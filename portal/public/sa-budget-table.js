@@ -1,5 +1,5 @@
 /** Same shared table for server HTML, enhancement and CSV. No aggregation. */
-import {dataTableHTML} from './datatable.js?v=5c09aecf9c';
+import {dataTableHTML} from './datatable.js?v=a8472268da';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const phoneColumns={'Measure':'measure','Fiscal year':'fiscal_year','Value':'display_value'};
 export const saBudgetPhoneColumns=Object.values(phoneColumns);

@@ -1,3 +1,4 @@
+import {actInvoiceCoverageNotes} from '../public/act-invoices-context.js'
 import {actInvoicesMetadata} from './act-invoices-metadata.ts'
 import {loadDonorIndex} from './donor-index.ts'
 import {donorDisclosure,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
@@ -121,7 +122,8 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     const db=env.TABLE_DB
     const version=await db.prepare("SELECT value FROM table_meta WHERE key='version'").first<string>('value')
     if (!version) throw new Error('unavailable')
-    if (name === 'act-invoices' && !await actInvoicesMetadata(db)) return errorResponse(404,'not_available')
+    const actReceipt=name==='act-invoices'?await actInvoicesMetadata(db):null
+    if (name === 'act-invoices' && !actReceipt) return errorResponse(404,'not_available')
     if (repeatedTableKeys(url.searchParams,null).size) return errorResponse(400,'invalid_query')
     const queryParams = new URLSearchParams(url.searchParams)
     const supplier = name === 'contracts' ? queryParams.get('supplier') : null
@@ -167,6 +169,8 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     const table=tableName(name), selection=where(table,query,undefined,supplierIds), columnSQL=config.columns.filter(c=>!c.computed).map(c=>'t.'+quote(c.key)).join(',')
     const total=Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
     if (csv) {
+      const csvNotes=actReceipt?actInvoiceCoverageNotes(actReceipt):[]
+      if(csvNotes.length)headers.set('x-table-csv-notes',encodeURIComponent(JSON.stringify(csvNotes)))
       const exportable=Math.min(MAX_CSV,total),exportLimited=total>MAX_CSV
       const csvPage=query.page!,pages=Math.ceil(exportable/CSV_PAGE)
       const start=csvPage>pages ? exportable : (csvPage-1)*CSV_PAGE
@@ -180,7 +184,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
       headers.set('content-type','text/csv; charset=utf-8');headers.set('content-disposition',`attachment; filename="${name}-page-${csvPage}.csv"`)
       headers.set('x-table-total',String(total));headers.set('x-table-exported',String(exported));headers.set('x-table-page',String(csvPage))
       headers.set('x-table-truncated',String(truncated));headers.set('x-table-export-truncated',String(exportLimited))
-      headers.set('access-control-expose-headers','Link, X-Table-Total, X-Table-Exported, X-Table-Page, X-Table-Truncated, X-Table-Export-Truncated, X-Table-Export-Note')
+      headers.set('access-control-expose-headers','Link, X-Table-Total, X-Table-Exported, X-Table-Page, X-Table-Truncated, X-Table-Export-Truncated, X-Table-Export-Note, X-Table-CSV-Notes')
       const note=(exported ? `Showing rows ${(start+1).toLocaleString('en-AU')}-${end.toLocaleString('en-AU')} of ${total.toLocaleString('en-AU')}` : `Showing 0 rows of ${total.toLocaleString('en-AU')}`)
         +(exportLimited ? '; export limited to the first 50,000 rows' : '')
         +(next ? `; next export: ${next}` : '')
@@ -193,6 +197,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
           if (offset>=end) {
             if (truncated) controller.enqueue(encoder.encode([csvValue(note),...config.columns.slice(1).map(()=>'')].join(',')+'\r\n'))
             if (exportLimited && !next) controller.enqueue(encoder.encode('# Export truncated at 50,000 rows.\r\n'))
+            for(const note of csvNotes)controller.enqueue(encoder.encode([csvValue('# '+note),...config.columns.slice(1).map(()=>'')].join(',')+'\r\n'))
             controller.close();return
           }
           const batch=await db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,Math.min(BATCH,end-offset),offset).all<Row>()

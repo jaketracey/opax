@@ -1,0 +1,160 @@
+{
+  "baseline": "766828d2e",
+  "review": "CHANGES addressed; independent approval still pending",
+  "full_portal_suite": {
+    "tests": 2552,
+    "passed": 2552,
+    "failed": 0,
+    "skipped": 0,
+    "prerequisites": [
+      "uv sync --frozen --python 3.12",
+      "node scripts/build_search_catalog.mjs",
+      "node scripts/cached_release_build.mjs crawl"
+    ],
+    "command": "PATH=\"$PWD/../.venv/bin:$PATH\" OPAX_TEST_HOST=::1 node --test --test-concurrency=4 test/*.test.mjs (portal/)",
+    "generated_search_manifest": "Restored baseline after the offline build/test run; an unrelated catalogue refresh is excluded from this lane"
+  },
+  "targeted": {
+    "tests": 124,
+    "passed": 124,
+    "failed": 0
+  },
+  "python_act_tests": {
+    "passed": 8,
+    "failed": 0
+  },
+  "tsc": "pass",
+  "check": "pass",
+  "workflow_reload_on_dry_run": {
+    "workflow": "valid",
+    "reload_off": "skipped",
+    "before_sql_build": true,
+    "status": "held",
+    "reason": "ACT release missing, unapproved or failed size/hash/content verification; retaining last approved D1 rows",
+    "dry_run": true
+  },
+  "workflow_reload_off_dry_run": {
+    "workflow": "valid",
+    "reload_off": "skipped",
+    "before_sql_build": true,
+    "status": "skipped",
+    "reason": "table reload is off"
+  },
+  "bundle": {
+    "schema": 1,
+    "repository": "jaketracey/opax",
+    "public": true,
+    "release_tag": "act-invoices-2026-10-22-9461967d519f-pending",
+    "asset_name": "act-invoices-kzmf-7uhp-2026-10-22-pending.json.gz",
+    "bytes": 8204935,
+    "sha256": "40b78a2e9cdae7c68b5d0ee2718afd3bc42b4b001f5f64814ff7f705cd156118",
+    "uncompressed_bytes": 79921365,
+    "uncompressed_sha256": "ca0505531acffff48724a8eeb466e44f6d9407ef937bb805f7a2c160770055bf",
+    "dataset_id": "kzmf-7uhp",
+    "snapshot": "2026-10-21T22:08:57.440248+00:00",
+    "snapshot_date": "2026-10-22",
+    "snapshot_sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac",
+    "review": {
+      "receipt": "data/staged/act-invoices/review.json",
+      "sha256": "e32118352b9424b15c1565b69b3f600de96dbcbea74b8aafe966209519976db7",
+      "status": "pending",
+      "reviewed_commit": null
+    }
+  },
+  "bundle_content": {
+    "mode": "offline-candidate-inspection",
+    "rows": 127437,
+    "published_fields": 8,
+    "provenance_fields": 6,
+    "source_field_checks": 1784118,
+    "all_source_values_identical": true,
+    "supplier_index": false,
+    "joins": false,
+    "bytes": 8204935,
+    "sha256": "40b78a2e9cdae7c68b5d0ee2718afd3bc42b4b001f5f64814ff7f705cd156118",
+    "review": "pending",
+    "uploads": 0
+  },
+  "protected": {
+    "votes.json": {
+      "byte_identical": true,
+      "sha256": "a112166dc583c6acac8b38ab452de83f9e698aab62b4ed5ca94e52ca7c6f46eb"
+    },
+    "pay.json": {
+      "byte_identical": true,
+      "sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722"
+    }
+  },
+  "coverage_guards_byte_identical": true,
+  "review_inputs_byte_identical": true,
+  "act_portal_requests": 0,
+  "uploads": 0,
+  "pushes": 0,
+  "deploys": 0,
+  "browser": {
+    "390": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 390,
+      "viewport": 390,
+      "cells": [
+        {
+          "label": "Supplier",
+          "left": 20,
+          "right": 153,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Date",
+          "left": 153,
+          "right": 254.5,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 254.5,
+          "right": 370,
+          "whiteSpace": "nowrap"
+        }
+      ]
+    },
+    "1440": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 1440,
+      "viewport": 1440,
+      "cells": [
+        {
+          "label": "Supplier",
+          "left": 57.59375,
+          "right": 374.875,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Date",
+          "left": 374.875,
+          "right": 496.484375,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 496.484375,
+          "right": 631.984375,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Reporting entity",
+          "left": 631.984375,
+          "right": 1040.21875,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Description",
+          "left": 1040.21875,
+          "right": 1382.40625,
+          "whiteSpace": "normal"
+        }
+      ]
+    }
+  }
+}

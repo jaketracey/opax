@@ -21,7 +21,7 @@ for(const [name,config]of Object.entries(TABLE_DATASETS))test(name+': paging, so
   r=await fetchTable(name,'q=needle');page=await r.json();assert.equal(page.total,1);assert.equal(page.rows[0].id,'item-3');assert.equal(r.headers.get('x-robots-tag'),'noindex');
   const filter=new URLSearchParams({['f.'+cat.key]:JSON.stringify(['Group 0']),['f.'+numeric.key]:JSON.stringify(numeric.type==='year' ? {min:2010,max:2020} : {min:10,max:20})});
   r=await fetchTable(name,filter);page=await r.json();assert.equal(page.total,numeric.type==='year' ? 6 : 5);assert.ok(page.rows.every(row=>[row[cat.key]].flat().includes('Group 0')&&row[numeric.key]>=(numeric.type==='year' ? 2010 : 10)&&row[numeric.key]<=(numeric.type==='year' ? 2020 : 20)));
-  r=await fetchTable(name,'format=csv');const csv=await r.text();assert.equal(r.headers.get('x-table-exported'),'260');assert.equal(r.headers.get('x-table-truncated'),'false');assert.equal(csv.split('\r\n').length,262);assert.ok(csv.includes(numeric.type==='year' ? '2000' : '0.25'));
+  r=await fetchTable(name,'format=csv');const csv=await r.text();assert.equal(r.headers.get('x-table-exported'),'260');assert.equal(r.headers.get('x-table-truncated'),'false');assert.equal(csv.split('\r\n').length,name==='act-invoices'?268:262);assert.ok(csv.includes(numeric.type==='year' ? '2000' : '0.25'));
 });
 test('bad dataset is 404; invalid state and methods return fixed JSON errors',async()=>{
   assert.equal((await fetchTable('bad-dataset')).status,404);

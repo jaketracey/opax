@@ -162,6 +162,18 @@ jobs:
       # datasets). Never on pull requests. Re-running is safe: a failed reload marks the deployment
       # receipt failed, so the duplicate guard lets a re-run deploy and reload again.
       # Opt-in: repository variable OPAX_TABLE_RELOAD=on (needs D1 Edit on CLOUDFLARE_API_TOKEN). Unset or anything else = skip.
+      # Release assets on jaketracey/opax are PUBLIC. Only the approved source
+      # mirror is accepted; download/verification failure leaves ACT out of SQL
+      # so the existing retention path keeps its last approved rows and receipt.
+      - name: Prepare reviewed ACT invoice release
+        id: act_invoice_asset
+        if: ${{ steps.duplicate.outputs.skip != 'true' && steps.production.outcome == 'success' && github.event_name != 'pull_request' && vars.OPAX_TABLE_RELOAD == 'on' }}
+        continue-on-error: true
+        run: node ../scripts/act_invoices/prepare_release.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OPAX_TABLE_RELOAD: ${{ vars.OPAX_TABLE_RELOAD }}
+
       - name: Reload D1 tables if the table data changed
         id: tables
         if: ${{ steps.duplicate.outputs.skip != 'true' && steps.production.outcome == 'success' && github.event_name != 'pull_request' && vars.OPAX_TABLE_RELOAD == 'on' }}
@@ -174,6 +186,7 @@ jobs:
           fi
           node ../scripts/reload_tables.mjs --remote --base https://opax.com.au
         env:
+          OPAX_ACT_INVOICES_RELEASE_STATUS: ${{ steps.act_invoice_asset.outputs.status }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 

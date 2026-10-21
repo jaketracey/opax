@@ -12,7 +12,8 @@ def checked_projection(stage):
             raise ValueError('Staging differs from retained original: '+name)
     if (stage/'series.jsonl').read_text()!=text:
         raise ValueError('Source rows differ from retained original')
-    return dict(info,series_jsonl=text),dict(rows=len(rows),months=len(report['by_month']),missing_months=report['missing_months'],
+    coverage=dict(exact_duplicate_groups=report['exact_duplicate_groups'],extra_duplicate_rows=report['extra_duplicate_rows'],observed_months=sum('2015-07'<=m<=info['payment_date_max'][:7] for m in report['by_month']),missing_months=report['missing_months'],outside_period_rows=sum(n for m,n in report['by_month'].items() if m<'2015-07'),missing_payment_dates=report['missing_payment_dates'])
+    return dict(info,coverage=coverage,series_jsonl=text),dict(rows=len(rows),months=len(report['by_month']),missing_months=report['missing_months'],
                                   exact_duplicate_groups=report['exact_duplicate_groups'],extra_duplicate_rows=report['extra_duplicate_rows'],public_computed_totals=0)
 
 

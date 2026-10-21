@@ -1,5 +1,6 @@
+import {actInvoiceEntityName} from './act-invoices-context.js?v=f00b35af13';
 /** Supplier identity is source-record text only. No links, facets or name search. */
-import {dataTableHTML,guardTableURL,serializeQuery} from './datatable.js?v=5c09aecf9c';
+import {dataTableHTML,guardTableURL,serializeQuery} from './datatable.js?v=a8472268da';
 export const ACT_INVOICES_ID='kzmf-7uhp';
 export const ACT_INVOICES_SOURCE='https://www.data.act.gov.au/Government-and-Transparency/Notifiable-Invoices-Register/'+ACT_INVOICES_ID;
 export const ACT_INVOICES_SEARCH=['publish_description','reporting_entity'];
@@ -19,7 +20,7 @@ export const actInvoicesColumns=[
  {key:'contract_number',label:'Contract number',type:'text',sortable:false},
  ...['id','source_row_position','socrata_id','socrata_sid','socrata_position','snapshot','snapshot_sha256','dataset_id','source_url','licence','licence_url','attribution'].map(key=>({key,label:({id:'Snapshot record',source_row_position:'Source row position',socrata_id:'Socrata row ID',socrata_sid:'Socrata SID',socrata_position:'Socrata position',snapshot_sha256:'Snapshot SHA-256',dataset_id:'Dataset ID'})[key]||key.replaceAll('_',' '),type:key==='source_row_position'?'count':'text',sortable:false})),
 ];
-/** @returns {import('./datatable.js?v=5c09aecf9c').DataTableConfig} */
+/** @returns {import('./datatable.js?v=a8472268da').DataTableConfig} */
 export const actInvoicesConfig=()=>({id:'act-invoices',caption:'Published invoice records',pageType:'act-invoices',urlKey:'t',pageSize:50,
  columns:actInvoicesColumns,columnsVisible:['supplier_name','payment_day','amount','reporting_entity','publish_description'],
  defaultSort:{key:'payment_day',dir:'desc'},source:{endpoint:'/api/table/act-invoices'},export:{filename:'act-invoices.csv'}});
@@ -36,13 +37,20 @@ export function actInvoicesURL(input){
  url.search=serializeQuery(query,'t');
  return {url,query,rejected:false};
 }
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const withoutZeroCents=value=>value.replace(/(\$[\d,]+)\.00(?=["<]|$)/g,'$1');
 const phone={'Supplier':'supplier','Date':'date','Amount':'amount'};
-export function actInvoicesTableHTML(config,page,url){
- return dataTableHTML(config,page,url).replace(/<th\b([^>]*)>([\s\S]*?)<\/th>/g,(html,attrs,body)=>{
+export function actInvoicesTableHTML(config,page,url,definitions={}){
+ return dataTableHTML(config,page,url)
+ .replace(/<td\b[^>]*data-label="Amount"[^>]*>[\s\S]*?<\/td>/g,withoutZeroCents)
+ .replace(/<td\b[^>]*data-label="Reporting entity"[^>]*>[\s\S]*?<\/td>/g,cell=>cell.replace(/(<span class="dt-value">)([\s\S]*?)(<\/span>)/,(all,open,code,close)=>{const raw=Object.keys(definitions).find(k=>esc(k)===code);const name=raw&&actInvoiceEntityName(raw,definitions);return name?open+code+' · '+esc(name)+close:all;}))
+ .replace(/<th\b([^>]*)>([\s\S]*?)<\/th>/g,(html,attrs,body)=>{
   const key=phone[body.replace(/<[^>]*>/g,'').trim()];return key?`<th${attrs} data-act-column="${key}">${body}</th>`:html;
  }).replace('placeholder="Search"','placeholder="Description or reporting entity"');
 }
-export function decorateActInvoices(root){
+export function decorateActInvoices(root,definitions={}){
  for(const th of root.querySelectorAll('thead th')){const key=phone[th.textContent.trim()];if(key)th.dataset.actColumn=key;}
+ for(const cell of root.querySelectorAll('td[data-label="Amount"]')){const value=cell.querySelector('.dt-value');if(value){const clean=withoutZeroCents(value.textContent);if(value.textContent!==clean)value.textContent=clean;}cell.title=withoutZeroCents(cell.title);}
+ for(const cell of root.querySelectorAll('td[data-label="Reporting entity"]')){const value=cell.querySelector('.dt-value');if(!value)continue;const code=cell.dataset.actEntityCode||value.textContent.split(' · ')[0];cell.dataset.actEntityCode=code;const name=actInvoiceEntityName(code,definitions),label=code+(name?' · '+name:'');if(value.textContent!==label)value.textContent=label;}
  const input=root.querySelector('[data-search]');if(input){input.placeholder='Description or reporting entity';input.setAttribute('aria-label','Search description or reporting entity');}
 }

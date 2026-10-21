@@ -19,7 +19,9 @@ const info=JSON.parse(await readFile(resolve(root,'data/staged/act-invoices/hub.
 const series=await readFile(resolve(root,'data/staged/act-invoices/series.jsonl'),'utf8');
 const rows=series.trimEnd().split('\n').map(line=>({row:{...JSON.parse(line),dataset_id:info.dataset_id,source_url:info.source_url,licence:info.licence,licence_url:info.licence_url,attribution:info.attribution}}));
 // Test-only receipt; the real pending review and promoted directory are untouched.
-const metadata={...info,promotion:{reviewed_commit:'0'.repeat(40),local_candidate_preview:true}};
+const report=JSON.parse(await readFile(resolve(root,'data/staged/act-invoices/reconciliation.json'),'utf8'));
+const coverage={exact_duplicate_groups:report.exact_duplicate_groups,extra_duplicate_rows:report.extra_duplicate_rows,observed_months:Object.keys(report.by_month).filter(m=>m>='2015-07'&&m<=info.payment_date_max.slice(0,7)).length,missing_months:report.missing_months,outside_period_rows:2,missing_payment_dates:report.missing_payment_dates};
+const metadata={...info,coverage,promotion:{reviewed_commit:'0'.repeat(40),local_candidate_preview:true}};
 const manifest=await buildTableSQL({output:resolve(out,'sql'),datasets:{'act-invoices':rows},metadata:{'act-invoices':metadata}});
 const mime=p=>p.endsWith('.css')?'text/css':p.endsWith('.js')?'text/javascript':p.endsWith('.json')?'application/json':p.endsWith('.woff2')?'font/woff2':p.endsWith('.svg')?'image/svg+xml':'text/html';
 const mf=localMiniflare({rootPath:out,resourcePersistencePath:resolve(out,'state'),resourceTmpPath:resolve(out,'runtime'),isolatedResourcePersistencePath:resolve(out,'isolated'),outboundService:async()=>{throw Error('External network disabled');},workers:[{name:'act-invoices-preview',modules:true,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],script:bundled.outputFiles[0].text,d1Databases:{TABLE_DB:'act-invoices-candidate'},

@@ -80,4 +80,5 @@ data/staged/sa-grants/.acquire.lock
 # ACT invoice suppliers stay within local source records, outside Git and static assets.
 data/staged/act-invoices/.acquire.lock
 data/staged/act-invoices/series.jsonl
-data/promoted/act-invoices/
+data/promoted/act-invoices/*
+!data/promoted/act-invoices/release.json

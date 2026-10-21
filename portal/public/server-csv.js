@@ -14,7 +14,7 @@ export function csvRecords(csv) {
 const csvValue = value => /[",\r\n]/.test(value) ? '"'+value.replaceAll('"','""')+'"' : value;
 export async function readServerCSV(first, fetchPage, signal) {
   const origin=new URL(first), seen=new Set(), data=[];
-  let url=origin.href,header,headers,truncated=false,finalMarker=false,pages=0;
+  let url=origin.href,header,headers,truncated=false,finalMarker=false,pages=0,notesHeader,coverageRows=[];
   while (url) {
     const current=new URL(url,origin);
     if (current.origin!==origin.origin || current.pathname!==origin.pathname || seen.has(current.href) || ++pages>5) throw new Error('Invalid CSV continuation');
@@ -39,11 +39,21 @@ export async function readServerCSV(first, fetchPage, signal) {
       trailers.shift();
     }
     if (trailers[0]===CSV_TRUNCATION) {finalMarker=true;trailers.shift();}
+    const notes=response.headers.get('x-table-csv-notes');
+    if(notes){
+      if(current.pathname!=='/api/table/act-invoices'||notes.length>12000||notesHeader!=null&&notesHeader!==notes)throw new Error('Invalid CSV notes');
+      const values=JSON.parse(decodeURIComponent(notes));
+      if(!Array.isArray(values)||values.length>8||values.some(v=>typeof v!=='string'||v.length>2000))throw new Error('Invalid CSV notes');
+      const columns=csvRecords(header+'\n')[0].split(',').length;
+      const expected=values.map(note=>csvValue('# '+note)+','.repeat(columns-1));
+      if(JSON.stringify(trailers)!==JSON.stringify(expected))throw new Error('Missing CSV coverage notes');
+      coverageRows=expected;notesHeader=notes;trailers.length=0;
+    }else if(notesHeader!=null)throw new Error('Missing CSV coverage notes');
     if (trailers.length) throw new Error('Unexpected CSV trailer');
     const next=/<([^>]+)>;\s*rel="next"/.exec(response.headers.get('link') || '');
     if (finalMarker && next) throw new Error('Premature CSV truncation');
     url=next ? new URL(next[1],current).href : '';
   }
   if (truncated && (data.length!==CSV_LIMIT || !finalMarker)) throw new Error('Missing CSV truncation record');
-  return {csv:[header,...data,...(truncated ? [CSV_TRUNCATION] : [])].join('\r\n')+'\r\n',truncated,headers};
+  return {csv:[header,...data,...coverageRows,...(truncated ? [CSV_TRUNCATION] : [])].join('\r\n')+'\r\n',truncated,headers};
 }

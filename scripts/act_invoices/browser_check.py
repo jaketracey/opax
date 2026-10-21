@@ -25,6 +25,12 @@ def main():
             assert all(k in visible for k in ('Supplier','Date','Amount'))
             assert visible['Date']['whiteSpace']=='nowrap'
             assert not page.locator('[data-label="Supplier"] a').count()
+            assert page.locator('table caption').filter(has_text='Published invoice records').count()==1
+            assert page.get_by_text('22 Oct 2026 (Melbourne)',exact=True).count()==1
+            assert page.get_by_text('July 2015 to September 2026',exact=False).count()>=1
+            assert '.00' not in page.locator('[data-label="Amount"]').all_text_contents()[2]
+            if width==1440:
+                assert 'Suburban Land Agency' in page.locator('[data-label="Reporting entity"]').all_text_contents()[4]
             page.locator('.act-invoices-content>section').first.screenshot(path=str(OUT/f'{width}-section.png'))
             if width==390:
                 assert visible['Amount']['right']<=390

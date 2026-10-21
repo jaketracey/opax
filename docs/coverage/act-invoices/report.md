@@ -163,15 +163,17 @@ Its ACT destination is **`data/promoted/act-invoices/table.json`**, outside publ
 assets and Git. The D1 builder accepts only that reviewed artifact, verifies the
 series digest/coordinates and stores its source receipt in `table_meta`.
 
-An orchestrator must carry the approved artifact into its checkout for an ACT
-refresh, then use the existing `OPAX_TABLE_RELOAD=on` deployment path. Ordinary
+Fix 1 supplies the reviewed GitHub release-asset transfer before the SQL build;
+see [fix 1 report](fix1-report.md) and the [orchestrator steps](../../../scripts/act_invoices/README.md#fix-1-reviewed-public-release-delivery).
+The orchestrator uses the existing `OPAX_TABLE_RELOAD=on` deployment path. Ordinary
 reloads without it preserve the last approved ACT rows and receipt; they cannot
 clear or refresh them. A fresh database without an ACT receipt serves no ACT
 rows: page and API fail closed. Nightly never acquires or promotes this source.
 
 **Holds:** no acquisition hold; independent review and explicit promotion remain
 pending, with duplicate/date/missing-value caveats for that review. The pending
-review receipt is unchanged. No reviewed artifact was written. Browser evidence
+review receipt is unchanged. Fix 1 also commits a pending release manifest; no
+public release asset exists from this lane. No reviewed artifact was written. Browser evidence
 uses the full staged snapshot in an isolated local D1 with an explicitly
 labelled test-only receipt, no production bindings and outbound network denied.
 

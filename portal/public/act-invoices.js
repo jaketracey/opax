@@ -1,9 +1,10 @@
-import {mountDataTable} from './datatable.js?v=5c09aecf9c';
-import {actInvoicesConfig,actInvoicesURL,decorateActInvoices} from './act-invoices-table.js?v=6d847c98a7';
+import {mountDataTable} from './datatable.js?v=a8472268da';
+import {actInvoicesConfig,actInvoicesURL,decorateActInvoices} from './act-invoices-table.js?v=92266161a4';
 for(const root of document.querySelectorAll('[data-act-invoices-table]')){
+ const definitions=JSON.parse(root.querySelector('[data-act-entity-definitions]')?.textContent||'{}');
  const guard=actInvoicesURL(new URL(location.href));
  history.replaceState(history.state,'',guard.url.pathname+guard.url.search);
- new MutationObserver(()=>decorateActInvoices(root)).observe(root,{childList:true});
+ new MutationObserver(()=>decorateActInvoices(root,definitions)).observe(root,{childList:true,subtree:true});
  mountDataTable(root,actInvoicesConfig());
- decorateActInvoices(root);
+ decorateActInvoices(root,definitions);
 }

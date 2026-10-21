@@ -14,3 +14,8 @@
  .act-invoices-content .dt :is([data-act-column="date"],[data-label="Date"]){display:table-cell;width:29%;white-space:nowrap}
  .act-invoices-content .dt :is([data-act-column="amount"],[data-label="Amount"]){display:table-cell;width:33%;white-space:nowrap;font-variant-numeric:tabular-nums}
 }
+
+.act-invoices-receipt time{white-space:nowrap}
+.act-invoices-entity-key{margin-block:var(--space-block)}
+.act-invoices-entity-key dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3fr);gap:var(--space-tight);font:var(--type-fine)}
+.act-invoices-entity-key dd{margin:0}

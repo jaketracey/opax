@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "repository": "jaketracey/opax",
+  "public": true,
+  "release_tag": "act-invoices-2026-10-22-9461967d519f-pending",
+  "asset_name": "act-invoices-kzmf-7uhp-2026-10-22-pending.json.gz",
+  "bytes": 8204935,
+  "sha256": "40b78a2e9cdae7c68b5d0ee2718afd3bc42b4b001f5f64814ff7f705cd156118",
+  "uncompressed_bytes": 79921365,
+  "uncompressed_sha256": "ca0505531acffff48724a8eeb466e44f6d9407ef937bb805f7a2c160770055bf",
+  "dataset_id": "kzmf-7uhp",
+  "snapshot": "2026-10-21T22:08:57.440248+00:00",
+  "snapshot_date": "2026-10-22",
+  "snapshot_sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac",
+  "review": {
+    "receipt": "data/staged/act-invoices/review.json",
+    "sha256": "e32118352b9424b15c1565b69b3f600de96dbcbea74b8aafe966209519976db7",
+    "status": "pending",
+    "reviewed_commit": null
+  }
+}

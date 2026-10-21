@@ -155,6 +155,7 @@ export const MODULE_STAMPS = [
   ['suppliers.js', 'contracts-table.js'], ['suppliers.js', 'suppliers-table.js'], ['app.js', 'contracts-table.js'],
    ['grants-table.js', 'datatable.js'],
   ['budget.js', 'datatable.js'], ['budget.js', 'budget-table.js'],
+  ['act-invoices-table.js','act-invoices-context.js'],
   ['act-invoices-table.js', 'datatable.js'], ['act-invoices.js', 'datatable.js'], ['act-invoices.js', 'act-invoices-table.js'],
   ['sa-grants-table.js', 'datatable.js'], ['sa-grants.js', 'datatable.js'], ['sa-grants.js', 'sa-grants-table.js'],
   ['sa-budget-table.js', 'datatable.js'], ['sa-budget.js', 'datatable.js'], ['sa-budget.js', 'sa-budget-table.js'],
