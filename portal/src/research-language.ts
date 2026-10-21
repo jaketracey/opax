@@ -18,17 +18,17 @@ function protectedAnswerSpans(text:string,payload:Record<string,unknown>):[numbe
 }
 
 /** Edit only answer text, retaining source text and remapping code-point citations. */
-export function rewriteAnswerPayload<T extends Record<string, unknown>>(payload:T,transform:(replace:(pattern:RegExp,replacement:string|((match:string)=>string))=>void)=>void,protectQuotes=false):T {
+export function rewriteAnswerPayload<T extends Record<string, unknown>>(payload:T,transform:(replace:(pattern:RegExp,replacement:string|((match:string,index?:number)=>string))=>void)=>void,protectQuotes=false):T {
   if(typeof payload.answer!=='string')return payload
   const original=payload.answer
   let chars=Array.from(original),origins=chars.map((_,i)=>i)
-  const replace=(pattern:RegExp,replacement:string|((match:string)=>string))=>{
+  const replace=(pattern:RegExp,replacement:string|((match:string,index?:number)=>string))=>{
     const text=chars.join(''),matches=[...text.matchAll(pattern)]
     for(const match of matches.reverse()){
       const protectedText=protectQuotes?protectedAnswerSpans(text,payload):[]
       if(protectedText.some(([a,b])=>match.index!<b&&match.index!+match[0].length>a))continue
       const from=Array.from(text.slice(0,match.index)).length,n=Array.from(match[0]).length
-      const value=Array.from(typeof replacement==='string'?replacement:replacement(match[0])),old=origins.slice(from,from+n)
+      const value=Array.from(typeof replacement==='string'?replacement:replacement(match[0],match.index!)),old=origins.slice(from,from+n)
       chars.splice(from,n,...value)
       origins.splice(from,n,...value.map((_,i)=>old[Math.min(old.length-1,Math.floor(i*old.length/value.length))]??0))
     }

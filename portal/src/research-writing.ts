@@ -5,7 +5,7 @@ import { claimAttributionOk, claimMatchesParty, withoutUnsupportedFigures } from
 import type { QualitativeAnswer } from './research-types'
 import { plainAnswerPayload } from './research-language'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-4'
+export const ANSWER_WRITING_VERSION = 'written-answer-5'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -88,8 +88,16 @@ function coverageSentence(input: WritingInput): WrittenSentence | undefined {
   return relevant ? {text:finish(clean(relevant.replace(/^It excludes/i,'These records exclude')).split(/(?<=[.!?])\s+/)[0]),facts:ids,coverage:true} : undefined
 
 }
+/** A known jurisdiction boundary is itself the useful answer, including if writing fails. */
+function statePayCoverage(input:WritingInput):WrittenSentence|undefined {
+ if(!input.facts.some(f=>/federal.*(?:only|cannot).*state.*(?:pay|salary)/i.test(f.text)))return
+ const jurisdiction=/\b(Victorian|Queensland|Tasmanian|South Australian|Western Australian|NSW|New South Wales|ACT|Northern Territory)\b/i.exec(input.question)?.[0]
+ const year=input.period.since?.slice(0,4)??/\b(?:19|20)\d{2}\b/.exec(input.question)?.[0]
+ return {text:`The highest-paid ${jurisdiction?jurisdiction+' ':''}state politician${year?' in '+year:''} is not identified by OPAX's pay records: they cover federal parliamentarians, with state parliamentary salaries outside their coverage.`,facts:input.facts.map(f=>f.id),coverage:true}
+}
 /** Never return the original block, even when the provider is unavailable or the wall cap is spent. */
 export function proseFallback(input: WritingInput): QualitativeAnswer {
+  const stateCoverage=statePayCoverage(input);if(stateCoverage)return assemble([stateCoverage],input)
   const lines: WrittenSentence[] = [], rates = input.facts.flatMap(f => {const r=payRate(f.text);return r?[{f,r}]:[]})
   const year=input.period.since?.slice(0,4)
   if (rates.length) {
@@ -282,6 +290,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
       lines.push({text:finish(sentence),facts:supportingIds.length?supportingIds:ids,coverage:isLimit})
     }
   }
+  if(statePayCoverage(input)&&!lines.some(l=>/federal/i.test(l.text)&&/state/i.test(l.text)))return proseFallback(input)
   if (!lines.length || lines[0].coverage&&input.facts.some(f=>!f.coverage&&!f.metadata&&!/^(?:Period|Financial years):/.test(f.text))) return null
   // The opening must carry a subject and an available headline figure, not a generic preamble.
   if (/^(?:It\b|They\b|His\b|Her\b|This\b|That\b|Here|Based on|According to|The (?:data|records|tool|table|figures) show)/i.test(lines[0].text)) return null

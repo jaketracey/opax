@@ -1,12 +1,13 @@
 import {auditPayload,quotationSpans} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
+import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
-  let out=plainAnswerPayload(payload)
+  let out=neutralAnonymousAttribution(plainAnswerPayload(payload))
   for(let attempt=0;attempt<3;attempt++){
     const audit=auditPayload(question,out)
-    if(!audit.findings.length)return out
+    if(!audit.findings.length)return leadWithFinding(out)
     const answer=String(out.answer??''),remove=new Set<string>()
     for(const finding of audit.findings){
       const text=finding.text,base=answer.indexOf(text)
@@ -29,5 +30,5 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
     const sentences=[...new Set(audit.findings.map(f=>f.text))]
     out=rewriteAnswerPayload(out,replace=>{for(const sentence of sentences)replace(new RegExp(sentence.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),'')})
   }
-  return plainAnswerPayload(out)
+  return leadWithFinding(plainAnswerPayload(out))
 }

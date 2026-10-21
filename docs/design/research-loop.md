@@ -376,6 +376,17 @@ failures, including when a saved excerpt is too short to establish them.
 Subject binding is independent of the predicate's spelling. A recipient cannot
 borrow a figure from an anonymous or another person's speech; a quote and its
 owner, topic, figures and dates must match the same selected evidence atom.
+The person reporting a figure is separate from its recipient or donor. A speech
+about Labor receiving an amount does not establish that its speaker was paid
+that amount. Direct and indirect personal-payment claims require the recipient
+in the passage or structured record; a named donor also requires the giving
+association. An explicit first-person financial statement can identify a single
+known speaker as the owner, but speaker metadata alone cannot.
+Document titles, chambers and parties are record subjects, never inferred human
+speakers. A chamber passage can support a statement without identifying its
+individual speaker. Anonymous party descriptions that lack party metadata are
+neutralised to a passage description while preserving its supported words and
+evidence anchors.
 Possessive attribution is checked as well. The ordinary planner fallback uses
 the same final check. Period metadata selected alongside a figure is retained
 on that figure's source atom with the metadata evidence ID, rather than being
@@ -389,6 +400,12 @@ assembly uses claim identity too, retaining equal values for distinct entities
 and trimming only repeated clauses while rebasing citations.
 Verified passage points already written by the research model retain their
 existing attribution, quotation and loose-point checks.
+When supported findings follow an introductory limitation, the final boundary
+can move a checked finding to the front without writing a new claim. Citation
+spans follow the original characters, including short legacy anchors. Ancillary
+coverage dates cannot displace a useful chamber or scope limitation. A known
+federal-versus-state pay boundary remains a specific explanation, including in
+the prose fallback, with its selected coverage citations.
 
 Writing uses the existing model/provider, per-call limiter, daily reservation,
 token ceiling, request cancellation and remaining wall budget. The existing
