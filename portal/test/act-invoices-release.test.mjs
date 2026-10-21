@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
+import {existsSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
@@ -73,7 +74,10 @@ test('P1: actual workflow is guarded off and prepares the release before the SQL
  const f=await fixture(t);let downloads=0;
  const result=await prepareRelease({root:f.root,reload:'off',download:async()=>{downloads++;return f.bytes;}});assert.equal(result.status,'skipped');assert.equal(downloads,0);
  const base=resolve(new URL('../../',import.meta.url).pathname);assert.equal((await checkReleaseWorkflow(base)).workflow,'valid');
- const py=spawnSync(join(base,'.venv/bin/python3'),['-c','import json,yaml; print(json.dumps(yaml.safe_load(open(".github/workflows/deploy.yml"))))'],{cwd:base,encoding:'utf8'});
+ // The repo virtualenv exists only in some checkouts; otherwise use python3 from PATH, and skip the YAML step checks where no PyYAML is installed.
+ const venv=join(base,'.venv/bin/python3'),python=existsSync(venv)?venv:'python3';
+ if(spawnSync(python,['-c','import yaml'],{encoding:'utf8'}).status!==0)return t.skip('PyYAML unavailable; workflow text checks above still ran');
+ const py=spawnSync(python,['-c','import json,yaml; print(json.dumps(yaml.safe_load(open(".github/workflows/deploy.yml"))))'],{cwd:base,encoding:'utf8'});
  assert.equal(py.status,0,py.stderr);const steps=JSON.parse(py.stdout).jobs.deploy.steps;
  const index=steps.findIndex(s=>s.id==='act_invoice_asset'),step=steps[index];assert.equal('${{ '+step.if.replace(/^\$\{\{\s*|\s*\}\}$/g,'')+' }}',ACT_RELEASE_CONDITION);
  assert.equal(step['continue-on-error'],true);assert.ok(index<steps.findIndex(s=>s.id==='tables'));
