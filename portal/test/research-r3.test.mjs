@@ -45,6 +45,16 @@ test('r3 a named donor cannot borrow a receipt with an unknown donor',()=>{
 test('r3 a purpose after the amount cannot replace a named receipt subject',()=>{
  for(const answer of ['Avery Example was given $100,000 to fund Labor.','Avery Example received $100,000 to support Labor.'])assert.ok(auditPayload('Who received the money?',payload(answer,[speech])).findings.length)
 })
+test('r3 every recipient in a coordinated list must own that amount in the same evidence',()=>{
+ const answer='A Senate passage says $100,000 went to Labor, Liberal and Banana Alliance parties in 2017-18.'
+ const a=source('a','The industry donated $100,000 to Labor and Liberal in 2017-18.',{kind:'speech',speaker:'Avery Example',chamber:'senate'})
+ const b=source('b','Banana Alliance: $200,000 in 2017-18.')
+ const p=payload(answer,[a,b]);p.citations['b/t/body/0']=[[0,answer.length]]
+ assert.ok(auditPayload('Who received the money?',p).findings.some(f=>f.type==='figure'&&f.entity==='Banana Alliance'))
+})
+test('r3 a proposed office budget is not a personal receipt',()=>{
+ assert.ok(auditPayload('Who received the money?',payload('Avery Example received $100,000.',[{...speech,snippet:'Avery Example has a $100,000 office budget.'}])).findings.length)
+})
 test('r3 explicit first-person financial evidence can establish the speaker as recipient or donor',()=>{
  for(const [answer,snippet]of [['Avery Example was paid $100,000.','I was paid $100,000.'],['Avery Example donated $100,000 to Labor.','I donated $100,000 to Labor.']])assert.equal(auditPayload('What did the record say?',payload(answer,[{...speech,snippet}])).findings.length,0)
  assert.ok(auditPayload('What did the record say?',payload('Avery Example was paid $100,000.',[{...speech,snippet:'I was not paid $100,000.'}])).findings.length)

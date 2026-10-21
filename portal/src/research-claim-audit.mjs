@@ -81,8 +81,15 @@ function amountOwners(text,f,known=[]){
  }
  // An explicit object after 'to' owns a receipt, regardless of who uttered it.
  const target=f.unit==='count'?'(?:to|for)':'to'
- const to=new RegExp('^\\s*(?:dollars?\\s+)?(?:(?:was|were)\\s+)?(?:(?:paid|awarded|given|donated)\\s+)?'+target+'\\s+(?:the\\s+)?([^.;]+?)(?=\\s+in\\s+(?:19|20)\\d{2}|$|[.;])','i').exec(after)?.[1]
- if(to){const exact=exactNames(to),names=partyMentions(to);return names.length?names.map(n=>n.name):exact.length?[exact[0].name]:nounPhrases(to).slice(0,1).map(n=>n.name)}
+ const to=new RegExp('^\\s*(?:[a-z]+\\s+){0,5}'+target+'\\s+(?:the\\s+)?([^.;]+?)(?=\\s+in\\s+(?:19|20)\\d{2}|$|[.;])','i').exec(after)?.[1]
+ if(to){
+  const exact=exactNames(to),names=partyMentions(to)
+  if(!names.length)return exact.length?[exact[0].name]:nounPhrases(to).slice(0,1).map(n=>n.name)
+  const targets=(known.length?exact:[...names,...nounPhrases(to)]).sort((a,b)=>a.at-b.at||b.end-a.end).filter((n,i,all)=>!all.some((x,j)=>j!==i&&x.at<=n.at&&x.end>=n.end&&(x.end-x.at>n.end-n.at||j<i&&x.end===n.end&&x.at===n.at)))
+  const group=[];let previous
+  for(const target of targets){if(previous&&!/^(?:\s|,|\band\b|\bor\b|\bthe\b|\bParty\b)*$/i.test(to.slice(previous.end,target.at)))break;group.push(target.name);previous=target}
+  return group.map(n=>/^(?:Labor|Liberal) Party$/i.test(n)?partyName(n.split(' ')[0]):n)
+ }
  if(f.owner)return [f.owner]
  const actors=(known.length?exactNames(before):[...partyMentions(before),...nounPhrases(before)]).sort((a,b)=>a.at-b.at||b.end-a.end).filter((n,i,ns)=>!ns.some((x,j)=>j!==i&&x.at<=n.at&&x.end>=n.end&&(x.end-x.at>n.end-n.at)))
  const last=actors.at(-1)
@@ -135,6 +142,7 @@ function evidenceRows(payload){
    const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(line);
    const values=figures(line);for(const f of values){if(['speech','bill'].includes(source.kind)&&f.metric==='receipts'&&!f.owner){const before=line.slice(Math.max(0,f.at-120),f.at),party=[...before.matchAll(/\b(Labor|Coalition|Liberal|ALP|Greens|Nationals)(?: Party)?\b[^.;]{0,70}\b(?:received|collected|accepted)\b[^$]*$/gi)].at(-1);if(party)f.owner=partyName(party[1])}if(source.date&&/^\s*last financial year\b/i.test(line.slice(f.end))){const year=Number(source.date.slice(0,4))-(Number(source.date.slice(5,7))>=7?1:2);f.period=periods(year+'-'+String((year+1)%100).padStart(2,'0'))}}
    for(const f of values){f.donor=givingActor(line,f,nounPhrases(line).map(n=>n.name),source.speaker);f.owners=['speech','bill'].includes(source.kind)?amountOwners(line,f):[f.owner??entity].filter(Boolean)}
+   for(const f of values)if(['speech','bill'].includes(source.kind)&&f.unit==='AUD'&&f.metric==='receipts'&&!financialPredicate.test(line.slice(0,f.at))&&!(label&&f.owners.some(n=>norm(n)===norm(label))))f.owners=[]
    for(const f of values)if(source.speaker&&!f.owners.length&&!quotationSpans(line).some(q=>f.at>=q.at&&f.end<=q.end)&&/\bI (?:was |have |had |have been |had been |am )?(?:paid|received|secured|got|won|earned|given)\s*(?:(?:about|almost|nearly|over|more than|at least)\s*)?$/i.test(line.slice(0,f.at)))f.owners=[source.speaker]
    for(const f of values.slice())if(!f.period.length&&!period.length&&!fiscal){
     const atoms=(Array.isArray(source.claim_atoms)?source.claim_atoms:[]).filter(a=>a.value===f.value&&a.unit===f.unit&&norm(a.entity)===norm(entity)&&typeof a.periodEvidenceId==='string')
@@ -160,7 +168,7 @@ function nounPhrases(text){
 }
 function claimScope(text,at,named,speakers=[]){
  const quotes=[...quotations(text),...[...text.matchAll(/\([^)]*\)/g)].map(m=>({at:m.index,end:m.index+m[0].length}))]
- const cuts=[0,...[...text.matchAll(/;\s*|,?\s+(?:and|but|while|whereas|because)\s+/g)].filter(m=>!quotes.some(q=>m.index>=q.at&&m.index<q.end)&&! /^[A-Z][\p{L}'’-]*(?:\s+(?:[A-Z][\p{L}'’-]*|to|of|the|and|for))*[,).]/u.test(text.slice(m.index+m[0].length))&&(named.some(n=>n.at===m.index+m[0].length)||figures(text.slice(0,m.index)).length>0||quotes.some(q=>q.end<=m.index))).map(m=>m.index+m[0].length),text.length]
+ const cuts=[0,...[...text.matchAll(/;\s*|,?\s+(?:and|but|while|whereas|because)\s+/g)].filter(m=>!quotes.some(q=>m.index>=q.at&&m.index<q.end)&&! /^[A-Z][\p{L}'’-]*(?:\s+(?:[A-Z][\p{L}'’-]*|to|of|the|and|for))*(?: political parties| parties)?(?: in \d{4}(?:[–-]\d{2,4})?)?\s*(?:[,).]|$)/u.test(text.slice(m.index+m[0].length))&&(named.some(n=>n.at===m.index+m[0].length)||figures(text.slice(0,m.index)).length>0||quotes.some(q=>q.end<=m.index))).map(m=>m.index+m[0].length),text.length]
  const start=cuts.filter(c=>c<=at).at(-1)??0,end=cuts.find(c=>c>at)??text.length
  const names=named.filter(n=>n.at>=start&&n.at<end&&!/^\d{4}$/.test(n.name))
  const before=names.filter(n=>n.at<=at),subject=before.find(n=>speakers.includes(n.name))??names.find(n=>speakers.includes(n.name))??before[0]??names[0]??named.find(n=>n.at<start&&!/^\d{4}$/.test(n.name))
@@ -221,7 +229,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
    const scope=claimScope(text,f.at,availableNames,speakers),reporter=reporterIn(text,scope,named,selected,f.at)
    const prefix=text.slice(scope.start,f.at),recordReport=!personName(scope.owner,selected)&&/\b(?:passage|record|speech|speaker|document)\b/i.test(prefix)&&reportingPredicate.test(prefix),reported=!!reporter||recordReport
    let owners=amountOwners(text.slice(scope.start,scope.end),{...f,at:f.at-scope.start,end:f.end-scope.start},availableNames.map(n=>({name:n.name,surface:text.slice(n.at,n.end)})))
-   if(reported&&owners.length&&!f.owner&&!/^\s*(?:dollars?\s+)?to\b/i.test(text.slice(f.end))&&!financialPredicate.test(text.slice(availableNames.filter(n=>n.end<=f.at).at(-1)?.end??scope.start,f.at)))owners=[]
+   if(reported&&owners.length&&!f.owner&&!/^\s*(?:[a-z]+\s+){0,5}to\b/i.test(text.slice(f.end))&&!financialPredicate.test(text.slice(availableNames.filter(n=>n.end<=f.at).at(-1)?.end??scope.start,f.at)))owners=[]
    if(!owners.length&&!reported)owners=paidTo&&following.length?[following[0].name]:preceding.length?[preceding.at(-1).name]:[]
    const selectedDonor=preceding.find(n=>selected.some(r=>r.donor===n.name))?.name
    if(selectedDonor&&/\b(?:gave|donated|provided)\b/i.test(text.slice(scope.start,f.at)))owners=[selectedDonor]
