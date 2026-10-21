@@ -1,5 +1,7 @@
 /** Source-record text only: no recipient facets, person links or identity keys. */
 import {dataTableHTML} from './datatable.js?v=5c09aecf9c';
+// Keep the shared numeric/CSV contract; only SA's visible zero cents are removed.
+const withoutZeroCents=value=>value.replace(/(\$[\d,]+)\.00(?=["<]|$)/g,'$1');
 export const saGrantsPhoneColumns=['recipient','year','amount'];
 export const saGrantsConfig=(rows,id)=>({
   id:'sa-grants-'+id,caption:'Published awards',pageType:'grants',urlKey:'sa'+id.slice(0,8),pageSize:10,rows,
@@ -17,7 +19,9 @@ export const saGrantsConfig=(rows,id)=>({
 });
 const phone={'Recipient':'recipient','Year':'year','Amount':'amount'};
 export function saGrantsTableHTML(config,page,url){
-  return dataTableHTML(config,page,url).replace(/<th\b([^>]*)>([\s\S]*?)<\/th>/g,(html,attrs,body)=>{
+  return dataTableHTML(config,page,url)
+  .replace(/<td\b[^>]*data-label="Amount"[^>]*>[\s\S]*?<\/td>/g,withoutZeroCents)
+  .replace(/<th\b([^>]*)>([\s\S]*?)<\/th>/g,(html,attrs,body)=>{
     const key=phone[body.replace(/<[^>]*>/g,'').trim()];
     return key?`<th${attrs} data-sa-grants-column="${key}">${body}</th>`:html;
   });
@@ -25,5 +29,10 @@ export function saGrantsTableHTML(config,page,url){
 export function decorateSAGrants(root){
   for(const th of root.querySelectorAll('thead th')){
     const key=phone[th.textContent.trim()];if(key)th.dataset.saGrantsColumn=key;
+  }
+  for(const cell of root.querySelectorAll('td[data-label="Amount"]')){
+    const value=cell.querySelector('.dt-value');
+    if(value)value.textContent=withoutZeroCents(value.textContent);
+    cell.title=withoutZeroCents(cell.title);
   }
 }

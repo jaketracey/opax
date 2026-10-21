@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync,statSync} from 'node:fs';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
-import {saGrantsConfig,saGrantsPhoneColumns} from '../public/sa-grants-table.js';
+import {saGrantsConfig,saGrantsPhoneColumns,decorateSAGrants} from '../public/sa-grants-table.js';
 import {toCSV,applyQuery} from '../public/datatable.js';
 
 const bundle=await build({entryPoints:[new URL('../src/sa-grants.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
@@ -26,8 +26,27 @@ test('server renders bounded historical awards, source receipt and shared table'
  assert.match(d.body.textContent,/not proof of payment/);
  for(const text of ['Source:','Dataset:','Resource:','Year:','Snapshot:','CC BY 4.0','SHA-256','Resource UUID:'])assert.ok(d.body.textContent.includes(text));
  assert.deepEqual(saGrantsPhoneColumns,['recipient','year','amount']);
- assert.equal(d.querySelector('[data-label="Amount"]').textContent,'$1,250.00');
+ assert.equal(d.querySelector('[data-label="Amount"]').textContent,'$1,250');
  assert.ok(d.querySelector('[data-sa-grants-column="year"]'));
+});
+
+test('whole dollars and published cents survive server rendering, enhancement and CSV',async()=>{
+ for(const [amount,display] of [[1250,'$1,250'],[1250.5,'$1,250.50'],[1250.75,'$1,250.75']]){
+  const h=fixture();
+  Object.assign(h.rows[0],{amount,amount_as_published:display});
+  Object.assign(h.documents[0].source_rows['CSV!2'],{amount,amount_as_published:display});
+  const d=new JSDOM((await page(h)).prerender).window.document;
+  const cell=d.querySelector('[data-label="Amount"]');
+  assert.equal(cell.textContent,display);assert.equal(cell.title,display);
+  // The shared table repaints exact money before the SA enhancement runs.
+  cell.querySelector('.dt-value').textContent='$'+amount.toLocaleString('en-AU',{minimumFractionDigits:2});
+  cell.title=cell.textContent;
+  decorateSAGrants(d);
+  assert.equal(cell.textContent,display);assert.equal(cell.title,display);
+  const rows=saGrantsRows(h),csv=toCSV(rows,saGrantsConfig(rows,id));
+  assert.ok(csv.includes(','+String(amount)+','));
+  assert.ok(csv.includes('"'+display+'"'));
+ }
 });
 
 test('private-person text stays in its record, with no identity links, facets or joins',async()=>{

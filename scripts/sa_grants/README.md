@@ -1,7 +1,7 @@
 # SA historical grants: stage only
 
 Status: **staged; review and promotion pending**. No public data asset is written.
-The independent reviewer must check the exact local input hashes and set the
+The independent reviewer must check the exact committed input hashes and set the
 review receipt before any explicit promotion. This lane stays outside nightly.
 
 `acquire.py` calls the SA budget acquisition engine with its own locked ledger,
@@ -25,14 +25,18 @@ python3 scripts/promote_hub_data.py sa-grants --dry-run --votes-reference 9c7dea
 
 The last command must reject `review: sa-grants` while the receipt is pending.
 Never change it to approved just to make a dry run succeed. Its input hashes
-include the exact local `series.jsonl` and `hub.json` plus inventory, receipts,
+include the exact committed `series.jsonl` and `hub.json` plus inventory, receipts,
 reconciliation and acquisition audit. A changed input invalidates approval.
 
-Source-record text may contain private names. `data/staged/sa-grants/series.jsonl`
-and `hub.json` are deliberately local and git-ignored; the committed inventory,
-receipts and review hashes carry no award text. Do not force-add these files.
-The local preview candidate is also private. Review on this Mac needs the
-retained originals and ignored files; a fresh clone alone cannot reproduce them.
+`data/staged/sa-grants/series.jsonl` and `hub.json` are committed as authorised
+source-record text under Jake's 19 October decision. Recipient names remain
+within these records; no person entities, recipient facets or identity joins
+are added. Commit messages, tests and fixtures contain no private names.
+Raw CSV/workbook bodies and the local preview candidate remain private.
+The [originals handoff](../../docs/coverage/sa-grants/report.md#originals-handoff)
+records the durable Mac cache, every retained SHA-256, an offline restore and a
+future re-acquisition command. A fresh clone has all six reviewable promotion
+inputs; reproducing the source audit also needs the hash-verified originals.
 `reviewed-staged` describes the file/row checks, not independent approval.
 
 The CSV parser preserves Windows-1252 text, exact source strings, resource UUID

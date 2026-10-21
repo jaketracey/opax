@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "source_commit": "b831e14c7190efa393864adae13a4b590fea3485",
+  "handoff_cache": "/Users/jake/Projects/opax-ios/portal/private/sa-grants/originals-b831e14c7",
+  "worktree_cache": "/Users/jake/Projects/opax-ios-wt/sa-grants/portal/private/sa-grants/acquisition",
+  "retained_bodies": [
+    {
+      "kind": "robots",
+      "url": "https://data.sa.gov.au/robots.txt",
+      "resource_id": null,
+      "sha256": "773fb8d35bb9a39d35335ee6db8dc5c912d2aacbfb823152d9c61cd647dd902d",
+      "bytes": 2027
+    },
+    {
+      "kind": "terms",
+      "url": "https://data.sa.gov.au/copyright",
+      "resource_id": null,
+      "sha256": "8311da111c19d22f63400b8ffd60c559d2e20a9d0c236f17bae1a56107868d7e",
+      "bytes": 22442
+    },
+    {
+      "kind": "dataset",
+      "url": "https://data.sa.gov.au/data/dataset/grants-sa-funded-projects-2016-2017",
+      "resource_id": null,
+      "sha256": "f71488542c8c04a8b954f62532028728283c37c33141e36f774b14306dee136b",
+      "bytes": 28290
+    },
+    {
+      "kind": "dataset",
+      "url": "https://data.sa.gov.au/data/dataset/premier-s-community-initiatives-fund",
+      "resource_id": null,
+      "sha256": "5b277282142f4f8f225608ac2c6cd4e2a82434eb880a0b950f2abc2dac1b3f75",
+      "bytes": 42011
+    },
+    {
+      "kind": "resource",
+      "url": "https://data.sa.gov.au/data/dataset/grants-sa-funded-projects-2016-2017/resource/0760d21e-8344-4462-b305-2f7f92f22f72",
+      "resource_id": "0760d21e-8344-4462-b305-2f7f92f22f72",
+      "sha256": "5b5d799ab9754a1a2cd694c1ab1a4c8bcd69fd4fdc2488e69bc877c80aa8bd6c",
+      "bytes": 26447
+    },
+    {
+      "kind": "resource",
+      "url": "https://data.sa.gov.au/data/dataset/grants-sa-funded-projects-2016-2017/resource/36f0af29-ef87-4793-a290-7061144e078f",
+      "resource_id": "36f0af29-ef87-4793-a290-7061144e078f",
+      "sha256": "35c4a50e870ef72182a7309007bc8a6c0b6b3bd10ed7ac2a22fd7470d2a6218e",
+      "bytes": 26615
+    },
+    {
+      "kind": "resource",
+      "url": "https://data.sa.gov.au/data/dataset/premier-s-community-initiatives-fund/resource/baec199e-2218-4f8d-b8fb-059e2c428a38",
+      "resource_id": "baec199e-2218-4f8d-b8fb-059e2c428a38",
+      "sha256": "3add1d42d095121f82007d9962d95e5df40ce5045a97b80fece7d26411b6b2b3",
+      "bytes": 21329
+    },
+    {
+      "kind": "resource",
+      "url": "https://data.sa.gov.au/data/dataset/premier-s-community-initiatives-fund/resource/3e3c5bf1-038f-4cf8-a712-9476cb5b595d",
+      "resource_id": "3e3c5bf1-038f-4cf8-a712-9476cb5b595d",
+      "sha256": "38089dadf047adaf75f58d97cd91fa123d05eb32af818858dc618a74f482a4f9",
+      "bytes": 21349
+    },
+    {
+      "kind": "resource",
+      "url": "https://data.sa.gov.au/data/dataset/premier-s-community-initiatives-fund/resource/bd96c82f-fa18-433a-8608-68c57d1eb05f",
+      "resource_id": "bd96c82f-fa18-433a-8608-68c57d1eb05f",
+      "sha256": "dc3ff35bace1579c51ed0ebb7e90028f1c14977b173da3dceb90c16a9e3e74ce",
+      "bytes": 21322
+    },
+    {
+      "kind": "resource",
+      "url": "https://data.sa.gov.au/data/dataset/premier-s-community-initiatives-fund/resource/f58e0329-b0af-4666-8a5f-11380fb3db8a",
+      "resource_id": "f58e0329-b0af-4666-8a5f-11380fb3db8a",
+      "sha256": "f9c048e3adacdfe37f30f5d5583c5d2e73d1ba009bd4e3db085e439b2ff3754d",
+      "bytes": 21329
+    },
+    {
+      "kind": "resource",
+      "url": "https://data.sa.gov.au/data/dataset/premier-s-community-initiatives-fund/resource/776a1e61-a44e-4239-a6af-c5c305c3adb7",
+      "resource_id": "776a1e61-a44e-4239-a6af-c5c305c3adb7",
+      "sha256": "bae229ee27acc1c957208945460060d8026f24874cc11dbac755755d376c4e99",
+      "bytes": 21329
+    },
+    {
+      "kind": "download",
+      "url": "https://data.sa.gov.au/data/dataset/a572374e-ebdd-4513-a224-f7e79f126431/resource/0760d21e-8344-4462-b305-2f7f92f22f72/download/grants-sa-funded-projects-2016-2017.csv",
+      "resource_id": "0760d21e-8344-4462-b305-2f7f92f22f72",
+      "sha256": "3eb9b520edcd60bde341e20bdf5c5111fe98bc2d8ae7e7c3367ef17d3eb0d084",
+      "bytes": 97699
+    },
+    {
+      "kind": "download",
+      "url": "https://data.sa.gov.au/data/dataset/a572374e-ebdd-4513-a224-f7e79f126431/resource/36f0af29-ef87-4793-a290-7061144e078f/download/ptemp-gov-hack-to-uploadcssd_open_data_2018grants-sa-funded-projects-2017-18.csv",
+      "resource_id": "36f0af29-ef87-4793-a290-7061144e078f",
+      "sha256": "70a175c9bc7e497cda0ea54459d2acdd21253e1e052344944c0858f64b33d063",
+      "bytes": 132648
+    }
+  ],
+  "successful_csvs": 2,
+  "retained_xls_files": 0,
+  "failed_bodies_retained": 0,
+  "verification": "All retained bodies matched acquisition receipt SHA-256 before and after handoff; no requests"
+}

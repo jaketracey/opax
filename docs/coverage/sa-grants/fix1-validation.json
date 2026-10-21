@@ -1,0 +1,70 @@
+{
+  "base_commit": "b831e14c7190efa393864adae13a4b590fea3485",
+  "status": "staged; review and promotion pending",
+  "source_requests": 0,
+  "network_policy": "OS denies all IP networking; browser uses one local file and Unix IPC only",
+  "payloads": {
+    "series.jsonl": "994d8f41d51c12609e1f117a600f8f80d9369bd6b4640bce1aa7ab0e00145e0f",
+    "hub.json": "ed7bdf62e7a7c321bf5ad90dda45e61058ac155034e7b22ee99793c7e07b471e"
+  },
+  "committed_promotion_inputs": true,
+  "raw_bodies_in_git": false,
+  "originals_handoff": "docs/coverage/sa-grants/originals-handoff.json",
+  "originals_verified": 13,
+  "fresh_source_audit": "pass; isolated input copy plus durable handoff",
+  "tests": {
+    "node_passed": 53,
+    "python_grants_passed": 12,
+    "python_budget_passed": 14,
+    "excluded": [
+      "D1 grants keeps source rows: unchanged local-network fixture excluded under no-network constraint"
+    ],
+    "tsc": "pass",
+    "check": "pass"
+  },
+  "dry_runs": {
+    "staging": "pass; zero writes",
+    "promoter": "expected pending-review denial; exit 1",
+    "fresh_source_audit": "pass"
+  },
+  "csv_byte_identical": true,
+  "csv_exports": [
+    {
+      "resource_id": "0760d21e-8344-4462-b305-2f7f92f22f72",
+      "awards": 318,
+      "sha256": "0dd386f7d87beef3b674ddca9a96343c36816a9f702e3912d0e0ac537d7021ff"
+    },
+    {
+      "resource_id": "36f0af29-ef87-4793-a290-7061144e078f",
+      "awards": 359,
+      "sha256": "beaef74f82ef01803e588177a8b0ca60478bf2d4070a4ff67c9ce90c0302f253"
+    }
+  ],
+  "phone": {
+    "render": "disk-only candidate; embedded styles, fonts and actual table enhancement",
+    "viewport": 390,
+    "page_width": 390,
+    "amount_right": 370,
+    "year_nowrap": true,
+    "whole_dollars": true,
+    "sort_repaint": true,
+    "external_requests": 0,
+    "http_requests": 0,
+    "file_requests": 1,
+    "errors": []
+  },
+  "screenshot_sha256": "d720064a98e2e8e658fea636576a11d19c2c0db0f00545ff15fffe90ff5b9809",
+  "gates": {
+    "promoter_dry_run": "expected review denial",
+    "promoter_exit": 1,
+    "public_asset_exists": false,
+    "votes_byte_identical": true,
+    "votes_sha256": "d89f34bd8acb440da2efe8364d147e51d0cb8737d5631bac091cd524fe9bf999",
+    "coverage_guards_byte_identical": true,
+    "review_hashes_match": true,
+    "source_requests": 0,
+    "receipts_byte_identical": true
+  },
+  "push": false,
+  "deploy": false
+}

@@ -772,7 +772,7 @@
       "reason": "Outside successful-award scope; no resource page, file or records acquired"
     }
   ],
-  "source_record_text": "Local ignored series.jsonl and hub.json; never committed",
+  "source_record_text": "Committed authorised source-record text in series.jsonl and hub.json; raw originals remain private",
   "counts": {
     "resources": 12,
     "selected": 7,

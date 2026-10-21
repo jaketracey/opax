@@ -106,12 +106,12 @@
     }
   },
   "screenshots": {
-    "390-table-crop.png": "b62961d73aabb1113e0a22bfe9a8315edcf3d9d8d4e2370529805db60d78d93f",
+    "390-table-crop.png": "d720064a98e2e8e658fea636576a11d19c2c0db0f00545ff15fffe90ff5b9809",
     "390-section.png": "d48d8d97aee9ea87d3abfc6676f22a6410540296b1d7ee6425d98da9ed5bbfb6",
     "1440-section.png": "2518e66d6708feb624ef070f207177ece45f7fed0d522220fba8bc3b94fa68e8"
   },
   "source_inputs": {
-    "inventory.json": "b93f56011c4e0e0133081679513ad5b0e9f2a4fbf17b161d3aed0e269afb188a",
+    "inventory.json": "43ae10afd836331ac6d506e6854ebe3141da45988f0aa307d5828d4e64b97a86",
     "receipts.json": "9f5a475c01bfe944c97fbc506dd5aa0d659964d0cc2b07ba706d0c145c21eb83",
     "series.jsonl": "994d8f41d51c12609e1f117a600f8f80d9369bd6b4640bce1aa7ab0e00145e0f",
     "reconciliation.json": "b03bcf9a31809c59ea1a0a7550cf417a42a203569d21d339cc58003a0bef1c47",
@@ -133,7 +133,7 @@
   "push": false,
   "deploy": false,
   "production_writes": false,
-  "source_record_text": "Local ignored staging only; no award text in commits",
+  "source_record_text": "Committed authorised source-record text; raw originals and preview candidate remain private",
   "csv_exports": [
     {
       "resource_id": "0760d21e-8344-4462-b305-2f7f92f22f72",
@@ -145,5 +145,6 @@
       "exported_awards": 359,
       "source_rows_match": true
     }
-  ]
+  ],
+  "fix1_validation": "fix1-validation.json"
 }

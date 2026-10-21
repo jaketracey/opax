@@ -2,7 +2,7 @@
   "status": "pending",
   "reviewed_commit": null,
   "inputs": {
-    "inventory.json": "b93f56011c4e0e0133081679513ad5b0e9f2a4fbf17b161d3aed0e269afb188a",
+    "inventory.json": "43ae10afd836331ac6d506e6854ebe3141da45988f0aa307d5828d4e64b97a86",
     "receipts.json": "9f5a475c01bfe944c97fbc506dd5aa0d659964d0cc2b07ba706d0c145c21eb83",
     "series.jsonl": "994d8f41d51c12609e1f117a600f8f80d9369bd6b4640bce1aa7ab0e00145e0f",
     "reconciliation.json": "b03bcf9a31809c59ea1a0a7550cf417a42a203569d21d339cc58003a0bef1c47",

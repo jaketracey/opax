@@ -74,7 +74,5 @@ portal/private/
 data/staged/bills-*/.acquire.lock
 data/staged/sa-budget/.acquire.lock
 
-# Historical SA grants source-record text remains local; no private names in git.
+# Historical SA grants acquisition lock; authorised source-record inputs are tracked.
 data/staged/sa-grants/.acquire.lock
-data/staged/sa-grants/series.jsonl
-data/staged/sa-grants/hub.json

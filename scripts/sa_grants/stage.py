@@ -106,7 +106,7 @@ def build():
             items.append(item)
             docs.append(item)
     hub=dict(schema=1,generated_at=ledger[-1]['snapshot'],documents=docs,rows=rows)
-    inventory=dict(schema=1,generated_at=hub['generated_at'],resources=items,source_record_text='Local ignored series.jsonl and hub.json; never committed',
+    inventory=dict(schema=1,generated_at=hub['generated_at'],resources=items,source_record_text='Committed authorised source-record text in series.jsonl and hub.json; raw originals remain private',
         counts=dict(resources=len(items),selected=len(docs),excluded=len(items)-len(docs),staged_awards=len(rows),held_files=sum(d['status']=='held' for d in docs)))
     audit=dict(requests=len(ledger),responses={str(s):sum(r['status']==s for r in ledger) for s in set(r['status'] for r in ledger)},
         minimum_completion_gap_seconds=min(gaps),overlaps=0,redirects_followed=0,host_stopped=any(host_stopped(r) for r in ledger),

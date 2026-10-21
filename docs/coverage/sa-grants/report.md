@@ -66,12 +66,13 @@ total. PCIF award counts, successful-sheet boundaries and totals cannot be
 reconciled without original files. Synthetic XLS tests are boundary guards,
 not evidence of a verified live XLS schema.
 
-Source-record text is retained locally in
-`data/staged/sa-grants/series.jsonl` and `hub.json`; both are intentionally
-**git-ignored**. Originals and the local projected `candidate.json` are private.
-This preserves the no-private-names-in-commits rule without altering the local
-source records. The committed inventory/receipts/review hashes contain no award
-text. A fresh clone alone is insufficient for this Mac-local review.
+`data/staged/sa-grants/series.jsonl` and `hub.json` are committed as authorised
+source-record text under Jake's 19 October decision. All 677 awards retain the
+same source strings, amounts and snapshot hashes as the reviewed candidate.
+Raw originals and the local projected `candidate.json` stay outside Git.
+Commit messages, tests and fixtures contain no private names. The six promotion
+inputs can now be reviewed from a fresh checkout; source-audit reproduction
+also requires the hash-verified originals described below.
 
 Recipients display as source-record text, including any private individual.
 There are no recipient entities, profiles, facets, person links, donor joins,
@@ -95,13 +96,90 @@ The engine's new configuration defaults leave existing budget acquisition scope
 unchanged; the grants wrapper rejects excluded resource UUIDs before transport.
 
 [Review receipt](../../../data/staged/sa-grants/review.json) is **pending** and
-records all six current input hashes, including both ignored local record files.
+records all six current input hashes, including both committed source-record files.
 `reviewed-staged` is a local file/row validation status, not independent approval.
 `scripts/promote_hub_data.py sa-grants` is explicit opt-in, outside the unchanged
 four default hubs. Its dry run rechecks originals and rejects the pending review
 with `FAIL sa-grants: review: sa-grants` (expected exit 1). No asset is written.
 Approval must identify the reviewed commit and exact input hashes. No approval
 was manufactured. A changed input invalidates the receipt.
+
+## Originals handoff
+
+Fix 1 commits both source-record payloads, with unchanged hashes:
+
+- `series.jsonl`: `994d8f41d51c12609e1f117a600f8f80d9369bd6b4640bce1aa7ab0e00145e0f`
+- `hub.json`: `ed7bdf62e7a7c321bf5ad90dda45e61058ac155034e7b22ee99793c7e07b471e`
+
+The original cache on this Mac is
+`/Users/jake/Projects/opax-ios-wt/sa-grants/portal/private/sa-grants/acquisition/`.
+A separate durable handoff, outside this worktree, is at
+`/Users/jake/Projects/opax-ios/portal/private/sa-grants/originals-b831e14c7/`.
+Each body has its SHA-256 as its basename. All **13 retained bodies** matched
+receipts before and after copying: two CSV originals and eleven robots,
+terms, dataset and resource-page snapshots. The two CSV SHA-256s are in the
+inventory table above; [the handoff manifest](originals-handoff.json) lists
+every retained body's exact SHA-256, URL, kind and byte count. No XLS original
+or failed-response body was retained. No raw body enters Git.
+
+From the root of a fresh checkout on this Mac, restore the private audit cache
+without any network request. Existing differing cache bytes cause a hold:
+
+```sh
+python3 - <<'PY'
+import hashlib, json
+from pathlib import Path
+manifest = json.loads(Path('docs/coverage/sa-grants/originals-handoff.json').read_text())
+source = Path(manifest['handoff_cache'])
+target = Path('portal/private/sa-grants/acquisition')
+target.mkdir(parents=True, exist_ok=True)
+for body in manifest['retained_bodies']:
+    data = (source / body['sha256']).read_bytes()
+    assert hashlib.sha256(data).hexdigest() == body['sha256']
+    destination = target / body['sha256']
+    if destination.exists():
+        assert destination.read_bytes() == data
+    else:
+        destination.write_bytes(data)
+print('13 source bodies verified and handed off locally')
+PY
+python3 -m scripts.sa_grants.check --dry-run
+```
+
+**Future re-acquisition command, documented but not run for fix 1.** It needs
+separate acquisition authorisation; this fix makes no network requests. Use a
+new private ledger, retain the original receipts, and request only previously
+successful source URLs in their recorded order. The shared engine enforces
+robots first, identifying user agent, delay, locking, no automatic redirects,
+licence/terms checks before downloads and persistent refusal stops. The five
+404 PCIF file URLs and all excluded resources are omitted. Changed CSV bytes
+require a new snapshot and review; fresh metadata bytes do not replace the old
+snapshot or establish an unchanged historical audit.
+
+```sh
+python3 - <<'PY'
+import fcntl, json
+from pathlib import Path
+from scripts.sa_budget.acquire import _acquire
+from scripts.sa_grants.acquire import ROOT, DATASETS
+receipts = json.loads((ROOT / 'data/staged/sa-grants/receipts.json').read_text())
+run = ROOT / 'portal/private/sa-grants/reacquisition'
+run.mkdir(parents=True, exist_ok=False)
+with (run / '.acquire.lock').open('a') as lock:
+    fcntl.flock(lock, fcntl.LOCK_EX)
+    for old in receipts:
+        if not old['body_retained']:
+            continue
+        current = _acquire(old['url'], old['kind'], stage=run,
+            cache=run / 'acquisition', datasets=DATASETS, download_cap=2,
+            allow_storage=True)
+        if current['status'] != 200 or not current['body_retained']:
+            raise SystemExit('HOLD: source unavailable; no ingest or promotion')
+        if old['kind'] == 'download' and current['sha256'] != old['sha256']:
+            raise SystemExit('HOLD: original CSV changed; new review required')
+print('Fresh source run retained privately; no ingest or promotion')
+PY
+```
 
 ## Web and app
 
@@ -166,3 +244,38 @@ Private evidence on this Mac:
 Committed [validation summary](validation.json), inventory, receipts,
 reconciliation and pending review receipt accompany this report. No push,
 deployment, nightly, production write or app build is claimed.
+
+## Fix 1: review changes and offline validation
+
+Both authorised source-record files are now tracked with their original hashes.
+Raw originals remain private, with the 13-body hash-verified durable handoff
+above. An isolated fresh input copy reproduced the 677-award source audit using
+only that handoff. No source receipt or award payload changed; only the
+inventory's storage description and its pending-review digest changed.
+
+SA table amounts now show whole dollars without `.00`, matching the federal
+individual-award style. Published nonzero cents remain, including `.50` and
+`.75`. The shared numeric/CSV contract is unchanged. Both real CSV exports are
+byte-identical to their pre-fix SHA-256s; synthetic checks cover whole dollars,
+nonzero cents, server HTML, browser repaint and CSV.
+
+Offline gates: **53 Node checks, 12 SA grants Python checks and 14 SA budget
+Python checks pass**. The unchanged `D1 grants keeps source rows` test requires
+local IP networking; an initial full-denial run aborted during that fixture's
+startup. It is excluded from the offline rerun, rather than permitting network
+access. `tsc --noEmit` and `npm run check` pass with all IP networking denied.
+The staging dry run passes. The promoter dry run still rejects pending review
+with expected exit 1; no public asset is written. Votes and both protected
+COVERAGE passages are byte-identical. No push, deploy or production write.
+
+The **390 table crop was retaken** from a disk-only rendering of the actual
+candidate renderer and bundled table enhancement, with embedded styles/fonts.
+Only a local file was requested; no HTTP or source request was made. The browser
+uses local Unix IPC while IP networking is denied by the OS. Amount remains
+visible through x=370, Year does not wrap, and sorting repaints whole-dollar
+amounts correctly. Screenshot: `portal/private/sa-grants/390-table-crop.png`.
+
+[Fix 1 validation](fix1-validation.json) records counts, hashes, the fixture
+exclusion, fresh-input reproduction, unchanged CSV bytes and browser evidence.
+Detailed logs are in `portal/private/sa-grants/fix1/`. Re-acquisition is documented
+only; it was not executed during this fix.
