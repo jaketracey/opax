@@ -317,7 +317,10 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   const publicQuestion = question.replace(/\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g, ' ').replace(/https?:\/\/\S+/gi, ' ')
   const q = ` ${normaliseQuestion(publicQuestion)} `
   const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
-  const records = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
+  const exported = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
+  // A bare indexed surname is an alias, not a full identity that may hide other people.
+  const fullSurnames=new Set(exported.filter(p=>typeof p.name==='string'&&p.name.trim().includes(' ')).map(p=>normaliseQuestion(p.name).split(' ').at(-1)!))
+  const records=exported.filter(p=>typeof p.name==='string'&&(p.name.trim().includes(' ')||!fullSurnames.has(normaliseQuestion(p.name))))
   const people: string[] = []
   // A lone surname is an ordinary word as often as a name ("nuclear power", "differ on"): when the
   // asker uses capitals at all, a one-word match must be capitalised as written in the roster.

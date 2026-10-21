@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {build} from 'esbuild'
 import {answerStyleChecks,gradeRow} from '../../scripts/research_eval_grade.mjs'
-const b=await build({stdin:{contents:"export * from './src/research-writing';export * from './src/research-response';export * from './src/research-loop';export {runAgentic} from './src/agentic-ask';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const b=await build({stdin:{contents:"export * from './src/research-writing';export * from './src/research-response';export * from './src/research-loop';export {runAgentic,extractNamedScope} from './src/agentic-ask';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
 const source=(resource,text,kind='record')=>({resource,slug:'',title:text,snippet:text,href:'https://example.org/records',url:'https://example.org/records',cited:true,kind})
 const fact=(id,text,kind='record')=>({id,text,source:source('f-'+id,text,kind)})
@@ -121,4 +121,10 @@ test('review rubric: comparison sides come from the question even if one side ha
 })
 test('review rubric: equal amounts for different metrics are distinct claims',()=>{
  assert.equal(answerStyleChecks('What did Avery Example receive?','Avery Example received $100,000 in salary. Avery Example received $100,000 in grants.').no_duplicates,'pass')
+})
+
+test('review actual ambiguity: a bare surname export cannot mask multiple full identities',()=>{
+ const roster={people:[{name:'Example'},{name:'Avery Example'},{name:'Blake Example'}]}
+ const named=api.extractNamedScope('How much was Example paid in 2005?',roster,{bills:[]})
+ assert.equal(named.ambiguous,true);assert.deepEqual(named.people,[])
 })
