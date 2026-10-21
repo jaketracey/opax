@@ -88,9 +88,10 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   if (rates.length) {
     const ranking=/highest|most|top/i.test(input.question), named=rates.filter(x=>input.question.toLowerCase().includes(x.r[1].toLowerCase()))
     const selected=ranking ? rates.filter(x=>!rates.some(y=>Number(y.r[2].replace(/[^0-9.]/g,''))>Number(x.r[2].replace(/[^0-9.]/g,'')) && y.r[4]<=x.r[5] && y.r[5]>=x.r[4])) : named.length ? named : rates.filter(x=>x.r[1]===rates[0].r[1])
-    const offices=[...new Set(selected.map(x=>x.r[3]))]
-    for(const office of offices) {
-      const group=selected.filter(x=>x.r[3]===office), names=[...new Set(group.map(x=>x.r[1]))], amounts=new Map<string,{since:string;until:string}>()
+    const offices=[...new Set(selected.map(x=>x.r[3]+'\0'+x.r[1]))].sort((a,b)=>Math.max(...selected.filter(x=>x.r[3]+'\0'+x.r[1]===b).map(x=>Number(x.r[2].replace(/[^0-9.]/g,''))))-Math.max(...selected.filter(x=>x.r[3]+'\0'+x.r[1]===a).map(x=>Number(x.r[2].replace(/[^0-9.]/g,'')))))
+    for(const officeKey of offices) {
+      const [office,name]=officeKey.split('\0')
+      const group=selected.filter(x=>x.r[3]===office&&x.r[1]===name), names=[...new Set(group.map(x=>x.r[1]))], amounts=new Map<string,{since:string;until:string}>()
       for(const {r} of group){const previous=amounts.get(r[2]);amounts.set(r[2],{since:previous&&previous.since<r[4]?previous.since:r[4],until:previous&&previous.until>r[5]?previous.until:r[5]})}
       const text=`${year?'In '+year+', ':''}${names.join(' and ')} ${names.length===1?'was':'were'} ${ranking?'the highest-paid federal parliamentarian'+(names.length>1?'s':'')+', ':''}${office}, with annual salary ${amounts.size>1?'rates':'entitlements'} of `+
         [...amounts].map(([amount,g])=>`${amount} from ${day(g.since)} to ${day(g.until)}`).join(' and ')+'.'
@@ -277,7 +278,8 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   if (/^(?:It\b|They\b|His\b|Her\b|This\b|That\b|Here|Based on|According to|The (?:data|records|tool|table|figures) show)/i.test(lines[0].text)) return null
   const quantitative=/\b(?:highest|lowest|most|least|largest|biggest|top|paid|salary|pay|cost|worth|contracts?|grants?)\b|\bhow (?:many|much)\b/i.test(input.question)
   const candidates=/suppliers?/i.test(input.question)&&input.facts.some(f=>/\/supplier\//.test(f.source.url))?input.facts.filter(f=>/\/supplier\//.test(f.source.url)):input.facts
-  const primary=quantitative?candidates.filter(f=>!f.coverage&&!f.metadata).flatMap(f=>(f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)).filter(a=>a.unit.startsWith('AUD')&&a.metric!=='base_salary'||a.unit==='count'&&/^(?:speeches|divisions)/.test(a.metric)).map(atom=>({fact:f,atom})))[0]:undefined
+  const primaries=quantitative?candidates.filter(f=>!f.coverage&&!f.metadata).flatMap(f=>(f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)).filter(a=>a.unit.startsWith('AUD')&&a.metric!=='base_salary'||a.unit==='count'&&/^(?:speeches|divisions)/.test(a.metric)).map(atom=>({fact:f,atom}))):[]
+  const primary=/highest|most.*paid|paid.*most/i.test(input.question)&&primaries.some(p=>p.atom.metric==='salary')?primaries.filter(p=>p.atom.metric==='salary').sort((a,b)=>Number(b.atom.value)-Number(a.atom.value))[0]:primaries[0]
   const containsHeadline=(line:WrittenSentence)=>!!primary&&!line.coverage&&tokens(line.text).includes(primary.atom.value)&&(!primary.atom.entity||line.text.includes(primary.atom.entity))
   let repairLead=!!primary&&!containsHeadline(lines[0])
   if(repairLead){const found=lines.findIndex(containsHeadline);if(found>0){lines.unshift(...lines.splice(found,1));repairLead=false}}

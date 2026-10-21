@@ -177,3 +177,12 @@ test('review units: a Census age cannot become a population with the same value'
  const fs=api.writingFacts(undefined,[{id:1,text,cite:{kind:'export',url:'https://example.org',label:text}}]);assert.equal(fs[0].atoms.find(a=>a.value==='51').unit,'years')
  const out=api.proseFallback({question:'Which electorate has the oldest median age?',period,facts});assert.match(out.answer,/Sample District.*median age.*51 years.*2021 Census \(ABS\)/)
 })
+
+test('review direct salary lead: the peak rate leads even when earlier rates were selected first',()=>{
+ const facts=[fact(1,'Avery Example: $340,704 a year as Prime Minister, 2010-01-01 to 2010-06-23; base $131,040 plus 160%.'),fact(2,'Blake Sample: $340,704 a year as Prime Minister, 2010-06-24 to 2010-07-31; base $131,040 plus 160%.'),fact(3,'Blake Sample: $353,704 a year as Prime Minister, 2010-08-01 to 2010-12-31; base $136,040 plus 160%.')]
+ const input={question:'Who was the highest paid politician in 2010?',period,facts}
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Earlier in the year, Avery Example and then Blake Sample each had a Prime Minister salary of $340,704 a year.',facts:[1,2]},{text:'The highest paid politician in 2010 was Blake Sample, whose Prime Minister salary was $353,704 a year from 2010-08-01 to 2010-12-31.',facts:[3]}]},input)
+ assert.match(out.answer.split('\n\n')[0],/highest paid.*Blake Sample.*353,704/)
+ assert.doesNotMatch(api.proseFallback(input).answer.split('\n\n')[0],/Avery Example/)
+ assert.match(api.proseFallback(input).answer.split('\n\n')[0],/Blake Sample.*353,704/)
+})
