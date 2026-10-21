@@ -252,8 +252,13 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({})) {
   const echo = /Coverage:|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||base \$[\d,]+ plus \d+(?:\.\d+)?%/i.test(answer)
   const first = sentences[0] ?? '', amountsInAnswer = amounts(answer)
   const figureAsked = /\b(?:highest|lowest|most|least|largest|biggest|top|salary|paid|grants?|contracts?|median|population)\b|\bhow (?:many|much)\b/i.test(question)
-  const firstAmount = !figureAsked || !amountsInAnswer.length || amounts(first).some(a => amountsInAnswer.some(b => a.v === b.v))
-  const direct = first.length > 12 && !/^(?:Here|Based on|According to|Coverage:|The (?:data|records|tool|table|figures) show)/i.test(first) && !/^\|/.test(answer) && firstAmount && /\b(?:is|are|was|were|has|have|had|received|recorded|gave|got|led|leads?|made|said|argued|supported|opposed|cannot|covers?|holds?|does|do|ranked|topped|earned|paid|provides?|start|Please|I|OPAX)\b/i.test(first)
+  const bodyFigures=plainNumbers(answer).filter(n=>!isYear(n)), firstFigures=plainNumbers(first).filter(n=>!isYear(n))
+  const firstAmount = !figureAsked || !amountsInAnswer.length&&!bodyFigures.length || amounts(first).length>0 || firstFigures.length>0
+  // Reject table rows and preambles, rather than whitelisting verbs ("rose" and "cited" are direct too).
+  const prefix=/^([^.!?]{1,110}):/.exec(first)?.[1]
+  const rowLike=!!prefix && !/\b(?:is|was|are|were|has|have|had)\b/i.test(prefix)
+  const direct = first.length > 12 && first.split(/\s+/).length>=5 && !/^(?:Here|Based on|According to|Coverage:|The (?:data|records|tool|table|figures) show)/i.test(first) && !/^\|/.test(answer) && !rowLike && !/:$/.test(first) && firstAmount
+
   return { no_tool_echo: echo ? 'fail' : 'pass', no_duplicates: duplicate || coverage.length > 1 ? 'fail' : 'pass', direct_first_sentence: direct ? 'pass' : 'fail' }
 }
 

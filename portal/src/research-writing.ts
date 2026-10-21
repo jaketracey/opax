@@ -234,7 +234,8 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   if(new Set(amounts).size!==amounts.length)return null
   // The opening must carry a subject and an available headline figure, not a generic preamble.
   if (/^(?:It\b|They\b|His\b|Her\b|This\b|That\b|Here|Based on|According to|The (?:data|records|tool|table|figures) show)/i.test(lines[0].text)) return null
-  const headline=input.facts.find(f=>!f.coverage && /\$[\d]|\d+ (?:speeches|divisions)/.test(f.text))
+  const quantitative=/\b(?:highest|lowest|most|least|largest|biggest|top|paid|salary|pay|cost|worth|contracts?|grants?)\b|\bhow (?:many|much)\b/i.test(input.question)
+  const headline=quantitative ? input.facts.find(f=>!f.coverage && /\$[\d]|\d+ (?:speeches|divisions)/.test(f.text)) : undefined
   if (headline && !tokens(lines[0].text).some(n=>tokens(headline.text).includes(n) && !/^\d{4}$/.test(n))) return null
   if (!coverage) {const limit=coverageSentence(input);if(limit)lines.push(limit)}
   return assemble(lines,input)

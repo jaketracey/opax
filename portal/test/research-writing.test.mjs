@@ -116,3 +116,9 @@ test('the rubric counts deterministic OPAX coverage declines honestly',()=>{
  assert.equal(gradeRow({question,expected:{kind:'answer'}},payload).axes.decline,'fail')
  assert.equal(gradeRow({question,expected:{kind:'decline'}},payload).axes.decline,'pass')
 })
+
+test('a qualitative record answer need not lead with an incidental asset value',()=>{
+ const text='Robin Example declared a shareholding in Fixture Company; the recorded asset value was $100,000.'
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Robin Example declared a shareholding in Fixture Company.',facts:[1]}]}, {question:'What interests has Robin Example declared?',period:{kind:'all',label:''},facts:[{id:1,text,source:source('interest-1',text)}]})
+ assert.match(out.answer,/^Robin Example declared/)
+});

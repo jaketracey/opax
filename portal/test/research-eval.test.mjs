@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { build } from 'esbuild'
-import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck } from '../../scripts/research_eval_grade.mjs'
+import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck, answerStyleChecks } from '../../scripts/research_eval_grade.mjs'
 import { parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -279,4 +279,12 @@ test('a plural-subject denial of causation is not an allegation',()=>{
 test('date days in both prose orders are not invented financial figures',()=>{
  assert.deepEqual(plainNumbers('Paid $277,602 until June 30, 2005 and $288,990 from July 1.'),[277602,2005,288990]);
  assert.deepEqual(plainNumbers('Paid $277,602 until 30 June 2005 and $288,990 from 1 July.'),[277602,2005,288990]);
+});
+
+test('direct prose can use rose or cited while a raw numeric row cannot',()=>{
+ assert.equal(answerStyleChecks('What was the salary?',"Robin Example's salary rose from $100,000 to $120,000.").direct_first_sentence,'pass');
+ assert.equal(answerStyleChecks('What did Robin Example say?','Robin Example cited the earlier housing reform as a precedent.').direct_first_sentence,'pass');
+ assert.equal(answerStyleChecks('What was the salary?','Robin Example: $100,000 annual salary.').direct_first_sentence,'fail');
+ assert.equal(answerStyleChecks('What was the salary?','Robin Example is the highest paid: $100,000 a year.').direct_first_sentence,'pass');
+ assert.equal(answerStyleChecks('Who spoke most and what did the funding cost?','Robin Example led with 9 speeches. The funding cost $10,000.').direct_first_sentence,'pass');
 });
