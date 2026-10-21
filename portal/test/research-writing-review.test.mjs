@@ -193,3 +193,9 @@ test('review rubric: salary ranking uses the peak selected rate rather than the 
  assert.equal(answerStyleChecks('Who was the highest paid politician in 2010?','In 2010 Blake Sample was the highest paid politician, earning $353,704 a year.',evidence).direct_first_sentence,'pass')
  assert.equal(answerStyleChecks('Who was the highest paid politician in 2010?','Avery Example was the highest paid politician in 2010, earning $340,704 a year.',evidence).direct_first_sentence,'fail')
 })
+
+test('review rubric: an explicit incomplete-period boundary is a direct coverage answer',()=>{
+ const answer="No politician's pay for 1990 can be identified, because OPAX's pay records only cover 1999-12-07 to 2026-10-19, so the period 1990-01-01 to 1990-12-31 is not fully covered."
+ const evidence={sources:[source('pay',"OPAX's pay records cover 1999-12-07 to 2026-10-19; the requested period 1990-01-01 to 1990-12-31 is not fully covered.",'pay')]}
+ assert.equal(answerStyleChecks('Who was the highest paid politician in 1990?',answer,evidence).direct_first_sentence,'pass')
+})
