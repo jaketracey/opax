@@ -114,3 +114,11 @@ test('review deadline: long selection leaves four seconds for the real writing h
  const research=Object.assign(async()=>{now+=10950;return {steps:[],results:[],selected:[],rounds:1,tokens:{input:0,output:0},costUsd:0,qualitative}},{writingWallMs:15000,write:async(input,stats,signal,ms)=>{remaining=ms;return api.proseFallback(input)}})
  try{const run=await api.runAgentic('What did Avery Example earn in 2005?',{research,generate:async()=>{throw Error('no planner')},asset:async()=>({}),kb:async()=>({})},undefined,40000,period,{},{people:[],parties:[],bills:[],ambiguous:false,unresolved:false});assert.equal(run.answered,true);assert.ok(remaining>=4000&&remaining<=4050,String(remaining))}finally{Date.now=previous}
 })
+test('review rubric: comparison sides come from the question even if one side has no selected evidence',()=>{
+ const q={question:'Compare Avery Example and Blake Sample on housing.',must:[{type:'required_components'}]}
+ const answer='Avery Example recorded 87 housing speeches.'
+ assert.equal(gradeRow(q,{answer,sources:[source('f','Avery Example: 87 housing speeches.')],citations:{'f/t/body/0':[[0,answer.length]]}}).axes.required_components,'fail')
+})
+test('review rubric: equal amounts for different metrics are distinct claims',()=>{
+ assert.equal(answerStyleChecks('What did Avery Example receive?','Avery Example received $100,000 in salary. Avery Example received $100,000 in grants.').no_duplicates,'pass')
+})

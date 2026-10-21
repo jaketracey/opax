@@ -252,7 +252,11 @@ const styleNormal=s=>fold(s).replace(/[^a-z0-9]+/g,' ').trim()
 function requiredComponents(q,answer,ev) {
   const rule=q.must?.find(c=>c.type==='required_components'),comparison=/\b(?:compar\w*|versus|vs|between|both)\b|this term.*last term|last term.*this term/i.test(q.question)||q.kind==='comparison'
   if(!rule&&!comparison)return 'n/a'
-  const rows=styleRows(ev),entities=rule?.entities??(comparison?[...new Set(rows.map(r=>r.entity))].slice(0,2):[])
+  const rows=styleRows(ev)
+  const named=[...q.question.matchAll(/\b[A-Z][\p{L}'’-]*(?:\s+[A-Z][\p{L}'’-]*)+\b/gu)].map(m=>m[0].replace(/^(?:Compare|Between|Both|How|What|Which|Is) /,''))
+  const parties=['Labor','Liberal','Greens','Nationals','One Nation'].filter(p=>new RegExp('\\b'+p+'\\b','i').test(q.question))
+  const requested=[...new Set([...named,...parties])].filter(n=>n.split(/\s+/).length>1||parties.includes(n))
+  const entities=rule?.entities??(comparison||rule?(requested.length>=2?requested:[...new Set(rows.map(r=>r.entity))].slice(0,2)):[])
   const figures=rule?.figures??(comparison||rule?.entities?rows.filter(r=>entities.includes(r.entity)).map(r=>r.value):[])
   const contains=s=>styleNormal(answer).includes(styleNormal(s))
   if(entities.some(e=>!contains(e))||figures.some(v=>!plainNumbers(answer).includes(Number(String(v).replace(/[$,]/g,'')))))return 'fail'
@@ -271,7 +275,11 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({}), r
     const entity=/^(?:In \d{4}(?:[–-]\d{2,4})?,?\s+)?(.+?)\s+(?:received|recorded|earned|had|has|was|were|spoke|gave)\b/i.exec(clause)?.[1]
     if(!entity)continue
     const period=(clause.match(/\b(?:19|20)\d{2}(?:[–-]\d{2,4})?\b/g)??[]).join('/')
-    for(const amount of amounts(clause)){const signature=styleNormal(entity)+'/'+period+'/'+amount.v;if(claims.has(signature))duplicate=true;claims.add(signature)}
+    const metric=(/salary|pay|earn/i.test(clause)?'salary':/grants?/i.test(clause)?'grants':/contracts?/i.test(clause)?'contracts':/speech|spoke/i.test(clause)?'speeches':/division|vote/i.test(clause)?'votes':'receipts')+'/'+(/housing|gambling|immigration|climate|tax(?:-budget)?|budget/i.exec(clause)?.[0]??'')
+    const unit=/per week|weekly/i.test(clause)?'week':/per month|monthly/i.test(clause)?'month':/a year|annual|per year/i.test(clause)?'year':''
+    const dated=(clause.match(/\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2} (?:January|February|March|April|May|June|July|August|September|October|November|December)(?: \d{4})?/g)??[]).join('/')
+    const values=amounts(clause).length?amounts(clause).map(a=>a.v):plainNumbers(clause).filter(n=>!isYear(n))
+    for(const value of values){const signature=styleNormal(entity)+'/'+metric+'/'+unit+'/'+(dated||period)+'/'+value;if(claims.has(signature))duplicate=true;claims.add(signature)}
   }
   const coverage=sentences.filter(s=>/^(?:Coverage:|OPAX.*(?:records|export)|Salary entitlements|These records)|\b(?:exclude[sd]? allowances|not allowances|records start|records cover|coverage (?:is|of))/i.test(s))
   const echo=/Coverage:|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||base \$[\d,]+ plus \d+(?:\.\d+)?%/i.test(answer)
