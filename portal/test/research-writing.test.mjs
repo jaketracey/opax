@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {build} from 'esbuild'
 import {MockLanguageModelV4} from 'ai/test'
-import {answerStyleChecks} from '../../scripts/research_eval_grade.mjs'
+import {gradeRow,answerStyleChecks} from '../../scripts/research_eval_grade.mjs'
 const bundled=await build({stdin:{contents:"export * from './src/research-writing'; export * from './src/research-writer'; export * from './src/research-response'; export {inferPeriod} from './src/agentic-ask';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
 const question='Who is the highest paid politician in 2005?',period=api.inferPeriod(question)
@@ -102,4 +102,15 @@ test('a full money calculation plus overlapping rows falls back without boilerpl
  assert.match(out.answer.split('\n')[0],/2005.*Example Party.*165,050/)
  assert.doesNotMatch(out.answer,/Explore these|unknown start|Financial years recorded|\|/)
  assert.ok(out.answer.split('\n\n').length<=3)
+})
+
+test('a calculator title containing its entire block does not turn its figures into coverage',()=>{
+ const answer=texts.join('\n\n'),selected={answer,citations:{'fact-1/t/body/0':[[0,answer.length]]},sources:[{...source('fact-1',answer),title:answer}]}
+ const sheet=api.writingFacts(selected)
+ assert.equal(sheet.filter(f=>!f.coverage).length,2);check(api.proseFallback({...input,facts:sheet}))
+})
+test('the rubric counts deterministic OPAX coverage declines honestly',()=>{
+ const payload={answer:'OPAX cannot establish the requested answer for 2005 from the selected records.',sources:[],citations:{}}
+ assert.equal(gradeRow({question,expected:{kind:'answer'}},payload).axes.decline,'fail')
+ assert.equal(gradeRow({question,expected:{kind:'decline'}},payload).axes.decline,'pass')
 })

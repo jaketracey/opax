@@ -30,7 +30,7 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     const ranges = Object.entries(answer.citations).filter(([id]) => id === source.resource || id.startsWith(source.resource+'/')).flatMap(([,ranges]) => ranges)
     const text = ranges.length && ranges.every(([a,b])=>b-a>3) ? ranges.map(([a,b]) => Array.from(answer.answer).slice(a,b).join('')).join('\n') : source.snippet
     for (const part of text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
-      const before=out.length;add(part, source, isCoverage(part) || source.resource==='coverage' || /coverage/i.test(source.title))
+      const before=out.length;add(part, source, isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
       if(out.length>before)out[out.length-1].evidenceId=Object.keys(answer.citations).find(id=>id===source.resource || id.startsWith(source.resource+'/'))
     }
   }
