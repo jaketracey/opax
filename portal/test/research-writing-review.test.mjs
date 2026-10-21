@@ -221,3 +221,9 @@ test('review rubric: equal term shares joined by while belong to distinct claims
  const answer='The 47th Parliament recorded 354 gambling speeches, 0.7% of 51096 topic-labelled speeches, while the 48th Parliament recorded 40 gambling speeches, also 0.7% of 5380 topic-labelled speeches.'
  assert.equal(answerStyleChecks('Compare gambling speeches in both parliaments.',answer).no_duplicates,'pass')
 })
+
+test('review rubric: an explicit unavailable chamber ranking is recognized as a decline',()=>{
+ const answer='The selected records do not identify who the highest paid senator in 2005 was, because this export does not date party or chamber changes and its roster labels cannot establish a historical party or chamber ranking.'
+ const q={question:'Who was the highest paid senator in 2005?',expected:{unanswerable:'Historical chamber changes are not dated.'},must:[{type:'mentions',any:['chamber']}]}
+ assert.equal(gradeRow(q,{answer,sources:[],citations:{}}).axes.decline,'pass')
+})

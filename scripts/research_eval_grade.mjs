@@ -308,7 +308,7 @@ const axisOf = (counts) => counts.fail ? 'fail' : counts.partial ? 'partial' : '
 export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) {
   const answer = String(payload?.answer ?? '')
   const answered = payload?.answered !== false && answer.trim().length > 0
-  const refusal = !answered || REFUSAL.test(answer)
+  const refusal = !answered || REFUSAL.test(answer) || /^(?:The )?(?:selected|retrieved) records do not (?:identify|establish)\b/i.test(answer)
   const ev = evidenceOf(payload)
   const cit = citationCheck(payload, answer, ev)
   const figures = figureCheck(answer, q.question, ev, cit.sentences, cit.covered)
