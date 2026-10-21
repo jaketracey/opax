@@ -33,7 +33,11 @@ wait for every in-flight result before selecting fact ids.
 
 `ask-constraints.ts` extracts period, jurisdiction, chamber, party, named people,
 place, superlatives and trend intent. Supported tool parameters are constrained
-before execution. Explicit filters and follow-up periods survive this boundary.
+before execution. An explicit question year overrides stale UI dates on both
+loop and ordinary fallback paths. Open-ended dates clear any stale opposite
+bound: `since`/`until` are inclusive and `after`/`before` exclude the named day
+(or whole named year). `between` includes both endpoints. ACT jurisdiction
+requires an unambiguous territory reference, not the ordinary word "act".
 Every tool result carries coverage dates/as-of, or explicitly unknown coverage.
 A mismatched result loses its figures and becomes a coverage-only fact. Census
 2021 cannot answer a 2005 demographic question as though it were contemporary.
@@ -72,6 +76,11 @@ lines on attribution, private people, causation and SA placeholders still drop
 points. Explicit date constraints are a hard boundary: the loop never cites a
 passage outside the requested window, and a tool with incompatible or unknown
 coverage can supply only a coverage explanation, not its current figures.
+Both requested and observed coverage must match, including calculated receipt
+answers. Receipt coverage uses financial-year starting-year keys explicitly;
+it does not claim calendar-year totals. Dated fallback and cached replay paths
+suppress unvalidated SSE deltas and release only the validated final answer.
+Progress events still stream immediately.
 
 The SA display omission label is never evidence. Intake cleans passage text,
 structured excerpts and prior assistant turns before either engine sees them,

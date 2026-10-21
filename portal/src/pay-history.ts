@@ -11,7 +11,7 @@ export function datedPay(pay: PayData, args: Record<string, unknown>): Structure
   const asOf = String(args.as_of ?? ''), year = /^\d{4}$/.test(asOf)
   const since = String(args.since ?? (year ? asOf + '-01-01' : asOf || pay.meta.as_of))
   const until = String(args.until ?? (year ? asOf + '-12-31' : asOf || pay.meta.as_of))
-  const coverage = { since: pay.meta.from, until: pay.meta.as_of, as_of: pay.meta.as_of, requested_since: since, requested_until: until }
+  const coverage = { since, until, available_since: pay.meta.from, available_until: pay.meta.as_of, as_of: pay.meta.as_of, requested_since: since, requested_until: until }
   const notes = ['Coverage: Federal parliamentary salary records start on 7 December 1999 and run to ' + pay.meta.as_of + '. Salary entitlements, not payslips; excludes electorate allowances, expenses, superannuation and outside income. Committee chair loadings are not counted. Party and chamber labels are the stored roster labels; historical affiliations and chamber changes are not dated in this export.']
   const limits = (text: string): StructuredToolResult => ({ rows: [], coverage: { ...coverage, matched: false }, citations: [{ kind: 'record', url: 'https://opax.com.au/methods', text }], notes })
   if (!validDate(since) || !validDate(until) || since > until) return limits('Please give a valid date or date range for the salary calculation.')
@@ -23,7 +23,7 @@ export function datedPay(pay: PayData, args: Record<string, unknown>): Structure
   for (const b of pay.base) if (b.from > since && b.from <= until) cuts.add(b.from)
   for (const p of Object.values(pay.people)) for (const spell of p.spells) for (const d of [spell[0], spell[1]]) if (d && d > since && d <= until) cuts.add(d)
   const dates = [...cuts].sort()
-  const rows: { name: string; post: string; pct: number; salary: number; since: string; until: string; base: number; assumed: boolean; source: string }[] = []
+  const rows: { name: string; post: string; pct: number; salary: number; since: string; until: string; base: number; assumed: boolean; source: string; uncertain?: boolean }[] = []
   const requested = Array.isArray(args.people) ? args.people.map(String) : args.person ? [String(args.person)] : []
   const groups = requested.map(name => Object.values(pay.people).filter(p => fold(name).split(' ').every(w => fold(p.name).split(' ').includes(w))))
   const matches = groups.flat()
@@ -37,10 +37,20 @@ export function datedPay(pay: PayData, args: Record<string, unknown>): Structure
       if (!spell || args.party && p.party !== args.party || args.chamber && p.chamber !== args.chamber) return []
       const [, , post, pct, , assumed] = spell
       if (args.office && !fold(post).includes(fold(String(args.office)))) return []
-      const ministerial = /minister|treasurer|attorney.general|parliamentary secretary/i.test(post) && !/shadow/i.test(post)
-      const salary = ministerial ? rounded(base.amount * (1 + pct / 100)) : base.amount + Math.ceil(Math.round(base.amount * pct / 100 * 1e6) / 1e6 / 10) * 10
-      return [{ name: p.name, post, pct, salary, since: date, until: end, base: base.amount, assumed: !!assumed, source: base.url ?? 'https://handbook.aph.gov.au/' }]
+      const ending = spell[1] ? previous(spell[1]) : pay.meta.as_of
+      const endBase = pay.base.filter(b => b.from <= ending).at(-1)!.amount
+      const officeRate = (amount: number) => amount + Math.ceil(Math.round(amount * pct / 100 * 1e6) / 1e6 / 10) * 10
+      // The export stores each spell's entitlement at its end. Use that rate
+      // and the registry's ministerial percentages to identify its rounding
+      // class. Shadow and summed parliamentary offices use the office rule.
+      const ministerial = !assumed && Object.values(pay.offices).some(o => o.kind === 'ministerial' && o.pct === pct) && rounded(endBase * (1 + pct / 100)) === spell[4]
+      const exact = rounded(base.amount * (1 + pct / 100)), office = officeRate(base.amount)
+      const officeClass = assumed || Object.values(pay.offices).some(o => o.kind !== 'ministerial' && o.pct === pct)
+      const uncertain = ministerial && officeClass && officeRate(endBase) === spell[4] && exact !== office
+      const salary = uncertain ? (args.order === 'asc' ? Math.min(exact, office) : Math.max(exact, office)) : ministerial ? exact : office
+      return [{ name: p.name, post, pct, salary, ...(uncertain ? { uncertain: true } : {}), since: date, until: end, base: base.amount, assumed: !!assumed, source: base.url ?? 'https://handbook.aph.gov.au/' }]
     }).sort((a, b) => (args.order === 'asc' ? a.salary - b.salary : b.salary - a.salary) || a.name.localeCompare(b.name)).slice(0, limit)
+    if (pool.some(row => row.uncertain)) return limits('The export does not distinguish the remuneration classification for a selected salary spell at this date. I cannot establish its exact rounding without that classification; no rate has been guessed.')
     for (const row of pool) {
       const last = [...rows].reverse().find(r => r.name === row.name)
       if (last && last.post === row.post && last.salary === row.salary && previous(row.since) === last.until) last.until = row.until

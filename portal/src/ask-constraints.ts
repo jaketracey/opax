@@ -6,7 +6,7 @@ export interface AskConstraints {
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}): AskConstraints {
   const q = question.toLowerCase()
-  const detected = String(filters.state || (/new south wales|\bnsw\b/.test(q) ? 'nsw' : /victoria|\bvic\b/.test(q) ? 'vic' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /western australia|\bwa\b/.test(q) ? 'wa' : /tasmania/.test(q) ? 'tas' : /\bact\b/.test(q) ? 'act' : /northern territory/.test(q) ? 'nt' : /federal|commonwealth/.test(q) ? 'federal' : '')) || undefined
+  const detected = String(filters.state || (/new south wales|\bnsw\b/.test(q) ? 'nsw' : /victoria|\bvic\b/.test(q) ? 'vic' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /western australia|\bwa\b/.test(q) ? 'wa' : /tasmania/.test(q) ? 'tas' : (/\bACT\b|\bA\.C\.T\.(?=\W|$)/.test(question) || /australian capital territory|\bcanberra (?:government|jurisdiction|territory)\b/i.test(question)) ? 'act' : /northern territory/.test(q) ? 'nt' : /federal|commonwealth/.test(q) ? 'federal' : '')) || undefined
   const jurisdiction = /\bfederal|commonwealth\b/.test(q) ? 'federal' : detected
   const locationState = detected && detected !== 'federal' ? detected : undefined
   const stateGovernment = /\b(?:state|queensland|qld|victorian?|nsw|south australian?) (?:government|grants?)\b/.test(q)
@@ -21,6 +21,8 @@ export function extractAskConstraints(question: string, period: Period, named: N
 export function constrainStep(step: PlanStep, c: AskConstraints, properties: Record<string, unknown>): PlanStep {
   const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k)
   if (c.dated) {
+    for (const key of ['since', 'from_year', 'from']) if (has(key) && !c.period.since) delete a[key]
+    for (const key of ['until', 'to_year', 'to']) if (has(key) && !c.period.until) delete a[key]
     if (has('since') && c.period.since) a.since = c.period.since
     if (has('until') && c.period.until) a.until = c.period.until
     if (has('from_year') && c.period.since) a.from_year = Number(c.period.since.slice(0, 4))
@@ -58,8 +60,11 @@ export function resultCoverage(result: ToolResult, step: PlanStep): Coverage {
 export function periodMatches(c: AskConstraints, coverage: Coverage): boolean {
   if (!c.dated) return true
   if (coverage.matched === false) return false
-  const since = coverage.requested_since ?? coverage.since, until = coverage.requested_until ?? coverage.until
-  return !!since && (!c.period.since || since >= c.period.since) && (!c.period.until || !!until && until <= c.period.until) && (!c.period.until || !since || since <= c.period.until)
+  const within = (since?: string | null, until?: string | null) => !!(since || until) &&
+    (!c.period.since || !!since && since >= c.period.since) && (!c.period.until || !!until && until <= c.period.until) &&
+    (!c.period.until || !since || since <= c.period.until) && (!c.period.since || !until || until >= c.period.since)
+  return within(coverage.since, coverage.until) &&
+    (!(coverage.requested_since || coverage.requested_until) || within(coverage.requested_since, coverage.requested_until))
 }
 export function guardToolPeriod(result: ToolResult, step: PlanStep, c: AskConstraints): ToolResult {
   const coverage = resultCoverage(result, step)

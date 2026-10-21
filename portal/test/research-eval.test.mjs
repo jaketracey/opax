@@ -256,3 +256,15 @@ test('a legacy evidence-gap refusal is recognised, and date formatting is not an
 test('gold fixture unanswerable reason strings expect a correct decline',()=>{
  assert.equal(gradeRow({question:'A missing profile?',expected:{unanswerable:'no_demographic_data'},must:[{type:'decline'}]},{answered:false,answer:'The record cannot establish that value.',sources:[]}).overall,'pass')
 })
+
+test('historical chamber limitations are graded as explicit declines',()=>{
+ const answer="The export does not date chamber changes. A historical chamber ranking cannot be established from its current roster labels."
+ assert.equal(gradeRow({question:'Highest paid senator in 2005?',expected:{unanswerable:'historical chamber membership unavailable'},must:[{type:'decline'}]},{answer,citations:{},sources:[]}).overall,'pass')
+})
+test('since constraints accept attributed dated evidence after the start without restating the boundary',()=>{
+ const payload={answer:'Taylor Example spoke about housing in 2022.',citations:{s:[[0,49]]},sources:[{resource:'s',kind:'speech',speaker:'Taylor Example',date:'2022-07-01',cited:true,snippet:'Taylor Example spoke about housing in 2022.'}]}
+ const question={question:'Housing since 2010?',must:[{type:'constraint',years:[2010],open_end:true}]}
+ assert.equal(gradeRow(question,payload).axes.constraints,'pass')
+ assert.equal(gradeRow(question,{...payload,sources:[{...payload.sources[0],date:'2009-07-01'}]}).axes.constraints,'fail')
+ assert.equal(gradeRow(question,{...payload,sources:[{...payload.sources[0],date:undefined}]}).axes.constraints,'fail')
+})

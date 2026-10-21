@@ -34,6 +34,13 @@ membership as a historical affiliation. Every tool reports its requested window,
 record coverage and export as-of date. Unsupported periods do not substitute
 current salaries. No change to `pay.json` or its schema is required.
 
+Historical rounding uses the exported office remuneration classes and the
+spell-ending entitlement, rather than words in the role title. If both classes
+fit that stored rate but imply different rates earlier in the spell, Ask states
+that the classification is unavailable instead of guessing. Regression checks
+reconcile all 2,716 spell-ending entitlements and all 226 current rows.
+
+
 ## Two sources, joined
 
 | What | Source | Licence |

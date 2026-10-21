@@ -230,6 +230,25 @@ test('the moved salary route keeps scraper blocks ahead of inference',async()=>{
  }finally{if(oldCf)Object.defineProperty(Request.prototype,'cf',oldCf);else delete Request.prototype.cf;}
  const response=await h.fetch('/api/ask',{method:'POST',headers:{'content-type':'application/json','user-agent':'Baiduspider-render'},body:JSON.stringify({question:'who is the highest paid politician in 2005'})});assert.equal(response.status,403);assert.equal(fake.doGenerateCalls.length,0);
 });
+test('failed research constrains ordinary money and senator fallbacks before calculation',async()=>{
+ h.env.RESEARCH_LOOP='route';const assets=h.env.ASSETS,limiter=h.env.MODEL_LIMITER;h.env.ASSETS=realAssets;h.env.MODEL_LIMITER={limit:async()=>({success:false})};
+ try{for(const stream of [false,true])for(const question of ['Who gets the most from mining in 2005?','Who was the highest paid senator in 2005?']){
+  const raw=await(await post(question,stream,{kind:'all',from:'2024',to:'2024',...(question.includes('senator')?{chamber:'senate'}:{})})).text()
+  assert.doesNotMatch(raw,/786,999|622,102|2024–25|Prime Minister/);assert.match(raw,/2005/)
+  if(question.includes('senator'))assert.match(raw,/does not date party or chamber changes/)
+  else assert.match(raw,/165,050/)
+  await flush()
+ }}finally{h.env.ASSETS=assets;h.env.MODEL_LIMITER=limiter}
+});
+test('a cached ordinary fallback replay never emits wrong-period answer text',async()=>{
+ h.env.RESEARCH_LOOP='route';const previousCaches=globalThis.caches,limiter=h.env.MODEL_LIMITER;
+ const cached={answer:'The current salary is $622,102.',sources:[{resource:'current-pay',href:'https://example.org/pay',kind:'pay',cited:true,date:'2026-10-19'}],citations:{'current-pay':[[0,32]]}}
+ let hits=0;globalThis.caches={default:{match:async k=>{if(new URL(k.url).pathname.includes('/ask/')){hits++;return Response.json(cached)}},put:async()=>{}}};h.env.MODEL_LIMITER={limit:async()=>({success:false})}
+ try{
+  const response=await h.fetch('/api/ask?stream=1',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:'What was the salary record in 2005?',kind:'speech'})})
+  const raw=await response.text();assert.equal(hits,1);assert.match(raw,/cached/);assert.match(raw,/coverage_only/);assert.doesNotMatch(raw,/622,102/);await flush()
+ }finally{globalThis.caches=previousCaches;h.env.MODEL_LIMITER=limiter}
+});
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
  for(const stream of [false,true]){

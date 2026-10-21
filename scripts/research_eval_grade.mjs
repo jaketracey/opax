@@ -38,7 +38,7 @@ const traceable = (n) => !isYear(n) && (n >= 10 || !Number.isInteger(n))
 const near = (a, b, tol = 0.05) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1)
 
 export const CAVEAT = /coverage|thin|gap|incomplete|missing|limited|understat|not (?:fully )?(?:covered|captured|complete)|only \d+ (?:federal )?(?:chamber )?speeches|record (?:holds|has) (?:few|only)|sparse/i
-export const REFUSAL = /^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:determined|answered)|is not possible to (?:determine|identify)|does not discuss/i
+export const REFUSAL = /^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:determined|answered)|(?:ranking|answer|total|rate) cannot be established|is not possible to (?:determine|identify)|does not discuss/i
 export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /** Sentences that deny causation are the required no-causation wording, not a breach. */
 const DENIAL = /\bnot (?:evidence|proof)\b|\bno evidence\b|does not (?:prove|show|establish|mean|imply)|is not proof|cannot be (?:inferred|read)/i
@@ -192,7 +192,7 @@ export function runCheck(c, ctx) {
       const to = c.open_end ? null : c.until ?? (c.years?.length ? String(Math.max(...c.years)) : null)
       const dates = ev.cited.filter(s => s.kind === 'speech').map(s => String(s.date ?? ''))
       const outside = dates.some(d => !d || from && d.slice(0,4) < String(from).slice(0,4) || to && d.slice(0,4) > String(to).slice(0,4))
-      return { status: !forbidden && !outside && (years || explicitLimit) ? 'pass' : 'fail', detail: forbidden ? 'substituted forbidden period' : outside ? 'source outside requested period' : 'period in answer or explicit coverage limit' }
+      return { status: !forbidden && !outside && (years || explicitLimit || c.open_end && dates.length > 0) ? 'pass' : 'fail', detail: forbidden ? 'substituted forbidden period' : outside ? 'source outside requested period' : c.open_end && dates.length ? 'dated evidence within open period' : 'period in answer or explicit coverage limit' }
     }
     case 'period': {
       const since = typeof payload?.period?.since === 'string' ? payload.period.since : null

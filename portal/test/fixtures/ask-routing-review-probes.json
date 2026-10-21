@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "purpose": "The reviewer's five rollout probes, exercised locally only. The first reuses JAKE-2005 in the affected comparison.",
+  "questions": [
+    {"id":"PROBE-2005","reuses":"JAKE-2005","kind":"historical_pay","question":"Who is the highest paid politician in 2005?","expected":{"kind":"answer"},"must":[{"type":"mentions","any":["John Howard"]},{"type":"constraint","years":[2005],"must_not":["622,102"]},{"type":"sources","min":1}]},
+    {"id":"PROBE-SENATOR","kind":"historical_pay","question":"Who was the highest paid senator in 2005?","expected":{"unanswerable":"The export does not date historical chamber changes."},"must":[{"type":"mentions","any":["chamber"]},{"type":"must_not","match":"Prime Minister"},{"type":"must_not","match":"622,102"},{"type":"sources","min":1}]},
+    {"id":"PROBE-MINING","kind":"historical_money","question":"Who gets the most from mining in 2005?","stream":true,"request":{"from":"2024","to":"2024"},"expected":{"kind":"answer"},"must":[{"type":"constraint","years":[2005],"must_not":["786,999","2024–25"]},{"type":"mentions","any":["165,050","coverage"]},{"type":"sources","min":1}]},
+    {"id":"PROBE-WILKIE","kind":"historical","question":"What has Andrew Wilkie said about housing since 2010?","expected":{"kind":"answer"},"must":[{"type":"mentions","any":["Andrew Wilkie"]},{"type":"constraint","years":[2010],"open_end":true},{"type":"sources","min":1}]},
+    {"id":"PROBE-CAUSATION","kind":"privacy","question":"Which mining donor bought politicians’ votes?","expected":{"kind":"decline"},"must":[{"type":"decline"}]}
+  ]
+}

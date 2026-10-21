@@ -243,6 +243,10 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const amount=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(cents/100)
   return {
     answer:matching?`The ${jurisdiction} records shown on Opax list ${amount} in disclosed party receipts for ${subject}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.`:'No matching receipts are shown in this selection and period. This does not establish that no funding occurred.',
+    period_coverage: { since: Number.isFinite(first) ? `${first}-01-01` : null, until: Number.isFinite(last) ? `${last}-12-31` : null,
+      as_of: typeof graph.meta.generated === 'string' ? graph.meta.generated.slice(0, 10) : null,
+      requested_since: from === undefined ? undefined : `${from}-01-01`, requested_until: to === undefined ? undefined : `${to}-12-31`,
+      matched: matching > 0, basis: 'financial_year_start', note: 'Years identify financial years by starting year, not calendar-year totals; only matching recorded receipts in the published selection.' },
     total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
     by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),

@@ -90,9 +90,9 @@ test('funding conversations replace party, industry, donor and financial year wi
  await follow('What about Tabcorp Holdings?',/Tabcorp.*\$87,300/s,p=>p.get('focus')==='donor:tabcorp'&&!p.has('industry')&&p.get('party')==='party:Liberal');
  await follow('And in 2021-22?',/Tabcorp.*\$87,500/s,p=>p.get('from')==='2021'&&p.get('to')==='2021'&&p.get('party')==='party:Liberal');
  const controlled=await ask('What about 2019-20?',{context:history(...turns),party:'Nationals',from:'2022',to:'2022'});
- assert.equal(controlled.answer_status,'calculated');assert.match(controlled.answer,/Tabcorp.*\$30,650/s);
- assert.match(controlled.money_context,/Financial years: 2022–23/);
- assert.ok(controlled.sources.some(s=>s.href.includes('party%3ANationals')&&s.href.includes('from=2022')));
+ assert.equal(controlled.answer_status,'calculated');assert.match(controlled.answer,/Tabcorp.*\$26,400/s);
+ assert.match(controlled.money_context,/Financial years: 2019–20/);
+ assert.ok(controlled.sources.some(s=>s.href.includes('party%3ANationals')&&s.href.includes('from=2019')));
 });
 
 test('unknown follow-up scope and relative years never reuse a stale winner',async()=>{
@@ -254,7 +254,7 @@ test('year comparisons exclude intermediate years and handle decreases',async()=
  assert.equal(unknown.answer_status,'needs_scope');assert.doesNotMatch(unknown.answer,/\$/);
 });
 
-test('year comparisons clarify conflicting filters, ambiguous years and multiple cohorts',async()=>{
+test('year comparisons honour explicit dates and clarify ambiguous years and multiple cohorts',async()=>{
  for(const q of ['Did Labor or Liberal receive more gambling money in 2020 than in 2021?','Compare gambling money for Labor and Liberal, 2020 vs 2021?','Compare gambling receipts in 2020 versus 2021']) {
   const r=await ask(q);assert.equal(r.answer_status,'needs_scope',q);assert.doesNotMatch(r.answer,/\$/);
  }
@@ -262,7 +262,7 @@ test('year comparisons clarify conflicting filters, ambiguous years and multiple
   const r=await ask(q);assert.equal(r.answer_status,'needs_period',q);assert.doesNotMatch(r.answer,/\$/);
  }
  const filters=await ask('How did gambling receipts to Labor change from 2020 to 2021?',{from:'2022',to:'2024'});
- assert.equal(filters.answer_status,'needs_period');assert.match(filters.answer,/filters differ/);
+ assert.equal(filters.answer_status,'calculated');assert.match(filters.money_context,/2020–21.*2021–22/);assert.doesNotMatch(filters.answer,/2024–25/);
  const missing=await ask('Compare gambling receipts to Labor in 1900 versus 2021');
  assert.equal(missing.answer_status,'evidence_gap');assert.doesNotMatch(missing.answer,/\$0|received.*more/);
 });
@@ -460,7 +460,7 @@ test('comparison canonical questions retain UI periods and survive truncated con
   assert.match(last.money_question,/Labor or Liberal/);
  }
  const controlled=await ask('And in 2021–22?',{context:history(last.money_question),from:'2022',to:'2022'});
- assert.deepEqual(controlled,await ask(seed,{from:'2022',to:'2022'}));
+ assert.deepEqual(controlled,await ask(seed,{from:'2021',to:'2021'}));
  assert.deepEqual(await ask(controlled.money_question),controlled);
 });
 
@@ -573,3 +573,9 @@ test('compound party names retain distinct federal identities and reject unsuppo
   const r=await ask(q);assert.equal(r.answer_status,'needs_scope',q);assert.deepEqual(r.sources,[]);assert.doesNotMatch(r.answer,/\$[\d,]+/);
  }
 });
+
+test('an explicit ranking year beats stale UI dates and reports actual calculated coverage',async()=>{
+ const r=await ask('Who gets the most from mining in 2005?',{from:'2024',to:'2024'})
+ assert.doesNotMatch(r.answer,/786,999|2024–25/)
+ assert.ok(r.answer_status!=='calculated'||r.coverage?.requested_since==='2005-01-01')
+})

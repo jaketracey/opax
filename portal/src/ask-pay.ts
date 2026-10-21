@@ -430,9 +430,10 @@ export async function paidAnswer(input: RecordQuestion, assets: Fetcher) {
   const question = input.question || ''
   const data = await loadPay(assets)
   const period = inferPeriod(question)
-  if (period.since || input.from || input.to || input.since || input.until) {
+  if (period.kind === 'window') input = { ...input, from: undefined, to: undefined, since: period.since, until: period.until }
+  if (period.since || period.until || input.from || input.to || input.since || input.until) {
     const people = peopleNamed(question, data)
-    const result = datedPay(data, { since: period.since || input.since || (input.from ? `${input.from}-01-01` : undefined), until: period.until || input.until || (input.to ? `${input.to}-12-31` : undefined) || data.meta.as_of,
+    const result = datedPay(data, { jurisdiction: input.state || 'federal', chamber: input.chamber || (/\bsenat(?:e|ors?)\b/i.test(question) ? 'senate' : /house of representatives/i.test(question) ? 'representatives' : undefined), party: input.party, since: period.since || input.since || (input.from ? `${input.from}-01-01` : data.meta.from), until: period.until || input.until || (input.to ? `${input.to}-12-31` : undefined) || data.meta.as_of,
       ...(people.length ? { people: people.map(p => p.name) } : {}), ...(PARTIES.find(p => p.pattern.test(question)) ? { party: PARTIES.find(p => p.pattern.test(question))!.label } : {}),
       ...(POSTS.find(p => p.office && p.pattern.test(question)) ? { office: POSTS.find(p => p.office && p.pattern.test(question))!.label } : {}),
       order: LOWEST.test(question) ? 'asc' : 'desc', limit: Math.max(1, people.length) })

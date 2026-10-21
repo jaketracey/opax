@@ -72,3 +72,37 @@ test('a named state government is kept distinct from the location of federal gra
  assert.equal(api.constrainStep({tool:'grants',args:{}},constraints('Queensland government grants'),properties).args.jurisdiction,'qld')
  assert.equal(api.constrainStep({tool:'grants',args:{}},constraints('federal grants in Queensland'),properties).args.jurisdiction,'federal')
 })
+
+test('historical rates reconcile all 2716 spell-ending entitlements in the export',()=>{
+ let count=0
+ for(const p of Object.values(pay.people))for(const spell of p.spells){
+  const date=spell[1]?new Date(Date.parse(spell[1])-86400000).toISOString().slice(0,10):pay.meta.as_of
+  assert.equal(api.datedPay(pay,{person:p.name,as_of:date}).rows[0]?.salary,spell[4],`${spell[2]} ending ${date}`);count++
+ }
+ assert.equal(count,2716)
+})
+test('ACT jurisdiction needs a territory reference, never ordinary act or a statute title',()=>{
+ for(const q of ['Why did parliament act on housing?','How did MPs vote on the Climate Change Act 2022?','What happened in Canberra yesterday?'])assert.equal(constraints(q).jurisdiction,undefined,q)
+ for(const q of ['ACT housing grants','A.C.T. housing grants','Australian Capital Territory housing grants','Canberra government grants'])assert.equal(constraints(q).jurisdiction,'act',q)
+})
+test('ISO dates and years preserve since, after, before, until and between semantics',()=>{
+ for(const [q,since,until] of [
+  ['since 2005-07-01','2005-07-01',undefined],['after 2005-07-01','2005-07-02',undefined],['before 2005-07-01',undefined,'2005-06-30'],['until 2005-07-01',undefined,'2005-07-01'],['between 2005-07-01 and 2010-06-30','2005-07-01','2010-06-30'],
+  ['since 2005','2005-01-01',undefined],['after 2005','2006-01-01',undefined],['before 2005',undefined,'2004-12-31'],['until 2005',undefined,'2005-12-31'],['between 2005 and 2010','2005-01-01','2010-12-31']
+ ]){const p=api.inferPeriod('Speeches '+q);assert.equal(p.since,since,q);assert.equal(p.until,until,q)}
+})
+
+test('open date constraints remove stale opposite tool bounds and validate observed coverage too',()=>{
+ for(const q of ['since 2005-07-01','before 2005-07-01']){
+  const c=constraints(q),s=api.constrainStep({tool:'search',args:{since:'2024-01-01',until:'2024-12-31'}},c,{since:{},until:{}})
+  assert.equal(s.args.since,c.period.since);assert.equal(s.args.until,c.period.until)
+ }
+ assert.equal(api.periodMatches(constraints('before 2005'),{since:'1999-12-07',until:'2004-12-31',as_of:'2026-10-19'}),true)
+ assert.equal(api.periodMatches(constraints('in 2005'),{since:'2024-01-01',until:'2024-12-31',requested_since:'2005-01-01',requested_until:'2005-12-31',matched:true}),false)
+})
+test('rounding follows exported remuneration evidence regardless of the role title',()=>{
+ const synthetic={...pay,base:[{from:'1999-12-07',amount:207100}],people:{synthetic:{name:'Taylor Example',spells:[['2018-08-27','2018-09-01','Synthetic executive role',35,279585]]}}}
+ assert.equal(api.datedPay(synthetic,{person:'Taylor Example',as_of:'2018-08-27'}).rows[0].salary,279585)
+ const ambiguous={...synthetic,base:[{from:'1999-12-07',amount:207100},{from:'2018-08-30',amount:208000}],people:{synthetic:{name:'Taylor Example',spells:[['2018-08-27','2018-09-01','Synthetic role',75,364000]]}}}
+ const r=api.datedPay(ambiguous,{person:'Taylor Example',as_of:'2018-08-27'});assert.equal(r.coverage.matched,false);assert.match(r.citations[0].text,/classification/)
+})

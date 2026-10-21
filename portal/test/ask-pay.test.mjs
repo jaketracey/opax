@@ -119,3 +119,10 @@ test('all historical salary steps remain in a shared source snippet with full cl
   for(const line of lines){assert.ok(r.sources.some(s=>s.snippet.includes(line)),line);const start=Array.from(r.answer.slice(0,r.answer.indexOf(line))).length;assert.ok(Object.values(r.citations).flat().some(([a,b])=>a<=start&&b>=start+Array.from(line).length),line);}
  }
 });
+
+test('historical senator ranking preserves explicit and question chamber constraints',async()=>{
+ for(const filters of [{},{chamber:'senate'},{party:'Labor'}]){
+  const r=await ask('Who was the highest paid senator in 2005?',filters)
+  assert.equal(r.coverage.matched,false);assert.match(r.answer,/does not date party or chamber changes/);assert.doesNotMatch(r.answer,/Prime Minister|\$[\d,]+/)
+ }
+})

@@ -6401,7 +6401,9 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     if (request.signal.aborted) return json({ error: 'The request was cancelled.', research }, 503)
     if (loopRoute) { budget.dispose(); budget = new AskDeadline(90_000, request.signal) }
     try { return await budget.run(async () => {
-      const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, undefined, budget, quotaTaken)
+      const period = agenticPeriod(input, true)
+      const fallbackInput = loopRoute && period.kind !== 'all' ? { ...input, from: period.since?.slice(0, 4), to: period.until?.slice(0, 4), since: period.since, until: period.until } : undefined
+      const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, fallbackInput as AskInput | undefined, budget, quotaTaken)
       const safe = loopRoute && response.status === 504 ? new Response(response.body, { status: 503, headers: response.headers }) : response
       // Ordinary RAG consumption is observed for operator evals. Otherwise,
       // keep total usage unknown; per-turn telemetry still describes the loop.

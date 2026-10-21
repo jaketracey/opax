@@ -31,16 +31,24 @@ export function inferPeriod(question: string, override?: unknown): Period {
   if (/\bthis term\b/.test(q) && /\blast term\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], label: 'Counting speeches in the current and previous parliaments, since July 2022.' }
   if (override === 'current' || /\b(?:this|current) (?:term|parliament)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
   if (/\blast (?:term|parliament)\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], until: TERMS['47th'][1]!, label: 'Counting speeches in the previous parliament, July 2022 to March 2025.' }
-  // A year in a bill's title is not a request to restrict speech history.
-  const dates = [...q.matchAll(/\b((?:19|20)\d{2}-\d{2}-\d{2})\b/g)].map(m => m[1]).sort()
-  if (dates.length) return { kind: 'window', since: dates[0], until: dates.at(-1), label: `Records from ${dates[0]} to ${dates.at(-1)}.` }
-  const years = [...q.replace(/\bbill\s+(?:19|20)\d{2}\b/g, 'bill').matchAll(/\b((?:19|20)\d{2})(s)?\b/g)]
-  if (years.length) {
-    const sorted = years.map(m => Number(m[1])).sort((a, b) => a - b)
-    const since = `${sorted[0]}-01-01`
-    const open = /\bsince\b/.test(q) && years.length === 1 && !years[0][2]
-    const until = open ? undefined : `${sorted.at(-1)! + (years.at(-1)![2] ? 9 : 0)}-12-31`
-    return { kind: 'window', since, until, label: `Counting speeches from ${since}${until ? ` to ${until}` : ' onwards'}.` }
+  // A bill/statute title's year is not a date filter on its debate history.
+  const dated = q.replace(/\b(?:bill|act)\s+(?:19|20)\d{2}\b/g, '')
+  const tokens = [...dated.matchAll(/\b((?:19|20)\d{2})(-\d{2}-\d{2}|s)?\b/g)]
+  if (tokens.length) {
+    const bounds = tokens.map(m => ({
+      start: m[2]?.startsWith('-') ? m[0] : `${m[1]}-01-01`,
+      end: m[2]?.startsWith('-') ? m[0] : `${Number(m[1]) + (m[2] === 's' ? 9 : 0)}-12-31`,
+    })).sort((a, b) => a.start.localeCompare(b.start))
+    let since: string | undefined = bounds[0].start, until: string | undefined = bounds.at(-1)!.end
+    const prefix = dated.slice(0, tokens[0].index).match(/\b(since|from|after|before|until|through)\s*$/)?.[1]
+    const shift = (date: string, days: number) => new Date(Date.parse(date) + days * 86400000).toISOString().slice(0, 10)
+    if (tokens.length === 1) {
+      if (prefix === 'since' || prefix === 'from') until = undefined
+      else if (prefix === 'after') { since = shift(until, 1); until = undefined }
+      else if (prefix === 'before') { until = shift(since, -1); since = undefined }
+      else if (prefix === 'until' || prefix === 'through') since = undefined
+    }
+    return { kind: 'window', ...(since ? { since } : {}), ...(until ? { until } : {}), label: `Records from ${since ?? 'the start of the record'} to ${until ?? 'the present'}.` }
   }
   if (/\b(?:is|are)\s+(?:\S+\s+){0,4}(?:making|speaking|debating|discussing|talking)\b|\b(?:speaks|says|mentions|debates|discusses)\b|\b(?:is|are)\s+(?:\S+\s+){0,3}(?:debated|discussed)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
   return { kind: 'all', label: 'Counting speeches across the whole record.' }
