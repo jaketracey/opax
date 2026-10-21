@@ -15,30 +15,44 @@ const positiveAct = (tokens, i, text) => {
   )
 }
 
+function* titleSegments(text) {
+  let start = 0
+  for (const m of text.matchAll(/[.?!;:\r\n]/g)) {
+    // A title's abbreviated Act. and its year belong to the same segment.
+    if (m[0] === '.' && /\bact$/i.test(text.slice(start, m.index)) && /^[ \t]*\d{4}\b/.test(text.slice(m.index + 1))) continue
+    yield { text: text.slice(start, m.index), start }
+    start = m.index + 1
+  }
+  yield { text: text.slice(start), start }
+}
+
 export function territoryAfterStatutes(question, titles = null) {
-  const tokens = words(question), spans = []
-  if (titles !== null) {
-    const dated = tokens.filter(w => !/^\d{4}$/.test(w.key))
-    for (let i = 0; i < dated.length; i++) if (dated[i].key === 'act') {
-      // Longest exact title first: the preceding 1–8 words plus Act.
-      for (let n = Math.min(8, i); n >= 1; n--) {
-        if (titles.has(dated.slice(i - n, i + 1).map(w => w.key).join(' '))) {
-          spans.push([dated[i - n].start, dated[i].end])
-          break
+  const spans = []
+  for (const { text, start } of titleSegments(question)) {
+    const tokens = words(text), exclude = (from, to) => spans.push([start + from, start + to])
+    if (titles !== null) {
+      const dated = tokens.filter(w => !/^\d{4}$/.test(w.key))
+      for (let i = 0; i < dated.length; i++) if (dated[i].key === 'act') {
+        // Longest exact title first: the preceding 1–8 words plus Act, within this segment.
+        for (let n = Math.min(8, i); n >= 1; n--) {
+          if (titles.has(dated.slice(i - n, i + 1).map(w => w.key).join(' '))) {
+            exclude(dated[i - n].start, dated[i].end)
+            break
+          }
         }
       }
     }
-  } else {
-    // Only unavailable title data enables the old capitalized-title heuristic.
-    // Positive territory syntax protects List ACT senators/elections here too.
-    for (const m of question.matchAll(/\baustralian capital territory(?:\s+\([^)]*\))?\s+act\b(?:\s+\d{4})?/gi)) spans.push([m.index, m.index + m[0].length])
-    for (const m of question.matchAll(/\b(?:\p{Lu}[\p{L}\p{N}'’()-]*\s+)+[Aa][Cc][Tt]\b/gu)) {
+    // Explicit statute syntax still counts when the catalogue lacks the title.
+    for (const m of text.matchAll(/\baustralian capital territory(?:\s+\([^)]*\))?\s+act\b/gi)) exclude(m.index, m.index + m[0].length)
+    for (const m of text.matchAll(/\b(?:\p{Lu}[\p{L}\p{N}'’()-]*\s+)+(?:\([^)]*\)\s+)?[Aa][Cc][Tt]\b/gu)) {
       const end = m.index + m[0].length, index = tokens.findIndex(w => w.end === end)
-      if (index >= 0 && !positiveAct(tokens, index, question)) spans.push([m.index, end])
+      const dated = /^\.?\s*\d{4}\b/.test(text.slice(end)), parenthesized = /\([^)]*\)/.test(m[0])
+      // Undated capitalized phrases are a heuristic only when title data is unavailable.
+      if ((titles === null || dated || parenthesized) && index >= 0 && (parenthesized || !positiveAct(tokens, index, text))) exclude(m.index, end)
     }
-    for (const m of question.matchAll(/\bact\s+\d{4}\b/gi)) {
+    for (const m of text.matchAll(/\bact\.?\s+\d{4}\b/gi)) {
       const index = tokens.findIndex(w => w.start === m.index)
-      if (index >= 0 && !positiveAct(tokens, index, question)) spans.push([m.index, m.index + m[0].length])
+      if (index >= 0 && !positiveAct(tokens, index, text)) exclude(m.index, m.index + m[0].length)
     }
   }
   // Match offsets are UTF-16 offsets. Spaces preserve unrelated word boundaries.

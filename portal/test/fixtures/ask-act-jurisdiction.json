@@ -23,5 +23,7 @@
  {"question":"the ACT government discussed the climate change ACT 2022","jurisdiction":"act"},
  {"question":"ACT Labor results","jurisdiction":"act"},
  {"question":"ACT MLAs","jurisdiction":"act"},
- {"question":"ACT electorate divisions","jurisdiction":"act"}
+ {"question":"ACT electorate divisions","jurisdiction":"act"},
+ {"question":"What did MPs say about climate change? ACT senators' statements, please.","jurisdiction":"act"},
+ {"question":"What changed under the Australian Capital Territory (Self-Government) Act 1988?","jurisdiction":null}
 ]

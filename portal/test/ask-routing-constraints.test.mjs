@@ -108,7 +108,8 @@ test('rounding follows exported remuneration evidence regardless of the role tit
 })
 
 test('statute titles do not select ACT, including uppercase and undated title forms',()=>{
- for(const q of [
+ const known=new Set(JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url))).titles)
+ for(const titles of [known,null])for(const q of [
   'How did MPs vote on the Climate Change ACT 2022?',
   'How did MPs vote on the climate change act 2022?',
   'How did MPs vote on the Climate Change Act 2022?',
@@ -120,7 +121,7 @@ test('statute titles do not select ACT, including uppercase and undated title fo
   'What changed under the Australian Capital Territory (Self-Government) Act 1988?',
   'What changed under the Privacy ACT?',
  ]){
-  const c=constraints(q),step=api.constrainStep({tool:'search',args:{}},c,{state:{},jurisdiction:{}})
+  const c=api.extractAskConstraints(q,api.inferPeriod(q),empty,{},titles),step=api.constrainStep({tool:'search',args:{}},c,{state:{},jurisdiction:{}})
   assert.equal(c.jurisdiction,undefined,q);assert.equal(step.args.state,undefined,q)
  }
 })

@@ -241,3 +241,18 @@ test('research loads shipped titles before its constraints reach search',async()
   await f.run(question);assert.equal(reads,1);assert.equal(observed.jurisdiction,jurisdiction)
  }
 })
+
+test('research keeps ACT across clauses and excludes self-government statutes with or without its catalogue',async()=>{
+ const {readFileSync}=await import('node:fs')
+ const titles=JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url)))
+ for(const catalogue of [titles,null])for(const [question,jurisdiction]of [
+  ["What did MPs say about climate change? ACT senators' statements, please.",'act'],
+  ['What changed under the Australian Capital Territory (Self-Government) Act 1988?',undefined],
+ ]){
+  let observed,reads=0
+  const f=fixtures(model([reply([call('search',{query:'housing'})]),reply([call('decline',{reason:'ambiguous'})])]),{searchBody:(_q,_n,context)=>{observed=context.constraints.jurisdiction;return {query:'housing'}}})
+  f.deps.asset=async path=>{if(path==='/ask-statute-titles.json'){reads++;return catalogue}return null}
+  await f.run(question);assert.equal(reads,1)
+  assert.equal(observed,jurisdiction,question)
+ }
+})

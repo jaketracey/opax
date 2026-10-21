@@ -40,9 +40,12 @@ bound: `since`/`until` are inclusive and `after`/`before` exclude the named day
 uses exact statute identity before positive territory syntax. `build:ask-titles`
 derives `/ask-statute-titles.json` from shipped bill short titles, linked Act
 titles and the FRL instrument title index, normalized without case or years.
-A preceding 1–8 words plus Act matching this list is a statute. Only explicit
-territory patterns (the full name, A.C.T., the ACT, ACT plus a jurisdiction noun,
-or for/in/from ACT) constrain retrieval. Bare or otherwise ambiguous ACT stays
+A preceding 1–8 words plus Act matching this list is a statute, within a single
+sentence or clause (`.?!;:`, or a newline, ends the segment; `Act.` followed by
+a year stays together). Generic dated and parenthesized statute-title exclusions
+also apply when the catalogue loads, including the territory's Self-Government
+Act. Only explicit territory patterns (the full name, A.C.T., the ACT, ACT plus a
+jurisdiction noun, or for/in/from ACT) constrain retrieval. Bare or otherwise ambiguous ACT stays
 unfiltered. The agent still sees the original question.
 
 Only questions containing Act need the local title asset. Its load is bounded

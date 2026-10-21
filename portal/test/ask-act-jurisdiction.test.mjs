@@ -10,14 +10,46 @@ const rows=JSON.parse(readFileSync(new URL('./fixtures/ask-act-jurisdiction.json
 const scope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
 const titleFile=JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url)))
 const known=new Set(titleFile.titles)
-for(const row of rows)test(`ACT jurisdiction table: ${row.question}`,()=>{
- const c=api.extractAskConstraints(row.question,api.inferPeriod(row.question),scope,{},known)
+for(const row of rows)for(const [catalogue,titles] of [['present',known],['absent',null]])test(`ACT jurisdiction table (${catalogue}): ${row.question}`,()=>{
+ const c=api.extractAskConstraints(row.question,api.inferPeriod(row.question),scope,{},titles)
  const search=api.constrainStep({tool:'search',args:{}},c,{state:{},since:{},until:{}})
  assert.equal(c.jurisdiction,row.jurisdiction??undefined)
  assert.equal(search.args.state,row.jurisdiction??undefined)
  if(row.since){assert.equal(search.args.since,row.since);assert.equal(search.args.until,row.until)}
 })
 
+test('statute titles cannot cross any sentence or clause boundary, including in the heuristic fallback',()=>{
+ for(const titles of [known,null])for(const boundary of ['.','?','!',';',':','\n','\r\n']){
+  const question=`What did MPs say about Climate Change${boundary} ACT senators' statements, please.`
+  const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
+  assert.equal(c.jurisdiction,'act',JSON.stringify(boundary))
+  assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,'act',JSON.stringify(boundary))
+ }
+})
+test('an Act abbreviation followed by a year stays inside a statute title segment',()=>{
+ for(const titles of [known,null])for(const question of [
+  'What changed under the Australian Capital Territory Act. 1988?',
+  'What changed under the Australian Capital Territory (Self-Government) Act. 1988?',
+  'Climate Change Act. 2022; ACT senators discussed housing.',
+ ]){
+  const expected=question.startsWith('Climate')?'act':undefined
+  const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
+  assert.equal(c.jurisdiction,expected,question)
+  assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,expected,question)
+ }
+})
+test('generic dated and parenthesized statute exclusions supplement a loaded catalogue',()=>{
+ for(const titles of [known,null])for(const suffix of ['Example Act 1888','Example (Self-Government) Act']){
+  const title=`Australian Capital Territory ${suffix}`
+  assert.equal(known.has(normaliseStatuteTitle(title)),false,'synthetic title is absent from the real catalogue')
+  for(const [prefix,expected] of [['What changed under the ',undefined],['ACT senators discussed the ','act']]){
+   const question=prefix+title+'?'
+   const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
+   assert.equal(c.jurisdiction,expected,question)
+   assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,expected,question)
+  }
+ }
+})
 
 test('the title asset is derived exactly from shipped bill and FRL title metadata',()=>{
  assert.deepEqual(titleFile,statuteTitleFile())
