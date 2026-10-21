@@ -42,6 +42,9 @@ test('r3 a named donor cannot borrow a receipt with an unknown donor',()=>{
  const input=payload('Avery Example donated $100,000 to Labor.',[speech])
  assert.ok(auditPayload('Who donated the money?',input).findings.length)
 })
+test('r3 a purpose after the amount cannot replace a named receipt subject',()=>{
+ for(const answer of ['Avery Example was given $100,000 to fund Labor.','Avery Example received $100,000 to support Labor.'])assert.ok(auditPayload('Who received the money?',payload(answer,[speech])).findings.length)
+})
 test('r3 explicit first-person financial evidence can establish the speaker as recipient or donor',()=>{
  for(const [answer,snippet]of [['Avery Example was paid $100,000.','I was paid $100,000.'],['Avery Example donated $100,000 to Labor.','I donated $100,000 to Labor.']])assert.equal(auditPayload('What did the record say?',payload(answer,[{...speech,snippet}])).findings.length,0)
  assert.ok(auditPayload('What did the record say?',payload('Avery Example was paid $100,000.',[{...speech,snippet:'I was not paid $100,000.'}])).findings.length)

@@ -74,6 +74,11 @@ function amountOwners(text,f,known=[]){
  const exactNames=part=>mentions(part,known.map(n=>typeof n==='string'?n:n.surface)).map(n=>({...n,name:known.find(k=>(typeof k==='string'?k:k.surface)===n.name)?.name??n.name}))
  if(['years','months'].includes(f.unit))return []
  const before=text.slice(0,f.at).split(/[.!?;]\s+/).at(-1),after=text.slice(f.end)
+ // Receipt subjects remain recipients even when a later 'to' phrase states a purpose.
+ const receipt=[...before.matchAll(/\b(?:receiv(?:ed|es|ing|e)|secur(?:ed|es|ing|e)|got|won|earn(?:ed|s|ing)?|(?:was|were|been)\s+(?:paid|given|awarded))\b/gi)].at(-1)
+ if(receipt){const actors=known.length?exactNames(before.slice(0,receipt.index)):nounPhrases(before.slice(0,receipt.index)),actor=actors.at(-1)
+  if(actor&&/^\s*(?:\w+ly\s*)*$/.test(before.slice(actor.end,receipt.index)))return [actor.name]
+ }
  // An explicit object after 'to' owns a receipt, regardless of who uttered it.
  const target=f.unit==='count'?'(?:to|for)':'to'
  const to=new RegExp('^\\s*(?:dollars?\\s+)?(?:(?:was|were)\\s+)?(?:(?:paid|awarded|given|donated)\\s+)?'+target+'\\s+(?:the\\s+)?([^.;]+?)(?=\\s+in\\s+(?:19|20)\\d{2}|$|[.;])','i').exec(after)?.[1]
