@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {build} from 'esbuild'
 import {gradeRow} from '../../scripts/research_eval_grade.mjs'
+import {auditPayload} from '../../scripts/research_eval_audit.mjs'
 const bundled=await build({stdin:{contents:"export * from './src/research-response';export * from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
 const forbidden=/\b(?:tools?|lookups?|calculators?|unknown[- ]range|coverage tools?|pipeline)\b/i
@@ -58,4 +59,17 @@ test('acceptance SSE: a clean completion cannot authorize different unsafe delta
  const wire='event: delta\ndata: '+JSON.stringify({text:'The unknown-range coverage tool returned this.'})+'\n\nevent: done\ndata: '+JSON.stringify(clean)+'\n\n'
  const out=await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}))).text()
  assert.doesNotMatch(out,/event: delta|unknown-range|coverage tool/)
+})
+test('acceptance repair: conjunctions inside a rejected quotation cannot leave half a quote',async()=>{
+ const answer='Avery Example cited $100,000, and said “The planets and the stars are money”.'
+ const input={answer,citations:{'s/t/body/0':[[0,answer.length]]},sources:[{...source('s','There was $100,000. I oppose the bill.'),kind:'speech',speaker:'Avery Example'}]}
+ const out=await(await api.withAnswerLanguage(Response.json(input),'What did Avery Example say?')).json()
+ assert.match(out.answer,/100,000/);assert.doesNotMatch(out.answer,/planets|stars|[“”]/)
+ assert.equal(auditPayload('What did Avery Example say?',out).findings.length,0)
+})
+test('acceptance repair: a deleted opening does not leave a dangling recipient fragment',async()=>{
+ const answer=', and the Example Party.\n\nAvery Example received $100,000.'
+ const input={answer,citations:{'s/t/body/0':[[0,answer.length]]},sources:[source('s','Avery Example: $100,000.')]}
+ const out=await(await api.withAnswerLanguage(Response.json(input),'What did Avery Example receive?')).json()
+ assert.match(out.answer,/^Avery Example received/)
 })

@@ -2,14 +2,14 @@
 export const ANSWER_INTERNAL_LANGUAGE = /\b(?:tools?|lookups?|calculators?|unknown[- ]range|coverage tools?|data pipeline|(?:our|the) pipeline|pipeline|not yet (?:been )?(?:imported|ingested|indexed|loaded|fetched)|(?:been|being|was|were|are|is) (?:imported|ingested|backfilled)|imported for|ingest(?:ed|ion|ing)?|backfill(?:ed|ing|s)?|still being fetched|being fetched|fixture data|seed data|normali[sz]ed (?:title|name|text)|while indexing|currently indexing|indexing runs|coming soon|record type|indexed speech(?:es)?|speeches indexed|passages indexed|documents indexed|not yet indexed|indexed contests?|labelling pass|the labeller|pending exact export|in this release|(?:PDF )?body held|held PDF bod(?:y|ies)|held with the PDF|uncleared copyright)\b/i
 
 /** Edit only answer text, retaining source text and remapping code-point citations. */
-export function rewriteAnswerPayload<T extends Record<string, unknown>>(payload:T,transform:(replace:(pattern:RegExp,replacement:string|((match:string)=>string))=>void)=>void):T {
+export function rewriteAnswerPayload<T extends Record<string, unknown>>(payload:T,transform:(replace:(pattern:RegExp,replacement:string|((match:string)=>string))=>void)=>void,protectQuotes=false):T {
   if(typeof payload.answer!=='string')return payload
   const original=payload.answer
   let chars=Array.from(original),origins=chars.map((_,i)=>i)
   const replace=(pattern:RegExp,replacement:string|((match:string)=>string))=>{
     const text=chars.join(''),matches=[...text.matchAll(pattern)]
     for(const match of matches.reverse()){
-      const quotes=[...text.matchAll(/[“"]([^”"]+)[”"]|(?<![\p{L}])[‘']([^’']+)[’'](?![\p{L}])/gu)]
+      const quotes=protectQuotes?[...text.matchAll(/[“"]([^”"\n]+)[”"]|(?<![\p{L}])[‘']([^’'\n]+)[’'](?![\p{L}])/gu)]:[]
       if(quotes.some(q=>match.index!>q.index!&&match.index!+match[0].length<q.index!+q[0].length))continue
       const from=Array.from(text.slice(0,match.index)).length,n=Array.from(match[0]).length
       const value=Array.from(typeof replacement==='string'?replacement:replacement(match[0])),old=origins.slice(from,from+n)
@@ -38,6 +38,10 @@ export function rewriteAnswerPayload<T extends Record<string, unknown>>(payload:
 }
 
 export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T):T {
+  const unbalanced=(s:string)=>(s.match(/"/g)??[]).length%2!==0||(s.match(/“/g)??[]).length!==(s.match(/”/g)??[]).length
+  if(typeof payload.answer==='string'&&unbalanced(payload.answer))payload=rewriteAnswerPayload(payload,replace=>{
+    replace(/[^\n]+/g,paragraph=>unbalanced(paragraph)?paragraph.split(/(?<=[.!?])\s+/).filter(sentence=>!unbalanced(sentence)).join(' '):paragraph)
+  })
   return rewriteAnswerPayload(payload,replace=>{
   replace(/,\s*(?:and|so)\s+[^.!?;\n]*\b(?:tools?|lookups?|calculators?|unknown[- ]range|pipeline)\b[^.!?\n]*(?:[.!?]|$)/gi,m=>/\d/.test(m)?m:'.')
   // Never silently alter a literal quotation. Drop its sentence if it cannot be displayed.
@@ -57,6 +61,12 @@ export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T)
   replace(/(?<!\.)\.\.(?!\.)/g,'.')
   replace(/[ \t]{2,}/g,' ')
   replace(/\n(?:[ \t]*\n){2,}/g,'\n\n')
-  replace(/^\s+|\s+$/g,'')
+  replace(/(?:^|\n\n)[^\n]+(?=\n\n|$)/g,m=>{
+    const text=m.trim()
+    if(!/^(?:[,;.]|and\b|but\b|while\b|because\b)/i.test(text))return m
+    if(!/\d|\b(?:is|are|was|were|has|have|had|said|says|received|recorded|earned|gave|gives|cited|cannot|do|does|will|would|could|should|limits|compares)\b/i.test(text))return ''
+    return m.replace(/^(\n\n)?[,;. ]+/,'$1')
   })
+  replace(/^\s+|\s+$/g,'')
+  },true)
 }
