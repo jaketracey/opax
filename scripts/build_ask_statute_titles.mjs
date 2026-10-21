@@ -5,14 +5,14 @@ import {dirname,join,resolve} from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {normaliseStatuteTitle} from '../portal/src/ask-statute-titles.mjs'
 const PUBLIC=resolve(dirname(fileURLToPath(import.meta.url)),'../portal/public')
-export function statuteTitleFile(root=PUBLIC){
+export function shippedStatuteTitles(root=PUBLIC){
  const titles=new Set(),sources=[]
  const add=title=>{
   if(typeof title!=='string')return
   // An Act's own short title, or the leading named Act in an instrument title.
   // The remaining instrument qualifier is not part of the statute's identity.
   const match=/^(.+?\bAct)(?:\s+\d{4}\b|$)/i.exec(title.trim())
-  if(match){const name=normaliseStatuteTitle(match[1]);if(name.endsWith(' act'))titles.add(name)}
+  if(match)titles.add(match[1])
  }
  const index=JSON.parse(readFileSync(join(root,'bills/index.json'),'utf8'))
  sources.push({path:'/bills/index.json',records:index.bills.length})
@@ -34,7 +34,12 @@ export function statuteTitleFile(root=PUBLIC){
   for(const row of data.records)add(row[column])
   sources.push({path:'/instruments/index.json',records:data.records.length})
  }
- return {schema:1,sources,count:titles.size,titles:[...titles].sort()}
+ return {sources,titles:[...titles]}
+}
+export function statuteTitleFile(root=PUBLIC){
+ const {sources,titles:raw}=shippedStatuteTitles(root)
+ const titles=[...new Set(raw.map(normaliseStatuteTitle))].sort()
+ return {schema:1,sources,count:titles.length,titles}
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const data=statuteTitleFile(),file=join(PUBLIC,'ask-statute-titles.json'),text=JSON.stringify(data)+'\n'

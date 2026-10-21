@@ -247,6 +247,9 @@ test('research keeps ACT across clauses and excludes self-government statutes wi
  const titles=JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url)))
  for(const catalogue of [titles,null])for(const [question,jurisdiction]of [
   ["What did MPs say about climate change? ACT senators' statements, please.",'act'],
+  ['While MPs debated climate change, ACT senators discussed housing.','act'],
+  ['While MPs debated climate change—ACT senators discussed housing.','act'],
+  ['While MPs debated climate change–ACT senators discussed housing.','act'],
   ['What changed under the Australian Capital Territory (Self-Government) Act 1988?',undefined],
  ]){
   let observed,reads=0

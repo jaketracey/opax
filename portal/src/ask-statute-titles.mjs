@@ -15,26 +15,38 @@ const positiveAct = (tokens, i, text) => {
   )
 }
 
-function* titleSegments(text) {
+export function* statuteTitleSegments(text) {
   let start = 0
-  for (const m of text.matchAll(/[.?!;:\r\n]/g)) {
+  const brackets = []
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i]
+    if (char === '(' || char === '[') { brackets.push(char); continue }
+    if (char === ')' || char === ']') {
+      if (brackets.at(-1) === (char === ')' ? '(' : '[')) brackets.pop()
+      continue
+    }
+    if (brackets.length) continue
+    const boundary = '.?!;:,\r\n—–'.includes(char) || char === '-' && /\s/.test(text[i - 1] ?? '') && /\s/.test(text[i + 1] ?? '')
+    if (!boundary) continue
     // A title's abbreviated Act. and its year belong to the same segment.
-    if (m[0] === '.' && /\bact$/i.test(text.slice(start, m.index)) && /^[ \t]*\d{4}\b/.test(text.slice(m.index + 1))) continue
-    yield { text: text.slice(start, m.index), start }
-    start = m.index + 1
+    if (char === '.' && /\bact$/i.test(text.slice(start, i)) && /^[ \t]*\d{4}\b/.test(text.slice(i + 1))) continue
+    yield { text: text.slice(start, i), start }
+    start = i + 1
   }
   yield { text: text.slice(start), start }
 }
 
-export function territoryAfterStatutes(question, titles = null) {
+export function scopeAfterStatutes(question, titles = null) {
   const spans = []
-  for (const { text, start } of titleSegments(question)) {
+  // The catalogue, rather than a fixed word limit, bounds exact title matches.
+  const maxTitleWords = titles?.size ? Math.max(...Array.from(titles, title => title.split(' ').length)) : 0
+  for (const { text, start } of statuteTitleSegments(question)) {
     const tokens = words(text), exclude = (from, to) => spans.push([start + from, start + to])
     if (titles !== null) {
       const dated = tokens.filter(w => !/^\d{4}$/.test(w.key))
       for (let i = 0; i < dated.length; i++) if (dated[i].key === 'act') {
-        // Longest exact title first: the preceding 1–8 words plus Act, within this segment.
-        for (let n = Math.min(8, i); n >= 1; n--) {
+        // Longest exact title first, entirely within this segment.
+        for (let n = Math.min(maxTitleWords - 1, i); n >= 1; n--) {
           if (titles.has(dated.slice(i - n, i + 1).map(w => w.key).join(' '))) {
             exclude(dated[i - n].start, dated[i].end)
             break
@@ -59,8 +71,13 @@ export function territoryAfterStatutes(question, titles = null) {
   const clean = question.split('')
   for (const [start, end] of spans) for (let i = start; i < end; i++) clean[i] = ' '
   const text = clean.join(''), remaining = words(text)
-  return /\baustralian capital territory\b/i.test(text) || /\bA\.C\.T\.(?=\W|$)/i.test(text) ||
+  const territory = /\baustralian capital territory\b/i.test(text) || /\bA\.C\.T\.(?=\W|$)/i.test(text) ||
     remaining.some((w, i) => w.key === 'act' && positiveAct(remaining, i, text))
+  return { text, territory }
+}
+
+export function territoryAfterStatutes(question, titles = null) {
+  return scopeAfterStatutes(question, titles).territory
 }
 
 export async function loadStatuteTitles(asset, signal, timeoutMs = 500) {

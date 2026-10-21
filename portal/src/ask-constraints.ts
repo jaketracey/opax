@@ -1,4 +1,4 @@
-import { territoryAfterStatutes } from './ask-statute-titles.mjs'
+import { scopeAfterStatutes } from './ask-statute-titles.mjs'
 import type { Period, NamedScope, PlanStep } from './agentic-ask'
 import type { ToolResult } from './agentic-tools'
 export interface AskConstraints {
@@ -7,11 +7,11 @@ export interface AskConstraints {
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
   const q = question.toLowerCase()
-  const territory = territoryAfterStatutes(question, statuteTitles)
-  const detected = String(filters.state || (/new south wales|\bnsw\b/.test(q) ? 'nsw' : /victoria|\bvic\b/.test(q) ? 'vic' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /western australia|\bwa\b/.test(q) ? 'wa' : /tasmania/.test(q) ? 'tas' : territory ? 'act' : /northern territory/.test(q) ? 'nt' : /federal|commonwealth/.test(q) ? 'federal' : '')) || undefined
-  const jurisdiction = /\bfederal|commonwealth\b/.test(q) ? 'federal' : detected
+  const { text, territory } = scopeAfterStatutes(question, statuteTitles), jurisdictionText = text.toLowerCase()
+  const detected = String(filters.state || (/new south wales|\bnsw\b/.test(jurisdictionText) ? 'nsw' : /victoria|\bvic\b/.test(jurisdictionText) ? 'vic' : /queensland|\bqld\b/.test(jurisdictionText) ? 'qld' : /south australia|\bsa\b/.test(jurisdictionText) ? 'sa' : /western australia|\bwa\b/.test(jurisdictionText) ? 'wa' : /tasmania/.test(jurisdictionText) ? 'tas' : territory ? 'act' : /northern territory/.test(jurisdictionText) ? 'nt' : /federal|commonwealth/.test(jurisdictionText) ? 'federal' : '')) || undefined
+  const jurisdiction = /\bfederal|commonwealth\b/.test(jurisdictionText) ? 'federal' : detected
   const locationState = detected && detected !== 'federal' ? detected : undefined
-  const stateGovernment = /\b(?:state|queensland|qld|victorian?|nsw|south australian?) (?:government|grants?)\b/.test(q)
+  const stateGovernment = /\b(?:state|queensland|qld|victorian?|nsw|south australian?) (?:government|grants?)\b/.test(jurisdictionText)
   const chamber = String(filters.chamber || (/\bsenat(?:e|ors?)\b/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : '')) || undefined
   const party = String(filters.party || (named.parties.length === 1 ? named.parties[0] : '')) || undefined
   const place = /\b(?:electorate|seat) of ([A-Z][\p{L}'-]*(?: [A-Z][\p{L}'-]*)*)/u.exec(question)?.[1]?.trim()

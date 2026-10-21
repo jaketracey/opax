@@ -25,5 +25,9 @@
  {"question":"ACT MLAs","jurisdiction":"act"},
  {"question":"ACT electorate divisions","jurisdiction":"act"},
  {"question":"What did MPs say about climate change? ACT senators' statements, please.","jurisdiction":"act"},
- {"question":"What changed under the Australian Capital Territory (Self-Government) Act 1988?","jurisdiction":null}
+ {"question":"What changed under the Australian Capital Territory (Self-Government) Act 1988?","jurisdiction":null},
+ {"question":"While MPs debated climate change, ACT senators discussed housing.","jurisdiction":"act"},
+ {"question":"While MPs debated climate change—ACT senators discussed housing.","jurisdiction":"act"},
+ {"question":"While MPs debated climate change–ACT senators discussed housing.","jurisdiction":"act"},
+ {"question":"While MPs debated climate change, ACT senators discussed housing between 2010 and 2015. Show their statements.","jurisdiction":"act","since":"2010-01-01","until":"2015-12-31"}
 ]
