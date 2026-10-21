@@ -153,6 +153,10 @@ export function supportedDates(text: string, evidence: string): boolean {
     const date=`${Number(m[1])} ${m[2].toLowerCase()}${m[3]?' '+m[3]:''}`
     if(!expanded.includes(date))return false
   }
+  for(const m of text.matchAll(/\b(January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2})(?:,? (\d{4}))?\b/gi)) {
+    const date=`${Number(m[2])} ${m[1].toLowerCase()}${m[3]?' '+m[3]:''}`
+    if(!expanded.includes(date))return false
+  }
   return true
 }
 

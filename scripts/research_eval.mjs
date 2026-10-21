@@ -38,7 +38,8 @@ export function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     const val = () => { const v = argv[++i]; if (v === undefined) throw new Error(`${a} needs a value`); return v }
-    if (a === '--review-probes') opts.reviewProbes = true
+    if (a === '--interval') opts.intervalMs = Number(val())
+    else if (a === '--review-probes') opts.reviewProbes = true
     else if (a === '--prod') opts.prod = true
     else if (a === '--baseline-loop') opts.baselineLoop = true
     else if (a === '--spend-cap') opts.spendCap = Number(val())
@@ -63,6 +64,7 @@ export function parseArgs(argv) {
   if (!['research', 'gold', 'all', 'routing'].includes(opts.set)) throw new Error('--set must be research, gold or all.')
   if (!['auto', 'ops', 'ask'].includes(opts.route)) throw new Error('--route must be auto, ops or ask.')
   if (!Number.isInteger(opts.limit) || opts.limit < 1 || opts.limit > MAX_LIMIT) throw new Error(`--limit must be an integer from 1 to ${MAX_LIMIT}.`)
+  if (opts.intervalMs !== undefined && (!Number.isFinite(opts.intervalMs) || opts.intervalMs<0 || opts.intervalMs>10000)) throw new Error('--interval must be between 0 and 10000 ms.')
   if (opts.spendCap !== undefined && (!Number.isFinite(opts.spendCap) || opts.spendCap <= 0)) throw new Error('--spend-cap must be a positive US dollar amount.')
   if (!(opts.prices.input >= 0 && opts.prices.output >= 0)) throw new Error('Prices must be non-negative numbers.')
   if (!(opts.timeoutMs >= 1000 && opts.timeoutMs <= 120_000)) throw new Error('--timeout must be between 1000 and 120000 ms.')
@@ -164,6 +166,7 @@ export async function runEval(opts) {
       rows.push(row)
       spent += fixture ? 0 : row.usage?.cost_usd ?? 0.75
       await opts.onRow?.({ row, rows, spent })
+      if(!fixture && opts.intervalMs)await new Promise(resolve=>setTimeout(resolve,opts.intervalMs))
     }
     if (stopped) break
   }
@@ -204,7 +207,7 @@ async function main() {
   const { roster, parties } = await loadRoster()
   await mkdir(opts.out, { recursive: true })
   const onRow = async ({ row, rows, spent }) => { await writeFile(resolve(opts.out, 'in-progress.json'), JSON.stringify({ rows, spent }, null, 2)); console.log(JSON.stringify({ id: row.id, mode: row.mode, grade: row.grade?.overall, ms: row.ms, spent })) }
-  const { report, summary } = await runEval({ onRow: fixture ? undefined : onRow, spendCap: opts.spendCap, baselineLoop: opts.baselineLoop, questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
+  const { report, summary } = await runEval({ onRow: fixture ? undefined : onRow, spendCap: opts.spendCap, intervalMs: opts.intervalMs, baselineLoop: opts.baselineLoop, questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
   const written = await writeReports(report, opts.out)
   // Counts only on stdout: no question or answer text.
   const brief = Object.fromEntries(Object.entries(summary).map(([m, s]) => [m, { n: s.n, errors: s.errors, pass: s.overall.pass, partial: s.overall.partial, fail: s.overall.fail, p50_ms: s.latency_ms.p50, p95_ms: s.latency_ms.p95, mean_cost_usd: s.cost_usd.mean }]))

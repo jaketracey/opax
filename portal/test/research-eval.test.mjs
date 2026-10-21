@@ -148,6 +148,8 @@ test('the base guard refuses production without --prod, reserved ports and remot
 
 test('arguments: limit defaults to 12 and is capped, modes and sets are closed, unknown flags fail', () => {
   const o = parseArgs(['http://127.0.0.1:8962'])
+  assert.equal(parseArgs(['http://127.0.0.1:8962','--interval','4000']).intervalMs,4000)
+  assert.throws(()=>parseArgs(['http://127.0.0.1:8962','--interval','-1']),/interval/)
   assert.equal(o.limit, DEFAULT_LIMIT); assert.equal(DEFAULT_LIMIT, 12); assert.deepEqual(o.modes, ['planner', 'loop']); assert.equal(o.set, 'research'); assert.equal(o.route, 'auto'); assert.equal(o.prod, false)
   assert.throws(() => parseArgs(['http://127.0.0.1:8962', '--limit', String(MAX_LIMIT + 1)]), /--limit/)
   assert.throws(() => parseArgs(['http://127.0.0.1:8962', '--limit', '0']), /--limit/)

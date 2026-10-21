@@ -35,6 +35,8 @@ test('unsupported figures are removed locally while the supported answer survive
 })
 test('reworded dates preserve their day, month and year',()=>{
  assert.equal(api.supportedDates('from 1 July 2005',texts[1]),true)
+ assert.equal(api.supportedDates('from July 1, 2005',texts[1]),true)
+ assert.equal(api.supportedDates('from June 1, 2005',texts[1]),false)
  for(const text of ['from 1 June 2005','from 1 July 2006'])assert.equal(api.supportedDates(text,texts[1]),false)
  assert.equal(api.verifyWrittenAnswer({sentences:[{text:prose.replace('1 July','1 August'),facts:[1,2]}]},input),null)
 })
