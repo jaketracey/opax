@@ -139,3 +139,41 @@ test('review rubric: an explicit verified coverage limitation can answer first w
  const text='The requested period, 2005-01-01 to 2005-12-31, is not covered: no historical total or ranking for that period can be established.'
  assert.equal(answerStyleChecks('Who was the highest paid state politician in 2005?',text,{sources:[source('coverage',text)],texts:[text]}).direct_first_sentence,'pass')
 })
+test('review repair: removing a bad lead must not leave a runner-up as the opening answer',()=>{
+ const facts=[fact(1,'Avery Example: 99 chamber speeches labelled housing.','count'),fact(2,'Blake Sample: 87 chamber speeches labelled housing.','count')]
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Avery Example led with 999 chamber speeches about housing.',facts:[1]},{text:'Blake Sample followed with 87 chamber speeches about housing.',facts:[2]}]},{question:'Who spoke most about housing?',period,facts})
+ assert.ok(out);assert.match(out.answer,/^Avery Example.*99/);assert.doesNotMatch(out.answer,/999/);assert.match(out.answer,/Blake Sample followed with 87/)
+})
+test('review mixed points: equal amounts for different people survive the final append',()=>{
+ const a='Avery Example received $100,000.',b='Blake Sample received $100,000.'
+ const one={answer:a,citations:{'a/t/body/0':[[0,a.length]]},sources:[source('a',a)]},two={answer:b,citations:{'b/t/body/0':[[0,b.length]]},sources:[source('b',b)]}
+ const out=api.appendWrittenPoints(one,two);assert.match(out.answer,/Avery Example/);assert.match(out.answer,/Blake Sample/);assert.ok(out.citations['b/t/body/0'])
+})
+test('review pay boundary: a coverage-only writer answer says the boundary once',()=>{
+ const fs=api.writingFacts(undefined,[{id:1,text:"OPAX's pay records cover 1999-12-07 to 2026-10-19; the requested period 1990-01-01 to 1990-12-31 is not fully covered.",cite:{kind:'record',url:'https://example.org',label:'Pay coverage'}}])
+ const out=api.verifyWrittenAnswer({sentences:[{text:'The pay records start on 7 December 1999, so the highest paid politician in 1990 cannot be identified.',facts:[1]},{text:'The available pay records cover 1999-12-07 to 2026-10-19.',facts:[1]}]},{question:'Who was the highest paid politician in 1990?',period,facts:fs})
+ assert.ok(out);assert.equal(out.answer.split('\n\n').length,1);assert.match(out.answer,/December 1999/)
+})
+test('review comparison grounding: current-term count cannot be called higher when its atom is lower',()=>{
+ const facts=[fact(1,'47th Parliament: 354 chamber speeches labelled gambling (0.7% of 51096 topic-labelled speeches).','count'),fact(2,'48th Parliament: 40 chamber speeches labelled gambling (0.7% of 5380 topic-labelled speeches).','count')]
+ const bad='Comparing the 47th Parliament with 354 gambling speeches and the 48th Parliament with 40, the current-term count is far higher.'
+ assert.equal(api.boundFigures(bad,facts),false)
+})
+test('review mixed points: trim a repeated clause and preserve the new amount and span',()=>{
+ const a='Avery Example received $100,000.',b='Avery Example received $100,000, and Blake Sample received $200,000.'
+ const out=api.appendWrittenPoints({answer:a,citations:{'a/t/body/0':[[0,a.length]]},sources:[source('a',a)]},{answer:b,citations:{'b/t/body/0':[[0,b.length]]},sources:[source('b',b)]})
+ assert.equal((out.answer.match(/100,000/g)||[]).length,1);assert.match(out.answer,/Blake Sample received \$200,000/)
+ const range=out.citations['b/t/body/0'][0];assert.equal(Array.from(out.answer).slice(...range).join(''),'Blake Sample received $200,000.')
+})
+test('review pay boundary: a generic first limitation cannot hide the known start date',()=>{
+ const fs=api.writingFacts(undefined,[{id:1,text:"OPAX's pay records cover 1999-12-07 to 2026-10-19; the requested period 1990-01-01 to 1990-12-31 is not fully covered.",cite:{kind:'record',url:'https://example.org',label:'Pay coverage'}}])
+ const out=api.verifyWrittenAnswer({sentences:[{text:'The highest paid politician in 1990 cannot be identified because the requested period is not fully covered.',facts:[1]},{text:'The available pay records begin on 7 December 1999.',facts:[1]}]},{question:'Who was the highest paid politician in 1990?',period,facts:fs})
+ assert.ok(out);assert.match(out.answer,/December 1999/);assert.equal(out.answer.split('\n\n').length,1)
+})
+test('review units: a Census age cannot become a population with the same value',()=>{
+ const text='Sample District (Federal, House of Representatives): median age 51 years (2021 Census (ABS))',facts=[fact(1,text,'export')]
+ assert.equal(api.boundFigures('Sample District has a population of 51 people.',facts),false)
+ assert.equal(api.boundFigures('Sample District has a median age of 51 years.',facts),true)
+ const fs=api.writingFacts(undefined,[{id:1,text,cite:{kind:'export',url:'https://example.org',label:text}}]);assert.equal(fs[0].atoms.find(a=>a.value==='51').unit,'years')
+ const out=api.proseFallback({question:'Which electorate has the oldest median age?',period,facts});assert.match(out.answer,/Sample District.*median age.*51 years.*2021 Census \(ABS\)/)
+})

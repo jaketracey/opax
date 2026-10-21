@@ -41,7 +41,8 @@ test('reworded dates preserve their day, month and year',()=>{
  const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('1 July','1 August'),facts:[1,2]}]},input);assert.match(repaired.answer,/277,602/);assert.doesNotMatch(repaired.answer,/1 August/)
 })
 test('raw rate lines, coverage blocks and repeated figure sets cannot pass through',()=>{
- for(const text of [texts[0],texts[2],prose.replace('$277,602','$999,999')])assert.equal(api.verifyWrittenAnswer({sentences:[{text,facts:[1,2]}]},input),null)
+ for(const text of [texts[0],texts[2]])assert.equal(api.verifyWrittenAnswer({sentences:[{text,facts:[1,2]}]},input),null)
+ const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('$277,602','$999,999'),facts:[1,2]}]},input);check(repaired);assert.doesNotMatch(repaired.answer,/999,999/)
  check(api.verifyWrittenAnswer({sentences:[...draft.sentences,...draft.sentences,{text:'Robin Example received $277,602 and $288,990 in annual salary rates.',facts:[1,2]}]},input))
 })
 const response=text=>({content:[{type:'text',text}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})

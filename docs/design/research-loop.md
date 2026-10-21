@@ -367,6 +367,13 @@ those facts, including date associations; an
 unsupported numeric clause or sentence is removed under the 16 October loose
 answer contract, preserving supported prose. Citation ranges are rebuilt in
 Unicode code points and retain original resource/evidence IDs and source URLs.
+If clause repair removes the leading ranking claim, the answer restores the
+verified leader from selected facts and preserves the remaining valid prose.
+Term-comparison direction is checked against the corresponding count/share
+atoms. Coverage-only responses state the boundary once; they do not repeat the
+same boundary as ordinary facts and again as a limitation. Final mixed-point
+assembly uses claim identity too, retaining equal values for distinct entities
+and trimming only repeated clauses while rebasing citations.
 Verified passage points already written by the research model retain their
 existing attribution, quotation and loose-point checks.
 
