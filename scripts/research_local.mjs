@@ -3,32 +3,53 @@
 //
 //   npm run research:local -- [questionIds...] [--model slug] [--port 8967] [--keep] [--json out.json]
 //
+// --serve starts the server without Asks; --portal PATH selects a detached baseline checkout.
+// Remote public D1/KV reads are retained; telemetry is local and KV writes are suppressed.
 // Starts `wrangler dev` from portal/ with a generated config whose D1 and KV bindings are
 // remote (real data), loads secrets from portal/.dev.vars (OPENROUTER_API_KEY, ARAG_KB_ID,
 // ARAG_KB_TOKEN, DAILY_POST_OPERATOR_SECRET; gitignored, never printed), then asks each
 // question through the operator-only `x-opax-research: loop` override and prints per turn:
 // serving provider, ms, tokens in/out/cached; the trail; the answer or fallback reason; and
 // quick checks. Loop code edits hot-reload in wrangler dev; rerun with --port to reuse it.
+import {createServer} from 'node:http';
+import {createReadStream, statSync} from 'node:fs';
+import {resolve, sep} from 'node:path';
 import {spawn} from 'node:child_process';
 import {readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync, symlinkSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 
-const portal = fileURLToPath(new URL('../portal/', import.meta.url));
+const sourcePortal = fileURLToPath(new URL('../portal/', import.meta.url));
 const args = process.argv.slice(2);
 const flag = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
+const portal = flag('--portal', sourcePortal);
+const serveOnly = args.includes('--serve');
 const port = Number(flag('--port', 8967));
 const model = flag('--model', 'deepseek/deepseek-v4.1-flash');
 const keep = args.includes('--keep'), reuse = args.includes('--reuse');
 const jsonOut = flag('--json', null);
-const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json'].includes(args[i - 1]));
+const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal'].includes(args[i - 1]));
 const questions = JSON.parse(readFileSync(new URL('research_local_questions.json', import.meta.url), 'utf8'))
-  .filter(q => !ids.length || ids.includes(q.id));
+  .filter(q => !serveOnly && (!ids.length || ids.includes(q.id)));
 
 const vars = Object.fromEntries(readFileSync(portal + '.dev.vars', 'utf8').split('\n')
   .map(l => l.match(/^([A-Z0-9_]+)=(.*)$/)).filter(Boolean).map(m => [m[1], m[2].replace(/^"|"$/g, '')]));
 for (const k of ['OPENROUTER_API_KEY', 'ARAG_KB_ID', 'ARAG_KB_TOKEN', 'DAILY_POST_OPERATOR_SECRET'])
   if (!vars[k]) { console.error(`portal/.dev.vars is missing ${k}`); process.exit(2); }
+
+// Bulk bill/division JSON stays outside Wrangler's file watcher, but remains available to tools on demand.
+let assetOrigin;
+const bulkRoot = resolve(portal, 'public');
+const bulkAssets = createServer((request, response) => {
+  const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+  const file = resolve(bulkRoot, '.' + pathname);
+  if (!/^\/(?:bills|divisions)\/[a-zA-Z0-9_.-]+\.json$/.test(pathname) || !file.startsWith(bulkRoot + sep)) { response.writeHead(404).end(); return; }
+  try {
+    if (!statSync(file).isFile()) { response.writeHead(404).end(); return; }
+    response.writeHead(200, {'content-type': 'application/json'});
+    createReadStream(file).on('error', () => response.destroy()).pipe(response);
+  } catch { response.writeHead(404).end(); }
+});
 
 function localConfig() {
   const require = createRequire(portal + 'package.json');
@@ -37,14 +58,24 @@ function localConfig() {
   const cfg = structuredClone(rawConfig);
   delete cfg.env; delete cfg.routes; delete cfg.triggers;
   // With a `secrets` block wrangler dev only exposes the declared names, so declare exactly the ones .dev.vars holds.
+  mkdirSync(portal + '.wrangler', {recursive: true});
+  writeFileSync(portal + '.wrangler/research-entry.ts', `import worker from '../src/index.ts';
+export default { ...worker, fetch(request, env, ctx) {
+  const assets = env.ASSETS; env.ASSETS = {fetch(request) {const url = new URL(request.url); return /^\\/(?:bills|divisions)\\//.test(url.pathname) ? fetch(new URL(url.pathname, ${JSON.stringify(assetOrigin)})) : assets.fetch(request);}};
+  for (const key of ${JSON.stringify((cfg.kv_namespaces || []).map(k => k.binding))}) { const binding = env[key]; if (binding) env[key] = { get: binding.get.bind(binding), getWithMetadata: binding.getWithMetadata?.bind(binding), list: binding.list?.bind(binding), put: async () => {}, delete: async () => {} }; }
+  return worker.fetch(request, env, ctx);
+} };
+`);
+  cfg.main = './.wrangler/research-entry.ts';
   cfg.secrets = {required: Object.keys(vars)};
-  cfg.d1_databases = (cfg.d1_databases || []).map(d => ({...d, remote: true}));
+  cfg.d1_databases = (cfg.d1_databases || []).map(d => ({...d, remote: d.binding !== 'COMMUNITY_DB'}));
   cfg.kv_namespaces = (cfg.kv_namespaces || []).map(k => ({...k, remote: true}));
   // wrangler dev holds every asset file open: the full public/ (~22.5k files) stalls at the fd limit
   // or fails with spawn EBADF. Serve a symlinked subset without the bulk folders Ask never reads.
   const slim = portal + '.research-assets/', skip = new Set(['divisions', 'bills', 'growth', 'photos', 'grants']);
   rmSync(slim, {recursive: true, force: true}); mkdirSync(slim);
   for (const name of readdirSync(portal + 'public')) if (!skip.has(name)) symlinkSync(portal + 'public/' + name, slim + name);
+  cfg.vars = {...cfg.vars, INDEXNOW_ENABLED: 'false', INDEXNOW_DRY_RUN: 'true'};
   cfg.assets = {...cfg.assets, directory: './.research-assets'};
   // Lives in portal/ (gitignored) so relative paths and .dev.vars resolve as for the real config.
   const path = portal + 'research-local.wrangler.jsonc';
@@ -56,15 +87,17 @@ async function up(base) { try { return (await fetch(base + '/', {signal: AbortSi
 
 async function startServer(base) {
   if (reuse && await up(base)) return null;
+  await new Promise(resolve => bulkAssets.listen(0, '127.0.0.1', resolve));
+  assetOrigin = 'http://127.0.0.1:' + bulkAssets.address().port;
   const config = localConfig();
   const child = spawn('bash', ['-c', `ulimit -n 8192; exec npx --no-install wrangler dev -c "${config}" --port ${port}`],
     {cwd: portal, stdio: ['ignore', 'pipe', 'pipe'], detached: true});
   // Own process group: stopping the runner stops wrangler, esbuild and workerd with it.
-  const stop = () => { try { process.kill(-child.pid, 'SIGTERM'); } catch {} };
+  const stop = () => { bulkAssets.close(); try { process.kill(-child.pid, 'SIGTERM'); } catch {} };
   process.on('exit', stop); for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { stop(); process.exit(130); });
   child.stop = stop;
   let log = '';
-  child.stdout.on('data', d => { log += d; }); child.stderr.on('data', d => { log += d; });
+  child.stdout.on('data', d => { log += d; for (const line of String(d).split('\n')) if (/^\{"kind":"research_loop_/.test(line)) console.log(line); }); child.stderr.on('data', d => { log += d; });
   for (let i = 0; i < 120; i++) {
     if (await up(base)) return child;
     if (child.exitCode !== null) break;
@@ -105,6 +138,7 @@ async function ask(base, q) {
 
 const base = `http://127.0.0.1:${port}`;
 const server = await startServer(base);
+if (serveOnly) { console.log(`Local research server ready on port ${port}; process group ${server?.pid}`); await new Promise(() => {}); }
 const rows = [], dump = [];
 try {
   for (const q of questions) {

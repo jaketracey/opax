@@ -112,3 +112,10 @@ test('a loosely written pay question still hands the model the right person’s 
  assert.equal(filtered[0].title,`${top.name} — pay for the posts held`);
  for(const r of [...typo,...general])assert.ok(r.snippet.length<=1800,r.slug);
 });
+
+test('all historical salary steps remain in a shared source snippet with full claim citation spans',async()=>{
+ for(const question of ['who is the highest paid politician in 2005','Who was the highest paid politician in 2010?']){
+  const r=await ask(question),chars=Array.from(r.answer),lines=r.answer.split('\n').filter(line=>/^\w.*\$/.test(line));
+  for(const line of lines){assert.ok(r.sources.some(s=>s.snippet.includes(line)),line);const start=Array.from(r.answer.slice(0,r.answer.indexOf(line))).length;assert.ok(Object.values(r.citations).flat().some(([a,b])=>a<=start&&b>=start+Array.from(line).length),line);}
+ }
+});

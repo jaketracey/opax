@@ -32,6 +32,8 @@ export function inferPeriod(question: string, override?: unknown): Period {
   if (override === 'current' || /\b(?:this|current) (?:term|parliament)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
   if (/\blast (?:term|parliament)\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], until: TERMS['47th'][1]!, label: 'Counting speeches in the previous parliament, July 2022 to March 2025.' }
   // A year in a bill's title is not a request to restrict speech history.
+  const dates = [...q.matchAll(/\b((?:19|20)\d{2}-\d{2}-\d{2})\b/g)].map(m => m[1]).sort()
+  if (dates.length) return { kind: 'window', since: dates[0], until: dates.at(-1), label: `Records from ${dates[0]} to ${dates.at(-1)}.` }
   const years = [...q.replace(/\bbill\s+(?:19|20)\d{2}\b/g, 'bill').matchAll(/\b((?:19|20)\d{2})(s)?\b/g)]
   if (years.length) {
     const sorted = years.map(m => Number(m[1])).sort((a, b) => a - b)
@@ -208,7 +210,9 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     const d = r.data as Record<string, unknown>
     const filter = (d.filter ?? {}) as Record<string, unknown>
     entities = [filter.speaker || d.person ? `person:${filter.speaker || d.person}` : '', filter.party || d.party ? `party:${filter.party || d.party}` : ''].filter(Boolean)
-    if (getAskTool(r.tool)) {
+    if (d.coverage_only || d.calculated_answer || r.tool === 'person_overview') {
+      r.cite.forEach(cite => add(cite.label, cite))
+    } else if (getAskTool(r.tool)) {
       r.cite.forEach(cite => add(cite.label, cite))
     } else if (r.tool === 'count_speeches') {
       const rows = (d.rows as { name: string; count: number }[] | undefined)
@@ -540,7 +544,7 @@ async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: 
 }
 async function attempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, extras: AbortSignal, resolvedScope?: NamedScope): Promise<AgenticPayload> {
   const electorateData = isElectorateDataQuestion(question)
-  if (electorateData) period = { kind: 'all', label: 'Figures use published Census geography.' }
+  if (electorateData && !deps.research) period = { kind: 'all', label: 'Figures use published Census geography.' }
   const t0 = Date.now(), deadline = t0 + budgetMs
   const tokens = { input: 0, output: 0 }
   let cost: number | null = electorateData ? 0 : null
@@ -554,7 +558,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
     ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
     ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
-  if (!electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
+  if (!deps.research && !electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
   let named: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
@@ -617,7 +621,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   let plan: Plan | null = electorateData ? electoratePlan(question) : null
   const used = new Set<number>()
   const usedOnly = <T,>(list: T[]) => researched && used.size ? list.filter((_, i) => used.has(i)) : list
-  if (deps.research && !electorateData) {
+  if (deps.research) {
     const rules = fallbackPlan(question)?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
     const explicit = Object.fromEntries(['state', 'chamber', 'party'].filter(k => rules[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, rules[k]]))
     researched = await bounded(signal => { executionSignal = signal; return deps.research!(question, {

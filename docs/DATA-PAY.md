@@ -5,8 +5,8 @@ record does not establish…", because it is true: no speech says it. A salary i
 instrument. `portal/public/pay.json` joins the instruments to the record of who held which
 post, and three things read it:
 
-* **Ask and chat** (`portal/src/ask-pay.ts`): a calculated answer with no model call, the way
-  `ask-money.ts` answers from receipt edges. Rankings (all, by party, by chamber, "top 10",
+* **Ask and chat** (`portal/src/ask-pay.ts`): a calculated answer selected by the research agent through `paid_answer` or
+  `parliamentary_pay`, with the ordinary calculated path retained as fallback. Rankings (all, by party, by chamber, "top 10",
   lowest), a named person, two people compared, the price of a post, the base salary.
 * **The model, for everything looser** (`payEvidence()` in the same file, called from
   `retrieveAskRecords`): a misspelt name, a vague or compound question. The catalogue's word
@@ -21,7 +21,18 @@ post, and three things read it:
   with the rate now, an estimate per financial year and every spell.
 * Anything else that wants it: the file is static and self-describing.
 
-Federal parliament only, from **7 December 1999**.
+Federal parliament only, from **7 December 1999**. Historical Ask constraints now
+pass as `as_of` (year or date), or `since`/`until`, to `pay-history.ts`. Calculations
+join the salary base in force on each date to the office spell then held, and
+split a year/range at both salary and office changes. For Jake's 2005 question,
+John Howard's Prime Minister entitlement was $277,602 a year to 30 June and
+$288,990 from 1 July. These are annual rates, not a total paid during the year.
+
+The export's party and chamber fields are roster labels without dated changes.
+Historical party/chamber rankings explain that limit; they never use current
+membership as a historical affiliation. Every tool reports its requested window,
+record coverage and export as-of date. Unsupported periods do not substitute
+current salaries. No change to `pay.json` or its schema is required.
 
 ## Two sources, joined
 

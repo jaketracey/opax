@@ -1,3 +1,5 @@
+import { datedPay } from './pay-history'
+import { inferPeriod } from './agentic-ask'
 import type { RecordQuestion } from './ask-records'
 import type { CatalogRecord } from './catalog-search'
 import { payPersonRecord, payGeneralRecords } from './pay-records.mjs'
@@ -124,13 +126,13 @@ function answerBuilder(data: PayData) {
   let answer = ''
   const citations: Record<string, number[][]> = {}
   const sources: Source[] = []
-  const cite = (title: string, href: string, snippet: string, source: string, offset = 0) => {
+  const cite = (title: string, href: string, snippet: string, source: string, offset = 0, span?: [number, number]) => {
     const end = Array.from(answer).length - offset
     // One instrument can stand behind two sentences; it is still one source.
     const again = sources.find(row => row.href === href)
-    if (again) { citations[again.resource].push([end - 1, end]); return }
+    if (again) { citations[again.resource].push(span ?? [end - 1, end]); if (span && !again.snippet.includes(plain(snippet))) again.snippet += ' ' + plain(snippet); return }
     const resource = `pay-${sources.length}`
-    citations[resource] = [[end - 1, end]]
+    citations[resource] = [span ?? [end - 1, end]]
     sources.push({ resource, title, href, url: href, kind: 'pay', snippet: plain(snippet), cited: true, source, dateLabel: `As at ${day(data.meta.as_of)}`, date: data.meta.as_of })
   }
   const instrument = (id: string, snippet: string, offset = 0) => {
@@ -427,6 +429,23 @@ export async function paidAnswer(input: RecordQuestion, assets: Fetcher) {
   if (input.state && input.state !== 'federal') return null
   const question = input.question || ''
   const data = await loadPay(assets)
+  const period = inferPeriod(question)
+  if (period.since || input.from || input.to || input.since || input.until) {
+    const people = peopleNamed(question, data)
+    const result = datedPay(data, { since: period.since || input.since || (input.from ? `${input.from}-01-01` : undefined), until: period.until || input.until || (input.to ? `${input.to}-12-31` : undefined) || data.meta.as_of,
+      ...(people.length ? { people: people.map(p => p.name) } : {}), ...(PARTIES.find(p => p.pattern.test(question)) ? { party: PARTIES.find(p => p.pattern.test(question))!.label } : {}),
+      ...(POSTS.find(p => p.office && p.pattern.test(question)) ? { office: POSTS.find(p => p.office && p.pattern.test(question))!.label } : {}),
+      order: LOWEST.test(question) ? 'asc' : 'desc', limit: Math.max(1, people.length) })
+    const b = answerBuilder(data)
+    for (const c of result.citations) {
+      const separator = b.done().answer ? '\n' : '', start = Array.from(b.done().answer + separator).length
+      b.add(separator + c.text)
+      b.cite('Dated salary entitlement', c.url, c.text, 'Parliamentary Library and Parliamentary Handbook', 0, [start, Array.from(b.done().answer).length])
+    }
+    b.add('\n\n' + result.notes.join(' '))
+    b.cite('Coverage of parliamentary pay records', 'https://opax.com.au/methods', result.notes.join(' '), 'OPAX pay record coverage')
+    return { ...b.done(), answer_status: 'calculated', pay_answer: true, coverage: result.coverage, scope: { state: 'federal' } }
+  }
   const people = peopleNamed(question, data)
   if (people.length >= 2) return comparePeople(people, data)
   if (people.length === 1) return personAnswer(people[0], data)

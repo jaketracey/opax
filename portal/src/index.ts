@@ -102,7 +102,7 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
-import { withPlannerResearch, withResearchEval } from './research-response'
+import { withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
 import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
@@ -6191,11 +6191,16 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         cleanup: work => ctx.waitUntil(work),
         ...(env.RESEARCH_EVAL ? { onUsage: stats => captureLoopUsage(env.RESEARCH_EVAL!, stats) } : {}),
         inputPrice: Number(env.AGENTIC_INPUT_USD_PER_MILLION) || undefined, outputPrice: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) || undefined,
+        input,
+        overview: async (person, signal) => {
+          const pack = await personOverviewPack({ ...input, question: `What has ${person} focused on in parliament?`, speaker: person }, env, ctx, signal)
+          return { tool: 'person_overview', ok: true, data: { rows: pack.records.records }, cite: pack.records.records.map(r => ({ kind: 'record' as const, label: r.snippet, url: new URL(r.href || '/doc/' + r.slug, SITE_ORIGIN).href })), notes: [pack.records.coverage] }
+        },
         conversation: saConversationInput(input, env.SA_HANSARD_FULL_TEXT).context,
         positionQuery: isPositionBody(buildAskBody(input)) ? String(buildAskBody(input).query || input.question || '') : undefined,
         searchBody: (query, limit, context, filters) => {
           // A party scope is the model's search argument (one side of a comparison at a time), not an implicit filter.
-          const scoped = { ...input,
+          const scoped = { ...input, ...(context.constraints?.jurisdiction ? { state: context.constraints.jurisdiction } : {}), ...(context.constraints?.chamber ? { chamber: context.constraints.chamber } : {}),
             ...(filters.speaker ? { speaker: filters.speaker } : context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
             ...(context.period.since ? { since: context.period.since } : {}), ...(context.period.until ? { until: context.period.until } : {}),
           }
@@ -6232,8 +6237,14 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
     },
   }
 }
-function agenticPeriod(input: Record<string, unknown>) {
-  const inferred = inferPeriod(String(input.question), input.period)
+function agenticPeriod(input: Record<string, unknown>, enforceQuestion = false) {
+  const literal = inferPeriod(String(input.question))
+  // An explicit year/range in the question cannot be replaced by an older UI filter.
+  if (enforceQuestion && literal.kind === 'window') return literal
+  const current = inferPeriod(String(input.question), input.period)
+  const previous = Array.isArray(input.context) ? [...input.context].reverse().find(t => ['question', 'user'].includes(String(t.author)) && typeof t.text === 'string')?.text : undefined
+  const inferred = current.kind === 'all' && previous && /^(?:and|what about|how about)|\b(?:he|she|they|their|that|those|it)\b/i.test(String(input.question)) ? inferPeriod(previous, input.period) : current
+  if (enforceQuestion && (input.since || input.until)) return { kind: 'window' as const, ...(input.since ? { since: String(input.since) } : {}), ...(input.until ? { until: String(input.until) } : {}), label: `Records${input.since ? ` from ${input.since}` : ''}${input.until ? ` to ${input.until}` : ''}.` }
   if (!input.from && !input.to) return inferred
   const since = input.from ? `${input.from}-01-01` : undefined, until = input.to ? `${input.to}-12-31` : undefined
   return { kind: 'window' as const, since, until, label: `Counting speeches${since ? ` from ${since}` : ''}${until ? ` to ${until}` : ' onwards'}.` }
@@ -6242,6 +6253,7 @@ function agenticFilters(input: Record<string, unknown>): Record<string, unknown>
   return Object.fromEntries(['speaker', 'party', 'state', 'chamber', 'topic'].filter(k => typeof input[k] === 'string' && input[k]).map(k => [k, input[k]]))
 }
 function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: AgenticPayload) {
+  if (env.RESEARCH_EVAL) return
   ctx.waitUntil(recordAgenticRun(env.COMMUNITY_DB, question, run).catch(() => {
     // Fixed message only: upstream errors can contain private query strings.
     console.warn('Ask monitoring write unavailable')
@@ -6249,7 +6261,7 @@ function monitorAgentic(env: Env, ctx: ExecutionContext, question: string, run: 
 }
 async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: Progress, signal?: AbortSignal, budgetMs = AGENTIC_BUDGET_MS, namedScope?: NamedScope, onRun?: (run: AgenticPayload) => void) {
   const question = String(input.question).trim()
-  const started = Date.now(), period = agenticPeriod(input)
+  const started = Date.now(), period = agenticPeriod(input, env.RESEARCH_LOOP === 'route')
   let run: AgenticPayload
   let failure: ResearchError | undefined
   const deps = agenticDeps(env, ctx, signal, input), report = deps.onResearchFailure
@@ -6393,7 +6405,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       const safe = loopRoute && response.status === 504 ? new Response(response.body, { status: 503, headers: response.headers }) : response
       // Ordinary RAG consumption is observed for operator evals. Otherwise,
       // keep total usage unknown; per-turn telemetry still describes the loop.
-      return loopRoute || research?.trail.length ? withPlannerResearch(safe, research ? { ...research, ms: Date.now() - started, tokens: null, cost_usd: null } : undefined) : safe
+      const scopedFallback = loopRoute ? await withFallbackPeriod(safe, agenticPeriod(input, true)) : safe
+      return loopRoute || research?.trail.length ? withPlannerResearch(scopedFallback, research ? { ...research, ms: Date.now() - started, tokens: null, cost_usd: null } : undefined) : scopedFallback
     }) } catch (error) {
       if (!loopRoute || request.signal.aborted) throw error
       return json({ error: 'The record is temporarily unavailable. Please try again.', research: { ...research, mode: 'planner', failure: research?.failure ?? 'timeout' } }, 503)
@@ -6402,27 +6415,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   const expired = () => json({ error: 'The answer took too long. Please try again.' }, 504)
   let streamOwnsBudget = false
   try {
-    if (loopRoute) {
-      // Published receipt and salary calculations already bind their figures
-      // to instruments. Keep these ahead of inference, without an overview call.
-      let calculated: Record<string, unknown> | null = null
-      try {
-        const ranked = await budget.run(() => rankedMoneyAnswer(input, env.ASSETS))
-        if (ranked) { const { money_facts: _facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }; calculated = payload }
-      } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
-      if (!calculated) calculated = await budget.run(() => paidAnswer(input, env.ASSETS).catch(() => null))
-      if (calculated) {
-        const adapted = await withPlannerResearch(json(calculated))
-        const payload = await adapted.json() as Record<string, unknown>
-        payload.research = { ...payload.research as ResearchPayload, ms: Date.now() - started, tokens: { input: 0, output: 0 }, cost_usd: 0 }
-        if (url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')) {
-          return new Response(`event: done\ndata: ${JSON.stringify(payload)}\n\n`, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'BYPASS' } })
-        }
-        return withCacheStatus(json(payload), 'BYPASS', false)
-      }
-    }
     // Resolve the reader's named scope within the same request deadline.
-    const electorateData = classifyAgentic(question).rule === 'electorate-data'
+    const electorateData = !loopRoute && classifyAgentic(question).rule === 'electorate-data'
     let namedScope: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
     if (!electorateData) {
       try { namedScope = await resolveNamedScope(question, agenticToolDeps(env, budget.signal), Math.min(4_000, budget.remaining), agenticFilters(input)) }
@@ -6433,7 +6427,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     // declines unsafe scopes; qualitative research verifies original passages.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
     const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '8000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
-    const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
+    const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input, loopRoute), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {
       const hit = await budget.run(() => readGenerationCache(env, ctx, key))
@@ -6450,7 +6444,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const finish = (run: AgenticPayload) => {
       const response = json(agenticAskPayload(run, question))
       // An answer with no citation at all is not kept for a week: the next ask may cite it (as cacheableAnswer).
-      if (key && run.answered && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited') storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited') storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
       return response
     }
     if (!streaming) {

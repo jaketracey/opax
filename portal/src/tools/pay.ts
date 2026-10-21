@@ -1,5 +1,7 @@
 /** Federal parliamentarians' salary entitlements from public/pay.json (Remuneration Tribunal rates joined to
  * Handbook posts). Public servants' pay is not held: the tool says so and names where it is published. */
+import { datedPay } from '../pay-history'
+import type { PayData as HistoricalPayData } from '../ask-pay'
 import { personUrl } from '../../public/canonical-urls.js'
 import { aud, clip, fold, siteUrl, tableRows } from './record-common'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
@@ -31,16 +33,22 @@ async function notHeld(env: ToolEnv) {
 
 export const tool: ToolDefinition = {
   name: 'parliamentary_pay',
-  description: 'Salaries of federal MPs, senators and ministers: a person\'s current salary and post, what an office (Prime Minister, Treasurer, Cabinet Minister, Speaker, Leader of the Opposition...) pays, or the highest-paid sitting parliamentarians. MP and minister pay comes from here. OPAX does NOT hold public servants\' pay (departmental secretaries, agency heads, commissioners): ask with that office anyway and it returns where that pay is published.',
+  description: 'Dated salaries of federal MPs, senators and ministers (since 7 December 1999); pass as_of (year/date) or since/until for historical questions: a person\'s current salary and post, what an office (Prime Minister, Treasurer, Cabinet Minister, Speaker, Leader of the Opposition...) pays, or the highest-paid sitting parliamentarians. MP and minister pay comes from here. OPAX does NOT hold public servants\' pay (departmental secretaries, agency heads, commissioners): ask with that office anyway and it returns where that pay is published.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'A federal parliamentarian\'s name.' },
+    people: { type: 'array', minItems: 2, maxItems: 6, items: { type: 'string' }, description: 'Named people in a comparison; include every requested person.' },
     office: { type: 'string', minLength: 2, maxLength: 160, description: 'An office or post, e.g. "Prime Minister", "Cabinet Minister", "Secretary of the Department of Defence".' },
+    as_of: { type: 'string', pattern: '^\\d{4}(-\\d{2}-\\d{2})?$', description: 'Calendar year or ISO date. Always pass the requested year; never substitute current figures.' },
+    since: { type: 'string', format: 'date' }, until: { type: 'string', format: 'date' },
+    jurisdiction: { type: 'string', enum: ['federal', 'nsw', 'vic', 'qld', 'sa', 'wa', 'tas', 'act', 'nt'] },
+    party: { type: 'string' }, chamber: { type: 'string' }, order: { type: 'string', enum: ['asc', 'desc'] },
     limit: { type: 'integer', minimum: 1, maximum: 15, description: 'Rows for a ranking or an office\'s holders (default 5).' },
   }, examples: [{ person: 'Penny Wong' }, { office: 'Treasurer' }, { limit: 10 }, { office: 'Secretary of the Department of Foreign Affairs and Trade' }] },
   stepLabel: args => ({ label: 'Checking parliamentary pay', arg: clip(args.person ?? args.office ?? 'highest paid', 40) }),
   async handler(env, args) {
     const pay = await readToolAsset(env, '/pay.json') as PayData | null
     if (!pay?.current || !pay.base?.length) return { rows: [], citations: [], notes: [], error: 'Parliamentary pay records are unavailable.' }
+    if (args.people || args.party || args.chamber || args.order || args.as_of || args.since || args.until || args.jurisdiction && args.jurisdiction !== 'federal') return datedPay(pay as unknown as HistoricalPayData, args)
     const base = pay.base[pay.base.length - 1].amount, asAt = pay.meta.as_of, limit = Number(args.limit) || 5
     const href = (name: string) => siteUrl(env, `${personUrl(name)}#person-pay`)
     const determination = pay.meta.sources?.find(s => s.id === 'mp-determination')?.url ?? 'https://www.remtribunal.gov.au/'
@@ -76,6 +84,6 @@ export const tool: ToolDefinition = {
       citations.push({ kind: 'record', url: determination, value: base, text: `Federal parliamentary base salary: ${aud(base)} a year, as at ${asAt}` })
       for (const c of pay.current.slice(0, limit)) { citations.push(row(c)); rows.push({ name: c.name, post: c.post, salary: c.salary }) }
     }
-    return { rows, citations, notes: [PAY_LIMITS] }
+    return { rows, citations, coverage: { since: asAt, until: asAt, as_of: asAt, matched: true }, notes: [PAY_LIMITS, `Coverage: salary rates as at ${asAt}.`] }
   },
 }

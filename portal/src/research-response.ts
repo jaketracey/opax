@@ -48,3 +48,24 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
     flush(controller) { pending += decoder.decode(); if (pending) controller.enqueue(encoder.encode(frame(pending))) },
   })), { status: response.status, statusText: response.statusText, headers })
 }
+
+/** A failed loop may use ordinary RAG, but it may not substitute undated/current evidence for a dated ask. */
+export async function withFallbackPeriod(response: Response, period: import('./agentic-ask').Period): Promise<Response> {
+  if (!response.ok || period.kind === 'all' || !period.since && !period.until) return response
+  return mapResearchResponse(response, payload => {
+    // The deterministic calculators already apply the requested window to their original records.
+    const coverage = payload.coverage as { matched?: boolean } | undefined
+    if (coverage?.matched === true || payload.money_ranking && payload.answer_status === 'calculated') return payload
+    const sources = Array.isArray(payload.sources) ? payload.sources as Record<string, unknown>[] : []
+    const cited = sources.filter(s => s.cited === true)
+    const outside = cited.find(s => typeof s.date === 'string' && (period.since && s.date.slice(0, 10) < period.since || period.until && s.date.slice(0, 10) > period.until))
+    if (!outside && cited.length && cited.every(s => typeof s.date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(s.date))) return payload
+    const requested = `${period.since ?? 'the start of the record'} to ${period.until ?? 'the present'}`
+    const text = `The returned records do not establish the requested answer for ${requested}. ${outside ? `A returned source is dated ${String(outside.date).slice(0, 10)}, outside that period.` : 'The returned evidence has no verified date coverage for that period.'} I have not substituted current figures. Please narrow the question or check the records linked here.`
+    const url = String(outside?.href ?? outside?.url ?? cited[0]?.href ?? cited[0]?.url ?? 'https://opax.com.au/methods')
+    return { ...payload, answer: text, answer_status: 'coverage_only', citations: { 'period-coverage/t/body/0': [[0, Array.from(text).length]] },
+      sources: [{ resource: 'period-coverage', slug: '', title: 'Coverage of the returned records', href: url, url, kind: 'record', snippet: text, cited: true }],
+      coverage: { requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? null, matched: false },
+    }
+  })
+}

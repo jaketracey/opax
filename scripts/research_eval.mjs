@@ -9,7 +9,7 @@
 //   node scripts/research_eval.mjs http://127.0.0.1:8962 --mode both --limit 13
 //   node scripts/research_eval.mjs --fixture portal/test/fixtures/research-evals-canned.json --mode both   # offline
 //
-// Flags: --mode planner|loop|both (both) · --limit N (12, max 50) · --set research|gold|all (research)
+// Flags: --mode planner|loop|both (both) · --limit N (12, max 200) · --set research|gold|all|routing (research)
 //        --route auto|ops|ask (auto) · --planner-base URL · --loop-base URL · --fixture FILE · --out DIR
 //        --price-in / --price-out US$ per million tokens (0.44 / 1.32, the BYOK DeepSeek rate) · --timeout ms · --prod · --operator
 //
@@ -27,7 +27,7 @@ import { gradeRow, usageOf, summarise, renderMarkdown, fold } from './research_e
 
 const here = dirname(fileURLToPath(import.meta.url))
 export const ROOT = resolve(here, '..')
-export const DEFAULT_LIMIT = 12, MAX_LIMIT = 50, DEFAULT_TIMEOUT_MS = 60_000
+export const DEFAULT_LIMIT = 12, MAX_LIMIT = 200, DEFAULT_TIMEOUT_MS = 60_000
 export const DEFAULT_PRICES = { input: 0.44, output: 1.32 }
 export const PROD_HOSTS = /(^|\.)opax\.com\.au$/i
 export const LEGACY_PERIOD = /\b(?:this term|last term|since|(?:19|20)\d{2}s?)\b/i
@@ -39,6 +39,8 @@ export function parseArgs(argv) {
     const a = argv[i]
     const val = () => { const v = argv[++i]; if (v === undefined) throw new Error(`${a} needs a value`); return v }
     if (a === '--prod') opts.prod = true
+    else if (a === '--baseline-loop') opts.baselineLoop = true
+    else if (a === '--spend-cap') opts.spendCap = Number(val())
     else if (a === '--operator') opts.operator = true
     else if (a === '--mode') opts.mode = val()
     else if (a === '--limit') opts.limit = Number(val())
@@ -57,9 +59,10 @@ export function parseArgs(argv) {
   if (rest.length > 1) throw new Error('Pass one base URL.')
   opts.base = rest[0]
   if (!['planner', 'loop', 'both'].includes(opts.mode)) throw new Error('--mode must be planner, loop or both.')
-  if (!['research', 'gold', 'all'].includes(opts.set)) throw new Error('--set must be research, gold or all.')
+  if (!['research', 'gold', 'all', 'routing'].includes(opts.set)) throw new Error('--set must be research, gold or all.')
   if (!['auto', 'ops', 'ask'].includes(opts.route)) throw new Error('--route must be auto, ops or ask.')
   if (!Number.isInteger(opts.limit) || opts.limit < 1 || opts.limit > MAX_LIMIT) throw new Error(`--limit must be an integer from 1 to ${MAX_LIMIT}.`)
+  if (opts.spendCap !== undefined && (!Number.isFinite(opts.spendCap) || opts.spendCap <= 0)) throw new Error('--spend-cap must be a positive US dollar amount.')
   if (!(opts.prices.input >= 0 && opts.prices.output >= 0)) throw new Error('Prices must be non-negative numbers.')
   if (!(opts.timeoutMs >= 1000 && opts.timeoutMs <= 120_000)) throw new Error('--timeout must be between 1000 and 120000 ms.')
   if (!opts.fixture && !opts.base) throw new Error('Pass a base URL, or --fixture for an offline run.')
@@ -79,6 +82,7 @@ export function guardBase(base, { prod = false } = {}) {
 }
 
 export async function loadQuestions(set) {
+  if (set === 'routing') return JSON.parse(await readFile(resolve(ROOT, 'portal/test/fixtures/ask-routing-evals.json'), 'utf8')).questions
   const list = []
   if (set !== 'gold') {
     const f = JSON.parse(await readFile(resolve(ROOT, 'portal/test/fixtures/research-evals.json'), 'utf8'))
@@ -98,24 +102,24 @@ export async function loadRoster(file = resolve(ROOT, 'portal/public/parliamenta
 }
 
 /** The one request a (question, mode) pair sends. */
-export function requestFor(q, mode, { route = 'auto', secret, operator = false, prod = false } = {}) {
+export function requestFor(q, mode, { route = 'auto', secret, baselineLoop = false, operator = false, prod = false } = {}) {
   const override = operator || prod
   const ops = !override && (route === 'ops' || (route === 'auto' && Boolean(secret) && (q.gold === true || q.old_route !== 'ordinary')))
   const body = { question: q.question, ...(q.request ?? {}) }
   // Legacy gold defines unstated periods as whole-record (scripts/agentic_ask_shadow.mjs).
   if (q.gold && !LEGACY_PERIOD.test(q.question) && body.period === undefined) body.period = 'all'
-  const headers = { 'content-type': 'application/json', accept: 'application/json' }
+  const headers = { 'content-type': 'application/json', accept: 'application/json', 'x-opax-nocache': '1' }
   if (override || ops) {
     if (!secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for the ops route.')
     headers.authorization = 'Bearer ' + secret
   }
-  if (override) headers['x-opax-research'] = mode === 'loop' ? 'loop' : 'old'
+  if (override) headers['x-opax-research'] = mode === 'loop' || baselineLoop ? 'loop' : 'old'
   return { path: ops ? '/api/ops/ask-gold' : '/api/ask', body, headers }
 }
 
 /** Exactly one fetch. Any failure becomes an error row; nothing is re-sent. */
-export async function runOne({ q, mode, base, route, secret, operator, prod, fetchImpl = fetch, timeoutMs = DEFAULT_TIMEOUT_MS }) {
-  const { path, body, headers } = requestFor(q, mode, { route, secret, operator, prod })
+export async function runOne({ q, mode, base, route, secret, baselineLoop, operator, prod, fetchImpl = fetch, timeoutMs = DEFAULT_TIMEOUT_MS }) {
+  const { path, body, headers } = requestFor(q, mode, { route, secret, baselineLoop, operator, prod })
   const t0 = performance.now()
   const elapsed = () => Math.round(performance.now() - t0)
   try {
@@ -133,14 +137,16 @@ export async function runEval(opts) {
   const { questions, modes, prices = DEFAULT_PRICES, timeoutMs = DEFAULT_TIMEOUT_MS, fetchImpl = fetch, fixture, limit = DEFAULT_LIMIT, roster = [], parties = new Map() } = opts
   const picked = questions.slice(0, limit)
   const rows = []
+  let spent = 0, stopped = null
   for (const q of picked) {
     for (const mode of modes) {
+      if (!fixture && spent + 0.75 > (opts.spendCap ?? 14)) { stopped = 'spend_cap'; break }
       let r
       if (fixture) {
         const hit = fixture.find((x) => x.id === q.id && (x.mode ?? mode) === mode)
         r = hit ? { route: 'fixture', ms: hit.ms ?? 0, server_ms: hit.server_ms ?? null, payload: hit.payload, error: hit.error } : { route: 'fixture', ms: 0, error: 'missing fixture' }
       } else {
-        r = await runOne({ q, mode, base: opts.bases[mode], route: opts.route, secret: opts.secret, operator: opts.operator, prod: opts.prod, fetchImpl, timeoutMs })
+        r = await runOne({ q, mode, base: opts.bases[mode], route: opts.route, secret: opts.secret, baselineLoop: opts.baselineLoop, operator: opts.operator, prod: opts.prod, fetchImpl, timeoutMs })
       }
       const row = { id: q.id, set: q.set, kind: q.kind, mode, route: r.route, ms: r.ms, server_ms: r.server_ms ?? r.payload?.research?.ms ?? r.payload?.agentic?.ms ?? null }
       if (r.error || !r.payload || typeof r.payload !== 'object') row.error = r.error ?? 'empty payload'
@@ -151,11 +157,14 @@ export async function runEval(opts) {
         row.payload = r.payload
       }
       rows.push(row)
+      spent += fixture ? 0 : row.usage?.cost_usd ?? 0.75
+      await opts.onRow?.({ row, rows, spent })
     }
+    if (stopped) break
   }
   const summary = summarise(rows)
   const report = {
-    generated: new Date().toISOString(), base_host: opts.baseHost ?? null, set: opts.set ?? 'research', modes, limit, prices, summary,
+    generated: new Date().toISOString(), spent_upper_estimate: spent, stopped, base_host: opts.baseHost ?? null, set: opts.set ?? 'research', modes, limit, prices, summary,
     questions: picked.map((q) => ({ id: q.id, kind: q.kind, shape: q.shape ?? null, question: q.question, old_route: q.old_route ?? null, expected_tools: q.expected_tools ?? [], rubric: q.rubric ?? null, by_mode: Object.fromEntries(modes.map((m) => [m, rows.find((r) => r.id === q.id && r.mode === m) ?? null])) })),
   }
   return { rows, summary, report }
@@ -179,15 +188,17 @@ async function main() {
     if (!fixture) throw new Error('The fixture must be an array of {id, mode, payload} rows, or {rows: [...]}.')
   } else {
     const main = guardBase(opts.base, opts)
-    bases.planner = opts.operator || opts.prod ? main.href : guardBase(opts.plannerBase ?? opts.base, opts).href
-    bases.loop = opts.operator || opts.prod ? main.href : guardBase(opts.loopBase ?? opts.base, opts).href
+    bases.planner = guardBase(opts.plannerBase ?? opts.base, opts).href
+    bases.loop = guardBase(opts.loopBase ?? opts.base, opts).href
     baseHost = main.host
   }
   const secret = process.env.DAILY_POST_OPERATOR_SECRET
   if (!fixture && (opts.route === 'ops' || opts.operator || opts.prod) && !secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for operator evaluation.')
   const questions = await loadQuestions(opts.set)
   const { roster, parties } = await loadRoster()
-  const { report, summary } = await runEval({ questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
+  await mkdir(opts.out, { recursive: true })
+  const onRow = async ({ row, rows, spent }) => { await writeFile(resolve(opts.out, 'in-progress.json'), JSON.stringify({ rows, spent }, null, 2)); console.log(JSON.stringify({ id: row.id, mode: row.mode, grade: row.grade?.overall, ms: row.ms, spent })) }
+  const { report, summary } = await runEval({ onRow: fixture ? undefined : onRow, spendCap: opts.spendCap, baselineLoop: opts.baselineLoop, questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
   const written = await writeReports(report, opts.out)
   // Counts only on stdout: no question or answer text.
   const brief = Object.fromEntries(Object.entries(summary).map(([m, s]) => [m, { n: s.n, errors: s.errors, pass: s.overall.pass, partial: s.overall.partial, fail: s.overall.fail, p50_ms: s.latency_ms.p50, p95_ms: s.latency_ms.p95, mean_cost_usd: s.cost_usd.mean }]))

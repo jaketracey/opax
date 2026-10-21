@@ -1,52 +1,51 @@
 # Ask research loop
 
-The 14 October 2026 04:00 shared contract makes this the engine for **all** Ask
-questions when `RESEARCH_LOOP=route`. The existing numerical planner and ordinary
-RAG path remain the automatic fallback. This lane prepares the implementation and
-local gates; the orchestrator merges, evaluates and deploys it. No live Ask or
-OpenRouter requests were used to build or test this lane.
+As of 21 October 2026, `RESEARCH_LOOP=route` makes research the default for every
+Ask, including follow-ups and non-speech kinds. The classifier supplies answer
+shape and numerical safeguards; it does not decide whether an Ask gets an agent.
+The ordinary RAG path and numerical planner remain the bounded automatic fallback.
+This change is evaluated locally; it does not deploy or request production Ask.
 
 ## Request path
 
-`apiAskRouted` selects `off`, `shadow` or `route`. In route mode it retains the
-existing request validation, per-IP admission and cache transport. The loop
-phase uses a 40-second request envelope and an eight-second research wall; an
-ordinary fallback gets a fresh 90-second envelope for its existing two 40-second
-attempts and verification, linked directly to the client signal. It calls `runAgentic` with `deps.research`, implemented by
-`createResearch` using AI SDK `generateText`. The exact dependencies are
-`ai@7.0.139` and `@openrouter/ai-sdk-provider@3.1.0`. The SDK accepts the existing
-`TOOL_SPECS` through `jsonSchema`; no new Zod dependency is added.
+Request validation and network blocks precede routing. Cache hits retain their
+existing quota behaviour. A cache miss takes one reader quota before research;
+model-minute admission and the atomic daily USD reservation still precede every
+model turn. Fallback reuses the reader quota. Conversations and prior-resource
+turns retain private cache isolation. Calculated pay and receipt answers remain
+uncached, and uncited answers and fixed declines are not written to the cache.
+The tools version separates this release's cache keys from older answers.
 
-The provider uses `@preset/opax-pro` and the optional Worker secret
-`OPENROUTER_API_KEY`. Jake provisions that secret. A missing key immediately falls
-back; it does not create a credential or use a different provider. Tests use
-`ai/test`'s `MockLanguageModelV4`; route tests replace the provider factory with a
-fake. The hub confirmed the production key is set. The release configuration now
-defaults to `shadow`; this lane does not deploy it or call production Ask.
+The configured model remains `deepseek/deepseek-v4.1-flash` on Together via
+OpenRouter, with the existing 15-second research wall, 96,000 token budget and
+US$10 daily cap. Step limits, cancellation, reservation settlement, credit
+cooldown and fallback deadlines retain their existing implementation. No model,
+provider, data load or public data schema changes are part of this release.
 
-Classified numerical/agentic questions can use the registered tools, including
-`electorates`, together with `search`, `read_passage`, `finish` and `answer`.
-Unclassified qualitative questions expose only `search`, `read_passage` and
-`answer`: structured speech/count/person tools are hidden. They get six model
-rounds. After two searches, `prepareStep.activeTools` restricts the next turn to
-reading original passages; after a read it offers read/answer, and the last round
-is answer-only. No answer is offered before an original passage is read. Tool execution is serialized
-so fact ids and progress ids remain ordered even when a model returns several
-parallel calls. Request dates and explicit scopes pass through `periodPlan` before
-execution. Original and scoped arguments are validated. Identical scoped calls
-share their first result; `prepareStep` tells the model what already ran and
-restricts a repeating model to terminal tools. No tool accepts an arbitrary URL or
-writes to an external system.
+`rankedMoneyAnswer` and `paidAnswer` no longer return before inference. The agent
+can call them as `ranked_money` and `paid_answer`, alongside `parliamentary_pay`,
+`electorates`, grants, contracts, interests, record discovery, speech searches,
+counts and votes. `person_overview` exposes the existing overview retrieval.
+Electorate answers also run through research: the agent calls the published
+Census tool and selects its facts. It may select a calculator's complete answer
+only after seeing its result. Independent reads may run together; terminal calls
+wait for every in-flight result before selecting fact ids.
 
-Route mode first tries the existing published money and pay calculations, and
-electorate questions execute the existing deterministic `electoratePlan` directly
-without invoking research. Unavailable electorate profiles remain honest
-non-answers without inference or speech substitution. They
-return their cited calculations in JSON/SSE with zero model usage, without calling
-the money overview generator. Questions those calculations cannot answer proceed
-to the loop. A numerical `answer` misroute leaves only `finish` active and does not
-consume the qualitative repair allowance. Terminal drafts appear in subsequent
-instructions only as `answer#<SHA256>`, never as full draft text or quotes.
+`ask-constraints.ts` extracts period, jurisdiction, chamber, party, named people,
+place, superlatives and trend intent. Supported tool parameters are constrained
+before execution. Explicit filters and follow-up periods survive this boundary.
+Every tool result carries coverage dates/as-of, or explicitly unknown coverage.
+A mismatched result loses its figures and becomes a coverage-only fact. Census
+2021 cannot answer a 2005 demographic question as though it were contemporary.
+
+`pay-history.ts` reads the existing salary base steps and dated office spells.
+A whole year is split at salary and office changes; an exact date uses that day.
+Pre-7 December 1999, future and state salary requests explain the available
+coverage. The export does not date party/chamber affiliation changes, so a
+historical ranking by those labels is explicitly unavailable rather than joined
+to today's roster. Person and office salary calculations retain the dated spells.
+
+## Evidence and answers
 
 `search` performs bounded Nuclia `/find` retrieval with the existing Ask filter
 builder. `read_passage` accepts only an id returned by this request's search,
@@ -61,32 +60,18 @@ The existing plan scope checks, completeness/`no_supported_claim` checks,
 committee supplement, `selectAnswerFacts` and `templateAnswer` still own the
 answer. The model's free text is ignored. Fact ordering remains deterministic.
 
-For qualitative questions, `answer` supplies:
+For qualitative and structured-record questions, `answer` selects record fact ids,
+verified passage points, or both. Calculated answers retain their original sources
+and Unicode citation spans when selected as a complete answer. A `decline` tool
+lets the agent select fixed clarification, private-person, out-of-scope or
+no-causation wording; it cannot supply free-form allegations.
 
-```ts
-{ text: string, citations: [{ id: string, quote: string,
-                             start: number, end: number }] }
-```
-
-Offsets are Unicode code points into `text`, matching existing Ask citations.
-Every claim must be covered by a valid range bound to a passage the loop read.
-Supporting quotes must occur literally in original evidence. Existing
-`originalContext`, `unsupportedQuotes`, `guardPositionAnswer`, `positionEvidence`,
-`positionPointSupported`, eligibility checks and first-turn checks are reused.
-Short quotes are checked too. The existing no-causation expression applies.
-A rejected draft gets one repair turn with only `answer` available; another
-failure returns to the old path. No unsupported quote is silently unquoted.
-This verifies citation/quote integrity and existing position constraints; it is
-not a general semantic entailment model.
-Each citation's covered claim is also checked against the public roster: named
-people must match the passage speaker, including surname-only and possessive
-mentions. A name inside a quotation cannot establish its authorship. Partial
-roster bylines are treated as aliases, not additional people. Accepted sources
-carry the passage speaker into `research.sources`. The ordinary Ask JSON/SSE
-fallback uses the same attribution check, including footnote-at-end claim
-ranges. Overview speech sources now retain their verified speaker. A subject
-heading or aggregate/bill paragraph can use the unanimously verified speaker;
-it cannot introduce another person.
+The 16 October contract still applies: an answer beats no answer. Soft checks
+leave points uncited (and remove unverified quotation marks); the existing hard
+lines on attribution, private people, causation and SA placeholders still drop
+points. Explicit date constraints are a hard boundary: the loop never cites a
+passage outside the requested window, and a tool with incompatible or unknown
+coverage can supply only a coverage explanation, not its current figures.
 
 The SA display omission label is never evidence. Intake cleans passage text,
 structured excerpts and prior assistant turns before either engine sees them,

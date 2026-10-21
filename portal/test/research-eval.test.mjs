@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { build } from 'esbuild'
-import { gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck } from '../../scripts/research_eval_grade.mjs'
+import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck } from '../../scripts/research_eval_grade.mjs'
 import { parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -56,7 +56,7 @@ test('a planner ranking without the vote hop is partial; the loop answer with bo
   const old = grade('H01', 'planner'), neu = grade('H01', 'loop')
   assert.equal(old.axes.usefulness, 'partial'); assert.deepEqual(old.parts.names, ['ranking']); assert.equal(old.overall, 'partial')
   assert.equal(old.axes.citations, 'pass'); assert.deepEqual(old.flags, [])
-  assert.deepEqual(neu.axes, { usefulness: 'pass', citations: 'pass', correctness: 'pass' }); assert.equal(neu.overall, 'pass')
+  assert.deepEqual(neu.axes, { usefulness: 'pass', citations: 'pass', correctness: 'pass', constraints: 'pass', decline: 'pass' }); assert.equal(neu.overall, 'pass')
   assert.equal(neu.tools.status, 'pass'); assert.equal(neu.tools.mode, 'loop'); assert.equal(neu.tools.rounds, 2)
   assert.ok(neu.evidence_complete && old.evidence_complete)
   assert.equal(neu.figures.unbound.length, 0)
@@ -234,4 +234,25 @@ test('sentence offsets are code points and quotations tolerate ellipses and punc
   assert.deepEqual(s.map((x) => [x.start, x.end]), [[0, 17], [19, 37], [38, 43]])
   assert.deepEqual(quoteCheck('She said "we will act on this, and we will act on it quickly … without delay".', ['We will act on this — and we will act on it quickly, carefully, and without delay.']), { total: 1, found: 1, missing: [] })
   assert.equal(quoteCheck('She said "we will never act on this, whatever the cost may be".', ['we will act on this']).missing.length, 1)
+})
+
+test('routing fixture, detached baseline selection and the spend ceiling are explicit', async () => {
+  assert.ok((await loadQuestions('routing')).length >= 40)
+  const request=requestFor({question:'Who is the highest paid politician?'},'planner',{operator:true,baselineLoop:true,secret:'fixture-only'})
+  assert.equal(request.headers['x-opax-research'],'loop')
+  assert.equal(request.headers['x-opax-nocache'],'1')
+  assert.throws(()=>parseArgs(['http://127.0.0.1:8963','--spend-cap','NaN']),/spend-cap/)
+  const {rows,report}=await runEval({questions:[q('H01'),q('H02')],modes:['loop'],bases:{loop:'http://127.0.0.1:8963'},spendCap:0.5,fetchImpl:()=>{throw Error('must not spend past admission')}})
+  assert.equal(rows.length,0);assert.equal(report.stopped,'spend_cap')
+})
+
+test('a legacy evidence-gap refusal is recognised, and date formatting is not an invented count', () => {
+ const payload={answer:'This selection does not establish their position on that topic.',sources:[],citations:{}}
+ assert.equal(gradeRow({question:'Which seat?',expected:{kind:'decline'},must:[{type:'decline'}]},payload).overall,'pass')
+ assert.equal(gradeRow({question:'Who spoke most?',must:[]},payload).overall,'fail')
+ assert.deepEqual(plainNumbers('Since 26 July 2022 and 2023–24: 150 speeches.'),[2022,2023,150])
+})
+
+test('gold fixture unanswerable reason strings expect a correct decline',()=>{
+ assert.equal(gradeRow({question:'A missing profile?',expected:{unanswerable:'no_demographic_data'},must:[{type:'decline'}]},{answered:false,answer:'The record cannot establish that value.',sources:[]}).overall,'pass')
 })

@@ -18,10 +18,10 @@ export function mentions(text, name) {
   if (t.includes(n)) return true
   const parts = n.split(/\s+/).filter((p) => p.length > 1)
   if (parts.length <= 1) return word(parts[0] ?? n).test(t)
-  return word(parts[0]).test(t) && word(parts.at(-1)).test(t)
+  return word(parts.at(-1)).test(t)
 }
 /** Plain numbers (commas removed), skipping footnote markers. */
-export const plainNumbers = (text) => (String(text ?? '').replace(/\[\d+\]/g, ' ').match(/\d[\d,]*(?:\.\d+)?/g) ?? []).map((n) => Number(n.replace(/,/g, '')))
+export const plainNumbers = (text) => (String(text ?? '').replace(/https?:\/\/[^\s)]+/g, ' ').replace(/\b((?:19|20)\d{2})-\d{2}-\d{2}\b/g, '$1').replace(/\b((?:19|20)\d{2})[–-]\d{2}\b/g, '$1').replace(/\b\d{1,2}\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+((?:19|20)\d{2})\b/gi, '$1').replace(/\[\d+\]/g, ' ').match(/\d[\d,]*(?:\.\d+)?/g) ?? []).map((n) => Number(n.replace(/,/g, '')))
 /** Dollar amounts as numbers ($12.3m, $12.3 million, $12,345,678). */
 export function amounts(text) {
   const out = []
@@ -38,7 +38,7 @@ const traceable = (n) => !isYear(n) && (n >= 10 || !Number.isInteger(n))
 const near = (a, b, tol = 0.05) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1)
 
 export const CAVEAT = /coverage|thin|gap|incomplete|missing|limited|understat|not (?:fully )?(?:covered|captured|complete)|only \d+ (?:federal )?(?:chamber )?speeches|record (?:holds|has) (?:few|only)|sparse/i
-export const REFUSAL = /^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:determined|answered)|is not possible to (?:determine|identify)|does not discuss/i
+export const REFUSAL = /^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:determined|answered)|is not possible to (?:determine|identify)|does not discuss/i
 export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /** Sentences that deny causation are the required no-causation wording, not a breach. */
 const DENIAL = /\bnot (?:evidence|proof)\b|\bno evidence\b|does not (?:prove|show|establish|mean|imply)|is not proof|cannot be (?:inferred|read)/i
@@ -77,7 +77,7 @@ export function figureCheck(answer, question, ev, sentences, covered) {
   for (const s of sentences) {
     const seen = new Set()
     for (const { v, rounded } of amounts(s.text)) { seen.add(v); figures.push({ value: v, amount: true, bound: bound(v, rounded), cited: covered(s), sentence: s.text.trim() }) }
-    for (const n of plainNumbers(s.text)) { if (!traceable(n) || seen.has(n)) continue; seen.add(n); figures.push({ value: n, amount: false, bound: bound(n, false), cited: covered(s), sentence: s.text.trim() }) }
+    for (const n of plainNumbers(s.text.replace(/\$\s?\d[\d,]*(?:\.\d+)?\s*(?:billion|bn|million|m\b|k\b|thousand)?/gi, ' '))) { if (!traceable(n) || seen.has(n)) continue; seen.add(n); figures.push({ value: n, amount: false, bound: bound(n, false), cited: covered(s), sentence: s.text.trim() }) }
   }
   const unbound = figures.filter((f) => !f.bound)
   return { figures, unbound, unbound_uncited: unbound.filter((f) => !f.cited) }
@@ -91,8 +91,11 @@ export function nameCheck(answer, question, ev, roster) {
   const found = [], bound = [], unbound = []
   for (const name of roster) {
     const n = fold(name)
-    if (n.split(/\s+/).length < 2 || n.length < 6 || !t.includes(n)) continue
-    found.push(name); (pool.includes(n) ? bound : unbound).push(name)
+    if (n.split(/\s+/).length < 2 || n.length < 6 || !mentions(answer, name)) continue
+    const surname = n.split(/\s+/).at(-1)
+    if (!t.includes(n) && !new RegExp(`(?<![\\p{L}])${esc(name.split(/\s+/).at(-1))}(?![\\p{L}])`, 'u').test(answer)) continue
+    if (!t.includes(n) && roster.filter(other => fold(other).split(/\s+/).at(-1) === surname).length > 1) continue
+    found.push(name); (mentions(pool, name) ? bound : unbound).push(name)
   }
   return { found, bound, unbound }
 }
@@ -179,6 +182,18 @@ export function runCheck(c, ctx) {
     case 'names': {
       return { status: names.bound.length >= (c.min ?? 1) ? 'pass' : 'fail', detail: names.bound.length ? `bound names: ${names.bound.join(', ')}` : 'no bound roster name' }
     }
+    case 'must_not': return { status: new RegExp(c.match, c.flags ?? 'i').test(t) ? 'fail' : 'pass', detail: 'forbidden answer content' }
+    case 'constraint': {
+      if (ctx.refusal && (ctx.expectedDecline || /Please (?:name|give|specify|clarify)/i.test(t))) return { status: 'pass', detail: 'clarification makes no period claim' }
+      const years = (c.years ?? []).every(y => t.includes(String(y)))
+      const forbidden = (c.must_not ?? []).some(x => new RegExp(x, 'i').test(t))
+      const explicitLimit = /not (?:fully )?covered|cannot establish|records (?:start|cover)|does not (?:hold|date)|not.*available|cannot.*historical/i.test(t)
+      const from = c.since ?? (c.years?.length ? String(Math.min(...c.years)) : null)
+      const to = c.open_end ? null : c.until ?? (c.years?.length ? String(Math.max(...c.years)) : null)
+      const dates = ev.cited.filter(s => s.kind === 'speech').map(s => String(s.date ?? ''))
+      const outside = dates.some(d => !d || from && d.slice(0,4) < String(from).slice(0,4) || to && d.slice(0,4) > String(to).slice(0,4))
+      return { status: !forbidden && !outside && (years || explicitLimit) ? 'pass' : 'fail', detail: forbidden ? 'substituted forbidden period' : outside ? 'source outside requested period' : 'period in answer or explicit coverage limit' }
+    }
     case 'period': {
       const since = typeof payload?.period?.since === 'string' ? payload.period.since : null
       if (since) return { status: since.startsWith(c.since) ? 'pass' : 'fail', detail: `period.since ${since}` }
@@ -233,8 +248,8 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   const quotes = quoteCheck(answer, ev.texts)
   const causal = causalCheck(answer)
   const tools = toolsCheck(q.expected_tools, payload)
-  const expectsDecline = q.expected?.kind === 'decline' || q.expected?.unanswerable === true || (q.must ?? []).some((c) => c.type === 'decline')
-  const ctx = { answer, payload, ev, roster, parties, names, figures, refusal }
+  const expectsDecline = q.expected?.kind === 'decline' || Boolean(q.expected?.unanswerable) || (q.must ?? []).some((c) => c.type === 'decline')
+  const ctx = { answer, payload, ev, roster, parties, names, figures, refusal, expectedDecline: expectsDecline }
   const checks = (q.must ?? []).map((c) => ({ ...c, ...runCheck(c, ctx) }))
   const parts = [...new Set(checks.map((c) => c.part).filter(Boolean))]
   const coveredParts = parts.filter((p) => checks.filter((c) => c.part === p).every((c) => c.status === 'pass' || c.status === 'n/a'))
@@ -268,7 +283,10 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   else if (figures.unbound.length || names.unbound.length || passed < graded.length || unknown) correctness = 'partial'
   else correctness = 'pass'
 
-  const axes = { usefulness, citations, correctness }
+  const constraintChecks = checks.filter(c => ['constraint', 'period', 'must_not'].includes(c.type))
+  const constraints = constraintChecks.some(c => c.status === 'fail') ? 'fail' : constraintChecks.length ? 'pass' : 'n/a'
+  const decline = expectsDecline ? refusal ? 'pass' : 'fail' : refusal ? 'fail' : 'pass'
+  const axes = { usefulness, citations, correctness, constraints, decline }
   const overall = axisOf({ fail: Object.values(axes).includes('fail'), partial: Object.values(axes).includes('partial') })
   const flags = [
     ...figures.unbound.map((f) => `unbound figure ${f.amount ? '$' : ''}${f.value}${f.cited ? '' : ' (uncited sentence)'}`),
@@ -326,6 +344,7 @@ export function summarise(rows) {
       latency_ms: { p50: percentile(ms, 50), p95: percentile(ms, 95) },
       tokens: { p50: percentile(tokens, 50), p95: percentile(tokens, 95), reported: tokens.length },
       cost_usd: { mean: cost.length ? cost.reduce((a, b) => a + b, 0) / cost.length : null, p50: percentile(cost, 50), p95: percentile(cost, 95), reported: graded.filter((r) => r.usage?.cost_source === 'reported').length, estimated: graded.filter((r) => r.usage?.cost_source === 'estimated').length, missing: graded.filter((r) => !r.usage || r.usage.cost_source === 'missing').length },
+      categories: Object.fromEntries([...new Set(all.map(r => r.kind))].map(category => { const rs = all.filter(r => r.kind === category); const costs = rs.map(r => r.usage?.cost_usd).filter(x => x != null); return [category, { n: rs.length, pass: rs.filter(r => r.grade?.overall === 'pass').length, partial: rs.filter(r => r.grade?.overall === 'partial').length, constraints_pass: rs.filter(r => r.grade?.axes.constraints === 'pass').length, decline_pass: rs.filter(r => r.grade?.axes.decline === 'pass').length, latency_ms: { p50: percentile(rs.map(r => r.ms), 50), p95: percentile(rs.map(r => r.ms), 95) }, cost_usd: { mean: costs.length ? costs.reduce((a,b) => a+b,0)/costs.length : null, p95: percentile(costs,95) } }] })),
       mode_mismatch: graded.filter((r) => r.grade.tools.mode && r.grade.tools.mode !== mode).length,
     }
   }

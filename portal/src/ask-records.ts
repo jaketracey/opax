@@ -4,7 +4,7 @@ import { payEvidence } from './ask-pay'
 
 export interface RecordQuestion {
   question?: string; kind?: string; speaker?: string; party?: string
-  state?: string; chamber?: string; topic?: string; from?: string; to?: string
+  since?: string; until?: string; state?: string; chamber?: string; topic?: string; from?: string; to?: string
   context?: { author?: string; text?: string }[]
 }
 
