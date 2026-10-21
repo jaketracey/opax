@@ -108,7 +108,8 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   const selectedPeriod=periodFact ? /^(?:Period|Financial years):\s*((?:19|20)\d{2}(?:[–-]\d{2}(?:\d{2})?)?(?:\s+to\s+(?:19|20)\d{2}(?:[–-]\d{2}(?:\d{2})?)?)?)(?=[.\s]|$)/i.exec(periodFact.text)?.[1] : undefined
   const period=selectedPeriod ?? (input.period.since ? input.period.since.slice(0,4)+(input.period.until&&input.period.until.slice(0,4)!==input.period.since.slice(0,4)?'–'+input.period.until.slice(0,4):'') : '')
   if(!rates.length && !currentPay.length) {
-    const available=input.facts.filter(f=>!f.coverage && !f.metadata), rows:{name:string;amount:string;tail:string;f:WritingFact}[]=[]
+    const personRanking=/\b(?:who|which (?:politician|parliamentarian|person|party|senator))\b/i.test(input.question)&&/most|highest|largest|top|biggest/i.test(input.question)
+    const available=input.facts.filter(f=>!f.coverage && !f.metadata).sort((a,b)=>personRanking?Number(/^\d{4}:/.test(a.text))-Number(/^\d{4}:/.test(b.text)):0), rows:{name:string;amount:string;tail:string;f:WritingFact}[]=[]
     // Tables and labelled record rows are data, never text to copy into the answer.
     for(const f of available) {
       if(/^\|/.test(f.text)) {
@@ -154,8 +155,9 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     const limit=input.facts.find(f=>/cannot|not fully covered|does not date|not.*available|not.*held|not.*sitting|not.*provide|no matching/i.test(f.text))
     const requested=input.period.since ? ' for '+input.period.since+(input.period.until?' to '+input.period.until:'') : ''
     const reason=limit && /does not date|chamber changes|affiliations.*not dated/i.test(limit.text) ? ' because this export does not date historical party or chamber changes' : ' from the selected records'
+    const requestedStart=input.period.since??/requested period (\d{4}-\d{2}-\d{2})/.exec(input.facts.map(f=>f.text).join(' '))?.[1]??/\b(?:19|20)\d{2}\b/.exec(input.question)?.[0]
     const boundary=/(?:cover|start(?: on| in)?) (1999-12-07|7 December 1999|December 1999)/i.exec(input.facts.map(f=>f.text).join(' '))
-    return assemble([{text:boundary?`OPAX's federal pay records start in December 1999, so they cannot establish the requested salary answer${requested}.`:`OPAX cannot establish the requested answer${requested}${reason}.`,facts:(boundary?input.facts:limit?[limit]:input.facts.slice(0,1)).map(f=>f.id)}],input)
+    return assemble([{text:boundary&&requestedStart&&requestedStart<'1999-12-07'?`OPAX's federal pay records start in December 1999, so they cannot establish the requested salary answer${requested}.`:`OPAX cannot establish the requested answer${requested}${reason}.`,facts:(boundary?input.facts:limit?[limit]:input.facts.slice(0,1)).map(f=>f.id)}],input)
   }
   if(coverage && !lines.some(l=>key(l.text)===key(coverage.text)))lines.push(coverage)
   return assemble(lines,input)
@@ -279,7 +281,8 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   const quantitative=/\b(?:highest|lowest|most|least|largest|biggest|top|paid|salary|pay|cost|worth|contracts?|grants?)\b|\bhow (?:many|much)\b/i.test(input.question)
   const candidates=/suppliers?/i.test(input.question)&&input.facts.some(f=>/\/supplier\//.test(f.source.url))?input.facts.filter(f=>/\/supplier\//.test(f.source.url)):input.facts
   const primaries=quantitative?candidates.filter(f=>!f.coverage&&!f.metadata).flatMap(f=>(f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)).filter(a=>a.unit.startsWith('AUD')&&a.metric!=='base_salary'||a.unit==='count'&&/^(?:speeches|divisions)/.test(a.metric)).map(atom=>({fact:f,atom}))):[]
-  const primary=/highest|most.*paid|paid.*most/i.test(input.question)&&primaries.some(p=>p.atom.metric==='salary')?primaries.filter(p=>p.atom.metric==='salary').sort((a,b)=>Number(b.atom.value)-Number(a.atom.value))[0]:primaries[0]
+  const headlineCandidates=/\b(?:who|which (?:politician|parliamentarian|person|party|senator))\b/i.test(input.question)?primaries.filter(p=>p.atom.entity&&!/^\d{4}$/.test(p.atom.entity)):primaries
+  const primary=/highest|most.*paid|paid.*most/i.test(input.question)&&headlineCandidates.some(p=>p.atom.metric==='salary')?headlineCandidates.filter(p=>p.atom.metric==='salary').sort((a,b)=>Number(b.atom.value)-Number(a.atom.value))[0]:headlineCandidates[0]
   const containsHeadline=(line:WrittenSentence)=>!!primary&&!line.coverage&&tokens(line.text).includes(primary.atom.value)&&(!primary.atom.entity||line.text.includes(primary.atom.entity))
   let repairLead=!!primary&&!containsHeadline(lines[0])
   if(repairLead){const found=lines.findIndex(containsHeadline);if(found>0){lines.unshift(...lines.splice(found,1));repairLead=false}}

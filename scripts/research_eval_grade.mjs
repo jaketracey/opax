@@ -287,7 +287,8 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({}), r
   const echo=/Coverage:|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||base \$[\d,]+ plus \d+(?:\.\d+)?%/i.test(answer)
   const first=sentences[0]??'',rows=styleRows(evidence),ranking=/\b(?:highest|lowest|most|least|largest|biggest|top|fewest)\b/i.test(question)
   const limited=/\b(?:cannot|could not|do(?:es)? not|did not) establish\b|\bno (?:reliable|verified|matching)\b|\b(?:records|export).*\b(?:start|does not date)\b|^Please (?:name|give|specify)|^OPAX covers|(?:ranking|total|answer).*cannot be established|no ranking or total can be established|(?:period|records|coverage)[^.]*is not (?:fully )?covered|no [^.]*\b(?:ranking|total|answer)\b[^.]*can be established|private information|no evidence|does not (?:hold|cover)/i.test(first)
-  const row=ranking&&/paid|salary|pay\b/i.test(question)&&rows.some(r=>r.salary)?rows.filter(r=>r.salary).sort((a,b)=>(/lowest|least/i.test(question)?1:-1)*(Number(a.value.replace(/[$,]/g,''))-Number(b.value.replace(/[$,]/g,''))))[0]:rows[0]
+  const candidates=ranking&&/\b(?:who|which (?:politician|parliamentarian|person|party|senator))\b/i.test(question)?rows.filter(r=>!/^\d{4}$/.test(r.entity)):rows
+  const row=ranking&&/paid|salary|pay\b/i.test(question)&&candidates.some(r=>r.salary)?candidates.filter(r=>r.salary).sort((a,b)=>(/lowest|least/i.test(question)?1:-1)*(Number(a.value.replace(/[$,]/g,''))-Number(b.value.replace(/[$,]/g,''))))[0]:candidates[0]
   const speakers=[...new Set((evidence.sources??[]).map(s=>s.speaker).filter(Boolean))]
   const subject=limited||row?limited||styleNormal(first).includes(styleNormal(row.entity)):!speakers.length||speakers.some(n=>styleNormal(first).includes(styleNormal(n)))
   const topic=/\b(mining|gambling|housing|immigration|climate|tax|budget|contracts?|grants?|salary|income)\b/i.exec(question)?.[1]

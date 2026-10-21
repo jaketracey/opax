@@ -199,3 +199,20 @@ test('review rubric: an explicit incomplete-period boundary is a direct coverage
  const evidence={sources:[source('pay',"OPAX's pay records cover 1999-12-07 to 2026-10-19; the requested period 1990-01-01 to 1990-12-31 is not fully covered.",'pay')]}
  assert.equal(answerStyleChecks('Who was the highest paid politician in 1990?',answer,evidence).direct_first_sentence,'pass')
 })
+
+test('review direct ranking lead: an ancillary year total cannot precede the named leader',()=>{
+ const facts=[fact(1,'2022: 38 chamber speeches labelled gambling.','count'),fact(2,'Avery Example: 21 chamber speeches labelled gambling.','count')]
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Avery Example spoke most about gambling, with 21 chamber speeches.',facts:[2]},{text:'Yearly federal gambling speech counts were 38 in 2022.',facts:[1]}]},{question:'Who spoke most about gambling since 2022?',period,facts})
+ assert.match(out.answer.split('\n\n')[0],/Avery Example.*most.*21/)
+ assert.match(api.proseFallback({question:'Who spoke most about gambling since 2022?',period,facts}).answer.split('\n\n')[0],/Avery Example.*21/)
+ const evidence={sources:facts.map(f=>f.source)}
+ assert.equal(answerStyleChecks('Who spoke most about gambling since 2022?','Avery Example spoke most about gambling, with 21 chamber speeches.',evidence).direct_first_sentence,'pass')
+ assert.equal(answerStyleChecks('Who spoke most about gambling since 2022?','In 2022 there were the most gambling speeches, with 38.',evidence).direct_first_sentence,'fail')
+})
+
+test('review fallback scope: the 1999 start cannot explain an unavailable historical chamber ranking in 2005',()=>{
+ const facts=[{...fact(1,"OPAX's pay records cover 2005-01-01 to 2005-12-31, but this export does not date party or chamber changes. A historical chamber ranking cannot be established from its current roster labels."),coverage:true},{...fact(2,'Coverage: Federal parliamentary salary records start on 7 December 1999 and run to 2026-10-19.'),coverage:true}]
+ const out=api.proseFallback({question:'Who was the highest paid senator in 2005?',period:{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'},facts})
+ assert.match(out.answer,/does not date historical party or chamber changes/)
+ assert.doesNotMatch(out.answer,/1999.*so.*cannot/)
+})
