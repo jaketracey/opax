@@ -1,4 +1,4 @@
-import {auditPayload} from './research-claim-audit.mjs'
+import {auditPayload,quotationSpans} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
@@ -12,8 +12,8 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
       const text=finding.text,base=answer.indexOf(text)
       if(base<0)continue
       const at=finding.offset===undefined?Math.max(0,text.indexOf(finding.quote??finding.entity)):Math.max(0,finding.offset-base)
-      const quotes=[...text.matchAll(/[“"]([^”"]+)[”"]|(?<![\p{L}])[‘']([^’']+)[’'](?![\p{L}])/gu)]
-      const boundaries=[0,...[...text.matchAll(/;\s+|,?\s+(?:and|while|whereas|because|but)\s+(?=(?:the |a |an |that |their |no |full |more |said |[A-Z]))/g)].filter(m=>!quotes.some(q=>m.index!>q.index!&&m.index!<q.index!+q[0].length)).map(m=>m.index!),text.length]
+      const quotes=quotationSpans(text)
+      const boundaries=[0,...[...text.matchAll(/;\s+|,?\s+(?:and|while|whereas|because|but)\s+(?=(?:the |a |an |that |their |no |full |more |said |[A-Z]))/g)].filter(m=>!quotes.some(q=>m.index!>q.at&&m.index!<q.end)).map(m=>m.index!),text.length]
       const index=Math.max(0,boundaries.findIndex((b,i)=>b<=at&&boundaries[i+1]>at))
       remove.add(text.slice(boundaries[index],boundaries[index+1]))
     }

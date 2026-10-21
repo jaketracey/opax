@@ -1,3 +1,4 @@
+import type { ClaimAtom } from './research-claims'
 import type { PlanStep, Period, NamedScope, Fact, Progress } from './agentic-ask'
 import type { ToolDeps, ToolResult } from './agentic-tools'
 
@@ -26,7 +27,7 @@ export interface Passage {
 export interface QualitativeAnswer {
   answer: string
   citations: Record<string, [number, number][]>
-  sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; kind: string }[]
+  sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; kind: string; claim_atoms?: (ClaimAtom & {periodEvidenceId?:string})[] }[]
   /** Some or all of the answer's points could not be matched to a passage and carry no citation. */
   answer_status?: 'uncited' | 'partly_cited'
 }

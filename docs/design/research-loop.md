@@ -373,6 +373,13 @@ discarding supported neighbouring clauses or intentionally uncited points.
 The offline audit uses the same pure extraction and association checks and
 records every extracted atom and its evidence ID; unverified claims count as
 failures, including when a saved excerpt is too short to establish them.
+Subject binding is independent of the predicate's spelling. A recipient cannot
+borrow a figure from an anonymous or another person's speech; a quote and its
+owner, topic, figures and dates must match the same selected evidence atom.
+Possessive attribution is checked as well. The ordinary planner fallback uses
+the same final check. Period metadata selected alongside a figure is retained
+on that figure's source atom with the metadata evidence ID, rather than being
+searched globally across unrelated records.
 If clause repair removes the leading ranking claim, the answer restores the
 verified leader from selected facts and preserves the remaining valid prose.
 Term-comparison direction is checked against the corresponding count/share
@@ -409,7 +416,11 @@ Every JSON answer, SSE completion, ordinary fallback and cached replay passes a
 plain-language guard before text is released. Internal processing vocabulary is
 removed, punctuation spacing is normalised, and citation spans are remapped in
 Unicode code points. Source evidence is untouched. Literal quotations are never
-silently rewritten. The final audit and language guard add no inference calls,
+silently rewritten or removed by the language guard. Bill, Act and document
+titles are also protected. Machinery references are matched in context, such
+as a coverage tool returning data; a speech describing a useful tool keeps its
+meaning. Unsupported quotations remain the grounding check's responsibility.
+The final audit and language guard add no inference calls,
 provider changes or time allowance. `scripts/research_eval_audit.mjs` audits saved
 comparison payloads without network access.
 
@@ -436,3 +447,8 @@ excluded from each request's measured latency. The grader treats an explicit
 OPAX coverage decline as a decline, recognises denial of causation with singular
 or plural subjects, and excludes day-of-month tokens in both prose date orders
 from financial-figure checks.
+
+An affected-case replay must preserve the untouched payloads exactly and state
+each arm's original pacing. The saved October comparison used three-second
+baseline pacing and six-second new pacing. Regrading both arms identically
+does not make those timings a fresh simultaneous comparison.

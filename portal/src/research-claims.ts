@@ -34,7 +34,7 @@ export function atomsFromText(text: string, evidenceId: string, source: {speaker
   const current=/^(.+?) \([^)]+\), (.+?): base salary (\$[\d,]+) plus a loading of ([\d.]+)%, (\$[\d,]+) a year/.exec(text)
   const label=/^([^:|]+):\s/.exec(text)?.[1]?.replace(/\s*\([^)]*\).*$/,'').trim()
   const table=text.startsWith('|')?text.split('|').map(s=>s.trim()).find(s=>/[a-z]/i.test(s)):undefined
-  const entity=rate?.[1]??current?.[1]??label??table??source.speaker??/^(.+?) (?:gave|received|was awarded)\b/.exec(text)?.[1]??''
+  const entity=(rate?.[1]??current?.[1]??label??table??source.speaker??/^(.+?) (?:gave|received|was awarded)\b/.exec(text)?.[1]??'').replace(/\s+(?:received|provided|gave|led)\b.*$/i,'')
   const field=censusField(text)
   const dates=text.match(datePattern)??[]
   const period:ClaimAtom['period']=rate?{since:rate[4],until:rate[5]}:{...(dates[0]?{since:dates[0]}:{}),...(dates[1]?{until:dates[1]}:{})}

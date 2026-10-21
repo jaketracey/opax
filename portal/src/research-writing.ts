@@ -5,7 +5,7 @@ import { claimAttributionOk, claimMatchesParty, withoutUnsupportedFigures } from
 import type { QualitativeAnswer } from './research-types'
 import { plainAnswerPayload } from './research-language'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-3'
+export const ANSWER_WRITING_VERSION = 'written-answer-4'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -55,8 +55,14 @@ function assemble(lines: WrittenSentence[], input: WritingInput): QualitativeAns
       const fact = input.facts.find(f => f.id === id)
       if (!fact) continue
       const source = fact.source
+      // A selected period fact is associated only with the other facts cited by this sentence.
+      // Preserve that verified association for the independent final audit; never infer it globally.
+      const metadata=line.facts.map(id=>input.facts.find(f=>f.id===id)).filter((f):f is WritingFact=>!!f&&/^(?:Period|Financial years):/i.test(f.text))
+      const atomPeriod=metadata.length===1?metadata[0]:undefined
+      const atoms=(fact.atoms??atomsFromText(fact.text,fact.evidenceId??source.resource+'/t/body/0',source)).map(atom=>
+        atomPeriod&&!atom.period.since&&!atom.period.until&&!atom.period.label?{...atom,period:{label:atomPeriod.text.replace(/^(?:Period|Financial years):\s*/i,'').replace(/\.$/,'')},periodEvidenceId:atomPeriod.evidenceId??atomPeriod.source.resource+'/t/body/0'}:atom)
       const previous=sources.get(source.resource)
-      sources.set(source.resource, previous ? {...previous,snippet:[...new Set([previous.snippet,fact.text])].join('\n')} : {...source,snippet:[...new Set([source.snippet,fact.text])].join('\n')})
+      sources.set(source.resource, previous ? {...previous,snippet:[...new Set([previous.snippet,fact.text])].join('\n'),claim_atoms:[...(previous.claim_atoms??[]),...atoms]} : {...source,snippet:[...new Set([source.snippet,fact.text])].join('\n'),claim_atoms:atoms})
       const evidenceId = fact.evidenceId ?? (source.resource.includes('/t/') ? source.resource : source.resource+'/t/body/0')
       ;(citations[evidenceId] ??= []).push([start,Array.from(answer).length])
     }
