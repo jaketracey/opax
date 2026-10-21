@@ -333,7 +333,7 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
     if (party === null) soft ??= 'claim_party_mismatch'
     else claim = party
     // A point repeating one already kept from the same passage adds nothing.
-    const key = id + '\u0000' + normal(claim).toLowerCase()
+    const key = normal(claim).toLowerCase()
     if (seen.has(key)) return drop('duplicate')
     const strict = (text: string) => {
       const reasons: string[] = []

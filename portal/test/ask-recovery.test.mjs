@@ -36,7 +36,7 @@ function harness(responses, env = {}) {
     return value;
   };
   const ctx = { waitUntil(p) { pending.push(p); } };
-  const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {saConversationInput,
+  const api = runInNewContext(transpile(code) + ';({apiAsk,apiAskStream})', {saConversationInput,ANSWER_WRITING_VERSION:'written-answer-1',
     saSendData:async (_event,data)=>data,
     isWitness, loadPeople: async () => ({byFold:new Map()}), scopeSpeakerBody: async () => {}, // External scoped retrieval is exercised in witness-split.test.mjs.
     ...passageText, ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,

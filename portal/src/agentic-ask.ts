@@ -1,3 +1,4 @@
+import { researchPhaseWallMs } from './research-time'
 /**
  * OPAX-owned Ask orchestration in the Worker
  * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
@@ -17,7 +18,9 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-7-research'
+import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
+
+export const AGENTIC_PROMPT_VERSION = `agentic-ask-7-research/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 /** A loop answer's time target: optional extras (the committee supplement) are dropped rather than run past it. */
@@ -314,7 +317,10 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   const publicQuestion = question.replace(/\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g, ' ').replace(/https?:\/\/\S+/gi, ' ')
   const q = ` ${normaliseQuestion(publicQuestion)} `
   const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
-  const records = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
+  const exported = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
+  // A bare indexed surname is an alias, not a full identity that may hide other people.
+  const fullSurnames=new Set(exported.filter(p=>typeof p.name==='string'&&p.name.trim().includes(' ')).map(p=>normaliseQuestion(p.name).split(' ').at(-1)!))
+  const records=exported.filter(p=>typeof p.name==='string'&&(p.name.trim().includes(' ')||!fullSurnames.has(normaliseQuestion(p.name))))
   const people: string[] = []
   // A lone surname is an ordinary word as often as a name ("nuclear power", "differ on"): when the
   // asker uses capitals at all, a one-word match must be capitalised as written in the roster.
@@ -452,6 +458,7 @@ export interface AgenticPayload {
   version: string
   research?: ResearchPayload
   qualitative?: QualitativeAnswer
+  passage_answer?: QualitativeAnswer
   chosen_facts?: number[]
   research_failure?: string
 }
@@ -501,16 +508,41 @@ export function researchTrail(events: StepEvent[], steps: AgenticPayload['steps'
 /** Loop failures retain the old planner, inside the original request deadline. */
 export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope): Promise<AgenticPayload> {
   const started = Date.now()
+  const reserveEnabled=!!deps.research?.write&&(deps.research.writingWallMs??budgetMs)>=1000
+  const selectionLeft=()=>Math.max(1,(deps.research?.write?researchPhaseWallMs(Math.min(budgetMs,deps.research.writingWallMs??budgetMs)):budgetMs)-(Date.now()-started))
   const attempted: StepEvent[] = []
   const loopProgress: Progress = async (event, data) => {
     const step = (data as { step?: StepEvent })?.step
     if (step && step.state !== 'running') attempted.push(step)
     await progress(event, data)
   }
-  try {
-    const run = await runAgenticAttempt(question, deps, deps.research ? loopProgress : progress, budgetMs, period, filters, resolvedScope)
-    if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
+  const writeRun = async (run: AgenticPayload) => {
+    if (!run.answered || !deps.research?.write) return run
+    const chosen = new Set(run.chosen_facts ?? [])
+    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind==='count'?'count':f.kind==='export'?'export':'record',url:f.url,label:f.text,value:f.value}}))
+    // Passage points have already been written and checked by the model; retain the 16 Oct loose-point contract.
+    if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
+    const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
+    const sheet = writingFacts(recordAnswer, facts, run.notes)
+    // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
+    if (!sheet.length) return run
+    await progress('status', {phase:'writing'})
+    const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
+    const input={question,period,facts:sheet}
+    const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
+    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
+    const complete=run.passage_answer ? appendWrittenPoints(written,run.passage_answer) : written
+    run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
+    run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
+    run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started
+    if(run.research){run.research.turns=stats.turns;run.research.sources=complete.sources.map(s=>({title:s.title,url:s.url,kind:s.kind,...(s.date?{date:s.date}:{}),...(s.speaker?{speaker:s.speaker}:{})}))}
     return run
+  }
+  try {
+    const primary=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal},deps.research?loopProgress:progress,budgetMs,period,filters,resolvedScope,started)
+    const run = await (reserveEnabled?bounded(primary,selectionLeft(),deps.signal):primary(deps.signal))
+    if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
+    return await writeRun(run)
   }
   catch (error) {
     if (!deps.research) throw error
@@ -530,7 +562,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       const value = data as { step?: StepEvent }
       await progress(event, value?.step ? { ...value, step: { ...value.step, id: value.step.id + offset } } : data)
     }
-    const fallback = await runAgenticAttempt(question, { ...deps, research: undefined, plannerTrail: true }, shifted, Math.max(0, budgetMs - (Date.now() - started)), period, filters, resolvedScope)
+    const recover=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal,research:undefined,plannerTrail:true},shifted,Math.max(0,budgetMs-(Date.now()-started)),period,filters,resolvedScope,started)
+    const fallback = await (reserveEnabled?bounded(recover,selectionLeft(),deps.signal):recover(deps.signal))
     fallback.events = fallback.events.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) fallback.research.trail = fallback.research.trail.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) Object.assign(fallback.research, { failure: failure.reason, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
@@ -538,16 +571,16 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
     fallback.timings.total_ms = Date.now() - started
     fallback.research_failure = failure.reason
-    return fallback
+    return await writeRun(fallback)
   }
 }
-async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope, primaryStarted=Date.now()): Promise<AgenticPayload> {
   // Speculative extras (the early committee check) end with their attempt: a dropped or failed run leaves no lookup behind.
   const extras = new AbortController()
-  try { return await attempt(question, deps, progress, budgetMs, period, filters, extras.signal, resolvedScope) }
+  try { return await attempt(question, deps, progress, budgetMs, period, filters, extras.signal, resolvedScope, primaryStarted) }
   finally { extras.abort() }
 }
-async function attempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, extras: AbortSignal, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+async function attempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, extras: AbortSignal, resolvedScope?: NamedScope,primaryStarted=Date.now()): Promise<AgenticPayload> {
   const electorateData = isElectorateDataQuestion(question)
   if (electorateData && !deps.research) period = { kind: 'all', label: 'Figures use published Census geography.' }
   const t0 = Date.now(), deadline = t0 + budgetMs
@@ -568,6 +601,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
     catch { return base({ reason: 'declined' }) }
+    if(named.ambiguous&&deps.research){const answer='Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,citations:{},sources:[],answer_status:'uncited'}})}
     if (!deps.research && (named.unresolved || named.ambiguous || named.bills.length)) return base({ reason: 'declined' })
   }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {
@@ -630,7 +664,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
     const rules = fallbackPlan(question)?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
     const explicit = Object.fromEntries(['state', 'chamber', 'party'].filter(k => rules[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, rules[k]]))
     researched = await bounded(signal => { executionSignal = signal; return deps.research!(question, {
-      deps, period, named, signal, progress,
+      deps, period, named, signal, progress,selectionWallMs:(deps.research!.writingWallMs??budgetMs)>=1000?Math.max(1,researchPhaseWallMs(Math.min(budgetMs,deps.research!.writingWallMs??budgetMs))-(Date.now()-primaryStarted)-50):undefined,
       scope: step => periodPlan({ shape: classifyAgentic(question).shape ?? 'ranking', steps: [step] }, period, { ...explicit, ...filters }).steps[0],
       execute: async (step, round, custom, signal) => {
         const r = await execute(step, false, custom, round, signal)
@@ -651,7 +685,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
       timings.plan_ms = Date.now() - t0
       if (researched.answer) await deps.onResearchAnswer?.(researched.answer).catch(() => {})
       await progress('status', { phase: 'writing' })
-      return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative,
+      return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative, passage_answer:researched.points,
         research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input), ...(researched.answer ? { answer_stats: researched.answer } : {}), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
     }
   }
@@ -727,9 +761,8 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const mainFacts = facts.filter(f => !committeeFacts.some(c => c.text === f.text))
   const peakYear = /\bwhich year\b.*\bmost\b/i.test(question)
   if (peakYear) mainFacts.sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0))
-  // No composer call: figures, metric labels, entities and citations are
-  // rendered together from the tool rows, so swapping aye/no or party/year
-  // values in model text can never affect an answer.
+  // Select deterministically before the writing stage. Figures, metric labels,
+  // entities and counting basis remain attached to their original tool rows.
   const chosen = oneBasis(researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts)
   // The loop's finish already bounds its own selection (30 ids): a year-by-year trend keeps every year it chose.
   const selected = electorateData ? chosen : selectAnswerFacts(chosen, named, peakYear, researched ? 30 : 8)

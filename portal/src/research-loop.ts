@@ -1,3 +1,7 @@
+import { researchPhaseWallMs } from './research-time'
+export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
+import { createAnswerWriter } from './research-writer'
+import { electoratePlan } from './tools/electorates'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
 import { extractAskConstraints, constrainStep, guardToolPeriod } from './ask-constraints'
 import { calculatedLookup } from './research-calculated'
@@ -54,11 +58,12 @@ export interface ResearchOptions {
 
 /** Fetch-based SDK loop. All provider and tool state belongs to this request. */
 export function createResearch(options: ResearchOptions): Research {
-  return async (question, context) => {
+  const research: Research = async (question, context) => {
     const qualitativeRun = !classifyAgentic(question).shape || classifyAgentic(question).rule === 'electorate-data'
     let constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {})
     context.constraints = constraints
-    const limits = researchLimits({ ...options, ...(qualitativeRun ? { steps: 6 } : {}) }), started = Date.now()
+    const configured = researchLimits({ ...options, ...(qualitativeRun ? { steps: 6 } : {}) })
+    const limits = {...configured,wallMs:Math.max(1,Math.min(researchPhaseWallMs(configured.wallMs),context.selectionWallMs??Infinity))}, started = Date.now()
     const controller = new AbortController(), abortParent = () => controller.abort(context.signal.reason)
     context.signal.addEventListener('abort', abortParent, { once: true })
     if (context.signal.aborted) abortParent()
@@ -68,7 +73,7 @@ export function createResearch(options: ResearchOptions): Research {
     const cache = new Map<string, Promise<unknown>>()
     const lookupRounds = new Set<number>()
     let calls = 0, round = 0, answerAttempts = 0, argRepairs = 0, finished = false, repeated = false, numericalAnswer = false
-    let selected: number[] = [], qualitative: QualitativeAnswer | null = null
+    let selected: number[] = [], qualitative: QualitativeAnswer | null = null, selectedPoints: QualitativeAnswer | undefined
     // The model's latest answer call and the roster it is checked against, kept so a run that stops after the model
     // has answered (the wall clock, a failed turn) still returns that answer under the same checks.
     let draft: Record<string, unknown> | undefined, draftRoster: Promise<unknown> | undefined
@@ -109,6 +114,8 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       const properties = (TOOL_SPECS.find(t => t.name === rawStep.tool)?.input.properties ?? calculatedProperties) as Record<string, unknown>
       rawStep = terminal ? rawStep : constrainStep(rawStep, constraints, properties)
+      const metric=rawStep.tool==='electorates'?electoratePlan(question)?.steps.find(s=>s.tool==='electorates')?.args.indicator:undefined
+      if(metric)rawStep={...rawStep,args:{...rawStep.args,indicator:metric}}
       const resolved = resolveArgs(rawStep.args, results)
       if (!resolved) return fail('malformed_args')
       let step = terminal || !TOOL_SPECS.some(t => t.name === rawStep.tool) ? { ...rawStep, args: resolved } : context.scope({ ...rawStep, args: resolved })
@@ -281,6 +288,7 @@ export function createResearch(options: ResearchOptions): Research {
       })
     }
     const compose = (facts: ReturnType<typeof factLines>, points: QualitativeAnswer | null): QualitativeAnswer => {
+      selectedPoints = points ?? undefined
       const calculated = facts.length === 1 && !points ? results.find(r => r.data?.calculated_answer && r.cite.some(c => c.label === facts[0].fact.text)) : undefined
       if (calculated) {
         const p = calculated.data!.payload as QualitativeAnswer
@@ -512,7 +520,7 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       if (!finished) fail(stats.rounds >= limits.rounds || calls >= RESEARCH_MAX_CALLS ? 'steps' : answerAttempts ? 'grounding' : 'no_finish')
       await Promise.race([settle(), stopped])
-      return { steps, results, selected, ...stats, ...(qualitative ? { qualitative } : {}) }
+      return { steps, results, selected, ...stats, ...(qualitative ? { qualitative, points:selectedPoints } : {}) }
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
         credits.exhaust(); failed = 'research_credit_exhausted'; turnCost = 0; stats.usageUnknown = false
@@ -527,7 +535,7 @@ export function createResearch(options: ResearchOptions): Research {
       const salvaged = qualitativeRun && !context.signal.aborted ? qualitative ?? await salvage() : null
       if (!salvaged) throw stop
       stats.answer = { ...(stats.answer ?? emptyTally()), salvaged: stop.reason }
-      return { steps, results, selected, ...stats, qualitative: salvaged }
+      return { steps, results, selected, ...stats, qualitative: salvaged, points:selectedPoints }
     } finally {
       if (pendingTurn !== undefined) stats.turns![pendingTurn].ms = Math.max(0, Date.now() - turnStarted)
       // A provider timeout/disconnect has unknown cost: keep its reservation.
@@ -543,4 +551,5 @@ export function createResearch(options: ResearchOptions): Research {
       clearTimeout(timer); context.signal.removeEventListener('abort', abortParent); controller.signal.removeEventListener('abort', rejectAbort)
     }
   }
+  return Object.assign(research, { write: createAnswerWriter(options), writingWallMs: researchLimits(options).wallMs })
 }

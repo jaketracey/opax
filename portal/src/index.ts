@@ -102,7 +102,9 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
-import { withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { ANSWER_WRITING_VERSION } from './research-writing'
+import { withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
 import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
@@ -1389,7 +1391,7 @@ function earlyOverviewStream(work: () => Promise<Response>, budget: AskDeadline,
   return new Response(readable, {headers:SSE_HEADERS})
 }
 
-async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline, quotaTaken = false): Promise<Response> {
+async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline, quotaTaken = false, selectedToolsOnly = false): Promise<Response> {
   const rawInput = saConversationInput((prepared || ((await request.json().catch(() => ({}))) ?? {})) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
   const overviewCandidate = (isPersonOverviewCandidate(rawInput.question || '') || isPersonRecentCandidate(rawInput.question || '')) && !rawInput.topic && !rawInput.from && !rawInput.to && (!rawInput.kind || ['speech','all'].includes(rawInput.kind))
   if (!firstBudget && (overviewCandidate || isPersonRecentIntent(rawInput))) {
@@ -1416,7 +1418,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
   try {
-    const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
+    const ranked = selectedToolsOnly ? null : await rankedMoneyAnswer(rawInput, env.ASSETS)
     if (ranked) {
       mark('receipts')
       // The sheet is for writing the opening, never for the reader: it leaves
@@ -1437,7 +1439,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   // What a parliamentarian is paid is set by instrument, not said in a speech:
   // answered from /pay.json, again with no model call. A failure here is not
   // the reader's problem; the question falls through to the record.
-  const paid = await paidAnswer(rawInput, env.ASSETS).catch(() => null)
+  const paid = selectedToolsOnly ? null : await paidAnswer(rawInput, env.ASSETS).catch(() => null)
   if (paid) { mark('pay'); return timed(json(paid)) }
   // A follow-up in a conversation rarely names its subject ("no he has been
   // in tons of grants, look more"), and the record is searched on the words
@@ -1461,7 +1463,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     if (askedAs) {
       rawInput.question = askedAs
       // "And the Liberals?" after a pay answer only reads as one once rewritten.
-      const paidFollowUp = await paidAnswer({ ...rawInput, context: undefined }, env.ASSETS).catch(() => null)
+      const paidFollowUp = selectedToolsOnly ? null : await paidAnswer({ ...rawInput, context: undefined }, env.ASSETS).catch(() => null)
       if (paidFollowUp) { mark('pay'); return timed(json(withAskedAs(paidFollowUp, askedAs))) }
     }
   }
@@ -1484,7 +1486,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   // The model is part of the key: re-pinning ASK_MODEL retires answers the
   // previous model wrote instead of replaying them for seven days.
   const askModel = env.ASK_MODEL || 'openai-compatible'
-  const keyText = askCacheInput(input, `${env.CACHE_EPOCH}:${askModel}`)
+  const keyText = askCacheInput(input, `${env.CACHE_EPOCH}:${askModel}:${ANSWER_WRITING_VERSION}`)
   const cacheKey = keyText ? cacheRequest('ask', await sha256Hex(keyText)) : null
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
@@ -6305,17 +6307,19 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
   // Operator evals may also pick a model from RESEARCH_LOOP_MODEL_ALLOW and a provider sort for this request only.
   const modelOverride = usage ? researchModelOverride(request.headers.get('x-opax-research-model'), request.headers.get('x-opax-research-provider'), env.RESEARCH_LOOP_MODEL_ALLOW) : {}
   const selected = usage ? { ...env, ...modelOverride, RESEARCH_LOOP: override === 'loop' ? 'route' as const : 'off' as const, RESEARCH_EVAL: usage } : env
+  let answerQuestion=''
   const serve = async () => {
     const body = await readJsonBody(request)
     if (body instanceof Response) return body
     const question = body.value.question
     if (typeof question !== 'string' || !question.trim()) return json({ error: 'question is required' }, 400)
     if (question.length > MAX_QUESTION_CHARS) return json({ error: `question must be ${MAX_QUESTION_CHARS} characters or fewer` }, 400)
+    answerQuestion=question
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
   }
-  const response = await serve()
+  const response = await withAnswerLanguage(await serve(),selected.RESEARCH_LOOP==='route'?answerQuestion:undefined)
   // Operator evals also see which model and routing the loop used.
   return usage ? withResearchEval(response, () => ({ ...researchEvalUsage(usage), model: researchModelKey(selected.RESEARCH_LOOP_MODEL_ID, selected.RESEARCH_LOOP_PROVIDER, selected.RESEARCH_LOOP_REASONING) })) : response
 }
@@ -6403,7 +6407,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     try { return await budget.run(async () => {
       const period = agenticPeriod(input, true)
       const fallbackInput = loopRoute && period.kind !== 'all' ? { ...input, from: period.since?.slice(0, 4), to: period.until?.slice(0, 4), since: period.since, until: period.until } : undefined
-      const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, fallbackInput as AskInput | undefined, budget, quotaTaken)
+      const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, fallbackInput as AskInput | undefined, budget, quotaTaken, loopRoute)
       const safe = loopRoute && response.status === 504 ? new Response(response.body, { status: 503, headers: response.headers }) : response
       // Ordinary RAG consumption is observed for operator evals. Otherwise,
       // keep total usage unknown; per-turn telemetry still describes the loop.
@@ -6428,7 +6432,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     // but can neither read nor fill the agentic cache. The numerical path
     // declines unsafe scopes; qualitative research verifies original passages.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
-    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '8000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
+    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/${ANSWER_WRITING_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '8000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
     const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input, loopRoute), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {
@@ -6438,15 +6442,18 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
           shape: classifyAgentic(question).shape, cost_usd: 0,
           timings: { plan_ms: 0, tools_ms: 0, compose_ms: 0, total_ms: Date.now() - started },
         }).catch(() => console.warn('Ask monitoring write unavailable')))
+        // This versioned key only holds the completed, period-checked written payload.
         return streaming ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
       }
     }
     const limited = await budget.run(() => rateLimited(env.ASK_LIMITER, request)); if (limited) return limited
     quotaTaken = true
     const finish = (run: AgenticPayload) => {
-      const response = json(agenticAskPayload(run, question))
+      const payload=agenticAskPayload(run, question)
+      const finalPayload=loopRoute?groundAnswerPayload(payload,question):payload
+      const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week: the next ask may cite it (as cacheableAnswer).
-      if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited') storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited' && (!loopRoute||Object.keys(finalPayload.citations??{}).length>0)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
       return response
     }
     if (!streaming) {

@@ -38,7 +38,9 @@ export function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     const val = () => { const v = argv[++i]; if (v === undefined) throw new Error(`${a} needs a value`); return v }
-    if (a === '--prod') opts.prod = true
+    if (a === '--interval') opts.intervalMs = Number(val())
+    else if (a === '--review-probes') opts.reviewProbes = true
+    else if (a === '--prod') opts.prod = true
     else if (a === '--baseline-loop') opts.baselineLoop = true
     else if (a === '--spend-cap') opts.spendCap = Number(val())
     else if (a === '--operator') opts.operator = true
@@ -62,6 +64,7 @@ export function parseArgs(argv) {
   if (!['research', 'gold', 'all', 'routing'].includes(opts.set)) throw new Error('--set must be research, gold or all.')
   if (!['auto', 'ops', 'ask'].includes(opts.route)) throw new Error('--route must be auto, ops or ask.')
   if (!Number.isInteger(opts.limit) || opts.limit < 1 || opts.limit > MAX_LIMIT) throw new Error(`--limit must be an integer from 1 to ${MAX_LIMIT}.`)
+  if (opts.intervalMs !== undefined && (!Number.isFinite(opts.intervalMs) || opts.intervalMs<0 || opts.intervalMs>10000)) throw new Error('--interval must be between 0 and 10000 ms.')
   if (opts.spendCap !== undefined && (!Number.isFinite(opts.spendCap) || opts.spendCap <= 0)) throw new Error('--spend-cap must be a positive US dollar amount.')
   if (!(opts.prices.input >= 0 && opts.prices.output >= 0)) throw new Error('Prices must be non-negative numbers.')
   if (!(opts.timeoutMs >= 1000 && opts.timeoutMs <= 120_000)) throw new Error('--timeout must be between 1000 and 120000 ms.')
@@ -108,7 +111,7 @@ export function requestFor(q, mode, { route = 'auto', secret, baselineLoop = fal
   const body = { question: q.question, ...(q.request ?? {}) }
   // Legacy gold defines unstated periods as whole-record (scripts/agentic_ask_shadow.mjs).
   if (q.gold && !LEGACY_PERIOD.test(q.question) && body.period === undefined) body.period = 'all'
-  const headers = { 'content-type': 'application/json', accept: 'application/json', 'x-opax-nocache': '1' }
+  const headers = { 'content-type': 'application/json', accept: q.stream ? 'text/event-stream' : 'application/json', 'x-opax-nocache': '1' }
   if (override || ops) {
     if (!secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for the ops route.')
     headers.authorization = 'Bearer ' + secret
@@ -124,10 +127,14 @@ export async function runOne({ q, mode, base, route, secret, baselineLoop, opera
   const elapsed = () => Math.round(performance.now() - t0)
   try {
     const res = await fetchImpl(new URL(path, base), { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(timeoutMs) })
-    const ms = elapsed()
-    if (!res.ok) return { route: path, ms, error: `HTTP ${res.status}` }
-    const payload = await res.json()
-    return { route: path, ms, payload }
+    if (!res.ok) return { route: path, ms:elapsed(), error: `HTTP ${res.status}` }
+    let payload
+    if ((res.headers?.get('content-type') ?? '').includes('text/event-stream')) {
+      const text=await res.text(), done=text.split(/\r?\n\r?\n/).find(frame=>/^event: done$/m.test(frame))
+      if(!done)return {route:path,ms:elapsed(),error:'missing SSE done'}
+      payload=JSON.parse(done.split(/\r?\n/).find(line=>line.startsWith('data: ')).slice(6))
+    } else payload=await res.json()
+    return { route: path, ms:elapsed(), payload }
   } catch (e) {
     return { route: path, ms: elapsed(), error: e?.name === 'TimeoutError' || e?.name === 'AbortError' ? 'timeout' : 'network' }
   }
@@ -159,6 +166,7 @@ export async function runEval(opts) {
       rows.push(row)
       spent += fixture ? 0 : row.usage?.cost_usd ?? 0.75
       await opts.onRow?.({ row, rows, spent })
+      if(!fixture && opts.intervalMs)await new Promise(resolve=>setTimeout(resolve,opts.intervalMs))
     }
     if (stopped) break
   }
@@ -194,11 +202,12 @@ async function main() {
   }
   const secret = process.env.DAILY_POST_OPERATOR_SECRET
   if (!fixture && (opts.route === 'ops' || opts.operator || opts.prod) && !secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for operator evaluation.')
-  const questions = await loadQuestions(opts.set)
+  const baseQuestions = await loadQuestions(opts.set)
+  const questions = opts.reviewProbes ? [...baseQuestions.slice(0,45),...JSON.parse(await readFile(resolve(ROOT,'portal/test/fixtures/ask-routing-review-probes.json'),'utf8')).questions] : baseQuestions
   const { roster, parties } = await loadRoster()
   await mkdir(opts.out, { recursive: true })
   const onRow = async ({ row, rows, spent }) => { await writeFile(resolve(opts.out, 'in-progress.json'), JSON.stringify({ rows, spent }, null, 2)); console.log(JSON.stringify({ id: row.id, mode: row.mode, grade: row.grade?.overall, ms: row.ms, spent })) }
-  const { report, summary } = await runEval({ onRow: fixture ? undefined : onRow, spendCap: opts.spendCap, baselineLoop: opts.baselineLoop, questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
+  const { report, summary } = await runEval({ onRow: fixture ? undefined : onRow, spendCap: opts.spendCap, intervalMs: opts.intervalMs, baselineLoop: opts.baselineLoop, questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
   const written = await writeReports(report, opts.out)
   // Counts only on stdout: no question or answer text.
   const brief = Object.fromEntries(Object.entries(summary).map(([m, s]) => [m, { n: s.n, errors: s.errors, pass: s.overall.pass, partial: s.overall.partial, fail: s.overall.fail, p50_ms: s.latency_ms.p50, p95_ms: s.latency_ms.p95, mean_cost_usd: s.cost_usd.mean }]))

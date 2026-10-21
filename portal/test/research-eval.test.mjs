@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { build } from 'esbuild'
-import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck } from '../../scripts/research_eval_grade.mjs'
+import { plainNumbers, gradeRow, usageOf, percentile, summarise, renderMarkdown, sentencesOf, quoteCheck, causalCheck, answerStyleChecks } from '../../scripts/research_eval_grade.mjs'
 import { parseArgs, guardBase, requestFor, runOne, runEval, loadQuestions, DEFAULT_LIMIT, MAX_LIMIT } from '../../scripts/research_eval.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -54,9 +54,9 @@ test('the gold set is included with --set gold and all', async () => {
 
 test('a planner ranking without the vote hop is partial; the loop answer with both hops passes', () => {
   const old = grade('H01', 'planner'), neu = grade('H01', 'loop')
-  assert.equal(old.axes.usefulness, 'partial'); assert.deepEqual(old.parts.names, ['ranking']); assert.equal(old.overall, 'partial')
+  assert.equal(old.axes.usefulness, 'partial'); assert.deepEqual(old.parts.names, ['ranking']); assert.equal(old.overall, 'fail')
   assert.equal(old.axes.citations, 'pass'); assert.deepEqual(old.flags, [])
-  assert.deepEqual(neu.axes, { usefulness: 'pass', citations: 'pass', correctness: 'pass', constraints: 'pass', decline: 'pass' }); assert.equal(neu.overall, 'pass')
+  assert.deepEqual(neu.axes, { usefulness: 'pass', citations: 'pass', correctness: 'pass', constraints: 'pass', decline: 'pass', no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'fail',required_components:'n/a' }); assert.equal(neu.overall, 'fail')
   assert.equal(neu.tools.status, 'pass'); assert.equal(neu.tools.mode, 'loop'); assert.equal(neu.tools.rounds, 2)
   assert.ok(neu.evidence_complete && old.evidence_complete)
   assert.equal(neu.figures.unbound.length, 0)
@@ -65,7 +65,7 @@ test('a planner ranking without the vote hop is partial; the loop answer with bo
 test('a trend without a leader is partial; the loop names a roster leader bound to a fact', () => {
   const old = grade('H02', 'planner'), neu = grade('H02', 'loop')
   assert.equal(old.axes.usefulness, 'partial'); assert.equal(old.checks.find((c) => c.type === 'names').status, 'fail')
-  assert.equal(neu.overall, 'pass'); assert.deepEqual(neu.names.bound, ['Andrew Wilkie']); assert.deepEqual(neu.names.unbound, [])
+  assert.equal(neu.overall, 'fail'); assert.deepEqual(neu.names.bound, ['Andrew Wilkie']); assert.deepEqual(neu.names.unbound, [])
   assert.equal(neu.checks.find((c) => c.type === 'years').detail, '12 distinct years')
 })
 
@@ -90,7 +90,7 @@ test('a refusal fails usefulness; an uncited invented figure fails correctness',
 
 test('money answers: the no-causation note is accepted, causal prose is not', () => {
   const old = grade('H05', 'planner'), neu = grade('H05', 'loop')
-  assert.equal(old.overall, 'pass', JSON.stringify(old.flags)); assert.deepEqual(old.causal, [])
+  assert.equal(old.axes.correctness, 'pass', JSON.stringify(old.flags)); assert.equal(old.axes.direct_first_sentence,'fail'); assert.deepEqual(old.causal, [])
   assert.equal(neu.axes.correctness, 'fail'); assert.equal(neu.overall, 'fail'); assert.ok(neu.flags.some((f) => f.startsWith('causal wording')))
   assert.equal(old.checks.find((c) => c.part === 'donors').status, 'pass'); assert.equal(old.checks.find((c) => c.type === 'period').status, 'pass')
 })
@@ -99,7 +99,7 @@ test('gold rows reuse the deterministic gold scorer and the generic grounding ch
   const gold = { id: 'R-fixture', gold: true, question: 'Who spoke most about gambling?', expected: { kind: 'ranking', top: [{ name: 'Andrew Wilkie', count: 9 }], top_n: 1 }, expected_tools: [] }
   const ok = { answered: true, answer: 'Andrew Wilkie: 9 speeches about gambling.', citations: { 'fact-1/t/body/0': [[0, 40]] }, sources: [{ resource: 'fact-1', title: 'Andrew Wilkie: 9 speeches about gambling', snippet: 'Andrew Wilkie: 9 speeches about gambling', kind: 'count', url: 'https://opax.com.au/search', cited: true }] }
   const g = gradeRow(gold, ok, { roster })
-  assert.equal(g.gold.pass, true); assert.equal(g.overall, 'pass')
+  assert.equal(g.gold.pass, true); assert.equal(g.overall, 'fail');assert.equal(g.axes.direct_first_sentence,'fail')
   const wrong = gradeRow(gold, { ...ok, answer: 'Penny Wong: 12 speeches about gambling.' }, { roster })
   assert.equal(wrong.axes.correctness, 'fail'); assert.ok(wrong.flags.some((f) => f.startsWith('unbound figure 12')) && wrong.flags.includes('unbound name Penny Wong'))
   const declined = { id: 'P-fixture', gold: true, question: 'Which parties speak most about agriculture in the NSW Parliament?', expected: { kind: 'decline' }, expected_tools: [] }
@@ -121,7 +121,7 @@ test('percentiles are nearest-rank and the summary carries latency, tokens and c
   rows.push({ id: 'Q07', mode: 'loop', ms: 0, error: 'missing fixture' })
   const s = summarise(rows)
   assert.equal(s.planner.n, 5); assert.equal(s.loop.n, 6); assert.equal(s.loop.errors, 1)
-  assert.deepEqual(s.planner.overall, { pass: 2, partial: 2, fail: 1 }); assert.deepEqual(s.loop.overall, { pass: 3, partial: 0, fail: 2 })
+  assert.deepEqual(s.planner.overall, { pass: 1, partial: 0, fail: 4 }); assert.deepEqual(s.loop.overall, { pass: 1, partial: 0, fail: 4 })
   assert.equal(s.loop.cost_usd.reported, 5); assert.equal(s.planner.cost_usd.missing, 5); assert.equal(s.planner.cost_usd.mean, null)
   assert.equal(s.loop.latency_ms.p50, 24900); assert.equal(s.loop.tokens.p95, 61980); assert.equal(s.loop.mode_mismatch, 0)
 })
@@ -132,7 +132,7 @@ test('the markdown report puts both answers side by side with grades, latency, c
   const md = renderMarkdown(report)
   assert.match(md, /## Summary/); assert.match(md, /\| planner \| 13 \| 8 \|/); assert.match(md, /\| loop \| 13 \| 8 \|/)
   assert.match(md, /### H01 · multi_hop · ranking\+vote/); assert.match(md, /\*\*planner answer\*\*/); assert.match(md, /\*\*loop answer\*\*/)
-  assert.match(md, /\| overall \| partial \| pass \|/); assert.match(md, /count_speeches → member_votes → finish → pass \(loop, 2\)/)
+  assert.match(md, /\| overall \| fail \| fail \|/); assert.match(md, /count_speeches → member_votes → finish → pass \(loop, 2\)/)
   assert.match(md, /error: missing fixture/); assert.match(md, /Judge: _old vs new, one line_/)
   assert.match(md, /Rubric — usefulness:/)
 })
@@ -148,6 +148,8 @@ test('the base guard refuses production without --prod, reserved ports and remot
 
 test('arguments: limit defaults to 12 and is capped, modes and sets are closed, unknown flags fail', () => {
   const o = parseArgs(['http://127.0.0.1:8962'])
+  assert.equal(parseArgs(['http://127.0.0.1:8962','--interval','4000']).intervalMs,4000)
+  assert.throws(()=>parseArgs(['http://127.0.0.1:8962','--interval','-1']),/interval/)
   assert.equal(o.limit, DEFAULT_LIMIT); assert.equal(DEFAULT_LIMIT, 12); assert.deepEqual(o.modes, ['planner', 'loop']); assert.equal(o.set, 'research'); assert.equal(o.route, 'auto'); assert.equal(o.prod, false)
   assert.throws(() => parseArgs(['http://127.0.0.1:8962', '--limit', String(MAX_LIMIT + 1)]), /--limit/)
   assert.throws(() => parseArgs(['http://127.0.0.1:8962', '--limit', '0']), /--limit/)
@@ -209,7 +211,7 @@ test('the CLI runs offline against the canned payloads and writes JSON and markd
     const { stdout } = await run(process.execPath, [resolve(root, 'scripts/research_eval.mjs'), '--fixture', resolve(root, 'portal/test/fixtures/research-evals-canned.json'), '--mode', 'both', '--limit', '13', '--out', out], { cwd: root })
     const line = JSON.parse(stdout.trim().split('\n').at(-1))
     assert.equal(line.questions, 13); assert.deepEqual(line.modes, ['planner', 'loop'])
-    assert.equal(line.summary.planner.errors, 8); assert.equal(line.summary.loop.pass, 3); assert.equal(line.summary.loop.fail, 2)
+    assert.equal(line.summary.planner.errors, 8); assert.equal(line.summary.loop.pass, 1); assert.equal(line.summary.loop.fail, 4)
     assert.equal(line.summary.loop.p50_ms, 24900); assert.ok(line.summary.loop.mean_cost_usd > 0.02 && line.summary.loop.mean_cost_usd < 0.03)
     const files = await readdir(out)
     assert.equal(files.filter((f) => f.endsWith('.json')).length, 1); assert.equal(files.filter((f) => f.endsWith('.md')).length, 1)
@@ -268,3 +270,21 @@ test('since constraints accept attributed dated evidence after the start without
  assert.equal(gradeRow(question,{...payload,sources:[{...payload.sources[0],date:'2009-07-01'}]}).axes.constraints,'fail')
  assert.equal(gradeRow(question,{...payload,sources:[{...payload.sources[0],date:undefined}]}).axes.constraints,'fail')
 })
+
+test('a plural-subject denial of causation is not an allegation',()=>{
+ assert.deepEqual(causalCheck('The records do not establish that money caused votes or speeches.'),[]);
+ assert.equal(causalCheck('The money caused votes.').length,1);
+});
+
+test('date days in both prose orders are not invented financial figures',()=>{
+ assert.deepEqual(plainNumbers('Paid $277,602 until June 30, 2005 and $288,990 from July 1.'),[277602,2005,288990]);
+ assert.deepEqual(plainNumbers('Paid $277,602 until 30 June 2005 and $288,990 from 1 July.'),[277602,2005,288990]);
+});
+
+test('direct prose can use rose or cited while a raw numeric row cannot',()=>{
+ assert.equal(answerStyleChecks('What was the salary?',"Robin Example's salary rose from $100,000 to $120,000.").direct_first_sentence,'pass');
+ assert.equal(answerStyleChecks('What did Robin Example say?','Robin Example cited the earlier housing reform as a precedent.').direct_first_sentence,'pass');
+ assert.equal(answerStyleChecks('What was the salary?','Robin Example: $100,000 annual salary.').direct_first_sentence,'fail');
+ assert.equal(answerStyleChecks('What was the salary?','Robin Example is the highest paid: $100,000 a year.').direct_first_sentence,'pass');
+ assert.equal(answerStyleChecks('Who spoke most and what did the funding cost?','Robin Example led with 9 speeches. The funding cost $10,000.').direct_first_sentence,'pass');
+});

@@ -1,0 +1,135 @@
+{
+  "GOLD-M03": {
+    "answer": "The retrieved passages do not contain donor-to-recipient disclosure records itemising gambling-industry donations by party. These are party funding only, not personal donations to MPs.\n\nThe debate passages give competing figures... A Senate passage says the gambling industry donated almost $3 million to Liberal, Labor and Australian Conservatives in 2017-18. A Greens-indexed House passage says Labor. These are speakers’ claims, not verified disclosure totals.\n\nOn which party’s MPs spoke most, the retrieved selection is dominated by Greens-indexed and Independent-passages, with several multi-speaker House and Senate records that do not name individual speakers. The record therefore does not establish a reliable count of MPs by party; it only shows that gambling-related criticism appears heavily in Greens, Independent and Centre Alliance-passages, while Labor and Coalition positions appear mainly through unnamed multi-speaker debate records.",
+    "citations": {
+      "6a600425312249cfb937ecf6572d6e77/t/body/88171-88942": [
+        [
+          666,
+          667
+        ]
+      ],
+      "105e2c5c17e14974b4821f6da3128959/t/body/90377-91441": [
+        [
+          666,
+          667
+        ]
+      ],
+      "3a9f00aad3ff46caa54d627fb6aa5f07/t/body/0-1509": [
+        [
+          358,
+          359
+        ]
+      ],
+      "506513886d064366b64efbe3e678befa/t/body/360-988": [
+        [
+          666,
+          667
+        ]
+      ],
+      "72b30b58746540f7a358d807ba924c49/t/body/1830-2500": [
+        [
+          666,
+          667
+        ]
+      ]
+    },
+    "sources": [
+      {
+        "resource": "105e2c5c17e14974b4821f6da3128959",
+        "title": "Selected parliamentary passage",
+        "kind": "speech",
+        "speaker": null,
+        "party": null,
+        "chamber": "representatives",
+        "date": "2026-08-12",
+        "snippet": "Let me just dwell on this for a moment. Let's talk about money; let's follow the money. There was a very good article in theSydney Morning Heraldand theAgeon 22 July. The journalists, Avery Reporter and Blake Reporter—I hope I've pronounced those correctly—actually went to the trouble of doing the homework. They tallied up the figures. They've calculated that, in the four years between 2020-21 and 2024-25, according to donor records, the Labor Party received about $5 million in donations from gambling companies. I would add the coalition received about $4.5 million in donations from the …",
+        "cited": true
+      },
+      {
+        "resource": "3a9f00aad3ff46caa54d627fb6aa5f07",
+        "title": "Selected parliamentary passage",
+        "kind": "speech",
+        "speaker": "Avery Example",
+        "party": "Greens",
+        "chamber": "senate",
+        "date": "2019-02-13",
+        "snippet": "I move:\n\nThat the Senate—\n\n(a) notes that:\n\n(i) the gambling industry donated almost $3 million dollars to the Liberal, Labor and Australian Conservatives political parties in 2017-18,\n\n(ii) these donations came from sports betting companies, casinos and poker machine operators,\n\n(iii) the Australian Hotels Association was the second largest political donor in the country for the 2017-18 year, with declared political gifts leaping from $153,000 in 2016-17 to $1.1 million last financial year,\n\n(iv) Australia has the world's worst per-capita gambling losses of $1,000 a head,\n\n(v) there are at …",
+        "cited": true
+      },
+      {
+        "resource": "6a600425312249cfb937ecf6572d6e77",
+        "title": "Selected parliamentary passage",
+        "kind": "speech",
+        "speaker": null,
+        "party": null,
+        "chamber": "representatives",
+        "date": "2026-08-12",
+        "snippet": "Amongst those people that were coming to see the MPs were gambling companies. Gambling companies pay big money, and in return they get direct private access to the major parties. As election time approaches and the campaigns ramp up, so do the political donations. If you want to know why a comprehensive ban hasn't been implemented so far, if you want to know why we're getting half measures instead of total reform, follow the money. According to donor records, the Labor Party has collected about $5 million in gambling related donations in five years, including about $1.5 million in the …",
+        "cited": true
+      },
+      {
+        "resource": "72b30b58746540f7a358d807ba924c49",
+        "title": "Selected parliamentary passage",
+        "kind": "speech",
+        "speaker": "Casey Fixture",
+        "party": "Greens",
+        "chamber": "representatives",
+        "date": "2023-03-09",
+        "snippet": "Over the last few years, the LNP has accepted thousands of dollars in political donations from Brisbane Racing Club, resulting in three sitting LNP councillors abstaining from the vote last October to transfer the lease to the club, due to that perceived conflict of interest. In fact, both Labor and the LNP have accepted more than $9 million in donations from the gambling industry over the last two decades, with political donations from the gambling industry amounting to $2.165 million in the last year alone, representing a 40 per cent increase on the previous year. This is legalised …",
+        "cited": true
+      },
+      {
+        "resource": "506513886d064366b64efbe3e678befa",
+        "title": "Selected parliamentary passage",
+        "kind": "speech",
+        "speaker": "Blake Sample",
+        "party": "Centre Alliance",
+        "chamber": "senate",
+        "date": "2021-10-21",
+        "snippet": "A recent ABC News investigation which tracked gambling-related political statements dating back to 1998 showed that entities with a stake in gambling made at least $81.77 million in political donations over the 22 years. Nearly half of this went to the ALP. More than a quarter went to the coalition. But the response to these revelations has been met with complete silence from both Labor and the coalition. It's their dirty little secret, and neither will break ranks over it. The gambling industry is trying to buy influence and access to politicians, and over $80 million would buy a lot of …",
+        "cited": true
+      }
+    ]
+  },
+  "RESEARCH-H01": {
+    "answer": "The retrieved passages do not establish a count of which party’s senators spoke most about housing since 2022, because the records are a ranked selection, not an exhaustive tally. What they do show is a sharp partisan dispute over the Housing Australia Future Fund, with Labor, Greens, and Coalition-passages each claiming the others blocked or delayed the bill.\n\nLabor-passages accuse the Greens. A Labor speaker says the Greens “blocked” the HAFF, Help to Buy, and Build to Rent, causing a nearly 12-month delay. Another Labor passage says the coalition voted against the HAFF and voted to delay it.\n\nThe record therefore supports competing claims about who delayed the HAFF, but it does not establish which party’s senators spoke most about housing overall.",
+    "citations": {
+      "8702a522f27a47039f4db96753bd3480/t/body/11230-12050": [
+        [
+          512,
+          513
+        ]
+      ],
+      "e558f2e0441b46e59e3c665f2957b3bb/t/body/5066-5985": [
+        [
+          599,
+          600
+        ]
+      ]
+    },
+    "sources": [
+      {
+        "resource": "e558f2e0441b46e59e3c665f2957b3bb",
+        "title": "Selected parliamentary passage",
+        "kind": "speech",
+        "speaker": null,
+        "party": null,
+        "chamber": "senate",
+        "date": "2025-03-26",
+        "snippet": "Here we have it again. They come in here and they say they care about cost of living, and then they vote against tax cuts. They now come in here and criticise the HAFF when they voted against it and voted to delay it, and now they say, 'How many houses have you built?' after they spent a year and a half blocking the passage of that bill that set up theHousing Australia Future Fund. Round 1 is under negotiation now, which is actually, considering the time the Senate delayed the passage of this bill—and we never got it through with your support anyway. We had to completely bypass you because …",
+        "cited": true
+      },
+      {
+        "resource": "8702a522f27a47039f4db96753bd3480",
+        "title": "Selected parliamentary passage",
+        "kind": "speech",
+        "speaker": null,
+        "party": null,
+        "chamber": "senate",
+        "date": "2026-08-19",
+        "snippet": "Of course, you have on the flip side of the delay for the HAFF, Help to Buy and Build to Rent the Greens, because they also blocked those arrangements—a nearly 12-month delay from getting support to many, many people in need in our community. That's social housing for single parents and people seeking to escape domestic violence. One thing I do agree with the Greens on, because they agree with us too on this—in actual fact, everybody agrees on this—is that housing was not being built for social housing and affordable housing in this country during the period that the coalition was in power. …",
+        "cited": true
+      }
+    ]
+  }
+}

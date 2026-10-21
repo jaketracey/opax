@@ -113,7 +113,7 @@ const code = parsed.statements.filter((n) => ts.isFunctionDeclaration(n) && ['ap
 const transpile = (s) => ts.transpileModule(s, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 function route(rewriteResult) {
   const seen = { generation: 0, retrieval: 0, limiter: 0 };
-  const apiAsk = runInNewContext(transpile(code) + ';apiAsk', {saConversationInput,
+  const apiAsk = runInNewContext(transpile(code) + ';apiAsk', {saConversationInput,ANSWER_WRITING_VERSION:'written-answer-1',
     URL, Request, Response, Date,
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 

@@ -88,12 +88,13 @@ original first speaking turn. Generated fields and news cannot be cited.
 For numerical questions, `finish({facts: number[]})` chooses ids from `factSheet`.
 Passage snippets and people lookups cannot be selected as numerical evidence.
 The existing plan scope checks, completeness/`no_supported_claim` checks,
-committee supplement, `selectAnswerFacts` and `templateAnswer` still own the
-answer. The model's free text is ignored. Fact ordering remains deterministic.
+committee supplement, `selectAnswerFacts` and `templateAnswer` still own fact
+selection and validation. Free text from the selection turn is ignored. Fact
+ordering remains deterministic; the checked writing step below authors the prose.
 
 For qualitative and structured-record questions, `answer` selects record fact ids,
-verified passage points, or both. Calculated answers retain their original sources
-and Unicode citation spans when selected as a complete answer. A `decline` tool
+verified passage points, or both. Calculated answers retain their original source and evidence IDs when selected
+as a complete answer; writing rebuilds their Unicode citation spans. A `decline` tool
 lets the agent select fixed clarification, private-person, out-of-scope or
 no-causation wording; it cannot supply free-form allegations.
 
@@ -342,3 +343,129 @@ Current primary references: [AI SDK core](https://ai-sdk.dev/docs/ai-sdk-core/to
 [Workers limits](https://developers.cloudflare.com/workers/platform/limits/).
 The current Worker size limit is 64 MiB uncompressed on both plans; compressed
 size is reported for comparison, not as the deployment limit.
+
+## Answer writing contract (21 October 2026)
+
+A selected tool result is evidence, including a complete `paid_answer` or
+`ranked_money` calculation. Selecting it never authorises rendering its answer
+block. After record selection and the existing period, entity, chamber and
+counting-basis checks, the same pinned research model writes a short answer from
+a fact sheet. The opening answers the question with its subject and key figure.
+Subsequent sentences add the requested figures and context without repeating
+points, paragraphs or figure sets. Coverage is at most one sentence, in prose;
+there is no `Coverage:` block, raw salary-rate line or calculator table.
+
+`research-writing.ts` separates evidence atoms from final sentences. Overlapping
+calculator and record results are deduplicated. Older calculators' one-character
+citation anchors are resolved to their source snippets; those anchors must not
+be mistaken for fact text. Each written sentence selects supporting fact IDs.
+Each numeric atom carries its entity, metric, value, unit, chamber, period and
+source evidence ID. Clauses are checked against these associations in either
+word order, including percentages and dates before amounts. Quoted text of any
+length must occur literally in the selected source. Figures are checked against
+those facts, including date associations; an
+unsupported numeric clause or sentence is removed under the 16 October loose
+answer contract, preserving supported prose. Citation ranges are rebuilt in
+Unicode code points and retain original resource/evidence IDs and source URLs.
+The final response boundary also audits selected record associations and passage
+speaker/date/figure/quote claims. An unsupported clause is removed without
+discarding supported neighbouring clauses or intentionally uncited points.
+The offline audit uses the same pure extraction and association checks and
+records every extracted atom and its evidence ID; unverified claims count as
+failures, including when a saved excerpt is too short to establish them.
+Subject binding is independent of the predicate's spelling. A recipient cannot
+borrow a figure from an anonymous or another person's speech; a quote and its
+owner, topic, figures and dates must match the same selected evidence atom.
+The person reporting a figure is separate from its recipient or donor. A speech
+about Labor receiving an amount does not establish that its speaker was paid
+that amount. Direct and indirect personal-payment claims require the recipient
+in the passage or structured record; a named donor also requires the giving
+association. An explicit first-person financial statement can identify a single
+known speaker as the owner, but speaker metadata alone cannot.
+Document titles, chambers and parties are record subjects, never inferred human
+speakers. A chamber passage can support a statement without identifying its
+individual speaker. Anonymous party descriptions that lack party metadata are
+neutralised to a passage description while preserving its supported words and
+evidence anchors.
+Possessive attribution is checked as well. The ordinary planner fallback uses
+the same final check. Period metadata selected alongside a figure is retained
+on that figure's source atom with the metadata evidence ID, rather than being
+searched globally across unrelated records.
+If clause repair removes the leading ranking claim, the answer restores the
+verified leader from selected facts and preserves the remaining valid prose.
+Term-comparison direction is checked against the corresponding count/share
+atoms. Coverage-only responses state the boundary once; they do not repeat the
+same boundary as ordinary facts and again as a limitation. Final mixed-point
+assembly uses claim identity too, retaining equal values for distinct entities
+and trimming only repeated clauses while rebasing citations.
+Verified passage points already written by the research model retain their
+existing attribution, quotation and loose-point checks.
+When supported findings follow an introductory limitation, the final boundary
+can move a checked finding to the front without writing a new claim. Citation
+spans follow the original characters, including short legacy anchors. Ancillary
+coverage dates cannot displace a useful chamber or scope limitation. A known
+federal-versus-state pay boundary remains a specific explanation, including in
+the prose fallback, with its selected coverage citations.
+
+Writing uses the existing model/provider, per-call limiter, daily reservation,
+token ceiling, request cancellation and remaining wall budget. The existing
+15-second production primary research allowance reserves four seconds for writing:
+name resolution, research and selection must finish inside its first eleven
+seconds, with a small handoff margin. This cap starts at the primary request
+entry, rather than restarting after name resolution. The writer receives only
+the time remaining inside that same allowance. No primary or fallback deadline
+is increased; expired selection cannot consume the reserved writing slice. No retry or
+provider substitution is introduced. Failure, timeout or exhausted admission
+uses a bounded deterministic prose template from the selected facts: a direct
+sentence, key figures and one coverage sentence. It never returns the raw tool
+block. A failed research run cannot auto-select an ordinary instant calculator.
+
+JSON and SSE share this final payload. Ordinary fallback and cache replay buffer
+answer text until the period and writing checks complete; status events can
+still stream. Ordinary fallback prose also removes repeated sentences and
+claims identified by entity, metric, period and value, rebasing citation spans and unciting dropped-only sources.
+The writing version participates in both answer cache keys, so
+answers produced under the earlier calculator-rendering contract cannot replay.
+Caches store only the completed answer, with the existing privacy, conversation
+and uncited-answer exclusions.
+
+Every JSON answer, SSE completion, ordinary fallback and cached replay passes a
+plain-language guard before text is released. Internal processing vocabulary is
+removed, punctuation spacing is normalised, and citation spans are remapped in
+Unicode code points. Source evidence is untouched. Literal quotations are never
+silently rewritten or removed by the language guard. Bill, Act and document
+titles are also protected. Machinery references are matched in context, such
+as a coverage tool returning data; a speech describing a useful tool keeps its
+meaning. Unsupported quotations remain the grounding check's responsibility.
+The final audit and language guard add no inference calls,
+provider changes or time allowance. `scripts/research_eval_audit.mjs` audits saved
+comparison payloads without network access.
+
+The routing fixture and deterministic grader include `no_tool_echo`,
+`no_duplicates`, `direct_first_sentence` and `required_components`. The opening
+must match the selected subject, requested ranking or relationship and available
+headline value. Comparison checks require both sides, their primary figures and
+relevant coverage. Equal figures for different entities or periods remain
+distinct claims. Coverage notes have stable distinct evidence IDs, and source
+assembly retains all supporting text. Financial-year metadata is factual scope,
+rather than a limitation that is excluded from ordinary claims. Comparison runs use the first 45
+routing cases plus the five reviewer probes, separately against a detached live
+baseline and the working branch, with no production Ask requests. Report strict
+pass and each rubric axis separately; a style improvement is not evidence of
+factual correctness or complete historical coverage.
+For a year-by-year comparison, a combined interval total is insufficient in
+either comparison arm; each requested year needs its own supported figure.
+
+Pace live local comparisons rather than bypassing the deployed rate limits:
+`--interval 6000` with one mode per local Worker, or `--interval 3000` for a
+sequential `--mode both` run. `--review-probes --set routing --limit 50` combines
+the first 45 cases and all five review probes. Waiting between requests is
+excluded from each request's measured latency. The grader treats an explicit
+OPAX coverage decline as a decline, recognises denial of causation with singular
+or plural subjects, and excludes day-of-month tokens in both prose date orders
+from financial-figure checks.
+
+An affected-case replay must preserve the untouched payloads exactly and state
+each arm's original pacing. The saved October comparison used three-second
+baseline pacing and six-second new pacing. Regrading both arms identically
+does not make those timings a fresh simultaneous comparison.
