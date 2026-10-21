@@ -45,8 +45,8 @@ function periods(text){
  }
  return out
 }
-function figures(text,{evidence=false}={}){
- const dates=periods(text),out=[]
+function figures(text){
+ const dates=periods(text),out=[],sentences=sentenceParts(text)
  for(const m of text.matchAll(/\$\s*\d(?:[\d,]*\d)?(?:\.\d+)?(?:\s*(?:billion|million|thousand|bn|m)\b)?|\b\d(?:[\d,]*\d)?(?:\.\d+)?(?:%|\s+per cent)?|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eighth|half|quarter)\b/gi)){
   const at=m.index,raw=m[0],tail=text.slice(at+raw.length),head=text.slice(0,at)
   if(dates.some(d=>at>=d.at&&at<d.end)||/^\d+(?:st|nd|rd|th)\b/.test(text.slice(at)))continue
@@ -62,7 +62,15 @@ function figures(text,{evidence=false}={}){
   if(amount&&/\bbase\s*$/i.test(head))metric='base_salary'
   if(unit==='count'&&metric==='count'&&/speech|spoke/i.test(text))metric='speeches'
   const cuts=[0,...[...text.matchAll(/;\s*|,?\s+(?:and|while|but|whereas)\s+(?=[A-Z])/g)].map(m=>m.index+m[0].length),text.length],start=cuts.filter(n=>n<=at).at(-1),end=cuts.find(n=>n>at),local=text.slice(start,end)
-  if(amount&&/\b(?:budgets?|allocations?|allocated|appropriations?|appropriated)\b/i.test(local)&&(evidence||!financialPredicate.test(local)))metric='budget'
+  if(amount){
+   const sentence=sentences.find(s=>s.at<=at&&s.at+s.text.length>at)
+   const from=Math.max(start,sentence?.at??0,out.at(-1)?.end??0),until=Math.min(end,sentence?sentence.at+sentence.text.length:text.length)
+   const prefix=text.slice(from,at),suffix=text.slice(at+raw.length,until)
+   // A predicate governs its next figure; later funding-source language cannot relabel it.
+   const predicate=[...prefix.matchAll(figurePredicate)].at(-1)?.[0]
+   const budgetLabel=/^\s*(?:[\p{L}-]+\s+){0,4}(?:budgets?|allocations?|appropriations?)\b/iu.test(suffix)
+   if(budgetPredicate.test(predicate??'')||!predicate&&budgetLabel)metric='budget'
+  }
   if(metric==='speeches'||metric==='share'){const topic=/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(local)?.[0]?.toLowerCase()??/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(text)?.[0]?.toLowerCase();if(topic)metric+='/'+(topic==='tax'||topic==='budget'?'tax-budget':topic)}
   const vote=/(all aye|all no|split) (?:in )?$/i.exec(head)?.[1];if(vote)metric='votes/'+norm(vote)
   const owner=partyName(/^\s+(?:dollars?\s+)?(?:to (?:the )?)?(Labor|Liberal|Coalition|Greens|Nationals|ALP)\b/i.exec(tail)?.[1])
@@ -74,6 +82,8 @@ function figures(text,{evidence=false}={}){
 const parties=['Labor','Liberal','Coalition','Greens','Nationals','ALP','LNP','Australian Conservatives','Australian Democrats','One Nation','Centre Alliance','Independent']
 const reportingPredicate=/\b(?:said|says|say|argu(?:ed|es)|called for|described|cited|reported|explained|introduced|presented|proposed|linked|challenged|recalled|not(?:ed|ing|es)|put a motion|disputed|asked|supported|opposed|criticised|criticized|framed|set out|told|words (?:were|are))\b/i
 const financialPredicate=/\b(?:paid|receiv(?:ed|es|ing|e)|secur(?:ed|es|ing|e)|got|won|earn(?:ed|s|ing)?|given|donat(?:ed|es|ing|e)|collected|accepted)\b/i
+const budgetPredicate=/\b(?:budgets?|allocations?|allocated|appropriations?|appropriated)\b/i
+const figurePredicate=new RegExp(financialPredicate.source+'|'+budgetPredicate.source,'gi')
 const partyMentions=text=>mentions(text,parties).map(n=>({...n,name:partyName(n.name)}))
 function amountOwners(text,f,known=[]){
  const exactNames=part=>mentions(part,known.map(n=>typeof n==='string'?n:n.surface)).map(n=>({...n,name:known.find(k=>(typeof k==='string'?k:k.surface)===n.name)?.name??n.name}))
@@ -144,7 +154,7 @@ function evidenceRows(payload){
    const current=/^(.+?) \([^)]+\), [^:]+: base salary/.exec(line)?.[1]
    const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
    const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(line);
-   const values=figures(line,{evidence:true});for(const f of values){if(['speech','bill'].includes(source.kind)&&f.metric==='receipts'&&!f.owner){const before=line.slice(Math.max(0,f.at-120),f.at),party=[...before.matchAll(/\b(Labor|Coalition|Liberal|ALP|Greens|Nationals)(?: Party)?\b[^.;]{0,70}\b(?:received|collected|accepted)\b[^$]*$/gi)].at(-1);if(party)f.owner=partyName(party[1])}if(source.date&&/^\s*last financial year\b/i.test(line.slice(f.end))){const year=Number(source.date.slice(0,4))-(Number(source.date.slice(5,7))>=7?1:2);f.period=periods(year+'-'+String((year+1)%100).padStart(2,'0'))}}
+   const values=figures(line);for(const f of values){if(['speech','bill'].includes(source.kind)&&f.metric==='receipts'&&!f.owner){const before=line.slice(Math.max(0,f.at-120),f.at),party=[...before.matchAll(/\b(Labor|Coalition|Liberal|ALP|Greens|Nationals)(?: Party)?\b[^.;]{0,70}\b(?:received|collected|accepted)\b[^$]*$/gi)].at(-1);if(party)f.owner=partyName(party[1])}if(source.date&&/^\s*last financial year\b/i.test(line.slice(f.end))){const year=Number(source.date.slice(0,4))-(Number(source.date.slice(5,7))>=7?1:2);f.period=periods(year+'-'+String((year+1)%100).padStart(2,'0'))}}
    for(const f of values){f.donor=givingActor(line,f,nounPhrases(line).map(n=>n.name),source.speaker);f.owners=['speech','bill'].includes(source.kind)?amountOwners(line,f):[f.owner??entity].filter(Boolean)}
    for(const f of values)if(['speech','bill'].includes(source.kind)&&f.unit==='AUD'&&f.metric==='receipts'&&!financialPredicate.test(line.slice(0,f.at))&&!(label&&f.owners.some(n=>norm(n)===norm(label))))f.owners=[]
    for(const f of values)if(source.speaker&&!f.owners.length&&!quotationSpans(line).some(q=>f.at>=q.at&&f.end<=q.end)&&/\bI (?:was |have |had |have been |had been |am )?(?:paid|received|secured|got|won|earned|given)\s*(?:(?:about|almost|nearly|over|more than|at least)\s*)?$/i.test(line.slice(0,f.at)))f.owners=[source.speaker]

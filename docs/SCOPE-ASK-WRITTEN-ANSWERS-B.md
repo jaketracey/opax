@@ -62,3 +62,17 @@ Deferred. The saved mining finals do not contain the reported live CFMEU sentenc
 The fresh worktree initially lacked generated search/crawl/hub assets. Prepared them locally using `build_search_catalog.mjs`, `build_hubs.mjs`, `build_vic_election.mjs`, then `build_crawl_catalog.mjs` after the hubs existed. The final complete suite runs against those generated assets. Restored the generated search manifest to its original bytes after testing; no generated public changes are committed. Logs and exit-code receipts are in private `gates.json` and the adjacent log files.
 
 Elapsed before committing: **7.8 minutes**. New model calls: **0**. Spend: **US$0**. No production requests, push or deployment.
+
+## B fix 1 — preserve payments near budget references
+
+Reviewed `review-ask-written-answers-b.last.md` against B baseline `3379a8c92`. The four new speech/record reproductions first failed on that baseline. Figure classification now limits relationship lookup to the containing sentence/clause and the text since the preceding figure. It uses the governing financial/budget predicate or an attached amount label, with the same rules for evidence and answer text. Removed the evidence-wide budget override.
+
+**Decision:** `Avery Example was paid $100,000 from the office budget.` establishes a payment of $100,000. The budget is its funding source. The supported payment and citation survive, as they do when a separate sentence describes a $200,000 office budget. Budget-only evidence continues to reject paid/received/secured/got/given claims and to retain genuine budget statements.
+
+Four added tests cover both reviewer snippets on speech and structured-record sources across JSON/SSE × fallback/ordinary metadata × cache/miss: **32 boundary checks**. The focused audit, r3 preservation, acceptance and B suites pass **106/106**. Existing budget-negative and supported-budget controls remain enabled and pass.
+
+Replayed **50 reviewed r4 payloads from acceptance-r3 and 50 reviewer r2 payloads** through baseline r4 (`6b021dc84`) and the corrected guard, with network fetch disabled. **Zero changed sentences, zero citation-key differences, zero full-grade-object differences**. The reviewed-r4 metrics remain correctness **40/5/5**, citations **39/0/1 + 10 n/a**, dates **23 pass + 27 n/a**, declines **49/50**, audit **0/530**. Saved p95 **19.121 s** and mean cost **US$0.00277353** are unchanged; there are no model calls or new performance measurements. Per-case payloads, audit atoms and full grades are in `portal/private/ask-written-answers-b/fix1/replay.json`.
+
+Fix-1 gates: `npm run build:search` **passes**, followed by the **full portal suite: 2,579/2,579 pass**, zero failures/skips (`node --test --test-concurrency=4 test/*.test.mjs`). `tsc --noEmit`, `npm run check`, the Worker dry run and `git diff --check` pass. `votes.json` and `pay.json` remain byte-identical to `3379a8c92` and the live-code baseline. Logs, exact commands, exit-code receipts, replay details and byte hashes are retained in `portal/private/ask-written-answers-b/fix1/`.
+
+The search build regenerated the tracked search manifest and party-member index as local test inputs. Restored those two generated files to their original bytes after testing; the commit contains only the audit fix, four regression tests and this report update. To reproduce the complete suite, run `npm run build:search` first. No production requests, model calls, push or deployment.

@@ -70,3 +70,15 @@ test('B preserves the unlabelled supported office budget that r4 removed',async(
  const answer='Avery Example has a $100,000 office budget.',input=payload(answer,source(answer))
  for(const path of paths){const {out}=await boundary(input,'What is Avery’s budget?',path);assert.equal(out.answer,answer);assert.deepEqual(out.citations,input.citations)}
 })
+
+for(const kind of ['speech','record'])for(const snippet of [
+ 'Avery Example was paid $100,000. The office budget is $200,000.',
+ 'Avery Example was paid $100,000 from the office budget.',
+])test(`B fix 1 preserves the payment relationship in ${kind}: ${snippet}`,async()=>{
+ const answer='Avery Example was paid $100,000.',input=payload(answer,source(snippet,{kind}))
+ assert.equal(auditPayload('What was Avery paid?',input).findings.length,0)
+ for(const path of paths){
+  const {out}=await boundary(input,'What was Avery paid?',path)
+  assert.equal(out.answer,answer);assert.deepEqual(out.citations,input.citations);assert.equal(out.sources[0].cited,true)
+ }
+})
