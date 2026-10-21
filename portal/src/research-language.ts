@@ -75,7 +75,7 @@ export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T)
   replace(/[,;:]+(?=[.!?])/g,'')
   replace(/(?<=[.!?])[,;:]+/g,'')
   replace(/(^|\n\n)[.;,]\s*(?=[A-Z])/g,m=>m.startsWith('\n')?'\n\n':'')
-  replace(/(?<!\.)\.\.(?!\.)/g,'.')
+  replace(/\.{2,}/g,'.')
   replace(/[ \t]{2,}/g,' ')
   replace(/\n(?:[ \t]*\n){2,}/g,'\n\n')
   replace(/(?:^|\n\n)[^\n]+(?=\n\n|$)/g,m=>{

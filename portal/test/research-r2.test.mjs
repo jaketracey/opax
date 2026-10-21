@@ -90,3 +90,8 @@ test('r2 a calculator heading cannot trigger a second mining lead during writer 
  const out=api.verifyWrittenAnswer({sentences:[{text:'In the 2005–06 financial year selection, Labor received the most disclosed mining funding, totaling $165,050 across 13 records.',facts:[1,2,3]}]},input)
  assert.ok(out);assert.equal((out.answer.match(/165,050/g)??[]).length,1);assert.match(out.answer,/13 records/)
 })
+test('r2 removed clauses cannot leave a run of full stops outside a literal quote',async()=>{
+ const answer='The available records do not establish the ranking.....\n\nAvery Example said “Wait... this is a useful tool”.'
+ const out=await(await api.withAnswerLanguage(Response.json(payload(answer)))).json()
+ assert.match(out.answer,/ranking\.\n/);assert.match(out.answer,/“Wait\.\.\. this is a useful tool”/)
+})
