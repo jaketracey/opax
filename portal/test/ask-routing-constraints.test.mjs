@@ -83,7 +83,7 @@ test('historical rates reconcile all 2716 spell-ending entitlements in the expor
 })
 test('ACT jurisdiction needs a territory reference, never ordinary act or a statute title',()=>{
  for(const q of ['Why did parliament act on housing?','How did MPs vote on the Climate Change Act 2022?','What happened in Canberra yesterday?'])assert.equal(constraints(q).jurisdiction,undefined,q)
- for(const q of ['ACT housing grants','A.C.T. housing grants','Australian Capital Territory housing grants','Canberra government grants'])assert.equal(constraints(q).jurisdiction,'act',q)
+ for(const q of ['ACT government grants','A.C.T. housing grants','Australian Capital Territory housing grants'])assert.equal(constraints(q).jurisdiction,'act',q)
 })
 test('ISO dates and years preserve since, after, before, until and between semantics',()=>{
  for(const [q,since,until] of [
@@ -126,7 +126,7 @@ test('statute titles do not select ACT, including uppercase and undated title fo
 })
 test('territory references survive statute removal and keep ACT search constraints',()=>{
  for(const q of [
-  'ACT','the ACT','The ACT','A.C.T.','Australian Capital Territory',
+  'ACT senators','the ACT','The ACT','A.C.T.','Australian Capital Territory',
   'What happened in the ACT election?','Describe ACT elections.','Who are the senators for the ACT?',
   'What did the ACT say about the Climate Change ACT 2022?',
   'How did senators for the ACT vote on the Climate Change ACT?',

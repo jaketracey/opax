@@ -1,3 +1,4 @@
+import { loadStatuteTitles } from './ask-statute-titles.mjs'
 import { extractAskConstraints, constrainStep, guardToolPeriod } from './ask-constraints'
 import { calculatedLookup } from './research-calculated'
 import type { RecordQuestion } from './ask-records'
@@ -55,7 +56,7 @@ export interface ResearchOptions {
 export function createResearch(options: ResearchOptions): Research {
   return async (question, context) => {
     const qualitativeRun = !classifyAgentic(question).shape || classifyAgentic(question).rule === 'electorate-data'
-    const constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {})
+    let constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {})
     context.constraints = constraints
     const limits = researchLimits({ ...options, ...(qualitativeRun ? { steps: 6 } : {}) }), started = Date.now()
     const controller = new AbortController(), abortParent = () => controller.abort(context.signal.reason)
@@ -419,6 +420,12 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       if (credits.blocked()) fail('research_credit_exhausted')
       if (!options.model) fail('missing_key')
+      if (/\bact\b/i.test(question)) {
+        const titles = await Promise.race([loadStatuteTitles(context.deps.asset, controller.signal), stopped])
+        constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {}, titles)
+        context.constraints = constraints
+        check()
+      }
       await Promise.race([generateText({
         model: options.model!, instructions, tools, toolChoice: 'required',
         prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, constraints, conversation: options.conversation ?? [] }),

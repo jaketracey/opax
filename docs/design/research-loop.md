@@ -37,9 +37,20 @@ before execution. An explicit question year overrides stale UI dates on both
 loop and ordinary fallback paths. Open-ended dates clear any stale opposite
 bound: `since`/`until` are inclusive and `after`/`before` exclude the named day
 (or whole named year). `between` includes both endpoints. ACT jurisdiction
-requires an unambiguous territory reference, excluding statute-title Act/ACT
-occurrences even when uppercase. Each date bound applies its own operator:
-"after 2005 and before 2010" is 2006-01-01 through 2009-12-31.
+uses exact statute identity before positive territory syntax. `build:ask-titles`
+derives `/ask-statute-titles.json` from shipped bill short titles, linked Act
+titles and the FRL instrument title index, normalized without case or years.
+A preceding 1–8 words plus Act matching this list is a statute. Only explicit
+territory patterns (the full name, A.C.T., the ACT, ACT plus a jurisdiction noun,
+or for/in/from ACT) constrain retrieval. Bare or otherwise ambiguous ACT stays
+unfiltered. The agent still sees the original question.
+
+Only questions containing Act need the local title asset. Its load is bounded
+at 500 ms inside the research deadline. Missing, invalid or unavailable data
+uses the capitalized-title fallback, preserving positive territory syntax.
+The release build regenerates the asset; `check` verifies freshness. Each date
+bound keeps its approved operator: "after 2005 and before 2010" is
+2006-01-01 through 2009-12-31.
 Every tool result carries coverage dates/as-of, or explicitly unknown coverage.
 A mismatched result loses its figures and becomes a coverage-only fact. Census
 2021 cannot answer a 2005 demographic question as though it were contemporary.

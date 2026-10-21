@@ -14,7 +14,7 @@ const names=c=>c.tools.map(t=>t.name);
 function fixtures(m,options={}) {
  let plannerCalls=0,lookups=0,turns=0;const events=[],failures=[];
  const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:api.createResearch({model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),...options}),onResearchFailure:async e=>failures.push(e)};
- return {model:m,deps,events,failures,run:()=>api.runAgentic(question,deps,async(e,d)=>events.push(d),40_000,api.inferPeriod(question),{},emptyScope),get plannerCalls(){return plannerCalls},get lookups(){return lookups},get turns(){return turns}};
+ return {model:m,deps,events,failures,run:(q=question)=>api.runAgentic(q,deps,async(e,d)=>events.push(d),40_000,api.inferPeriod(q),{},emptyScope),get plannerCalls(){return plannerCalls},get lookups(){return lookups},get turns(){return turns}};
 }
 test('multi-round happy path, finish maps selected facts to templates and matching step events',async()=>{
  const m=model([reply([call('count_speeches',args,'a')]),reply([call('count_speeches',{...args,limit:1},'b')]),reply([call('finish',{facts:[3]},'c')])]),f=fixtures(m),run=await f.run(),body=api.agenticAskPayload(run,question);
@@ -229,3 +229,15 @@ test('prompt cache: every turn sends a byte-identical prefix (instructions and t
  const rest=c=>c.prompt.filter(m=>!['system','developer'].includes(m.role)).map(m=>JSON.stringify(m));
  for(let i=1;i<calls.length;i++){const before=rest(calls[i-1]),after=rest(calls[i]);assert.ok(after.length>before.length);assert.deepEqual(after.slice(0,before.length),before,'append-only messages');}
 });
+
+
+test('research loads shipped titles before its constraints reach search',async()=>{
+ const {readFileSync}=await import('node:fs')
+ const titles=JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url)))
+ for(const [question,jurisdiction]of [['fair work ACT government policy',undefined],['List ACT senators','act']]){
+  let observed,reads=0
+  const f=fixtures(model([reply([call('search',{query:'housing'})]),reply([call('decline',{reason:'ambiguous'})])]),{searchBody:(_q,_n,context)=>{observed=context.constraints;return {query:'housing'}}})
+  f.deps.asset=async path=>{if(path==='/ask-statute-titles.json'){reads++;return titles}return null}
+  await f.run(question);assert.equal(reads,1);assert.equal(observed.jurisdiction,jurisdiction)
+ }
+})
