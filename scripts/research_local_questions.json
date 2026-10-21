@@ -14,5 +14,6 @@
   {"id": "Q13", "kind": "person-quote", "question": "What has Jacqui Lambie said about veterans?"},
   {"id": "Q14", "kind": "person-compare", "question": "How do Penny Wong and Simon Birmingham differ on China?"},
   {"id": "Q15", "kind": "ranking", "question": "Which senators have spoken most about climate change this term?"},
-  {"id": "Q16", "kind": "trend", "question": "How has the number of housing speeches changed each year since 2018?"}
+  {"id": "Q16", "kind": "trend", "question": "How has the number of housing speeches changed each year since 2018?"},
+  {"id": "COH-PHON", "kind": "donor_ranking", "question": "who does pauline hansons party take the most money from"}
 ]

@@ -1,75 +1,115 @@
-# Ask written answers B — roster names only
+# Ask written answers B — coherent writing
 
-Final scope: retain roster name binding and speaker-owned quotations from `3379a8c92`; restore the financial audit exactly to live r4 `31e00250a`. The budget changes from `3379a8c92`, `ce0e1e0dd` and `be807ff1c` are superseded. Read `review-ask-written-answers-b-r3.last.md` and the four salary reproductions before implementing this reduction.
+**Status: implemented and committed for review; not ready to ship.** The saved reviewed-r4 population keeps its 40/50 correctness and all prior citation/date/decline grades. The fresh comparison does not meet the correctness/citation/decline release bars, and one question returns HTTP 503. No production OPAX requests, push or deploy. No claim-plan C changes; its flag remains off.
 
-## Retained name binding
+## Cause of the Pauline failure
 
-Person identity comes from the existing roster name/canonical-slug index and selected speaker/recipient metadata. There is no word-based `Bill` exclusion. Personal quotations bind to the evidence speaker; textual name presence and amount ownership do not establish quotation ownership. Document subjects match selected titles and record identities. Existing unresolved reporting-subject checks remain enabled.
+The local r4 reproduction loses the leader and another donor sentence. The deterministic writer fallback parses “Westpac Banking Corporation gave One Nation …” as a subject containing the giving predicate and recipient, then appends “received the most …”. The final claim audit cannot establish that figure/owner association. It also treats “Smaller” in “Smaller amounts included $19,715 from National Australia Bank …” as an unsupported named subject. Clause deletion leaves a dangling “and”. Its character-origin remapper can retain a terminal punctuation anchor from a removed sentence, leaving an orphan citation. Provider wording varies: the first local reproduction preserves two donor fragments; the fresh r4 comparison preserves only the coverage caveat.
 
-All **7 original name tests** remain unchanged: Bill Shorten substitution rejection, own-speaker quote and canonical-slug preservation, selected Bill/Act/Report titles, and recipient-versus-speaker ownership. The **21 reviewer name controls** also pass across **168 response-boundary checks**, including Bill Tilley, Michaelia Cash, possessives and titles containing surnames.
+## Changes and tests
 
-## Financial code restored to r4
+- Detail repair keeps a verified sentence while removing an unsupported secondary figure or wrong party adjective. Speaker ownership remains mandatory. Tested secondary details, party qualifiers, Bill Shorten substitutions and all names-only salary controls.
+- At most one second writer pass uses the same pinned model and 1,400-token output ceiling, shares the existing writing wall reserve, and rechecks surviving selected evidence. Every pass still checks credit, token and budget admission and settles its reservation. Mock-model tests prove one/two calls, evidence restriction, settlement and no extra call for an intact draft. No deadline, token cap or rate-limit setting changed.
+- JSON, SSE, ordinary fallback and cache share punctuation/anchor cleanup. Eight boundary combinations cover the reproduced failure; orphan punctuation anchors and dangling openers are removed without losing legitimate short citation anchors.
+- Ranking leads use selected tool facts, native calculation tables and their exact aggregate periods. A return-reference year is not the period of an aggregate. Native donor-table coverage recovers a true leader even when the writer selected only smaller rows. Existing speech-ranking clauses are repaired and moved, preserving their other facts and citations.
+- Missing direct leads, substantial stripping and donor fragments use an independently audited deterministic summary: lead, short descending list with amounts/periods/citations, then one coverage caveat. Donor identities remain upstream privacy-filtered; receipts remain distinct from gifts and personal payments, with no influence inference. Complete organisation names containing initials are protected as literal selected names instead of being split into sentence fragments.
+- Six tool-derived donor questions added to the eval set: One Nation/Pauline Hanson, Greens, Liberal, Labor, Nationals and Queensland LNP. The shared grader checks direct opening, selected ranking leader/amount/period, orphan anchors, dangling openers and excessive stripping without fallback. Style checks are shared with the serving boundary. A qualitative “between 1998 and 2000” constraint is not treated as a request for a numerical comparison.
 
-Budget-versus-payment handling is **known and deferred to the structured claim-plan lane C**. The superseded B budget rejection/restoration tests are removed, with that decision recorded in the test-file comment. B introduces no budget metric, scope inheritance, budget predicate or evidence-wide budget override.
+26 new coherence tests pass; existing name and salary tests remain enabled. The rollback parity test is pinned to the assigned main baseline `6b021dc84` so later unrelated changes to `origin/main` cannot break its scratch checkout. Older r3 tests now expect a specific limitation ahead of an incidental figure when that figure cannot answer the requested ranking; their citation-preservation and audit assertions remain.
 
-The following financial source regions are byte-identical to `31e00250a`:
+## Budget logic and guards
 
-- `periods()`, `figures()`, `amountOwners()`, `givingActor()`, `dateSupported()` and `metricSupported()`.
-- `financialPredicate`.
-- `evidenceRows()` line/figure processing.
-- The complete numeric-claim loop in `auditPayload()`.
+`portal/src/research-claim-audit.mjs` is byte-identical to the names-only commit `8954ed767`. The extracted financial functions still match literal live r4 `31e00250a`: **budget/financial-function diff: none**. Combined financial-region SHA-256: `a5b4cc718c94a81aaefbd49f6208f475522d68acb6c2b7c4839b74b4b3e65ef5`. Budget-versus-payment gaps remain known and deferred to lane C. No closed-world prototype rule was ported.
 
-The shared evidence-row header still carries `recipient` as name-binding metadata. The entire remaining audit diff against r4 consists of roster/person identity, selected-title matching, attribution and speaker-owned quotation changes.
-
-The extracted financial-function diff is empty:
-
-```text
-diff -u portal/private/ask-written-answers-b/names-only/r4-financial.mjs \
-        portal/private/ask-written-answers-b/names-only/B-financial.mjs
-(no output; exit 0)
-```
-
-The snapshots, empty `budget-r4.diff` and `budget-identity.json` receipt are retained alongside the replay logs. Combined financial source SHA-256: `a5b4cc718c94a81aaefbd49f6208f475522d68acb6c2b7c4839b74b4b3e65ef5`.
-
-All **53 prior financial controls** produce exactly the same complete response payload under literal r4 and names-only B across JSON/SSE × ordinary/fallback metadata × cache/miss. This intentionally preserves r4's known budget gaps, including budget-only evidence supporting payment claims and the unlabelled office-budget statement being removed. Those cases are not claimed as fixed in B.
-
-## Salary and payment preservation
-
-All four reviewer salary snippets retain `Avery Example earned a salary of $100,000.` and its citation:
-
-1. `Avery Example: office budget $50,000 and salary $100,000.`
-2. `Avery Example: office budget of $50,000 and salary of $100,000.`
-3. `Avery Example has an office budget of $50,000 and an annual salary of $100,000.`
-4. `Avery Example has a $50,000 office budget and a $100,000 salary.`
-
-These run on speech and record sources: **8 committed tests / 64 response-boundary checks**, all preserving exact answer text, citation ranges and `cited: true`. The four earlier payment-preservation tests also remain enabled: payments followed by a separate budget sentence and payments funded from the office budget. The focused B/audit/r3/acceptance set passes **77/77**.
-
-The separate control comparison totals **82 cases / 656 B response-boundary checks**: 21 name, 53 financial-parity and 8 salary cases. Financial and salary payloads match literal r4 exactly; name cases follow the corrected expected attribution. Complete inputs and results are in private `names-only/controls.json`.
+Temporal, chamber, ACT, privacy, moderation, rate/budget admission and speaker/figure ownership gates remain enabled. The final suite includes their existing tests. The answer-writing cache version is bumped to `written-answer-6`.
 
 ## Saved-payload replay
 
-Replayed **50 reviewed r4 payloads from `acceptance-r3` and 50 reviewer r2 payloads** through exact r4 (`31e00250a`) and names-only B, in memory with network fetch disabled. Inputs remain copied read-only under `portal/private/ask-written-answers-b/`; original paths and input hashes are in `inputs.json`.
+Both 50-case populations were replayed through literal r4 and B without network/model calls, with the same final grader. The only changed answers are `GOLD-R02`, `GOLD-M03`, `RESEARCH-H01` and `RESEARCH-Q04`: a supported ranking lead is repaired, or a checked answer/limitation is moved first; H01 also repairs its dangling passage opener. **Every citation-key difference: none, in both populations.** Detailed sentence lists are retained in private `replay.json` and `final-report.json`.
 
-**Every sentence, citation-key and full-grade difference: none.** The unchanged grader recomputes the reviewed-r4 metrics below.
-
-| Metric | r4 | Names-only B |
+| Reviewed r4 population (50) | r4 | B |
 |---|---:|---:|
 | Correctness pass/partial/fail | 40/5/5 | 40/5/5 |
 | Citations pass/partial/fail; n/a | 39/0/1; 10 | 39/0/1; 10 |
-| Date/constraint pass; n/a | 23; 27 | 23; 27 |
+| Dates/constraints | 23/23 | 23/23 |
 | Decline decisions | 49/50 | 49/50 |
-| Audit findings/atoms | 0/530 | 0/530 |
+| Coherence | 46/50 | 50/50 |
+| Audit findings | 0 | 0 |
 
-The r2 replay remains identical in both arms, with audit **0/523**. GOLD-M03 retains five citation keys and RESEARCH-H01 retains two. Per-case payloads, complete grades and audit atoms are in private `names-only/replay.json`.
+The 50-case r2 population likewise retains every prior correctness/citation/date/decline grade and all citation keys, with coherence improving 46→50 and zero audit findings.
 
-Saved p95 **19.121 s** and mean cost **US$0.00277353** are unchanged by construction. No new Ask/model calls or performance measurements were made.
+## Fresh comparison and limits
 
-## Gates and boundaries
+Both arms use the local harness and the same pinned DeepSeek/Together model, original deadlines, and identical final grading. Baseline code is detached literal `31e00250a`. Source modules and the money/pay/roster/electorate assets match the assigned `6b021dc84` base; its pre-existing nightly `votes.json` differs from the older checkout. Fresh B responses are also replayed through the final deterministic boundary after the last repairs; this replay makes no model calls. Usage and HTTP latency below are measurements from the fresh calls, rather than another complete run of the final binary.
 
-`npm run build:search` passes, followed by the **full portal suite: 2,550/2,550 pass**, zero failures/skips (`node --test --test-concurrency=4 test/*.test.mjs`). `tsc --noEmit`, `npm run check`, the Worker dry run and `git diff --check` pass. The extracted financial-function diff remains empty (exit 0).
+| Original 50, fresh calls | r4 | B |
+|---|---:|---:|
+| Correctness pass/partial/fail | 34/6/10 | 32/8/9; 1 error |
+| Citations pass/partial/fail; n/a | 37/0/1; n/a 12 | 33/0/1; n/a 15; 1 error |
+| Date/constraint checks | 21/23 | 23/23 |
+| Decline decisions | 45/50 | 42/50; 1 error |
+| Coherence | 40/50 | 49/50; 1 error |
+| Audit findings | 0 | 0 |
+| New donor correctness | 0/6 | 6/6 |
+| New donor coherence | 1/6 | 6/6 |
 
-Restored the generated search manifest and party-member index to their original bytes after the complete suite; no generated public-data changes are committed. Reproducing the suite requires `npm run build:search` first. Build logs, exact commands, exit-code receipts, control/replay results and byte hashes are retained in `portal/private/ask-written-answers-b/names-only/`. Elapsed before committing: **3.5 minutes**, within the 20-minute limit.
+B has 55 coherent graded responses out of 56 attempted cases; `GOLD-E04` (Victorian state electorate with lowest median income) returns HTTP 503, including one retry. That error is not counted as a coherence pass. The original-50 correctness, citation and decline release bars are not met by the fresh B arm. No further model calls are made after the spend guard stops the run.
 
-`votes.json` and `pay.json` are byte-identical to this round's starting commit `be807ff1c` and the supplied worktree baseline `6b021dc84`. The earlier nightly update to `votes.json` relative to literal `31e00250a` is retained; only financial code is restored to that r4 commit.
+Second writer: **32/55** successful B responses. Deterministic fallback: **21/55**. These are observed counts, including coverage/provider fallbacks, not an assumption that revision was rare. The error case has no usable counters.
 
-No production requests, model calls, push or deployment. Spend: **US$0**. Further budget-versus-payment work belongs to lane C.
+| All 56 HTTP attempts | r4 | B |
+|---|---:|---:|
+| p50 | 2.357 s | 3.188 s |
+| p95 | 23.093 s | 20.459 s |
+| Mean reported response cost | US$0.003112 (55 receipts) | US$0.002857 (55 receipts) |
+
+Reported-cost means exclude missing receipts; exact all-attempt mean cost cannot be certified. Neither request deadlines nor writing limits were raised.
+
+r4 slowest three:
+- AMBIG: 33.194 s, /api/ask, planner / timeout.
+- GOLD-M03: 29.569 s, /api/ask, planner / grounding.
+- GOLD-C01: 23.093 s, /api/ask, planner / grounding.
+
+B slowest three:
+- GOLD-E04: 25.984 s, /api/ask, error / HTTP 503.
+- GOLD-M03: 21.356 s, /api/ask, planner / grounding.
+- GOLD-T05: 20.459 s, /api/ask, planner / grounding.
+
+**Spend:** US$0.351456 confirmed; US$1.00 retained as conservative reservations for four unmetered attempts; **US$1.351456 accounted against US$1.50** across 124 local requests, including probes/retries. A further US$0.25 request reservation would exceed the cap, so all model calls stop. This is not a claim that missing usage was free or that the reserved amount is the final billed amount.
+
+## Pauline question — full before/after
+
+Question: `who does pauline hansons party take the most money from`
+
+First local r4 reproduction (full):
+
+The Australian Hotels Association (NSW) followed with $126,996 in 2012-13. [1]
+
+and $3,000 from the Registered Clubs Association of NSW (t/as ClubsNSW) in 2017-18. [2]
+
+These disclosed party receipts cover only the published selection, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech. [3]
+
+B (full, final-boundary replay of the confirmed local response):
+
+Westpac Banking Corporation provided the most disclosed funding to One Nation: $161,787 in financial years 1998-99 to 2025-26. [1]
+
+- Australian Hotels Association (NSW) provided disclosed funding: $126,996 in financial years 1998-99 to 2025-26. [2]
+
+- Sporting Shooters Association of Australia (Queensland) Inc provided disclosed funding: $43,057 in financial years 1998-99 to 2025-26. [3]
+
+- Adani Mining Pty Ltd provided disclosed funding: $30,000 in financial years 1998-99 to 2025-26. [4]
+
+- National Australia Bank provided disclosed funding: $19,715 in financial years 1998-99 to 2025-26. [5]
+
+These disclosed party receipts cover only the published selection, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech. [6]
+
+## Gates and artifacts
+
+**Full portal suite: 2,576/2,576 pass**, zero failures/skips (`node --test --test-concurrency=4 test/*.test.mjs`). Search assets were built first. Standalone `tsc --noEmit`, `npm run check`, Worker deploy **dry run only**, and `git diff --check` pass. Generated build timestamps are restored before committing.
+
+- votes.json: 1321573 bytes, unchanged; SHA-256 a112166dc583c6acac8b38ab452de83f9e698aab62b4ed5ca94e52ca7c6f46eb.
+- pay.json: 590501 bytes, unchanged; SHA-256 ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722.
+
+Raw model payloads, preserved earlier attempts, per-turn usage, grades, full sentence differences, budget/protected-data receipts and gate logs remain git-ignored under `portal/private/ask-written-answers-coherence/`. No `.dev.vars` contents were printed or committed. Both owned local servers are stopped. No production OPAX calls, push, deploy or C changes.
+
+Time: approximately 41 minutes since the first local eval setup, excluding earlier B rounds.

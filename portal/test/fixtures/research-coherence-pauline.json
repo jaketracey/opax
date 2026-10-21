@@ -1,0 +1,427 @@
+{
+  "question": "who does pauline hansons party take the most money from",
+  "payload": {
+    "answer": "Westpac Banking Corporation gave One Nation received the most disclosed funding, with $161,787.\n\nThe Australian Hotels Association (NSW) followed with $126,996 in 2012-13.\n\nSmaller amounts included $19,715 from National Australia Bank in 2014-15.\n\nand $3,000 from the Registered Clubs Association of NSW (t/as ClubsNSW) in 2017-18.\n\nThese disclosed party receipts cover only the published selection, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech.",
+    "citations": {
+      "fact-1/t/body/0": [
+        [
+          0,
+          95
+        ]
+      ],
+      "fact-2/t/body/0": [
+        [
+          97,
+          171
+        ]
+      ],
+      "fact-5/t/body/0": [
+        [
+          173,
+          246
+        ]
+      ],
+      "fact-9/t/body/0": [
+        [
+          248,
+          331
+        ]
+      ],
+      "coverage/t/body/0": [
+        [
+          333,
+          530
+        ]
+      ]
+    },
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "Westpac Banking Corporation to One Nation — AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Westpac%20Banking%20Corporation",
+        "url": "https://opax.com.au/subject/donor/Westpac%20Banking%20Corporation",
+        "snippet": "Westpac Banking Corporation gave One Nation $161,787 (federal disclosures) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "Westpac Banking Corporation",
+            "metric": "receipts",
+            "value": "161787",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2011-12"
+            },
+            "evidenceId": "fact-1/t/body/0"
+          },
+          {
+            "entity": "Westpac Banking Corporation",
+            "metric": "count",
+            "value": "12",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2011-12"
+            },
+            "evidenceId": "fact-1/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "Australian Hotels Association (NSW) to One Nation — AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Australian%20Hotels%20Association",
+        "url": "https://opax.com.au/subject/donor/Australian%20Hotels%20Association",
+        "snippet": "Australian Hotels Association (NSW) gave One Nation $126,996 (federal disclosures) — AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "Australian Hotels Association (NSW)",
+            "metric": "receipts",
+            "value": "126996",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2012-13"
+            },
+            "evidenceId": "fact-2/t/body/0"
+          },
+          {
+            "entity": "Australian Hotels Association (NSW)",
+            "metric": "count",
+            "value": "13",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2012-13"
+            },
+            "evidenceId": "fact-2/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-5",
+        "slug": "",
+        "title": "National Australia Bank to One Nation — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/National%20Australia%20Bank",
+        "url": "https://opax.com.au/subject/donor/National%20Australia%20Bank",
+        "snippet": "National Australia Bank gave One Nation $19,715 (federal disclosures) — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "National Australia Bank",
+            "metric": "receipts",
+            "value": "19715",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2014-15"
+            },
+            "evidenceId": "fact-5/t/body/0"
+          },
+          {
+            "entity": "National Australia Bank",
+            "metric": "count",
+            "value": "15",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2014-15"
+            },
+            "evidenceId": "fact-5/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-9",
+        "slug": "",
+        "title": "Registered Clubs Association of NSW (t/as ClubsNSW) to One Nation — AEC annual return · 2017-18 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Registered%20Clubs%20Association%20of%20NSW",
+        "url": "https://opax.com.au/subject/donor/Registered%20Clubs%20Association%20of%20NSW",
+        "snippet": "Registered Clubs Association of NSW (t/as ClubsNSW) gave One Nation $3,000 (federal disclosures) — AEC annual return · 2017-18 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+            "metric": "receipts",
+            "value": "3000",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2017-18"
+            },
+            "evidenceId": "fact-9/t/body/0"
+          },
+          {
+            "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+            "metric": "count",
+            "value": "18",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2017-18"
+            },
+            "evidenceId": "fact-9/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/money/party/One%20Nation",
+        "url": "https://opax.com.au/money/party/One%20Nation",
+        "snippet": "Federal AEC donation returns, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds). These are party receipts, not personal payments to politicians, and a donation is not evidence that it influenced any vote or speech.",
+        "cited": true,
+        "kind": "record",
+        "claim_atoms": [
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "99",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          },
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "26",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          },
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "250",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          }
+        ]
+      }
+    ]
+  },
+  "live_fragment": {
+    "answer": "The Australian Hotels Association (NSW) followed with $126,996 in 2012-13.\n\nand $3,000 from the Registered Clubs Association of NSW (t/as ClubsNSW) in 2017-18.\n\nThese disclosed party receipts cover only the published selection, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech.",
+    "citations": {
+      "fact-2/t/body/0": [
+        [
+          0,
+          74
+        ]
+      ],
+      "fact-9/t/body/0": [
+        [
+          76,
+          159
+        ]
+      ],
+      "coverage/t/body/0": [
+        [
+          161,
+          358
+        ]
+      ]
+    },
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "Westpac Banking Corporation to One Nation — AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Westpac%20Banking%20Corporation",
+        "url": "https://opax.com.au/subject/donor/Westpac%20Banking%20Corporation",
+        "snippet": "Westpac Banking Corporation gave One Nation $161,787 (federal disclosures) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+        "cited": false,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "Westpac Banking Corporation",
+            "metric": "receipts",
+            "value": "161787",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2011-12"
+            },
+            "evidenceId": "fact-1/t/body/0"
+          },
+          {
+            "entity": "Westpac Banking Corporation",
+            "metric": "count",
+            "value": "12",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2011-12"
+            },
+            "evidenceId": "fact-1/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "Australian Hotels Association (NSW) to One Nation — AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Australian%20Hotels%20Association",
+        "url": "https://opax.com.au/subject/donor/Australian%20Hotels%20Association",
+        "snippet": "Australian Hotels Association (NSW) gave One Nation $126,996 (federal disclosures) — AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "Australian Hotels Association (NSW)",
+            "metric": "receipts",
+            "value": "126996",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2012-13"
+            },
+            "evidenceId": "fact-2/t/body/0"
+          },
+          {
+            "entity": "Australian Hotels Association (NSW)",
+            "metric": "count",
+            "value": "13",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2012-13"
+            },
+            "evidenceId": "fact-2/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-5",
+        "slug": "",
+        "title": "National Australia Bank to One Nation — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/National%20Australia%20Bank",
+        "url": "https://opax.com.au/subject/donor/National%20Australia%20Bank",
+        "snippet": "National Australia Bank gave One Nation $19,715 (federal disclosures) — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+        "cited": false,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "National Australia Bank",
+            "metric": "receipts",
+            "value": "19715",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2014-15"
+            },
+            "evidenceId": "fact-5/t/body/0"
+          },
+          {
+            "entity": "National Australia Bank",
+            "metric": "count",
+            "value": "15",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2014-15"
+            },
+            "evidenceId": "fact-5/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-9",
+        "slug": "",
+        "title": "Registered Clubs Association of NSW (t/as ClubsNSW) to One Nation — AEC annual return · 2017-18 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Registered%20Clubs%20Association%20of%20NSW",
+        "url": "https://opax.com.au/subject/donor/Registered%20Clubs%20Association%20of%20NSW",
+        "snippet": "Registered Clubs Association of NSW (t/as ClubsNSW) gave One Nation $3,000 (federal disclosures) — AEC annual return · 2017-18 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+            "metric": "receipts",
+            "value": "3000",
+            "unit": "AUD/year",
+            "chamber": "federal",
+            "period": {
+              "label": "2017-18"
+            },
+            "evidenceId": "fact-9/t/body/0"
+          },
+          {
+            "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+            "metric": "count",
+            "value": "18",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "2017-18"
+            },
+            "evidenceId": "fact-9/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/money/party/One%20Nation",
+        "url": "https://opax.com.au/money/party/One%20Nation",
+        "snippet": "Federal AEC donation returns, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds). These are party receipts, not personal payments to politicians, and a donation is not evidence that it influenced any vote or speech.",
+        "cited": true,
+        "kind": "record",
+        "claim_atoms": [
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "99",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          },
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "26",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          },
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "250",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          }
+        ]
+      }
+    ]
+  }
+}

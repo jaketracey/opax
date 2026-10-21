@@ -24,7 +24,7 @@ const grade = (id, mode) => gradeRow(q(id), payload(id, mode), { roster, parties
 
 test('the eval set is small, mixed, complete and routes as declared', async () => {
   assert.equal(evals.schema, 1)
-  assert.ok(evals.questions.length >= 10 && evals.questions.length <= 15, `${evals.questions.length} questions`)
+  assert.ok(evals.questions.length >= 10 && evals.questions.length <= 21, `${evals.questions.length} questions`)
   assert.equal(new Set(evals.questions.map((x) => x.id)).size, evals.questions.length)
   assert.ok(evals.questions.filter((x) => x.kind === 'multi_hop').length >= 6)
   assert.ok(evals.questions.filter((x) => x.kind === 'qualitative').length >= 5)
@@ -56,7 +56,7 @@ test('a planner ranking without the vote hop is partial; the loop answer with bo
   const old = grade('H01', 'planner'), neu = grade('H01', 'loop')
   assert.equal(old.axes.usefulness, 'partial'); assert.deepEqual(old.parts.names, ['ranking']); assert.equal(old.overall, 'fail')
   assert.equal(old.axes.citations, 'pass'); assert.deepEqual(old.flags, [])
-  assert.deepEqual(neu.axes, { usefulness: 'pass', citations: 'pass', correctness: 'pass', constraints: 'pass', decline: 'pass', no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'fail',required_components:'n/a' }); assert.equal(neu.overall, 'fail')
+  assert.deepEqual(neu.axes, { coherence:'fail', usefulness: 'pass', citations: 'pass', correctness: 'pass', constraints: 'pass', decline: 'pass', no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'fail',required_components:'n/a' }); assert.equal(neu.overall, 'fail')
   assert.equal(neu.tools.status, 'pass'); assert.equal(neu.tools.mode, 'loop'); assert.equal(neu.tools.rounds, 2)
   assert.ok(neu.evidence_complete && old.evidence_complete)
   assert.equal(neu.figures.unbound.length, 0)

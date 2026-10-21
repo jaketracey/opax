@@ -242,7 +242,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       else add(`${who} in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
     } else if (r.tool === 'party_donations') {
       if (d.party) {
-        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
+        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures; financial years ${((d.years as (number|null)[]|undefined)?.[0] ?? 1998)}-${String(((d.years as (number|null)[]|undefined)?.[0] ?? 1998)+1).slice(-2)} to ${((d.years as (number|null)[]|undefined)?.[1] ?? 2025)}-${String(((d.years as (number|null)[]|undefined)?.[1] ?? 2025)+1).slice(-2)})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
       } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${d.industry} donors gave ${row.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i], [`party:${row.party}`]))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]

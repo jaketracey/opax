@@ -11,12 +11,14 @@ import {build} from 'esbuild';
 // Retired as a RESEARCH_LOOP route gate by Jake, 14 Oct 04:00.
 // This pin now proves the rollback path only, with the new flag explicitly off.
 test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research metadata is additive',async t=>{
+ // Freeze the rollback fixture to B's assigned main baseline; origin/main may advance independently.
+ const baseline='6b021dc84'
  const root=new URL('../../',import.meta.url).pathname,scratch=mkdtempSync(join(tmpdir(),'opax-agentic-parity-'));
  let goldMode=false;const realNow=Date.now;
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
  try{
-  const files=execFileSync('git',['ls-tree','-r','--name-only','origin/main','portal/src','portal/graph','portal/public','parli/ingest/user-agent.json'],{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024}).trim().split('\n').filter(f=>f.startsWith('portal/src/')||f.startsWith('portal/graph/')||/^portal\/public\/[^/]+\.js$/.test(f)||f==='parli/ingest/user-agent.json');
-  for(const f of files){const target=join(scratch,f);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,execFileSync('git',['show',`origin/main:${f}`],{cwd:root,maxBuffer:20*1024*1024}));}
+  const files=execFileSync('git',['ls-tree','-r','--name-only',baseline,'portal/src','portal/graph','portal/public','parli/ingest/user-agent.json'],{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024}).trim().split('\n').filter(f=>f.startsWith('portal/src/')||f.startsWith('portal/graph/')||/^portal\/public\/[^/]+\.js$/.test(f)||f==='parli/ingest/user-agent.json');
+  for(const f of files){const target=join(scratch,f);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,execFileSync('git',['show',`${baseline}:${f}`],{cwd:root,maxBuffer:20*1024*1024}));}
   symlinkSync(join(root,'portal/node_modules'),join(scratch,'portal/node_modules'));
   const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(join(scratch,'portal/src/index.ts'),root+'portal/public',ctx);
   for(const h of [current,main]){

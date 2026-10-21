@@ -304,6 +304,228 @@
         "citations": "pass: every argument cited, quotations verbatim; fail: none.",
         "correctness": "pass: arguments match the cited speeches and are attributed to the right speakers; fail: invented speakers or figures."
       }
+    },
+    {
+      "id": "COH-PHON",
+      "kind": "donor_ranking",
+      "question": "who does pauline hansons party take the most money from",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "party_donations"
+      ],
+      "must": [
+        {
+          "type": "mentions",
+          "any": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "mentions",
+          "any": [
+            "$161,787"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Lead with the largest selected disclosed donor, amount and aggregate period; answer the party question.",
+        "citations": "Every amount and the coverage caveat has its source.",
+        "correctness": "Tool-computed federal AEC published-selection totals; no personal payments or influence inference."
+      },
+      "donor_gold": {
+        "party": "One Nation",
+        "donor": "Westpac Banking Corporation",
+        "amount": 161787,
+        "period": "1998-99 to 2025-26",
+        "source": "party_donations from portal/public/graph/money.json; privacy-filtered public disclosure names",
+        "note": "Aggregate period; return_reference is an example return, not the aggregation period."
+      }
+    },
+    {
+      "id": "COH-GREENS",
+      "kind": "donor_ranking",
+      "question": "who gives the most money to the Greens",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "party_donations"
+      ],
+      "must": [
+        {
+          "type": "mentions",
+          "any": [
+            "Duncan Turpie"
+          ]
+        },
+        {
+          "type": "mentions",
+          "any": [
+            "$6,982,366"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Lead with the largest selected disclosed donor, amount and aggregate period; answer the party question.",
+        "citations": "Every amount and the coverage caveat has its source.",
+        "correctness": "Tool-computed federal AEC published-selection totals; no personal payments or influence inference."
+      },
+      "donor_gold": {
+        "party": "Greens",
+        "donor": "Duncan Turpie",
+        "amount": 6982366,
+        "period": "1998-99 to 2025-26",
+        "source": "party_donations from portal/public/graph/money.json; privacy-filtered public disclosure names",
+        "note": "Aggregate period; return_reference is an example return, not the aggregation period."
+      }
+    },
+    {
+      "id": "COH-LIB",
+      "kind": "donor_ranking",
+      "question": "top donors to the Liberal Party",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "party_donations"
+      ],
+      "must": [
+        {
+          "type": "mentions",
+          "any": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "mentions",
+          "any": [
+            "$40,608,922"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Lead with the largest selected disclosed donor, amount and aggregate period; answer the party question.",
+        "citations": "Every amount and the coverage caveat has its source.",
+        "correctness": "Tool-computed federal AEC published-selection totals; no personal payments or influence inference."
+      },
+      "donor_gold": {
+        "party": "Liberal",
+        "donor": "Westpac Banking Corporation",
+        "amount": 40608922,
+        "period": "1998-99 to 2025-26",
+        "source": "party_donations from portal/public/graph/money.json; privacy-filtered public disclosure names",
+        "note": "Aggregate period; return_reference is an example return, not the aggregation period."
+      }
+    },
+    {
+      "id": "COH-LAB",
+      "kind": "donor_ranking",
+      "question": "who donates the most to Labor",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "party_donations"
+      ],
+      "must": [
+        {
+          "type": "mentions",
+          "any": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "mentions",
+          "any": [
+            "$55,227,183"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Lead with the largest selected disclosed donor, amount and aggregate period; answer the party question.",
+        "citations": "Every amount and the coverage caveat has its source.",
+        "correctness": "Tool-computed federal AEC published-selection totals; no personal payments or influence inference."
+      },
+      "donor_gold": {
+        "party": "Labor",
+        "donor": "Westpac Banking Corporation",
+        "amount": 55227183,
+        "period": "1998-99 to 2025-26",
+        "source": "party_donations from portal/public/graph/money.json; privacy-filtered public disclosure names",
+        "note": "Aggregate period; return_reference is an example return, not the aggregation period."
+      }
+    },
+    {
+      "id": "COH-NAT",
+      "kind": "donor_ranking",
+      "question": "who donates the most to the Nationals",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "party_donations"
+      ],
+      "must": [
+        {
+          "type": "mentions",
+          "any": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "mentions",
+          "any": [
+            "$7,476,793"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Lead with the largest selected disclosed donor, amount and aggregate period; answer the party question.",
+        "citations": "Every amount and the coverage caveat has its source.",
+        "correctness": "Tool-computed federal AEC published-selection totals; no personal payments or influence inference."
+      },
+      "donor_gold": {
+        "party": "Nationals",
+        "donor": "Westpac Banking Corporation",
+        "amount": 7476793,
+        "period": "1998-99 to 2025-26",
+        "source": "party_donations from portal/public/graph/money.json; privacy-filtered public disclosure names",
+        "note": "Aggregate period; return_reference is an example return, not the aggregation period."
+      }
+    },
+    {
+      "id": "COH-LNP",
+      "kind": "donor_ranking",
+      "question": "who gives the most money to Queensland LNP",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "party_donations"
+      ],
+      "must": [
+        {
+          "type": "mentions",
+          "any": [
+            "LGT Crestone Wealth Management Limited"
+          ]
+        },
+        {
+          "type": "mentions",
+          "any": [
+            "$8,857,209"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Lead with the largest selected disclosed donor, amount and aggregate period; answer the party question.",
+        "citations": "Every amount and the coverage caveat has its source.",
+        "correctness": "Tool-computed federal AEC published-selection totals; no personal payments or influence inference."
+      },
+      "donor_gold": {
+        "party": "LNP",
+        "donor": "LGT Crestone Wealth Management Limited",
+        "amount": 8857209,
+        "period": "1998-99 to 2025-26",
+        "source": "party_donations from portal/public/graph/money.json; privacy-filtered public disclosure names",
+        "note": "Aggregate period; return_reference is an example return, not the aggregation period."
+      }
     }
   ]
 }
