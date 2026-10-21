@@ -13,8 +13,9 @@ const known=new Set(titleFile.titles)
 for(const row of rows)for(const [catalogue,titles] of [['present',known],['absent',null]])test(`ACT jurisdiction table (${catalogue}): ${row.question}`,()=>{
  const c=api.extractAskConstraints(row.question,api.inferPeriod(row.question),scope,{},titles)
  const search=api.constrainStep({tool:'search',args:{}},c,{state:{},since:{},until:{}})
- assert.equal(c.jurisdiction,row.jurisdiction??undefined)
- assert.equal(search.args.state,row.jurisdiction??undefined)
+ const expected=titles===null?undefined:row.jurisdiction??undefined
+ assert.equal(c.jurisdiction,expected)
+ assert.equal(search.args.state,expected)
  if(row.since){assert.equal(search.args.since,row.since);assert.equal(search.args.until,row.until)}
 })
 
@@ -28,22 +29,23 @@ for(const separator of separators)for(const [catalogue,titles]of [['present',kno
  ])test(`separator ${JSON.stringify(separator)} / ${kind} / catalogue ${catalogue}`,()=>{
   const catalogueWithFixture=titles===null||kind==='clause'?titles:new Set([...titles,normaliseStatuteTitle(question.slice('What did MPs say about the '.length,-1))])
   const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},catalogueWithFixture)
-  assert.equal(c.jurisdiction,expected)
-  assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,expected)
+  const jurisdiction=titles===null?undefined:expected
+  assert.equal(c.jurisdiction,jurisdiction)
+  assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,jurisdiction)
  })
 }
-test('every shipped catalogue title leaves jurisdiction and search state unset',()=>{
+for(const [catalogue,titles]of [['present',known],['absent',null]])test(`every shipped catalogue title leaves jurisdiction and search state unset (${catalogue})`,()=>{
  const failures=[]
  for(const title of known){
   const question=`What did MPs say about the ${title}?`
-  const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},known)
+  const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
   const state=api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state
   if(c.jurisdiction!==undefined||state!==undefined)failures.push({title,jurisdiction:c.jurisdiction,state})
  }
  assert.equal(known.size,1602)
  assert.deepEqual(failures,[])
 })
-test('original shipped title spellings preserve parenthesized punctuation and select no jurisdiction',()=>{
+for(const [catalogue,titles]of [['present',known],['absent',null]])test(`original shipped title spellings preserve parenthesized punctuation and select no jurisdiction (${catalogue})`,()=>{
  const raw=shippedStatuteTitles().titles,identities=new Set(),failures=[]
  let bracketedPunctuation=0
  for(const title of raw){
@@ -55,7 +57,7 @@ test('original shipped title spellings preserve parenthesized punctuation and se
     assert.ok(segments.some(s=>s.text.includes(parenthesized)),title)
   }
   const question=`What did MPs say about the ${title}?`
-  const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},known)
+  const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
   const state=api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state
   if(c.jurisdiction!==undefined||state!==undefined)failures.push({title,jurisdiction:c.jurisdiction,state})
  }
@@ -69,8 +71,9 @@ test('nested brackets retain title punctuation and compound hyphens while the ne
   assert.deepEqual([...statuteTitleSegments(title)].map(s=>s.text),[title])
   for(const [question,expected]of [[`What changed under the ${title}?`,undefined],[`${title}, ACT senators discussed housing.`,'act']]){
    const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
-   assert.equal(c.jurisdiction,expected)
-   assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,expected)
+   const jurisdiction=titles===null?undefined:expected
+   assert.equal(c.jurisdiction,jurisdiction)
+   assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,jurisdiction)
   }
  }
 })
@@ -94,7 +97,7 @@ test('an Act abbreviation followed by a year stays inside a statute title segmen
   'What changed under the Australian Capital Territory (Self-Government) Act. 1988?',
   'Climate Change Act. 2022; ACT senators discussed housing.',
  ]){
-  const expected=question.startsWith('Climate')?'act':undefined
+  const expected=titles!==null&&question.startsWith('Climate')?'act':undefined
   const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
   assert.equal(c.jurisdiction,expected,question)
   assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,expected,question)
@@ -107,8 +110,9 @@ test('generic dated and parenthesized statute exclusions supplement a loaded cat
   for(const [prefix,expected] of [['What changed under the ',undefined],['ACT senators discussed the ','act']]){
    const question=prefix+title+'?'
    const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},titles)
-   assert.equal(c.jurisdiction,expected,question)
-   assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,expected,question)
+   const jurisdiction=titles===null?undefined:expected
+   assert.equal(c.jurisdiction,jurisdiction,question)
+   assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,jurisdiction,question)
   }
  }
 })
@@ -129,18 +133,45 @@ test('known title identity wins over an adjacent territory noun and retains sepa
  assert.equal(territoryAfterStatutes('one two three four five six seven eight ACT budget',title),false)
  const longer='zero one two three four five six seven eight ACT budget'
  assert.equal(territoryAfterStatutes(longer,new Set(['zero one two three four five six seven eight act'])),false)
- assert.equal(territoryAfterStatutes(longer,new Set()),true)
+ assert.equal(territoryAfterStatutes(longer,new Set(['unrelated statute act'])),true)
+ assert.equal(territoryAfterStatutes(longer,new Set()),false)
 })
-test('asset load failures use a bounded title heuristic and keep positive territory syntax',async()=>{
+test('asset load failures never infer an ACT filter, including for genuine territory references',async()=>{
  const signal=new AbortController().signal
  for(const asset of [async()=>null,async()=>({schema:1,titles:[]}),async()=>({schema:1,titles:['not a title']}),async()=>{throw Error('fixture missing')},()=>new Promise(()=>{})]){
   const titles=await loadStatuteTitles(asset,signal,5)
   assert.equal(titles,null)
   assert.equal(territoryAfterStatutes('Climate Change ACT 2022',titles),false)
-  assert.equal(territoryAfterStatutes('List ACT senators',titles),true)
-  assert.equal(territoryAfterStatutes('List ACT election results',titles),true)
-  assert.equal(territoryAfterStatutes('the ACT 2022 election',titles),true)
+  for(const q of ['List ACT senators','List ACT election results','the ACT 2022 election','A.C.T. budget','Australian Capital Territory budget']){
+   assert.equal(territoryAfterStatutes(q,titles),false)
+   const c=api.extractAskConstraints(q,api.inferPeriod(q),scope,{},titles)
+   assert.equal(c.jurisdiction,undefined)
+   assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,undefined)
+  }
  }
  assert.deepEqual(await loadStatuteTitles(async()=>titleFile,signal),known)
  const controller=new AbortController();controller.abort();assert.equal(await loadStatuteTitles(()=>new Promise(()=>{}),controller.signal),null)
+})
+test('uncatalogued territory statute constructions retain no ACT filter in either mode',()=>{
+ const unknown=new Set(known)
+ const titles=[
+  'Australian Capital Territory (Self-Government) Amendment Act',
+  'Australian Capital Territory (Planning and Land Management) Amendment Act',
+  'A.C.T. (Planning and Land Management (Amendment)) Regulations',
+ ]
+ for(const title of titles)unknown.delete(normaliseStatuteTitle(title))
+ for(const catalogue of [unknown,null])for(const title of titles){
+  const question=`What did MPs say about the ${title}?`
+  const c=api.extractAskConstraints(question,api.inferPeriod(question),scope,{},catalogue)
+  assert.equal(c.jurisdiction,undefined,question)
+  assert.equal(api.constrainStep({tool:'search',args:{}},c,{state:{}}).args.state,undefined,question)
+ }
+})
+test('absent catalogue clears stale and model-selected ACT filters while retaining other constraints',()=>{
+ const q='List ACT senators speaking about housing between 2010 and 2015'
+ const c=api.extractAskConstraints(q,api.inferPeriod(q),scope,{state:'act'},null)
+ assert.equal(c.jurisdiction,undefined)
+ assert.deepEqual(api.constrainStep({tool:'search',args:{state:'act',jurisdiction:'act'}},c,{state:{},jurisdiction:{},since:{},until:{},chamber:{}}).args,{since:'2010-01-01',until:'2015-12-31',chamber:'senate'})
+ const other=api.extractAskConstraints('Queensland government grants',api.inferPeriod('all'),scope,{},null)
+ assert.equal(other.jurisdiction,'qld')
 })

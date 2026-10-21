@@ -249,6 +249,30 @@ test('a cached ordinary fallback replay never emits wrong-period answer text',as
   const raw=await response.text();assert.equal(hits,1);assert.match(raw,/cached/);assert.match(raw,/coverage_only/);assert.doesNotMatch(raw,/622,102/);await flush()
  }finally{globalThis.caches=previousCaches;h.env.MODEL_LIMITER=limiter}
 });
+test('missing and invalid statute catalogues never force ACT into the actual search request',async()=>{
+ h.env.RESEARCH_LOOP='route';const assets=h.env.ASSETS,fetchFixture=globalThis.fetch
+ const catalogue=JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url)))
+ try{
+  for(const data of [catalogue,null,{schema:1,titles:['invalid']}])for(const question of [
+   'List ACT senators statements about housing',
+   'What did MPs say about the Australian Capital Territory (Self-Government) Amendment Act?',
+   'What did MPs say about the A.C.T. (Planning and Land Management (Amendment)) Regulations?',
+  ]){
+   h.env.ASSETS={fetch:req=>new URL(req.url).pathname==='/ask-statute-titles.json'?Promise.resolve(data===null?new Response('fixture missing',{status:404}):Response.json(data)):assets.fetch(req)}
+   const searches=[];globalThis.fetch=(input,init)=>{
+    if(new URL(input).pathname.endsWith('/find'))searches.push(JSON.parse(init.body).filter_expression)
+    return fetchFixture(input,init)
+   }
+   globalThis.__researchModel=qualitative()
+   const present=data===catalogue,genuine=question.startsWith('List')
+   const body=await(await post(question,false,!present?{state:'act'}:{})).json()
+   assert.equal(body.research.mode,'loop');assert.equal(searches.length,1)
+   if(present&&genuine)assert.match(JSON.stringify(searches),/"act"/)
+   else assert.doesNotMatch(JSON.stringify(searches),/"act"/,question)
+   await flush()
+  }
+ }finally{h.env.ASSETS=assets;globalThis.fetch=fetchFixture}
+})
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
  for(const stream of [false,true]){

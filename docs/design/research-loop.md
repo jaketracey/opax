@@ -46,15 +46,22 @@ Punctuation inside parentheses or square brackets stays within the title, as
 does `Act.` followed by a year. Exact matching is bounded by the catalogue's
 longest title. Generic dated and parenthesized statute-title exclusions
 also apply when the catalogue loads, including the territory's Self-Government
-Act. Only explicit territory patterns (the full name, A.C.T., the ACT, ACT plus a
+Act. Uncatalogued Australian Capital Territory … Act and A.C.T. … Act/Regulations
+title constructions are also removed, with balanced nested qualifiers. Only explicit territory patterns (the full name, A.C.T., the ACT, ACT plus a
 jurisdiction noun, or for/in/from ACT) constrain retrieval. The same statute-free
 text is used for other jurisdiction names, so words such as Northern Territory
 inside an Act title do not force a filter. Bare or otherwise ambiguous ACT stays
 unfiltered. The agent still sees the original question.
 
-Only questions containing Act need the local title asset. Its load is bounded
-at 500 ms inside the research deadline. Missing, invalid or unavailable data
-uses the capitalized-title fallback, preserving positive territory syntax.
+Questions mentioning Act, the full territory name or A.C.T., and explicit ACT
+filters, use the local title asset. Its load is bounded at 500 ms inside the
+research deadline. Missing, invalid or unavailable data
+never forces ACT: genuine territory references also stay unfiltered until the
+catalogue is available. Jurisdiction inference is soft for Act/instrument
+questions when title identities cannot be verified; the original question,
+dates, chamber and named scope still reach the agent. Stale ACT UI filters and
+ACT tool arguments are cleared on that path. Territory abbreviations and the
+full name trigger the same bounded asset load as Act questions.
 The release build regenerates the asset; `check` verifies freshness. Each date
 bound keeps its approved operator: "after 2005 and before 2010" is
 2006-01-01 through 2009-12-31.

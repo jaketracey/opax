@@ -8,6 +8,7 @@ const api = await import('data:text/javascript;base64,' + Buffer.from(built.outp
 const empty = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
 const constraints = (q, scope=empty, filters={}) => api.extractAskConstraints(q, api.inferPeriod(q), scope, filters)
 const pay = JSON.parse(readFileSync(new URL('../public/pay.json', import.meta.url)))
+const knownTitles=new Set(JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url))).titles)
 test('Jake’s exact 2005 question prices the dated base and posts across both salary steps', () => {
  const c=constraints('who is the highest paid politician in 2005')
  const step=api.constrainStep({tool:'parliamentary_pay',args:{as_of:'2026-10-19',limit:1}},c,{as_of:{},since:{},until:{}})
@@ -83,7 +84,7 @@ test('historical rates reconcile all 2716 spell-ending entitlements in the expor
 })
 test('ACT jurisdiction needs a territory reference, never ordinary act or a statute title',()=>{
  for(const q of ['Why did parliament act on housing?','How did MPs vote on the Climate Change Act 2022?','What happened in Canberra yesterday?'])assert.equal(constraints(q).jurisdiction,undefined,q)
- for(const q of ['ACT government grants','A.C.T. housing grants','Australian Capital Territory housing grants'])assert.equal(constraints(q).jurisdiction,'act',q)
+ for(const titles of [knownTitles,null])for(const q of ['ACT government grants','A.C.T. housing grants','Australian Capital Territory housing grants'])assert.equal(api.extractAskConstraints(q,api.inferPeriod(q),empty,{},titles).jurisdiction,titles?'act':undefined,q)
 })
 test('ISO dates and years preserve since, after, before, until and between semantics',()=>{
  for(const [q,since,until] of [
@@ -132,8 +133,10 @@ test('territory references survive statute removal and keep ACT search constrain
   'What did the ACT say about the Climate Change ACT 2022?',
   'How did senators for the ACT vote on the Climate Change ACT?',
  ]){
-  const c=constraints(q),step=api.constrainStep({tool:'search',args:{}},c,{state:{},jurisdiction:{}})
-  assert.equal(c.jurisdiction,'act',q);assert.equal(step.args.state,'act',q)
+  for(const titles of [knownTitles,null]){
+   const c=api.extractAskConstraints(q,api.inferPeriod(q),empty,{},titles),step=api.constrainStep({tool:'search',args:{}},c,{state:{},jurisdiction:{}})
+   assert.equal(c.jurisdiction,titles?'act':undefined,q);assert.equal(step.args.state,titles?'act':undefined,q)
+  }
  }
 })
 for(const [operator,expectedYears,expectedDates] of [

@@ -6200,7 +6200,7 @@ function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, inpu
         positionQuery: isPositionBody(buildAskBody(input)) ? String(buildAskBody(input).query || input.question || '') : undefined,
         searchBody: (query, limit, context, filters) => {
           // A party scope is the model's search argument (one side of a comparison at a time), not an implicit filter.
-          const scoped = { ...input, ...(context.constraints?.jurisdiction ? { state: context.constraints.jurisdiction } : {}), ...(context.constraints?.chamber ? { chamber: context.constraints.chamber } : {}),
+          const scoped = { ...input, ...(context.constraints?.actUnfiltered && input.state === 'act' ? { state: undefined } : {}), ...(context.constraints?.jurisdiction ? { state: context.constraints.jurisdiction } : {}), ...(context.constraints?.chamber ? { chamber: context.constraints.chamber } : {}),
             ...(filters.speaker ? { speaker: filters.speaker } : context.named.people.length === 1 ? { speaker: context.named.people[0] } : {}),
             ...(context.period.since ? { since: context.period.since } : {}), ...(context.period.until ? { until: context.period.until } : {}),
           }

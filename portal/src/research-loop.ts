@@ -111,7 +111,8 @@ export function createResearch(options: ResearchOptions): Research {
       rawStep = terminal ? rawStep : constrainStep(rawStep, constraints, properties)
       const resolved = resolveArgs(rawStep.args, results)
       if (!resolved) return fail('malformed_args')
-      const step = terminal || !TOOL_SPECS.some(t => t.name === rawStep.tool) ? { ...rawStep, args: resolved } : context.scope({ ...rawStep, args: resolved })
+      let step = terminal || !TOOL_SPECS.some(t => t.name === rawStep.tool) ? { ...rawStep, args: resolved } : context.scope({ ...rawStep, args: resolved })
+      if (!terminal && constraints.actUnfiltered) step = constrainStep(step, constraints, properties)
       const problem = !terminal && TOOL_SPECS.some(t => t.name === rawStep.tool) ? toolArgProblem(rawStep.tool, resolved) : null
       // One slip in the model's own arguments (an enum miss, an out-of-range limit) is answered with the reason and
       // may be corrected next turn; a second invalid call, or arguments the request scope makes invalid, still ends the run.
@@ -420,7 +421,7 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       if (credits.blocked()) fail('research_credit_exhausted')
       if (!options.model) fail('missing_key')
-      if (/\bact\b/i.test(question)) {
+      if (/\bact\b|\baustralian capital territory\b|\bA\.C\.T\.(?=\W|$)/i.test(question) || options.input?.state === 'act') {
         const titles = await Promise.race([loadStatuteTitles(context.deps.asset, controller.signal), stopped])
         constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {}, titles)
         context.constraints = constraints

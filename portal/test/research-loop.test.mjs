@@ -234,7 +234,7 @@ test('prompt cache: every turn sends a byte-identical prefix (instructions and t
 test('research loads shipped titles before its constraints reach search',async()=>{
  const {readFileSync}=await import('node:fs')
  const titles=JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url)))
- for(const [question,jurisdiction]of [['fair work ACT government policy',undefined],['List ACT senators','act']]){
+ for(const [question,jurisdiction]of [['fair work ACT government policy',undefined],['List ACT senators','act'],['A.C.T. budget','act'],['Australian Capital Territory budget','act']]){
   let observed,reads=0
   const f=fixtures(model([reply([call('search',{query:'housing'})]),reply([call('decline',{reason:'ambiguous'})])]),{searchBody:(_q,_n,context)=>{observed=context.constraints;return {query:'housing'}}})
   f.deps.asset=async path=>{if(path==='/ask-statute-titles.json'){reads++;return titles}return null}
@@ -242,7 +242,7 @@ test('research loads shipped titles before its constraints reach search',async()
  }
 })
 
-test('research keeps ACT across clauses and excludes self-government statutes with or without its catalogue',async()=>{
+test('research keeps ACT across clauses with its catalogue and leaves unavailable catalogue scope soft',async()=>{
  const {readFileSync}=await import('node:fs')
  const titles=JSON.parse(readFileSync(new URL('../public/ask-statute-titles.json',import.meta.url)))
  for(const catalogue of [titles,null])for(const [question,jurisdiction]of [
@@ -251,11 +251,14 @@ test('research keeps ACT across clauses and excludes self-government statutes wi
   ['While MPs debated climate change—ACT senators discussed housing.','act'],
   ['While MPs debated climate change–ACT senators discussed housing.','act'],
   ['What changed under the Australian Capital Territory (Self-Government) Act 1988?',undefined],
+  ['What did MPs say about the Australian Capital Territory (Self-Government) Amendment Act?',undefined],
+  ['What did MPs say about the Australian Capital Territory (Planning and Land Management) Amendment Act?',undefined],
+  ['What did MPs say about the A.C.T. (Planning and Land Management (Amendment)) Regulations?',undefined],
  ]){
   let observed,reads=0
   const f=fixtures(model([reply([call('search',{query:'housing'})]),reply([call('decline',{reason:'ambiguous'})])]),{searchBody:(_q,_n,context)=>{observed=context.constraints.jurisdiction;return {query:'housing'}}})
   f.deps.asset=async path=>{if(path==='/ask-statute-titles.json'){reads++;return catalogue}return null}
   await f.run(question);assert.equal(reads,1)
-  assert.equal(observed,jurisdiction,question)
+  assert.equal(observed,catalogue?jurisdiction:undefined,question)
  }
 })

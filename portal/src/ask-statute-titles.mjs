@@ -18,6 +18,7 @@ const positiveAct = (tokens, i, text) => {
 export function* statuteTitleSegments(text) {
   let start = 0
   const brackets = []
+  const abbreviationDots = new Set([...text.matchAll(/\bA\.C\.T\.(?=\W|$)/gi)].flatMap(m => [m.index + 1, m.index + 3, m.index + 5]))
   for (let i = 0; i < text.length; i++) {
     const char = text[i]
     if (char === '(' || char === '[') { brackets.push(char); continue }
@@ -28,6 +29,7 @@ export function* statuteTitleSegments(text) {
     if (brackets.length) continue
     const boundary = '.?!;:,\r\n—–'.includes(char) || char === '-' && /\s/.test(text[i - 1] ?? '') && /\s/.test(text[i + 1] ?? '')
     if (!boundary) continue
+    if (abbreviationDots.has(i)) continue
     // A title's abbreviated Act. and its year belong to the same segment.
     if (char === '.' && /\bact$/i.test(text.slice(start, i)) && /^[ \t]*\d{4}\b/.test(text.slice(i + 1))) continue
     yield { text: text.slice(start, i), start }
@@ -36,7 +38,38 @@ export function* statuteTitleSegments(text) {
   yield { text: text.slice(start), start }
 }
 
+const titleConnectors = new Set('a an and as at by for from in of on or the to under with without'.split(' '))
+function territoryStatuteEnd(text, start) {
+  let i = start, qualified = false
+  while (i < text.length) {
+    i += /^\s*/.exec(text.slice(i))[0].length
+    if (text[i] === '(' || text[i] === '[') {
+      const stack = [text[i++]]
+      while (i < text.length && stack.length) {
+        const char = text[i++]
+        if (char === '(' || char === '[') stack.push(char)
+        else if (char === ')' || char === ']') {
+          if (stack.at(-1) !== (char === ')' ? '(' : '[')) return null
+          stack.pop()
+        }
+      }
+      if (stack.length) return null
+      qualified = true
+      continue
+    }
+    const word = /^[\p{L}\p{N}][\p{L}\p{N}'’\-]*/u.exec(text.slice(i))?.[0]
+    if (!word) return null
+    if (/^(?:act|regulations)$/i.test(word)) return qualified || word !== word.toLowerCase() ? i + word.length : null
+    if (!/^\p{Lu}|^\d/u.test(word) && !titleConnectors.has(word)) return null
+    i += word.length
+  }
+  return null
+}
+
 export function scopeAfterStatutes(question, titles = null) {
+  // Without title identities, scope words in an Act/instrument question cannot be verified.
+  // The agent still gets the original question; no inferred ACT filter is permitted.
+  if (!titles?.size) return { text: /\b(?:act|regulations)\b/i.test(question) ? '' : question, territory: false }
   const spans = []
   // The catalogue, rather than a fixed word limit, bounds exact title matches.
   const maxTitleWords = titles?.size ? Math.max(...Array.from(titles, title => title.split(' ').length)) : 0
@@ -55,12 +88,16 @@ export function scopeAfterStatutes(question, titles = null) {
       }
     }
     // Explicit statute syntax still counts when the catalogue lacks the title.
+    for (const m of text.matchAll(/\baustralian capital territory\b|\bA\.C\.T\.(?=\W|$)/gi)) {
+      const end = territoryStatuteEnd(text, m.index + m[0].length)
+      if (end !== null) exclude(m.index, end)
+    }
     for (const m of text.matchAll(/\baustralian capital territory(?:\s+\([^)]*\))?\s+act\b/gi)) exclude(m.index, m.index + m[0].length)
     for (const m of text.matchAll(/\b(?:\p{Lu}[\p{L}\p{N}'’()-]*\s+)+(?:\([^)]*\)\s+)?[Aa][Cc][Tt]\b/gu)) {
       const end = m.index + m[0].length, index = tokens.findIndex(w => w.end === end)
       const dated = /^\.?\s*\d{4}\b/.test(text.slice(end)), parenthesized = /\([^)]*\)/.test(m[0])
-      // Undated capitalized phrases are a heuristic only when title data is unavailable.
-      if ((titles === null || dated || parenthesized) && index >= 0 && (parenthesized || !positiveAct(tokens, index, text))) exclude(m.index, end)
+      // Uncatalogued capitalized titles need dated or parenthesized statute syntax.
+      if ((dated || parenthesized) && index >= 0 && (parenthesized || !positiveAct(tokens, index, text))) exclude(m.index, end)
     }
     for (const m of text.matchAll(/\bact\.?\s+\d{4}\b/gi)) {
       const index = tokens.findIndex(w => w.start === m.index)
