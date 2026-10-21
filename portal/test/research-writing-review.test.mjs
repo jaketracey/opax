@@ -19,6 +19,8 @@ for(const [name,bad] of [
  ['short invented quote','Avery Example said “I love corruption”.']
 ])test('review grounding: '+name+' removes only the bad clause',()=>{
  const input={question:'What did Avery Example earn in 2005?',period,facts:salary}
+ assert.equal(api.boundFigures(bad,salary),false)
+ assert.equal(api.verifyWrittenAnswer({sentences:[{text:bad,facts:[1,2,3]}]},input),null)
  const out=api.verifyWrittenAnswer({sentences:[{text:good+' '+bad,facts:[1,2,3]}]},input)
  assert.ok(out);assert.match(out.answer,/277,602.*30 June 2005/)
  assert.doesNotMatch(out.answer,new RegExp(bad.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')))
@@ -127,4 +129,13 @@ test('review actual ambiguity: a bare surname export cannot mask multiple full i
  const roster={people:[{name:'Example'},{name:'Avery Example'},{name:'Blake Example'}]}
  const named=api.extractNamedScope('How much was Example paid in 2005?',roster,{bills:[]})
  assert.equal(named.ambiguous,true);assert.deepEqual(named.people,[])
+})
+test('review rubric: a calculator heading supplies an entity, not an entire expected sentence',()=>{
+ const text='**Example Party** received the most disclosed funding from mining donors in this published selection: **$165,050**.\n\n| Recipient party | Disclosed receipts | Records |\n| Example Party | $165,050 | 13 |'
+ const ev={sources:[source('f',text)],texts:[text]}
+ assert.equal(answerStyleChecks('Which party got the most mining receipts?','Example Party received the most mining funding, with $165,050.',ev).direct_first_sentence,'pass')
+})
+test('review rubric: an explicit verified coverage limitation can answer first without a ranking amount',()=>{
+ const text='The requested period, 2005-01-01 to 2005-12-31, is not covered: no historical total or ranking for that period can be established.'
+ assert.equal(answerStyleChecks('Who was the highest paid state politician in 2005?',text,{sources:[source('coverage',text)],texts:[text]}).direct_first_sentence,'pass')
 })

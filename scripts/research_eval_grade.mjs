@@ -243,7 +243,7 @@ function styleRows(ev) {
     const current=/^(.+?) \([^)]+\), [^:]+: base salary \$[\d,]+ plus a loading of [\d.]+%, (\$[\d,]+) a year/.exec(line)
     if(current){rows.push({entity:current[1],value:current[2],text:line});continue}
     const row=/^\s*[-*]?\s*([^:|]{2,120}):\s*(\$?[\d,]+(?:\.\d+)?)/.exec(line)
-    if(row&&!/coverage|period|financial years/i.test(row[1]))rows.push({entity:row[1].replace(/\s*\([^)]*\).*$/,'').trim(),value:row[2],text:line})
+    if(row&&!/coverage|period|financial years/i.test(row[1]))rows.push({entity:row[1].replace(/\s*\([^)]*\).*$/,'').replace(/\s+(?:received|gave|provided|was awarded|led)\b.*$/i,'').trim(),value:row[2],text:line})
     if(/^\|/.test(line)){const cells=line.split('|').map(x=>x.trim()).filter(Boolean),value=cells.find(x=>/^\$[\d,]+/.test(x)),entity=cells.find(x=>/[a-z]/i.test(x));if(value&&entity)rows.push({entity,value,text:line})}
   }
   return rows.filter((r,i)=>rows.findIndex(x=>x.entity===r.entity&&x.value===r.value)===i)
@@ -284,7 +284,7 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({}), r
   const coverage=sentences.filter(s=>/^(?:Coverage:|OPAX.*(?:records|export)|Salary entitlements|These records)|\b(?:exclude[sd]? allowances|not allowances|records start|records cover|coverage (?:is|of))/i.test(s))
   const echo=/Coverage:|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||base \$[\d,]+ plus \d+(?:\.\d+)?%/i.test(answer)
   const first=sentences[0]??'',rows=styleRows(evidence),ranking=/\b(?:highest|lowest|most|least|largest|biggest|top|fewest)\b/i.test(question)
-  const limited=/\b(?:cannot|could not|do(?:es)? not|did not) establish\b|\bno (?:reliable|verified|matching)\b|\b(?:records|export).*\b(?:start|does not date)\b|^Please (?:name|give|specify)|^OPAX covers|(?:ranking|total|answer).*cannot be established|no ranking or total can be established|private information|no evidence|does not (?:hold|cover)/i.test(first)
+  const limited=/\b(?:cannot|could not|do(?:es)? not|did not) establish\b|\bno (?:reliable|verified|matching)\b|\b(?:records|export).*\b(?:start|does not date)\b|^Please (?:name|give|specify)|^OPAX covers|(?:ranking|total|answer).*cannot be established|no ranking or total can be established|(?:period|records|coverage)[^.]*is not covered|no [^.]*\b(?:ranking|total|answer)\b[^.]*can be established|private information|no evidence|does not (?:hold|cover)/i.test(first)
   const row=rows[0]
   const speakers=[...new Set((evidence.sources??[]).map(s=>s.speaker).filter(Boolean))]
   const subject=limited||row?limited||styleNormal(first).includes(styleNormal(row.entity)):!speakers.length||speakers.some(n=>styleNormal(first).includes(styleNormal(n)))
