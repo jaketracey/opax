@@ -99,7 +99,7 @@ test('the Tencent Cloud Singapore fleet loses the model routes, nothing else', a
   const wrangler = readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
   const env = { GENERATION_BLOCKED_CIDRS: /"GENERATION_BLOCKED_CIDRS":\s*"([^"]*)"/.exec(wrangler)[1] };
   const from = (ip, path = '/api/ask', asn = 132203) => { const r = new Request(`https://opax.com.au${path}`, { headers: { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'cf-connecting-ip': ip } }); Object.defineProperty(r, 'cf', { value: { asn } }); return r; };
-  for (const ip of ['43.172.194.160', '43.172.195.98', '43.172.196.45', '43.172.197.87', '43.172.198.118', '43.173.173.73', '43.173.175.24', '43.173.179.25', '43.173.180.49', '43.173.182.6']) {
+  for (const ip of ['43.172.194.160', '43.172.195.98', '43.172.196.45', '43.172.197.87', '43.172.198.118', '43.173.173.73', '43.173.174.12', '43.173.175.24', '43.173.176.9', '43.173.177.40', '43.173.178.201', '43.173.179.25', '43.173.180.49', '43.173.181.77', '43.173.182.6']) {
     assert.equal(networkBlock(from(ip), env, '/api/ask')?.status, 403, ip);
   }
   assert.equal(networkBlock(from('43.172.196.45', '/api/followups'), env, '/api/followups')?.status, 403);
