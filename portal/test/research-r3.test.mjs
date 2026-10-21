@@ -60,6 +60,20 @@ test('r3 a chamber limitation leads ahead of ancillary pay coverage dates',async
  const {out}=await boundary(p,'Who was the highest paid senator in 2005?')
  assert.equal(out.answer,answer)
 })
+test('r3 a disclosure-record limitation cannot precede an already cited finding',async()=>{
+ const answer='The retrieved disclosure records do not establish a complete party-by-party total.\n\nA Senate passage says Labor received $100,000.'
+ const p=payload(answer,[{...speech,chamber:'senate'}])
+ const {out}=await boundary(p,'What does the evidence show?')
+ assert.match(out.answer,/^A Senate passage says Labor received \$100,000\./)
+ assert.deepEqual(Object.keys(out.citations),Object.keys(p.citations))
+})
+test('r3 a moved finding makes its implied passage subject explicit',async()=>{
+ const answer='The retrieved passages do not establish an exhaustive count.\n\nAnother says “I oppose the bill”.'
+ const p=payload(answer,[source('p','I oppose the bill.',{kind:'speech'})])
+ const {out}=await boundary(p,'What does the evidence show?')
+ assert.match(out.answer,/^A selected passage says “I oppose the bill”\./)
+ assert.deepEqual(Object.keys(out.citations),Object.keys(p.citations))
+})
 for(const [answer,s] of [
  ['The Parliamentary Tool Bill changes reporting requirements.',source('bill','The Parliamentary Tool Bill changes reporting requirements.',{kind:'bill',title:'Parliamentary Tool Bill'})],
  ['The Senate passed the measure.',source('senate','The Senate passed the measure.',{kind:'speech',speaker:'Avery Example',chamber:'senate'})],

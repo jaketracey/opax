@@ -22,7 +22,7 @@ export function neutralAnonymousAttribution<T extends Record<string,unknown>>(pa
 export function leadWithFinding<T extends Record<string,unknown>>(payload:T):T {
   if(typeof payload.answer!=='string')return payload
   const answer=payload.answer,parts=sentenceParts(answer)
-  const limitation=(text:string)=>/^(?:The (?:(?:selected|retrieved|available) )?(?:records?|passages|evidence|material)|This selection|OPAX) (?:do(?:es)? not|cannot|can't)\b/i.test(text)
+  const limitation=(text:string)=>/^(?:(?:The|These|This) [^.!?]{0,100}\b(?:records?|passages?|evidence|material|selection)(?: (?:here|therefore|currently|retrieved|available))*|OPAX) (?:do(?:es)? not|cannot|can't)\b/i.test(text)
   if(!parts.length||!limitation(parts[0].text))return payload
   const entries=Object.entries(payload.citations??{})
   const cp=(n:number)=>Array.from(answer.slice(0,n)).length
@@ -45,5 +45,5 @@ export function leadWithFinding<T extends Record<string,unknown>>(payload:T):T {
       if(start<end)(citations[id]??=[]).push([offset+start-a,offset+end-a])
     }
   }
-  return plainAnswerPayload({...payload,answer:written,citations})
+  return plainAnswerPayload(rewriteAnswerPayload({...payload,answer:written,citations},replace=>replace(/^Another (?=(?:says|said|reports|describes)\b)/g,'A selected passage ')))
 }
