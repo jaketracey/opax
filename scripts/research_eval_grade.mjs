@@ -260,6 +260,8 @@ function requiredComponents(q,answer,ev) {
   const requested=[...new Set([...named,...parties])].filter(n=>n.split(/\s+/).length>1||parties.includes(n))
   const entities=rule?.entities??(comparison||rule?(requested.length>=2?requested:[...new Set(rows.map(r=>r.entity))].slice(0,2)):[])
   const figures=rule?.figures??(comparison||rule?.entities?rows.filter(r=>entities.includes(r.entity)).map(r=>r.value):[])
+  const years=[...q.question.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>m[0])
+  if(comparison&&years.length>=2&&(/\b(?:counts?|number|how many|speeches)\b/i.test(q.question)||(ev.sources??[]).some(s=>s.kind==='count'))&&/\b(?:each year|by year|in|during|between)\b/i.test(q.question)&&years.some(year=>!rows.some(r=>r.entity===year&&new RegExp('\\b'+year+'\\b').test(answer)&&plainNumbers(answer).includes(Number(r.value.replace(/[$,]/g,''))))))return 'fail'
   const contains=s=>styleNormal(answer).includes(styleNormal(s))
   if(entities.some(e=>!contains(e))||figures.some(v=>!plainNumbers(answer).includes(Number(String(v).replace(/[$,]/g,'')))))return 'fail'
   const coverage=rule?.coverage===true||(comparison&&(ev.sources??[]).some(s=>/^coverage(?:-|$)/.test(s.resource??'')))

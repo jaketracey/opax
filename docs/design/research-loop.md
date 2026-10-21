@@ -367,6 +367,12 @@ those facts, including date associations; an
 unsupported numeric clause or sentence is removed under the 16 October loose
 answer contract, preserving supported prose. Citation ranges are rebuilt in
 Unicode code points and retain original resource/evidence IDs and source URLs.
+The final response boundary also audits selected record associations and passage
+speaker/date/figure/quote claims. An unsupported clause is removed without
+discarding supported neighbouring clauses or intentionally uncited points.
+The offline audit uses the same pure extraction and association checks and
+records every extracted atom and its evidence ID; unverified claims count as
+failures, including when a saved excerpt is too short to establish them.
 If clause repair removes the leading ranking claim, the answer restores the
 verified leader from selected facts and preserves the remaining valid prose.
 Term-comparison direction is checked against the corresponding count/share
@@ -399,6 +405,14 @@ answers produced under the earlier calculator-rendering contract cannot replay.
 Caches store only the completed answer, with the existing privacy, conversation
 and uncited-answer exclusions.
 
+Every JSON answer, SSE completion, ordinary fallback and cached replay passes a
+plain-language guard before text is released. Internal processing vocabulary is
+removed, punctuation spacing is normalised, and citation spans are remapped in
+Unicode code points. Source evidence is untouched. Literal quotations are never
+silently rewritten. The final audit and language guard add no inference calls,
+provider changes or time allowance. `scripts/research_eval_audit.mjs` audits saved
+comparison payloads without network access.
+
 The routing fixture and deterministic grader include `no_tool_echo`,
 `no_duplicates`, `direct_first_sentence` and `required_components`. The opening
 must match the selected subject, requested ranking or relationship and available
@@ -411,6 +425,8 @@ routing cases plus the five reviewer probes, separately against a detached live
 baseline and the working branch, with no production Ask requests. Report strict
 pass and each rubric axis separately; a style improvement is not evidence of
 factual correctness or complete historical coverage.
+For a year-by-year comparison, a combined interval total is insufficient in
+either comparison arm; each requested year needs its own supported figure.
 
 Pace live local comparisons rather than bypassing the deployed rate limits:
 `--interval 6000` with one mode per local Worker, or `--interval 3000` for a

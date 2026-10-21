@@ -1,5 +1,7 @@
 import { claimClauses, proseClaimKeys } from './research-claims'
 import { proseFallback, rawToolEcho, writingFacts } from './research-writing'
+import { plainAnswerPayload } from './research-language'
+import { groundAnswerPayload } from './research-grounding'
 import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
@@ -18,6 +20,11 @@ export async function withPlannerResearch(response: Response, previous?: Researc
   return mapResearchResponse(response, payload => plannerPayload(payload, previous))
 }
 
+/** One guard covers JSON, streamed fallbacks and cached payloads. */
+export async function withAnswerLanguage(response: Response,question?:string): Promise<Response> {
+  return mapResearchResponse(response, payload=>question?groundAnswerPayload(payload,question):plainAnswerPayload(payload), true, true)
+}
+
 export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage> & { model?: string }): Promise<Response> {
   const headers = new Headers(response.headers)
   headers.set('cache-control', 'no-store')
@@ -28,26 +35,43 @@ export async function withResearchEval(response: Response, usage: () => ReturnTy
   })
 }
 
-async function mapResearchResponse(response: Response, augment: (payload: Record<string, unknown>) => Record<string, unknown>, validateBeforeText = false): Promise<Response> {
+async function mapResearchResponse(response: Response, augment: (payload: Record<string, unknown>) => Record<string, unknown>, validateBeforeText = false,replayUnchangedDeltas=false): Promise<Response> {
   if (!response.ok) return response
   const headers = new Headers(response.headers)
   headers.delete('content-length')
   if (!(response.headers.get('content-type') ?? '').includes('text/event-stream')) return new Response(JSON.stringify(augment(await response.json() as Record<string, unknown>)), { status: response.status, statusText: response.statusText, headers })
   const decoder = new TextDecoder(), encoder = new TextEncoder()
   let pending = ''
-  const frame = (value: string) => {
+  const deltas:string[]=[]
+  let deltaText='',replayable=true
+  const frame = (value: string,separator='\n\n') => {
     // Fallback and cache replay deltas have not passed the period check yet.
     // The validated done payload is the only answer text released on this path.
-    if (validateBeforeText && /^event: delta$/m.test(value)) return ''
+    if (validateBeforeText && /^event: delta$/m.test(value)) {
+      if(replayUnchangedDeltas&&replayable){
+        try {const data=JSON.parse(/^data: (.+)$/m.exec(value)?.[1]??'');if(typeof data.text!=='string')throw Error('invalid delta');deltaText+=data.text;deltas.push(value+separator)}catch{replayable=false}
+        if(deltaText.length>100_000){replayable=false;deltas.length=0;deltaText=''}
+      }
+      return ''
+    }
     if (!/^event: done$/m.test(value)) return value
-    return value.replace(/^data: (.+)$/m, (_line, data: string) => 'data: ' + JSON.stringify(augment(JSON.parse(data))))
+    let unchanged=false
+    const done=value.replace(/^data: (.+)$/m, (_line, data: string) => {
+      const original=JSON.parse(data),checked=augment(original)
+      unchanged=typeof original.answer==='string'&&checked.answer===original.answer&&deltaText===checked.answer
+      return 'data: '+JSON.stringify(checked)
+    })
+    const safe=replayUnchangedDeltas&&replayable&&unchanged?deltas.join(''):''
+    deltas.length=0
+    deltaText=''
+    return safe+done
   }
   return new Response(response.body!.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
     transform(chunk, controller) {
       pending += decoder.decode(chunk, { stream: true })
       let boundary: RegExpExecArray | null
       while ((boundary = /\r?\n\r?\n/.exec(pending))) {
-        const next = frame(pending.slice(0, boundary.index))
+        const next = frame(pending.slice(0, boundary.index),boundary[0])
         if (next) controller.enqueue(encoder.encode(next + boundary[0]))
         pending = pending.slice(boundary.index + boundary[0].length)
       }
@@ -93,6 +117,7 @@ export async function withFallbackPeriod(response: Response, period: import('./a
 
 /** Keep the fallback model's prose, removing repeated claims and financial figure sets before replay. */
 export function normaliseWrittenPayload(payload: Record<string, unknown>): Record<string, unknown> {
+  payload=plainAnswerPayload(payload)
   if (typeof payload.answer !== 'string' || !payload.answer.trim()) return payload
   const original = payload.answer, cp = (n: number) => Array.from(original.slice(0,n)).length
   const key = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim()

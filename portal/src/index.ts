@@ -103,7 +103,8 @@ import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
-import { withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
 import { researchEvalState, researchEvalUsage, captureLoopUsage, observeEvalModelResponse, researchPrices } from './research-eval'
@@ -6306,17 +6307,19 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
   // Operator evals may also pick a model from RESEARCH_LOOP_MODEL_ALLOW and a provider sort for this request only.
   const modelOverride = usage ? researchModelOverride(request.headers.get('x-opax-research-model'), request.headers.get('x-opax-research-provider'), env.RESEARCH_LOOP_MODEL_ALLOW) : {}
   const selected = usage ? { ...env, ...modelOverride, RESEARCH_LOOP: override === 'loop' ? 'route' as const : 'off' as const, RESEARCH_EVAL: usage } : env
+  let answerQuestion=''
   const serve = async () => {
     const body = await readJsonBody(request)
     if (body instanceof Response) return body
     const question = body.value.question
     if (typeof question !== 'string' || !question.trim()) return json({ error: 'question is required' }, 400)
     if (question.length > MAX_QUESTION_CHARS) return json({ error: `question must be ${MAX_QUESTION_CHARS} characters or fewer` }, 400)
+    answerQuestion=question
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
   }
-  const response = await serve()
+  const response = await withAnswerLanguage(await serve(),selected.RESEARCH_LOOP==='route'?answerQuestion:undefined)
   // Operator evals also see which model and routing the loop used.
   return usage ? withResearchEval(response, () => ({ ...researchEvalUsage(usage), model: researchModelKey(selected.RESEARCH_LOOP_MODEL_ID, selected.RESEARCH_LOOP_PROVIDER, selected.RESEARCH_LOOP_REASONING) })) : response
 }
@@ -6446,9 +6449,11 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const limited = await budget.run(() => rateLimited(env.ASK_LIMITER, request)); if (limited) return limited
     quotaTaken = true
     const finish = (run: AgenticPayload) => {
-      const response = json(agenticAskPayload(run, question))
+      const payload=agenticAskPayload(run, question)
+      const finalPayload=loopRoute?groundAnswerPayload(payload,question):payload
+      const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week: the next ask may cite it (as cacheableAnswer).
-      if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited') storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited' && (!loopRoute||Object.keys(finalPayload.citations??{}).length>0)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
       return response
     }
     if (!streaming) {
