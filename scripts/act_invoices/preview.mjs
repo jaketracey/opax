@@ -1,4 +1,4 @@
-/** Explicit local candidate: full staged rows in an isolated D1, outbound denied. */
+/** Explicit local preview: full candidate or approved rows, isolated D1, outbound denied. */
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -6,22 +6,30 @@ import {createRequire} from 'node:module';
 import {createServer} from 'node:http';
 import {buildTableSQL} from '../load_tables.mjs';
 import {localMiniflare} from '../../portal/test/local-miniflare.mjs';
+import {actInvoicesSnapshot} from './table-snapshot.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const out=resolve(root,'portal/private/act-invoices/preview');
-if(process.env.OPAX_ACT_INVOICES_PREVIEW!=='candidate')throw Error('Explicit local candidate required');
+const mode=process.env.OPAX_ACT_INVOICES_PREVIEW;
+if(!['candidate','promoted'].includes(mode))throw Error('Explicit local candidate or promoted preview required');
 await mkdir(out,{recursive:true});
 const require=createRequire(resolve(root,'portal/package.json')),{build}=require('esbuild');
 const bundled=await build({entryPoints:[resolve(root,'portal/src/index.ts')],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'preview-no-og',setup(b){
  b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'preview'}));
  b.onLoad({filter:/.*/,namespace:'preview'},()=>({contents:'export const renderOgPng=async()=>null;export const renderOgJpeg=renderOgPng;export const renderStoryJpeg=renderOgPng;',loader:'js'}));
 }}]});
-const info=JSON.parse(await readFile(resolve(root,'data/staged/act-invoices/hub.json'),'utf8'));
-const series=await readFile(resolve(root,'data/staged/act-invoices/series.jsonl'),'utf8');
-const rows=series.trimEnd().split('\n').map(line=>({row:{...JSON.parse(line),dataset_id:info.dataset_id,source_url:info.source_url,licence:info.licence,licence_url:info.licence_url,attribution:info.attribution}}));
-// Test-only receipt; the real pending review and promoted directory are untouched.
-const report=JSON.parse(await readFile(resolve(root,'data/staged/act-invoices/reconciliation.json'),'utf8'));
-const coverage={exact_duplicate_groups:report.exact_duplicate_groups,extra_duplicate_rows:report.extra_duplicate_rows,observed_months:Object.keys(report.by_month).filter(m=>m>='2015-07'&&m<=info.payment_date_max.slice(0,7)).length,missing_months:report.missing_months,outside_period_rows:2,missing_payment_dates:report.missing_payment_dates};
-const metadata={...info,coverage,promotion:{reviewed_commit:'0'.repeat(40),local_candidate_preview:true}};
+let rows,metadata;
+if(mode==='promoted'){
+ ({rows,metadata}=await actInvoicesSnapshot(resolve(root,'portal/public'),{releaseStatus:'ready'}));
+ if(!metadata||!rows.length)throw Error('Approved promoted snapshot required');
+}else{
+ const info=JSON.parse(await readFile(resolve(root,'data/staged/act-invoices/hub.json'),'utf8'));
+ const series=await readFile(resolve(root,'data/staged/act-invoices/series.jsonl'),'utf8');
+ rows=series.trimEnd().split('\n').map(line=>({row:{...JSON.parse(line),dataset_id:info.dataset_id,source_url:info.source_url,licence:info.licence,licence_url:info.licence_url,attribution:info.attribution}}));
+ // Test-only receipt; the actual review and promoted directory are untouched.
+ const report=JSON.parse(await readFile(resolve(root,'data/staged/act-invoices/reconciliation.json'),'utf8'));
+ const coverage={exact_duplicate_groups:report.exact_duplicate_groups,extra_duplicate_rows:report.extra_duplicate_rows,observed_months:Object.keys(report.by_month).filter(m=>m>='2015-07'&&m<=info.payment_date_max.slice(0,7)).length,missing_months:report.missing_months,outside_period_rows:2,missing_payment_dates:report.missing_payment_dates};
+ metadata={...info,coverage,promotion:{reviewed_commit:'0'.repeat(40),local_candidate_preview:true}};
+}
 const manifest=await buildTableSQL({output:resolve(out,'sql'),datasets:{'act-invoices':rows},metadata:{'act-invoices':metadata}});
 const mime=p=>p.endsWith('.css')?'text/css':p.endsWith('.js')?'text/javascript':p.endsWith('.json')?'application/json':p.endsWith('.woff2')?'font/woff2':p.endsWith('.svg')?'image/svg+xml':'text/html';
 const mf=localMiniflare({rootPath:out,resourcePersistencePath:resolve(out,'state'),resourceTmpPath:resolve(out,'runtime'),isolatedResourcePersistencePath:resolve(out,'isolated'),outboundService:async()=>{throw Error('External network disabled');},workers:[{name:'act-invoices-preview',modules:true,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],script:bundled.outputFiles[0].text,d1Databases:{TABLE_DB:'act-invoices-candidate'},
@@ -44,6 +52,6 @@ const server=createServer(async(req,res)=>{
 });
 await new Promise(done=>server.listen(Number(process.env.OPAX_ACT_INVOICES_PORT||8982),'::1',done));
 await writeFile(resolve(out,'preview.pid'),String(process.pid)+'\n');
-console.log(JSON.stringify({port:server.address().port,rows:rows.length,sqlBytes:manifest.bytes,scope:'Local staged candidate; no production bindings, writes or approval'}));
+console.log(JSON.stringify({port:server.address().port,rows:rows.length,sqlBytes:manifest.bytes,mode,scope:'Isolated local D1; no production bindings or writes'}));
 async function close(){await new Promise(done=>server.close(done));await mf.dispose();}
 process.on('SIGINT',async()=>{await close();process.exit(0);});process.on('SIGTERM',async()=>{await close();process.exit(0);});

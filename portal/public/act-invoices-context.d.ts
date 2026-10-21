@@ -1,5 +1,7 @@
 export type ActInvoiceCoverage={exact_duplicate_groups:number;extra_duplicate_rows:number;observed_months:number;missing_months:string[];outside_period_rows:number;missing_payment_dates:number}
-export type ActInvoiceContext={source_url:string;snapshot:string;catalogued_period:string;coverage?:ActInvoiceCoverage}
+export type ActInvoicePublicCopy={url:string;sha256:string}
+export type ActInvoiceContext={source_url:string;snapshot:string;catalogued_period:string;coverage?:ActInvoiceCoverage;public_copy?:ActInvoicePublicCopy}
+export function actInvoicePublicCopyNote(copy:ActInvoicePublicCopy):string
 export function actInvoicePeriod(value:unknown):string
 export function actInvoiceSnapshotDate(value:string):string
 export function actInvoiceCoverageNotes(metadata:ActInvoiceContext):string[]

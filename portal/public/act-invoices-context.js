@@ -5,6 +5,7 @@ export function actInvoiceSnapshotDate(value){
  const parts=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',day:'2-digit',month:'2-digit',year:'numeric'}).formatToParts(new Date(value)).map(p=>[p.type,p.value]));
  return shortDate(`${parts.year}-${parts.month}-${parts.day}`);
 }
+export const actInvoicePublicCopyNote=copy=>`OPAX keeps a verbatim public copy of the published file for its table load: ${copy.url}. SHA-256: ${copy.sha256}.`;
 export function actInvoiceCoverageNotes(m){
  const c=m.coverage;
  return [
@@ -14,6 +15,7 @@ export function actInvoiceCoverageNotes(m){
   'There is no unique invoice ID. Row positions and Socrata IDs locate snapshot records, not invoices.'+(c?` ${c.exact_duplicate_groups.toLocaleString('en-AU')} duplicate groups / ${c.extra_duplicate_rows.toLocaleString('en-AU')} extra copies kept as published.`:''),
   c?`Snapshot month coverage: ${c.observed_months} payment months from ${actInvoicePeriod(m.catalogued_period)}; ${c.missing_months.length} empty months in that span. ${c.outside_period_rows} rows have pre-start payment dates and ${c.missing_payment_dates} have no payment date. A month appearing does not establish complete entity reporting.`:`Catalogued period: ${actInvoicePeriod(m.catalogued_period)}. A month appearing does not establish complete entity reporting.`,
   'Reporting-entity labels changed over time, including 19 August 2025. Codes remain as published. Financial year and month use payment date, not received date. Exact duplicates and missing values are retained; no spending total is computed.',
+  ...(m.public_copy?[actInvoicePublicCopyNote(m.public_copy)]:[]),
  ];
 }
 export function actInvoiceEntityDefinitions(description){

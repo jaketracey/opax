@@ -1,3 +1,5 @@
+Round 3: independent r2 approval recorded, unchanged inputs promoted locally, and the approved public-release bundle built without upload. Status: **LIVE pending deploy**. See [round 3 handoff](round3-report.md).
+
 # ACT Notifiable Invoices Register — 22 October 2026
 
 **Staged; review and promotion pending.** No push, deploy, production data write,

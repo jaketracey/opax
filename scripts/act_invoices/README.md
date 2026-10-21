@@ -27,7 +27,7 @@ Offline checks:
 ```sh
 python3 -m scripts.act_invoices.stage
 python3 -m scripts.act_invoices.check --dry-run
-python3 scripts/promote_hub_data.py act-invoices --dry-run --votes-reference 6b021dc84
+python3 scripts/promote_hub_data.py act-invoices --dry-run --votes-reference origin/main
 ```
 
 The last command must reject the pending review. Never self-approve it. The
@@ -71,21 +71,24 @@ profiles, financial-year fields or derived numeric amounts. The table loader
 reconstructs display fields after verification. Source/CSV values stay unchanged.
 
 The only tracked file in `data/promoted/act-invoices/` is **`release.json`**. The
-current manifest describes a **pending candidate**, not an uploaded or approved
-release. Neither CI nor the publisher accepts that candidate for production.
+current manifest describes the **approved r2 snapshot**, promoted and bundled
+locally in round 3. No release has been created or uploaded. The receipt keeps
+`761926c15` as the independently reviewed commit; the eventual release must target
+the final round 3 handoff commit reported by this lane, including its source note.
 
 After independent approval, the orchestrator follows these steps from the repo
 root. Approval and external operations are not performed by this fix lane.
 
-1. Ensure the independently reviewed code commit exists on GitHub through the
-   orchestrator’s normal review/promotion process, so it can be the release tag
-   target. This lane has not pushed that commit. Record the independently approved commit and the unchanged source input
-   digests in `data/staged/act-invoices/review.json`; commit that approval receipt.
+1. Ensure the final handoff commit exists on GitHub through the orchestrator’s
+   normal review/promotion process, so it can be the release tag target. This lane
+   has not pushed that commit. Retain the independently approved r2 commit and
+   unchanged input digests in `data/staged/act-invoices/review.json`. Round 3 has
+   already recorded that receipt and completed the local promotion/build below.
 2. Validate, then promote the reviewed snapshot offline:
 
    ```sh
-   python3 scripts/promote_hub_data.py act-invoices --dry-run --votes-reference 6b021dc84
-   python3 scripts/promote_hub_data.py act-invoices --votes-reference 6b021dc84
+   python3 scripts/promote_hub_data.py act-invoices --dry-run --votes-reference origin/main
+   python3 scripts/promote_hub_data.py act-invoices --votes-reference origin/main
    ```
 
 3. Build the approved bundle and small manifest without uploading:
@@ -101,12 +104,14 @@ root. Approval and external operations are not performed by this fix lane.
    allow an explicit unique revision; use the same options for upload.
 
 4. Create that public release if its tag does not yet exist, then explicitly
-   upload. The script does not create releases or overwrite existing assets.
+   upload. Use the exact final round 3 commit from the handoff report as the target;
+   verify the branch SHA below before running it. The script does not create releases
+   or overwrite existing assets.
 
    ```sh
    act_release_tag="$(node -p 'JSON.parse(require("fs").readFileSync("data/promoted/act-invoices/release.json")).release_tag')"
-   act_reviewed_commit="$(node -p 'JSON.parse(require("fs").readFileSync("data/promoted/act-invoices/release.json")).review.reviewed_commit')"
-   gh release create "$act_release_tag" --repo jaketracey/opax --target "$act_reviewed_commit" --title "ACT invoice source mirror" --notes-file portal/private/act-invoices/release/README.md
+   act_release_target="$(git rev-parse coverage/act-invoices)"
+   gh release create "$act_release_tag" --repo jaketracey/opax --target "$act_release_target" --title "ACT invoice source mirror" --notes-file portal/private/act-invoices/release/README.md
    node scripts/act_invoices/publish_bundle.mjs --upload
    ```
 
@@ -143,11 +148,22 @@ stale local artifact exists. No ACT portal fetch or nightly acquisition occurs.
 Offline lane dry runs (never upload or contact GitHub/ACT):
 
 ```sh
-node scripts/act_invoices/publish_bundle.mjs --candidate
+node scripts/act_invoices/publish_bundle.mjs
 OPAX_TABLE_RELOAD=on node scripts/act_invoices/prepare_release.mjs --dry-run
 OPAX_TABLE_RELOAD=off node scripts/act_invoices/prepare_release.mjs --dry-run
 ```
 
-The first builds a clearly pending source mirror from hash-verified retained
-staging for size/content review. The second validates the actual workflow file
-and reports a hold for the pending manifest; the third reports skipped.
+The first rebuilds the approved source mirror locally. The second validates the
+actual workflow and approved manifest and prints the exact proposed download;
+the third reports skipped. None downloads or uploads anything.
+
+Round 3 promoted-data browser check (all outbound requests denied):
+
+```sh
+OPAX_TEST_HOST=::1 OPAX_ACT_INVOICES_PREVIEW=promoted node scripts/act_invoices/preview.mjs
+OPAX_ACT_INVOICES_PREVIEW=promoted python3 -m scripts.act_invoices.browser_check
+```
+
+This mode reads the real approved local artifact and receipt, never a test-only
+approval. The isolated D1 and SQL are disposable; the promoted artifact and gzip
+remain ignored and must not be committed.

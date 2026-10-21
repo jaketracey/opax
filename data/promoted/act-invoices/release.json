@@ -2,20 +2,20 @@
   "schema": 1,
   "repository": "jaketracey/opax",
   "public": true,
-  "release_tag": "act-invoices-2026-10-22-9461967d519f-pending",
-  "asset_name": "act-invoices-kzmf-7uhp-2026-10-22-pending.json.gz",
-  "bytes": 8204935,
-  "sha256": "40b78a2e9cdae7c68b5d0ee2718afd3bc42b4b001f5f64814ff7f705cd156118",
-  "uncompressed_bytes": 79921365,
-  "uncompressed_sha256": "ca0505531acffff48724a8eeb466e44f6d9407ef937bb805f7a2c160770055bf",
+  "release_tag": "act-invoices-2026-10-22-9461967d519f-761926c158d5",
+  "asset_name": "act-invoices-kzmf-7uhp-2026-10-22-761926c158d5.json.gz",
+  "bytes": 8204956,
+  "sha256": "e92aba9d9ceaa2de39d6bc5ef8691eb621835fee38c93e58a34c687b8ecfae46",
+  "uncompressed_bytes": 79921404,
+  "uncompressed_sha256": "c02c572432c26472501b1a9c2132880ecf90781968063cac52a396da69ba01b9",
   "dataset_id": "kzmf-7uhp",
   "snapshot": "2026-10-21T22:08:57.440248+00:00",
   "snapshot_date": "2026-10-22",
   "snapshot_sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac",
   "review": {
     "receipt": "data/staged/act-invoices/review.json",
-    "sha256": "e32118352b9424b15c1565b69b3f600de96dbcbea74b8aafe966209519976db7",
-    "status": "pending",
-    "reviewed_commit": null
+    "sha256": "48d9b1a994b863774a29eaa472b7d1935f3404e64bbcfdc0e12cec337263776e",
+    "status": "approved",
+    "reviewed_commit": "761926c158d5ecb15b2b70b593ab7149eb659634"
   }
 }

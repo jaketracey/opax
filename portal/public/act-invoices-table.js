@@ -1,4 +1,4 @@
-import {actInvoiceEntityName} from './act-invoices-context.js?v=f00b35af13';
+import {actInvoiceEntityName} from './act-invoices-context.js?v=61d4f9572c';
 /** Supplier identity is source-record text only. No links, facets or name search. */
 import {dataTableHTML,guardTableURL,serializeQuery} from './datatable.js?v=a8472268da';
 export const ACT_INVOICES_ID='kzmf-7uhp';

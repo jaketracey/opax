@@ -1,5 +1,5 @@
 import {actInvoiceCoverageNotes} from '../public/act-invoices-context.js'
-import {actInvoicesMetadata} from './act-invoices-metadata.ts'
+import {actInvoicesMetadata,actInvoicesPublicCopy} from './act-invoices-metadata.ts'
 import {loadDonorIndex} from './donor-index.ts'
 import {donorDisclosure,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {foldDonorName} from '../public/donor-entity.js'
@@ -169,7 +169,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     const table=tableName(name), selection=where(table,query,undefined,supplierIds), columnSQL=config.columns.filter(c=>!c.computed).map(c=>'t.'+quote(c.key)).join(',')
     const total=Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
     if (csv) {
-      const csvNotes=actReceipt?actInvoiceCoverageNotes(actReceipt):[]
+      const csvNotes=actReceipt?actInvoiceCoverageNotes({...actReceipt,public_copy:actInvoicesPublicCopy(actReceipt)}):[]
       if(csvNotes.length)headers.set('x-table-csv-notes',encodeURIComponent(JSON.stringify(csvNotes)))
       const exportable=Math.min(MAX_CSV,total),exportLimited=total>MAX_CSV
       const csvPage=query.page!,pages=Math.ceil(exportable/CSV_PAGE)

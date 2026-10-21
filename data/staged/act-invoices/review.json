@@ -1,6 +1,6 @@
 {
-  "status": "pending",
-  "reviewed_commit": null,
+  "status": "approved",
+  "reviewed_commit": "761926c158d5ecb15b2b70b593ab7149eb659634",
   "inputs": {
     "inventory.json": "579a20b7327712e4e196b161bac53324d3e865b67b1475a62a6e733135a8a52d",
     "schema.json": "594bbc2484fd98a76f4a25a2ef90b218748fe4e611de4c039f66fb052e61bb18",
@@ -10,5 +10,11 @@
     "acquisition-audit.json": "2849caefe6e6fac3d40258a1ffdf3296ec69c555b87689c7dd2f9bae6f107a31",
     "hub.json": "ee11c040b163c8f7c7c71d6adb6ecadebb0208db246121d2e6ab5486b993fd84"
   },
-  "reason": "Independent review and explicit D1 snapshot promotion pending; nightly off"
+  "reason": "Independent r2 APPROVE with no remaining findings; unchanged staged input digests verified. Local promotion authorised for round 3; nightly off.",
+  "independent_review": {
+    "reference": ".ops/codex-runs/review-coverage-act-invoices-r2.last.md",
+    "sha256": "dcf459d4c8fd77b29696a9f6387d317308c3894014fb9e50b98b0e7ee6e683de",
+    "verdict": "APPROVE",
+    "reviewed_parent": "766828d2e7f66deb39bb01a6236104e0d39dcd8d"
+  }
 }

@@ -1,0 +1,249 @@
+{
+  "reviewed_commit": "761926c158d5ecb15b2b70b593ab7149eb659634",
+  "main_ref": "6b021dc84c44ee11ed64d9f235fb0269d98cf358",
+  "merge": "Already up to date; no fetch or network",
+  "receipt": "data/staged/act-invoices/review.json",
+  "full_portal_suite": {
+    "pass": 2554,
+    "fail": 0,
+    "skipped": 0,
+    "command": "PATH=\"$PWD/../.venv/bin:$PATH\" OPAX_TEST_HOST=::1 WRANGLER_SEND_METRICS=false node --test --test-concurrency=4 test/*.test.mjs (portal/)",
+    "prerequisites": [
+      "node scripts/build_search_catalog.mjs",
+      "node scripts/cached_release_build.mjs crawl"
+    ],
+    "generated_search_manifest": "Restored to the reviewed parent after tests"
+  },
+  "targeted": {
+    "pass": 73,
+    "fail": 0
+  },
+  "python": {
+    "act_invoice_checks": 8,
+    "shared_promoter_checks": 14,
+    "fail": 0
+  },
+  "tsc": "pass",
+  "check": "pass",
+  "worker_dry_run": "pass; metrics disabled and Node external network disabled",
+  "workflow_reload_on": {
+    "workflow": "valid",
+    "reload_off": "skipped",
+    "before_sql_build": true,
+    "status": "dry-run",
+    "would_download": true,
+    "repository": "jaketracey/opax",
+    "release_tag": "act-invoices-2026-10-22-9461967d519f-761926c158d5",
+    "asset_name": "act-invoices-kzmf-7uhp-2026-10-22-761926c158d5.json.gz",
+    "bytes": 8204956,
+    "sha256": "e92aba9d9ceaa2de39d6bc5ef8691eb621835fee38c93e58a34c687b8ecfae46"
+  },
+  "workflow_reload_off": {
+    "workflow": "valid",
+    "reload_off": "skipped",
+    "before_sql_build": true,
+    "status": "skipped",
+    "reason": "table reload is off"
+  },
+  "staging_dry_run": {
+    "mode": "dry-run",
+    "writes": 0,
+    "review": "approved",
+    "rows": 127437,
+    "months": 137,
+    "missing_months": [],
+    "exact_duplicate_groups": 1530,
+    "extra_duplicate_rows": 2393,
+    "public_computed_totals": 0
+  },
+  "promotion_containment": {
+    "declared_output": "data/promoted/act-invoices/table.json",
+    "changed_paths": [
+      "data/promoted/act-invoices/table.json"
+    ],
+    "bytes": 107519435,
+    "other_files_unchanged": 21447
+  },
+  "bundle": {
+    "schema": 1,
+    "repository": "jaketracey/opax",
+    "public": true,
+    "release_tag": "act-invoices-2026-10-22-9461967d519f-761926c158d5",
+    "asset_name": "act-invoices-kzmf-7uhp-2026-10-22-761926c158d5.json.gz",
+    "bytes": 8204956,
+    "sha256": "e92aba9d9ceaa2de39d6bc5ef8691eb621835fee38c93e58a34c687b8ecfae46",
+    "uncompressed_bytes": 79921404,
+    "uncompressed_sha256": "c02c572432c26472501b1a9c2132880ecf90781968063cac52a396da69ba01b9",
+    "dataset_id": "kzmf-7uhp",
+    "snapshot": "2026-10-21T22:08:57.440248+00:00",
+    "snapshot_date": "2026-10-22",
+    "snapshot_sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac",
+    "review": {
+      "receipt": "data/staged/act-invoices/review.json",
+      "sha256": "48d9b1a994b863774a29eaa472b7d1935f3404e64bbcfdc0e12cec337263776e",
+      "status": "approved",
+      "reviewed_commit": "761926c158d5ecb15b2b70b593ab7149eb659634"
+    }
+  },
+  "bundle_content": {
+    "rows": 127437,
+    "published_fields": 8,
+    "provenance_fields": 6,
+    "source_value_comparisons": 1784118,
+    "all_source_values_unchanged": true,
+    "bytes": 8204956,
+    "sha256": "e92aba9d9ceaa2de39d6bc5ef8691eb621835fee38c93e58a34c687b8ecfae46",
+    "approved_review": true,
+    "uploads": 0
+  },
+  "promoted_csv": {
+    "status": 200,
+    "csv_notes": 7,
+    "mirror_note_once": true,
+    "manifest_release_and_sha256_match": true,
+    "scope": "Isolated promoted D1 over loopback only"
+  },
+  "protected": {
+    "portal/public/votes.json": {
+      "byte_identical_to_review_and_main": true,
+      "sha256": "a112166dc583c6acac8b38ab452de83f9e698aab62b4ed5ca94e52ca7c6f46eb"
+    },
+    "portal/public/pay.json": {
+      "byte_identical_to_review_and_main": true,
+      "sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722"
+    },
+    "coverage_guards_byte_identical": true,
+    "staged_inputs_verified": 7,
+    "promoted_artifact_ignored": true,
+    "bundle_ignored": true
+  },
+  "html_and_spa_audit": {
+    "portal/public/community.html": {
+      "only_stamps_vs_main": false,
+      "own_previously_approved_changes": true
+    },
+    "portal/public/datatable-workbench.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/home.html": {
+      "only_stamps_vs_main": false,
+      "own_previously_approved_changes": true
+    },
+    "portal/public/index.html": {
+      "only_stamps_vs_main": false,
+      "own_previously_approved_changes": true
+    },
+    "portal/public/lg-test.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/map.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/nr-test.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/qz-test.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/spa-shell.js": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/st-test.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/tm-test.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/ui-workbench.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    },
+    "portal/public/wb-test.html": {
+      "only_stamps_vs_main": true,
+      "own_previously_approved_changes": false
+    }
+  },
+  "browser": {
+    "390": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 390,
+      "viewport": 390,
+      "cells": [
+        {
+          "label": "Supplier",
+          "left": 20,
+          "right": 153,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Date",
+          "left": 153,
+          "right": 254.5,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 254.5,
+          "right": 370,
+          "whiteSpace": "nowrap"
+        }
+      ]
+    },
+    "1440": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 1440,
+      "viewport": 1440,
+      "cells": [
+        {
+          "label": "Supplier",
+          "left": 57.59375,
+          "right": 374.875,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Date",
+          "left": 374.875,
+          "right": 496.484375,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 496.484375,
+          "right": 631.984375,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Reporting entity",
+          "left": 631.984375,
+          "right": 1040.21875,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Description",
+          "left": 1040.21875,
+          "right": 1382.40625,
+          "whiteSpace": "normal"
+        }
+      ]
+    }
+  },
+  "preview_stopped": true,
+  "owned_runtime_scratch_removed": true,
+  "external_requests": 0,
+  "release_creations": 0,
+  "uploads": 0,
+  "pushes": 0,
+  "deploys": 0,
+  "remote_d1_writes": 0,
+  "nightly_runs": 0
+}

@@ -1,5 +1,6 @@
 """Local actual Worker/D1 candidate only; browser requests cannot leave loopback."""
 import json
+import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[2]
@@ -9,6 +10,7 @@ PATH='register/act-invoices?t.pageSize=10'
 
 
 def main():
+    release=json.loads((ROOT/'data/promoted/act-invoices/release.json').read_text())
     with sync_playwright() as p:
         browser=p.chromium.launch(channel='chrome',headless=True)
         for width in (390,1440):
@@ -28,6 +30,12 @@ def main():
             assert page.locator('table caption').filter(has_text='Published invoice records').count()==1
             assert page.get_by_text('22 Oct 2026 (Melbourne)',exact=True).count()==1
             assert page.get_by_text('July 2015 to September 2026',exact=False).count()>=1
+            if os.environ.get('OPAX_ACT_INVOICES_PREVIEW')=='promoted':
+                receipt=page.locator('details.act-invoices-receipt')
+                assert receipt.locator('[data-act-public-copy]').count()==1
+                assert receipt.locator('[data-act-public-copy] a').get_attribute('href')=='https://github.com/jaketracey/opax/releases/tag/'+release['release_tag']
+                receipt.evaluate('el=>el.open=true')
+                assert release['sha256'] in receipt.inner_text()
             assert '.00' not in page.locator('[data-label="Amount"]').all_text_contents()[2]
             if width==1440:
                 assert 'Suburban Land Agency' in page.locator('[data-label="Reporting entity"]').all_text_contents()[4]
