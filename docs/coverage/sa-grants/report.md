@@ -1,9 +1,15 @@
 # South Australian historical grants: local staging
 
-**Status: staged; review and promotion pending.** Checked 21 October 2026
-Melbourne on `coverage/sa-grants`, from `9c7deab0d0165805d687a90fbec4599a19842d04`.
-No public grant asset, production data, push, deployment, nightly, KB, D1 or
-native app change. The local commit SHA is supplied in the lane closeout.
+**Current status: LIVE pending deploy.** Independent r2 APPROVE covers
+`32af360d7`; all six unchanged staged inputs have passed the explicit local
+promoter. See [round 3 promotion evidence](promotion-round-3.md) for the asset,
+review receipt, containment, local Worker/browser proof and gates. No deployment
+or production write is claimed.
+
+The initial staging and fix 1 account below records the earlier state. It was
+checked 21 October 2026 Melbourne on `coverage/sa-grants`, from
+`9c7deab0d0165805d687a90fbec4599a19842d04`. The initial lane did not write a
+public grant asset, push, deploy, run nightly, or write KB/D1 or native app data.
 
 ## Inventory and licence
 

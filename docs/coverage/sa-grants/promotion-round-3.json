@@ -1,0 +1,312 @@
+{
+  "validated_at_utc": "2026-10-21T00:43:34.170975+00:00",
+  "status": "LIVE pending deploy",
+  "approved_commit": "32af360d74c26d435977a1451f18fa897cd8c861",
+  "origin_main": "9c7deab0d0165805d687a90fbec4599a19842d04",
+  "merge_result": "Already up to date; local origin/main ancestor, no fetch",
+  "review_receipt": {
+    "path": "data/staged/sa-grants/review.json",
+    "bytes": 1504,
+    "sha256": "752e4cd2315fd0ac1bd72fd777cbcf7acf5aae980d0c96f7b04b6947617dd86f"
+  },
+  "independent_review_evidence": {
+    "path": ".ops/codex-runs/review-coverage-sa-grants-r2.last.md (main checkout)",
+    "sha256": "1aafcb75fa677689cc7e793d62614d832aeaf0c8826df4489e6d0779c3a5cc38",
+    "verdict": "APPROVE",
+    "approved_commit": "32af360d74c26d435977a1451f18fa897cd8c861"
+  },
+  "inputs_sha256": {
+    "inventory.json": "43ae10afd836331ac6d506e6854ebe3141da45988f0aa307d5828d4e64b97a86",
+    "receipts.json": "9f5a475c01bfe944c97fbc506dd5aa0d659964d0cc2b07ba706d0c145c21eb83",
+    "series.jsonl": "994d8f41d51c12609e1f117a600f8f80d9369bd6b4640bce1aa7ab0e00145e0f",
+    "reconciliation.json": "b03bcf9a31809c59ea1a0a7550cf417a42a203569d21d339cc58003a0bef1c47",
+    "acquisition-audit.json": "cc53e7cd295cf4eb325a7d3ad97e83c75ed7dc725bc565afb0fc891ef343dfd6",
+    "hub.json": "ed7bdf62e7a7c321bf5ad90dda45e61058ac155034e7b22ee99793c7e07b471e"
+  },
+  "inputs_byte_identical_to_approved_commit": true,
+  "promoted_files": [
+    {
+      "path": "portal/public/sa-grants/data.json",
+      "bytes": 1271823,
+      "sha256": "8a6311c10c14ecad7cd11797af203f0c03e17094af28aa68b5095abac6941b48"
+    }
+  ],
+  "public_output_audit": {
+    "files_before": 19683,
+    "files_after": 19684,
+    "changed_files": [
+      "portal/public/sa-grants/data.json"
+    ],
+    "all_other_files_byte_identical": true
+  },
+  "stamps": {
+    "command": "npm run -s stamp",
+    "result": "already current; no stamp changes",
+    "html_and_shell_files": 13,
+    "non_stamp_differences": []
+  },
+  "generated_build_files": "No tracked regenerated build-file drift; no restoration needed",
+  "votes": {
+    "bytes": 1309476,
+    "sha256": "d89f34bd8acb440da2efe8364d147e51d0cb8737d5631bac091cd524fe9bf999",
+    "byte_identical_to": "9c7deab0d0165805d687a90fbec4599a19842d04",
+    "schema": 1
+  },
+  "coverage_protected_text": {
+    "Every recommendation shares these guards:": "1c7b7aff582bc4d59019b906e0bcc968c5c14e43ad31e3090be2e4aa4dd7cc01",
+    "19 Oct 2026, Jake:": "c5f92e6388ba362d3345f6f6934093989f733876fba701465b6b5967668a8d59"
+  },
+  "tests": {
+    "python_sa_grants_passed": 12,
+    "python_sa_budget_passed": 14,
+    "portal_targeted_passed": 53,
+    "promoted_public_outputs_passed": 3,
+    "failures": 0,
+    "excluded": [
+      "Unchanged D1-writing fixture: D1 grants keeps source rows; no D1 writes authorised"
+    ]
+  },
+  "gates": {
+    "tsc": "passed",
+    "check": "passed",
+    "worker_deployment_dry_run": "passed; no deployment",
+    "staging_dry_run": "passed; zero writes",
+    "promoter_dry_run": "passed",
+    "promoter_check_public": "passed"
+  },
+  "counts": {
+    "resources": 12,
+    "selected": 7,
+    "excluded": 5,
+    "staged_awards": 677,
+    "held_files": 5,
+    "reconciliations": 2,
+    "source_row_checks": 677,
+    "public_computed_totals": 0
+  },
+  "containment": {
+    "pcif_award_rows": 0,
+    "pcif_file_bodies": 0,
+    "pcif_source_row_manifests": 0,
+    "applicant_unsuccessful_rows": 0,
+    "excluded_resource_metadata": 0,
+    "computed_amount_totals": 0,
+    "held_numeric_values": 0,
+    "non_numerical_source_hold_notes": 5,
+    "existing_guards": "passed",
+    "promoted_html_hydration_csv_search_mcp": "passed 3 direct containment checks"
+  },
+  "browser": {
+    "serving_source": "Promoted public asset on local Worker; candidate override disabled; no production bindings",
+    "results": [
+      {
+        "width": 390,
+        "status": 200,
+        "asset_status": 200,
+        "asset_sha256": "8a6311c10c14ecad7cd11797af203f0c03e17094af28aa68b5095abac6941b48",
+        "promoted_asset_matches_disk": true,
+        "page_width": 390,
+        "server_source_rows": 677,
+        "tables": [
+          {
+            "id": "0760d21e-8344-4462-b305-2f7f92f22f72",
+            "tableWidth": 350,
+            "containerWidth": 350,
+            "scrollWidth": 350,
+            "cells": [
+              {
+                "label": "Recipient",
+                "left": 20,
+                "right": 181,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Year",
+                "left": 181,
+                "right": 261.5,
+                "whiteSpace": "nowrap"
+              },
+              {
+                "label": "Amount",
+                "left": 261.5,
+                "right": 370,
+                "whiteSpace": "nowrap"
+              }
+            ]
+          },
+          {
+            "id": "36f0af29-ef87-4793-a290-7061144e078f",
+            "tableWidth": 350,
+            "containerWidth": 350,
+            "scrollWidth": 350,
+            "cells": [
+              {
+                "label": "Recipient",
+                "left": 20,
+                "right": 181,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Year",
+                "left": 181,
+                "right": 261.5,
+                "whiteSpace": "nowrap"
+              },
+              {
+                "label": "Amount",
+                "left": 261.5,
+                "right": 370,
+                "whiteSpace": "nowrap"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "http_503": 0,
+        "external_browser_requests_blocked": 0
+      },
+      {
+        "width": 1440,
+        "status": 200,
+        "asset_status": 200,
+        "asset_sha256": "8a6311c10c14ecad7cd11797af203f0c03e17094af28aa68b5095abac6941b48",
+        "promoted_asset_matches_disk": true,
+        "page_width": 1440,
+        "server_source_rows": 677,
+        "tables": [
+          {
+            "id": "0760d21e-8344-4462-b305-2f7f92f22f72",
+            "tableWidth": 1324.8125,
+            "containerWidth": 1325,
+            "scrollWidth": 1325,
+            "cells": [
+              {
+                "label": "Recipient",
+                "left": 57.59375,
+                "right": 284.5,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Year",
+                "left": 284.5,
+                "right": 369.703125,
+                "whiteSpace": "nowrap"
+              },
+              {
+                "label": "Amount",
+                "left": 369.703125,
+                "right": 474.234375,
+                "whiteSpace": "nowrap"
+              },
+              {
+                "label": "Project",
+                "left": 474.234375,
+                "right": 646.46875,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Project description",
+                "left": 646.46875,
+                "right": 1037.109375,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Region as published",
+                "left": 1037.109375,
+                "right": 1279.359375,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Source row",
+                "left": 1279.359375,
+                "right": 1382.40625,
+                "whiteSpace": "normal"
+              }
+            ]
+          },
+          {
+            "id": "36f0af29-ef87-4793-a290-7061144e078f",
+            "tableWidth": 1324.8125,
+            "containerWidth": 1325,
+            "scrollWidth": 1325,
+            "cells": [
+              {
+                "label": "Recipient",
+                "left": 57.59375,
+                "right": 276,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Year",
+                "left": 276,
+                "right": 361.578125,
+                "whiteSpace": "nowrap"
+              },
+              {
+                "label": "Amount",
+                "left": 361.578125,
+                "right": 466.109375,
+                "whiteSpace": "nowrap"
+              },
+              {
+                "label": "Project",
+                "left": 466.109375,
+                "right": 648.71875,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Project description",
+                "left": 648.71875,
+                "right": 942.640625,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Region as published",
+                "left": 942.640625,
+                "right": 1280.1875,
+                "whiteSpace": "normal"
+              },
+              {
+                "label": "Source row",
+                "left": 1280.1875,
+                "right": 1382.40625,
+                "whiteSpace": "normal"
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "http_503": 0,
+        "external_browser_requests_blocked": 0
+      }
+    ],
+    "no_javascript_phone": "passed",
+    "new_source_requests": 0
+  },
+  "screenshots": {
+    "1440-table.png": {
+      "path": "portal/private/sa-grants/round3/1440-table.png",
+      "sha256": "8bd3f1a7e9e2a57bea73d7addd79a934dda17a2e6afc95d60e8ea71f616cc1f8"
+    },
+    "390-table.png": {
+      "path": "portal/private/sa-grants/round3/390-table.png",
+      "sha256": "48b1c998001fb29beac181133d4db3d8641aeea54f222a8ffdd64ad8e715f5df"
+    },
+    "1440-section.png": {
+      "path": "portal/private/sa-grants/round3/1440-section.png",
+      "sha256": "70a4dc76a331adaafddc87674a667b62366b1fdc3887f823212dca80bd093636"
+    },
+    "390-section.png": {
+      "path": "portal/private/sa-grants/round3/390-section.png",
+      "sha256": "76d5db95d84c217045575e964529d5c7a8b46561fcf65e05bbd2109cd0c41d3d"
+    }
+  },
+  "future_repromotion_command": "python3 scripts/promote_hub_data.py sa-grants --votes-reference origin/main",
+  "source_requests": 0,
+  "external_requests": 0,
+  "nightly": false,
+  "push": false,
+  "deploy": false,
+  "kb_writes": false,
+  "d1_writes": false
+}

@@ -1,8 +1,9 @@
 # SA historical grants: stage only
 
-Status: **staged; review and promotion pending**. No public data asset is written.
-The independent reviewer must check the exact committed input hashes and set the
-review receipt before any explicit promotion. This lane stays outside nightly.
+Status: **LIVE pending deploy**. Independent r2 APPROVE at `32af360d7` covers
+the six unchanged inputs; the reviewed public asset is promoted locally.
+See [promotion evidence](../../docs/coverage/sa-grants/promotion-round-3.md).
+Future inputs require a new independent review receipt. Nightly stays off.
 
 `acquire.py` calls the SA budget acquisition engine with its own locked ledger,
 seven exact resource UUIDs, a seven-download cap, and permission for original
@@ -23,8 +24,9 @@ python3 -m unittest discover -s tests -p test_sa_grants.py
 python3 scripts/promote_hub_data.py sa-grants --dry-run --votes-reference 9c7deab0d
 ```
 
-The last command must reject `review: sa-grants` while the receipt is pending.
-Never change it to approved just to make a dry run succeed. Its input hashes
+The dry run now passes against the approved receipt. A pending receipt must
+still reject `review: sa-grants`; approval must come from independent review.
+Its input hashes
 include the exact committed `series.jsonl` and `hub.json` plus inventory, receipts,
 reconciliation and acquisition audit. A changed input invalidates approval.
 
@@ -59,7 +61,8 @@ python3 -m scripts.sa_grants.browser_check
 ```
 
 Port 8978; no production bindings. Without the explicit candidate variable the
-preview reads only the public asset, which does not exist in this lane. Browser
+preview reads only the reviewed public asset. Round 3 browser proof uses this
+promoted asset, with no candidate override. Browser
 checks block every external URL and assert the 390/1440 table layout, hydration,
 sorting and no-JavaScript phone rendering. Screenshots and metrics stay private.
 The existing `/money/grants` page links to this separate historical register

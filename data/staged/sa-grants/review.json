@@ -1,6 +1,16 @@
 {
-  "status": "pending",
-  "reviewed_commit": null,
+  "status": "approved",
+  "reviewed_commit": "32af360d74c26d435977a1451f18fa897cd8c861",
+  "reviewer_verdict": "APPROVE",
+  "review_round": "r2",
+  "review_basis": "User round 3 authorisation cites independent r2 APPROVE. All six staged inputs are byte-identical to the approved commit. Explicit local sa-grants promotion only; PCIF file bodies/award rows and all applicant/unsuccessful rows excluded. Five approved non-numerical source hold notes remain. Nightly stays off; no new source requests, push, deploy, KB or D1 writes.",
+  "review_evidence": {
+    "path": ".ops/codex-runs/review-coverage-sa-grants-r2.last.md (main checkout)",
+    "sha256": "1aafcb75fa677689cc7e793d62614d832aeaf0c8826df4489e6d0779c3a5cc38",
+    "verdict": "APPROVE",
+    "approved_commit": "32af360d74c26d435977a1451f18fa897cd8c861"
+  },
+  "merged_origin_main": "9c7deab0d0165805d687a90fbec4599a19842d04",
   "inputs": {
     "inventory.json": "43ae10afd836331ac6d506e6854ebe3141da45988f0aa307d5828d4e64b97a86",
     "receipts.json": "9f5a475c01bfe944c97fbc506dd5aa0d659964d0cc2b07ba706d0c145c21eb83",
@@ -9,5 +19,5 @@
     "acquisition-audit.json": "cc53e7cd295cf4eb325a7d3ad97e83c75ed7dc725bc565afb0fc891ef343dfd6",
     "hub.json": "ed7bdf62e7a7c321bf5ad90dda45e61058ac155034e7b22ee99793c7e07b471e"
   },
-  "reason": "Independent review and explicit promotion pending; nightly off"
+  "reviewed_at": "2026-10-21T00:39:24.257580+00:00"
 }
