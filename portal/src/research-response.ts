@@ -59,6 +59,7 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
 export async function withFallbackPeriod(response: Response, period: import('./agentic-ask').Period): Promise<Response> {
   if (!response.ok) return response
   return mapResearchResponse(response, payload => {
+    payload=normaliseWrittenPayload(payload)
     // No fallback/cache delta is released before both writing and period checks.
     if (rawToolEcho(String(payload.answer ?? ''))) {
       const facts=writingFacts(payload as unknown as QualitativeAnswer)
@@ -85,4 +86,60 @@ export async function withFallbackPeriod(response: Response, period: import('./a
       coverage: { requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? null, matched: false },
     }
   }, true)
+}
+
+/** Keep the fallback model's prose, removing repeated claims and financial figure sets before replay. */
+export function normaliseWrittenPayload(payload: Record<string, unknown>): Record<string, unknown> {
+  if (typeof payload.answer !== 'string' || !payload.answer.trim()) return payload
+  const original = payload.answer, cp = (n: number) => Array.from(original.slice(0,n)).length
+  const key = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim()
+  const money = (s: string) => [...s.matchAll(/(?:(US|USD|AU|AUD|A))?\$\s?(\d[\d,]*(?:\.\d+)?)\s*(billion|bn|million|m\b|thousand|k\b)?/gi)].map(m=>{
+    const unit=(m[3]??'').toLowerCase(), scale=/^(billion|bn)$/.test(unit)?1e9:/^(million|m)$/.test(unit)?1e6:/^(thousand|k)$/.test(unit)?1e3:1
+    return (m[1]?.toUpperCase()??'$')+'/'+Number(m[2].replace(/,/g,''))*scale
+  })
+  const seenText=new Set<string>(), seenMoney=new Set<string>()
+  const kept: {text:string;from:number;until:number}[][]=[]
+  let changed=false
+  for(const paragraph of original.matchAll(/\S[\s\S]*?(?=\n\s*\n|$)/g)) {
+    const text=paragraph[0], base=paragraph.index!
+    if (/^(?:#{1,6}\s*)?(?:what the records? say(?:s)?|answer|overview|sources|summary)\s*:?$/i.test(text.trim())) {changed=true;continue}
+    const boundaries=[0,...[...text.matchAll(/(?<=[.!?])\s+(?=[A-Z“"‘'(])/g)].map(m=>m.index!),text.length]
+    const parts:{text:string;from:number;until:number}[]=[]
+    for(let i=0;i<boundaries.length-1;i++) {
+      const raw=text.slice(boundaries[i],boundaries[i+1]), sentence=raw.trim()
+      if(!sentence)continue
+      const values=money(sentence), signature=key(sentence)
+      if(seenText.has(signature) || values.length>0 && values.every(v=>seenMoney.has(v))) {changed=true;continue}
+      seenText.add(signature);values.forEach(v=>seenMoney.add(v))
+      const from=base+boundaries[i]+raw.indexOf(sentence)
+      parts.push({text:sentence,from:cp(from),until:cp(from+sentence.length)})
+    }
+    // A general introduction left after all of its repeated financial detail is removed adds no answer.
+    if(money(text).length && parts.length && !parts.some(p=>money(p.text).length)) {changed=true;continue}
+    if(parts.length)kept.push(parts)
+  }
+  if(!changed || !kept.length)return payload
+  const originalLength=Array.from(original).length, mapping=new Map<number,number>();let answer=''
+  for(const paragraph of kept) {
+    if(answer)answer+='\n\n'
+    for(const [index,part] of paragraph.entries()) {
+      if(index)answer+=' '
+      const offset=Array.from(answer).length
+      for(let i=part.from;i<part.until;i++)mapping.set(i,offset+i-part.from)
+      answer+=part.text
+    }
+  }
+  const citations: Record<string,[number,number][]>={}
+  const originalCitations=payload.citations && typeof payload.citations==='object' ? payload.citations as Record<string,unknown> : {}
+  for(const [id,ranges] of Object.entries(originalCitations))if(Array.isArray(ranges))for(const range of ranges) {
+    if(!Array.isArray(range) || !range.every(Number.isSafeInteger) || range.length!==2)continue
+    let from:number|undefined,until:number|undefined
+    for(let i=Math.max(0,range[0]);i<Math.min(originalLength,range[1]);i++) {
+      const mapped=mapping.get(i)
+      if(mapped!==undefined){from=from===undefined?mapped:Math.min(from,mapped);until=Math.max(until??0,mapped+1)}
+    }
+    if(from!==undefined && until!==undefined)(citations[id]??=[]).push([from,until])
+  }
+  const sources=Array.isArray(payload.sources)?(payload.sources as Record<string,unknown>[]).map(s=>typeof s.resource==='string' && s.cited===true ? {...s,cited:Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}:s):[]
+  return {...payload,answer,citations,sources,...(!Object.keys(citations).length?{answer_status:'uncited'}:{})}
 }

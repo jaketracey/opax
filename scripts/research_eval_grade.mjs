@@ -253,7 +253,8 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({})) {
   const first = sentences[0] ?? '', amountsInAnswer = amounts(answer)
   const figureAsked = /\b(?:highest|lowest|most|least|largest|biggest|top|salary|paid|grants?|contracts?|median|population)\b|\bhow (?:many|much)\b/i.test(question)
   const bodyFigures=plainNumbers(answer).filter(n=>!isYear(n)), firstFigures=plainNumbers(first).filter(n=>!isYear(n))
-  const firstAmount = !figureAsked || !amountsInAnswer.length&&!bodyFigures.length || amounts(first).length>0 || firstFigures.length>0
+  const limited = /\b(?:cannot|could not|do(?:es)? not|did not) establish\b|\bno (?:reliable|verified|matching)\b/i.test(first)
+  const firstAmount = limited || !figureAsked || !amountsInAnswer.length&&!bodyFigures.length || amounts(first).length>0 || firstFigures.length>0
   // Reject table rows and preambles, rather than whitelisting verbs ("rose" and "cited" are direct too).
   const prefix=/^([^.!?]{1,110}):/.exec(first)?.[1]
   const rowLike=!!prefix && !/\b(?:is|was|are|were|has|have|had)\b/i.test(prefix)

@@ -122,3 +122,23 @@ test('a qualitative record answer need not lead with an incidental asset value',
  const out=api.verifyWrittenAnswer({sentences:[{text:'Robin Example declared a shareholding in Fixture Company.',facts:[1]}]}, {question:'What interests has Robin Example declared?',period:{kind:'all',label:''},facts:[{id:1,text,source:source('interest-1',text)}]})
  assert.match(out.answer,/^Robin Example declared/)
 });
+test('ordinary fallback and its cached SSE replay remove repeated financial sets while remapping Unicode spans',async()=>{
+ const intro='The selected 🏠 debate records do not establish a reliable party ranking.'
+ const first='Example Party described a $10 billion fund and $500 million annual funding.'
+ const next='Another Example Party passage described an additional $3 billion.'
+ const repeated='Sample Party offered the opposite account. One passage described $3bn and a $500 million maximum becoming a $500 million minimum. Another repeated $3 billion.'
+ const answer='What the record says:\n\n'+intro+'\n\n'+first+' '+next+'\n\n'+repeated
+ const at=Array.from(answer.slice(0,answer.indexOf(first))).length, end=at+Array.from(first).length
+ const payload={answer,citations:{'a/t/body/0':[[at,end]],'b/t/body/0':[[Array.from(answer).length-1,Array.from(answer).length]]},sources:[source('a',first),source('b',repeated)]}
+ const result=api.normaliseWrittenPayload(payload)
+ assert.equal((result.answer.match(/\$3 (?:billion|bn)/g)||[]).length,1)
+ assert.equal((result.answer.match(/\$500 million/g)||[]).length,1)
+ assert.doesNotMatch(result.answer,/What the record says|opposite account/)
+ assert.equal(Array.from(result.answer).slice(...result.citations['a/t/body/0'][0]).join(''),first)
+ assert.equal(result.sources.find(s=>s.resource==='b').cited,false)
+ assert.deepEqual(answerStyleChecks('Which party spoke most and how did they vote?',result.answer),{no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'pass'})
+ const stream=new Response('event: delta\ndata: '+JSON.stringify({text:answer})+'\n\nevent: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers:{'content-type':'text/event-stream'}})
+ const wire=await(await api.withFallbackPeriod(stream,{kind:'all',label:''})).text()
+ assert.doesNotMatch(wire,/event: delta/)
+ assert.deepEqual(JSON.parse(wire.match(/^data: (.+)$/m)[1]),result)
+})
