@@ -31,6 +31,7 @@ export interface QualitativeAnswer {
   answer_status?: 'uncited' | 'partly_cited'
 }
 export interface ResearchContext {
+  selectionWallMs?: number
   constraints?: import('./ask-constraints').AskConstraints
   deps: ToolDeps
   period: Period

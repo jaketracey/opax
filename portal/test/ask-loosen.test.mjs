@@ -74,7 +74,7 @@ test('an ambiguous or unresolved named person still declines, with no repair tur
   const v=verify(softPoints,q,named);assert.equal(v.out,null);assert.equal(v.tally.drops[label],1);
   assert.equal(api.recordPassagesAnswer(passages,q,named),null);
   const f=loop([reply([call('search',{query:'poker machine reform'})]),reply([call('answer',{points:softPoints})]),reply([call('answer',{points:softPoints})])],{named,q});
-  const run=await f.run();assert.equal(run.answered,false);assert.equal(f.model.doGenerateCalls.length,2,label);assert.equal(f.failures[0].reason,'grounding');
+  const run=await f.run();if(named.ambiguous){assert.equal(run.answered,true);assert.match(run.answer,/Please give the full name/);assert.equal(f.model.doGenerateCalls.length,0);assert.equal(f.failures.length,0)}else{assert.equal(run.answered,false);assert.equal(f.model.doGenerateCalls.length,2,label);assert.equal(f.failures[0].reason,'grounding')}
  }
 });
 

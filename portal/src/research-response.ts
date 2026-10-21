@@ -1,3 +1,4 @@
+import { claimClauses, proseClaimKeys } from './research-claims'
 import { proseFallback, rawToolEcho, writingFacts } from './research-writing'
 import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
@@ -60,6 +61,8 @@ export async function withFallbackPeriod(response: Response, period: import('./a
   if (!response.ok) return response
   return mapResearchResponse(response, payload => {
     payload=normaliseWrittenPayload(payload)
+    // A request for a name asserts no dated facts; keep it through ordinary fallback.
+    if(/^Please (?:give the full name|name the person)/i.test(String(payload.answer??''))&&!/[\d$]/.test(String(payload.answer))&&!((payload.sources??[]) as unknown[]).length)return payload
     // No fallback/cache delta is released before both writing and period checks.
     if (rawToolEcho(String(payload.answer ?? ''))) {
       const facts=writingFacts(payload as unknown as QualitativeAnswer)
@@ -93,29 +96,20 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>): Recor
   if (typeof payload.answer !== 'string' || !payload.answer.trim()) return payload
   const original = payload.answer, cp = (n: number) => Array.from(original.slice(0,n)).length
   const key = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim()
-  const money = (s: string) => [...s.matchAll(/(?:(US|USD|AU|AUD|A))?\$\s?(\d[\d,]*(?:\.\d+)?)\s*(billion|bn|million|m\b|thousand|k\b)?/gi)].map(m=>{
-    const unit=(m[3]??'').toLowerCase(), scale=/^(billion|bn)$/.test(unit)?1e9:/^(million|m)$/.test(unit)?1e6:/^(thousand|k)$/.test(unit)?1e3:1
-    return (m[1]?.toUpperCase()??'$')+'/'+Number(m[2].replace(/,/g,''))*scale
-  })
-  const seenText=new Set<string>(), seenMoney=new Set<string>()
+  const seenText=new Set<string>(), seenClaims=new Set<string>()
   const kept: {text:string;from:number;until:number}[][]=[]
   let changed=false
   for(const paragraph of original.matchAll(/\S[\s\S]*?(?=\n\s*\n|$)/g)) {
     const text=paragraph[0], base=paragraph.index!
     if (/^(?:#{1,6}\s*)?(?:what the records? say(?:s)?|answer|overview|sources|summary)\s*:?$/i.test(text.trim())) {changed=true;continue}
-    const boundaries=[0,...[...text.matchAll(/(?<=[.!?])\s+(?=[A-Z“"‘'(])/g)].map(m=>m.index!),text.length]
     const parts:{text:string;from:number;until:number}[]=[]
-    for(let i=0;i<boundaries.length-1;i++) {
-      const raw=text.slice(boundaries[i],boundaries[i+1]), sentence=raw.trim()
-      if(!sentence)continue
-      const values=money(sentence), signature=key(sentence)
-      if(seenText.has(signature) || values.some(v=>seenMoney.has(v)) || new Set(values).size<values.length) {changed=true;continue}
-      seenText.add(signature);values.forEach(v=>seenMoney.add(v))
-      const from=base+boundaries[i]+raw.indexOf(sentence)
-      parts.push({text:sentence,from:cp(from),until:cp(from+sentence.length)})
+    for(const clause of claimClauses(text)) {
+      const connector=parts.length?/(?:,?\s+and\s+)$/.exec(text.slice(0,clause.start))?.[0]:undefined
+      const sentence=(connector?'and ':'')+clause.text, identities=proseClaimKeys(clause.text),signature=key(clause.text)
+      if(seenText.has(signature)||identities.length>0&&identities.every(id=>seenClaims.has(id))) {changed=true;continue}
+      seenText.add(signature);identities.forEach(id=>seenClaims.add(id))
+      parts.push({text:sentence,from:cp(base+clause.start-(connector?4:0)),until:cp(base+clause.end)})
     }
-    // A general introduction left after all of its repeated financial detail is removed adds no answer.
-    if(money(text).length && parts.length && !parts.some(p=>money(p.text).length)) {changed=true;continue}
     if(parts.length)kept.push(parts)
   }
   if(!changed)return payload

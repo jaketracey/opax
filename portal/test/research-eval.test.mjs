@@ -56,7 +56,7 @@ test('a planner ranking without the vote hop is partial; the loop answer with bo
   const old = grade('H01', 'planner'), neu = grade('H01', 'loop')
   assert.equal(old.axes.usefulness, 'partial'); assert.deepEqual(old.parts.names, ['ranking']); assert.equal(old.overall, 'fail')
   assert.equal(old.axes.citations, 'pass'); assert.deepEqual(old.flags, [])
-  assert.deepEqual(neu.axes, { usefulness: 'pass', citations: 'pass', correctness: 'pass', constraints: 'pass', decline: 'pass', no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'fail' }); assert.equal(neu.overall, 'fail')
+  assert.deepEqual(neu.axes, { usefulness: 'pass', citations: 'pass', correctness: 'pass', constraints: 'pass', decline: 'pass', no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'fail',required_components:'n/a' }); assert.equal(neu.overall, 'fail')
   assert.equal(neu.tools.status, 'pass'); assert.equal(neu.tools.mode, 'loop'); assert.equal(neu.tools.rounds, 2)
   assert.ok(neu.evidence_complete && old.evidence_complete)
   assert.equal(neu.figures.unbound.length, 0)
@@ -90,7 +90,7 @@ test('a refusal fails usefulness; an uncited invented figure fails correctness',
 
 test('money answers: the no-causation note is accepted, causal prose is not', () => {
   const old = grade('H05', 'planner'), neu = grade('H05', 'loop')
-  assert.equal(old.overall, 'pass', JSON.stringify(old.flags)); assert.deepEqual(old.causal, [])
+  assert.equal(old.axes.correctness, 'pass', JSON.stringify(old.flags)); assert.equal(old.axes.direct_first_sentence,'fail'); assert.deepEqual(old.causal, [])
   assert.equal(neu.axes.correctness, 'fail'); assert.equal(neu.overall, 'fail'); assert.ok(neu.flags.some((f) => f.startsWith('causal wording')))
   assert.equal(old.checks.find((c) => c.part === 'donors').status, 'pass'); assert.equal(old.checks.find((c) => c.type === 'period').status, 'pass')
 })
@@ -121,7 +121,7 @@ test('percentiles are nearest-rank and the summary carries latency, tokens and c
   rows.push({ id: 'Q07', mode: 'loop', ms: 0, error: 'missing fixture' })
   const s = summarise(rows)
   assert.equal(s.planner.n, 5); assert.equal(s.loop.n, 6); assert.equal(s.loop.errors, 1)
-  assert.deepEqual(s.planner.overall, { pass: 2, partial: 0, fail: 3 }); assert.deepEqual(s.loop.overall, { pass: 1, partial: 0, fail: 4 })
+  assert.deepEqual(s.planner.overall, { pass: 1, partial: 0, fail: 4 }); assert.deepEqual(s.loop.overall, { pass: 1, partial: 0, fail: 4 })
   assert.equal(s.loop.cost_usd.reported, 5); assert.equal(s.planner.cost_usd.missing, 5); assert.equal(s.planner.cost_usd.mean, null)
   assert.equal(s.loop.latency_ms.p50, 24900); assert.equal(s.loop.tokens.p95, 61980); assert.equal(s.loop.mode_mismatch, 0)
 })

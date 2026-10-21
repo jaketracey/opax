@@ -180,7 +180,7 @@ test('finish outside the numerical shapes answers with record facts only', async
   const { out, failures } = await loop('Which suppliers got the Department of Fixtures contracts?', [
     reply([call('contracts', { agency: 'Fixtures', limit: 1 }, 'a')]), reply([call('finish', { facts: [1, 2] }, 'b')])]);
   assert.deepEqual(failures, []); assert.equal(out.answered, true);
-  assert.match(out.answer, /^Department of Fixtures recorded \$9,000,000,000 across 900 published contracts \(2013–2026\)\.\n\nExample Shipyards Pty Ltd/);
+  assert.match(out.answer,/^Example Shipyards Pty Ltd recorded \$4,000,000,000/);assert.match(out.answer,/Department of Fixtures recorded \$9,000,000,000 across 900 published contracts \(2013–2026\)/);
 });
 
 test('person_quotes on MCP: one person\'s own speeches, newest first, one excerpt per speech, each checked in their own turn', async () => {

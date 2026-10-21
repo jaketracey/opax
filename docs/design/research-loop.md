@@ -359,7 +359,11 @@ there is no `Coverage:` block, raw salary-rate line or calculator table.
 calculator and record results are deduplicated. Older calculators' one-character
 citation anchors are resolved to their source snippets; those anchors must not
 be mistaken for fact text. Each written sentence selects supporting fact IDs.
-Figures are checked against those facts, including date associations; an
+Each numeric atom carries its entity, metric, value, unit, chamber, period and
+source evidence ID. Clauses are checked against these associations in either
+word order, including percentages and dates before amounts. Quoted text of any
+length must occur literally in the selected source. Figures are checked against
+those facts, including date associations; an
 unsupported numeric clause or sentence is removed under the 16 October loose
 answer contract, preserving supported prose. Citation ranges are rebuilt in
 Unicode code points and retain original resource/evidence IDs and source URLs.
@@ -367,7 +371,13 @@ Verified passage points already written by the research model retain their
 existing attribution, quotation and loose-point checks.
 
 Writing uses the existing model/provider, per-call limiter, daily reservation,
-token ceiling, request cancellation and remaining wall budget. No retry or
+token ceiling, request cancellation and remaining wall budget. The existing
+15-second production primary research allowance reserves four seconds for writing:
+name resolution, research and selection must finish inside its first eleven
+seconds, with a small handoff margin. This cap starts at the primary request
+entry, rather than restarting after name resolution. The writer receives only
+the time remaining inside that same allowance. No primary or fallback deadline
+is increased; expired selection cannot consume the reserved writing slice. No retry or
 provider substitution is introduced. Failure, timeout or exhausted admission
 uses a bounded deterministic prose template from the selected facts: a direct
 sentence, key figures and one coverage sentence. It never returns the raw tool
@@ -376,14 +386,20 @@ block. A failed research run cannot auto-select an ordinary instant calculator.
 JSON and SSE share this final payload. Ordinary fallback and cache replay buffer
 answer text until the period and writing checks complete; status events can
 still stream. Ordinary fallback prose also removes repeated sentences and
-financial figure sets, rebasing citation spans and unciting dropped-only sources.
+claims identified by entity, metric, period and value, rebasing citation spans and unciting dropped-only sources.
 The writing version participates in both answer cache keys, so
 answers produced under the earlier calculator-rendering contract cannot replay.
 Caches store only the completed answer, with the existing privacy, conversation
 and uncited-answer exclusions.
 
 The routing fixture and deterministic grader include `no_tool_echo`,
-`no_duplicates` and `direct_first_sentence`. Comparison runs use the first 45
+`no_duplicates`, `direct_first_sentence` and `required_components`. The opening
+must match the selected subject, requested ranking or relationship and available
+headline value. Comparison checks require both sides, their primary figures and
+relevant coverage. Equal figures for different entities or periods remain
+distinct claims. Coverage notes have stable distinct evidence IDs, and source
+assembly retains all supporting text. Financial-year metadata is factual scope,
+rather than a limitation that is excluded from ordinary claims. Comparison runs use the first 45
 routing cases plus the five reviewer probes, separately against a detached live
 baseline and the working branch, with no production Ask requests. Report strict
 pass and each rubric axis separately; a style improvement is not evidence of

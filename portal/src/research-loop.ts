@@ -1,4 +1,7 @@
+import { researchPhaseWallMs } from './research-time'
+export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
 import { createAnswerWriter } from './research-writer'
+import { electoratePlan } from './tools/electorates'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
 import { extractAskConstraints, constrainStep, guardToolPeriod } from './ask-constraints'
 import { calculatedLookup } from './research-calculated'
@@ -59,7 +62,8 @@ export function createResearch(options: ResearchOptions): Research {
     const qualitativeRun = !classifyAgentic(question).shape || classifyAgentic(question).rule === 'electorate-data'
     let constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {})
     context.constraints = constraints
-    const limits = researchLimits({ ...options, ...(qualitativeRun ? { steps: 6 } : {}) }), started = Date.now()
+    const configured = researchLimits({ ...options, ...(qualitativeRun ? { steps: 6 } : {}) })
+    const limits = {...configured,wallMs:Math.max(1,Math.min(researchPhaseWallMs(configured.wallMs),context.selectionWallMs??Infinity))}, started = Date.now()
     const controller = new AbortController(), abortParent = () => controller.abort(context.signal.reason)
     context.signal.addEventListener('abort', abortParent, { once: true })
     if (context.signal.aborted) abortParent()
@@ -110,6 +114,8 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       const properties = (TOOL_SPECS.find(t => t.name === rawStep.tool)?.input.properties ?? calculatedProperties) as Record<string, unknown>
       rawStep = terminal ? rawStep : constrainStep(rawStep, constraints, properties)
+      const metric=rawStep.tool==='electorates'?electoratePlan(question)?.steps.find(s=>s.tool==='electorates')?.args.indicator:undefined
+      if(metric)rawStep={...rawStep,args:{...rawStep.args,indicator:metric}}
       const resolved = resolveArgs(rawStep.args, results)
       if (!resolved) return fail('malformed_args')
       let step = terminal || !TOOL_SPECS.some(t => t.name === rawStep.tool) ? { ...rawStep, args: resolved } : context.scope({ ...rawStep, args: resolved })

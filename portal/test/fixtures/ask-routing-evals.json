@@ -299,6 +299,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ]
     },
@@ -1737,6 +1740,14 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components",
+          "entities": [
+            "47th Parliament",
+            "48th Parliament"
+          ],
+          "coverage": true
         }
       ],
       "provenance": {
@@ -1844,6 +1855,14 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components",
+          "entities": [
+            "2023",
+            "2024"
+          ],
+          "coverage": true
         }
       ],
       "provenance": {
@@ -2030,6 +2049,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ],
       "provenance": {
@@ -2071,6 +2093,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ],
       "provenance": {
@@ -4839,6 +4864,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ],
       "provenance": {
@@ -5127,6 +5155,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ],
       "provenance": {
@@ -5624,6 +5655,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ],
       "provenance": {
@@ -6369,6 +6403,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ],
       "must_not": [],
@@ -6863,6 +6900,9 @@
         },
         {
           "type": "direct_first_sentence"
+        },
+        {
+          "type": "required_components"
         }
       ],
       "provenance": {

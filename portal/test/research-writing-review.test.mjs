@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {build} from 'esbuild'
 import {answerStyleChecks,gradeRow} from '../../scripts/research_eval_grade.mjs'
-const b=await build({stdin:{contents:"export * from './src/research-writing';export * from './src/research-response';export * from './src/research-loop';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const b=await build({stdin:{contents:"export * from './src/research-writing';export * from './src/research-response';export * from './src/research-loop';export {runAgentic} from './src/agentic-ask';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
 const source=(resource,text,kind='record')=>({resource,slug:'',title:text,snippet:text,href:'https://example.org/records',url:'https://example.org/records',cited:true,kind})
 const fact=(id,text,kind='record')=>({id,text,source:source('f-'+id,text,kind)})
@@ -11,6 +11,7 @@ const salary=[fact(1,'Avery Example: $277,602 a year as Prime Minister, 2005-01-
 const good='Avery Example earned $277,602 as Prime Minister until 30 June 2005.'
 for(const [name,bad] of [
  ['invented recipient','Banana Alliance received $277,602.'],
+ ['invented recipient after value','$277,602 was paid to Banana Alliance.'],
  ['wrong person before value','Blake Sample received $277,602.'],
  ['wrong person after value','$277,602 was paid to Blake Sample.'],
  ['date before value','From 1 July 2005 Avery Example received $277,602.'],
@@ -78,4 +79,38 @@ test('review rubric: bananas fail; selected subject ranking amount and coverage 
 })
 test('review deadline: writer has a reserved slice inside the unchanged allowance',()=>{
  assert.equal(api.researchPhaseWallMs(15000),11000);assert.equal(api.researchPhaseWallMs(12000),8000)
+})
+
+test('review grounding: a count cannot borrow another fact\'s period',()=>{
+ const facts=[fact(1,'Avery Example: 87 chamber speeches from 2005-01-01 to 2005-12-31.','count'),fact(2,'Blake Sample: 99 chamber speeches from 2010-01-01 to 2010-12-31.','count')]
+ assert.equal(api.boundFigures('Avery Example recorded 87 chamber speeches in 2010.',facts),false)
+})
+
+test('review clarification: temporal fallback preserves a request for the full name',async()=>{
+ const payload={answer:'Please give the full name of the person you mean so I can distinguish their records.',sources:[],citations:{}}
+ const response=await api.withFallbackPeriod(Response.json(payload),{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'})
+ assert.deepEqual(await response.json(),payload)
+})
+test('review T01 wording: this term versus last term requires both raw counts as well as share',()=>{
+ const facts=[fact(1,'47th Parliament: 354 chamber speeches labelled gambling (0.7% of 51096 topic-labelled speeches).','count'),fact(2,'48th Parliament: 40 chamber speeches labelled gambling (0.7% of 5380 topic-labelled speeches).','count')]
+ const input={question:'Is gambling debated more in federal parliament this term than last term?',period,facts}
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Both parliaments show the same share of 0.7% of topic-labelled speeches.',facts:[1,2]}]},input)??api.proseFallback(input)
+ for(const term of ['47th','48th','354','40'])assert.ok(out.answer.includes(term),term)
+})
+test('review metric association: a person cannot borrow a count from another topic',()=>{
+ const facts=[fact(1,'Avery Example: 87 chamber speeches labelled housing.','count'),fact(2,'Avery Example: 99 chamber speeches labelled climate.','count')]
+ assert.equal(api.boundFigures('Avery Example recorded 99 chamber speeches about housing.',facts),false)
+})
+
+test('review ambiguity: clarify before inference and report zero usage',async()=>{
+ const fail=async()=>{throw Error('must clarify without inference')}
+ const run=await api.runAgentic('What did Example say in 2005?',{research:fail,generate:fail,kb:fail,asset:fail},undefined,40000,{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'},{},{people:[],parties:[],bills:[],ambiguous:true,unresolved:false})
+ assert.match(run.answer,/Please give the full name/);assert.equal(run.research.mode,'loop');assert.equal(run.cost_usd,0);assert.deepEqual(run.research.turns,[])
+})
+test('review deadline: long selection leaves four seconds for the real writing handoff',async()=>{
+ const previous=Date.now;let now=1700000000000,remaining
+ Date.now=()=>now
+ const text=salary[0].text,qualitative={answer:text,sources:[source('f',text)],citations:{'f/t/body/0':[[0,text.length]]}}
+ const research=Object.assign(async()=>{now+=10950;return {steps:[],results:[],selected:[],rounds:1,tokens:{input:0,output:0},costUsd:0,qualitative}},{writingWallMs:15000,write:async(input,stats,signal,ms)=>{remaining=ms;return api.proseFallback(input)}})
+ try{const run=await api.runAgentic('What did Avery Example earn in 2005?',{research,generate:async()=>{throw Error('no planner')},asset:async()=>({}),kb:async()=>({})},undefined,40000,period,{},{people:[],parties:[],bills:[],ambiguous:false,unresolved:false});assert.equal(run.answered,true);assert.ok(remaining>=4000&&remaining<=4050,String(remaining))}finally{Date.now=previous}
 })

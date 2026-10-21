@@ -1,3 +1,4 @@
+import { researchPhaseWallMs } from './research-time'
 /**
  * OPAX-owned Ask orchestration in the Worker
  * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
@@ -504,6 +505,8 @@ export function researchTrail(events: StepEvent[], steps: AgenticPayload['steps'
 /** Loop failures retain the old planner, inside the original request deadline. */
 export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope): Promise<AgenticPayload> {
   const started = Date.now()
+  const reserveEnabled=!!deps.research?.write&&(deps.research.writingWallMs??budgetMs)>=1000
+  const selectionLeft=()=>Math.max(1,(deps.research?.write?researchPhaseWallMs(Math.min(budgetMs,deps.research.writingWallMs??budgetMs)):budgetMs)-(Date.now()-started))
   const attempted: StepEvent[] = []
   const loopProgress: Progress = async (event, data) => {
     const step = (data as { step?: StepEvent })?.step
@@ -533,7 +536,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     return run
   }
   try {
-    const run = await runAgenticAttempt(question, deps, deps.research ? loopProgress : progress, budgetMs, period, filters, resolvedScope)
+    const primary=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal},deps.research?loopProgress:progress,budgetMs,period,filters,resolvedScope,started)
+    const run = await (reserveEnabled?bounded(primary,selectionLeft(),deps.signal):primary(deps.signal))
     if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
     return await writeRun(run)
   }
@@ -555,7 +559,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       const value = data as { step?: StepEvent }
       await progress(event, value?.step ? { ...value, step: { ...value.step, id: value.step.id + offset } } : data)
     }
-    const fallback = await runAgenticAttempt(question, { ...deps, research: undefined, plannerTrail: true }, shifted, Math.max(0, budgetMs - (Date.now() - started)), period, filters, resolvedScope)
+    const recover=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal,research:undefined,plannerTrail:true},shifted,Math.max(0,budgetMs-(Date.now()-started)),period,filters,resolvedScope,started)
+    const fallback = await (reserveEnabled?bounded(recover,selectionLeft(),deps.signal):recover(deps.signal))
     fallback.events = fallback.events.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) fallback.research.trail = fallback.research.trail.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) Object.assign(fallback.research, { failure: failure.reason, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
@@ -566,13 +571,13 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     return await writeRun(fallback)
   }
 }
-async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope, primaryStarted=Date.now()): Promise<AgenticPayload> {
   // Speculative extras (the early committee check) end with their attempt: a dropped or failed run leaves no lookup behind.
   const extras = new AbortController()
-  try { return await attempt(question, deps, progress, budgetMs, period, filters, extras.signal, resolvedScope) }
+  try { return await attempt(question, deps, progress, budgetMs, period, filters, extras.signal, resolvedScope, primaryStarted) }
   finally { extras.abort() }
 }
-async function attempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, extras: AbortSignal, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+async function attempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, extras: AbortSignal, resolvedScope?: NamedScope,primaryStarted=Date.now()): Promise<AgenticPayload> {
   const electorateData = isElectorateDataQuestion(question)
   if (electorateData && !deps.research) period = { kind: 'all', label: 'Figures use published Census geography.' }
   const t0 = Date.now(), deadline = t0 + budgetMs
@@ -593,6 +598,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
     catch { return base({ reason: 'declined' }) }
+    if(named.ambiguous&&deps.research){const answer='Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,citations:{},sources:[],answer_status:'uncited'}})}
     if (!deps.research && (named.unresolved || named.ambiguous || named.bills.length)) return base({ reason: 'declined' })
   }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {
@@ -655,7 +661,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
     const rules = fallbackPlan(question)?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
     const explicit = Object.fromEntries(['state', 'chamber', 'party'].filter(k => rules[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, rules[k]]))
     researched = await bounded(signal => { executionSignal = signal; return deps.research!(question, {
-      deps, period, named, signal, progress,
+      deps, period, named, signal, progress,selectionWallMs:(deps.research!.writingWallMs??budgetMs)>=1000?Math.max(1,researchPhaseWallMs(Math.min(budgetMs,deps.research!.writingWallMs??budgetMs))-(Date.now()-primaryStarted)-50):undefined,
       scope: step => periodPlan({ shape: classifyAgentic(question).shape ?? 'ranking', steps: [step] }, period, { ...explicit, ...filters }).steps[0],
       execute: async (step, round, custom, signal) => {
         const r = await execute(step, false, custom, round, signal)
