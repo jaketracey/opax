@@ -342,3 +342,46 @@ Current primary references: [AI SDK core](https://ai-sdk.dev/docs/ai-sdk-core/to
 [Workers limits](https://developers.cloudflare.com/workers/platform/limits/).
 The current Worker size limit is 64 MiB uncompressed on both plans; compressed
 size is reported for comparison, not as the deployment limit.
+
+## Answer writing contract (21 October 2026)
+
+A selected tool result is evidence, including a complete `paid_answer` or
+`ranked_money` calculation. Selecting it never authorises rendering its answer
+block. After record selection and the existing period, entity, chamber and
+counting-basis checks, the same pinned research model writes a short answer from
+a fact sheet. The opening answers the question with its subject and key figure.
+Subsequent sentences add the requested figures and context without repeating
+points, paragraphs or figure sets. Coverage is at most one sentence, in prose;
+there is no `Coverage:` block, raw salary-rate line or calculator table.
+
+`research-writing.ts` separates evidence atoms from final sentences. Overlapping
+calculator and record results are deduplicated. Older calculators' one-character
+citation anchors are resolved to their source snippets; those anchors must not
+be mistaken for fact text. Each written sentence selects supporting fact IDs.
+Figures are checked against those facts, including date associations; an
+unsupported numeric clause or sentence is removed under the 16 October loose
+answer contract, preserving supported prose. Citation ranges are rebuilt in
+Unicode code points and retain original resource/evidence IDs and source URLs.
+Verified passage points already written by the research model retain their
+existing attribution, quotation and loose-point checks.
+
+Writing uses the existing model/provider, per-call limiter, daily reservation,
+token ceiling, request cancellation and remaining wall budget. No retry or
+provider substitution is introduced. Failure, timeout or exhausted admission
+uses a bounded deterministic prose template from the selected facts: a direct
+sentence, key figures and one coverage sentence. It never returns the raw tool
+block. A failed research run cannot auto-select an ordinary instant calculator.
+
+JSON and SSE share this final payload. Ordinary fallback and cache replay buffer
+answer text until the period and writing checks complete; status events can
+still stream. The writing version participates in both answer cache keys, so
+answers produced under the earlier calculator-rendering contract cannot replay.
+Caches store only the completed answer, with the existing privacy, conversation
+and uncited-answer exclusions.
+
+The routing fixture and deterministic grader include `no_tool_echo`,
+`no_duplicates` and `direct_first_sentence`. Comparison runs use the first 45
+routing cases plus the five reviewer probes, separately against a detached live
+baseline and the working branch, with no production Ask requests. Report strict
+pass and each rubric axis separately; a style improvement is not evidence of
+factual correctness or complete historical coverage.

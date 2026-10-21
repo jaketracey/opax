@@ -17,7 +17,9 @@ import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
 
-export const AGENTIC_PROMPT_VERSION = 'agentic-ask-7-research'
+import { writingFacts, appendWrittenPoints, ANSWER_WRITING_VERSION } from './research-writing'
+
+export const AGENTIC_PROMPT_VERSION = `agentic-ask-7-research/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = 40_000
 export const AGENTIC_MAX_STEPS = 6
 /** A loop answer's time target: optional extras (the committee supplement) are dropped rather than run past it. */
@@ -452,6 +454,7 @@ export interface AgenticPayload {
   version: string
   research?: ResearchPayload
   qualitative?: QualitativeAnswer
+  passage_answer?: QualitativeAnswer
   chosen_facts?: number[]
   research_failure?: string
 }
@@ -507,10 +510,31 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (step && step.state !== 'running') attempted.push(step)
     await progress(event, data)
   }
+  const writeRun = async (run: AgenticPayload) => {
+    if (!run.answered || !deps.research?.write) return run
+    const chosen = new Set(run.chosen_facts ?? [])
+    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind==='count'?'count':f.kind==='export'?'export':'record',url:f.url,label:f.text,value:f.value}}))
+    // Passage points have already been written and checked by the model; retain the 16 Oct loose-point contract.
+    if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
+    const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
+    const sheet = writingFacts(recordAnswer, facts, run.notes)
+    // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
+    if (!sheet.length) return run
+    await progress('status', {phase:'writing'})
+    const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
+    const written = await deps.research.write({question,period,facts:sheet}, stats, deps.signal,
+      Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started))
+    const complete=run.passage_answer ? appendWrittenPoints(written,run.passage_answer) : written
+    run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
+    run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
+    run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started
+    if(run.research){run.research.turns=stats.turns;run.research.sources=complete.sources.map(s=>({title:s.title,url:s.url,kind:s.kind,...(s.date?{date:s.date}:{}),...(s.speaker?{speaker:s.speaker}:{})}))}
+    return run
+  }
   try {
     const run = await runAgenticAttempt(question, deps, deps.research ? loopProgress : progress, budgetMs, period, filters, resolvedScope)
     if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
-    return run
+    return await writeRun(run)
   }
   catch (error) {
     if (!deps.research) throw error
@@ -538,7 +562,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
     fallback.timings.total_ms = Date.now() - started
     fallback.research_failure = failure.reason
-    return fallback
+    return await writeRun(fallback)
   }
 }
 async function runAgenticAttempt(question: string, deps: AgenticDeps, progress: Progress, budgetMs: number, period: Period, filters: Record<string, unknown>, resolvedScope?: NamedScope): Promise<AgenticPayload> {
@@ -651,7 +675,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
       timings.plan_ms = Date.now() - t0
       if (researched.answer) await deps.onResearchAnswer?.(researched.answer).catch(() => {})
       await progress('status', { phase: 'writing' })
-      return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative,
+      return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative, passage_answer:researched.points,
         research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input), ...(researched.answer ? { answer_stats: researched.answer } : {}), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
     }
   }
@@ -727,9 +751,8 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const mainFacts = facts.filter(f => !committeeFacts.some(c => c.text === f.text))
   const peakYear = /\bwhich year\b.*\bmost\b/i.test(question)
   if (peakYear) mainFacts.sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0))
-  // No composer call: figures, metric labels, entities and citations are
-  // rendered together from the tool rows, so swapping aye/no or party/year
-  // values in model text can never affect an answer.
+  // Select deterministically before the writing stage. Figures, metric labels,
+  // entities and counting basis remain attached to their original tool rows.
   const chosen = oneBasis(researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts)
   // The loop's finish already bounds its own selection (30 ids): a year-by-year trend keeps every year it chose.
   const selected = electorateData ? chosen : selectAnswerFacts(chosen, named, peakYear, researched ? 30 : 8)

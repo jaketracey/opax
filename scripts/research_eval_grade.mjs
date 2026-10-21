@@ -150,6 +150,7 @@ export function runCheck(c, ctx) {
   const { answer, payload, ev, roster, names } = ctx
   const t = answer
   switch (c.type) {
+    case 'no_tool_echo': case 'no_duplicates': case 'direct_first_sentence': return {status:answerStyleChecks(ctx.question ?? '', t, ev)[c.type],detail:'answer-writing contract'}
     case 'mentions': {
       const all = (c.all ?? []).filter((n) => !mentions(t, n)), any = c.any ? c.any.some((n) => mentions(t, n)) : true
       return { status: !all.length && any ? 'pass' : 'fail', detail: all.length ? `missing: ${all.join(', ')}` : any ? 'named' : `none of: ${c.any.join(', ')}` }
@@ -234,6 +235,28 @@ export function runCheck(c, ctx) {
   }
 }
 
+/** Answer-writing rubric, shared by the comparison and regression tests. */
+export function answerStyleChecks(question, answer, evidence = evidenceOf({})) {
+  const plain = String(answer).replace(/\[\d+\]/g, '')
+  const sentences = plain.split(/(?<=[.!?])\s+|\n+/).map(s => s.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
+  const normal = s => fold(s).replace(/[^a-z0-9]+/g, ' ').trim()
+  const seen = new Set(), sets = new Set(); let duplicate = false
+  for (const sentence of sentences) {
+    const k = normal(sentence), nums = plainNumbers(sentence).filter(n => !isYear(n))
+    const money=amounts(sentence).map(a=>a.v)
+    const signature = money.length ? [...new Set(money)].sort((a,b)=>a-b).join('/') : nums.length ? [...new Set(nums)].sort((a,b)=>a-b).join('/') : ''
+    if (seen.has(k) || signature && sets.has(signature)) duplicate = true
+    seen.add(k); if(signature)sets.add(signature)
+  }
+  const coverage = sentences.filter(s => /^(?:Coverage:|OPAX.*(?:records|export)|Salary entitlements|These records)|\b(?:exclude[sd]? allowances|not allowances|records start|records cover|coverage (?:is|of))/i.test(s))
+  const echo = /Coverage:|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||base \$[\d,]+ plus \d+(?:\.\d+)?%/i.test(answer)
+  const first = sentences[0] ?? '', amountsInAnswer = amounts(answer)
+  const figureAsked = /\b(?:highest|lowest|most|least|largest|biggest|top|salary|paid|grants?|contracts?|median|population)\b|\bhow (?:many|much)\b/i.test(question)
+  const firstAmount = !figureAsked || !amountsInAnswer.length || amounts(first).some(a => amountsInAnswer.some(b => a.v === b.v))
+  const direct = first.length > 12 && !/^(?:Here|Based on|According to|Coverage:|The (?:data|records|tool|table|figures) show)/i.test(first) && !/^\|/.test(answer) && firstAmount && /\b(?:is|are|was|were|has|have|had|received|recorded|gave|got|led|leads?|made|said|argued|supported|opposed|cannot|covers?|holds?|does|do|ranked|topped|earned|paid|provides?|start|Please|I|OPAX)\b/i.test(first)
+  return { no_tool_echo: echo ? 'fail' : 'pass', no_duplicates: duplicate || coverage.length > 1 ? 'fail' : 'pass', direct_first_sentence: direct ? 'pass' : 'fail' }
+}
+
 const axisOf = (counts) => counts.fail ? 'fail' : counts.partial ? 'partial' : 'pass'
 
 /** Grade one payload against one question. `roster` is a list of names; `parties` maps folded name → party. */
@@ -249,7 +272,7 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   const causal = causalCheck(answer)
   const tools = toolsCheck(q.expected_tools, payload)
   const expectsDecline = q.expected?.kind === 'decline' || Boolean(q.expected?.unanswerable) || (q.must ?? []).some((c) => c.type === 'decline')
-  const ctx = { answer, payload, ev, roster, parties, names, figures, refusal, expectedDecline: expectsDecline }
+  const ctx = { question:q.question, answer, payload, ev, roster, parties, names, figures, refusal, expectedDecline: expectsDecline }
   const checks = (q.must ?? []).map((c) => ({ ...c, ...runCheck(c, ctx) }))
   const parts = [...new Set(checks.map((c) => c.part).filter(Boolean))]
   const coveredParts = parts.filter((p) => checks.filter((c) => c.part === p).every((c) => c.status === 'pass' || c.status === 'n/a'))
@@ -270,7 +293,7 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   else citations = 'pass'
 
   // Correctness: must checks, nothing invented, no causal wording.
-  const graded = checks.filter((c) => c.status === 'pass' || c.status === 'fail')
+  const graded = checks.filter((c) => !['no_tool_echo','no_duplicates','direct_first_sentence'].includes(c.type) && (c.status === 'pass' || c.status === 'fail'))
   const passed = graded.filter((c) => c.status === 'pass').length
   const unknown = checks.filter((c) => c.status === 'unknown').length
   const invented = causal.length > 0 || figures.unbound_uncited.length > 0 || (ev.complete && (figures.unbound.length > 0 || names.unbound.length > 0))
@@ -286,7 +309,9 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   const constraintChecks = checks.filter(c => ['constraint', 'period', 'must_not'].includes(c.type))
   const constraints = constraintChecks.some(c => c.status === 'fail') ? 'fail' : constraintChecks.length ? 'pass' : 'n/a'
   const decline = expectsDecline ? refusal ? 'pass' : 'fail' : refusal ? 'fail' : 'pass'
-  const axes = { usefulness, citations, correctness, constraints, decline }
+  const style = answerStyleChecks(q.question, answer, ev)
+  if(expectsDecline && !answered)style.direct_first_sentence='n/a'
+  const axes = { usefulness, citations, correctness, constraints, decline, ...style }
   const overall = axisOf({ fail: Object.values(axes).includes('fail'), partial: Object.values(axes).includes('partial') })
   const flags = [
     ...figures.unbound.map((f) => `unbound figure ${f.amount ? '$' : ''}${f.value}${f.cited ? '' : ' (uncited sentence)'}`),
@@ -341,6 +366,7 @@ export function summarise(rows) {
       n: all.length, graded: graded.length, errors: all.length - graded.length,
       overall: tally(graded, (r) => r.grade.overall),
       usefulness: tally(graded, (r) => r.grade.axes.usefulness), citations: tally(graded, (r) => r.grade.axes.citations), correctness: tally(graded, (r) => r.grade.axes.correctness),
+      ...Object.fromEntries(['constraints','decline','no_tool_echo','no_duplicates','direct_first_sentence'].map(axis=>[axis,tally(graded,r=>r.grade.axes[axis])])),
       latency_ms: { p50: percentile(ms, 50), p95: percentile(ms, 95) },
       tokens: { p50: percentile(tokens, 50), p95: percentile(tokens, 95), reported: tokens.length },
       cost_usd: { mean: cost.length ? cost.reduce((a, b) => a + b, 0) / cost.length : null, p50: percentile(cost, 50), p95: percentile(cost, 95), reported: graded.filter((r) => r.usage?.cost_source === 'reported').length, estimated: graded.filter((r) => r.usage?.cost_source === 'estimated').length, missing: graded.filter((r) => !r.usage || r.usage.cost_source === 'missing').length },
@@ -364,6 +390,8 @@ export function renderMarkdown(report) {
   L.push(`Base: ${report.base_host ?? 'offline fixture'} · set: ${report.set} · modes: ${report.modes.join(', ')} · limit: ${report.limit} · questions: ${report.questions.length} · prices US$/M: in ${report.prices.input}, out ${report.prices.output}`, '')
   L.push('## Summary', '', '| mode | n | errors | overall P/p/F | usefulness | citations | correctness | p50 latency | p95 latency | p50 tokens | p95 tokens | mean cost | p50 cost | p95 cost | usage reported / estimated / missing |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
   for (const [mode, s] of Object.entries(report.summary)) L.push(`| ${mode} | ${s.n} | ${s.errors} | ${grades(s.overall)} | ${grades(s.usefulness)} | ${grades(s.citations)} | ${grades(s.correctness)} | ${fmtMs(s.latency_ms.p50)} | ${fmtMs(s.latency_ms.p95)} | ${fmtN(s.tokens.p50)} | ${fmtN(s.tokens.p95)} | ${fmtUsd(s.cost_usd.mean)} | ${fmtUsd(s.cost_usd.p50)} | ${fmtUsd(s.cost_usd.p95)} | ${s.cost_usd.reported} / ${s.cost_usd.estimated} / ${s.cost_usd.missing} |`)
+  L.push('', '| mode | no tool echo P/p/F | no duplicates P/p/F | direct first sentence P/p/F | date checks P/p/F | declines P/p/F |', '|---|---|---|---|---|---|')
+  for(const [mode,s] of Object.entries(report.summary))L.push(`| ${mode} | ${grades(s.no_tool_echo)} | ${grades(s.no_duplicates)} | ${grades(s.direct_first_sentence)} | ${grades(s.constraints)} | ${grades(s.decline)} |`)
   L.push('', 'P/p/F = pass / partial / fail counts. Grades are structural (facts, citations, quotations, invented figures and names); the judge reads the answers below for usefulness.', '')
   L.push('## Side by side', '')
   for (const q of report.questions) {

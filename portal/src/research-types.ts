@@ -48,11 +48,15 @@ export interface ResearchResult {
   tokens: { input: number; output: number }
   costUsd?: number
   qualitative?: QualitativeAnswer
+  points?: QualitativeAnswer
   turns?: ResearchTurn[]
   /** Points in, kept, repaired and dropped (labels and counts only) for the final answer attempt. */
   answer?: AnswerTally
 }
-export type Research = (question: string, context: ResearchContext) => Promise<ResearchResult>
+export type Research = ((question: string, context: ResearchContext) => Promise<ResearchResult>) & {
+  write?: ReturnType<typeof import('./research-writer').createAnswerWriter>
+  writingWallMs?: number
+}
 import type { AnswerTally } from './research-evidence'
 export interface ResearchStats { answer?: AnswerTally; rounds: number; tokens: { input: number; output: number }; costUsd?: number; usageUnknown?: boolean; turns?: ResearchTurn[]; cachedByTurn?: (number | null)[]; rejections?: string[] }
 export type ResearchStop = 'error' | 'timeout' | 'steps' | 'tokens' | 'limiter' | 'aborted' | 'malformed_args' | 'grounding' | 'no_supported_claim' | 'no_finish' | 'missing_key' | 'result_size' | 'daily_budget' | 'daily_budget_unavailable' | 'research_credit_exhausted'

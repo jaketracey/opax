@@ -27,5 +27,5 @@ export async function recordResearchComparison(question: string, planner: Agenti
   const figures = (run: AgenticPayload) => selectedFacts(run).flatMap(f => f.text.match(/\d+(?:[,.]\d+)*/g) ?? []).sort()
   const plannerStats = planner ? stats(planner) : { steps: [], chosen_facts: [], rounds: null, ms: null, tokens: null, cost_usd: null, mode: 'planner', failure: null }
   console.log(JSON.stringify({ kind: 'research_loop_shadow', question_hash: await questionHash(question), planner: plannerStats, loop: stats(loop),
-    agreement: { facts: same(plannerFacts, loopFacts), figures: planner && !loop.qualitative ? same(figures(planner), figures(loop)) : null } }))
+    agreement: { facts: same(plannerFacts, loopFacts), figures: planner && selectedFacts(loop).length ? same(figures(planner), figures(loop)) : null } }))
 }

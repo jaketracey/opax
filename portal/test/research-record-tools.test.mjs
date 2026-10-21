@@ -148,14 +148,15 @@ test('a qualitative answer leads with record facts rendered from tool rows and c
     reply([call('contracts', { agency: 'Department of Fixtures', limit: 2 }, 'a'), call('search', { query: 'fixture contracts' }, 'b')]),
     reply([call('answer', { facts: [2, 3, 2, 99], points: [{ claim: 'Robin Example said the contracts must be published in full.', id: passageId, quote: 'the fixture contracts must be published in full' }] }, 'c')])]);
   assert.deepEqual(failures, []); assert.equal(out.answered, true); assert.equal(out.research.mode, 'loop');
-  const lines = out.answer.split('\n');
-  assert.equal(lines[0], '- Example Shipyards Pty Ltd: $4,000,000,000 across 12 Department of Fixtures contracts');
-  assert.equal(lines[1], '- Sample Systems Ltd: $2,000,000,000 across 40 Department of Fixtures contracts');
-  assert.equal(lines[2], '- Robin Example said the contracts must be published in full.');
+  const lines = out.answer.split('\n\n');
+  assert.equal(lines[0], 'Example Shipyards Pty Ltd recorded $4,000,000,000 across 12 Department of Fixtures contracts.');
+  assert.equal(lines[1], 'Sample Systems Ltd recorded $2,000,000,000 across 40 Department of Fixtures contracts.');
+  const point=lines.find(line=>line.includes('Robin Example said'));
+  assert.equal(point, '- Robin Example said the contracts must be published in full.');
   assert.match(out.answer, /AusTender contract notices/);
-  assert.deepEqual(out.qualitative.citations['fact-2/t/body/0'], [[2, lines[0].length]]);
-  const pointStart = Array.from(lines[0] + '\n' + lines[1] + '\n- ').length;
-  assert.deepEqual(out.qualitative.citations[passageId], [[pointStart, pointStart + Array.from(lines[2].slice(2)).length]]);
+  assert.deepEqual(out.qualitative.citations['fact-2/t/body/0'], [[0, lines[0].length]]);
+  const pointStart = Array.from(out.answer.slice(0,out.answer.indexOf(point)+2)).length;
+  assert.deepEqual(out.qualitative.citations[passageId], [[pointStart, pointStart + Array.from(point.slice(2)).length]]);
   assert.equal(out.qualitative.sources.find(s => s.resource === 'fact-2').url, 'https://opax.com.au/subject/supplier/s-00000000000000000001');
   // Tool output shows each fact once, with global ids.
   assert.match(JSON.stringify(m.doGenerateCalls[1].prompt).replace(/\\"/g, '"'), /"id":2,"text":"Example Shipyards/);
@@ -167,7 +168,7 @@ test('record facts obey the named scope: an overall count is refused for a named
     reply([call('count_speeches', { topic: 'gambling', group_by: 'none' }, 'a'), call('count_speeches', { topic: 'gambling', speaker: 'Robin Example', group_by: 'none' }, 'b')]),
     reply([call('answer', { facts: [1, 2] }, 'c')])], scope);
   assert.deepEqual(named.failures, []); assert.equal(named.out.answered, true);
-  assert.equal(named.out.answer.split('\n')[0], '- 7 chamber speeches labelled gambling by Robin Example');
+  assert.equal(named.out.answer.split('\n')[0], 'There were 7 chamber speeches labelled gambling by Robin Example.');
   assert.ok(!named.out.answer.split('\n').includes('- 7 chamber speeches labelled gambling'));
   const unresolved = await loop('What has Pat Unknownname said about contracts?', [
     reply([call('parliamentary_pay', { person: 'Robin Example' }, 'a')]), reply([call('answer', { facts: [1] }, 'b')]), reply([call('answer', { facts: [1] }, 'c')])],
@@ -179,7 +180,7 @@ test('finish outside the numerical shapes answers with record facts only', async
   const { out, failures } = await loop('Which suppliers got the Department of Fixtures contracts?', [
     reply([call('contracts', { agency: 'Fixtures', limit: 1 }, 'a')]), reply([call('finish', { facts: [1, 2] }, 'b')])]);
   assert.deepEqual(failures, []); assert.equal(out.answered, true);
-  assert.match(out.answer, /^- Department of Fixtures: \$9,000,000,000 across 900 published contracts \(2013–2026\)\n- Example Shipyards Pty Ltd/);
+  assert.match(out.answer, /^Department of Fixtures recorded \$9,000,000,000 across 900 published contracts \(2013–2026\)\.\n\nExample Shipyards Pty Ltd/);
 });
 
 test('person_quotes on MCP: one person\'s own speeches, newest first, one excerpt per speech, each checked in their own turn', async () => {

@@ -1,3 +1,5 @@
+import { proseFallback, rawToolEcho, writingFacts } from './research-writing'
+import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
 
@@ -55,8 +57,15 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
 
 /** A failed loop may use ordinary RAG, but it may not substitute undated/current evidence for a dated ask. */
 export async function withFallbackPeriod(response: Response, period: import('./agentic-ask').Period): Promise<Response> {
-  if (!response.ok || period.kind === 'all' || !period.since && !period.until) return response
+  if (!response.ok) return response
   return mapResearchResponse(response, payload => {
+    // No fallback/cache delta is released before both writing and period checks.
+    if (rawToolEcho(String(payload.answer ?? ''))) {
+      const facts=writingFacts(payload as unknown as QualitativeAnswer)
+      const written=proseFallback({question:'',period,facts})
+      payload={...payload,...written}
+    }
+    if (period.kind === 'all' || !period.since && !period.until) return payload
     const coverage = payload.coverage as { matched?: boolean; since?: string; until?: string; requested_since?: string; requested_until?: string } | undefined
     const within = (since?: string, until?: string) => !!(since || until) &&
       (!period.since || !!since && since >= period.since) && (!period.until || !!until && until <= period.until) &&
