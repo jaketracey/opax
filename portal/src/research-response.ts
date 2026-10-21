@@ -109,7 +109,7 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>): Recor
       const raw=text.slice(boundaries[i],boundaries[i+1]), sentence=raw.trim()
       if(!sentence)continue
       const values=money(sentence), signature=key(sentence)
-      if(seenText.has(signature) || values.length>0 && values.every(v=>seenMoney.has(v))) {changed=true;continue}
+      if(seenText.has(signature) || values.some(v=>seenMoney.has(v)) || new Set(values).size<values.length) {changed=true;continue}
       seenText.add(signature);values.forEach(v=>seenMoney.add(v))
       const from=base+boundaries[i]+raw.indexOf(sentence)
       parts.push({text:sentence,from:cp(from),until:cp(from+sentence.length)})
@@ -118,7 +118,8 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>): Recor
     if(money(text).length && parts.length && !parts.some(p=>money(p.text).length)) {changed=true;continue}
     if(parts.length)kept.push(parts)
   }
-  if(!changed || !kept.length)return payload
+  if(!changed)return payload
+  if(!kept.length) return {...payload,...proseFallback({question:'',period:{kind:'all',label:''},facts:writingFacts(payload as unknown as QualitativeAnswer)})}
   const originalLength=Array.from(original).length, mapping=new Map<number,number>();let answer=''
   for(const paragraph of kept) {
     if(answer)answer+='\n\n'

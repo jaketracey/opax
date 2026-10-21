@@ -240,12 +240,13 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({})) {
   const plain = String(answer).replace(/\[\d+\]/g, '')
   const sentences = plain.split(/(?<=[.!?])\s+|\n+/).map(s => s.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
   const normal = s => fold(s).replace(/[^a-z0-9]+/g, ' ').trim()
-  const seen = new Set(), sets = new Set(); let duplicate = false
+  const seen = new Set(), sets = new Set(), moneySeen = new Set(); let duplicate = false
   for (const sentence of sentences) {
     const k = normal(sentence), nums = plainNumbers(sentence).filter(n => !isYear(n))
     const money=amounts(sentence).map(a=>a.v)
     const signature = money.length ? [...new Set(money)].sort((a,b)=>a-b).join('/') : nums.length ? [...new Set(nums)].sort((a,b)=>a-b).join('/') : ''
-    if (seen.has(k) || signature && sets.has(signature)) duplicate = true
+    if (seen.has(k) || signature && sets.has(signature) || money.some(v=>moneySeen.has(v)) || new Set(money).size<money.length) duplicate = true
+    money.forEach(v=>moneySeen.add(v))
     seen.add(k); if(signature)sets.add(signature)
   }
   const coverage = sentences.filter(s => /^(?:Coverage:|OPAX.*(?:records|export)|Salary entitlements|These records)|\b(?:exclude[sd]? allowances|not allowances|records start|records cover|coverage (?:is|of))/i.test(s))

@@ -126,14 +126,15 @@ test('ordinary fallback and its cached SSE replay remove repeated financial sets
  const intro='The selected 🏠 debate records do not establish a reliable party ranking.'
  const first='Example Party described a $10 billion fund and $500 million annual funding.'
  const next='Another Example Party passage described an additional $3 billion.'
- const repeated='Sample Party offered the opposite account. One passage described $3bn and a $500 million maximum becoming a $500 million minimum. Another repeated $3 billion.'
+ const repeated='Sample Party offered the opposite account. One passage described $3bn and a $500 million maximum becoming a $500 million minimum. Another repeated $3 billion. An overlapping claim added $3 billion and $700 million.'
  const answer='What the record says:\n\n'+intro+'\n\n'+first+' '+next+'\n\n'+repeated
  const at=Array.from(answer.slice(0,answer.indexOf(first))).length, end=at+Array.from(first).length
  const payload={answer,citations:{'a/t/body/0':[[at,end]],'b/t/body/0':[[Array.from(answer).length-1,Array.from(answer).length]]},sources:[source('a',first),source('b',repeated)]}
  const result=api.normaliseWrittenPayload(payload)
  assert.equal((result.answer.match(/\$3 (?:billion|bn)/g)||[]).length,1)
  assert.equal((result.answer.match(/\$500 million/g)||[]).length,1)
- assert.doesNotMatch(result.answer,/What the record says|opposite account/)
+ assert.doesNotMatch(result.answer,/What the record says|opposite account|700 million/)
+ assert.equal(answerStyleChecks('What funding?',intro+' '+first+' '+next+' '+repeated).no_duplicates,'fail')
  assert.equal(Array.from(result.answer).slice(...result.citations['a/t/body/0'][0]).join(''),first)
  assert.equal(result.sources.find(s=>s.resource==='b').cited,false)
  assert.deepEqual(answerStyleChecks('Which party spoke most and how did they vote?',result.answer),{no_tool_echo:'pass',no_duplicates:'pass',direct_first_sentence:'pass'})

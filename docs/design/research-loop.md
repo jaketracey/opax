@@ -88,12 +88,13 @@ original first speaking turn. Generated fields and news cannot be cited.
 For numerical questions, `finish({facts: number[]})` chooses ids from `factSheet`.
 Passage snippets and people lookups cannot be selected as numerical evidence.
 The existing plan scope checks, completeness/`no_supported_claim` checks,
-committee supplement, `selectAnswerFacts` and `templateAnswer` still own the
-answer. The model's free text is ignored. Fact ordering remains deterministic.
+committee supplement, `selectAnswerFacts` and `templateAnswer` still own fact
+selection and validation. Free text from the selection turn is ignored. Fact
+ordering remains deterministic; the checked writing step below authors the prose.
 
 For qualitative and structured-record questions, `answer` selects record fact ids,
-verified passage points, or both. Calculated answers retain their original sources
-and Unicode citation spans when selected as a complete answer. A `decline` tool
+verified passage points, or both. Calculated answers retain their original source and evidence IDs when selected
+as a complete answer; writing rebuilds their Unicode citation spans. A `decline` tool
 lets the agent select fixed clarification, private-person, out-of-scope or
 no-causation wording; it cannot supply free-form allegations.
 
@@ -374,7 +375,9 @@ block. A failed research run cannot auto-select an ordinary instant calculator.
 
 JSON and SSE share this final payload. Ordinary fallback and cache replay buffer
 answer text until the period and writing checks complete; status events can
-still stream. The writing version participates in both answer cache keys, so
+still stream. Ordinary fallback prose also removes repeated sentences and
+financial figure sets, rebasing citation spans and unciting dropped-only sources.
+The writing version participates in both answer cache keys, so
 answers produced under the earlier calculator-rendering contract cannot replay.
 Caches store only the completed answer, with the existing privacy, conversation
 and uncited-answer exclusions.
