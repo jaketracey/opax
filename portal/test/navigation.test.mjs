@@ -1,4 +1,6 @@
 import test from 'node:test';
+import {tableDatabase} from './table-d1-harness.mjs';
+import {actMetadata,actRow} from './act-invoices-fixture.mjs';
 import assert from 'node:assert/strict';
 import { Worker } from 'node:worker_threads';
 import { readFileSync } from 'node:fs';
@@ -82,7 +84,10 @@ test('every menu, footer and shortcut link is a page the Worker serves', async (
       : href === '/register/tax-expenditures' ? {'/tax-expenditures/data.json': JSON.parse(readFileSync(new URL('../../data/staged/tax-expenditures/hub.json',import.meta.url),'utf8'))} : {};
     // A link behind the reports gate is drawn only where they are published (REPORTS_ENABLED).
     const env = menuLinks.some(l => l.href === href && l.gate === 'reports') ? { REPORTS_ENABLED: 'true' } : {};
-    const response = await workerFetch(href, env, {}, {assets:fixtures});
+    const act=href==='/register/act-invoices' ? await tableDatabase({memorySQL:true,datasets:{'act-invoices':[{row:actRow()}]},metadata:{'act-invoices':actMetadata}}) : null;
+    let response;
+    try {response = await workerFetch(href, {...env,...(act?{TABLE_DB:act.db}:{})}, {}, {assets:fixtures});}
+    finally {await act?.close();}
     assert.equal(response.status, 200, href);
     await response.arrayBuffer();
   }

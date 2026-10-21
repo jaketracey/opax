@@ -1,0 +1,29 @@
+{
+  "location": "/Users/jake/.cache/opax/act-invoices/9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac/acquisition",
+  "snapshot_sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac",
+  "files": [
+    {
+      "kind": "robots",
+      "sha256": "395b50aec2e9b0908df18db3a8534a2913236e2d070fdc2635fa89fe1a47a256",
+      "bytes": 1750
+    },
+    {
+      "kind": "metadata",
+      "sha256": "58e4f9f0ae245637d49f62889598c319a17ee52910e38d19a744998b31277540",
+      "bytes": 25636
+    },
+    {
+      "kind": "page",
+      "sha256": "54858d60d61db575a462bbb1540e24677d6117488c98bce4103170cdab3517ad",
+      "bytes": 577018
+    },
+    {
+      "kind": "data",
+      "sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac",
+      "bytes": 35967878
+    }
+  ],
+  "verified": true,
+  "supplier_bearing_inputs_committed": false,
+  "restore": "Copy these hash-named bodies to portal/private/act-invoices/acquisition, then run python3 -m scripts.act_invoices.stage offline"
+}

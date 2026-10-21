@@ -48,6 +48,7 @@
           page('/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'),
         ] },
         { heading: 'Public money', links: [
+          page('/register/act-invoices', 'ACT notifiable invoices', 'Monthly paid-invoice disclosures for invoices valued at $25,000 or more.'),
           page('/register/gov-advertising', 'Government advertising', 'Published campaign and non-campaign media expenditure.'),
           page('/register/tax-expenditures', 'Tax expenditures', 'Treasury’s estimates of revenue forgone against tax benchmarks.'),
           page('/register/government-finance', 'Government finance', 'ABS annual revenue, expenses, balances and debt.'),
@@ -122,6 +123,7 @@
 
   /** The group a path belongs to; null for Home, Ask, Search and records. */
   const active = (path, params = new URLSearchParams()) => {
+    if (path === '/register/act-invoices') return 'money';
     if (path === '/register/gov-advertising') return 'money';
     if (path === '/register/tax-expenditures') return 'money';
     if (path === '/register/government-finance') return 'money';

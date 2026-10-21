@@ -1,0 +1,142 @@
+{
+  "baseline": "6b021dc84",
+  "node_checks": {
+    "passed": 117,
+    "failed": 0,
+    "suites": [
+      "donor-privacy",
+      "table-api",
+      "table-load",
+      "plain-language",
+      "reload-tables",
+      "navigation",
+      "sa-grants",
+      "identity-cache"
+    ]
+  },
+  "python_act_checks": {
+    "passed": 8,
+    "failed": 0
+  },
+  "python_sa_grants_checks": {
+    "passed": 12,
+    "failed": 0
+  },
+  "optional_sa_budget_regression": {
+    "passed": 11,
+    "unavailable": 3,
+    "reason": "Original-cache-dependent checks cannot find the pre-existing SA budget private cache in this worktree; no source retry"
+  },
+  "tsc": "pass",
+  "check": "pass",
+  "staging_dry_run": {
+    "mode": "dry-run",
+    "writes": 0,
+    "review": "pending",
+    "rows": 127437,
+    "months": 137,
+    "missing_months": [],
+    "exact_duplicate_groups": 1530,
+    "extra_duplicate_rows": 2393,
+    "public_computed_totals": 0
+  },
+  "promoter_dry_run": {
+    "exit_code": 1,
+    "expected": true,
+    "reason": "review pending",
+    "writes": 0
+  },
+  "sql_preflight": {
+    "mode": "offline-preflight",
+    "writes": 0,
+    "rows": 127437,
+    "sqlBytes": 101155819,
+    "tables": 23,
+    "version": "14437f03ac2956b088015cb8",
+    "source": "Local candidate only; no promotion"
+  },
+  "browser": {
+    "390": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 390,
+      "viewport": 390,
+      "cells": [
+        {
+          "label": "Supplier",
+          "left": 20,
+          "right": 153,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Date",
+          "left": 153,
+          "right": 254.5,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 254.5,
+          "right": 370,
+          "whiteSpace": "nowrap"
+        }
+      ]
+    },
+    "1440": {
+      "status": 200,
+      "errors": [],
+      "pageWidth": 1440,
+      "viewport": 1440,
+      "cells": [
+        {
+          "label": "Supplier",
+          "left": 57.59375,
+          "right": 476.90625,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Date",
+          "left": 476.90625,
+          "right": 598.515625,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Amount",
+          "left": 598.515625,
+          "right": 734.015625,
+          "whiteSpace": "nowrap"
+        },
+        {
+          "label": "Reporting entity",
+          "left": 734.015625,
+          "right": 865.453125,
+          "whiteSpace": "normal"
+        },
+        {
+          "label": "Description",
+          "left": 865.453125,
+          "right": 1382.40625,
+          "whiteSpace": "normal"
+        }
+      ]
+    }
+  },
+  "protected": {
+    "votes.json": {
+      "sha256": "a112166dc583c6acac8b38ab452de83f9e698aab62b4ed5ca94e52ca7c6f46eb",
+      "byte_identical": true
+    },
+    "pay.json": {
+      "sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722",
+      "byte_identical": true
+    }
+  },
+  "coverage_guard_byte_identical": true,
+  "private_names_decision_byte_identical": true,
+  "no_push": true,
+  "no_deploy": true,
+  "no_nightly_change": true,
+  "no_production_writes": true,
+  "supplier_bearing_inputs_committed": false,
+  "snapshot_sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac"
+}

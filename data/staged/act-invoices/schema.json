@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Supplier Name",
+    "fieldName": "supplier_name",
+    "dataTypeName": "text",
+    "position": 1,
+    "description": ""
+  },
+  {
+    "name": "Supplier ABN",
+    "fieldName": "supplier_abn",
+    "dataTypeName": "text",
+    "position": 2,
+    "description": ""
+  },
+  {
+    "name": "Reporting Entity",
+    "fieldName": "reporting_entity",
+    "dataTypeName": "text",
+    "position": 3,
+    "description": ""
+  },
+  {
+    "name": "Publish Description",
+    "fieldName": "publish_description",
+    "dataTypeName": "text",
+    "position": 4,
+    "description": ""
+  },
+  {
+    "name": "Date Invoice Received",
+    "fieldName": "date_invoice_received",
+    "dataTypeName": "calendar_date",
+    "position": 5,
+    "description": ""
+  },
+  {
+    "name": "Payment Date",
+    "fieldName": "payment_date",
+    "dataTypeName": "calendar_date",
+    "position": 6,
+    "description": ""
+  },
+  {
+    "name": "Payment Amount",
+    "fieldName": "payment_amount",
+    "dataTypeName": "number",
+    "position": 7,
+    "description": ""
+  },
+  {
+    "name": "Contract Number",
+    "fieldName": "contract_number",
+    "dataTypeName": "text",
+    "position": 9,
+    "description": ""
+  }
+]

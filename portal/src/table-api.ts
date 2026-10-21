@@ -1,3 +1,4 @@
+import {actInvoicesMetadata} from './act-invoices-metadata.ts'
 import {loadDonorIndex} from './donor-index.ts'
 import {donorDisclosure,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {foldDonorName} from '../public/donor-entity.js'
@@ -120,6 +121,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     const db=env.TABLE_DB
     const version=await db.prepare("SELECT value FROM table_meta WHERE key='version'").first<string>('value')
     if (!version) throw new Error('unavailable')
+    if (name === 'act-invoices' && !await actInvoicesMetadata(db)) return errorResponse(404,'not_available')
     if (repeatedTableKeys(url.searchParams,null).size) return errorResponse(400,'invalid_query')
     const queryParams = new URLSearchParams(url.searchParams)
     const supplier = name === 'contracts' ? queryParams.get('supplier') : null
@@ -131,6 +133,15 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     let query: Query | undefined
     try {query=parseTableQuery(queryParams,config.columns,config.defaultSort)} catch { /* Fixed grammar error, without echo. */ }
     if (!query) return errorResponse(400,'invalid_query')
+    if (name === 'act-invoices') {
+      if (Object.keys(query.filters || {}).some(key=>!config.filterKeys!.includes(key))) return errorResponse(400,'invalid_query')
+      // Reject user-supplied labels unless they are published public-body/period facets.
+      // Unknown supplier names and ABNs never become selected facet values.
+      for (const [key,values] of Object.entries(query.filters || {})) if (Array.isArray(values)) {
+        const valid=await db.prepare('SELECT COUNT(DISTINCT value) AS n FROM table_act_invoices_facets WHERE key=? AND value IN (SELECT value FROM json_each(?))').bind(key,JSON.stringify(values)).first<number>('n')
+        if (Number(valid)!==values.length) return errorResponse(400,'invalid_query')
+      }
+    }
     if (supplier) {query.filters ||= {};query.filters.supplier_id = [supplier]}
     const supplierIds = donor !== null ? await donorSupplierIds(env.ASSETS, donor) : undefined
     const stateKey = (state: Query, csv: boolean) => {
@@ -144,7 +155,7 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     const digest=await tableQueryHash(['table-v3',version,env.CACHE_EPOCH || '',name,key].join('|'))
     const headers=new Headers({'cache-control':'public, max-age=60, s-maxage=60','etag':`"${digest}"`})
     headers.set('content-location','/api/table/'+name+'?'+key)
-    if (url.searchParams.size || csv) headers.set('x-robots-tag','noindex')
+    if (url.searchParams.size || csv || name==='act-invoices') headers.set('x-robots-tag','noindex')
     if (request.headers.get('if-none-match')===headers.get('etag')) return new Response(null,{status:304,headers})
     const disclosures=['money-connections','party-money'].includes(name) && env.ASSETS ? await loadDonorIndex(env.ASSETS).catch(()=>new Map<string,DonorDisclosureRecord>()) : null
     const enrich=(rows:Row[])=>rows.map(row=>{

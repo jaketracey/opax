@@ -76,3 +76,8 @@ data/staged/sa-budget/.acquire.lock
 
 # Historical SA grants acquisition lock; authorised source-record inputs are tracked.
 data/staged/sa-grants/.acquire.lock
+
+# ACT invoice suppliers stay within local source records, outside Git and static assets.
+data/staged/act-invoices/.acquire.lock
+data/staged/act-invoices/series.jsonl
+data/promoted/act-invoices/

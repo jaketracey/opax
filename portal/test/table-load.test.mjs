@@ -29,6 +29,6 @@ test('the original D1 schema upgrades to grants, voting and register projections
       const columns=await local.db.prepare(`PRAGMA table_info(table_${name})`).all();
       assert.deepEqual(new Set(columns.results.map(c=>c.name)),new Set(['rowid','search',...TABLE_DATASETS[name].columns.map(c=>c.key)]));
     }
-    assert.equal((tableSchema().match(/USING fts5/g)||[]).length,10);
+    assert.equal((tableSchema().match(/USING fts5/g)||[]).length,Object.keys(TABLE_DATASETS).length);
   } finally {await local.close();}
 });

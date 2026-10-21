@@ -1,3 +1,4 @@
+import {actInvoicesColumns,ACT_INVOICES_SEARCH,ACT_INVOICES_FILTERS} from '../public/act-invoices-table.js';
 // Server dataset columns. The shared DataTable contract stays unchanged.
 const text = (key, label = key) => ({key, label, type: 'text'});
 const category = (key, label = key) => ({key, label, type: 'category', facet: 'multi'});
@@ -6,6 +7,7 @@ const date = (key, label = key) => ({key, label, type: 'date'});
 const jurisdiction = category('jurisdiction');
 const money = [text('id'), text('from'), text('to'), category('type'), jurisdiction, category('industry'), number('amount', 'money', 'Value'), number('count', 'count', 'Records'), number('firstYear', 'year', 'First year'), number('lastYear', 'year', 'Last year'), ...['return_reference','from_href','to_href'].map(key=>({...text(key,key==='return_reference'?'Return reference':key),computed:true,sortable:false}))];
 export const TABLE_DATASETS = {
+  'act-invoices': {columns:actInvoicesColumns,searchKeys:ACT_INVOICES_SEARCH,filterKeys:ACT_INVOICES_FILTERS,indexKeys:[...ACT_INVOICES_FILTERS,'payment_day'],defaultSort:{key:'payment_day',dir:'desc'}},
   'money-connections': {columns: money, defaultSort: {key: 'amount', dir: 'desc'}},
   contracts: {columns: [text('id'), text('title'), text('supplier'), text('supplier_id'), category('agency'), category('procurement_method', 'Method'), jurisdiction, number('amount', 'money', 'Value'), date('start_date', 'Start'), date('end_date', 'End'), text('description'), text('url', 'Source')], defaultSort: {key: 'amount', dir: 'desc'}},
   suppliers: {columns: [text('id'), text('name'), text('abn', 'Registration'), jurisdiction, number('total', 'money', 'Value'), number('count', 'count', 'Contracts'), number('agency_count', 'count', 'Agencies'), number('first_year', 'year', 'First year'), number('last_year', 'year', 'Last year')], defaultSort: {key: 'total', dir: 'desc'}},

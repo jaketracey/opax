@@ -1,0 +1,10 @@
+{
+  "requests": 4,
+  "minimum_completion_gap_seconds": 7.015138,
+  "overlaps": 0,
+  "process_lock": true,
+  "redirects_followed": 0,
+  "refusals": 0,
+  "robots_checked_exact_urls": true,
+  "user_agent": "OPAXBot/1.0 (+https://opax.com.au/about; corrections@opax.com.au)"
+}

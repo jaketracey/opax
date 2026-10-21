@@ -34,15 +34,16 @@ from scripts.tax_expenditures.check import checked_projection as tax_projection
 from scripts.gov_advertising.victoria import checked_projection as advertising_projection
 from scripts.sa_budget.check import checked_projection as sa_projection
 from scripts.sa_grants.check import checked_projection as sa_grants_projection
+from scripts.act_invoices.check import checked_projection as act_invoices_projection
 
-ASSETS = {"budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json",
+ASSETS = {"act-invoices": "data/promoted/act-invoices/table.json", "budget": "budget/data.json", "vic-gifts": "vic-gifts/data.json",
           "bills-tas": "bills-tas/data.json", "bills-act": "bills-act/data.json",
           "abs-gfs": "government-finance/data.json", "tax-expenditures": "tax-expenditures/data.json",
           "vic-advertising": "gov-advertising/data.json", "sa-budget": "sa-budget/data.json", "sa-grants": "sa-grants/data.json"}
 # Annual ABS GFS, tax expenditures and advertising are opt-in, outside nightly.
 # Existing default runs remain scoped to the four scheduled hubs.
 DEFAULT_HUBS = ["budget", "vic-gifts", "bills-tas", "bills-act"]
-INPUTS = {"budget": ["inventory.json", "receipts.json", "aggregates.json", "measures.json", "hub.json"],
+INPUTS = {"act-invoices": ["inventory.json", "schema.json", "receipts.json", "series.jsonl", "reconciliation.json", "acquisition-audit.json", "hub.json"], "budget": ["inventory.json", "receipts.json", "aggregates.json", "measures.json", "hub.json"],
           "vic-gifts": ["inventory.json", "receipts.json", "hub.json"],
           "bills-tas": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
           "bills-act": ["inventory.json", "receipts.json", "hub.json", "acquisition-notes.json"],
@@ -278,6 +279,8 @@ def validated_asset(hub_name, root=ROOT):
         hub, counts = tax_projection(stage)
     elif hub_name == "vic-advertising":
         hub, counts = advertising_projection(stage)
+    elif hub_name == "act-invoices":
+        hub, counts = act_invoices_projection(stage)
     elif hub_name == "sa-grants":
         hub, counts = sa_grants_projection(stage)
     elif hub_name == "sa-budget":
@@ -311,7 +314,7 @@ def promote(hubs, root=ROOT, dry_run=False, check_public=False, votes_reference=
         try:
             data, manifest = validated_asset(name, root)
             equal(votes_path.read_bytes(), votes, "votes", "bytes changed during promotion")
-            target = root / "portal/public" / ASSETS[name]
+            target = (root if name == "act-invoices" else root / "portal/public") / ASSETS[name]
             if check_public:
                 equal(target.read_bytes(), data, "public-asset", str(target))
             elif not dry_run:
@@ -327,7 +330,7 @@ def promote(hubs, root=ROOT, dry_run=False, check_public=False, votes_reference=
                 finally:
                     if os.path.exists(tmp):
                         os.unlink(tmp)
-            print(json.dumps({"hub": name, "asset": "portal/public/" + ASSETS[name], "bytes": len(data),
+            print(json.dumps({"hub": name, "asset": ("" if name == "act-invoices" else "portal/public/") + ASSETS[name], "bytes": len(data),
                               "mode": "check-public" if check_public else "dry-run" if dry_run else "promote", **manifest}))
         except (ValueError, KeyError, OSError, TypeError) as error:
             failed = True

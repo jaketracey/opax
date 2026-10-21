@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {actMetadata} from './act-invoices-fixture.mjs';
 import assert from 'node:assert/strict';
 import {serializeQuery} from '../public/datatable.js';
 import {TABLE_DATASETS} from '../src/table-datasets.mjs';
@@ -7,7 +8,7 @@ import {tableDatabase} from './table-d1-harness.mjs';
 import {registerServerCSVContract} from './datatable-endpoint-contract.mjs';
 
 const rows=Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name,c])=>[name,Array.from({length:260},(_,i)=>({row:Object.fromEntries(c.columns.map(col=>[col.key,col.key==='id' ? 'item-'+i : ['money','count'].includes(col.type) ? i+0.25 : col.type==='year' ? 2000+i : col.type==='category' ? (['portfolios','sectors','entities'].includes(col.key) ? ['Group '+i%2] : 'Group '+i%2) : col.type==='date' ? '2024-01-01' : col.key==='abn' ? '' : i===3 ? 'Needle record' : 'Record '+i]))}))]));
-const local=await tableDatabase({datasets:rows});test.after(()=>local.close());
+const local=await tableDatabase({datasets:rows,metadata:{'act-invoices':actMetadata}});test.after(()=>local.close());
 const env={TABLE_DB:local.db,CACHE_EPOCH:'test'};
 const fetchTable=(name,query='',init)=>tableApi(new Request('https://opax.com.au/api/table/'+name+'?'+query,init),env);
 

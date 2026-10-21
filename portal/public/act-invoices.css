@@ -1,0 +1,16 @@
+.act-invoices-content{padding-block:var(--space-section);color:var(--ink)}
+.act-invoices-content>section{margin-block:var(--space-section);border-top:var(--border-hairline) solid var(--divider-default);padding-top:var(--space-group)}
+.act-invoices-content h2{font:var(--type-heading);margin-bottom:var(--space-block)}
+.act-invoices-content p{max-width:var(--size-readable)}
+.act-invoices-receipt{font:var(--type-fine);color:var(--ink-soft);overflow-wrap:anywhere;margin-block:var(--space-block)}
+.act-invoices-receipt summary{cursor:pointer}
+.act-invoices-content .dt :is([data-label="Date"],[data-act-column="date"],[data-label="Payment date as published"],[data-label="Invoice received as published"]){white-space:nowrap;overflow-wrap:normal;word-break:normal}
+@media(max-width:760px){
+ .act-invoices-content .dt{table-layout:fixed}
+ .act-invoices-content .dt th:not([data-act-column]),
+ .act-invoices-content .dt td:not([data-label="Supplier"]):not([data-label="Date"]):not([data-label="Amount"]):not([colspan]){display:none}
+ .act-invoices-content .dt :is(th,td){padding:var(--space-tight)}
+ .act-invoices-content .dt :is([data-act-column="supplier"],[data-label="Supplier"]){display:table-cell;width:38%;min-width:0;position:static;box-shadow:none}
+ .act-invoices-content .dt :is([data-act-column="date"],[data-label="Date"]){display:table-cell;width:29%;white-space:nowrap}
+ .act-invoices-content .dt :is([data-act-column="amount"],[data-label="Amount"]){display:table-cell;width:33%;white-space:nowrap;font-variant-numeric:tabular-nums}
+}

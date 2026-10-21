@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "dataset_id": "kzmf-7uhp",
+  "title": "Notifiable Invoices Register",
+  "publisher": "ACT Government",
+  "attribution": "ACT Government",
+  "attribution_link": "http://www.procurement.act.gov.au/about/act-government-notifiable-invoices-register",
+  "source_url": "https://www.data.act.gov.au/Government-and-Transparency/Notifiable-Invoices-Register/kzmf-7uhp",
+  "download_url": "https://www.data.act.gov.au/api/views/kzmf-7uhp/rows.json",
+  "generated_at": "2026-10-21T22:08:57.440248+00:00",
+  "snapshot": "2026-10-21T22:08:57.440248+00:00",
+  "snapshot_sha256": "9461967d519fd9ea21f47301975b16b792f2829b4f231bb1d87a90dde0d66dac",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+  "licence_grant": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "logoUrl": "images/licenses/cc30by.png",
+    "termsLink": "http://creativecommons.org/licenses/by/4.0/legalcode"
+  },
+  "description": "In accordance with the Government Procurement Act 2001, from 1 July 2015, the Government is publishing relevant information about its notifiable invoices.  The requirement is consistent with Open Government and applies to all Territory entities.  The Notifiable Invoices Register, in conjunction with the ACT Government Contracts Register provides transparency about Government purchasing to the community. \n\nNotifiable Invoices are invoices with a value of $25,000 or more for goods, services or works received by the Territory or a Territory entity.\u00a0 The Territory publishes details of notifiable invoices within 21 days after the end of the month in which the invoice was paid.\t\t\t\n\t\t\t\nFor reporting from July 1 2017, the Territory will be including date invoice received in the notifiable invoices register.\u00a0 A number of points should be taken into account when using this information:\t\t\t\n - For the June 2017 reporting period, this field is the date that a valid invoice was received by the responsible Territory entity, however in small number of cases, it relates to the date the invoices was initially entered into the financial processing system of the Territory entity where known.\t\t\t\n - A small proportion of notifiable invoices do not have date received information recorded.\u00a0 This is due to a variety of reasons including some cases of scheduled payments under agreements or contracts not having an explicit invoice received date, and several reporting entities not yet being able to transmit to the Territory central finance system the date invoice received.\n\nA new column titled \u2018Procurement Unique Identifier\u2019 has been added to the Notifiable Invoices Register.  An initiative of the Procurement Reform Program to improve transparency of government procurement and contracting, the Procurement Unique Identifier was launched for new procurements entering into the planning phase in April 2023 to facilitate linkage of procurement activities across the procurement lifecycle. The Procurement Unique Identifier can be searched in the \u2018Contract Number\u2019 or \u2018Contract Title\u2019 field in the Notifiable Contracts Register. \n\nReporting Entity Key for Merged Entities and New Directorates on 19 August 2025 \n\nAHD, CSD and CSD-Housing have been merged under the new directorate HCS.\n\nFor the SSF consolidated file, the structure will be:\n\uf0d8\tHCS-H: AHD\n\uf0d8\tHCS-C: CSD\n\uf0d8\tHCS-Housing: CSD-Housing\n\nCMTEDD-DDTS ICT will now become a new directorate: DCBR. \n\nCMTEDD, CMTEDD-ED, and CMTEDD-SS will be consolidated into one tab named CMTEDD.\n\nA new directorate CED will include the following entities:\n\uf0d8\tEPSDD\n\uf0d8\tTCCS\n\uf0d8\tTCO\n\uf0d8\tYN\n\uf0d8\tAccess Canberra\n\nFor the SSF consolidated file, the structure will be:\n\uf0d8\tCED-E: EPSDD\n\uf0d8\tCED-C: TCCS\n\uf0d8\tCED-TCO: TCCS-TCO\n\uf0d8\tCED-AC: Access Canberra\n\uf0d8\tCED-YN: TCCS-YN\n\nAll other reporting entities will remain unchanged.\n\n----------------------------------------------------------------------------------------------------------\nReporting Entity Key\t\nACT Legal Aid: \tACT Legal Aid Commission\nACTAO: \tACT Audit Office\nACTIA: \tACT Insurance Authority\nACTIC: \tACT Integrity Commission\nBCIFA: \tBuilding and Construction Industry Fund Authority\nCFC: \tCultural Facilities Corporation\nCMTEDD-SPA: \tChief Minister, Treasury and Economic Development Directorate - Superannuation Provision Account\nCMTEDD-TBA: \tChief Minister, Treasury and Economic Development Directorate - Territory Banking Account\nICRC: \tIndependent Competition and Regulatory Commission\nLSLA: \tACT Long Service Leave Authority\nLTCS: \tLifetime Care and Support Fund ACT\nMAI: \tMotor Accident Injuries Commission\nOLA: \tOffice of the Legislative Assembly\nPTG: \tPublic Trustee and Guardian for the Australian Capital Territory\nTCCS-Canberra Cemeteries: \tCanberra Memorial Parks/Australian Capital Territory Public Cemeteries Authority\nTQI: \tTeachers Quality Institute\nACT Ombudsman: \tACT Ombudsman\nACT Electoral: \tACT Electoral Commission\nAHD: \tACT Health Directorate\nCHS: \tCanberra Health Services\nCIT: \tCanberra Institute of Technology\nCMTEDD: \tChief Minister, Treasury and Economic Development Directorate\nCMTEDD-ACT Exec: \tACT Executive\nCMTEDD-DDTS-ICT: \tChief Minister, Treasury and Economic Development Directorate- Digital, Data and Technology Solutions\nCMTEDD-ED: \tChief Minister, Treasury and Economic Development Directorate - Economic Development\nCMTEDD-SS: \tChief Minister, Treasury and Economic Development Directorate - Shared Services\nCRA: \tCity Renewal Authority\nCSD: \tCommunity Services Directorate\nCSD-Housing: \tCommunity Services Directorate - Housing ACT\nEPSDD: \tEnvironment Planning and Sustainable Development Directorate\nETD: \tEducation Directorate\nGRC: \tACT Gambling & Racing Commission\nJACSD: \tJustice and Community Safety Directorate\nMPC: \tMajor Projects Canberra\nSLA: \tSuburban Land Agency\nWorksafeACT: Office of the Work Health and Safety Commissioner (Worksafe ACT)\nTCCS: \tTransport Canberra and City Services\nTCCS-TCO: \tTransport Canberra and City Services - Transport Canberra Control\nCMTEDD Asset Liability Management: \tCMTEDD Asset Liability Management\nWSB: \tWSB\nACT Compulsory Third-Party Insurance Regulator: ACT Compulsory Third-Party Insurance Regulator\nCMTEDD: CMTEDD - TVE\nDefault Insurance Fund (Historical Invoices), ACTIA (Current Invoices): \tDefault Insurance Fund (The entity is currently covered by ACTIA).\nOffice of the Nominal Defendant (Historical Invoices), ACTIA (Current Invoices): \tOffice of the Nominal Defendant (The entity is currently covered by ACTIA).\nCMTEDD-LDA: \tLand Development Agency (Legacy entity)\nTAMSD: \tTerritory and Municipal Services Directorate (Legacy entity)\nTCCS-CMA and TAMSD-CMA (all past invoices): \tCapital Metro Agency (Legacy entity that was part of TCCS and TAMSD).\nTAMSD-ACTION: \tACTION (Legacy entity that was part of TAMSD).\nCMTEDD-ACTP and MPC-ACTP: \tCapital Works (Legacy entity that was part of CMTEDD and MPC).\nTCCS (current invoices) and TAMSD-Yarralumla Nursery (past invoices): Yarralumla Nursery (The entity is currently part of TCCS and has been historically part of TAMSD).",
+  "metadata_sha256": "58e4f9f0ae245637d49f62889598c319a17ee52910e38d19a744998b31277540",
+  "rows": 127437,
+  "payment_date_min": "2005-12-17",
+  "payment_date_max": "2026-09-30",
+  "catalogued_period": "July 2015 - September 2026",
+  "source_updated_at": "2026-10-20T04:38:46+00:00",
+  "no_unique_invoice_id": true,
+  "published_totals": false,
+  "search_keys": [
+    "publish_description",
+    "reporting_entity"
+  ],
+  "filters": [
+    "reporting_entity",
+    "financial_year",
+    "month",
+    "amount"
+  ],
+  "surface": "D1 table API",
+  "nightly": false
+}

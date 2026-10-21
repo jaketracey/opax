@@ -1,3 +1,4 @@
+import {actInvoicesSnapshot} from './act_invoices/table-snapshot.mjs';
 import {readFile, readdir, mkdir, writeFile, rm} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {join, resolve, dirname} from 'node:path';
@@ -60,7 +61,10 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
       add('grants', {id: String(g.id ?? `${r.id}:${i}`), title: g.n || g.pr || g.id || '', recipient: r.n, agency: g.ag || '', program: g.pr || '', category: g.cat || '', jurisdiction: jur, amount: g.v, year: Number(String(g.fy || g.s || '').slice(0, 4)) || null, start_date: g.s || null, description: g.desc || '', url: g.guid ? `https://www.grants.gov.au/Ga/Show/${g.guid}` : '', electorate: g.el || 'Not recorded', recipientId: r.id, recipientKind: r.k || r.identity?.kind || '', recipientABNType: r.abr?.etype || r.abr?.type || r.identity?.type || '', recipientAvailable: profiles.has(String(r.id)) ? 1 : 0});
     }
   }
-  if (moneyOnly) return {rows};
+  const actInvoices=await actInvoicesSnapshot(root);
+  rows['act-invoices']=actInvoices.rows;
+  const metadata=actInvoices.metadata ? {'act-invoices':actInvoices.metadata} : {};
+  if (moneyOnly) return {rows,metadata};
   const bills = (await read('bills/index.json')).bills, billScopes = new Map(), stages = new Map();
   for (const bill of bills) {
     const seen = new Set();
@@ -93,29 +97,34 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
   }
   for (const v of (await read('audit/index.json')).records) add('audit-reports', {id: v.id, title: v.title, report_label: v.report_label, sectors: categoryMembers(v.sectors), entities: v.entities, jurisdiction: 'qld', number: v.number, year: Number(String(v.year).slice(0, 4)) || null, tabled_date: v.tabled_date, canonical_url: v.canonical_url});
   for (const entry of await interestTableRows(root)) add('interests',entry.row);
-  return {rows};
+  return {rows,metadata};
 }
 
 
 const literal = value => value == null ? 'NULL' : typeof value === 'number' && Number.isFinite(value) ? String(value) : "'" + String(value).replaceAll("'","''") + "'";
 
 /** Sanitised SQL chunks live outside public/. No raw source snapshot is copied. */
-export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new URL('../portal/private/dt-api/sql/',import.meta.url)),datasets}={}) {
-  if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;}
+export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new URL('../portal/private/dt-api/sql/',import.meta.url)),datasets,metadata={}}={}) {
+  if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;metadata=loaded.metadata;}
+  const includeAct=Boolean(metadata['act-invoices']);
+  if (Boolean(datasets['act-invoices']?.length)!==includeAct) throw Error('ACT invoice rows and reviewed source receipt must be supplied together');
+  const active=Object.keys(TABLE_DATASETS).filter(name=>name!=='act-invoices'||includeAct);
   await mkdir(output,{recursive:true});
   for (const file of await readdir(output)) if (/^\d+-.*\.sql$|^manifest\.json$/.test(file)) await rm(join(output,file));
   const files=[],counts={};let bytes=0,part=0;
   const put=async (suffix,sql)=>{const file=String(part++).padStart(4,'0')+'-'+suffix+'.sql';await writeFile(join(output,file),sql);files.push(file);bytes+=Buffer.byteLength(sql);};
   // Rebuild these projections when reloading an earlier summary-only database.
-  let setup=['divisions','votes'].map(name=>`DROP TABLE IF EXISTS table_${name}_fts;\nDROP TABLE IF EXISTS table_${name}_facets;\nDROP TABLE IF EXISTS table_${name};\n`).join('')+tableSchema();
-  for (const name of Object.keys(TABLE_DATASETS)) {const table=tableName(name);setup+=`DELETE FROM ${table};\nDELETE FROM ${table}_facets;\n`;}
-  setup+='DELETE FROM table_meta;\n';
+  let setup=['divisions','votes'].map(name=>`DROP TABLE IF EXISTS table_${name}_fts;\nDROP TABLE IF EXISTS table_${name}_facets;\nDROP TABLE IF EXISTS table_${name};\n`).join('')+tableSchema(active);
+  for (const name of active) {const table=tableName(name);setup+=`DELETE FROM ${table};\nDELETE FROM ${table}_facets;\n`;}
+  // An ordinary deploy without the private reviewed artifact preserves the
+  // last approved ACT rows and receipt. It cannot clear or refresh that source.
+  setup+=includeAct ? 'DELETE FROM table_meta;\n' : "DELETE FROM table_meta WHERE key<>'act-invoices';\n";
   await put('schema',setup);
   let sql='',pending=new Map();
   const insert=(prefix,values)=>{let list=pending.get(prefix)||[];if(list.length && Buffer.byteLength(prefix+' VALUES '+list.join(',')+','+values)>80_000){sql+=prefix+' VALUES '+list.join(',')+';\n';list=[];}list.push(values);pending.set(prefix,list);if(list.length>=100){sql+=prefix+' VALUES '+list.join(',')+';\n';pending.delete(prefix);}};
   const flush=async suffix=>{for(const [prefix,list]of pending)sql+=prefix+' VALUES '+list.join(',')+';\n';pending.clear();if(sql){await put(suffix,sql);sql='';}};
-  for (const [name,config] of Object.entries(TABLE_DATASETS)) {
-    const table=tableName(name);counts[name]=0;
+  for (const name of active) {
+    const config=TABLE_DATASETS[name],table=tableName(name);counts[name]=0;
     for (const {row} of datasets[name] || []) {
       const rowid=++counts[name];
       const values=config.columns.filter(c=>!c.computed).map(c=>arrayColumns.has(c.key) && Array.isArray(row[c.key]) ? JSON.stringify(row[c.key]) : row[c.key] ?? null);
@@ -128,10 +137,15 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
     await flush(name);
     await put(name+'-fts',`INSERT INTO ${table}_fts (${table}_fts) VALUES ('rebuild');\n`);
   }
+  // Dataset receipt and rows become readable together only after the final version.
+  if (counts['act-invoices']) {
+    if (!metadata['act-invoices']) throw Error('ACT invoice source receipt missing; reload held');
+    await put('act-invoices-receipt',`INSERT INTO table_meta VALUES ('act-invoices',${literal(JSON.stringify(metadata['act-invoices']))});\n`);
+  }
   const version=createHash('sha256');for(const file of files)version.update(await readFile(join(output,file)));
   // Publish the data version after all projections and their indexes are loaded.
   await put('version',`INSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
-  const manifest={files,bytes,counts,publicAssets:0};
+  const manifest={files,bytes,counts,publicAssets:0,retainedDatasets:includeAct?[]:['act-invoices']};
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
@@ -141,10 +155,10 @@ export function tableMetadataOnly(argv = process.argv.slice(2), env = process.en
   if (argv.includes('--metadata-only') && argv.includes('--sql')) throw new Error('Conflicting table build modes');
   return !argv.includes('--sql') && (argv.includes('--metadata-only') || env.OPAX_TABLE_METADATA_ONLY === '1');
 }
-export async function buildTableAssets({root=defaultRoot, output, metadataOnly=false, datasets}={}) {
+export async function buildTableAssets({root=defaultRoot, output, metadataOnly=false, datasets, metadata}={}) {
   if (metadataOnly) return {publicAssets:0};
-  datasets ||= (await tableRows(root)).rows;
-  return buildTableSQL({root,output,datasets});
+  if (!datasets) {const loaded=await tableRows(root);datasets=loaded.rows;metadata=loaded.metadata;}
+  return buildTableSQL({root,output,datasets,metadata});
 }
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {

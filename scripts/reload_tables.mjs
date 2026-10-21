@@ -143,7 +143,8 @@ export async function reloadTables({dir, d1, base, fetch, sleep = ms => new Prom
     result = {action:'reloaded',version:manifest.version,drift,files:manifest.files.length};
   }
   if (base) {
-    const bad = await smoke({base,fetch,sleep,log});
+    const datasets=manifest.counts?.['act-invoices']>0 ? [...SMOKE_DATASETS,'act-invoices'] : SMOKE_DATASETS;
+    const bad = await smoke({base,fetch,sleep,log,datasets});
     if (bad.length) throw new ReloadError(`table smoke failed for ${bad.join(', ')}`);
     log('TABLE SMOKE OK');
   }
