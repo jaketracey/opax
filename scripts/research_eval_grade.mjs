@@ -273,7 +273,7 @@ export function answerStyleChecks(question, answer, evidence = evidenceOf({}), r
   for(const sentence of sentences){const k=styleNormal(sentence);if(seen.has(k))duplicate=true;seen.add(k)}
   // Same figure for different people or periods is not a duplicated claim.
   const claims=new Set()
-  for(const sentence of sentences)for(const clause of sentence.split(/,?\s+and\s+(?=[A-Z][\w'’-]*(?:\s+[A-Z][\w'’-]*)*\s+(?:received|recorded|earned|had|has|was|spoke))/)){
+  for(const sentence of sentences)for(const clause of sentence.split(/[,;]?\s+(?:and|while|whereas)\s+(?=(?:the\s+)?(?:\d+(?:st|nd|rd|th)\s+Parliament|[A-Z][\w'’-]*(?:\s+[A-Z][\w'’-]*)*)\s+(?:received|recorded|earned|had|has|was|spoke))/)){
     const entity=/^(?:In \d{4}(?:[–-]\d{2,4})?,?\s+)?(.+?)\s+(?:received|recorded|earned|had|has|was|were|spoke|gave)\b/i.exec(clause)?.[1]
     if(!entity)continue
     const period=(clause.match(/\b(?:19|20)\d{2}(?:[–-]\d{2,4})?\b/g)??[]).join('/')

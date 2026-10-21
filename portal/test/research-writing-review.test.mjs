@@ -216,3 +216,8 @@ test('review fallback scope: the 1999 start cannot explain an unavailable histor
  assert.match(out.answer,/does not date historical party or chamber changes/)
  assert.doesNotMatch(out.answer,/1999.*so.*cannot/)
 })
+
+test('review rubric: equal term shares joined by while belong to distinct claims',()=>{
+ const answer='The 47th Parliament recorded 354 gambling speeches, 0.7% of 51096 topic-labelled speeches, while the 48th Parliament recorded 40 gambling speeches, also 0.7% of 5380 topic-labelled speeches.'
+ assert.equal(answerStyleChecks('Compare gambling speeches in both parliaments.',answer).no_duplicates,'pass')
+})
