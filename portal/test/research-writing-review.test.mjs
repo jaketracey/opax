@@ -1,0 +1,81 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import {build} from 'esbuild'
+import {answerStyleChecks,gradeRow} from '../../scripts/research_eval_grade.mjs'
+const b=await build({stdin:{contents:"export * from './src/research-writing';export * from './src/research-response';export * from './src/research-loop';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
+const source=(resource,text,kind='record')=>({resource,slug:'',title:text,snippet:text,href:'https://example.org/records',url:'https://example.org/records',cited:true,kind})
+const fact=(id,text,kind='record')=>({id,text,source:source('f-'+id,text,kind)})
+const period={kind:'all',label:''}
+const salary=[fact(1,'Avery Example: $277,602 a year as Prime Minister, 2005-01-01 to 2005-06-30; base $106,770 plus 160%.'),fact(2,'Avery Example: $288,990 a year as Prime Minister, 2005-07-01 to 2005-12-31; base $111,150 plus 160%.'),fact(3,'Blake Sample: $170,000 a year as Minister, 2005-01-01 to 2005-12-31; base $106,770 plus 60%.')]
+const good='Avery Example earned $277,602 as Prime Minister until 30 June 2005.'
+for(const [name,bad] of [
+ ['invented recipient','Banana Alliance received $277,602.'],
+ ['wrong person before value','Blake Sample received $277,602.'],
+ ['wrong person after value','$277,602 was paid to Blake Sample.'],
+ ['date before value','From 1 July 2005 Avery Example received $277,602.'],
+ ['another percentage','Blake Sample received a loading of 160%.'],
+ ['short invented quote','Avery Example said “I love corruption”.']
+])test('review grounding: '+name+' removes only the bad clause',()=>{
+ const input={question:'What did Avery Example earn in 2005?',period,facts:salary}
+ const out=api.verifyWrittenAnswer({sentences:[{text:good+' '+bad,facts:[1,2,3]}]},input)
+ assert.ok(out);assert.match(out.answer,/277,602.*30 June 2005/)
+ assert.doesNotMatch(out.answer,new RegExp(bad.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')))
+})
+test('review grounding: structured atoms retain entity metric value unit chamber period and evidence',()=>{
+ const fs=api.writingFacts(undefined,[{id:1,text:salary[0].text,cite:{kind:'record',url:'https://example.org',label:salary[0].text}}])
+ const a=fs.flatMap(f=>f.atoms??[]).find(a=>a.value==='277602')
+ assert.equal(a.entity,'Avery Example');assert.equal(a.metric,'salary');assert.equal(a.unit,'AUD/year');assert.equal(a.period.since,'2005-01-01');assert.equal(a.period.until,'2005-06-30');assert.ok(a.evidenceId);assert.equal(a.chamber,'federal')
+})
+test('review coverage: every percentage resolves to retained source text',()=>{
+ const fs=api.writingFacts(undefined,[{id:1,text:'Avery Example: 87 chamber speeches labelled housing.',cite:{kind:'count',url:'https://example.org',label:'count'}}],['Topic labels cover 73% of the record.','Topic labels cover 91% of the 2010s record.'])
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Avery Example recorded 87 chamber speeches about housing.',facts:[1]},{text:'Topic labels cover 73% of the record and 91% of the 2010s record.',facts:[2,3],coverage:true}]},{question:'Who spoke most about housing?',period,facts:fs})
+ for(const value of ['73%','91%'])assert.ok(out.sources.some(s=>s.snippet.includes(value)&&Object.keys(out.citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))),value)
+})
+const mining=[fact(1,'Labor: $165,050, 13 disclosed receipt records.'),fact(2,'Liberal: $125,483, 15 disclosed receipt records.'),fact(3,'Nationals: $82,815, 10 disclosed receipt records.'),{...fact(4,'Period: 2005–06.'),coverage:true},{...fact(5,'Coverage: Only receipts included in the published map are ranked; this is a selection, not an exhaustive industry total.'),coverage:true}]
+test('review period: a verified financial year supports an ordinary written claim',()=>{
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Labor received the most disclosed mining funding in 2005–06, with $165,050.',facts:[1,4]}]},{question:'Who gets most from mining in 2005?',period,facts:mining})
+ assert.ok(out);assert.match(out.answer,/Labor received the most.*2005–06/)
+})
+test('review fallback: ranking retains subject period runners-up and selection',()=>{
+ const out=api.proseFallback({question:'Who gets most from mining in 2005?',period,facts:mining})
+ assert.match(out.answer.split(/(?<=[.!?])\s/)[0],/Labor.*(?:most|led|largest).*mining.*2005–06.*165,050|2005–06.*Labor.*(?:most|led|largest).*mining.*165,050/)
+ assert.match(out.answer,/Liberal.*125,483.*Nationals.*82,815/)
+ assert.match(out.answer,/selection|published map/)
+})
+test('review fallback: missing historical salary retains December 1999 boundary',()=>{
+ const facts=[fact(1,"OPAX's pay records cover 1999-12-07 to 2026-10-19; the requested period 1990-01-01 to 1990-12-31 is not fully covered.")]
+ assert.match(api.proseFallback({question:'Who was paid most in 1990?',period,facts}).answer,/December 1999/)
+})
+test('review dedupe: equal counts for distinct people both survive',()=>{
+ const facts=[fact(1,'Avery Example: 87 chamber speeches labelled housing.','count'),fact(2,'Blake Sample: 87 chamber speeches labelled housing.','count')]
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Avery Example recorded 87 chamber speeches about housing.',facts:[1]},{text:'Blake Sample recorded 87 chamber speeches about housing.',facts:[2]}]},{question:'Compare Avery Example and Blake Sample on housing.',period,facts})
+ assert.match(out.answer,/Avery Example/);assert.match(out.answer,/Blake Sample/)
+})
+test('review dedupe: an overlapping clause does not delete new detail or its citation',()=>{
+ const a='Avery Example received $100,000.',b='Avery Example received $100,000, and Blake Sample received $200,000.'
+ const answer=a+'\n\n'+b,at=answer.indexOf(b)
+ const out=api.normaliseWrittenPayload({answer,sources:[source('f',b)],citations:{'f/t/body/0':[[at,answer.length]]}})
+ assert.equal((out.answer.match(/100,000/g)||[]).length,1);assert.match(out.answer,/Blake Sample received \$200,000/);assert.ok(out.citations['f/t/body/0'])
+})
+test('review fallback: year rows do not repeat the entire comparison interval',()=>{
+ const facts=[fact(1,'2023: 815 chamber speeches labelled immigration in federal parliament from 2023-01-01 to 2024-12-31.','count'),fact(2,'2024: 985 chamber speeches labelled immigration in federal parliament from 2023-01-01 to 2024-12-31.','count')]
+ const out=api.proseFallback({question:'Compare immigration speeches each year in 2023 and 2024.',period,facts})
+ assert.match(out.answer,/2023.*815/);assert.match(out.answer,/2024.*985/);assert.doesNotMatch(out.answer,/from 2023-01-01 to 2024-12-31/)
+})
+test('review comparison: both named terms and counts survive a percentage-only draft',()=>{
+ const facts=[fact(1,'47th Parliament: 354 chamber speeches labelled gambling (0.7% of 51096 topic-labelled speeches).','count'),fact(2,'48th Parliament: 40 chamber speeches labelled gambling (0.7% of 5380 topic-labelled speeches).','count')]
+ const input={question:'Compare gambling speeches in the 47th and 48th Parliaments.',period,facts}
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Both parliaments had a share of 0.7% of topic-labelled speeches.',facts:[1,2]}]},input)??api.proseFallback(input)
+ for(const term of ['47th','48th','354','40'])assert.ok(out.answer.includes(term),term)
+})
+test('review rubric: bananas fail; selected subject ranking amount and coverage are required',()=>{
+ const evidence={sources:mining.map(f=>f.source),cited:mining.map(f=>f.source),texts:mining.map(f=>f.text),entries:[],researchSources:[]}
+ assert.equal(answerStyleChecks('Who gets most from mining in 2005?','Bananas are yellow and the sky is blue.',evidence).direct_first_sentence,'fail')
+ assert.equal(answerStyleChecks('Who gets most from mining in 2005?','Labor recorded $165,050, 13 disclosed receipt records.',evidence).direct_first_sentence,'fail')
+ const q={question:'Compare Avery Example and Blake Sample on housing.',must:[{type:'required_components',entities:['Avery Example','Blake Sample'],coverage:true}]}
+ assert.equal(gradeRow(q,{answer:'Avery Example recorded 87 speeches.',sources:[source('f','Avery Example: 87 speeches. Coverage: incomplete record.')],citations:{'f/t/body/0':[[0,35]]}}).axes.required_components,'fail')
+})
+test('review deadline: writer has a reserved slice inside the unchanged allowance',()=>{
+ assert.equal(api.researchPhaseWallMs(15000),11000);assert.equal(api.researchPhaseWallMs(12000),8000)
+})
