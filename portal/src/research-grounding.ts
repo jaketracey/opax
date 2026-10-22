@@ -1,7 +1,7 @@
-import {auditPayload,quotationSpans} from './research-claim-audit.mjs'
+import {auditPayload,quotationSpans,sentenceParts} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
-import {coherenceCheck,citationHasSentence,protectedDecision,donorRanking} from './research-coherence.mjs'
+import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,donorRanking,canReconstructRanking} from './research-coherence.mjs'
 import {proseFallback,type WritingInput} from './research-writing'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
@@ -10,7 +10,7 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
   const auditFor=(value:Record<string,unknown>)=>{
     const audit=auditPayload(question,value)
     // Keep the decision itself; audit any accompanying substantive points without promoting them.
-    if(!promote){const text=String(value.answer??''),end=text.indexOf('\n\n');audit.findings=audit.findings.filter(f=>{const inDecision=(f.offset??text.indexOf(f.text))<(end<0?text.length:end);const questionEcho=f.type==='quote'&&!f.entity&&!!f.quote&&question.includes(f.quote);return !inDecision||f.type!=='period'&&!questionEcho})}
+    if(!promote){const text=String(value.answer??''),end=text.indexOf('\n\n');audit.findings=audit.findings.filter(f=>{const inDecision=(f.offset??text.indexOf(f.text))<(end<0?text.length:end);const questionEcho=f.type==='quote'&&!f.entity&&!!f.quote&&question.includes(f.quote);const nonFactualIdentity=f.type==='entity'&&f.metric==='identity'&&!audit.claims.some(c=>c.text===f.text&&['figure','quote'].includes(c.type));return !inDecision||f.type!=='period'&&!questionEcho&&!nonFactualIdentity})}
     return audit
   }
   // A wrong party adjective need not erase a correctly owned statement.
@@ -75,22 +75,65 @@ export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,u
   const sources=Array.isArray(cleaned.sources)?cleaned.sources.map(s=>s&&typeof s==='object'?{...s,cited:s.cited===true&&Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}:s):[]
   return {...cleaned,citations,sources}
 }
+type SelectedSource=WritingInput['facts'][number]['source']
+/** Every monetary fallback sentence needs selected evidence for its own owner/amount association. */
+function citeFallbackMoney(payload:Record<string,unknown>,question:string,selected:SelectedSource[]):Record<string,unknown> {
+  const research=payload.research as {mode?:string;coherence?:{fallback?:boolean}}|undefined
+  if(research?.mode!=='planner'&&!research?.coherence?.fallback&&!(payload.coherence as {fallback?:boolean}|undefined)?.fallback)return payload
+  // The writer may have attached verified period atoms/canonical rows to these
+  // same selected resources. Retain them; this never admits another resource.
+  const current=(Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]
+  selected=selected.map(s=>({...current.find(c=>c.resource===s.resource)??s,cited:true}))
+  const money=(a:ReturnType<typeof auditPayload>)=>a.claims.filter(c=>c.type==='figure'&&c.unit?.startsWith('AUD'))
+  let out=payload,repaired=0,omitted=0
+  for(const part of sentenceParts(String(payload.answer??''))){
+    const answer=String(out.answer??''),at=answer.indexOf(part.text);if(at<0)continue
+    const from=Array.from(answer.slice(0,at)).length,until=from+Array.from(part.text).length
+    const keys=Object.entries(out.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(([a,b]:number[])=>a<until&&b>from)).map(([id])=>id)
+    const associated=selected.filter(s=>keys.some(id=>id===s.resource||id.startsWith(s.resource+'/')))
+    const probe=(sources:SelectedSource[])=>auditPayload(question,{answer:part.text,sources,citations:{}})
+    const available=probe(selected),claims=money(available)
+    if(!claims.length)continue
+    if(associated.length&&claims.every(c=>c.status==='supported'&&c.evidence_ids.some(id=>associated.some(s=>id===s.resource||id.startsWith(s.resource+'/')))))continue
+    if(claims.some(c=>c.status!=='supported')){
+      out=rewriteAnswerPayload(out,replace=>replace(new RegExp(part.text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),''));omitted++;continue
+    }
+    const citations=Object.fromEntries(Object.entries((out.citations??{}) as Record<string,[number,number][]>).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a,b] as [number,number])]))
+    const support=[...new Set(claims.flatMap(c=>c.evidence_ids))].filter(id=>selected.some(s=>s.resource===id))
+    for(const resource of support){
+      const id=Object.keys(citations).find(id=>id===resource||id.startsWith(resource+'/'))??resource+'/t/body/0'
+      if(!(citations[id]??[]).some(([a,b])=>a<=from&&b>=until))(citations[id]??=[]).push([from,until])
+    }
+    out={...out,citations,sources:((out.sources??[]) as SelectedSource[]).map(s=>support.includes(s.resource)?{...s,cited:true}:s)};repaired++
+  }
+  if(!repaired&&!omitted)return out
+  if(!String(out.answer??'').trim())out={...out,answer:'The selected evidence does not establish the requested financial answer.',answer_decision:'limitation',citations:{}}
+  return cleanAnswerShape({...out,coherence:{...((out.coherence??{}) as object),monetary_citations:{repaired,omitted}}})
+}
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   // An empty record-only prefix is not a refusal of the checked passage answer beside it.
   const prefix=/^OPAX cannot establish the requested answer from the selected records\.\s*\n\s*\n/.exec(String(payload.answer??''))?.[0]
-  if(prefix&&payload.answered!==false&&!payload.answer_status&&/^what\b.*\b(?:say|said|argue|think|position)\b/i.test(question)){
+  if(prefix&&!protectedDecision(payload)&&payload.answered!==false&&!payload.answer_status&&/^what\b.*\b(?:say|said|argue|think|position)\b/i.test(question)){
     const selected=(Array.isArray(payload.sources)?payload.sources:[]) as WritingInput['facts'][number]['source'][]
     const passage=selected.some(s=>s.cited&&s.kind==='speech'&&Object.entries(payload.citations??{}).some(([id,ranges])=>(id===s.resource||id.startsWith(s.resource+'/'))&&Array.isArray(ranges)&&ranges.some((r:number[])=>r[1]>prefix.length)))
     if(passage)payload=rewriteAnswerPayload(payload,replace=>replace(new RegExp('^'+prefix.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),''))
   }
-  if(protectedDecision(payload))return cleanAnswerShape(checkedClaims(cleanAnswerShape(payload),question,false))
+  const sources=((Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]).filter(s=>s.cited===true&&!/^USER_CONTEXT_/i.test(s.resource))
+  const audit=auditPayload(question,payload)
+  // Legacy/cache migration is conservative: no figure claims means no permission
+  // to change the draft's purpose. New writers and loop decisions carry the enum.
+  const citedClaim=Object.values(payload.citations??{}).some(ranges=>Array.isArray(ranges)&&ranges.some(range=>citationHasSentence(String(payload.answer??''),range)))
+  payload={...payload,answer_decision:answerDecision(payload)??(citedClaim||audit.claims.some(c=>['figure','quote'].includes(c.type)||c.type==='entity'&&c.metric==='attribution')?'answer':'preserve')}
+  if(protectedDecision(payload))return citeFallbackMoney(cleanAnswerShape(checkedClaims(cleanAnswerShape(payload),question,false)),question,sources)
   const draft=String(payload.answer??''),checked=checkedClaims(cleanAnswerShape(payload),question)
   let out=leadWithFinding(cleanAnswerShape(checked),question)
   const stripped=Math.max(0,1-String(out.answer??'').length/Math.max(1,draft.length))
   const check=coherenceCheck(question,out)
-  const sources=((Array.isArray(payload.sources)?payload.sources:[]) as WritingInput['facts'][number]['source'][]).filter(s=>s.cited===true&&!/^USER_CONTEXT_/i.test(s.resource))
-  if((stripped>1/3||!check.rankingLead||check.reasons.includes('first sentence does not answer')||check.reasons.includes('incomplete donor sentence'))&&sources.some(s=>['count','export','record','receipt','pay','grant','contract'].includes(s.kind))&&(!/donor|donat|money|funding/i.test(question)||donorRanking(question,sources).length>0)) {
+  const donorQuestion=/donor|donat|money|funding/i.test(question)
+  const rankingQuestion=/\b(?:who|which)\b.*\b(?:most|highest|largest|biggest|top)\b|\btop\s+\w+/i.test(question)
+  const canReconstruct=donorQuestion||rankingQuestion?canReconstructRanking(payload,question):true
+  if(canReconstruct&&(donorQuestion||stripped>1/3||!check.rankingLead||check.reasons.includes('first sentence does not answer')||check.reasons.includes('incomplete donor sentence'))&&sources.some(s=>['count','export','record','receipt','pay','grant','contract'].includes(s.kind))) {
     const input:WritingInput={question,period:{kind:'all',label:''},facts:sources.filter(s=>!['speech','bill'].includes(s.kind)).flatMap((source,i)=>String(source.snippet??'').split(/\n+/).map((text,j)=>({id:i*100+j+1,text,source,coverage:/^coverage(?:-|$)/.test(source.resource)||/^Coverage:|^These are party receipts|^Federal AEC|^Opax added|^This selection|^It excludes|^Amounts are|^Based on AEC/i.test(text)})))}
     const fallback=proseFallback(input),audited=checkedClaims(fallback as unknown as Record<string,unknown>,question)
     if(Object.keys((audited.citations??{}) as object).every(id=>sources.some(s=>id===s.resource||id.startsWith(s.resource+'/')))&&!auditPayload(question,audited).findings.length&&coherenceCheck(question,audited).pass&&String(audited.answer??'').length>40){
@@ -112,7 +155,7 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
     const lead=`The selected excerpts do not establish how ${comparison[1]} and ${comparison[2]} differ on ${comparison[3]}.`,prefix=lead+'\n\n',offset=Array.from(prefix).length
     const citations=Object.fromEntries(Object.entries(out.citations??{}).map(([id,ranges])=>[id,(ranges as number[][]).map(([a,b])=>[a+offset,b+offset])])) as Record<string,number[][]>
     for(const id of Object.keys(citations))citations[id].unshift([0,Array.from(lead).length])
-    out={...out,answer:prefix+String(out.answer??''),citations,coherence:{stripped_ratio:stripped,fallback:true,method:'checked_points_with_limit'}}
+    out={...out,answer:prefix+String(out.answer??''),answer_decision:'limitation',citations,coherence:{stripped_ratio:stripped,fallback:true,method:'checked_points_with_limit'}}
   }
   const years=[...new Set([...question.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>m[0]))].sort()
   const countData=sources.filter(s=>s.kind==='count'&&!/^coverage(?:-|$)/.test(s.resource))
@@ -121,9 +164,9 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
     const citations=Object.fromEntries(Object.entries(out.citations??{}).map(([id,ranges])=>[id,(ranges as number[][]).map(([a,b])=>[a+offset,b+offset])])) as Record<string,number[][]>
     const id=Object.keys(citations).find(id=>id===countData[0].resource||id.startsWith(countData[0].resource+'/'))
     if(id)citations[id].unshift([0,Array.from(lead).length])
-    out={...out,answer:prefix+String(out.answer??''),citations,coherence:{stripped_ratio:stripped,fallback:true,method:'combined_count_limit'}}
+    out={...out,answer:prefix+String(out.answer??''),answer_decision:'limitation',citations,coherence:{stripped_ratio:stripped,fallback:true,method:'combined_count_limit'}}
   }
   // Preserve diagnostics through repeated cache/boundary checks without creating them on unchanged answers.
   if(stripped>0&&!out.coherence)out={...out,coherence:{stripped_ratio:stripped,fallback:false}}
-  return out
+  return cleanAnswerShape(citeFallbackMoney(out,question,sources))
 }

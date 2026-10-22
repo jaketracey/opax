@@ -121,6 +121,10 @@ for(const question of ['Did Westpac give money to One Nation in most years?','Wh
 })
 test('ranking party scope reads the selected calculation URL, including encoded party labels',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-labor-2023.json',import.meta.url)))
+ const bad='Avery Example received $2,000,000.',shift=bad.length+2
+ f.payload.answer=bad+'\n\n'+f.payload.answer
+ f.payload.citations=Object.fromEntries(Object.entries(f.payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+shift,b+shift])]))
+ f.payload.citations['receipt-ranking-1/t/body/0']=[[0,bad.length]]
  const out=api.groundAnswerPayload(f.payload,f.question);assert.match(out.answer.split('\n')[0],/Pratt Holdings Pty Ltd/);assert.match(out.answer.split('\n')[0],/2,000,000/);assert.match(out.answer.split('\n')[0],/2023[–-]24/);assert.equal(coherenceCheck(f.question,out).pass,true)
 })
 test('an affirmative misattributed figure cannot become a protected decision by adding a limitation',()=>{
@@ -131,7 +135,7 @@ test('an affirmative misattributed figure cannot become a protected decision by 
 test('selected by-person counts retain both comparison figures in the direct lead',()=>{
  const question='Compare how often Peter Dutton and Anthony Albanese spoke about immigration.',answer='Peter Dutton spoke about immigration more often than Anthony Albanese.'
  const sources=[['fact-3','244 chamber speeches labelled immigration by Anthony Albanese'],['fact-4','578 chamber speeches labelled immigration by Peter Dutton']].map(([resource,snippet])=>({resource,kind:'count',title:'Selected speech counts',snippet,cited:true}))
- const out=api.groundAnswerPayload({answer,sources,citations:Object.fromEntries(sources.map(s=>[s.resource+'/t/body/0',[[0,answer.length]]]))},question)
+ const out=api.groundAnswerPayload({answer,answer_decision:'answer',sources,citations:Object.fromEntries(sources.map(s=>[s.resource+'/t/body/0',[[0,answer.length]]]))},question)
  assert.match(out.answer.split('\n')[0],/578/);assert.match(out.answer.split('\n')[0],/244/);assert.match(out.answer.split('\n')[0],/Peter Dutton/);assert.match(out.answer.split('\n')[0],/Anthony Albanese/);assert.equal(coherenceCheck(question,out).pass,true)
 })
 test('proseFallback never turns USER_CONTEXT into selected calculation evidence',()=>{

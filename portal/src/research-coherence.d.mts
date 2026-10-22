@@ -7,5 +7,7 @@ export function coherenceCheck(question:string,payload:any,options?:{direct?:boo
 export function citationHasSentence(text:string,range:unknown):boolean
 
 export function protectedDecision(payload:any):boolean
+export function answerDecision(payload:any):import('./research-types').AnswerDecision|undefined
+export function canReconstructRanking(payload:any,question:string):boolean
 
 export function selectedDonorFacts(question:string,sources?:RankingSource[]):DonorRow[]

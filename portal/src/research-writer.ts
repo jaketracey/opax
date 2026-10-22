@@ -1,16 +1,28 @@
 import { generateText } from 'ai'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, type WritingInput } from './research-writing'
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
 import type { ResearchOptions } from './research-loop'
 import {groundAnswerPayload} from './research-grounding'
 import {auditPayload} from './research-claim-audit.mjs'
+import {protectedDecision,donorRanking,answerDecision,canReconstructRanking} from './research-coherence.mjs'
 import type { QualitativeAnswer, ResearchStats } from './research-types'
 
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
-    const fallback=()=>{stats.coherence={...stats.coherence,fallback:true};return {...proseFallback(input),coherence:{fallback:true}}}, credits=options.creditCooldown ?? researchCreditCooldown
+    let lastDraft:QualitativeAnswer|null=null
+    const fallback=()=>{
+      stats.coherence={...stats.coherence,fallback:true}
+      if(lastDraft&&donorRanking(input.question,input.facts.map(f=>f.source)).length&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
+        const checked=groundAnswerPayload(lastDraft as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
+        if(protectedDecision(checked))return {...checked,answer_decision:answerDecision(checked),coherence:{fallback:true}}
+        const lead='A reliable donor ranking is not established here.',prefix=lead+'\n\n',offset=Array.from(prefix).length
+        const citations=Object.fromEntries(Object.entries(checked.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+offset,b+offset] as [number,number])]))
+        return {...checked,answer:prefix+checked.answer,answer_decision:'limitation' as const,citations,coherence:{fallback:true}}
+      }
+      return {...proseFallback(input),coherence:{fallback:true}}
+    }, credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
     const required=proseFallback(input),lead=required.answer.split('\n')[0]
     const headlineRequired=/highest|most|top|largest|biggest/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
@@ -61,10 +73,12 @@ export function createAnswerWriter(options: ResearchOptions) {
         Object.assign(turn,{input:inputTokens,output:outputTokens,cached_input:result.usage.inputTokenDetails?.cacheReadTokens??0,cost_usd:cost,provider:meta?.provider??'',ms:Date.now()-started})
         if(stats.tokens.input+stats.tokens.output>Math.min(160000,Number(options.tokens ?? 96000)))return fallback()
         let raw;try{raw=JSON.parse(result.text.replace(/^```(?:json)?\s*|\s*```$/g,''))}catch{return fallback()}
+        lastDraft=draftWrittenAnswer(raw,activeInput)
         const verified=verifyWrittenAnswer(raw,activeInput)
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
         const audit=auditPayload(input.question,verified)
         const checked=groundAnswerPayload(verified as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
+        if(protectedDecision(verified))return checked
         const draft=Array.isArray(raw.sentences)?raw.sentences.map((s:{text?:string})=>s.text??'').join('\n\n'):''
         const dropped=Array.isArray(raw.sentences)&&raw.sentences.some((s:{text?:string})=>{const words=(s.text??'').toLowerCase().match(/[\p{L}\p{N}]+/gu)??[];return words.length>0&&words.filter((w:string)=>verified.answer.toLowerCase().includes(w)).length/words.length<0.8})
         if(pass===0&&(audit.findings.length||dropped||!keepsHeadline(checked.answer))&&remainingMs-(Date.now()-startedWriting)>=500){

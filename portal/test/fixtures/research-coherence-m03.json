@@ -1,0 +1,135 @@
+{
+  "question": "How much did gambling-industry donors give to each party, and which party's MPs spoke most about gambling?",
+  "payload": {
+    "answer": "A later Senate passage says the major parties were given more than $10 million by gambling companies and lobby groups.\n\nA Greens-indexed Senate motion states the gambling industry donated almost $3 million to the Liberal, Labor and Australian Conservatives parties in 2017-18.\n\nAnother representatives passage gives Labor about $5 million.",
+    "sources": [
+      {
+        "resource": "3a9f00aad3ff46caa54d627fb6aa5f07",
+        "slug": "speech-1494052",
+        "title": "Larissa Waters — MOTIONS — 2019-02-13",
+        "href": "/doc/speech-1494052",
+        "kind": "speech",
+        "speaker": "Larissa Waters",
+        "party": "Greens",
+        "speaker_type": "member",
+        "person_id": "10764",
+        "speaker_attribution": null,
+        "state": "federal",
+        "chamber": "senate",
+        "date": "2019-02-13",
+        "url": null,
+        "snippet": "I move:\n\nThat the Senate—\n\n(a) notes that:\n\n(i) the gambling industry donated almost $3 million dollars to the Liberal, Labor and Australian Conservatives political parties in 2017-18,\n\n(ii) these donations came from sports betting companies, casinos and poker machine operators,\n\n(iii) the Australian Hotels Association was the second largest political donor in the country for the 2017-18 year, with declared political gifts leaping from $153,000 in 2016-17 to $1.1 million last financial year,\n\n(iv) Australia has the world's worst per-capita gambling losses of $1,000 a head,\n\n(v) there are at …",
+        "cited": false
+      },
+      {
+        "resource": "6a600425312249cfb937ecf6572d6e77",
+        "slug": "speech-1205072",
+        "title": "Alison Penfold — Bills — 2026-08-12",
+        "href": "/doc/speech-1205072",
+        "kind": "speech",
+        "speaker": null,
+        "party": null,
+        "speaker_type": "multi_speaker",
+        "person_id": null,
+        "speaker_attribution": "multi_speaker",
+        "speaker_display": "Several speakers",
+        "debate": "Bills",
+        "participants": [
+          {
+            "name": "Alison Penfold",
+            "person_id": "11046"
+          },
+          {
+            "name": "Susan Templeman",
+            "person_id": "10873"
+          },
+          {
+            "name": "Allegra Spender",
+            "person_id": "11001"
+          },
+          {
+            "name": "Libby Coker",
+            "person_id": "10921"
+          },
+          {
+            "name": "Jason Wood",
+            "person_id": "10679"
+          },
+          {
+            "name": "Louise Miller-Frost",
+            "person_id": "10968"
+          },
+          {
+            "name": "Zali Steggall",
+            "person_id": "10941"
+          },
+          {
+            "name": "Andrew Gee",
+            "person_id": "10883"
+          },
+          {
+            "name": "Anika Wells",
+            "person_id": "10931"
+          },
+          {
+            "name": "Sophie Scamps",
+            "person_id": "10989"
+          }
+        ],
+        "state": "federal",
+        "chamber": "representatives",
+        "date": "2026-08-12",
+        "url": null,
+        "snippet": "Amongst those people that were coming to see the MPs were gambling companies. Gambling companies pay big money, and in return they get direct private access to the major parties. As election time approaches and the campaigns ramp up, so do the political donations. If you want to know why a comprehensive ban hasn't been implemented so far, if you want to know why we're getting half measures instead of total reform, follow the money. According to donor records, the Labor Party has collected about $5 million in gambling related donations in five years, including about $1.5 million in the …",
+        "cited": true
+      },
+      {
+        "resource": "ed9ab66b61ff4bf283755cf5312457a4",
+        "slug": "speech-1205794",
+        "title": "Sue Lines — Bills — 2026-08-19",
+        "href": "/doc/speech-1205794",
+        "kind": "speech",
+        "speaker": null,
+        "party": null,
+        "speaker_type": "multi_speaker",
+        "person_id": null,
+        "speaker_attribution": "multi_speaker",
+        "speaker_display": "Several speakers",
+        "debate": "Bills",
+        "participants": [
+          {
+            "name": "Sue Lines",
+            "person_id": "10782",
+            "role": "President"
+          },
+          {
+            "name": "Nick McKim",
+            "person_id": "10841"
+          }
+        ],
+        "state": "federal",
+        "chamber": "senate",
+        "date": "2026-08-19",
+        "url": null,
+        "snippet": "5:23 pm\n\nI will now deal with the second reading amendment circulated by the Australian Greens.\n\nAustralian Greens' circulated amendment—\n\nAt the end of the motion, add , but the Senate:\n\n(a) notes that the major parties have been given more than $10 million by gambling companies and lobby groups;",
+        "cited": true
+      }
+    ],
+    "citations": {
+      "ed9ab66b61ff4bf283755cf5312457a4/t/body/394-709": [
+        [
+          0,
+          118
+        ]
+      ]
+    },
+    "research": {
+      "mode": "planner",
+      "failure": "grounding"
+    },
+    "coherence": {
+      "fallback": true
+    }
+  },
+  "origin": "Saved paired GOLD-M03, c6348c221; monetary sentences and their three original source records only."
+}

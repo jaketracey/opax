@@ -85,7 +85,7 @@ test('a second writer receives only surviving evidence, with both reservations s
 test('year-filtered disclosed-donor tables recover their leading donor and period',()=>{
  const source=(resource,snippet)=>({resource,snippet,kind:'receipt',title:'Labor federal disclosed donor records',cited:true})
  const sources=[source('receipt-ranking-1','Pratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-2','United Workers Union: $953,447, 14 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-0','Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 119 donors during 2023–24. It excludes government funding.')]
- const answer='Other donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-2/t/body/0':[[0,answer.length]]}}
+ const bad='Avery Example received $2,000,000.',answer=bad+'\n\nOther donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-1/t/body/0':[[0,bad.length]],'receipt-ranking-2/t/body/0':[[bad.length+2,answer.length]]}}
  const out=api.groundAnswerPayload(p,'Who gave the most disclosed funding to Labor in 2023?')
  assert.match(out.answer.split('\n')[0],/2023–24.*Pratt Holdings Pty Ltd.*2,000,000/)
  assert.equal(coherenceCheck('Who gave the most disclosed funding to Labor in 2023?',out).pass,true);assert.equal(auditPayload('',out).findings.length,0)
@@ -103,8 +103,12 @@ test('selected donor initials never turn a complete organisation name into a sen
  const out=api.groundAnswerPayload(api.proseFallback(input),input.question)
  assert.match(out.answer,/“J\.J\. Richards & Sons Pty Ltd”.*1,000,000/);assert.ok(out.citations['fact-2/t/body/0']);assert.equal(auditPayload(input.question,out).findings.length,0);assert.equal(coherenceCheck(input.question,out).pass,true)
 })
-test('native ranked-money tables retain the true leader when a selected prose subset omits it',()=>{
+test('native ranked-money tables repair a rejected draft figure with the selected leader',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-native-donors.json',import.meta.url)))
+ const bad='Avery Example received $55,227,183.',shift=bad.length+2
+ f.payload.answer=bad+'\n\n'+f.payload.answer
+ f.payload.citations=Object.fromEntries(Object.entries(f.payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+shift,b+shift])]))
+ f.payload.citations[f.payload.sources.find(s=>s.snippet.includes('$55,227,183')).resource+'/t/body/0']=[[0,bad.length]]
  const out=api.groundAnswerPayload(f.payload,f.question)
  assert.match(out.answer.split('\n')[0],/1998[–-]99 to 2025[–-]26.*Westpac Banking Corporation.*55,227,183/)
  assert.equal(coherenceCheck(f.question,out).pass,true);assert.equal(auditPayload(f.question,out).findings.length,0)

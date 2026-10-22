@@ -1,19 +1,17 @@
-import {sentenceParts} from './research-claim-audit.mjs'
+import {sentenceParts,auditPayload} from './research-claim-audit.mjs'
 import {answerStyleChecks} from './research-answer-style.mjs'
 // Shared, deterministic checks; evidence remains data and the claim audit remains authoritative.
 export const danglingOpener = /^(?:[-*•]\s*|\d+[.)]\s*)?(?:other\b|also\b|in addition\b|further(?:more)?\b|however\b|meanwhile\b|additionally\b|moreover\b|and\b|another\b|the runners-up\b)/i
 const folded = s => String(s??'').toLowerCase().replace(/[–—]/g,'-').replace(/[^\p{L}\p{N}]+/gu,' ').trim()
-/** These decisions are authoritative; retained evidence is not permission to change them. */
-export function protectedDecision(payload) {
-  if(payload?.answered===false || /^(?:coverage_only|evidence_gap|needs_question|needs_scope|needs_period|clarification|declined|refused|moderated|blocked)$/.test(payload?.answer_status??''))return true
-  const first=String(payload?.answer??'').trim().split(/\n\s*\n/)[0].split(/(?<=[.!?])\s+(?=[A-Z])/)[0]
-  if(/exhaustive count|complete (?:historical )?total/i.test(first)&&String(payload?.answer??'').includes('\n\n')&&payload?.sources?.some(s=>s.cited&&s.kind==='speech'))return false
-  if(/^(?:Please (?:name|specify|clarify|choose|give)|I (?:cannot|can't) help|There is not enough evidence)/i.test(first))return true
-  const decline=/(?:cannot|can't|could not|do not|does not) establish|cannot be (?:established|determined|answered)|do not identify|not (?:evidence|proof)|does not prove/i.test(first)
-  const decisionSubject=/^(?:OPAX|(?:The|These|This|Selected|Retrieved)\b[^$“”"]{0,180}\b(?:records?|facts|evidence|returns|receipts|selection|passages?|material|coverage|Census)\b|A donation\b)/i.test(first)
-  const affirmative=/\b(?:paid|earned|received|gave|donated|provided|recorded|said)\b/i.test(first.split(/\b(?:cannot|do not|does not)\b/i)[0])
-  return decline&&!affirmative&&(decisionSubject||/^[^$“”"]+cannot be (?:established|determined|answered)/i.test(first))
+/** Typed decisions and legacy status codes; prose wording grants no permission. */
+export function answerDecision(payload) {
+  if(payload?.answered===false)return 'refusal'
+  const status={coverage_only:'limitation',evidence_gap:'limitation',needs_question:'clarification',needs_scope:'clarification',needs_period:'clarification',clarification:'clarification',declined:'refusal',refused:'refusal',moderated:'refusal',blocked:'refusal'}[payload?.answer_status]
+  if(status)return status
+  if(['checked_points_with_limit','combined_count_limit','specific_limitation'].includes(payload?.coherence?.method))return 'limitation'
+  return ['answer','limitation','clarification','refusal','preserve'].includes(payload?.answer_decision)?payload.answer_decision:undefined
 }
+export function protectedDecision(payload) {const decision=answerDecision(payload);return !!decision&&decision!=='answer'}
 const partyAliases=[['One Nation',/\b(?:one nation|pauline hanson[’']?s?(?: party)?)\b/i],['Labor',/\b(?:labor|alp)\b/i],['Liberal',/\bliberal(?: party)?\b/i],['Greens',/\bgreens?\b/i],['Nationals',/\b(?:nationals?|national party)\b/i],['LNP',/\b(?:lnp|liberal national party)\b/i]]
 const sourceMetadata=source=>{
   let party='',jurisdiction=''
@@ -72,6 +70,22 @@ function donorRows(question,sources=[],requireRanking=true) {
 export function donorRanking(question,sources=[]){return donorRows(question,sources,true)}
 /** Parse only selected donor/recipient relationships, also for an explicit amount lookup. */
 export function selectedDonorFacts(question,sources=[]){return donorRows(question,sources,false)}
+function citesDraftClaim(payload,text,resource) {
+  const answer=String(payload.answer??''),at=answer.indexOf(text);if(at<0)return false
+  const from=Array.from(answer.slice(0,at)).length,until=from+Array.from(text).length
+  return Object.entries(payload.citations??{}).some(([id,ranges])=>(id===resource||id.startsWith(resource+'/'))&&Array.isArray(ranges)&&ranges.some(([a,b])=>a<until&&b>from))
+}
+/** Proof comes from the original draft, never from the presence of spare facts. */
+export function canReconstructRanking(payload,question) {
+  if(protectedDecision(payload))return false
+  const sources=(payload.sources??[]).filter(s=>s.cited&&!/^USER_CONTEXT_/i.test(s.resource)),audit=auditPayload(question,payload)
+  const rejected=audit.findings.filter(c=>c.type==='figure')
+  if(/donor|donat|money|funding/i.test(question)){
+    const rows=donorRanking(question,sources)
+    return rejected.some(c=>c.unit?.startsWith('AUD')&&rows.some(row=>Number(c.value)===row.value&&citesDraftClaim(payload,c.text,row.source.resource)))
+  }
+  return rejected.some(c=>sources.some(source=>citesDraftClaim(payload,c.text,source.resource)&&auditPayload(question,{answer:source.snippet,sources:[source],citations:{}}).claims.some(f=>f.type==='figure'&&f.value===c.value&&f.unit===c.unit)))
+}
 export function coherenceCheck(question,payload,{direct=answerStyleChecks(question,String(payload.answer??''),{sources:payload.sources??[],ranking_rows:donorRanking(question,payload.sources??[])}).direct_first_sentence==='pass'}={}) {
   const text=String(payload.answer??''),first=sentenceParts(text)[0]?.text.trim().split('\n')[0]??'',chars=Array.from(text)
   const orphan=[]

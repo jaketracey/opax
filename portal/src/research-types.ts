@@ -25,8 +25,11 @@ export interface Passage {
   /** The search query that found it. */
   query?: string
 }
+/** `preserve` is the conservative migration decision for a figure-free legacy draft. */
+export type AnswerDecision = 'answer' | 'limitation' | 'clarification' | 'refusal' | 'preserve'
 export interface QualitativeAnswer {
   answer: string
+  answer_decision?: AnswerDecision
   citations: Record<string, [number, number][]>
   sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; kind: string; claim_atoms?: (ClaimAtom & {periodEvidenceId?:string})[] }[]
   /** Some or all of the answer's points could not be matched to a passage and carry no citation. */

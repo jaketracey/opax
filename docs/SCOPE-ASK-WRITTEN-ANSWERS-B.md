@@ -1,5 +1,7 @@
 # Ask coherence: review fix and follow-up evidence
 
+This is the fix 1 evaluation record. The subsequent [structural decision fix and offline replay](SCOPE-ASK-COHERENCE-FIX2.md) resolve its P1 wording bypass and GOLD-M03 citation finding; the original measurements below remain unchanged.
+
 **Scope:** local review only. No production OPAX HTTP requests, push or deployment. Claim-plan C was not changed or enabled. Roster/speaker name binding remains in place; all financial audit functions remain literal r4.
 
 The local Hanson failure came from two rejected owner associations: the old fallback turned “Westpac Banking Corporation gave One Nation …” into a subject ending “received the most …”, and the audit treated “Smaller” in a later donor sentence as a named owner. Deleting those clauses removed the leader and left a dangling conjunction. A citation anchored to removed sentence punctuation survived as an orphan. The new boundary preserves authoritative refusals, validates the requested ranking scope, and reconstructs only from selected evidence.

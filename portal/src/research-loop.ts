@@ -20,6 +20,7 @@ import { ResearchError, type Passage, type QualitativeAnswer, type Research, typ
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
 import { researchReservationUsd, researchTurnReservationUsd } from './research-budget'
 import { researchCreditCooldown, isResearchCreditError, type ResearchCreditCooldown } from './research-credit'
+import {answerDecision} from './research-coherence.mjs'
 
 export const RESEARCH_MAX_ROUNDS = 6
 export const RESEARCH_MAX_CALLS = 10
@@ -261,14 +262,14 @@ export function createResearch(options: ResearchOptions): Research {
     // Record facts are rows from the structured tools, bound by factSheet; passages (search, read) are cited as points.
     const PASSAGE_TOOLS = ['find_people', 'find_quotes', 'search', 'person_quotes', 'read_passage']
     const recordFacts = () => {
-      const all = factSheet(results).facts, tools = new Map<number, string>()
+      const all = factSheet(results).facts, tools = new Map<number, string>(),coverage=new Set<number>()
       let previous = 0
       for (const result of results) {
         const next = previous + factSheet([result]).facts.length
-        if (!PASSAGE_TOOLS.includes(result.tool)) for (let id = previous + 1; id <= next; id++) tools.set(id, result.tool)
+        if (!PASSAGE_TOOLS.includes(result.tool)) for (let id = previous + 1; id <= next; id++){tools.set(id, result.tool);if(result.data?.coverage_only)coverage.add(id)}
         previous = next
       }
-      return { all, tools }
+      return { all, tools,coverage }
     }
     const validIds = (ids: unknown, max: number): ids is number[] => Array.isArray(ids) && ids.length > 0 && ids.length <= max && new Set(ids).size === ids.length && ids.every(id => Number.isInteger(id))
     // Answer fact ids are a selection, not a contract: repeated or stray ids are dropped rather than failing the answer.
@@ -277,14 +278,14 @@ export function createResearch(options: ResearchOptions): Research {
     // its record. Speech counts must belong to a named person or party when the question names one; an unresolved
     // or ambiguous person keeps facts out, as it keeps passages out.
     const factLines = (ids: number[], why: (reason: string) => void) => {
-      const { all, tools } = recordFacts()
+      const { all, tools,coverage } = recordFacts()
       const required = [...context.named.people.map(n => `person:${n}`), ...context.named.parties.map(n => `party:${n}`)]
       return ids.flatMap(id => {
         const fact = all.find(f => f.id === id), tool = tools.get(id)
         if (!fact || !tool) { why(`fact ${id}: not a record fact`); return [] }
         if (context.named.ambiguous || unresolvedPersonAsked(question, context.named)) { why(`fact ${id}: named_unresolved`); return [] }
         if (required.length && ['count_speeches', 'speech_trend', 'member_votes'].includes(tool) && !fact.entities?.some(e => required.includes(e))) { why(`fact ${id}: outside_named_scope`); return [] }
-        return [{ fact, tool }]
+        return [{ fact, tool,coverage:coverage.has(id) }]
       })
     }
     const compose = (facts: ReturnType<typeof factLines>, points: QualitativeAnswer | null): QualitativeAnswer => {
@@ -292,7 +293,7 @@ export function createResearch(options: ResearchOptions): Research {
       const calculated = facts.length === 1 && !points ? results.find(r => r.data?.calculated_answer && r.cite.some(c => c.label === facts[0].fact.text)) : undefined
       if (calculated) {
         const p = calculated.data!.payload as QualitativeAnswer
-        return { answer: p.answer, citations: p.citations, sources: p.sources.map(s => ({ ...s, url: new URL(s.url ?? s.href, context.deps.origin ?? 'https://opax.com.au').href, slug: s.slug ?? '' })) }
+        return { answer: p.answer, answer_decision:answerDecision(p)??'answer', citations: p.citations, sources: p.sources.map(s => ({ ...s, url: new URL(s.url ?? s.href, context.deps.origin ?? 'https://opax.com.au').href, slug: s.slug ?? '' })) }
       }
       let text = ''
       const citations: QualitativeAnswer['citations'] = {}, sources: QualitativeAnswer['sources'] = []
@@ -324,7 +325,7 @@ export function createResearch(options: ResearchOptions): Research {
       }
       // Record facts are always cited: uncited points beside them make the answer partly cited.
       const status = points?.answer_status === 'uncited' && facts.length ? 'partly_cited' : points?.answer_status
-      return { answer: text, citations, sources, ...(status ? { answer_status: status } : {}) }
+      return { answer: text, answer_decision:!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}) }
     }
     // One answer call, checked: cited points, uncited points that failed only soft checks, record facts; else, with
     // nothing usable written, the best verified passages in their own words. Null when none of those exists.
@@ -394,7 +395,7 @@ export function createResearch(options: ResearchOptions): Research {
       inputSchema: jsonSchema<{ reason: string }>({ type: 'object', properties: { reason: { type: 'string', enum: ['out_of_scope', 'private_person', 'causation', 'ambiguous'] } }, required: ['reason'], additionalProperties: false }),
       execute: args => invoke({ tool: 'decline', args }, async () => {
         const messages: Record<string, string> = { out_of_scope: 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.', private_person: 'I cannot provide private information about a private person. OPAX can help with public parliamentary and disclosure records.', causation: 'Public donation and voting records do not establish that money caused a vote. I can help compare the disclosed records without making that allegation.', ambiguous: 'Please name the person, place, period or public record you mean so I can answer the whole question.' }
-        qualitative = { answer: messages[args.reason], citations: {}, sources: [] }; finished = true
+        qualitative = { answer: messages[args.reason], answer_decision:args.reason==='ambiguous'?'clarification':'refusal', citations: {}, sources: [] }; finished = true
         return { tool: 'decline', ok: true, data: {}, cite: [], notes: [] }
       }, true),
     })
