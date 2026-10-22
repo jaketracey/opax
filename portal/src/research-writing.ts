@@ -6,10 +6,11 @@ import type { QualitativeAnswer } from './research-types'
 import { plainAnswerPayload } from './research-language'
 import { donorRanking,selectedDonorFacts,answerDecision,canReconstructRanking } from './research-coherence.mjs'
 import {auditPayload} from './research-claim-audit.mjs'
+import {rankingCoverageMatches} from './research-ranking-scope.mjs'
 
 export const ANSWER_WRITING_VERSION = 'written-answer-8'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
-export interface WritingInput { question: string; period: Period; facts: WritingFact[] }
+export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
@@ -83,7 +84,7 @@ function assemble(lines: WrittenSentence[], input: WritingInput): QualitativeAns
       ;(citations[evidenceId] ??= []).push([start,Array.from(answer).length])
     }
   }
-  return plainAnswerPayload({ answer, answer_decision:lines.length&&lines.every(l=>l.coverage)?'limitation' as const:'answer' as const, citations, sources:[...sources.values()] })
+  return plainAnswerPayload({ answer, answer_decision:lines.length&&lines.every(l=>l.coverage)?'limitation' as const:'answer' as const, ...(input.constraints?{answer_scope:input.constraints}:{}), citations, sources:[...sources.values()] })
 }
 const finish = (s: string) => /[.!?]$/.test(s) ? s : s+'.'
 const payRate = (s: string) => /^(.+?): (\$\d[\d,]*(?:\.\d+)?) a year as (.+?), (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2});/.exec(s)
@@ -136,16 +137,16 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     const total=input.facts.flatMap(f=>{const m=f.source.kind==='record'?/^Donor:\s*(.+?)\s*—[\s\S]*?(\$[\d,.]+) in disclosed political receipts/.exec(f.text):null;return m&&matchesOwner(m[1])?[{f,m}]:[]})[0]
     if(total)return assemble([{text:`${total.m[1]} gave ${total.m[2]} in disclosed political receipts in this published selection, but these selected facts do not name which parties received the funding.`,facts:[total.f.id]}],input)
   }
-  const donors=donorRanking(input.question,input.facts.map(f=>f.source))
+  const donors=donorRanking(input.question,input.facts.map(f=>f.source),input.constraints)
   const donorEvidence=input.facts.some(f=>f.source.kind==='receipt'||/gave .+? \$[\d,]+ \(federal disclosures|\|\s*Donor\s*\|\s*Disclosed receipts/i.test(f.text+'\n'+f.source.snippet))
-  const wantsDonorRanking=/\b(?:who|which (?:company|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(input.question)
+  const wantsDonorRanking=/\b(?:who|which (?:company|corporation|person|individual|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(input.question)
   if(donorEvidence&&(wantsDonorRanking||/\bmost years\b/i.test(input.question))&&!donors.length){
     const text=/\bmost years\b/i.test(input.question)?'The selected aggregate disclosed receipts do not establish whether giving occurred in most years.':'The selected disclosed receipts do not establish a donor ranking for the requested party, period and jurisdiction.'
     const coverage=input.facts.filter(f=>f.coverage)
     return assemble([{text,facts:(coverage.length?coverage:input.facts.slice(0,1)).map(f=>f.id),coverage:true}],input)
   }
   if(/\bhow much\b/i.test(input.question)&&!/\bmost years\b/i.test(input.question)){
-    const selected=selectedDonorFacts(input.question,input.facts.map(f=>f.source))
+    const selected=selectedDonorFacts(input.question,input.facts.map(f=>f.source),input.constraints)
     const named=selected.filter(r=>{const first=r.name.split(/\s+/)[0];return key(input.question).includes(key(r.name))||first.length>=4&&new RegExp('\\b'+first.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i').test(input.question)&&selected.filter(x=>x.name.split(/\s+/)[0].toLowerCase()===first.toLowerCase()).length===1})
     if(named.length===1&&named[0].period){
       const row=named[0],text=`Across disclosed returns from ${row.period} in OPAX’s published selection, ${row.name} provided disclosed funding to ${row.party}: ${row.amount}.`,line={text,facts:input.facts.filter(f=>f.source.resource===row.source.resource).map(f=>f.id)},coverage=coverageSentence(input)
@@ -153,6 +154,8 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     }
   }
   if(donors.length && donors.every(r=>r.period)) {
+    const resources=new Set(donors.map(row=>row.source.resource))
+    input={...input,facts:input.facts.filter(f=>resources.has(f.source.resource)||f.coverage&&rankingCoverageMatches(input.question,f.source,donors,input.constraints))}
     // Old cached tool facts carry the aggregate range in their coverage source.
     input={...input,facts:input.facts.map(f=>{const row=donors.find(r=>r.source.resource===f.source.resource);if(!row||!f.text.includes('(federal disclosures)'))return f;const text=f.text.replace('(federal disclosures)',`(federal disclosures; financial years ${row.period})`);return {...f,text,source:{...f.source,snippet:text}}})}
     input={...input,facts:input.facts.map(f=>{const rows=donors.filter(r=>r.source.resource===f.source.resource);const fields=rows.map(r=>`Donor: ${r.name} — ${r.amount}. Financial years: ${r.period}.`).filter(line=>!f.source.snippet.includes(line));return fields.length?{...f,source:{...f.source,snippet:f.source.snippet+'\n'+fields.join('\n')}}:f})}
@@ -396,7 +399,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   const written={...assemble(lines,input),answer_decision:decision??'answer' as const}
   if(repairLead&&primary) {
     const draft=draftWrittenAnswer(raw,input)
-    if(donorRanking(input.question,input.facts.map(f=>f.source)).length&&(!draft||!canReconstructRanking(draft,input.question)))return written
+    if(donorRanking(input.question,input.facts.map(f=>f.source),input.constraints).length&&(!draft||!canReconstructRanking(draft,input.question)))return written
     const fallback=proseFallback(input),lead=fallback.answer.split('\n\n')[0],end=Array.from(lead).length
     if(!tokens(lead).includes(primary.atom.value))return null
     const citations:QualitativeAnswer['citations']={}

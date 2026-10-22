@@ -22,6 +22,7 @@ test('loop decisions carry a typed refusal or clarification through the response
  for(const reason of ['ambiguous','causation']){
   const f=fixtures(model([reply([call('decline',{reason})])])),run=await f.run('Who gives the most money to One Nation?'),payload=api.agenticAskPayload(run,'Who gives the most money to One Nation?')
   assert.equal(payload.answer_decision,reason==='ambiguous'?'clarification':'refusal');assert.equal(payload.answer,run.qualitative.answer)
+  assert.deepEqual(payload.answer_scope,run.answer_scope);assert.ok(payload.answer_scope.period)
  }
 })
 test('multi-round happy path, finish maps selected facts to templates and matching step events',async()=>{
@@ -30,6 +31,7 @@ test('multi-round happy path, finish maps selected facts to templates and matchi
  const steps=f.events.filter(x=>x.phase==='step').map(x=>x.step);assert.equal(steps.length,6);
  for(let i=0;i<steps.length;i+=2){assert.equal(steps[i].state,'running');assert.equal(steps[i+1].state,'done');assert.equal(steps[i].id,steps[i+1].id);assert.equal(typeof steps[i+1].results,'number');assert.equal(typeof steps[i+1].ms,'number');assert.equal(steps[i].round,i/2+1);}
  assert.ok(m.doGenerateCalls.every(c=>c.maxOutputTokens<=1800));
+ assert.equal(run.answer_scope.jurisdiction,'nsw');assert.deepEqual(body.answer_scope,run.answer_scope)
 });
 test('identical scoped calls dedupe despite different property order',async()=>{
  const m=model([reply([call('count_speeches',args,'a')]),reply([call('count_speeches',{group_by:'speaker',state:'nsw',topic:'gambling'},'b')]),reply([call('finish',{facts:[1]},'c')])]),f=fixtures(m),run=await f.run();

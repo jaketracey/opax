@@ -521,7 +521,7 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       if (!finished) fail(stats.rounds >= limits.rounds || calls >= RESEARCH_MAX_CALLS ? 'steps' : answerAttempts ? 'grounding' : 'no_finish')
       await Promise.race([settle(), stopped])
-      return { steps, results, selected, ...stats, ...(qualitative ? { qualitative, points:selectedPoints } : {}) }
+      return { constraints, steps, results, selected, ...stats, ...(qualitative ? { qualitative:{...(qualitative as QualitativeAnswer),answer_scope:constraints}, points:selectedPoints } : {}) }
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
         credits.exhaust(); failed = 'research_credit_exhausted'; turnCost = 0; stats.usageUnknown = false
@@ -536,7 +536,7 @@ export function createResearch(options: ResearchOptions): Research {
       const salvaged = qualitativeRun && !context.signal.aborted ? qualitative ?? await salvage() : null
       if (!salvaged) throw stop
       stats.answer = { ...(stats.answer ?? emptyTally()), salvaged: stop.reason }
-      return { steps, results, selected, ...stats, qualitative: salvaged, points:selectedPoints }
+      return { constraints, steps, results, selected, ...stats, qualitative:{...salvaged,answer_scope:constraints}, points:selectedPoints }
     } finally {
       if (pendingTurn !== undefined) stats.turns![pendingTurn].ms = Math.max(0, Date.now() - turnStarted)
       // A provider timeout/disconnect has unknown cost: keep its reservation.

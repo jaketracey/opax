@@ -3,6 +3,7 @@ import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
 import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,donorRanking,canReconstructRanking} from './research-coherence.mjs'
 import {proseFallback,type WritingInput} from './research-writing'
+import {rankingSourceMatches} from './research-ranking-scope.mjs'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
 function checkedClaims(payload:Record<string,unknown>,question:string,promote=true):Record<string,unknown> {
@@ -134,7 +135,7 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   const rankingQuestion=/\b(?:who|which)\b.*\b(?:most|highest|largest|biggest|top)\b|\btop\s+\w+/i.test(question)
   const canReconstruct=donorQuestion||rankingQuestion?canReconstructRanking(payload,question):true
   if(canReconstruct&&(donorQuestion||stripped>1/3||!check.rankingLead||check.reasons.includes('first sentence does not answer')||check.reasons.includes('incomplete donor sentence'))&&sources.some(s=>['count','export','record','receipt','pay','grant','contract'].includes(s.kind))) {
-    const input:WritingInput={question,period:{kind:'all',label:''},facts:sources.filter(s=>!['speech','bill'].includes(s.kind)).flatMap((source,i)=>String(source.snippet??'').split(/\n+/).map((text,j)=>({id:i*100+j+1,text,source,coverage:/^coverage(?:-|$)/.test(source.resource)||/^Coverage:|^These are party receipts|^Federal AEC|^Opax added|^This selection|^It excludes|^Amounts are|^Based on AEC/i.test(text)})))}
+    const input:WritingInput={question,constraints:payload.answer_scope as WritingInput['constraints'],period:{kind:'all',label:''},facts:sources.filter(s=>!['speech','bill'].includes(s.kind)&&(!rankingQuestion||donorQuestion||rankingSourceMatches(question,s,payload.answer_scope as WritingInput['constraints']))).flatMap((source,i)=>String(source.snippet??'').split(/\n+/).map((text,j)=>({id:i*100+j+1,text,source,coverage:/^coverage(?:-|$)/.test(source.resource)||/^Coverage:|^These are party receipts|^Federal AEC|^Opax added|^This selection|^It excludes|^Amounts are|^Based on AEC/i.test(text)})))}
     const fallback=proseFallback(input),audited=checkedClaims(fallback as unknown as Record<string,unknown>,question)
     if(Object.keys((audited.citations??{}) as object).every(id=>sources.some(s=>id===s.resource||id.startsWith(s.resource+'/')))&&!auditPayload(question,audited).findings.length&&coherenceCheck(question,audited).pass&&String(audited.answer??'').length>40){
       out={...payload,...cleanAnswerShape(audited),coherence:{...((payload.coherence??{}) as object),stripped_ratio:stripped,fallback:true}}

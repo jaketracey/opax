@@ -30,6 +30,8 @@ export type AnswerDecision = 'answer' | 'limitation' | 'clarification' | 'refusa
 export interface QualitativeAnswer {
   answer: string
   answer_decision?: AnswerDecision
+  /** Resolved question constraints survive writing and cached response boundaries. */
+  answer_scope?: Partial<import('./ask-constraints').AskConstraints> & {entity_type?:string}
   citations: Record<string, [number, number][]>
   sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; kind: string; claim_atoms?: (ClaimAtom & {periodEvidenceId?:string})[] }[]
   /** Some or all of the answer's points could not be matched to a passage and carry no citation. */
@@ -47,6 +49,7 @@ export interface ResearchContext {
   execute: (step: PlanStep, round: number, custom?: (deps: ToolDeps) => Promise<ToolResult>, signal?: AbortSignal) => Promise<ToolResult>
 }
 export interface ResearchResult {
+  constraints?: import('./ask-constraints').AskConstraints
   steps: PlanStep[]
   results: ToolResult[]
   selected: number[]

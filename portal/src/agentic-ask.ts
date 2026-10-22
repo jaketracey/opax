@@ -458,6 +458,7 @@ export interface AgenticPayload {
   version: string
   research?: ResearchPayload
   qualitative?: QualitativeAnswer
+  answer_scope?: QualitativeAnswer['answer_scope']
   passage_answer?: QualitativeAnswer
   chosen_facts?: number[]
   research_failure?: string
@@ -530,7 +531,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     await progress('status', {phase:'writing'})
     const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text}))
-    const input={question,period,facts:sheet}
+    const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
     const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
     const complete=run.passage_answer ? appendWrittenPoints(written,run.passage_answer) : written
@@ -594,6 +595,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   let researched: ResearchResult | undefined
   let executionSignal = deps.signal
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
+    ...(researched?.constraints?{answer_scope:researched.constraints}:{}),
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
     ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
     ...over, timings: { ...timings, total_ms: Date.now() - t0 } })

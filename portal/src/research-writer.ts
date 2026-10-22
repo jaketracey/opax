@@ -14,7 +14,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     let lastDraft:QualitativeAnswer|null=null
     const fallback=()=>{
       stats.coherence={...stats.coherence,fallback:true}
-      if(lastDraft&&donorRanking(input.question,input.facts.map(f=>f.source)).length&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
+      if(lastDraft&&donorRanking(input.question,input.facts.map(f=>f.source),input.constraints).length&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
         const checked=groundAnswerPayload(lastDraft as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
         if(protectedDecision(checked))return {...checked,answer_decision:answerDecision(checked),coherence:{fallback:true}}
         const lead='A reliable donor ranking is not established here.',prefix=lead+'\n\n',offset=Array.from(prefix).length
