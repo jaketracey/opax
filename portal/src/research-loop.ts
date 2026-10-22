@@ -60,6 +60,7 @@ export interface ResearchOptions {
 /** Fetch-based SDK loop. All provider and tool state belongs to this request. */
 export function createResearch(options: ResearchOptions): Research {
   const research: Research = async (question, context) => {
+    question = context.named.resolvedQuestion ?? question
     const qualitativeRun = !classifyAgentic(question).shape || classifyAgentic(question).rule === 'electorate-data'
     let constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {})
     context.constraints = constraints

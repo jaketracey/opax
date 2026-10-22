@@ -4,6 +4,7 @@
 //   npm run research:local -- [questionIds...] [--model slug] [--port 8967] [--keep] [--json out.json]
 //
 // --serve starts the server without Asks; --portal PATH selects a detached baseline checkout.
+// --local-data disables remote bindings and blocks outbound requests except the model provider.
 // Remote public D1/KV reads are retained; telemetry is local and KV writes are suppressed.
 // Starts `wrangler dev` from portal/ with a generated config whose D1 and KV bindings are
 // remote (real data), loads secrets from portal/.dev.vars (OPENROUTER_API_KEY, ARAG_KB_ID,
@@ -24,6 +25,7 @@ const args = process.argv.slice(2);
 const flag = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
 const portal = flag('--portal', sourcePortal);
 const serveOnly = args.includes('--serve');
+const localData = args.includes('--local-data');
 const port = Number(flag('--port', 8967));
 const model = flag('--model', 'deepseek/deepseek-v4.1-flash');
 const keep = args.includes('--keep'), reuse = args.includes('--reuse');
@@ -60,6 +62,12 @@ function localConfig() {
   // With a `secrets` block wrangler dev only exposes the declared names, so declare exactly the ones .dev.vars holds.
   mkdirSync(portal + '.wrangler', {recursive: true});
   writeFileSync(portal + '.wrangler/research-entry.ts', `import worker from '../src/index.ts';
+${localData ? `const modelFetch = globalThis.fetch.bind(globalThis);
+globalThis.fetch = (request, init) => {
+  const url = new URL(typeof request === 'string' || request instanceof URL ? request : request.url);
+  if (url.hostname !== 'openrouter.ai' && !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)) throw new Error('Local-data evaluation blocked a non-model remote request');
+  return modelFetch(request, init);
+};` : ''}
 export default { ...worker, fetch(request, env, ctx) {
   const assets = env.ASSETS; env.ASSETS = {fetch(request) {const url = new URL(request.url); return /^\\/(?:bills|divisions)\\//.test(url.pathname) ? fetch(new URL(url.pathname, ${JSON.stringify(assetOrigin)})) : assets.fetch(request);}};
   for (const key of ${JSON.stringify((cfg.kv_namespaces || []).map(k => k.binding))}) { const binding = env[key]; if (binding) env[key] = { get: binding.get.bind(binding), getWithMetadata: binding.getWithMetadata?.bind(binding), list: binding.list?.bind(binding), put: async () => {}, delete: async () => {} }; }
@@ -68,8 +76,9 @@ export default { ...worker, fetch(request, env, ctx) {
 `);
   cfg.main = './.wrangler/research-entry.ts';
   cfg.secrets = {required: Object.keys(vars)};
-  cfg.d1_databases = (cfg.d1_databases || []).map(d => ({...d, remote: d.binding !== 'COMMUNITY_DB'}));
-  cfg.kv_namespaces = (cfg.kv_namespaces || []).map(k => ({...k, remote: true}));
+  cfg.d1_databases = (cfg.d1_databases || []).map(d => ({...d, remote: !localData && d.binding !== 'COMMUNITY_DB'}));
+  cfg.kv_namespaces = (cfg.kv_namespaces || []).map(k => ({...k, remote: !localData}));
+  if (localData) { delete cfg.ai; delete cfg.services; }
   // wrangler dev holds every asset file open: the full public/ (~22.5k files) stalls at the fd limit
   // or fails with spawn EBADF. Serve a symlinked subset without the bulk folders Ask never reads.
   const slim = portal + '.research-assets/', skip = new Set(['divisions', 'bills', 'growth', 'photos', 'grants']);
@@ -91,7 +100,7 @@ async function startServer(base) {
   assetOrigin = 'http://127.0.0.1:' + bulkAssets.address().port;
   const config = localConfig();
   const child = spawn('bash', ['-c', `ulimit -n 8192; exec npx --no-install wrangler dev -c "${config}" --port ${port}`],
-    {cwd: portal, stdio: ['ignore', 'pipe', 'pipe'], detached: true});
+    {cwd: portal, stdio: ['ignore', 'pipe', 'pipe'], detached: true, env: {...process.env, WRANGLER_SEND_METRICS: 'false'}});
   // Own process group: stopping the runner stops wrangler, esbuild and workerd with it.
   const stop = () => { bulkAssets.close(); try { process.kill(-child.pid, 'SIGTERM'); } catch {} };
   process.on('exit', stop); for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { stop(); process.exit(130); });

@@ -7,8 +7,9 @@ import { plainAnswerPayload } from './research-language'
 import { repairDonorRanking,selectedDonorFacts,answerDecision,canReconstructRanking } from './research-coherence.mjs'
 import {auditPayload} from './research-claim-audit.mjs'
 import {rankingCoverageMatches} from './research-ranking-scope.mjs'
+import {donationCoverageLimit} from './research-coverage'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-8'
+export const ANSWER_WRITING_VERSION = 'written-answer-9'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -116,6 +117,12 @@ function statePayCoverage(input:WritingInput):WrittenSentence|undefined {
 export function proseFallback(input: WritingInput): QualitativeAnswer {
   // Context records are retrieval aids, never selected calculation facts.
   input={...input,facts:input.facts.filter(f=>!/^USER_CONTEXT_/i.test(f.source.resource))}
+  const coverageLimit=donationCoverageLimit(input.question,input.facts.map(f=>f.text).join('\n'))
+  if(coverageLimit&&input.facts.some(f=>f.coverage&&/The requested period|cannot establish|donation records start/i.test(f.text))) {
+    const fact=input.facts.find(f=>donationCoverageLimit(input.question,f.text))!
+    const request=input.facts.find(f=>f.coverage&&/^The requested period/i.test(f.text))
+    return {...assemble([{text:coverageLimit,facts:[...new Set([fact.id,...(request?[request.id]:[])])],coverage:true}],input),answer_decision:'limitation'}
+  }
   // The count tool also emits count-first rows; serialize the same owner/value
   // relationship in the labelled form understood by writing and the claim audit.
   input={...input,facts:input.facts.map(f=>{

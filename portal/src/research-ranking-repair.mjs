@@ -5,8 +5,8 @@ const normal=s=>String(s).trim().toLowerCase().replace(/[â€™]/g,"'").replace(/[â
 const partySlot=new RegExp('^(?:the )?('+[...partyAliases].sort(([a],[b])=>(Number(b==='LNP')-Number(a==='LNP'))).map(([,re])=>re.source).join('|')+')(?= |$)','i')
 const jurSlot=new RegExp('^('+jurisdictions.map(([,re])=>re.source).join('|')+')(?= |$)','i')
 const exact=(re,text)=>new RegExp('^(?:'+re.source+')$','i').test(text)
-export function rankingRepairQuestion(question){
- let rest=normal(question),company=false,hanson=false
+export function rankingRepairQuestion(question,constraints={}){
+ let rest=normal(constraints.resolved_question??question),company=false,hanson=false
  const prefix=/^(who|which company) (?:gives|gave|donates|donated) the most(?: money)? to /.exec(rest)
  if(prefix){company=prefix[1]==='which company';rest=rest.slice(prefix[0].length)}
  else if(rest.startsWith('top donors to '))rest=rest.slice('top donors to '.length)

@@ -1,4 +1,5 @@
 import { researchPhaseWallMs } from './research-time'
+import { resolvePartySubject } from './ask-party-subject'
 /**
  * OPAX-owned Ask orchestration in the Worker
  * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
@@ -309,11 +310,15 @@ export function selectAnswerFacts(facts: Fact[], scope: NamedScope, peakYear = f
 }
 
 // --------------------------------------------------------------- named scope
-export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean; unresolved: boolean }
+export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean; unresolved: boolean; resolvedQuestion?: string; partyClarification?: true }
 /** Exact roster/list matching, with a unique surname allowed. Longest names
  * win over surnames inside another full name. Never ask the model to identify
  * the entities it must retain. */
 export function extractNamedScope(question: string, roster: unknown, billList: unknown): NamedScope {
+  const subject = resolvePartySubject(question, roster)
+  if (subject.clarification) return { people: [], parties: [], bills: [], ambiguous: true, unresolved: true, partyClarification: true }
+  const resolvedQuestion = subject.question !== question ? subject.question : undefined
+  question = subject.question
   const publicQuestion = question.replace(/\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g, ' ').replace(/https?:\/\/\S+/gi, ' ')
   const q = ` ${normaliseQuestion(publicQuestion)} `
   const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
@@ -321,12 +326,20 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   // A bare indexed surname is an alias, not a full identity that may hide other people.
   const fullSurnames=new Set(exported.filter(p=>typeof p.name==='string'&&p.name.trim().includes(' ')).map(p=>normaliseQuestion(p.name).split(' ').at(-1)!))
   const records=exported.filter(p=>typeof p.name==='string'&&(p.name.trim().includes(' ')||!fullSurnames.has(normaliseQuestion(p.name))))
+  const aliases: Record<string, string[]> = {
+    Labor: ['Labor', 'Australian Labor Party', 'ALP'], Liberal: ['Liberal', 'Liberal Party'],
+    Greens: ['Greens', 'Australian Greens'], Nationals: ['Nationals', 'National Party'],
+    LNP: ['LNP', 'Liberal National Party'], 'One Nation': ['One Nation', 'PHON', "Pauline Hanson's One Nation"],
+  }
+  const knownPartyNames = new Set(Object.values(aliases).flat().map(normaliseQuestion))
+  for (const p of records) for (const name of [p.party, p.party_now]) if (name && !knownPartyNames.has(normaliseQuestion(name))) aliases[name] ??= [name]
   const people: string[] = []
   // A lone surname is an ordinary word as often as a name ("nuclear power", "differ on"): when the
   // asker uses capitals at all, a one-word match must be capitalised as written in the roster.
   const cased = /\p{Lu}/u.test(publicQuestion)
   const capitalised = (word: string) => !cased || new RegExp(`(?<![\\p{L}])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'u').test(publicQuestion)
   let unmatched = q
+  for (const party of [...new Set(Object.values(aliases).flat())].sort((a, b) => b.length-a.length)) unmatched = unmatched.split(` ${normaliseQuestion(party)} `).join(' ~ ')
   for (const p of records.filter(p => typeof p.name === 'string').sort((a, b) => b.name.length - a.name.length)) {
     const name = ` ${normaliseQuestion(p.name)} `
     if (!p.name.trim().includes(' ') && !capitalised(p.name.trim())) continue
@@ -345,12 +358,6 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `) && capitalised([...names][0].trim().split(' ').at(-1)!)) {
     if (names.size === 1) people.push([...names][0]); else ambiguous = true
   }
-  const aliases: Record<string, string[]> = {
-    Labor: ['Labor', 'Australian Labor Party', 'ALP'], Liberal: ['Liberal', 'Liberal Party'],
-    Greens: ['Greens', 'Australian Greens'], Nationals: ['Nationals', 'National Party'],
-    LNP: ['LNP', 'Liberal National Party'], 'One Nation': ['One Nation'],
-  }
-  for (const p of records) for (const name of [p.party, p.party_now]) if (name) aliases[name] ??= [name]
   const parties = Object.entries(aliases).filter(([, names]) => names.some(mentions)).map(([name]) => name)
     .filter(name => name !== 'Liberal' || !mentions('Liberal National Party'))
   const bills = [...new Set(((billList as { bills?: { key: string; title?: string; short_title?: string }[] } | null)?.bills ?? [])
@@ -361,7 +368,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   const mask = (text: string, phrase: string) => text.split(` ${normaliseQuestion(phrase)} `).join(' ~ ')
   let unknown = resolvedPeople.reduce((text, name) => mask(text, name), q)
   for (const name of resolvedPeople) unknown = mask(unknown, name.split(' ').at(-1)!)
-  for (const party of parties) for (const alias of aliases[party]) unknown = mask(unknown, alias)
+  for (const party of parties) for (const alias of [...aliases[party]].sort((a,b)=>b.length-a.length)) unknown = mask(unknown, alias)
   for (const bill of (billList as { bills?: { key: string; title?: string; short_title?: string }[] } | null)?.bills ?? [])
     if (bills.includes(bill.key)) for (const title of [bill.key, bill.title, bill.short_title]) if (title) unknown = mask(unknown, title)
   // Grammar also catches an unresolved single name: "has morgan made", "did
@@ -396,7 +403,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     let length = 0
     return span.trim().split(/\s+/).some(word => { length = isUnknown(word) ? length + 1 : 0; return length >= 2 })
   })
-  return { people: resolvedPeople, parties, bills, ambiguous, unresolved: unresolvedGrammar || unresolvedSpan }
+  return { people: resolvedPeople, parties, bills, ambiguous, unresolved: unresolvedGrammar || unresolvedSpan, ...(resolvedQuestion ? { resolvedQuestion } : {}) }
 }
 /** Public roster resolution is bounded and precedes planning and cache reads. */
 export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4_000, filters: Record<string, unknown> = {}): Promise<NamedScope> {
@@ -605,7 +612,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
     catch { return base({ reason: 'declined' }) }
-    if(named.ambiguous&&deps.research){const answer='Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,answer_decision:'clarification',citations:{},sources:[],answer_status:'uncited'}})}
+    if(named.partyClarification||named.ambiguous&&deps.research){const answer=named.partyClarification?'Which party do you mean? The current public roster does not identify a unique current party for that person.':'Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,answer_decision:'clarification',citations:{},sources:[],answer_status:'uncited'}})}
     if (!deps.research && (named.unresolved || named.ambiguous || named.bills.length)) return base({ reason: 'declined' })
   }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {

@@ -4,6 +4,7 @@ import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-sha
 import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,donorRanking,canReconstructRanking} from './research-coherence.mjs'
 import {proseFallback,type WritingInput} from './research-writing'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
+import {plainCoverageRefusal} from './research-coverage'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
 function checkedClaims(payload:Record<string,unknown>,question:string,promote=true):Record<string,unknown> {
@@ -113,6 +114,7 @@ function citeFallbackMoney(payload:Record<string,unknown>,question:string,select
 }
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
+  payload=plainCoverageRefusal(payload,question)
   // An empty record-only prefix is not a refusal of the checked passage answer beside it.
   const prefix=/^OPAX cannot establish the requested answer from the selected records\.\s*\n\s*\n/.exec(String(payload.answer??''))?.[0]
   if(prefix&&!protectedDecision(payload)&&payload.answered!==false&&!payload.answer_status&&/^what\b.*\b(?:say|said|argue|think|position)\b/i.test(question)){

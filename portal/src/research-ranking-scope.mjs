@@ -1,6 +1,6 @@
 // Repair permission uses evidence scope, never a donor's name or an unrelated coverage paragraph.
 export const jurisdictions=[['federal',/\b(?:federal|commonwealth)\b/i],['nsw',/\b(?:nsw|new south wales)\b/i],['vic',/\b(?:vic|victoria|victorian)\b/i],['qld',/\b(?:qld|queensland)\b/i],['sa',/\b(?:sa|south australia|south australian)\b/i],['wa',/\b(?:wa|western australia|western australian)\b/i],['tas',/\b(?:tas|tasmania|tasmanian)\b/i],['act',/\b(?:act|australian capital territory)\b/i],['nt',/\b(?:nt|northern territory)\b/i]]
-export const partyAliases=[['One Nation',/\b(?:one nation|pauline hanson[’']?s? party)\b/i],['Labor',/\b(?:labor|alp|australian labor party)\b/i],['Liberal',/\bliberal(?: party)?\b/i],['Greens',/\bgreens?\b/i],['Nationals',/\b(?:nationals?|national party)\b/i],['LNP',/\b(?:lnp|liberal national party)\b/i]]
+export const partyAliases=[['One Nation',/\b(?:one nation|phon|pauline hanson[’']s one nation|pauline hanson[’']?s? party)\b/i],['Labor',/\b(?:labor|alp|australian labor party)\b/i],['Liberal',/\bliberal(?: party)?\b/i],['Greens',/\bgreens?\b/i],['Nationals',/\b(?:nationals?|national party)\b/i],['LNP',/\b(?:lnp|liberal national party)\b/i]]
 const one=(values)=>{const unique=[...new Set(values.filter(Boolean))];return unique.length===1?unique[0]:unique.length?'conflict':undefined}
 const party=value=>one(partyAliases.filter(([,re])=>re.test(String(value??'').replace(/\bliberal national party\b/ig,'LNP'))).map(([name])=>name))
 const jurisdiction=value=>jurisdictions.find(([,re])=>re.test(String(value??'')))?.[0]
@@ -28,6 +28,7 @@ function period(value){
 }
 /** Preserve resolved request filters. Explicit question constraints must also agree with them. */
 export function resolvedRankingScope(question,constraints={}){
+ question=constraints.resolved_question??question
  const explicitJur=one(jurisdictions.filter(([,re])=>re.test(question)).map(([name])=>name))??(/\bstate (?:returns|disclosures|donations)\b/i.test(question)?'unknown':undefined)
  const explicitType=/\bwhich (?:company|corporation)\b/i.test(question)?'company':/\bwhich (?:person|individual)\b/i.test(question)?'person':/\bwhich organi[sz]ation\b/i.test(question)?'organisation':undefined
  const explicitPeriod=period(question),resolvedPeriod=period(constraints.period)

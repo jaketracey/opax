@@ -5,8 +5,10 @@ export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
   actUnfiltered?: true
+  resolved_question?: string
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
+  question = named.resolvedQuestion ?? question
   const q = question.toLowerCase()
   const { text, territory } = scopeAfterStatutes(question, statuteTitles), jurisdictionText = text.toLowerCase()
   const actUnfiltered = !statuteTitles?.size, state = actUnfiltered && filters.state === 'act' ? undefined : filters.state
@@ -17,7 +19,7 @@ export function extractAskConstraints(question: string, period: Period, named: N
   const chamber = String(filters.chamber || (/\bsenat(?:e|ors?)\b/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : '')) || undefined
   const party = String(filters.party || (named.parties.length === 1 ? named.parties[0] : '')) || undefined
   const place = /\b(?:electorate|seat) of ([A-Z][\p{L}'-]*(?: [A-Z][\p{L}'-]*)*)/u.exec(question)?.[1]?.trim()
-  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
+  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
     superlative: /\b(?:lowest|least|fewest|smallest|youngest)\b/.test(q) ? 'lowest' : /\b(?:highest|most|largest|biggest|oldest|top)\b/.test(q) ? 'highest' : undefined,
     trend: /\b(?:trend|since|over time|each year|by year|changed?|increas\w*|decreas\w*)\b/.test(q) }
 }
@@ -54,6 +56,8 @@ export interface Coverage { since: string | null; until: string | null; as_of: s
 /** Unknown coverage stays unknown; never describe the requested window as observed data. */
 export function resultCoverage(result: ToolResult, step: PlanStep): Coverage {
   const d = result.data ?? {}, known = d.coverage as Coverage | undefined
+  const donation=/Federal AEC donation returns, financial years ((?:19|20)\d{2})[–-]\d{2} to ((?:19|20)\d{2})[–-]\d{2}/i.exec(result.notes.join(' '))
+  if(donation&&(!known?.since||!known?.until))return {...known,since:donation[1]+'-07-01',until:String(Number(donation[2])+1)+'-06-30',as_of:known?.as_of??null,note:result.notes[0]}
   if (known && ('since' in known || 'as_of' in known)) return known
   const f = (d.filter ?? {}) as Record<string, unknown>
   if (['count_speeches', 'speech_trend', 'member_votes', 'search', 'person_quotes'].includes(step.tool)) return {
@@ -74,7 +78,8 @@ export function periodMatches(c: AskConstraints, coverage: Coverage): boolean {
 export function guardToolPeriod(result: ToolResult, step: PlanStep, c: AskConstraints): ToolResult {
   const coverage = resultCoverage(result, step)
   if (result.ok && !periodMatches(c, coverage)) {
-    const message = `The requested period is ${c.period.since ?? 'the start of the record'} to ${c.period.until ?? 'the present'}. This tool covers ${coverage.since ?? 'an unknown start'} to ${coverage.until ?? 'an unknown end'}, as of ${coverage.as_of ?? 'an unknown date'}. ${coverage.note ?? ''} It cannot establish the answer for the requested period; no current figures have been substituted.`
+    const bounds = coverage.since && coverage.until ? `The available records cover ${coverage.since} to ${coverage.until}. ` : coverage.since ? `The available records start on ${coverage.since}. ` : coverage.until ? `The available records end on ${coverage.until}. ` : ''
+    const message = `The requested period is ${c.period.since ?? 'the start of the record'} to ${c.period.until ?? 'the present'}. ${bounds}${coverage.as_of ? 'Updated '+coverage.as_of+'. ' : ''}${coverage.note ?? ''} It cannot establish the answer for the requested period; no current figures have been substituted.`
     if (coverage.matched === false && ['parliamentary_pay', 'paid_answer'].includes(step.tool) && result.cite.every(c => !c.label.includes('$'))) return { ...result, coverage, data: { coverage, coverage_only: true } }
     return { ...result, coverage: { ...coverage, matched: false }, data: { coverage: { ...coverage, matched: false }, coverage_only: true }, cite: [{ kind: 'record', label: message, url: result.cite[0]?.url ?? 'https://opax.com.au/methods' }], notes: result.notes }
   }

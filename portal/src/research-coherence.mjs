@@ -51,7 +51,7 @@ function donorRows(question,sources=[],requireRanking=true,constraints={}) {
   return scoped.filter((r,i)=>scoped.findIndex(x=>x.name===r.name&&x.party===r.party&&x.value===r.value)===i).sort((a,b)=>b.value-a.value)
 }
 export function donorRanking(question,sources=[],constraints={}){return donorRows(question,sources,true,constraints)}
-export function repairDonorRanking(question,sources=[],constraints={}){const form=rankingRepairQuestion(question);return form?donorRows(question,sources,true,constraints).filter(row=>repairSlotsMatch(form,question,row,constraints)):[]}
+export function repairDonorRanking(question,sources=[],constraints={}){const form=rankingRepairQuestion(question,constraints);return form?donorRows(question,sources,true,constraints).filter(row=>repairSlotsMatch(form,question,row,constraints)):[]}
 /** Parse only selected donor/recipient relationships, also for an explicit amount lookup. */
 export function selectedDonorFacts(question,sources=[],constraints={}){return donorRows(question,sources,false,constraints)}
 function citesDraftClaim(payload,text,resource) {
