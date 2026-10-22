@@ -1,5 +1,7 @@
 # Ask: post-deploy party subject and plain coverage fix
 
+**Round 2 supersedes the surname and temporal-affiliation policy below:** [strict party resolution](SCOPE-ASK-POST-DEPLOY-R2.md).
+
 Base: `8ea0bddb843db52885758c6550807c6d316373ea`. Local-only work; no push, deployment or production OPAX/KB requests. Claim-plan C is unchanged. Financial audit and roster quote ownership code are byte-identical to the release.
 
 The production Hanson answer carried `people: ["Pauline Hanson"]` and no party, so the fail-closed ranking repair correctly refused to turn One Nation evidence into a person-scoped answer.

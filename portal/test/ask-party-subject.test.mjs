@@ -7,7 +7,7 @@ const b=await build({stdin:{contents:"export {extractNamedScope,inferPeriod,runA
 const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
 const roster=JSON.parse(fs.readFileSync(new URL('../public/parliamentarians.json',import.meta.url)))
 const question="Who does Pauline Hanson's party take the most money from?"
-for(const q of [question,'Who does the party of Pauline Hanson take the most money from?',"who gives the most to Albanese's party",'Top donors to PHON'])test(`party subject from current roster: ${q}`,()=>{
+for(const q of [question,'Who does the party of Pauline Hanson take the most money from?',"who gives the most to Anthony Albanese's party",'Top donors to PHON'])test(`party subject from current roster: ${q}`,()=>{
  const n=api.extractNamedScope(q,roster,null),c=api.extractAskConstraints(q,api.inferPeriod(q),n)
  assert.deepEqual(n.people,[]);assert.deepEqual(n.parties,[q.includes('Albanese')?'Labor':'One Nation']);assert.equal(n.ambiguous,false);assert.equal(n.unresolved,false);assert.equal(c.party,n.parties[0]);assert.deepEqual(c.people,[])
  const args=api.constrainStep({tool:'party_donations',args:{}},c,{party:{},speaker:{}}).args
