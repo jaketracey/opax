@@ -1,0 +1,653 @@
+{
+  "schema": 1,
+  "source": "/graph/money.json",
+  "source_sha256": "ed267871f612004e354105ba2af250eb5b5a3cfbe86db12ea0325375c4aff861",
+  "gold_method": "partyDonations tool, exact published selection, federal disclosed receipts; no inference of gifts or influence",
+  "conversations": [
+    {
+      "id": "FOLLOW-D01",
+      "turns": [
+        {
+          "question": "Who gives the most money to One Nation?",
+          "standalone": "Who gives the most money to One Nation?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 161787,
+              "receipts": 4
+            }
+          ],
+          "tool_query": {
+            "party": "One Nation"
+          }
+        },
+        {
+          "question": "what about Labor?",
+          "standalone": "Who gives the most money to Labor?",
+          "context_all": [
+            "Labor"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 55227183,
+              "receipts": 500
+            }
+          ],
+          "tool_query": {
+            "party": "Labor"
+          },
+          "context_not": [
+            "One Nation"
+          ]
+        },
+        {
+          "question": "and in 2019-20?",
+          "standalone": "Who gave the most money to Labor in 2019-20?",
+          "context_all": [
+            "Labor"
+          ],
+          "period": 2019,
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Shop Distributive & Allied Employees' Association Vic Branch",
+              "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+              "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 974058,
+              "receipts": 13
+            }
+          ],
+          "tool_query": {
+            "party": "Labor",
+            "from_year": 2019,
+            "to_year": 2019
+          },
+          "context_not": [
+            "One Nation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D02",
+      "turns": [
+        {
+          "question": "Who gives the most money to the Greens?",
+          "standalone": "Who gives the most money to the Greens?",
+          "context_all": [
+            "Greens"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Duncan Turpie",
+              "href": "/subject/donor/Duncan%20Turpie",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 6982366,
+              "receipts": 90
+            }
+          ],
+          "tool_query": {
+            "party": "Greens"
+          }
+        },
+        {
+          "question": "who else gave to them?",
+          "standalone": "Who else gave to the Greens beyond the donors already named?",
+          "context_all": [
+            "Greens"
+          ],
+          "decision": "answer",
+          "rows": [],
+          "tool_query": {
+            "party": "Greens"
+          },
+          "novel_from_previous": true,
+          "eligible_rows": [
+            {
+              "donor": "Duncan Turpie",
+              "href": "/subject/donor/Duncan%20Turpie",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 6982366,
+              "receipts": 90
+            },
+            {
+              "donor": "Graeme Wood",
+              "href": "/subject/donor/Graeme%20Wood",
+              "return_reference": "AEC annual return · 2018-19 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 5712574,
+              "receipts": 25
+            },
+            {
+              "donor": "Ruth Greble",
+              "href": "/subject/donor/Ruth%20Greble",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 3456419,
+              "receipts": 124
+            },
+            {
+              "donor": "Electrical Trades Union",
+              "href": "/subject/donor/Electrical%20Trades%20Union%20of%20Australia",
+              "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 3238538,
+              "receipts": 28
+            },
+            {
+              "donor": "Chilla Bulbeck",
+              "href": "/subject/donor/Chilla%20Bulbeck",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 2256071,
+              "receipts": 73
+            },
+            {
+              "donor": "NSW Efa",
+              "href": "/subject/donor/NSW%20Efa",
+              "return_reference": "AEC annual return · 2010-11 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 2139546,
+              "receipts": 2
+            },
+            {
+              "donor": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division",
+              "href": "/subject/donor/Communications%2C%20Electrical%20and%20Plumbing%20Union%20of%20Australia",
+              "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 1855000,
+              "receipts": 8
+            },
+            {
+              "donor": "Anna Milanowicz",
+              "href": "/subject/donor/Anna%20Milanowicz",
+              "return_reference": "AEC annual return · 2013-14 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 1200000,
+              "receipts": 6
+            },
+            {
+              "donor": "Norman Pater",
+              "href": "/subject/donor/Norman%20Pater",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 900000,
+              "receipts": 6
+            },
+            {
+              "donor": "CFMEU Mining & Energy Division",
+              "href": "/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union",
+              "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 534000,
+              "receipts": 15
+            },
+            {
+              "donor": "Bendigo & Adelaide Bank Limited",
+              "href": "/subject/donor/Bendigo%20and%20Adelaide%20Bank%20Limited",
+              "return_reference": "AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 391796,
+              "receipts": 71
+            },
+            {
+              "donor": "Australian Manufacturing Workers Union",
+              "href": "/subject/donor/Australian%20Manufacturing%20Workers%27%20Union",
+              "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 190908,
+              "receipts": 8
+            },
+            {
+              "donor": "Commonwealth Bank of Australia",
+              "href": "/subject/donor/Commonwealth%20Bank%20of%20Australia",
+              "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 174352,
+              "receipts": 8
+            },
+            {
+              "donor": "Suncorp Group Limited",
+              "href": "/subject/donor/Suncorp%20Group%20Limited",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 164072,
+              "receipts": 6
+            },
+            {
+              "donor": "Macquarie Telecom",
+              "href": "/subject/donor/Macquarie%20Technology%20Group%20Ltd",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 86000,
+              "receipts": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D03",
+      "turns": [
+        {
+          "question": "Top donors to the Liberal Party",
+          "standalone": "Top donors to the Liberal Party",
+          "context_all": [
+            "Liberal"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 40608922,
+              "receipts": 433
+            }
+          ],
+          "tool_query": {
+            "party": "Liberal"
+          }
+        },
+        {
+          "question": "how much was that?",
+          "standalone": "How much did Westpac Banking Corporation give to the Liberal Party?",
+          "context_all": [
+            "Liberal",
+            "Westpac"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 40608922,
+              "receipts": 433
+            }
+          ],
+          "tool_query": {
+            "party": "Liberal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D04",
+      "turns": [
+        {
+          "question": "Who gave the most money to Labor in 2019-20?",
+          "standalone": "Who gave the most money to Labor in 2019-20?",
+          "context_all": [
+            "Labor"
+          ],
+          "period": 2019,
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Shop Distributive & Allied Employees' Association Vic Branch",
+              "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+              "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 974058,
+              "receipts": 13
+            }
+          ],
+          "tool_query": {
+            "party": "Labor",
+            "from_year": 2019,
+            "to_year": 2019
+          }
+        },
+        {
+          "question": "what about the Greens?",
+          "standalone": "Who gave the most money to the Greens in 2019-20?",
+          "context_all": [
+            "Greens"
+          ],
+          "period": 2019,
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Duncan Turpie",
+              "href": "/subject/donor/Duncan%20Turpie",
+              "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 310000,
+              "receipts": 4
+            }
+          ],
+          "tool_query": {
+            "party": "Greens",
+            "from_year": 2019,
+            "to_year": 2019
+          },
+          "context_not": [
+            "Labor"
+          ]
+        },
+        {
+          "question": "and in 2023-24?",
+          "standalone": "Who gave the most money to the Greens in 2023-24?",
+          "context_all": [
+            "Greens"
+          ],
+          "period": 2023,
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Duncan Turpie",
+              "href": "/subject/donor/Duncan%20Turpie",
+              "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 935135,
+              "receipts": 15
+            }
+          ],
+          "tool_query": {
+            "party": "Greens",
+            "from_year": 2023,
+            "to_year": 2023
+          },
+          "context_not": [
+            "Labor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D05",
+      "turns": [
+        {
+          "question": "Who donates the most to the Nationals?",
+          "standalone": "Who donates the most to the Nationals?",
+          "context_all": [
+            "Nationals|National Party"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 7476793,
+              "receipts": 116
+            }
+          ],
+          "tool_query": {
+            "party": "Nationals"
+          }
+        },
+        {
+          "question": "and in 2019-20?",
+          "standalone": "Who donated the most to the Nationals in 2019-20?",
+          "context_all": [
+            "Nationals|National Party"
+          ],
+          "period": 2019,
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Pratt Holdings Pty Ltd",
+              "href": "/subject/donor/Pratt%20Holdings%20Pty%20Ltd",
+              "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+              "industry": "property",
+              "total_aud": 250000,
+              "receipts": 1
+            }
+          ],
+          "tool_query": {
+            "party": "Nationals",
+            "from_year": 2019,
+            "to_year": 2019
+          }
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D06",
+      "turns": [
+        {
+          "question": "Who gives the most money to LNP in federal records?",
+          "standalone": "Who gives the most money to LNP in federal records?",
+          "context_all": [
+            "LNP|Liberal National Party"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "LGT Crestone Wealth Management Limited",
+              "href": "/subject/donor/LGT%20Crestone",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 8857209,
+              "receipts": 14
+            }
+          ],
+          "tool_query": {
+            "party": "LNP"
+          }
+        },
+        {
+          "question": "what about One Nation?",
+          "standalone": "Who gives the most money to One Nation in federal records?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 161787,
+              "receipts": 4
+            }
+          ],
+          "tool_query": {
+            "party": "One Nation"
+          },
+          "context_not": [
+            "LNP|Liberal National Party"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D07",
+      "turns": [
+        {
+          "question": "Who gives the most money to One Nation?",
+          "standalone": "Who gives the most money to One Nation?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 161787,
+              "receipts": 4
+            }
+          ],
+          "tool_query": {
+            "party": "One Nation"
+          }
+        },
+        {
+          "question": "did that buy their votes?",
+          "standalone": "Did the largest donor to One Nation buy their votes?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "decision": "decline",
+          "rows": [],
+          "tool_query": {
+            "party": "One Nation"
+          }
+        },
+        {
+          "question": "Who gives the most money to Labor?",
+          "standalone": "Who gives the most money to Labor?",
+          "context_all": [
+            "Labor"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 55227183,
+              "receipts": 500
+            }
+          ],
+          "tool_query": {
+            "party": "Labor"
+          },
+          "context_not": [
+            "One Nation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D08",
+      "turns": [
+        {
+          "question": "Which Smith gave the most money to One Nation?",
+          "standalone": "Which Smith gave the most money to One Nation?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "decision": "clarify",
+          "rows": [],
+          "tool_query": {
+            "party": "One Nation"
+          }
+        },
+        {
+          "question": "I mean Westpac. How much did it give to One Nation?",
+          "standalone": "How much did Westpac give to One Nation?",
+          "context_all": [
+            "One Nation|Hanson",
+            "Westpac"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 161787,
+              "receipts": 4
+            }
+          ],
+          "tool_query": {
+            "party": "One Nation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D09",
+      "turns": [
+        {
+          "question": "Who gave the most money to One Nation in 1990?",
+          "standalone": "Who gave the most money to One Nation in 1990?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "period": 1990,
+          "decision": "decline",
+          "rows": [],
+          "tool_query": {
+            "party": "One Nation",
+            "from_year": 1990,
+            "to_year": 1990
+          }
+        },
+        {
+          "question": "and in 2019-20?",
+          "standalone": "Who gave the most money to One Nation in 2019-20?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "period": 2019,
+          "decision": "decline",
+          "rows": [],
+          "tool_query": {
+            "party": "One Nation",
+            "from_year": 2019,
+            "to_year": 2019
+          },
+          "gold_limitation": "The selected federal graph has no One Nation donor rows in financial year 2019-20; this does not establish zero giving."
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW-D10",
+      "turns": [
+        {
+          "question": "Who gives the most money to One Nation?",
+          "standalone": "Who gives the most money to One Nation?",
+          "context_all": [
+            "One Nation|Hanson"
+          ],
+          "decision": "answer",
+          "rows": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 161787,
+              "receipts": 4
+            }
+          ],
+          "tool_query": {
+            "party": "One Nation"
+          }
+        },
+        {
+          "question": "Did Westpac give money to One Nation in most years?",
+          "standalone": "Did Westpac give money to One Nation in most years?",
+          "context_all": [
+            "One Nation|Hanson",
+            "Westpac"
+          ],
+          "decision": "limited_or_years",
+          "rows": [],
+          "tool_query": {
+            "party": "One Nation"
+          }
+        }
+      ]
+    }
+  ]
+}

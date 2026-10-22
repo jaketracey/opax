@@ -96,6 +96,7 @@ async function startServer(base) {
   const stop = () => { bulkAssets.close(); try { process.kill(-child.pid, 'SIGTERM'); } catch {} };
   process.on('exit', stop); for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { stop(); process.exit(130); });
   child.stop = stop;
+  if(serveOnly)child.once('exit',(code,signal)=>{console.error(`Local research Worker stopped (exit=${code}, signal=${signal??'none'}).`);process.exit(code??3)});
   let log = '';
   child.stdout.on('data', d => { log += d; for (const line of String(d).split('\n')) if (/^\{"kind":"research_loop_/.test(line)) console.log(line); }); child.stderr.on('data', d => { log += d; });
   for (let i = 0; i < 120; i++) {

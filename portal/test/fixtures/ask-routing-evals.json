@@ -634,7 +634,8 @@
       "question": "What was the median age in Corangamite in 2005?",
       "old_route": "ordinary",
       "expected": {
-        "kind": "answer"
+        "kind": "decline",
+        "reason": "2021 Census coverage cannot answer 2005; equivalent coverage refusals grade identically on both arms"
       },
       "must": [
         {

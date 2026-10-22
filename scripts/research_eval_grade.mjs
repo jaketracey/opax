@@ -41,7 +41,7 @@ const traceable = (n) => !isYear(n) && (n >= 10 || !Number.isInteger(n))
 const near = (a, b, tol = 0.05) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1)
 
 export const CAVEAT = /coverage|thin|gap|incomplete|missing|limited|understat|not (?:fully )?(?:covered|captured|complete)|only \d+ (?:federal )?(?:chamber )?speeches|record (?:holds|has) (?:few|only)|sparse/i
-export const REFUSAL = /OPAX cannot establish|^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:determined|answered)|(?:ranking|answer|total|rate) cannot be established|is not possible to (?:determine|identify)|does not discuss/i
+export const REFUSAL = /OPAX cannot establish|^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:established|determined|answered)|(?:ranking|answer|total|rate) cannot be established|is not possible to (?:determine|identify)|does not discuss/i
 export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /** Sentences that deny causation are the required no-causation wording, not a breach. */
 const DENIAL = /\bnot (?:evidence|proof)\b|\bno evidence\b|(?:does|do) not (?:prove|show|establish|mean|imply)|is not proof|cannot be (?:inferred|read)/i
@@ -263,7 +263,7 @@ const axisOf = (counts) => counts.fail ? 'fail' : counts.partial ? 'partial' : '
 export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) {
   const answer = String(payload?.answer ?? '')
   const answered = payload?.answered !== false && answer.trim().length > 0
-  const refusal = !answered || REFUSAL.test(answer) || /^(?:The )?(?:selected|retrieved) records do not (?:identify|establish)\b/i.test(answer)
+  let refusal = !answered || REFUSAL.test(answer) || /^(?:The )?(?:selected|retrieved|returned) (?:facts|records|excerpts|passages|evidence) do not (?:identify|establish)\b/i.test(answer) || /^(?:The )?(?:available records|(?:20\d{2} )?Census)\b[^.!?]*(?:do not|cannot) establish\b/i.test(answer)
   const ev = {...evidenceOf(payload),ranking_rows:donorRanking(q.question,payload?.sources??[])}
   const cit = citationCheck(payload, answer, ev)
   const figures = figureCheck(answer, q.question, ev, cit.sentences, cit.covered)
@@ -272,6 +272,11 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   const causal = causalCheck(answer)
   const tools = toolsCheck(q.expected_tools, payload)
   const expectsDecline = q.expected?.kind === 'decline' || Boolean(q.expected?.unanswerable) || (q.must ?? []).some((c) => c.type === 'decline')
+  // A partial numerical answer remains an answer when its verified, cited facts
+  // follow a limitation. Moving that limitation must not hide citation quality.
+  const protectedStatus=payload?.answered===false||/^(?:coverage_only|evidence_gap|needs_question|needs_scope|needs_period|refused|declined|moderated)$/.test(payload?.answer_status??'')
+  const substantive=figures.figures.some(f=>f.bound&&f.cited&&!REFUSAL.test(f.sentence)&&!/^(?:Coverage:|Topic counts cover|These records|These disclosed|These are|OPAX.s federal pay records)/i.test(f.sentence))
+  if(refusal&&!expectsDecline&&!protectedStatus&&substantive)refusal=false
   const ctx = { question:q.question, answer, payload, ev, roster, parties, names, figures, refusal, expectedDecline: expectsDecline }
   const checks = (q.must ?? []).map((c) => ({ ...c, ...runCheck(c, ctx) }))
   const parts = [...new Set(checks.map((c) => c.part).filter(Boolean))]

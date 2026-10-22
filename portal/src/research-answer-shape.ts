@@ -34,7 +34,7 @@ export function leadWithFinding<T extends Record<string,unknown>>(payload:T,ques
       if(finding){
         let repaired=finding.text.replace(/^Further down,\s*/,'').replace(new RegExp(escaped+' recorded ','i'),top.entity+' led the selected ranking with ')
         const period=/ from \d{4}-\d{2}-\d{2}(?: to \d{4}-\d{2}-\d{2})?/.exec(top.text)?.[0]
-        if(period&&!repaired.includes(period.trim()))repaired=repaired.replace(/,\s+(?:while|and|whereas)\b|[.!?]$/,match=>period+match)
+        if(period&&!repaired.includes(period.trim()))repaired=repaired.replace(/,\s+(?:while|and|whereas)\s+|[.!?]$/,match=>period+(/,$/.test(match.trim())?'':/\b(?:while|and|whereas)\b/.test(match)?'. ':match))
         payload=rewriteAnswerPayload(payload,replace=>replace(new RegExp(finding.text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),repaired))
       }
     }

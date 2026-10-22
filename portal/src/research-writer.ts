@@ -12,6 +12,19 @@ export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
     const fallback=()=>{stats.coherence={...stats.coherence,fallback:true};return {...proseFallback(input),coherence:{fallback:true}}}, credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
+    const required=proseFallback(input),lead=required.answer.split('\n')[0]
+    const headlineRequired=/highest|most|top|largest|biggest/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
+    const ownerFigure=(text:string)=>{
+      const rate=/^([^:]+): (\$[\d,]+)/.exec(text)
+      if(rate)return {owner:rate[1],amount:rate[2]}
+      const donation=/^(.+?) gave (.+?) (\$[\d,]+)/.exec(text)
+      return donation?{owner:donation[1],amount:donation[3],party:donation[2]}:null
+    }
+    const named=input.facts.filter(f=>{const pair=ownerFigure(f.text);return pair&&input.question.toLowerCase().includes(pair.owner.toLowerCase())&&(!pair.party||input.question.toLowerCase().includes(pair.party.toLowerCase()))})
+    const recipientFacts=/\b(?:which|what) parties\b/i.test(input.question)?input.facts.flatMap(f=>{const m=/^Disclosed receipt:\s*(.+?)\s*→\s*(.+?)\s*—/.exec(f.text);return m?[{f,party:m[2]}]:[]}):[]
+    const requiredIds=new Set([...recipientFacts.map(r=>r.f.id),...named.map(f=>f.id),...(headlineRequired?Object.entries(required.citations).filter(([,ranges])=>ranges.some(([a])=>a<lead.length)).flatMap(([id])=>input.facts.filter(f=>id===(f.evidenceId??f.source.resource+'/t/body/0')).map(f=>f.id)):[])])
+    const recipients=recipientFacts.map(r=>r.party)
+    const keepsHeadline=(answer:string)=>recipients.every(p=>answer.toLowerCase().includes(p.toLowerCase()))&&input.facts.filter(f=>requiredIds.has(f.id)).every(f=>{const pair=ownerFigure(f.text);return !pair||answer.includes(pair.owner)&&answer.includes(pair.amount)})
     let activeInput=input, prompt=writingPrompt(input)
     const startedWriting=Date.now()
     const inputReserve=Math.ceil(prompt.length/3)+1024, outputReserve=Math.min(1400,Math.min(160000,Number(options.tokens ?? 96000))-stats.tokens.input-stats.tokens.output-inputReserve)
@@ -54,13 +67,13 @@ export function createAnswerWriter(options: ResearchOptions) {
         const checked=groundAnswerPayload(verified as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
         const draft=Array.isArray(raw.sentences)?raw.sentences.map((s:{text?:string})=>s.text??'').join('\n\n'):''
         const dropped=Array.isArray(raw.sentences)&&raw.sentences.some((s:{text?:string})=>{const words=(s.text??'').toLowerCase().match(/[\p{L}\p{N}]+/gu)??[];return words.length>0&&words.filter((w:string)=>verified.answer.toLowerCase().includes(w)).length/words.length<0.8})
-        if(pass===0&&(audit.findings.length||dropped)&&remainingMs-(Date.now()-startedWriting)>=500){
+        if(pass===0&&(audit.findings.length||dropped||!keepsHeadline(checked.answer))&&remainingMs-(Date.now()-startedWriting)>=500){
           const used=new Set(checked.sources.filter(s=>s.cited).map(s=>s.resource))
-          const surviving={...activeInput,facts:activeInput.facts.filter(f=>used.has(f.source.resource))}
+          const surviving={...activeInput,facts:activeInput.facts.filter(f=>used.has(f.source.resource)||requiredIds.has(f.id))}
           if(surviving.facts.length){activeInput=surviving;prompt=writingPrompt(surviving);continue}
         }
         const stripped=Math.max(0,1-checked.answer.length/Math.max(1,draft.length))
-        if(stripped>1/3)return fallback()
+        if(stripped>1/3||!keepsHeadline(checked.answer))return fallback()
         return checked
       }catch(error){
         if(isResearchCreditError(error)){credits.exhaust();receipt=0;stats.usageUnknown=false;if(turn)Object.assign(turn,{input:0,output:0,cost_usd:0})}

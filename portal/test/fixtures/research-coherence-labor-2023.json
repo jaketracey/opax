@@ -1,0 +1,277 @@
+{
+  "question": "Who gave the most disclosed funding to Labor in 2023?",
+  "payload": {
+    "answer": "The runners-up were Shop Distributive & Allied Employees' Association Vic Branch with $1,128,644,, United Workers Union with $953,447,, Commonwealth Bank of Australia with $659,452,, CFMEU Mining & Energy Division with $588,262.\n\nThese disclosed party receipts include more than gifts and cover only the published selection; undisclosed receipts below the disclosure threshold make totals a lower bound, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech.",
+    "citations": {
+      "receipt-ranking-1": [
+        [
+          230,
+          534
+        ]
+      ],
+      "receipt-ranking-2": [
+        [
+          0,
+          228
+        ]
+      ],
+      "receipt-ranking-3": [
+        [
+          0,
+          228
+        ]
+      ],
+      "receipt-ranking-4": [
+        [
+          0,
+          228
+        ]
+      ],
+      "receipt-ranking-5": [
+        [
+          0,
+          228
+        ]
+      ],
+      "receipt-ranking-0": [
+        [
+          230,
+          534
+        ],
+        [
+          230,
+          534
+        ],
+        [
+          230,
+          534
+        ],
+        [
+          230,
+          534
+        ]
+      ]
+    },
+    "sources": [
+      {
+        "resource": "receipt-ranking-1",
+        "title": "Pratt Holdings Pty Ltd: $2,000,000",
+        "href": "/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Apratt",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Apratt",
+        "kind": "receipt",
+        "snippet": "Pratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records. Period: 2023–24. Based on AEC political disclosure records in this published selection.\nPratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records.\nPeriod: 2023–24.\nBased on AEC political disclosure records in this published selection.",
+        "cited": true,
+        "source": "AEC political disclosure records",
+        "dateLabel": "Calculated by Opax",
+        "date": "2026-10-18",
+        "slug": "",
+        "claim_atoms": [
+          {
+            "entity": "Pratt Holdings Pty Ltd",
+            "metric": "receipts",
+            "value": "2000000",
+            "unit": "AUD",
+            "chamber": "",
+            "period": {
+              "label": "2023–24"
+            },
+            "evidenceId": "receipt-ranking-1",
+            "periodEvidenceId": "receipt-ranking-1"
+          },
+          {
+            "entity": "Pratt Holdings Pty Ltd",
+            "metric": "count",
+            "value": "2",
+            "unit": "count",
+            "chamber": "",
+            "period": {
+              "label": "2023–24"
+            },
+            "evidenceId": "receipt-ranking-1",
+            "periodEvidenceId": "receipt-ranking-1"
+          },
+          {
+            "entity": "Period",
+            "metric": "count",
+            "value": "24",
+            "unit": "count",
+            "chamber": "",
+            "period": {
+              "label": "2023–24"
+            },
+            "evidenceId": "receipt-ranking-1"
+          }
+        ]
+      },
+      {
+        "resource": "receipt-ranking-2",
+        "title": "Shop Distributive & Allied Employees' Association Vic Branch: $1,128,644",
+        "href": "/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Ashop+distributive+and+allied+employees+association",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Ashop+distributive+and+allied+employees+association",
+        "kind": "receipt",
+        "snippet": "Shop Distributive & Allied Employees' Association Vic Branch: $1,128,644, 19 disclosed receipt records. Period: 2023–24. Based on AEC political disclosure records in this published selection.\nShop Distributive & Allied Employees' Association Vic Branch: $1,128,644, 19 disclosed receipt records.",
+        "cited": true,
+        "source": "AEC political disclosure records",
+        "dateLabel": "Calculated by Opax",
+        "date": "2026-10-18",
+        "slug": "",
+        "claim_atoms": [
+          {
+            "entity": "Shop Distributive & Allied Employees' Association Vic Branch",
+            "metric": "receipts",
+            "value": "1128644",
+            "unit": "AUD",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-2"
+          },
+          {
+            "entity": "Shop Distributive & Allied Employees' Association Vic Branch",
+            "metric": "count",
+            "value": "19",
+            "unit": "count",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-2"
+          }
+        ]
+      },
+      {
+        "resource": "receipt-ranking-3",
+        "title": "United Workers Union: $953,447",
+        "href": "/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Aunited+workers+union",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Aunited+workers+union",
+        "kind": "receipt",
+        "snippet": "United Workers Union: $953,447, 14 disclosed receipt records. Period: 2023–24. Based on AEC political disclosure records in this published selection.\nUnited Workers Union: $953,447, 14 disclosed receipt records.",
+        "cited": true,
+        "source": "AEC political disclosure records",
+        "dateLabel": "Calculated by Opax",
+        "date": "2026-10-18",
+        "slug": "",
+        "claim_atoms": [
+          {
+            "entity": "United Workers Union",
+            "metric": "receipts",
+            "value": "953447",
+            "unit": "AUD",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-3"
+          },
+          {
+            "entity": "United Workers Union",
+            "metric": "count",
+            "value": "14",
+            "unit": "count",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-3"
+          }
+        ]
+      },
+      {
+        "resource": "receipt-ranking-4",
+        "title": "Commonwealth Bank of Australia: $659,452",
+        "href": "/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Acommonwealth+bank+of+australia",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Acommonwealth+bank+of+australia",
+        "kind": "receipt",
+        "snippet": "Commonwealth Bank of Australia: $659,452, 115 disclosed receipt records. Period: 2023–24. Based on AEC political disclosure records in this published selection.\nCommonwealth Bank of Australia: $659,452, 115 disclosed receipt records.",
+        "cited": true,
+        "source": "AEC political disclosure records",
+        "dateLabel": "Calculated by Opax",
+        "date": "2026-10-18",
+        "slug": "",
+        "claim_atoms": [
+          {
+            "entity": "Commonwealth Bank of Australia",
+            "metric": "receipts",
+            "value": "659452",
+            "unit": "AUD",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-4"
+          },
+          {
+            "entity": "Commonwealth Bank of Australia",
+            "metric": "count",
+            "value": "115",
+            "unit": "count",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-4"
+          }
+        ]
+      },
+      {
+        "resource": "receipt-ranking-5",
+        "title": "CFMEU Mining & Energy Division: $588,262",
+        "href": "/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Aconstruction+forestry+maritime+mining+and+energy+union",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023&focus=donor%3Aconstruction+forestry+maritime+mining+and+energy+union",
+        "kind": "receipt",
+        "snippet": "CFMEU Mining & Energy Division: $588,262, 9 disclosed receipt records. Period: 2023–24. Based on AEC political disclosure records in this published selection.\nCFMEU Mining & Energy Division: $588,262, 9 disclosed receipt records.",
+        "cited": true,
+        "source": "AEC political disclosure records",
+        "dateLabel": "Calculated by Opax",
+        "date": "2026-10-18",
+        "slug": "",
+        "claim_atoms": [
+          {
+            "entity": "CFMEU Mining & Energy Division",
+            "metric": "receipts",
+            "value": "588262",
+            "unit": "AUD",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-5"
+          },
+          {
+            "entity": "CFMEU Mining & Energy Division",
+            "metric": "count",
+            "value": "9",
+            "unit": "count",
+            "chamber": "",
+            "period": {},
+            "evidenceId": "receipt-ranking-5"
+          }
+        ]
+      },
+      {
+        "resource": "receipt-ranking-0",
+        "title": "How these funding totals were calculated",
+        "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023",
+        "kind": "receipt",
+        "snippet": "Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 119 donors during 2023–24. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.\nOpax added the disclosed receipts matching this question, grouped by donor.\nThis selection covers 119 donors during 2023–24.\nIt excludes government funding and records outside the published selection.\nAmounts are in Australian dollars and are not adjusted for inflation.",
+        "cited": true,
+        "source": "AEC political disclosure records",
+        "dateLabel": "Calculated by Opax",
+        "date": "2026-10-18",
+        "slug": "",
+        "claim_atoms": [
+          {
+            "entity": "",
+            "metric": "count",
+            "value": "119",
+            "unit": "count",
+            "chamber": "",
+            "period": {
+              "label": "2023–24"
+            },
+            "evidenceId": "receipt-ranking-0"
+          },
+          {
+            "entity": "",
+            "metric": "count",
+            "value": "24",
+            "unit": "count",
+            "chamber": "",
+            "period": {
+              "label": "2023–24"
+            },
+            "evidenceId": "receipt-ranking-0"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -168,7 +168,7 @@ test('record facts obey the named scope: an overall count is refused for a named
     reply([call('count_speeches', { topic: 'gambling', group_by: 'none' }, 'a'), call('count_speeches', { topic: 'gambling', speaker: 'Robin Example', group_by: 'none' }, 'b')]),
     reply([call('answer', { facts: [1, 2] }, 'c')])], scope);
   assert.deepEqual(named.failures, []); assert.equal(named.out.answered, true);
-  assert.equal(named.out.answer.split('\n')[0], 'There were 7 chamber speeches labelled gambling by Robin Example.');
+  assert.equal(named.out.answer.split('\n')[0], 'Robin Example recorded 7 chamber speeches labelled gambling.');
   assert.ok(!named.out.answer.split('\n').includes('- 7 chamber speeches labelled gambling'));
   const unresolved = await loop('What has Pat Unknownname said about contracts?', [
     reply([call('parliamentary_pay', { person: 'Robin Example' }, 'a')]), reply([call('answer', { facts: [1] }, 'b')]), reply([call('answer', { facts: [1] }, 'c')])],

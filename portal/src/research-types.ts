@@ -7,6 +7,7 @@ export interface ResearchPayload {
   rounds: number
   trail: { id: number; tool: string; round: number; label: string; arg?: string; results?: number; ms: number; ok: boolean }[]
   sources: { title: string; url: string; date?: string; kind: string; speaker?: string }[]
+  pre_writer_sources?: QualitativeAnswer['sources']
   ms?: number
   tokens?: { input: number; output: number } | null
   cost_usd?: number | null

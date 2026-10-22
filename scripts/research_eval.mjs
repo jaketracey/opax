@@ -127,11 +127,17 @@ export async function runOne({ q, mode, base, route, secret, baselineLoop, opera
   const elapsed = () => Math.round(performance.now() - t0)
   try {
     const res = await fetchImpl(new URL(path, base), { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(timeoutMs) })
-    if (!res.ok) return { route: path, ms:elapsed(), error: `HTTP ${res.status}` }
+    if (!res.ok) {
+      const response_body=await res.text();let payload;try{payload=JSON.parse(response_body)}catch{}
+      return { route:path,ms:elapsed(),error:`HTTP ${res.status}`,status:res.status,response_body,...(payload?{payload}:{}) }
+    }
     let payload
     if ((res.headers?.get('content-type') ?? '').includes('text/event-stream')) {
       const text=await res.text(), done=text.split(/\r?\n\r?\n/).find(frame=>/^event: done$/m.test(frame))
-      if(!done)return {route:path,ms:elapsed(),error:'missing SSE done'}
+      if(!done){
+        const frame=text.split(/\r?\n\r?\n/).find(frame=>/^event: error$/m.test(frame));let payload;try{payload=JSON.parse(frame?.split(/\r?\n/).find(line=>line.startsWith('data: '))?.slice(6)??'')}catch{}
+        return {route:path,ms:elapsed(),error:'missing SSE done',response_body:text,...(payload?{payload}:{})}
+      }
       payload=JSON.parse(done.split(/\r?\n/).find(line=>line.startsWith('data: ')).slice(6))
     } else payload=await res.json()
     return { route: path, ms:elapsed(), payload }

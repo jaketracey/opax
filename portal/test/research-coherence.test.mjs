@@ -17,7 +17,7 @@ for(const stream of [false,true])for(const cache of [false,true])for(const fallb
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})}
  const response=stream?new Response('event: delta\ndata: '+JSON.stringify({text:p.answer})+'\n\nevent: done\ndata: '+JSON.stringify(p)+'\n\n',{headers}):Response.json(p,{headers})
  const wire=await(await api.withAnswerLanguage(response,fixture.question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.match(out.answer.split('\n')[0],/Westpac Banking Corporation.*161,787.*1998-99 to 2025-26/)
+ assert.match(out.answer.split('\n')[0],/1998-99 to 2025-26.*Westpac Banking Corporation.*161,787/)
  assert.equal(coherenceCheck(fixture.question,out).pass,true)
  assert.equal(auditPayload(fixture.question,out).findings.length,0)
  assert.ok(out.citations['fact-1/t/body/0']);assert.ok(out.citations[k]);assert.equal(out.coherence.fallback,true)
@@ -83,11 +83,11 @@ test('a second writer receives only surviving evidence, with both reservations s
  const prompt=JSON.stringify(model.doGenerateCalls[1].prompt);assert.doesNotMatch(prompt,/support the bill/);assert.doesNotMatch(out.answer,/Bill Shorten/)
 })
 test('year-filtered disclosed-donor tables recover their leading donor and period',()=>{
- const source=(resource,snippet)=>({resource,snippet,kind:'receipt',title:'Disclosed donor records',cited:true})
+ const source=(resource,snippet)=>({resource,snippet,kind:'receipt',title:'Labor federal disclosed donor records',cited:true})
  const sources=[source('receipt-ranking-1','Pratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-2','United Workers Union: $953,447, 14 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-0','Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 119 donors during 2023–24. It excludes government funding.')]
  const answer='Other donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-2/t/body/0':[[0,answer.length]]}}
  const out=api.groundAnswerPayload(p,'Who gave the most disclosed funding to Labor in 2023?')
- assert.match(out.answer.split('\n')[0],/Pratt Holdings Pty Ltd.*2,000,000.*2023–24/)
+ assert.match(out.answer.split('\n')[0],/2023–24.*Pratt Holdings Pty Ltd.*2,000,000/)
  assert.equal(coherenceCheck('Who gave the most disclosed funding to Labor in 2023?',out).pass,true);assert.equal(auditPayload('',out).findings.length,0)
 })
 test('an incorrect party adjective is repaired without changing quotation ownership',()=>{
@@ -106,7 +106,7 @@ test('selected donor initials never turn a complete organisation name into a sen
 test('native ranked-money tables retain the true leader when a selected prose subset omits it',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-native-donors.json',import.meta.url)))
  const out=api.groundAnswerPayload(f.payload,f.question)
- assert.match(out.answer.split('\n')[0],/Westpac Banking Corporation.*55,227,183.*1998[–-]99 to 2025[–-]26/)
+ assert.match(out.answer.split('\n')[0],/1998[–-]99 to 2025[–-]26.*Westpac Banking Corporation.*55,227,183/)
  assert.equal(coherenceCheck(f.question,out).pass,true);assert.equal(auditPayload(f.question,out).findings.length,0)
 })
 test('a supported speech-ranking lead is repaired while retaining the year and coverage citations',()=>{

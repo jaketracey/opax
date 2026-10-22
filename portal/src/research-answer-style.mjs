@@ -1,3 +1,4 @@
+import {sentenceParts} from './research-claim-audit.mjs'
 // Pure answer-shape checks shared by the serving boundary and both evaluation arms.
 export const fold = (s) => String(s ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase()
 export const plainNumbers = (text) => (String(text ?? '').replace(/https?:\/\/[^\s)]+/g, ' ').replace(/\b((?:19|20)\d{2})-\d{2}-\d{2}\b/g, '$1').replace(/\b((?:19|20)\d{2})[–-]\d{2}\b/g, '$1').replace(/\b\d{1,2}\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+((?:19|20)\d{2})\b/gi, '$1').replace(/\b\d{1,2}\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/gi, ' ').replace(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2}),?\s+((?:19|20)\d{2})\b/gi, '$3').replace(/\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}\b/gi, ' ').replace(/\[\d+\]/g, ' ').match(/\d[\d,]*(?:\.\d+)?/g) ?? []).map((n) => Number(n.replace(/,/g, '')))
@@ -15,6 +16,8 @@ const isYear = (n) => Number.isInteger(n) && n >= 1900 && n <= 2035
 export function styleRows(ev) {
   const rows=[]
   for(const source of (ev.sources??[]).filter(s=>!['speech','bill'].includes(s.kind)))for(const text of [source.title,source.snippet])if(typeof text==='string')for(const raw of text.split(/\n+/)) {const line=raw.replace(/\*\*/g,'')
+    const by=/^(\d[\d,]*) chamber speeches labelled .+? by (.+?)(?: from \d{4}-\d{2}-\d{2}(?: to \d{4}-\d{2}-\d{2})?)?\.?$/.exec(line)
+    if(by){rows.push({entity:by[2],value:by[1],text:line});continue}
     const rates=[...line.matchAll(/(?:^|[.\n])\s*[-*]?\s*([^:$;\n.]+):\s*(\$[\d,]+) a year as [^,]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}/g)]
     if(rates.length){for(const rate of rates)rows.push({entity:rate[1].trim(),value:rate[2],text:rate[0],salary:true});continue}
     const current=/^(.+?) \([^)]+\), [^:]+: base salary \$[\d,]+ plus a loading of [\d.]+%, (\$[\d,]+) a year/.exec(line)
@@ -28,7 +31,7 @@ export function styleRows(ev) {
 export const styleNormal=s=>fold(s).replace(/[^a-z0-9]+/g,' ').trim()
 /** Writing quality is assessed against selected evidence, not fluent-looking prose alone. */
 export function answerStyleChecks(question, answer, evidence = {sources:[]}, requirements={}) {
-  const plain=String(answer).replace(/\[\d+\]/g,''),sentences=plain.split(/(?<=[.!?])\s+|\n+/).map(s=>s.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
+  const plain=String(answer).replace(/\[\d+\]/g,''),sentences=sentenceParts(plain).flatMap(p=>p.text.split(/\n+/)).map(s=>s.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
   const seen=new Set();let duplicate=false
   for(const sentence of sentences){const k=styleNormal(sentence);if(seen.has(k))duplicate=true;seen.add(k)}
   // Same figure for different people or periods is not a duplicated claim.
@@ -52,12 +55,13 @@ export function answerStyleChecks(question, answer, evidence = {sources:[]}, req
   const speakers=[...new Set((evidence.sources??[]).map(s=>s.speaker).filter(Boolean))]
   const subject=limited||row?limited||styleNormal(first).includes(styleNormal(row.entity)):!speakers.length||speakers.some(n=>styleNormal(first).includes(styleNormal(n)))
   const topic=/\b(mining|gambling|housing|immigration|climate|tax|budget|contracts?|grants?|salary|income)\b/i.exec(question)?.[1]
-  const subjectTopic=limited||!topic||new RegExp(({salary:'salary|paid|pay',grants:'grants?',grant:'grants?',contracts:'contracts?',contract:'contracts?',immigration:'immigration|asylum|migrant|refugee',tax:'tax|GST',housing:'housing|homes?|rent|HAFF'})[topic.toLowerCase()]??topic,'i').test(first)
+  const topicalSource=topic&&(evidence.sources??[]).some(s=>s.cited&&s.speaker&&styleNormal(first).includes(styleNormal(s.speaker))&&new RegExp(topic,'i').test([s.title,s.snippet].join(' ')))
+  const subjectTopic=limited||!topic||topicalSource||new RegExp(({salary:'salary|paid|pay',grants:'grants?',grant:'grants?',contracts:'contracts?',contract:'contracts?',immigration:'immigration|asylum|migrant|refugee',tax:'tax|GST',housing:'housing|homes?|rent|HAFF'})[topic.toLowerCase()]??topic,'i').test(first)
   const comparative=/compar|versus|\bvs\b|this term.*last term|last term.*this term/i.test(question)||/between/i.test(question)&&/how (?:many|much)|counts?|salary|paid|speeches|contracts?|grants?/i.test(question)
   const relation=limited||(!ranking&&!comparative)||/same|equal|more|fewer|compared|versus|higher|lower|than|highest|lowest|most|least|largest|biggest|top|fewest|led|leader|leads|ahead|ranked|tied/i.test(first)
   const quantitative=ranking||comparative||/how (?:many|much)|salary|paid|contracts?|grants?|median|population/i.test(question)
   const headline=limited||!quantitative||(!row?!amounts(answer).length&&!plainNumbers(answer).some(n=>!isYear(n)):[row.value,...(comparative?[...row.text.matchAll(/([\d.]+)%/g)].map(m=>m[1]):[])].some(v=>plainNumbers(first).includes(Number(v.replace(/[$,]/g,'')))))||!row&&(amounts(first).length>0||plainNumbers(first).some(n=>!isYear(n)))
   const prefix=/^([^.!?]{1,110}):/.exec(first)?.[1],rowLike=!!prefix&&!/\b(?:is|was|are|were|has|have|had|provided|gave|donated|led|recorded|received)\b/i.test(prefix)
-  const direct=first.length>12&&first.split(/\s+/).length>=5&&!/^(?:Here|Based on|According to|Coverage:|The (?:data|records|tool|table|figures) show)/i.test(first)&&!/^\|/.test(answer)&&!rowLike&&!/:$/.test(first)&&subject&&subjectTopic&&relation&&headline
+  const direct=first.length>12&&first.split(/\s+/).length>=3&&!/^(?:Here|Based on|According to|Coverage:|The (?:data|records|tool|table|figures) show)/i.test(first)&&!/^\|/.test(answer)&&!rowLike&&!/:$/.test(first)&&subject&&subjectTopic&&relation&&headline
   return {no_tool_echo:echo?'fail':'pass',no_duplicates:duplicate||coverage.length>1?'fail':'pass',direct_first_sentence:direct?'pass':'fail'}
 }

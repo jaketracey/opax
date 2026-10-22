@@ -171,3 +171,9 @@ for(const stage of ['fetch','body'])test(`an expired overview budget aborts the 
  await new Promise(resolve=>setTimeout(resolve,5));
  assert.equal(active,0);assert.equal(aborted,1);assert.equal(budget.signal.aborted,true);budget.dispose();
 });
+test('a declarative model response cannot replace the follow-up question',()=>{
+ assert.equal(readRewrite('The record supports parliamentary scrutiny.','And how much did he earn?','Who was the highest paid politician in 2005?'),null)
+})
+test('a rewrite cannot discard an explicit year in the latest turn',()=>{
+ assert.equal(readRewrite('Who gave the most money to Labor?','and in 2019-20?','Who gave the most money to Labor?'),null)
+})

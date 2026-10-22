@@ -528,6 +528,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!sheet.length) return run
     await progress('status', {phase:'writing'})
     const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
+    if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text}))
     const input={question,period,facts:sheet}
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
     const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))

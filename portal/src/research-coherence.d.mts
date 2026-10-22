@@ -5,3 +5,7 @@ export function donorRanking(question:string,sources?:{resource:string;snippet?:
 export function coherenceCheck(question:string,payload:any,options?:{direct?:boolean}):{pass:boolean;reasons:string[];orphan:string[];rankingLead:boolean}
 
 export function citationHasSentence(text:string,range:unknown):boolean
+
+export function protectedDecision(payload:any):boolean
+
+export function selectedDonorFacts(question:string,sources?:RankingSource[]):DonorRow[]
