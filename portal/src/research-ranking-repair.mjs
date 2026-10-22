@@ -5,7 +5,7 @@ const normal=s=>String(s).trim().toLowerCase().replace(/[â€™]/g,"'").replace(/[â
 const partySlot=new RegExp('^(?:the )?('+[...partyAliases].sort(([a],[b])=>(Number(b==='LNP')-Number(a==='LNP'))).map(([,re])=>re.source).join('|')+')(?= |$)','i')
 const jurSlot=new RegExp('^('+jurisdictions.map(([,re])=>re.source).join('|')+')(?= |$)','i')
 const exact=(re,text)=>new RegExp('^(?:'+re.source+')$','i').test(text)
-export function rankingRepairQuestion(question,constraints={}){
+export function rankingRepairQuestion(question,constraints={}, {unqualified=false}={}){
  let rest=normal(constraints.resolved_question??question),company=false,hanson=false
  const prefix=/^(who|which company) (?:gives|gave|donates|donated) the most(?: money)? to /.exec(rest)
  if(prefix){company=prefix[1]==='which company';rest=rest.slice(prefix[0].length)}
@@ -32,6 +32,7 @@ export function rankingRepairQuestion(question,constraints={}){
   if(rest===' disclosures')rest=''
   else if(rest.startsWith(' disclosures '))rest=rest.slice(' disclosures'.length)
  }
+ if(unqualified&&(jurisdiction||period))return null
  return {party,jurisdiction:jurisdiction??'federal',entity_type:company?'company':'donor',period}
 }
 /** All fact slots must match; donor is a typed tool relationship, never a name heuristic. */

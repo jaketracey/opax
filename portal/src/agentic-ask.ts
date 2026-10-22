@@ -310,7 +310,7 @@ export function selectAnswerFacts(facts: Fact[], scope: NamedScope, peakYear = f
 }
 
 // --------------------------------------------------------------- named scope
-export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean; unresolved: boolean; resolvedQuestion?: string; partyClarification?: true; partyClarificationReason?: 'identity' | 'party' | 'period' }
+export interface NamedScope { people: string[]; parties: string[]; bills: string[]; ambiguous: boolean; unresolved: boolean; resolvedQuestion?: string; partyClarification?: true; partyClarificationReason?: 'identity' | 'party' | 'form' }
 /** Exact roster/list matching, with a unique surname allowed. Longest names
  * win over surnames inside another full name. Never ask the model to identify
  * the entities it must retain. */
@@ -612,7 +612,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
     catch { return base({ reason: 'declined' }) }
-    if(named.partyClarification||named.ambiguous&&deps.research){const answer=named.partyClarification?(named.partyClarificationReason==='period'?'Which party do you mean for that period? The roster only records current party affiliations.':named.partyClarificationReason==='identity'?"Which party do you mean? Please give the person's full name so I can identify their current party.":"Which party do you mean? This person's current roster affiliation does not identify a political party."):'Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,answer_decision:'clarification',citations:{},sources:[],answer_status:'uncited'}})}
+    if(named.partyClarification||named.ambiguous&&deps.research){const answer=named.partyClarification?(named.partyClarificationReason==='form'?'Which party do you mean? Please name the party directly so I can check the records for your question.':named.partyClarificationReason==='identity'?"Which party do you mean? Please give the person's full name so I can identify their current party.":"Which party do you mean? This person's current roster affiliation does not identify a political party."):'Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,answer_decision:'clarification',citations:{},sources:[],answer_status:'uncited'}})}
     if (!deps.research && (named.unresolved || named.ambiguous || named.bills.length)) return base({ reason: 'declined' })
   }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {

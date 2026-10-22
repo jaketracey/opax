@@ -1,5 +1,7 @@
 # Ask post-deploy round 2: strict party ownership
 
+**Round 3 replaces the period-word check with the shared fail-closed allowlist:** [allowlisted ownership](SCOPE-ASK-POST-DEPLOY-R3.md).
+
 Base: `d942ef4ae2d370a8ab64343a6fb55ac0f80500a1`. This round supersedes the prior surname and affiliation policy. No model calls, production requests, push or deployment; spend US$0.
 
 Party resolution requires all three conditions:

@@ -46,9 +46,9 @@ test('coverage fallback uses the known start once, without implementation langua
  const result=api.guardToolPeriod({tool:'party_donations',ok:true,data:{rows:[]},cite:[],notes:[coverageSources[1].snippet]},{tool:'party_donations',args:{party:'One Nation'}},c)
  assert.equal(result.coverage.since,'1998-07-01');assert.doesNotMatch(result.cite[0].label,/unknown start|unknown end|unknown date|tool/)
 })
-test('a calculated party owner remains a research question, rather than a named-party clarification',()=>{
+test('a calculated party owner now requires an explicit party',()=>{
  const q='Who donated most to the party of the federal MP who made the most speeches about housing?',n=api.extractNamedScope(q,roster,null)
- assert.equal(n.partyClarification,undefined);assert.equal(n.resolvedQuestion,undefined)
+ assert.equal(n.partyClarification,true);assert.equal(n.resolvedQuestion,undefined)
 })
 test('an official party name containing its founder does not introduce a person filter',()=>{
  const n=api.extractNamedScope(question,{people:[{name:'Pauline Hanson',party_now:"Pauline Hanson's One Nation"}]},null)

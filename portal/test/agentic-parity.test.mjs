@@ -59,7 +59,11 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   // "than last term" -> "Last"). Only questions whose named scope differs between the two trees may differ.
   const scopeOf=async entry=>{const out=await build({entryPoints:[entry],bundle:true,platform:'node',format:'esm',write:false});return (await import('data:text/javascript;base64,'+Buffer.from(out.outputFiles[0].text).toString('base64'))).extractNamedScope};
   const roster=JSON.parse(readFileSync(root+'portal/public/parliamentarians.json')),[scopeNow,scopeMain]=await Promise.all([scopeOf(root+'portal/src/agentic-ask.ts'),scopeOf(join(scratch,'portal/src/agentic-ask.ts'))]);
-  const SURNAME_FIX=new Set(gold.filter(q=>JSON.stringify(scopeNow(q.question,roster,{bills:[]}))!==JSON.stringify(scopeMain(q.question,roster,{bills:[]}))).map(q=>q.id));
+  // Current-party inference is now allowed only in the four unqualified donor
+  // forms. The computed owner in M04 must ask for the party explicitly.
+  const PARTY_CLARIFY=new Set(gold.filter(q=>scopeNow(q.question,roster,{bills:[]}).partyClarification).map(q=>q.id));
+  assert.deepEqual([...PARTY_CLARIFY],['M04']);
+  const SURNAME_FIX=new Set(gold.filter(q=>!PARTY_CLARIFY.has(q.id)&&JSON.stringify(scopeNow(q.question,roster,{bills:[]}))!==JSON.stringify(scopeMain(q.question,roster,{bills:[]}))).map(q=>q.id));
   // Empty once origin/main carries the fix (deployed 14 Oct); while it differs, R07 must be among at most six.
   assert.ok(SURNAME_FIX.size<=6&&(!SURNAME_FIX.size||SURNAME_FIX.has('R07')),[...SURNAME_FIX].join());
   for(const q of gold)if(SURNAME_FIX.has(q.id))assert.ok(scopeNow(q.question,roster,{bills:[]}).people.every(name=>name.includes(' ')),q.id);
@@ -103,11 +107,12 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
    const [after,before]=[legacyBody(await b.text(),stream),mainCopy(legacyBody(await a.text(),stream),stream)];
    // 14 Oct: origin/main read lowercase words as surname-only people ("speakers on defence" -> "On") and
    // declined these; the capitalised-surname rule now answers them from tool rows. Every other body stays byte-identical.
-   if(q.id==='R07'){assert.match(after,/"answered":true/,`gold R07 (${stream?'SSE':'JSON'})`);assert.match(after,/Scott Morrison: 133/);}
+   if(PARTY_CLARIFY.has(q.id)){assert.match(after,/"answer_decision":"clarification"/);assert.match(after,/Which party do you mean/);assert.doesNotMatch(after,/"tool":"(?:party_donations|count_speeches)"/);}
+   else if(q.id==='R07'){assert.match(after,/"answered":true/,`gold R07 (${stream?'SSE':'JSON'})`);assert.match(after,/Scott Morrison: 133/);}
    else if(SURNAME_FIX.has(q.id))assert.match(after,/"answer":/,`gold ${q.id} (${stream?'SSE':'JSON'})`);
    else assert.equal(after,before,`gold ${q.id} (${stream?'SSE':'JSON'})`);
    while(pending.length)await Promise.all(pending.splice(0));
   }
-  assert.equal(gold.length,34);t.diagnostic('34 agentic gold questions, 68 JSON/SSE bodies: 0 legacy-field differences; optional research metadata rebaselined.');
+  assert.equal(gold.length,34);t.diagnostic('34 agentic gold questions, 68 JSON/SSE bodies: unaffected legacy fields pinned; M04 now clarifies under the party ownership allowlist.');
  }finally{Date.now=realNow;restore();rmSync(scratch,{recursive:true,force:true})}
 });

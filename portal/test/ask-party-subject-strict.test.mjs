@@ -6,6 +6,17 @@ const b=await build({stdin:{contents:"export {extractNamedScope,inferPeriod,runA
 const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
 const roster=JSON.parse(fs.readFileSync(new URL('../public/parliamentarians.json',import.meta.url))),hanson=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-pauline.json',import.meta.url)))
 const cases=[
+ ['computed party owner','Who donated most to the party of the federal MP who made the most speeches about housing?','clarification'],
+ ['pandemic review','Who gave the most money to Barnaby Joyce’s party during the pandemic?','clarification'],
+ ['historical membership',"Who gave the most money to Barnaby Joyce's party when he was in the Nationals?",'clarification'],
+ ['before pandemic',"Who gave the most money to Pauline Hanson's party before the pandemic?",'clarification'],
+ ['election period',"Who gave the most money to Pauline Hanson's party around the last election?",'clarification'],
+ ['lockdown period',"Who gave the most money to Pauline Hanson's party during lockdown?",'clarification'],
+ ['extra adverb',"Who usually gives the most money to Pauline Hanson's party?",'clarification'],
+ ['non-allowlisted funds',"Who funds Mark Butler's party?",'clarification'],
+ ['allowlist financial year',"Who gave the most money to Pauline Hanson's party in 2013–14?",'clarification'],
+ ['allowlist explicit federal',"Who gives the most money to Pauline Hanson's party in federal disclosures?",'clarification'],
+ ['allowlist explicit state',"Top donors to the party of Pauline Hanson in Queensland disclosures?",'clarification'],
  ['historical affiliation review','Who gave the most money to Barnaby Joyce’s party in 2013?','clarification'],
  ['independent review','Who funds David Pocock’s party?','clarification'],
  ['common word review','Who funds the party of cash?','clarification'],
@@ -23,7 +34,7 @@ for(const [label,question,decision] of cases)for(const sse of [false,true])for(c
   assert.equal(named.partyClarification,true);assert.deepEqual(named.people,[]);assert.deepEqual(named.parties,[])
   let calls=0;const forbidden=async()=>{calls++;throw Error('A clarification must not make tool or model calls')}
   const run=await api.runAgentic(question,{asset:forbidden,kb:forbidden,generate:forbidden,research:forbidden},async()=>{},10000,api.inferPeriod(question),{},named)
-  assert.equal(calls,0);assert.equal(run.qualitative.answer_decision,'clarification')
+  assert.equal(calls,0);assert.equal(run.qualitative.answer_decision,'clarification');assert.match(run.qualitative.answer,/^Which party do you mean/i)
   payload={...run.qualitative,sources:structuredClone(hanson.payload.sources).map(s=>({...s,cited:true}))}
  }else if(decision==='person'){
   assert.deepEqual(named.people,['Pauline Hanson']);assert.deepEqual(named.parties,[]);assert.equal(named.partyClarification,undefined)
@@ -43,7 +54,7 @@ for(const [label,question,decision] of cases)for(const sse of [false,true])for(c
 })
 for(const alias of ['Avery Example','Avery Display','avery-example'])test(`full roster name/display/slug resolves: ${alias}`,()=>{
  const r={people:[{name:'Avery Example',full:'Avery Display',slug:'avery-example',party_now:'Greens'}]}
- assert.equal(api.resolvePartySubject(`Who funds ${alias}'s party?`,r).question,'Who funds Greens?')
+ assert.equal(api.resolvePartySubject(`Top donors to ${alias}'s party`,r).question,'Top donors to Greens')
 })
 for(const label of ['Independent','independent','Unaffiliated','Not affiliated','None','',undefined])test(`non-party affiliation clarifies: ${label}`,()=>{
  assert.equal(api.resolvePartySubject("Who funds Avery Example's party?",{people:[{name:'Avery Example',party_now:label}]}).clarification,true)
@@ -57,4 +68,9 @@ test('two roster identities with the same full display name cannot be chosen',()
 
 test('a longer unrecognised slug cannot match a known slug suffix',()=>{
  assert.equal(api.resolvePartySubject("Who funds fake-pauline-hanson's party?",roster).clarification,true)
+})
+
+for(const question of ["Who gives the most money to Avery Example's party?","Which company donated the most to Avery Example's party?","Top donors to Avery Example's party", "Who does Avery Example's party take the most money from?"])test(`unqualified allowlist family: ${question}`,()=>{
+ const out=api.resolvePartySubject(question,{people:[{name:'Avery Example',party_now:'Greens'}]})
+ assert.equal(out.clarification,undefined);assert.equal(out.question,question.replace("Avery Example's party",'Greens'))
 })

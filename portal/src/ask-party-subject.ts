@@ -1,11 +1,11 @@
 import {PERSON_PATHS} from '../public/person-paths.js'
+import {rankingRepairQuestion} from './research-ranking-repair.mjs'
 
 /** The roster establishes a current party only for one fully identified person.
  * It cannot establish dated membership or turn independents into a party. */
-export function resolvePartySubject(question: string, roster: unknown): { question: string; clarification?: true; reason?: 'identity' | 'party' | 'period' } {
-  // "The party of the MP who ..." is a computed subject, not a named owner.
-  if (!/[’']s\s+party\b|\bthe party of\s+(?!(?:the|a|an)\b)/i.test(question)) return { question }
-  const clarify = (reason: 'identity' | 'party' | 'period') => ({ question, clarification: true as const, reason })
+export function resolvePartySubject(question: string, roster: unknown): { question: string; clarification?: true; reason?: 'identity' | 'party' | 'form' } {
+  if (!/[’']s\s+party\b|\bthe party of\b/i.test(question)) return { question }
+  const clarify = (reason: 'identity' | 'party' | 'form') => ({ question, clarification: true as const, reason })
   const records = (roster as { people?: { name: string; full?: string; display_name?: string; slug?: string; party_now?: string }[] } | null)?.people ?? []
   const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const fullName = (s: unknown): s is string => typeof s === 'string' && /^\S+\s+\S/.test(s.trim())
@@ -22,7 +22,7 @@ export function resolvePartySubject(question: string, roster: unknown): { questi
     }
   }
   const spans = matches.filter(m => !matches.some(n => n.start <= m.start && n.end >= m.end && n.end - n.start > m.end - m.start))
-  let resolved = question, periodText = question
+  let resolved = question
   for (const span of spans.sort((a, b) => b.start - a.start)) {
     const owners = spans.filter(m => m.start === span.start && m.end === span.end)
     if (new Set(owners.map(m => m.identity)).size !== 1) return clarify('identity')
@@ -30,12 +30,10 @@ export function resolvePartySubject(question: string, roster: unknown): { questi
     if (!affiliation || /^(?:independent|independents|ind|unaffiliated|not affiliated|no party|none|unknown|n a|non aligned|non partisan|nonpartisan|crossbench)$/.test(affiliation)) return clarify('party')
     if (owners[0] !== span) continue
     resolved = resolved.slice(0, span.start) + span.party + resolved.slice(span.end)
-    periodText = periodText.slice(0, span.start) + ' ' + periodText.slice(span.end)
   }
   if (/[’']s\s+party\b|\bthe party of\b/i.test(resolved)) return clarify('identity')
-  // Mask the identity before checking time: a roster display name or slug is
-  // not a date. Any named period requires affiliation evidence we do not hold.
-  const period = /\b\d{4}s?\b|\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b|\b(?:years?|months?|weeks?|days?|decades?|centur(?:y|ies)|then|historically|previously|formerly|past|yesterday|today|tomorrow|now|currently|ever)\b|\b(?:this|last|previous|next|current|earlier|former)\s+(?:term|parliament|election|period)\b|\b(?:all[ -]time|whole record)\b|\b(?:January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/i
-  if (period.test(periodText)) return clarify('period')
+  // The same whole-question grammar owns both permissions. No named slots,
+  // extra words or alternate verbs can infer affiliation from today's roster.
+  if (!rankingRepairQuestion(resolved, {}, {unqualified:true})) return clarify('form')
   return { question: resolved }
 }
