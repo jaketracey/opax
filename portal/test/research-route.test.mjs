@@ -275,6 +275,17 @@ test('missing and invalid statute catalogues never force ACT into the actual sea
   }
  }finally{h.env.ASSETS=assets;globalThis.fetch=fetchFixture}
 })
+test('conversation clarification is protected before loop selection, in JSON and SSE',async()=>{
+ h.env.RESEARCH_LOOP='route';const before=ordinaryCalls
+ globalThis.__researchModel=new MockLanguageModelV4({doGenerate:()=>{throw Error('clarification must not select facts')}})
+ for(const stream of [false,true]){const r=await post('ok',stream,{context:[{author:'user',text:q},{author:'answer',text:'Taylor Example led the ranking.'}]});const raw=await r.text(),body=r.headers.get('content-type')?.includes('event-stream')?decodeStream(raw):JSON.parse(raw);assert.equal(body.answer_status,'needs_question',JSON.stringify(body));assert.deepEqual(body.citations,{})}
+ assert.equal(ordinaryCalls,before)
+})
+test('loop follow-ups search the standalone question, expose asked_as and pre-writer evidence',async()=>{
+ h.env.RESEARCH_LOOP='route';const originalFetch=globalThis.fetch
+ globalThis.fetch=(input,init)=>{const body=JSON.parse(init?.body??'{}');return body.prompt?.system?.startsWith('You rewrite follow-up')?Promise.resolve(Response.json({answer:q,metadata:{tokens:{input:8,output:8}}})):originalFetch(input,init)}
+ try{for(const stream of [false,true]){globalThis.__researchModel=counted();const r=await post('and gambling?',stream,{context:[{author:'user',text:'Who speaks most about housing in NSW across the whole record?'},{author:'answer',text:'Taylor Example.'}]});const raw=await r.text(),body=r.headers.get('content-type')?.includes('event-stream')?decodeStream(raw):JSON.parse(raw);assert.equal(body.asked_as,q);assert.match(body.answer,/Taylor Example/);assert.ok(body.research.pre_writer_sources.some(s=>s.snippet.includes('Taylor Example')))}}finally{globalThis.fetch=originalFetch}
+})
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
  for(const stream of [false,true]){

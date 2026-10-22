@@ -1,5 +1,9 @@
 // Pure selected-evidence audit, shared by the final boundary and the offline report.
+import {PERSON_PATHS} from '../public/person-paths.js'
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[‘’]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
+// This generated index binds public parliamentarians.json names and their canonical slugs.
+const rosterPeople=new Map(Object.entries(PERSON_PATHS.exact).flatMap(([name,path])=>[[norm(name),path],[norm(path.split('/').at(-1)),path]]))
+const samePerson=(a,b)=>!!a&&!!b&&(norm(a)===norm(b)||rosterPeople.has(norm(a))&&rosterPeople.get(norm(a))===rosterPeople.get(norm(b)))
 const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 const months=['January','February','March','April','May','June','July','August','September','October','November','December']
 const partyName=s=>s?({labor:'Labor',liberal:'Liberal',coalition:'Coalition',greens:'Greens',nationals:'Nationals',alp:'ALP'}[s.toLowerCase()]??s):s
@@ -114,11 +118,10 @@ function recordName(name,row){
  return text.includes(n)||title.includes(n)||norm(row.party)===n||norm(row.entity)===n
 }
 function personName(name,rows){
- if(!name||parties.some(p=>norm(p)===norm(name))||/\b(?:Bill|Act|Report|Fund|House|Senate|Parliament|Ministry|Department|Pty|Ltd|Alliance|Party|Committee|Commission)\b|indexed|passages?/i.test(name))return false
- if(rows.some(r=>r.speaker===name))return true
- if(rows.some(r=>r.entity===name||r.donor===name)&&!rows.some(r=>r.speaker===name))return false
- return /^[A-Z][\p{L}'’-]+(?: [A-Z][\p{L}'’-]+)+$/u.test(name)
+ return !!name&&(rosterPeople.has(norm(name))||rows.some(r=>samePerson(r.speaker,name)||samePerson(r.recipient,name)))
 }
+// A reporting subject without a selected document/entity identity still needs an author.
+const recordSubject=(name,rows)=>rows.some(r=>recordName(name,{...r,text:''}))
 function reporterIn(text,scope,named,rows,until=scope.end){
  const subject=scope.owner
  if(!personName(subject,rows))return undefined
@@ -130,7 +133,7 @@ function evidenceRows(payload){
  const rows=[]
  for(const source of Array.isArray(payload.sources)?payload.sources:[]){
   if(!source||typeof source!=='object'||typeof source.resource!=='string')continue
-  const text=String(source.snippet??''),base={id:source.resource,text,date:source.date,speaker:source.speaker,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
+  const text=String(source.snippet??''),base={id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
   const parts=text.split(/\n+|(?<=[.!?])\s+(?=[A-Z][^:$;\n.]{1,110}:\s*\$?\d)/)
   for(const line of parts){
    const label=/^\s*[-*]?\s*([^:|]{2,140}):/.exec(line)?.[1]
@@ -214,12 +217,11 @@ export function auditPayload(question,payload,{roster=[]}={}){
   for(const name of [...new Set(named.map(n=>n.name))]){
    if(/^\d{4}$/.test(name))continue
    const modifier=speech&&name!==speaker&&['Labor','Liberal','Coalition','Greens','Nationals','ALP','Australian Democrats','One Nation','Senate','House'].includes(name)
-   const titleMention=new RegExp(escape(name)+'[^.!?]{0,85}\\b(?:Bill|Act|Fund)\\b').test(text)
    if(descriptor(text,named.find(n=>n.name===name)))continue
-   const candidates=selected.filter(r=>recordName(name,r)||titleMention&&norm(r.text+' '+(r.title??'')).replace(/ /g,'').includes(norm(name).replace(/ /g,''))||norm(r.entity)===norm(name)||norm(r.text).includes(norm(name))||r.speaker===name||modifier&&r.speaker===speaker)
+   const candidates=selected.filter(r=>recordName(name,r)||samePerson(r.speaker,name)||modifier&&r.speaker===speaker)
    const nameAt=named.find(n=>n.name===name)?.at??0,scope=claimScope(text,nameAt,named,speakers)
-   const attribution=scope.owner===name&&personName(name,selected)&&(!!reporterIn(text,scope,named,selected)||!numeric.some(f=>f.at>=scope.start&&f.at<scope.end))&&selected.some(r=>['speech','bill'].includes(r.kind))
-   add({type:'entity',entity:name,metric:attribution?'attribution':'identity',value:name,period:[],text,offset:sentenceAt+nameAt},attribution?candidates.filter(r=>r.speaker===name&&topicsMatch(text.slice(scope.start,scope.end),r)):candidates,'named entity or speaker/topic association is not established by selected evidence')
+   const attribution=scope.owner===name&&(personName(name,selected)||!recordSubject(name,selected)&&reportingPredicate.test(text.slice(nameAt,scope.end)))&&(!!reporterIn(text,scope,named,selected)||!numeric.some(f=>f.at>=scope.start&&f.at<scope.end))&&selected.some(r=>['speech','bill'].includes(r.kind))
+   add({type:'entity',entity:name,metric:attribution?'attribution':'identity',value:name,period:[],text,offset:sentenceAt+nameAt},attribution?candidates.filter(r=>samePerson(r.speaker,name)&&topicsMatch(text.slice(scope.start,scope.end),r)):candidates,'named entity or speaker/topic association is not established by selected evidence')
   }
   for(const f of numeric){
    const availableNames=f.metric==='salary'&&f.unit.startsWith('AUD')?named.filter(n=>!['Labor','Liberal','Coalition','Greens','Nationals','ALP'].includes(n.name)):named
@@ -267,7 +269,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
   }
   for(const q of quotations(text)){
    const scope=claimScope(text,q.at,named,speakers),possessive=scope.names.filter(n=>n.end<=q.at&&/^[’']s\b/.test(text.slice(n.end))).at(-1),entity=possessive?.name??scope.owner,dates=ps.filter(p=>p.at>=scope.start&&p.end<=scope.end),numbers=numeric.filter(f=>f.at>=scope.start&&f.end<=scope.end)
-   const candidates=selected.filter(r=>(!entity?true:personName(entity,selected)?owns(r,entity):recordName(entity,r))&&r.text.includes(q.value)&&topicsMatch(text.slice(scope.start,scope.end),r)&&dates.every(p=>dateSupported(p.value,r))&&numbers.every(f=>r.figures.some(v=>v.value===f.value&&metricSupported(f,v))))
+   const candidates=selected.filter(r=>(!entity?true:personName(entity,selected)?samePerson(r.speaker,entity):recordName(entity,r))&&r.text.includes(q.value)&&topicsMatch(text.slice(scope.start,scope.end),r)&&dates.every(p=>dateSupported(p.value,r))&&numbers.every(f=>r.figures.some(v=>v.value===f.value&&metricSupported(f,v))))
    add({type:'quote',entity,metric:'literal quote',value:q.value,quote:q.value,period:dates.map(p=>p.value),text,offset:sentenceAt+q.at},candidates,'quotation/owner/figure/period is not one literal selected evidence atom')
   }
  }

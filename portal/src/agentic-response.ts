@@ -58,6 +58,7 @@ export function agenticAskPayload(run: AgenticPayload, question: string) {
   const party = typeof speech?.party === 'string' ? ` for ${speech.party}` : ''
   const followup = topic ? `${opening} about ${topic}${party}${place}${chamber}${run.period.kind === 'all' ? ' in the current parliament' : ' across the whole record'}?` : null
   return {
+    ...(run.answer_scope?{answer_scope:run.answer_scope}:{}),
     answered: run.answered,
     ...(run.reason ? { reason: run.reason } : {}),
     answer: run.answered ? answer : '',

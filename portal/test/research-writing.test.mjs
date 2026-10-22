@@ -38,11 +38,12 @@ test('reworded dates preserve their day, month and year',()=>{
  assert.equal(api.supportedDates('from July 1, 2005',texts[1]),true)
  assert.equal(api.supportedDates('from June 1, 2005',texts[1]),false)
  for(const text of ['from 1 June 2005','from 1 July 2006'])assert.equal(api.supportedDates(text,texts[1]),false)
- const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('1 July','1 August'),facts:[1,2]}]},input);assert.match(repaired.answer,/277,602/);assert.doesNotMatch(repaired.answer,/1 August/)
+ const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('1 July','1 August'),facts:[1,2]}]},input);assert.equal(repaired,null,'an invalid date outside the repair allowlist requires a retry')
 })
 test('raw rate lines, coverage blocks and repeated figure sets cannot pass through',()=>{
  for(const text of [texts[0],texts[2]])assert.equal(api.verifyWrittenAnswer({sentences:[{text,facts:[1,2]}]},input),null)
- const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('$277,602','$999,999'),facts:[1,2]}]},input);check(repaired);assert.doesNotMatch(repaired.answer,/999,999/)
+ // Pay questions are outside the donor repair allowlist; request a retry instead of emitting a fragment.
+ const repaired=api.verifyWrittenAnswer({sentences:[{text:prose.replace('$277,602','$999,999'),facts:[1,2]}]},input);assert.equal(repaired,null)
  check(api.verifyWrittenAnswer({sentences:[...draft.sentences,...draft.sentences,{text:'Robin Example received $277,602 and $288,990 in annual salary rates.',facts:[1,2]}]},input))
 })
 const response=text=>({content:[{type:'text',text}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]})

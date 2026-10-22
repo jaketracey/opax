@@ -70,11 +70,11 @@ test('r3 a chamber limitation leads ahead of ancillary pay coverage dates',async
  const {out}=await boundary(p,'Who was the highest paid senator in 2005?')
  assert.equal(out.answer,answer)
 })
-test('r3 a disclosure-record limitation cannot precede an already cited finding',async()=>{
+test('a specific coverage limitation leads when the question cannot be answered by an incidental figure',async()=>{
  const answer='The retrieved disclosure records do not establish a complete party-by-party total.\n\nA Senate passage says Labor received $100,000.'
  const p=payload(answer,[{...speech,chamber:'senate'}])
  const {out}=await boundary(p,'What does the evidence show?')
- assert.match(out.answer,/^A Senate passage says Labor received \$100,000\./)
+ assert.match(out.answer,/^The retrieved disclosure records do not establish/);assert.match(out.answer,/Labor received \$100,000/)
  assert.deepEqual(Object.keys(out.citations),Object.keys(p.citations))
 })
 test('r3 a moved finding makes its implied passage subject explicit',async()=>{
@@ -105,7 +105,8 @@ for(const [id,input]of Object.entries(replay))test('r3 identical r2 selected evi
   assert.equal(auditPayload(question,out).findings.length,0)
   if(id==='GOLD-M03'){
    assert.match(out.answer,/almost \$3 million.*2017-18/)
-   assert.match(out.answer.split(/(?<=[.!?])\s/)[0],/\$3 million/)
+   // The ownership-checked quotation survives; an unestablished ranking must lead with its limitation.
+   assert.match(out.answer.split(/(?<=[.!?])\s/)[0],/does not establish|do not establish/)
    assert.equal(gradeRow({question,must:[]},out).refusal,false)
   }
  }

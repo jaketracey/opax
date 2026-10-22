@@ -19,7 +19,7 @@ import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
-import { rankedMoneyAnswer } from './ask-money'
+import { fundingResearchFollowUp, rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { buildPersonOverview, isPersonOverviewCandidate, isPersonOverviewIntent, isPersonRecentCandidate, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, OVERVIEW_CAPS, OVERVIEW_RETRIEVAL_MS, OVERVIEW_FIRST_ANSWER_MS, OVERVIEW_VERIFICATION_MS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
@@ -6314,25 +6314,27 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
   // Operator evals may also pick a model from RESEARCH_LOOP_MODEL_ALLOW and a provider sort for this request only.
   const modelOverride = usage ? researchModelOverride(request.headers.get('x-opax-research-model'), request.headers.get('x-opax-research-provider'), env.RESEARCH_LOOP_MODEL_ALLOW) : {}
   const selected = usage ? { ...env, ...modelOverride, RESEARCH_LOOP: override === 'loop' ? 'route' as const : 'off' as const, RESEARCH_EVAL: usage } : env
-  let answerQuestion=''
+  let answerQuestion='',routedInput:Record<string,unknown>|undefined
   const serve = async () => {
     const body = await readJsonBody(request)
     if (body instanceof Response) return body
     const question = body.value.question
     if (typeof question !== 'string' || !question.trim()) return json({ error: 'question is required' }, 400)
     if (question.length > MAX_QUESTION_CHARS) return json({ error: `question must be ${MAX_QUESTION_CHARS} characters or fewer` }, 400)
-    answerQuestion=question
+    answerQuestion=question;routedInput=body.value
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
   }
-  const response = await withAnswerLanguage(await serve(),selected.RESEARCH_LOOP==='route'?answerQuestion:undefined)
+  const served=await serve()
+  answerQuestion=String(routedInput?.question??answerQuestion)
+  const response = await withAnswerLanguage(served,selected.RESEARCH_LOOP==='route'?answerQuestion:undefined,typeof routedInput?.asked_as==='string'?routedInput.asked_as:undefined)
   // Operator evals also see which model and routing the loop used.
   return usage ? withResearchEval(response, () => ({ ...researchEvalUsage(usage), model: researchModelKey(selected.RESEARCH_LOOP_MODEL_ID, selected.RESEARCH_LOOP_PROVIDER, selected.RESEARCH_LOOP_REASONING) })) : response
 }
 async function apiAskRoutedCore(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void): Promise<Response> {
   const started = Date.now()
-  const question = String(input.question).trim()
+  let question = String(input.question).trim()
   let quotaTaken = false
   const fallback = () => apiAsk(request.clone(), env, ctx, undefined, undefined, quotaTaken)
   const loopRoute = env.RESEARCH_LOOP === 'route'
@@ -6455,6 +6457,17 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     }
     const limited = await budget.run(() => rateLimited(env.ASK_LIMITER, request)); if (limited) return limited
     quotaTaken = true
+    // Resolve chat ellipsis before research, under the original request budget.
+    if(loopRoute&&privateTurn){
+      const funding=await budget.run(()=>fundingResearchFollowUp(input as AskInput,env.ASSETS))
+      if(funding&&'answer' in funding){budget.dispose();return json(funding)}
+      const rewrite=funding&&'question' in funding?funding.question:await standaloneQuestion(input as AskInput,env,budget)
+      if(rewrite&&typeof rewrite==='object'){budget.dispose();return json(clarifyPayload(question,rewrite.suggestion))}
+      if(typeof rewrite==='string'){
+        question=rewrite;input.question=rewrite;input.asked_as=rewrite
+        namedScope=await resolveNamedScope(question,agenticToolDeps(env,budget.signal),Math.min(4_000,budget.remaining),agenticFilters(input))
+      }
+    }
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       const finalPayload=loopRoute?groundAnswerPayload(payload,question):payload

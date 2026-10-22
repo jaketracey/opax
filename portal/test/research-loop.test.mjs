@@ -18,12 +18,20 @@ function fixtures(m,options={}) {
  const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:selectionOnly(api.createResearch({model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),...options})),onResearchFailure:async e=>failures.push(e)};
  return {model:m,deps,events,failures,run:(q=question)=>api.runAgentic(q,deps,async(e,d)=>events.push(d),40_000,api.inferPeriod(q),{},emptyScope),get plannerCalls(){return plannerCalls},get lookups(){return lookups},get turns(){return turns}};
 }
+test('loop decisions carry a typed refusal or clarification through the response adapter',async()=>{
+ for(const reason of ['ambiguous','causation']){
+  const f=fixtures(model([reply([call('decline',{reason})])])),run=await f.run('Who gives the most money to One Nation?'),payload=api.agenticAskPayload(run,'Who gives the most money to One Nation?')
+  assert.equal(payload.answer_decision,reason==='ambiguous'?'clarification':'refusal');assert.equal(payload.answer,run.qualitative.answer)
+  assert.deepEqual(payload.answer_scope,run.answer_scope);assert.ok(payload.answer_scope.period)
+ }
+})
 test('multi-round happy path, finish maps selected facts to templates and matching step events',async()=>{
  const m=model([reply([call('count_speeches',args,'a')]),reply([call('count_speeches',{...args,limit:1},'b')]),reply([call('finish',{facts:[3]},'c')])]),f=fixtures(m),run=await f.run(),body=api.agenticAskPayload(run,question);
  assert.equal(run.answered,true);assert.equal(run.answer_source,'template');assert.equal(f.plannerCalls,0);assert.equal(f.turns,3);assert.deepEqual(run.chosen_facts,[3]);assert.match(body.answer,/Taylor Example: 87/);assert.doesNotMatch(body.answer,/Pat Example/);assert.equal(body.research.mode,'loop');assert.equal(body.research.rounds,3);assert.equal(body.research.sources.length,1);assert.deepEqual(run.tokens,{input:30,output:15});
  const steps=f.events.filter(x=>x.phase==='step').map(x=>x.step);assert.equal(steps.length,6);
  for(let i=0;i<steps.length;i+=2){assert.equal(steps[i].state,'running');assert.equal(steps[i+1].state,'done');assert.equal(steps[i].id,steps[i+1].id);assert.equal(typeof steps[i+1].results,'number');assert.equal(typeof steps[i+1].ms,'number');assert.equal(steps[i].round,i/2+1);}
  assert.ok(m.doGenerateCalls.every(c=>c.maxOutputTokens<=1800));
+ assert.equal(run.answer_scope.jurisdiction,'nsw');assert.deepEqual(body.answer_scope,run.answer_scope)
 });
 test('identical scoped calls dedupe despite different property order',async()=>{
  const m=model([reply([call('count_speeches',args,'a')]),reply([call('count_speeches',{group_by:'speaker',state:'nsw',topic:'gambling'},'b')]),reply([call('finish',{facts:[1]},'c')])]),f=fixtures(m),run=await f.run();

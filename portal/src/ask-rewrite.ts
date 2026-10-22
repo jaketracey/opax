@@ -85,6 +85,8 @@ export function readRewrite(raw: string | null | undefined, question: string, pr
     return useful ? { unclear: true, suggestion: guess } : { unclear: true }
   }
   if (!text || text.length > 400 || text.length < 4) return null
+  if(!/\b(?:who|what|which|how|why|when|where|did|does|do|is|was|are|were|can|could|would)\b/i.test(text))return null
+  if([...question.matchAll(/\b(?:19|20)\d{2}\b/g)].some(m=>!text.includes(m[0])))return null
   if (text.toLowerCase() === question.toLowerCase()) return null
   // The incident: a message that was not the last question came back as it.
   if (previous && sameQuestion(text, previous) && !sameQuestion(question, previous) && !AGAIN.test(question)) return { unclear: true }

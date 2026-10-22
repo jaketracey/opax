@@ -2,6 +2,7 @@ import { claimClauses, proseClaimKeys } from './research-claims'
 import { proseFallback, rawToolEcho, writingFacts } from './research-writing'
 import { plainAnswerPayload } from './research-language'
 import { groundAnswerPayload } from './research-grounding'
+import {protectedDecision} from './research-coherence.mjs'
 import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
@@ -21,8 +22,8 @@ export async function withPlannerResearch(response: Response, previous?: Researc
 }
 
 /** One guard covers JSON, streamed fallbacks and cached payloads. */
-export async function withAnswerLanguage(response: Response,question?:string): Promise<Response> {
-  return mapResearchResponse(response, payload=>question?groundAnswerPayload(payload,question):plainAnswerPayload(payload), true, true)
+export async function withAnswerLanguage(response: Response,question?:string,askedAs?:string): Promise<Response> {
+  return mapResearchResponse(response, payload=>{const out=question?groundAnswerPayload(payload,question):plainAnswerPayload(payload);return askedAs?{...out,asked_as:askedAs}:out}, true, true)
 }
 
 export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage> & { model?: string }): Promise<Response> {
@@ -85,6 +86,13 @@ export async function withFallbackPeriod(response: Response, period: import('./a
   if (!response.ok) return response
   return mapResearchResponse(response, payload => {
     payload=normaliseWrittenPayload(payload)
+    if(protectedDecision(payload)){
+      if(period.kind!=='all'&&(period.since||period.until)&&/^This selection does not establish their position on that topic\.$/.test(String(payload.answer??''))){
+        const answer=`The selected records do not establish the requested answer for ${period.since??'the start of the record'} to ${period.until??'the present'}.`
+        return {...payload,answer,citations:{},sources:[],answer_status:'coverage_only'}
+      }
+      return payload
+    }
     // A request for a name asserts no dated facts; keep it through ordinary fallback.
     if(/^Please (?:give the full name|name the person)/i.test(String(payload.answer??''))&&!/[\d$]/.test(String(payload.answer))&&!((payload.sources??[]) as unknown[]).length)return payload
     // No fallback/cache delta is released before both writing and period checks.

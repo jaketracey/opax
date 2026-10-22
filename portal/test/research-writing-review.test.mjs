@@ -142,7 +142,8 @@ test('review rubric: an explicit verified coverage limitation can answer first w
 test('review repair: removing a bad lead must not leave a runner-up as the opening answer',()=>{
  const facts=[fact(1,'Avery Example: 99 chamber speeches labelled housing.','count'),fact(2,'Blake Sample: 87 chamber speeches labelled housing.','count')]
  const out=api.verifyWrittenAnswer({sentences:[{text:'Avery Example led with 999 chamber speeches about housing.',facts:[1]},{text:'Blake Sample followed with 87 chamber speeches about housing.',facts:[2]}]},{question:'Who spoke most about housing?',period,facts})
- assert.ok(out);assert.match(out.answer,/^Avery Example.*99/);assert.doesNotMatch(out.answer,/999/);assert.match(out.answer,/Blake Sample followed with 87/)
+ // Speech rankings are outside the donor repair allowlist: retry rather than emit a runner-up fragment.
+ assert.equal(out,null)
 })
 test('review mixed points: equal amounts for different people survive the final append',()=>{
  const a='Avery Example received $100,000.',b='Blake Sample received $100,000.'

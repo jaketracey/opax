@@ -161,6 +161,38 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
 }
 
+/** Reuse the web money path's scope resolver before a research-loop follow-up. */
+export async function fundingResearchFollowUp(input:RecordQuestion,assets:Fetcher){
+  const causalPronoun=/^did\s+(?:that|it)\s+buy\s+(?:their|its|his|her)\s+votes?[?.!]*$/i.test(input.question??'')
+  if((!fundingContinuation(input.question??'')&&!causalPronoun)||input.speaker||input.chamber||input.topic)return null
+  const previous=fundingUserTurns(input).reverse().find(question=>isMoneyRanking({question}))
+  if(!previous)return null
+  const selection=await receiptGraphForQuestion(previous,async file=>{
+    const response=await assets.fetch(new Request('https://opax.com.au'+file))
+    if(!response.ok)return null
+    const graph=await response.json() as Record<string,unknown>
+    return isReceiptGraph(graph)?graph:null
+  },input.state)
+  if(!selection)return null
+  const {graph,jurisdiction}=selection
+  if(causalPronoun){
+    const scope=receiptAnswer(graph,previous,jurisdiction,'https://opax.com.au')
+    if(!scope||'needs_scope' in scope||'needs_period' in scope||scope.selected_parties.length!==1||unmatchedReceiptRankingScope(graph,receiptPeriodQuery(previous).query,scope))return null
+    const {from,to}=scope.requested_years
+    const period=from!==null&&from===to?' in '+financialYear(from):from!==null&&to!==null?' from '+financialYear(from)+' to '+financialYear(to):from!==null?' since '+financialYear(from):to!==null?' through '+financialYear(to):''
+    return {question:`Did the disclosed funding to ${scope.selected_parties[0]}${period} buy its votes?`}
+  }
+  const resolved=fundingFollowUp(input,graph,jurisdiction,isMoneyRanking)
+  if(resolved)return resolved
+  // A new explicit year may follow a coverage refusal. Retain the validated
+  // subject from the prior question; replace its period, never its identity.
+  if(/^(?:and\s+)?(?:in|during|for)\s+(?:19|20)\d{2}(?:[–-]\d{2})?[?!.]*$/i.test(input.question??'')){
+    const context=input.context?.map(t=>t.author==='answer'?t:{...t,text:t.text?.replace(/\s+(?:in|during|for|since|from)\s+(?:19|20)\d{2}(?:[–-]\d{2})?(?:\s+to\s+(?:19|20)\d{2})?/gi,'')})
+    return fundingFollowUp({...input,context},graph,jurisdiction,isMoneyRanking)
+  }
+  return null
+}
+
 export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) {
   const direct={...input,context:undefined}
   const standalone=isMoneyRanking(direct)

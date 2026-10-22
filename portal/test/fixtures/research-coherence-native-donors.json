@@ -1,0 +1,136 @@
+{
+  "question": "who donates the most to Labor",
+  "payload": {
+    "answer": "Shop Distributive & Allied Employees' Association Vic Branch provided the most disclosed funding to Labor: $42,837,142 in financial years 1998-99 to 2025-26.\n\n- CFMEU Mining & Energy Division provided disclosed funding: $32,152,941 in financial years 1998-99 to 2025-26.\n\nThese disclosed party receipts cover only the published selection, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech.",
+    "citations": {
+      "fact-2/t/body/0": [
+        [
+          0,
+          157
+        ]
+      ],
+      "fact-3/t/body/0": [
+        [
+          159,
+          270
+        ]
+      ],
+      "fact-11/t/body/0": [
+        [
+          272,
+          469
+        ]
+      ],
+      "coverage/t/body/0": [
+        [
+          272,
+          469
+        ]
+      ]
+    },
+    "sources": [
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "Shop Distributive & Allied Employees' Association Vic Branch to Labor — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+        "url": "https://opax.com.au/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+        "snippet": "Shop Distributive & Allied Employees' Association Vic Branch gave Labor $42,837,142 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2014-15 · https://transparency.aec.gov.au/\nDonor: Shop Distributive & Allied Employees' Association Vic Branch — $42,837,142. Financial years: 1998-99 to 2025-26.\nShop Distributive & Allied Employees' Association Vic Branch gave Labor $42,837,142 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "Shop Distributive & Allied Employees' Association Vic Branch",
+            "metric": "receipts",
+            "value": "42837142",
+            "unit": "AUD",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99 to 2025-26"
+            },
+            "evidenceId": "fact-2/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-3",
+        "slug": "",
+        "title": "CFMEU Mining & Energy Division to Labor — AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
+        "href": "https://opax.com.au/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union",
+        "url": "https://opax.com.au/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union",
+        "snippet": "CFMEU Mining & Energy Division gave Labor $32,152,941 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2015-16 · https://transparency.aec.gov.au/\nDonor: CFMEU Mining & Energy Division — $32,152,941. Financial years: 1998-99 to 2025-26.\nCFMEU Mining & Energy Division gave Labor $32,152,941 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
+        "cited": true,
+        "kind": "export",
+        "claim_atoms": [
+          {
+            "entity": "CFMEU Mining & Energy Division",
+            "metric": "receipts",
+            "value": "32152941",
+            "unit": "AUD",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99 to 2025-26"
+            },
+            "evidenceId": "fact-3/t/body/0"
+          }
+        ]
+      },
+      {
+        "resource": "fact-11",
+        "slug": "",
+        "title": "**Westpac Banking Corporation** has the largest disclosed total to Labor in this published selection: **$55,227,183**. These figures rank disclosed receipts, which include more than gifts; they are not a donations-only ranking.\n\n**Financial years: 1998–99 to 2025–26.** 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.\n\n| Donor | Disclosed receipts | Records |\n| --- | ---: | ---: |\n| [Westpac Banking Corporation](/subject/donor/Westpac%20Banking%20Corporation) | $55,227,183 | 500 |\n| [Shop Distributive & Allied Employees' Association Vic Branch](/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association) | $42,837,142 | 533 |\n| [CFMEU Mining & Energy Division](/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union) | $32,152,941 | 751 |\n| [Australian Workers Union](/subject/donor/The%20Australian%20Workers%27%20Union) | $19,907,893 | 588 |\n| [Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division](/subject/donor/Communications%2C%20Electrical%20and%20Plumbing%20Union%20of%20Australia) | $17,926,857 | 696 |\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.\n\n[Explore these records](https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor) · [Download the calculation data](https://opax.com.au/graph/money.json)",
+        "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor",
+        "snippet": "**Westpac Banking Corporation** has the largest disclosed total to Labor in this published selection: **$55,227,183**. These figures rank disclosed receipts, which include more than gifts; they are not a donations-only ranking.\n\n**Financial years: 1998–99 to 2025–26.** 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.\n\n| Donor | Disclosed receipts | Records |\n| --- | ---: | ---: |\n| [Westpac Banking Corporation](/subject/donor/Westpac%20Banking%20Corporation) | $55,227,183 | 500 |\n| [Shop Distributive & Allied Employees' Association Vic Branch](/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association) | $42,837,142 | 533 |\n| [CFMEU Mining & Energy Division](/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union) | $32,152,941 | 751 |\n| [Australian Workers Union](/subject/donor/The%20Australian%20Workers%27%20Union) | $19,907,893 | 588 |\n| [Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division](/subject/donor/Communications%2C%20Electrical%20and%20Plumbing%20Union%20of%20Australia) | $17,926,857 | 696 |\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.\n\n[Explore these records](https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor) · [Download the calculation data](https://opax.com.au/graph/money.json)\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.",
+        "cited": true,
+        "kind": "record",
+        "claim_atoms": []
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/money/party/Labor",
+        "url": "https://opax.com.au/money/party/Labor",
+        "snippet": "Federal AEC donation returns, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds). These are party receipts, not personal payments to politicians, and a donation is not evidence that it influenced any vote or speech.",
+        "cited": true,
+        "kind": "record",
+        "claim_atoms": [
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "99",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          },
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "26",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          },
+          {
+            "entity": "",
+            "metric": "speeches",
+            "value": "250",
+            "unit": "count",
+            "chamber": "federal",
+            "period": {
+              "label": "1998-99"
+            },
+            "evidenceId": "coverage/t/body/0"
+          }
+        ]
+      }
+    ]
+  }
+}

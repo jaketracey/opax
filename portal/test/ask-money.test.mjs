@@ -579,3 +579,16 @@ test('an explicit ranking year beats stale UI dates and reports actual calculate
  assert.doesNotMatch(r.answer,/786,999|2024–25/)
  assert.ok(r.answer_status!=='calculated'||r.coverage?.requested_since==='2005-01-01')
 })
+test('research follow-up resolution switches the recipient and keeps the financial year',async()=>{
+ const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
+ assert.equal(typeof api.fundingResearchFollowUp,'function')
+ const context=history('Who gives the most money to One Nation?')
+ const labor=await api.fundingResearchFollowUp({question:'what about Labor?',kind:'all',context},assets);assert.match(labor.question,/to Labor/);assert.doesNotMatch(labor.question,/to One Nation/)
+ const greens=await api.fundingResearchFollowUp({question:'what about the Greens?',kind:'all',context:history('Who gave the most money to Labor in 2019-20?')},assets);assert.match(greens.question,/to Greens.*2019/);assert.doesNotMatch(greens.question,/to Labor/)
+ const after=await api.fundingResearchFollowUp({question:'and in 2019-20?',kind:'all',context:history('Who gave the most money to One Nation in 1990?')},assets);assert.match(after.question,/to One Nation.*2019/)
+})
+test('a causal pronoun follow-up preserves the validated recipient without becoming a ranking',async()=>{
+ const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
+ const out=await api.fundingResearchFollowUp({question:'did that buy their votes?',kind:'all',context:history('Who gives the most money to One Nation?')},assets)
+ assert.match(out.question,/One Nation/);assert.match(out.question,/buy.*votes/i);assert.doesNotMatch(out.question,/most|top donor/i)
+})

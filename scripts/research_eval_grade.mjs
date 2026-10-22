@@ -4,6 +4,9 @@
 // Every check is structural: figures and names in the answer are matched against the payload's
 // facts and cited sources, quotations against the evidence text, citation keys against sources,
 // and the per-question `must` list against the payload. Gold rows reuse agentic_ask_score.mjs.
+import {answerStyleChecks,styleRows,styleNormal} from '../portal/src/research-answer-style.mjs'
+export {answerStyleChecks} from '../portal/src/research-answer-style.mjs'
+import {coherenceCheck,donorRanking} from '../portal/src/research-coherence.mjs'
 import { score as goldScore } from './agentic_ask_score.mjs'
 
 export const fold = (s) => String(s ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase()
@@ -38,7 +41,7 @@ const traceable = (n) => !isYear(n) && (n >= 10 || !Number.isInteger(n))
 const near = (a, b, tol = 0.05) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1)
 
 export const CAVEAT = /coverage|thin|gap|incomplete|missing|limited|understat|not (?:fully )?(?:covered|captured|complete)|only \d+ (?:federal )?(?:chamber )?speeches|record (?:holds|has) (?:few|only)|sparse/i
-export const REFUSAL = /OPAX cannot establish|^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:determined|answered)|(?:ranking|answer|total|rate) cannot be established|is not possible to (?:determine|identify)|does not discuss/i
+export const REFUSAL = /OPAX cannot establish|^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:established|determined|answered)|(?:ranking|answer|total|rate) cannot be established|is not possible to (?:determine|identify)|does not discuss/i
 export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /** Sentences that deny causation are the required no-causation wording, not a breach. */
 const DENIAL = /\bnot (?:evidence|proof)\b|\bno evidence\b|(?:does|do) not (?:prove|show|establish|mean|imply)|is not proof|cannot be (?:inferred|read)/i
@@ -236,21 +239,6 @@ export function runCheck(c, ctx) {
   }
 }
 
-/** Selected record rows, independent of which comparison arm produced them. */
-function styleRows(ev) {
-  const rows=[]
-  for(const source of (ev.sources??[]).filter(s=>!['speech','bill'].includes(s.kind)))for(const text of [source.title,source.snippet])if(typeof text==='string')for(const raw of text.split(/\n+/)) {const line=raw.replace(/\*\*/g,'')
-    const rates=[...line.matchAll(/(?:^|[.\n])\s*[-*]?\s*([^:$;\n.]+):\s*(\$[\d,]+) a year as [^,]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}/g)]
-    if(rates.length){for(const rate of rates)rows.push({entity:rate[1].trim(),value:rate[2],text:rate[0],salary:true});continue}
-    const current=/^(.+?) \([^)]+\), [^:]+: base salary \$[\d,]+ plus a loading of [\d.]+%, (\$[\d,]+) a year/.exec(line)
-    if(current){rows.push({entity:current[1],value:current[2],text:line,salary:true});continue}
-    const row=/^\s*[-*]?\s*([^:|]{2,120}):\s*(\$?[\d,]+(?:\.\d+)?)/.exec(line)
-    if(row&&!/coverage|period|financial years/i.test(row[1]))rows.push({entity:row[1].replace(/\s*\([^)]*\).*$/,'').replace(/\s+(?:received|gave|provided|was awarded|led)\b.*$/i,'').trim(),value:row[2],text:line})
-    if(/^\|/.test(line)){const cells=line.split('|').map(x=>x.trim()).filter(Boolean),value=cells.find(x=>/^\$[\d,]+/.test(x)),entity=cells.find(x=>/[a-z]/i.test(x));if(value&&entity)rows.push({entity,value,text:line})}
-  }
-  return rows.filter((r,i)=>rows.findIndex(x=>x.entity===r.entity&&x.value===r.value)===i)
-}
-const styleNormal=s=>fold(s).replace(/[^a-z0-9]+/g,' ').trim()
 function requiredComponents(q,answer,ev) {
   const rule=q.must?.find(c=>c.type==='required_components'),comparison=/\b(?:compar\w*|versus|vs|between|both)\b|this term.*last term|last term.*this term/i.test(q.question)||q.kind==='comparison'
   if(!rule&&!comparison)return 'n/a'
@@ -268,41 +256,6 @@ function requiredComponents(q,answer,ev) {
   if(coverage&&!/coverage|selection|incomplete|exclud|undercount|Census|records (?:start|cover)|label(?:led|s).*cover|gaps|not.*exhaustive/i.test(answer))return 'fail'
   return 'pass'
 }
-/** Writing quality is assessed against selected evidence, not fluent-looking prose alone. */
-export function answerStyleChecks(question, answer, evidence = evidenceOf({}), requirements={}) {
-  const plain=String(answer).replace(/\[\d+\]/g,''),sentences=plain.split(/(?<=[.!?])\s+|\n+/).map(s=>s.replace(/^[-*•]\s*/,'').trim()).filter(Boolean)
-  const seen=new Set();let duplicate=false
-  for(const sentence of sentences){const k=styleNormal(sentence);if(seen.has(k))duplicate=true;seen.add(k)}
-  // Same figure for different people or periods is not a duplicated claim.
-  const claims=new Set()
-  for(const sentence of sentences)for(const clause of sentence.split(/[,;]?\s+(?:and|while|whereas)\s+(?=(?:the\s+)?(?:\d+(?:st|nd|rd|th)\s+Parliament|[A-Z][\w'’-]*(?:\s+[A-Z][\w'’-]*)*)\s+(?:received|recorded|earned|had|has|was|spoke))/)){
-    const entity=/^(?:In \d{4}(?:[–-]\d{2,4})?,?\s+)?(.+?)\s+(?:received|recorded|earned|had|has|was|were|spoke|gave)\b/i.exec(clause)?.[1]
-    if(!entity)continue
-    const period=(clause.match(/\b(?:19|20)\d{2}(?:[–-]\d{2,4})?\b/g)??[]).join('/')
-    const metric=(/salary|pay|earn/i.test(clause)?'salary':/grants?/i.test(clause)?'grants':/contracts?/i.test(clause)?'contracts':/speech|spoke/i.test(clause)?'speeches':/division|vote/i.test(clause)?'votes':'receipts')+'/'+(/housing|gambling|immigration|climate|tax(?:-budget)?|budget/i.exec(clause)?.[0]??'')
-    const unit=/per week|weekly/i.test(clause)?'week':/per month|monthly/i.test(clause)?'month':/a year|annual|per year/i.test(clause)?'year':''
-    const dated=(clause.match(/\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2} (?:January|February|March|April|May|June|July|August|September|October|November|December)(?: \d{4})?/g)??[]).join('/')
-    const values=amounts(clause).length?amounts(clause).map(a=>a.v):plainNumbers(clause).filter(n=>!isYear(n))
-    for(const value of values){const signature=styleNormal(entity)+'/'+metric+'/'+unit+'/'+(dated||period)+'/'+value;if(claims.has(signature))duplicate=true;claims.add(signature)}
-  }
-  const coverage=sentences.filter(s=>/^(?:Coverage:|OPAX.*(?:records|export)|Salary entitlements|These records)|\b(?:exclude[sd]? allowances|not allowances|records start|records cover|coverage (?:is|of))/i.test(s))
-  const echo=/Coverage:|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||base \$[\d,]+ plus \d+(?:\.\d+)?%/i.test(answer)
-  const first=sentences[0]??'',rows=styleRows(evidence),ranking=/\b(?:highest|lowest|most|least|largest|biggest|top|fewest)\b/i.test(question)
-  const limited=/\b(?:cannot|could not|do(?:es)? not|did not) establish\b|\bno (?:reliable|verified|matching)\b|\b(?:records|export).*\b(?:start|does not date)\b|^Please (?:name|give|specify)|^OPAX covers|(?:ranking|total|answer).*cannot be established|no ranking or total can be established|(?:period|records|coverage)[^.]*is not (?:fully )?covered|no [^.]*\b(?:ranking|total|answer)\b[^.]*can be established|private information|no evidence|does not (?:hold|cover)/i.test(first)
-  const candidates=ranking&&/\b(?:who|which (?:politician|parliamentarian|person|party|senator))\b/i.test(question)?rows.filter(r=>!/^\d{4}$/.test(r.entity)):rows
-  const row=ranking&&/paid|salary|pay\b/i.test(question)&&candidates.some(r=>r.salary)?candidates.filter(r=>r.salary).sort((a,b)=>(/lowest|least/i.test(question)?1:-1)*(Number(a.value.replace(/[$,]/g,''))-Number(b.value.replace(/[$,]/g,''))))[0]:candidates[0]
-  const speakers=[...new Set((evidence.sources??[]).map(s=>s.speaker).filter(Boolean))]
-  const subject=limited||row?limited||styleNormal(first).includes(styleNormal(row.entity)):!speakers.length||speakers.some(n=>styleNormal(first).includes(styleNormal(n)))
-  const topic=/\b(mining|gambling|housing|immigration|climate|tax|budget|contracts?|grants?|salary|income)\b/i.exec(question)?.[1]
-  const subjectTopic=limited||!topic||new RegExp(({salary:'salary|paid|pay',grants:'grants?',grant:'grants?',contracts:'contracts?',contract:'contracts?',immigration:'immigration|asylum|migrant|refugee',tax:'tax|GST',housing:'housing|homes?|rent|HAFF'})[topic.toLowerCase()]??topic,'i').test(first)
-  const comparative=/compar|between|versus|\bvs\b|this term.*last term|last term.*this term/i.test(question)
-  const relation=limited||(!ranking&&!comparative)||/same|equal|more|fewer|compared|versus|higher|lower|than|highest|lowest|most|least|largest|biggest|top|fewest|led|leader|leads|ahead|ranked|tied/i.test(first)
-  const quantitative=ranking||comparative||/compar|between|both/i.test(question)||/how (?:many|much)|salary|paid|contracts?|grants?|median|population/i.test(question)
-  const headline=limited||!quantitative||(!row?!amounts(answer).length&&!plainNumbers(answer).some(n=>!isYear(n)):[row.value,...(comparative?[...row.text.matchAll(/([\d.]+)%/g)].map(m=>m[1]):[])].some(v=>plainNumbers(first).includes(Number(v.replace(/[$,]/g,'')))))||!row&&(amounts(first).length>0||plainNumbers(first).some(n=>!isYear(n)))
-  const prefix=/^([^.!?]{1,110}):/.exec(first)?.[1],rowLike=!!prefix&&!/\b(?:is|was|are|were|has|have|had)\b/i.test(prefix)
-  const direct=first.length>12&&first.split(/\s+/).length>=5&&!/^(?:Here|Based on|According to|Coverage:|The (?:data|records|tool|table|figures) show)/i.test(first)&&!/^\|/.test(answer)&&!rowLike&&!/:$/.test(first)&&subject&&subjectTopic&&relation&&headline
-  return {no_tool_echo:echo?'fail':'pass',no_duplicates:duplicate||coverage.length>1?'fail':'pass',direct_first_sentence:direct?'pass':'fail'}
-}
 
 const axisOf = (counts) => counts.fail ? 'fail' : counts.partial ? 'partial' : 'pass'
 
@@ -310,8 +263,8 @@ const axisOf = (counts) => counts.fail ? 'fail' : counts.partial ? 'partial' : '
 export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) {
   const answer = String(payload?.answer ?? '')
   const answered = payload?.answered !== false && answer.trim().length > 0
-  const refusal = !answered || REFUSAL.test(answer) || /^(?:The )?(?:selected|retrieved) records do not (?:identify|establish)\b/i.test(answer)
-  const ev = evidenceOf(payload)
+  let refusal = !answered || REFUSAL.test(answer) || /^(?:The )?(?:selected|retrieved|returned) (?:facts|records|excerpts|passages|evidence) do not (?:identify|establish)\b/i.test(answer) || /^(?:The )?(?:available records|(?:20\d{2} )?Census)\b[^.!?]*(?:do not|cannot) establish\b/i.test(answer)
+  const ev = {...evidenceOf(payload),ranking_rows:donorRanking(q.question,payload?.sources??[])}
   const cit = citationCheck(payload, answer, ev)
   const figures = figureCheck(answer, q.question, ev, cit.sentences, cit.covered)
   const names = nameCheck(answer, q.question, ev, roster)
@@ -319,6 +272,11 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   const causal = causalCheck(answer)
   const tools = toolsCheck(q.expected_tools, payload)
   const expectsDecline = q.expected?.kind === 'decline' || Boolean(q.expected?.unanswerable) || (q.must ?? []).some((c) => c.type === 'decline')
+  // A partial numerical answer remains an answer when its verified, cited facts
+  // follow a limitation. Moving that limitation must not hide citation quality.
+  const protectedStatus=payload?.answered===false||/^(?:coverage_only|evidence_gap|needs_question|needs_scope|needs_period|refused|declined|moderated)$/.test(payload?.answer_status??'')
+  const substantive=figures.figures.some(f=>f.bound&&f.cited&&!REFUSAL.test(f.sentence)&&!/^(?:Coverage:|Topic counts cover|These records|These disclosed|These are|OPAX.s federal pay records)/i.test(f.sentence))
+  if(refusal&&!expectsDecline&&!protectedStatus&&substantive)refusal=false
   const ctx = { question:q.question, answer, payload, ev, roster, parties, names, figures, refusal, expectedDecline: expectsDecline }
   const checks = (q.must ?? []).map((c) => ({ ...c, ...runCheck(c, ctx) }))
   const parts = [...new Set(checks.map((c) => c.part).filter(Boolean))]
@@ -360,7 +318,8 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   let components=requiredComponents(q,answer,ev)
   if(components!=='n/a'&&parts.some(p=>!coveredParts.includes(p)))components='fail'
   if(expectsDecline && !answered)style.direct_first_sentence='n/a'
-  const axes = { usefulness, citations, correctness, constraints, decline, ...style,required_components:components }
+  const coherence=coherenceCheck(q.question,payload,{direct:expectsDecline&&!answered||style.direct_first_sentence==='pass'})
+  const axes = { coherence:coherence.pass?'pass':'fail', usefulness, citations, correctness, constraints, decline, ...style,required_components:components }
   const overall = axisOf({ fail: Object.values(axes).includes('fail'), partial: Object.values(axes).includes('partial') })
   const flags = [
     ...figures.unbound.map((f) => `unbound figure ${f.amount ? '$' : ''}${f.value}${f.cited ? '' : ' (uncited sentence)'}`),
@@ -376,7 +335,7 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
     checks: checks.map(({ part, type, status, detail, why }) => ({ part: part ?? null, type, status, detail, why: why ?? null })),
     figures: { total: figures.figures.length, unbound: figures.unbound.map((f) => f.value), unbound_uncited: figures.unbound_uncited.map((f) => f.value) },
     names, quotes, citations: { keys: cit.keys, unresolved: cit.unresolved, cited_sources: cit.cited_sources, figure_sentences: cit.figure_sentences, figure_sentences_cited: cit.figure_sentences_cited },
-    causal, tools, gold: gold ? { pass: gold.pass, checks: gold.checks } : null, evidence_complete: ev.complete, flags,
+    coherence, causal, tools, gold: gold ? { pass: gold.pass, checks: gold.checks } : null, evidence_complete: ev.complete, flags,
   }
 }
 
@@ -415,7 +374,7 @@ export function summarise(rows) {
       n: all.length, graded: graded.length, errors: all.length - graded.length,
       overall: tally(graded, (r) => r.grade.overall),
       usefulness: tally(graded, (r) => r.grade.axes.usefulness), citations: tally(graded, (r) => r.grade.axes.citations), correctness: tally(graded, (r) => r.grade.axes.correctness),
-      ...Object.fromEntries(['constraints','decline','no_tool_echo','no_duplicates','direct_first_sentence','required_components'].map(axis=>[axis,tally(graded,r=>r.grade.axes[axis])])),
+      ...Object.fromEntries(['coherence','constraints','decline','no_tool_echo','no_duplicates','direct_first_sentence','required_components'].map(axis=>[axis,tally(graded,r=>r.grade.axes[axis])])),
       latency_ms: { p50: percentile(ms, 50), p95: percentile(ms, 95) },
       tokens: { p50: percentile(tokens, 50), p95: percentile(tokens, 95), reported: tokens.length },
       cost_usd: { mean: cost.length ? cost.reduce((a, b) => a + b, 0) / cost.length : null, p50: percentile(cost, 50), p95: percentile(cost, 95), reported: graded.filter((r) => r.usage?.cost_source === 'reported').length, estimated: graded.filter((r) => r.usage?.cost_source === 'estimated').length, missing: graded.filter((r) => !r.usage || r.usage.cost_source === 'missing').length },
@@ -439,8 +398,8 @@ export function renderMarkdown(report) {
   L.push(`Base: ${report.base_host ?? 'offline fixture'} · set: ${report.set} · modes: ${report.modes.join(', ')} · limit: ${report.limit} · questions: ${report.questions.length} · prices US$/M: in ${report.prices.input}, out ${report.prices.output}`, '')
   L.push('## Summary', '', '| mode | n | errors | overall P/p/F | usefulness | citations | correctness | p50 latency | p95 latency | p50 tokens | p95 tokens | mean cost | p50 cost | p95 cost | usage reported / estimated / missing |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
   for (const [mode, s] of Object.entries(report.summary)) L.push(`| ${mode} | ${s.n} | ${s.errors} | ${grades(s.overall)} | ${grades(s.usefulness)} | ${grades(s.citations)} | ${grades(s.correctness)} | ${fmtMs(s.latency_ms.p50)} | ${fmtMs(s.latency_ms.p95)} | ${fmtN(s.tokens.p50)} | ${fmtN(s.tokens.p95)} | ${fmtUsd(s.cost_usd.mean)} | ${fmtUsd(s.cost_usd.p50)} | ${fmtUsd(s.cost_usd.p95)} | ${s.cost_usd.reported} / ${s.cost_usd.estimated} / ${s.cost_usd.missing} |`)
-  L.push('', '| mode | no tool echo P/p/F | no duplicates P/p/F | direct first sentence P/p/F | required components P/p/F | date checks P/p/F | declines P/p/F |', '|---|---|---|---|---|---|---|')
-  for(const [mode,s] of Object.entries(report.summary))L.push(`| ${mode} | ${grades(s.no_tool_echo)} | ${grades(s.no_duplicates)} | ${grades(s.direct_first_sentence)} | ${grades(s.required_components)} | ${grades(s.constraints)} | ${grades(s.decline)} |`)
+  L.push('', '| mode | no tool echo P/p/F | no duplicates P/p/F | coherence P/p/F | direct first sentence P/p/F | required components P/p/F | date checks P/p/F | declines P/p/F |', '|---|---|---|---|---|---|---|')
+  for(const [mode,s] of Object.entries(report.summary))L.push(`| ${mode} | ${grades(s.no_tool_echo)} | ${grades(s.no_duplicates)} | ${grades(s.coherence)} | ${grades(s.direct_first_sentence)} | ${grades(s.required_components)} | ${grades(s.constraints)} | ${grades(s.decline)} |`)
   L.push('', 'P/p/F = pass / partial / fail counts. Grades are structural (facts, citations, quotations, invented figures and names); the judge reads the answers below for usefulness.', '')
   L.push('## Side by side', '')
   for (const q of report.questions) {

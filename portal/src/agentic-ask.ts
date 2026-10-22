@@ -242,7 +242,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       else add(`${who} in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
     } else if (r.tool === 'party_donations') {
       if (d.party) {
-        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
+        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures; financial years ${((d.years as (number|null)[]|undefined)?.[0] ?? 1998)}-${String(((d.years as (number|null)[]|undefined)?.[0] ?? 1998)+1).slice(-2)} to ${((d.years as (number|null)[]|undefined)?.[1] ?? 2025)}-${String(((d.years as (number|null)[]|undefined)?.[1] ?? 2025)+1).slice(-2)})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
       } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${d.industry} donors gave ${row.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i], [`party:${row.party}`]))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]
@@ -458,6 +458,7 @@ export interface AgenticPayload {
   version: string
   research?: ResearchPayload
   qualitative?: QualitativeAnswer
+  answer_scope?: QualitativeAnswer['answer_scope']
   passage_answer?: QualitativeAnswer
   chosen_facts?: number[]
   research_failure?: string
@@ -518,6 +519,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
   }
   const writeRun = async (run: AgenticPayload) => {
     if (!run.answered || !deps.research?.write) return run
+    if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
     const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind==='count'?'count':f.kind==='export'?'export':'record',url:f.url,label:f.text,value:f.value}}))
     // Passage points have already been written and checked by the model; retain the 16 Oct loose-point contract.
@@ -528,7 +530,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!sheet.length) return run
     await progress('status', {phase:'writing'})
     const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
-    const input={question,period,facts:sheet}
+    if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text}))
+    const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
     const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
     const complete=run.passage_answer ? appendWrittenPoints(written,run.passage_answer) : written
@@ -592,6 +595,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   let researched: ResearchResult | undefined
   let executionSignal = deps.signal
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
+    ...(researched?.constraints?{answer_scope:researched.constraints}:{}),
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
     ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
     ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
@@ -601,7 +605,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   if (!electorateData) {
     try { named = resolvedScope ?? await resolveNamedScope(question, deps, Math.min(4_000, left()), filters) }
     catch { return base({ reason: 'declined' }) }
-    if(named.ambiguous&&deps.research){const answer='Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,citations:{},sources:[],answer_status:'uncited'}})}
+    if(named.ambiguous&&deps.research){const answer='Please give the full name of the person you mean so I can distinguish their records.';return base({answered:true,answer,answer_source:'template',cost_usd:0,research:{mode:'loop',rounds:0,trail:[],sources:[],turns:[],tokens:{input:0,output:0},cost_usd:0},qualitative:{answer,answer_decision:'clarification',citations:{},sources:[],answer_status:'uncited'}})}
     if (!deps.research && (named.unresolved || named.ambiguous || named.bills.length)) return base({ reason: 'declined' })
   }
   const usage = (out: { tokens?: { input: number; output: number }; costUsd?: number }) => {
