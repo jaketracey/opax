@@ -87,6 +87,51 @@ test('a routed done payload renders exactly like a normal Ask payload, with the 
  assert.equal(payload.agentic.steps.length,run.events.length);assert.match(a.textContent,/current parliament since July 2025/);
 });
 
+test('planner partial-FY donations render an exact scoped limitation without companion figures',async()=>{
+ const q='Which party spoke most about gambling, and how much gambling money did each party receive in October 2026?';
+ const plan={shape:'money',steps:[{tool:'party_donations',args:{industry:'gambling'}},{tool:'count_speeches',args:{topic:'gambling',group_by:'party'}}]};
+ const fixture={...deps,generate:async()=>({text:JSON.stringify(plan)}),
+  asset:async path=>{assert.notEqual(path,'/graph/money.json','partial FY must not read donation totals');return deps.asset(path)},
+  kb:async()=>({fulltext:{total:777,facets:{'/classification.labels/party':{'/classification.labels/party/Labor':777}}}})};
+ const run=await runAgentic(q,fixture),payload=agenticAskPayload(run,q);
+ assert.equal(run.answered,true);assert.equal(run.steps.length,2);assert.ok(run.steps.every(step=>step.ok));
+ assert.equal(payload.answer_decision,'limitation');assert.deepEqual([payload.answer_scope.period.since,payload.answer_scope.period.until],['2026-10-01','2026-10-31']);
+ assert.match(payload.answer,/2026-10-01 to 2026-10-31/);assert.match(payload.answer,/grouped by financial year/);assert.match(payload.answer,/No donation totals have been substituted/);
+ assert.doesNotMatch(JSON.stringify({answer:payload.answer,sources:payload.sources}),/777|total_aud|\$/);assert.deepEqual(payload.followups,[]);
+ const dom=new JSDOM('<div id="answer"></div>',{url:'https://opax.com.au'});
+ const context={document:dom.window.document,NodeFilter:dom.window.NodeFilter,URL,Node:dom.window.Node,tableFit:{observe(){}},displayTitle:s=>s.title,renderEvidenceAnswer(){throw Error('ordinary renderer required')}};
+ vm.createContext(context);vm.runInContext(slice('function normaliseAnswerBullets','function safeAnswerLink')+slice('function safeAnswerLink','function renderEvidenceAnswer')+slice('function renderAnswer(container','function renderAskDateRuler'),context);
+ const answer=context.document.querySelector('#answer');answer.askEvidence=payload.sources.map(s=>({...s,answerRanges:Object.entries(payload.citations).filter(([key])=>key.split('/')[0]===s.resource).flatMap(([,v])=>v)}));
+ context.renderAnswer(answer,payload.answer,payload);assert.match(answer.textContent,/2026-10-01 to 2026-10-31/);assert.match(answer.textContent,/grouped by financial year/);assert.equal(answer.querySelectorAll('button.ask-citation').length,1);
+ const failed=await runAgentic(q,{...fixture,kb:async()=>{throw Error('speech lookup unavailable')}});
+ assert.equal(failed.answered,false);assert.equal(failed.reason,'no_supported_claim');assert.equal(agenticAskPayload(failed,q).answer,'');
+ const wholeFY=q.replace('October 2026','FY 2023-24');
+ const empty=await runAgentic(wholeFY,{...fixture,asset:async path=>path==='/graph/money.json'?{nodes:[],edges:[]}:deps.asset(path)});
+ assert.equal(empty.answered,false);assert.equal(empty.reason,'no_supported_claim');
+});
+
+test('a known partial-FY limitation survives dependent received/receive planner lookups',async()=>{
+ for(const verb of ['received','receive']){
+  const q=`Which party ${verb} the most gambling donations and spoke most about gambling in October 2026?`;
+  const plan=fallbackPlan(q);assert.equal(plan.steps[1].args.party,'$1');
+  let lookups=0;
+  const fixture={...deps,generate:async()=>({text:JSON.stringify(plan)}),
+   asset:async path=>{assert.notEqual(path,'/graph/money.json');return deps.asset(path)},
+   kb:async()=>{lookups++;throw Error('dependent scope must not be guessed')}};
+  const run=await runAgentic(q,fixture),payload=agenticAskPayload(run,q);
+  assert.equal(run.answered,true);assert.equal(payload.answer_decision,'limitation');assert.equal(lookups,0);
+  assert.equal(run.steps.length,1);assert.equal(run.steps[0].tool,'party_donations');
+  assert.match(payload.answer,/2026-10-01 to 2026-10-31/);assert.match(payload.answer,/No donation totals have been substituted/);assert.doesNotMatch(payload.answer,/\$/);
+  const unrelated={...plan,steps:[plan.steps[0],{tool:'find_people',args:{name:'Alex Example'}},plan.steps[1]]};
+  let rosterReads=0;
+  const broken=await runAgentic(q,{...fixture,generate:async()=>({text:JSON.stringify(unrelated)}),asset:async path=>{
+   if(path==='/parliamentarians.json'&&++rosterReads>1)throw Error('roster lookup unavailable');
+   return fixture.asset(path);
+  }});
+  assert.equal(broken.answered,false);assert.equal(broken.reason,'no_supported_claim');assert.equal(broken.steps.find(s=>s.tool==='find_people').ok,false);assert.equal(lookups,0);
+ }
+});
+
 test('committee counts stay out of the answer when they leave the ranking unchanged',async()=>{
  const r=await runAgentic(question,{...deps,kb:async(path,body)=>{const replacement=JSON.parse(JSON.stringify(body).replaceAll('\"venue\":\"all\"','\"venue\":\"chamber\"'));if(path==='/catalog')return{fulltext:{total:199,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':60,'/u/o/Alex Example':52}}}};return{fulltext:{total:87}}}});
  assert.equal(r.answered,true);assert.doesNotMatch(r.answer,/Including committee hearings:/);

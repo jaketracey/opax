@@ -1,6 +1,7 @@
 import { scopeAfterStatutes } from './ask-statute-titles.mjs'
 import type { Period, NamedScope, PlanStep } from './agentic-ask'
 import type { ToolResult } from './agentic-tools'
+import { receiptYearWindow } from './receipt-period'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
@@ -34,6 +35,11 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
     if (has('until') && c.period.until) a.until = c.period.until
     if (has('from_year') && c.period.since) a.from_year = Number(c.period.since.slice(0, 4))
     if (has('to_year') && c.period.until) a.to_year = Number(c.period.until.slice(0, 4))
+    if (step.tool === 'party_donations') {
+      delete a.from_year; delete a.to_year
+      const years = receiptYearWindow(c.period.since, c.period.until)
+      if (!years.error) Object.assign(a, years)
+    }
     if (has('from') && c.period.since) a.from = c.period.since.slice(0, 4)
     if (has('to') && c.period.until) a.to = c.period.until.slice(0, 4)
     if (has('as_of')) { delete a.as_of; if (!has('since')) a.as_of = c.period.until ?? c.period.since }

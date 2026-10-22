@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { build } from 'esbuild'
 import { mentions, nameCheck, gradeRow, evidenceOf } from '../../scripts/research_eval_grade.mjs'
-const built = await build({ stdin: { contents: "export * from './src/ask-constraints'; export {inferPeriod} from './src/agentic-ask'; export {datedPay} from './src/pay-history';", resolveDir: new URL('..', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' })
+const built = await build({ stdin: { contents: "export * from './src/ask-constraints'; export {inferPeriod, periodPlan, factSheet, agenticCacheKey} from './src/agentic-ask'; export {partyDonations, TOOL_SPECS, AGENTIC_TOOLS_VERSION} from './src/agentic-tools'; export {datedPay} from './src/pay-history';", resolveDir: new URL('..', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const empty = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
 const constraints = (q, scope=empty, filters={}) => api.extractAskConstraints(q, api.inferPeriod(q), scope, filters)
@@ -91,6 +91,93 @@ test('ISO dates and years preserve since, after, before, until and between seman
   ['since 2005-07-01','2005-07-01',undefined],['after 2005-07-01','2005-07-02',undefined],['before 2005-07-01',undefined,'2005-06-30'],['until 2005-07-01',undefined,'2005-07-01'],['between 2005-07-01 and 2010-06-30','2005-07-01','2010-06-30'],
   ['since 2005','2005-01-01',undefined],['after 2005','2006-01-01',undefined],['before 2005',undefined,'2004-12-31'],['until 2005',undefined,'2005-12-31'],['between 2005 and 2010','2005-01-01','2010-12-31']
  ]){const p=api.inferPeriod('Speeches '+q);assert.equal(p.since,since,q);assert.equal(p.until,until,q)}
+})
+
+test('financial-year labels retain their exact July-to-June window',()=>{
+ for(const label of ['FY2023-24','FY 2023/24','FY 2023–2024','financial year 2023–24','financial-year 2023-2024','2023/2024','2023–24','financial year ending 2024']){
+  const q=`Donations in ${label}`,p=api.inferPeriod(q)
+  assert.deepEqual([p.since,p.until],['2023-07-01','2024-06-30'],q)
+ }
+ for(const [q,expected] of [
+  ['since FY2023-24',['2023-07-01',undefined]],['after FY2023-24',['2024-07-01',undefined]],
+  ['before FY2023-24',[undefined,'2023-06-30']],['until FY2023-24',[undefined,'2024-06-30']],
+  ['from FY2022-23 to FY2023-24',['2022-07-01','2024-06-30']],
+  ['FY2022-23 – 2023-24',['2022-07-01','2024-06-30']],['financial years 2022-23 – 2023-24',['2022-07-01','2024-06-30']],
+  ['between 2023 and 2024',['2023-01-01','2024-12-31']],['2023-2024',['2023-01-01','2024-12-31']],
+ ]){const p=api.inferPeriod(q);assert.deepEqual([p.since,p.until],expected,q)}
+})
+
+test('English dates and months are not widened to the calendar years they contain',()=>{
+ for(const [q,expected] of [
+  ['from 1 July 2023 to 30 June 2024',['2023-07-01','2024-06-30']],
+  ['between 1st July 2023 and 30th June 2024',['2023-07-01','2024-06-30']],
+  ['July 1, 2023 – June 30, 2024',['2023-07-01','2024-06-30']],
+  ['on 1 Jul. 2023',['2023-07-01','2023-07-01']],
+  ['in October 2026',['2026-10-01','2026-10-31']],['in Feb 2024',['2024-02-01','2024-02-29']],
+  ['since October 2026',['2026-10-01',undefined]],['after October 2026',['2026-11-01',undefined]],
+  ['before 1 July 2023',[undefined,'2023-06-30']],['through 30 June 2024',[undefined,'2024-06-30']],
+  ['from July 2023 to June 2024',['2023-07-01','2024-06-30']],
+  ['after 29 February 2024',['2024-03-01',undefined]],
+  ['Climate Change Act 2022 speeches in October 2026',['2026-10-01','2026-10-31']],
+ ]){
+  const c=constraints(q);assert.deepEqual([c.period.since,c.period.until],expected,q)
+  const args=api.constrainStep({tool:'search',args:{since:'1900-01-01',until:'2099-12-31'}},c,{since:{},until:{}}).args
+  assert.deepEqual([args.since,args.until],expected,q)
+ }
+})
+
+test('FY donations use starting-year buckets and never include the following financial year',async()=>{
+ const graph={nodes:[{id:'party:Labor',kind:'party',label:'Labor'},{id:'donor:Example',kind:'donor',label:'Example',industry:'mining'}],edges:[{source:'donor:Example',target:'party:Labor',total:999,count:3,byYear:{2022:[100,1],2023:[200,1],2024:[699,1]}}]}
+ const deps={asset:async()=>graph,kb:async()=>({})},properties=api.TOOL_SPECS.find(t=>t.name==='party_donations').input.properties
+ for(const question of ['donations in FY2023-24','donations from 1 July 2023 to 30 June 2024','donations from 2023-07-01 to 2024-06-30'])for(const args of [{party:'Labor'},{industry:'mining'}]){
+  const c=constraints(question),planned={tool:'party_donations',args:{...args,from_year:1998,to_year:2025}}
+  const step=api.constrainStep(planned,c,properties),scoped=api.periodPlan({shape:'money',steps:[planned]},c.period,{}).steps[0]
+  assert.deepEqual(step.args,scoped.args,question);assert.equal(step.args.from_year,2023);assert.equal(step.args.to_year,2023)
+  const result=await api.partyDonations(deps,step.args),guarded=api.guardToolPeriod(result,step,c)
+  assert.equal(result.data.rows[0].total_aud,200,question);assert.equal(guarded.data.coverage_only,undefined)
+  assert.deepEqual([guarded.coverage.since,guarded.coverage.until],['2023-07-01','2024-06-30'])
+  assert.doesNotMatch(JSON.stringify(api.factSheet([guarded]).facts),/999|699/)
+ }
+ const since=api.periodPlan({shape:'money',steps:[{tool:'party_donations',args:{party:'Labor',to_year:2023}}]},api.inferPeriod('since FY2023-24'),{}).steps[0]
+ assert.equal(since.args.to_year,undefined);assert.equal((await api.partyDonations(deps,since.args)).data.rows[0].total_aud,899)
+})
+
+test('partial-FY donation windows return only a scoped coverage explanation without reading totals',async()=>{
+ const deps={asset:async()=>{throw new Error('partial FY must not read totals')},kb:async()=>({})}
+ const properties=api.TOOL_SPECS.find(t=>t.name==='party_donations').input.properties
+ for(const q of ['donations in October 2026','donations in 2023','donations from 1 August 2023 to 30 June 2024','donations until 1 July 2024']){
+  const c=constraints(q),step=api.constrainStep({tool:'party_donations',args:{party:'Labor',from_year:1998,to_year:2025}},c,properties)
+  assert.equal(step.args.from_year,undefined);assert.equal(step.args.to_year,undefined)
+  const result=api.guardToolPeriod(await api.partyDonations(deps,step.args),step,c)
+  assert.equal(result.data.coverage_only,true);assert.equal(result.coverage.matched,false)
+  assert.match(result.cite[0].label,/financial year/);assert.match(result.cite[0].label,new RegExp(c.period.until ?? c.period.since))
+  assert.doesNotMatch(JSON.stringify(api.factSheet([result])),/total_aud|\$/)
+ }
+})
+
+test('exact date windows and the changed FY adapter cannot reuse old agentic cache answers',async()=>{
+ for(const [question,oldSince,oldUntil] of [
+  ['donations in FY2023-24','2023-01-01','2023-12-31'],
+  ['speeches from 1 July 2023 to 30 June 2024','2023-01-01','2024-12-31'],
+  ['speeches in October 2026','2026-01-01','2026-12-31'],
+ ]){
+  const current=api.inferPeriod(question),old={...current,since:oldSince,until:oldUntil}
+  assert.notEqual(await api.agenticCacheKey(question,'epoch','model',current),await api.agenticCacheKey(question,'epoch','model',old),question)
+ }
+ const q='donations from 2023-07-01 to 2024-06-30',p=api.inferPeriod(q)
+ const oldVersion=api.AGENTIC_TOOLS_VERSION.replace('agentic-tools-15-exact-date-windows','agentic-tools-14-soft-act-fallback')
+ assert.notEqual(await api.agenticCacheKey(q,'epoch','model',p),await api.agenticCacheKey(q,'epoch','model',p,oldVersion))
+})
+
+test('rejected new date syntax retains legacy year bounds rather than becoming all-time',()=>{
+ // Numeric slash dates and malformed English/FY dates are not newly supported.
+ for(const [q,expected] of [
+  ['Speeches from 2023/07/01 to 2024/06/30',['2023-01-01','2024-12-31']],
+  ['Speeches on 2023/24/01',['2023-01-01','2023-12-31']],
+  ['Speeches on 31 February 2024',['2024-01-01','2024-12-31']],
+  ['Speeches in FY 2023-25',['2023-01-01','2023-12-31']],
+  ['Speeches on 2023-02-29',['2023-02-29','2023-02-29']],
+ ]){const p=api.inferPeriod(q);assert.equal(p.kind,'window');assert.deepEqual([p.since,p.until],expected,q)}
 })
 
 test('open date constraints remove stale opposite tool bounds and validate observed coverage too',()=>{
