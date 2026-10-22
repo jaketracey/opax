@@ -1,5 +1,6 @@
 import { researchPhaseWallMs } from './research-time'
 import { resolvePartySubject } from './ask-party-subject'
+import { receiptYearWindow } from './receipt-period'
 /**
  * OPAX-owned Ask orchestration in the Worker
  * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
@@ -29,6 +30,54 @@ export const LOOP_ANSWER_TARGET_MS = 13_000
 
 export type Shape = 'ranking' | 'trend' | 'comparison' | 'money'
 export interface Period { kind: 'current' | 'all' | 'window'; since?: string; until?: string; label: string }
+/** Consume specific dates before bare years, so their years cannot widen the window. */
+function periodTokens(text: string): { start: string; end: string; index: number }[] {
+  const tokens: { start: string; end: string; index: number }[] = []
+  const rejected: [number, number][] = []
+  let remaining = text
+  const scan = (pattern: RegExp, bounds: (m: RegExpMatchArray) => [string, string] | null, bareYears = false) => {
+    remaining = remaining.replace(pattern, (...args) => {
+      const index = args.at(-2) as number, m = args.slice(0, -2) as RegExpMatchArray
+      if (!bareYears && rejected.some(([start, end]) => index < end && index + m[0].length > start)) return m[0]
+      const value = bounds(m)
+      // Rejected new syntax retains the existing year fallback; never erase it into all-time.
+      if (!value) { rejected.push([index, index + m[0].length]); return m[0] }
+      tokens.push({ start: value[0], end: value[1], index })
+      return ' '.repeat(m[0].length)
+    })
+  }
+  const date = (year: number, month: number, day: number): string | null => {
+    const value = new Date(Date.UTC(year, month - 1, day))
+    return value.getUTCFullYear() === year && value.getUTCMonth() === month - 1 && value.getUTCDate() === day ? value.toISOString().slice(0, 10) : null
+  }
+  // Preserve the existing ISO-date path; tool validation owns invalid ISO dates.
+  scan(/\b((?:19|20)\d{2})-(\d{2})-(\d{2})\b/g, m => [m[0], m[0]])
+  const financialYear = (year: number): [string, string] => [`${year}-07-01`, `${year + 1}-06-30`]
+  scan(/\b(?:fy|financial[ -]years?)\s*(?:ending|ended)\s+((?:19|20)\d{2})\b/g, m => financialYear(Number(m[1]) - 1))
+  scan(/\b(?:fy|financial[ -]years?)\s*((?:19|20)\d{2})(?:\s*[/–—‑-]\s*((?:19|20)\d{2}|\d{2}))?\b(?!\s*(?:\/\s*\d|[–—‑-]\s*\d{1,2}\b))/g, m => {
+    const year = Number(m[1])
+    return !m[2] || Number(m[2]) === (m[2].length === 2 ? (year + 1) % 100 : year + 1) ? financialYear(year) : null
+  })
+  // A short ending or slash denotes an FY; a full dashed pair remains a calendar-year range.
+  scan(/\b((?:19|20)\d{2})\s*(?:[/–—‑-]\s*(\d{2})|\/\s*((?:19|20)\d{2}))\b(?!\s*(?:\/\s*\d|[–—‑-]\s*\d{1,2}\b))/g, m => {
+    const year = Number(m[1]), end = m[2] || m[3]
+    return Number(end) === (end.length === 2 ? (year + 1) % 100 : year + 1) ? financialYear(year) : null
+  })
+  const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+  const month = '(?:january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept?|oct|nov|dec)'
+  const dayBounds = (year: string, name: string, day: string): [string, string] | null => {
+    const value = date(Number(year), months.indexOf(name.slice(0, 3)) + 1, Number(day))
+    return value ? [value, value] : null
+  }
+  scan(new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+(?:of\\s+)?(${month})\\.?\\s+((?:19|20)\\d{2})\\b`, 'g'), m => dayBounds(m[3], m[2], m[1]))
+  scan(new RegExp(`\\b(${month})\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?[,]?\\s+((?:19|20)\\d{2})\\b`, 'g'), m => dayBounds(m[3], m[1], m[2]))
+  scan(new RegExp(`\\b(${month})\\.?\\s+((?:19|20)\\d{2})\\b`, 'g'), m => {
+    const year = Number(m[2]), month = months.indexOf(m[1].slice(0, 3)) + 1
+    return [date(year, month, 1)!, new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10)]
+  })
+  scan(/\b((?:19|20)\d{2})(s)?\b/g, m => [`${m[1]}-01-01`, `${Number(m[1]) + (m[2] === 's' ? 9 : 0)}-12-31`], true)
+  return tokens
+}
 export function inferPeriod(question: string, override?: unknown): Period {
   const q = question.toLowerCase()
   if (override === 'all' || /\b(?:whole record|all[ -]time|across the record)\b/.test(q)) return { kind: 'all', label: 'Counting speeches across the whole record.' }
@@ -37,13 +86,11 @@ export function inferPeriod(question: string, override?: unknown): Period {
   if (/\blast (?:term|parliament)\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], until: TERMS['47th'][1]!, label: 'Counting speeches in the previous parliament, July 2022 to March 2025.' }
   // A bill/statute title's year is not a date filter on its debate history.
   const dated = q.replace(/\b(?:bill|act)\s+(?:19|20)\d{2}\b/g, '')
-  const tokens = [...dated.matchAll(/\b((?:19|20)\d{2})(-\d{2}-\d{2}|s)?\b/g)]
+  const tokens = periodTokens(dated)
   if (tokens.length) {
     const shift = (date: string, days: number) => new Date(Date.parse(date) + days * 86400000).toISOString().slice(0, 10)
-    const bounds = tokens.map(m => {
-      const start = m[2]?.startsWith('-') ? m[0] : `${m[1]}-01-01`
-      const end = m[2]?.startsWith('-') ? m[0] : `${Number(m[1]) + (m[2] === 's' ? 9 : 0)}-12-31`
-      const operator = dated.slice(0, m.index).match(/\b(since|from|after|before|until|through|to)\s*$/)?.[1]
+    const bounds = tokens.map(({ start, end, index }) => {
+      const operator = dated.slice(0, index).match(/\b(since|from|after|before|until|through|to)\s*$/)?.[1]
       return { start: operator === 'after' ? shift(end, 1) : start, end: operator === 'before' ? shift(start, -1) : end, operator }
     })
     const starts = bounds.filter(b => !['before', 'until', 'through', 'to'].includes(b.operator ?? ''))
@@ -486,6 +533,11 @@ export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: 
 }
 export function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>): Plan {
   return { ...plan, steps: plan.steps.map(s => {
+    if (s.tool === 'party_donations' && (period.since || period.until)) {
+      const { since: _s, until: _u, from_year: _f, to_year: _t, ...args } = s.args
+      const years = receiptYearWindow(period.since, period.until)
+      return { ...s, args: { ...args, ...(!years.error ? years : {}), ...(period.since ? { since: period.since } : {}), ...(period.until ? { until: period.until } : {}) } }
+    }
     if (!['count_speeches', 'speech_trend', 'find_quotes', 'member_votes'].includes(s.tool)) return s
     const { since: _s, until: _u, term: _t, ...args } = s.args
     const scoped = s.tool === 'member_votes' ? { ...(filters.speaker ? { person: filters.speaker } : {}), ...(filters.party ? { party: filters.party } : {}) } : filters
@@ -738,16 +790,41 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   plan = periodPlan(plan, period, { ...explicitScope, ...filters })
   if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
   const tTools = Date.now()
+  const donationLimitation = (r: ToolResult | undefined) => r?.tool === 'party_donations' && r.ok && r.data?.coverage_only === true && r.coverage?.matched === false
+  const coverageBlocked = new Set<number>()
   for (const step of researched ? [] : plan.steps) {
     if (left() < 8_000) break
     const args = resolveArgs(step.args, results)
-    if (!args) { results.push({ tool: step.tool, ok: false, error: 'unresolved earlier result', cite: [], notes: [] }); continue }
+    if (!args) {
+      const unresolved = Object.entries(step.args).filter(([key, value]) => !resolveArgs({ [key]: value }, results))
+      const limited = unresolved.length > 0 && unresolved.every(([, value]) => {
+        const index = Number(String(value).match(/\d+/)![0]) - 1
+        return donationLimitation(results[index]) || coverageBlocked.has(index)
+      })
+      if (limited) coverageBlocked.add(results.length)
+      results.push({ tool: step.tool, ok: false, error: limited ? 'lookup depends on unsupported donation period' : 'unresolved earlier result', cite: [], notes: [] })
+      continue
+    }
     results.push(await execute({ ...step, args }))
   }
   // A failed join or partial comparison must never imply missing votes or money.
-  if (results.length !== plan.steps.length || usedOnly(results).some(r => !r.ok || r.data?.exact === false ||
+  const checkedResults = usedOnly(results.map((result, index) => ({ result, index }))).filter(({ index }) => !coverageBlocked.has(index)).map(({ result }) => result)
+  if (results.length !== plan.steps.length || checkedResults.some(r => !r.ok || r.data?.exact === false ||
     r.tool === 'member_votes' && !(r.data?.summary as { divisions?: number } | undefined)?.divisions ||
-    r.tool === 'party_donations' && !(r.data?.rows as unknown[] | undefined)?.length)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
+    r.tool === 'party_donations' && !donationLimitation(r) && !(r.data?.rows as unknown[] | undefined)?.length)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
+  const limitedDonations = checkedResults.find(donationLimitation)
+  if (limitedDonations) {
+    // A partial FY is a known source limit, not an empty result. Keep it out of
+    // numerical selection and writing so a companion count cannot imply a money comparison.
+    const note = limitedDonations.coverage?.note ?? 'The donation records cannot establish totals for the requested period.'
+    const answer = `${period.label} ${note} No donation totals have been substituted.`
+    const url = limitedDonations.cite[0]?.url ?? 'https://opax.com.au/methods'
+    const qualitative: QualitativeAnswer = { answer, answer_decision: 'limitation', answer_scope: { period },
+      citations: { 'coverage/t/body/0': [[0, Array.from(answer).length]] },
+      sources: [{ resource: 'coverage', slug: '', title: 'Donation record coverage', href: url, url, snippet: answer, cited: true, kind: 'record' }] }
+    timings.tools_ms = Date.now() - tTools
+    return base({ answered: true, answer, answer_source: 'template', qualitative, notes: [note] })
+  }
   const rankIndex = plan.steps.findIndex((s, i) => eligibleRank(s) && (!researched || !used.size || used.has(i)))
   const committeeFacts: Fact[] = []
   if (rankIndex >= 0 && left() >= 8_000) {

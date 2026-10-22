@@ -20,7 +20,8 @@ import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../pub
  */
 import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
 import type { ToolEnv } from './tools'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-14-soft-act-fallback/' + TOOL_REGISTRY_VERSION
+import { receiptYearWindow } from './receipt-period'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-15-exact-date-windows/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -370,13 +371,21 @@ function sumYears(e: MoneyEdge, from?: number, to?: number): [number, number] {
   for (const [y, [v, n]] of Object.entries(e.byYear ?? {})) { const yr = Number(y); if ((!from || yr >= from) && (!to || yr <= to)) { t += v; c += n } }
   return [t, c]
 }
-export async function partyDonations(deps: ToolDeps, input: { party?: string | null; industry?: string | null; from_year?: number; to_year?: number; limit?: number }): Promise<ToolResult> {
+export async function partyDonations(deps: ToolDeps, input: { party?: string | null; industry?: string | null; from_year?: number; to_year?: number; since?: string; until?: string; limit?: number }): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
+  const dated = !!(input.since || input.until), window = receiptYearWindow(input.since, input.until)
+  if (window.error) {
+    const coverage = { since: null, until: null, as_of: null, matched: false, requested_since: input.since, requested_until: input.until, note: window.error }
+    return { tool: 'party_donations', ok: true, data: { coverage, coverage_only: true }, coverage,
+      cite: [{ kind: 'record', label: window.error, url: `${origin}/methods` }], notes: [window.error] }
+  }
   const g = await money(deps)
   const node = new Map(g.nodes.map((n) => [n.id, n]))
-  const from = Number(input.from_year) || undefined, to = Number(input.to_year) || undefined
+  const from = dated ? window.from_year : Number(input.from_year) || undefined, to = dated ? window.to_year : Number(input.to_year) || undefined
   const limit = Math.min(Number(input.limit) || 5, 15)
   const notes = ['Federal AEC donation returns, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).', 'These are party receipts, not personal payments to politicians, and a donation is not evidence that it influenced any vote or speech.']
+  const coverage = { since: `${Math.max(from ?? 1998, 1998)}-07-01`, until: `${Math.min(to ?? 2025, 2025) + 1}-06-30`, as_of: null,
+    ...(input.since ? { requested_since: input.since } : {}), ...(input.until ? { requested_until: input.until } : {}), note: notes[0] }
   if (input.party) {
     const pid = `party:${input.party}`
     if (!node.has(pid)) return { tool: 'party_donations', ok: false, error: `no party "${input.party}" in the money record; parties: ${g.nodes.filter((n) => n.kind === 'party').map((n) => n.label).join(', ')}`, cite: [], notes }
@@ -390,7 +399,7 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     })
     return {
       tool: 'party_donations', ok: true,
-      data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows},
+      data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows,coverage},
       cite: [{kind:'export',label:`Donations to ${input.party} (AEC returns)`,url:`${origin}/money/party/${encodeURIComponent(input.party)}`},...rows.map(r=>({kind:'export' as const,label:`${r.donor} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : 'https://transparency.aec.gov.au/'}))],
       query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to }, notes,
     }
@@ -405,7 +414,7 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     }
     const rows = [...sums].map(([party, [t, c]]) => ({ party, total_aud: t, receipts: c })).filter((r) => r.total_aud > 0).sort((a, b) => b.total_aud - a.total_aud)
     return {
-      tool: 'party_donations', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], rows },
+      tool: 'party_donations', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], rows, coverage },
       cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} donors to ${r.party}`, value: r.total_aud, url: `${origin}/money/party/${encodeURIComponent(r.party)}` })),
       query: { file: '/graph/money.json', industry: input.industry, from, to }, notes,
     }
@@ -460,7 +469,7 @@ export const TOOL_SPECS: ToolSpec[] = [
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
   { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
   { name: 'member_votes', description: 'How a person or party voted in recorded divisions whose title contains a keyword (e.g. "gambling").', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
-  { name: 'party_donations', description: 'Largest disclosed donors to a federal party, or totals by party for one donor industry (e.g. gambling, mining). Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
+  { name: 'party_donations', description: 'Largest disclosed donors to a federal party, or totals by party for one donor industry (e.g. gambling, mining). Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Find a few cited passages to quote or describe what was said. A ranked sample: never count them.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string' }, limit: { type: 'integer' } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
 ]
 /** Schema-check model plans before any lookup. References are validated separately. */

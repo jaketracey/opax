@@ -21,5 +21,15 @@ export function receiptPeriodQuery(input: string): {query:string; error?:string}
 
 export const financialYear = (year:number) => `${year}–${String(year + 1).slice(-2)}`
 
+/** The graph stores complete FY buckets keyed by their starting year, not calendar years. */
+export function receiptYearWindow(since?: string, until?: string): { from_year?: number; to_year?: number; error?: string } {
+  const from_year = since ? Number(since.slice(0, 4)) : undefined
+  const to_year = until ? Number(until.slice(0, 4)) - 1 : undefined
+  if (since && !/^\d{4}-07-01$/.test(since) || until && !/^\d{4}-06-30$/.test(until) || from_year != null && to_year != null && from_year > to_year) {
+    return { error: 'These records are grouped by financial year (1 July to 30 June), so they cannot establish totals for the requested partial or calendar-year period.' }
+  }
+  return { ...(from_year != null ? { from_year } : {}), ...(to_year != null ? { to_year } : {}) }
+}
+
 export const separateReceiptYears = (query:string) => [...query.matchAll(/\b(?:19|20)\d{2}\b/g)].length===2
   && !/\bbetween\s+(?:19|20)\d{2}\s+and\s+(?:19|20)\d{2}\b|\b(?:19|20)\d{2}\s+(?:to|through|until)\s+(?:19|20)\d{2}\b/i.test(query)
