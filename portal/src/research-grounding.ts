@@ -141,6 +141,12 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
       out={...payload,...cleanAnswerShape(audited),coherence:{...((payload.coherence??{}) as object),stripped_ratio:stripped,fallback:true}}
     }
   }
+  if(!canReconstruct&&(donorQuestion||rankingQuestion)&&audit.findings.some(f=>f.type==='figure')&&!coherenceCheck(question,out).pass){
+    // A repair veto preserves checked points beside a limitation, even for a short rejected lead.
+    const lead='The selected evidence does not establish the requested answer for this scope.',points=String(out.answer??'').trim(),prefix=lead+(points?'\n\n':''),offset=Array.from(prefix).length
+    const citations=Object.fromEntries(Object.entries(out.citations??{}).map(([id,ranges])=>[id,(ranges as number[][]).map(([a,b])=>[a+offset,b+offset])]))
+    out={...out,answer:prefix+points,answer_decision:'limitation',citations,coherence:{stripped_ratio:stripped,fallback:true,method:points?'checked_points_with_limit':'specific_limitation'}}
+  }
   if(stripped>1/3&&!((out.coherence as {fallback?:boolean}|undefined)?.fallback)){
     // Checked points keep their purpose and ownership; never substitute an arbitrary quotation.
     const surviving={...out,coherence:{stripped_ratio:stripped,fallback:true,method:'checked_points'}}

@@ -1,23 +1,27 @@
 import { generateText } from 'ai'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, payRate, type WritingInput } from './research-writing'
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
 import type { ResearchOptions } from './research-loop'
 import {groundAnswerPayload} from './research-grounding'
 import {auditPayload} from './research-claim-audit.mjs'
-import {protectedDecision,donorRanking,answerDecision,canReconstructRanking} from './research-coherence.mjs'
+import {protectedDecision,coherenceCheck,answerDecision,canReconstructRanking} from './research-coherence.mjs'
 import type { QualitativeAnswer, ResearchStats } from './research-types'
 
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
     let lastDraft:QualitativeAnswer|null=null
+    let requiredAnswer:QualitativeAnswer|null=null,keepsRequired=(answer:string)=>true
     const fallback=()=>{
       stats.coherence={...stats.coherence,fallback:true}
-      if(lastDraft&&donorRanking(input.question,input.facts.map(f=>f.source),input.constraints).length&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
+      if(lastDraft&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
         const checked=groundAnswerPayload(lastDraft as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
-        if(protectedDecision(checked))return {...checked,answer_decision:answerDecision(checked),coherence:{fallback:true}}
-        const lead='A reliable donor ranking is not established here.',prefix=lead+'\n\n',offset=Array.from(prefix).length
+        if(protectedDecision(lastDraft))return {...checked,coherence:{fallback:true}}
+        // Preserve the checked pay answer prepared before writing when a revision loses its required headline.
+        if(requiredAnswer&&!keepsRequired(checked.answer))return {...requiredAnswer,coherence:{fallback:true}}
+        if(protectedDecision(checked)||coherenceCheck(input.question,checked).pass)return {...checked,answer_decision:answerDecision(checked),coherence:{fallback:true}}
+        const lead='The selected evidence does not establish the requested answer for this scope.',prefix=lead+'\n\n',offset=Array.from(prefix).length
         const citations=Object.fromEntries(Object.entries(checked.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+offset,b+offset] as [number,number])]))
         return {...checked,answer:prefix+checked.answer,answer_decision:'limitation' as const,citations,coherence:{fallback:true}}
       }
@@ -25,6 +29,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     }, credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
     const required=proseFallback(input),lead=required.answer.split('\n')[0]
+    if(input.facts.some(f=>payRate(f.text)))requiredAnswer=groundAnswerPayload(required as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
     const headlineRequired=/highest|most|top|largest|biggest/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
     const ownerFigure=(text:string)=>{
       const rate=/^([^:]+): (\$[\d,]+)/.exec(text)
@@ -37,6 +42,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     const requiredIds=new Set([...recipientFacts.map(r=>r.f.id),...named.map(f=>f.id),...(headlineRequired?Object.entries(required.citations).filter(([,ranges])=>ranges.some(([a])=>a<lead.length)).flatMap(([id])=>input.facts.filter(f=>id===(f.evidenceId??f.source.resource+'/t/body/0')).map(f=>f.id)):[])])
     const recipients=recipientFacts.map(r=>r.party)
     const keepsHeadline=(answer:string)=>recipients.every(p=>answer.toLowerCase().includes(p.toLowerCase()))&&input.facts.filter(f=>requiredIds.has(f.id)).every(f=>{const pair=ownerFigure(f.text);return !pair||answer.includes(pair.owner)&&answer.includes(pair.amount)})
+    keepsRequired=keepsHeadline
     let activeInput=input, prompt=writingPrompt(input)
     const startedWriting=Date.now()
     const inputReserve=Math.ceil(prompt.length/3)+1024, outputReserve=Math.min(1400,Math.min(160000,Number(options.tokens ?? 96000))-stats.tokens.input-stats.tokens.output-inputReserve)

@@ -1,5 +1,5 @@
 // Repair permission uses evidence scope, never a donor's name or an unrelated coverage paragraph.
-const jurisdictions=[['federal',/\b(?:federal|commonwealth)\b/i],['nsw',/\b(?:nsw|new south wales)\b/i],['vic',/\b(?:vic|victoria|victorian)\b/i],['qld',/\b(?:qld|queensland)\b/i],['sa',/\b(?:sa|south australia|south australian)\b/i],['wa',/\b(?:wa|western australia|western australian)\b/i],['tas',/\b(?:tas|tasmania|tasmanian)\b/i],['act',/\b(?:act|australian capital territory)\b/i],['nt',/\b(?:nt|northern territory)\b/i]]
+export const jurisdictions=[['federal',/\b(?:federal|commonwealth)\b/i],['nsw',/\b(?:nsw|new south wales)\b/i],['vic',/\b(?:vic|victoria|victorian)\b/i],['qld',/\b(?:qld|queensland)\b/i],['sa',/\b(?:sa|south australia|south australian)\b/i],['wa',/\b(?:wa|western australia|western australian)\b/i],['tas',/\b(?:tas|tasmania|tasmanian)\b/i],['act',/\b(?:act|australian capital territory)\b/i],['nt',/\b(?:nt|northern territory)\b/i]]
 export const partyAliases=[['One Nation',/\b(?:one nation|pauline hanson[’']?s? party)\b/i],['Labor',/\b(?:labor|alp|australian labor party)\b/i],['Liberal',/\bliberal(?: party)?\b/i],['Greens',/\bgreens?\b/i],['Nationals',/\b(?:nationals?|national party)\b/i],['LNP',/\b(?:lnp|liberal national party)\b/i]]
 const one=(values)=>{const unique=[...new Set(values.filter(Boolean))];return unique.length===1?unique[0]:unique.length?'conflict':undefined}
 const party=value=>one(partyAliases.filter(([,re])=>re.test(String(value??'').replace(/\bliberal national party\b/ig,'LNP'))).map(([name])=>name))
@@ -11,7 +11,7 @@ function period(value){
   if(value.kind==='all')return undefined
   if(value.since&&value.until){
    const a=String(value.since),b=String(value.until)
-   if(a.endsWith('-07-01')&&b.endsWith('-06-30'))return `fy:${a.slice(0,4)}-${b.slice(2,4)}:fy:${a.slice(0,4)}-${b.slice(2,4)}`
+   if(a.endsWith('-07-01')&&b.endsWith('-06-30'))return `fy:${a.slice(0,4)}-${String(Number(a.slice(0,4))+1).slice(-2)}:fy:${Number(b.slice(0,4))-1}-${b.slice(2,4)}`
    if(a.endsWith('-01-01')&&b.endsWith('-12-31'))return `year:${a.slice(0,4)}:year:${b.slice(0,4)}`
    return `date:${a}:${b}`
   }
@@ -19,6 +19,8 @@ function period(value){
   value=value.label
  }
  const text=String(value??'').replace(/[–—]/g,'-')
+ const dates=[...text.matchAll(/\b(?:19|20)\d{2}-\d{2}-\d{2}\b/g)].map(m=>m[0])
+ if(dates.length)return `date:${dates[0]}:${dates.at(-1)}`
  const financial=[...text.matchAll(/\b((?:19|20)\d{2})-(\d{2})(?!-\d)\b/g)].map(m=>`fy:${m[1]}-${m[2]}`)
  if(financial.length)return financial[0]+':'+financial.at(-1)
  const years=[...text.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>'year:'+m[0])
@@ -93,3 +95,5 @@ export function rankingSourceMatches(question,source,constraints={}){
  const atoms=source.claim_atoms??[]
  return atoms.length>0&&atoms.every(atom=>atomMatches(question,source,atom,constraints))
 }
+
+export const normaliseRankingPeriod=period

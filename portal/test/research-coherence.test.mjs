@@ -86,9 +86,12 @@ test('year-filtered disclosed-donor tables recover their leading donor and perio
  const source=(resource,snippet)=>({resource,snippet,kind:'receipt',title:'Labor federal disclosed donor records',cited:true})
  const sources=[source('receipt-ranking-1','Pratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-2','United Workers Union: $953,447, 14 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-0','Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 119 donors during 2023–24. It excludes government funding.')]
  const bad='Avery Example received $2,000,000.',answer=bad+'\n\nOther donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-1/t/body/0':[[0,bad.length]],'receipt-ranking-2/t/body/0':[[bad.length+2,answer.length]]}}
- const out=api.groundAnswerPayload(p,'Who gave the most disclosed funding to Labor in 2023?')
+ // The former phrasing is now outside the repair allowlist; keep its checked point.
+ const blocked=api.groundAnswerPayload(structuredClone(p),'Who gave the most disclosed funding to Labor in 2023?')
+ assert.equal(blocked.answer_decision,'limitation');assert.match(blocked.answer,/United Workers Union.*953,447/);assert.doesNotMatch(blocked.answer,/Pratt/);assert.equal(coherenceCheck('Who gave the most disclosed funding to Labor in 2023?',blocked).pass,true)
+ const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(p,question)
  assert.match(out.answer.split('\n')[0],/2023–24.*Pratt Holdings Pty Ltd.*2,000,000/)
- assert.equal(coherenceCheck('Who gave the most disclosed funding to Labor in 2023?',out).pass,true);assert.equal(auditPayload('',out).findings.length,0)
+ assert.equal(coherenceCheck(question,out).pass,true);assert.equal(auditPayload('',out).findings.length,0)
 })
 test('an incorrect party adjective is repaired without changing quotation ownership',()=>{
  const answer='Liberal Bill Shorten said “I support the bill”.'

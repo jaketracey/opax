@@ -25,7 +25,7 @@ const cases=[
  ['Senate excludes House','Who gives the most money to the LNP in federal Senate disclosures?',source({chamber:'representatives'}),false],
  ['House excludes Senate','Who gives the most money to the LNP in federal House of Representatives disclosures?',source({chamber:'senate'}),false],
  ['Senate requires known chamber','Who gives the most money to the LNP in federal Senate disclosures?',source(),false],
- ['matching Senate','Who gives the most money to the LNP in federal Senate disclosures?',source({chamber:'senate'}),true],
+ ['matching Senate is outside the repair allowlist','Who gives the most money to the LNP in federal Senate disclosures?',source({chamber:'senate'}),false],
  ['Labor excludes Liberal','Who gives the most money to Labor in federal disclosures?',source({party:'Liberal'}),false],
  ['Liberal excludes Labor','Who gives the most money to the Liberal Party in federal disclosures?',source({party:'Labor'}),false],
  ['One Nation alias',"Who gives the most money to Pauline Hanson's party in federal disclosures?",source({party:'One Nation'}),true],
@@ -36,7 +36,7 @@ const cases=[
  ['a party ranking cannot answer a personal-recipient question','Who gives the most money to Pauline Hanson in federal disclosures?',source({party:'One Nation'}),false],
  ['matching company','Which company gives the most money to the LNP in federal disclosures?',source({entity_type:'company'}),true],
  ['jurisdiction requires evidence','Who gives the most money to the LNP in federal disclosures?',source({jur:''}),false],
- ['all dimensions together','Which company gives the most money to Labor in federal Senate disclosures in 2019–20?',source({party:'Labor',chamber:'senate',entity_type:'company'}),true],
+ ['chamber wording is outside the repair allowlist','Which company gives the most money to Labor in federal Senate disclosures in 2019–20?',source({party:'Labor',chamber:'senate',entity_type:'company'}),false],
  ['one disagreement vetoes the conjunction','Which company gives the most money to Labor in federal Senate disclosures in 2019–20?',source({jur:'qld',party:'Labor',chamber:'senate',entity_type:'company'}),false],
 ]
 for(const [jur,name] of [['nsw','New South Wales'],['vic','Victoria'],['qld','Queensland'],['sa','South Australia'],['wa','Western Australia'],['tas','Tasmania'],['act','Australian Capital Territory'],['nt','Northern Territory']]){
@@ -80,7 +80,8 @@ test('writer retains resolved constraints on the draft and its checked result',a
 for(const [asked,evidence,allowed] of [['senate','representatives',false],['representatives','senate',false],['senate','senate',true],['representatives','representatives',true]])test(`non-donor ranking scope: ${asked}/${evidence}`,()=>{
  const question=`Which Labor politician made the most speeches in federal ${asked==='senate'?'Senate':'House of Representatives'} records in 2019?`,answer='Avery Example recorded 42 chamber speeches labelled gambling in federal parliament in 2019.'
  const source={resource:'fact-1',kind:'count',url:`/explore?state=federal&party=Labor&chamber=${evidence}`,cited:true,snippet:'Pat Example: 42 chamber speeches labelled gambling in federal parliament from 2019-01-01 to 2019-12-31.',claim_atoms:[{entity:'Pat Example',metric:'speeches',value:'42',unit:'count',chamber:evidence,period:{since:'2019-01-01',until:'2019-12-31'}}]}
- assert.equal(canReconstructRanking({answer,sources:[source],citations:{'fact-1/t/body/0':[[0,answer.length]]}},question),allowed)
+ assert.equal(canReconstructRanking({answer,sources:[source],citations:{'fact-1/t/body/0':[[0,answer.length]]}},question),false,'non-donor ranking forms no longer grant reconstruction permission')
+ assert.equal(rankingSourceMatches(question,source),allowed)
  const mixed={...source,claim_atoms:[...source.claim_atoms,{...source.claim_atoms[0],period:{since:'2020-01-01',until:'2020-12-31'}}]}
  assert.equal(rankingSourceMatches(question,mixed),false,'every figure is checked, including repeated values')
 })

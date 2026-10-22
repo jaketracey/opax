@@ -64,12 +64,12 @@ test('RESEARCH-Q04 drops the empty record refusal beside supported passage point
 })
 test('FOLLOW-PAY a revision cannot drop the required highest-paid subject',async()=>{
  let calls=0;const response=text=>({content:[{type:'text',text:JSON.stringify({sentences:[{text,facts:[calls===1?1:2]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})
- const model=new MockLanguageModelV4({doGenerate:()=>{calls++;return response(calls===1?'John Howard was Prime Minister, with annual salary entitlements of $288,990, plus $999.':'Peter Costello earned $208,406 a year as Treasurer.')}})
+ const model=new MockLanguageModelV4({doGenerate:()=>{calls++;return response(calls===1?'John Howard was Prime Minister, with annual salary entitlements of $288,990, plus an unverified additional payment of $999 and a separate claimed special payment of $888.':'Peter Costello earned $208,406 a year as Treasurer.')}})
  const facts=[['John Howard: $288,990 a year as Prime Minister, 2005-07-01 to 2005-12-31; base $111,150 plus 160%.'],['Peter Costello: $208,406 a year as Treasurer, 2005-07-01 to 2005-12-31; base $111,150 plus 87.5%.']].map(([text],i)=>({id:i+1,text,source:{resource:'fact-'+(i+1),kind:'record',snippet:text,cited:true,title:'Federal pay'}}))
  const write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}}),stats={rounds:1,tokens:{input:0,output:0}}
  const out=await write({question:'Who was the highest paid politician in 2005?',period:{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'},facts},stats,undefined,3000)
  assert.match(out.answer,/John Howard/);assert.match(out.answer,/288,990/);assert.ok(out.citations['fact-1/t/body/0'])
- if(model.doGenerateCalls.length===2)assert.match(JSON.stringify(model.doGenerateCalls[1].prompt),/John Howard/)
+ assert.equal(model.doGenerateCalls.length,2);assert.match(JSON.stringify(model.doGenerateCalls[1].prompt),/John Howard/)
 })
 test('eval harness preserves non-2xx bodies and structured research error evidence',async()=>{
  const body={error:'grounding failed',research:{failure:'grounding',cost_usd:0.012}}
@@ -125,7 +125,9 @@ test('ranking party scope reads the selected calculation URL, including encoded 
  f.payload.answer=bad+'\n\n'+f.payload.answer
  f.payload.citations=Object.fromEntries(Object.entries(f.payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+shift,b+shift])]))
  f.payload.citations['receipt-ranking-1/t/body/0']=[[0,bad.length]]
- const out=api.groundAnswerPayload(f.payload,f.question);assert.match(out.answer.split('\n')[0],/Pratt Holdings Pty Ltd/);assert.match(out.answer.split('\n')[0],/2,000,000/);assert.match(out.answer.split('\n')[0],/2023[–-]24/);assert.equal(coherenceCheck(f.question,out).pass,true)
+ // Full original wording remains a veto control; canonical FY wording remains a positive control.
+ const blocked=api.groundAnswerPayload(structuredClone(f.payload),f.question);assert.equal(blocked.answer_decision,'limitation');assert.match(blocked.answer,/United Workers Union/);assert.equal(coherenceCheck(f.question,blocked).pass,true)
+ const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(f.payload,question);assert.match(out.answer.split('\n')[0],/Pratt Holdings Pty Ltd/);assert.match(out.answer.split('\n')[0],/2,000,000/);assert.match(out.answer.split('\n')[0],/2023[–-]24/);assert.equal(coherenceCheck(question,out).pass,true)
 })
 test('an affirmative misattributed figure cannot become a protected decision by adding a limitation',()=>{
  const answer='Avery Example was paid $999,999, but the records cannot establish anything further.'
@@ -183,7 +185,9 @@ test('a quoted organisation name containing initials remains one complete rankin
 test('selected receipt periods survive when the writer fact is prose rather than the raw data row',()=>{
  const row={resource:'receipt-ranking-1',kind:'receipt',title:'Shop Distributive & Allied Employees Association: $974,058',url:'https://opax.com.au/money?jur=federal&party=party%3ALabor&from=2019&to=2019',snippet:'Shop Distributive & Allied Employees Association: $974,058, 13 disclosed receipt records. Period: 2019–20.',cited:true}
  const coverage={...row,resource:'receipt-ranking-0',snippet:'Opax added the disclosed receipts matching this question, grouped by donor.'}
- const question='Who donates the most to Labor in federal records in 2019?',out=api.proseFallback({question,period:{kind:'all',label:''},facts:[{id:1,text:'Shop Distributive & Allied Employees Association has the largest disclosed total: $974,058.',source:row},{id:2,text:coverage.snippet,coverage:true,source:coverage}]})
+ const facts=[{id:1,text:'Shop Distributive & Allied Employees Association has the largest disclosed total: $974,058.',source:row},{id:2,text:coverage.snippet,coverage:true,source:coverage}]
+ const blocked=api.proseFallback({question:'Who donates the most to Labor in federal records in 2019?',period:{kind:'all',label:''},facts});assert.equal(blocked.answer_decision,'limitation');assert.doesNotMatch(blocked.answer,/provided the most/)
+ const question='Who donates the most to Labor in federal disclosures in 2019–20?',out=api.proseFallback({question,period:{kind:'all',label:''},facts})
  assert.match(out.answer.split('\n')[0],/Shop Distributive.*974,058/);assert.match(out.answer.split('\n')[0],/2019[–-]20/);assert.equal(coherenceCheck(question,out).pass,true)
 })
 for(const [party,amount]of [['Liberal','40,608,922'],['One Nation','161,787']])test('named donor fallback preserves the giving relationship: '+party,()=>{

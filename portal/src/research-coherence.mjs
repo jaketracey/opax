@@ -1,6 +1,7 @@
 import {sentenceParts,auditPayload} from './research-claim-audit.mjs'
 import {answerStyleChecks} from './research-answer-style.mjs'
-import {partyAliases,sourceMetadata,rankingScopeMatches,rankingFactMatches,rankingSourceMatches,associatedRankingPeriod} from './research-ranking-scope.mjs'
+import {rankingRepairQuestion,repairSlotsMatch} from './research-ranking-repair.mjs'
+import {partyAliases,sourceMetadata,rankingScopeMatches,associatedRankingPeriod} from './research-ranking-scope.mjs'
 // Shared, deterministic checks; evidence remains data and the claim audit remains authoritative.
 export const danglingOpener = /^(?:[-*•]\s*|\d+[.)]\s*)?(?:other\b|also\b|in addition\b|further(?:more)?\b|however\b|meanwhile\b|additionally\b|moreover\b|and\b|another\b|the runners-up\b)/i
 const folded = s => String(s??'').toLowerCase().replace(/[–—]/g,'-').replace(/[^\p{L}\p{N}]+/gu,' ').trim()
@@ -45,10 +46,12 @@ function donorRows(question,sources=[],requireRanking=true,constraints={}) {
       rows.push({name:m[1],party:m[2],amount:m[3],value:Number(m[3].replace(/[$,]/g,'')),period,source})
     }
   }
+  for(const row of rows)row.entity_type=sourceMetadata(row.source).entity_type??'donor'
   const scoped=rows.filter(r=>rankingScopeMatches(question,r,constraints))
   return scoped.filter((r,i)=>scoped.findIndex(x=>x.name===r.name&&x.party===r.party&&x.value===r.value)===i).sort((a,b)=>b.value-a.value)
 }
 export function donorRanking(question,sources=[],constraints={}){return donorRows(question,sources,true,constraints)}
+export function repairDonorRanking(question,sources=[],constraints={}){const form=rankingRepairQuestion(question);return form?donorRows(question,sources,true,constraints).filter(row=>repairSlotsMatch(form,question,row,constraints)):[]}
 /** Parse only selected donor/recipient relationships, also for an explicit amount lookup. */
 export function selectedDonorFacts(question,sources=[],constraints={}){return donorRows(question,sources,false,constraints)}
 function citesDraftClaim(payload,text,resource) {
@@ -61,11 +64,8 @@ export function canReconstructRanking(payload,question) {
   if(protectedDecision(payload))return false
   const sources=(payload.sources??[]).filter(s=>s.cited&&!/^USER_CONTEXT_/i.test(s.resource)),audit=auditPayload(question,payload)
   const rejected=audit.findings.filter(c=>c.type==='figure')
-  if(/donor|donat|money|funding/i.test(question)){
-    const rows=donorRanking(question,sources,payload.answer_scope)
-    return rejected.some(c=>c.unit?.startsWith('AUD')&&rows.some(row=>Number(c.value)===row.value&&citesDraftClaim(payload,c.text,row.source.resource)))
-  }
-  return rejected.some(c=>sources.some(source=>citesDraftClaim(payload,c.text,source.resource)&&rankingSourceMatches(question,source,payload.answer_scope)&&rankingFactMatches(question,source,c,payload.answer_scope)&&auditPayload(question,{answer:source.snippet,sources:[source],citations:{}}).claims.some(f=>f.type==='figure'&&f.value===c.value&&f.unit===c.unit)))
+  const rows=repairDonorRanking(question,sources,payload.answer_scope)
+  return rejected.some(c=>c.unit?.startsWith('AUD')&&rows.some(row=>Number(c.value)===row.value&&citesDraftClaim(payload,c.text,row.source.resource)))
 }
 export function coherenceCheck(question,payload,{direct=answerStyleChecks(question,String(payload.answer??''),{sources:payload.sources??[],ranking_rows:donorRanking(question,payload.sources??[],payload.answer_scope)}).direct_first_sentence==='pass'}={}) {
   const text=String(payload.answer??''),first=sentenceParts(text)[0]?.text.trim().split('\n')[0]??'',chars=Array.from(text)

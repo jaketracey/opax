@@ -4,7 +4,7 @@ import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, m
 import { claimAttributionOk, claimMatchesParty, withoutUnsupportedFigures } from './research-evidence'
 import type { QualitativeAnswer } from './research-types'
 import { plainAnswerPayload } from './research-language'
-import { donorRanking,selectedDonorFacts,answerDecision,canReconstructRanking } from './research-coherence.mjs'
+import { repairDonorRanking,selectedDonorFacts,answerDecision,canReconstructRanking } from './research-coherence.mjs'
 import {auditPayload} from './research-claim-audit.mjs'
 import {rankingCoverageMatches} from './research-ranking-scope.mjs'
 
@@ -87,7 +87,7 @@ function assemble(lines: WrittenSentence[], input: WritingInput): QualitativeAns
   return plainAnswerPayload({ answer, answer_decision:lines.length&&lines.every(l=>l.coverage)?'limitation' as const:'answer' as const, ...(input.constraints?{answer_scope:input.constraints}:{}), citations, sources:[...sources.values()] })
 }
 const finish = (s: string) => /[.!?]$/.test(s) ? s : s+'.'
-const payRate = (s: string) => /^(.+?): (\$\d[\d,]*(?:\.\d+)?) a year as (.+?), (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2});/.exec(s)
+export const payRate = (s: string) => /^(.+?): (\$\d[\d,]*(?:\.\d+)?) a year as (.+?), (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2});/.exec(s)
 const day = (s: string) => new Date(s+'T00:00:00Z').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
 function coverageSentence(input: WritingInput): WrittenSentence | undefined {
   const all = input.facts.filter(f => f.coverage && !/^(?:Period|Financial years):/i.test(f.text)), text = all.map(f => f.text).join(' ')
@@ -137,7 +137,7 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     const total=input.facts.flatMap(f=>{const m=f.source.kind==='record'?/^Donor:\s*(.+?)\s*—[\s\S]*?(\$[\d,.]+) in disclosed political receipts/.exec(f.text):null;return m&&matchesOwner(m[1])?[{f,m}]:[]})[0]
     if(total)return assemble([{text:`${total.m[1]} gave ${total.m[2]} in disclosed political receipts in this published selection, but these selected facts do not name which parties received the funding.`,facts:[total.f.id]}],input)
   }
-  const donors=donorRanking(input.question,input.facts.map(f=>f.source),input.constraints)
+  const donors=repairDonorRanking(input.question,input.facts.map(f=>f.source),input.constraints)
   const donorEvidence=input.facts.some(f=>f.source.kind==='receipt'||/gave .+? \$[\d,]+ \(federal disclosures|\|\s*Donor\s*\|\s*Disclosed receipts/i.test(f.text+'\n'+f.source.snippet))
   const wantsDonorRanking=/\b(?:who|which (?:company|corporation|person|individual|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(input.question)
   if(donorEvidence&&(wantsDonorRanking||/\bmost years\b/i.test(input.question))&&!donors.length){
@@ -210,6 +210,8 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     const unique=eligible.filter((row,i)=>eligible.findIndex(x=>key(x.name)===key(row.name)&&x.amount===row.amount)===i).slice(0,8)
     if(unique.length) {
       const ranking=/most|highest|largest|top|biggest/i.test(input.question), industry=/\b(mining|gambling|property|finance|unions|fossil fuels)\b/i.exec(input.question)?.[1]
+      // Donor evidence cannot regain ranking permission through the generic money renderer.
+      if(ranking&&donorEvidence)return assemble([{text:'The selected disclosed receipts do not establish a donor ranking for the requested scope.',facts:[],coverage:true}],input)
       const leader=unique[0], giving=/\b(?:gave|donated|provided)\b/i.test(input.question),target=giving?/\bto (Labor|Liberal|Greens|Nationals)\b/i.exec(input.question)?.[1]:undefined, subject=industry?industry+' funding':/contract/i.test(input.question)?'contract value':/grant/i.test(input.question)?'grant funding':'disclosed funding'
       if(!ranking){for(const row of unique)lines.push({text:`${row===leader&&period?'In '+period+', ':''}${row.name} recorded ${row.amount}${row.tail?' '+clean(row.tail).replace(/[.;]+$/,''):''}.`,facts:[row.f.id]})}
       else {lines.push({text:ranking?`${leader.name} ${giving?'provided':'received'} the most ${subject}${target?' to '+target:''}${period?' in '+period:''}, with ${leader.amount}.`:`${period?'In '+period+', ':''}${leader.name} recorded ${leader.amount}.`,facts:[leader.f.id,...(periodFact?[periodFact.id]:[])]})
@@ -399,7 +401,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   const written={...assemble(lines,input),answer_decision:decision??'answer' as const}
   if(repairLead&&primary) {
     const draft=draftWrittenAnswer(raw,input)
-    if(donorRanking(input.question,input.facts.map(f=>f.source),input.constraints).length&&(!draft||!canReconstructRanking(draft,input.question)))return written
+    if(!draft||!canReconstructRanking(draft,input.question))return null
     const fallback=proseFallback(input),lead=fallback.answer.split('\n\n')[0],end=Array.from(lead).length
     if(!tokens(lead).includes(primary.atom.value))return null
     const citations:QualitativeAnswer['citations']={}
