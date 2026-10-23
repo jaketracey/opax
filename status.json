@@ -1,0 +1,98 @@
+{
+ "date": "2026-10-24",
+ "status": "ok",
+ "started": "2026-10-23T16:15:40Z",
+ "finished": "2026-10-23T17:17:10Z",
+ "commit": "39c5d9b81",
+ "deploy": "started by the push (deploy.yml, corpus.json changed)",
+ "summary": "990,380 resources (+170: speech +130, press_release +40); divisions: 0 new; federal latest 2026-10-15; bills: 0 new, 0 changed, 0 titles filled, 0 sponsor IDs filled; evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); Paused sources: bills, committees, diaries_qld, grants_fetch, interests_federal, qld, qld_contracts, sa",
+ "failures": [],
+ "warnings": [
+  "evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); catch-up retained; export skipped",
+  "division export retained 28 pinned records; explicit coverage flags identify degraded source coverage",
+  "SEO recent votes retained 942 published source URLs across 23 divisions: Victorian Hansard asset paths changed; unchanged recorded votes kept their prior citations"
+ ],
+ "paused_sources": {
+  "committees": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-10-23T16:19:45.239385+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "data.parliament.qld.gov.au",
+   "checked_at": "2026-10-23T16:19:41.102247+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "bills": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-10-23T16:43:55.511901+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "sa": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "hansardsearch.parliament.sa.gov.au",
+   "checked_at": "2026-10-23T16:19:46.968485+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld_contracts": {
+   "status": "paused",
+   "reason": "redirect refused: destination robots policy is unavailable",
+   "host": "www.data.qld.gov.au",
+   "checked_at": "2026-10-19T10:44:04.795759+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "grants_fetch": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "www.grants.gov.au",
+   "checked_at": "2026-10-23T16:32:59.800456+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "interests_federal": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "www.aph.gov.au",
+   "checked_at": "2026-10-23T16:43:54.613622+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "diaries_qld": {
+   "status": "paused",
+   "reason": "challenge/WAF page",
+   "host": "cabinet.qld.gov.au",
+   "checked_at": "2026-10-19T10:44:08.575881+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  }
+ },
+ "periodic_state": {
+  "schema": 1,
+  "observed_through": "2026-10-24",
+  "groups": {
+   "frl": {
+    "last_success": "2026-10-23",
+    "last_attempt": "2026-10-23",
+    "commit": "30020ef5651862c53230e37381bef827586bb313"
+   },
+   "monthly": {
+    "last_success": "2026-10-19",
+    "last_attempt": "2026-10-19",
+    "commit": "77401b801e5f3c05d66414cacc87eb04a70f406f"
+   },
+   "weekly": {}
+  }
+ }
+}
