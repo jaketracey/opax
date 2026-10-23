@@ -53,9 +53,6 @@ SA_CHAMBER = {
     "sa_lc": "uh",
 }
 
-# Rate limiting: seconds between API calls
-REQUEST_DELAY = 0.15
-
 # HTML/XML tag stripping
 HTML_TAG_RE = re.compile(r"<[^>]+>")
 MULTI_SPACE_RE = re.compile(r"\s+")
@@ -70,14 +67,13 @@ PROGRESS_DIR = Path("~/.cache/autoresearch/sa_hansard").expanduser()
 
 
 def _api_get(url: str, retries: int = 3) -> bytes:
-    """Make a GET request with rate limiting and retries."""
+    """GET with retries; shared HTTP policy coordinates the SA request limit."""
     req = source_http.Request(url, headers={
         "User-Agent": source_http.USER_AGENT,
         "Accept": "*/*",
     })
     for attempt in range(retries):
         try:
-            time.sleep(REQUEST_DELAY)
             with source_http.urlopen(req, timeout=60) as resp:
                 return resp.read()
         except Exception as e:
