@@ -50,6 +50,31 @@ fetchers use `source-access.json`. No refusal deletes a source's last good data.
 The full repository match inventory and dispositions are in
 [SOURCES-ACCESS-AUDIT.md](SOURCES-ACCESS-AUDIT.md).
 
+## SA request pacing (preparation only)
+
+SA Hansard remains paused in `PAUSED_HOSTS`, before HTTP transport or pacing-state
+access. Adding a limiter does not grant source access or resume acquisition.
+Permission, verified stable egress and a separate review of the pause are still
+required. No new SA access test is implied by an inherited refusal receipt.
+
+For `hansardsearch.parliament.sa.gov.au` only, the shared synchronous Requests and
+urllib transports serialize each attempt, including explicit retries, and wait
+at least one second after its completion before the next attempt. A longer
+`Retry-After` on 429/503 is retained for cooperating callers too. SA's ingestor
+has no separate shorter delay. Other hosts keep their existing pacing.
+
+The lock and state at
+`~/.cache/autoresearch/pipeline/sa-hansard-http-pacing.json` (and its `.lock`
+sibling) coordinate cooperating processes using the same files, on one machine
+under one user. This does not coordinate multiple machines or other users sharing
+an outbound IP. An interrupted attempt, invalid state, unavailable coordination
+or a backwards monotonic clock stops acquisition for review; state is never
+automatically reset. SA requests with custom/retrying Requests adapters,
+non-policy response hooks, custom/authenticating urllib handlers, or async
+transports are refused because their individual attempts cannot be covered by
+this synchronous limiter. Current SA ingestion and probing use the supported
+synchronous transports.
+
 ## Permission review, 19 October 2026
 
 Relevant replies received since the 10 October decision were read in full. Private
