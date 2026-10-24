@@ -2,6 +2,9 @@
   "schema": 1,
   "source": "/graph/money.json",
   "source_sha256": "ed267871f612004e354105ba2af250eb5b5a3cfbe86db12ea0325375c4aff861",
+  "source_revision": "c6348c2213a65691555f241196c960d23ecd4671",
+  "source_generated": "2026-10-18",
+  "source_semantic_sha256": "a4fbc81d939e2a99cc64f6693bdc95bada987e1baf9570dcf06ed3e354d7cf3d",
   "gold_method": "partyDonations tool, exact published selection, federal disclosed receipts; no inference of gifts or influence",
   "conversations": [
     {

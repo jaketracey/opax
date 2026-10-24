@@ -49,6 +49,8 @@ The state question explicitly asks about LNP funding **in Queensland**. Its gold
 
 10 conversations, 23 turns. Gold owner/amount pairs come from `partyDonations` and were cross-checked against the local receipt calculator. “Who else?” requires a newly named donor from tool data, beyond the actual preceding answer. Context checks also reject recipient-role inversion.
 
+The fixture pins `/graph/money.json` at source revision `c6348c2213a65691555f241196c960d23ecd4671`, generated 18 October 2026. Its original exact-byte `source_sha256` remains historical provenance. The live-source guard uses `source_semantic_sha256`: SHA-256 of JSON with recursively sorted object keys and array order preserved, omitting only `meta.generated` after validating it as a UTC calendar date. A weekly export can update that date without changing the gold. Every other metadata value, node, edge, identity, amount, receipt count and period remains guarded; financial or provenance changes require review of the gold and a deliberate fingerprint update. This guard does not approve refreshed data or replace publication gates.
+
 All four checks pass on 7/23 r4 turns versus 23/23 new turns; complete conversations 0/10 versus 10/10. Coherence across all single-turn and follow-up cases: 47/79 versus 79/79.
 
 Each cell below is **context / owners and figures / citations / decline**. P = pass, F = fail, — = not applicable, E = request error.
