@@ -167,7 +167,7 @@ test('party words inside a resolved donor name are not recipient selections',()=
 
 test('voice lending questions cannot reuse mixed receipt totals',async()=>{
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
- for(const query of ['How much money did Westpac Banking Corporation lend to Labor?','Which banks lent money to Labor?','How much money was loaned to Labor by Westpac Banking Corporation?',...['lent','loan','loaned','borrowed','borrowing','owe','owes','owed','debt'].map(verb=>'How much money '+verb+' to Labor by Westpac Banking Corporation?')])for(const tool of ['search_records','find_connections']){
+ for(const query of ['Who loaned the most money to Labor?','How much money did Westpac Banking Corporation lend to Labor?','Which banks lent money to Labor?','How much money was loaned to Labor by Westpac Banking Corporation?',...['lent','loan','loaned','borrowed','borrowing','owe','owes','owed','debt'].map(verb=>'How much money '+verb+' to Labor by Westpac Banking Corporation?')])for(const tool of ['search_records','find_connections']){
   const out=await runVoiceTool(tool,{query},env,async()=>{throw Error('Unexpected network retrieval')});
   assert.match(out.data.answer,/cannot establish how much was lent/);
   assert.match(out.data.answer,/balances owed at 30 June/);
@@ -190,5 +190,13 @@ test('voice uses the shared family calculator, with its entire table and citatio
   assert.match(out.data.answer,/\| Source \| Disclosed receipts \| Records \|/);
   assert.equal(out.data.answer.split('\n').filter(s=>/^\| /.test(s)).length,7);
   assert.ok(Object.keys(out.data.citations).length>=6);assert.equal('money_facts' in out.data,false);
+ }
+});
+
+test('voice recognises plural, contracted, misspelled and uncertain family requests',async()=>{
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ for(const query of ["Who are the Greens' top donors?","Who's been giving the most money to the Greens?",'who donates teh most to labor','Who givvinng the most money to Labor?'])for(const tool of ['search_records','find_connections']){
+  const out=await runVoiceTool(tool,{query},env,async()=>{throw Error('Long-tail family reached generic retrieval')});
+  assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.ok(['calculated','needs_scope'].includes(out.data.answer_status));
  }
 });

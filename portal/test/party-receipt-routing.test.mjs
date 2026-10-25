@@ -142,3 +142,59 @@ test('additional federal total labels use receipts and source wording throughout
   ['src/seo-content.ts',/<h2>Donors to their party<\/h2>/],
  ])assert.doesNotMatch(fs.readFileSync(root+file,'utf8'),old,file)
 })
+
+test('R7 long-tail grammar stays deterministic; original and new near-miss controls stay outside',async()=>{
+ const {cases,negatives}=await import('./fixtures/party-receipt-long-tail.mjs')
+ assert.ok(cases.length>=150);assert.equal(negatives.length,10)
+ for(const {question,party}of cases){
+  const p=await api.federalPartyMoneyAnswer({question},assets);assert.ok(p,question)
+  assert.ok(['calculated','needs_scope'].includes(p.answer_status),question)
+  if(p.answer_status==='calculated'){complete(p);assert.equal(new URL(p.sources[0].url,'https://opax.test').searchParams.get('party'),'party:'+party,question)}
+  else assert.ok(p.answer.includes(party),question)
+ }
+ for(const question of negatives){assert.equal(api.federalPartyRankingIntent(question),null,question);assert.equal(await api.federalPartyMoneyAnswer({question},assets),null,question)}
+})
+test('uncertain financial grammar and ambiguous party aliases clarify without assets or models',async()=>{
+ const {uncertain}=await import('./fixtures/party-receipt-long-tail.mjs')
+ const forbidden={fetch:async()=>{throw Error('Clarification must not guess a calculation')}}
+ for(const {question,parties}of uncertain){
+  const p=await api.federalPartyMoneyAnswer({question},forbidden)
+  assert.equal(p.answer_status,'needs_scope',question);assert.equal(p.money_route,'federal-party-ranking-v1')
+  for(const party of parties)assert.ok(p.answer.includes(party),question)
+  assert.deepEqual(p.sources,[]);assert.deepEqual(p.citations,{});assert.doesNotMatch(p.answer,/\$|gave|donated/)
+  assert.equal((await api.rankedMoneyAnswer({question},forbidden)).answer,p.answer)
+ }
+ assert.equal(api.receiptKeywordDistance('teh','the'),1)
+ assert.equal(api.receiptKeywordDistance('bxxgest','biggest'),2)
+ assert.equal(api.receiptKeywordDistance('greezs','greens'),1)
+})
+test('R7 exact reproductions and uncertain requests bypass poisoned caches in JSON and SSE',async()=>{
+ const {reproductions,uncertain}=await import('./fixtures/party-receipt-long-tail.mjs')
+ const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
+ const h=await loadWorker(root+'src/index.ts',root+'public',ctx),saved=caches.default
+ let reads=0;globalThis.caches.default={match:async()=>{reads++;return Response.json({answer:'Old gift claim'})},put:async()=>{}}
+ const before=outbound.length
+ try{
+  h.env.RESEARCH_LOOP='route';h.env.AGENTIC_ASK_MODE='route'
+  for(const question of [...reproductions,...uncertain.map(u=>u.question)])for(const stream of [false,true]){
+   const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question})})
+   assert.equal(response.status,200);assert.equal(response.headers.get('x-opax-money-route'),'federal-party-ranking-v1',question)
+   const wire=await response.text(),p=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
+   assert.deepEqual(p,JSON.parse(JSON.stringify(api.publicPartyMoneyAnswer(await api.federalPartyMoneyAnswer({question},assets)))))
+   if(reproductions.includes(question))complete(p);else assert.equal(p.answer_status,'needs_scope')
+  }
+  assert.equal(reads,0);assert.equal(outbound.length,before)
+ }finally{globalThis.caches.default=saved;await Promise.all(pending);restore()}
+})
+
+test('uncertain family intent stays deterministic through direct agentic, research and follow-ups',async()=>{
+ const question='Who givvinng the most money to Labor?',forbidden=()=>{throw Error('Uncertain family intent reached a model or asset')}
+ const deps={asset:forbidden,kb:forbidden,generate:forbidden,research:Object.assign(forbidden,{write:forbidden})}
+ const run=await api.runAgentic(question,deps);assert.equal(api.agenticAskPayload(run,question).answer_status,'needs_scope');assert.equal(run.cost_usd,0)
+ const research=api.createResearch({input:{question},modelBudgetSpent:forbidden,dailyBudget:{reserve:forbidden}})
+ const out=await research(question,{deps,period:api.inferPeriod(question),named:{people:[],parties:[],bills:[],ambiguous:false,unresolved:false},signal:new AbortController().signal,progress:forbidden,scope:x=>x,execute:forbidden})
+ assert.equal(out.qualitative.answer_status,'needs_scope');assert.equal(out.costUsd,0)
+ const context=[{author:'user',text:question}]
+ for(const next of ['What about the Greens?','And in 2019-20?'])assert.equal((await api.federalPartyMoneyAnswer({question:next,context},assets)).answer_status,'needs_scope')
+ assert.equal(await api.federalPartyMoneyAnswer({question:'And what did Labor say about housing?',topic:'housing',context},assets),null)
+})

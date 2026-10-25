@@ -2,7 +2,7 @@ import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
 import {reportsEnabled} from './reports-gate'
-import {federalPartyMoneyAnswer, federalPartyRankingQuestion, publicPartyMoneyAnswer} from './ask-money-routing'
+import {federalPartyMoneyAnswer, federalPartyRankingIntent, publicPartyMoneyAnswer} from './ask-money-routing'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -90,7 +90,7 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
   if (name === 'search_records') {
     const query = text(args.query, 2, 300, 'Search'), kind = args.kind ?? 'all'
     if (typeof kind !== 'string' || (!['all','speech','press_release','division','legal'].includes(kind) && !CATALOG_KINDS.has(kind))) throw new CommunityError(400, 'Choose a supported record kind.')
-    if(federalPartyRankingQuestion(query)||kind==='receipt'||(kind==='all'&&moneyQuestion(query))) {
+    if(federalPartyRankingIntent(query)||kind==='receipt'||(kind==='all'&&moneyQuestion(query))) {
       const found=await receipts(query,kind)
       if(found) return found
     }

@@ -1,0 +1,388 @@
+{
+  "baseline": "origin/main",
+  "input": "158 saved payloads, r4/B arms",
+  "payloads": 158,
+  "family": 46,
+  "non_family_identical_payloads": 112,
+  "family_calculated": 42,
+  "family_evidence_gap": 4,
+  "family_table_rows": 200,
+  "changed": 46,
+  "differences": [
+    {
+      "arm": "r4",
+      "position": 10,
+      "id": "MONEY-YEAR",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 51,
+      "id": "COH-PHON",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 52,
+      "id": "COH-GREENS",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 53,
+      "id": "COH-LIB",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 54,
+      "id": "COH-LAB",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 55,
+      "id": "COH-NAT",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 57,
+      "id": "FOLLOW-D01-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 58,
+      "id": "FOLLOW-D01-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 59,
+      "id": "FOLLOW-D01-T3",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 60,
+      "id": "FOLLOW-D02-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 62,
+      "id": "FOLLOW-D03-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 64,
+      "id": "FOLLOW-D04-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 65,
+      "id": "FOLLOW-D04-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 66,
+      "id": "FOLLOW-D04-T3",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 67,
+      "id": "FOLLOW-D05-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 68,
+      "id": "FOLLOW-D05-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 69,
+      "id": "FOLLOW-D06-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 70,
+      "id": "FOLLOW-D06-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 71,
+      "id": "FOLLOW-D07-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 73,
+      "id": "FOLLOW-D07-T3",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 76,
+      "id": "FOLLOW-D09-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 77,
+      "id": "FOLLOW-D09-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "r4",
+      "position": 78,
+      "id": "FOLLOW-D10-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 10,
+      "id": "MONEY-YEAR",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 51,
+      "id": "COH-PHON",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 52,
+      "id": "COH-GREENS",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 53,
+      "id": "COH-LIB",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 54,
+      "id": "COH-LAB",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 55,
+      "id": "COH-NAT",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 57,
+      "id": "FOLLOW-D01-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 58,
+      "id": "FOLLOW-D01-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 59,
+      "id": "FOLLOW-D01-T3",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 60,
+      "id": "FOLLOW-D02-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 62,
+      "id": "FOLLOW-D03-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 64,
+      "id": "FOLLOW-D04-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 65,
+      "id": "FOLLOW-D04-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 66,
+      "id": "FOLLOW-D04-T3",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 67,
+      "id": "FOLLOW-D05-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 68,
+      "id": "FOLLOW-D05-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 69,
+      "id": "FOLLOW-D06-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 70,
+      "id": "FOLLOW-D06-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 71,
+      "id": "FOLLOW-D07-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 73,
+      "id": "FOLLOW-D07-T3",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 76,
+      "id": "FOLLOW-D09-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 77,
+      "id": "FOLLOW-D09-T2",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    },
+    {
+      "arm": "B",
+      "position": 78,
+      "id": "FOLLOW-D10-T1",
+      "family": true,
+      "changed": true,
+      "reason": "Replace the family response with the complete federal receipts calculator answer; no model prose."
+    }
+  ],
+  "non_family_changes": [],
+  "damaged_family_answers": [],
+  "network_requests": 0,
+  "model_calls": 0,
+  "spend_usd": 0,
+  "baseline_sha": "7b5a0e4715f7220cb108755bd305f8aedcc3ea0a",
+  "round6_incremental_changes": []
+}

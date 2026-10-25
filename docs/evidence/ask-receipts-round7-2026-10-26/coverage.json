@@ -1,0 +1,1329 @@
+{
+  "original_generated_cases": 612,
+  "round7_generated_checks": 252,
+  "new_unique_wordings": 249,
+  "statuses": {
+    "routed": 252,
+    "clarified": 0,
+    "outside": 0
+  },
+  "original_negatives": 24,
+  "new_negatives": 10,
+  "exact_reproductions": 5,
+  "uncertainty_fixtures": 5,
+  "json_sse_new_responses": 20,
+  "cases": [
+    {
+      "question": "Who are the Greens' top donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ top donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' top backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ top backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' top supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ top supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' top benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ top benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' top funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ top funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' top contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ top contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' biggest donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ biggest donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' biggest backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ biggest backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' biggest supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ biggest supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' biggest benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ biggest benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' biggest funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ biggest funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' biggest contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ biggest contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' largest donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ largest donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' largest backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ largest backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' largest supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ largest supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' largest benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ largest benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' largest funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ largest funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' largest contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ largest contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' main donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ main donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' main backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ main backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' main supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ main supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' main benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ main benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' main funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ main funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' main contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ main contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' major donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ major donors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' major backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ major backers?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' major supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ major supporters?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' major benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ major benefactors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' major funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ major funders?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens' major contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Greens’ major contributors?",
+      "party": "Greens",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' top donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ top donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' top backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ top backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' top supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ top supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' top benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ top benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' top funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ top funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' top contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ top contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' biggest donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ biggest donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' biggest backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ biggest backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' biggest supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ biggest supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' biggest benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ biggest benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' biggest funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ biggest funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' biggest contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ biggest contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' largest donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ largest donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' largest backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ largest backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' largest supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ largest supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' largest benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ largest benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' largest funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ largest funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' largest contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ largest contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' main donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ main donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' main backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ main backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' main supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ main supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' main benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ main benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' main funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ main funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' main contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ main contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' major donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ major donors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' major backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ major backers?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' major supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ major supporters?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' major benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ major benefactors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' major funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ major funders?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals' major contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who are the Nationals’ major contributors?",
+      "party": "Nationals",
+      "form": "plural possessive"
+    },
+    {
+      "question": "Who's been giving the most money to Labor?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been giving the most money to Labor?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been giving the most money to Labor?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been donating the most money to Labor?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been donating the most money to Labor?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been donating the most money to Labor?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been funding Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been funding Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been funding Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been bankrolling Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been bankrolling Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been bankrolling Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been backing Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been backing Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been backing Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been supporting Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been supporting Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been supporting Labor the most?",
+      "party": "Labor",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been giving the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been giving the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been giving the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been donating the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been donating the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been donating the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been funding the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been funding the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been funding the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been bankrolling the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been bankrolling the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been bankrolling the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been backing the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been backing the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been backing the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been supporting the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been supporting the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been supporting the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been giving the most money to the Greens?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been giving the most money to the Greens?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been giving the most money to the Greens?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been donating the most money to the Greens?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been donating the most money to the Greens?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been donating the most money to the Greens?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been funding the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been funding the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been funding the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been bankrolling the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been bankrolling the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been bankrolling the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been backing the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been backing the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been backing the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who's been supporting the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who’s been supporting the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Whos been supporting the Greens the most?",
+      "party": "Greens",
+      "form": "who has been"
+    },
+    {
+      "question": "Who've given the most money to Labor?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve given the most money to Labor?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who've donated the most money to Labor?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve donated the most money to Labor?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who've funded Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve funded Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who've bankrolled Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve bankrolled Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who've backed Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve backed Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who've supported Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve supported Labor the most?",
+      "party": "Labor",
+      "form": "who have"
+    },
+    {
+      "question": "Who've given the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve given the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who've donated the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve donated the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who've funded the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve funded the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who've bankrolled the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve bankrolled the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who've backed the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve backed the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who've supported the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve supported the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "who have"
+    },
+    {
+      "question": "Who've given the most money to the Greens?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve given the most money to the Greens?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who've donated the most money to the Greens?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve donated the most money to the Greens?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who've funded the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve funded the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who've bankrolled the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve bankrolled the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who've backed the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve backed the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who've supported the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who’ve supported the Greens the most?",
+      "party": "Greens",
+      "form": "who have"
+    },
+    {
+      "question": "Who donates teh most to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who donates the msot to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who gives the most money to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who are the tpo donors to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the bxxgest donor to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the lxxgest donor to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the largest donar to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top suppoxxer of Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who banxxolls Labor the most?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top benefxctor to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who donates teh most to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who donates the msot to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who gives the most money to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who are the tpo donors to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the bxxgest donor to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the lxxgest donor to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the largest donar to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top suppoxxer of the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who banxxolls the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top benefxctor to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who donates teh most to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who donates the msot to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who gives the most money to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who are the tpo donors to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the bxxgest donor to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the lxxgest donor to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the largest donar to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top suppoxxer of the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who banxxolls the Greens the most?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top benefxctor to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who gives the most money to Labro?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Labro?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Labour?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Labour?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Libreal?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Libreal?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Liberxx?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Liberxx?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Greezs?",
+      "party": "Greens",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Greezs?",
+      "party": "Greens",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Natxxnals?",
+      "party": "Nationals",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Natxxnals?",
+      "party": "Nationals",
+      "form": "party typo"
+    }
+  ],
+  "negatives": [
+    "What is the most popular Labor policy?",
+    "Who funds the ABC?",
+    "Greens' top priorities",
+    "What are the Nationals’ biggest policy priorities?",
+    "Who finds Labor policy most appealing?",
+    "Which Greens policy gives people the most support?",
+    "Who is the biggest supporter of Labor housing policy?",
+    "Who donated blood most often at the Labor conference?",
+    "Who is the top contributor to the Greens manifesto?",
+    "Who gave evidence on the biggest Labor policy change?"
+  ],
+  "reproductions": [
+    "Who are the Greens' top donors?",
+    "the Nationals' biggest backers",
+    "Who's been giving the most money to the Greens?",
+    "Who've given the most money to Labor?",
+    "who donates teh most to labor"
+  ],
+  "uncertain": [
+    {
+      "question": "Who Labor top donors?",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Who donates tehmost to Labor?",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Who givvinng the most money to Labor?",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Who are the top fundes to Labor?",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Who gives the most money to LAP?",
+      "parties": [
+        "Labor",
+        "LNP"
+      ]
+    }
+  ]
+}

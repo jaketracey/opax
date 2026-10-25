@@ -15,10 +15,9 @@ const verbs='(?:giv(?:e[sn]?|ing)|gave|donat(?:e[sd]?|ing)|fund(?:s|ed|ing)?|ban
 const auxiliaries='(?:(?:(?:has|have|had)(?: been)?|(?:is|are|was|were)(?: being)?|does|did|will|would|can|could) )?'
 const actions=auxiliaries+verbs
 const roles='(?:(?:financial|political) )?(?:donors?|backers?|supporters?|benefactors?|funders?|contributors?)'
-const normal=(q:string)=>q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().replace(/[?!.]+$/,'').replace(/^please /,'').replace(/ please$/,'').replace(/^and /,'').replace(/^who's /,'who is ')
+const normal=(q:string)=>q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().replace(/[?!.]+$/,'').replace(/^please /,'').replace(/ please$/,'').replace(/^and /,'').replace(/\bteh\b/g,'the').replace(/\b([a-z]+s)'(?=\s|$)/g,"$1's").replace(/^who've /,'who have ')
 const escape=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
-export function federalPartyRankingQuestion(question:string):string|null {
- const q=normal(question)
+function exactRankingQuestion(q:string):string|null {
  // An explicit state jurisdiction never enters this federal route.
  if(/\b(?:queensland|qld|victoria|victorian|vic|tasmania|tasmanian|tas|new south wales|nsw|south australia|western australia|northern territory|act disclosures|state records|state disclosures)\b/.test(q))return null
  let target:string|undefined
@@ -49,4 +48,111 @@ export function federalPartyRankingQuestion(question:string):string|null {
   return `Who has the most disclosed receipts to ${party}${scope?' '+scope:''}?`
  }
  return null
+}
+
+export type FederalPartyRankingIntent={parties:string[];question?:string;uncertain:boolean}
+const jurisdiction=/\b(?:queensland|qld|victoria|victorian|vic|tasmania|tasmanian|tas|new south wales|nsw|south australia|western australia|northern territory|act disclosures|state records|state disclosures)\b/
+const rankingWords=new Set('most top biggest largest major main leading highest'.split(' '))
+const moneyWords=new Set(('give gives gave given giving donate donates donated donating donation donations donor donors fund funds funded funding funder funders back backs backed backing backer backers support supports supported supporting supporter supporters bankroll bankrolls bankrolled bankrolling benefactor benefactors contribute contributes contributed contributing contributor contributors money receipts receipt').split(' '))
+const keywords=[...new Set([...rankingWords,...moneyWords])]
+// Grammar scaffolding must not be spelling-corrected into financial keywords.
+const joiners=new Set('who is are was were has have had been being does did do will would can could the a an to for of from in on by with at and or as up which show me list all time years year financial fiscal fy during since before after until through between over across federal aec records record disclosures returns disclosed total totals amount amounts largest party parties please'.split(' '))
+
+/** Damerau-Levenshtein: adjacent keyboard transpositions count as one edit. */
+export function receiptKeywordDistance(a:string,b:string):number {
+ const d=Array.from({length:a.length+1},()=>Array<number>(b.length+1).fill(0))
+ for(let i=0;i<=a.length;i++)d[i][0]=i
+ for(let j=0;j<=b.length;j++)d[0][j]=j
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){
+  d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1))
+  if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1)
+ }
+ return d[a.length][b.length]
+}
+function editCost(word:string,target:string):number {
+ const max=target.length>=7?2:1
+ if(Math.abs(word.length-target.length)>max)return Infinity
+ const distance=receiptKeywordDistance(word,target)
+ return distance<=max?distance:Infinity
+}
+const aliases=parties.flatMap(([party,names])=>names.map(name=>({party,words:name.split(' '),max:name.length>=7?2:1})))
+function variants(question:string):string[]{
+ const q=normal(question)
+ return /^who(?:'s|s) /.test(q)?[q.replace(/^who(?:'s|s) /,'who is '),q.replace(/^who(?:'s|s) /,'who has ')]:[q]
+}
+
+/** Only question text is normalised. Ambiguous intent never enters a writer. */
+export function federalPartyRankingIntent(question:string):FederalPartyRankingIntent|null {
+ const inputs=variants(question)
+ for(const q of inputs){const exact=exactRankingQuestion(q);if(exact){const party=parties.find(([p])=>exact.startsWith(`Who has the most disclosed receipts to ${p}`))![0];return {parties:[party],question:exact,uncertain:false}}}
+ for(const q of inputs){
+  if(jurisdiction.test(q))continue
+  const words=[...q.matchAll(/[a-z]+(?:'[a-z]+)?|\d+(?:[–/-]\d+)*/g)].map(m=>({text:m[0],at:m.index!,end:m.index!+m[0].length}))
+  const spans:{start:number;length:number;parties:string[];suffix:string;cost:number}[]=[]
+  for(let i=0;i<words.length;i++){
+   if(joiners.has(words[i].text))continue
+   const hits:{party:string;length:number;cost:number;suffix:string}[]=[]
+   for(const alias of aliases){
+    if(i+alias.words.length>words.length)continue
+    let cost=0,suffix=''
+    for(let j=0;j<alias.words.length;j++){
+     let word=words[i+j].text
+     if(j===alias.words.length-1&&word.endsWith("'s")&&!alias.words[j].endsWith("'s")){word=word.slice(0,-2);suffix="'s"}
+     cost+=editCost(word,alias.words[j])
+    }
+    if(cost<=alias.max)hits.push({party:alias.party,length:alias.words.length,cost,suffix})
+   }
+   hits.sort((a,b)=>b.length-a.length||a.cost-b.cost)
+   if(!hits.length)continue
+   const best=hits.filter(h=>h.length===hits[0].length&&h.cost===hits[0].cost)
+   spans.push({start:i,length:best[0].length,parties:[...new Set(best.map(h=>h.party))],suffix:best[0].suffix,cost:best[0].cost});i+=best[0].length-1
+  }
+  // Multiple explicit parties are comparisons, outside this single-party family.
+  if(spans.length!==1)continue
+  const span=spans[0],replacements=new Map<number,string>();let ambiguous=false,money=false,ranking=false,corrected=false,headUnknown=false
+  for(let i=0;i<words.length;i++){
+   if(i>=span.start&&i<span.start+span.length)continue
+   const word=words[i].text
+   if(joiners.has(word)||/^\d/.test(word)){if(rankingWords.has(word))ranking=true;continue}
+   let choices=keywords.includes(word)?[word]:[]
+   if(!choices.length){
+    const scores=keywords.map(k=>({k,cost:editCost(word,k)})).filter(c=>Number.isFinite(c.cost)).sort((a,b)=>a.cost-b.cost)
+    if(scores.length)choices=scores.filter(c=>c.cost===scores[0].cost).map(c=>c.k)
+   }
+   if(!choices.length){if(i<span.start)headUnknown=true;continue}
+   money||=choices.some(c=>moneyWords.has(c));ranking||=choices.some(c=>rankingWords.has(c))
+   if(choices.length===1){replacements.set(i,choices[0]);corrected||=choices[0]!==word}else ambiguous=true
+  }
+  if(!money)continue
+  const candidates:string[]=[]
+  for(const party of span.parties){
+   let fixed='',end=0
+   for(let i=0;i<words.length;i++){
+    fixed+=q.slice(end,words[i].at)
+    if(i===span.start){fixed+=party.toLowerCase()+span.suffix;end=words[i+span.length-1].end;i+=span.length-1}
+    else {fixed+=replacements.get(i)??words[i].text;end=words[i].end}
+   }
+   fixed+=q.slice(end)
+   const match=exactRankingQuestion(fixed);if(match)candidates.push(match)
+  }
+  const unique=[...new Set(candidates)]
+  if(unique.length===1&&span.parties.length===1&&!ambiguous)return {parties:span.parties,question:unique[0],uncertain:false}
+  // Topic questions, named-sender filters and comparisons are different intents.
+  // Unknown wording in an otherwise financial ranking instead needs confirmation.
+  const otherIntent=/\b(?:lend|lends|lending|lent|loan|loans|loaned|loaning|borrow|borrows|borrowed|borrowing|owe|owes|owed|owing|debt|debts|pay|salary|salaries|income|entitlements|expenses|mps|senators|politicians|personal|personally|grants?|contracts?|more|less|higher|lower|compare|versus|vs|or|else|usually|when|evidence|polic(?:y|ies)|priorities|manifesto|popular|appealing|blood|organ|charity|conference|polls?|parliament|why|excluding|except|without|influence|speeches?|say|says|said|votes?|voting)\b/.test(q)
+  const suffix=q.slice(words[span.start+span.length-1].end)
+  const existingPeriod=!headUnknown&&!corrected&&!ambiguous&&span.cost===0&&/\b(?:in|during|for|since|from|before|after|until|through|between|around|recently|back then)\b/.test(suffix)
+  const senderFilter=words.some((w,i)=>w.text==='from'&&i+1<words.length&&!/^(?:19|20)\d/.test(words[i+1].text)&&!['federal','aec'].includes(words[i+1].text))
+  const listing=/^(?:who\b|show\b|list\b|the\b)/.test(q)||rankingWords.has(words[0]?.text)||span.start===0
+  if(!otherIntent&&!existingPeriod&&!senderFilter&&listing&&(ranking||/^who\b/.test(q)))return {parties:span.parties,uncertain:true}
+ }
+ return null
+}
+export function federalPartyRankingQuestion(question:string):string|null {
+ const intent=federalPartyRankingIntent(question)
+ return intent&&!intent.uncertain?intent.question??null:null
+}
+export function federalPartyRankingClarification(intent:FederalPartyRankingIntent){
+ const answer=intent.parties.length===1?`Do you mean the largest disclosed receipts to ${intent.parties[0]}?`:`Which party do you mean: ${intent.parties.join(' or ')}? I can rank their largest disclosed receipts.`
+ return {answer,answer_status:'needs_scope' as const,money_ranking:true as const,citations:{},sources:[]}
 }

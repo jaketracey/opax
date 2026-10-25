@@ -1,15 +1,26 @@
 import type {RecordQuestion} from './ask-records'
 import {rankedMoneyAnswer, fundingResearchFollowUp} from './ask-money'
 import {fundingContinuation, fundingUserTurns} from './ask-money-followup'
-import {federalPartyRankingQuestion} from './ask-money-family'
-export {federalPartyRankingQuestion} from './ask-money-family'
+import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification} from './ask-money-family'
+export {federalPartyRankingQuestion,federalPartyRankingIntent,receiptKeywordDistance} from './ask-money-family'
 
 export type PartyMoneyAnswer=NonNullable<Awaited<ReturnType<typeof rankedMoneyAnswer>>>&{money_route:'federal-party-ranking-v1'}
 /** Resolve before model selection, model prose, cache reads or paid overview. */
 export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetcher):Promise<PartyMoneyAnswer|null> {
  if(input.state&&input.state!=='federal')return null
- const direct=federalPartyRankingQuestion(input.question??'')
+ const intent=federalPartyRankingIntent(input.question??'')
+ if(intent?.uncertain)return {...federalPartyRankingClarification(intent),money_route:'federal-party-ranking-v1'}
+ const direct=intent?.question??null
  const prior=fundingUserTurns(input)
+ if(!intent&&fundingContinuation(input.question??'')&&prior.length){
+  const unresolved=federalPartyRankingIntent(prior[prior.length-1])
+  if(unresolved?.uncertain){
+   const fragment=(input.question??'').trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i,'').replace(/^and\s+/i,'').replace(/[?!.]+$/,'')
+   const party=federalPartyRankingIntent('Who funds '+fragment+'?')
+   const period=/^(?:in|during|for|since|from|before|after|until|through|between)\s+(?:19|20)\d{2}(?:[–-]\d{2})?(?:\s+(?:to|and|through)\s+(?:19|20)\d{2}(?:[–-]\d{2})?)?$/i.test(fragment)
+   if(party||period)return {...federalPartyRankingClarification(party??unresolved),money_route:'federal-party-ranking-v1'}
+  }
+ }
  if(!direct&&(!fundingContinuation(input.question??'')||!prior.some(q=>federalPartyRankingQuestion(q))))return null
  const context=Array.isArray(input.context)?input.context.map(turn=>turn&&typeof turn.text==='string'&&(turn.author==='user'||turn.author==='question')?{...turn,text:federalPartyRankingQuestion(turn.text)??turn.text}:turn):undefined
  let scoped:RecordQuestion={...input,kind:'all',context,question:direct??input.question}

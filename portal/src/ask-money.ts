@@ -1,4 +1,4 @@
-import {federalPartyRankingQuestion} from './ask-money-family'
+import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification} from './ask-money-family'
 import {FEDERAL_RECEIPTS_NOTE} from './receipt-copy'
 import type { RecordQuestion } from './ask-records'
 import type { MoneyFacts } from './ask-money-overview'
@@ -197,6 +197,8 @@ export async function fundingResearchFollowUp(input:RecordQuestion,assets:Fetche
 
 export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) {
   if((!input.state||input.state==='federal')&&!input.speaker&&!input.chamber&&!input.topic){
+    const intent=federalPartyRankingIntent(input.question??'')
+    if(intent?.uncertain)return federalPartyRankingClarification(intent)
     const canonical=federalPartyRankingQuestion(input.question??'')
     input={...input,...(canonical?{question:canonical,kind:'all'}:{}),context:Array.isArray(input.context)?input.context.map(t=>t&&typeof t.text==='string'&&(t.author==='user'||t.author==='question')?{...t,text:federalPartyRankingQuestion(t.text)??t.text}:t):undefined}
   }
