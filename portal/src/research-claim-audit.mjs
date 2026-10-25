@@ -170,7 +170,7 @@ function evidenceRows(payload){
 }
 // Bind noun phrases independently of predicate spelling. Unresolved subjects fail closed.
 const quotations=quotationSpans
-const introductory=new Set(('In From Until Since During Between By On At The This That These Those They He She It Another One Some Both Each Other We I None There No Nearly About Earlier Gambling Mining Housing Climate Immigration Tax Federal Topic Amounts Salary OPAX Parliament Australian Financial Coverage Please Next Further Across Below What Public MPs Hansard Census AUD A Topic-labelled').split(' '))
+const introductory=new Set(('In From Until Since During Between By On At The This That These Those They He She It Another One Some Both Each Other We I None There No Nearly About Earlier Gambling Mining Housing Climate Immigration Tax Federal Topic Amounts Salary OPAX Parliament Australian Financial Coverage Please Named Next Further Across Below What Public MPs Hansard Census AUD A Topic-labelled').split(' '))
 function nounPhrases(text){
  const quotes=quotations(text)
  return [...text.matchAll(/\b[A-Z][\p{L}'’-]*(?:[ \t]+[A-Z][\p{L}'’-]*)*/gu)].map(m=>({name:m[0].replace(/^(?:In|From|On|During|Since|Until|A|An|The|Another) /,'').replace(/[’']s$/,''),at:m.index,end:m.index+m[0].length})).filter(m=>!quotes.some(q=>m.at>=q.at&&m.end<=q.end)&&!introductory.has(m.name)&&!months.includes(m.name)&&(m.name.includes(' ')||/^(?:\s*(?:In|From|On|During|Since|Until)\s+[^,]+,?\s*)?$|(?:^|[;,])\s*(?:(?:and|but|while|whereas|because)\s*)?$|\b(?:to|by|for)\s+$/.test(text.slice(0,m.at))))

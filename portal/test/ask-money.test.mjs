@@ -71,7 +71,7 @@ test('implicit funding wording preserves scope restrictions and unknown qualifie
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
  const r=await ask('Who receives the most disclosed receipts from fossil fuel donors?');
  assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\$9,013,973/);assert.match(r.answer,/\$8,526,686/);
- assert.equal(r.answer_status,'calculated');assert.match(r.answer,/not every donor/);
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/not every receipt source/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALiberal')));
 });
 
@@ -188,7 +188,7 @@ test('biggest industry donors and biggest recipient parties are distinct ranking
 
 test('party comparisons calculate a dollar difference and cite each scoped side',async()=>{
  const r=await ask('Who gets more gambling money, Labor or Liberal?');
- assert.equal(r.answer_status,'calculated');assert.match(r.answer,/Labor received \$1,739,427 more from gambling donors than Liberal/);
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/Labor received \$1,739,427 more from gambling receipt sources than Liberal/);
  assert.match(r.answer,/\$10,763,834/);assert.match(r.answer,/\$9,024,407/);
  for(const party of ['Labor','Liberal']) assert.ok(r.sources.some(s=>s.href.includes('party=party%3A'+party)&&s.href.includes('industry=gambling')));
  const dated=await ask('Who gets more gambling money, Labor or Liberal in 2020?');
@@ -305,7 +305,7 @@ test('financial-year labels select one year, not two, with exact source links',a
  for(const label of ['2020/2021','2020/21','2020–21','2020-21','2020‑21','FY2020-2021','financial year 2020–2021']) {
   const r=await ask(`Who gets the most money from gambling in ${label}?`);
   assert.equal(r.answer_status,'calculated',label);assert.match(r.answer,/\$457,673/);assert.doesNotMatch(r.answer,/\$1,468,701/);
-  assert.match(r.money_context,/Financial years: 2020–21/);assert.match(r.money_context,/7 donors with matching receipts/);
+  assert.match(r.money_context,/Financial years: 2020–21/);assert.match(r.money_context,/7 receipt sources with matching receipts/);
   assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')),label);
  }
  const r=await ask('Who gets more gambling money, Labor or Liberal in 2020/2021?');
@@ -333,7 +333,7 @@ test('ambiguous or invalid year labels cannot silently change the period',async(
 test('a missing year has no fabricated ranking or calculation citation',async()=>{
  const r=await ask('Who gets the most money from gambling in 1900/1901?');
  assert.equal(r.answer_status,'evidence_gap');assert.deepEqual(r.sources,[]);assert.deepEqual(r.citations,{});
- assert.match(r.answer,/does not establish that no funding occurred/);assert.doesNotMatch(r.answer,/\$0|received the most/);
+ assert.match(r.answer,/does not establish that no receipts occurred/);assert.doesNotMatch(r.answer,/\$0|received the most/);
 });
 
 test('year ending labels and requested versus actual coverage remain explicit',async()=>{

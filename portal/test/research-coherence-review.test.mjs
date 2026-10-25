@@ -15,7 +15,7 @@ const payload=(answer,sources=hanson.payload.sources)=>({answer,sources:structur
 const controls=[
  ['1990 coverage','Who gave the most money to One Nation in 1990?','The disclosed returns cover 1998–99 to 2025–26 and cannot establish the answer for 1990.',{}],
  ['causal refusal','Which donor gave the most money to One Nation to buy its votes?','These disclosed receipts do not establish that money bought votes or influenced policy.',{}],
- ['Smith clarification','Which Smith gave the most money to One Nation?','Please specify which Smith you mean before I compare their disclosed funding.',{}],
+ ['Smith clarification','Which Smith gave the most money to One Nation?','Please specify which Smith you mean before I compare their disclosed receipts.',{}],
  ['answered false',hanson.question,'There is not enough evidence to answer this question.',{answered:false}],
  ['moderation',hanson.question,'I cannot help with that request.',{answer_status:'moderated'}],
 ]

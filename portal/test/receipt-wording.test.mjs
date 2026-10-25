@@ -2,9 +2,9 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import {build} from 'esbuild'
-import {FEDERAL_RECEIPTS_NOTE,unsafeReceiptWording} from '../src/receipt-language.mjs'
+import {FEDERAL_RECEIPTS_NOTE,unsafeReceiptWording,neutralReceiptSentence} from '../src/receipt-language.mjs'
 
-const bundled=await build({stdin:{contents:"export * from './src/ask-money';export * from './src/ask-money-overview';export * from './src/agentic-tools';export * from './src/agentic-ask';export * from './src/research-writing';export * from './src/research-grounding';export * from './src/research-response';export * from './src/research-calculated';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'node',format:'esm'})
+const bundled=await build({stdin:{contents:"export * from './src/ask-money';export * from './src/ask-money-overview';export * from './src/agentic-tools';export * from './src/agentic-ask';export * from './src/research-writing';export * from './src/research-grounding';export * from './src/research-response';export * from './src/research-calculated';export * from './src/research-receipts';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'node',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
 const probes=JSON.parse(fs.readFileSync(new URL('./fixtures/ask-receipts-probes.json',import.meta.url))).questions
 const read=path=>JSON.parse(fs.readFileSync(new URL('../public'+path,import.meta.url)))
@@ -91,4 +91,92 @@ test('party table labels change while numeric rows, column keys and ordering rem
  assert.equal(config.columns.find(c=>c.key==='total').label,'Received')
  assert.deepEqual(config.columns.map(c=>c.key),['label','industry','total','count','firstYear','lastYear'])
  assert.deepEqual(rows,before)
+})
+
+const framing=JSON.parse(fs.readFileSync(new URL('./fixtures/receipt-framing.json',import.meta.url)))
+const receiptPayload=answer=>({answer,money_ranking:true,answer_status:'calculated',citations:{'receipt-framing':[[0,Array.from(answer).length]]},sources:[{resource:'receipt-framing',kind:'receipt',cited:true,title:'Federal receipts',snippet:'Labor disclosed $90,000,000 in receipts from Example Bank Ltd (federal disclosures; financial years 2024–25)',href:'/money'}]})
+for(const claim of framing.claims)test('gift framing is rejected and enforced: '+claim,async()=>{
+ const sentence=`${framing.source} ${claim}.`
+ assert.equal(unsafeReceiptWording(sentence),true)
+ const facts={ranked_by:'donor',selection:'Federal (AEC)',rows:[{name:framing.source,amount:framing.amount,records:'2'}],derived:[],limits:[FEDERAL_RECEIPTS_NOTE]}
+ assert.equal(api.verifiedOverview(sentence+' '+FEDERAL_RECEIPTS_NOTE,facts),'')
+ const input={question:probes[0].question,period:{kind:'all',label:''},facts:api.writingFacts(receiptPayload(sentence))}
+ assert.equal(api.verifyWrittenAnswer({sentences:[{text:sentence,facts:[1]}]},input),null)
+ const safe=api.groundAnswerPayload(receiptPayload(sentence),probes[0].question)
+ assert.equal(api.receiptWordingFindings(safe).length,0)
+ assert.equal(unsafeReceiptWording(safe.answer),false)
+ assert.ok(safe.answer.includes(framing.amount))
+ for(const stream of [false,true])for(const question of [undefined,probes[0].question]){
+  const payload=receiptPayload(sentence)
+  const response=stream?new Response('event: delta\ndata: '+JSON.stringify({text:sentence})+'\n\nevent: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers:{'content-type':'text/event-stream','x-opax-cache':'HIT'}}):Response.json(payload,{headers:{'x-opax-cache':'HIT'}})
+  const wire=await(await api.withAnswerLanguage(response,question)).text()
+  assert.doesNotMatch(wire,/event: delta/)
+  const out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
+  assert.equal(unsafeReceiptWording(out.answer),false)
+  assert.ok(out.answer.includes(framing.amount))
+  for(const ranges of Object.values(out.citations))for(const[a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(out.answer).length)
+ }
+})
+
+test('unknown unsafe syntax is dropped, including uncited follow-up claims',()=>{
+ const lead='Labor disclosed $90,000,000 in receipts from Example Bank Ltd.'
+ const answer=lead+' It is their biggest backer and has given an unverified amount.'
+ const payload=receiptPayload(answer);payload.citations['receipt-framing']=[[0,lead.length]]
+ const out=api.withReceiptWording(payload,'And who is the biggest donor?')
+ assert.ok(out.answer.startsWith(lead))
+ assert.equal(unsafeReceiptWording(out.answer),false)
+ assert.ok(!out.answer.includes('unverified amount'))
+ assert.equal(api.receiptWordingFindings(out).length,0)
+})
+
+test('sentence templates retain amount units and grammatical superlatives',()=>{
+ for(const unit of ['million','billion','thousand','m','bn']){
+  const out=neutralReceiptSentence(`Example Bank Ltd gave $90 ${unit} to Labor.`)
+  assert.equal(out,`Labor disclosed $90 ${unit} in receipts from Example Bank Ltd.`)
+ }
+ assert.equal(neutralReceiptSentence('Example Bank Ltd gives the most money to Labor in this published selection.'),'Example Bank Ltd was the source of the largest disclosed receipts to Labor in this published selection.')
+ assert.equal(neutralReceiptSentence('Example Bank Ltd is donating $90 million.'),'Example Bank Ltd was the source of $90 million in disclosed receipts.')
+ assert.equal(neutralReceiptSentence('An unknown structure calls it bankrolling a party.'),'')
+})
+
+test('donor profile and directory totals use receipt labels',()=>{
+ const app=fs.readFileSync(new URL('../public/app.js',import.meta.url),'utf8')
+ assert.ok(app.includes('"Received by parties (disclosed)"'))
+ assert.ok(app.includes('"Receipts counted"'))
+ assert.doesNotMatch(app,/"Given \(disclosed\)"|"Donations counted"|"Most donations"|"Party given to"/)
+})
+
+test('cached garbled migrations are repaired as complete sentences',()=>{
+ for(const [before,after]of [
+  ['Example Bank Ltd was the source of disclosed receipts to the most money to Labor.','Example Bank Ltd was the source of the largest disclosed receipts to Labor.'],
+  ['Example Bank Ltd was the source of $90 in disclosed receipts million.','Example Bank Ltd was the source of $90 million in disclosed receipts.'],
+ ]){
+  const out=api.withReceiptWording(receiptPayload(before),'Who gives the most money to Labor?')
+  assert.ok(out.answer.startsWith(after))
+  assert.ok(out.answer.includes(FEDERAL_RECEIPTS_NOTE))
+  assert.equal(unsafeReceiptWording(out.answer),false)
+ }
+})
+
+test('a table cannot conceal a positive gift claim',()=>{
+ const lead='Labor disclosed $90,000,000 in receipts from Example Bank Ltd.'
+ const out=api.withReceiptWording(receiptPayload(lead+'\n\n| Example Bank Ltd has given Labor $90,000,000 |'),'Who gives the most money to Labor?')
+ assert.ok(out.answer.startsWith(lead))
+ assert.equal(unsafeReceiptWording(out.answer),false)
+ assert.doesNotMatch(out.answer,/has given/)
+})
+
+test('entity names and requests for names are not financial predicates',()=>{
+ const name='Example Future Fund Ltd',answer='Labor disclosed $90,000,000 in receipts from '+name+'.'
+ const payload=receiptPayload(answer);payload.sources[0].snippet='Labor disclosed $90,000,000 in receipts from '+name+' (federal disclosures)'
+ assert.equal(api.withReceiptWording(payload,'How much was received?').answer,answer)
+ assert.equal(unsafeReceiptWording("Please give the person's full name so I can identify their current party."),false)
+})
+
+test('the follow-up fixture receives the same enforced receipt wording',()=>{
+ const follow=framing.follow_up
+ const out=api.groundAnswerPayload({...receiptPayload(follow.unsafe_answer),asked_as:follow.question},follow.question)
+ assert.equal(unsafeReceiptWording(out.answer),false)
+ assert.ok(out.answer.includes(framing.amount))
+ assert.ok(out.answer.includes(FEDERAL_RECEIPTS_NOTE))
 })

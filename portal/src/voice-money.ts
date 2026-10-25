@@ -1,3 +1,4 @@
+import {FEDERAL_RECEIPTS_NOTE} from './receipt-language.mjs'
 import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
 
@@ -115,7 +116,8 @@ export function unmatchedReceiptRankingScope(graph:ReceiptGraph, query:string, s
   }
   return remainder.trim().split(' ').filter(w=>w&&!scaffolding.has(w)&&!rankingWords.has(w)&&!/^(?:19|20)\d{2}$/.test(w)).join(' ')
 }
-export const moneyQuestion = (q:string) => /\b(?:money|donat\w*|donors?|receipts?|fund(?:s|ing|ed)?|contributions?)\b/i.test(q)
+export const lendingQuestion = (q:string) => /\b(?:lend(?:s|ing)?|lent|loans?|borrow(?:ed|ings?|s)?|debts?)\b/i.test(q)
+export const moneyQuestion = (q:string) => lendingQuestion(q)||/\b(?:money|donat\w*|donors?|receipts?|fund(?:s|ing|ed)?|contributions?)\b/i.test(q)
 const receiptRegions=[['federal'],['qld','queensland'],['vic','victoria'],['tas','tasmania'],['nsw','new south wales'],['wa','western australia'],['sa','south australia'],['nt','northern territory'],['act','australian capital territory']]
 const mentionedReceiptRegions=(query:string)=>receiptRegions.filter(names=>names.some(n=>contains(normal(query),n))).map(names=>names[0])
 export function receiptJurisdiction(query:string): string | null {
@@ -158,6 +160,7 @@ export async function receiptGraphForQuestion(query:string, load:(file:string)=>
 
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
 export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean} = {}) {
+  if(lendingQuestion(query))return {needs_scope:true,answer:jurisdiction==='federal'?'The published records cannot establish how much was lent. Federal debt records report balances owed at 30 June, not new lending, and name only the latest year’s largest creditors. Mixed receipt totals cannot establish loan amounts.':'The receipt records cannot establish how much was lent; a separate record identifying loans and their basis is needed.',sources:jurisdiction==='federal'?[{title:'AEC debt records: balance owed at 30 June; latest year only',url:origin+'/graph/aec-extras.json'}]:[],jurisdiction}
   if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
   const periodQuery=receiptPeriodQuery(query)
   if(periodQuery.error)return {needs_period:true,answer:periodQuery.error,sources:[],jurisdiction}
@@ -243,7 +246,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const period=Number.isFinite(first)?first===last?financialYear(first):`${financialYear(first)} to ${financialYear(last)}`:null
   const amount=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(cents/100)
   return {
-    answer:matching?`The ${jurisdiction} records shown on Opax list ${amount} in disclosed party receipts for ${subject}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.`:'No matching receipts are shown in this selection and period. This does not establish that no funding occurred.',
+    answer:matching?`The ${jurisdiction} records shown on Opax list ${amount} in disclosed party receipts for ${subject}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.${jurisdiction==='federal'?' '+FEDERAL_RECEIPTS_NOTE:''}`:'No matching receipts are shown in this selection and period. This does not establish that no receipts occurred.',
     period_coverage: { since: Number.isFinite(first) ? `${first}-01-01` : null, until: Number.isFinite(last) ? `${last}-12-31` : null,
       as_of: typeof graph.meta.generated === 'string' ? graph.meta.generated.slice(0, 10) : null,
       requested_since: from === undefined ? undefined : `${from}-01-01`, requested_until: to === undefined ? undefined : `${to}-12-31`,

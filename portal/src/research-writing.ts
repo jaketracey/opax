@@ -338,8 +338,8 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   const obj=raw && typeof raw==='object' ? raw as {sentences?:unknown;answer_decision?:unknown} : {}
   if (!Array.isArray(obj.sentences)) return null
   const rawLines=obj.sentences.filter((s):s is WrittenSentence=>!!s&&typeof s==='object'&&typeof s.text==='string').map(s=>({...s,facts:Array.isArray(s.facts)?s.facts:[]}))
-  if(input.facts.some(f=>receiptSource(f.source))&&rawLines.some(line=>unsafeReceiptWording(line.text)))return null
   const receiptNames=receiptSourceNames(input.facts.map(f=>f.source))
+  if(input.facts.some(f=>receiptSource(f.source))&&rawLines.some(line=>unsafeReceiptWording(line.text,receiptNames)))return null
   if(rawLines.some(line=>receiptDirectionMistakes(line.text,receiptNames).length))return null
   const declared=answerDecision(obj)
   if(!declared&&rawLines.length&&rawLines.every(s=>rawToolEcho(s.text)))return null

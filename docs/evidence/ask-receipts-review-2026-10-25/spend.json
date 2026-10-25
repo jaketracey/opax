@@ -1,0 +1,9 @@
+{
+  "cap_usd": 0.5,
+  "model_calls": 0,
+  "model_spend_usd": 0,
+  "provider_requests": 0,
+  "production_requests": 0,
+  "replay_payloads": 158,
+  "offline_probes": 5
+}

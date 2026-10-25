@@ -1510,7 +1510,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=afe423e4b6' : '/ledger.js?v=5d3a46b145');
+    const mod = await import(grants ? '/grants.js?v=c30de05002' : '/ledger.js?v=a6b9e5441b');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1559,7 +1559,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=9be773135f');
+    const mod = await import('/grant-recipient.js?v=8c998df5d3');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -5990,11 +5990,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // one source line sit with "Where it came from", so the page says the
     // map's date once (principle 4).
     const entryFacts = [
-      [isParty ? "Received (disclosed)" : "Given (disclosed)", `<b>${esc(fmtMoney(node.total || 0))}</b>`],
-      ["Donations counted", esc((node.count || 0).toLocaleString())],
+      [isParty ? "Received (disclosed)" : "Received by parties (disclosed)", `<b>${esc(fmtMoney(node.total || 0))}</b>`],
+      ["Receipts counted", esc((node.count || 0).toLocaleString())],
       node.via === "public_money"
         ? ["On the map for", `${esc(fmtMoney(node.publicMoney || 0))} in Commonwealth contracts and grants`]
-        : ["Rank", esc(`#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`)],
+        : ["Rank", esc(`#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed receipt sources"}`)],
       !isParty && fitsInfoRow(fits, "by_entity", node.label),
       aliasRow,
     ];
@@ -6642,8 +6642,8 @@ function topicMoneyHTML(ind) {
   return `
     <h3 class="subject-section-title ui-section-title">The money beside the words</h3>
     <p class="ui-section-note">While parliament debated this, ${esc(industryLabel(ind))}
-      interests disclosed <b>${esc(fmtMoney(total))}</b> in donations to political parties.</p>
-    ${barList(rankedDonors, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} donors`,
+      interests disclosed <b>${esc(fmtMoney(total))}</b> in receipts to political parties.</p>
+    ${barList(rankedDonors, { fmt: fmtMoney, heading: `Largest ${industryLabel(ind)} receipt sources`,
       linkTo: (nm) => subjectHash("donor", nm) })}
     <p class="action-row">${explainBtn({ industry: ind }, "Explain this flow", { primary: true })}</p>
     <p class="fineprint">${esc(AEC_NOTE)} <a href="/money">Explore on the money map</a></p>`;
@@ -7376,7 +7376,7 @@ function fitsInfoRow(fits, bucket, name) {
         ceased > 0 ? ` ${plural(ceased, "earlier relationship has", "earlier relationships have")} ceased.` : ""}`
     : `Was registered under the Foreign Influence Transparency Scheme for ${who.join("; ")}${
         more > 0 ? ` and ${plural(more, "other principal", "other principals")}` : ""}; every relationship has ceased.`;
-  // The label stays as short as the longest existing one ("Donations counted"):
+  // The label stays as short as the longest existing one ("Receipts counted"):
   // the infobox's label column is `auto`, so a longer term squeezes every value.
   return ["Foreign influence",
     `${sentence}${url ? ` <a href="${esc(url)}" rel="noopener" target="_blank">Register entry&nbsp;↗︎</a>` : ""}`];
@@ -7864,7 +7864,7 @@ async function buildDonorsDirectory() {
     const jurs = Object.keys(d.money);
     const figs = [
       ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(d.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
-      `<span class="dir-fig"><b>${num(d._count)}</b>donation${d._count === 1 ? "" : "s"}</span>`,
+      `<span class="dir-fig"><b>${num(d._count)}</b>receipt${d._count === 1 ? "" : "s"}</span>`,
     ].join("");
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
@@ -7889,7 +7889,7 @@ async function buildDonorsDirectory() {
       { key: "jur", label: "Disclosed to",
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"]],
         test: (d, v) => Boolean(d.money[v]) },
-      { key: "party", label: "Party given to",
+      { key: "party", label: "Recipient party",
         options: [...partyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([p, n]) => [p, `${p} (${n.toLocaleString()})`]),
         test: (d, v) => d._partyList.includes(v) },
       { key: "access", label: "Lobbyists or meetings", check: true, test: (d) => d._lobbyists > 0 || d._meetings > 0 },
@@ -7897,12 +7897,12 @@ async function buildDonorsDirectory() {
     ],
     sorts: [
       ["total", "Largest disclosed total", byNumDesc(moneyFor)],
-      ["count", "Most donations", byNumDesc((d, s) => (s?.jur && d.money[s.jur]) ? d.money[s.jur].count : d._count)],
+      ["count", "Most receipts", byNumDesc((d, s) => (s?.jur && d.money[s.jur]) ? d.money[s.jur].count : d._count)],
       ["recent", "Most recent", (a, b, s) => (b.last || 0) - (a.last || 0) || moneyFor(b, s) - moneyFor(a, s)],
       ["name", "Name A-Z", byName],
     ],
     row,
-    fineprint: `This directory combines the bounded money-map selection with names referenced elsewhere in the source records. Unconfirmed electoral matches have no profile link or donation amount.
+    fineprint: `This directory combines the bounded money-map selection with names referenced elsewhere in the source records. Unconfirmed electoral matches have no profile link or receipt amount.
       ${esc(AEC_NOTE)} The same goes for gifts under each state's disclosure threshold.
       ${esc(STATE_NOT_SUMMED)} Source: ${esc(commissions.join("; "))}. Lobbyist and meeting markers
       come from the six lobbyist registers and the NSW and QLD ministerial diaries; names must match
@@ -9528,11 +9528,11 @@ document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=717df11604", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=20fb6cb14a", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=5d3a46b145", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=afe423e4b6", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=6c7e51f2e6", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=a6b9e5441b", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=c30de05002", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=7c9c7a83fe", mount: "mountWordsDollars" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9552844be8", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=a587064c1f", mount: "mountThenVsNow" },
 };
 
@@ -13611,7 +13611,7 @@ async function loadReportsList(manageFocus) {
   $("reports-source").innerHTML = sourceLineHTML({
     updated: newest, source: "Generated from the record",
     originals: [{ label: "Methods and how to cite", href: "/methods" }],
-    notes: ["Each report pairs disclosed donations with what was said in parliament. Its sections are machine-written from the record and cite it; every report carries its own date.",
+    notes: ["Each report pairs disclosed receipts with what was said in parliament. Its sections are machine-written from the record and cite it; every report carries its own date.",
       "Donations come from AEC annual returns, so totals are a floor; speeches come from the parliamentary record."],
   });
   // Not the first card: focusing it painted a 250px focus ring around one
@@ -14649,7 +14649,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=7c9c7a83fe");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=9552844be8");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {
@@ -14697,7 +14697,7 @@ function renderReportMoney(report, slug) {
   part.hidden = !cfg;
   if (!cfg) return;
   part.append(reportSectionHead("report-money", "Follow the money"));
-  const note = reportNote(`Disclosed donations from ${cfg.label} donors to the parties, from the AEC returns. ` +
+  const note = reportNote(`Disclosed receipts from ${cfg.label} sources to the parties, from the AEC returns. ` +
     "Drag to orbit, click a donor or a party for its card, and drag the years to watch the money move.");
   const plate = document.createElement("div");
   plate.className = "subject-map report-map is-waiting";
@@ -14936,7 +14936,7 @@ async function openReport(slug, sectionNum, manageFocus) {
     if (!st) return "";
     return `${stat((st.speech_count ?? 0).toLocaleString(), st.speech_scope === "topic-labelled-corpus" ? "labelled speeches on this topic" : "speeches on the record")}
       ${stat((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
-      ${don ? stat(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
+      ${don ? stat(fmtMoney(don.total ?? 0), `receipts: ${fmtIndustries(don.industries || [])}`) : ""}`;
   };
   const v2 = reportIsV2(report);
   // A v2 report reads in its own order (now, then how it moved), so the v1

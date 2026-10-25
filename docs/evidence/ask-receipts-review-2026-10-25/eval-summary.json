@@ -1,0 +1,147 @@
+{
+  "execution": "Offline calculated research tool and final answer boundary; no model generation",
+  "probes": [
+    {
+      "id": "RC01",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC02",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC03",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC04",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC05",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    }
+  ],
+  "summary": {
+    "loop": {
+      "n": 5,
+      "graded": 5,
+      "errors": 0,
+      "overall": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "usefulness": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "citations": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "correctness": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "coherence": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "constraints": {
+        "pass": 0,
+        "partial": 0,
+        "fail": 0
+      },
+      "decline": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "no_tool_echo": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "no_duplicates": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "direct_first_sentence": {
+        "pass": 5,
+        "partial": 0,
+        "fail": 0
+      },
+      "required_components": {
+        "pass": 0,
+        "partial": 0,
+        "fail": 0
+      },
+      "latency_ms": {
+        "p50": 0,
+        "p95": 0
+      },
+      "tokens": {
+        "p50": null,
+        "p95": null,
+        "reported": 0
+      },
+      "cost_usd": {
+        "mean": null,
+        "p50": null,
+        "p95": null,
+        "reported": 0,
+        "estimated": 0,
+        "missing": 5
+      },
+      "categories": {
+        "qualitative": {
+          "n": 5,
+          "pass": 5,
+          "partial": 0,
+          "constraints_pass": 0,
+          "decline_pass": 5,
+          "latency_ms": {
+            "p50": 0,
+            "p95": 0
+          },
+          "cost_usd": {
+            "mean": null,
+            "p95": null
+          }
+        }
+      },
+      "mode_mismatch": 0
+    }
+  }
+}

@@ -66,7 +66,7 @@ test('year and party filters resummate dated receipts without lifetime or undate
  assert.equal(answer('gambling since 2021').total_aud,40);
  assert.equal(answer('gambling before 2021').total_aud,260);
  assert.equal(answer('gambling in 2019').total_aud,0);
- assert.match(answer('gambling in 2019').answer,/does not establish that no funding occurred/);
+ assert.match(answer('gambling in 2019').answer,/does not establish that no receipts occurred/);
  assert.match(answer('gambling in 2020').sources[0].url,/from=2020&to=2020/);
 });
 test('known donors, parties, aliases and jurisdictions retain their scope',()=>{
@@ -163,4 +163,20 @@ test('party words inside a resolved donor name are not recipient selections',()=
   }
   const missing=receiptAnswer(named,`money from ${label} to LNP`,'vic','https://opax.test');assert.equal(missing.needs_scope,true);
  }
+});
+
+test('voice lending questions cannot reuse mixed receipt totals',async()=>{
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ for(const query of ['How much money did Westpac Banking Corporation lend to Labor?','Which banks lent money to Labor?'])for(const tool of ['search_records','find_connections']){
+  const out=await runVoiceTool(tool,{query},env,async()=>{throw Error('Unexpected network retrieval')});
+  assert.match(out.data.answer,/cannot establish how much was lent/);
+  assert.match(out.data.answer,/balances owed at 30 June/);
+  assert.match(out.data.answer,/latest year/);
+  assert.equal(out.data.total_aud,undefined);
+  assert.doesNotMatch(out.data.answer,/55,227,183/);
+  assert.match(out.sources[0].url,/graph\/aec-extras.json$/);
+ }
+ const receipt=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},env,async()=>{throw Error('Unexpected network retrieval')});
+ assert.equal(receipt.data.total_aud,55227183);
+ assert.match(receipt.data.answer,/These federal totals mix donations with other receipts such as loans, so this is not a donation ranking/);
 });

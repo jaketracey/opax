@@ -32,7 +32,7 @@ const recordCount=(n:number)=>`${n.toLocaleString('en-AU')} disclosed receipt ${
 const sourceCopy=(text:string)=>plain(text).replace(/\s+/g,' ').trim()
 type ReceiptTotals = Exclude<ReturnType<typeof receiptAnswer>, null | {needs_period:boolean} | {needs_scope:boolean}>
 
-const LIMITS=['These are party receipts, not personal payments to politicians.','Not every receipt is a gift.','Only donors in Opax\u2019s published selection are counted, not every donor.','An industry grouping is not proof of coordinated lobbying or influence.','Amounts are not adjusted for inflation.']
+const LIMITS=['These are party receipts, not personal payments to politicians.','Not every receipt is a gift.','Only receipt sources in Opax\u2019s published selection are counted, not every receipt source.','An industry grouping is not proof of coordinated lobbying or influence.','Amounts are not adjusted for inflation.']
 
 /**
  * What a written opening is allowed to draw on. Every figure a model could
@@ -60,7 +60,7 @@ function moneyContext(result:ReceiptTotals, years?:number[]) {
     :bounds.from!==null||bounds.to!==null?`${bounds.from===null?'earliest records':financialYear(bounds.from)} to ${bounds.to===null?'latest records':financialYear(bounds.to)}`
     :result.period||'No dated records'
   const coverage=!years&&selected!==result.period?` Matching recorded years: ${result.period||'none'}.`:''
-  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'donor':'donors'} with matching receipts in Opax’s selected map. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.`
+  return `**Financial years: ${selected}.**${coverage} ${result.by_donor.length.toLocaleString('en-AU')} ${result.by_donor.length===1?'receipt source':'receipt sources'} with matching receipts in Opax’s selected map. ${result.jurisdiction==='federal'?'Federal (AEC)':result.jurisdiction.toUpperCase()}. Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.`
 }
 
 /** Compare two individual year cells, never their pooled range or lifetime sum. */
@@ -132,7 +132,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   if(rows.some(r=>!r.receipts))return {answer:'There are not enough matching receipts for both sides of that comparison in this selection and period. A missing total does not establish that no receipts occurred.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true,money_question}
   const difference=Math.round((first.total_aud-second.total_aud)*100)/100
   const sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
-  const subject=partyComparison?(sector?` from ${plain(sector)} donors`:result.selected_donors.length?` from ${plain(result.subject)}`:''):(result.selected_parties.length?` to ${plain(result.selected_parties[0])}`:' to parties')
+  const subject=partyComparison?(sector?` from ${plain(sector)} receipt sources`:result.selected_donors.length?` from ${plain(result.subject)}`:''):(result.selected_parties.length?` to ${plain(result.selected_parties[0])}`:' to parties')
   let answer=difference?`**${plain(first.name)} ${partyComparison?'received':'accounted for'} ${aud(difference)} more${subject} than ${plain(second.name)}** in this published selection.`:`**${plain(first.name)} and ${plain(second.name)} have the same disclosed total${subject}** in this published selection.`
   const citations:Record<string,number[][]>={}
   const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string}[]=[]
@@ -156,7 +156,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
     else params.set('industry',row.id)
     cite(`${row.name}: ${aud(row.total_aud)}`,'/money?'+params,`${row.name}: ${aud(row.total_aud)} across ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
   }
-  answer+='\n\nCoverage: These are **party receipts, not personal payments or a gifts-only donation total**. Only donors in Opax’s published map are included, not every donor. Industry labels do not establish lobbying or influence. Both sides use the same year filters; undated records are excluded when filtering by year.'
+  answer+='\n\nCoverage: These are **party receipts, not personal payments to politicians**. Only receipt sources in Opax’s published map are included, not every receipt source. Industry labels do not establish lobbying or influence. Both sides use the same year filters; undated records are excluded when filtering by year.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
   const money_facts=moneyFacts(money_question,partyComparison?'recipient party':'donor industry',context,rows)
   return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
@@ -257,9 +257,9 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
     : (fromDonors?result.by_donor:result.by_party).map(r=>({...r,party:fromDonors?result.selected_parties[0]:r.name}))).slice(0,5)
   if(!rows.length)return {answer:result.answer,coverage:result.period_coverage,citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}
   const who=rows[0], recipient=result.selected_parties.join(' and '), sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
-  const lead=who ? allFlows ? `The largest donor-to-party connection in this published selection is **${plain(who.name)}: ${aud(who.total_aud)}**.`
+  const lead=who ? allFlows ? `The largest source-to-party receipt connection in this published selection is **${plain(who.name)}: ${aud(who.total_aud)}**.`
     : fromDonors ? `The largest disclosed receipts${recipient?` to ${plain(recipient)}`:''}${sector?` among ${plain(sector)} sources`:''} in this published selection are from **${plain(who.name)}: ${aud(who.total_aud)}** across ${who.receipts.toLocaleString('en-AU')} records.`
-    : `**${plain(who.name)}** received the most disclosed receipts${sector?` from ${plain(sector)} donors`:` from ${plain(result.subject)}`} in this published selection: **${aud(who.total_aud)}**.`
+    : `**${plain(who.name)}** received the most disclosed receipts${sector?` from ${plain(sector)} receipt sources`:` from ${plain(result.subject)}`} in this published selection: **${aud(who.total_aud)}**.`
     : result.answer
   const sources: {resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string}[]=[]
   const citations: Record<string,number[][]>={}
@@ -287,7 +287,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
     }
   }
   answer+='\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.'
-  answer+=`\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.`
+  answer+=`\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every receipt source or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.`
   answer+=`\n\n[Explore these records](${result.sources[0].url}) · [Download the calculation data](https://opax.com.au${file})`
   // A canonical request preserves UI-only filters and survives a bounded chat
   // history. It contains selections, never amounts or generated answer text.

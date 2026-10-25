@@ -2,6 +2,7 @@ import { claimClauses, proseClaimKeys } from './research-claims'
 import { proseFallback, rawToolEcho, writingFacts } from './research-writing'
 import { plainAnswerPayload } from './research-language'
 import { groundAnswerPayload } from './research-grounding'
+import {withReceiptWording} from './research-receipts'
 import {protectedDecision} from './research-coherence.mjs'
 import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
@@ -23,7 +24,7 @@ export async function withPlannerResearch(response: Response, previous?: Researc
 
 /** One guard covers JSON, streamed fallbacks and cached payloads. */
 export async function withAnswerLanguage(response: Response,question?:string,askedAs?:string): Promise<Response> {
-  return mapResearchResponse(response, payload=>{const out=question?groundAnswerPayload(payload,question):plainAnswerPayload(payload);return askedAs?{...out,asked_as:askedAs}:out}, true, true)
+  return mapResearchResponse(response, payload=>{const out=withReceiptWording(question?groundAnswerPayload(payload,question):plainAnswerPayload(payload),question??String(payload.asked_as??''));return askedAs?{...out,asked_as:askedAs}:out}, true, true)
 }
 
 export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage> & { model?: string }): Promise<Response> {

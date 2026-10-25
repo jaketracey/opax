@@ -323,7 +323,7 @@ export function buildCSV (view, rows, commentLines) {
       ].join(','))
     }
   } else {
-    lines.push(['Donor', 'Industry', 'Total (AUD)', 'Parties funded',
+    lines.push(['Donor', 'Industry', 'Total (AUD)', 'Recipient parties',
       'Records', 'First year', 'Last year', 'Top recipient',
       'Top recipient share (%)', 'Return reference'].join(','))
     for (const r of rows) {
@@ -853,7 +853,7 @@ export function mountLedger (container, opts = {}) {
         : 'OPAX — Political receipts: donors aggregated over the filtered flows',
       meta.jurisdiction
         ? `Source: ${meta.commission} disclosures (${meta.sourceShort}), ${meta.coverage}, top disclosed donors, via opax.com.au${file}`
-        : `Source: AEC donation disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed donors), via opax.com.au${file}`,
+        : `Source: AEC receipt disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed donors), via opax.com.au${file}`,
       `Exported ${new Date().toISOString().slice(0, 10)} · ${currentRows.length} rows · filters: ${describeFilters()} · sorted by ${sort.key} ${sort.dir}`,
       meta.jurisdiction
         ? `Caveat: ${meta.threshold} Totals are a floor, not a ceiling.`

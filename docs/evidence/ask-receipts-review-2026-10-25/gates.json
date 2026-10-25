@@ -1,0 +1,17 @@
+{
+  "npm_ci": "pass",
+  "build_search_before_suite": "pass",
+  "portal_suite": {
+    "pass": 3708,
+    "fail": 0
+  },
+  "check": "pass",
+  "standalone_tsc": "pass",
+  "deploy_dry_run": "pass",
+  "diff_check": "pass",
+  "build_churn_restored": [
+    "portal/public/ask-statute-titles.json",
+    "portal/public/graph/party-members.json",
+    "portal/public/search-catalog/manifest.json"
+  ]
+}

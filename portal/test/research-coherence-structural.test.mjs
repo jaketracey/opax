@@ -9,9 +9,9 @@ const built=await build({stdin:{contents:"export * from './src/research-groundin
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const hanson=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-pauline.json',import.meta.url))),question='Who gives the most money to One Nation?'
 const variants=[
- 'The selected records are insufficient to determine a reliable donor ranking.',
- 'Which financial year do you mean? Please specify the period before I rank donors.',
- 'This sample leaves the identity of the leading donor unresolved.',
+ 'The selected records are insufficient to determine a reliable receipt ranking.',
+ 'Which financial year do you mean? Please specify the period before I rank receipt sources.',
+ 'This sample leaves the identity of the leading receipt source unresolved.',
  'I need the recipient and financial year before making that comparison.',
  'Would you like federal returns or Queensland disclosures?',
 ]

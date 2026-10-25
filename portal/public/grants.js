@@ -422,8 +422,8 @@ export function buildCSV (view, rows, ctx, commentLines) {
   const lines = commentLines.map((l) => '# ' + l)
   if (view === 'recipients') {
     lines.push(['Recipient', 'Kind', 'Recipient id', 'Awarded (AUD)', 'Grants', 'First year', 'Last year', 'Top agency',
-      'Ad hoc or one-off (AUD)', 'Donor register entity', 'AEC donations (AUD)', 'AEC top party',
-      'State register donations (AUD)'].join(','))
+      'Ad hoc or one-off (AUD)', 'Donor register entity', 'AEC receipts (AUD)', 'AEC top party',
+      'State register receipts (AUD)'].join(','))
     for (const r of rows) {
       lines.push([csvCell(r.n), csvCell(kindLabel(r.k)), csvCell(r.id || ''), Math.round(r.wt ?? r.t), r.wc ?? r.c,
         csvCell(r.wy0 ?? r.y0 ?? ''), csvCell(r.wy1 ?? r.y1 ?? ''), csvCell(ctx.agencies[(r.ag || [])[0]] || ''),
@@ -1500,7 +1500,7 @@ export function mountGrants (container, opts = {}) {
         const gs = govShare(d.grants, data.meta.government, new Set(blocs.keys()))
         const note = el('p', 'gr-note')
         const blocNames = [...blocs.keys()]
-        note.textContent = `${Math.round(gs.share * 100)}% of the grant dollars shown here (${fmtMoney(gs.dollars)}) were awarded while a party it has given to (${blocNames.join(', ')}) was in ${state.jur === 'qld' ? 'government in Queensland' : 'government federally'}. That is a fact about timing, not a finding: most programs are open and competitive.`
+        note.textContent = `${Math.round(gs.share * 100)}% of the grant dollars shown here (${fmtMoney(gs.dollars)}) were awarded while a party that disclosed receipts from it (${blocNames.join(', ')}) was in ${state.jur === 'qld' ? 'government in Queensland' : 'government federally'}. That is a fact about timing, not a finding: most programs are open and competitive.`
         box.appendChild(note)
       }
       if (Object.keys(d.d.st || {}).length && d.d.aec > 0) {

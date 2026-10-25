@@ -178,7 +178,7 @@ const TEMPLATES = [
         const options = trio.map(([k], i) => ({ label: industryLabel(k), correct: i === 0 }));
         return {
           template: this.id, deck: this.deck, kind: "mc",
-          prompt: "Which of these industries has disclosed the most in political donations?",
+          prompt: "Which of these industries is the source of the largest disclosed political receipts?",
           options: shuffled(options, rng),
           fact: factLine(industryLabel(top[0]), fmtMoney(top[1].total)),
           explanation:
@@ -216,11 +216,11 @@ const TEMPLATES = [
         template: this.id, deck: this.deck, kind: "mc",
         prompt:
           "Roughly how much " + subject +
-          " disclosed in political donations between " + s.first + " and " + s.last + "?",
+          " disclosed in political receipts between " + s.first + " and " + s.last + "?",
         options,
         fact: factLine(industryLabel(key), fmtMoney(s.total)),
         explanation:
-          fmtCount(s.count) + " disclosed donations from the industry's biggest donors make up that total; " +
+          fmtCount(s.count) + " disclosed receipts from the industry's largest receipt sources make up that total; " +
           "amounts below the threshold are not visible.",
         source: "AEC disclosures via OPAX's money data",
         link: moneyLink(key),
@@ -315,7 +315,7 @@ const TEMPLATES = [
       if ((meta.exclusions || []).some((x) => /public electoral funding/i.test(x))) {
         pool.push({
           statement:
-            "Taxpayer money the AEC pays parties after each election (public electoral funding) is counted in these donation totals.",
+            "Taxpayer money the AEC pays parties after each election (public electoral funding) is counted in these receipt totals.",
           answer: false,
           explanation:
             "The methodology leaves public electoral funding out" +
@@ -1336,7 +1336,7 @@ export function mountQuiz(container, helpers = {}) {
     intro.appendChild(h(doc, "p", {
       class: "qz-fineprint",
       text:
-        "No trick questions, no sound and no opinions dressed up as facts. Donation totals are disclosed " +
+        "No trick questions, no sound and no opinions dressed up as facts. Receipt totals are disclosed " +
         "figures, so they remain a floor rather than a complete account of political funding.",
     }));
     stage.appendChild(intro);

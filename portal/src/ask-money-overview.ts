@@ -81,7 +81,7 @@ export function verifiedOverview(text: string, facts: MoneyFacts): string {
     .trim()
   if (clean.length < MIN_CHARS || clean.length > MAX_CHARS) return ''
   if (/[|#*_`~\[\]<>]|https?:\/\//.test(clean)) return ''
-  if (OVERREACH.test(clean) || unsafeReceiptWording(clean)) return ''
+  if (OVERREACH.test(clean) || unsafeReceiptWording(clean,facts.rows.map(r=>r.name))) return ''
   if(facts.ranked_by==='donor'&&receiptDirectionMistakes(clean,facts.rows.map(r=>r.name)).length)return ''
   if(/Federal|AEC/i.test(facts.selection)&&!clean.includes(FEDERAL_RECEIPTS_NOTE))return ''
   if (clean.split(/(?<=[.!?])\s+/).filter(Boolean).length > 4) return ''

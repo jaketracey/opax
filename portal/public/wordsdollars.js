@@ -5,7 +5,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
  * takes the money and who does the talking.
  *
  * One panel per AEC donor industry that maps onto an enrichment topic. Each
- * panel pairs, party by party, the industry's disclosed donations (AEC
+ * panel pairs, party by party, the industry's disclosed receipts (AEC
  * disclosures via /graph/money.json) with that party's share of the topic's
  * labelled speeches (live labels via /api/matrix). Comparison, never
  * causation. Plain browser ES module, no dependencies.
@@ -325,7 +325,7 @@ export function mountWordsDollars (container, opts = {}) {
   // ---- static chrome (no data passes through this template) ---------------
   const root = el('section', 'wd-root')
   root.setAttribute('aria-label',
-    'Words per dollar: disclosed donations beside each party\'s share of the matching debate')
+    'Words per dollar: disclosed receipts beside each party\'s share of the matching debate')
   root.innerHTML = `
     <p class="wd-intro"></p>
     <div class="wd-status">Adding up the disclosures…</div>
@@ -368,7 +368,7 @@ export function mountWordsDollars (container, opts = {}) {
       } else {
         cell.appendChild(el('span', 'wd-dash', '–'))
         cell.title = row.party === 'Independent'
-          ? 'Donations here are grouped by party, so money to independents is not separated.'
+          ? 'Receipts here are grouped by party, so money to independents is not separated.'
           : `Nothing disclosed to ${row.party} from these donors.`
         cell.appendChild(el('span', 'wd-visually-hidden', 'none disclosed'))
       }
@@ -501,7 +501,7 @@ export function mountWordsDollars (container, opts = {}) {
         introEl.append(
           'Where an AEC donor industry maps onto a debate in the topic taxonomy, ',
           'this view puts the two side by side: ', grandLink,
-          ` in disclosed donations across ${panels.length} industries, beside each ` +
+          ` in disclosed receipts across ${panels.length} industries, beside each ` +
           'party\'s share of the matching debate in the labelled record. ' +
           'Every number opens the disclosures or speeches behind it.')
       }

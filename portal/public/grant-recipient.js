@@ -1,7 +1,7 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=800932e746';
 import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
 import {partyUrl} from './canonical-urls.js?v=c82496afb7';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=afe423e4b6';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=c30de05002';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -194,7 +194,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
         const years=donorYears(donor.py);if(years.length)donations.append(valueTable('AEC party returns by year',years));
       }
       for (const [jur, register] of Object.entries(donor.st || {})) {
-        donations.append(node('h3', REGISTERS[jur] || jur), ((text)=>node('p',text))(`${''}${money(register.t)} in ${NUMBER.format(register.c || 0)} gifts.`));
+        donations.append(node('h3', REGISTERS[jur] || jur), ((text)=>node('p',text))(`${''}${money(register.t)} in ${NUMBER.format(register.c || 0)} receipt records.`));
         donations.append(valueTable('Disclosed by party', Object.entries(register.p || {}).sort((a,b) => b[1] - a[1]), name => link(partyUrl(name), name)));
         const years = donorYears(register.py); if (years.length) donations.append(valueTable('State party returns by year', years));
       }
@@ -203,10 +203,10 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
         const blocs = donorBlocs(donor, index.meta?.blocs || {});
         if (blocs.size) {
           const timing = govShare(grants, index.meta?.government || [], new Set(blocs.keys()));
-          donations.append(node('p', `${(timing.share * 100).toFixed(1)}% of the award value listed on this page (${money(timing.dollars)}) has a start date, or financial-year proxy, when a party this organisation has given to was in government. This describes timing only, not influence or preferential treatment.`, 'grant-recipient-note'));
+          donations.append(node('p', `${(timing.share * 100).toFixed(1)}% of the award value listed on this page (${money(timing.dollars)}) has a start date, or financial-year proxy, when a party that disclosed receipts from this organisation was in government. This describes timing only, not influence or preferential treatment.`, 'grant-recipient-note'));
         }
       }
-      donations.append(node('p', 'AEC and state figures are shown separately because AEC returns include state branch receipts. Recorded donations and grants do not establish influence.', 'grant-recipient-note'));
+      donations.append(node('p', 'AEC and state figures are shown separately because AEC returns include state branch receipts. Recorded receipts and grants do not establish influence.', 'grant-recipient-note'));
     } else donations.append(node('p', data.k === 'individual' ? 'People are never matched to donor registers by name.' : ['government', 'council', 'university'].includes(data.k) ? 'Public bodies are not matched to donor registers.' : 'No match was found under this name or ABN. Donations below disclosure thresholds are not reported, so this is not evidence of no donations.'));
     aside.append(donations);
     if (data.other && JURISDICTIONS[data.other.jur]) {
