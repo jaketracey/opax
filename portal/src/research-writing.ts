@@ -1,4 +1,5 @@
-import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,federalReceiptFact,receiptSource,receiptSourceNames,receiptDirectionMistakes,unsafeReceiptWording} from './receipt-language.mjs'
+import {receiptWordingFindings} from './research-receipts'
+import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,federalReceiptFact,federalReceiptSource,receiptSource} from './receipt-language.mjs'
 /** Tools supply evidence; only checked, newly written prose reaches an Ask reader. */
 import { CAUSAL, type Fact, type Period } from './agentic-ask'
 import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, metricAt, proseClaimKeys, censusField, type ClaimAtom } from './research-claims'
@@ -115,7 +116,7 @@ function statePayCoverage(input:WritingInput):WrittenSentence|undefined {
  return {text:`The highest-paid ${jurisdiction?jurisdiction+' ':''}state politician${year?' in '+year:''} is not identified by OPAX's pay records: they cover federal parliamentarians, with state parliamentary salaries outside their coverage.`,facts:input.facts.map(f=>f.id),coverage:true}
 }
 /** Never return the original block, even when the provider is unavailable or the wall cap is spent. */
-export function proseFallback(input: WritingInput, receiptWording=true): QualitativeAnswer {
+export function proseFallback(input: WritingInput): QualitativeAnswer {
   // Context records are retrieval aids, never selected calculation facts.
   input={...input,facts:input.facts.filter(f=>!/^USER_CONTEXT_/i.test(f.source.resource))}
   const coverageLimit=donationCoverageLimit(input.question,input.facts.map(f=>f.text).join('\n'))
@@ -136,20 +137,20 @@ export function proseFallback(input: WritingInput, receiptWording=true): Qualita
     const matchesOwner=(name:string)=>key(input.question).includes(key(name))||name.split(/\s+/)[0].length>=4&&key(input.question).split(' ').includes(key(name.split(/\s+/)[0]))
     const flows=input.facts.flatMap(f=>{const m=f.source.kind==='record'?/^Disclosed receipt:\s*(.+?)\s*→\s*(.+?)\s*—\s*(\$[\d,.]+) in disclosed political receipts/.exec(f.text):null;return m&&matchesOwner(m[1])?[{f,m}]:[]})
     if(flows.length&&new Set(flows.map(r=>r.m[1])).size===1){
-      const parties=[...new Set(flows.map(r=>r.m[2]))],lead=`In the published selection, ${parties.join(', ').replace(/, ([^,]+)$/,' and $1')} received disclosed ${receiptWording?'receipts':'funding'} from ${flows[0].m[1]}.`
+      const parties=[...new Set(flows.map(r=>r.m[2]))],lead=`In the published selection, ${parties.join(', ').replace(/, ([^,]+)$/,' and $1')} received disclosed receipts from ${flows[0].m[1]}.`
       const lines:WrittenSentence[]=[{text:lead,facts:flows.map(r=>r.f.id)},...flows.map(({f,m})=>({text:`- ${m[2]} received ${m[3]} in disclosed political receipts from ${m[1]}.`,facts:[f.id]})),{text:'These are selected party receipts, not personal payments or individual gifts.',facts:flows.map(r=>r.f.id),coverage:true}]
       const total=input.facts.flatMap(f=>{const m=f.source.kind==='record'?/^Donor:\s*(.+?)\s*—[\s\S]*?(\$[\d,.]+) in disclosed political receipts/.exec(f.text):null;return m&&m[1]===flows[0].m[1]?[{f,m}]:[]})[0]
-      if(total)lines.splice(1,0,{text:receiptWording?`${total.m[1]} was the source of ${total.m[2]} in disclosed political receipts overall in this published selection.`:`${total.m[1]} gave ${total.m[2]} in disclosed political receipts overall in this published selection.`,facts:[total.f.id]})
+      if(total)lines.splice(1,0,{text:`Disclosed receipts from ${total.m[1]} total ${total.m[2]}.`,facts:[total.f.id]})
       return assemble(lines,input)
     }
     const total=input.facts.flatMap(f=>{const m=f.source.kind==='record'?/^Donor:\s*(.+?)\s*—[\s\S]*?(\$[\d,.]+) in disclosed political receipts/.exec(f.text):null;return m&&matchesOwner(m[1])?[{f,m}]:[]})[0]
-    if(total)return assemble([{text:receiptWording?`${total.m[1]} was the source of ${total.m[2]} in disclosed political receipts in this published selection, but these selected facts do not name which parties received the receipts.`:`${total.m[1]} gave ${total.m[2]} in disclosed political receipts in this published selection, but these selected facts do not name which parties received the funding.`,facts:[total.f.id]}],input)
+    if(total)return assemble([{text:`Disclosed receipts from ${total.m[1]} total ${total.m[2]}. These facts do not identify the recipient parties.`,facts:[total.f.id]}],input)
   }
   const donors=repairDonorRanking(input.question,input.facts.map(f=>f.source),input.constraints)
   const donorEvidence=input.facts.some(f=>f.source.kind==='receipt'||!!federalReceiptFact(f.text)||/gave .+? \$[\d,]+ \(federal disclosures|\|\s*Donor\s*\|\s*Disclosed receipts/i.test(f.text+'\n'+f.source.snippet))
   const wantsDonorRanking=/\b(?:who|which (?:company|corporation|person|individual|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(input.question)
   if(donorEvidence&&(wantsDonorRanking||/\bmost years\b/i.test(input.question))&&!donors.length){
-    const text=/\bmost years\b/i.test(input.question)?receiptWording?'The selected aggregate disclosed receipts do not establish whether receipts occurred in most years.':'The selected aggregate disclosed receipts do not establish whether giving occurred in most years.':'The selected disclosed receipts do not establish a donor ranking for the requested party, period and jurisdiction.'
+    const text=/\bmost years\b/i.test(input.question)?'The selected aggregate disclosed receipts do not establish whether receipts occurred in most years.':'The selected disclosed receipts do not establish a donor ranking for the requested party, period and jurisdiction.'
     const coverage=input.facts.filter(f=>f.coverage)
     return assemble([{text,facts:(coverage.length?coverage:input.facts.slice(0,1)).map(f=>f.id),coverage:true}],input)
   }
@@ -157,7 +158,7 @@ export function proseFallback(input: WritingInput, receiptWording=true): Qualita
     const selected=selectedDonorFacts(input.question,input.facts.map(f=>f.source),input.constraints)
     const named=selected.filter(r=>{const first=r.name.split(/\s+/)[0];return key(input.question).includes(key(r.name))||first.length>=4&&new RegExp('\\b'+first.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i').test(input.question)&&selected.filter(x=>x.name.split(/\s+/)[0].toLowerCase()===first.toLowerCase()).length===1})
     if(named.length===1&&named[0].period){
-      const row=named[0],text=receiptWording?`Across disclosed returns from ${row.period} in OPAX’s published selection, ${row.name} was the source of ${row.amount} in disclosed receipts to ${row.party}.`:`Across disclosed returns from ${row.period} in OPAX’s published selection, ${row.name} provided disclosed funding to ${row.party}: ${row.amount}.`,line={text,facts:input.facts.filter(f=>f.source.resource===row.source.resource).map(f=>f.id)},coverage=coverageSentence(input)
+      const row=named[0],text=`Across disclosed returns from ${row.period} in OPAX’s published selection, ${row.party} disclosed ${row.amount} in receipts from ${row.name}.`,line={text,facts:input.facts.filter(f=>f.source.resource===row.source.resource).map(f=>f.id)},coverage=coverageSentence(input)
       return assemble([line,...(coverage?[coverage]:[])],input)
     }
   }
@@ -167,8 +168,12 @@ export function proseFallback(input: WritingInput, receiptWording=true): Qualita
     // Old cached tool facts carry the aggregate range in their coverage source.
     input={...input,facts:input.facts.map(f=>{const row=donors.find(r=>r.source.resource===f.source.resource);if(!row||!f.text.includes('(federal disclosures)'))return f;const text=f.text.replace('(federal disclosures)',`(federal disclosures; financial years ${row.period})`);return {...f,text,source:{...f.source,snippet:text}}})}
     input={...input,facts:input.facts.map(f=>{const rows=donors.filter(r=>r.source.resource===f.source.resource);const fields=rows.map(r=>`Donor: ${r.name} — ${r.amount}. Financial years: ${r.period}.`).filter(line=>!f.source.snippet.includes(line));return fields.length?{...f,source:{...f.source,snippet:f.source.snippet+'\n'+fields.join('\n')}}:f})}
-    const note=receiptWording&&(sourceMetadata(donors[0].source).jurisdiction||'federal')==='federal'?' '+FEDERAL_RECEIPTS_NOTE:''
-    const lines:WrittenSentence[]=donors.slice(0,5).map((r,i)=>({text:`${i===0?`Across disclosed returns from ${r.period} in OPAX’s published selection, `:'- '}${/\.(?=\s+[A-Z])|\b[A-Z]\.[A-Z]\./.test(r.name)?'“'+r.name+'”':r.name} ${i===0?(receiptWording?'was the source of the largest disclosed receipts':'provided the most disclosed funding')+(new RegExp('\\b'+r.party+'\\b','i').test(r.source.snippet??'')?' to '+r.party:''):receiptWording?'was the source of disclosed receipts':'provided disclosed funding'}: ${r.amount}.${i===0?note:''}`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
+    const federal=federalReceiptSource(donors[0].source),note=federal?' '+FEDERAL_RECEIPTS_NOTE:''
+    const lines:WrittenSentence[]=donors.slice(0,5).map((r,i)=>{
+      const name=/\.(?=\s+[A-Z])|\b[A-Z]\.[A-Z]\./.test(r.name)?'“'+r.name+'”':r.name
+      const text=federal?(i===0?`Across disclosed returns from ${r.period} in OPAX’s published selection, the largest disclosed receipts to ${r.party} came from ${name}: ${r.amount}.${note}`:`Disclosed receipts from ${name} total ${r.amount}.`):`${i===0?`Across disclosed returns from ${r.period} in OPAX’s published selection, `:'- '}${name} ${i===0?'was the source of the largest disclosed receipts'+(new RegExp('\\b'+r.party+'\\b','i').test(r.source.snippet??'')?' to '+r.party:''):'was the source of disclosed receipts'}: ${r.amount}.`
+      return {text,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}
+    })
     const coverage=coverageSentence(input);if(coverage)lines.push(coverage)
     return assemble(lines,input)
   }
@@ -221,9 +226,9 @@ export function proseFallback(input: WritingInput, receiptWording=true): Qualita
       const ranking=/most|highest|largest|top|biggest/i.test(input.question), industry=/\b(mining|gambling|property|finance|unions|fossil fuels)\b/i.exec(input.question)?.[1]
       // Donor evidence cannot regain ranking permission through the generic money renderer.
       if(ranking&&donorEvidence)return assemble([{text:'The selected disclosed receipts do not establish a donor ranking for the requested scope.',facts:[],coverage:true}],input)
-      const leader=unique[0], giving=/\b(?:gave|donated|provided)\b/i.test(input.question),target=giving?/\bto (Labor|Liberal|Greens|Nationals)\b/i.exec(input.question)?.[1]:undefined, subject=industry?industry+(receiptWording&&donorEvidence?' disclosed receipts':' funding'):/contract/i.test(input.question)?'contract value':/grant/i.test(input.question)?'grant funding':receiptWording?'disclosed receipts':'disclosed funding'
+      const leader=unique[0], giving=/\b(?:gave|donated|provided)\b/i.test(input.question),target=giving?/\bto (Labor|Liberal|Greens|Nationals)\b/i.exec(input.question)?.[1]:undefined, subject=industry?industry+(input.facts.some(f=>receiptSource(f.source))?' disclosed receipts':' funding'):/contract/i.test(input.question)?'contract value':/grant/i.test(input.question)?'grant funding':'disclosed receipts'
       if(!ranking){for(const row of unique)lines.push({text:`${row===leader&&period?'In '+period+', ':''}${row.name} recorded ${row.amount}${row.tail?' '+clean(row.tail).replace(/[.;]+$/,''):''}.`,facts:[row.f.id]})}
-      else {lines.push({text:ranking?`${leader.name} ${giving?(receiptWording?'was the source of':'provided'):'received'} the most ${subject}${target?' to '+target:''}${period?' in '+period:''}, with ${leader.amount}.`:`${period?'In '+period+', ':''}${leader.name} recorded ${leader.amount}.`,facts:[leader.f.id,...(periodFact?[periodFact.id]:[])]})
+      else {lines.push({text:ranking?`${leader.name} ${giving?'was the source of':'received'} the most ${subject}${target?' to '+target:''}${period?' in '+period:''}, with ${leader.amount}.`:`${period?'In '+period+', ':''}${leader.name} recorded ${leader.amount}.`,facts:[leader.f.id,...(periodFact?[periodFact.id]:[])]})
       if(unique.length>1)lines.push({text:(ranking?'The runners-up were ':'The other records were ')+unique.slice(1).map(r=>`${r.name} with ${r.amount}`).join(', ')+'.',facts:unique.slice(1).map(r=>r.f.id)})}
       for(const row of rows.filter(r=>!eligible.includes(r)))lines.push({text:`${row.name} recorded ${row.amount}${row.tail?' '+clean(row.tail).replace(/[.;]+$/,''):''}.`,facts:[row.f.id]})
     }
@@ -338,9 +343,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   const obj=raw && typeof raw==='object' ? raw as {sentences?:unknown;answer_decision?:unknown} : {}
   if (!Array.isArray(obj.sentences)) return null
   const rawLines=obj.sentences.filter((s):s is WrittenSentence=>!!s&&typeof s==='object'&&typeof s.text==='string').map(s=>({...s,facts:Array.isArray(s.facts)?s.facts:[]}))
-  const receiptNames=receiptSourceNames(input.facts.map(f=>f.source))
-  if(input.facts.some(f=>receiptSource(f.source))&&rawLines.some(line=>unsafeReceiptWording(line.text,receiptNames)))return null
-  if(rawLines.some(line=>receiptDirectionMistakes(line.text,receiptNames).length))return null
+  if(receiptWordingFindings({...assemble(rawLines,input)}).length)return null
   const declared=answerDecision(obj)
   if(!declared&&rawLines.length&&rawLines.every(s=>rawToolEcho(s.text)))return null
   const ranking=/\b(?:who|which)\b.*\b(?:most|highest|largest|biggest|top)\b|\btop\s+\w+/i.test(input.question)

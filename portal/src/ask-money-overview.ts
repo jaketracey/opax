@@ -1,4 +1,5 @@
-import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,unsafeReceiptWording,receiptDirectionMistakes} from './receipt-language.mjs'
+import {sentenceParts} from './research-claim-audit.mjs'
+import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,receiptSentenceCheck} from './receipt-language.mjs'
 /**
  * A written opening for a calculated money answer.
  *
@@ -12,6 +13,8 @@ import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,unsafeReceiptWording,receipt
  */
 
 export type MoneyFacts = {
+  recipient_party?:string
+  jurisdiction?:string
   /** The canonical wording of the selection, where one exists: the same
    *  figures must always produce the same sheet, whatever a reader typed. */
   question?: string
@@ -81,8 +84,9 @@ export function verifiedOverview(text: string, facts: MoneyFacts): string {
     .trim()
   if (clean.length < MIN_CHARS || clean.length > MAX_CHARS) return ''
   if (/[|#*_`~\[\]<>]|https?:\/\//.test(clean)) return ''
-  if (OVERREACH.test(clean) || unsafeReceiptWording(clean,facts.rows.map(r=>r.name))) return ''
-  if(facts.ranked_by==='donor'&&receiptDirectionMistakes(clean,facts.rows.map(r=>r.name)).length)return ''
+  if (OVERREACH.test(clean)) return ''
+  const source={kind:'receipt',jurisdiction:facts.jurisdiction??(/Federal|AEC/i.test(facts.selection)?'federal':''),snippet:facts.selection,receipt_facts:facts.rows.map(row=>({amount:row.amount,name:facts.ranked_by==='donor'?row.name:undefined,party:facts.ranked_by==='recipient party'?row.name:facts.recipient_party,owner:row.name,records:Number(row.records.replace(/[^0-9]/g,''))}))}
+  if(sentenceParts(clean).some(part=>{const check=receiptSentenceCheck(part.text,[source]);return check.scoped&&!check.allowed}))return ''
   if(/Federal|AEC/i.test(facts.selection)&&!clean.includes(FEDERAL_RECEIPTS_NOTE))return ''
   if (clean.split(/(?<=[.!?])\s+/).filter(Boolean).length > 4) return ''
   const allowed = new Set(numbers([facts.question || '', facts.selection, ...facts.rows.map(r => `${r.name} ${r.amount} ${r.records}`), ...facts.derived].join(' ')))

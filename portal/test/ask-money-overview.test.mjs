@@ -33,7 +33,7 @@ test('the prompt hands over the figures and forbids working any out', () => {
 });
 
 test('an opening that only restates the sheet is kept', () => {
-  const written = 'Liberal and Labor are close: $487,287 separates them, across 508 and 743 disclosed receipt records. These federal totals mix donations with other receipts such as loans, so this is not a donation ranking.';
+  const written = 'Liberal recorded $9,013,973 in disclosed receipts. These federal totals mix donations with other receipts such as loans, so this is not a donation ranking.';
   assert.equal(verifiedOverview(written, facts), written);
 });
 

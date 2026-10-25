@@ -33,15 +33,15 @@ test('a typed refusal is protected before the legacy mixed-answer prefix cleanup
 })
 test('a supported lower donor is not an audit rejection permitting a new ranked answer',()=>{
  const answer='National Australia Bank provided disclosed funding: $19,715.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-5/t/body/0':[[0,answer.length]]}},question)
- assert.doesNotMatch(out.answer,/Westpac/);assert.match(out.answer,/National Australia Bank/)
+ assert.doesNotMatch(out.answer,/Westpac|National Australia Bank|19,715/)
 })
 test('an unrelated rejected amount cannot authorize a selected donor ranking',()=>{
  const answer='Avery Example received $999,999.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
  assert.doesNotMatch(out.answer,/Westpac|161,787/)
 })
-test('a rejected figure cited to a matching selected ranking fact can be repaired',()=>{
+test('a rejected federal figure is dropped even when a ranking fact is selected',()=>{
  const answer='Avery Example received $161,787.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
- assert.match(out.answer,/Westpac Banking Corporation.*161,787/);assert.equal(auditPayload(question,out).findings.length,0)
+ assert.doesNotMatch(out.answer,/Westpac Banking Corporation|161,787/);assert.deepEqual(out.citations,{});assert.equal(auditPayload(question,out).findings.length,0)
 })
 for(const decision of ['clarification',undefined,'answer'])test(`writer figure-free decision survives without a retry: ${decision??'legacy'}`,async()=>{
  const answer=variants[1],model=new MockLanguageModelV4({doGenerate:()=>({content:[{type:'text',text:JSON.stringify({answer_decision:decision,sentences:[{text:answer,facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})})

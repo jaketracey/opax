@@ -1,0 +1,1150 @@
+{
+  "baseline": "d018d6ebcea41280a3666f5bca5fbcd69c9097f7",
+  "input": "/Users/jake/Projects/opax-ios-wt/ask-written-answers-b/portal/private/ask-post-deploy-r3/replay.json",
+  "payloads": 158,
+  "changed": 54,
+  "differences": [
+    {
+      "arm": "r4",
+      "position": 10,
+      "id": "MONEY-YEAR",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 11,
+      "id": "MONEY-RANGE",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 35,
+      "id": "GOLD-M03",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 44,
+      "id": "REG-donor-receipts",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 48,
+      "id": "PROBE-MINING",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 51,
+      "id": "COH-PHON",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 52,
+      "id": "COH-GREENS",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 53,
+      "id": "COH-LIB",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 54,
+      "id": "COH-LAB",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 57,
+      "id": "FOLLOW-D01-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 58,
+      "id": "FOLLOW-D01-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 59,
+      "id": "FOLLOW-D01-T3",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 60,
+      "id": "FOLLOW-D02-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 62,
+      "id": "FOLLOW-D03-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 63,
+      "id": "FOLLOW-D03-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 64,
+      "id": "FOLLOW-D04-T1",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 65,
+      "id": "FOLLOW-D04-T2",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 66,
+      "id": "FOLLOW-D04-T3",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 67,
+      "id": "FOLLOW-D05-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 68,
+      "id": "FOLLOW-D05-T2",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 69,
+      "id": "FOLLOW-D06-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 70,
+      "id": "FOLLOW-D06-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "r4",
+      "position": 73,
+      "id": "FOLLOW-D07-T3",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 78,
+      "id": "FOLLOW-D10-T1",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "r4",
+      "position": 79,
+      "id": "FOLLOW-D10-T2",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "B",
+      "position": 10,
+      "id": "MONEY-YEAR",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 11,
+      "id": "MONEY-RANGE",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 44,
+      "id": "REG-donor-receipts",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "B",
+      "position": 48,
+      "id": "PROBE-MINING",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 51,
+      "id": "COH-PHON",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 52,
+      "id": "COH-GREENS",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 53,
+      "id": "COH-LIB",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 54,
+      "id": "COH-LAB",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 55,
+      "id": "COH-NAT",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 56,
+      "id": "COH-LNP",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "B",
+      "position": 57,
+      "id": "FOLLOW-D01-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 58,
+      "id": "FOLLOW-D01-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 59,
+      "id": "FOLLOW-D01-T3",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 60,
+      "id": "FOLLOW-D02-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 61,
+      "id": "FOLLOW-D02-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    },
+    {
+      "arm": "B",
+      "position": 62,
+      "id": "FOLLOW-D03-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 63,
+      "id": "FOLLOW-D03-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 64,
+      "id": "FOLLOW-D04-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 65,
+      "id": "FOLLOW-D04-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 2,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 2 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 66,
+      "id": "FOLLOW-D04-T3",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 3,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 3 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 67,
+      "id": "FOLLOW-D05-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 68,
+      "id": "FOLLOW-D05-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 69,
+      "id": "FOLLOW-D06-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 70,
+      "id": "FOLLOW-D06-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 71,
+      "id": "FOLLOW-D07-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 73,
+      "id": "FOLLOW-D07-T3",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 75,
+      "id": "FOLLOW-D08-T2",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 1,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 1 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 78,
+      "id": "FOLLOW-D10-T1",
+      "changed": true,
+      "same_numbers": false,
+      "same_amounts": false,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 5,
+      "introduced_receipt_sentences": 0,
+      "reason": "Drop 5 federal financial sentence(s) outside the cited neutral grammar; no replacement or re-attribution."
+    },
+    {
+      "arm": "B",
+      "position": 79,
+      "id": "FOLLOW-D10-T2",
+      "changed": true,
+      "same_numbers": true,
+      "same_amounts": true,
+      "money": true,
+      "idempotent": true,
+      "baseline_idempotent": true,
+      "unsafe": false,
+      "drop_count": 0,
+      "introduced_receipt_sentences": 0,
+      "reason": "Retain only original, cited neutral receipt sentences; remove legacy reconstruction and migrate no prose."
+    }
+  ],
+  "number_changes": [
+    {
+      "arm": "r4",
+      "id": "MONEY-YEAR"
+    },
+    {
+      "arm": "r4",
+      "id": "MONEY-RANGE"
+    },
+    {
+      "arm": "r4",
+      "id": "PROBE-MINING"
+    },
+    {
+      "arm": "r4",
+      "id": "COH-PHON"
+    },
+    {
+      "arm": "r4",
+      "id": "COH-LIB"
+    },
+    {
+      "arm": "r4",
+      "id": "COH-LAB"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D01-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D01-T2"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D02-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D03-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D03-T2"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D05-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D06-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D06-T2"
+    },
+    {
+      "arm": "B",
+      "id": "MONEY-YEAR"
+    },
+    {
+      "arm": "B",
+      "id": "MONEY-RANGE"
+    },
+    {
+      "arm": "B",
+      "id": "PROBE-MINING"
+    },
+    {
+      "arm": "B",
+      "id": "COH-PHON"
+    },
+    {
+      "arm": "B",
+      "id": "COH-GREENS"
+    },
+    {
+      "arm": "B",
+      "id": "COH-LIB"
+    },
+    {
+      "arm": "B",
+      "id": "COH-LAB"
+    },
+    {
+      "arm": "B",
+      "id": "COH-NAT"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T3"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D02-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D02-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D03-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D03-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T3"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D05-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D05-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D06-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D06-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D07-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D07-T3"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D08-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D10-T1"
+    }
+  ],
+  "amount_changes": [
+    {
+      "arm": "r4",
+      "id": "MONEY-YEAR"
+    },
+    {
+      "arm": "r4",
+      "id": "MONEY-RANGE"
+    },
+    {
+      "arm": "r4",
+      "id": "PROBE-MINING"
+    },
+    {
+      "arm": "r4",
+      "id": "COH-PHON"
+    },
+    {
+      "arm": "r4",
+      "id": "COH-LIB"
+    },
+    {
+      "arm": "r4",
+      "id": "COH-LAB"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D01-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D01-T2"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D02-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D03-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D03-T2"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D05-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D06-T1"
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D06-T2"
+    },
+    {
+      "arm": "B",
+      "id": "MONEY-YEAR"
+    },
+    {
+      "arm": "B",
+      "id": "MONEY-RANGE"
+    },
+    {
+      "arm": "B",
+      "id": "PROBE-MINING"
+    },
+    {
+      "arm": "B",
+      "id": "COH-PHON"
+    },
+    {
+      "arm": "B",
+      "id": "COH-GREENS"
+    },
+    {
+      "arm": "B",
+      "id": "COH-LIB"
+    },
+    {
+      "arm": "B",
+      "id": "COH-LAB"
+    },
+    {
+      "arm": "B",
+      "id": "COH-NAT"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T3"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D02-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D02-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D03-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D03-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T3"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D05-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D05-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D06-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D06-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D07-T1"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D07-T3"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D08-T2"
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D10-T1"
+    }
+  ],
+  "non_money_changes": [],
+  "not_idempotent": [],
+  "new_idempotence_failures": [],
+  "unsafe": [],
+  "introduced_receipt_sentences": [],
+  "network_requests": 0,
+  "model_calls": 0,
+  "spend_usd": 0
+}

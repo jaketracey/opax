@@ -7,7 +7,7 @@ import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
 const dir=mkdtempSync(join(tmpdir(),'opax-voice-money-'));
 await build({entryPoints:[new URL('../src/voice-money.ts',import.meta.url).pathname,new URL('../src/voice-tools.ts',import.meta.url).pathname],outdir:dir,bundle:true,platform:'node',format:'esm'});
-const {receiptAnswer,receiptJurisdiction,receiptGraphForQuestion}=await import(pathToFileURL(join(dir,'voice-money.js')));
+const {receiptAnswer,receiptJurisdiction,receiptGraphForQuestion,guardVoiceReceiptProse}=await import(pathToFileURL(join(dir,'voice-money.js')));
 const {runVoiceTool}=await import(pathToFileURL(join(dir,'voice-tools.js')));
 const graph={meta:{coverage:'2020–2022',methodology:'Selected donors only'},nodes:[
  {id:'a',kind:'donor',label:'Example Casino',industry:'gambling',group:'gambling',total:99999},
@@ -84,7 +84,7 @@ test('money tools return computed receipts before speech search without changing
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async()=>Response.json(graph)}};
  for(const [tool,args] of [['search_records',{query:'gambling donations'}],['find_connections',{query:'gambling'}]]){
   const out=await runVoiceTool(tool,args,env,async()=>{throw Error('Unrelated speech retrieval')});
-  assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed party receipts/);
+  assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipt total/);
  }
  let reads=0;
  await runVoiceTool('search_records',{query:'health grant funding'},env,async()=>{reads++;return Response.json({results:[]})});assert.equal(reads,1);
@@ -167,7 +167,7 @@ test('party words inside a resolved donor name are not recipient selections',()=
 
 test('voice lending questions cannot reuse mixed receipt totals',async()=>{
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
- for(const query of ['How much money did Westpac Banking Corporation lend to Labor?','Which banks lent money to Labor?'])for(const tool of ['search_records','find_connections']){
+ for(const query of ['How much money did Westpac Banking Corporation lend to Labor?','Which banks lent money to Labor?','How much money was loaned to Labor by Westpac Banking Corporation?',...['lent','loan','loaned','borrowed','borrowing','owe','owes','owed','debt'].map(verb=>'How much money '+verb+' to Labor by Westpac Banking Corporation?')])for(const tool of ['search_records','find_connections']){
   const out=await runVoiceTool(tool,{query},env,async()=>{throw Error('Unexpected network retrieval')});
   assert.match(out.data.answer,/cannot establish how much was lent/);
   assert.match(out.data.answer,/balances owed at 30 June/);
@@ -180,3 +180,11 @@ test('voice lending questions cannot reuse mixed receipt totals',async()=>{
  assert.equal(receipt.data.total_aud,55227183);
  assert.match(receipt.data.answer,/These federal totals mix donations with other receipts such as loans, so this is not a donation ranking/);
 });
+
+test('voice financial prose uses the same closed allowlist',()=>{
+ const result={jurisdiction:'federal',subject:'Example Bank Ltd',total_aud:90000000,receipts:2,period:'2024–25',selected_donors:['Example Bank Ltd'],selected_parties:['Labor']}
+ for(const text of ['Example Bank Ltd props up Labor with $90,000,000.',"Example Bank Ltd is Labor's main financial supporter at $90,000,000.",'Liberal received $90,000,000 from Example Bank Ltd.','Labor was given $90,000,000 by Example Bank Ltd.'])assert.equal(guardVoiceReceiptProse(text,result),'')
+ const safe='Labor received $90,000,000 from Example Bank Ltd.'
+ assert.equal(guardVoiceReceiptProse(safe,result),safe)
+ assert.equal(guardVoiceReceiptProse('The bill funds hospitals.',result),'The bill funds hospitals.')
+})

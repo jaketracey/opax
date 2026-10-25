@@ -1,0 +1,55 @@
+{
+  "execution": "Offline calculated research tool and final answer boundary; no model generation",
+  "questions": 5,
+  "pass": 5,
+  "rows": [
+    {
+      "id": "RC01",
+      "overall": "pass",
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC02",
+      "overall": "pass",
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC03",
+      "overall": "pass",
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC04",
+      "overall": "pass",
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC05",
+      "overall": "pass",
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    }
+  ],
+  "network_requests": 0,
+  "model_calls": 0,
+  "spend_usd": 0
+}

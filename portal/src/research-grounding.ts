@@ -5,7 +5,7 @@ import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,dono
 import {proseFallback,type WritingInput} from './research-writing'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
-import {withReceiptWording} from './research-receipts'
+import {withReceiptWording,receiptSentenceFindings} from './research-receipts'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
 function checkedClaims(payload:Record<string,unknown>,question:string,promote=true):Record<string,unknown> {
@@ -139,9 +139,9 @@ function groundClaimsPayload(payload:Record<string,unknown>,question:string):Rec
   const canReconstruct=donorQuestion||rankingQuestion?canReconstructRanking(payload,question):true
   if(canReconstruct&&(donorQuestion||stripped>1/3||!check.rankingLead||check.reasons.includes('first sentence does not answer')||check.reasons.includes('incomplete donor sentence'))&&sources.some(s=>['count','export','record','receipt','pay','grant','contract'].includes(s.kind))) {
     const input:WritingInput={question,constraints:payload.answer_scope as WritingInput['constraints'],period:{kind:'all',label:''},facts:sources.filter(s=>!['speech','bill'].includes(s.kind)&&(!rankingQuestion||donorQuestion||rankingSourceMatches(question,s,payload.answer_scope as WritingInput['constraints']))).flatMap((source,i)=>String(source.snippet??'').split(/\n+/).map((text,j)=>({id:i*100+j+1,text,source,coverage:/^coverage(?:-|$)/.test(source.resource)||/^Coverage:|^These are party receipts|^Federal AEC|^Opax added|^This selection|^It excludes|^Amounts are|^Based on AEC/i.test(text)})))}
-    // Historical proof text must keep the same claim checks and figure selection.
-    // The outer receipt-language boundary migrates its wording after those checks.
-    const fallback=proseFallback(input,false),audited=checkedClaims(fallback as unknown as Record<string,unknown>,question)
+    // Other domains retain the existing fallback. The outer receipt boundary
+    // rejects any reconstructed federal financial sentence absent from the draft.
+    const fallback=proseFallback(input),audited=checkedClaims(fallback as unknown as Record<string,unknown>,question)
     if(Object.keys((audited.citations??{}) as object).every(id=>sources.some(s=>id===s.resource||id.startsWith(s.resource+'/')))&&!auditPayload(question,audited).findings.length&&coherenceCheck(question,audited).pass&&String(audited.answer??'').length>40){
       out={...payload,...cleanAnswerShape(audited),coherence:{...((payload.coherence??{}) as object),stripped_ratio:stripped,fallback:true}}
     }
@@ -185,8 +185,12 @@ function groundClaimsPayload(payload:Record<string,unknown>,question:string):Rec
 
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   // The receipt calculator already binds every row to graph amounts. Its links
-  // and table cells are not prose claims; retain them and migrate wording only.
+  // and table cells are generated from data, independently of model prose.
   if(payload.money_ranking===true&&payload.answer_status==='calculated')return withReceiptWording(payload,question)
   if(Array.isArray(payload.sources))payload={...payload,sources:payload.sources.map(source=>source?.receipt_original_snippet?{...source,snippet:source.receipt_original_snippet}:source)}
-  return withReceiptWording(groundClaimsPayload(payload,question),question)
+  const allowed=new Set(receiptSentenceFindings(payload).filter(p=>p.allowed).map(p=>p.text))
+  const checked=withReceiptWording(payload,question)
+  // The general claim audit may remove more material, but it may not replace a
+  // model's federal receipt sentence or reconstruct one using another fact.
+  return withReceiptWording(groundClaimsPayload(checked,question),question,allowed)
 }

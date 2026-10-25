@@ -1,0 +1,8 @@
+{
+  "cap_usd": 0.5,
+  "model_calls": 0,
+  "model_eval_spend_usd": 0,
+  "provider_requests": 0,
+  "production_requests": 0,
+  "execution": "Offline local assets, saved payloads and mocked writer responses only; no new provider generation. Coding-session billing is not exposed by the runtime."
+}

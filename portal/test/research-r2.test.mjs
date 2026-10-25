@@ -46,7 +46,7 @@ test('r2 mining period metadata survives writer and final JSON/SSE/cache audit',
  for(const p of [written,api.proseFallback(input)])for(const stream of [false,true]){
   const response=stream?new Response('event: done\ndata: '+JSON.stringify(p)+'\n\n',{headers:{'content-type':'text/event-stream','x-opax-cache':'HIT'}}):Response.json(p)
   const result=await api.withAnswerLanguage(response,input.question),wire=await result.text(),out=stream?JSON.parse(wire.match(/^data: (.+)$/m)[1]):JSON.parse(wire)
-  assert.match(out.answer,/^Labor received the most .*mining funding in 2005–06, with \$165,050\./)
+  assert.match(out.answer,/^Labor received the most .*mining (?:funding|receipts) in 2005–06, with \$165,050\./)
   assert.equal(auditPayload(input.question,out).findings.length,0)
  }
 })

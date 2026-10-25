@@ -1,0 +1,33 @@
+{
+  "npm_ci": "pass",
+  "build_search_before_suite": "pass",
+  "portal_suite": {
+    "pass": 3720,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 54319
+  },
+  "standalone_tsc": "pass",
+  "check": "pass",
+  "deploy_dry_run": "pass",
+  "diff_check": "pass",
+  "property_cases": 200,
+  "offline_controls": {
+    "pass": 5,
+    "total": 5
+  },
+  "build_churn_restored": [
+    "portal/public/ask-statute-titles.json",
+    "portal/public/graph/party-members.json",
+    "portal/public/search-catalog/manifest.json"
+  ],
+  "logs": {
+    "npm_ci": "/tmp/receipt-r4-ci.log",
+    "build_search": "/tmp/receipt-r4-search-final.log",
+    "portal_suite": "/tmp/receipt-r4-suite-release.log",
+    "tsc": "/tmp/receipt-r4-tsc-final.log",
+    "check": "/tmp/receipt-r4-check-final.log",
+    "deploy_dry_run": "/tmp/receipt-r4-dry-run-final.log",
+    "final_scope_assertions": "/tmp/receipt-r4-scope-final.log"
+  }
+}

@@ -1,4 +1,4 @@
-import {federalReceiptFact,neutralReceiptSentence} from './receipt-language.mjs'
+import {federalReceiptFact,receiptSentenceProof,receiptAmounts} from './receipt-language.mjs'
 // Pure selected-evidence audit, shared by the final boundary and the offline report.
 import {PERSON_PATHS} from '../public/person-paths.js'
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[‘’]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
@@ -137,14 +137,10 @@ function evidenceRows(payload){
   if(!source||typeof source!=='object'||typeof source.resource!=='string')continue
   const text=String(source.snippet??''),base={id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
   const parts=text.split(/\n+|(?<=[.!?])\s+(?=[A-Z][^:$;\n.]{1,110}:\s*\$?\d)/)
-  if(source.receipt_original_snippet)parts.push(...text.split('\n').map(neutralReceiptSentence).filter(line=>{
-   const fact=federalReceiptFact(line)
-   return fact&&String(payload.answer??'').includes(`${fact.party} disclosed ${fact.amount} in receipts from`)&&!parts.includes(line)
-  }))
   for(const line of parts){
    const label=/^\s*[-*]?\s*([^:|]{2,140}):/.exec(line)?.[1]
    const table=/^\|/.test(line)?line.split('|').map(s=>s.trim()).filter(Boolean):[]
-   const canonical=/^.+? disclosed \$/.test(line)?federalReceiptFact(line):null,receipt=/^Disclosed receipt: (.+?) → (.+?) [—–] \$/.exec(line),donor=/^Donor: (.+?) [—–]/.exec(line)
+   const canonical=federalReceiptFact(line),receipt=/^Disclosed receipt: (.+?) → (.+?) [—–] \$/.exec(line),donor=/^Donor: (.+?) [—–]/.exec(line)
    const tableDonor=/\|\s*Donor\s*\|/i.test(text)
    const current=/^(.+?) \([^)]+\), [^:]+: base salary/.exec(line)?.[1]
    const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(canonical?.party??receipt?.[2]??donor?.[1]??current??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
@@ -217,6 +213,14 @@ export function auditPayload(question,payload,{roster=[]}={}){
   const named=mentions(text,[...entities,...unknownActors.map(a=>a.name)]).map(n=>({...n,name:personAliases.get(n.name)??n.name})),numeric=figures(text),ps=periods(text)
   const citedIds=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(range=>Array.isArray(range)&&range.length===2&&range.every(Number.isSafeInteger)&&range[0]<Array.from(body.slice(0,sentenceAt+text.length)).length&&range[1]>Array.from(body.slice(0,sentenceAt)).length)).map(([id])=>id)
   const selected=citedIds.length?rows.filter(r=>citedIds.some(id=>id===r.id||id.startsWith(r.id+'/'))):rows
+  // A closed neutral receipt sentence already proves the complete association
+  // against its own cited record. Do not re-guess its owner from prose order.
+  const receiptProof=citedIds.length?receiptSentenceProof(text,(payload.sources??[]).filter(s=>citedIds.some(id=>id===s.resource||id.startsWith(s.resource+'/')))):null
+  if(receiptProof){
+   const {source,fact}=receiptProof,evidence=[source.resource],entity=fact.party??fact.name??fact.owner??''
+   for(const amount of receiptAmounts(text))claims.push({type:'figure',entity,metric:'receipts',value:String(amount.value),unit:'AUD',period:periods(fact.period??''),text,offset:sentenceAt+text.indexOf(amount.text),evidence_ids:evidence,status:'supported'})
+   continue
+  }
   const headScope=claimScope(text,0,named,speakers),head=headScope.owner
   const speaker=reporterIn(text,headScope,named,selected)
   const speech=!!speaker

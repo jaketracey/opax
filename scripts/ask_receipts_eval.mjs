@@ -4,23 +4,27 @@ import fs from 'node:fs'
 import {fileURLToPath} from 'node:url'
 import {createRequire} from 'node:module'
 import {runEval} from './research_eval.mjs'
-import {unsafeReceiptWording} from '../portal/src/receipt-language.mjs'
+
 
 const root=fileURLToPath(new URL('../',import.meta.url))
 const base=process.argv[2]??'http://127.0.0.1:8973'
 const offline=base==='--offline'
 if(!offline&&!/^http:\/\/(?:127\.0\.0\.1|localhost):\d+$/.test(base))throw Error('Receipt evals require a local server')
-const out=process.argv[3]??root+'portal/private/ask-receipts-round2'
+const out=process.argv[3]??root+'portal/private/ask-receipts-round4'
+const receiptRequire=createRequire(root+'portal/package.json')
+const receiptBundle=await receiptRequire('esbuild').build({stdin:{contents:"export * from './src/research-receipts'",resolveDir:root+'portal'},bundle:true,write:false,platform:'node',format:'esm'})
+const receiptApi=await import('data:text/javascript;base64,'+Buffer.from(receiptBundle.outputFiles[0].text).toString('base64'))
 const questions=JSON.parse(fs.readFileSync(root+'portal/test/fixtures/ask-receipts-probes.json')).questions
 const vars=offline?{}:Object.fromEntries(fs.readFileSync(root+'portal/.dev.vars','utf8').split('\n').map(l=>l.match(/^([A-Z0-9_]+)=(.*)$/)).filter(Boolean).map(m=>[m[1],m[2].replace(/^"|"$/g,'')]))
 if(!offline&&!vars.DAILY_POST_OPERATOR_SECRET)throw Error('Local operator credential is missing')
 fs.mkdirSync(out,{recursive:true})
 const ledger=out+'/spend-ledger.json'
+const spendCapUsd=0.50
 const previous=fs.existsSync(ledger)?JSON.parse(fs.readFileSync(ledger)).spent_upper_estimate:0
-if(!offline&&previous>=1)throw Error('The US$1.00 session eval cap has been reached')
+if(!offline&&previous>=spendCapUsd)throw Error('The US$0.50 session eval cap has been reached')
 // For the bounded local Worker, use its existing $10/million token reservation rule.
 // Keep all earlier unknown-cost reservations; an errored request retains this ceiling too.
-let requestReserveUsd=0.75
+let requestReserveUsd=0.20
 if(!offline){
  const config=JSON.parse(fs.readFileSync(root+'portal/research-local.wrangler.jsonc'))
  const tokens=Number(config.vars?.RESEARCH_LOOP_TOKENS)
@@ -43,15 +47,16 @@ if(offline){
   fixture.push({id:q.id,mode:'loop',payload})
  }
 }
-const {rows,report,summary}=await runEval({questions,fixture,requestReserveUsd,modes:['loop'],bases:{loop:base},baseHost:offline?'offline local assets':base,route:'ask',secret:vars.DAILY_POST_OPERATOR_SECRET,operator:true,prod:false,limit:5,spendCap:1-previous,timeoutMs:120000,
+const {rows,report,summary}=await runEval({questions,fixture,requestReserveUsd,modes:['loop'],bases:{loop:base},baseHost:offline?'offline local assets':base,route:'ask',secret:vars.DAILY_POST_OPERATOR_SECRET,operator:true,prod:false,limit:5,spendCap:spendCapUsd-previous,timeoutMs:120000,
  onRow:async({rows,spent})=>{
   fs.writeFileSync(out+'/in-progress.json',JSON.stringify({rows,spent},null,2))
-  if(!offline)fs.writeFileSync(ledger,JSON.stringify({spent_upper_estimate:previous+spent,cap_usd:1},null,2))
+  if(!offline)fs.writeFileSync(ledger,JSON.stringify({spent_upper_estimate:previous+spent,cap_usd:spendCapUsd},null,2))
   const row=rows.at(-1);console.log(`${row.id}: ${row.error??row.grade?.overall??'unknown'}, cost so far $${spent.toFixed(6)}`)
  }})
+const fixtureWording=row=>row.payload?receiptApi.receiptWordingFindings(row.payload).length===0:true
 for(const row of rows){
  const answer=row.answer??''
- row.receipt_wording={safe:row.id==='RC05'||!unsafeReceiptWording(answer),receipts_lead:row.id==='RC05'||/disclosed receipts/i.test(answer.split('\n')[0]),basis:row.id==='RC05'?/balances owed at 30 June/.test(answer):/not a donation ranking/.test(answer)}
+ row.receipt_wording={safe:row.id==='RC05'||fixtureWording(row),receipts_lead:row.id==='RC05'||/disclosed receipts/i.test(answer.split('\n')[0]),basis:row.id==='RC05'?/balances owed at 30 June/.test(answer):/not a donation ranking/.test(answer)}
 }
 const execution=offline?'Offline calculated research tool and final answer boundary; no model generation':'Local Worker with model provider, remote data blocked'
 fs.writeFileSync(out+'/results.json',JSON.stringify({execution,rows,report,summary},null,2))
@@ -65,7 +70,7 @@ for(const row of rows){
  }
  const answer=Array.from(row.answer??row.error??'No answer.').map((c,i)=>c+(marks.has(i+1)?[...marks.get(i+1)].map(n=>`[${n}]`).join(''):'' )).join('')
  lines.push('## '+questions.find(q=>q.id===row.id).question,'',answer,'','Citations:','')
- cited.forEach((s,i)=>lines.push(`- [${i+1}] ${s.resource}: [${s.title??'Source'}](${s.url??s.href}) — ${s.snippet??''}`))
+ cited.forEach((s,i)=>lines.push(`- [${i+1}] ${s.resource}: [${String(s.title??'Source').split('\n')[0].replace(/[\[\]*]/g,'').slice(0,200)}](${s.url??s.href})`))
  lines.push('')
 }
 fs.writeFileSync(out+'/answers.md',lines.join('\n'))

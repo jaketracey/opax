@@ -40,7 +40,7 @@ const LIMITS=['These are party receipts, not personal payments to politicians.',
  * what the rest come to, the leader's share - so the paragraph above the table
  * never has to do arithmetic of its own. See ask-money-overview.ts.
  */
-function moneyFacts(question:string|undefined, ranked_by:string, selection:string, rows:{name:string;total_aud:number;receipts:number}[]):MoneyFacts|undefined {
+function moneyFacts(question:string|undefined, ranked_by:string, selection:string, rows:{name:string;total_aud:number;receipts:number}[],jurisdiction?:string,recipient_party?:string):MoneyFacts|undefined {
   if(rows.length<1)return undefined
   const listed=rows.reduce((sum,row)=>sum+row.total_aud,0)
   const derived:string[]=[]
@@ -50,7 +50,7 @@ function moneyFacts(question:string|undefined, ranked_by:string, selection:strin
     derived.push(`Everything below ${plain(rows[0].name)}, added together: ${aud(listed-rows[0].total_aud)}`)
     if(listed>0)derived.push(`${plain(rows[0].name)}'s share of the shown total (${aud(listed)}): ${Math.round((rows[0].total_aud/listed)*100)}%`)
   }
-  return {...(question?.trim()?{question:question.trim()}:{}),ranked_by,selection:sourceCopy(selection.replace(/\*\*/g,'')),
+  return {jurisdiction,recipient_party,...(question?.trim()?{question:question.trim()}:{}),ranked_by,selection:sourceCopy(selection.replace(/\*\*/g,'')),
     rows:rows.map(row=>({name:plain(row.name).trim(),amount:aud(row.total_aud),records:recordCount(row.receipts)})),derived,limits:LIMITS}
 }
 
@@ -158,7 +158,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   }
   answer+='\n\nCoverage: These are **party receipts, not personal payments to politicians**. Only receipt sources in Opax’s published map are included, not every receipt source. Industry labels do not establish lobbying or influence. Both sides use the same year filters; undated records are excluded when filtering by year.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
-  const money_facts=moneyFacts(money_question,partyComparison?'recipient party':'donor industry',context,rows)
+  const money_facts=moneyFacts(money_question,partyComparison?'recipient party':'donor industry',context,rows,result.jurisdiction,result.selected_parties[0])
   return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
 }
 
@@ -294,6 +294,6 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   const money_question=fundingScopeQuestion({party:result.selected_parties[0],industry:result.selected_industries[0],
     donor:result.selected_industries.length?undefined:result.selected_donors.length===1?result.selected_donors[0]:undefined,
     ...result.requested_years,mode:fromDonors?'donors':allFlows?'connections':'parties'},jurisdiction)
-  const money_facts=moneyFacts(money_question,allFlows?'donor and recipient party':fromDonors?'donor':'recipient party',context,rows)
+  const money_facts=moneyFacts(money_question,allFlows?'donor and recipient party':fromDonors?'donor':'recipient party',context,rows,result.jurisdiction,result.selected_parties[0])
   return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_question,money_facts,scope:{state:jurisdiction,...(input.party?{party:input.party}:{})}}
 }

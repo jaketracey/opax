@@ -1,4 +1,5 @@
-import {FEDERAL_RECEIPTS_NOTE} from './receipt-language.mjs'
+import {sentenceParts} from './research-claim-audit.mjs'
+import {FEDERAL_RECEIPTS_NOTE,receiptSentenceCheck} from './receipt-language.mjs'
 import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
 
@@ -116,7 +117,7 @@ export function unmatchedReceiptRankingScope(graph:ReceiptGraph, query:string, s
   }
   return remainder.trim().split(' ').filter(w=>w&&!scaffolding.has(w)&&!rankingWords.has(w)&&!/^(?:19|20)\d{2}$/.test(w)).join(' ')
 }
-export const lendingQuestion = (q:string) => /\b(?:lend(?:s|ing)?|lent|loans?|borrow(?:ed|ings?|s)?|debts?)\b/i.test(q)
+export const lendingQuestion = (q:string) => /\b(?:lend(?:s|ing)?|lent|loan(?:s|ed|ing)?|borrow(?:s|ed|ing|ings)?|ow(?:e|es|ed|ing)|debts?)\b/i.test(q)
 export const moneyQuestion = (q:string) => lendingQuestion(q)||/\b(?:money|donat\w*|donors?|receipts?|fund(?:s|ing|ed)?|contributions?)\b/i.test(q)
 const receiptRegions=[['federal'],['qld','queensland'],['vic','victoria'],['tas','tasmania'],['nsw','new south wales'],['wa','western australia'],['sa','south australia'],['nt','northern territory'],['act','australian capital territory']]
 const mentionedReceiptRegions=(query:string)=>receiptRegions.filter(names=>names.some(n=>contains(normal(query),n))).map(names=>names[0])
@@ -156,6 +157,16 @@ export async function receiptGraphForQuestion(query:string, load:(file:string)=>
     selected=candidate
   }
   return selected
+}
+
+/** The same closed relation grammar guards monetary voice prose. The source
+ * tuple below is the calculator's result, never a model-supplied replacement. */
+export function guardVoiceReceiptProse(answer:string,result:{jurisdiction:string;subject:string;total_aud:number;receipts:number;period:string|null;selected_donors?:string[];selected_parties?:string[]}) {
+ if(result.jurisdiction!=='federal')return answer
+ const source={kind:'receipt',jurisdiction:'federal',receipt_facts:[{owner:result.subject,name:result.selected_donors?.length===1?result.selected_donors[0]:undefined,party:result.selected_parties?.length===1?result.selected_parties[0]:undefined,amount:'$'+result.total_aud,records:result.receipts,period:result.period??undefined}]}
+ let out=answer
+ for(const part of sentenceParts(answer)){const check=receiptSentenceCheck(part.text,[source]);if(check.scoped&&!check.allowed)out=out.replace(part.text,'')}
+ return out.trim()
 }
 
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
@@ -246,7 +257,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const period=Number.isFinite(first)?first===last?financialYear(first):`${financialYear(first)} to ${financialYear(last)}`:null
   const amount=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(cents/100)
   return {
-    answer:matching?`The ${jurisdiction} records shown on Opax list ${amount} in disclosed party receipts for ${subject}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.${jurisdiction==='federal'?' '+FEDERAL_RECEIPTS_NOTE:''}`:'No matching receipts are shown in this selection and period. This does not establish that no receipts occurred.',
+    answer:matching?guardVoiceReceiptProse(`The disclosed receipt total for ${subject} is ${amount}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.${jurisdiction==='federal'?' '+FEDERAL_RECEIPTS_NOTE:''}`,{jurisdiction,subject,total_aud:cents/100,receipts:count,period,selected_donors:donors.map(d=>d.label),selected_parties:parties.map(p=>p.label)}):'No matching receipts are shown in this selection and period. This does not establish that no receipts occurred.',
     period_coverage: { since: Number.isFinite(first) ? `${first}-01-01` : null, until: Number.isFinite(last) ? `${last}-12-31` : null,
       as_of: typeof graph.meta.generated === 'string' ? graph.meta.generated.slice(0, 10) : null,
       requested_since: from === undefined ? undefined : `${from}-01-01`, requested_until: to === undefined ? undefined : `${to}-12-31`,
