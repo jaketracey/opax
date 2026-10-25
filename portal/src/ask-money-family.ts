@@ -43,4 +43,3 @@ export function federalPartyRankingQuestion(question:string):string|null {
  }
  return null
 }
-
