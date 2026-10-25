@@ -1,0 +1,31 @@
+{
+  "npm_ci": "pass",
+  "build_search_before_suite": "pass",
+  "portal_suite": {
+    "pass": 3730,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 52897
+  },
+  "standalone_tsc": "pass",
+  "check": "pass",
+  "deploy_dry_run": "pass",
+  "diff_check": "pass",
+  "emitted_family_responses": 282,
+  "model_or_network_calls_in_family_test": 0,
+  "non_family_parity_bodies": 192,
+  "build_churn_restored": [
+    "portal/public/ask-statute-titles.json",
+    "portal/public/graph/party-members.json",
+    "portal/public/search-catalog/manifest.json"
+  ],
+  "logs": {
+    "npm_ci": "/tmp/receipt-r5-ci.log",
+    "build_search": "/tmp/receipt-r5-search.log",
+    "portal_suite": "/tmp/receipt-r5-suite-final-artifacts.log",
+    "tsc": "/tmp/receipt-r5-tsc-release.log",
+    "check": "/tmp/receipt-r5-check-release.log",
+    "deploy_dry_run": "/tmp/receipt-r5-dry-run-release.log",
+    "eval": "/tmp/receipt-r5-eval-final-contract.log"
+  }
+}

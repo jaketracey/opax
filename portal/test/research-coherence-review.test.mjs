@@ -15,7 +15,7 @@ const payload=(answer,sources=hanson.payload.sources)=>({answer,sources:structur
 const controls=[
  ['1990 coverage','Who gave the most money to One Nation in 1990?','The disclosed returns cover 1998–99 to 2025–26 and cannot establish the answer for 1990.',{}],
  ['causal refusal','Which donor gave the most money to One Nation to buy its votes?','These disclosed receipts do not establish that money bought votes or influenced policy.',{}],
- ['Smith clarification','Which Smith gave the most money to One Nation?','Please specify which Smith you mean before I compare their disclosed receipts.',{}],
+ ['Smith clarification','Which Smith gave the most money to One Nation?','Please specify which Smith you mean before I compare their disclosed funding.',{}],
  ['answered false',hanson.question,'There is not enough evidence to answer this question.',{answered:false}],
  ['moderation',hanson.question,'I cannot help with that request.',{answer_status:'moderated'}],
 ]
@@ -46,7 +46,10 @@ test('GOLD-M03 never reconstructs or cites unselected USER_CONTEXT',()=>{
 })
 test('aggregate donor range occurs once, with selection, lower-bound and receipts caveats',()=>{
  const out=api.groundAnswerPayload(structuredClone(hanson.payload),hanson.question)
- assert.doesNotMatch(out.answer,/\$[\d,]+|was the source of/);assert.equal(out.answer_status,'coverage_only');assert.ok(out.citations['coverage/t/body/0'])
+ assert.match(out.answer,/^Across disclosed returns from 1998[–-]99 to 2025[–-]26 in OPAX.s published selection, Westpac/)
+ assert.equal((out.answer.match(/1998[–-]99 to 2025[–-]26/g)??[]).length,1)
+ assert.match(out.answer,/floor|lower.bound|under.*threshold/i);assert.match(out.answer,/more than gifts|not.*gifts/i)
+ for(const id of Object.keys(out.citations))assert.ok(out.sources.some(s=>s.cited&&id.startsWith(s.resource+'/')))
 })
 test('PLACE-OLD proseFallback preserves the Census coverage explanation',()=>{
  const text='The requested period is 2005-01-01 to 2005-12-31. This tool covers 2021-01-01 to 2021-12-31, as of 2021-08-10. 2021 Census; published geography. It cannot establish the answer for the requested period; no current figures have been substituted.'
@@ -123,8 +126,8 @@ test('ranking party scope reads the selected calculation URL, including encoded 
  f.payload.citations=Object.fromEntries(Object.entries(f.payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+shift,b+shift])]))
  f.payload.citations['receipt-ranking-1/t/body/0']=[[0,bad.length]]
  // Full original wording remains a veto control; canonical FY wording remains a positive control.
- const blocked=api.groundAnswerPayload(structuredClone(f.payload),f.question);assert.doesNotMatch(blocked.answer,/\$[\d,]+/);assert.equal(coherenceCheck(f.question,blocked).pass,true)
- const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(f.payload,question);assert.doesNotMatch(out.answer,/\$[\d,]+/);assert.equal(coherenceCheck(question,out).pass,true)
+ const blocked=api.groundAnswerPayload(structuredClone(f.payload),f.question);assert.equal(blocked.answer_decision,'limitation');assert.match(blocked.answer,/United Workers Union/);assert.equal(coherenceCheck(f.question,blocked).pass,true)
+ const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(f.payload,question);assert.match(out.answer.split('\n')[0],/Pratt Holdings Pty Ltd/);assert.match(out.answer.split('\n')[0],/2,000,000/);assert.match(out.answer.split('\n')[0],/2023[–-]24/);assert.equal(coherenceCheck(question,out).pass,true)
 })
 test('an affirmative misattributed figure cannot become a protected decision by adding a limitation',()=>{
  const answer='Avery Example was paid $999,999, but the records cannot establish anything further.'
@@ -156,7 +159,7 @@ test('a named donor cannot be replaced by a different selected donor',async()=>{
  let calls=0;const model=new MockLanguageModelV4({doGenerate:()=>{calls++;return {content:[{type:'text',text:JSON.stringify({sentences:[{text:calls===1?'Vapold Pty Ltd gave Liberal $33,999,963.':'Westpac Banking Corporation gave Liberal $40,608,922.',facts:[calls===1?2:1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]}}})
  const stats={rounds:1,tokens:{input:0,output:0}},write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}})
  const out=await write({question:'How much disclosed funding did Westpac Banking Corporation provide to the Liberal Party?',period:{kind:'all',label:''},facts},stats,undefined,3000)
- assert.doesNotMatch(out.answer,/40,608,922|33,999,963|gave/);assert.deepEqual(out.citations,{});assert.ok(calls>=1&&calls<=2)
+ assert.match(out.answer,/Westpac Banking Corporation.*40,608,922/);assert.ok(out.citations['fact-1/t/body/0']);assert.ok(calls>=1&&calls<=2)
 })
 test('equivalent selected-excerpt and OPAX limitations use the same refusal rubric',()=>{
  const q={question:'How do Labor and the Coalition differ on nuclear power?',expected:{kind:'decline'},must:[]}
@@ -216,5 +219,5 @@ test('equivalent partial numerical answers retain citation grading with a limita
 test('a selected donor profile total survives even when recipient connections are absent',()=>{
  const facts=api.writingFacts(undefined,[{id:9,text:'Donor: Woodside Energy Group Ltd — Fossil fuels. $7,488,622.00 in disclosed political receipts across 278 records.',cite:{kind:'record',url:'https://example.org/money',label:'Donor profile'}}]),question='Which parties received funding from Woodside?'
  const out=api.groundAnswerPayload(api.proseFallback({question,period:{kind:'all',label:''},facts}),question)
- assert.match(out.answer,/Woodside.*7,488,622/);assert.match(out.answer,/do not identify the recipient parties/);assert.ok(out.citations['fact-9/t/body/0'])
+ assert.match(out.answer,/Woodside.*7,488,622/);assert.match(out.answer,/do not name which parties/);assert.ok(out.citations['fact-9/t/body/0'])
 })

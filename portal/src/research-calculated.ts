@@ -1,4 +1,4 @@
-import {FEDERAL_RECEIPTS_NOTE} from './receipt-language.mjs'
+import {FEDERAL_RECEIPTS_NOTE} from './receipt-copy'
 /** Existing instant calculators, exposed only as read-only research tools. */
 import { paidAnswer } from './ask-pay'
 import { rankedMoneyAnswer } from './ask-money'
@@ -32,5 +32,5 @@ export async function calculatedLookup(tool: string, args: Record<string, unknow
   const coverage = payload.coverage as ToolResult['coverage'] ?? { since: args.from ? args.from + '-01-01' : tool === 'paid_answer' ? generated : null, until: args.to ? args.to + '-12-31' : tool === 'paid_answer' ? generated : null, as_of: generated,
     ...(args.from ? { requested_since: args.from + '-01-01' } : {}), ...(args.to ? { requested_until: args.to + '-12-31' } : {}) }
   return { tool, ok: true, coverage, data: { calculated_answer: true, payload, coverage },
-    cite: [{ kind: 'record', label: String(payload.answer), url: new URL(sources[0]?.href ?? '/methods', deps.origin ?? 'https://opax.com.au').href }], notes: tool==='ranked_money'&&payload.answer_status==='calculated'&&(!args.state||args.state==='federal')?[FEDERAL_RECEIPTS_NOTE]:[] }
+    cite: [{ kind: 'record', label: String(payload.answer), url: new URL(sources[0]?.href ?? '/methods', deps.origin ?? 'https://opax.com.au').href }], notes: tool==='ranked_money'&&payload.answer_status==='calculated'&&(payload.scope as {state?:string}|undefined)?.state==='federal'?[FEDERAL_RECEIPTS_NOTE]:[] }
 }

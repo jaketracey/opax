@@ -1,0 +1,7 @@
+{
+  "cap_usd": 0.5,
+  "model_provider_calls": 0,
+  "eval_spend_usd": 0,
+  "production_requests": 0,
+  "mode": "Local assets, saved payloads and mocked unit-test models only; no new model completions."
+}

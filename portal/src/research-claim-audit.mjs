@@ -1,4 +1,3 @@
-import {federalReceiptFact,receiptSentenceProof,receiptAmounts} from './receipt-language.mjs'
 // Pure selected-evidence audit, shared by the final boundary and the offline report.
 import {PERSON_PATHS} from '../public/person-paths.js'
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[‘’]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
@@ -132,21 +131,20 @@ function reporterIn(text,scope,named,rows,until=scope.end){
 const descriptor=(text,n)=>parties.includes(n.name)&&/\b(?:passages|records|speakers)\b/i.test(text)&&!figures(text).length||/^(?:-indexed|-passages?| speaker| passage)/i.test(text.slice(n.end))||/indexed|passages?/.test(n.name)
 function evidenceRows(payload){
  const rows=[]
- for(let source of Array.isArray(payload.sources)?payload.sources:[]){
-  if(source?.receipt_original_snippet)source={...source,snippet:source.receipt_original_snippet}
+ for(const source of Array.isArray(payload.sources)?payload.sources:[]){
   if(!source||typeof source!=='object'||typeof source.resource!=='string')continue
   const text=String(source.snippet??''),base={id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
   const parts=text.split(/\n+|(?<=[.!?])\s+(?=[A-Z][^:$;\n.]{1,110}:\s*\$?\d)/)
   for(const line of parts){
    const label=/^\s*[-*]?\s*([^:|]{2,140}):/.exec(line)?.[1]
    const table=/^\|/.test(line)?line.split('|').map(s=>s.trim()).filter(Boolean):[]
-   const canonical=federalReceiptFact(line),receipt=/^Disclosed receipt: (.+?) → (.+?) [—–] \$/.exec(line),donor=/^Donor: (.+?) [—–]/.exec(line)
+   const receipt=/^Disclosed receipt: (.+?) → (.+?) [—–] \$/.exec(line),donor=/^Donor: (.+?) [—–]/.exec(line)
    const tableDonor=/\|\s*Donor\s*\|/i.test(text)
    const current=/^(.+?) \([^)]+\), [^:]+: base salary/.exec(line)?.[1]
-   const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(canonical?.party??receipt?.[2]??donor?.[1]??current??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
+   const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
    const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(line);
    const values=figures(line);for(const f of values){if(['speech','bill'].includes(source.kind)&&f.metric==='receipts'&&!f.owner){const before=line.slice(Math.max(0,f.at-120),f.at),party=[...before.matchAll(/\b(Labor|Coalition|Liberal|ALP|Greens|Nationals)(?: Party)?\b[^.;]{0,70}\b(?:received|collected|accepted)\b[^$]*$/gi)].at(-1);if(party)f.owner=partyName(party[1])}if(source.date&&/^\s*last financial year\b/i.test(line.slice(f.end))){const year=Number(source.date.slice(0,4))-(Number(source.date.slice(5,7))>=7?1:2);f.period=periods(year+'-'+String((year+1)%100).padStart(2,'0'))}}
-   for(const f of values){f.donor=canonical?.name??givingActor(line,f,nounPhrases(line).map(n=>n.name),source.speaker);f.owners=['speech','bill'].includes(source.kind)?amountOwners(line,f):[f.owner??entity].filter(Boolean)}
+   for(const f of values){f.donor=givingActor(line,f,nounPhrases(line).map(n=>n.name),source.speaker);f.owners=['speech','bill'].includes(source.kind)?amountOwners(line,f):[f.owner??entity].filter(Boolean)}
    for(const f of values)if(['speech','bill'].includes(source.kind)&&f.unit==='AUD'&&f.metric==='receipts'&&!financialPredicate.test(line.slice(0,f.at))&&!(label&&f.owners.some(n=>norm(n)===norm(label))))f.owners=[]
    for(const f of values)if(source.speaker&&!f.owners.length&&!quotationSpans(line).some(q=>f.at>=q.at&&f.end<=q.end)&&/\bI (?:was |have |had |have been |had been |am )?(?:paid|received|secured|got|won|earned|given)\s*(?:(?:about|almost|nearly|over|more than|at least)\s*)?$/i.test(line.slice(0,f.at)))f.owners=[source.speaker]
    for(const f of values.slice())if(!f.period.length&&!period.length&&!fiscal){
@@ -159,14 +157,14 @@ function evidenceRows(payload){
      if(bound)values.push(association);else{Object.assign(f,association);bound=true}
     }
    }
-   rows.push({...base,text:line,entity,donor:canonical?.name??receipt?.[1]??donor?.[1]??(tableDonor&&entity?entity:undefined),role:donor||tableDonor&&entity?'donor':undefined,period:period.length?period:fiscal?periods(fiscal):[],figures:values})
+   rows.push({...base,text:line,entity,donor:receipt?.[1]??donor?.[1]??(tableDonor&&entity?entity:undefined),role:donor||tableDonor&&entity?'donor':undefined,period:period.length?period:fiscal?periods(fiscal):[],figures:values})
   }
  }
  return rows
 }
 // Bind noun phrases independently of predicate spelling. Unresolved subjects fail closed.
 const quotations=quotationSpans
-const introductory=new Set(('In From Until Since During Between By On At The This That These Those They He She It Another One Some Both Each Other We I None There No Nearly About Earlier Gambling Mining Housing Climate Immigration Tax Federal Topic Amounts Salary OPAX Parliament Australian Financial Coverage Please Named Next Further Across Below What Public MPs Hansard Census AUD A Topic-labelled').split(' '))
+const introductory=new Set(('In From Until Since During Between By On At The This That These Those They He She It Another One Some Both Each Other We I None There No Nearly About Earlier Gambling Mining Housing Climate Immigration Tax Federal Topic Amounts Salary OPAX Parliament Australian Financial Coverage Please Next Further Across Below What Public MPs Hansard Census AUD A Topic-labelled').split(' '))
 function nounPhrases(text){
  const quotes=quotations(text)
  return [...text.matchAll(/\b[A-Z][\p{L}'’-]*(?:[ \t]+[A-Z][\p{L}'’-]*)*/gu)].map(m=>({name:m[0].replace(/^(?:In|From|On|During|Since|Until|A|An|The|Another) /,'').replace(/[’']s$/,''),at:m.index,end:m.index+m[0].length})).filter(m=>!quotes.some(q=>m.at>=q.at&&m.end<=q.end)&&!introductory.has(m.name)&&!months.includes(m.name)&&(m.name.includes(' ')||/^(?:\s*(?:In|From|On|During|Since|Until)\s+[^,]+,?\s*)?$|(?:^|[;,])\s*(?:(?:and|but|while|whereas|because)\s*)?$|\b(?:to|by|for)\s+$/.test(text.slice(0,m.at))))
@@ -213,14 +211,6 @@ export function auditPayload(question,payload,{roster=[]}={}){
   const named=mentions(text,[...entities,...unknownActors.map(a=>a.name)]).map(n=>({...n,name:personAliases.get(n.name)??n.name})),numeric=figures(text),ps=periods(text)
   const citedIds=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(range=>Array.isArray(range)&&range.length===2&&range.every(Number.isSafeInteger)&&range[0]<Array.from(body.slice(0,sentenceAt+text.length)).length&&range[1]>Array.from(body.slice(0,sentenceAt)).length)).map(([id])=>id)
   const selected=citedIds.length?rows.filter(r=>citedIds.some(id=>id===r.id||id.startsWith(r.id+'/'))):rows
-  // A closed neutral receipt sentence already proves the complete association
-  // against its own cited record. Do not re-guess its owner from prose order.
-  const receiptProof=citedIds.length?receiptSentenceProof(text,(payload.sources??[]).filter(s=>citedIds.some(id=>id===s.resource||id.startsWith(s.resource+'/')))):null
-  if(receiptProof){
-   const {source,fact}=receiptProof,evidence=[source.resource],entity=fact.party??fact.name??fact.owner??''
-   for(const amount of receiptAmounts(text))claims.push({type:'figure',entity,metric:'receipts',value:String(amount.value),unit:'AUD',period:periods(fact.period??''),text,offset:sentenceAt+text.indexOf(amount.text),evidence_ids:evidence,status:'supported'})
-   continue
-  }
   const headScope=claimScope(text,0,named,speakers),head=headScope.owner
   const speaker=reporterIn(text,headScope,named,selected)
   const speech=!!speaker
@@ -244,7 +234,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
    if(reported&&owners.length&&!f.owner&&!/^\s*(?:[a-z]+\s+){0,5}to\b/i.test(text.slice(f.end))&&!financialPredicate.test(text.slice(availableNames.filter(n=>n.end<=f.at).at(-1)?.end??scope.start,f.at)))owners=[]
    if(!owners.length&&!reported)owners=paidTo&&following.length?[following[0].name]:preceding.length?[preceding.at(-1).name]:[]
    const selectedDonor=preceding.find(n=>selected.some(r=>r.donor===n.name))?.name
-   if(selectedDonor&&/\b(?:gave|donated|provided|was the source of)\b/i.test(text.slice(scope.start,f.at)))owners=[selectedDonor]
+   if(selectedDonor&&/\b(?:gave|donated|provided)\b/i.test(text.slice(scope.start,f.at)))owners=[selectedDonor]
    const previous=numeric.filter(n=>n.end<=f.at).at(-1)?.end??0
    if(!speech&&/\b(?:each|both|tied)\b/i.test(text)&&named.filter(n=>n.at>=previous&&n.end<=f.at).length>1)owners=named.filter(n=>n.at>=previous&&n.end<=f.at).map(n=>n.name)
    if(!owners.length&&scope.owner&&!reported)owners=[scope.owner]
@@ -253,7 +243,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
     const next=numeric.find(n=>n.at>f.at)?.at??text.length,nearPeriods=ps.filter(p=>p.at>=f.end&&p.at<next)
     const beforePeriod=ps.filter(p=>p.end<=f.at).at(-1)
     const attached=nearPeriods.length?nearPeriods:beforePeriod&&!/,\s*(?:and|but|while|because)|;/.test(text.slice(beforePeriod.end,f.at))?[beforePeriod]:[]
-    const giving=/\b(?:gave|donated|provided|giving)\b|\bwas the source of\b/i.test(text)||/\b(?:total|aggregate|records)\b/i.test(text)&&!/\b(?:received|was paid|earned)\b/i.test(text),donor=givingActor(text,f,named.map(n=>n.name))??named.filter(n=>n.at<f.at&&rows.some(r=>r.donor===n.name)).at(-1)?.name
+    const giving=/\b(?:gave|donated|provided|giving)\b/i.test(text)||/\b(?:total|aggregate|records)\b/i.test(text)&&!/\b(?:received|was paid|earned)\b/i.test(text),donor=givingActor(text,f,named.map(n=>n.name))??named.filter(n=>n.at<f.at&&rows.some(r=>r.donor===n.name)).at(-1)?.name
     let candidates=selected.filter(r=>r.figures.some(v=>{
      const passage=['speech','bill'].includes(r.kind),factOwners=v.owners??[]
      const owner=reported&&!entity?(!reporter||r.speaker===reporter):!entity?(!r.entity&&!r.speaker&&!passage||/^(?:19|20)\d{2}$/.test(r.entity)):passage?factOwners.some(n=>norm(n)===norm(entity)):norm(r.entity)===norm(entity)&&(!r.role||r.role!=='donor'||giving)||v.owner===entity||giving&&r.donor===entity

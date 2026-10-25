@@ -1,0 +1,104 @@
+{
+  "questions": [
+    "Who gives the most money to Labor?",
+    "Who gave the most money to Labor?",
+    "Who has given the most money to Labor?",
+    "Who donates the most to Labor?",
+    "Who donated the most to Labor?",
+    "Who funds Labor?",
+    "Who funds the Liberal Party?",
+    "Who funds the most money to Labor?",
+    "Who funded Labor?",
+    "Who bankrolls Labor?",
+    "Who bankrolled Labor?",
+    "Who supports Labor?",
+    "Who supported Labor?",
+    "Who props up Labor?",
+    "Who prop up the Liberal Party?",
+    "Top donors to Labor",
+    "Biggest donor to Labor",
+    "Largest donors to Labor",
+    "Who is the biggest donor to Labor?",
+    "Who are the top backers of Labor?",
+    "Who is the largest supporter of Labor?",
+    "Who is the largest benefactor to Labor?",
+    "Who is Labor's biggest donor?",
+    "Who are Labor's top supporters?",
+    "Who is the Liberal Party's largest backer?",
+    "Who does Labor take the most money from?",
+    "Who does Pauline Hanson's party take the most money from?",
+    "who does pauline hansons party take the most money from",
+    "Who gives the most money to the Greens?",
+    "Who donates the most to the Nationals?",
+    "Who gives the most money to LNP in federal records?",
+    "Who gave the most disclosed funding to Labor in 2023?",
+    "Who gave the most money to Labor in 2019-20?",
+    "Who gives the most money to Labor from 2010 to 2015?",
+    "Who has the most disclosed receipts to Labor in federal records?",
+    "Who supports Labor the most?",
+    "Who bankrolls Labor most?",
+    "Who gives Labor the most money?",
+    "Who is the main financial supporter of Labor?",
+    "Who are Labor's biggest financial backers?",
+    "Who funds Labor over all time?",
+    "Please list the top donors to Labor."
+  ],
+  "followups": [
+    {
+      "question": "What about Labor?",
+      "context": [
+        {
+          "author": "user",
+          "text": "Who bankrolls the Liberal Party?"
+        }
+      ]
+    },
+    {
+      "question": "And in 2019-20?",
+      "context": [
+        {
+          "author": "user",
+          "text": "Who gives the most money to Labor?"
+        }
+      ]
+    },
+    {
+      "question": "What about One Nation?",
+      "context": [
+        {
+          "author": "user",
+          "text": "Who props up Labor?"
+        }
+      ]
+    },
+    {
+      "question": "And in 2023-24?",
+      "context": [
+        {
+          "author": "user",
+          "text": "Who gives the most money to Labor?"
+        },
+        {
+          "author": "user",
+          "text": "What about the Greens?"
+        }
+      ]
+    }
+  ],
+  "outside": [
+    "What did Labor say about donations?",
+    "Who gets the most from mining in 2005?",
+    "Which party got the most mining receipts from 2010 to 2015?",
+    "How much did Westpac give Labor?",
+    "Which parties received funding from Woodside?",
+    "Which banks lent money to Labor?",
+    "Who gives the most money to the LNP in Queensland?",
+    "Who gives the most money to Labor in Victoria?",
+    "Who gives the most money to Labor and why?",
+    "Did Westpac give money to One Nation in most years?",
+    "Does funding prove MPs were bribed?",
+    "Who is the top donor to Labor excluding banks?",
+    "Which Smith gave the most money to One Nation?",
+    "The bill funds hospitals."
+  ]
+}

@@ -44,7 +44,7 @@ function harness(responses, env = {}) {
     SSE_HEADERS: { 'content-type': 'text/event-stream' },
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
-    rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
+    federalPartyMoneyAnswer:async()=>null, rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
     isPersonOverviewCandidate: () => false, isPersonOverviewIntent: () => false, isPersonRecentCandidate: () => false, isPersonRecentIntent: () => false, overviewPayload: async payload => ({...payload,is_overview_intent:false}),
     retrieveAskRecords: async () => ({ records: [], coverage: '', total: 0 }),

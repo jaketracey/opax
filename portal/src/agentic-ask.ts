@@ -1,3 +1,4 @@
+import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
 import { researchPhaseWallMs } from './research-time'
 import { resolvePartySubject } from './ask-party-subject'
 import { receiptYearWindow } from './receipt-period'
@@ -567,6 +568,9 @@ export function researchTrail(events: StepEvent[], steps: AgenticPayload['steps'
 }
 /** Loop failures retain the old planner, inside the original request deadline. */
 export async function runAgentic(question: string, deps: AgenticDeps, progress: Progress = async () => {}, budgetMs = AGENTIC_BUDGET_MS, period = inferPeriod(question), filters: Record<string, unknown> = {}, resolvedScope?: NamedScope): Promise<AgenticPayload> {
+  const assets={fetch:async(request:Request)=>{const data=await deps.asset(new URL(request.url).pathname);return data?Response.json(data):new Response('',{status:404})}} as Fetcher
+  const calculated=await federalPartyMoneyAnswer({...filters,question} as import('./ask-records').RecordQuestion,assets)
+  if(calculated)return {answered:true,answer:calculated.answer,answer_source:'template',shape:'money',period,facts:[],notes:[],steps:[],events:[],timings:{plan_ms:0,tools_ms:0,compose_ms:0,total_ms:0},tokens:{input:0,output:0},cost_usd:0,over_budget:false,version:AGENTIC_PROMPT_VERSION,qualitative:publicPartyMoneyAnswer(calculated) as unknown as QualitativeAnswer}
   const started = Date.now()
   const reserveEnabled=!!deps.research?.write&&(deps.research.writingWallMs??budgetMs)>=1000
   const selectionLeft=()=>Math.max(1,(deps.research?.write?researchPhaseWallMs(Math.min(budgetMs,deps.research.writingWallMs??budgetMs)):budgetMs)-(Date.now()-started))

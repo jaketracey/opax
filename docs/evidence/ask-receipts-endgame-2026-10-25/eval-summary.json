@@ -1,0 +1,119 @@
+{
+  "execution": "Offline deterministic family routing and calculated debt-basis control; no model generation",
+  "calculator_contract": {
+    "pass": 5,
+    "total": 5,
+    "raw_prose_pass": 1
+  },
+  "raw_prose_rubric_note": "Unchanged research prose rubric rejects required tables and reads citation URL digits as figures. Raw grades are preserved.",
+  "rows": [
+    {
+      "id": "RC01",
+      "raw_prose_grade": "fail",
+      "calculator_contract": {
+        "overall": "pass",
+        "checks": {
+          "receipt_copy": true,
+          "gold_leader": true,
+          "direct_lead": true,
+          "public_shape": true,
+          "full_table": true,
+          "table_values": true,
+          "row_citations": true,
+          "valid_citations": true
+        }
+      },
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC02",
+      "raw_prose_grade": "fail",
+      "calculator_contract": {
+        "overall": "pass",
+        "checks": {
+          "receipt_copy": true,
+          "gold_leader": true,
+          "direct_lead": true,
+          "public_shape": true,
+          "full_table": true,
+          "table_values": true,
+          "row_citations": true,
+          "valid_citations": true
+        }
+      },
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC03",
+      "raw_prose_grade": "fail",
+      "calculator_contract": {
+        "overall": "pass",
+        "checks": {
+          "receipt_copy": true,
+          "gold_leader": true,
+          "direct_lead": true,
+          "public_shape": true,
+          "full_table": true,
+          "table_values": true,
+          "row_citations": true,
+          "valid_citations": true
+        }
+      },
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC04",
+      "raw_prose_grade": "fail",
+      "calculator_contract": {
+        "overall": "pass",
+        "checks": {
+          "receipt_copy": true,
+          "gold_leader": true,
+          "direct_lead": true,
+          "public_shape": true,
+          "full_table": true,
+          "table_values": true,
+          "row_citations": true,
+          "valid_citations": true
+        }
+      },
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC05",
+      "raw_prose_grade": "pass",
+      "calculator_contract": {
+        "overall": "pass",
+        "checks": {
+          "receipt_copy": true,
+          "debt_citation": true,
+          "valid_citations": true
+        }
+      },
+      "receipt_wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    }
+  ],
+  "network_requests": 0,
+  "model_calls": 0,
+  "spend_usd": 0
+}

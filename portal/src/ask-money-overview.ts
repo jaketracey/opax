@@ -1,5 +1,4 @@
-import {sentenceParts} from './research-claim-audit.mjs'
-import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,receiptSentenceCheck} from './receipt-language.mjs'
+import {RECEIPTS_WRITING_RULE} from './receipt-copy'
 /**
  * A written opening for a calculated money answer.
  *
@@ -13,8 +12,8 @@ import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,receiptSentenceCheck} from '
  */
 
 export type MoneyFacts = {
-  recipient_party?:string
-  jurisdiction?:string
+  recipient_party?: string
+  jurisdiction?: string
   /** The canonical wording of the selection, where one exists: the same
    *  figures must always produce the same sheet, whatever a reader typed. */
   question?: string
@@ -42,8 +41,8 @@ const numbers = (value: string): string[] =>
 
 export function moneyOverviewPrompt(facts: MoneyFacts): string {
   return [
-    'Write the opening of an answer for a reader who asked about the figures below.',
     RECEIPTS_WRITING_RULE,
+    'Write the opening of an answer for a reader who asked about the figures below.',
     'A table of those figures follows what you write; you are introducing it, not replacing it.',
     '',
     ...(facts.question ? [`QUESTION: ${facts.question}`, ''] : []),
@@ -85,9 +84,6 @@ export function verifiedOverview(text: string, facts: MoneyFacts): string {
   if (clean.length < MIN_CHARS || clean.length > MAX_CHARS) return ''
   if (/[|#*_`~\[\]<>]|https?:\/\//.test(clean)) return ''
   if (OVERREACH.test(clean)) return ''
-  const source={kind:'receipt',jurisdiction:facts.jurisdiction??(/Federal|AEC/i.test(facts.selection)?'federal':''),snippet:facts.selection,receipt_facts:facts.rows.map(row=>({amount:row.amount,name:facts.ranked_by==='donor'?row.name:undefined,party:facts.ranked_by==='recipient party'?row.name:facts.recipient_party,owner:row.name,records:Number(row.records.replace(/[^0-9]/g,''))}))}
-  if(sentenceParts(clean).some(part=>{const check=receiptSentenceCheck(part.text,[source]);return check.scoped&&!check.allowed}))return ''
-  if(/Federal|AEC/i.test(facts.selection)&&!clean.includes(FEDERAL_RECEIPTS_NOTE))return ''
   if (clean.split(/(?<=[.!?])\s+/).filter(Boolean).length > 4) return ''
   const allowed = new Set(numbers([facts.question || '', facts.selection, ...facts.rows.map(r => `${r.name} ${r.amount} ${r.records}`), ...facts.derived].join(' ')))
   if (numbers(clean).some(number => !allowed.has(number))) return ''

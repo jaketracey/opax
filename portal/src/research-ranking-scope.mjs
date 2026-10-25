@@ -47,7 +47,7 @@ function periodAgrees(wanted,actual){
 /** All constrained dimensions must match this fact; unknown evidence cannot grant permission. */
 function evidenceScope(row){
  const meta=sourceMetadata(row.source)
- const actualJur=meta.jurisdiction?jurisdiction(meta.jurisdiction):(/\(federal disclosures\b|\bFederal \(AEC\)|\bFederal AEC (?:donation returns|disclosed receipts)\b|\bBased on AEC political disclosure records\b/i.test(row.source.snippet??'')||/\bfederal (?:disclosed )?(?:donor|disclosure|receipt|political|record)/i.test(row.source.title??'')?'federal':undefined)
+ const actualJur=meta.jurisdiction?jurisdiction(meta.jurisdiction):(/\(federal disclosures\b|\bFederal \(AEC\)|\bFederal AEC donation returns\b|\bBased on AEC political disclosure records\b/i.test(row.source.snippet??'')||/\bfederal (?:disclosed )?(?:donor|disclosure|receipt|political|record)/i.test(row.source.title??'')?'federal':undefined)
  return {jurisdiction:actualJur,chamber:chamber(meta.chamber),party:one([party(row.party),party(meta.party)]),entity_type:entity(row.entity_type??meta.entity_type),period:period(row.period)}
 }
 export function rankingScopeMatches(question,row,constraints={}){

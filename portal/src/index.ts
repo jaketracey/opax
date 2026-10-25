@@ -1,3 +1,4 @@
+import {federalPartyMoneyAnswer,federalPartyMoneyResponse} from './ask-money-routing'
 import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
@@ -1331,9 +1332,9 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
  */
 async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext, request: Request): Promise<{ overview: string; why: string }> {
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
-  const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ version:'receipts-wording-1',epoch: env.CACHE_EPOCH, model, facts })))
+  const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
-  if (hit) return { overview: verifiedOverview((await hit.json<{ overview?: string }>()).overview || '',facts), why: 'hit' }
+  if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
   // A paid call, so it spends the reader's Ask quota like any other answer; past
   // the limit the calculated answer goes out without its opening paragraph.
   if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
@@ -1419,6 +1420,8 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   }
   if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
   try {
+    const routedMoney=await federalPartyMoneyAnswer(rawInput,env.ASSETS)
+    if(routedMoney)return federalPartyMoneyResponse(routedMoney,request)
     const ranked = selectedToolsOnly ? null : await rankedMoneyAnswer(rawInput, env.ASSETS)
     if (ranked) {
       mark('receipts')
@@ -6302,6 +6305,8 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   if (body instanceof Response) return body
   const input = body.value, q = input.question
   if (typeof q !== 'string' || !q.trim() || q.length > MAX_QUESTION_CHARS) return json({ error: 'question is required' }, 400)
+  const money=await federalPartyMoneyAnswer(input as AskInput,env.ASSETS)
+  if(money)return federalPartyMoneyResponse(money,request)
   if (classifyAgentic(q).route !== 'agentic') return json({ error: 'question is outside the route classifier' }, 409)
   const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
   const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
@@ -6324,9 +6329,12 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     answerQuestion=question;routedInput=body.value
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
+    const money=await federalPartyMoneyAnswer(body.value as AskInput,selected.ASSETS)
+    if(money)return federalPartyMoneyResponse(money,request)
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
   }
   const served=await serve()
+  if(served.headers.has('x-opax-money-route'))return usage?withResearchEval(served,()=>({...researchEvalUsage(usage),model:'deterministic-receipts'})):served
   answerQuestion=String(routedInput?.question??answerQuestion)
   const response = await withAnswerLanguage(served,selected.RESEARCH_LOOP==='route'?answerQuestion:undefined,typeof routedInput?.asked_as==='string'?routedInput.asked_as:undefined)
   // Operator evals also see which model and routing the loop used.

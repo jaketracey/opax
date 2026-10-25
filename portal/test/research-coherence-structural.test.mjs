@@ -9,9 +9,9 @@ const built=await build({stdin:{contents:"export * from './src/research-groundin
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const hanson=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-pauline.json',import.meta.url))),question='Who gives the most money to One Nation?'
 const variants=[
- 'The selected records are insufficient to determine a reliable receipt ranking.',
- 'Which financial year do you mean? Please specify the period before I rank receipt sources.',
- 'This sample leaves the identity of the leading receipt source unresolved.',
+ 'The selected records are insufficient to determine a reliable donor ranking.',
+ 'Which financial year do you mean? Please specify the period before I rank donors.',
+ 'This sample leaves the identity of the leading donor unresolved.',
  'I need the recipient and financial year before making that comparison.',
  'Would you like federal returns or Queensland disclosures?',
 ]
@@ -33,15 +33,15 @@ test('a typed refusal is protected before the legacy mixed-answer prefix cleanup
 })
 test('a supported lower donor is not an audit rejection permitting a new ranked answer',()=>{
  const answer='National Australia Bank provided disclosed funding: $19,715.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-5/t/body/0':[[0,answer.length]]}},question)
- assert.doesNotMatch(out.answer,/Westpac|National Australia Bank|19,715/)
+ assert.doesNotMatch(out.answer,/Westpac/);assert.match(out.answer,/National Australia Bank/)
 })
 test('an unrelated rejected amount cannot authorize a selected donor ranking',()=>{
  const answer='Avery Example received $999,999.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
  assert.doesNotMatch(out.answer,/Westpac|161,787/)
 })
-test('a rejected federal figure is dropped even when a ranking fact is selected',()=>{
+test('a rejected figure cited to a matching selected ranking fact can be repaired',()=>{
  const answer='Avery Example received $161,787.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
- assert.doesNotMatch(out.answer,/Westpac Banking Corporation|161,787/);assert.deepEqual(out.citations,{});assert.equal(auditPayload(question,out).findings.length,0)
+ assert.match(out.answer,/Westpac Banking Corporation.*161,787/);assert.equal(auditPayload(question,out).findings.length,0)
 })
 for(const decision of ['clarification',undefined,'answer'])test(`writer figure-free decision survives without a retry: ${decision??'legacy'}`,async()=>{
  const answer=variants[1],model=new MockLanguageModelV4({doGenerate:()=>({content:[{type:'text',text:JSON.stringify({answer_decision:decision,sentences:[{text:answer,facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})})

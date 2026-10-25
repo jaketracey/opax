@@ -1,4 +1,5 @@
-import {FEDERAL_RECEIPTS_NOTE} from './receipt-language.mjs'
+import {federalPartyRankingQuestion} from './ask-money-family'
+import {FEDERAL_RECEIPTS_NOTE} from './receipt-copy'
 import type { RecordQuestion } from './ask-records'
 import type { MoneyFacts } from './ask-money-overview'
 import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, samePeriodFundingComparison} from './ask-money-followup'
@@ -23,7 +24,7 @@ export function isMoneyRanking(input: RecordQuestion): boolean {
   // rather than turning a question about attention into a receipt ranking.
   const ambiguousMedia=industries.includes('media')&&!/\b(?:industry|sector|lobby)\b/i.test(q)
   const impliedFunding=industries.length>0&&!ambiguousMedia
-  return (moneyQuestion(q)||impliedFunding||/\b(?:takes?|gets?|receives?)\b.*\blobby\b/i.test(q)) && (/\b(?:largest|biggest|most|top)\b/i.test(q)||/^who funds\b/i.test(q)||comparisonQuestion(q)||yearComparisonQuestion(q))
+  return !!federalPartyRankingQuestion(q)||(moneyQuestion(q)||impliedFunding||/\b(?:takes?|gets?|receives?)\b.*\blobby\b/i.test(q)) && (/\b(?:largest|biggest|most|top)\b/i.test(q)||/^who funds\b/i.test(q)||comparisonQuestion(q)||yearComparisonQuestion(q))
 }
 const aud=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
 const plain=(s:string)=>s.replace(/[|\n\r\[\]*]/g,' ')
@@ -195,6 +196,10 @@ export async function fundingResearchFollowUp(input:RecordQuestion,assets:Fetche
 }
 
 export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) {
+  if((!input.state||input.state==='federal')&&!input.speaker&&!input.chamber&&!input.topic){
+    const canonical=federalPartyRankingQuestion(input.question??'')
+    input={...input,...(canonical?{question:canonical,kind:'all'}:{}),context:Array.isArray(input.context)?input.context.map(t=>t&&typeof t.text==='string'&&(t.author==='user'||t.author==='question')?{...t,text:federalPartyRankingQuestion(t.text)??t.text}:t):undefined}
+  }
   // Debt stocks cannot establish a history of loan receipts. Do not infer lenders from names.
   if((!input.state||input.state==='federal')&&!input.speaker&&!input.chamber&&!input.topic&&(!input.kind||['all','receipt'].includes(input.kind))&&/^\s*Which banks lent money to Labor\s*[?!.]*$/i.test(input.question??'')) {
     const response=await assets.fetch(new Request('https://opax.com.au/graph/aec-extras.json'))
@@ -255,7 +260,15 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   const allFlows=!result.selected_parties.length && !result.selected_industries.length && !result.selected_donors.length && !fromDonors
   const rows=(allFlows ? result.flows.map(r=>({name:`${r.donor} → ${r.party}`,total_aud:r.total_aud,receipts:r.receipts,id:r.donor_id,party:r.party}))
     : (fromDonors?result.by_donor:result.by_party).map(r=>({...r,party:fromDonors?result.selected_parties[0]:r.name}))).slice(0,5)
-  if(!rows.length)return {answer:result.answer,coverage:result.period_coverage,citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}
+  if(!rows.length){
+    if(jurisdiction==='federal'&&federalPartyRankingQuestion(input.question??'')&&result.selected_parties.length===1){
+      const bounds=result.requested_years,period=bounds.from===bounds.to&&bounds.from!==null?financialYear(bounds.from):bounds.from!==null&&bounds.to!==null?`${financialYear(bounds.from)} to ${financialYear(bounds.to)}`:'the requested period'
+      const party=plain(result.selected_parties[0]),answer=`The published federal selection has no matching disclosed receipts to ${party} for ${period}. This does not establish that no receipts occurred. ${FEDERAL_RECEIPTS_NOTE}`
+      const resource='receipt-ranking-gap',href=result.sources[0].url
+      return {answer,coverage:result.period_coverage,citations:{[resource]:[[0,Array.from(answer).length]]},sources:[{resource,title:`Selected receipts to ${party}: ${period}`,href,url:href,kind:'receipt',snippet:answer,cited:true}],answer_status:'evidence_gap',money_ranking:true,money_question:fundingScopeQuestion({party:result.selected_parties[0],...bounds,mode:'donors'},jurisdiction)}
+    }
+    return {answer:result.answer,coverage:result.period_coverage,citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}
+  }
   const who=rows[0], recipient=result.selected_parties.join(' and '), sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
   const lead=who ? allFlows ? `The largest source-to-party receipt connection in this published selection is **${plain(who.name)}: ${aud(who.total_aud)}**.`
     : fromDonors ? `The largest disclosed receipts${recipient?` to ${plain(recipient)}`:''}${sector?` among ${plain(sector)} sources`:''} in this published selection are from **${plain(who.name)}: ${aud(who.total_aud)}** across ${who.receipts.toLocaleString('en-AU')} records.`

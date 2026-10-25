@@ -10,15 +10,18 @@ Error.stackTraceLimit=2
 const b=await build({stdin:{contents:"export * from './src/research-grounding';export * from './src/research-response';export * from './src/research-writing';export * from './src/research-writer';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
 const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-pauline.json',import.meta.url)))
-for(const stream of [false,true])for(const cache of [false,true])for(const fallback of [false,true])test(`unsafe federal donor prose is dropped: JSON/SSE=${stream}, cache=${cache}, fallback=${fallback}`,async()=>{
+for(const stream of [false,true])for(const cache of [false,true])for(const fallback of [false,true])test(`coherent donor recovery: JSON/SSE=${stream}, cache=${cache}, fallback=${fallback}`,async()=>{
  const p={...structuredClone(fixture.payload),...(fallback?{research:{mode:'planner',failure:'grounding'}}:{})}
  // Reproduce a citation anchored only to a sentence's terminal punctuation.
  const k='fact-5/t/body/0',r=p.citations[k][0];p.citations[k]=[[r[1]-1,r[1]]]
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})}
  const response=stream?new Response('event: delta\ndata: '+JSON.stringify({text:p.answer})+'\n\nevent: done\ndata: '+JSON.stringify(p)+'\n\n',{headers}):Response.json(p,{headers})
  const wire=await(await api.withAnswerLanguage(response,fixture.question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.doesNotMatch(out.answer,/\$[\d,]+|was the source of/);assert.equal(out.answer_status,'coverage_only');assert.ok(out.citations['coverage/t/body/0'])
+ assert.match(out.answer.split('\n')[0],/1998-99 to 2025-26.*Westpac Banking Corporation.*161,787/)
  assert.equal(coherenceCheck(fixture.question,out).pass,true)
+ assert.equal(auditPayload(fixture.question,out).findings.length,0)
+ assert.ok(out.citations['fact-1/t/body/0']);assert.ok(out.citations[k]);assert.equal(out.coherence.fallback,true)
+ assert.equal((out.answer.match(/not evidence/g)??[]).length,1)
  assert.deepEqual(api.groundAnswerPayload(out,fixture.question),out)
 })
 const source={resource:'salary',title:'Salary',kind:'record',snippet:'Avery Example: $100,000 annual salary.',cited:true,href:'https://example.org',url:'https://example.org',slug:''}
@@ -59,7 +62,7 @@ test('a supported donor draft uses its aggregate period and passes both existing
  const text='Westpac Banking Corporation gave One Nation $161,787 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/'
  const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'export',url:'https://example.org/aec',label:'Disclosed donation'}}])
  const input={question:fixture.question,period:{kind:'all',label:''},facts}
- const line='Across disclosed returns from 1998-99 to 2025-26 in OPAX’s published selection, the largest disclosed receipts to One Nation came from Westpac Banking Corporation: $161,787.'
+ const line='Westpac Banking Corporation provided the most disclosed funding to One Nation, with $161,787 in financial years 1998-99 to 2025-26.'
  const out=api.verifyWrittenAnswer({sentences:[{text:line,facts:[1]}]},input)
  assert.equal(out.answer,line);assert.equal(auditPayload(fixture.question,out).findings.length,0);assert.equal(coherenceCheck(fixture.question,out).pass,true)
  assert.equal(facts[0].atoms[0].unit,'AUD');assert.equal(facts[0].atoms[0].period.label,'1998-99 to 2025-26')
@@ -85,9 +88,9 @@ test('year-filtered disclosed-donor tables recover their leading donor and perio
  const bad='Avery Example received $2,000,000.',answer=bad+'\n\nOther donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-1/t/body/0':[[0,bad.length]],'receipt-ranking-2/t/body/0':[[bad.length+2,answer.length]]}}
  // The former phrasing is now outside the repair allowlist; keep its checked point.
  const blocked=api.groundAnswerPayload(structuredClone(p),'Who gave the most disclosed funding to Labor in 2023?')
- assert.doesNotMatch(blocked.answer,/Pratt|953,447|2,000,000/);assert.equal(coherenceCheck('Who gave the most disclosed funding to Labor in 2023?',blocked).pass,true)
+ assert.equal(blocked.answer_decision,'limitation');assert.match(blocked.answer,/United Workers Union.*953,447/);assert.doesNotMatch(blocked.answer,/Pratt/);assert.equal(coherenceCheck('Who gave the most disclosed funding to Labor in 2023?',blocked).pass,true)
  const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(p,question)
- assert.doesNotMatch(out.answer,/Pratt|2,000,000|953,447/)
+ assert.match(out.answer.split('\n')[0],/2023–24.*Pratt Holdings Pty Ltd.*2,000,000/)
  assert.equal(coherenceCheck(question,out).pass,true);assert.equal(auditPayload('',out).findings.length,0)
 })
 test('an incorrect party adjective is repaired without changing quotation ownership',()=>{
@@ -103,14 +106,14 @@ test('selected donor initials never turn a complete organisation name into a sen
  const out=api.groundAnswerPayload(api.proseFallback(input),input.question)
  assert.match(out.answer,/“J\.J\. Richards & Sons Pty Ltd”.*1,000,000/);assert.ok(out.citations['fact-2/t/body/0']);assert.equal(auditPayload(input.question,out).findings.length,0);assert.equal(coherenceCheck(input.question,out).pass,true)
 })
-test('native source tables cannot reconstruct a dropped federal model claim',()=>{
+test('native ranked-money tables repair a rejected draft figure with the selected leader',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-native-donors.json',import.meta.url)))
  const bad='Avery Example received $55,227,183.',shift=bad.length+2
  f.payload.answer=bad+'\n\n'+f.payload.answer
  f.payload.citations=Object.fromEntries(Object.entries(f.payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+shift,b+shift])]))
  f.payload.citations[f.payload.sources.find(s=>s.snippet.includes('$55,227,183')).resource+'/t/body/0']=[[0,bad.length]]
  const out=api.groundAnswerPayload(f.payload,f.question)
- assert.doesNotMatch(out.answer,/55,227,183|Avery Example/)
+ assert.match(out.answer.split('\n')[0],/1998[–-]99 to 2025[–-]26.*Westpac Banking Corporation.*55,227,183/)
  assert.equal(coherenceCheck(f.question,out).pass,true);assert.equal(auditPayload(f.question,out).findings.length,0)
 })
 test('a supported speech-ranking lead is repaired while retaining the year and coverage citations',()=>{

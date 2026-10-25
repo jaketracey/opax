@@ -39,6 +39,13 @@
         "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
         "citations": "Each monetary statement has its own source.",
         "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      },
+      "calculator_expected": {
+        "party": "Labor",
+        "leader": "Westpac Banking Corporation",
+        "amount_aud": 55227183,
+        "records": 500,
+        "table_rows": 5
       }
     },
     {
@@ -79,6 +86,13 @@
         "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
         "citations": "Each monetary statement has its own source.",
         "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      },
+      "calculator_expected": {
+        "party": "Labor",
+        "leader": "Westpac Banking Corporation",
+        "amount_aud": 55227183,
+        "records": 500,
+        "table_rows": 5
       }
     },
     {
@@ -119,6 +133,13 @@
         "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
         "citations": "Each monetary statement has its own source.",
         "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      },
+      "calculator_expected": {
+        "party": "Liberal",
+        "leader": "Westpac Banking Corporation",
+        "amount_aud": 40608922,
+        "records": 433,
+        "table_rows": 5
       }
     },
     {
@@ -159,6 +180,13 @@
         "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
         "citations": "Each monetary statement has its own source.",
         "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      },
+      "calculator_expected": {
+        "party": "One Nation",
+        "leader": "Westpac Banking Corporation",
+        "amount_aud": 161787,
+        "records": 4,
+        "table_rows": 5
       }
     },
     {

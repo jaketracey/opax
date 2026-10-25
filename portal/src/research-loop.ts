@@ -1,3 +1,4 @@
+import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
 import { researchPhaseWallMs } from './research-time'
 export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
 import { createAnswerWriter } from './research-writer'
@@ -5,7 +6,6 @@ import { electoratePlan } from './tools/electorates'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
 import { extractAskConstraints, constrainStep, guardToolPeriod } from './ask-constraints'
 import { calculatedLookup } from './research-calculated'
-import { isMoneyRanking } from './ask-money'
 import type { RecordQuestion } from './ask-records'
 import { generateText, jsonSchema, tool, isStepCount, ToolChoiceViolationError, type LanguageModel, type ToolSet } from 'ai'
 import { TOOL_SPECS, validToolArgs, toolArgProblem, type ToolDeps, type ToolResult } from './agentic-tools'
@@ -62,6 +62,9 @@ export interface ResearchOptions {
 export function createResearch(options: ResearchOptions): Research {
   const research: Research = async (question, context) => {
     question = context.named.resolvedQuestion ?? question
+    const assets={fetch:async(request:Request)=>{const data=await context.deps.asset(new URL(request.url).pathname);return data?Response.json(data):new Response('',{status:404})}} as Fetcher
+    const calculated=await federalPartyMoneyAnswer({...options.input,question},assets)
+    if(calculated)return {steps:[],results:[],selected:[],rounds:0,tokens:{input:0,output:0},costUsd:0,qualitative:publicPartyMoneyAnswer(calculated) as unknown as QualitativeAnswer}
     const qualitativeRun = !classifyAgentic(question).shape || classifyAgentic(question).rule === 'electorate-data'
     let constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {})
     context.constraints = constraints
@@ -192,12 +195,10 @@ export function createResearch(options: ResearchOptions): Research {
       description: spec.description,
       inputSchema: jsonSchema<Record<string, unknown>>(spec.input),
       // A null or empty optional argument means "not set"; models send them for unused filters.
-      execute: args => invoke({ tool: spec.name, args: Object.fromEntries(Object.entries(object(args)).filter(([, v]) => v !== null && v !== '')) },
-        spec.name==='party_receipts'&&(isMoneyRanking({...options.input,question})||/^Which banks lent money to Labor[?!.]*$/i.test(question))
-          ? (deps,scoped)=>calculatedLookup('ranked_money',scoped,{...options.input,question},deps) : undefined),
+      execute: args => invoke({ tool: spec.name, args: Object.fromEntries(Object.entries(object(args)).filter(([, v]) => v !== null && v !== '')) }),
     })]))
     for (const name of ['paid_answer', 'ranked_money']) tools[name] = tool({
-      description: name === 'paid_answer' ? 'Calculate a complete federal parliamentary pay answer, rankings, party comparisons or person comparisons from the requested year/date. Use parliamentary_pay for flexible dated office/person lookups.' : 'Calculate disclosed receipt rankings, comparisons and money overviews, including chat follow-ups. For questions about giving, donating or funding, these are mixed receipts, not a donation ranking. Also checks the basis and limits of the published bank-debt records for lending questions. Preserves donor identity gates and financial-year semantics. Pass the requested period.',
+      description: name === 'paid_answer' ? 'Calculate a complete federal parliamentary pay answer, rankings, party comparisons or person comparisons from the requested year/date. Use parliamentary_pay for flexible dated office/person lookups.' : 'Calculate disclosed receipt rankings, comparisons and money overviews, including chat follow-ups. For federal questions about giving, donating or funding, these are mixed receipts, not a donation ranking. Also checks the basis and limits of the published bank-debt records for lending questions. Preserves donor identity gates and financial-year semantics. Pass the requested period.',
       inputSchema: jsonSchema<Record<string, unknown>>({ type: 'object', properties: calculatedProperties, additionalProperties: false }),
       execute: args => invoke({ tool: name, args }, (deps, scoped) => calculatedLookup(name, scoped, { ...options.input, question }, deps)),
     })

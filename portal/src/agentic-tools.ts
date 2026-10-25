@@ -1,4 +1,4 @@
-import {FEDERAL_RECEIPTS_NOTE} from './receipt-language.mjs'
+import {FEDERAL_RECEIPTS_NOTE} from './receipt-copy'
 import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 /**
  * Structured tools for Ask (docs/design/agentic-ask-2026-10.md).

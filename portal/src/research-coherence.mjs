@@ -1,4 +1,3 @@
-import {federalReceiptFact} from './receipt-language.mjs'
 import {sentenceParts,auditPayload} from './research-claim-audit.mjs'
 import {answerStyleChecks} from './research-answer-style.mjs'
 import {rankingRepairQuestion,repairSlotsMatch} from './research-ranking-repair.mjs'
@@ -16,14 +15,14 @@ export function answerDecision(payload) {
 }
 export function protectedDecision(payload) {const decision=answerDecision(payload);return !!decision&&decision!=='answer'}
 function donorRows(question,sources=[],requireRanking=true,constraints={}) {
-  sources=Array.isArray(sources)?sources.filter(s=>s&&typeof s==='object').map(s=>s.receipt_original_snippet?{...s,snippet:s.receipt_original_snippet}:s):[]
-  if((requireRanking&&!/^who funds\b/i.test(question)&&!/\b(?:who|which (?:company|corporation|person|individual|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(question))||!/donor|donat|giv|gave|fund|receipts?|take.*money|money.*from/i.test(question)||/\bwhich Smith\b|\b(?:buy|bought|bribe|because|influenc|cause)\w*\b/i.test(question))return []
+  sources=Array.isArray(sources)?sources.filter(s=>s&&typeof s==='object'):[]
+  if((requireRanking&&!/\b(?:who|which (?:company|corporation|person|individual|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(question))||!/donor|donat|giv|gave|funding|take.*money|money.*from/i.test(question)||/\bwhich Smith\b|\b(?:buy|bought|bribe|because|influenc|cause)\w*\b/i.test(question))return []
   const rows=[],coverage=sources.map(s=>s.snippet??'').join('\n')
   for(const source of sources){
     // ranked_money also supplies a native, privacy-filtered Donor table.
     const native=(String(source.snippet??'')+'\n'+String(source.title??'')).replace(/\*\*/g,'')
     if(/^fact-\d+$/.test(source.resource??'')&&source.kind==='record'&&/\/money(?:[/?]|$)/.test(String(source.url??source.href??''))&&/\|\s*Donor\s*\|\s*Disclosed receipts\s*\|/i.test(native)){
-      const party=/has the largest disclosed total to (.+?) in this published selection/.exec(native)?.[1]??/largest disclosed receipts to (.+?) in this published selection/.exec(native)?.[1]
+      const party=/has the largest disclosed total to (.+?) in this published selection/.exec(native)?.[1]
       const period=/Financial years:\s*([^\n.]+)/i.exec(native)?.[1]?.trim()
       if(party&&period)for(const line of native.split('\n')){
         const row=/^\|\s*(?:\[([^\]]+)\]\([^)]+\)|([^|]+))\s*\|\s*(\$\d(?:[\d,]*\d)?(?:\.\d+)?)\s*\|/.exec(line)
@@ -39,12 +38,12 @@ function donorRows(question,sources=[],requireRanking=true,constraints={}) {
     }
     if(!/^fact-\d+$/.test(source.resource??'')||source.kind!=='export')continue
     for(const line of String(source.snippet??'').split('\n')){
-      const m=federalReceiptFact(line)
+      const m=/^(.+?) gave (.+?) (\$[\d,]+(?:\.\d+)?) \(federal disclosures(?:[^)]*)\)/.exec(line)
       if(!m)continue
       const span=/financial years ((?:19|20)\d{2}[–-]\d{2}(?: to (?:19|20)\d{2}[–-]\d{2})?)/i.exec(line)?.[1]
       // Return-reference years are not the period of an aggregated total.
-      const period=span??associatedRankingPeriod(source,m.party,sources)
-      rows.push({name:m.name,party:m.party,amount:m.amount,value:Number(m.amount.replace(/[$,]/g,'')),period,source})
+      const period=span??associatedRankingPeriod(source,m[2],sources)
+      rows.push({name:m[1],party:m[2],amount:m[3],value:Number(m[3].replace(/[$,]/g,'')),period,source})
     }
   }
   for(const row of rows)row.entity_type=sourceMetadata(row.source).entity_type??'donor'

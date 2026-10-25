@@ -5,8 +5,7 @@ import { isResearchCreditError, researchCreditCooldown } from './research-credit
 import type { ResearchOptions } from './research-loop'
 import {groundAnswerPayload} from './research-grounding'
 import {auditPayload} from './research-claim-audit.mjs'
-import {protectedDecision,coherenceCheck,answerDecision,canReconstructRanking,repairDonorRanking} from './research-coherence.mjs'
-import {FEDERAL_RECEIPTS_NOTE,federalReceiptFact} from './receipt-language.mjs'
+import {protectedDecision,coherenceCheck,answerDecision,canReconstructRanking} from './research-coherence.mjs'
 import type { QualitativeAnswer, ResearchStats } from './research-types'
 
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
@@ -30,21 +29,19 @@ export function createAnswerWriter(options: ResearchOptions) {
     }, credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
     const required=proseFallback(input),lead=required.answer.split('\n')[0]
-    const completeReceipt=input.facts.some(f=>f.source.kind==='receipt'||/largest disclosed receipts to/.test(f.source.snippet))
-    const receiptLeader=completeReceipt?repairDonorRanking(input.question,input.facts.map(f=>f.source),input.constraints)[0]:undefined
-    if(receiptLeader||input.facts.some(f=>payRate(f.text)))requiredAnswer=groundAnswerPayload(required as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
+    if(input.facts.some(f=>payRate(f.text)))requiredAnswer=groundAnswerPayload(required as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
     const headlineRequired=/highest|most|top|largest|biggest/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
     const ownerFigure=(text:string)=>{
       const rate=/^([^:]+): (\$[\d,]+)/.exec(text)
       if(rate)return {owner:rate[1],amount:rate[2]}
-      const receipt=federalReceiptFact(text)
-      return receipt?{owner:receipt.name,amount:receipt.amount,party:receipt.party}:null
+      const donation=/^(.+?) gave (.+?) (\$[\d,]+)/.exec(text)
+      return donation?{owner:donation[1],amount:donation[3],party:donation[2]}:null
     }
     const named=input.facts.filter(f=>{const pair=ownerFigure(f.text);return pair&&input.question.toLowerCase().includes(pair.owner.toLowerCase())&&(!pair.party||input.question.toLowerCase().includes(pair.party.toLowerCase()))})
     const recipientFacts=/\b(?:which|what) parties\b/i.test(input.question)?input.facts.flatMap(f=>{const m=/^Disclosed receipt:\s*(.+?)\s*→\s*(.+?)\s*—/.exec(f.text);return m?[{f,party:m[2]}]:[]}):[]
     const requiredIds=new Set([...recipientFacts.map(r=>r.f.id),...named.map(f=>f.id),...(headlineRequired?Object.entries(required.citations).filter(([,ranges])=>ranges.some(([a])=>a<lead.length)).flatMap(([id])=>input.facts.filter(f=>id===(f.evidenceId??f.source.resource+'/t/body/0')).map(f=>f.id)):[])])
     const recipients=recipientFacts.map(r=>r.party)
-    const keepsHeadline=(answer:string)=>(!receiptLeader||answer.split('\n')[0].includes(receiptLeader.name)&&answer.split('\n')[0].includes(receiptLeader.amount)&&answer.split('\n')[0].includes(FEDERAL_RECEIPTS_NOTE))&&recipients.every(p=>answer.toLowerCase().includes(p.toLowerCase()))&&input.facts.filter(f=>requiredIds.has(f.id)).every(f=>{const pair=ownerFigure(f.text);return !pair||answer.includes(pair.owner)&&answer.includes(pair.amount)})
+    const keepsHeadline=(answer:string)=>recipients.every(p=>answer.toLowerCase().includes(p.toLowerCase()))&&input.facts.filter(f=>requiredIds.has(f.id)).every(f=>{const pair=ownerFigure(f.text);return !pair||answer.includes(pair.owner)&&answer.includes(pair.amount)})
     keepsRequired=keepsHeadline
     let activeInput=input, prompt=writingPrompt(input)
     const startedWriting=Date.now()

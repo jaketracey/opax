@@ -68,7 +68,7 @@ test('Ask checks shared cache before quota, while conversations and explicit ref
   // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
   questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }),
   isPersonOverviewCandidate:()=>false,isPersonRecentCandidate:()=>false,isPersonRecentIntent:()=>false,
-  rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, withAskedAs:p=>p, needsAskPeople:()=>false,resolveAskScope:input=>({input}),askCacheInput:input=>input.context?.length?null:'public',
+  federalPartyMoneyAnswer:async()=>null, rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, withAskedAs:p=>p, needsAskPeople:()=>false,resolveAskScope:input=>({input}),askCacheInput:input=>input.context?.length?null:'public',
   cacheRequest:()=>key(),sha256Hex:async()=>'',cacheBypass:(r,u)=>u.searchParams.get('nocache')==='1',
   readGenerationCache:async()=>{cacheReads++;return Response.json({answer:'Cached'})},
   rateLimited:async()=>{quota++;return Response.json({error:'limited'},{status:429})},json:Response.json,withCacheStatus:r=>r});

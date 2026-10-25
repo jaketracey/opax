@@ -117,7 +117,7 @@ function route(rewriteResult) {
     URL, Request, Response, Date,
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
-    rankedMoneyAnswer: async () => null, paidAnswer: async () => null, clarifyPayload,
+    federalPartyMoneyAnswer:async()=>null, rankedMoneyAnswer: async () => null, paidAnswer: async () => null, clarifyPayload,
     standaloneQuestion: async () => rewriteResult,
     rateLimited: async () => { seen.limiter++; return null; },
     needsAskPeople: () => false, resolveAskScope: (input) => ({ input, scope: {} }), isPersonOverviewCandidate: () => false, isPersonOverviewIntent: () => false, isPersonRecentCandidate: () => false, isPersonRecentIntent: () => false,

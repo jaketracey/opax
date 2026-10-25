@@ -20,7 +20,7 @@ function fixtures(m,options={}) {
 }
 test('loop decisions carry a typed refusal or clarification through the response adapter',async()=>{
  for(const reason of ['ambiguous','causation']){
-  const f=fixtures(model([reply([call('decline',{reason})])])),run=await f.run('Who gives the most money to One Nation?'),payload=api.agenticAskPayload(run,'Who gives the most money to One Nation?')
+  const f=fixtures(model([reply([call('decline',{reason})])])),run=await f.run('How much money reached One Nation?'),payload=api.agenticAskPayload(run,'How much money reached One Nation?')
   assert.equal(payload.answer_decision,reason==='ambiguous'?'clarification':'refusal');assert.equal(payload.answer,run.qualitative.answer)
   assert.deepEqual(payload.answer_scope,run.answer_scope);assert.ok(payload.answer_scope.period)
  }
