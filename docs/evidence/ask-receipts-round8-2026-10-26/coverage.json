@@ -1,0 +1,378 @@
+{
+  "original_generated": 612,
+  "retained_round7_generated": 216,
+  "removed_fuzzy_generated": 36,
+  "fixed_typo_checks": 15,
+  "negative_checks": 68,
+  "original_negatives": 24,
+  "near_miss_negatives": 44,
+  "review_regressions": [
+    "Who funds Liberty?",
+    "Who funds Nationalism?",
+    "Who founded Labor?",
+    "Who gave Labor its name?",
+    "Who gave Labor advice?",
+    "Labor's biggest donor reform bill"
+  ],
+  "previous_review_reproductions": [
+    "Who are the Greens' top donors?",
+    "the Nationals' biggest backers",
+    "Who's been giving the most money to the Greens?",
+    "Who've given the most money to Labor?",
+    "who donates teh most to labor"
+  ],
+  "deterministic_clarifications": [
+    {
+      "question": "Who Labor top donors?",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Who are the top Labor donors?",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Show the largest Labor receipts",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Who Labor most money?",
+      "parties": [
+        "Labor"
+      ]
+    },
+    {
+      "question": "Who gives Labor the largest amount?",
+      "parties": [
+        "Labor"
+      ]
+    }
+  ],
+  "removed_fuzzy_clarifications": [
+    "Who donates tehmost to Labor?",
+    "Who givvinng the most money to Labor?",
+    "Who are the top fundes to Labor?",
+    "Who gives the most money to LAP?"
+  ],
+  "json_sse_regression_responses": 12,
+  "json_sse_reproduction_and_clarification_responses": 20,
+  "removed_cases": [
+    {
+      "question": "Who donates the msot to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who are the tpo donors to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the bxxgest donor to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the lxxgest donor to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the largest donar to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top suppoxxer of Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who banxxolls Labor the most?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top benefxctor to Labor?",
+      "party": "Labor",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who donates the msot to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who are the tpo donors to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the bxxgest donor to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the lxxgest donor to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the largest donar to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top suppoxxer of the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who banxxolls the Liberal Party the most?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top benefxctor to the Liberal Party?",
+      "party": "Liberal",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who donates the msot to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who are the tpo donors to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the bxxgest donor to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the lxxgest donor to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the largest donar to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top suppoxxer of the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who banxxolls the Greens the most?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who is the top benefxctor to the Greens?",
+      "party": "Greens",
+      "form": "keyword typo"
+    },
+    {
+      "question": "Who gives the most money to Labro?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Labro?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Labour?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Labour?",
+      "party": "Labor",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Libreal?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Libreal?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Liberxx?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Liberxx?",
+      "party": "Liberal",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Greezs?",
+      "party": "Greens",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Greezs?",
+      "party": "Greens",
+      "form": "party typo"
+    },
+    {
+      "question": "Who gives the most money to Natxxnals?",
+      "party": "Nationals",
+      "form": "party typo"
+    },
+    {
+      "question": "Who are the top donors to Natxxnals?",
+      "party": "Nationals",
+      "form": "party typo"
+    }
+  ],
+  "negatives": [
+    "Who has given evidence about Labor housing policy?",
+    "Who has donated the most to Labor in Victoria?",
+    "Who is giving evidence to the Greens committee?",
+    "Who funded Labor housing research and why?",
+    "Who backed Labor in parliament?",
+    "Who supports the Liberal Party housing policy?",
+    "Who props up Labor in the opinion polls?",
+    "Who contributed to Labor housing policy?",
+    "Who is the main contributor to the Greens manifesto?",
+    "Who is the largest supporter of Labor in Victoria?",
+    "Who bankrolled Labor and the Liberal Party?",
+    "Who gave the most to Labor excluding banks?",
+    "Who is Labor’s biggest donor in Queensland?",
+    "Who is giving the most money to Labor and why?",
+    "Who has donated the most money to Labor from Westpac?",
+    "How much money did Westpac give Labor?",
+    "Which banks lent money to Labor?",
+    "What does Labor say about funding hospitals?",
+    "The bill funds hospitals.",
+    "Who backs the housing bill?",
+    "Who does Labor take advice from?",
+    "Which party receives the most receipts?",
+    "Who is the largest backer of housing reform?",
+    "What about the Greens housing policy?",
+    "What is the most popular Labor policy?",
+    "Who funds the ABC?",
+    "Greens' top priorities",
+    "What are the Nationals’ biggest policy priorities?",
+    "Who finds Labor policy most appealing?",
+    "Which Greens policy gives people the most support?",
+    "Who is the biggest supporter of Labor housing policy?",
+    "Who donated blood most often at the Labor conference?",
+    "Who is the top contributor to the Greens manifesto?",
+    "Who gave evidence on the biggest Labor policy change?",
+    "Who funds Liberty?",
+    "Who funds Nationalism?",
+    "Who founded Labor?",
+    "Who gave Labor its name?",
+    "Who gave Labor advice?",
+    "Labor's biggest donor reform bill",
+    "Who funds the Liberty Party?",
+    "Who funds the Nationalism Party?",
+    "Who founded the Greens?",
+    "Who has founded Labor?",
+    "Who founded Labor with the most money?",
+    "Who gave Labor its name in the first place?",
+    "Who gave Labor support for a bill?",
+    "Who gave the most advice to Labor?",
+    "Who gives the Greens the most support for a bill?",
+    "Who are Labor’s biggest donor reform bill supporters?",
+    "The Greens' largest donor reform bill",
+    "What is Labor’s top donor reform policy?",
+    "Who supports Labor’s top policy?",
+    "Who is Labor’s most popular leader?",
+    "Who proposed Labor’s top funding bill?",
+    "Who gave the largest speech to Labor?",
+    "Who is the largest donor to Labor housing reform?",
+    "Who are the Nationals’ top priorities aimed at?",
+    "Who gives Labor the most advice?",
+    "Who gave Labor the most support for a bill?",
+    "Who founded the Liberal Party?",
+    "Who are the biggest donors to Liberty?",
+    "Who are the biggest donors to Nationalism?",
+    "Who funds Labour?",
+    "Who funds Libreal?",
+    "Who funds Greezs?",
+    "Waht are Labor’s top priorities?",
+    "Who funds the ABC the most?"
+  ],
+  "fixed_typo_cases": [
+    {
+      "question": "Who dontes the most to Labor?",
+      "party": "Labor"
+    },
+    {
+      "question": "Who donates hte most to Labor?",
+      "party": "Labor"
+    },
+    {
+      "question": "Who donates teh most to Labor?",
+      "party": "Labor"
+    },
+    {
+      "question": "Who gives the most moeny to Labor?",
+      "party": "Labor"
+    },
+    {
+      "question": "Who gives donatoins to Labor?",
+      "party": "Labor"
+    },
+    {
+      "question": "Who dontes the most to the Liberal Party?",
+      "party": "Liberal"
+    },
+    {
+      "question": "Who donates hte most to the Liberal Party?",
+      "party": "Liberal"
+    },
+    {
+      "question": "Who donates teh most to the Liberal Party?",
+      "party": "Liberal"
+    },
+    {
+      "question": "Who gives the most moeny to the Liberal Party?",
+      "party": "Liberal"
+    },
+    {
+      "question": "Who gives donatoins to the Liberal Party?",
+      "party": "Liberal"
+    },
+    {
+      "question": "Who dontes the most to the Greens?",
+      "party": "Greens"
+    },
+    {
+      "question": "Who donates hte most to the Greens?",
+      "party": "Greens"
+    },
+    {
+      "question": "Who donates teh most to the Greens?",
+      "party": "Greens"
+    },
+    {
+      "question": "Who gives the most moeny to the Greens?",
+      "party": "Greens"
+    },
+    {
+      "question": "Who gives donatoins to the Greens?",
+      "party": "Greens"
+    }
+  ]
+}

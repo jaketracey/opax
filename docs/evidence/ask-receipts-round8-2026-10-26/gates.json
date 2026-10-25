@@ -1,0 +1,30 @@
+{
+  "completed_utc": "2026-10-25T13:29:47.360104+00:00",
+  "npm_ci": 0,
+  "build_search_before_suite": 0,
+  "stamp": 0,
+  "focused_suite": {
+    "exit_code": 0,
+    "tests": 95,
+    "passed": 95,
+    "failed": 0
+  },
+  "portal_suite": {
+    "exit_code": 0,
+    "tests": 3746,
+    "passed": 3746,
+    "failed": 0
+  },
+  "tsc_no_emit": 0,
+  "check": 0,
+  "wrangler_deploy_dry_run": 0,
+  "replay": 0,
+  "restored_build_churn": [
+    "portal/public/ask-statute-titles.json",
+    "portal/public/graph/party-members.json",
+    "portal/public/search-catalog/manifest.json"
+  ],
+  "protected_dataset_hashes_verified": 9,
+  "model_calls": 0,
+  "production_requests": 0
+}

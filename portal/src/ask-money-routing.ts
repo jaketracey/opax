@@ -2,7 +2,7 @@ import type {RecordQuestion} from './ask-records'
 import {rankedMoneyAnswer, fundingResearchFollowUp} from './ask-money'
 import {fundingContinuation, fundingUserTurns} from './ask-money-followup'
 import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification} from './ask-money-family'
-export {federalPartyRankingQuestion,federalPartyRankingIntent,receiptKeywordDistance} from './ask-money-family'
+export {federalPartyRankingQuestion,federalPartyRankingIntent} from './ask-money-family'
 
 export type PartyMoneyAnswer=NonNullable<Awaited<ReturnType<typeof rankedMoneyAnswer>>>&{money_route:'federal-party-ranking-v1'}
 /** Resolve before model selection, model prose, cache reads or paid overview. */

@@ -1,0 +1,50 @@
+# Replay differences
+
+All 158 answers are byte-identical to the reviewed Round 7 replay. The 112 non-family payloads are identical to main. The following 46 family payloads differ from main because they use the deterministic receipts calculator (42 calculated tables, four evidence gaps).
+
+- r4/MONEY-YEAR: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/COH-PHON: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/COH-GREENS: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/COH-LIB: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/COH-LAB: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/COH-NAT: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D01-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D01-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D01-T3: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D02-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D03-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D04-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D04-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D04-T3: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D05-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D05-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D06-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D06-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D07-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D07-T3: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D09-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D09-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- r4/FOLLOW-D10-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/MONEY-YEAR: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/COH-PHON: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/COH-GREENS: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/COH-LIB: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/COH-LAB: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/COH-NAT: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D01-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D01-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D01-T3: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D02-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D03-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D04-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D04-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D04-T3: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D05-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D05-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D06-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D06-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D07-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D07-T3: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D09-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D09-T2: Replace the family response with the complete federal receipts calculator answer; no model prose.
+- B/FOLLOW-D10-T1: Replace the family response with the complete federal receipts calculator answer; no model prose.

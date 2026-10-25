@@ -195,7 +195,7 @@ test('voice uses the shared family calculator, with its entire table and citatio
 
 test('voice recognises plural, contracted, misspelled and uncertain family requests',async()=>{
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
- for(const query of ["Who are the Greens' top donors?","Who's been giving the most money to the Greens?",'who donates teh most to labor','Who givvinng the most money to Labor?'])for(const tool of ['search_records','find_connections']){
+ for(const query of ["Who are the Greens' top donors?","Who's been giving the most money to the Greens?",'who donates teh most to labor','Who Labor top donors?'])for(const tool of ['search_records','find_connections']){
   const out=await runVoiceTool(tool,{query},env,async()=>{throw Error('Long-tail family reached generic retrieval')});
   assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.ok(['calculated','needs_scope'].includes(out.data.answer_status));
  }

@@ -16,6 +16,9 @@ export function isMoneyRanking(input: RecordQuestion): boolean {
   const q=input.question||''
   if(input.kind && !['all','receipt'].includes(input.kind) || input.speaker || input.chamber || input.topic || input.context?.length) return false
   if(/\b(?:say|said|says|speeches?|stance|position|vot\w*|influence|favours?|why|personal\w*|MPs?|senators?|politicians?|grants?|contracts?|blood|organ|charity|except|excluding|without|percent\w*|share|average|inflation|real terms)\b/i.test(q)) return false
+  // Non-financial purposes and bill/policy titles must not be rescued by the
+  // generic ranking fallback after the closed family grammar declines them.
+  if(/\b(?:bills?|polic(?:y|ies)|advice|name)\b/i.test(q))return false
   // Ordinary recipient questions often omit "money". Admit a known industry
   // after "from"; the calculator still validates every remaining scope word.
   const recipientIndustry=/^\s*(?:who|which\s+(?:party|parties))\s+(?:takes?|gets?|receives?)\b[^?!.]*\bfrom\s+(.+?)\s*[?!.]*$/i.exec(q)
