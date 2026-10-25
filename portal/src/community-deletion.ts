@@ -1,9 +1,11 @@
 import {body,CommunityError,digest,json,limit,now,randomToken,sameOrigin,type Member} from './community-core'
 import {macHex,matchesSignInCode,randomSignInCode,requireSignInCodeSecret,signInCodeMac} from './community-signin-code'
+import {REVIEWER_EMAILS,reviewerLoginEnabled} from './community-auth'
 
 const FAILURE='This deletion could not be completed. Request a new deletion code and try again.'
 const UNAVAILABLE='This action could not be completed. Please try again shortly.'
 const CODE_LIFETIME=900
+const encoder=new TextEncoder()
 
 /** A valid session grants deletion of its own account even after moderation.
  * Keep this separate from normal member authentication: no other writes gain access. */
@@ -33,13 +35,14 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
  const m=await deletionMember(req,env)
  if(!m)throw new CommunityError(401,'Sign in to continue.')
  await requireDeletionSchema(env)
- const issuing=path.endsWith('/deletion-code')
+ const issuing=path.endsWith('/deletion-code'),reviewer=REVIEWER_EMAILS.includes(m.email)
  try{
   if(issuing){
    await body(req,2000)
    await limit(env,'login-ip:'+(req.headers.get('cf-connecting-ip')||'local'),15,3600)
    await limit(env,'login-email:'+m.email.toLowerCase(),5,3600)
-   const challengeId=randomToken(),code=randomSignInCode(),t=now()
+   if(reviewer&&!reviewerLoginEnabled(env))throw new CommunityError(503,UNAVAILABLE)
+   const challengeId=randomToken(),code=reviewer?env.REVIEWER_LOGIN_CODE!:randomSignInCode(),t=now()
    const mac=macHex(await signInCodeMac(env,challengeId,code,m.id))
    const results=await env.COMMUNITY_DB.batch([
     env.COMMUNITY_DB.prepare('UPDATE community_deletion_challenges SET superseded_at=?,expires_at=? WHERE member_id=? AND used_at IS NULL AND superseded_at IS NULL').bind(t,t,m.id),
@@ -48,7 +51,7 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
    ])
    if(!results[1].meta.changes)throw new CommunityError(400,FAILURE)
    // Never include a sign-in link or expose the code in the HTTP response/logs.
-   try{await env.COMMUNITY_EMAIL.send({from:{email:env.COMMUNITY_EMAIL_FROM,name:'Opax'},to:m.email,subject:'Confirm your Opax account deletion',text:`Your Opax account deletion code: ${code}\n\nIt expires in 15 minutes. Enter it only if you requested permanent account deletion. Never share this code. If you did not request deletion, ignore this email.`})}
+   try{if(!reviewer)await env.COMMUNITY_EMAIL.send({from:{email:env.COMMUNITY_EMAIL_FROM,name:'Opax'},to:m.email,subject:'Confirm your Opax account deletion',text:`Your Opax account deletion code: ${code}\n\nIt expires in 15 minutes. Enter it only if you requested permanent account deletion. Never share this code. If you did not request deletion, ignore this email.`})}
    catch{await env.COMMUNITY_DB.prepare('DELETE FROM community_deletion_challenges WHERE challenge_id=?').bind(challengeId).run();throw new CommunityError(503,UNAVAILABLE)}
    return json({sent:true,challenge_id:challengeId,message:'Check your email for a deletion code. It expires in 15 minutes.'})
   }
@@ -60,11 +63,16 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
   if(!proof)throw new CommunityError(400,FAILURE)
   await limit(env,'consume-code-email:'+await digest(m.email.toLowerCase()),10,86400)
   const admitted=await env.COMMUNITY_DB.prepare('UPDATE community_deletion_challenges SET attempts=attempts+1 WHERE challenge_id=? AND member_id=? AND used_at IS NULL AND superseded_at IS NULL AND expires_at>? AND attempts<5 RETURNING code_mac').bind(challengeId,m.id,now()).first<{code_mac:string}>()
-  if(!admitted||typeof data.code!=='string'||!/^\d{8}$/.test(data.code)||!await matchesSignInCode(env,challengeId!,data.code,admitted.code_mac,m.id))throw new CommunityError(400,FAILURE)
+  if(!admitted||typeof data.code!=='string'||!/^\d{8}$/.test(data.code))throw new CommunityError(400,FAILURE)
+  // Keep the existing challenge/member MAC, expiry and admissions. Recheck the
+  // live reviewer binding as well, so disabling or rotating it revokes old proofs.
+  if(reviewer&&(!reviewerLoginEnabled(env)||!crypto.subtle.timingSafeEqual(encoder.encode(data.code),encoder.encode(env.REVIEWER_LOGIN_CODE!))))throw new CommunityError(400,FAILURE)
+  if(!await matchesSignInCode(env,challengeId!,data.code,admitted.code_mac,m.id))throw new CommunityError(400,FAILURE)
   const session=req.headers.get('cookie')!.split(';').map(s=>s.trim()).find(s=>s.startsWith('__Host-opax_session='))!.slice(20)
   const sessionHash=await digest(session),limitKeys=await accountLimitKeys(m,now()),t=now()
   const results=await env.COMMUNITY_DB.batch(deletionBatch(env,m,challengeId!,sessionHash,t,limitKeys))
   if(!results[0].meta.changes)throw new CommunityError(400,FAILURE)
+  if(reviewer)console.log(JSON.stringify({event:'community_reviewer_deletion',timestamp:new Date().toISOString(),colo:req.cf?.colo??null}))
   return json({deleted:true,signed_out:true,message:'Your account and authored content have been deleted.'},200,{'set-cookie':'__Host-opax_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0'})
  }catch(e){
   if(e instanceof CommunityError)throw new CommunityError(e.status===503?503:400,e.status===503?UNAVAILABLE:FAILURE)
