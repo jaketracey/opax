@@ -1,0 +1,14 @@
+{
+  "baseline": "12ce00e22814398b3c10ff4599f89f0dbe0fbde5",
+  "input": "/Users/jake/Projects/opax-ios-wt/ask-written-answers-b/portal/private/ask-post-deploy-r3/replay.json",
+  "arms": {
+    "r4": 79,
+    "B": 79
+  },
+  "payloads": 158,
+  "comparison": "groundAnswerPayload output at baseline versus current, using the same saved input; answer and citations",
+  "differences": [],
+  "network_requests": 0,
+  "model_calls": 0,
+  "spend_usd": 0
+}

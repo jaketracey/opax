@@ -1,0 +1,298 @@
+{
+  "baseline": "12ce00e22814398b3c10ff4599f89f0dbe0fbde5",
+  "graphs": {
+    "money.json": {
+      "generated": "2026-10-18",
+      "receipt_edges": 866,
+      "receipt_edge_fields": [
+        "byYear",
+        "count",
+        "firstYear",
+        "lastYear",
+        "source",
+        "target",
+        "total",
+        "undated"
+      ],
+      "classification_fields": [],
+      "donor_reference_return_types": {
+        "AEC annual return": 7679,
+        "icacpls": 1822,
+        "ECQ direct": 770,
+        "AEC election return": 1
+      },
+      "declared_type_exclusions": null,
+      "declared_political_donation_flags": null
+    },
+    "money.qld.json": {
+      "generated": "2026-10-18",
+      "receipt_edges": 375,
+      "receipt_edge_fields": [
+        "byYear",
+        "count",
+        "firstYear",
+        "lastYear",
+        "source",
+        "target",
+        "total",
+        "undated"
+      ],
+      "classification_fields": [],
+      "donor_reference_return_types": {
+        "ECQ gift": 1829
+      },
+      "declared_type_exclusions": {},
+      "declared_political_donation_flags": {
+        "political_donation": 2500,
+        "gift_not_political_donation": 5229,
+        "unflagged": 15130
+      }
+    },
+    "money.vic.json": {
+      "generated": "2026-10-18",
+      "receipt_edges": 302,
+      "receipt_edge_fields": [
+        "byYear",
+        "count",
+        "firstYear",
+        "lastYear",
+        "source",
+        "target",
+        "total"
+      ],
+      "classification_fields": [],
+      "donor_reference_return_types": {
+        "VEC donation return": 548
+      },
+      "declared_type_exclusions": {},
+      "declared_political_donation_flags": null
+    },
+    "money.tas.json": {
+      "generated": "2026-10-18",
+      "receipt_edges": 178,
+      "receipt_edge_fields": [
+        "byYear",
+        "count",
+        "firstYear",
+        "lastYear",
+        "source",
+        "target",
+        "total"
+      ],
+      "classification_fields": [],
+      "donor_reference_return_types": {
+        "TEC disclosure": 184
+      },
+      "declared_type_exclusions": {
+        "loan": 1
+      },
+      "declared_political_donation_flags": null
+    }
+  },
+  "examples": [
+    {
+      "party": "Labor",
+      "receipt_edge": {
+        "source": "donor:westpac banking corporation",
+        "target": "party:Labor",
+        "total": 55227183,
+        "count": 500,
+        "firstYear": 1998,
+        "lastYear": 2025,
+        "byYear": {
+          "1998": [
+            1329164,
+            20
+          ],
+          "1999": [
+            590401,
+            14
+          ],
+          "2000": [
+            1179863,
+            5
+          ],
+          "2001": [
+            983481,
+            15
+          ],
+          "2002": [
+            1071813,
+            20
+          ],
+          "2003": [
+            2067448,
+            14
+          ],
+          "2004": [
+            3956606,
+            33
+          ],
+          "2005": [
+            178398,
+            22
+          ],
+          "2006": [
+            3251337,
+            21
+          ],
+          "2007": [
+            8428922,
+            7
+          ],
+          "2008": [
+            1073848,
+            17
+          ],
+          "2009": [
+            1559699,
+            19
+          ],
+          "2010": [
+            3242274,
+            25
+          ],
+          "2011": [
+            127569,
+            26
+          ],
+          "2012": [
+            5709028,
+            36
+          ],
+          "2013": [
+            160800,
+            24
+          ],
+          "2014": [
+            5167650,
+            28
+          ],
+          "2015": [
+            4178638,
+            23
+          ],
+          "2016": [
+            1088050,
+            9
+          ],
+          "2017": [
+            3106815,
+            15
+          ],
+          "2018": [
+            1570800,
+            12
+          ],
+          "2019": [
+            683400,
+            7
+          ],
+          "2020": [
+            606513,
+            13
+          ],
+          "2021": [
+            2614606,
+            26
+          ],
+          "2022": [
+            110579,
+            14
+          ],
+          "2023": [
+            71700,
+            15
+          ],
+          "2024": [
+            1115298,
+            19
+          ],
+          "2025": [
+            2483,
+            1
+          ]
+        }
+      },
+      "latest_debt": {
+        "year": "2024-25",
+        "westpac_rows": [
+          {
+            "name": "Westpac Banking Corporation",
+            "amount": 33680,
+            "type": "Financial",
+            "to": [
+              "Australian Labor Party (ALP)"
+            ]
+          }
+        ],
+        "basis": "Outstanding debt at 30 June, not an identified receipt or new lending flow",
+        "receipt_link_available": false
+      }
+    },
+    {
+      "party": "One Nation",
+      "receipt_edge": {
+        "source": "donor:westpac banking corporation",
+        "target": "party:One Nation",
+        "total": 161787,
+        "count": 4,
+        "firstYear": 1998,
+        "lastYear": 2024,
+        "byYear": {
+          "1998": [
+            7183,
+            1
+          ],
+          "2022": [
+            104604,
+            2
+          ],
+          "2024": [
+            50000,
+            1
+          ]
+        }
+      },
+      "latest_debt": {
+        "year": "2024-25",
+        "westpac_rows": [
+          {
+            "name": "Westpac",
+            "amount": 100000,
+            "type": "Financial",
+            "to": [
+              "Pauline Hanson's One Nation"
+            ]
+          }
+        ],
+        "basis": "Outstanding debt at 30 June, not an identified receipt or new lending flow",
+        "receipt_link_available": false
+      }
+    }
+  ],
+  "debt_source": "AEC Transparency Register annual returns (AllAnnualData bundle) via parli.db ext_aec_debts / ext_aec_benefits / ext_aec_returns",
+  "debt_notes": [
+    "Debts are balances owed at 30 June as listed on the lodger's own annual return: bank loans sit beside trade creditors and tax owed. The register's Financial / Non-financial institution flag is carried per creditor.",
+    "Party figures sum every branch that lodged a Political Party Return under that party's name; state branches and the federal secretariat are separate returns.",
+    "Discretionary benefits are payments from Commonwealth, state or local government other than public election funding; the register itemises them from 2018-19.",
+    "Return totals are the lodger's own headline figures; itemised receipts cover only lines above the disclosure threshold, so they sum to less than total receipts.",
+    "Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice."
+  ],
+  "protected_data": {
+    "votes.json": {
+      "sha256": "15e3438d9f74d0eb8863a7839d10f7dcf684f3fd734be29162f5ff118575bf8d",
+      "baseline_sha256": "15e3438d9f74d0eb8863a7839d10f7dcf684f3fd734be29162f5ff118575bf8d",
+      "byte_identical": true
+    },
+    "pay.json": {
+      "sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722",
+      "baseline_sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722",
+      "byte_identical": true
+    }
+  },
+  "conclusion": "Federal receipt edges cannot distinguish gifts, loans, borrowings or other receipts. Debt balances cannot be subtracted from receipt flows.",
+  "network_requests": 0,
+  "model_calls": 0,
+  "spend_usd": 0
+}

@@ -1,0 +1,697 @@
+{
+  "note": "Unchanged local baseline probes, not corrected gifts-only evals; no network or provider calls.",
+  "rows": [
+    {
+      "question": "Who gives the most money to Labor?",
+      "path": "deterministic",
+      "payload": {
+        "answer": "**Westpac Banking Corporation** has the largest disclosed total to Labor in this published selection: **$55,227,183**.\n\n**Financial years: 1998–99 to 2025–26.** 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.\n\n| Donor | Disclosed receipts | Records |\n| --- | ---: | ---: |\n| [Westpac Banking Corporation](/subject/donor/Westpac%20Banking%20Corporation) | $55,227,183 | 500 |\n| [Shop Distributive & Allied Employees' Association Vic Branch](/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association) | $42,837,142 | 533 |\n| [CFMEU Mining & Energy Division](/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union) | $32,152,941 | 751 |\n| [Australian Workers Union](/subject/donor/The%20Australian%20Workers%27%20Union) | $19,907,893 | 588 |\n| [Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division](/subject/donor/Communications%2C%20Electrical%20and%20Plumbing%20Union%20of%20Australia) | $17,926,857 | 696 |\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.\n\n[Explore these records](https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor) · [Download the calculation data](https://opax.com.au/graph/money.json)",
+        "citations": {
+          "receipt-ranking-0": [
+            [
+              117,
+              118
+            ]
+          ],
+          "receipt-ranking-1": [
+            [
+              510,
+              511
+            ]
+          ],
+          "receipt-ranking-2": [
+            [
+              677,
+              678
+            ]
+          ],
+          "receipt-ranking-3": [
+            [
+              826,
+              827
+            ]
+          ],
+          "receipt-ranking-4": [
+            [
+              931,
+              932
+            ]
+          ],
+          "receipt-ranking-5": [
+            [
+              1135,
+              1136
+            ]
+          ]
+        },
+        "sources": [
+          {
+            "resource": "receipt-ranking-0",
+            "title": "How these funding totals were calculated",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor",
+            "kind": "receipt",
+            "snippet": "Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 306 donors during 1998–99 to 2025–26. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-1",
+            "title": "Westpac Banking Corporation: $55,227,183",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Awestpac+banking+corporation",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Awestpac+banking+corporation",
+            "kind": "receipt",
+            "snippet": "Westpac Banking Corporation: $55,227,183, 500 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-2",
+            "title": "Shop Distributive & Allied Employees' Association Vic Branch: $42,837,142",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Ashop+distributive+and+allied+employees+association",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Ashop+distributive+and+allied+employees+association",
+            "kind": "receipt",
+            "snippet": "Shop Distributive & Allied Employees' Association Vic Branch: $42,837,142, 533 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-3",
+            "title": "CFMEU Mining & Energy Division: $32,152,941",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aconstruction+forestry+maritime+mining+and+energy+union",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aconstruction+forestry+maritime+mining+and+energy+union",
+            "kind": "receipt",
+            "snippet": "CFMEU Mining & Energy Division: $32,152,941, 751 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-4",
+            "title": "Australian Workers Union: $19,907,893",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aaustralian+workers+union",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aaustralian+workers+union",
+            "kind": "receipt",
+            "snippet": "Australian Workers Union: $19,907,893, 588 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-5",
+            "title": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division: $17,926,857",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Acommunications+electrical+and+plumbing+union+of+australia",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Acommunications+electrical+and+plumbing+union+of+australia",
+            "kind": "receipt",
+            "snippet": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division: $17,926,857, 696 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          }
+        ],
+        "answer_status": "calculated",
+        "money_ranking": true,
+        "coverage": {
+          "since": "1998-01-01",
+          "until": "2025-12-31",
+          "as_of": "2026-10-18",
+          "matched": true,
+          "basis": "financial_year_start",
+          "note": "Years identify financial years by starting year, not calendar-year totals; only matching recorded receipts in the published selection."
+        },
+        "money_context": "**Financial years: 1998–99 to 2025–26.** 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.",
+        "money_question": "Who donates the most to Labor in federal records?",
+        "money_facts": {
+          "question": "Who donates the most to Labor in federal records?",
+          "ranked_by": "donor",
+          "selection": "Financial years: 1998–99 to 2025–26. 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.",
+          "rows": [
+            {
+              "name": "Westpac Banking Corporation",
+              "amount": "$55,227,183",
+              "records": "500 disclosed receipt records"
+            },
+            {
+              "name": "Shop Distributive & Allied Employees' Association Vic Branch",
+              "amount": "$42,837,142",
+              "records": "533 disclosed receipt records"
+            },
+            {
+              "name": "CFMEU Mining & Energy Division",
+              "amount": "$32,152,941",
+              "records": "751 disclosed receipt records"
+            },
+            {
+              "name": "Australian Workers Union",
+              "amount": "$19,907,893",
+              "records": "588 disclosed receipt records"
+            },
+            {
+              "name": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division",
+              "amount": "$17,926,857",
+              "records": "696 disclosed receipt records"
+            }
+          ],
+          "derived": [
+            "Gap between Westpac Banking Corporation and Shop Distributive & Allied Employees' Association Vic Branch: $12,390,041",
+            "Everything below Westpac Banking Corporation, added together: $112,824,833",
+            "Westpac Banking Corporation's share of the shown total ($168,052,016): 33%"
+          ],
+          "limits": [
+            "These are party receipts, not personal payments to politicians.",
+            "Not every receipt is a gift.",
+            "Only donors in Opax’s published selection are counted, not every donor.",
+            "An industry grouping is not proof of coordinated lobbying or influence.",
+            "Amounts are not adjusted for inflation."
+          ]
+        },
+        "scope": {
+          "state": "federal"
+        }
+      }
+    },
+    {
+      "question": "Who donates the most to Labor?",
+      "path": "deterministic",
+      "payload": {
+        "answer": "**Westpac Banking Corporation** has the largest disclosed total to Labor in this published selection: **$55,227,183**. These figures rank disclosed receipts, which include more than gifts; they are not a donations-only ranking.\n\n**Financial years: 1998–99 to 2025–26.** 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.\n\n| Donor | Disclosed receipts | Records |\n| --- | ---: | ---: |\n| [Westpac Banking Corporation](/subject/donor/Westpac%20Banking%20Corporation) | $55,227,183 | 500 |\n| [Shop Distributive & Allied Employees' Association Vic Branch](/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association) | $42,837,142 | 533 |\n| [CFMEU Mining & Energy Division](/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union) | $32,152,941 | 751 |\n| [Australian Workers Union](/subject/donor/The%20Australian%20Workers%27%20Union) | $19,907,893 | 588 |\n| [Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division](/subject/donor/Communications%2C%20Electrical%20and%20Plumbing%20Union%20of%20Australia) | $17,926,857 | 696 |\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.\n\n[Explore these records](https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor) · [Download the calculation data](https://opax.com.au/graph/money.json)",
+        "citations": {
+          "receipt-ranking-0": [
+            [
+              226,
+              227
+            ]
+          ],
+          "receipt-ranking-1": [
+            [
+              619,
+              620
+            ]
+          ],
+          "receipt-ranking-2": [
+            [
+              786,
+              787
+            ]
+          ],
+          "receipt-ranking-3": [
+            [
+              935,
+              936
+            ]
+          ],
+          "receipt-ranking-4": [
+            [
+              1040,
+              1041
+            ]
+          ],
+          "receipt-ranking-5": [
+            [
+              1244,
+              1245
+            ]
+          ]
+        },
+        "sources": [
+          {
+            "resource": "receipt-ranking-0",
+            "title": "How these funding totals were calculated",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor",
+            "kind": "receipt",
+            "snippet": "Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 306 donors during 1998–99 to 2025–26. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-1",
+            "title": "Westpac Banking Corporation: $55,227,183",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Awestpac+banking+corporation",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Awestpac+banking+corporation",
+            "kind": "receipt",
+            "snippet": "Westpac Banking Corporation: $55,227,183, 500 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-2",
+            "title": "Shop Distributive & Allied Employees' Association Vic Branch: $42,837,142",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Ashop+distributive+and+allied+employees+association",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Ashop+distributive+and+allied+employees+association",
+            "kind": "receipt",
+            "snippet": "Shop Distributive & Allied Employees' Association Vic Branch: $42,837,142, 533 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-3",
+            "title": "CFMEU Mining & Energy Division: $32,152,941",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aconstruction+forestry+maritime+mining+and+energy+union",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aconstruction+forestry+maritime+mining+and+energy+union",
+            "kind": "receipt",
+            "snippet": "CFMEU Mining & Energy Division: $32,152,941, 751 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-4",
+            "title": "Australian Workers Union: $19,907,893",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aaustralian+workers+union",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Aaustralian+workers+union",
+            "kind": "receipt",
+            "snippet": "Australian Workers Union: $19,907,893, 588 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          },
+          {
+            "resource": "receipt-ranking-5",
+            "title": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division: $17,926,857",
+            "href": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Acommunications+electrical+and+plumbing+union+of+australia",
+            "url": "/money?jur=federal&type=receipts&party=party%3ALabor&focus=donor%3Acommunications+electrical+and+plumbing+union+of+australia",
+            "kind": "receipt",
+            "snippet": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division: $17,926,857, 696 disclosed receipt records. Period: 1998–99 to 2025–26. Based on AEC political disclosure records in this published selection.",
+            "cited": true,
+            "source": "AEC political disclosure records",
+            "dateLabel": "Calculated by Opax",
+            "date": "2026-10-18"
+          }
+        ],
+        "answer_status": "calculated",
+        "money_ranking": true,
+        "coverage": {
+          "since": "1998-01-01",
+          "until": "2025-12-31",
+          "as_of": "2026-10-18",
+          "matched": true,
+          "basis": "financial_year_start",
+          "note": "Years identify financial years by starting year, not calendar-year totals; only matching recorded receipts in the published selection."
+        },
+        "money_context": "**Financial years: 1998–99 to 2025–26.** 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.",
+        "money_question": "Who donates the most to Labor in federal records?",
+        "money_facts": {
+          "question": "Who donates the most to Labor in federal records?",
+          "ranked_by": "donor",
+          "selection": "Financial years: 1998–99 to 2025–26. 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.",
+          "rows": [
+            {
+              "name": "Westpac Banking Corporation",
+              "amount": "$55,227,183",
+              "records": "500 disclosed receipt records"
+            },
+            {
+              "name": "Shop Distributive & Allied Employees' Association Vic Branch",
+              "amount": "$42,837,142",
+              "records": "533 disclosed receipt records"
+            },
+            {
+              "name": "CFMEU Mining & Energy Division",
+              "amount": "$32,152,941",
+              "records": "751 disclosed receipt records"
+            },
+            {
+              "name": "Australian Workers Union",
+              "amount": "$19,907,893",
+              "records": "588 disclosed receipt records"
+            },
+            {
+              "name": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division",
+              "amount": "$17,926,857",
+              "records": "696 disclosed receipt records"
+            }
+          ],
+          "derived": [
+            "Gap between Westpac Banking Corporation and Shop Distributive & Allied Employees' Association Vic Branch: $12,390,041",
+            "Everything below Westpac Banking Corporation, added together: $112,824,833",
+            "Westpac Banking Corporation's share of the shown total ($168,052,016): 33%"
+          ],
+          "limits": [
+            "These are party receipts, not personal payments to politicians.",
+            "Not every receipt is a gift.",
+            "Only donors in Opax’s published selection are counted, not every donor.",
+            "An industry grouping is not proof of coordinated lobbying or influence.",
+            "Amounts are not adjusted for inflation."
+          ]
+        },
+        "scope": {
+          "state": "federal"
+        }
+      }
+    },
+    {
+      "question": "Who funds the Liberal Party?",
+      "path": "deterministic",
+      "payload": null
+    },
+    {
+      "question": "Who does Pauline Hanson's party take the most money from?",
+      "path": "deterministic",
+      "payload": {
+        "answer": "Please name the donor, industry or recipient party you want to compare. You can [browse the names in the money map](https://opax.com.au/money). I could not match the whole question, so I have not calculated a total.",
+        "citations": {},
+        "sources": [],
+        "answer_status": "needs_scope",
+        "money_ranking": true
+      }
+    },
+    {
+      "question": "Which banks lent money to Labor?",
+      "path": "deterministic",
+      "payload": null
+    },
+    {
+      "question": "who does pauline hansons party take the most money from",
+      "path": "saved-research-grounding",
+      "payload": {
+        "answer": "Across disclosed returns from 1998-99 to 2025-26 in OPAX’s published selection, Westpac Banking Corporation provided the most disclosed funding to One Nation: $161,787.\n\n- Australian Hotels Association (NSW) provided disclosed funding: $126,996.\n\n- National Australia Bank provided disclosed funding: $19,715.\n\n- Registered Clubs Association of NSW (t/as ClubsNSW) provided disclosed funding: $3,000.\n\nThese disclosed party receipts include more than gifts and cover only the published selection; undisclosed receipts below the disclosure threshold make totals a lower bound, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech.",
+        "citations": {
+          "fact-1/t/body/0": [
+            [
+              0,
+              168
+            ]
+          ],
+          "fact-2/t/body/0": [
+            [
+              170,
+              245
+            ]
+          ],
+          "fact-5/t/body/0": [
+            [
+              247,
+              309
+            ]
+          ],
+          "fact-9/t/body/0": [
+            [
+              311,
+              400
+            ]
+          ],
+          "coverage/t/body/0": [
+            [
+              402,
+              706
+            ]
+          ]
+        },
+        "sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Westpac Banking Corporation to One Nation — AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Westpac%20Banking%20Corporation",
+            "url": "https://opax.com.au/subject/donor/Westpac%20Banking%20Corporation",
+            "snippet": "Westpac Banking Corporation gave One Nation $161,787 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/\nDonor: Westpac Banking Corporation — $161,787. Financial years: 1998-99 to 2025-26.\nWestpac Banking Corporation gave One Nation $161,787 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "claim_atoms": [
+              {
+                "entity": "Westpac Banking Corporation",
+                "metric": "receipts",
+                "value": "161787",
+                "unit": "AUD/year",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-1/t/body/0"
+              },
+              {
+                "entity": "Westpac Banking Corporation",
+                "metric": "count",
+                "value": "99",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-1/t/body/0"
+              },
+              {
+                "entity": "Westpac Banking Corporation",
+                "metric": "count",
+                "value": "26",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-1/t/body/0"
+              },
+              {
+                "entity": "Westpac Banking Corporation",
+                "metric": "count",
+                "value": "12",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-1/t/body/0"
+              }
+            ]
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Australian Hotels Association (NSW) to One Nation — AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Australian%20Hotels%20Association",
+            "url": "https://opax.com.au/subject/donor/Australian%20Hotels%20Association",
+            "snippet": "Australian Hotels Association (NSW) gave One Nation $126,996 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2012-13 · https://transparency.aec.gov.au/\nDonor: Australian Hotels Association (NSW) — $126,996. Financial years: 1998-99 to 2025-26.\nAustralian Hotels Association (NSW) gave One Nation $126,996 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "claim_atoms": [
+              {
+                "entity": "Australian Hotels Association (NSW)",
+                "metric": "receipts",
+                "value": "126996",
+                "unit": "AUD/year",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-2/t/body/0"
+              },
+              {
+                "entity": "Australian Hotels Association (NSW)",
+                "metric": "count",
+                "value": "99",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-2/t/body/0"
+              },
+              {
+                "entity": "Australian Hotels Association (NSW)",
+                "metric": "count",
+                "value": "26",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-2/t/body/0"
+              },
+              {
+                "entity": "Australian Hotels Association (NSW)",
+                "metric": "count",
+                "value": "13",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-2/t/body/0"
+              }
+            ]
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "National Australia Bank to One Nation — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/National%20Australia%20Bank",
+            "url": "https://opax.com.au/subject/donor/National%20Australia%20Bank",
+            "snippet": "National Australia Bank gave One Nation $19,715 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2014-15 · https://transparency.aec.gov.au/\nDonor: National Australia Bank — $19,715. Financial years: 1998-99 to 2025-26.\nNational Australia Bank gave One Nation $19,715 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "claim_atoms": [
+              {
+                "entity": "National Australia Bank",
+                "metric": "receipts",
+                "value": "19715",
+                "unit": "AUD/year",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-5/t/body/0"
+              },
+              {
+                "entity": "National Australia Bank",
+                "metric": "count",
+                "value": "99",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-5/t/body/0"
+              },
+              {
+                "entity": "National Australia Bank",
+                "metric": "count",
+                "value": "26",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-5/t/body/0"
+              },
+              {
+                "entity": "National Australia Bank",
+                "metric": "count",
+                "value": "15",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-5/t/body/0"
+              }
+            ]
+          },
+          {
+            "resource": "fact-9",
+            "slug": "",
+            "title": "Registered Clubs Association of NSW (t/as ClubsNSW) to One Nation — AEC annual return · 2017-18 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Registered%20Clubs%20Association%20of%20NSW",
+            "url": "https://opax.com.au/subject/donor/Registered%20Clubs%20Association%20of%20NSW",
+            "snippet": "Registered Clubs Association of NSW (t/as ClubsNSW) gave One Nation $3,000 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2017-18 · https://transparency.aec.gov.au/\nDonor: Registered Clubs Association of NSW (t/as ClubsNSW) — $3,000. Financial years: 1998-99 to 2025-26.\nRegistered Clubs Association of NSW (t/as ClubsNSW) gave One Nation $3,000 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2017-18 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "claim_atoms": [
+              {
+                "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+                "metric": "receipts",
+                "value": "3000",
+                "unit": "AUD/year",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-9/t/body/0"
+              },
+              {
+                "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+                "metric": "count",
+                "value": "99",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-9/t/body/0"
+              },
+              {
+                "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+                "metric": "count",
+                "value": "26",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-9/t/body/0"
+              },
+              {
+                "entity": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+                "metric": "count",
+                "value": "18",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "fact-9/t/body/0"
+              }
+            ]
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/money/party/One%20Nation",
+            "url": "https://opax.com.au/money/party/One%20Nation",
+            "snippet": "Federal AEC donation returns, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds). These are party receipts, not personal payments to politicians, and a donation is not evidence that it influenced any vote or speech.",
+            "cited": true,
+            "kind": "record",
+            "claim_atoms": [
+              {
+                "entity": "",
+                "metric": "speeches",
+                "value": "99",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "coverage/t/body/0"
+              },
+              {
+                "entity": "",
+                "metric": "speeches",
+                "value": "26",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "coverage/t/body/0"
+              },
+              {
+                "entity": "",
+                "metric": "speeches",
+                "value": "250",
+                "unit": "count",
+                "chamber": "federal",
+                "period": {
+                  "label": "1998-99"
+                },
+                "evidenceId": "coverage/t/body/0"
+              }
+            ]
+          }
+        ],
+        "answer_decision": "answer",
+        "coherence": {
+          "stripped_ratio": 0.16981132075471694,
+          "fallback": true
+        }
+      }
+    }
+  ]
+}
