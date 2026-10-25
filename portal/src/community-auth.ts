@@ -4,7 +4,7 @@ import {macHex,matchesSignInCode,randomSignInCode,requireSignInCodeSecret,signIn
 const COOKIE='__Host-opax_session'
 const CODE_FAILURE='This code could not be used. Request a new sign-in email or use its link to sign in through your browser.'
 // Reviewed in code only; environment bindings cannot extend this allowlist.
-const REVIEWER_EMAILS:readonly string[]=['play-review@opax.com.au','app-review@opax.com.au']
+export const REVIEWER_EMAILS:readonly string[]=['play-review@opax.com.au','app-review@opax.com.au']
 const REQUEST_MINIMUM_MS=100
 const encoder=new TextEncoder()
 export function reviewerLoginEnabled(env:Env):boolean {

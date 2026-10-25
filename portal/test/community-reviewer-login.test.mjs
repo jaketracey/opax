@@ -93,7 +93,7 @@ function fixture(t){
    // Grep-style leak gate covers every captured response body, header and log.
    assert.ok(![...responses,...logs].some(line=>line.includes(fakeSecret)),'reviewer test credential leaked in an HTTP response or log');
    assert.ok(![...responses,...logs].some(line=>line.includes(fakeOperator)),'operator test credential leaked in an HTTP response or log');
-   for(const table of ['login_links','members','member_sessions','community_limits'])assert.ok(!JSON.stringify(db.prepare('SELECT * FROM '+table).all()).includes(fakeSecret),'reviewer test credential persisted in database rows');
+   for(const table of ['login_links','members','member_sessions','community_limits','community_deletion_challenges'])assert.ok(!JSON.stringify(db.prepare('SELECT * FROM '+table).all()).includes(fakeSecret),'reviewer test credential persisted in database rows');
   }finally{db.close()}
  });
  const status=async(headers={},method='GET')=>{
@@ -341,7 +341,7 @@ test('normal deletion removes the reviewer account and the next sign-in recreate
  f.db.prepare('INSERT INTO voice_access VALUES (?,1,?)').run(first.id,time());
  const secret=f.env.REVIEWER_LOGIN_CODE,headers={cookie},deletion=await f.call('account/deletion-code',{},headers);
  assert.equal(deletion.status,200);const challenge=await deletion.json();
- const code=f.outbox.at(-1).text.match(/deletion code: (\d{8})/)[1];
+ const code=f.env.REVIEWER_LOGIN_CODE;
  const deleted=await f.call('account/delete',{challenge_id:challenge.challenge_id,code},headers);
  assert.equal(deleted.status,200);assert.equal((await deleted.json()).deleted,true);
  assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,0);assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,0);
@@ -350,12 +350,13 @@ test('normal deletion removes the reviewer account and the next sign-in recreate
  assert.notEqual(second.id,first.id);assert.equal(second.display_name,'');assert.equal(second.bio,'');assert.equal(second.role,'member');assert.equal(second.disabled,0);
  const status=await f.voice(sessionCookie(response));assert.equal(status.enabled,true);assert.equal(status.remaining_seconds,600);assert.equal(status.unlimited,false);
  const source=readFileSync(new URL('../src/community-deletion.ts',import.meta.url),'utf8');
- assert.doesNotMatch(source,/REVIEWER_LOGIN_CODE|REVIEWER_EMAILS|env\.[A-Z_]+\s*=|wrangler|api\.cloudflare\.com/);
+ assert.doesNotMatch(source,/env\.[A-Z_]+\s*=|wrangler|api\.cloudflare\.com/);
+ assert.equal(f.outbox.length,0);
 });
 
 test('a concurrent deletion prevents reviewer session issuance from resurrecting an account',async t=>{
  const f=fixture(t),cookie=sessionCookie(await f.consume(await f.issue())),headers={cookie};
- const deletion=await f.call('account/deletion-code',{},headers),proof=await deletion.json(),code=f.outbox.at(-1).text.match(/deletion code: (\d{8})/)[1];
+ const deletion=await f.call('account/deletion-code',{},headers),proof=await deletion.json(),code=f.env.REVIEWER_LOGIN_CODE;
  const signin=await f.issue(),original=f.env.COMMUNITY_DB.batch;
  let reached,release;const held=new Promise(resolve=>{reached=resolve}),resume=new Promise(resolve=>{release=resolve});
  f.env.COMMUNITY_DB.batch=async statements=>{if(statements.length===2){reached();await resume}return original(statements)};
@@ -401,4 +402,124 @@ for(const {label,value} of invalidReviewerBindings)test('operator status reports
 test('authorized operator status accepts only GET and never falls through to staging',async t=>{
  const f=fixture(t),response=await f.status({authorization:'Bearer '+f.env.DAILY_POST_OPERATOR_SECRET},'POST');
  assert.equal(response.status,405);assert.equal(response.headers.get('allow'),'GET');assert.equal(response.headers.get('cache-control'),'no-store');
+});
+
+for(const email of ['play-review@opax.com.au','app-review@opax.com.au'])test('inbox-free reviewer deletion, wrong/right code and fresh sign-in: '+email,async t=>{
+ const f=fixture(t),cookie=sessionCookie(await f.consume(await f.issue(email))),headers={cookie};
+ const first=f.db.prepare('SELECT * FROM members WHERE email=?').get(email);
+ const response=await f.call('account/deletion-code',{},headers);assert.equal(response.status,200);
+ const proof=await response.json();assert.equal(f.outbox.length,0);
+ const row=()=>f.db.prepare('SELECT * FROM community_deletion_challenges WHERE challenge_id=?').get(proof.challenge_id);
+ assert.match(row().code_mac,/^[a-f0-9]{64}$/);assert.equal(row().member_id,first.id);
+ assert.equal((await f.call('account/delete',{challenge_id:proof.challenge_id,code:'00000001'},headers)).status,400);
+ assert.equal(row().attempts,1);assert.equal((await f.voice(cookie)).signed_in,true);
+ const removed=await f.call('account/delete',{challenge_id:proof.challenge_id,code:f.env.REVIEWER_LOGIN_CODE},headers);
+ assert.equal(removed.status,200);assert.equal((await removed.json()).deleted,true);assert.match(removed.headers.get('set-cookie'),/Max-Age=0/);
+ assert.equal((await f.voice(cookie)).signed_in,false);assert.equal(f.db.prepare('SELECT count(*) n FROM members WHERE email=?').get(email).n,0);
+ const audit=JSON.parse(f.logs.find(line=>line.includes('community_reviewer_deletion')));
+ assert.deepEqual(audit,{event:'community_reviewer_deletion',timestamp:audit.timestamp,colo:'SYD'});
+ const fresh=sessionCookie(await f.consume(await f.issue(email))),second=f.db.prepare('SELECT * FROM members WHERE email=?').get(email);
+ assert.notEqual(second.id,first.id);assert.equal(second.role,'member');assert.equal(second.disabled,0);
+ const voice=await f.voice(fresh);assert.equal(voice.signed_in,true);assert.equal(voice.remaining_seconds,600);assert.equal(voice.unlimited,false);
+ assert.equal(f.outbox.length,0);
+});
+
+for(const {label,value} of invalidReviewerBindings)test('review deletion disabled without email when secret is '+label,async t=>{
+ const f=fixture(t),cookie=sessionCookie(await f.consume(await f.issue())),headers={cookie};
+ const proof=await (await f.call('account/deletion-code',{},headers)).json(),old=f.env.REVIEWER_LOGIN_CODE;
+ setReviewerBinding(f.env,value);
+ assert.equal((await f.call('account/deletion-code',{},headers)).status,503);
+ assert.equal((await f.call('account/delete',{challenge_id:proof.challenge_id,code:old},headers)).status,400);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,1);assert.equal(f.outbox.length,0);
+ assert.ok(!f.logs.some(line=>line.includes('community_reviewer_deletion')));
+});
+
+test('review deletion keeps session, purpose, rotation and attempt/IP/email guards',async t=>{
+ const f=fixture(t),signin=await f.issue(),cookie=sessionCookie(await f.consume(signin)),headers={cookie};
+ let proof=await (await f.call('account/deletion-code',{},headers)).json();
+ assert.equal((await f.call('account/delete',{challenge_id:proof.challenge_id,code:f.env.REVIEWER_LOGIN_CODE})).status,401);
+ assert.equal((await f.call('account/delete',{challenge_id:signin.challenge_id,code:f.env.REVIEWER_LOGIN_CODE},headers)).status,400);
+ f.env.REVIEWER_LOGIN_CODE='00000002';
+ assert.equal((await f.call('account/delete',{challenge_id:proof.challenge_id,code:'00000000'},headers)).status,400);
+ assert.equal((await f.call('account/delete',{challenge_id:proof.challenge_id,code:'00000002'},headers)).status,400,'rotation invalidates the stored member-bound MAC');
+ proof=await (await f.call('account/deletion-code',{},headers)).json();
+ const consume=()=>f.call('account/delete',{challenge_id:proof.challenge_id,code:f.env.REVIEWER_LOGIN_CODE},headers);
+ f.seedCounter('consume:192.0.2.1',900,30);assert.equal((await consume()).status,400);
+ f.seedCounter('consume:192.0.2.1',900,0);f.seedCounter('consume-code-email:'+hash('play-review@opax.com.au'),86400,10);assert.equal((await consume()).status,400);
+ f.seedCounter('consume-code-email:'+hash('play-review@opax.com.au'),86400,0);
+ for(let i=0;i<5;i++)assert.equal((await f.call('account/delete',{challenge_id:proof.challenge_id,code:'00000001'},headers)).status,400);
+ const comparisons=f.trace.filter(line=>line==='constant-time comparison').length;
+ assert.equal((await consume()).status,400);assert.equal(f.trace.filter(line=>line==='constant-time comparison').length,comparisons);
+ assert.equal(f.db.prepare('SELECT attempts FROM community_deletion_challenges WHERE challenge_id=?').get(proof.challenge_id).attempts,5);
+ assert.equal(f.outbox.length,0);
+});
+
+test('ordinary member deletion still emails and accepts only its emailed code with reviewer secret enabled or unset',async t=>{
+ const f=fixture(t);
+ for(const configured of [true,false]){
+  if(!configured)delete f.env.REVIEWER_LOGIN_CODE;
+  const proof=await f.issue('ordinary-'+configured+'@example.test'),otp=f.outbox.at(-1).text.match(/app sign-in code: (\d{8})/)[1];
+  const cookie=sessionCookie(await f.consume(proof,otp)),headers={cookie},before=f.outbox.length;
+  const response=await f.call('account/deletion-code',{},headers);assert.equal(response.status,200);
+  const deletion=await response.json();assert.equal(f.outbox.length,before+1);
+  const mail=f.outbox.at(-1);assert.equal(mail.to,'ordinary-'+configured+'@example.test');
+  const code=mail.text.match(/deletion code: (\d{8})/)[1];
+  assert.equal((await f.call('account/delete',{challenge_id:deletion.challenge_id,code:'00000000'},headers)).status,400);
+  assert.equal((await f.call('account/delete',{challenge_id:deletion.challenge_id,code},headers)).status,200);
+ }
+ assert.ok(!f.logs.some(line=>line.includes('community_reviewer_deletion')));
+});
+
+test('real Worker/Miniflare D1: existing reviewer secret, failures, quotas, ordinary email and inbox-free deletion/recreation',async()=>{
+ const FIXTURE_CODE='00000000',REVIEW_EMAIL='app-review@opax.com.au';
+ const {localMiniflare}=await import('./local-miniflare.mjs');
+ const compiled=await build({stdin:{contents:`import {communityRoute} from './src/community';import {voiceRoute} from './src/voice';export {communityRoute,voiceRoute};`,resolveDir:new URL('..',import.meta.url).pathname},bundle:true,platform:'browser',format:'esm',write:false,external:['node:crypto']});
+ const script=compiled.outputFiles[0].text+`\nexport default {fetch(req,bindings){const env={...bindings,COMMUNITY_EMAIL:{async send(mail){return (await env.EMAIL_STUB.fetch(new Request('https://fixture.invalid/mail',{method:'POST',body:JSON.stringify(mail)}))).json()}}};const omit=req.headers.get('x-fixture-omit');if(omit)delete env[omit];return new URL(req.url).pathname==='/api/voice/status'?voiceRoute(req,env,{},()=>{throw Error('No reader calls')}):communityRoute(req,env)}};`;
+ const outbox=[],logs=[];
+ const {Log,LogLevel}=await import('miniflare');
+ class CaptureLog extends Log {logWithLevel(level,message){logs.push(String(message))}}
+ const mf=localMiniflare({workers:[{name:'app-review',modules:true,script,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'app-review-test-only'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'fixture@example.test',COMMUNITY_CODE_MAC_SECRET:'fixture-only-mac-secret-00000000000000000000000000000000',REVIEWER_LOGIN_CODE:FIXTURE_CODE,VOICE_ENABLED:'true',VOICE_AGENT_ID:'fixture-only-agent',ELEVENLABS_API_KEY:'fixture-only',VOICE_TOOL_SECRET:'fixture-only-voice-secret-0000000000000000',VOICE_MONTHLY_SECONDS:'40000'},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'fixture-only'})}},outboundService:()=>{throw Error('External network is forbidden in review tests')}}],log:new CaptureLog(LogLevel.DEBUG)});
+ try{
+  const db=await mf.getD1Database('COMMUNITY_DB','app-review');
+  for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')).sort())await db.batch(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean).map(sql=>db.prepare(sql)));
+  const responses=[];
+  const call=async(path,data,headers={})=>{
+   const response=await mf.dispatchFetch('https://opax.test'+path,{method:data===undefined?'GET':'POST',headers:{origin:'https://opax.test','content-type':'application/json',...headers},body:data===undefined?undefined:JSON.stringify(data)});
+   responses.push(await response.clone().text(),JSON.stringify([...response.headers]));return response;
+  };
+  const auth=(path,data,headers)=>call('/api/community/auth/'+path,data,headers);
+  const issue=async email=>{const r=await auth('request',{email:email??REVIEW_EMAIL,client:'ios'});assert.equal(r.status,200);return r.json()};
+  const consume=(proof,code=FIXTURE_CODE,headers)=>auth('consume-code',{challenge_id:proof.challenge_id,code},headers);
+  const clearLimits=()=>db.prepare('DELETE FROM community_limits').run();
+  let proof=await issue();assert.equal(outbox.length,0);assert.equal((await consume(proof,'00000001')).status,400);
+  const ordinary=await issue('ordinary@example.test'),otp=outbox.at(-1).text.match(/app sign-in code: (\d{8})/)[1];
+  assert.equal((await consume(ordinary)).status,400);sessionCookie(await consume(ordinary,otp));
+  const cookie=sessionCookie(await consume(proof)),headers={cookie};
+  let status=await (await call('/api/voice/status',undefined,headers)).json();
+  assert.equal(status.signed_in,true);assert.equal(status.remaining_seconds,600);assert.equal(status.unlimited,false);
+  const first=await db.prepare('SELECT * FROM members WHERE email=?').bind(REVIEW_EMAIL).first();assert.equal(first.role,'member');
+  for(const omitted of ['REVIEWER_LOGIN_CODE']){
+   const pending=await issue();assert.equal((await consume(pending,FIXTURE_CODE,{'x-fixture-omit':omitted})).status,400);
+  }
+  await clearLimits();proof=await issue();
+  for(let i=0;i<5;i++)assert.equal((await consume(proof,'00000001')).status,400);
+  assert.equal((await consume(proof)).status,400);
+  for(let i=1;i<5;i++)await issue();
+  assert.equal((await auth('request',{email:REVIEW_EMAIL,client:'ios'})).status,429);
+  await clearLimits();
+  const deletion=await (await call('/api/community/account/deletion-code',{},headers)).json();
+  assert.equal(outbox.length,1,'only the ordinary member receives email');
+  assert.equal((await call('/api/community/account/delete',{challenge_id:deletion.challenge_id,code:'00000001'},headers)).status,400);
+  const deleted=await call('/api/community/account/delete',{challenge_id:deletion.challenge_id,code:FIXTURE_CODE},headers);
+  assert.equal(deleted.status,200);assert.match(deleted.headers.get('set-cookie'),/Max-Age=0/);
+  status=await (await call('/api/voice/status',undefined,headers)).json();assert.equal(status.signed_in,false);
+  assert.equal(await db.prepare('SELECT id FROM members WHERE email=?').bind(REVIEW_EMAIL).first(),null);
+  proof=await issue();const renewed=sessionCookie(await consume(proof));
+  const second=await db.prepare('SELECT * FROM members WHERE email=?').bind(REVIEW_EMAIL).first();
+  assert.notEqual(second.id,first.id);assert.equal(second.role,'member');assert.equal(second.disabled,0);
+  assert.equal((await (await call('/api/voice/status',undefined,{cookie:renewed})).json()).signed_in,true);assert.equal(outbox.length,1);
+  for(const table of ['login_links','members','member_sessions','community_deletion_challenges'])assert.ok(!JSON.stringify(await db.prepare('SELECT * FROM '+table).all()).includes(FIXTURE_CODE));
+  const play=await issue('play-review@opax.com.au');sessionCookie(await consume(play));assert.equal(outbox.length,1);
+  assert.ok(![...responses,...logs].some(line=>line.includes(FIXTURE_CODE)));
+ }finally{await mf.dispose()}
 });
