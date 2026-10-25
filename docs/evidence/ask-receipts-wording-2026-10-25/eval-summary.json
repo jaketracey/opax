@@ -1,0 +1,60 @@
+{
+  "execution": "Offline calculated research tool and final answer boundary; no model generation",
+  "questions": [
+    {
+      "id": "RC01",
+      "question": "Who gives the most money to Labor?",
+      "lead": "Across disclosed returns from 1998–99 to 2025–26 in OPAX’s published selection, Westpac Banking Corporation was the source of the largest disclosed receipts to Labor: $55,227,183. These federal totals mix donations with other receipts such as loans, so this is not a donation ranking.",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC02",
+      "question": "Who donates the most to Labor?",
+      "lead": "Across disclosed returns from 1998–99 to 2025–26 in OPAX’s published selection, Westpac Banking Corporation was the source of the largest disclosed receipts to Labor: $55,227,183. These federal totals mix donations with other receipts such as loans, so this is not a donation ranking.",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC03",
+      "question": "Who funds the Liberal Party?",
+      "lead": "Across disclosed returns from 1998–99 to 2024–25 in OPAX’s published selection, Westpac Banking Corporation was the source of the largest disclosed receipts to Liberal: $40,608,922. These federal totals mix donations with other receipts such as loans, so this is not a donation ranking.",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC04",
+      "question": "Who does Pauline Hanson's party take the most money from?",
+      "lead": "Across disclosed returns from 1998–99 to 2024–25 in OPAX’s published selection, Westpac Banking Corporation was the source of the largest disclosed receipts to One Nation: $161,787. These federal totals mix donations with other receipts such as loans, so this is not a donation ranking.",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    },
+    {
+      "id": "RC05",
+      "question": "Which banks lent money to Labor?",
+      "lead": "The published debt records cannot establish a complete list of banks that lent money to Labor. They report balances owed at 30 June, rather than amounts newly lent, and name only the latest year’s largest creditors.",
+      "grade": "pass",
+      "wording": {
+        "safe": true,
+        "receipts_lead": true,
+        "basis": true
+      }
+    }
+  ]
+}

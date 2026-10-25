@@ -973,7 +973,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       // "Donor" on this site is a political donor. Asked to count blood donors
       // the model once listed OAM recipients it found in the passages; asked
       // to count political donors it cannot, and should say where that lives.
-      'On this site "donor", "donation" and "gave" mean money disclosed to electoral commissions by political donors, not blood or organ donation, unless the question says otherwise. ' +
+      'Unclassified electoral totals are disclosed receipts, not gifts or donations: never describe them as gave, donated or funded. Federal receipt totals mix donations with other receipts such as loans, so a receipt ranking is not a donation ranking. ' +
       (records.coverage ? `Published-record coverage: ${records.coverage} ` : '') +
       'A ranked retrieval is not an exhaustive search of parliament. Never claim a person or group made no statements merely because none appeared in these results. If the requested group is absent, say the retrieved selection does not establish its position. ' +
       'Distinguish what was said during a requested period from later recollections about that period. Do not present a later retrospective account as a contemporaneous statement. Keep the answer to about 300 words unless more detail is requested. ' +
@@ -1331,9 +1331,9 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
  */
 async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext, request: Request): Promise<{ overview: string; why: string }> {
   const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
-  const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
+  const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ version:'receipts-wording-1',epoch: env.CACHE_EPOCH, model, facts })))
   const hit = await caches.default.match(key)
-  if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  if (hit) return { overview: verifiedOverview((await hit.json<{ overview?: string }>()).overview || '',facts), why: 'hit' }
   // A paid call, so it spends the reader's Ask quota like any other answer; past
   // the limit the calculated answer goes out without its opening paragraph.
   if (await rateLimited(env.ASK_LIMITER, request)) return { overview: '', why: 'rate-limited' }
@@ -3683,12 +3683,12 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     query: true,
   },
   money: {
-    title: 'Political donations & public money map · OPAX',
+    title: 'Political receipts & public money map · OPAX',
     description: 'Follow the money in Australian politics: who donates to which party, by industry and year, and the contracts and grants that flow back, from federal and state records.',
     query: true,
   },
   'money/receipts': {
-    title: 'Political donations by donor & party · OPAX',
+    title: 'Political receipts by source & party · OPAX',
     description: 'Who gives money to Australian political parties: every disclosed receipt by donor, party, industry and year, from AEC and state electoral commission returns.',
     query: true,
   },
@@ -5240,7 +5240,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   } else if (node) {
     const what = node.industry === 'individual' ? 'donor' : `${industryLabel(node.industry)} donor`
     facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
-    tail = 'Which parties it funded.'
+    tail = 'Which parties disclosed receipts from it.'
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,

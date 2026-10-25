@@ -63,7 +63,7 @@ for(const f of golds)for(const stream of [false,true])for(const cache of [false,
  assert.equal(canReconstructRanking(payload,f.question),true)
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})},response=stream?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,f.question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.match(out.answer,/provided the most disclosed funding/);assert.ok(out.answer.includes(figure));assert.equal(coherenceCheck(f.question,out).pass,true)
+ assert.match(out.answer,/was the source of the largest disclosed receipts/);assert.ok(out.answer.includes(figure));assert.equal(coherenceCheck(f.question,out).pass,true)
 })
 for(const [question,evidence,allowed] of [
  ['Who gave the most to One Nation?',synthetic(),true],

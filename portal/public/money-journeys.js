@@ -62,7 +62,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     const header = `<div class="journey-story-top"><h2 class="journey-title">${esc(active.title)}</h2><button type="button" class="ui-button ui-icon-button" data-variant="quiet" data-action="exit" aria-label="End guided journey">×</button></div>`;
     const chooser = active.choices ? `<div class="journey-selector"><label for="journey-focus">${esc(active.selectorLabel || 'Focus')}</label><select id="journey-focus" data-focus="true" aria-label="${esc(active.selectorLabel || 'Focus')}"><option value="">Choose ${active.selectorLabel === 'Industry' ? 'an industry' : active.selectorLabel === 'Recipient' ? 'a recipient' : 'an organisation'}…</option>${active.choices.map(choice => `<option value="${esc(choice.value)}"${choice.value === active.selection ? ' selected' : ''}>${esc(choice.label)}</option>`).join('')}</select></div>` : '';
     if (!active.steps.length) {
-      story.innerHTML = `${header}<div class="journey-choice-empty">${chooser}<p class="journey-help">${esc(active.id === 'public-money' ? 'Recipients with both public-money and party-funding connections in this map.' : active.id === 'over-time' ? 'Organisations with dated receipts in both comparison windows.' : 'Choices reflect the connections available in this map.')}</p></div>`;
+      story.innerHTML = `${header}<div class="journey-choice-empty">${chooser}<p class="journey-help">${esc(active.id === 'public-money' ? 'Recipients with both public-money and party-receipt connections in this map.' : active.id === 'over-time' ? 'Organisations with dated receipts in both comparison windows.' : 'Choices reflect the connections available in this map.')}</p></div>`;
       enhancePicker();
       return;
     }

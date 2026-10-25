@@ -7,8 +7,9 @@ const jurSlot=new RegExp('^('+jurisdictions.map(([,re])=>re.source).join('|')+')
 const exact=(re,text)=>new RegExp('^(?:'+re.source+')$','i').test(text)
 export function rankingRepairQuestion(question,constraints={}, {unqualified=false}={}){
  let rest=normal(constraints.resolved_question??question),company=false,hanson=false
- const prefix=/^(who|which company) (?:gives|gave|donates|donated) the most(?: money)? to /.exec(rest)
+ const prefix=/^(who|which company) (?:(?:gives|gave|donates|donated|funds) the most(?: money)? to |has the most disclosed receipts to )/.exec(rest)
  if(prefix){company=prefix[1]==='which company';rest=rest.slice(prefix[0].length)}
+ else if(rest.startsWith('who funds '))rest=rest.slice('who funds '.length)
  else if(rest.startsWith('top donors to '))rest=rest.slice('top donors to '.length)
  else if(rest.startsWith('who does ')){hanson=true;rest=rest.slice('who does '.length)}
  else return null

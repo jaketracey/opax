@@ -55,7 +55,7 @@ test('steps are real-time, fixed text and escaped/bounded args; the answer keeps
  assert.ok(r.events.every(s=>['done','failed'].includes(s.state)&&s.ms>=0));
  assert.match(r.answer,/Counting speeches in the current parliament since July 2025\./);
  assert.match(r.answer,/Including committee hearings: Alex Example: 130 \[\d+\], Sam Sample: 94 \[\d+\], Casey Sample: 65/);
- assert.equal(stepEvent({tool:'party_donations',args:{party:'Jordan Private Name'}},1).arg,undefined);
+ assert.equal(stepEvent({tool:'party_receipts',args:{party:'Jordan Private Name'}},1).arg,undefined);
  const safe=stepEvent({tool:'member_votes',args:{keyword:'<script>'+('x'.repeat(80))}},1);assert.ok(safe.arg.length<=40);assert.doesNotMatch(safe.arg,/[<>]/);
 });
 test('confident individual donors retain links; uncertain matches link their own spelling\'s page and retain return references',async()=>{
@@ -89,7 +89,7 @@ test('a routed done payload renders exactly like a normal Ask payload, with the 
 
 test('planner partial-FY donations render an exact scoped limitation without companion figures',async()=>{
  const q='Which party spoke most about gambling, and how much gambling money did each party receive in October 2026?';
- const plan={shape:'money',steps:[{tool:'party_donations',args:{industry:'gambling'}},{tool:'count_speeches',args:{topic:'gambling',group_by:'party'}}]};
+ const plan={shape:'money',steps:[{tool:'party_receipts',args:{industry:'gambling'}},{tool:'count_speeches',args:{topic:'gambling',group_by:'party'}}]};
  const fixture={...deps,generate:async()=>({text:JSON.stringify(plan)}),
   asset:async path=>{assert.notEqual(path,'/graph/money.json','partial FY must not read donation totals');return deps.asset(path)},
   kb:async()=>({fulltext:{total:777,facets:{'/classification.labels/party':{'/classification.labels/party/Labor':777}}}})};
@@ -120,7 +120,7 @@ test('a known partial-FY limitation survives dependent received/receive planner 
    kb:async()=>{lookups++;throw Error('dependent scope must not be guessed')}};
   const run=await runAgentic(q,fixture),payload=agenticAskPayload(run,q);
   assert.equal(run.answered,true);assert.equal(payload.answer_decision,'limitation');assert.equal(lookups,0);
-  assert.equal(run.steps.length,1);assert.equal(run.steps[0].tool,'party_donations');
+  assert.equal(run.steps.length,1);assert.equal(run.steps[0].tool,'party_receipts');
   assert.match(payload.answer,/2026-10-01 to 2026-10-31/);assert.match(payload.answer,/No donation totals have been substituted/);assert.doesNotMatch(payload.answer,/\$/);
   const unrelated={...plan,steps:[plan.steps[0],{tool:'find_people',args:{name:'Alex Example'}},plan.steps[1]]};
   let rosterReads=0;

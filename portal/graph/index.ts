@@ -1802,7 +1802,7 @@ export async function mountMoneyMap(
           ? (node.flow === 'contracts'
             ? `Held by donors on this map across ${node.count.toLocaleString()} contracts · ${span}`
             : `Awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`)
-          : `Given across ${node.count.toLocaleString()} donations · ${span}`
+          : `Disclosed across ${node.count.toLocaleString()} receipt records · ${span}`
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
@@ -1854,7 +1854,7 @@ export async function mountMoneyMap(
         }
         if (node.via === 'public_money') {
           const why = el('p', 'mm-card-fine', card)
-          why.textContent = 'On the map for the public money it holds, not for the size of its donations.'
+          why.textContent = 'On the map for the public money it holds, not for the size of its disclosed receipts.'
         }
       }
       renderActions(card, node, plan, { kind: 'donor', from: node.label })
@@ -1884,8 +1884,8 @@ export async function mountMoneyMap(
       const coverage = contracts && typeof raw.meta.contracts_coverage === 'string' && raw.meta.contracts_coverage
         ? ` ${raw.meta.contracts_coverage}.` : ''
       fine.textContent = typeof source === 'string'
-        ? `${source}.${coverage} Public money is drawn the other way from donations and never summed with them; a donor ${contracts ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
-        : 'Public money is drawn the other way from donations and never summed with them.'
+        ? `${source}.${coverage} Public money is drawn the other way from party receipts and never summed with them; a donor ${contracts ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
+        : 'Public money is drawn the other way from party receipts and never summed with them.'
       renderActions(card, node, plan, {})
     } else {
       listTitle.textContent = 'Top donors shown on the map'
@@ -1985,7 +1985,7 @@ export async function mountMoneyMap(
       row(list, null, program, dollars, '', null)
     }
     const fine = el('p', 'mm-card-fine', card)
-    fine.textContent = 'Public money going the other way; not summed with the donations. A donor receiving a grant is a fact, not a finding.'
+    fine.textContent = 'Public money going the other way; not summed with party receipts. A donor receiving a grant is a fact, not a finding.'
     if (donor.grants?.rid && !/^(null|undefined)$/i.test(donor.grants.rid)) {
       action(actionRow(card), 'Open grants file', {
         name: 'Open their grants file',
@@ -2032,7 +2032,7 @@ export async function mountMoneyMap(
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     sub.textContent =
-      `Across ${(edge.count ?? 0).toLocaleString()} donations${span ? ` · ${span}` : ''}`
+      `Across ${(edge.count ?? 0).toLocaleString()} receipt records${span ? ` · ${span}` : ''}`
     inflationFineprint(card)
 
     const list = el('ul', 'mm-rows', card)

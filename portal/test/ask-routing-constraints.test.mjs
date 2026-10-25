@@ -128,9 +128,9 @@ test('English dates and months are not widened to the calendar years they contai
 
 test('FY donations use starting-year buckets and never include the following financial year',async()=>{
  const graph={nodes:[{id:'party:Labor',kind:'party',label:'Labor'},{id:'donor:Example',kind:'donor',label:'Example',industry:'mining'}],edges:[{source:'donor:Example',target:'party:Labor',total:999,count:3,byYear:{2022:[100,1],2023:[200,1],2024:[699,1]}}]}
- const deps={asset:async()=>graph,kb:async()=>({})},properties=api.TOOL_SPECS.find(t=>t.name==='party_donations').input.properties
+ const deps={asset:async()=>graph,kb:async()=>({})},properties=api.TOOL_SPECS.find(t=>t.name==='party_receipts').input.properties
  for(const question of ['donations in FY2023-24','donations from 1 July 2023 to 30 June 2024','donations from 2023-07-01 to 2024-06-30'])for(const args of [{party:'Labor'},{industry:'mining'}]){
-  const c=constraints(question),planned={tool:'party_donations',args:{...args,from_year:1998,to_year:2025}}
+  const c=constraints(question),planned={tool:'party_receipts',args:{...args,from_year:1998,to_year:2025}}
   const step=api.constrainStep(planned,c,properties),scoped=api.periodPlan({shape:'money',steps:[planned]},c.period,{}).steps[0]
   assert.deepEqual(step.args,scoped.args,question);assert.equal(step.args.from_year,2023);assert.equal(step.args.to_year,2023)
   const result=await api.partyDonations(deps,step.args),guarded=api.guardToolPeriod(result,step,c)
@@ -138,15 +138,15 @@ test('FY donations use starting-year buckets and never include the following fin
   assert.deepEqual([guarded.coverage.since,guarded.coverage.until],['2023-07-01','2024-06-30'])
   assert.doesNotMatch(JSON.stringify(api.factSheet([guarded]).facts),/999|699/)
  }
- const since=api.periodPlan({shape:'money',steps:[{tool:'party_donations',args:{party:'Labor',to_year:2023}}]},api.inferPeriod('since FY2023-24'),{}).steps[0]
+ const since=api.periodPlan({shape:'money',steps:[{tool:'party_receipts',args:{party:'Labor',to_year:2023}}]},api.inferPeriod('since FY2023-24'),{}).steps[0]
  assert.equal(since.args.to_year,undefined);assert.equal((await api.partyDonations(deps,since.args)).data.rows[0].total_aud,899)
 })
 
 test('partial-FY donation windows return only a scoped coverage explanation without reading totals',async()=>{
  const deps={asset:async()=>{throw new Error('partial FY must not read totals')},kb:async()=>({})}
- const properties=api.TOOL_SPECS.find(t=>t.name==='party_donations').input.properties
+ const properties=api.TOOL_SPECS.find(t=>t.name==='party_receipts').input.properties
  for(const q of ['donations in October 2026','donations in 2023','donations from 1 August 2023 to 30 June 2024','donations until 1 July 2024']){
-  const c=constraints(q),step=api.constrainStep({tool:'party_donations',args:{party:'Labor',from_year:1998,to_year:2025}},c,properties)
+  const c=constraints(q),step=api.constrainStep({tool:'party_receipts',args:{party:'Labor',from_year:1998,to_year:2025}},c,properties)
   assert.equal(step.args.from_year,undefined);assert.equal(step.args.to_year,undefined)
   const result=api.guardToolPeriod(await api.partyDonations(deps,step.args),step,c)
   assert.equal(result.data.coverage_only,true);assert.equal(result.coverage.matched,false)
@@ -165,7 +165,7 @@ test('exact date windows and the changed FY adapter cannot reuse old agentic cac
   assert.notEqual(await api.agenticCacheKey(question,'epoch','model',current),await api.agenticCacheKey(question,'epoch','model',old),question)
  }
  const q='donations from 2023-07-01 to 2024-06-30',p=api.inferPeriod(q)
- const oldVersion=api.AGENTIC_TOOLS_VERSION.replace('agentic-tools-15-exact-date-windows','agentic-tools-14-soft-act-fallback')
+ const oldVersion=api.AGENTIC_TOOLS_VERSION.replace(/^agentic-tools-[^/]+/,'agentic-tools-14-soft-act-fallback')
  assert.notEqual(await api.agenticCacheKey(q,'epoch','model',p),await api.agenticCacheKey(q,'epoch','model',p,oldVersion))
 })
 

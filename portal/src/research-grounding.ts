@@ -5,6 +5,7 @@ import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,dono
 import {proseFallback,type WritingInput} from './research-writing'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
+import {withReceiptWording} from './research-receipts'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
 function checkedClaims(payload:Record<string,unknown>,question:string,promote=true):Record<string,unknown> {
@@ -113,7 +114,7 @@ function citeFallbackMoney(payload:Record<string,unknown>,question:string,select
   return cleanAnswerShape({...out,coherence:{...((out.coherence??{}) as object),monetary_citations:{repaired,omitted}}})
 }
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
-export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
+function groundClaimsPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   payload=plainCoverageRefusal(payload,question)
   // An empty record-only prefix is not a refusal of the checked passage answer beside it.
   const prefix=/^OPAX cannot establish the requested answer from the selected records\.\s*\n\s*\n/.exec(String(payload.answer??''))?.[0]
@@ -138,7 +139,9 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   const canReconstruct=donorQuestion||rankingQuestion?canReconstructRanking(payload,question):true
   if(canReconstruct&&(donorQuestion||stripped>1/3||!check.rankingLead||check.reasons.includes('first sentence does not answer')||check.reasons.includes('incomplete donor sentence'))&&sources.some(s=>['count','export','record','receipt','pay','grant','contract'].includes(s.kind))) {
     const input:WritingInput={question,constraints:payload.answer_scope as WritingInput['constraints'],period:{kind:'all',label:''},facts:sources.filter(s=>!['speech','bill'].includes(s.kind)&&(!rankingQuestion||donorQuestion||rankingSourceMatches(question,s,payload.answer_scope as WritingInput['constraints']))).flatMap((source,i)=>String(source.snippet??'').split(/\n+/).map((text,j)=>({id:i*100+j+1,text,source,coverage:/^coverage(?:-|$)/.test(source.resource)||/^Coverage:|^These are party receipts|^Federal AEC|^Opax added|^This selection|^It excludes|^Amounts are|^Based on AEC/i.test(text)})))}
-    const fallback=proseFallback(input),audited=checkedClaims(fallback as unknown as Record<string,unknown>,question)
+    // Historical proof text must keep the same claim checks and figure selection.
+    // The outer receipt-language boundary migrates its wording after those checks.
+    const fallback=proseFallback(input,false),audited=checkedClaims(fallback as unknown as Record<string,unknown>,question)
     if(Object.keys((audited.citations??{}) as object).every(id=>sources.some(s=>id===s.resource||id.startsWith(s.resource+'/')))&&!auditPayload(question,audited).findings.length&&coherenceCheck(question,audited).pass&&String(audited.answer??'').length>40){
       out={...payload,...cleanAnswerShape(audited),coherence:{...((payload.coherence??{}) as object),stripped_ratio:stripped,fallback:true}}
     }
@@ -178,4 +181,12 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   // Preserve diagnostics through repeated cache/boundary checks without creating them on unchanged answers.
   if(stripped>0&&!out.coherence)out={...out,coherence:{stripped_ratio:stripped,fallback:false}}
   return cleanAnswerShape(citeFallbackMoney(out,question,sources))
+}
+
+export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
+  // The receipt calculator already binds every row to graph amounts. Its links
+  // and table cells are not prose claims; retain them and migrate wording only.
+  if(payload.money_ranking===true&&payload.answer_status==='calculated')return withReceiptWording(payload,question)
+  if(Array.isArray(payload.sources))payload={...payload,sources:payload.sources.map(source=>source?.receipt_original_snippet?{...source,snippet:source.receipt_original_snippet}:source)}
+  return withReceiptWording(groundClaimsPayload(payload,question),question)
 }

@@ -1,0 +1,14 @@
+{
+  "cap_usd": 1,
+  "reported_usage_usd": 0.031710336,
+  "unknown_cost_reservations_usd": [
+    0.75,
+    0.2
+  ],
+  "conservative_total_usd": 0.981710336,
+  "final_verification": "five offline local research-tool probes; no further model generation",
+  "replay_model_calls": 0,
+  "production_requests": 0,
+  "successful_local_model_eval_requests": 14,
+  "failed_local_eval_requests": 2
+}

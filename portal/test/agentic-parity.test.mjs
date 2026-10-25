@@ -18,7 +18,7 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
  try{
   const files=execFileSync('git',['ls-tree','-r','--name-only',baseline,'portal/src','portal/graph','portal/public','parli/ingest/user-agent.json'],{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024}).trim().split('\n').filter(f=>f.startsWith('portal/src/')||f.startsWith('portal/graph/')||/^portal\/public\/[^/]+\.js$/.test(f)||f==='parli/ingest/user-agent.json');
-  for(const f of files){const target=join(scratch,f);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,execFileSync('git',['show',`${baseline}:${f}`],{cwd:root,maxBuffer:20*1024*1024}));}
+  for(const f of files){const target=join(scratch,f);mkdirSync(dirname(target),{recursive:true});const content=execFileSync('git',['show',`${baseline}:${f}`],{cwd:root,maxBuffer:20*1024*1024});writeFileSync(target,f.startsWith('portal/src/')?content.toString().replaceAll('party_donations','party_receipts'):content);}
   symlinkSync(join(root,'portal/node_modules'),join(scratch,'portal/node_modules'));
   const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(join(scratch,'portal/src/index.ts'),root+'portal/public',ctx);
   for(const h of [current,main]){
@@ -107,7 +107,15 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
    const [after,before]=[legacyBody(await b.text(),stream),mainCopy(legacyBody(await a.text(),stream),stream)];
    // 14 Oct: origin/main read lowercase words as surname-only people ("speakers on defence" -> "On") and
    // declined these; the capitalised-surname rule now answers them from tool rows. Every other body stays byte-identical.
-   if(PARTY_CLARIFY.has(q.id)){assert.match(after,/"answer_decision":"clarification"/);assert.match(after,/Which party do you mean/);assert.doesNotMatch(after,/"tool":"(?:party_donations|count_speeches)"/);}
+   if(PARTY_CLARIFY.has(q.id)){assert.match(after,/"answer_decision":"clarification"/);assert.match(after,/Which party do you mean/);assert.doesNotMatch(after,/"tool":"(?:party_receipts|count_speeches)"/);}
+   else if(q.category==='money'){
+    // The authorised receipt wording and tool name differ. Keep the recorded amounts and result schema pinned.
+    const done=text=>JSON.parse(stream?text.match(/event: done\ndata: (.+)/)[1]:text)
+    const a=done(after),b=done(before),amounts=p=>(p.answer.match(/\$\d[\d,]*(?:\.\d+)?/g)??[]).sort()
+    assert.deepEqual(amounts(a),amounts(b),`gold ${q.id}: receipt amounts`)
+    assert.deepEqual(Object.keys(a).sort(),Object.keys(b).sort(),`gold ${q.id}: response fields`)
+    assert.doesNotMatch(a.answer,/\bgave\b|\bdonated\b|\bfunded\b/)
+   }
    else if(q.id==='R07'){assert.match(after,/"answered":true/,`gold R07 (${stream?'SSE':'JSON'})`);assert.match(after,/Scott Morrison: 133/);}
    else if(SURNAME_FIX.has(q.id))assert.match(after,/"answer":/,`gold ${q.id} (${stream?'SSE':'JSON'})`);
    else assert.equal(after,before,`gold ${q.id} (${stream?'SSE':'JSON'})`);

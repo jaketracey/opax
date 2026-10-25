@@ -1,3 +1,4 @@
+import {FEDERAL_RECEIPTS_NOTE,RECEIPTS_WRITING_RULE,unsafeReceiptWording,receiptDirectionMistakes} from './receipt-language.mjs'
 /**
  * A written opening for a calculated money answer.
  *
@@ -39,6 +40,7 @@ const numbers = (value: string): string[] =>
 export function moneyOverviewPrompt(facts: MoneyFacts): string {
   return [
     'Write the opening of an answer for a reader who asked about the figures below.',
+    RECEIPTS_WRITING_RULE,
     'A table of those figures follows what you write; you are introducing it, not replacing it.',
     '',
     ...(facts.question ? [`QUESTION: ${facts.question}`, ''] : []),
@@ -79,7 +81,9 @@ export function verifiedOverview(text: string, facts: MoneyFacts): string {
     .trim()
   if (clean.length < MIN_CHARS || clean.length > MAX_CHARS) return ''
   if (/[|#*_`~\[\]<>]|https?:\/\//.test(clean)) return ''
-  if (OVERREACH.test(clean)) return ''
+  if (OVERREACH.test(clean) || unsafeReceiptWording(clean)) return ''
+  if(facts.ranked_by==='donor'&&receiptDirectionMistakes(clean,facts.rows.map(r=>r.name)).length)return ''
+  if(/Federal|AEC/i.test(facts.selection)&&!clean.includes(FEDERAL_RECEIPTS_NOTE))return ''
   if (clean.split(/(?<=[.!?])\s+/).filter(Boolean).length > 4) return ''
   const allowed = new Set(numbers([facts.question || '', facts.selection, ...facts.rows.map(r => `${r.name} ${r.amount} ${r.records}`), ...facts.derived].join(' ')))
   if (numbers(clean).some(number => !allowed.has(number))) return ''

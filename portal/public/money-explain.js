@@ -309,7 +309,7 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
       if (whole > 0 && flowInSpan <= whole) recipientShare = { basis: 'file', amount: flowInSpan, whole, first, last: lastYear, years: lastYear - first + 1 };
     }
   }
-  // The flow as a share of a named organisation's disclosed giving.
+  // The flow as a share of a named organisation's disclosed receipts.
   let donorShare = null;
   if (donor && party) {
     const whole = context.reduce((s, e) => s + (Number(e.total) || 0), 0);
@@ -364,7 +364,7 @@ export function comparableFlows(flow, index, limit = 3) {
     const pick = (rows) => rows.sort((a, b) => size(a.e.total) - size(b.e.total));
     const sameIndustry = pick(pool.filter((r) => r.d.industry === ind));
     const rows = sameIndustry.slice(0, limit);
-    const rule = `Other organisations OPAX tags as ${industryName(ind).toLowerCase()} giving to ${flow.party.label}, closest in size`;
+    const rule = `Other organisations OPAX tags as ${industryName(ind).toLowerCase()} with disclosed receipts to ${flow.party.label}, closest in size`;
     if (rows.length < 2) {
       for (const r of pick(pool.filter((x) => x.d.industry !== ind))) { if (rows.length >= Math.min(limit, 2)) break; rows.push(r); }
     }

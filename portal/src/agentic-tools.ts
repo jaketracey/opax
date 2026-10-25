@@ -1,3 +1,4 @@
+import {FEDERAL_RECEIPTS_NOTE} from './receipt-language.mjs'
 import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 /**
  * Structured tools for Ask (docs/design/agentic-ask-2026-10.md).
@@ -21,7 +22,7 @@ import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../pub
 import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
 import type { ToolEnv } from './tools'
 import { receiptYearWindow } from './receipt-period'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-15-exact-date-windows/' + TOOL_REGISTRY_VERSION
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-16-receipts-wording/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -356,7 +357,7 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
   }
 }
 
-// ---------------------------------------------------------------- party_donations
+// ---------------------------------------------------------------- party_receipts
 interface MoneyNode extends DonorDisclosureRecord { id: string; label: string; kind: string; industry?: string; aliases?: string[]; jurisdiction?: string; total?: number; byYear?: Record<string, [number, number]> }
 interface MoneyEdge { source: string; target: string; total: number; count: number; byYear?: Record<string, [number, number]>; firstYear?: number; lastYear?: number }
 async function money(deps: ToolDeps) {
@@ -376,19 +377,19 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
   const dated = !!(input.since || input.until), window = receiptYearWindow(input.since, input.until)
   if (window.error) {
     const coverage = { since: null, until: null, as_of: null, matched: false, requested_since: input.since, requested_until: input.until, note: window.error }
-    return { tool: 'party_donations', ok: true, data: { coverage, coverage_only: true }, coverage,
+    return { tool: 'party_receipts', ok: true, data: { coverage, coverage_only: true }, coverage,
       cite: [{ kind: 'record', label: window.error, url: `${origin}/methods` }], notes: [window.error] }
   }
   const g = await money(deps)
   const node = new Map(g.nodes.map((n) => [n.id, n]))
   const from = dated ? window.from_year : Number(input.from_year) || undefined, to = dated ? window.to_year : Number(input.to_year) || undefined
   const limit = Math.min(Number(input.limit) || 5, 15)
-  const notes = ['Federal AEC donation returns, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).', 'These are party receipts, not personal payments to politicians, and a donation is not evidence that it influenced any vote or speech.']
+  const notes = ['Federal AEC disclosed receipts, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).', FEDERAL_RECEIPTS_NOTE, 'These are party receipts, not personal payments to politicians, and a receipt is not evidence that it influenced any vote or speech.']
   const coverage = { since: `${Math.max(from ?? 1998, 1998)}-07-01`, until: `${Math.min(to ?? 2025, 2025) + 1}-06-30`, as_of: null,
     ...(input.since ? { requested_since: input.since } : {}), ...(input.until ? { requested_until: input.until } : {}), note: notes[0] }
   if (input.party) {
     const pid = `party:${input.party}`
-    if (!node.has(pid)) return { tool: 'party_donations', ok: false, error: `no party "${input.party}" in the money record; parties: ${g.nodes.filter((n) => n.kind === 'party').map((n) => n.label).join(', ')}`, cite: [], notes }
+    if (!node.has(pid)) return { tool: 'party_receipts', ok: false, error: `no party "${input.party}" in the money record; parties: ${g.nodes.filter((n) => n.kind === 'party').map((n) => n.label).join(', ')}`, cite: [], notes }
     const edges = g.edges.filter((e) => e.target === pid && node.get(e.source)?.kind === 'donor' && (!input.industry || node.get(e.source)?.industry === input.industry))
     const sized = edges.map((e) => ({ e, v: sumYears(e, from, to) })).filter((x) => x.v[0] > 0)
     const ranked = sized.sort((a,b)=>b.v[0]-a.v[0])
@@ -398,9 +399,9 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
       return {donor:view.name,href:view.href,return_reference:reference ? returnReference(reference) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1]}
     })
     return {
-      tool: 'party_donations', ok: true,
+      tool: 'party_receipts', ok: true,
       data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows,coverage},
-      cite: [{kind:'export',label:`Donations to ${input.party} (AEC returns)`,url:`${origin}/money/party/${encodeURIComponent(input.party)}`},...rows.map(r=>({kind:'export' as const,label:`${r.donor} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : 'https://transparency.aec.gov.au/'}))],
+      cite: [{kind:'export',label:`Disclosed receipts to ${input.party} (AEC returns)`,url:`${origin}/money/party/${encodeURIComponent(input.party)}`},...rows.map(r=>({kind:'export' as const,label:`${r.donor} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : 'https://transparency.aec.gov.au/'}))],
       query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to }, notes,
     }
   }
@@ -414,12 +415,12 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     }
     const rows = [...sums].map(([party, [t, c]]) => ({ party, total_aud: t, receipts: c })).filter((r) => r.total_aud > 0).sort((a, b) => b.total_aud - a.total_aud)
     return {
-      tool: 'party_donations', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], rows, coverage },
+      tool: 'party_receipts', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], rows, coverage },
       cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} donors to ${r.party}`, value: r.total_aud, url: `${origin}/money/party/${encodeURIComponent(r.party)}` })),
       query: { file: '/graph/money.json', industry: input.industry, from, to }, notes,
     }
   }
-  return { tool: 'party_donations', ok: false, error: 'party or industry is required', cite: [], notes: [] }
+  return { tool: 'party_receipts', ok: false, error: 'party or industry is required', cite: [], notes: [] }
 }
 
 // ---------------------------------------------------------------- find_quotes
@@ -469,7 +470,7 @@ export const TOOL_SPECS: ToolSpec[] = [
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
   { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
   { name: 'member_votes', description: 'How a person or party voted in recorded divisions whose title contains a keyword (e.g. "gambling").', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
-  { name: 'party_donations', description: 'Largest disclosed donors to a federal party, or totals by party for one donor industry (e.g. gambling, mining). Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
+  { name: 'party_receipts', description: 'Largest disclosed receipt totals to a federal party, or receipt totals by party for one source industry (e.g. gambling, mining). Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Find a few cited passages to quote or describe what was said. A ranked sample: never count them.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string' }, limit: { type: 'integer' } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
 ]
 /** Schema-check model plans before any lookup. References are validated separately. */
@@ -497,7 +498,7 @@ export function toolArgProblem(name: string, args: unknown): string | null {
   if (a.since && a.until && String(a.since) > String(a.until)) return 'since must not be after until'
   if (name === 'member_votes' && !a.person && !a.party) return 'member_votes needs person or party'
   if (name === 'member_votes' && String(a.keyword).length < 3) return 'keyword must be at least 3 characters'
-  if (name === 'party_donations' && !a.party && !a.industry) return 'party_donations needs party or industry'
+  if (name === 'party_receipts' && !a.party && !a.industry) return 'party_receipts needs party or industry'
   return null
 }
 export async function runTool(deps: ToolDeps, name: string, args: Json): Promise<ToolResult> {

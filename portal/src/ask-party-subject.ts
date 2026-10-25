@@ -6,6 +6,8 @@ import {rankingRepairQuestion} from './research-ranking-repair.mjs'
 export function resolvePartySubject(question: string, roster: unknown): { question: string; clarification?: true; reason?: 'identity' | 'party' | 'form' } {
   if (!/[’']s\s+party\b|\bthe party of\b/i.test(question)) return { question }
   const clarify = (reason: 'identity' | 'party' | 'form') => ({ question, clarification: true as const, reason })
+  // The direct-party receipts question does not grant permission to infer an owner's affiliation.
+  if(/^who funds\b/i.test(question))return clarify('form')
   const records = (roster as { people?: { name: string; full?: string; display_name?: string; slug?: string; party_now?: string }[] } | null)?.people ?? []
   const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const fullName = (s: unknown): s is string => typeof s === 'string' && /^\S+\s+\S/.test(s.trim())

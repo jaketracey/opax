@@ -447,7 +447,7 @@ function describeAccess(flow: ResolvedFlow, helpers: ExplainHelpers): string {
   if (fits) parts.push(many
     ? `${donorsWithFits.toLocaleString()} shown donor${donorsWithFits === 1 ? '' : 's'} match the Foreign Influence Transparency Scheme register`
     : `${fits.toLocaleString()} Foreign Influence Transparency Scheme registration${fits === 1 ? '' : 's'}`)
-  return parts.length ? `${parts.join(' · ')}. These are register matches, not evidence that a donation bought access.` : ''
+  return parts.length ? `${parts.join(' · ')}. These are register matches, not evidence of access or influence.` : ''
 }
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = ''): HTMLElementTagNameMap[K] {
@@ -484,11 +484,11 @@ function partyList(rows: Array<{ node: MoneyNode; total: number }>, flow: Resolv
 
 function questionFor(flow: ResolvedFlow, detail: ExplainDetail, helpers: ExplainHelpers) {
   const party = flow.party?.label
-  if (detail.kind === 'party') return `What has parliament said about donations to ${party}?`
+  if (detail.kind === 'party') return `What has parliament said about disclosed receipts to ${party}?`
   const giver = flow.donor?.label || labelForIndustry(flow.industry, helpers)
   return party && detail.to
-    ? `What has parliament said about donations from ${giver} to ${party}?`
-    : `What has parliament said about donations from ${giver} to Australian political parties?`
+    ? `What has parliament said about disclosed receipts from ${giver} to ${party}?`
+    : `What has parliament said about disclosed receipts from ${giver} to Australian political parties?`
 }
 
 function sourceList(data: { citations?: Record<string, unknown>; sources?: AskSource[] }, helpers: ExplainHelpers) {
@@ -1727,7 +1727,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       const access = describeAccess(flow, helpers)
       if (access) copy.append(el('p', 'explain-access', access))
       if (detail.kind !== 'party' && flow.partyShares.length > 1) {
-        copy.append(el('p', '', 'It also gave to these parties:'))
+        copy.append(el('p', '', 'These parties also disclosed receipts from it:'))
         const primaryPartyId = flow.party?.id
         copy.append(partyList(flow.partyShares.filter((row) => row.node.id !== primaryPartyId), flow, helpers))
       }
@@ -1850,7 +1850,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       const excluded = Array.isArray(meta.exclusions)
         ? `The export excludes ${meta.exclusions.slice(0, 3).join('; ')}.`
         : "Public electoral funding, internal party transfers and government entities are excluded from the federal map's donor flows."
-      const noCausation = 'A disclosed donation and a parliamentary statement can be placed beside each other, but this does not prove access, influence, agreement or a causal link.'
+      const noCausation = 'A disclosed receipt and a parliamentary statement can be placed beside each other, but this does not prove access, influence, agreement or a causal link.'
       const stateRule = flow.jurisdiction === 'federal'
         ? helpers.stateNotSummed || 'State and federal returns are not summed: AEC returns already include state branch receipts.'
         : typeof meta.not_summed === 'string' ? meta.not_summed : helpers.stateNotSummed || ''

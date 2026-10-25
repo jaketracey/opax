@@ -27,11 +27,11 @@ export const samePeriodFundingComparison = (query:string) =>
 const unknown = () => clarify('Please name one donor, industry or recipient party from the [money map](https://opax.com.au/money), and the financial year if you want to change it. I could not resolve the whole follow-up, so I have not calculated a partial total.')
 
 export function fundingScopeQuestion(s:FundingSelection,jurisdiction:string):string {
-  const stem=s.party || s.mode==='donors' ? 'Who donates the most' : s.mode==='connections' ? 'Who donates the most to whom' : 'Who receives the most funding'
+  const stem=s.party ? 'Who has the most disclosed receipts' : s.mode==='donors' ? 'Who are the top donors by disclosed receipts' : s.mode==='connections' ? 'Which source has the largest disclosed receipts to which party' : 'Who receives the most disclosed receipts'
   const donor=s.donor || (s.industry ? s.industry.replaceAll('_',' ')+' donors' : '')
   const period=s.from===s.to&&s.from!==null?` in ${s.from}`:s.from!==null&&s.to!==null?` from ${s.from} to ${s.to}`:s.from!==null?` since ${s.from}`:s.to!==null?` through ${s.to}`:''
   const region=({federal:'federal',qld:'Queensland',vic:'Victoria',tas:'Tasmania'} as Record<string,string>)[jurisdiction]
-  if(s.compareParties) return `Who gets more funding${donor?' from '+donor:''}, ${s.compareParties.join(' or ')}${region?' in '+region+' records':''}${period}?`
+  if(s.compareParties) return `Who receives more disclosed receipts${donor?' from '+donor:''}, ${s.compareParties.join(' or ')}${region?' in '+region+' records':''}${period}?`
   return `${stem}${s.party?' to '+s.party:''}${donor?' from '+donor:''}${!s.party&&!donor?' in all receipts':''}${region?' in '+region+' records':''}${period}?`
 }
 
@@ -120,7 +120,7 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
       if(/^(?:all (?:donors|industries|sectors))$/i.test(name)) { selected={...selected,donor:undefined,industry:undefined};changed=true }
       else if(/^all (?:parties|recipients)$/i.test(name)) { selected={...selected,party:undefined,mode:'parties'};changed=true }
       else {
-        const query=`Who donates the most to ${name}`
+        const query=`Who has the most disclosed receipts to ${name}`
         const match=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au')
         if(!match || 'needs_scope' in match || 'needs_period' in match || unmatchedReceiptRankingScope(graph,query,match) ||
           match.selected_parties.length>1 || match.selected_industries.length>1 ||

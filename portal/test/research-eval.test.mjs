@@ -248,6 +248,12 @@ test('routing fixture, detached baseline selection and the spend ceiling are exp
   assert.equal(rows.length,0);assert.equal(report.stopped,'spend_cap')
 })
 
+test('a bounded request reservation keeps an unknown-cost failure charged and stops subsequent calls',async()=>{
+ let calls=0
+ const {rows,report}=await runEval({questions:[q('H01'),q('H02')],modes:['loop'],bases:{loop:'http://127.0.0.1:8963'},spendCap:0.22,requestReserveUsd:0.2,fetchImpl:async()=>{calls++;return new Response('local failure',{status:503})}})
+ assert.equal(calls,1);assert.equal(rows.length,1);assert.equal(report.spent_upper_estimate,0.2);assert.equal(report.stopped,'spend_cap')
+})
+
 test('a legacy evidence-gap refusal is recognised, and date formatting is not an invented count', () => {
  const payload={answer:'This selection does not establish their position on that topic.',sources:[],citations:{}}
  assert.equal(gradeRow({question:'Which seat?',expected:{kind:'decline'},must:[{type:'decline'}]},payload).overall,'pass')

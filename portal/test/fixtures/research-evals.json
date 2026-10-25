@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generated": "2026-10-14",
-  "purpose": "Quality eval for the research loop as the engine for ALL Ask (briefs/research-loop-contract.md). Thirteen questions: seven ordinary qualitative shapes and six multi-hop shapes. Graded structurally by scripts/research_eval_grade.mjs; the markdown report puts old and new answers side by side for the Fable judge.",
+  "purpose": "Quality eval for the research loop as the engine for ALL Ask (briefs/research-loop-contract.md). Thirteen questions: seven ordinary qualitative shapes and six multi-hop shapes. Graded structurally by scripts/research_eval_grade.mjs; the markdown report puts old and new answers side by side for the Fable judge. Includes the unclassified federal receipt wording regression.",
   "gold": {
     "file": "agentic-ask-gold.json",
     "route": "/api/ops/ask-gold",
@@ -13,7 +13,7 @@
       "speech_trend",
       "find_people",
       "member_votes",
-      "party_donations",
+      "party_receipts",
       "find_quotes",
       "electorates",
       "ranked_money"
@@ -304,7 +304,7 @@
       "question": "Which donors gave the most to the Nationals, and how many speeches about agriculture have Nationals MPs made since 2022?",
       "old_route": "money",
       "expected_tools": [
-        "party_donations",
+        "party_receipts",
         "count_speeches",
         "finish"
       ],
@@ -755,7 +755,7 @@
       "question": "who does pauline hansons party take the most money from",
       "old_route": "ordinary",
       "expected_tools": [
-        "party_donations"
+        "party_receipts"
       ],
       "must": [
         {
@@ -792,7 +792,7 @@
       "question": "who gives the most money to the Greens",
       "old_route": "ordinary",
       "expected_tools": [
-        "party_donations"
+        "party_receipts"
       ],
       "must": [
         {
@@ -829,7 +829,7 @@
       "question": "top donors to the Liberal Party",
       "old_route": "ordinary",
       "expected_tools": [
-        "party_donations"
+        "party_receipts"
       ],
       "must": [
         {
@@ -866,7 +866,7 @@
       "question": "who donates the most to Labor",
       "old_route": "ordinary",
       "expected_tools": [
-        "party_donations"
+        "party_receipts"
       ],
       "must": [
         {
@@ -903,7 +903,7 @@
       "question": "who donates the most to the Nationals",
       "old_route": "ordinary",
       "expected_tools": [
-        "party_donations"
+        "party_receipts"
       ],
       "must": [
         {
@@ -967,9 +967,49 @@
         "jurisdiction": "qld",
         "donor": "J.J. RICHARDS & SONS PTY LTD",
         "amount": 754314,
-        "period": "2013–14 to 2026–27.",
+        "period": "2013\u201314 to 2026\u201327.",
         "source": "/graph/money.json, /graph/money.qld.json",
         "note": "State disclosures; never substitute the federal AEC LNP aggregate."
+      }
+    },
+    {
+      "id": "RC01",
+      "kind": "qualitative",
+      "shape": "receipts",
+      "question": "Who gives the most money to Labor?",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "ranked_money",
+        "answer"
+      ],
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "mentions",
+          "all": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "not a donation ranking"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "disclosed receipts"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
+        "citations": "Each monetary statement has its own source.",
+        "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
       }
     }
   ]

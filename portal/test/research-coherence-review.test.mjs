@@ -159,7 +159,7 @@ test('a named donor cannot be replaced by a different selected donor',async()=>{
  let calls=0;const model=new MockLanguageModelV4({doGenerate:()=>{calls++;return {content:[{type:'text',text:JSON.stringify({sentences:[{text:calls===1?'Vapold Pty Ltd gave Liberal $33,999,963.':'Westpac Banking Corporation gave Liberal $40,608,922.',facts:[calls===1?2:1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]}}})
  const stats={rounds:1,tokens:{input:0,output:0}},write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}})
  const out=await write({question:'How much disclosed funding did Westpac Banking Corporation provide to the Liberal Party?',period:{kind:'all',label:''},facts},stats,undefined,3000)
- assert.match(out.answer,/Westpac Banking Corporation.*40,608,922/);assert.ok(out.citations['fact-1/t/body/0']);assert.ok(calls>=1&&calls<=2)
+ assert.match(out.answer,/Liberal disclosed \$40,608,922 in receipts from Westpac Banking Corporation/);assert.ok(out.citations['fact-1/t/body/0']);assert.ok(calls>=1&&calls<=2)
 })
 test('equivalent selected-excerpt and OPAX limitations use the same refusal rubric',()=>{
  const q={question:'How do Labor and the Coalition differ on nuclear power?',expected:{kind:'decline'},must:[]}

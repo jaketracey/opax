@@ -22,6 +22,7 @@ const scaffolding = new Set('how much how many money political donations donatio
 const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
 const receiptPartyNames = (party:Node):string[] => [party.label,...(party.aliases||[]),
   ...(party.label==='Labor'?['ALP']:[]),
+  ...(party.label==='One Nation'?["Pauline Hanson's party",'Pauline Hansons party']:[]),
   ...(party.label==='Nationals'?['National Party']:[]),
   ...(['LNP','Liberal National Party'].includes(party.label)?['LNP','Liberal National Party']:[])]
 
@@ -86,7 +87,7 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
   const partyQuery=specific.reduce((text,m)=>text.slice(0,m.start)+' '.repeat(m.end-m.start)+text.slice(m.end),q).replace(/\s+/g,' ').trim()
   return {nodes:[...new Map(specific.map(m=>[m.node.id,m.node])).values()],ambiguous:undefined,partyQuery}
 }
-const rankingWords = new Set('who which what are is was were be been being gets get got getting takes take took taking receives receive received receiving gives giving donates donate donated donating donors donor contributors contribution contributions largest biggest most top more less higher lower compare comparison compared versus vs than both either these those each with financial nominal aud dollars dollar amount amounts disclosed published recorded records record shown included selected selection lifetime across throughout during up until through starting ending between lobby lobbies to whom s change changed changes increase increased increases decrease decreased decreases grew growth rose fell'.split(' '))
+const rankingWords = new Set('who which what are is was were be been being gets get got getting takes take took taking receives receive received receiving gives giving donates donate donated donating donors donor sources source contributors contribution contributions largest biggest most top more less higher lower compare comparison compared versus vs than both either these those each with financial nominal aud dollars dollar amount amounts disclosed published recorded records record shown included selected selection lifetime across throughout during up until through starting ending between lobby lobbies to whom s change changed changes increase increased increases decrease decreased decreases grew growth rose fell'.split(' '))
 
 /** A recognised name must not hide an unrecognised qualifier or a second name.
  * Only consume names used by the calculation, plus the question's grammar.
@@ -114,7 +115,7 @@ export function unmatchedReceiptRankingScope(graph:ReceiptGraph, query:string, s
   }
   return remainder.trim().split(' ').filter(w=>w&&!scaffolding.has(w)&&!rankingWords.has(w)&&!/^(?:19|20)\d{2}$/.test(w)).join(' ')
 }
-export const moneyQuestion = (q:string) => /\b(?:money|donat\w*|donors?|receipts?|funding|funded|contributions?)\b/i.test(q)
+export const moneyQuestion = (q:string) => /\b(?:money|donat\w*|donors?|receipts?|fund(?:s|ing|ed)?|contributions?)\b/i.test(q)
 const receiptRegions=[['federal'],['qld','queensland'],['vic','victoria'],['tas','tasmania'],['nsw','new south wales'],['wa','western australia'],['sa','south australia'],['nt','northern territory'],['act','australian capital territory']]
 const mentionedReceiptRegions=(query:string)=>receiptRegions.filter(names=>names.some(n=>contains(normal(query),n))).map(names=>names[0])
 export function receiptJurisdiction(query:string): string | null {
@@ -176,7 +177,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(!filters.party&&namedParties.ambiguous)return {needs_scope:true,answer:'That name matches more than one recipient party in this map. Please use the full party name so separate records are not combined.',sources:[],jurisdiction}
   const partyFilter=filters.party
   const parties=partyFilter?graph.nodes.filter(n=>n.kind==='party'&&normal(n.label)===normal(partyFilter)):namedParties.nodes
-  const all=/\b(?:all|total) (?:political )?(?:receipts|donations|party funding)\b/.test(q) || /^(?:who donates the most(?: money)?(?: to who(?:m)?)?|(?:who are the )?(?:biggest|largest|top) political donors)$/.test(q)
+  const all=/^who are the top donors by disclosed receipts/.test(q) || /\b(?:all|total) (?:political )?(?:receipts|donations|party funding)\b/.test(q) || /^(?:who donates the most(?: money)?(?: to who(?:m)?)?|(?:who are the )?(?:biggest|largest|top) political donors)$/.test(q)
   if(filters.party && !parties.length) return null
   if(!donors.length&&!industries.length){
     const fragment=unmatchedReceiptRankingScope(graph,query,{selected_donors:[],selected_parties:parties.map(n=>n.label),selected_industries:[]},filters.party)

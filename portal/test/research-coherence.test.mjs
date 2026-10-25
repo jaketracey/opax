@@ -62,7 +62,7 @@ test('a supported donor draft uses its aggregate period and passes both existing
  const text='Westpac Banking Corporation gave One Nation $161,787 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/'
  const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'export',url:'https://example.org/aec',label:'Disclosed donation'}}])
  const input={question:fixture.question,period:{kind:'all',label:''},facts}
- const line='Westpac Banking Corporation provided the most disclosed funding to One Nation, with $161,787 in financial years 1998-99 to 2025-26.'
+ const line='Westpac Banking Corporation was the source of the largest disclosed receipts to One Nation, with $161,787 in financial years 1998-99 to 2025-26.'
  const out=api.verifyWrittenAnswer({sentences:[{text:line,facts:[1]}]},input)
  assert.equal(out.answer,line);assert.equal(auditPayload(fixture.question,out).findings.length,0);assert.equal(coherenceCheck(fixture.question,out).pass,true)
  assert.equal(facts[0].atoms[0].unit,'AUD');assert.equal(facts[0].atoms[0].period.label,'1998-99 to 2025-26')

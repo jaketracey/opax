@@ -151,9 +151,11 @@ export async function runEval(opts) {
   const picked = questions.slice(0, limit)
   const rows = []
   let spent = 0, stopped = null
+  const requestReserve=opts.requestReserveUsd??0.75
+  if(!Number.isFinite(requestReserve)||requestReserve<=0)throw Error('requestReserveUsd must be positive')
   for (const q of picked) {
     for (const mode of modes) {
-      if (!fixture && spent + 0.75 > (opts.spendCap ?? 14)) { stopped = 'spend_cap'; break }
+      if (!fixture && spent + requestReserve > (opts.spendCap ?? 14)) { stopped = 'spend_cap'; break }
       let r
       if (fixture) {
         const hit = fixture.find((x) => x.id === q.id && (x.mode ?? mode) === mode)
@@ -170,7 +172,7 @@ export async function runEval(opts) {
         row.payload = r.payload
       }
       rows.push(row)
-      spent += fixture ? 0 : row.usage?.cost_usd ?? 0.75
+      spent += fixture ? 0 : row.usage?.cost_usd ?? requestReserve
       await opts.onRow?.({ row, rows, spent })
       if(!fixture && opts.intervalMs)await new Promise(resolve=>setTimeout(resolve,opts.intervalMs))
     }

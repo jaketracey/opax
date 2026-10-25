@@ -35,7 +35,7 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
     if (has('until') && c.period.until) a.until = c.period.until
     if (has('from_year') && c.period.since) a.from_year = Number(c.period.since.slice(0, 4))
     if (has('to_year') && c.period.until) a.to_year = Number(c.period.until.slice(0, 4))
-    if (step.tool === 'party_donations') {
+    if (step.tool === 'party_receipts') {
       delete a.from_year; delete a.to_year
       const years = receiptYearWindow(c.period.since, c.period.until)
       if (!years.error) Object.assign(a, years)

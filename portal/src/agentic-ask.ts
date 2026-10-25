@@ -169,10 +169,10 @@ export function fallbackPlan(question: string): Plan | null {
     return { shape, steps: steps.slice(0, AGENTIC_MAX_STEPS) }
   }
   const industry = topic === 'mining-energy' ? 'mining' : topic
-  if (/each party/.test(q)) return { shape, steps: [{ tool: 'party_donations', args: { industry } }, { tool: 'count_speeches', args: { ...base, group_by: 'party' } }] }
-  if (/received|receive/.test(q)) return { shape, steps: [{ tool: 'party_donations', args: { industry } }, { tool: 'count_speeches', args: { ...base, state: 'federal', party: '$1', group_by: 'none' } }] }
-  if (/party of/.test(q)) return { shape, steps: [{ tool: 'count_speeches', args: { ...base, group_by: 'speaker' } }, { tool: 'find_people', args: { name: '$1' } }, { tool: 'party_donations', args: { party: '$2.party' } }] }
-  return { shape, steps: [{ tool: 'count_speeches', args: { ...base, group_by: 'party' } }, { tool: 'party_donations', args: { party: '$1' } }] }
+  if (/each party/.test(q)) return { shape, steps: [{ tool: 'party_receipts', args: { industry } }, { tool: 'count_speeches', args: { ...base, group_by: 'party' } }] }
+  if (/received|receive/.test(q)) return { shape, steps: [{ tool: 'party_receipts', args: { industry } }, { tool: 'count_speeches', args: { ...base, state: 'federal', party: '$1', group_by: 'none' } }] }
+  if (/party of/.test(q)) return { shape, steps: [{ tool: 'count_speeches', args: { ...base, group_by: 'speaker' } }, { tool: 'find_people', args: { name: '$1' } }, { tool: 'party_receipts', args: { party: '$2.party' } }] }
+  return { shape, steps: [{ tool: 'count_speeches', args: { ...base, group_by: 'party' } }, { tool: 'party_receipts', args: { party: '$1' } }] }
 }
 const toolCatalogue = () => TOOL_SPECS.map((t) => `- ${t.name}(${Object.keys((t.input.properties ?? {}) as object).join(', ')}): ${t.description}`).join('\n')
 export function plannerPrompt(): { system: string; user: string } {
@@ -191,7 +191,7 @@ export function plannerPrompt(): { system: string; user: string } {
     '- "Is X debated more / how has X changed / which year" -> speech_trend (by year, decade or term). Two named years -> speech_trend by year with from_year and to_year.',
     '- Votes versus words -> member_votes(keyword, person or party) AND count_speeches for the same person or party and topic (group_by none).',
     '- A later step can use an earlier result: "$1" is the top name from step 1 (a speaker or party), "$1.party" is that person\'s party. To get a speaker\'s party use find_people("$1") then "$2.party".',
-    '- Money: party_donations(party) for donors to a party; party_donations(industry) for an industry\'s totals by party. Industries: gambling, mining, fossil_fuels, finance, property, unions, health, hospitality, media, tech.',
+    '- Money: party_receipts(party) for donors to a party; party_receipts(industry) for an industry\'s totals by party. Industries: gambling, mining, fossil_fuels, finance, property, unions, health, hospitality, media, tech.',
     '- If the record cannot answer (party by state parliament other than federal or qld, a topic outside the list with no other route), set shape "unanswerable" and give the reason.',
     `- At most ${AGENTIC_MAX_STEPS} steps.`,
     '',
@@ -288,10 +288,10 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       const url = r.cite[0].url
       if (d.person) add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: aye ${s.aye}, no ${s.no}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
       else add(`${who} in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
-    } else if (r.tool === 'party_donations') {
+    } else if (r.tool === 'party_receipts') {
       if (d.party) {
-        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${row.donor} gave ${d.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures; financial years ${((d.years as (number|null)[]|undefined)?.[0] ?? 1998)}-${String(((d.years as (number|null)[]|undefined)?.[0] ?? 1998)+1).slice(-2)} to ${((d.years as (number|null)[]|undefined)?.[1] ?? 2025)}-${String(((d.years as (number|null)[]|undefined)?.[1] ?? 2025)+1).slice(-2)})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
-      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${d.industry} donors gave ${row.party} $${row.total_aud.toLocaleString('en-AU')} (federal disclosures)`, r.cite[i], [`party:${row.party}`]))
+        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${d.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${row.donor} (federal disclosures; financial years ${((d.years as (number|null)[]|undefined)?.[0] ?? 1998)}-${String(((d.years as (number|null)[]|undefined)?.[0] ?? 1998)+1).slice(-2)} to ${((d.years as (number|null)[]|undefined)?.[1] ?? 2025)}-${String(((d.years as (number|null)[]|undefined)?.[1] ?? 2025)+1).slice(-2)})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
+      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${d.industry} sources (federal disclosures)`, r.cite[i], [`party:${row.party}`]))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]
       if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, r.cite[0])
@@ -469,11 +469,11 @@ export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4
  * counts are not supported by these tools, so defer those questions to Ask. */
 export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
   if (scope.unresolved || scope.ambiguous || scope.bills.length) return false
-  const numeric = plan.steps.filter(s => ['count_speeches', 'speech_trend', 'member_votes', 'party_donations'].includes(s.tool))
+  const numeric = plan.steps.filter(s => ['count_speeches', 'speech_trend', 'member_votes', 'party_receipts'].includes(s.tool))
   const person = (s: PlanStep) => s.args[s.tool === 'member_votes' ? 'person' : 'speaker']
   const lookups = plan.steps.filter(s => ['count_speeches', 'speech_trend', 'member_votes', 'find_quotes'].includes(s.tool))
   if (scope.people.length && (scope.people.some(name => !numeric.some(s => person(s) === name)) ||
-    numeric.some(s => s.tool === 'party_donations') ||
+    numeric.some(s => s.tool === 'party_receipts') ||
     lookups.some(s => !scope.people.includes(String(person(s)))) ||
     plan.steps.some(s => s.tool === 'find_people' && !scope.people.includes(String(s.args.name))))) return false
   if (scope.parties.length && (scope.parties.some(name => !numeric.some(s => s.args.party === name)) ||
@@ -533,7 +533,7 @@ export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: 
 }
 export function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>): Plan {
   return { ...plan, steps: plan.steps.map(s => {
-    if (s.tool === 'party_donations' && (period.since || period.until)) {
+    if (s.tool === 'party_receipts' && (period.since || period.until)) {
       const { since: _s, until: _u, from_year: _f, to_year: _t, ...args } = s.args
       const years = receiptYearWindow(period.since, period.until)
       return { ...s, args: { ...args, ...(!years.error ? years : {}), ...(period.since ? { since: period.since } : {}), ...(period.until ? { until: period.until } : {}) } }
@@ -551,9 +551,9 @@ export function stepEvent(step: PlanStep, id: number, committee = false): StepEv
   const registered = getAskTool(step.tool)
   if (registered) return { id, ...registered.stepLabel(step.args), state: 'running' }
   const a = step.args
-  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_donations: 'Checking donations', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches', search: 'Searching the record', person_quotes: 'Reading their speeches', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer' } as Record<string, string>)[step.tool]
+  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_receipts: 'Checking disclosed receipts', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches', search: 'Searching the record', person_quotes: 'Reading their speeches', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer' } as Record<string, string>)[step.tool]
   const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])
-  const raw = step.tool === 'party_donations' ? [a.party, a.industry].find(v => typeof v === 'string' && moneyArgs.has(v)) : a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.person ?? a.topic ?? a.query ?? a.name
+  const raw = step.tool === 'party_receipts' ? [a.party, a.industry].find(v => typeof v === 'string' && moneyArgs.has(v)) : a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.person ?? a.topic ?? a.query ?? a.name
   const arg = typeof raw === 'string' ? raw.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) : undefined
   return { id, label, ...(arg ? { arg } : {}), state: 'running' }
 }
@@ -774,7 +774,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
     if (electorateData && plan.steps.some(s => s.tool !== 'electorates') || plan.shape === 'ranking' && !electorateData && !plan.steps.some(s => s.tool === 'count_speeches' && s.args.group_by === group) ||
         /\bwhich year\b.*\bmost\b/i.test(question) && !plan.steps.some(s => s.tool === 'speech_trend' && (s.args.by ?? 'year') === 'year') ||
         plan.shape === 'trend' && !has('count_speeches') && !has('speech_trend') ||
-        plan.shape === 'money' && (!has('party_donations') || !has('count_speeches')) ||
+        plan.shape === 'money' && (!has('party_receipts') || !has('count_speeches')) ||
         plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
   }
   if (plan && plan.shape !== 'unanswerable' && ((!researched && plan.shape !== classifyAgentic(question).shape) || topic && usedOnly(plan.steps).filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
@@ -790,7 +790,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   plan = periodPlan(plan, period, { ...explicitScope, ...filters })
   if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
   const tTools = Date.now()
-  const donationLimitation = (r: ToolResult | undefined) => r?.tool === 'party_donations' && r.ok && r.data?.coverage_only === true && r.coverage?.matched === false
+  const donationLimitation = (r: ToolResult | undefined) => r?.tool === 'party_receipts' && r.ok && r.data?.coverage_only === true && r.coverage?.matched === false
   const coverageBlocked = new Set<number>()
   for (const step of researched ? [] : plan.steps) {
     if (left() < 8_000) break
@@ -811,7 +811,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const checkedResults = usedOnly(results.map((result, index) => ({ result, index }))).filter(({ index }) => !coverageBlocked.has(index)).map(({ result }) => result)
   if (results.length !== plan.steps.length || checkedResults.some(r => !r.ok || r.data?.exact === false ||
     r.tool === 'member_votes' && !(r.data?.summary as { divisions?: number } | undefined)?.divisions ||
-    r.tool === 'party_donations' && !donationLimitation(r) && !(r.data?.rows as unknown[] | undefined)?.length)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
+    r.tool === 'party_receipts' && !donationLimitation(r) && !(r.data?.rows as unknown[] | undefined)?.length)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
   const limitedDonations = checkedResults.find(donationLimitation)
   if (limitedDonations) {
     // A partial FY is a known source limit, not an empty result. Keep it out of

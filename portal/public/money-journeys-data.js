@@ -75,7 +75,7 @@ function publicMoneyJourney(view, requested) {
     ...base,
     steps: [
       { title: `Start at ${hub.label}`, body: `Follow the line to ${donor.label}. It shows recorded ${noun}, not payments.`, metric: metric(`Recorded ${noun}`, edge.total), scene: scene(hub.id, [donor.id], [edge]) },
-      { title: `Meet ${donor.label}`, body: 'This organisation also appears in the funding record. Open its profile to inspect the connection and supporting records.', scene: scene(donor.id, [hub.id], [edge]), links },
+      { title: `Meet ${donor.label}`, body: 'This organisation also appears in the disclosed receipts record. Open its profile to inspect the connection and supporting records.', scene: scene(donor.id, [hub.id], [edge]), links },
       { title: 'Now follow the party receipts', body: `Now follow its ${giving.length} party connections. These receipts cover a different set of records and years from the awards.`, metric: metric('Receipts on the links shown', recorded), scene: scene(donor.id, parties, giving) },
       { title: 'Keep the two directions separate', body: 'Awards come in; party receipts go out. These are separate flows. A connection does not establish that one funded the other or bought influence.', scene: scene(donor.id, [hub.id, ...parties], [edge, ...giving]), links },
     ],
@@ -96,7 +96,7 @@ function multiplePartiesJourney(view, requested) {
   return {
     ...base,
     steps: [
-      { title: `Start with ${donor.label}`, body: `Its funding reaches several parties. Start with the ${shown.length} largest connections shown here.`, metric: metric('Parties linked in this record', all.length, 'number'), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
+      { title: `Start with ${donor.label}`, body: `Several parties disclosed receipts from it. Start with the ${shown.length} largest connections shown here.`, metric: metric('Parties linked in this record', all.length, 'number'), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },
       { title: `Its largest link: ${view.nodes.get(first.target).label}`, body: 'This is its largest recorded party connection across the years covered by the map.', metric: metric('Recorded receipts', first.total), scene: scene(first.target, [donor.id], [first]) },
       { title: `There is also ${view.nodes.get(second.target).label}`, body: 'The next-largest connection leads somewhere else. A single headline total would miss this part of the picture.', metric: metric('Recorded receipts', second.total), scene: scene(second.target, [donor.id], [second]) },
       { title: 'Put the destinations side by side', body: `Compare the ${shown.length} largest connections. Smaller or undisclosed receipts may be missing from the map.`, breakdown: shown.map(edge => ({ label: view.nodes.get(edge.target).label, value: edge.total, colour: view.nodes.get(edge.target).colour || "var(--party-oth)" })), scene: scene(donor.id, shown.map(e => e.target), shown), links: [donorLink(donor)] },

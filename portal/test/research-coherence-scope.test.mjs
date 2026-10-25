@@ -49,7 +49,7 @@ for(const [name,question,evidence,allowed] of cases)for(const stream of [false,t
  assert.equal(canReconstructRanking(payload,question),allowed,'scope permission')
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})},response=stream?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- if(allowed){assert.match(out.answer,/provided the most disclosed funding/);assert.match(out.answer,/754,314/);assert.ok(out.citations['fact-1/t/body/0'])}
+ if(allowed){assert.match(out.answer,/was the source of the largest disclosed receipts/);assert.match(out.answer,/754,314/);assert.ok(out.citations['fact-1/t/body/0'])}
  else{assert.doesNotMatch(out.answer,/provided the most|754,314/);assert.deepEqual(out.citations,{})}
 })
 test('each row used by a repair agrees with scope; a matching row cannot admit a mismatched row',()=>{

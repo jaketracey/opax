@@ -1,0 +1,8 @@
+export const FEDERAL_RECEIPTS_NOTE:string
+export const RECEIPTS_WRITING_RULE:string
+export function federalReceiptFact(text:string):{name:string;party:string;amount:string;period?:string;end:number}|null
+export function unsafeReceiptWording(text:string):boolean
+export function receiptSource(source:{kind?:string;snippet?:string}):boolean
+export function neutralReceiptSentence(text:string):string
+export function receiptSourceNames(sources:{kind?:string;snippet?:string}[]):string[]
+export function receiptDirectionMistakes(text:string,names:string[]):string[]

@@ -1,0 +1,200 @@
+{
+  "schema": 1,
+  "questions": [
+    {
+      "id": "RC01",
+      "kind": "qualitative",
+      "shape": "receipts",
+      "question": "Who gives the most money to Labor?",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "ranked_money",
+        "answer"
+      ],
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "mentions",
+          "all": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "not a donation ranking"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "disclosed receipts"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
+        "citations": "Each monetary statement has its own source.",
+        "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      }
+    },
+    {
+      "id": "RC02",
+      "kind": "qualitative",
+      "shape": "receipts",
+      "question": "Who donates the most to Labor?",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "ranked_money",
+        "answer"
+      ],
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "mentions",
+          "all": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "not a donation ranking"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "disclosed receipts"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
+        "citations": "Each monetary statement has its own source.",
+        "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      }
+    },
+    {
+      "id": "RC03",
+      "kind": "qualitative",
+      "shape": "receipts",
+      "question": "Who funds the Liberal Party?",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "ranked_money",
+        "answer"
+      ],
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "mentions",
+          "all": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "not a donation ranking"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "disclosed receipts"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
+        "citations": "Each monetary statement has its own source.",
+        "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      }
+    },
+    {
+      "id": "RC04",
+      "kind": "qualitative",
+      "shape": "receipts",
+      "question": "Who does Pauline Hanson's party take the most money from?",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "ranked_money",
+        "answer"
+      ],
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "mentions",
+          "all": [
+            "Westpac Banking Corporation"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "not a donation ranking"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "disclosed receipts"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
+        "citations": "Each monetary statement has its own source.",
+        "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      }
+    },
+    {
+      "id": "RC05",
+      "kind": "qualitative",
+      "shape": "receipts",
+      "question": "Which banks lent money to Labor?",
+      "old_route": "ordinary",
+      "expected_tools": [
+        "ranked_money",
+        "answer"
+      ],
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "terms",
+          "any": [
+            "balances owed at 30 June"
+          ]
+        },
+        {
+          "type": "terms",
+          "any": [
+            "cannot establish",
+            "do not establish"
+          ]
+        }
+      ],
+      "must_not": [],
+      "rubric": {
+        "usefulness": "Answer the receipt question or explicitly state the debt-record limitation.",
+        "citations": "Each monetary statement has its own source.",
+        "correctness": "Unclassified amounts are receipts, with no positive gift or donation claim."
+      }
+    }
+  ]
+}

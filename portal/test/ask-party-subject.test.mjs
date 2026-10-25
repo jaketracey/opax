@@ -10,7 +10,7 @@ const question="Who does Pauline Hanson's party take the most money from?"
 for(const q of [question,'Who does the party of Pauline Hanson take the most money from?',"who gives the most to Anthony Albanese's party",'Top donors to PHON'])test(`party subject from current roster: ${q}`,()=>{
  const n=api.extractNamedScope(q,roster,null),c=api.extractAskConstraints(q,api.inferPeriod(q),n)
  assert.deepEqual(n.people,[]);assert.deepEqual(n.parties,[q.includes('Albanese')?'Labor':'One Nation']);assert.equal(n.ambiguous,false);assert.equal(n.unresolved,false);assert.equal(c.party,n.parties[0]);assert.deepEqual(c.people,[])
- const args=api.constrainStep({tool:'party_donations',args:{}},c,{party:{},speaker:{}}).args
+ const args=api.constrainStep({tool:'party_receipts',args:{}},c,{party:{},speaker:{}}).args
  assert.equal(args.party,n.parties[0]);assert.equal(args.speaker,undefined)
 })
 for(const q of ["Who funds Adam Bandt's party?","Who funds Avery Unknown's party?","Who funds Smith's party?"])test(`missing or ambiguous current party clarifies before research: ${q}`,async()=>{
@@ -43,7 +43,7 @@ test('coverage fallback uses the known start once, without implementation langua
  const out=api.proseFallback({question:coverageQuestion,period:api.inferPeriod(coverageQuestion),facts:coverageSources.map((source,i)=>({id:i+1,text:source.snippet,coverage:true,source}))})
  assert.equal(out.answer,expected);assert.doesNotMatch(out.answer,/unknown|tool|lookup|covers an/)
  const c=api.extractAskConstraints(coverageQuestion,api.inferPeriod(coverageQuestion),{people:[],parties:['One Nation'],bills:[],ambiguous:false,unresolved:false})
- const result=api.guardToolPeriod({tool:'party_donations',ok:true,data:{rows:[]},cite:[],notes:[coverageSources[1].snippet]},{tool:'party_donations',args:{party:'One Nation'}},c)
+ const result=api.guardToolPeriod({tool:'party_receipts',ok:true,data:{rows:[]},cite:[],notes:[coverageSources[1].snippet]},{tool:'party_receipts',args:{party:'One Nation'}},c)
  assert.equal(result.coverage.since,'1998-07-01');assert.doesNotMatch(result.cite[0].label,/unknown start|unknown end|unknown date|tool/)
 })
 test('a calculated party owner now requires an explicit party',()=>{
