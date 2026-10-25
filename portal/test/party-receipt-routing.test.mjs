@@ -116,7 +116,9 @@ test('mixed receipt headers and charts use source and receipt labels without cha
  assert.ok(app.includes('Disclosed receipts per financial year'));assert.doesNotMatch(app,/Donations per financial year|Donations come from AEC/)
  assert.doesNotMatch(explain,/leading donors shown|leading donors account for/)
  assert.ok(app.includes('itemised as donations'),'Classified annual-return categories retain their source wording')
- const configText=fs.readFileSync(root+'wrangler.jsonc','utf8');assert.equal((configText.match(/"CACHE_EPOCH": "2026-10-25-receipts-r6"/g)||[]).length,2)
+ // The nightly rewrites CACHE_EPOCH every run; require both environments to share one epoch no older than the receipts release.
+ const configText=fs.readFileSync(root+'wrangler.jsonc','utf8'),epochs=[...configText.matchAll(/"CACHE_EPOCH": "([^"]+)"/g)].map(m=>m[1])
+ assert.equal(epochs.length,2);assert.equal(epochs[0],epochs[1]);assert.ok(epochs[0]>='2026-10-25-receipts-r6',`stale CACHE_EPOCH ${epochs[0]}`)
 })
 
 test('Source headers retain evidence direction and amounts, with legacy Donor compatibility',async()=>{
