@@ -156,7 +156,7 @@ test('industry and party questions rank different directions with source links',
   const answer=await ask(`Who donates the most to ${party}?`);
   const matching=graph.edges.filter(e=>e.target==='party:'+party&&e.source.startsWith('donor:')&&!e.flow&&!e.grant).sort((a,b)=>b.total-a.total);
   const winner=graph.nodes.find(n=>n.id===matching[0].source).label;
-  assert.ok(answer.answer.split('\n')[0].includes(`**${winner}:`));assert.match(answer.answer,/\| Donor \|/);
+  assert.ok(answer.answer.split('\n')[0].includes(`**${winner}:`));assert.match(answer.answer,/\| Source \|/);
   assert.ok(answer.sources.some(s=>new URL(s.href,'https://opax.test').searchParams.get('focus')===matching[0].source));
  }
 });
@@ -180,10 +180,10 @@ test('unsupported questions are not silently replaced by lifetime or party total
 
 test('biggest industry donors and biggest recipient parties are distinct rankings',async()=>{
  const donors=await ask('Who are the biggest gambling donors?');
- assert.match(donors.answer,/\| Donor \|/);assert.match(donors.answer,/among gambling sources/);
+ assert.match(donors.answer,/\| Source \|/);assert.match(donors.answer,/among gambling sources/);
  const parties=await ask('Which party receives the largest funding from gambling donors?');
  assert.match(parties.answer,/\| Recipient party \|/);assert.match(parties.answer,/^\*\*Labor\*\*/);
- const flow=await ask('Who donates the most to who?');assert.match(flow.answer,/\| Donor → party \|/);
+ const flow=await ask('Who donates the most to who?');assert.match(flow.answer,/\| Source → party \|/);
 });
 
 test('party comparisons calculate a dollar difference and cite each scoped side',async()=>{
@@ -201,7 +201,7 @@ test('industry comparisons do not treat banks as every finance organisation',asy
  const unsupported=await ask('Who gives more money to Labor, unions or banks?');
  assert.equal(unsupported.answer_status,'needs_scope');assert.match(unsupported.answer,/grouped with other finance/);
  const r=await ask('Who gives more money to Labor, unions or finance?');
- assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\| Donor industry \|/);
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\| Source industry \|/);
  assert.match(r.answer,/Unions accounted for \$122,966,378 more to Labor than Finance/);
  assert.match(r.answer,/\$247,398,401/);assert.match(r.answer,/\$124,432,023/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=unions')&&s.href.includes('party=party%3ALabor')));
@@ -229,7 +229,7 @@ test('unsupported comparisons and missing data never become a false winner',asyn
 test('year comparisons calculate separate cells and cite each exact year',async()=>{
  for(const q of ['Did Labor receive more gambling money in 2020 or 2021?','How did gambling receipts to Labor change from 2020 to 2021?','Compare gambling receipts to Labor in 2021 and 2020']) {
   const r=await ask(q);
-  assert.equal(r.answer_status,'calculated',q);assert.match(r.answer,/Labor received \$553,355 more from gambling donors in 2021–22 than in 2020–21/);
+  assert.equal(r.answer_status,'calculated',q);assert.match(r.answer,/Labor received \$553,355 more from gambling receipt sources in 2021–22 than in 2020–21/);
   assert.match(r.answer,/\| 2020–21 \| \$457,673 \| 47 \|/);assert.match(r.answer,/\| 2021–22 \| \$1,011,028 \| 67 \|/);
   for(const y of ['2020','2021']) {
    const s=r.sources.find(s=>s.href.includes(`from=${y}&to=${y}`));assert.ok(s,q);
@@ -249,7 +249,7 @@ test('year comparisons exclude intermediate years and handle decreases',async()=
  assert.match(ends.answer,/\$366,565 more/);assert.match(ends.answer,/\$283,635/);assert.match(ends.answer,/\$650,200/);
  assert.doesNotMatch(ends.answer,/\$457,673|\$1,011,028/);
  const decrease=await ask('How did gambling receipts to Labor change from 2021 to 2022?');
- assert.match(decrease.answer,/\$360,828 less from gambling donors in 2022–23 than in 2021–22/);
+ assert.match(decrease.answer,/\$360,828 less from gambling receipt sources in 2022–23 than in 2021–22/);
  const unknown=await ask('Compare gambling and aerospace money to Labor in 2020 versus 2021');
  assert.equal(unknown.answer_status,'needs_scope');assert.doesNotMatch(unknown.answer,/\$/);
 });

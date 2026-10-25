@@ -1,0 +1,4179 @@
+{
+  "verb_families": [
+    "give",
+    "donate",
+    "fund",
+    "bankroll",
+    "back",
+    "support",
+    "prop up",
+    "contribute"
+  ],
+  "tenses": [
+    "present",
+    "past",
+    "perfect",
+    "progressive",
+    "past progressive",
+    "past perfect",
+    "perfect progressive",
+    "future"
+  ],
+  "parties": [
+    "Labor",
+    "the Liberal Party",
+    "the Greens"
+  ],
+  "roles": [
+    "donor",
+    "backer",
+    "supporter",
+    "benefactor",
+    "funder",
+    "contributor"
+  ],
+  "superlatives": [
+    "biggest",
+    "top",
+    "largest",
+    "major",
+    "main"
+  ],
+  "verb_cases": 384,
+  "noun_superlative_cases": 180,
+  "separable_phrasal_cases": 48,
+  "positive_cases": 612,
+  "negative_controls": 24,
+  "cases": [
+    {
+      "question": "Who props Labor up the most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who props Labor up most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who props the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who props the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who props the Greens up the most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who props the Greens up most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who propped Labor up the most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who propped Labor up most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who propped the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who propped the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who propped the Greens up the most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who propped the Greens up most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who has propped Labor up the most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who has propped Labor up most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who has propped the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who has propped the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who has propped the Greens up the most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who has propped the Greens up most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who is propping Labor up the most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who is propping Labor up most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who is propping the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who is propping the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who is propping the Greens up the most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who is propping the Greens up most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who was propping Labor up the most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who was propping Labor up most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who was propping the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who was propping the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who was propping the Greens up the most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who was propping the Greens up most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who had propped Labor up the most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who had propped Labor up most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who had propped the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who had propped the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who had propped the Greens up the most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who had propped the Greens up most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who has been propping Labor up the most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who has been propping Labor up most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who has been propping the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who has been propping the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who has been propping the Greens up the most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who has been propping the Greens up most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who will prop Labor up the most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "Labor",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who will prop Labor up most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "Labor",
+      "form": "separable most"
+    },
+    {
+      "question": "Who will prop the Liberal Party up the most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who will prop the Liberal Party up most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "separable most"
+    },
+    {
+      "question": "Who will prop the Greens up the most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "separable the most"
+    },
+    {
+      "question": "Who will prop the Greens up most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "separable most"
+    },
+    {
+      "question": "Who gives the most money to Labor?",
+      "verb": "give",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who gives the most to Labor?",
+      "verb": "give",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who gives the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who gives the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who gives the most money to the Greens?",
+      "verb": "give",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who gives the most to the Greens?",
+      "verb": "give",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who gave the most money to Labor?",
+      "verb": "give",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who gave the most to Labor?",
+      "verb": "give",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who gave the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who gave the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who gave the most money to the Greens?",
+      "verb": "give",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who gave the most to the Greens?",
+      "verb": "give",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has given the most money to Labor?",
+      "verb": "give",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has given the most to Labor?",
+      "verb": "give",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has given the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has given the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has given the most money to the Greens?",
+      "verb": "give",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has given the most to the Greens?",
+      "verb": "give",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is giving the most money to Labor?",
+      "verb": "give",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is giving the most to Labor?",
+      "verb": "give",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is giving the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is giving the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is giving the most money to the Greens?",
+      "verb": "give",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is giving the most to the Greens?",
+      "verb": "give",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was giving the most money to Labor?",
+      "verb": "give",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was giving the most to Labor?",
+      "verb": "give",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was giving the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was giving the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was giving the most money to the Greens?",
+      "verb": "give",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was giving the most to the Greens?",
+      "verb": "give",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had given the most money to Labor?",
+      "verb": "give",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had given the most to Labor?",
+      "verb": "give",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had given the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had given the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had given the most money to the Greens?",
+      "verb": "give",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had given the most to the Greens?",
+      "verb": "give",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been giving the most money to Labor?",
+      "verb": "give",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been giving the most to Labor?",
+      "verb": "give",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been giving the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been giving the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been giving the most money to the Greens?",
+      "verb": "give",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been giving the most to the Greens?",
+      "verb": "give",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will give the most money to Labor?",
+      "verb": "give",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will give the most to Labor?",
+      "verb": "give",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will give the most money to the Liberal Party?",
+      "verb": "give",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will give the most to the Liberal Party?",
+      "verb": "give",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will give the most money to the Greens?",
+      "verb": "give",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will give the most to the Greens?",
+      "verb": "give",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who donates the most money to Labor?",
+      "verb": "donate",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who donates the most to Labor?",
+      "verb": "donate",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who donates the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who donates the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who donates the most money to the Greens?",
+      "verb": "donate",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who donates the most to the Greens?",
+      "verb": "donate",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who donated the most money to Labor?",
+      "verb": "donate",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who donated the most to Labor?",
+      "verb": "donate",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who donated the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who donated the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who donated the most money to the Greens?",
+      "verb": "donate",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who donated the most to the Greens?",
+      "verb": "donate",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has donated the most money to Labor?",
+      "verb": "donate",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has donated the most to Labor?",
+      "verb": "donate",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has donated the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has donated the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has donated the most money to the Greens?",
+      "verb": "donate",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has donated the most to the Greens?",
+      "verb": "donate",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is donating the most money to Labor?",
+      "verb": "donate",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is donating the most to Labor?",
+      "verb": "donate",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is donating the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is donating the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is donating the most money to the Greens?",
+      "verb": "donate",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is donating the most to the Greens?",
+      "verb": "donate",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was donating the most money to Labor?",
+      "verb": "donate",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was donating the most to Labor?",
+      "verb": "donate",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was donating the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was donating the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was donating the most money to the Greens?",
+      "verb": "donate",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was donating the most to the Greens?",
+      "verb": "donate",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had donated the most money to Labor?",
+      "verb": "donate",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had donated the most to Labor?",
+      "verb": "donate",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had donated the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had donated the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had donated the most money to the Greens?",
+      "verb": "donate",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had donated the most to the Greens?",
+      "verb": "donate",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been donating the most money to Labor?",
+      "verb": "donate",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been donating the most to Labor?",
+      "verb": "donate",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been donating the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been donating the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been donating the most money to the Greens?",
+      "verb": "donate",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been donating the most to the Greens?",
+      "verb": "donate",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will donate the most money to Labor?",
+      "verb": "donate",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will donate the most to Labor?",
+      "verb": "donate",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will donate the most money to the Liberal Party?",
+      "verb": "donate",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will donate the most to the Liberal Party?",
+      "verb": "donate",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will donate the most money to the Greens?",
+      "verb": "donate",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will donate the most to the Greens?",
+      "verb": "donate",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who funds Labor the most?",
+      "verb": "fund",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who funds Labor most?",
+      "verb": "fund",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who funds the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who funds the Liberal Party most?",
+      "verb": "fund",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who funds the Greens the most?",
+      "verb": "fund",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who funds the Greens most?",
+      "verb": "fund",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who funded Labor the most?",
+      "verb": "fund",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who funded Labor most?",
+      "verb": "fund",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who funded the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who funded the Liberal Party most?",
+      "verb": "fund",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who funded the Greens the most?",
+      "verb": "fund",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who funded the Greens most?",
+      "verb": "fund",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has funded Labor the most?",
+      "verb": "fund",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has funded Labor most?",
+      "verb": "fund",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has funded the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has funded the Liberal Party most?",
+      "verb": "fund",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has funded the Greens the most?",
+      "verb": "fund",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has funded the Greens most?",
+      "verb": "fund",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is funding Labor the most?",
+      "verb": "fund",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is funding Labor most?",
+      "verb": "fund",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is funding the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is funding the Liberal Party most?",
+      "verb": "fund",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is funding the Greens the most?",
+      "verb": "fund",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is funding the Greens most?",
+      "verb": "fund",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was funding Labor the most?",
+      "verb": "fund",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was funding Labor most?",
+      "verb": "fund",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was funding the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was funding the Liberal Party most?",
+      "verb": "fund",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was funding the Greens the most?",
+      "verb": "fund",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was funding the Greens most?",
+      "verb": "fund",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had funded Labor the most?",
+      "verb": "fund",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had funded Labor most?",
+      "verb": "fund",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had funded the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had funded the Liberal Party most?",
+      "verb": "fund",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had funded the Greens the most?",
+      "verb": "fund",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had funded the Greens most?",
+      "verb": "fund",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been funding Labor the most?",
+      "verb": "fund",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been funding Labor most?",
+      "verb": "fund",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been funding the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been funding the Liberal Party most?",
+      "verb": "fund",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been funding the Greens the most?",
+      "verb": "fund",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been funding the Greens most?",
+      "verb": "fund",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will fund Labor the most?",
+      "verb": "fund",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will fund Labor most?",
+      "verb": "fund",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will fund the Liberal Party the most?",
+      "verb": "fund",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will fund the Liberal Party most?",
+      "verb": "fund",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will fund the Greens the most?",
+      "verb": "fund",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will fund the Greens most?",
+      "verb": "fund",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who bankrolls Labor the most?",
+      "verb": "bankroll",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who bankrolls Labor most?",
+      "verb": "bankroll",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who bankrolls the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who bankrolls the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who bankrolls the Greens the most?",
+      "verb": "bankroll",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who bankrolls the Greens most?",
+      "verb": "bankroll",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who bankrolled Labor the most?",
+      "verb": "bankroll",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who bankrolled Labor most?",
+      "verb": "bankroll",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who bankrolled the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who bankrolled the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who bankrolled the Greens the most?",
+      "verb": "bankroll",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who bankrolled the Greens most?",
+      "verb": "bankroll",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has bankrolled Labor the most?",
+      "verb": "bankroll",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has bankrolled Labor most?",
+      "verb": "bankroll",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has bankrolled the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has bankrolled the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has bankrolled the Greens the most?",
+      "verb": "bankroll",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has bankrolled the Greens most?",
+      "verb": "bankroll",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is bankrolling Labor the most?",
+      "verb": "bankroll",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is bankrolling Labor most?",
+      "verb": "bankroll",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is bankrolling the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is bankrolling the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is bankrolling the Greens the most?",
+      "verb": "bankroll",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is bankrolling the Greens most?",
+      "verb": "bankroll",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was bankrolling Labor the most?",
+      "verb": "bankroll",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was bankrolling Labor most?",
+      "verb": "bankroll",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was bankrolling the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was bankrolling the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was bankrolling the Greens the most?",
+      "verb": "bankroll",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was bankrolling the Greens most?",
+      "verb": "bankroll",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had bankrolled Labor the most?",
+      "verb": "bankroll",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had bankrolled Labor most?",
+      "verb": "bankroll",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had bankrolled the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had bankrolled the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had bankrolled the Greens the most?",
+      "verb": "bankroll",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had bankrolled the Greens most?",
+      "verb": "bankroll",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been bankrolling Labor the most?",
+      "verb": "bankroll",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been bankrolling Labor most?",
+      "verb": "bankroll",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been bankrolling the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been bankrolling the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been bankrolling the Greens the most?",
+      "verb": "bankroll",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been bankrolling the Greens most?",
+      "verb": "bankroll",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will bankroll Labor the most?",
+      "verb": "bankroll",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will bankroll Labor most?",
+      "verb": "bankroll",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will bankroll the Liberal Party the most?",
+      "verb": "bankroll",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will bankroll the Liberal Party most?",
+      "verb": "bankroll",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will bankroll the Greens the most?",
+      "verb": "bankroll",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will bankroll the Greens most?",
+      "verb": "bankroll",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who backs Labor the most?",
+      "verb": "back",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who backs Labor most?",
+      "verb": "back",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who backs the Liberal Party the most?",
+      "verb": "back",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who backs the Liberal Party most?",
+      "verb": "back",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who backs the Greens the most?",
+      "verb": "back",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who backs the Greens most?",
+      "verb": "back",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who backed Labor the most?",
+      "verb": "back",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who backed Labor most?",
+      "verb": "back",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who backed the Liberal Party the most?",
+      "verb": "back",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who backed the Liberal Party most?",
+      "verb": "back",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who backed the Greens the most?",
+      "verb": "back",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who backed the Greens most?",
+      "verb": "back",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has backed Labor the most?",
+      "verb": "back",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has backed Labor most?",
+      "verb": "back",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has backed the Liberal Party the most?",
+      "verb": "back",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has backed the Liberal Party most?",
+      "verb": "back",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has backed the Greens the most?",
+      "verb": "back",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has backed the Greens most?",
+      "verb": "back",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is backing Labor the most?",
+      "verb": "back",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is backing Labor most?",
+      "verb": "back",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is backing the Liberal Party the most?",
+      "verb": "back",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is backing the Liberal Party most?",
+      "verb": "back",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is backing the Greens the most?",
+      "verb": "back",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is backing the Greens most?",
+      "verb": "back",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was backing Labor the most?",
+      "verb": "back",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was backing Labor most?",
+      "verb": "back",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was backing the Liberal Party the most?",
+      "verb": "back",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was backing the Liberal Party most?",
+      "verb": "back",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was backing the Greens the most?",
+      "verb": "back",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was backing the Greens most?",
+      "verb": "back",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had backed Labor the most?",
+      "verb": "back",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had backed Labor most?",
+      "verb": "back",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had backed the Liberal Party the most?",
+      "verb": "back",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had backed the Liberal Party most?",
+      "verb": "back",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had backed the Greens the most?",
+      "verb": "back",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had backed the Greens most?",
+      "verb": "back",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been backing Labor the most?",
+      "verb": "back",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been backing Labor most?",
+      "verb": "back",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been backing the Liberal Party the most?",
+      "verb": "back",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been backing the Liberal Party most?",
+      "verb": "back",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been backing the Greens the most?",
+      "verb": "back",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been backing the Greens most?",
+      "verb": "back",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will back Labor the most?",
+      "verb": "back",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will back Labor most?",
+      "verb": "back",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will back the Liberal Party the most?",
+      "verb": "back",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will back the Liberal Party most?",
+      "verb": "back",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will back the Greens the most?",
+      "verb": "back",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will back the Greens most?",
+      "verb": "back",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who supports Labor the most?",
+      "verb": "support",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who supports Labor most?",
+      "verb": "support",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who supports the Liberal Party the most?",
+      "verb": "support",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who supports the Liberal Party most?",
+      "verb": "support",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who supports the Greens the most?",
+      "verb": "support",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who supports the Greens most?",
+      "verb": "support",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who supported Labor the most?",
+      "verb": "support",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who supported Labor most?",
+      "verb": "support",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who supported the Liberal Party the most?",
+      "verb": "support",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who supported the Liberal Party most?",
+      "verb": "support",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who supported the Greens the most?",
+      "verb": "support",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who supported the Greens most?",
+      "verb": "support",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has supported Labor the most?",
+      "verb": "support",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has supported Labor most?",
+      "verb": "support",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has supported the Liberal Party the most?",
+      "verb": "support",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has supported the Liberal Party most?",
+      "verb": "support",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has supported the Greens the most?",
+      "verb": "support",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has supported the Greens most?",
+      "verb": "support",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is supporting Labor the most?",
+      "verb": "support",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is supporting Labor most?",
+      "verb": "support",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is supporting the Liberal Party the most?",
+      "verb": "support",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is supporting the Liberal Party most?",
+      "verb": "support",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is supporting the Greens the most?",
+      "verb": "support",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is supporting the Greens most?",
+      "verb": "support",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was supporting Labor the most?",
+      "verb": "support",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was supporting Labor most?",
+      "verb": "support",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was supporting the Liberal Party the most?",
+      "verb": "support",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was supporting the Liberal Party most?",
+      "verb": "support",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was supporting the Greens the most?",
+      "verb": "support",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was supporting the Greens most?",
+      "verb": "support",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had supported Labor the most?",
+      "verb": "support",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had supported Labor most?",
+      "verb": "support",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had supported the Liberal Party the most?",
+      "verb": "support",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had supported the Liberal Party most?",
+      "verb": "support",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had supported the Greens the most?",
+      "verb": "support",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had supported the Greens most?",
+      "verb": "support",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been supporting Labor the most?",
+      "verb": "support",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been supporting Labor most?",
+      "verb": "support",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been supporting the Liberal Party the most?",
+      "verb": "support",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been supporting the Liberal Party most?",
+      "verb": "support",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been supporting the Greens the most?",
+      "verb": "support",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been supporting the Greens most?",
+      "verb": "support",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will support Labor the most?",
+      "verb": "support",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will support Labor most?",
+      "verb": "support",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will support the Liberal Party the most?",
+      "verb": "support",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will support the Liberal Party most?",
+      "verb": "support",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will support the Greens the most?",
+      "verb": "support",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will support the Greens most?",
+      "verb": "support",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who props up Labor the most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who props up Labor most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who props up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who props up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who props up the Greens the most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who props up the Greens most?",
+      "verb": "prop up",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who propped up Labor the most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who propped up Labor most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who propped up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who propped up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who propped up the Greens the most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who propped up the Greens most?",
+      "verb": "prop up",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has propped up Labor the most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has propped up Labor most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has propped up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has propped up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has propped up the Greens the most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has propped up the Greens most?",
+      "verb": "prop up",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is propping up Labor the most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is propping up Labor most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is propping up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is propping up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is propping up the Greens the most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is propping up the Greens most?",
+      "verb": "prop up",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was propping up Labor the most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was propping up Labor most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was propping up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was propping up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was propping up the Greens the most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was propping up the Greens most?",
+      "verb": "prop up",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had propped up Labor the most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had propped up Labor most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had propped up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had propped up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had propped up the Greens the most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had propped up the Greens most?",
+      "verb": "prop up",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been propping up Labor the most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been propping up Labor most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been propping up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been propping up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been propping up the Greens the most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been propping up the Greens most?",
+      "verb": "prop up",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will prop up Labor the most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will prop up Labor most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will prop up the Liberal Party the most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will prop up the Liberal Party most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will prop up the Greens the most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will prop up the Greens most?",
+      "verb": "prop up",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who contributes the most money to Labor?",
+      "verb": "contribute",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who contributes the most to Labor?",
+      "verb": "contribute",
+      "tense": "present",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who contributes the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who contributes the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "present",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who contributes the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who contributes the most to the Greens?",
+      "verb": "contribute",
+      "tense": "present",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who contributed the most money to Labor?",
+      "verb": "contribute",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who contributed the most to Labor?",
+      "verb": "contribute",
+      "tense": "past",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who contributed the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who contributed the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "past",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who contributed the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who contributed the most to the Greens?",
+      "verb": "contribute",
+      "tense": "past",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has contributed the most money to Labor?",
+      "verb": "contribute",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has contributed the most to Labor?",
+      "verb": "contribute",
+      "tense": "perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has contributed the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has contributed the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has contributed the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has contributed the most to the Greens?",
+      "verb": "contribute",
+      "tense": "perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is contributing the most money to Labor?",
+      "verb": "contribute",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who is contributing the most to Labor?",
+      "verb": "contribute",
+      "tense": "progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who is contributing the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who is contributing the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who is contributing the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who is contributing the most to the Greens?",
+      "verb": "contribute",
+      "tense": "progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who was contributing the most money to Labor?",
+      "verb": "contribute",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who was contributing the most to Labor?",
+      "verb": "contribute",
+      "tense": "past progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who was contributing the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who was contributing the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "past progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who was contributing the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who was contributing the most to the Greens?",
+      "verb": "contribute",
+      "tense": "past progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who had contributed the most money to Labor?",
+      "verb": "contribute",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who had contributed the most to Labor?",
+      "verb": "contribute",
+      "tense": "past perfect",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who had contributed the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who had contributed the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "past perfect",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who had contributed the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who had contributed the most to the Greens?",
+      "verb": "contribute",
+      "tense": "past perfect",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who has been contributing the most money to Labor?",
+      "verb": "contribute",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been contributing the most to Labor?",
+      "verb": "contribute",
+      "tense": "perfect progressive",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who has been contributing the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been contributing the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "perfect progressive",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who has been contributing the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who has been contributing the most to the Greens?",
+      "verb": "contribute",
+      "tense": "perfect progressive",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who will contribute the most money to Labor?",
+      "verb": "contribute",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most money"
+    },
+    {
+      "question": "Who will contribute the most to Labor?",
+      "verb": "contribute",
+      "tense": "future",
+      "party": "Labor",
+      "form": "most"
+    },
+    {
+      "question": "Who will contribute the most money to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most money"
+    },
+    {
+      "question": "Who will contribute the most to the Liberal Party?",
+      "verb": "contribute",
+      "tense": "future",
+      "party": "the Liberal Party",
+      "form": "most"
+    },
+    {
+      "question": "Who will contribute the most money to the Greens?",
+      "verb": "contribute",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most money"
+    },
+    {
+      "question": "Who will contribute the most to the Greens?",
+      "verb": "contribute",
+      "tense": "future",
+      "party": "the Greens",
+      "form": "most"
+    },
+    {
+      "question": "Who is the biggest donor to Labor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is Labor's biggest financial donor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest donor to the Liberal Party?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Liberal Party's biggest financial donor?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest donor to the Greens?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Greens's biggest financial donor?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the top donor to Labor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is Labor's top financial donor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top donor to the Liberal Party?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Liberal Party's top financial donor?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top donor to the Greens?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Greens's top financial donor?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the largest donor to Labor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is Labor's largest financial donor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest donor to the Liberal Party?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Liberal Party's largest financial donor?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest donor to the Greens?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Greens's largest financial donor?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the major donor to Labor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is Labor's major financial donor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major donor to the Liberal Party?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Liberal Party's major financial donor?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major donor to the Greens?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Greens's major financial donor?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the main donor to Labor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is Labor's main financial donor?",
+      "role": "donor",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main donor to the Liberal Party?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Liberal Party's main financial donor?",
+      "role": "donor",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main donor to the Greens?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Greens's main financial donor?",
+      "role": "donor",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the biggest backer to Labor?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is Labor's biggest financial backer?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest backer to the Liberal Party?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Liberal Party's biggest financial backer?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest backer to the Greens?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Greens's biggest financial backer?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the top backer to Labor?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is Labor's top financial backer?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top backer to the Liberal Party?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Liberal Party's top financial backer?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top backer to the Greens?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Greens's top financial backer?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the largest backer to Labor?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is Labor's largest financial backer?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest backer to the Liberal Party?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Liberal Party's largest financial backer?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest backer to the Greens?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Greens's largest financial backer?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the major backer to Labor?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is Labor's major financial backer?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major backer to the Liberal Party?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Liberal Party's major financial backer?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major backer to the Greens?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Greens's major financial backer?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the main backer to Labor?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is Labor's main financial backer?",
+      "role": "backer",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main backer to the Liberal Party?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Liberal Party's main financial backer?",
+      "role": "backer",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main backer to the Greens?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Greens's main financial backer?",
+      "role": "backer",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the biggest supporter to Labor?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is Labor's biggest financial supporter?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest supporter to the Liberal Party?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Liberal Party's biggest financial supporter?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest supporter to the Greens?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Greens's biggest financial supporter?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the top supporter to Labor?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is Labor's top financial supporter?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top supporter to the Liberal Party?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Liberal Party's top financial supporter?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top supporter to the Greens?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Greens's top financial supporter?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the largest supporter to Labor?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is Labor's largest financial supporter?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest supporter to the Liberal Party?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Liberal Party's largest financial supporter?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest supporter to the Greens?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Greens's largest financial supporter?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the major supporter to Labor?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is Labor's major financial supporter?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major supporter to the Liberal Party?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Liberal Party's major financial supporter?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major supporter to the Greens?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Greens's major financial supporter?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the main supporter to Labor?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is Labor's main financial supporter?",
+      "role": "supporter",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main supporter to the Liberal Party?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Liberal Party's main financial supporter?",
+      "role": "supporter",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main supporter to the Greens?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Greens's main financial supporter?",
+      "role": "supporter",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the biggest benefactor to Labor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is Labor's biggest financial benefactor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest benefactor to the Liberal Party?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Liberal Party's biggest financial benefactor?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest benefactor to the Greens?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Greens's biggest financial benefactor?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the top benefactor to Labor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is Labor's top financial benefactor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top benefactor to the Liberal Party?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Liberal Party's top financial benefactor?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top benefactor to the Greens?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Greens's top financial benefactor?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the largest benefactor to Labor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is Labor's largest financial benefactor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest benefactor to the Liberal Party?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Liberal Party's largest financial benefactor?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest benefactor to the Greens?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Greens's largest financial benefactor?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the major benefactor to Labor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is Labor's major financial benefactor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major benefactor to the Liberal Party?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Liberal Party's major financial benefactor?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major benefactor to the Greens?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Greens's major financial benefactor?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the main benefactor to Labor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is Labor's main financial benefactor?",
+      "role": "benefactor",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main benefactor to the Liberal Party?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Liberal Party's main financial benefactor?",
+      "role": "benefactor",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main benefactor to the Greens?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Greens's main financial benefactor?",
+      "role": "benefactor",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the biggest funder to Labor?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is Labor's biggest financial funder?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest funder to the Liberal Party?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Liberal Party's biggest financial funder?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest funder to the Greens?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Greens's biggest financial funder?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the top funder to Labor?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is Labor's top financial funder?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top funder to the Liberal Party?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Liberal Party's top financial funder?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top funder to the Greens?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Greens's top financial funder?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the largest funder to Labor?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is Labor's largest financial funder?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest funder to the Liberal Party?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Liberal Party's largest financial funder?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest funder to the Greens?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Greens's largest financial funder?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the major funder to Labor?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is Labor's major financial funder?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major funder to the Liberal Party?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Liberal Party's major financial funder?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major funder to the Greens?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Greens's major financial funder?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the main funder to Labor?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is Labor's main financial funder?",
+      "role": "funder",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main funder to the Liberal Party?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Liberal Party's main financial funder?",
+      "role": "funder",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main funder to the Greens?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Greens's main financial funder?",
+      "role": "funder",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the biggest contributor to Labor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is Labor's biggest financial contributor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest contributor to the Liberal Party?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Liberal Party's biggest financial contributor?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the biggest contributor to the Greens?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the Greens's biggest financial contributor?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "biggest"
+    },
+    {
+      "question": "Who is the top contributor to Labor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is Labor's top financial contributor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top contributor to the Liberal Party?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Liberal Party's top financial contributor?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "top"
+    },
+    {
+      "question": "Who is the top contributor to the Greens?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the Greens's top financial contributor?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "top"
+    },
+    {
+      "question": "Who is the largest contributor to Labor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is Labor's largest financial contributor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest contributor to the Liberal Party?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Liberal Party's largest financial contributor?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the largest contributor to the Greens?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the Greens's largest financial contributor?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "largest"
+    },
+    {
+      "question": "Who is the major contributor to Labor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is Labor's major financial contributor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major contributor to the Liberal Party?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Liberal Party's major financial contributor?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "major"
+    },
+    {
+      "question": "Who is the major contributor to the Greens?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the Greens's major financial contributor?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "major"
+    },
+    {
+      "question": "Who is the main contributor to Labor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is Labor's main financial contributor?",
+      "role": "contributor",
+      "party": "Labor",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main contributor to the Liberal Party?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Liberal Party's main financial contributor?",
+      "role": "contributor",
+      "party": "the Liberal Party",
+      "form": "main"
+    },
+    {
+      "question": "Who is the main contributor to the Greens?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "main"
+    },
+    {
+      "question": "Who is the Greens's main financial contributor?",
+      "role": "contributor",
+      "party": "the Greens",
+      "form": "main"
+    }
+  ],
+  "controls": [
+    "Who has given evidence about Labor housing policy?",
+    "Who has donated the most to Labor in Victoria?",
+    "Who is giving evidence to the Greens committee?",
+    "Who funded Labor housing research and why?",
+    "Who backed Labor in parliament?",
+    "Who supports the Liberal Party housing policy?",
+    "Who props up Labor in the opinion polls?",
+    "Who contributed to Labor housing policy?",
+    "Who is the main contributor to the Greens manifesto?",
+    "Who is the largest supporter of Labor in Victoria?",
+    "Who bankrolled Labor and the Liberal Party?",
+    "Who gave the most to Labor excluding banks?",
+    "Who is Labor’s biggest donor in Queensland?",
+    "Who is giving the most money to Labor and why?",
+    "Who has donated the most money to Labor from Westpac?",
+    "How much money did Westpac give Labor?",
+    "Which banks lent money to Labor?",
+    "What does Labor say about funding hospitals?",
+    "The bill funds hospitals.",
+    "Who backs the housing bill?",
+    "Who does Labor take advice from?",
+    "Which party receives the most receipts?",
+    "Who is the largest backer of housing reform?",
+    "What about the Greens housing policy?"
+  ]
+}

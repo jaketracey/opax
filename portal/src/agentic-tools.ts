@@ -416,7 +416,7 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     const rows = [...sums].map(([party, [t, c]]) => ({ party, total_aud: t, receipts: c })).filter((r) => r.total_aud > 0).sort((a, b) => b.total_aud - a.total_aud)
     return {
       tool: 'party_receipts', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], rows, coverage },
-      cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} donors to ${r.party}`, value: r.total_aud, url: `${origin}/money/party/${encodeURIComponent(r.party)}` })),
+      cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} receipt sources to ${r.party}`, value: r.total_aud, url: `${origin}/money/party/${encodeURIComponent(r.party)}` })),
       query: { file: '/graph/money.json', industry: input.industry, from, to }, notes,
     }
   }

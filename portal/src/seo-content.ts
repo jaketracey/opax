@@ -213,7 +213,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
       if (register.ocr_rows || register.unread_pages) body += `<p>Some entries use OCR. ${register.unread_pages || 0} unread source pages; check the original register.</p>`
     }
   }
-  body += '<h2>Donors to their party</h2><p>Receipts to a party are not personal payments to this member. An association does not prove influence.</p>'
+  body += '<h2>Receipt sources to their party</h2><p>Receipts to a party are not personal payments to this member. An association does not prove influence.</p>'
   if (party) for (const [path,source] of [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']]) {
     const graph = await optional<MoneyGraph>(read,path)
     const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))

@@ -1,0 +1,50 @@
+{
+  "cwd": "portal/",
+  "completed_at_utc": "2026-10-25T12:37:06.136827+00:00",
+  "commands": [
+    {
+      "command": "npm ci",
+      "exit_code": 0,
+      "ran_first": true
+    },
+    {
+      "command": "npm run build:graph",
+      "exit_code": 0
+    },
+    {
+      "command": "npm run build:search",
+      "exit_code": 0,
+      "before_portal_suite": true
+    },
+    {
+      "command": "npm run stamp",
+      "exit_code": 0
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "tests": 3739,
+      "passed": 3739,
+      "failed": 0,
+      "duration_ms": 54624.392583
+    },
+    {
+      "command": "npx --no-install tsc --noEmit",
+      "exit_code": 0
+    },
+    {
+      "command": "WRANGLER_SEND_METRICS=false npm run check",
+      "exit_code": 0
+    },
+    {
+      "command": "WRANGLER_SEND_METRICS=false npx --no-install wrangler deploy --dry-run --outdir /tmp/opax-receipts-round6-dry-run",
+      "exit_code": 0,
+      "uploaded": false
+    }
+  ],
+  "restored_build_churn": [
+    "portal/public/ask-statute-titles.json",
+    "portal/public/graph/party-members.json",
+    "portal/public/search-catalog/manifest.json"
+  ]
+}

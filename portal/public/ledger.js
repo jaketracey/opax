@@ -314,7 +314,7 @@ function csvCell (v) {
 export function buildCSV (view, rows, commentLines) {
   const lines = commentLines.map((l) => '# ' + l)
   if (view === 'flows') {
-    lines.push(['Donor', 'Industry', 'Party', 'Total (AUD)', 'Records',
+    lines.push(['Source', 'Industry', 'Party', 'Total (AUD)', 'Records',
       'First year', 'Last year', 'Return reference'].join(','))
     for (const r of rows) {
       lines.push([
@@ -323,7 +323,7 @@ export function buildCSV (view, rows, commentLines) {
       ].join(','))
     }
   } else {
-    lines.push(['Donor', 'Industry', 'Total (AUD)', 'Recipient parties',
+    lines.push(['Source', 'Industry', 'Total (AUD)', 'Recipient parties',
       'Records', 'First year', 'Last year', 'Top recipient',
       'Top recipient share (%)', 'Return reference'].join(','))
     for (const r of rows) {
@@ -343,7 +343,7 @@ export function buildCSV (view, rows, commentLines) {
 
 const COLUMNS = {
   flows: [
-    { key: 'donor', label: 'Donor', numeric: false },
+    { key: 'donor', label: 'Source', numeric: false },
     { key: 'industry', label: 'Industry', numeric: false },
     { key: 'party', label: 'Party', numeric: false },
     { key: 'total', label: 'Total', numeric: true },
@@ -351,7 +351,7 @@ const COLUMNS = {
     { key: 'years', label: 'Return years', numeric: true },
   ],
   donors: [
-    { key: 'donor', label: 'Donor', numeric: false },
+    { key: 'donor', label: 'Source', numeric: false },
     { key: 'industry', label: 'Industry', numeric: false },
     { key: 'total', label: 'Total', numeric: true },
     { key: 'parties', label: 'Parties', numeric: true },
@@ -526,8 +526,8 @@ export function mountLedger (container, opts = {}) {
   root.setAttribute('aria-label', 'Political receipts: disclosed records, payer by payer')
   root.innerHTML = `
     <div class="ui-filter-bar lg-filter-bar" role="group" aria-label="Receipt filters" data-ui-size="compact">
-      <label class="ui-filter-search"><span class="lg-visually-hidden">Filter donor or party</span>
-        <input class="ui-input lg-search" id="lg-q" type="search" autocomplete="off" placeholder="Filter by donor or party" /></label>
+      <label class="ui-filter-search"><span class="lg-visually-hidden">Filter source or party</span>
+        <input class="ui-input lg-search" id="lg-q" type="search" autocomplete="off" placeholder="Filter by source or party" /></label>
       <label class="ui-filter-field"><span class="lg-visually-hidden">Jurisdiction</span>
         <select class="ui-input" id="lg-jur">${Object.entries(JURISDICTIONS).map(([k, j]) =>
           `<option value="${k}"${k === state.jur ? ' selected' : ''}>${j.label}</option>`).join('')}</select></label>
@@ -558,7 +558,7 @@ export function mountLedger (container, opts = {}) {
     <div class="lg-results-tools" data-ui-size="compact">
       <div class="lg-views ui-segmented" role="group" aria-label="View">
         <button type="button" class="ui-button lg-view" data-view="flows" aria-pressed="true">Flows</button>
-        <button type="button" class="ui-button lg-view" data-view="donors" aria-pressed="false">By donor</button>
+        <button type="button" class="ui-button lg-view" data-view="donors" aria-pressed="false">By source</button>
       </div>
       <div class="ui-actions">
         <button type="button" class="ui-button" id="lg-copy" disabled>Copy link</button>
@@ -787,7 +787,7 @@ export function mountLedger (container, opts = {}) {
     summaryEl.textContent = ''
     const b = el('b', null, state.view === 'flows'
       ? `${NUM.format(rows.length)} ${rows.length === 1 ? 'flow' : 'flows'} · ${AUD.format(shown)}`
-      : `${NUM.format(rows.length)} ${rows.length === 1 ? 'donor' : 'donors'} · ${AUD.format(shown)}`)
+      : `${NUM.format(rows.length)} ${rows.length === 1 ? 'source' : 'sources'} · ${AUD.format(shown)}`)
     summaryEl.appendChild(b)
     summaryEl.appendChild(document.createTextNode(state.view === 'flows'
       ? ' total shown'
@@ -803,8 +803,8 @@ export function mountLedger (container, opts = {}) {
       : `${period} · Includes undated records where available.`))
 
     captionEl.textContent = state.view === 'flows'
-      ? 'Disclosed donor to party flows matching the current filters'
-      : 'Donors aggregated over the flows matching the current filters'
+      ? 'Disclosed source to party flows matching the current filters'
+      : 'Sources aggregated over the flows matching the current filters'
     cardsEl.setAttribute('aria-label', captionEl.textContent)
 
     clearBtn.hidden = !hasFilters()
@@ -813,9 +813,9 @@ export function mountLedger (container, opts = {}) {
     if (state.focusDonorId) {
       // A filter chip (ui-controls.css): "Exact donor Name ✕", the whole chip removes it.
       const remove = el('button', 'ui-filter-chip')
-      remove.type = 'button'; remove.setAttribute('aria-label', `Remove donor filter: ${state.focusDonor}`)
+      remove.type = 'button'; remove.setAttribute('aria-label', `Remove source filter: ${state.focusDonor}`)
       const text = el('span', 'ui-filter-chip__text')
-      text.append(el('span', 'ui-filter-chip__key', 'Exact donor'), el('span', 'ui-filter-chip__value', state.focusDonor))
+      text.append(el('span', 'ui-filter-chip__key', 'Exact source'), el('span', 'ui-filter-chip__value', state.focusDonor))
       const svgNS = 'http://www.w3.org/2000/svg'
       const cross = document.createElementNS(svgNS, 'svg')
       cross.setAttribute('viewBox', '0 0 16 16')
@@ -836,7 +836,7 @@ export function mountLedger (container, opts = {}) {
     if (state.q.trim()) parts.push(`text ~ "${state.q.trim()}"`)
     if (state.industry) parts.push(`industry = ${industryLabel(state.industry)}`)
     if (state.party) parts.push(`party = ${state.party}`)
-    if (state.focusDonorId) parts.push(`donor = ${state.focusDonor}`)
+    if (state.focusDonorId) parts.push(`source = ${state.focusDonor}`)
     if (state.yearFrom != null || state.yearTo != null) {
       parts.push(`return years ${state.yearFrom ?? "any"}–${state.yearTo ?? "any"}; only dated amounts`)
     }
@@ -849,11 +849,11 @@ export function mountLedger (container, opts = {}) {
     const file = JURISDICTIONS[state.jur].file
     const comments = [
       state.view === 'flows'
-        ? 'OPAX — Political receipts: disclosed donor→party flows'
-        : 'OPAX — Political receipts: donors aggregated over the filtered flows',
+        ? 'OPAX — Political receipts: disclosed source→party flows'
+        : 'OPAX — Political receipts: sources aggregated over the filtered flows',
       meta.jurisdiction
-        ? `Source: ${meta.commission} disclosures (${meta.sourceShort}), ${meta.coverage}, top disclosed donors, via opax.com.au${file}`
-        : `Source: AEC receipt disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed donors), via opax.com.au${file}`,
+        ? `Source: ${meta.commission} disclosures (${meta.sourceShort}), ${meta.coverage}, top disclosed receipt sources, via opax.com.au${file}`
+        : `Source: AEC receipt disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed receipt sources), via opax.com.au${file}`,
       `Exported ${new Date().toISOString().slice(0, 10)} · ${currentRows.length} rows · filters: ${describeFilters()} · sorted by ${sort.key} ${sort.dir}`,
       meta.jurisdiction
         ? `Caveat: ${meta.threshold} Totals are a floor, not a ceiling.`
@@ -1029,7 +1029,7 @@ export function mountLedger (container, opts = {}) {
       originals: [{ label: 'Download the data (JSON)', href: JURISDICTIONS[state.jur].file }, register, { label: 'Methodology', href: '/methods' }],
       facts: [
         ['Coverage', esc(m.jurisdiction ? `${m.commission} (${m.sourceShort}), ${m.coverage}` : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}`)],
-        ['Shown', esc(`Top ${NUM.format(donors)} disclosed donors`)],
+        ['Shown', esc(`Top ${NUM.format(donors)} disclosed receipt sources`)],
       ],
       notes: [
         'Totals are a floor, not a ceiling.',

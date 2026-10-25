@@ -237,7 +237,7 @@ function slotElement(part) {
       topic: "Topic",
       bill: "Bill",
       party: "Party",
-      industry: "Donor industry",
+      industry: "Source industry",
     }[slot],
   );
   if (select) {
@@ -427,7 +427,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=378a79c7be"
+      "/money-map.js?v=ad0bc4ecc3"
     );
     if (disposed) return;
     root.replaceChildren();
@@ -514,7 +514,7 @@ async function headerSuggestions(q) {
   const names = (Array.isArray(speakers) ? speakers : speakers?.speakers || speakers?.names || []).map(row => Array.isArray(row) ? row[0] : row);
   for (const name of names.filter(contains).slice(0,4)) out.push({label:name, type:'Speaker', href:personUrl(name)});
   for (const [slug, name] of TOPICS.filter(([, name]) => contains(name)).slice(0,3)) out.push({label:name, type:'Topic', href:'/subject/topic/' + slug});
-  for (const node of (money?.nodes || []).filter(n=>contains(n.label)).slice(0,3)) out.push({label:node.label, type:node.kind === 'party' ? 'Party' : 'Donor', href:node.kind === 'party' ? partyUrl(node.label) : '/subject/donor/' + encodeURIComponent(node.label)});
+  for (const node of (money?.nodes || []).filter(n=>contains(n.label)).slice(0,3)) out.push({label:node.label, type:node.kind === 'party' ? 'Party' : 'Receipt source', href:node.kind === 'party' ? partyUrl(node.label) : '/subject/donor/' + encodeURIComponent(node.label)});
   for (const report of (reports?.reports || []).filter(r => contains(r.title)).slice(0,2)) out.push({label:report.title + ' report', type:'Report', href:'/reports/' + report.slug});
   return out;
 }

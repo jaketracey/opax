@@ -3,7 +3,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
 import {subjectUrl} from './canonical-urls.js?v=c82496afb7';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
- * organisations that receive them and checked against the donor registers.
+ * organisations that receive them and checked against the receipt registers.
  *
  * The ledger answers "who gives"; this answers "who gets", and lays the two
  * side by side. Plain browser ES module, no dependencies.
@@ -34,7 +34,7 @@ import {subjectUrl} from './canonical-urls.js?v=c82496afb7';
  * Four views over one filtered set:
  *   Recipients  — one row per recipient; a row opens the recipient's file in place
  *   Programs    — one row per grant program / opportunity, with the share of its
- *                 dollars that went to recipients found in the donor registers,
+ *                 dollars that went to recipients found in the receipt registers,
  *                 the closed non-competitive share and the share to government-
  *                 held seats; a row opens the program's file in place
  *   Program     — the opened program file: tiles, seat split, by-year chart,
@@ -422,7 +422,7 @@ export function buildCSV (view, rows, ctx, commentLines) {
   const lines = commentLines.map((l) => '# ' + l)
   if (view === 'recipients') {
     lines.push(['Recipient', 'Kind', 'Recipient id', 'Awarded (AUD)', 'Grants', 'First year', 'Last year', 'Top agency',
-      'Ad hoc or one-off (AUD)', 'Donor register entity', 'AEC receipts (AUD)', 'AEC top party',
+      'Ad hoc or one-off (AUD)', 'Receipt register entity', 'AEC receipts (AUD)', 'AEC top party',
       'State register receipts (AUD)'].join(','))
     for (const r of rows) {
       lines.push([csvCell(r.n), csvCell(kindLabel(r.k)), csvCell(r.id || ''), Math.round(r.wt ?? r.t), r.wc ?? r.c,
@@ -431,7 +431,7 @@ export function buildCSV (view, rows, ctx, commentLines) {
         csvCell(r.ds ? r.ds.topParty : ''), r.ds ? Math.round(r.ds.state) : ''].join(','))
     }
   } else if (view === 'programs') {
-    lines.push(['Program', 'Program id', 'Agency', 'Awarded (AUD)', 'Grants', 'Recipients', 'To recipients in the donor registers (AUD)',
+    lines.push(['Program', 'Program id', 'Agency', 'Awarded (AUD)', 'Grants', 'Recipients', 'To recipients in the receipt registers (AUD)',
       'Share (%)', 'Ad hoc or one-off (AUD)', 'Closed non-competitive (AUD)', 'Selection process recorded (AUD)',
       'Closed non-competitive share (%)', 'To government-held seats (AUD)', 'Electorate mapped (AUD)',
       'To government-held seats share (%)', 'First year', 'Last year'].join(','))
@@ -454,7 +454,7 @@ export function buildCSV (view, rows, ctx, commentLines) {
         csvCell(g.bloc || ''), csvCell(g.mt || ''), g.adhoc ? 1 : 0, csvCell(grantConnectUrl(g.guid) || '')].join(','))
     }
   } else {
-    lines.push(['Division', 'State', 'Awarded (AUD)', 'Grants', 'Recipients', 'To recipients in the donor registers (AUD)',
+    lines.push(['Division', 'State', 'Awarded (AUD)', 'Grants', 'Recipients', 'To recipients in the receipt registers (AUD)',
       'Share (%)', 'Ad hoc or one-off (AUD)', 'Held by', 'Margin (%)', 'Margin party', 'Margin election'].join(','))
     for (const r of rows) {
       const m = r.marginLatest
@@ -478,7 +478,7 @@ const COLUMNS = {
     { key: 'c', label: 'Grants', numeric: true },
     { key: 'years', label: 'Years', numeric: true },
     { key: 'agency', label: 'Main agency', numeric: false },
-    { key: 'donor', label: 'In the donor registers', numeric: true },
+    { key: 'donor', label: 'In the receipt registers', numeric: true },
   ],
   programs: [
     { key: 'n', label: 'Program', numeric: false },
@@ -486,7 +486,7 @@ const COLUMNS = {
     { key: 't', label: 'Awarded', numeric: true },
     { key: 'c', label: 'Grants', numeric: true },
     { key: 'r', label: 'Recipients', numeric: true },
-    { key: 'share', label: 'To donors', numeric: true },
+    { key: 'share', label: 'To receipt sources', numeric: true },
     { key: 'cnc', label: 'Closed non-competitive', numeric: true },
     { key: 'gov', label: 'To govt seats', numeric: true, federal: true },
     { key: 'adhoc', label: 'Ad hoc', numeric: true },
@@ -495,7 +495,7 @@ const COLUMNS = {
     { key: 'n', label: 'Division', numeric: false },
     { key: 't', label: 'Awarded', numeric: true },
     { key: 'c', label: 'Grants', numeric: true },
-    { key: 'share', label: 'To donors', numeric: true },
+    { key: 'share', label: 'To receipt sources', numeric: true },
     { key: 'adhoc', label: 'Ad hoc', numeric: true },
     { key: 'held', label: 'Held by', numeric: false },
     { key: 'margin', label: 'Margin', numeric: true },
@@ -838,11 +838,11 @@ export function mountGrants (container, opts = {}) {
   // Embedded in the money hub (no heading of its own) the tiles sit directly
   // under the hub's tab strip, so they drop their top rule there.
   if (opts.showHeading === false) root.classList.add('gr-embedded')
-  root.setAttribute('aria-label', 'Who gets the grants: grant recipients checked against the donor registers')
+  root.setAttribute('aria-label', 'Who gets the grants: grant recipients checked against the receipt registers')
   root.innerHTML = `
     ${opts.showHeading === false ? '' : `<h2 class="gr-title">Who gets the grants</h2>
     <p class="gr-deck">Every published grant award, resolved to the organisations that receive it and
-      checked against the donor registers: who gets public money, from which programs, in which seats,
+      checked against the receipt registers: who gets public money, from which programs, in which seats,
       and which of them also fund parties.</p>`}
 
     <div class="ui-stats gr-tiles" aria-label="Headline figures"></div>
@@ -872,7 +872,7 @@ export function mountGrants (container, opts = {}) {
         <span aria-hidden="true">–</span>
         <input class="ui-input gr-year" id="gr-year-to" type="number" inputmode="numeric" placeholder="2026" aria-label="To financial year starting" />
       </div>
-      <label class="ui-filter-toggle"><input type="checkbox" id="gr-donors" />Donors only</label>
+      <label class="ui-filter-toggle"><input type="checkbox" id="gr-donors" />Receipt sources only</label>
       <div class="ui-filter-actions">
         <button type="button" class="ui-button" data-variant="quiet" id="gr-clear" hidden>Clear filters</button>
       </div>
@@ -983,8 +983,8 @@ export function mountGrants (container, opts = {}) {
     const tiles = [
       [fmtMoney(c.dollars), `awarded in ${NUM.format(c.grants)} grants`],
       [NUM.format(c.recipients), 'recipients resolved to entities'],
-      [NUM.format(c.donor_recipients), 'of them appear in the donor registers'],
-      [`${(c.donor_share * 100).toFixed(1)}%`, `of the money, ${fmtMoney(c.donor_dollars)}, went to those donors`],
+      [NUM.format(c.donor_recipients), 'of them appear in the receipt registers'],
+      [`${(c.donor_share * 100).toFixed(1)}%`, `of the money, ${fmtMoney(c.donor_dollars)}, went to those receipt sources`],
     ]
     if (state.jur === 'federal') {
       tiles.push([`${Math.round(c.abn_known_share * 100)}%`, 'of the dollars carry a recipient ABN from the award record'])
@@ -1038,7 +1038,7 @@ export function mountGrants (container, opts = {}) {
       const g = document.createElementNS(svgNS, 'g')
       g.setAttribute('class', 'gr-year-col')
       g.dataset.fy = fy
-      const donorText = y.dt > 0 ? `; ${AUD_FULL.format(y.dt)} to recipients in the donor registers` : ''
+      const donorText = y.dt > 0 ? `; ${AUD_FULL.format(y.dt)} to recipients in the receipt registers` : ''
       if (interactive) {
         g.setAttribute('role', 'button')
         g.setAttribute('tabindex', '0')
@@ -1098,7 +1098,7 @@ export function mountGrants (container, opts = {}) {
     if (!years.length) return
     const svg = yearChartSvg(years, (fy) => data.years[fy], {
       width: chartEl.clientWidth, interactive: true, noun: 'grants',
-      label: 'Dollars awarded by financial year, with the share that went to recipients found in the donor registers',
+      label: 'Dollars awarded by financial year, with the share that went to recipients found in the receipt registers',
     })
     const toggleYear = (fy) => {
       const y = fyStart(fy)
@@ -1127,7 +1127,7 @@ export function mountGrants (container, opts = {}) {
     const leg1 = el('span', 'gr-legend')
     leg1.append(el('i'), document.createTextNode('awarded'))
     const leg2 = el('span', 'gr-legend')
-    leg2.append(el('i', 'gr-solid'), document.createTextNode('to recipients in the donor registers'))
+    leg2.append(el('i', 'gr-solid'), document.createTextNode('to recipients in the receipt registers'))
     gov.append(leg1, leg2, el('span', 'gr-hint', 'Click a year to filter'))
     const govLine = el('span', null, 'In government: ')
     for (const [from, to, bloc] of data.meta.government || []) {
@@ -1267,7 +1267,7 @@ export function mountGrants (container, opts = {}) {
     const noun = state.view === 'recipients' ? 'recipients' : state.view === 'programs' ? 'programs' : 'divisions'
     summaryEl.appendChild(el('b', null, `${NUM.format(rows.length)} ${noun} · ${fmtMoney(shown)}`))
     summaryEl.appendChild(document.createTextNode(
-      shown > 0 ? ` shown, of which ${fmtMoney(donorShown)} (${Math.round(donorShown / shown * 100)}%) went to recipients in the donor registers` : ' shown'))
+      shown > 0 ? ` shown, of which ${fmtMoney(donorShown)} (${Math.round(donorShown / shown * 100)}%) went to recipients in the receipt registers` : ' shown'))
     if (state.view === 'recipients') {
       const c = data.meta.counts
       summaryEl.appendChild(document.createTextNode(
@@ -1463,7 +1463,7 @@ export function mountGrants (container, opts = {}) {
 
     // right: the donor side
     const right = el('div')
-    right.appendChild(el('p', 'gr-kicker', 'In the donor registers'))
+    right.appendChild(el('p', 'gr-kicker', 'In the receipt registers'))
     const box = el('div', 'gr-donor')
     if (d.d) {
       const p = el('p')
@@ -1508,10 +1508,10 @@ export function mountGrants (container, opts = {}) {
       }
     } else {
       box.appendChild(el('p', null, d.k === 'individual'
-        ? 'People are never matched to the donor registers by name.'
+        ? 'People are never matched to the receipt registers by name.'
         : d.k === 'government' || d.k === 'council' || d.k === 'university'
-          ? 'Public bodies are not matched to the donor registers.'
-          : 'Not found in the donor registers under this name or ABN. Donations under the disclosure thresholds are never reported, so absence here is not proof of none.'))
+          ? 'Public bodies are not matched to the receipt registers.'
+          : 'Not found in the receipt registers under this name or ABN. Donations under the disclosure thresholds are never reported, so absence here is not proof of none.'))
     }
     right.appendChild(box)
     if (d.other) {
@@ -1523,7 +1523,7 @@ export function mountGrants (container, opts = {}) {
     }
     const links = actionRow()
     links.appendChild(action(link(searchHash(`"${d.n}"`, {}), 'Search the record for them'), 'primary'))
-    if(d.d){const href=donorDisclosure(donorIndex.get(d.d.n.toLowerCase()) || {label:d.d.n}).href;if(href)links.appendChild(action(link(href,'Donor entry'),'quiet'))}
+    if(d.d){const href=donorDisclosure(donorIndex.get(d.d.n.toLowerCase()) || {label:d.d.n}).href;if(href)links.appendChild(action(link(href,'Receipt source entry'),'quiet'))}
     const src = action(link(data.meta.source_url, state.jur === 'qld' ? 'Source: data.qld.gov.au' : 'Source: GrantConnect'), 'quiet')
     src.target = '_blank'
     src.rel = 'noopener'
@@ -1844,7 +1844,7 @@ export function mountGrants (container, opts = {}) {
       tile(fmtMoney(p.t), `awarded in ${NUM.format(p.c)} ${noun}`),
       tile(NUM.format(p.r), 'recipients'),
     )
-    if (p.dt > 0) tiles.append(tile(pct(shareOf(p.dt, p.t) || 0), `to recipients in the donor registers (${fmtMoney(p.dt)})`))
+    if (p.dt > 0) tiles.append(tile(pct(shareOf(p.dt, p.t) || 0), `to recipients in the receipt registers (${fmtMoney(p.dt)})`))
     if (cncShare != null) tiles.append(tile(pct(cncShare), `closed non-competitive, of the ${pct(shareOf(selKnown, p.t) || 0)} with a selection process recorded`))
     if (govShareOfMapped != null) tiles.append(tile(pct(govShareOfMapped), 'to seats held by the government of the day, of the dollars in seats with a member on the grant date'))
     if (p.t > 0) tiles.append(tile(pct(shareOf(elKnown, p.t) || 0), 'of the dollars are mapped to an electorate'))
@@ -1952,7 +1952,7 @@ export function mountGrants (container, opts = {}) {
         const li = el('li')
         const who = el('span')
         who.append(recipientRef(rid, name), el('small', 'gr-muted', ` ${kindLabel(kind)}`))
-        if (donor) who.append(document.createTextNode(' '), el('span', 'ui-tag', 'in the donor registers'))
+        if (donor) who.append(document.createTextNode(' '), el('span', 'ui-tag', 'in the receipt registers'))
         const num = el('span', 'gr-num')
         num.append(document.createTextNode(`${fmtMoney(dollars)} `), el('span', 'gr-share', `${NUM.format(count)}`))
         li.append(who, num)
@@ -2147,7 +2147,7 @@ export function mountGrants (container, opts = {}) {
     if (state.q.trim()) parts.push(`text ~ "${state.q.trim()}"`)
     if (state.kind) parts.push(`kind = ${kindLabel(state.kind)}`)
     if (state.agency !== '') parts.push(`agency = ${agencyName(Number(state.agency))}`)
-    if (state.donors) parts.push('donors only')
+    if (state.donors) parts.push('receipt sources only')
     if (state.yearFrom != null || state.yearTo != null) parts.push(`financial years starting ${state.yearFrom ?? '…'}–${state.yearTo ?? '…'}`)
     if (state.min > 0) parts.push(`min awarded ${AUD_FULL.format(state.min)}`)
     return parts.length ? parts.join('; ') : 'none'

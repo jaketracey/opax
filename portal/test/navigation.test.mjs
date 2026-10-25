@@ -273,9 +273,9 @@ test('donor trails name confident and uncertain source records',async()=>{
   const donor=donors.find(record=>confidentDonorMatch(record)===confident);assert.ok(donor);
   const shown=await serverTrail('/subject/donor/'+encodeURIComponent(donor.label)),name=donorDisclosure(donor).name;
   assert.equal(shown.status,200);assert.equal(shown.doc.querySelector('meta[name="robots"]'),null);
-  assert.deepEqual(shown.items.map(item=>item.label),['Home','Donors',nav.trail('/subject/donor',name)[1].label]);assertSameTrail(shown,'source-named donor');
+  assert.deepEqual(shown.items.map(item=>item.label),['Home','Receipt sources',nav.trail('/subject/donor',name)[1].label]);assertSameTrail(shown,'source-named donor');
  }
- assert.equal(label(nav.trail('/subject/donor/someone')),'Donors');
+ assert.equal(label(nav.trail('/subject/donor/someone')),'Receipt sources');
 });
 
 test('the app sets every trail through the shared list', () => {

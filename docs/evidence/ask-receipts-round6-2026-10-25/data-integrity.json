@@ -1,0 +1,73 @@
+{
+  "reviewed_tip": "ebf950238",
+  "original_main": "12ce00e22",
+  "files": [
+    {
+      "path": "portal/public/votes.json",
+      "bytes": 1321580,
+      "sha256": "15e3438d9f74d0eb8863a7839d10f7dcf684f3fd734be29162f5ff118575bf8d",
+      "reviewed_tip_sha256": "15e3438d9f74d0eb8863a7839d10f7dcf684f3fd734be29162f5ff118575bf8d",
+      "byte_identical_to_reviewed_tip": true,
+      "original_main_sha256": "15e3438d9f74d0eb8863a7839d10f7dcf684f3fd734be29162f5ff118575bf8d",
+      "byte_identical_to_original_main": true
+    },
+    {
+      "path": "portal/public/pay.json",
+      "bytes": 590501,
+      "sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722",
+      "reviewed_tip_sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722",
+      "byte_identical_to_reviewed_tip": true,
+      "original_main_sha256": "ea884852338db9bcf4c05e4cf0752a8cf86606e01ca185edd44f42eb70b15722",
+      "byte_identical_to_original_main": true
+    },
+    {
+      "path": "portal/public/graph/money.json",
+      "bytes": 2169189,
+      "sha256": "ed267871f612004e354105ba2af250eb5b5a3cfbe86db12ea0325375c4aff861",
+      "reviewed_tip_sha256": "ed267871f612004e354105ba2af250eb5b5a3cfbe86db12ea0325375c4aff861",
+      "byte_identical_to_reviewed_tip": true
+    },
+    {
+      "path": "portal/public/graph/money.qld.json",
+      "bytes": 589589,
+      "sha256": "553f5dc79dcffbdccc666f78824f5e49e46d643108bcf3c5081af0db596ecc70",
+      "reviewed_tip_sha256": "553f5dc79dcffbdccc666f78824f5e49e46d643108bcf3c5081af0db596ecc70",
+      "byte_identical_to_reviewed_tip": true
+    },
+    {
+      "path": "portal/public/graph/money.vic.json",
+      "bytes": 278048,
+      "sha256": "187237f922c9bcabac7e0acabb7435b054e8ab50f0ea2f82795e14bfc72e8d14",
+      "reviewed_tip_sha256": "187237f922c9bcabac7e0acabb7435b054e8ab50f0ea2f82795e14bfc72e8d14",
+      "byte_identical_to_reviewed_tip": true
+    },
+    {
+      "path": "portal/public/graph/money.tas.json",
+      "bytes": 151634,
+      "sha256": "b91217a717b92e306b83a07cbf12864fbbf3d6d37f5cb52141ebc7c8654555c8",
+      "reviewed_tip_sha256": "b91217a717b92e306b83a07cbf12864fbbf3d6d37f5cb52141ebc7c8654555c8",
+      "byte_identical_to_reviewed_tip": true
+    },
+    {
+      "path": "portal/public/graph/aec-extras.json",
+      "bytes": 234673,
+      "sha256": "03354fbe181709b4093d09c3f3f02dc44510aa3bb2091d701e988fcf277e00c5",
+      "reviewed_tip_sha256": "03354fbe181709b4093d09c3f3f02dc44510aa3bb2091d701e988fcf277e00c5",
+      "byte_identical_to_reviewed_tip": true
+    },
+    {
+      "path": "portal/public/graph/donor-index.json",
+      "bytes": 1402974,
+      "sha256": "962451c6fd04cebe9198c0bea282426061e4fada2550538654477fe9a495cd7d",
+      "reviewed_tip_sha256": "962451c6fd04cebe9198c0bea282426061e4fada2550538654477fe9a495cd7d",
+      "byte_identical_to_reviewed_tip": true
+    },
+    {
+      "path": "portal/public/graph/donor-disclosures.json",
+      "bytes": 2745635,
+      "sha256": "4206b0f129c1d003c787435b59dfaf2fed227676dde817472f3fb61400a533cd",
+      "reviewed_tip_sha256": "4206b0f129c1d003c787435b59dfaf2fed227676dde817472f3fb61400a533cd",
+      "byte_identical_to_reviewed_tip": true
+    }
+  ]
+}

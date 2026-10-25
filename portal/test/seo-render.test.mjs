@@ -331,7 +331,7 @@ test('association caveat requires a rendered money pairing, not an election cove
   const person=await get('/subject/person/anthony-albanese');
   const body=prerenderBody(person);
   assert.match(body,/<h1>Anthony Albanese<\/h1>/);
-  assert.match(body,/<h2>Donors to their party<\/h2>[\s\S]*An association does not prove influence\.[\s\S]*\$[\d,]+/);
+  assert.match(body,/<h2>Receipt sources to their party<\/h2>[\s\S]*An association does not prove influence\.[\s\S]*\$[\d,]+/);
 });
 
 test('server-only pages write the app breadcrumb strip, hidden once the app boots',()=>{

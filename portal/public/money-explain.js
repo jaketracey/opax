@@ -149,13 +149,13 @@ export function parseExplainParams(params, graph, index) {
   const fromId = get('from'), toId = get('to'), industry = get('industry'), donors = get('donors');
   const state = { jur };
   if (!fromId && !toId && !industry && !donors) return { ok: true, state, empty: true };
-  if ([fromId, industry, donors].filter(Boolean).length > 1) return fail('An explanation follows one giver at a time.');
+  if ([fromId, industry, donors].filter(Boolean).length > 1) return fail('An explanation follows one receipt source at a time.');
   if (toId) {
     const party = nodes.find((n) => n.kind === 'party' && n.id === toId);
     if (!party) return fail('That recipient is not in OPAX’s money data.');
     state.to = party.id;
   }
-  if(donors) return fail('Use a donor name, industry or recipient filter.');
+  if(donors) return fail('Use a receipt source name, industry or recipient filter.');
   if (industry) {
     const known = nodes.some((n) => n.kind === 'donor' && (n.industry === industry || n.group === industry));
     if (!known) return fail('That industry is not in OPAX’s money data.');
@@ -164,7 +164,7 @@ export function parseExplainParams(params, graph, index) {
   }
   if (fromId) {
     const donor = nodes.find((n) => n.kind === 'donor' && n.id === fromId);
-    if (!donor) return fail('That donor is not in OPAX’s money data.');
+    if (!donor) return fail('That receipt source is not in OPAX’s money data.');
 
     state.from = donor.id;
   }
@@ -380,7 +380,7 @@ export function comparableFlows(flow, index, limit = 3) {
   if (flow.kind === 'party') {
     const rows = graph.nodes.filter((n) => n.kind === 'party' && n.id !== flow.party.id).map((p) => {
       const s = sumEdges(donation.filter((e) => e.target === p.id && byId.get(e.source)?.kind === 'donor'));
-      return { label: `${p.label}: all donors on the map`, total: s.total, count: s.count, href: explainPath({ jur: state.jur, to: p.id }) };
+      return { label: `${p.label}: all receipt sources on the map`, total: s.total, count: s.count, href: explainPath({ jur: state.jur, to: p.id }) };
     }).filter((r) => r.total > 0).sort((a, b) => b.total - a.total).slice(0, limit);
     return { rule: 'The other parties in these records, largest first', rows };
   }
@@ -389,7 +389,7 @@ export function comparableFlows(flow, index, limit = 3) {
   if (flow.party) {
     const rows = flow.parties.filter((r) => r.node.id !== flow.party.id).slice(0, limit)
       .map((r) => ({ label: `${industryName(state.industry)} → ${r.node.label}`, total: r.total, href: explainPath({ jur: state.jur, industry: state.industry, to: r.node.id }) }));
-    return { rule: `${industryName(state.industry)} donors’ money to the other parties, largest first`, rows };
+    return { rule: `${industryName(state.industry)} receipts to the other parties, largest first`, rows };
   }
   const groups = new Map();
   for (const e of donation) {
@@ -508,12 +508,12 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
     out.push(`${recordedIn(flow)} ${money(total)} from ${donor.label} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}, with money in ${plural(yearsWithMoney, 'financial year')}.`);
   } else if (kind === 'party') {
     const givers = flow.named.length;
-    out.push(`${recordedIn(flow)} ${money(total)} to ${to} from ${givers === 1 ? 'the one donor' : `the ${plural(givers, 'donor')}`} on OPAX’s map, across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
+    out.push(`${recordedIn(flow)} ${money(total)} to ${to} from ${givers === 1 ? 'the one receipt source' : `the ${plural(givers, 'receipt source')}`} on OPAX’s map, across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   } else {
     const givers = flow.named.length;
-    out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} donor`)} on OPAX’s map ${givers === 1 ? 'accounts' : 'account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
+    out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} receipt source`)} on OPAX’s map ${givers === 1 ? 'accounts' : 'account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   }
-  if (flow.coarse) out.push(`${kind === 'unnamed' ? '' : ''}For a group of fewer than ${AGGREGATE_FLOOR} donors this page gives the total and the count only.`);
+  if (flow.coarse) out.push(`${kind === 'unnamed' ? '' : ''}For a group of fewer than ${AGGREGATE_FLOOR} receipt sources this page gives the total and the count only.`);
   if (peak && yearsWithMoney > 1) {
     const latestPart = latest && latest.year !== peak.year ? ` The latest year with money is ${yearPhrase(latest.year, flow.jur, flow.electionYears)}: ${money(latest.amount)}.` : '';
     out.push(`The largest year was ${yearPhrase(peak.year, flow.jur, flow.electionYears)}: ${money(peak.amount)} across ${plural(peak.count, 'receipt')}, ${pctText(peak.amount, total)} of the flow.${latestPart}`);
@@ -621,7 +621,7 @@ function scaleHTML(flow, comparisons, partyName, matches = null) {
   // would split the group back towards single donors.
   const breakdown = flow.kind === 'party' && flow.industries.length > 1
     ? `<div class="mx-compare"><h3 class="mx-subhead">By industry</h3><ul class="mx-compare-list">${flow.industries.slice(0, 5).map((i) => `<li><span>${esc(industryName(i.key))}</span><span class="mx-compare-figure">${esc(money(i.total))}<small>${esc(pctText(i.total, flow.total))}</small></span></li>`).join('')}</ul>
-      <p class="mx-fine">Industry is OPAX’s tag on each donor, not a category on the return.</p></div>` : '';
+      <p class="mx-fine">Industry is OPAX’s tag on each receipt source, not a category on the return.</p></div>` : '';
   return `${shares.length ? `<div class="mx-shares">${shares.join('')}</div>` : ''}${trendHTML(flow)}${breakdown}${compare}${registersHTML(flow, matches)}`;
 }
 
@@ -685,9 +685,9 @@ function limitsHTML(flow, partyName) {
     if (meta.not_summed) item('State and federal figures are separate', esc(meta.not_summed));
     if (meta.coverage) item('The years covered', esc(`The ${meta.sourceShort || 'register'} records cover ${meta.coverage}.`));
   }
-  const top = federal ? 'The map holds the 250 largest donors by lifetime total, plus donors holding $50m or more in Commonwealth contracts and grants' : 'The map holds the 250 largest donors by lifetime total in this jurisdiction';
-  item('Smaller donors are not on the map',
-    esc(`${top}. The flow totals in this explanation count only those donors and leave out internal party transfers; a party’s own return totals count everything it received.`));
+  const top = federal ? 'The map holds the 250 largest receipt sources by lifetime total, plus receipt sources holding $50m or more in Commonwealth contracts and grants' : 'The map holds the 250 largest receipt sources by lifetime total in this jurisdiction';
+  item('Smaller receipt sources are not on the map',
+    esc(`${top}. The flow totals in this explanation count only those receipt sources and leave out internal party transfers; a party’s own return totals count everything it received.`));
   // The first notes stay in view; the rest sit under one disclosure that the
   // mount opens on wide screens, so a phone reads three notes, not eight.
   const SHOWN = 3;
@@ -712,7 +712,7 @@ function parliamentHTML(rows, flow, partyName, words) {
   }).join('');
   const quoted = words.map((w) => `“${w}”`);
   const list = quoted.length === 1 ? quoted[0] : `${quoted.slice(0, -1).join(', ')} or ${quoted.at(-1)}`;
-  return `<p class="mx-caution">These are listed for context. A donation does not show that a vote or speech was influenced.</p>
+  return `<p class="mx-caution">These are listed for context. A receipt does not show that a vote or speech was influenced.</p>
     <p class="mx-fine">${esc(`Bills whose titles include ${list}, with a vote on the bill or its amendments dated ${flow.firstYear} to ${flow.lastYear + 1}. For each, ${possessive(partyName(party.label))} votes at the bill’s last reading in that time (or its last division), and up to two of its members’ speeches on the bill. Procedural motions are left out.`)}</p>
     <ul class="mx-bills">${items}</ul>`;
 }
@@ -749,7 +749,7 @@ function registersHTML(flow, matches) {
     matches.registrations && matches.fitsUrl ? `<a href="${esc(matches.fitsUrl)}" rel="noopener" target="_blank">${esc('Foreign Influence Transparency Scheme register ↗︎')}</a>` : '',
   ].filter(Boolean);
   return `<div class="mx-compare"><h3 class="mx-subhead">Other registers</h3>
-    <p class="mx-share-text">${esc(`${flow.donor.label} matches ${parts.join(', ')}. These are register matches, not evidence that a donation bought access.`)}</p>
+    <p class="mx-share-text">${esc(`${flow.donor.label} matches ${parts.join(', ')}. These are register matches, not evidence that a receipt bought access.`)}</p>
     ${links.length ? `<p class="mx-fine">${links.join(' · ')}</p>` : ''}</div>`;
 }
 

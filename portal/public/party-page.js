@@ -160,7 +160,7 @@ export function partyStateMoneyHTML(label, files, h) {
     const detail = [`${h.fmtMoney(node.total || 0)} across ${(node.count || 0).toLocaleString()} disclosed gifts`, years, meta.sourceShort || ''].filter(Boolean).join(' · ');
     const top = donors.slice(0, 5).map(([name]) => h.donorNameHTML(name)).join(', ');
     return `<li><a class="source-title" href="${h.esc(h.moneyHref(jur))}">${h.esc(meta.jurisdictionLabel || h.jurisdictionLabel(jur))}</a>
-      <span class="result-meta">${h.esc(detail)}</span>${top ? `<p class="snippet">Largest disclosed donors: ${top}${donors.length > 5 ? `, and ${(donors.length - 5).toLocaleString()} more` : ''}.</p>` : ''}</li>`;
+      <span class="result-meta">${h.esc(detail)}</span>${top ? `<p class="snippet">Largest disclosed receipt sources: ${top}${donors.length > 5 ? `, and ${(donors.length - 5).toLocaleString()} more` : ''}.</p>` : ''}</li>`;
   }).join('');
   const commissions = [...new Set(hits.map(x => x.meta.commission).filter(Boolean))];
   const total = hits.reduce((a, x) => Math.max(a, x.node.total || 0), 0);

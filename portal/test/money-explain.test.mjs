@@ -20,7 +20,7 @@ function assertReduced(flow, index) {
   const words = narrative(flow).join(' ');
   assert.ok(!/\d{4}–\d{2}/.test(words), 'no year in the words');
   assert.ok(!/went to/.test(words), 'no party split in the words');
-  assert.match(words, /For a group of fewer than 5 donors this page gives the total and the count only\./);
+  assert.match(words, /For a group of fewer than 5 receipt sources this page gives the total and the count only\./);
   const html = pageHTML(flow, {index});
   assert.ok(!/mx-trend|mx-timeline|mx-share|Largest year|Years with money|By industry|went to/.test(html));
   assert.ok(!/no one donor|can’t be read|cannot be read/i.test(html), 'the floor is not presented as a safeguard');
@@ -193,7 +193,7 @@ test('a named flow draws every section, the parliament context with its no-causa
   assert.equal(m.root.querySelectorAll('.mx-table tbody tr').length, 2);
   const parliament = m.root.querySelector('#mx-parliament');
   assert.equal(parliament.hidden, false);
-  assert.match(parliament.textContent, /These are listed for context\. A donation does not show that a vote or speech was influenced\./);
+  assert.match(parliament.textContent, /These are listed for context\. A receipt does not show that a vote or speech was influenced\./);
   assert.match(parliament.textContent, /Labor: 12 ayes, 1 no · Third reading agreed to · 1 Oct 2019/);
   assert.equal(parliament.querySelector('a[href="/doc/speech-1"]')?.textContent, 'Member One');
   assert.ok(!parliament.textContent.includes('Member Two'));
@@ -202,7 +202,7 @@ test('a named flow draws every section, the parliament context with its no-causa
   assert.ok(m.root.querySelector('a[href="https://www.aec.gov.au/Parties_and_Representatives/public_funding/threshold.htm"]'));
   assert.ok(m.root.querySelector('a[href="https://aec.gov.au/FADReform/faqs.htm"]'));
   assert.match(m.root.textContent, /Nothing here is written by a model\./);
-  assert.match(m.root.textContent, /Quarry Example Pty Ltd matches 3 ministerial diary meetings, 1 registered lobbying firm, 1 Foreign Influence Transparency Scheme registration\. These are register matches, not evidence that a donation bought access\./);
+  assert.match(m.root.textContent, /Quarry Example Pty Ltd matches 3 ministerial diary meetings, 1 registered lobbying firm, 1 Foreign Influence Transparency Scheme registration\. These are register matches, not evidence that a receipt bought access\./);
   assert.ok(!m.root.querySelector('.ui-machine, .ui-machine-inline, .ui-machine-pill'), 'no machine-written prose to label');
   assert.deepEqual(m.fetched, []);
 });

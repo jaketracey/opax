@@ -32,7 +32,7 @@ for(const [label,question,decision] of cases)for(const sse of [false,true])for(c
  if(api.federalPartyRankingQuestion(question)){
   const forbidden=async()=>{throw Error('The family route cannot call a model')},asset=async path=>JSON.parse(fs.readFileSync(new URL('../public'+path,import.meta.url)))
   const run=await api.runAgentic(question,{asset,kb:forbidden,generate:forbidden,research:forbidden},async()=>{},10000,api.inferPeriod(question),{},named),out=api.agenticAskPayload(run,question)
-  assert.equal(out.money_route,'federal-party-ranking-v1');assert.ok(['calculated','evidence_gap','needs_period','needs_scope'].includes(out.answer_status));if(out.answer_status==='calculated'){assert.match(out.answer,/largest disclosed receipts/);assert.match(out.answer,/\| Donor \|/)}
+  assert.equal(out.money_route,'federal-party-ranking-v1');assert.ok(['calculated','evidence_gap','needs_period','needs_scope'].includes(out.answer_status));if(out.answer_status==='calculated'){assert.match(out.answer,/largest disclosed receipts/);assert.match(out.answer,/\| Source \|/)}
   return
  }
  let payload

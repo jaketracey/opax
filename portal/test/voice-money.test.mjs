@@ -180,3 +180,15 @@ test('voice lending questions cannot reuse mixed receipt totals',async()=>{
  assert.equal(receipt.data.total_aud,55227183);
  assert.match(receipt.data.answer,/These federal totals mix donations with other receipts such as loans, so this is not a donation ranking/);
 });
+
+test('voice uses the shared family calculator, with its entire table and citations',async()=>{
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ for(const query of ['Who bankrolls Labor?','Who props up Labor?','Who has donated the most to the Greens?','Who is giving the most money to Labor?'])for(const [tool,kind]of [['search_records','all'],['search_records','receipt'],['search_records','speech'],['find_connections',undefined]]){
+  const out=await runVoiceTool(tool,{query,kind},env,async()=>{throw Error('A family question reached generic retrieval')});
+  assert.equal(out.data.money_route,'federal-party-ranking-v1');assert.equal(out.data.answer_status,'calculated');
+  assert.match(out.data.answer,/largest disclosed receipts/);assert.match(out.data.answer,/not a donation ranking/);
+  assert.match(out.data.answer,/\| Source \| Disclosed receipts \| Records \|/);
+  assert.equal(out.data.answer.split('\n').filter(s=>/^\| /.test(s)).length,7);
+  assert.ok(Object.keys(out.data.citations).length>=6);assert.equal('money_facts' in out.data,false);
+ }
+});

@@ -19,9 +19,9 @@ function donorRows(question,sources=[],requireRanking=true,constraints={}) {
   if((requireRanking&&!/\b(?:who|which (?:company|corporation|person|individual|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(question))||!/donor|donat|giv|gave|funding|take.*money|money.*from/i.test(question)||/\bwhich Smith\b|\b(?:buy|bought|bribe|because|influenc|cause)\w*\b/i.test(question))return []
   const rows=[],coverage=sources.map(s=>s.snippet??'').join('\n')
   for(const source of sources){
-    // ranked_money also supplies a native, privacy-filtered Donor table.
+    // ranked_money also supplies a native, privacy-filtered Source table (legacy Donor headers remain readable).
     const native=(String(source.snippet??'')+'\n'+String(source.title??'')).replace(/\*\*/g,'')
-    if(/^fact-\d+$/.test(source.resource??'')&&source.kind==='record'&&/\/money(?:[/?]|$)/.test(String(source.url??source.href??''))&&/\|\s*Donor\s*\|\s*Disclosed receipts\s*\|/i.test(native)){
+    if(/^fact-\d+$/.test(source.resource??'')&&source.kind==='record'&&/\/money(?:[/?]|$)/.test(String(source.url??source.href??''))&&/\|\s*(?:Source|Donor)\s*\|\s*Disclosed receipts\s*\|/i.test(native)){
       const party=/has the largest disclosed total to (.+?) in this published selection/.exec(native)?.[1]
       const period=/Financial years:\s*([^\n.]+)/i.exec(native)?.[1]?.trim()
       if(party&&period)for(const line of native.split('\n')){
@@ -29,7 +29,7 @@ function donorRows(question,sources=[],requireRanking=true,constraints={}) {
         if(row)rows.push({name:(row[1]??row[2]).trim(),party,amount:row[3],value:Number(row[3].replace(/[$,]/g,'')),period,source})
       }
     }
-    if(source.kind==='receipt'&&/^receipt-ranking-\d+$/.test(source.resource??'')&&/grouped by donor/i.test(coverage)){
+    if(source.kind==='receipt'&&/^receipt-ranking-\d+$/.test(source.resource??'')&&/grouped by (?:source|donor)/i.test(coverage)){
       const m=/^([^:\n]+): (\$\d(?:[\d,]*\d)?(?:\.\d+)?)/.exec(source.snippet??'')
       const period=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(source.snippet??'')?.[1]
       const explicit=sourceMetadata(source).party

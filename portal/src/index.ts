@@ -3663,7 +3663,7 @@ const CHAMBER_NAMES: Record<string, string> = {
 const DIRECTORY_KINDS: Record<string, string> = {
   person: 'Parliamentarians',
   party: 'Parties',
-  donor: 'Donors',
+  donor: 'Receipt sources',
   supplier: 'Government suppliers',
   agency: 'Government agencies',
   campaigner: 'Campaigners & third parties',
@@ -3715,7 +3715,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   explore: {
     title: 'Interactive tools · OPAX',
-    description: 'Play with the parliamentary record: the time machine, the record quiz, the donations ledger, who gets the grants and the money map.',
+    description: 'Play with the parliamentary record: the time machine, the record quiz, the receipts ledger, who gets the grants and the money map.',
   },
   'money/contracts': {
     title: 'Government contracts · OPAX',
@@ -4312,7 +4312,7 @@ const yearSpan = (a: string, b: string): string => (a && b && a !== b ? `${a} to
 
 const indexLinks = (): string =>
   `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
-  `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/agency">Government agencies</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
+  `<a href="/subject/donor">Receipt sources</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/agency">Government agencies</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
   `<a href="/subject/topic">Topics</a></p>`
 
 /** The no-JS page: its one title, one sentence and the directory links. No
@@ -4463,7 +4463,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           author: publisher,
           publisher,
         },
-        prerender: prerenderBlock(r.title, `${r.blurb} A standing OPAX investigation pairing disclosed donations with what was said in parliament, every claim cited to the record.`),
+        prerender: prerenderBlock(r.title, `${r.blurb} A standing OPAX investigation pairing disclosed receipts with what was said in parliament, every claim cited to the record.`),
       })
     }
 
@@ -4493,7 +4493,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           `The organisations that spend on Australian politics without donating: ${camp ? `${num(camp.entities.length)} ` : ''}associated entities, third parties and political campaigners on the AEC register.`,
         )
       } else {
-        description = 'The largest disclosed political donors in Australia, by industry and by the parties they fund, from AEC, ECQ and VEC returns.'
+        description = 'The largest disclosed political receipt sources in Australia, by industry and recipient party, from AEC, ECQ and VEC returns.'
       }
       return base({
         title: `${label} · OPAX`,
@@ -5232,12 +5232,12 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       facts = `${display}: ${parts.join('; ')}.`
       tail = speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
     } else {
-      facts = `${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`
+      facts = `${display} in the OPAX record of Australian parliamentary speeches and disclosed political receipts.`
     }
     card = {
       kicker: 'Political party',
       title: display,
-      lines: parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political donations.'],
+      lines: parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
       dot: node?.colour ?? null,
     }
   } else if (node) {

@@ -1334,7 +1334,7 @@ export async function mountMoneyMap(
       const toggle = el('button', 'mm-chip mm-grants-toggle', legend)
       toggle.type = 'button'
       toggle.setAttribute('aria-pressed', String(grantsOn))
-      toggle.title = 'Public money the donors on this map received, grants and contracts, drawn as flows out from the hubs'
+      toggle.title = 'Public money the receipt sources on this map received, grants and contracts, drawn as flows out from the hubs'
       const dot = el('span', 'mm-dot', toggle)
       dot.style.background = grantor ? hubColour(grantor) : GRANTOR_COLOUR
       el('span', '', toggle).textContent = 'Public money'
@@ -1800,8 +1800,8 @@ export async function mountMoneyMap(
         ? `Received across ${node.count.toLocaleString()} receipts · ${span}`
         : node.kind === 'grantor'
           ? (node.flow === 'contracts'
-            ? `Held by donors on this map across ${node.count.toLocaleString()} contracts · ${span}`
-            : `Awarded to donors on this map across ${node.count.toLocaleString()} grants · ${span}`)
+            ? `Held by receipt sources on this map across ${node.count.toLocaleString()} contracts · ${span}`
+            : `Awarded to receipt sources on this map across ${node.count.toLocaleString()} grants · ${span}`)
           : `Disclosed across ${node.count.toLocaleString()} receipt records · ${span}`
     inflationFineprint(card)
 
@@ -1861,8 +1861,8 @@ export async function mountMoneyMap(
     } else if (node.kind === 'grantor') {
       const contracts = node.flow === 'contracts'
       listTitle.textContent = contracts
-        ? 'Largest contractors among the donors on this map'
-        : 'Largest recipients among the donors on this map'
+        ? 'Largest contractors among the receipt sources on this map'
+        : 'Largest recipients among the receipt sources on this map'
       const outgoing = view.edges
         .filter((e) => e.source === node.id)
         .sort((a, b) => b.total - a.total)
@@ -1888,7 +1888,7 @@ export async function mountMoneyMap(
         : 'Public money is drawn the other way from party receipts and never summed with them.'
       renderActions(card, node, plan, {})
     } else {
-      listTitle.textContent = 'Top donors shown on the map'
+      listTitle.textContent = 'Top receipt sources shown on the map'
       const allIncoming=view.edges.filter(e=>e.target===node.id)
       const incoming = view.edges
         .filter((e) => e.target === node.id)
@@ -1931,12 +1931,12 @@ export async function mountMoneyMap(
     const sub = el('div', 'mm-card-sub', card)
     const span = yearSpan(edge.firstYear ?? null, edge.lastYear ?? null)
     const donors = edge.count ?? 0
-    sub.textContent = `From ${donors === 1 ? '1 donor' : `${donors.toLocaleString()} donors`} shown` +
+    sub.textContent = `From ${donors === 1 ? '1 receipt source' : `${donors.toLocaleString()} receipt sources`} shown` +
       `${span ? ` · ${span}` : ''}`
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
-    listTitle.textContent = 'Largest donors in this flow'
+    listTitle.textContent = 'Largest receipt sources in this flow'
     const list = el('ul', 'mm-rows', card)
     const flows = view.edges
       .filter((e) => e.target === party.id && view.nodes.get(e.source)?.group === group)
@@ -1979,13 +1979,13 @@ export async function mountMoneyMap(
     const list = el('ul', 'mm-rows', card)
     row(list, hubColour(grantor), grantor.label, grantor.total, '',
       () => setSelection(grantor.id, { user: true }))
-    row(list, markColour(donor), donor.label, donor.total, 'given to parties',
+    row(list, markColour(donor), donor.label, donor.total, 'disclosed receipts to parties',
       () => setSelection(donor.id, { user: true }))
     for (const [program, dollars] of (donor.grants?.top ?? []).slice(0, 3)) {
       row(list, null, program, dollars, '', null)
     }
     const fine = el('p', 'mm-card-fine', card)
-    fine.textContent = 'Public money going the other way; not summed with party receipts. A donor receiving a grant is a fact, not a finding.'
+    fine.textContent = 'Public money going the other way; not summed with party receipts. A receipt source receiving a grant is a fact, not a finding.'
     if (donor.grants?.rid && !/^(null|undefined)$/i.test(donor.grants.rid)) {
       action(actionRow(card), 'Open grants file', {
         name: 'Open their grants file',

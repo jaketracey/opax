@@ -103,7 +103,7 @@ test('donation matches require an organisation and exact normalised name, with A
  assert.equal(exactOrganisationDonors(supplier,[{...donor,abn:null}]).length,1);
  assert.equal(donationRegisterHTML(supplier,[{kind:'donor',label:'Alex Example',abn:donor.abn}]),'');
  assert.equal(donationRegisterHTML(supplier,[donor,{...donor,id:'second'}]),'');
- assert.match(donationRegisterHTML(supplier,[donor]),/Also in the donations register/);
+ assert.match(donationRegisterHTML(supplier,[donor]),/Also in the receipt disclosure records/);
  assert.ok(donationRegisterHTML(supplier,[donor]).includes(ASSOCIATION_NOTE));
 });
 test('live individual-donor fixture cannot enter the supplier donations or funding path',async()=>{

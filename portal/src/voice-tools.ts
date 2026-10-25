@@ -2,6 +2,7 @@ import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
 import {reportsEnabled} from './reports-gate'
+import {federalPartyMoneyAnswer, federalPartyRankingQuestion, publicPartyMoneyAnswer} from './ask-money-routing'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -72,7 +73,9 @@ function compact(value: unknown, budget = {left: 15_000}, depth = 0): unknown {
 export async function runVoiceTool(name: string, args: Data, env: Env, readPublic: PublicReader): Promise<Data> {
   const origin = env.COMMUNITY_ORIGIN
   const asset = async (path: string, limit: number) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), limit)
-  const receipts = async (query:string) => {
+  const receipts = async (query:string,kind?:string) => {
+    const family=await federalPartyMoneyAnswer({question:query,kind},env.ASSETS)
+    if(family)return {source_notice:evidenceNotice,sources:family.sources,data:publicPartyMoneyAnswer(family)}
     if(/\b(?:grants?|contracts?|expenditure|expenses?|government spending|public funding)\b/i.test(query)) return null
     const selection=await receiptGraphForQuestion(query,async file=>{
       const graph=await asset(file,8_000_000)
@@ -87,8 +90,8 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
   if (name === 'search_records') {
     const query = text(args.query, 2, 300, 'Search'), kind = args.kind ?? 'all'
     if (typeof kind !== 'string' || (!['all','speech','press_release','division','legal'].includes(kind) && !CATALOG_KINDS.has(kind))) throw new CommunityError(400, 'Choose a supported record kind.')
-    if(kind==='receipt'||(kind==='all'&&moneyQuestion(query))) {
-      const found=await receipts(query)
+    if(federalPartyRankingQuestion(query)||kind==='receipt'||(kind==='all'&&moneyQuestion(query))) {
+      const found=await receipts(query,kind)
       if(found) return found
     }
     const params = new URLSearchParams({q: query, kind, per: '6', page: '1'})

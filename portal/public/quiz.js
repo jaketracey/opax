@@ -143,7 +143,7 @@ function moneyLink(industry) {
     ? { href: "/money?industry=" + encodeURIComponent(industry), label: "Open this industry on the money map" }
     : MONEY_LINK;
 }
-function donorProof(record) {const view=donorDisclosure(record);return {href:view.href || '/graph/money.json',label:view.href ? 'Donor disclosure profile' : view.returns.length ? 'Disclosure return' : 'Disclosure data download'}}
+function donorProof(record) {const view=donorDisclosure(record);return {href:view.href || '/graph/money.json',label:view.href ? 'Receipt disclosure profile' : view.returns.length ? 'Disclosure return' : 'Disclosure data download'}}
 function subjectLink(kind, label) {
   return { href: subjectUrl(kind,label), label: "Open " + label + " in the record" };
 }

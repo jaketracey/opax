@@ -10,9 +10,12 @@ const parties:[string,string[]][]=[
  ['United Australia Party',['united australia party']],['Family First',['family first']],
  ["Katter's Australian Party",["katter's australian party"]],['Centre Alliance',['centre alliance']],
 ]
-const actions='(?:gives?|gave|has given|donates?|donated|funds?|funded|bankrolls?|bankrolled|supports?|supported|props? up)'
-const roles='(?:(?:financial|political) )?(?:donors?|backers?|supporters?|benefactors?|funders?)'
-const normal=(q:string)=>q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().replace(/[?!.]+$/,'').replace(/^please /,'').replace(/ please$/,'')
+// Inflection and aspect belong to the question grammar, not separate routes.
+const verbs='(?:giv(?:e[sn]?|ing)|gave|donat(?:e[sd]?|ing)|fund(?:s|ed|ing)?|bankroll(?:s|ed|ing)?|back(?:s|ed|ing)?|support(?:s|ed|ing)?|prop(?:s|ped|ping)? up|contribut(?:e[sd]?|ing))'
+const auxiliaries='(?:(?:(?:has|have|had)(?: been)?|(?:is|are|was|were)(?: being)?|does|did|will|would|can|could) )?'
+const actions=auxiliaries+verbs
+const roles='(?:(?:financial|political) )?(?:donors?|backers?|supporters?|benefactors?|funders?|contributors?)'
+const normal=(q:string)=>q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().replace(/[?!.]+$/,'').replace(/^please /,'').replace(/ please$/,'').replace(/^and /,'').replace(/^who's /,'who is ')
 const escape=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 export function federalPartyRankingQuestion(question:string):string|null {
  const q=normal(question)
@@ -20,11 +23,15 @@ export function federalPartyRankingQuestion(question:string):string|null {
  if(/\b(?:queensland|qld|victoria|victorian|vic|tasmania|tasmanian|tas|new south wales|nsw|south australia|western australia|northern territory|act disclosures|state records|state disclosures)\b/.test(q))return null
  let target:string|undefined
  const active=new RegExp('^who '+actions+' (?:(?:the )?most(?: (?:money|disclosed funding|funding|receipts))?(?: to| for)? |(?:money |donations? |receipts? )?to )?(.+)$').exec(q)
- const nouns=new RegExp('^(?:(?:who (?:is|are)|show(?: me)?|list)(?: the)? |the )?(?:biggest|top|largest|major|main) '+roles+' (?:to|for|of) (.+)$').exec(q)
- const taking=/^who does (.+?) take (?:the )?most money from(.*)$/.exec(q)
+ const separable=new RegExp('^who '+auxiliaries+'prop(?:s|ped|ping)? (.+?) up(.*)$').exec(q)
+ const copula='(?:is|are|was|were|has been|have been|had been)'
+ const nouns=new RegExp('^(?:(?:who '+copula+'|show(?: me)?|list)(?: the)? |the )?(?:biggest|top|largest|major|main) '+roles+' (?:to|for|of) (.+)$').exec(q)
+ const taking=/^who (?:does|did|will|would|can|could) (.+?) take (?:the )?most money from(.*)$/.exec(q)
+   ??/^who (?:has|had) (.+?) taken (?:the )?most money from(.*)$/.exec(q)
+   ??/^who (?:is|was) (.+?) taking (?:the )?most money from(.*)$/.exec(q)
  const neutral=/^who has the most disclosed receipts to (.+)$/.exec(q)
- const possessive=new RegExp('^(?:who (?:is|are) )?(.+?)(?:\'s) (?:biggest|top|largest|major|main) '+roles+'(.*)$').exec(q)
- target=active?.[1]??nouns?.[1]??neutral?.[1]??(taking?taking[1]+taking[2]:undefined)??(possessive?possessive[1]+possessive[2]:undefined)
+ const possessive=new RegExp('^(?:who '+copula+' )?(.+?)(?:\'s) (?:biggest|top|largest|major|main) '+roles+'(.*)$').exec(q)
+ target=active?.[1]??nouns?.[1]??neutral?.[1]??(taking?taking[1]+taking[2]:undefined)??(possessive?possessive[1]+possessive[2]:undefined)??(separable?separable[1]+separable[2]:undefined)
  if(!target)return null
  target=target.replace(/^the /,'')
  for(const [party,names]of parties)for(const name of names){

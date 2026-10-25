@@ -24,7 +24,7 @@ for(const [arm,data]of Object.entries(saved.results)){
   const before=old.groundAnswerPayload(structuredClone(row.payload),question)
   const calculated=await now.federalPartyMoneyAnswer({question,context},assets)
   const after=calculated?now.publicPartyMoneyAnswer(calculated):now.groundAnswerPayload(structuredClone(row.payload),question)
-  const changed=before.answer!==after.answer||JSON.stringify(before.citations)!==JSON.stringify(after.citations)
+  const changed=JSON.stringify(before)!==JSON.stringify(after)
   const result={arm,position:index+1,id:row.id,family:!!calculated,changed,reason:calculated?'Replace the family response with the complete federal receipts calculator answer; no model prose.':'Keep audit-baseline non-family behaviour.'}
   if(changed)differences.push(result)
   rows.push({...result,question,context,before,after})
@@ -32,7 +32,7 @@ for(const [arm,data]of Object.entries(saved.results)){
  }
 }
 const non_family_changes=rows.filter(r=>r.changed&&!r.family).map(r=>({arm:r.arm,id:r.id}))
-const damaged_family_answers=rows.filter(r=>r.family&&r.after.answer_status==='calculated'&&(!r.after.answer.includes('| Donor | Disclosed receipts | Records |')||!r.after.answer.includes('not a donation ranking')||!Object.keys(r.after.citations??{}).length)).map(r=>({arm:r.arm,id:r.id}))
-const summary={baseline,input,payloads:rows.length,family:rows.filter(r=>r.family).length,changed:differences.length,differences,non_family_changes,damaged_family_answers,network_requests:0,model_calls:0,spend_usd:0}
+const damaged_family_answers=rows.filter(r=>r.family&&r.after.answer_status==='calculated'&&(!r.after.answer.includes('| Source | Disclosed receipts | Records |')||!r.after.answer.includes('not a donation ranking')||!Object.keys(r.after.citations??{}).length)).map(r=>({arm:r.arm,id:r.id}))
+const summary={baseline,input,payloads:rows.length,family:rows.filter(r=>r.family).length,non_family_identical_payloads:rows.filter(r=>!r.family&&!r.changed).length,family_calculated:rows.filter(r=>r.family&&r.after.answer_status==='calculated').length,family_evidence_gap:rows.filter(r=>r.family&&r.after.answer_status==='evidence_gap').length,family_table_rows:rows.filter(r=>r.family).reduce((n,r)=>n+Math.max(0,String(r.after.answer).split('\n').filter(l=>/^\| /.test(l)).length-2),0),changed:differences.length,differences,non_family_changes,damaged_family_answers,network_requests:0,model_calls:0,spend_usd:0}
 fs.mkdirSync(out,{recursive:true});fs.writeFileSync(out+'/replay.json',JSON.stringify({summary,rows},null,2));fs.writeFileSync(out+'/replay-summary.json',JSON.stringify(summary,null,2)+'\n');console.log(JSON.stringify(summary))
 if(rows.length!==158||non_family_changes.length||damaged_family_answers.length)process.exitCode=1

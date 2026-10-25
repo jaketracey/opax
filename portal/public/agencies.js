@@ -1,5 +1,5 @@
 import {donorLabelHTML} from './donor-disclosure.js?v=800932e746';
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML } from './suppliers.js?v=6a5cf39d09';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML } from './suppliers.js?v=89bcd26c6e';
 import { procurementGraph } from './procurement-data.js';
 import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -26,7 +26,7 @@ export async function mountProcurementPreview(root, profile, kind, life) {
   root.hidden = false;
   root.innerHTML = '<p role="status">Opening the 3D map…</p>';
   try {
-    const { mountMoneyMap } = await import('/money-map.js?v=378a79c7be');
+    const { mountMoneyMap } = await import('/money-map.js?v=ad0bc4ecc3');
     if (!life.alive()) return;
     const graph = procurementGraph(profile, kind);
     if (!graph.edges.length) { root.innerHTML = '<p>No relationships with positive recorded contract value are available for the map.</p>'; return; }

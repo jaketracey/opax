@@ -337,7 +337,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
     const industryKey = norm(industry || '')
     donors = graph.nodes.filter((node) => node.kind === 'donor' &&
       [node.group, node.industry].some((value) => norm(String(value || '').replace(/_/g, ' ')) === industryKey))
-    if (!donors.length) throw new FlowNotFound(`No disclosed ${detail.from || 'industry'} donors were found`)
+    if (!donors.length) throw new FlowNotFound(`No disclosed ${detail.from || 'industry'} receipt sources were found`)
     const ids = new Set(donors.map((node) => node.id))
     contextEdges = graph.edges.filter((edge) => ids.has(edge.source))
   }
@@ -390,7 +390,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
 }
 
 function labelForIndustry(value: string | null, helpers: ExplainHelpers) {
-  if (!value) return 'Disclosed donors'
+  if (!value) return 'Disclosed receipt sources'
   if (['individual', 'individuals'].includes(value.toLowerCase())) return 'Industry not recorded'
   return helpers.industryLabel ? helpers.industryLabel(value) : value.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
 }
@@ -1707,14 +1707,14 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     if (step === 0) {
       let text = ''
       if (detail.kind === 'donor' && flow.donor) {
-        text = `${flow.donor.label} is grouped with ${labelForIndustry(flow.donor.industry || flow.donor.group || '', helpers).toLowerCase()} donors. ` +
+        text = `${flow.donor.label} is grouped with ${labelForIndustry(flow.donor.industry || flow.donor.group || '', helpers).toLowerCase()} receipt sources. ` +
           `The map holds ${helpers.fmtMoney(Number(flow.donor.total) || 0)} across ${plural(Number(flow.donor.count) || 0, 'disclosed receipt')} from ${yearsActive}. ` +
-          `${flow.donorRank ? `That places it ${flow.donorRank === 1 ? 'first' : `at number ${flow.donorRank}`} among the ${flow.graph.nodes.filter((node) => node.kind === 'donor').length} leading donors shown.` : ''}`
+          `${flow.donorRank ? `That places it ${flow.donorRank === 1 ? 'first' : `at number ${flow.donorRank}`} among the ${flow.graph.nodes.filter((node) => node.kind === 'donor').length} leading receipt sources shown.` : ''}`
       } else if (detail.kind === 'party' && flow.party) {
-        text = `${flow.party.label} received money from ${flow.donors.length.toLocaleString()} leading donors shown on this map. ` +
+        text = `${flow.party.label} received money from ${flow.donors.length.toLocaleString()} leading receipt sources shown on this map. ` +
           `Together, these flows account for ${helpers.fmtMoney(flow.total)} across ${plural(flow.count, 'disclosed receipt')} from ${yearsActive}.`
       } else {
-        text = `${labelForIndustry(flow.industry, helpers)} contains ${flow.donors.length.toLocaleString()} leading donors shown on this map. ` +
+        text = `${labelForIndustry(flow.industry, helpers)} contains ${flow.donors.length.toLocaleString()} leading receipt sources shown on this map. ` +
           `Their matching disclosed flows total ${helpers.fmtMoney(flow.total)} across ${plural(flow.count, 'receipt')} from ${yearsActive}.`
       }
       copy.append(el('p', '', text))
@@ -1722,7 +1722,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
         [helpers.fmtMoney(flow.total), flow.party && detail.to ? `disclosed to ${flow.party.label}` : 'disclosed in this view'],
         [flow.count.toLocaleString(), flow.count === 1 ? 'receipt in the flow' : 'receipts in the flow'],
         [yearsActive, 'dated activity'],
-        [(detail.kind === 'party' ? flow.topDonors.length : flow.otherParties.length).toLocaleString(), detail.kind === 'party' ? 'leading donors shown' : 'other recipient parties'],
+        [(detail.kind === 'party' ? flow.topDonors.length : flow.otherParties.length).toLocaleString(), detail.kind === 'party' ? 'leading receipt sources shown' : 'other recipient parties'],
       ]))
       const access = describeAccess(flow, helpers)
       if (access) copy.append(el('p', 'explain-access', access))
@@ -1753,7 +1753,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
       const contextTotal = flow.contextEdges.reduce((sum, edge) => sum + (Number(edge.total) || 0), 0)
       const share = contextTotal ? destinationTotal / contextTotal : 0
       if (detail.kind === 'party') {
-        copy.append(el('p', '', `${flow.party?.label} is the destination. The list below shows which of the map’s leading donors account for the largest disclosed flows into it.`))
+        copy.append(el('p', '', `${flow.party?.label} is the destination. The list below shows which of the map’s leading receipt sources account for the largest disclosed flows into it.`))
         copy.append(partyList(flow.topDonors.map((row) => ({ node: row.node, total: row.total })), flow, helpers,true))
       } else if (detail.to && flow.party) {
         copy.append(el('p', '', `${helpers.fmtMoney(destinationTotal)} landed with ${flow.party.label}. ` +
@@ -1872,7 +1872,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
     const shell = el('div', 'explain-shell')
     const stage = el('div', 'explain-stage')
     const narrative = el('div', 'explain-narrative')
-    const from = resolved.donor?.label || (detail.kind === 'party' ? 'Disclosed donors' : labelForIndustry(resolved.industry, helpers))
+    const from = resolved.donor?.label || (detail.kind === 'party' ? 'Disclosed receipt sources' : labelForIndustry(resolved.industry, helpers))
     const to = detail.kind === 'party' || detail.to
       ? resolved.party?.label || 'Political party'
       : 'Political parties'

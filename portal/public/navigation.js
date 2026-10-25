@@ -39,12 +39,12 @@
           page('/vic-election-2026', 'Victorian election 2026', '88 districts and 8 regions, voting 28 November.', { gate: 'vic-election' }),
         ] },
       ] },
-    { id: 'money', label: 'Money', href: '/money', sub: 'Donations, contracts and grants',
+    { id: 'money', label: 'Money', href: '/money', sub: 'Receipts, contracts and grants',
       intro: 'Money into politics, and public money out to organisations.', feature: 'money', columns: [
         { heading: 'Political money', links: [
           page('/money', 'Money map', 'Who funds whom, across 28 years of returns.'),
           page('/money/receipts', 'Political receipts', 'Every disclosed receipt, sortable and exportable.'),
-          page('/subject/donor', 'Donors', 'Organisations in the disclosure records.'),
+          page('/subject/donor', 'Receipt sources', 'Organisations in the disclosure records.'),
           page('/subject/campaigner', 'Campaigners & third parties', 'Organisations spending on politics.'),
         ] },
         { heading: 'Public money', links: [
@@ -261,7 +261,7 @@
         : `<a class="nav-feature" href="/sitting"><span class="nav-feature-kicker">The calendar</span><span class="nav-feature-title">Sitting weeks</span><span class="nav-feature-meta">Every federal sitting week, past and upcoming.</span><span class="nav-feature-more">See the calendar${ARROW}</span></a>`;
     }
     if (group.feature === 'vic') return gates['vic-election'] ? `<a class="nav-feature" href="/vic-election-2026"><span class="nav-feature-kicker">Votes on 28 November</span><span class="nav-feature-title">Victorian election 2026</span><span class="nav-feature-meta">Every district and region, its sitting member and their record.</span><span class="nav-feature-more">See the seats${ARROW}</span></a>` : '';
-    if (group.feature === 'money') return `<a class="nav-feature" href="/money"><span class="nav-feature-kicker">Explore</span><span class="nav-feature-title">The money map</span><span class="nav-feature-meta">Donors, parties and public money as one territory you can turn.</span><span class="nav-feature-more">Open the map${ARROW}</span></a>`;
+    if (group.feature === 'money') return `<a class="nav-feature" href="/money"><span class="nav-feature-kicker">Explore</span><span class="nav-feature-title">The money map</span><span class="nav-feature-meta">Receipt sources, parties and public money as one territory you can turn.</span><span class="nav-feature-more">Open the map${ARROW}</span></a>`;
     return '';
   }
   function panelHTML(group, links) {

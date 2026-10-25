@@ -87,7 +87,7 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
   }
   const fy=financialYear
   const party=plain(result.selected_parties[0])
-  const from=result.selected_industries.length?` from ${plain(result.selected_industries[0].replaceAll('_',' '))} donors`:result.selected_donors.length?` from ${plain(result.selected_donors[0])}`:''
+  const from=result.selected_industries.length?` from ${plain(result.selected_industries[0].replaceAll('_',' '))} receipt sources`:result.selected_donors.length?` from ${plain(result.selected_donors[0])}`:''
   const difference=Math.round((later.total_aud-earlier.total_aud)*100)/100
   let answer=difference?`**${party} received ${aud(Math.abs(difference))} ${difference>0?'more':'less'}${from} in ${fy(later.year)} than in ${fy(earlier.year)}** in this published selection.`
     :`**${party} has the same disclosed total${from} in ${fy(earlier.year)} and ${fy(later.year)}** in this published selection.`
@@ -106,7 +106,7 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
     const url=new URL(row.sources[0].url)
     cite(`${fy(row.year)}: ${aud(row.total_aud)}`,url.pathname+url.search,`${party}${from}: ${aud(row.total_aud)} across ${recordCount(row.receipts)} in ${fy(row.year)}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
   }
-  answer+='\n\nCoverage: **Selected party receipts, not a gifts-only donation total or personal payments.** These totals include only donors in Opax’s published map. Undated receipts and other years are excluded. Election returns may use polling-year dates. An industry grouping does not establish lobbying or influence.'
+  answer+='\n\nCoverage: **Selected party receipts, not a gifts-only donation total or personal payments.** These totals include only receipt sources in Opax’s published map. Undated receipts and other years are excluded. Election returns may use polling-year dates. An industry grouping does not establish lobbying or influence.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
   const money_facts=moneyFacts(undefined,'financial year',context,[earlier,later].map(row=>({name:fy(row.year),total_aud:row.total_aud,receipts:row.receipts})))
   return {answer,citations,sources,answer_status:'calculated',money_ranking:true,coverage:result.period_coverage,money_context:context,money_facts,scope:{state:result.jurisdiction,party:result.selected_parties[0]}}
@@ -147,7 +147,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   const bounds=result.requested_years
   const context=moneyContext(result)
   answer+=`\n\n${context}`
-  answer+=`\n\n| ${partyComparison?'Recipient party':'Donor industry'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
+  answer+=`\n\n| ${partyComparison?'Recipient party':'Source industry'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
   for(const row of rows) {
     const identity=result.by_donor.find(d=>d.id===row.id);
       const donorName=identity ? (identity.href ? `[${plain(row.name)}](${identity.href})` : plain(row.name)) : plain(row.name);
@@ -283,12 +283,12 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
     citations[resource]=[[Array.from(answer).length-offset-1,Array.from(answer).length-offset]]
     sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by Opax',date:typeof graph.meta.generated==='string'?graph.meta.generated:undefined})
   }
-  cite('How these receipt totals were calculated',result.sources[0].url,`${who.name}: ${aud(who.total_aud)}, ${recordCount(who.receipts)}.${recipient?` Receipts to ${plain(recipient)}.`:''} Period: ${result.period}. Opax added the disclosed receipts matching this question, grouped by ${fromDonors?'donor':allFlows?'donor and recipient party':'recipient party'}. This selection covers ${result.by_donor.length.toLocaleString('en-AU')} donors during ${result.period}. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.`)
+  cite('How these receipt totals were calculated',result.sources[0].url,`${who.name}: ${aud(who.total_aud)}, ${recordCount(who.receipts)}.${recipient?` Receipts to ${plain(recipient)}.`:''} Period: ${result.period}. Opax added the disclosed receipts matching this question, grouped by ${fromDonors?'source':allFlows?'source and recipient party':'recipient party'}. This selection covers ${result.by_donor.length.toLocaleString('en-AU')} receipt sources during ${result.period}. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.`)
   citations['receipt-ranking-0']=[[0,Array.from(answer).length]]
   const context=moneyContext(result)
   answer+=`\n\n${context}`
   if(rows.length){
-    answer+=`\n\n| ${allFlows?'Donor → party':fromDonors?'Donor':'Recipient party'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
+    answer+=`\n\n| ${allFlows?'Source → party':fromDonors?'Source':'Recipient party'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
     for(const row of rows){
       const identity=result.by_donor.find(d=>d.id===row.id);
       const donorName=identity ? (identity.href ? `[${plain(row.name)}](${identity.href})` : plain(row.name)) : plain(row.name);

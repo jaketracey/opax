@@ -70,3 +70,9 @@ test('graph-only selections never produce a broader receipt-list link',()=>{
   assert.equal(receipts,null,suffix);
  }
 });
+
+test('Source table headers retain the same money next steps as saved Donor headers',()=>{
+ for(const [head,first]of [['Source','Woodside Energy'],['Source → party','Woodside Energy → Liberal']]){
+  assert.deepEqual({...context.moneyNextSteps(answer(head,first))},{map:expectedMap,receipts:expectedMap.replace('/money?', '/money/receipts?'),donor:'Woodside Energy'});
+ }
+});

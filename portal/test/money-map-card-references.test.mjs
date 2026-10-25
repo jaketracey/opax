@@ -83,7 +83,7 @@ test('the entity card shows no return references for a donor or a party; Sources
 
     handle.select('party:Labor');
     const partyCard = card();
-    assert.match(partyCard.textContent, /Top donors shown on the map/);
+    assert.match(partyCard.textContent, /Top receipt sources shown on the map/);
     assert.match(partyCard.textContent, /Fixture Holdings Pty Ltd/);
     assert.doesNotMatch(partyCard.innerHTML, REFERENCE, 'party rows carry the plain donor name');
   } finally { handle.destroy(); }

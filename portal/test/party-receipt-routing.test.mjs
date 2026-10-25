@@ -9,7 +9,7 @@ const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFi
 const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/party-receipt-routing.json',import.meta.url)))
 const asset=async path=>JSON.parse(fs.readFileSync(root+'public'+path))
 const assets={fetch:async request=>Response.json(await asset(new URL(request.url).pathname))}
-function complete(p){assert.equal(p.answer_status,'calculated');assert.ok(p.answer.includes(api.FEDERAL_RECEIPTS_NOTE));assert.match(p.answer.split('\n')[0],/largest disclosed receipts/);assert.match(p.answer,/\| Donor \| Disclosed receipts \| Records \|/);assert.ok(p.answer.split('\n').filter(s=>/^\| /.test(s)).length>=3);assert.ok(Object.keys(p.citations).length>=2);for(const ranges of Object.values(p.citations))for(const[a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(p.answer).length)}
+function complete(p){assert.equal(p.answer_status,'calculated');assert.ok(p.answer.includes(api.FEDERAL_RECEIPTS_NOTE));assert.match(p.answer.split('\n')[0],/largest disclosed receipts/);assert.match(p.answer,/\| Source \| Disclosed receipts \| Records \|/);assert.ok(p.answer.split('\n').filter(s=>/^\| /.test(s)).length>=3);assert.ok(Object.keys(p.citations).length>=2);for(const ranges of Object.values(p.citations))for(const[a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(p.answer).length)}
 for(const question of fixture.questions)test('closed family routes to the complete calculator: '+question,async()=>{
  assert.ok(api.federalPartyRankingQuestion(question));const p=await api.federalPartyMoneyAnswer({question},assets);complete(p)
  const direct=await api.rankedMoneyAnswer({question},assets);assert.equal(direct.answer,p.answer)
@@ -62,4 +62,83 @@ test('receipt copy is input-only and reviewed web labels remain',async()=>{
  assert.ok(fs.readFileSync(root+'public/money-map.js','utf8').includes('Received across'));assert.doesNotMatch(fs.readFileSync(root+'public/money-map.js','utf8'),/Given across/)
  assert.ok(fs.readFileSync(root+'public/money-journeys-data.js','utf8').includes('disclosed receipts record'))
  for(const file of ['research-grounding.ts','research-response.ts','research-writer.ts'])assert.doesNotMatch(fs.readFileSync(root+'src/'+file,'utf8'),/receiptWording|research-receipts|receipt-language/)
+})
+
+test('conjugation × aspect × party × ranking grammar stays on the complete calculator',async()=>{
+ const {cases,controls}=await import('./fixtures/party-receipt-grammar.mjs')
+ assert.ok(cases.length>=100);assert.ok(controls.length>=20)
+ for(const {question,party}of cases){
+  const selected=party.replace(/^the /,'').replace('Liberal Party','Liberal')
+  assert.equal(api.federalPartyRankingQuestion(question),`Who has the most disclosed receipts to ${selected}?`,question)
+  const p=await api.federalPartyMoneyAnswer({question},assets);assert.ok(p,question);complete(p)
+  assert.ok(p.answer.split('\n')[0].includes(`receipts to ${selected} in this published selection`),question)
+  assert.equal(new URL(p.sources[0].url,'https://opax.test').searchParams.get('party'),'party:'+selected,question)
+ }
+ for(const question of controls){assert.equal(api.federalPartyRankingQuestion(question),null,question);assert.equal(await api.federalPartyMoneyAnswer({question},assets),null,question)}
+})
+test('follow-up intent is resolved before incompatible filters, in both topic directions',async()=>{
+ const history=text=>[{author:'user',text}]
+ for(const extra of [{topic:'housing'},{chamber:'senate'},{speaker:'speaker-fixture'},{kind:'speech'}]){
+  assert.equal(await api.federalPartyMoneyAnswer({question:'And what did Labor say about housing?',context:history('Who has donated the most to Labor?'),...extra},assets),null)
+ }
+ complete(await api.federalPartyMoneyAnswer({question:'Who is giving the most money to Labor?',context:history('What did Labor say about housing?')},assets))
+ assert.equal(await api.federalPartyMoneyAnswer({question:'What about the Greens?',context:[...history('Who funds Labor?'),...history('And what did Labor say about housing?')],topic:'housing'},assets),null)
+ for(const extra of [{topic:'housing'},{kind:'grant'}])assert.equal((await api.federalPartyMoneyAnswer({question:'And what about the Greens?',context:history('Who funds Labor?'),...extra},assets)).answer_status,'needs_scope')
+})
+test('Greens tense reproductions bypass a stale gift-framed cache in JSON and SSE',async()=>{
+ const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
+ const h=await loadWorker(root+'src/index.ts',root+'public',ctx),saved=caches.default
+ let cacheReads=0;globalThis.caches.default={match:async()=>{cacheReads++;return Response.json({answer:'Example Bank gives the most money to the Greens: $90 million.'})},put:async()=>{}}
+ const initial=outbound.length
+ try{
+  h.env.RESEARCH_LOOP='route';h.env.AGENTIC_ASK_MODE='route';h.env.ASK_MODEL='openai-compatible'
+  for(const question of ['Who has donated the most money to the Greens?','Who is giving the most money to the Greens?'])for(const stream of [false,true]){
+   const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question})})
+   assert.equal(response.headers.get('x-opax-money-route'),'federal-party-ranking-v1')
+   const wire=await response.text(),p=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
+   complete(p);assert.deepEqual(p,JSON.parse(JSON.stringify(api.publicPartyMoneyAnswer(await api.federalPartyMoneyAnswer({question},assets)))))
+  }
+  assert.equal(cacheReads,0);assert.equal(outbound.length,initial)
+ }finally{globalThis.caches.default=saved;await Promise.all(pending);restore()}
+})
+
+test('explicit family continuations and past recipient forms keep the calculator route',async()=>{
+ for(const question of ["Who's giving the most money to Labor?","Who's Labor's biggest backer?",'And who has donated the most to Labor?','Who has been the biggest funder to Labor?','Who was Labor\'s main contributor?','Who did Labor take the most money from?','Who has Labor taken the most money from?','Who is Labor taking the most money from?'])complete(await api.federalPartyMoneyAnswer({question,context:[{author:'user',text:'What did parliament say about housing?'}]},assets))
+})
+test('mixed receipt headers and charts use source and receipt labels without changing table keys',async()=>{
+ const tables=await import('../public/register-tables.js'),ledger=await import('../public/ledger.js')
+ const config=tables.partyMoneyTableConfig([{label:'Example Bank Ltd',total:90,count:2}])
+ assert.deepEqual(config.columns.map(c=>c.key),['label','industry','total','count','firstYear','lastYear'])
+ assert.equal(config.columns[0].label,'Source');assert.equal(config.columns[2].label,'Received');assert.equal(config.export.filename,'party-receipts.csv')
+ for(const view of ['flows','donors'])assert.ok(ledger.buildCSV(view,[],[]).startsWith('Source,'))
+ const graph=fs.readFileSync(root+'graph/index.ts','utf8'),app=fs.readFileSync(root+'public/app.js','utf8'),explain=fs.readFileSync(root+'graph/explain.ts','utf8')
+ assert.ok(graph.includes("'disclosed receipts to parties'"));assert.doesNotMatch(graph,/given to parties|Top donors shown|Largest donors in this flow/)
+ assert.ok(app.includes('Disclosed receipts per financial year'));assert.doesNotMatch(app,/Donations per financial year|Donations come from AEC/)
+ assert.doesNotMatch(explain,/leading donors shown|leading donors account for/)
+ assert.ok(app.includes('itemised as donations'),'Classified annual-return categories retain their source wording')
+ const configText=fs.readFileSync(root+'wrangler.jsonc','utf8');assert.equal((configText.match(/"CACHE_EPOCH": "2026-10-25-receipts-r6"/g)||[]).length,2)
+})
+
+test('Source headers retain evidence direction and amounts, with legacy Donor compatibility',async()=>{
+ const {donorRanking}=await import('../src/research-coherence.mjs'),{auditPayload}=await import('../src/research-claim-audit.mjs')
+ const question='Who gives the most money to Labor?',answer='Labor disclosed $90,000,000 in receipts from Example Bank Ltd.'
+ const source=header=>({resource:'fact-1',kind:'record',cited:true,url:'/money?jur=federal&party=party:Labor',snippet:`Example Bank Ltd has the largest disclosed total to Labor in this published selection: $90,000,000.\nFinancial years: 2020–21.\n| ${header} | Disclosed receipts | Records |\n| Example Bank Ltd | $90,000,000 | 2 |`})
+ const ranked=header=>donorRanking(question,[source(header)]).map(({name,party,value})=>({name,party,value}))
+ assert.deepEqual(ranked('Source'),[{name:'Example Bank Ltd',party:'Labor',value:90000000}]);assert.deepEqual(ranked('Source'),ranked('Donor'))
+ const audited=header=>auditPayload(question,{answer,sources:[source(header)],citations:{'fact-1':[[0,Array.from(answer).length]]}})
+ assert.deepEqual(audited('Source'),audited('Donor'))
+ const calculated=await api.federalPartyMoneyAnswer({question},assets)
+ assert.match(calculated.sources[0].snippet,/grouped by source/);assert.doesNotMatch(calculated.sources[0].snippet,/donors during/)
+ assert.equal(donorRanking(question,calculated.sources)[0].name,'Westpac Banking Corporation')
+ const app=fs.readFileSync(root+'public/app.js','utf8');assert.doesNotMatch(app,/heading: "Largest donors"|"major donors disclosed"|`disclosed donation\$/)
+})
+
+test('additional federal total labels use receipts and source wording throughout the public UI',()=>{
+ for(const [file,old]of [
+  ['public/app.js',/"Largest donors"|"major donors disclosed"|disclosed donation\$|Disclosed money from this donor/],
+  ['public/growth-modules.js',/Also in the donations register/],
+  ['public/grants.js',/label: 'To donors'|label: 'In the donor registers'|>Donors only</],
+  ['public/money-explain.js',/largest donors by lifetime total|all donors on the map|follows one giver/],
+  ['src/seo-content.ts',/<h2>Donors to their party<\/h2>/],
+ ])assert.doesNotMatch(fs.readFileSync(root+file,'utf8'),old,file)
 })

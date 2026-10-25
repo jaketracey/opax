@@ -1,0 +1,260 @@
+{
+  "reviewed_tip": "ebf950238",
+  "changed": 42,
+  "non_family_changes": 0,
+  "answer_changes": "Only the Donor → Source table header; citation offsets and calculation-note source labels also change.",
+  "differences": [
+    {
+      "arm": "r4",
+      "id": "MONEY-YEAR",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "COH-PHON",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "COH-GREENS",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "COH-LIB",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "COH-LAB",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "COH-NAT",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D01-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D01-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D01-T3",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D02-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D03-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D04-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D04-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D04-T3",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D05-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D05-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D06-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D06-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D07-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D07-T3",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "r4",
+      "id": "FOLLOW-D10-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "MONEY-YEAR",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "COH-PHON",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "COH-GREENS",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "COH-LIB",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "COH-LAB",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "COH-NAT",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D01-T3",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D02-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D03-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D04-T3",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D05-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D05-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D06-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D06-T2",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D07-T1",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D07-T3",
+      "family": true,
+      "answer_header_only": true
+    },
+    {
+      "arm": "B",
+      "id": "FOLLOW-D10-T1",
+      "family": true,
+      "answer_header_only": true
+    }
+  ]
+}

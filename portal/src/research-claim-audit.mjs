@@ -139,7 +139,7 @@ function evidenceRows(payload){
    const label=/^\s*[-*]?\s*([^:|]{2,140}):/.exec(line)?.[1]
    const table=/^\|/.test(line)?line.split('|').map(s=>s.trim()).filter(Boolean):[]
    const receipt=/^Disclosed receipt: (.+?) → (.+?) [—–] \$/.exec(line),donor=/^Donor: (.+?) [—–]/.exec(line)
-   const tableDonor=/\|\s*Donor\s*\|/i.test(text)
+   const tableDonor=/\|\s*(?:Source|Donor)\s*\|/i.test(text)
    const current=/^(.+?) \([^)]+\), [^:]+: base salary/.exec(line)?.[1]
    const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
    const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(line);

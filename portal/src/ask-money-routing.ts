@@ -11,16 +11,19 @@ export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetche
  const direct=federalPartyRankingQuestion(input.question??'')
  const prior=fundingUserTurns(input)
  if(!direct&&(!fundingContinuation(input.question??'')||!prior.some(q=>federalPartyRankingQuestion(q))))return null
- if(input.speaker||input.chamber||input.topic||input.kind&&!['all','receipt','speech'].includes(input.kind))return {answer:'This is a federal party-receipt ranking. Clear the speaker, chamber, topic or other record filters to calculate it.',answer_status:'needs_scope',money_ranking:true,citations:{},sources:[],money_route:'federal-party-ranking-v1'}
  const context=Array.isArray(input.context)?input.context.map(turn=>turn&&typeof turn.text==='string'&&(turn.author==='user'||turn.author==='question')?{...turn,text:federalPartyRankingQuestion(turn.text)??turn.text}:turn):undefined
  let scoped:RecordQuestion={...input,kind:'all',context,question:direct??input.question}
  if(!direct){
-  const follow=await fundingResearchFollowUp(scoped,assets)
+  // Resolve the continuation's intent before interpreting its record filters.
+  // A new speech question can carry a topic after a money question.
+  const follow=await fundingResearchFollowUp({...scoped,speaker:undefined,chamber:undefined,topic:undefined},assets)
   if(!follow)return null
-  if('answer' in follow){if(!follow.money_question||!federalPartyRankingQuestion(follow.money_question))return null;return {...follow,money_route:'federal-party-ranking-v1'}}
-  if(!federalPartyRankingQuestion(follow.question))return null
-  scoped={...scoped,context:undefined,question:follow.question}
+  const question='answer' in follow?follow.money_question:follow.question
+  if(!question||!federalPartyRankingQuestion(question))return null
+  if('answer' in follow&&!input.speaker&&!input.chamber&&!input.topic&&(!input.kind||['all','receipt','speech'].includes(input.kind)))return {...follow,money_route:'federal-party-ranking-v1'}
+  scoped={...scoped,context:undefined,question}
  }
+ if(input.speaker||input.chamber||input.topic||input.kind&&!['all','receipt','speech'].includes(input.kind))return {answer:'This is a federal party-receipt ranking. Clear the speaker, chamber, topic or other record filters to calculate it.',answer_status:'needs_scope',money_ranking:true,citations:{},sources:[],money_route:'federal-party-ranking-v1'}
  const payload=await rankedMoneyAnswer(scoped,assets)
  if(!payload)return null
  // Validate the party against the calculator's actual federal graph selection.
