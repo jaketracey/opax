@@ -70,7 +70,7 @@ cd portal && npx wrangler secret put REVIEWER_LOGIN_CODE
 
 For staging, use `cd portal && npx wrangler secret put REVIEWER_LOGIN_CODE --env staging`. Cloudflare secrets are write-only; keep the value in the operator's password manager, never in the repository, fixtures, logs or command arguments. Rotate it by putting a new eight-digit value with the same command and updating the relevant store's reviewer sign-in details from the password manager.
 
-Deleting a reviewer account uses ordinary account deletion, including its emailed deletion proof. Deletion only mutates account database rows; it never writes secrets or vars and cannot change the constant allowlist or env binding. A later reviewer sign-in creates a fresh account with ordinary defaults and allowance.
+Reviewer deletion uses a fresh member-bound deletion challenge and the same `REVIEWER_LOGIN_CODE`, without sending email (local patch; release pending). It retains the existing deletion MAC, cookie, Origin, expiry and all admission limits. The current reviewer binding is checked in constant time before redemption; an unset, malformed or rotated secret invalidates old review proofs. Successful review deletion emits `community_reviewer_deletion` with timestamp and colo, never the code. Other members still receive emailed deletion codes. Deletion only mutates account database rows; it never writes secrets or vars and cannot change the constant allowlist or env binding. A later reviewer sign-in creates a fresh account with ordinary defaults and allowance.
 
 ## Account deletion (W5 and W6, live since 3 October 2026)
 
