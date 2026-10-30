@@ -1,8 +1,8 @@
 import {applyQuery,guardTableURL,formatCell,type Row} from '../public/datatable.js'
 import {shortDate} from '../public/format.js'
 import {govAdvertisingTableConfig,registerTableHTML} from '../public/register-tables.js'
-import sourceStatus from './gov-advertising-status.json'
-import privacyPolicy from './gov-advertising-privacy.json'
+import sourceStatus from './gov-advertising-status.json' with {type:'json'}
+import privacyPolicy from './gov-advertising-privacy.json' with {type:'json'}
 
 const esc=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
 const hash=(v:unknown)=>typeof v==='string' && /^[a-f0-9]{64}$/.test(v)
