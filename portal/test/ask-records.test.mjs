@@ -146,7 +146,12 @@ test('filler-only remainders never pull a random slice of every register into th
  const question='How have MPs described negative gearing over the years?';
  assert.equal(records.recordQuery({question}),'negative gearing');
  const found=await records.retrieveAskRecords({question},assets);
- assert.ok(found.records.length<6, `expected a handful of subject records, got ${found.records.length}`);
+ // The expanded catalogue includes division motions on this subject. Enforce
+ // topical evidence, rather than a count tied to the older bill-only index.
+ assert.ok(found.records.length>0);
+ assert.ok(found.records.length<=48);
+ assert.ok(found.records.every(r=>/\bnegative\s+gearing\b/i.test(r.title+' '+r.snippet)),
+  'every retrieved record must explicitly concern negative gearing');
  assert.ok(found.records.every(r=>!/OVER IP|Year 13|MPS Macmill/i.test(r.title)));
  assert.equal(records.recordQuery({question:'What have MPs said over the years?'}),'');
  assert.equal((await records.retrieveAskRecords({question:'What have MPs said over the years?'},assets)).records.length,0);

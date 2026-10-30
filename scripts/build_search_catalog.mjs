@@ -11,6 +11,7 @@ import { moneyFlowType } from '../portal/public/money-records.js';
 import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
 import { reportsPublished } from './reports_flag.mjs';
+import { pageSearchRecords } from './search_catalog_pages.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -192,6 +193,8 @@ async function main() {
    `${r.report_label}. Tabled date: ${r.tabled_date}. ${[...r.sectors,...r.entities].join('; ')}.`,
    {date:r.tabled_date,state:'qld',source:'Queensland Audit Office',url:r.canonical_url,record_id:r.id});
  }
+ const readConfig = async name => JSON.parse(await readFile(new URL('./hubs/'+name,import.meta.url),'utf8'));
+ for await (const r of pageSearchRecords(read,readConfig)) add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);
  // Rebuild postings from sanitised document tokens; block contained aliases before
  // both release hashing and writing; unrelated record IDs stay intact.
  const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));

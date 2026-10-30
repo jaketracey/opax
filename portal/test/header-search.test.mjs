@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Worker } from 'node:worker_threads';
+import { runInNewContext } from 'node:vm';
 import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
@@ -100,3 +101,33 @@ for (const [label, path] of [['sitting hub', '/sitting'], ['Victorian election h
     assert.equal(result.suggestion, 'Search the record for “housing”Search');
   });
 }
+
+for (const [label, path] of paths) {
+  test('header and drawer search published records and documents on ' + label, async () => {
+    const result = await execute(path, false, 'suggestions');
+    assert.equal(result.requests.length, 2);
+    for (const field of result.results) {
+      assert.deepEqual(field.rows, ['Search the record for “example”Search', 'Example supplierSupplier', 'Example instrumentLegislative instrument', 'Example speechSpeech']);
+      assert.match(field.active, /opt-1$/);
+    }
+  });
+}
+
+test('SPA header suggestions follow server pages and source URLs through browser navigation', () => {
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const start = app.indexOf('function attachQuickSearch(input, panel, options = {})');
+  const end = app.indexOf('// Query text remains', start);
+  const followed = [], routed = [];
+  let options;
+  const context = { OpaxQuickSearch: { attach(_input, _panel, settings) { options = settings; } },
+    quickSearchSuggestions: () => [], location: { assign: href => followed.push(href) },
+    goRoute: href => routed.push(href), searchHash: q => '/ask?q=' + q };
+  const attach = runInNewContext(app.slice(start, end) + ';attachQuickSearch', context);
+  attach({}, {});
+  for (const href of ['/instrument/F2026L00001', '/sitting/2026-10-26', '/register/state-bills', '/subject/electorate/example', 'https://example.gov.au/record']) options.navigate(href);
+  assert.equal(followed.length, 5);
+  assert.equal(routed.length, 0);
+  attach({}, {}, {source: () => []});
+  options.navigate('/subject/person/example');
+  assert.deepEqual(routed, ['/subject/person/example']);
+});

@@ -200,7 +200,7 @@ export const MODULE_STAMPS = [
   // The Explore tools and the loaders, restyled on tokens in pass 4G.
   ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
-  ['home.js', 'home-data.js'], ['home.js', 'electorates.js'], ['home.js', 'money-map.js'],
+  ['home.js', 'home-data.js'], ['home.js', 'money-map.js'],
 ]
 
 // Files stamped the same way that are not MODULE_STAMPS imports: a stylesheet

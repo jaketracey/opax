@@ -78,8 +78,17 @@ test('built search catalogue and authenticated local /mcp never expose GFS recon
   const raw=await readFile(new URL(`../public/search-catalog/${manifest.version}/records-${shard}.json`,import.meta.url),'utf8');
   noDiagnostics(raw);
   for(const record of JSON.parse(raw)){
-   // GFS currently publishes through its register, not catalogue or MCP records.
-   assert.ok(!record.href?.startsWith('/register/government-finance'));
+   // Only the collection entry is discoverable. GFS observations remain in
+   // the register; catalogue and MCP never expose workbook or diagnostic rows.
+   if(record.href?.startsWith('/register/government-finance')) {
+    assert.equal(record.kind,'page');
+    assert.equal(record.href,'/register/government-finance');
+    assert.equal(record.title,'Government finance');
+    assert.equal(record.source,'OPAX published pages');
+    assert.equal(record.record_id,undefined);
+    assert.equal(record.url,undefined);
+    assert.equal(record.date,undefined);
+   }
    assert.doesNotMatch(JSON.stringify(record),/55120DO\d{3}_202425|function-reconciliation/);records++;
   }
  }
