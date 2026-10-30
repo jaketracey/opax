@@ -74,6 +74,46 @@ class SupplierExportTests(unittest.TestCase):
         self.assertEqual(len({s['id'] for s in rows}), 2)
         self.assertEqual(sum(bool(s['money_node_ids']) for s in rows), 1)
 
+    def test_abn_legal_name_labels_billing_alias_without_changing_identity(self):
+        self.db.execute("UPDATE ext_contract_suppliers SET canonical_name='COBS Telstra', abr_name='TELSTRA CORPORATION LIMITED'")
+        self.add('CN1', name='COBS TELSTRA', value=20)
+        self.add('CN2', name='Telstra Corporation Limited', value=30)
+        result = self.export()
+        row = result['index']['suppliers'][0]
+        profile = result['shards'][row['profile_path']]['profiles'][row['id']]
+        self.assertEqual(row['name'], 'Telstra Corporation Limited')
+        self.assertEqual(row['id'], exporter.public_id('abn:11111111111'))
+        self.assertEqual(row['aliases'], ['COBS TELSTRA', 'Telstra Corporation Limited'])
+        self.assertIn('COBS Telstra', row['lookup_names'])
+        self.assertEqual((row['total'], row['count']), (50, 2))
+        self.assertEqual({c['reported_supplier'] for c in profile['contracts']}, set(row['aliases']))
+
+    def test_legal_name_does_not_override_missing_abn_or_merge_two_abns(self):
+        self.assertEqual(exporter.supplier_display_name({'canonical_name': 'Desk', 'abr_name': 'ENTITY LIMITED'}), 'Desk')
+        self.assertEqual(exporter.supplier_display_name({'canonical_name': 'Desk', 'abn': '123', 'abr_name': 'ENTITY LIMITED'}), 'Desk')
+        self.add('CN1')
+        self.add('CN2', name='ACME LIMITED', abn='22222222222')
+        rows = self.export()['index']['suppliers']
+        self.assertEqual(len(rows), 2)
+        self.assertEqual({r['abn'] for r in rows}, {'11111111111', '22222222222'})
+
+    def test_published_name_refresh_is_idempotent_and_preserves_contracts(self):
+        self.db.execute("UPDATE ext_contract_suppliers SET canonical_name='Billing Desk'")
+        self.add('CN1')
+        result = self.export()
+        row = result['index']['suppliers'][0]
+        profile = result['shards'][row['profile_path']]['profiles'][row['id']]
+        # Simulate the already-published policy rather than a new export.
+        row['name'] = profile['name'] = 'Billing Desk'
+        with tempfile.TemporaryDirectory() as path:
+            exporter.write_export(result, path)
+            before_contracts = json.dumps(profile['contracts'], sort_keys=True)
+            audit = exporter.refresh_published_names(path)
+            self.assertEqual(audit['renamed_count'], 1)
+            refreshed = json.loads((Path(path) / row['profile_path'].lstrip('/')).read_text())['profiles'][row['id']]
+            self.assertEqual(json.dumps(refreshed['contracts'], sort_keys=True), before_contracts)
+            self.assertEqual(exporter.refresh_published_names(path)['renamed_count'], 0)
+
     def test_empty_registry_abn_does_not_merge_distinct_source_abns(self):
         self.db.execute("UPDATE ext_contract_suppliers SET abn=NULL")
         self.add('CN1', abn='22222222222')

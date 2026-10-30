@@ -38,6 +38,24 @@ def norm_name(value):
     return " ".join(str(value or "").strip().casefold().split())
 
 
+def supplier_display_name(info, aliases=(), fallback='Undisclosed supplier'):
+    """Label an ABN identity by its ABR entity name, retaining source aliases.
+
+    The register's commonest source spelling can be a billing desk (COBS
+    Telstra), a typo or a historic trading name. It is not the legal identity.
+    Only case/whitespace-equivalent source spellings may prettify the ABR name;
+    this never changes membership, IDs, contracts or an ABN boundary.
+    """
+    previous = info.get('canonical_name') or fallback
+    legal = str(info.get('abr_name') or '').strip()
+    abn = re.sub(r'\D', '', info.get('abn') or '')
+    if len(abn) != 11 or not legal:
+        return previous
+    variants = [previous, *sorted(aliases)]
+    return next((name for name in variants if norm_name(name) == norm_name(legal)
+                 and not name.isupper()), legal)
+
+
 def public_id(canonical_id):
     return "s-" + hashlib.sha256(canonical_id.encode()).hexdigest()[:20]
 
@@ -225,6 +243,9 @@ def build_export(db, graph, published_since=None):
     directory = []
     shards = defaultdict(lambda: {'profiles': {}})
     for p in profiles.values():
+        previous_name = p['name']
+        p['name'] = supplier_display_name({'canonical_name': previous_name,
+            'abn': p['abn'], 'abr_name': p['identity']['legal_name']}, p['aliases'], previous_name)
         p['total'] = money(p['total'])
         p['aliases'] = sorted(p['aliases'], key=lambda n: (norm_name(n), n))
         p['agencies'] = sorted(p['agencies'].values(), key=lambda a: (-a['total'], a['name']))
@@ -238,7 +259,8 @@ def build_export(db, graph, published_since=None):
         directory.append({k: p[k] for k in ('id', 'canonical_id', 'name', 'abn', 'total', 'count', 'aliases', 'first_year', 'last_year')}
                          | {'agency_count': len(p['agencies']), 'profile_path': path,
                             'money_node_ids': [link['id'] for link in p['donor_links']],
-                            'lookup_names': sorted({link['name'] for link in p['donor_links']})})
+                            'lookup_names': sorted({link['name'] for link in p['donor_links']}
+                                | ({previous_name} if previous_name != p['name'] else set()))})
         shards[path]['profiles'][p['id']] = p
     directory.sort(key=lambda p: (-p['total'], p['name'], p['id']))
     meta = {
@@ -276,6 +298,40 @@ def write_export(result, output):
     temporary.replace(target)
 
 
+def refresh_published_names(output):
+    """Apply the naming policy to an existing export without fetching data.
+
+    Preserve the snapshot dates and every contract/identity; the embedded ABR
+    evidence is the same evidence a fresh database export uses.
+    """
+    output = Path(output)
+    index = json.loads((output / 'suppliers.json').read_text())
+    shards = {path: json.loads((output / path.lstrip('/')).read_text())
+              for path in sorted({row['profile_path'] for row in index['suppliers']})}
+    changed = []
+    by_abn = defaultdict(list)
+    for row in index['suppliers']:
+        p = shards[row['profile_path']]['profiles'][row['id']]
+        if (p['id'], p.get('abn'), p['name']) != (row['id'], row.get('abn'), row['name']):
+            raise ValueError('Supplier index/profile disagreement: ' + row['id'])
+        if p.get('abn'):
+            by_abn[p['abn']].append(p['id'])
+        old = p['name']
+        name = supplier_display_name({'canonical_name': old, 'abn': p.get('abn'),
+            'abr_name': p.get('identity', {}).get('legal_name')}, p.get('aliases', []), old)
+        if name != old:
+            p['name'] = row['name'] = name
+            row['lookup_names'] = sorted(set(row.get('lookup_names', [])) | {old})
+            changed.append({'id': p['id'], 'abn': p['abn'], 'previous_name': old, 'name': name})
+    duplicate_abns = {abn: ids for abn, ids in by_abn.items() if len(ids) > 1}
+    if duplicate_abns:
+        raise ValueError('Duplicate ABN identities require review: ' + json.dumps(duplicate_abns))
+    index['suppliers'].sort(key=lambda p: (-p['total'], p['name'], p['id']))
+    write_export({'index': index, 'shards': shards}, output)
+    return {'supplier_count': len(index['suppliers']), 'duplicate_abn_count': 0,
+            'renamed_count': len(changed), 'renamed': changed}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--ssh')
@@ -283,9 +339,19 @@ def main():
     parser.add_argument('--money', type=Path, default=Path('portal/public/graph/money.json'))
     parser.add_argument('--output', type=Path, default=Path('portal/public'))
     parser.add_argument('--stdout', action='store_true')
+    parser.add_argument('--refresh-names', action='store_true',
+                        help='Use existing published ABR identity metadata to relabel profiles; no database access')
     parser.add_argument('--published-since', type=lambda value: date.fromisoformat(value).isoformat(),
                         help='Keep notices in this publication window plus existing legacy lineages')
     args = parser.parse_args()
+    if args.refresh_names:
+        if args.ssh or args.stdout:
+            parser.error('--refresh-names cannot be combined with --ssh or --stdout')
+        audit = refresh_published_names(args.output)
+        from export_agencies import export_agencies
+        export_agencies(args.output)
+        print(json.dumps(audit, ensure_ascii=False, indent=2))
+        return
     graph = globals().get('BUNDLED_GRAPH') or json.loads(args.money.read_text())
     if args.ssh:
         script = Path(__file__).read_text()
