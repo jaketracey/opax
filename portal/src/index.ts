@@ -645,6 +645,19 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
     ...(catalog?.results || []).map((r, i) => ({ ...r, score: 1 / (10 + i), sort_date: r.date || r.sort_date || '' })),
     ...(documents?.results || []).map((r, i) => ({ ...r, score: 1 / (10.5 + i), sort_date: r.date || '' })),
   ]
+  if (options.suggest) {
+    const query = catalogTokens(url.searchParams.get('q'))
+    const profiles = new Set(['person','party','donor','agency','supplier','electorate','topic'])
+    for (const row of combined) {
+      const title = catalogTokens(row.title)
+      const exact = query.length > 0 && query.join(' ') === title.join(' ')
+      const titleMatch = query.length > 0 && query.every(term => title.some(word => word.startsWith(term)))
+      // A named topic or collection must stay visible above the many records
+      // that happen to mention it. Full search retains its existing ranking.
+      if (titleMatch) row.score += (exact ? 100 : 10 + query.length / Math.max(1, title.length))
+        + (row.kind === 'page' ? 2 : profiles.has(row.kind) ? 1 : 0)
+    }
+  }
   const sort = url.searchParams.get('sort') || 'relevance'
   // Select the same relevance window before sorting, so changing order never
   // replaces matches or changes the count between pages.

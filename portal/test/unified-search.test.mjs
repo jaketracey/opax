@@ -8,9 +8,9 @@ import {CATALOG_KINDS} from '../src/catalog-search.ts';
 import {tokens as catalogTokens} from '../src/catalog-query.mjs';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** One /find at `topK` depth')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-function fixture({localError=false,docError=false,suggest=false}={}){
+function fixture({localError=false,docError=false,suggest=false,localRows}={}){
  const calls=[]; const requests=[];
- const local={results:[{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:1,truncated:false,coverage:'Published snapshot',version:'test'};
+ const local={results:localRows || [{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:1,truncated:false,coverage:'Published snapshot',version:'test'};
  const docs={results:[{kind:'speech',slug:'speech-1',title:'Woodside debate',date:'2024-01-01'}],truncated:false};
  const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},apiSearch:async(_r,u,_e,_c,options)=>{requests.push({url:u,options});calls.push(u.pathname+'?'+u.searchParams.get('kind'));return docError?new Response('',{status:502}):Response.json(docs)}};
  const fn=runInNewContext(code+';apiUnifiedSearch',ctx);
@@ -49,4 +49,16 @@ test('suggestions combine catalog records with original documents', async () => 
   assert.equal(f.requests[0].url.searchParams.get('top_k'), '20');
   assert.equal(f.requests[0].url.searchParams.get('mode'), 'keyword');
   assert.equal(f.requests[0].options.suggest, true);
+});
+
+test('exact topics and named collections stay above matching record mentions', async () => {
+  const localRows = [
+    ...Array.from({length:9},(_,i)=>({kind:'kind-'+i,title:'An unrelated record',slug:'record-'+i,href:'/doc/record-'+i})),
+    {kind:'topic',title:'Housing',href:'/subject/topic/housing'},
+    {kind:'page',title:'Legislative instruments',href:'/instruments'},
+  ];
+  const housing=await fixture({suggest:true,localRows}).run({q:'Housing'});
+  assert.equal(housing.data.results[0].href,'/subject/topic/housing');
+  const instruments=await fixture({suggest:true,localRows}).run({q:'Instruments'});
+  assert.equal(instruments.data.results[0].href,'/instruments');
 });
