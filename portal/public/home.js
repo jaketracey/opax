@@ -500,24 +500,7 @@ window.addEventListener("pageshow", pause);
 // The compact header keeps the same cross-collection quick search as the app.
 const headerSearch = OpaxQuickSearch.header;
 const searchHref = q => '/ask?' + new URLSearchParams({view:'search', q});
-let headerReferences;
-async function headerSuggestions(q) {
-  const out = [{label:`Search the record for “${q}”`, type:'Search', href:searchHref(q)}];
-  const contains = value => String(value || '').toLowerCase().includes(q.toLowerCase());
-  const read = async url => { const response = await fetch(url); if (!response.ok) throw Error('Unavailable'); return response.json(); };
-  headerReferences ??= Promise.allSettled([
-    read('/speakers.json'), read('/graph/money.json'), reportsPublished ? read('/reports/index.json') : {reports:[]},
-    import('/electorates.js?v=ca44f4e382').then(async module => ({...await module.loadIndex(), jurisdictions:module.JURISDICTIONS})),
-  ]);
-  const [speakers, money, reports, electorates] = (await headerReferences).map(result => result.status === 'fulfilled' ? result.value : null);
-  for (const e of (electorates?.electorates || []).filter(e => contains(e.name)).slice(0,3)) out.push({label:e.name, type:`${electorates.jurisdictions[e.jurisdiction]} electorate`, href:e.url});
-  const names = (Array.isArray(speakers) ? speakers : speakers?.speakers || speakers?.names || []).map(row => Array.isArray(row) ? row[0] : row);
-  for (const name of names.filter(contains).slice(0,4)) out.push({label:name, type:'Speaker', href:personUrl(name)});
-  for (const [slug, name] of TOPICS.filter(([, name]) => contains(name)).slice(0,3)) out.push({label:name, type:'Topic', href:'/subject/topic/' + slug});
-  for (const node of (money?.nodes || []).filter(n=>contains(n.label)).slice(0,3)) out.push({label:node.label, type:node.kind === 'party' ? 'Party' : 'Receipt source', href:node.kind === 'party' ? partyUrl(node.label) : '/subject/donor/' + encodeURIComponent(node.label)});
-  for (const report of (reports?.reports || []).filter(r => contains(r.title)).slice(0,2)) out.push({label:report.title + ' report', type:'Report', href:'/reports/' + report.slug});
-  return out;
-}
+const headerSuggestions = OpaxQuickSearch.suggestions;
 OpaxQuickSearch.attach($('mast-q'), $('mast-sugg'), {idPrefix:'ms', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => headerSearch.close()});
 
 OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => navDrawer.close()});

@@ -102,9 +102,9 @@
       <button type="button" class="header-search-toggle" id="header-search-open" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span class="nav-search-text">Search<span class="nav-search-more"> people, bills, topics</span></span><kbd class="nav-kbd" aria-hidden="true">/</kbd></button>
       <div class="header-search-panel" id="header-search-panel" hidden>
         <div class="mast-search ui-input-wrap" data-ui-size="default">
-          <label for="mast-q" class="visually-hidden">Search people, bills, topics and reports</label>
+          <label for="mast-q" class="visually-hidden">Search all of OPAX</label>
           <svg class="mast-search-icon ui-control-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
-          <input class="ui-input" id="mast-q" type="text" autocomplete="off" placeholder="Search people, bills, topics&#8230;"
+          <input class="ui-input" id="mast-q" type="text" autocomplete="off" placeholder="Search all of OPAX&#8230;"
                  role="combobox" aria-expanded="false" aria-controls="mast-sugg" aria-autocomplete="list">
           <div class="mast-sugg" id="mast-sugg" hidden role="listbox" aria-label="Suggestions"></div>
         </div>
@@ -134,7 +134,7 @@
   <form class="drawer-search ui-input-wrap" id="drawer-search" role="search" data-ui-size="large">
     <label for="drawer-q" class="visually-hidden">Search the record</label>
     <svg class="drawer-search-icon ui-control-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
-    <input class="ui-input" id="drawer-q" type="search" autocomplete="off" placeholder="Search people, bills, topics…" enterkeyhint="search"
+    <input class="ui-input" id="drawer-q" type="search" autocomplete="off" placeholder="Search all of OPAX…" enterkeyhint="search"
            role="combobox" aria-expanded="false" aria-controls="drawer-sugg" aria-autocomplete="list">
     <div class="drawer-sugg" id="drawer-sugg" hidden role="listbox" aria-label="Suggestions"></div>
   </form>
@@ -436,6 +436,14 @@
                   <option value="press_release">Government transcripts and releases</option>
                   <option value="report" data-reports-only>Research reports</option>
                   <option value="audit report">Audit reports</option>
+                  <option value="electorate">Electorates</option>
+                  <option value="topic">Topics</option>
+                  <option value="instrument">Legislative instruments</option>
+                  <option value="sitting">Sitting weeks</option>
+                  <option value="estimates">Senate estimates</option>
+                  <option value="video">Senate video</option>
+                  <option value="register">Other public registers</option>
+                  <option value="page">OPAX pages and tools</option>
                   <option value="grant_invitation">Grant invitations</option>
                   <option value="grant_award">Grant award source records</option>
                   <option value="election_baseline">Election baselines</option>
@@ -2122,11 +2130,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=3cdecd744b" defer></script>
-<script src="/navigation.js?v=7217d5f398" defer></script>
-<script src="/quick-search.js?v=27eac3b2f7" defer></script>
+<script src="/spa-shell.js?v=dee0b91c14" defer></script>
+<script src="/navigation.js?v=61e0ff2dc4" defer></script>
+<script src="/quick-search.js?v=7f0d91ca48" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=2d2c5ce8e2" defer></script>
+<script src="/app.js?v=7837b81f9d" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>

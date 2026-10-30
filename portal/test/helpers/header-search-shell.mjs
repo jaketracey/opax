@@ -20,7 +20,11 @@ async function run() {
   // No network. Keep unrelated hydration pending; the actual script bodies,
   // module imports, DOM operations and event listeners all execute.
   const requests = [];
-  window.fetch = (url, init) => { requests.push(`${init?.method || 'GET'} ${url}`); return new Promise(() => {}); };
+  window.fetch = (url, init) => { requests.push(`${init?.method || 'GET'} ${url}`); if (workerData.probe === 'suggestions' && String(url).startsWith('/api/suggest?')) return Promise.resolve({ ok: true, json: async () => ({ results: [
+    { kind: 'supplier', title: 'Example supplier', href: '/subject/supplier/example' },
+    { kind: 'instrument', title: 'Example instrument', href: '/instrument/example' },
+    { kind: 'speech', title: 'Example speech', slug: 'example-speech' },
+  ] }) }); return new Promise(() => {}); };
   window.document.fonts = { ready: new Promise(() => {}) };
   // Media queries match only where a probe asks (e.g. reduced motion).
   window.matchMedia = query => ({ matches: (workerData.media || []).some(m => query.includes(m)), media: query, addEventListener() {}, removeEventListener() {} });
@@ -140,6 +144,21 @@ async function run() {
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const key = (window, target, k, more = {}) => target.dispatchEvent(new window.KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true, ...more }));
 const probes = {
+  async suggestions(window, requests) {
+    const results = [];
+    for (const prefix of ['mast', 'drawer']) {
+      const input = window.document.getElementById(prefix + '-q');
+      input.value = 'example';
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+      await new Promise(resolve => setTimeout(resolve, 180));
+      const panel = window.document.getElementById(prefix + '-sugg');
+      const rows = [...panel.querySelectorAll('.ms-row')].map(row => row.textContent);
+      input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      results.push({ rows, active: input.getAttribute('aria-activedescendant') });
+    }
+    return { results, requests: requests.filter(url => url.includes('/api/suggest?')) };
+  },
   // The standing reports' links and copy as the page draws them: menus, sheet,
   // footer, the app's panels or the home page's blocks, and the trails.
   async reports(window) {

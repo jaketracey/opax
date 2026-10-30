@@ -525,7 +525,7 @@ interface SearchResult {
   topics?: string[]
 }
 
-async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext, options: { suggest?: boolean } = {}): Promise<Response> {
   const q = url.searchParams.get('q')?.trim()
   if (!q) return json({ error: 'q is required' }, 400)
   const paging = url.searchParams.has('page') || url.searchParams.has('per')
@@ -547,10 +547,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire windows/pages containing the old unnormalized, character-cut snippets.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -567,9 +567,9 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     if (cached) win = await cached.json() as SearchWindow
   }
   if (!win) {
-    const limited = await rateLimited(env.SEARCH_LIMITER, request)
+    const limited = options.suggest ? null : await rateLimited(env.SEARCH_LIMITER, request)
     if (limited) return limited
-    win = await searchWindow(env, { q, mode, kind, topK, url })
+    win = await searchWindow(env, { q, mode, kind, topK, url, ...(options.suggest ? { reranker: 'noop' as const, signal: AbortSignal.any([request.signal, AbortSignal.timeout(1500)]) } : {}) })
     if (!win) return json({ error: 'find failed' }, 502)
     cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
   }
@@ -604,7 +604,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
 }
 
 /** Unified public search. Existing /api/search callers retain document-only semantics. */
-async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext, options: { suggest?: boolean } = {}): Promise<Response> {
   const selected = url.searchParams.get('kind') || 'all'
   if ((selected === 'all' || CATALOG_KINDS.has(selected)) && catalogTokens(url.searchParams.get('q')).length > 16) return json({ error: 'Use up to 16 search words, or limit the search to documents.' }, 400)
   const check = new URL(url)
@@ -616,18 +616,19 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const limited = await rateLimited(env.SEARCH_LIMITER, request)
   if (limited) return limited
   const localWanted = selected === 'all' || CATALOG_KINDS.has(selected)
-  const documentsWanted = (selected === 'bill' || !CATALOG_KINDS.has(selected)) && !extendedStates.has(url.searchParams.get('state') || '')
+  const documentsWanted = (selected === 'bill' || selected === 'division' || !CATALOG_KINDS.has(selected)) && !extendedStates.has(url.searchParams.get('state') || '')
   const docUrl = new URL(url)
   docUrl.pathname = '/api/search'
   docUrl.searchParams.set('kind', selected === 'bill' ? 'bill_text' : selected)
   docUrl.searchParams.set('sort', 'relevance')
   docUrl.searchParams.set('page', '1')
-  docUrl.searchParams.set('per', '200')
+  docUrl.searchParams.set('per', options.suggest ? '20' : '200')
+  if (options.suggest) { docUrl.searchParams.set('mode', 'keyword'); docUrl.searchParams.set('top_k', '20') }
   const tasks = await Promise.allSettled([
-    localWanted ? searchCatalog(url, env.ASSETS) : Promise.resolve(null),
+    localWanted ? searchCatalog(url, env.ASSETS, options.suggest ? { perKind: 2 } : {}) : Promise.resolve(null),
     documentsWanted ? (async () => {
       const req = new Request(docUrl, request)
-      const response = env.STAGING_API ? await env.STAGING_API.fetch(req) : await apiSearch(req, docUrl, env, ctx)
+      const response = env.STAGING_API ? await env.STAGING_API.fetch(req) : await apiSearch(req, docUrl, env, ctx, options)
       if (!response.ok) throw new Error('Document search unavailable')
       return await response.json() as { results: SearchResult[]; truncated: boolean }
     })() : Promise.resolve(null),
@@ -648,7 +649,16 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   // Select the same relevance window before sorting, so changing order never
   // replaces matches or changes the count between pages.
   combined.sort((a, b) => compareSearchResults(a, b, 'relevance'))
-  const rows = combined.slice(0, 200).sort((a, b) => compareSearchResults(a, b, sort))
+  // Suggestions keep different collections visible and avoid sending the same
+  // profile repeatedly for several matching records or source variants.
+  const seen = new Set<string>(), kinds = new Map<string, number>()
+  const diverse = options.suggest ? combined.filter(row => {
+    const href = row.href || '/doc/' + encodeURIComponent(row.slug)
+    if (seen.has(href) || (kinds.get(row.kind) || 0) >= 2) return false
+    seen.add(href); kinds.set(row.kind, (kinds.get(row.kind) || 0) + 1)
+    return true
+  }) : combined
+  const rows = diverse.slice(0, options.suggest ? 9 : 200).sort((a, b) => compareSearchResults(a, b, sort))
   const per = Math.min(200, Number(url.searchParams.get('per') || 20))
   const pageCount = Math.max(1, Math.ceil(rows.length / per))
   const page = Math.min(pageCount, Number(url.searchParams.get('page') || 1))
@@ -6015,7 +6025,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/ask-agentic', '/api/followups', '/api/search', '/api/search-all'])
+const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/ask-agentic', '/api/followups', '/api/search', '/api/search-all', '/api/suggest'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
@@ -6882,9 +6892,9 @@ export default {
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
     }))
-    if (url.pathname === '/api/search-all' && request.method === 'GET') {
+    if ((url.pathname === '/api/search-all' || url.pathname === '/api/suggest') && request.method === 'GET') {
       try {
-        const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx)), url)
+        const response = withSecurityHeaders(await display(await apiUnifiedSearch(request, url, env, ctx, { suggest: url.pathname === '/api/suggest' })), url)
         if (env.STAGING_API) response.headers.set('x-robots-tag', 'noindex, nofollow')
         return response
       } catch {

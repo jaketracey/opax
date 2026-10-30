@@ -566,12 +566,12 @@
   if (!document.querySelector('script[src^="/app.js"], script[src^="/home.js"], script[src^="/community.js"]')) {
     mountDesktop(); mountDrawer();
     const searchHref = q => `/ask?view=search&q=${encodeURIComponent(q)}`;
-    // Without the app's suggestion engine the field offers one row: search the record.
-    const attachSearch = () => globalThis.OpaxQuickSearch?.attach(document.getElementById('mast-q'), document.getElementById('mast-sugg'), {
-      idPrefix: 'ms', searchHref, navigate: href => location.assign(href),
-      source: async q => [{ label: `Search the record for “${q}”`, type: 'Search', href: searchHref(q) }],
-      beforeGo: () => globalThis.OpaxQuickSearch?.header?.close(),
-    });
+    // Every page uses the same collection-wide suggestion source.
+    const attachSearch = () => { for (const prefix of ['mast', 'drawer']) globalThis.OpaxQuickSearch?.attach(document.getElementById(prefix + '-q'), document.getElementById(prefix + '-sugg'), {
+      idPrefix: prefix, searchHref, navigate: href => location.assign(href),
+      source: globalThis.OpaxQuickSearch.suggestions,
+      beforeGo: () => { globalThis.OpaxQuickSearch?.header?.close(); document.getElementById('nav-drawer')?.close(); },
+    }); };
     // quick-search.js is deferred after this script; it has run by DOMContentLoaded.
     if (globalThis.OpaxQuickSearch) attachSearch();
     else document.addEventListener('DOMContentLoaded', attachSearch, { once: true });

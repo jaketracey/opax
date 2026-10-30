@@ -8,13 +8,13 @@ import {CATALOG_KINDS} from '../src/catalog-search.ts';
 import {tokens as catalogTokens} from '../src/catalog-query.mjs';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** One /find at `topK` depth')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-function fixture({localError=false,docError=false}={}){
- const calls=[];
+function fixture({localError=false,docError=false,suggest=false}={}){
+ const calls=[]; const requests=[];
  const local={results:[{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:1,truncated:false,coverage:'Published snapshot',version:'test'};
  const docs={results:[{kind:'speech',slug:'speech-1',title:'Woodside debate',date:'2024-01-01'}],truncated:false};
- const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},apiSearch:async(_r,u)=>{calls.push(u.pathname+'?'+u.searchParams.get('kind'));return docError?new Response('',{status:502}):Response.json(docs)}};
+ const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},apiSearch:async(_r,u,_e,_c,options)=>{requests.push({url:u,options});calls.push(u.pathname+'?'+u.searchParams.get('kind'));return docError?new Response('',{status:502}):Response.json(docs)}};
  const fn=runInNewContext(code+';apiUnifiedSearch',ctx);
- return {calls,run:async(params={},env={})=>{const url=new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q:'Woodside',...params}));const res=await fn(new Request(url),url,env,{});return {status:res.status,data:await res.json()}}};
+ return {calls,requests,run:async(params={},env={})=>{const url=new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q:'Woodside',...params}));const res=await fn(new Request(url),url,env,{}, {suggest});return {status:res.status,data:await res.json()}}};
 }
 test('all-record search combines source types with pagination',async()=>{const f=fixture();const {data}=await f.run({per:'1',page:'2'});assert.equal(data.total,2);assert.equal(data.results[0].kind,'speech');assert.deepEqual(f.calls,['catalog','/api/search?all'])});
 test('financial-only queries do not invoke document retrieval',async()=>{const f=fixture();const {data}=await f.run({kind:'contract'});assert.equal(data.results[0].kind,'contract');assert.deepEqual(f.calls,['catalog'])});
@@ -37,4 +37,16 @@ test('bill searches include original text retrieval alongside register matches',
 });
 test('bill-text-only searches query the corpus without unrelated register matches',async()=>{
  const f=fixture();await f.run({kind:'bill_text'});assert.deepEqual(f.calls,['/api/search?bill_text']);
+});
+
+test('division searches retain full-text document retrieval alongside metadata', async () => {
+  const f=fixture(); await f.run({kind:'division'});
+  assert.ok(f.calls.includes('/api/search?division'));
+});
+test('suggestions combine catalog records with original documents', async () => {
+  const f=fixture({suggest:true}); const {data}=await f.run();
+  assert.deepEqual(data.results.map(row=>row.kind), ['contract','speech']);
+  assert.equal(f.requests[0].url.searchParams.get('top_k'), '20');
+  assert.equal(f.requests[0].url.searchParams.get('mode'), 'keyword');
+  assert.equal(f.requests[0].options.suggest, true);
 });

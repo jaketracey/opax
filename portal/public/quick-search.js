@@ -1,6 +1,26 @@
 /* Shared keyboard-accessible suggestions and header search disclosure. */
 (() => {
 // Keep the controller on the element so a second script evaluation reuses it.
+const searchHref = q => '/ask?' + new URLSearchParams({ view: 'search', q });
+const typeLabels = { person: 'Parliamentarian', party: 'Party', donor: 'Receipt source', receipt: 'Political receipt', contract: 'Contract', grant: 'Grant', supplier: 'Supplier', agency: 'Agency', bill: 'Bill', bill_text: 'Bill text', interest: 'Declared interest', expense: 'Expenses', access: 'Access record', campaigner: 'Campaigner', pay: 'Pay', speech: 'Speech', division: 'Division', press_release: 'Media release', committee: 'Committee', written_answer: 'Written answer', report: 'Report', 'audit report': 'Audit report', electorate: 'Electorate', topic: 'Topic', instrument: 'Legislative instrument', sitting: 'Sitting week', estimates: 'Estimates', video: 'Video', register: 'Register record', page: 'Page' };
+const initialSuggestions = q => [{ label: `Search the record for “${q}”`, type: 'Search', href: searchHref(q) }];
+async function siteSuggestions(q, signal) {
+  const out = initialSuggestions(q);
+  try {
+    const response = await fetch('/api/suggest?' + new URLSearchParams({ q }), { signal });
+    if (!response.ok) return out;
+    const data = await response.json();
+    const seen = new Set(out.map(row => row.href));
+    for (const row of data.results || []) {
+      const href = row.href || (row.slug ? '/doc/' + encodeURIComponent(row.slug) : '');
+      if (!href || seen.has(href) || !(href.startsWith('/') && !href.startsWith('//') || /^https?:\/\//i.test(href))) continue;
+      seen.add(href);
+      out.push({ label: row.title || row.speaker || 'Record', type: typeLabels[row.kind] || row.kind || 'Record', href });
+      if (out.length === 10) break;
+    }
+  } catch { /* The full-search link remains usable during a network failure. */ }
+  return out;
+}
 const disclosureKey = Symbol.for('opax.quick-search.disclosure');
 function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFallback = "search", clearOnGo = true, navigate, searchHref } = {}) {
   if (!input || !panel) return;
@@ -8,10 +28,12 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
   let active = -1;
   let seq = 0;
   let debounce = null;
+  let pending = null;
   const prefix = idPrefix || "ms";
   const close = () => {
     seq++;
     clearTimeout(debounce);
+    pending?.abort();
     panel.hidden = true;
     input.setAttribute("aria-expanded", "false");
     active = -1;
@@ -49,7 +71,11 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
     const q = input.value.trim();
     const my = ++seq;
     if (q.length < 2) { items = []; render(); return; }
-    const out = await source(q);
+    pending?.abort();
+    pending = new AbortController();
+    if (source === siteSuggestions) { items = initialSuggestions(q); active = -1; render(); }
+    let out;
+    try { out = await source(q, pending.signal); } catch { out = []; }
     if (my !== seq) return;
     items = (out || []).slice(0, 10);
     active = -1;
@@ -57,6 +83,9 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
   };
   input.addEventListener("input", () => {
     clearTimeout(debounce);
+    seq++;
+    pending?.abort();
+    items = []; active = -1; render();
     debounce = setTimeout(suggest, 120);
   });
   input.addEventListener("keydown", (e) => {
@@ -105,7 +134,7 @@ function disclosure(toggle, panel, input) {
   });
   return toggle[disclosureKey] = { close };
 }
-const api = globalThis.OpaxQuickSearch = { attach: attachQuickSearch, disclosure };
+const api = globalThis.OpaxQuickSearch = { attach: attachQuickSearch, disclosure, suggestions: siteSuggestions };
 if (typeof document !== 'undefined') {
   // Server-rendered research pages retain this script but omit app.js. The
   // shared script owns the disclosure; page scripts only use its controller.

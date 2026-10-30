@@ -2243,40 +2243,9 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
 /* `source(q)` swaps the site-wide suggestions for a caller's own list (the
    directories offer their entries); `enterFallback: null` leaves Enter to the
    form when nothing is highlighted; `clearOnGo: false` keeps what was typed. */
-async function quickSearchSuggestions(q) {
-    const ql = q.toLowerCase();
-    const out = [{ label: `Search the record for “${q}”`, type: "Search", href: searchHash(q, {}) }];
-    try {
-      const module = await loadElectorateModule();
-      const reference = await module.loadIndex();
-      for (const e of reference.electorates.filter((e) => e.name.toLowerCase().includes(ql)).slice(0, 3)) {
-        out.push({ label: e.name, type: `${module.JURISDICTIONS[e.jurisdiction]} electorate`, href: e.url });
-      }
-    } catch { /* Other search suggestions remain available. */ }
-    try {
-      await Promise.all([loadSpeakersDir(), loadMoneyData(), loadReportsIndex()]);
-      const dir = await loadSpeakersDir();
-      for (const name of (dir?.names || []).filter((n) => n.toLowerCase().includes(ql)).slice(0, 4)) {
-        out.push({ label: name, type: "Speaker", href: subjectHash("person", name) });
-      }
-      for (const [slug, disp] of Object.entries(TOPICS).filter(([, d]) => d.toLowerCase().includes(ql)).slice(0, 3)) {
-        out.push({ label: disp, type: "Topic", href: `/subject/topic/${slug}` });
-      }
-      for (const n of (moneyData?.nodes || []).filter((n) => n.label.toLowerCase().includes(ql)).slice(0, 3)) {
-        out.push({
-          label: n.label,
-          type: n.kind === "party" ? "Party" : "Receipt source",
-          href: subjectHash(n.kind === "party" ? "party" : "donor", n.label),
-        });
-      }
-      for (const r of (reportsIndex || []).filter((r) => (r.title || "").toLowerCase().includes(ql)).slice(0, 2)) {
-        out.push({ label: `${r.title} report`, type: "Report", href: `/reports/${r.slug}` });
-      }
-    } catch { /* the plain-search row stands alone */ }
-    return out;
-}
+const quickSearchSuggestions = OpaxQuickSearch.suggestions;
 function attachQuickSearch(input, panel, options = {}) {
-  return OpaxQuickSearch.attach(input, panel, { source: quickSearchSuggestions, navigate: goRoute, searchHref: q => searchHash(q, {}), ...options });
+  return OpaxQuickSearch.attach(input, panel, { source: quickSearchSuggestions, navigate: href => options.source ? goRoute(href) : location.assign(href), searchHref: q => searchHash(q, {}), ...options });
 }
 // Query text remains readable after submission, including shared links and
 // suggestions. Empty fields keep the compact single-line placeholder.
@@ -12057,6 +12026,7 @@ function searchQueryParams(q, f, page, sort) {
 // renderer, and a per-page clear function behind each cross.
 
 const FILTER_KIND_LABELS = {
+  register: "Register record", electorate: "Electorate", topic: "Topic", instrument: "Legislative instrument", sitting: "Sitting week", estimates: "Estimates", video: "Video", page: "Page",
   speech: "Speeches", division: "Divisions",
   press_release: "Government transcripts and releases", all: "All records",
   grant_invitation: "Grant invitations", grant_award: "Grant award records", election_baseline: "Election baselines", parliamentary_profile: "Recorded representation", research_report: "Research source notes",
@@ -12069,7 +12039,7 @@ const FILTER_KIND_LABELS = {
 // with it, so "Speeches" on a row is the same search, speeches only, rather
 // than an empty form. Dataset kinds go to their own hubs.
 function recordTypeHref(kind, q = "", f = {}) {
-  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/money/contracts', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports', 'audit report':'/audit' };
+  const roots = { electorate:'/subject/electorate', topic:'/subject/topic', instrument:'/instruments', sitting:'/sitting', estimates:'/estimates', video:'/video/senate', person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/money/contracts', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports', 'audit report':'/audit' };
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);
