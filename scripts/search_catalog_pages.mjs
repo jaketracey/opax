@@ -9,13 +9,10 @@ import { clearedStateBills } from '../portal/src/state-bills.ts';
 import { vicElectionEnabled } from '../portal/public/vic-election.js';
 import { reportsPublished } from './reports_flag.mjs';
 import { clearedTaxExpenditures } from '../portal/src/tax-expenditures.ts';
-import { clearedGovernmentFinance } from '../portal/src/government-finance.ts';
-import { clearedGovernmentFunctions } from '../portal/src/government-finance-functions.ts';
 import { clearedAdvertising } from '../portal/src/gov-advertising.ts';
 import { clearedAggregates } from '../portal/src/budget.ts';
 import { clearedSABudget } from '../portal/src/sa-budget.ts';
 import { clearedGiftRegisters } from '../portal/src/vic-gifts.ts';
-import { saGrantsRows } from '../portal/src/sa-grants.ts';
 
 const jurisdictions = { federal:'Federal', nsw:'New South Wales', vic:'Victoria', qld:'Queensland', sa:'South Australia', wa:'Western Australia', tas:'Tasmania', nt:'Northern Territory', act:'Australian Capital Territory' };
 const houseName = house => ({representatives:'House of Representatives',senate:'Senate'}[house] || String(house || '').replaceAll('_',' '));
@@ -64,12 +61,13 @@ export async function* pageSearchRecords(read, readConfig, {reports = reportsPub
  const video = await optional(read,'video/senate.json');
  for(const v of video?.videos || []) yield record('video:'+v.id,'video',v.title,'/video/senate?'+new URLSearchParams({kind:v.kind === 'first_speech' ? 'first-speech' : v.kind === 'question_time' ? 'question-time' : 'other'})+'#'+(v.kind==='other'?'other-video':'m'+String(v.date || v.published).slice(0,7)),
   'Official Senate video. Find the dated video in the archive or open the original recording.',{aliases:v.person?.name || '',date:v.date,state:'federal',source:'AuSenate YouTube channel',url:v.url,record_id:v.id});
- // Financial registers expose only rows that pass their existing publication
+ // GFS observations and SA grant awards remain confined to their own tables.
+ // Only their collection pages enter global discovery, preserving their
+ // existing publication and private-person containment contracts.
+ // Other financial registers expose rows that pass their existing publication
  // boundary. Search indexes the same checked facts; it does not infer entities.
  const tax = await optional(read,'tax-expenditures/data.json');
  for(const r of tax ? clearedTaxExpenditures(tax) : []) yield record(`tax:${r.item_id}:${r.measure_year}`,'register',`${r.item_id}: ${r.title} — ${r.measure_year}`,'/register/tax-expenditures?'+new URLSearchParams({'tax.q':r.item_id,'tax.f.measure_year':r.measure_year}),`${r.category}. Revenue forgone estimate. ${r.estimate_status}.`,{state:'federal',from:Number(r.measure_year.slice(0,4)),aliases:r.benchmark,source:'Treasury tax expenditures',url:r.source_url,record_id:r.item_id});
- const finance = await optional(read,'government-finance/data.json');
- for(const [i,r] of (finance ? [...clearedGovernmentFinance(finance),...clearedGovernmentFunctions(finance)] : []).entries()) yield record('gfs:'+i,'register',`${r.jurisdiction}: ${r.function_as_published || r.measure_as_published || r.measure.replaceAll('_',' ')} — ${r.reference_year}`,'/register/government-finance?'+new URLSearchParams({[(r.function_as_published?'gfsFunction':'gfs')+'.q']:r.function_as_published || r.measure_as_published || r.measure,jurisdiction:r.jurisdiction}),`${r.level_of_government}. ${r.sector}. ${r.function_as_published || ''}. ${r.unit}. ${r.prices_basis}.`,{aliases:r.measure_as_published || r.function_as_published || '',from:Number(r.reference_year.slice(0,4)),source:'Australian Bureau of Statistics',url:r.source_url});
  const advertising = await optional(read,'gov-advertising/data.json');
  for(const r of advertising ? clearedAdvertising(advertising) : []) yield record('advertising:'+r.id,'register',`${r.campaign} — ${r.entity}`,'/register/gov-advertising?'+new URLSearchParams({'advertising.q':r.campaign}),`${r.financial_year}. ${r.basis}. ${r.measure}.`,{from:Number(r.financial_year?.slice(0,4)),source:'Government advertising expenditure',url:r.source_url});
  const budget = await optional(read,'budget/data.json');
@@ -78,8 +76,6 @@ export async function* pageSearchRecords(read, readConfig, {reports = reportsPub
  for(const [i,r] of (saBudget ? clearedSABudget(saBudget) : []).entries()) yield record('sa-budget:'+i,'register',`${r.measure_as_published} — ${r.fiscal_year}`,'/budget#sa-budget',`South Australian budget. ${r.section_as_published}. ${r.estimate_or_actual}. ${r.units}.`,{from:Number(r.fiscal_year.slice(0,4)),state:'sa',source:'South Australian budget',url:r.source_url});
  const gifts = await optional(read,'vic-gifts/data.json');
  for(const reg of gifts ? clearedGiftRegisters(gifts) : []) for(const r of reg.rows) yield record('gift:'+r.id,'register',`${r.office_holder} — ministerial gift register`,'/register/vic-gifts?'+new URLSearchParams({'vicGifts.q':r.office_holder}),`${r.period}. ${r.description || ''}. ${r.giver || ''}. ${r.portfolio || ''}.`,{state:'vic',source:'Victorian ministerial gift register',url:r.source_url});
- const saGrants = await optional(read,'sa-grants/data.json');
- for(const r of saGrants ? saGrantsRows(saGrants) : []) yield record('sa-grant:'+r.id,'grant',`${r.project_title} — ${r.recipient}`,'/register/sa-grants?'+new URLSearchParams({['sa'+r.resource_id.slice(0,8)+'.q']:r.project_title})+'#sa-grants-'+r.resource_id,`${r.programme}. ${r.project_description}. ${r.region}. ${r.year}.`,{state:'sa',from:Number(r.year.slice(0,4)),source:'South Australian grant disclosures',url:r.source_url});
  const gates = {instruments:instrumentsReady,estimates:true,reports,'vic-election':vicElectionEnabled(vicElection ? 'true' : 'false')};
  const nav = globalThis.OpaxNavigation;
  const seen = new Set();

@@ -30,6 +30,19 @@ test('topics, electorate names and committee names lead to real collection addre
  assert.ok(rows.some(r=>r.kind==='page' && r.href==='/register/act-invoices'));
  assert.ok(rows.some(r=>r.kind==='page' && r.href==='/register/tax-expenditures'));
 });
+test('GFS observations and SA grant awards remain confined to their register tables', () => {
+ assert.ok(!rows.some(r=>r.key.startsWith('gfs:') || r.key.startsWith('sa-grant:')));
+ for(const href of ['/register/government-finance','/register/sa-grants']) {
+  const matches=rows.filter(r=>r.href.split(/[?#]/)[0]===href);
+  assert.equal(matches.length,1);
+  assert.equal(matches[0].kind,'page');
+  assert.equal(matches[0].href,href);
+  assert.equal(matches[0].extra.source,'OPAX published pages');
+  assert.equal(matches[0].extra.record_id,undefined);
+  assert.equal(matches[0].extra.url,undefined);
+ }
+});
+
 test('tax and advertising matches preserve accepted table filter parameter names', () => {
  const tax=rows.find(r=>r.key.startsWith('tax:'));
  const url=new URL(tax.href,'https://opax.com.au');
@@ -47,7 +60,7 @@ test('incomplete instruments and closed optional pages remain absent from search
 test('financial register rows fail closed when their source document clearance is removed', async () => {
  const held=await collect(async path=>{
   const value=await read(path);
-  if(['tax-expenditures/data.json','government-finance/data.json','gov-advertising/data.json','budget/data.json','sa-budget/data.json','sa-grants/data.json'].includes(path))value.documents=[];
+  if(['tax-expenditures/data.json','gov-advertising/data.json','budget/data.json','sa-budget/data.json'].includes(path))value.documents=[];
   if(path==='vic-gifts/data.json')value.registers=[];
   return value;
  });
