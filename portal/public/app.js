@@ -20,7 +20,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=7d3fc7c3dd").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=0e311f1392').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=01af53cd64').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=8b1bfd1c99').then(module => { askPerson = module; });
 let uiLabels;
@@ -4283,7 +4283,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
     ${registerHTML}
 
-    <p class="fineprint">Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry for holders and alterations.</p>
+    <p class="fineprint">Entries include statements and notified changes; they do not establish current holdings. Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry.</p>
     ${sourceLineHTML({
       updated: data.as_at || "", source: REGISTER[data.chamber] || "Register of interests",
       // Scanned pages read by machine: the register is complete, OPAX's reading of it may not be.
