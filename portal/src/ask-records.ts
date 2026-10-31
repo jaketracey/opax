@@ -45,6 +45,29 @@ export function recordQuery(input: RecordQuestion): string {
 export const integrityQuestion = (question: string) => /\b(?:anti[- ]corruption|integrity) commission\b/i.test(question)
 
 export interface AskRecords { records: CatalogRecord[]; coverage: string; total: number }
+// Catalogue metadata is year-grained; it only narrows candidates. Exact Ask
+// windows additionally require a known record date or a fully-contained span.
+// This establishes record eligibility, not a bill's passage/assent date or a
+// transaction date for a profile aggregate. Never recalculate a span subtotal.
+function withinExactRecordWindow(record: CatalogRecord, input: RecordQuestion): boolean {
+  if (!input.since && !input.until) return true
+  const since = input.since || (input.from ? `${input.from}-01-01` : '')
+  const until = input.until || (input.to ? `${input.to}-12-31` : '')
+  const span = record.dateLabel?.match(/^(\d{4})(?:[–-](\d{4}))?$/)
+  let start: string, end: string
+  if (span) {
+    start = `${span[1]}-01-01`
+    end = `${span[2] || span[1]}-12-31`
+  } else {
+    const date = record.date?.match(/^\d{4}-\d{2}-\d{2}(?:$|T)/)?.[0].slice(0, 10)
+    if (!date) return false
+    const parsed = new Date(date)
+    if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== date) return false
+    start = end = date
+  }
+  return start <= end && (!since || start >= since) && (!until || end <= until)
+}
+
 export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher): Promise<AskRecords> {
   const empty = { records: [], coverage: '', total: 0 }
   if ((input.kind && input.kind !== 'all') || input.chamber) return empty
@@ -58,6 +81,8 @@ export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher)
   for (const key of ['speaker', 'party', 'state', 'topic', 'from', 'to'] as const) {
     if (input[key]) params.set(key, input[key]!)
   }
+  if (input.since) params.set('from', input.since.slice(0, 4))
+  if (input.until) params.set('to', input.until.slice(0, 4))
   const url = new URL('https://opax.com.au/api/search-all?' + params)
   let found = await searchCatalog(url, assets, { perKind: 16 })
   // The union fallback matches any word, so only subject words may drive it:
@@ -75,6 +100,7 @@ export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher)
   for (const r of found.results) {
     if (seen.has(r.slug)) continue
     if (integrityQuestion(input.question || '') && !/\b(?:corruption|integrity|NACC)\b/i.test(r.title + ' ' + r.snippet)) continue
+    if (!withinExactRecordWindow(r, input)) continue
     // Overlapping date filters do not recalculate profile/connection totals.
     // Do not hand the model an out-of-window aggregate to mistake for a subtotal.
     const span = r.dateLabel?.match(/^(\d{4})(?:[–-](\d{4}))?$/)
@@ -86,7 +112,9 @@ export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher)
     records.push(r)
     if (records.length >= 48) break
   }
-  return { records, coverage: found.coverage, total: found.total }
+  return { records, coverage: input.since || input.until
+    ? `${found.coverage} Exact-window evidence is filtered from bounded catalogue candidates by known record dates or fully-contained year spans; not a complete inventory or a recalculated period subtotal.`
+    : found.coverage, total: input.since || input.until ? records.length : found.total }
 }
 
 export function recordContext(records: CatalogRecord[]): string[] {
@@ -126,6 +154,7 @@ export const RECORD_GROUNDING =
   'If the retrieved records cannot establish a requested count or total, say so briefly and answer the parts they support. ' +
   'Original bill text describes a specific version of a proposal, not necessarily enacted or current law. Name the version when relevant and do not merge provisions from different versions. ' +
   'For a question about a numbered clause, section, subsection or schedule, identify the requested provision in the cited text and keep each requirement attached to the provision that states it. Adjacent passages are context, not additional requirements of the requested provision. Discuss a neighbouring provision or cross-reference separately, naming it; do not import its penalties, powers or conditions into the requested provision without explicit textual support. A complete source file does not mean a retrieved excerpt contains the whole provision: if the excerpt is incomplete, qualify the answer rather than claiming to list every requirement. Describe bill provisions as proposed unless separate enactment and commencement evidence establishes their legal effect. ' +
+  'For questions about who spoke at a bill stage, establish the matching bill, requested stage and date from the debate evidence and cite the original speaking turn that explicitly identifies the speaker. First-reading bill text, a bill sponsor or an introduction date does not establish who spoke at second reading. A matching title alone does not establish the requested stage or date. If that evidence is absent, say the retrieved material does not establish the requested speaker rather than substituting another stage or version. A single speaking turn or ranked selection does not establish a complete list of speakers. ' +
   'For bill register records, the date is the introduction date. A passed status does not mean it passed on that date; only give a passage or assent date when separately documented. ' +
   'Give dates only when explicitly supplied; omit an unknown date rather than guessing it. Some debate records combine multiple speakers under the first speaker\'s index name. The title or metadata alone therefore cannot establish who said a passage. Name a speaker only when the passage itself explicitly identifies whose words they are; otherwise describe it as a debate passage with its date. Never label all speakers as funding recipients. ' +
   'Keep the answer focused: normally give up to four financial examples with their own citations and up to three relevant debate passages, unless the question asks for more. Do not dump every retrieved record. '
