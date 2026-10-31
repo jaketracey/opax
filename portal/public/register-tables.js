@@ -59,10 +59,15 @@ export function auditTableConfig(records) {
 /** The register's source words are retained verbatim. */
 export function interestTableData(register) {
   const rows = [];
+  const holders = new Map([['self','Self'],['spouse','Spouse or partner'],['children','Dependent child'],['unspecified','Not specified']]);
+  const kinds = new Map([['statement','Statement'],['addition','Addition'],['deletion','Deletion']]);
+  const label = (value, labels) => typeof value === 'string' && value.trim() ? labels.get(value.trim().toLowerCase()) || value : 'Not recorded';
   for (const [category,bucket] of Object.entries(register.buckets || {})) for (const item of bucket.items || []) {
     if (typeof item.description !== 'string') continue;
     const source = href(item.url) || href(register.source_url);
     rows.push({category:categoryLabels[category] || category.replaceAll('_',' '),item:item.description,
+      holder:typeof item.holder === 'string' ? item.holder : null,kind:typeof item.kind === 'string' ? item.kind : null,
+      holder_label:label(item.holder,holders),entry_type:label(item.kind,kinds),
       date:date(item.date) || date(register.as_at),source:source && item.page ? `${source.split('#')[0]}#page=${Number(item.page) || 1}` : source});
   }
   return {rows,omitted:0};
@@ -74,6 +79,8 @@ export function interestTableConfig(rows) {
   return {id:'interests-table',caption:'Register entries',pageType:'person',urlKey:'interests',pageSize:50,
     rows,defaultSort:{key:'category',dir:'asc'},export:{filename:'declared-interests.csv'},
     columns:[{key:'category',label:'Category',type:'category',facet:'multi'},{key:'item',label:'Item',type:'text',primary:true},
+      {key:'holder_label',label:'Holder',type:'category',facet:'multi',hideWhenConstant:false},
+      {key:'entry_type',label:'Entry type',type:'category',facet:'multi',hideWhenConstant:false},
       {key:'date',label:'Date',type:'date'}],primaryLink:row=>href(row.source)};
 }
 
