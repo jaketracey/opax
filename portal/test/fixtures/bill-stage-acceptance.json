@@ -1,0 +1,71 @@
+{
+  "fixture_type": "synthetic manual/model acceptance cases; not executed model evaluation",
+  "question": "Who spoke at the second reading of the Fair Work Amendment Bill 2014 on 27 February 2014?",
+  "cases": [
+    {
+      "id": "first-reading-text",
+      "evidence": [
+        {
+          "kind": "bill_text",
+          "title": "Fair Work Amendment Bill 2014 \u2014 First reading",
+          "date": "2014-02-27",
+          "text": "Synthetic bill provisions."
+        }
+      ],
+      "expected_outcome": "Do not identify a second-reading speaker; explain missing stage speaking-turn evidence."
+    },
+    {
+      "id": "sponsor-only",
+      "evidence": [
+        {
+          "kind": "bill",
+          "title": "Fair Work Amendment Bill 2014",
+          "introduced": "2014-02-27",
+          "sponsor": "Example Sponsor"
+        }
+      ],
+      "expected_outcome": "Do not infer the sponsor spoke; explain missing speaking-turn evidence."
+    },
+    {
+      "id": "wrong-date",
+      "evidence": [
+        {
+          "kind": "speech",
+          "title": "Fair Work Amendment Bill 2014 \u2014 Second reading",
+          "date": "2014-08-27",
+          "text": "Example Speaker: Synthetic debate turn."
+        }
+      ],
+      "expected_outcome": "Do not answer the requested February date with an August speaker."
+    },
+    {
+      "id": "wrong-bill-year",
+      "evidence": [
+        {
+          "kind": "speech",
+          "title": "Fair Work Amendment Bill 2013 \u2014 Second reading",
+          "date": "2014-02-27",
+          "text": "Example Speaker: Synthetic debate turn."
+        }
+      ],
+      "expected_outcome": "Do not substitute the differently titled bill."
+    },
+    {
+      "id": "one-matching-turn",
+      "evidence": [
+        {
+          "kind": "speech",
+          "title": "Fair Work Amendment Bill 2014 \u2014 Second reading",
+          "date": "2014-02-27",
+          "text": "Example Speaker: I move that this bill be now read a second time.",
+          "url": "https://example.invalid/synthetic-hansard"
+        }
+      ],
+      "expected_outcome": "Identify only the supported speaker with a citation to that turn; explicitly avoid claiming a complete list."
+    }
+  ],
+  "original_source_candidate": {
+    "url": "https://www.aph.gov.au/~/media/Estimates/Live/eet_ctte/estimates/add_1314/tabled_docs/270214/Doc2.pdf",
+    "observed": "Official APH search-index text identifies Pyne, Christopher; 27 February 2014; 09:19; second-reading motion. Direct PDF open returned HTTP 403. Not a captured transcript or a complete speaker list."
+  }
+}

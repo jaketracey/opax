@@ -166,3 +166,36 @@ test('original bill citations open the exact version on its bill page',()=>{
  assert.match(filter,/"label":"bill"/);assert.match(filter,/"label":"bill_text"/);
  assert.match(query.prompt.system,/specific version of a proposal/);
 });
+
+// Semantic regression fixture: not a captured live response or a complete
+// Hansard transcript. The original-source candidate for manual verification is
+// APH's proof extract Doc2.pdf (27 February 2014, Pyne, 09:19). Direct PDF access
+// was unavailable during this local test; only its search-index text was read.
+test('bill-stage speaker questions require stage evidence, not bill-version metadata',()=>{
+ const question='Who spoke at the second reading of the Fair Work Amendment Bill 2014 on 27 February 2014?';
+ const body=worker.buildAskBody({question,from:'2014',to:'2014'});
+ assert.match(body.prompt.system,/matching bill, requested stage and date/);
+ assert.match(body.prompt.system,/First-reading bill text.*does not establish who spoke/);
+ assert.match(body.prompt.system,/sponsor.*does not establish who spoke/);
+ assert.match(body.prompt.system,/single speaking turn.*complete list of speakers/);
+ assert.match(body.prompt.system,/cite the original speaking turn/);
+ assert.match(body.prompt.system,/never use it as a subtotal/);
+ assert.match(body.prompt.user,/27 February 2014/);
+ const filters=JSON.stringify(body.filter_expression);
+ assert.match(filters,/2014-01-01/);
+ assert.match(filters,/2014-12-31/);
+});
+
+test('bill-stage citation serialization keeps the cited resource and original URL separate from bill text',()=>{
+ const url='https://www.aph.gov.au/~/media/Estimates/Live/eet_ctte/estimates/add_1314/tabled_docs/270214/Doc2.pdf';
+ // Serialization only: the supplied answer/citation is synthetic; no speaker
+ // verification or model generation happens in this test.
+ const speech={slug:'semantic-fixture-second-reading',title:'Fair Work Amendment Bill 2014 — Second reading',origin:{url,collaborators:['Christopher Pyne']},usermetadata:{classifications:[{labelset:'kind',label:'speech'}]},extra:{metadata:{date:'2014-02-27'}},fields:{body:{paragraphs:{'speech/t/body/0-20':{text:'That this bill be now read a second time.',score:0.8,score_type:'RERANKER'}}}}};
+ const bill={slug:'bill-text-semantic-fixture',title:'Fair Work Amendment Bill 2014 — First reading',usermetadata:{classifications:[{labelset:'kind',label:'bill_text'}]},extra:{metadata:{bill_key:'au-federal-fixture',version_id:'first-reps'}},fields:{body:{paragraphs:{'bill/t/body/0-20':{text:'Synthetic first-reading bill provisions, not a speaking turn.',score:0.9,score_type:'RERANKER'}}}}};
+ const payload=worker.askPayload({answer:'A matching speaking turn was found; this is not a complete speaker list.',citations:{'speech/t/body/0-20':[[0,34]]},retrieval_results:{resources:{speech,bill}}});
+ assert.equal(payload.sources.find(s=>s.resource==='speech').url,url);
+ assert.equal(payload.sources.find(s=>s.resource==='speech').cited,true);
+ assert.equal(payload.sources.find(s=>s.resource==='speech').date,'2014-02-27');
+ assert.equal(payload.sources.find(s=>s.resource==='bill').cited,false);
+ assert.deepEqual(plain(payload.citations),{'speech/t/body/0-20':[[0,34]]});
+});

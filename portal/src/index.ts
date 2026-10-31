@@ -841,6 +841,8 @@ interface AskInput {
   topic?: string
   from?: string
   to?: string
+  since?: string
+  until?: string
   context?: { author?: string; text?: string }[]
   /**
    * Resource ids the conversation's earlier answers cited, sent by the chat.
@@ -885,7 +887,7 @@ const healthyRetrieval = (a: AskAnswer): boolean =>
 
 /** The platform /ask body for a portal question: filters, context turns, prompt. */
 function buildAskBody(input: AskInput, records: AskRecords = { records: [], coverage: '', total: 0 }, options: { reasoned?: boolean } = {}): Record<string, unknown> {
-  const { question, kind, speaker, party, state, chamber, topic, from, to, context } = input
+  const { question, kind, speaker, party, state, chamber, topic, from, to, since, until, context } = input
   const body: Record<string, unknown> = {
     query: askRetrievalQuery(input),
     citations: 'llm_footnotes', // NEVER combine citations with answer_json_schema
@@ -953,7 +955,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       })),
     })
   }
-  const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, chamber, topic, from, to })
+  const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, chamber, topic, from, to, since, until })
   if (filters) body.filter_expression = filters
   if (integrityQuestion(question || '')) {
     body.filter_expression = { field: { and: [
@@ -1268,6 +1270,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     topic: TOPIC_SLUGS.has(topic) ? topic : '',
     from: yr(input.from),
     to: yr(input.to),
+    ...(input.since || input.until ? { since: str(input.since), until: str(input.until) } : {}),
     // buildAskBody swaps in the custom prompt and the guidance turn on ANY
     // non-empty filter value, including ones filterExpression then discards
     // (an unknown topic, a "from" that is not a year). Two asks that differ
