@@ -14,10 +14,15 @@ export function answerDecision(payload) {
   return ['answer','limitation','clarification','refusal','preserve'].includes(payload?.answer_decision)?payload.answer_decision:undefined
 }
 /** A question asserting that money bought or moved something: the hard line that stays a decline. */
-const CAUSAL_ASK=/\b(?:buy|bought|bribe|because|influenc|cause)\w*\b|\bsw[ae]y\w*\b|\baffect\w*\b|\bchang\w* (?:how|what|the way|whether|their|its|his|her)\b|\bin return\b/i
+const CAUSAL_ASK=/\b(?:buy|bought|bribe\w*|because|influenc\w*|caus(?:e|ed|ing)|sw[ae]y\w*)\b|\bchang\w* (?:how|what|the way|whether)\b|\bin return\b|\bin exchange for\b|\bpaid for (?:access|votes?|influence)\b/i
 export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
-/** The one test of a causal ask: what a claim may not say, and what a question may not be answered with. */
-export const causalAsk=question=>CAUSAL.test(question)||CAUSAL_ASK.test(question)
+/** An explicit claim that money moved something: declined outright. Questions about votes and positions are a matter of shape, not of this list. */
+export const causalAsk=question=>CAUSAL_ASK.test(question)
+// What receipts cannot answer: anything about a vote, a position or why, and a yes/no question that is not about giving or receiving.
+const POSITION_ASK=/\b(?:why|explain\w*|vot(?:e|es|ed|ing)|positions?|stances?|oppos\w*|reforms?|polic(?:y|ies)|favou?rs?)\b/i
+const YES_NO_ASK=/^\s*(?:do|does|did|is|are|was|were|has|have|had|can|could|will|would|should)\b/i
+const RECEIPT_ASK=/\b(?:how much|money|funds?|funded|funding|receiv\w*|tak(?:e|es|en)|took|g[ai]ve|gives|given|donat\w*|disclos\w*|receipts?)\b/i
+export const receiptsCannotAnswer=question=>POSITION_ASK.test(question)||YES_NO_ASK.test(question)&&!RECEIPT_ASK.test(question)
 const DONOR_RANKING=/\b(?:who|which (?:\w+ )?(?:company|companies|corporation|person|individual|donors?|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i
 export const donorRankingAsked=question=>DONOR_RANKING.test(question)
 export function protectedDecision(payload) {const decision=answerDecision(payload);return !!decision&&decision!=='answer'}

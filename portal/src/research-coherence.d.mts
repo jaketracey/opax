@@ -15,3 +15,4 @@ export function selectedDonorFacts(question:string,sources?:RankingSource[],cons
 export const CAUSAL: RegExp
 export function causalAsk(question: string): boolean
 export function donorRankingAsked(question: string): boolean
+export function receiptsCannotAnswer(question: string): boolean

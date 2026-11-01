@@ -2,7 +2,7 @@ import {auditPayload,quotationSpans,sentenceParts} from './research-claim-audit.
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
 import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,canReconstructRanking,causalAsk} from './research-coherence.mjs'
-import {proseFallback,writingFacts,appendWrittenPoints,usableFact,foundFacts,besideLimitation,emptyAnswer,renderedKind,tokens,RANKING_WORDS,type WritingInput} from './research-writing'
+import {proseFallback,writingFacts,appendWrittenPoints,usableFact,foundFacts,besideLimitation,receiptsAsLimitation,emptyAnswer,renderedKind,tokens,RANKING_WORDS,type WritingInput} from './research-writing'
 import {inferPeriod} from './agentic-ask'
 import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
@@ -141,16 +141,25 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
   const leader=RANKING_WORDS.test(question)?found.find(f=>f.source.receipt):undefined
   const shown=(leader?figuresOf(leader):values).some(v=>said.includes(v))
   const {answer_status:_status,...rest}=out,diagnostics=(out.coherence??{}) as object
-  if(!empty&&decision!=='answer'){
-    // A figure-free draft naming nothing that was found says nothing about the record: it may be asking the reader something.
-    if(shown||decision==='preserve'&&!found.some(f=>(f.atoms??[]).some(a=>a.entity&&text.includes(a.entity))))return out
-    const beside=besideLimitation(input)
-    if(!beside)return out
-    const lead=text.trim()+'\n\n',offset=Array.from(lead).length,citations=Object.fromEntries(Object.entries((out.citations??{}) as Record<string,number[][]>).map(([id,ranges])=>[id,[...ranges]]))
-    for(const [id,ranges] of Object.entries(beside.citations))(citations[id]??=[]).push(...ranges.map(([a,b])=>[a+offset,b+offset]))
-    return {...out,answer:lead+beside.answer,citations,sources:[...((out.sources??[]) as SelectedSource[]).filter(s=>!beside.sources.some(b=>b.resource===s.resource)),...beside.sources],coherence:{...diagnostics,method:'facts_beside'}}
-  }
+  // A figure-free draft naming nothing that was found says nothing about the record: it may be asking the reader something.
+  if(!empty&&decision==='preserve'&&!found.some(f=>(f.atoms??[]).some(a=>a.entity&&text.includes(a.entity))))return out
   const sources=(Array.isArray(out.sources)?out.sources:[]) as SelectedSource[],citedBy=Object.entries((out.citations??{}) as Record<string,unknown[]>).filter(([,ranges])=>Array.isArray(ranges)&&ranges.length).flatMap(([id])=>sources.filter(s=>id===s.resource||id.startsWith(s.resource+'/')))
+  const ownLimit=!empty&&decision!=='answer'
+  // The limit stays first and unchanged, with what was found joined beneath it.
+  const beneath=(list:QualitativeAnswer)=>{
+    const lead=text.trim()+'\n\n',offset=Array.from(lead).length,citations=Object.fromEntries(Object.entries((out.citations??{}) as Record<string,number[][]>).map(([id,ranges])=>[id,[...ranges]]))
+    for(const [id,ranges] of Object.entries(list.citations))(citations[id]??=[]).push(...ranges.map(([a,b])=>[a+offset,b+offset]))
+    return {...out,answer:lead+list.answer,citations,sources:[...sources.filter(s=>!list.sources.some(b=>b.resource===s.resource)),...list.sources],coherence:{...diagnostics,method:'facts_beside'}}
+  }
+  // Spoken points can answer a question about a position; receipts alone cannot, whoever wrote them.
+  const spoken=citedBy.some(s=>['speech','bill'].includes(s.kind))||['uncited','partly_cited'].includes(String(out.answer_status))
+  const receiptsOnly=spoken?null:receiptsAsLimitation(input)
+  if(receiptsOnly)return ownLimit?beneath(receiptsOnly):{...rest,...receiptsOnly,coherence:{...diagnostics,fallback:true,method:'facts_beside'}}
+  if(ownLimit){
+    if(shown)return out
+    const beside=besideLimitation(input)
+    return beside?beneath(beside):out
+  }
   const figureAsked=/\bhow (?:much|many)\b|\b(?:most|least|fewest|largest|biggest|highest|lowest|top)\b/i.test(question)
   if(!empty&&(shown||!figureAsked||!values.length)&&citedBy.some(s=>!s.coverage&&!/^(?:period-)?coverage(?:-|$)/.test(s.resource)))return out
   if(!empty&&['uncited','partly_cited'].includes(String(out.answer_status))&&(shown||!figureAsked||!values.length))return out

@@ -6,7 +6,7 @@ import { claimAttributionOk, claimMatchesParty, withoutUnsupportedFigures } from
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { QualitativeAnswer, ReceiptFact } from './research-types'
 import { plainAnswerPayload } from './research-language'
-import { repairDonorRanking,selectedDonorFacts,answerDecision,canReconstructRanking,CAUSAL,causalAsk,donorRankingAsked } from './research-coherence.mjs'
+import { repairDonorRanking,selectedDonorFacts,answerDecision,canReconstructRanking,CAUSAL,causalAsk,receiptsCannotAnswer,donorRankingAsked } from './research-coherence.mjs'
 import {auditPayload} from './research-claim-audit.mjs'
 import {rankingCoverageMatches,rankingScopeGaps,partyNamed,sourceMetadata,resolvedRankingScope,jurisdictionNames} from './research-ranking-scope.mjs'
 import {questionIndustry} from './research-ranking-repair.mjs'
@@ -152,10 +152,12 @@ function onTopic(fact:WritingFact,input:WritingInput):boolean {
   if(scope.party&&!['conflict','unknown'].includes(scope.party)&&parties.length&&!parties.some(p=>partyNamed(p)===scope.party))return false
   const people=entities.filter(e=>e.startsWith('person:')).map(e=>e.slice(7)),asked=input.constraints?.people??[]
   if(asked.length&&people.length&&!people.some(p=>asked.includes(p)))return false
-  const industry=questionIndustry(input.question),held=receipt?.filter??receipt?.industry
-  if(industry&&receipt&&held&&held!==industry)return false
+  // A named person: a fact that carries no entity must at least name them.
+  if(asked.length&&!people.length&&!receipt&&!asked.some(p=>fact.text.toLowerCase().includes(p.toLowerCase())))return false
   const named=input.facts.filter(f=>f.source.receipt&&input.question.toLowerCase().includes(f.source.receipt.source.toLowerCase()))
-  return !receipt||!named.length||named.includes(fact)
+  if(receipt&&named.length)return named.includes(fact)
+  const industry=questionIndustry(input.question),held=receipt?.filter??receipt?.industry
+  return !(industry&&receipt&&held&&held!==industry)
 }
 /** What was found that can stand as an answer to this question, whatever its wording. */
 export const foundFacts=(input:WritingInput)=>causalAsk(input.question)?[]:input.facts.filter(f=>usableFact(f)&&onTopic(f,input)&&!outsideRequest(f,input))
@@ -217,18 +219,24 @@ function scopeGaps(input:WritingInput):string[] {
 }
 const scopeNotes=(input:WritingInput)=>{const gaps=scopeGaps(input);return gaps.length||!RANKING_WORDS.test(input.question)?gaps:['This is a list of what OPAX found, not a ranking.']}
 /** The found facts as a plain list: no superlative, no requested period, each row's own dates, the reason it is only a list, and the record's caveat. */
-function factList(input:WritingInput,note?:string,lead?:string):QualitativeAnswer|null {
-  const found=renderFacts(input,!!lead)
+function factList(input:WritingInput,note?:string,leads:string[]=[]):QualitativeAnswer|null {
+  const found=renderFacts(input,!!leads.length)
   if(!found.length)return null
   const noted=withNotes(input,note?[note]:scopeNotes(input)),coverage=coverageSentence(input)
-  return assemble([...(lead?[{text:lead,facts:[]}]:[]),...found,...noted.lines,...(coverage?[coverage]:[])],noted.input)
+  return assemble([...leads.map(text=>({text,facts:[]})),...found,...noted.lines,...(coverage?[coverage]:[])],noted.input)
 }
 /** Case 2 of the terminal rule: the limitation keeps its place, and this goes beside it. */
-export const besideLimitation=(input:WritingInput)=>factList(input,undefined,'What the records do show:')
-/** The system's own empty sentences, as opposed to a limit that says something. */
-const EMPTY_ANSWERS=new Set(['The selected evidence does not establish the requested answer.','The selected evidence does not establish the requested financial answer.','The selected records do not establish the requested answer.','The available records do not establish an answer to this question.'])
-const emptyLead=(requestedSpan='')=>`OPAX cannot establish the requested answer${requestedSpan}`
-export const emptyAnswer=(answer:string)=>{const text=answer.trim();return !text||EMPTY_ANSWERS.has(text)||text.startsWith(emptyLead())&&text.endsWith(' from the selected records.')}
+export const besideLimitation=(input:WritingInput)=>factList(input,undefined,['What the records do show:'])
+const NO_CAUSATION='Public donation and voting records do not establish that money caused a vote.'
+/** Receipts alone do not answer a question about a vote, a position or why. They are shown, under the limit that says so. */
+export function receiptsAsLimitation(input:WritingInput):QualitativeAnswer|null {
+  const found=foundFacts(input)
+  if(!found.length||!found.every(f=>f.source.receipt)||!receiptsCannotAnswer(input.question))return null
+  const list=factList(input,undefined,[NO_CAUSATION,'What the records do show:'])
+  return list&&{...list,answer_decision:'limitation',coherence:{...list.coherence,method:'facts_beside'}}
+}/** The system's own empty sentences, as opposed to a limit that says something. */
+const EMPTY_ANSWERS=new Set(['OPAX cannot establish the requested answer from the selected records.','The selected evidence does not establish the requested answer.','The selected evidence does not establish the requested financial answer.','The selected records do not establish the requested answer.','The available records do not establish an answer to this question.'])
+export const emptyAnswer=(answer:string)=>!answer.trim()||EMPTY_ANSWERS.has(answer.trim())
 /** Never return the original block, even when the provider is unavailable or the wall cap is spent. */
 export function proseFallback(input: WritingInput): QualitativeAnswer {
   // Context records are retrieval aids, never selected calculation facts.
@@ -264,7 +272,8 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   const donors=repairDonorRanking(input.question,input.facts.map(f=>f.source),input.constraints)
   const donorEvidence=input.facts.some(f=>f.source.receipt)
   // Money does not explain a vote: this line declines even when the model did not.
-  if(donorEvidence&&causalAsk(input.question))return {answer:'Public donation and voting records do not establish that money caused a vote. I can help compare the disclosed records without making that allegation.',answer_decision:'refusal',citations:{},sources:[]}
+  if(donorEvidence&&causalAsk(input.question))return {answer:NO_CAUSATION+' I can help compare the disclosed records without making that allegation.',answer_decision:'refusal',citations:{},sources:[]}
+  const receiptsOnly=receiptsAsLimitation(input);if(receiptsOnly)return receiptsOnly
   // Dates that could not be confirmed cannot carry a ranking or the requested period.
   if(input.facts.some(f=>f.text.includes(UNCONFIRMED_PERIOD))){const list=factList(input);if(list)return list}
   // Parties ranked on one industry's total: the tool's own ranking, read from its rows.
@@ -385,7 +394,7 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     const boundary=/(?:cover|start(?: on| in)?) (1999-12-07|7 December 1999|December 1999)/i.exec(input.facts.map(f=>f.text).join(' '))
     const censusLimit=input.facts.find(f=>/2021 Census/i.test(f.text)&&/cannot establish/i.test(f.text))
     if(censusLimit)return assemble([{text:`The 2021 Census covers 2021-01-01 to 2021-12-31 and cannot establish the requested answer${span}.`,facts:[censusLimit.id],coverage:true}],input)
-    return assemble([{text:boundary&&requestedStart&&requestedStart<'1999-12-07'?`OPAX's federal pay records start in December 1999, so they cannot establish the requested salary answer${span}.`:`${emptyLead(span)}${reason}.`,facts:(boundary?input.facts:limit?[limit]:input.facts.slice(0,1)).map(f=>f.id),coverage:true}],input)
+    return assemble([{text:boundary&&requestedStart&&requestedStart<'1999-12-07'?`OPAX's federal pay records start in December 1999, so they cannot establish the requested salary answer${span}.`:`OPAX cannot establish the requested answer${span}${reason}.`,facts:(boundary?input.facts:limit?[limit]:input.facts.slice(0,1)).map(f=>f.id),coverage:true}],input)
   }
   if(coverage && !lines.some(l=>key(l.text)===key(coverage.text)))lines.push(coverage)
   return assemble(lines,input)

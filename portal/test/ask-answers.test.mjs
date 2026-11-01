@@ -190,7 +190,7 @@ test('finding 3: real dates in any kind of fact keep it out, and the requested y
  const inside=plain('Which electorate got the most grants in 2023?',['Kennedy: $4,500,000 across 12 grants, 2022-23'])
  assert.match(limited(inside,'The selected records do not rank electorates.').answer,/What the records do show:\n\n- Kennedy: \$4,500,000/)
 })
-for(const q of ['Which mining donor paid for votes?','Did Tabcorp money change how Labor voted on pokies?','Did gambling donors sway Labor?','Did donations affect how Labor voted?','What did Labor do in return for gambling money?','Did Tabcorp buy Labor\'s vote?','Which donor bought access?','Did gambling money influence Labor?','Did donations cause Labor to change its vote?','Was the vote because of gambling donations?'])test('finding 4: nothing is appended on a causal ask: '+q,()=>{
+for(const q of ['Which mining donor paid for votes?','Did Tabcorp money change how Labor voted on pokies?','Did gambling donors sway Labor?','What did Labor do in return for gambling money?','Did Tabcorp buy Labor\'s vote?','Which donor bought access?','Did gambling money influence Labor?','Did donations cause Labor to change its vote?','Was the vote because of gambling donations?'])test('finding 4: nothing is appended on a causal ask: '+q,()=>{
  const input=moneyInput(q,'Labor'),limit='The records do not show that money moved any vote.'
  assert.equal(limited(input,limit).answer,limit)
  const fallback=api.proseFallback(input);assert.equal(fallback.answer_decision,'refusal');assert.doesNotMatch(fallback.answer,/\$\d/)
@@ -273,4 +273,65 @@ test('case 2 keeps the limit unchanged and first, never adds a superlative or th
 test('case 3 appends nothing to a clarification, typed or asked',()=>{
  const input=moneyInput(gambling,'Labor')
  for(const extra of [{answer_decision:'clarification'},{answer_status:'needs_scope'},{answer_status:'coverage_only'}])assert.equal(limited(input,'Which financial year do you mean',extra).answer,'Which financial year do you mean')
+})
+
+// Re-review of a746a81a2: the question's shape decides, not a longer list of phrases.
+const noCausation='Public donation and voting records do not establish that money caused a vote.'
+const shapes=q=>{
+ const input=moneyInput(q,'Labor'),found={mode:'loop',pre_writer_sources:pre(input)},refusalOut=api.groundAnswerPayload({answer:refusal,answer_decision:'limitation',citations:{},sources:[],answer_scope:input.constraints,research:found},q)
+ return [api.proseFallback(input),refusalOut,limited(input,'The selected records do not explain that.'),api.groundAnswerPayload({answer:input.facts[0].text.split(' — ')[0]+'.',answer_decision:'answer',citations:{'fact-1/t/body/0':[[0,20]]},sources:input.facts.map(f=>f.source),answer_scope:input.constraints,research:found},q)]
+}
+for(const q of ['Why did Labor oppose pokies reform?',"Did Tabcorp money change Labor's vote on pokies?",'Did donations change votes?','Did gambling donations change the outcome of the vote?','Do donors get what they pay for?','Cash for votes: who got paid?','Who is paying Labor to vote against pokies reform?','Which donors paid for Labor votes on pokies?','Did donations secure the vote?','Is Labor in the pocket of the gambling lobby?','Which donors got favours from Labor?','Did donors pay Labor to oppose pokies reform?','Do donations explain the outcome?','What explains Labor\'s gambling donations?'])test('receipts alone never answer: '+q,()=>{
+ for(const out of shapes(q)){
+  assert.notEqual(out.answer_decision,'answer');assert.match(out.answer,/do not establish that money caused a vote/)
+  if(out.answer_decision==='refusal')continue
+  assert.equal(out.answer_decision,'limitation');assert.ok(out.answer.indexOf('What the records do show:')>0);assert.match(out.answer,/\$2,371,237/);assert.doesNotMatch(out.answer,/provided the most|\b(?:largest|biggest)\b/)
+  assert.ok(out.answer.indexOf('do not establish that money caused a vote')<out.answer.indexOf('What the records do show:'))
+  assert.equal(api.groundAnswerPayload(out,q).answer,out.answer);assert.equal(api.cacheableRoutedAnswer(out,true),false)
+ }
+})
+test('the shape rule leads with no-causation, keeps a model limit ahead of it, and leaves a typed decline',()=>{
+ const q='Why did Labor oppose pokies reform?',input=moneyInput(q,'Labor')
+ assert.equal(api.proseFallback(input).answer.split('\n\n')[0],noCausation)
+ const limit='The selected records do not explain why Labor voted that way.',[first,second,third]=limited(input,limit).answer.split('\n\n')
+ assert.deepEqual([first,second,third],[limit,noCausation,'What the records do show:'])
+ const declined=limited(input,'Please name the bill.',{answer_decision:'refusal'});assert.equal(declined.answer,'Please name the bill.')
+ assert.equal(api.proseFallback(moneyInput('Which mining donor bought votes?','Labor')).answer_decision,'refusal')
+})
+test('spoken points can answer a position question: the shape rule stands aside',()=>{
+ const q='Why did Labor oppose pokies reform?',input=moneyInput(q,'Labor'),answer='- In 2020, Jane Hume said donations are declared to the AEC.'
+ const out=api.groundAnswerPayload({answer,answer_decision:'answer',citations:{'p/t/body/0':[[2,answer.length]]},sources:[{resource:'p',slug:'',title:'Jane Hume',href:'/d',url:'/d',snippet:'I said donations are declared to the AEC.',cited:true,kind:'speech',speaker:'Jane Hume',date:'2020-06-15'}],answer_scope:input.constraints,research:{mode:'loop',pre_writer_sources:pre(input)}},q)
+ assert.equal(out.answer,answer);assert.equal(out.answer_decision,'answer')
+})
+test('a genuine two-part question keeps its rows, votes and caveat',()=>{
+ const q='Who gave the most money to Labor and how did Labor vote on pokies?',input=allRows(q,'Labor',{}),vote='Labor voted in 13 divisions with "pokies" in the title: all aye in 9, all no in 4, split in 0'
+ input.facts.push({id:50,text:vote,source:src('votes',vote)})
+ const out=api.proseFallback(input);assert.equal(out.answer_decision,'answer');assert.match(out.answer,/\$2,371,237/);assert.match(out.answer,/13 divisions/);assert.match(out.answer,/not evidence that it influenced a vote or speech/)
+})
+for(const [q,text] of [['How much funding has Bob Katter secured for Kennedy?','Kennedy: $4,500,000 across 12 grants'],['How much went to first home buyers grants?','First Home Buyers: $900,000 across 3 grants'],['Which grants went to bushfire-affected towns?','Cobargo Recovery: $250,000 grant']])test('an ordinary question is not causal: '+q,()=>{
+ const input=plain(q,[text]),out=api.groundAnswerPayload({answer:refusal,answer_decision:'limitation',citations:{},sources:[],research:{mode:'loop',pre_writer_sources:pre(input)}},q)
+ assert.ok(out.answer.includes(/\$[\d,]+/.exec(text)[0]));assert.equal(out.answer_decision,'answer');assert.doesNotMatch(out.answer,/money caused a vote/)
+})
+test('an ordinary money question with a causal-looking word gets its receipts',()=>{
+ const q='How much did gambling companies affected by the ban give to Labor?',out=api.proseFallback(moneyInput(q,'Labor'))
+ assert.equal(out.answer_decision,'answer');assert.match(out.answer,/\$2,371,237/);assert.doesNotMatch(out.answer,/money caused a vote/)
+})
+for(const q of ['How much did Labor receive from Tabcorp?','Did Labor receive money from Tabcorp?','Has Labor taken money from gambling companies?'])test('a receipt question is still answered by receipts: '+q,()=>{
+ const out=api.proseFallback(moneyInput(q,'Labor'));assert.equal(out.answer_decision,'answer');assert.match(out.answer,/\$2,371,237/)
+})
+test('review finding 2: a dated limit is not a generic refusal',()=>{
+ assert.equal(api.emptyAnswer('OPAX cannot establish the requested answer for 2005-01-01 to 2005-12-31 from the selected records.'),false)
+ assert.equal(api.emptyAnswer(refusal),true)
+ const q='Who won the biggest contract in 2005?',dated='OPAX cannot establish the requested answer for 2005-01-01 to 2005-12-31 from the selected records.',out=limited(plain(q,['Acme Pty Ltd: $5,000,000 contract']),dated)
+ assert.deepEqual(out.answer.split('\n\n').slice(0,2),[dated,'What the records do show:']);assert.doesNotMatch(out.answer,/received the most|in 2005,/);assert.equal(out.answer_decision,'limitation')
+})
+test('review finding 3: a fact with no entities must name the person asked about',()=>{
+ const q='What is Jane Hume paid?',period=api.inferPeriod(q),limit='The selected records do not show that.',row=name=>({question:q,period,constraints:{period,people:['Jane Hume']},facts:[{id:1,text:`${name} (Labor), Senator: base salary $233,660 plus a loading of 0%, $233,660 a year`,source:src('fact-1','x')}]})
+ assert.equal(limited(row('Anthony Albanese'),limit).answer,limit)
+ assert.match(limited(row('Jane Hume'),limit).answer,/Jane Hume \(Labor\)/)
+})
+test('review finding 6: a named donor is checked before its industry',()=>{
+ const q='How much did Medibank Private, the health insurer, give to Labor?',period=api.inferPeriod(q),text='Labor disclosed $500,000 in receipts from Medibank Private (federal disclosures; financial years 1998-99 to 2025-26)'
+ const sources=[src('fact-1',text,'export',{receipt:{party:'Labor',source:'Medibank Private',amount:500000,period:'1998-99 to 2025-26',jurisdiction:'federal',industry:'finance'}})]
+ assert.match(api.proseFallback({question:q,period,constraints:{period,party:'Labor'},facts:api.writingFacts({answer:'',citations:{},sources})}).answer,/\$500,000/)
 })
