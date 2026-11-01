@@ -54,7 +54,7 @@ HOUSE_INDEX_URL = "https://www.aph.gov.au/Senators_and_Members/Members/Register"
 SENATE_INDEX_URL = ("https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/"
                     "Senators_Interests/Senators_Interests_Register")
 PARLIAMENT = 48
-PARSER_VERSION = "2026-09-04.1"
+PARSER_VERSION = "2026-11-01.1"
 
 # chamber value on our documents -> members.chamber; state chambers share their own codes
 MEMBERS_CHAMBER = {"house": "representatives", "senate": "senate"}
@@ -592,6 +592,30 @@ def _merge_alteration_blocks(blocks):
     return [b for b in merged if b["items"] or b["details"]]
 
 
+def _alteration_detail_entries(lines, x0, x1, n):
+    """Prefer explicit trailing receipt dates only when they identify exactly
+    n entries. Blank paragraphs, wrapped text and page resets are not row
+    boundaries. Ambiguous/missing metadata keeps the existing partition.
+    Dates remain source wording; this does not infer an event or record date.
+    """
+    terminal_date = re.compile(r"^(?:Date\s+(?:provided|received|of\s+receipt)|Received)\s*:\s*\d{1,2}/\d{1,2}/(?:\d{4}|\d{2})\.?$", re.I)
+    continuation = re.compile(r"^(?:Value\s*:|Date\s+(?:provided|received|of\s+receipt)\s*:|Provided\s+by\b|Hosted\s+by\b|Gifted\s+by\b|This\s+was\s+on\b)", re.I)
+    candidates = {i for i, (a, z) in enumerate(zip(lines, lines[1:]))
+                  if terminal_date.fullmatch(_norm_ws(a['text'])) and not continuation.match(_norm_ws(z['text']))}
+    if n > 1 and len(candidates) == n - 1:
+        breaks = candidates
+    else:
+        scores = _break_scores(lines, x0, x1)
+        breaks = set(sorted(range(len(scores)), key=lambda i: -scores[i])[:max(min(n - 1, len(lines) - 1), 0)])
+    entries = []
+    for i, line in enumerate(lines):
+        if not entries or i - 1 in breaks:
+            entries.append([line['top'], _norm_ws(line['text']), line.get('page')])
+        else:
+            entries[-1][1] += ' ' + _norm_ws(line['text'])
+    return entries
+
+
 def _rows_from_alteration_block(b):
     rows_out = []
     items, det = b["items"], b["details"]
@@ -605,11 +629,13 @@ def _rows_from_alteration_block(b):
                                         None, b["page"], notes="continuation page without item labels"))
         return rows_out
     details = [""] * len(items)
+    pages = [b["page"]] * len(items)
     if det:
         x0 = det[0]["cell_x0"]; x1 = det[0]["cell_x1"]
         if len(det) >= len(items):
-            for k, (top, text) in enumerate(_partition(det, x0, x1, len(items))):
+            for k, (top, text, page) in enumerate(_alteration_detail_entries(det, x0, x1, len(items))):
                 details[k] = text
+                pages[k] = page or b["page"]
         else:
             for top, text in _partition(det, x0, x1, None):
                 k = 0
@@ -617,13 +643,13 @@ def _rows_from_alteration_block(b):
                     if it[0] <= top + 2.5:
                         k = i
                 details[k] = (details[k] + " " + text).strip()
-    for (top, code, label), d in zip(items, details):
+    for (top, code, label), d, page in zip(items, details, pages):
         if not d and not label:
             continue
         cat = SECTIONS[code][0] if code in SECTIONS else "other"
         rows_out.append(InterestRow(holder=b["holder"], section_code=code, category=cat, kind=b["kind"],
                                     fields={"item": label, "details": d}, description=d or label,
-                                    date_declared=None, page=b["page"]))
+                                    date_declared=None, page=page))
     return rows_out
 
 
