@@ -4,11 +4,16 @@ import {partyAliases,jurisdictions,normaliseRankingPeriod,rankingScopeMatches,re
 const normal=s=>String(s).trim().toLowerCase().replace(/[’]/g,"'").replace(/[–—]/g,'-').replace(/\s+/g,' ').replace(/[?.]$/,'')
 const partySlot=new RegExp('^(?:the )?('+[...partyAliases].sort(([a],[b])=>(Number(b==='LNP')-Number(a==='LNP'))).map(([,re])=>re.source).join('|')+')(?= |$)','i')
 const jurSlot=new RegExp('^('+jurisdictions.map(([,re])=>re.source).join('|')+')(?= |$)','i')
+// An industry slot is typed tool scope, so a list of a party's largest sources cannot answer for one industry.
+const industries={gambling:'gambling',mining:'mining','fossil fuel':'fossil_fuels',finance:'finance',property:'property',health:'health',hospitality:'hospitality',media:'media',tech:'tech'}
 const exact=(re,text)=>new RegExp('^(?:'+re.source+')$','i').test(text)
 export function rankingRepairQuestion(question,constraints={}, {unqualified=false}={}){
- let rest=normal(constraints.resolved_question??question),company=false,hanson=false
- const prefix=/^(who|which company) (?:gives|gave|donates|donated) the most(?: money)? to /.exec(rest)
- if(prefix){company=prefix[1]==='which company';rest=rest.slice(prefix[0].length)}
+ let rest=normal(constraints.resolved_question??question),company=false,hanson=false,industry
+ const prefix=/^(who|which company|which ([a-z ]+?) (?:companies|donors|businesses|organisations|organizations)) (?:gives|gave|give|donates|donated|donate) the most(?: money)? to /.exec(rest)
+ if(prefix){
+  company=prefix[1]==='which company';rest=rest.slice(prefix[0].length)
+  if(prefix[2]){industry=industries[prefix[2]];if(!industry)return null}
+ }
  else if(rest.startsWith('top donors to '))rest=rest.slice('top donors to '.length)
  else if(rest.startsWith('who does ')){hanson=true;rest=rest.slice('who does '.length)}
  else return null
@@ -33,11 +38,11 @@ export function rankingRepairQuestion(question,constraints={}, {unqualified=fals
   else if(rest.startsWith(' disclosures '))rest=rest.slice(' disclosures'.length)
  }
  if(unqualified&&(jurisdiction||period))return null
- return {party,jurisdiction:jurisdiction??'federal',entity_type:company?'company':'donor',period}
+ return {party,jurisdiction:jurisdiction??'federal',entity_type:company?'company':'donor',period,...(industry?{industry}:{})}
 }
 /** All fact slots must match; donor is a typed tool relationship, never a name heuristic. */
 export function repairSlotsMatch(form,question,row,constraints={}){
- if(!form||!rankingScopeMatches(question,row,constraints))return false
+ if(!form||!rankingScopeMatches(question,row,constraints)||form.industry&&row.industry!==form.industry)return false
  if(constraints.chamber||!form.period&&constraints.period&&constraints.period.kind!=='all')return false
  const meta=sourceMetadata(row.source),actual=resolvedRankingScope('',{jurisdiction:meta.jurisdiction||'federal',party:row.party})
  if(meta.chamber)return false // The grammar has no chamber slot.

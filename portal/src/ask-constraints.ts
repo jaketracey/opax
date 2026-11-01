@@ -81,8 +81,11 @@ export function periodMatches(c: AskConstraints, coverage: Coverage): boolean {
   return within(coverage.since, coverage.until) &&
     (!(coverage.requested_since || coverage.requested_until) || within(coverage.requested_since, coverage.requested_until))
 }
+export const UNCONFIRMED_PERIOD = 'OPAX could not confirm that these records fall in the requested period, so check their dates.'
 export function guardToolPeriod(result: ToolResult, step: PlanStep, c: AskConstraints): ToolResult {
   const coverage = resultCoverage(result, step)
+  // Undated rows are not known to be wrong: they stand, marked, rather than becoming a refusal. A known mismatch is replaced below.
+  if (result.ok && c.dated && !coverage.since && !coverage.until && !coverage.as_of && coverage.matched !== false) return { ...result, coverage, notes: [UNCONFIRMED_PERIOD, ...result.notes] }
   if (result.ok && !periodMatches(c, coverage)) {
     const bounds = coverage.since && coverage.until ? `The available records cover ${coverage.since} to ${coverage.until}. ` : coverage.since ? `The available records start on ${coverage.since}. ` : coverage.until ? `The available records end on ${coverage.until}. ` : ''
     const message = `The requested period is ${c.period.since ?? 'the start of the record'} to ${c.period.until ?? 'the present'}. ${bounds}${coverage.as_of ? 'Updated '+coverage.as_of+'. ' : ''}${coverage.note ?? ''} It cannot establish the answer for the requested period; no current figures have been substituted.`

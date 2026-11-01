@@ -303,7 +303,7 @@ export function createResearch(options: ResearchOptions): Research {
       let text = ''
       const citations: QualitativeAnswer['citations'] = {}, sources: QualitativeAnswer['sources'] = []
       const seen = new Set<string>()
-      for (const { fact } of facts) {
+      for (const { fact, coverage } of facts) {
         if (seen.has(fact.text)) continue
         seen.add(fact.text)
         if (text) text += '\n'
@@ -311,7 +311,7 @@ export function createResearch(options: ResearchOptions): Research {
         const start = Array.from(text).length
         text += fact.text
         citations[`fact-${fact.id}/t/body/0`] = [[start, Array.from(text).length]]
-        sources.push({ resource: `fact-${fact.id}`, slug: '', title: fact.cite.label, href: fact.cite.url, url: fact.cite.url, snippet: fact.text, cited: true, kind: fact.cite.kind })
+        sources.push({ resource: `fact-${fact.id}`, slug: '', title: fact.cite.label, href: fact.cite.url, url: fact.cite.url, snippet: fact.text, cited: true, kind: fact.cite.kind, ...(fact.receipt ? { receipt: fact.receipt } : {}), ...(coverage ? { coverage: true } : {}) })
       }
       if (points) {
         const offset = text ? Array.from(text).length + 1 : 0
@@ -418,9 +418,12 @@ export function createResearch(options: ResearchOptions): Research {
         if (answer) return answer
       }
       const record = passages.size ? recordPassagesAnswer(passages, question, context.named, options.positionQuery) : null
-      if (!record) return null
-      stats.answer = { ...emptyTally(), mode: 'record_list' }
-      return compose([], record)
+      if (record) { stats.answer = { ...emptyTally(), mode: 'record_list' }; return compose([], record) }
+      // Records were found but no answer call landed: the facts themselves are the answer.
+      const lines = factLines([...recordFacts().tools.keys()].slice(0, 15), () => {})
+      if (!lines.some(line => !line.coverage)) return null
+      stats.answer = { ...emptyTally(), mode: 'facts' }
+      return compose(lines, null)
     }
     let rejectAbort: () => void = () => {}
     const stopped = new Promise<never>((_, reject) => {

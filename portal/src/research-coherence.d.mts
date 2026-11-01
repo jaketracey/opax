@@ -12,3 +12,5 @@ export function answerDecision(payload:any):import('./research-types').AnswerDec
 export function canReconstructRanking(payload:any,question:string):boolean
 
 export function selectedDonorFacts(question:string,sources?:RankingSource[],constraints?:import('./research-types').QualitativeAnswer['answer_scope']):DonorRow[]
+export const CAUSAL_ASK: RegExp
+export function donorRankingAsked(question: string): boolean

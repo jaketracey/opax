@@ -1,5 +1,5 @@
 import { generateText } from 'ai'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, payRate, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, payRate, usableFact, type WritingInput } from './research-writing'
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
 import type { ResearchOptions } from './research-loop'
@@ -11,37 +11,43 @@ import type { QualitativeAnswer, ResearchStats } from './research-types'
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
+    // Every check sees all the facts handed in, not just those a draft happened to cite.
+    const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
+    const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...payload,research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
     let lastDraft:QualitativeAnswer|null=null
     let requiredAnswer:QualitativeAnswer|null=null,keepsRequired=(answer:string)=>true
-    const fallback=()=>{
+    const fallback=():QualitativeAnswer=>{
       stats.coherence={...stats.coherence,fallback:true}
+      const facts=proseFallback(input),fromFacts={...facts,coherence:{...facts.coherence,fallback:true}}
       if(lastDraft&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
-        const checked=groundAnswerPayload(lastDraft as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
-        if(protectedDecision(lastDraft))return {...checked,coherence:{fallback:true}}
-        // Preserve the checked pay answer prepared before writing when a revision loses its required headline.
-        if(requiredAnswer&&!keepsRequired(checked.answer))return {...requiredAnswer,coherence:{fallback:true}}
-        if(protectedDecision(checked)||coherenceCheck(input.question,checked).pass)return {...checked,answer_decision:answerDecision(checked),coherence:{fallback:true}}
-        const lead='The selected evidence does not establish the requested answer for this scope.',prefix=lead+'\n\n',offset=Array.from(prefix).length
-        const citations=Object.fromEntries(Object.entries(checked.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+offset,b+offset] as [number,number])]))
-        return {...checked,answer:prefix+checked.answer,answer_decision:'limitation' as const,citations,coherence:{fallback:true}}
+        const checked=ground(lastDraft)
+        if(protectedDecision(lastDraft))return {...checked,coherence:{...checked.coherence,fallback:true}}
+        // Preserve the checked answer prepared before writing when a revision loses its required headline.
+        if(requiredAnswer&&!keepsRequired(checked.answer))return {...requiredAnswer,coherence:{...requiredAnswer.coherence,fallback:true}}
+        if(protectedDecision(checked)||coherenceCheck(input.question,checked).pass)return {...checked,answer_decision:answerDecision(checked),coherence:{...checked.coherence,fallback:true}}
+        // An incoherent draft yields to the facts it was written from; without any, its checked points stand.
+        return facts.answer_decision==='limitation'&&checked.answer.trim()?{...checked,coherence:{...checked.coherence,fallback:true}}:fromFacts
       }
-      return {...proseFallback(input),coherence:{fallback:true}}
+      return fromFacts
     }, credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
     const required=proseFallback(input),lead=required.answer.split('\n')[0]
-    if(input.facts.some(f=>payRate(f.text)))requiredAnswer=groundAnswerPayload(required as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
-    const headlineRequired=/highest|most|top|largest|biggest/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
-    const ownerFigure=(text:string)=>{
-      const rate=/^([^:]+): (\$[\d,]+)/.exec(text)
+    const figures=required.answer_decision!=='limitation'&&/\$\d/.test(lead)
+    if(figures||input.facts.some(f=>payRate(f.text)))requiredAnswer=ground(required)
+    const headlineRequired=/highest|most|top|largest|biggest|how much/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
+    const ownerFigure=(fact:WritingInput['facts'][number])=>{
+      const receipt=fact.source.receipt
+      if(receipt)return {owner:receipt.source,amount:'$'+receipt.amount.toLocaleString('en-AU'),party:receipt.party}
+      const rate=/^([^:]+): (\$[\d,]+)/.exec(fact.text)
       if(rate)return {owner:rate[1],amount:rate[2]}
-      const donation=/^(.+?) gave (.+?) (\$[\d,]+)/.exec(text)
+      const donation=/^(.+?) gave (.+?) (\$[\d,]+)/.exec(fact.text)
       return donation?{owner:donation[1],amount:donation[3],party:donation[2]}:null
     }
-    const named=input.facts.filter(f=>{const pair=ownerFigure(f.text);return pair&&input.question.toLowerCase().includes(pair.owner.toLowerCase())&&(!pair.party||input.question.toLowerCase().includes(pair.party.toLowerCase()))})
+    const named=input.facts.filter(f=>{const pair=ownerFigure(f);return pair&&input.question.toLowerCase().includes(pair.owner.toLowerCase())&&(!pair.party||input.question.toLowerCase().includes(pair.party.toLowerCase()))})
     const recipientFacts=/\b(?:which|what) parties\b/i.test(input.question)?input.facts.flatMap(f=>{const m=/^Disclosed receipt:\s*(.+?)\s*→\s*(.+?)\s*—/.exec(f.text);return m?[{f,party:m[2]}]:[]}):[]
     const requiredIds=new Set([...recipientFacts.map(r=>r.f.id),...named.map(f=>f.id),...(headlineRequired?Object.entries(required.citations).filter(([,ranges])=>ranges.some(([a])=>a<lead.length)).flatMap(([id])=>input.facts.filter(f=>id===(f.evidenceId??f.source.resource+'/t/body/0')).map(f=>f.id)):[])])
     const recipients=recipientFacts.map(r=>r.party)
-    const keepsHeadline=(answer:string)=>recipients.every(p=>answer.toLowerCase().includes(p.toLowerCase()))&&input.facts.filter(f=>requiredIds.has(f.id)).every(f=>{const pair=ownerFigure(f.text);return !pair||answer.includes(pair.owner)&&answer.includes(pair.amount)})
+    const keepsHeadline=(answer:string)=>recipients.every(p=>answer.toLowerCase().includes(p.toLowerCase()))&&input.facts.filter(f=>requiredIds.has(f.id)).every(f=>{const pair=ownerFigure(f);return !pair||answer.includes(pair.owner)&&answer.includes(pair.amount)})
     keepsRequired=keepsHeadline
     let activeInput=input, prompt=writingPrompt(input)
     const startedWriting=Date.now()
@@ -83,14 +89,16 @@ export function createAnswerWriter(options: ResearchOptions) {
         const verified=verifyWrittenAnswer(raw,activeInput)
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
         const audit=auditPayload(input.question,verified)
-        const checked=groundAnswerPayload(verified as unknown as Record<string,unknown>,input.question) as unknown as QualitativeAnswer
+        const checked=ground(verified)
         if(protectedDecision(verified))return checked
         const draft=Array.isArray(raw.sentences)?raw.sentences.map((s:{text?:string})=>s.text??'').join('\n\n'):''
         const dropped=Array.isArray(raw.sentences)&&raw.sentences.some((s:{text?:string})=>{const words=(s.text??'').toLowerCase().match(/[\p{L}\p{N}]+/gu)??[];return words.length>0&&words.filter((w:string)=>verified.answer.toLowerCase().includes(w)).length/words.length<0.8})
         if(pass===0&&(audit.findings.length||dropped||!keepsHeadline(checked.answer))&&remainingMs-(Date.now()-startedWriting)>=500){
           const used=new Set(checked.sources.filter(s=>s.cited).map(s=>s.resource))
           const surviving={...activeInput,facts:activeInput.facts.filter(f=>used.has(f.source.resource)||requiredIds.has(f.id))}
-          if(surviving.facts.length){activeInput=surviving;prompt=writingPrompt(surviving);continue}
+          // A revision may lose a rejected fact, never the only usable ones: a coverage note alone cannot be rewritten into an answer.
+          if(surviving.facts.some(usableFact)||!activeInput.facts.some(usableFact)&&surviving.facts.length){activeInput=surviving;prompt=writingPrompt(surviving)}
+          continue
         }
         const stripped=Math.max(0,1-checked.answer.length/Math.max(1,draft.length))
         if(stripped>1/3||!keepsHeadline(checked.answer))return fallback()

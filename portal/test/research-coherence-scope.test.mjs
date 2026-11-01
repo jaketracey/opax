@@ -8,6 +8,7 @@ import {rankingSourceMatches} from '../src/research-ranking-scope.mjs'
 const built=await build({stdin:{contents:"export * from './src/research-grounding';export * from './src/research-response';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const qld=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-lnp-qld.json',import.meta.url)))
+const shownUnranked=(out,figure)=>{assert.doesNotMatch(out.answer,/provided the most|received the most|led the selected ranking/);assert.ok(out.answer.includes(figure));assert.match(out.answer,/cannot establish a donor ranking|do not establish whether giving occurred in most years/);assert.ok(Object.keys(out.citations).length)}
 function source({jur='federal',party='LNP',period='2019–20',chamber,entity_type}={}){
  return {resource:'fact-1',kind:'record',title:'Selected donor ranking',url:`/money?jur=${jur}&party=party:${party}`,cited:true,...(chamber?{chamber}:{}),...(entity_type?{entity_type}:{}),snippet:`Selected Company has the largest disclosed total to ${party} in this published selection: $754,314.\nFinancial years: ${period}.\n| Donor | Disclosed receipts | Records |\n| Selected Company | $754,314 | 2 |\nThese are party receipts, not personal payments.`}
 }
@@ -50,7 +51,7 @@ for(const [name,question,evidence,allowed] of cases)for(const stream of [false,t
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})},response=stream?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
  if(allowed){assert.match(out.answer,/provided the most disclosed funding/);assert.match(out.answer,/754,314/);assert.ok(out.citations['fact-1/t/body/0'])}
- else{assert.doesNotMatch(out.answer,/provided the most|754,314/);assert.deepEqual(out.citations,{})}
+ else shownUnranked(out,'$754,314')
 })
 test('each row used by a repair agrees with scope; a matching row cannot admit a mismatched row',()=>{
  const wrong={...source({jur:'qld'}),resource:'fact-2',snippet:source({jur:'qld'}).snippet.replaceAll('Selected Company','Wrong Company')}
@@ -68,14 +69,14 @@ for(const [dimension,scope,evidence] of [
  assert.equal(canReconstructRanking(payload,question),false)
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})},response=stream?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.doesNotMatch(out.answer,/provided the most|754,314/);assert.deepEqual(out.citations,{})
+ shownUnranked(out,'$754,314')
 })
 test('writer retains resolved constraints on the draft and its checked result',async()=>{
  const writing=await build({stdin:{contents:"export * from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'}),writer=await import('data:text/javascript;base64,'+Buffer.from(writing.outputFiles[0].text).toString('base64'))
  const constraints={jurisdiction:'federal',party:'LNP'},evidence=source({jur:'qld'}),input={question:'Who gives the most money to the LNP?',period:{kind:'all',label:''},constraints,facts:[{id:1,text:evidence.snippet,source:evidence}]}
  const draft=writer.draftWrittenAnswer({answer_decision:'answer',sentences:[{text:'Avery Example received $754,314.',facts:[1]}]},input)
  assert.deepEqual(draft.answer_scope,constraints);assert.equal(canReconstructRanking(draft,input.question),false)
- const out=writer.proseFallback(input);assert.equal(out.answer_decision,'limitation');assert.doesNotMatch(out.answer,/provided the most|754,314/);assert.deepEqual(out.answer_scope,constraints)
+ const out=writer.proseFallback(input);shownUnranked(out,'$754,314');assert.deepEqual(out.answer_scope,constraints)
 })
 for(const [asked,evidence,allowed] of [['senate','representatives',false],['representatives','senate',false],['senate','senate',true],['representatives','representatives',true]])test(`non-donor ranking scope: ${asked}/${evidence}`,()=>{
  const question=`Which Labor politician made the most speeches in federal ${asked==='senate'?'Senate':'House of Representatives'} records in 2019?`,answer='Avery Example recorded 42 chamber speeches labelled gambling in federal parliament in 2019.'

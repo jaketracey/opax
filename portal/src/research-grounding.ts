@@ -1,8 +1,9 @@
 import {auditPayload,quotationSpans,sentenceParts} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
-import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,donorRanking,canReconstructRanking} from './research-coherence.mjs'
-import {proseFallback,type WritingInput} from './research-writing'
+import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,canReconstructRanking,CAUSAL_ASK} from './research-coherence.mjs'
+import {proseFallback,writingFacts,appendWrittenPoints,usableFact,tokens,type WritingInput} from './research-writing'
+import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
 
@@ -112,8 +113,56 @@ function citeFallbackMoney(payload:Record<string,unknown>,question:string,select
   if(!String(out.answer??'').trim())out={...out,answer:'The selected evidence does not establish the requested financial answer.',answer_decision:'limitation',citations:{}}
   return cleanAnswerShape({...out,coherence:{...((out.coherence??{}) as object),monetary_citations:{repaired,omitted}}})
 }
+/** Everything found for this answer: the facts handed to the writer, else the records it cites. */
+function foundInput(payload:Record<string,unknown>,question:string):WritingInput {
+  const scope=payload.answer_scope as WritingInput['constraints'],found=(payload.research as {pre_writer_sources?:SelectedSource[]}|undefined)?.pre_writer_sources
+  const sources=found?.length?found:((Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]).filter(s=>s.cited===true)
+  // writingFacts re-derives what it added to a receipt's snippet, so only the fact itself goes back in.
+  const facts=writingFacts({answer:'',citations:{},sources:sources.map(s=>({...s,cited:true,...(s.receipt?{snippet:s.snippet.split('\n')[0]}:{})}))})
+  return {question,period:scope?.period??{kind:'all',label:''},facts,constraints:scope}
+}
+/** A wrong-period total is not an answer for that period: the limitation that says so stands. */
+function outsideRequest(fact:WritingInput['facts'][number],input:WritingInput):boolean {
+  const {period,question}=input,notes=input.facts.filter(f=>f.coverage).map(f=>f.text).join('\n')
+  const held=fact.source.receipt?.period??/financial years:?\s*([^.;)\n]+)/i.exec(fact.text+'\n'+fact.source.snippet+'\n'+notes)?.[1]??''
+  const years=[...held.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0]))
+  const asked=[period.since,period.until,...question.match(/\b(?:19|20)\d{2}\b/g)??[]].filter(Boolean).map(y=>Number(String(y).slice(0,4)))
+  return !!years.length&&!!asked.length&&(Math.max(...asked)<Math.min(...years)||Math.min(...asked)>Math.max(...years)+1)
+}
+/** The terminal rule. Whatever happened above, usable found facts reach the reader as an answer; only a typed
+ * refusal or clarification, or a causal ask, keeps them back. A figure question also leads with figures, ahead of
+ * any points beside them. */
+function answerFromFound(out:Record<string,unknown>,question:string,found:Record<string,unknown>):Record<string,unknown> {
+  const decision=answerDecision(out),method=(out.coherence as {method?:string}|undefined)?.method
+  // A model's own unanswered question, and a limit already set beside the checked points, stay as they are.
+  if(decision==='refusal'||decision==='clarification'||CAUSAL_ASK.test(question)||method==='checked_points_with_limit'||method==='combined_count_limit')return out
+  if(decision==='preserve'&&/\?|^Please (?:specify|name|give|clarify)\b/i.test(String(out.answer??'')))return out
+  const input=foundInput(found,question),usable=input.facts.filter(f=>usableFact(f)&&!outsideRequest(f,input))
+  if(!usable.length)return out
+  const figuresOf=(f:WritingInput['facts'][number])=>(f.atoms??[]).map(a=>a.value).filter(v=>v.length>2)
+  const values=usable.flatMap(figuresOf),said=tokens(String(out.answer??''))
+  // A ranking of receipts is only answered by its leader, not by a lower row that survived.
+  const leader=/\b(?:most|largest|biggest|highest|top)\b/i.test(question)?usable.find(f=>f.source.receipt||f.source.kind==='receipt'):undefined
+  const shown=(leader?figuresOf(leader):values).some(v=>said.includes(v))
+  const sources=(Array.isArray(out.sources)?out.sources:[]) as SelectedSource[],citedBy=Object.entries((out.citations??{}) as Record<string,unknown[]>).filter(([,ranges])=>Array.isArray(ranges)&&ranges.length).flatMap(([id])=>sources.filter(s=>id===s.resource||id.startsWith(s.resource+'/')))
+  const passage=citedBy.some(s=>['speech','bill'].includes(s.kind))||['uncited','partly_cited'].includes(String(out.answer_status))
+  const record=citedBy.some(s=>!s.coverage&&!/^(?:period-)?coverage(?:-|$)/.test(s.resource))
+  const answered=shown||passage||decision==='answer'&&record
+  const figureAsked=/\bhow (?:much|many)\b|\b(?:most|least|fewest|largest|biggest|highest|lowest|top)\b/i.test(question)
+  if(answered&&(shown||!figureAsked||!values.length))return out
+  const facts=proseFallback({...input,facts:input.facts.filter(f=>usable.includes(f)||!usableFact(f))})
+  if(facts.answer_decision==='limitation'&&!tokens(facts.answer).some(v=>values.includes(v)))return out
+  const {answer_status:_status,...rest}=out
+  const merged=answered?appendWrittenPoints(facts,rest as unknown as QualitativeAnswer):facts
+  return {...rest,...merged,coherence:{...((out.coherence??{}) as object),...merged.coherence,fallback:true,method:'facts_rendered'}}
+}
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
+  // Rendered from the found facts, so no later pass may reword or remove them.
+  if((payload.coherence as {method?:string}|undefined)?.method==='facts_rendered')return payload
+  return answerFromFound(checkedAnswer(payload,question),question,payload)
+}
+function checkedAnswer(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   payload=plainCoverageRefusal(payload,question)
   // An empty record-only prefix is not a refusal of the checked passage answer beside it.
   const prefix=/^OPAX cannot establish the requested answer from the selected records\.\s*\n\s*\n/.exec(String(payload.answer??''))?.[0]
@@ -143,18 +192,8 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
       out={...payload,...cleanAnswerShape(audited),coherence:{...((payload.coherence??{}) as object),stripped_ratio:stripped,fallback:true}}
     }
   }
-  if(!canReconstruct&&(donorQuestion||rankingQuestion)&&audit.findings.some(f=>f.type==='figure')&&!coherenceCheck(question,out).pass){
-    // A repair veto preserves checked points beside a limitation, even for a short rejected lead.
-    const lead='The selected evidence does not establish the requested answer for this scope.',points=String(out.answer??'').trim(),prefix=lead+(points?'\n\n':''),offset=Array.from(prefix).length
-    const citations=Object.fromEntries(Object.entries(out.citations??{}).map(([id,ranges])=>[id,(ranges as number[][]).map(([a,b])=>[a+offset,b+offset])]))
-    out={...out,answer:prefix+points,answer_decision:'limitation',citations,coherence:{stripped_ratio:stripped,fallback:true,method:points?'checked_points_with_limit':'specific_limitation'}}
-  }
-  if(stripped>1/3&&!((out.coherence as {fallback?:boolean}|undefined)?.fallback)){
-    // Checked points keep their purpose and ownership; never substitute an arbitrary quotation.
-    const surviving={...out,coherence:{stripped_ratio:stripped,fallback:true,method:'checked_points'}}
-    if(String(out.answer??'').trim()&&coherenceCheck(question,surviving).pass)out=surviving
-    else out={...out,answer:/^why\b/i.test(question)?'The selected passages do not establish the requested explanation.':'The selected evidence does not establish the requested answer for this scope.',citations:{},sources:[],coherence:{stripped_ratio:stripped,fallback:true,method:'specific_limitation'}}
-  }
+  // Checked points keep their purpose and ownership; never substitute an arbitrary quotation.
+  if(stripped>1/3&&!((out.coherence as {fallback?:boolean}|undefined)?.fallback))out={...out,coherence:{stripped_ratio:stripped,fallback:true,method:'checked_points'}}
   // If checked points cannot supply the requested comparison, keep them beside
   // an explicit limitation instead of replacing them with a quotation.
   const incomplete=coherenceCheck(question,out)

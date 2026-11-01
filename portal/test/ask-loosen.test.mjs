@@ -23,10 +23,10 @@ const verify=(points,q=question,named=scope)=>{const why=[],tally=api.emptyTally
 // A research loop over one verified passage, the roster served as an asset.
 const call=(name,args,callId='fixture')=>({type:'tool-call',toolName:name,toolCallId:callId,input:JSON.stringify(args)});
 const reply=calls=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_calls'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},warnings:[]});
-function loop(responses,{named=scope,q=question,wallMs,rosterDelay=0}={}){
+function loop(responses,{named=scope,q=question,wallMs,rosterDelay=0,money=null}={}){
  const failures=[],model=new MockLanguageModelV4({doGenerate:responses});
  const deps={
-  asset:async path=>{if(path!=='/parliamentarians.json')return null;if(rosterDelay)await new Promise(r=>setTimeout(r,rosterDelay));return roster;},
+  asset:async path=>{if(path==='/graph/money.json')return money;if(path!=='/parliamentarians.json')return null;if(rosterDelay)await new Promise(r=>setTimeout(r,rosterDelay));return roster;},
   kb:async()=>({resources:{[passage.resource]:{slug:passage.slug,title:passage.title,fields:{body:{paragraphs:{[id]:{text:speech}}}}}}}),
   generate:async()=>{throw Error('the old planner must not run')},
   research:api.createResearch({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),
@@ -102,6 +102,16 @@ test('a loop timeout after the model has answered returns that draft, not the ol
  const run=await f.run();
  assert.equal(run.answered,true);assert.equal(run.research.mode,'loop');assert.equal(run.answer,'- Robin Example said losses should be capped at one dollar a spin.');assert.ok(run.qualitative.citations[id]);
  assert.equal(run.research.answer_stats.salvaged,'timeout');assert.equal(f.failures.length,0);
+});
+
+test('a loop timeout with only record facts in hand answers from those facts, carrying their structure',async()=>{
+ let n=0;
+ const money={nodes:[{id:'party:Labor',label:'Labor',kind:'party'},{id:'d1',label:'Tabcorp Holdings Limited',kind:'donor',industry:'gambling'}],edges:[{source:'d1',target:'party:Labor',total:2371237,count:3}]};
+ const q='How much did Labor disclose from gambling sources?',f=loop(async()=>++n===1?reply([call('party_receipts',{party:'Labor',industry:'gambling'})]):new Promise(()=>{}),{wallMs:250,money,q});
+ const run=await f.run();
+ assert.equal(run.answered,true);assert.match(run.answer,/Labor disclosed \$2,371,237 in receipts from Tabcorp Holdings Limited/);
+ assert.equal(run.research.answer_stats.mode,'facts');assert.equal(run.research.answer_stats.salvaged,'timeout');
+ assert.deepEqual(run.qualitative.sources[0].receipt,{party:'Labor',source:'Tabcorp Holdings Limited',amount:2371237,period:'1998-99 to 2025-26',industry:'gambling'});
 });
 
 test('a loop timeout before any draft answers from the verified passages it already holds',async()=>{

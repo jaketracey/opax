@@ -88,7 +88,7 @@ test('year-filtered disclosed-donor tables recover their leading donor and perio
  const bad='Avery Example received $2,000,000.',answer=bad+'\n\nOther donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-1/t/body/0':[[0,bad.length]],'receipt-ranking-2/t/body/0':[[bad.length+2,answer.length]]}}
  // The former phrasing is now outside the repair allowlist; keep its checked point.
  const blocked=api.groundAnswerPayload(structuredClone(p),'Who gave the most disclosed funding to Labor in 2023?')
- assert.equal(blocked.answer_decision,'limitation');assert.match(blocked.answer,/United Workers Union.*953,447/);assert.doesNotMatch(blocked.answer,/Pratt/);assert.equal(coherenceCheck('Who gave the most disclosed funding to Labor in 2023?',blocked).pass,true)
+ assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/Pratt Holdings Pty Ltd.*2,000,000/);assert.match(blocked.answer,/United Workers Union.*953,447/);assert.doesNotMatch(blocked.answer,/provided the most|Avery Example/);assert.match(blocked.answer,/cannot establish a donor ranking/)
  const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(p,question)
  assert.match(out.answer.split('\n')[0],/2023–24.*Pratt Holdings Pty Ltd.*2,000,000/)
  assert.equal(coherenceCheck(question,out).pass,true);assert.equal(auditPayload('',out).findings.length,0)

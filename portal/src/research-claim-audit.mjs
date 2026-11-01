@@ -134,6 +134,9 @@ function evidenceRows(payload){
  for(const source of Array.isArray(payload.sources)?payload.sources:[]){
   if(!source||typeof source!=='object'||typeof source.resource!=='string')continue
   const text=String(source.snippet??''),base={id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
+  const receipt=source.receipt
+  // The tool's own association, read as data: both sides own the amount, for its period.
+  if(receipt)rows.push({...base,text:`${receipt.party} ${receipt.source} $${receipt.amount.toLocaleString('en-AU')}`,entity:receipt.source,donor:receipt.source,period:periods(receipt.period),figures:figures('$'+receipt.amount.toLocaleString('en-AU')).map(f=>({...f,owner:receipt.party,owners:[receipt.source,receipt.party],period:periods(receipt.period)}))})
   const parts=text.split(/\n+|(?<=[.!?])\s+(?=[A-Z][^:$;\n.]{1,110}:\s*\$?\d)/)
   for(const line of parts){
    const label=/^\s*[-*]?\s*([^:|]{2,140}):/.exec(line)?.[1]

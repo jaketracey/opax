@@ -1,5 +1,5 @@
 import { claimClauses, proseClaimKeys } from './research-claims'
-import { proseFallback, rawToolEcho, writingFacts } from './research-writing'
+import { proseFallback, rawToolEcho, tokens, writingFacts } from './research-writing'
 import { plainAnswerPayload } from './research-language'
 import { groundAnswerPayload } from './research-grounding'
 import {protectedDecision} from './research-coherence.mjs'
@@ -15,6 +15,10 @@ function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPay
   })) }
   return { ...payload, research }
 }
+
+/** A stored answer replays for a week, so only an answer may be stored: never a refusal, limitation or clarification, which the next ask may better. */
+export const cacheableRoutedAnswer = (payload: Record<string, unknown>, requireCitation: boolean): boolean =>
+  !protectedDecision(payload) && (!requireCitation || Object.keys(payload.citations ?? {}).length > 0)
 
 /** Add metadata only at the boundary. Existing JSON and SSE fields survive. */
 export async function withPlannerResearch(response: Response, previous?: ResearchPayload): Promise<Response> {
@@ -113,6 +117,13 @@ export async function withFallbackPeriod(response: Response, period: import('./a
     const outside = cited.find(s => typeof s.date === 'string' && (period.since && s.date.slice(0, 10) < period.since || period.until && s.date.slice(0, 10) > period.until))
     if (!coverage && !outside && cited.length && cited.every(s => typeof s.date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(s.date))) return payload
     const requested = `${period.since ?? 'the start of the record'} to ${period.until ?? 'the present'}`
+    // Figures cannot be sorted by period after the fact, so they stay out. Prose is kept with its dates stated.
+    const answerText = String(payload.answer ?? '')
+    if (answerText.trim() && cited.length && !tokens(answerText).some(n => !/^(?:19|20)\d{2}$/.test(n))) {
+      const lead = `These records may not cover ${requested}: ${outside ? `a returned source is dated ${String(outside.date).slice(0, 10)}.` : 'their dates could not be confirmed for that period.'}`, offset = Array.from(lead + '\n\n').length
+      const citations = Object.fromEntries(Object.entries((payload.citations ?? {}) as Record<string, number[][]>).map(([id, ranges]) => [id, ranges.map(([a, b]) => [a + offset, b + offset])]))
+      return { ...payload, answer: lead + '\n\n' + answerText, citations, answer_status: 'coverage_only', coverage: { requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? null, matched: false } }
+    }
     const text = `The returned records do not establish the requested answer for ${requested}. ${outside ? `A returned source is dated ${String(outside.date).slice(0, 10)}, outside that period.` : 'The returned evidence has no verified date coverage for that period.'} I have not substituted current figures. Please narrow the question or check the records linked here.`
     const url = String(outside?.href ?? outside?.url ?? cited[0]?.href ?? cited[0]?.url ?? 'https://opax.com.au/methods')
     // Do not retain calculated tables, openings or snippets from another period.

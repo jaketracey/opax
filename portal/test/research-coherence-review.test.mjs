@@ -117,7 +117,7 @@ test('a later caveat cannot exempt an affirmative lead from ranking checks',()=>
 for(const question of ['Did Westpac give money to One Nation in most years?','Who gave the most money to Labor?','Who gave the most money to One Nation in 1990?'])test('proseFallback itself cannot turn out-of-scope donor facts into a ranking: '+question,()=>{
  const facts=hanson.payload.sources.flatMap((source,i)=>source.snippet.split(/\n+/).map((text,j)=>({id:100*i+j+1,text,source,coverage:source.resource==='coverage'})))
  const out=api.proseFallback({question,period:{kind:'all',label:''},facts})
- assert.doesNotMatch(out.answer,/provided the most|received the most|runners.up|^- /im);assert.match(out.answer,/cannot|do not establish|does not establish/i)
+ assert.doesNotMatch(out.answer,/provided the most|received the most|runners.up/i);assert.match(out.answer,/cannot|can't|do not establish|does not establish/i)
 })
 test('ranking party scope reads the selected calculation URL, including encoded party labels',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-labor-2023.json',import.meta.url)))
@@ -126,7 +126,7 @@ test('ranking party scope reads the selected calculation URL, including encoded 
  f.payload.citations=Object.fromEntries(Object.entries(f.payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+shift,b+shift])]))
  f.payload.citations['receipt-ranking-1/t/body/0']=[[0,bad.length]]
  // Full original wording remains a veto control; canonical FY wording remains a positive control.
- const blocked=api.groundAnswerPayload(structuredClone(f.payload),f.question);assert.equal(blocked.answer_decision,'limitation');assert.match(blocked.answer,/United Workers Union/);assert.equal(coherenceCheck(f.question,blocked).pass,true)
+ const blocked=api.groundAnswerPayload(structuredClone(f.payload),f.question);assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/United Workers Union/);assert.doesNotMatch(blocked.answer,/provided the most|Avery Example/)
  const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(f.payload,question);assert.match(out.answer.split('\n')[0],/Pratt Holdings Pty Ltd/);assert.match(out.answer.split('\n')[0],/2,000,000/);assert.match(out.answer.split('\n')[0],/2023[–-]24/);assert.equal(coherenceCheck(question,out).pass,true)
 })
 test('an affirmative misattributed figure cannot become a protected decision by adding a limitation',()=>{
@@ -180,13 +180,13 @@ test('a combined two-year count stays context rather than pretending to answer a
 test('a quoted organisation name containing initials remains one complete ranking lead',()=>{
  const question='Who gives the most money to Queensland LNP?',text='**J.J. RICHARDS & SONS PTY LTD** has the largest disclosed total to LNP in this published selection: **$754,314**.\n**Financial years: 2013–14 to 2026–27.** QLD.\n| Donor | Disclosed receipts |\n| --- | ---: |\n| J.J. RICHARDS & SONS PTY LTD | $754,314 |'
  const source={resource:'fact-14',kind:'record',title:text,url:'https://opax.com.au/money?jur=qld&party=party%3ALNP',snippet:text,cited:true}
- const out=api.proseFallback({question,period:{kind:'all',label:''},facts:[{id:1,text,source}]});assert.equal(coherenceCheck(question,out).pass,true)
+ const out=api.proseFallback({question,period:{kind:'all',label:''},facts:[{id:1,text,source}]});assert.match(out.answer.split('\n')[0],/^J\.J\. RICHARDS & SONS PTY LTD .*754,314/);assert.deepEqual(coherenceCheck(question,out).orphan,[])
 })
 test('selected receipt periods survive when the writer fact is prose rather than the raw data row',()=>{
  const row={resource:'receipt-ranking-1',kind:'receipt',title:'Shop Distributive & Allied Employees Association: $974,058',url:'https://opax.com.au/money?jur=federal&party=party%3ALabor&from=2019&to=2019',snippet:'Shop Distributive & Allied Employees Association: $974,058, 13 disclosed receipt records. Period: 2019–20.',cited:true}
  const coverage={...row,resource:'receipt-ranking-0',snippet:'Opax added the disclosed receipts matching this question, grouped by donor.'}
  const facts=[{id:1,text:'Shop Distributive & Allied Employees Association has the largest disclosed total: $974,058.',source:row},{id:2,text:coverage.snippet,coverage:true,source:coverage}]
- const blocked=api.proseFallback({question:'Who donates the most to Labor in federal records in 2019?',period:{kind:'all',label:''},facts});assert.equal(blocked.answer_decision,'limitation');assert.doesNotMatch(blocked.answer,/provided the most/)
+ const blocked=api.proseFallback({question:'Who donates the most to Labor in federal records in 2019?',period:{kind:'all',label:''},facts});assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/974,058/);assert.doesNotMatch(blocked.answer,/provided the most/);assert.match(blocked.answer,/cannot establish a donor ranking/)
  const question='Who donates the most to Labor in federal disclosures in 2019–20?',out=api.proseFallback({question,period:{kind:'all',label:''},facts})
  assert.match(out.answer.split('\n')[0],/Shop Distributive.*974,058/);assert.match(out.answer.split('\n')[0],/2019[–-]20/);assert.equal(coherenceCheck(question,out).pass,true)
 })

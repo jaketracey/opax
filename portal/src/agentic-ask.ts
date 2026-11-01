@@ -19,7 +19,7 @@ import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AG
 import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-electorates'
 import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
-import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ResearchResult } from './research-types'
+import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 
@@ -242,7 +242,9 @@ export interface Fact { id: number; text: string; cite: Cite; entities?: string[
   /** Rows of one ranking or trend share a lead line ("Chamber speeches labelled gambling since 2015, by year") and render as short rows. */
   group?: string; row?: string
   /** Counting basis of a speech count (chamber, committee or all): one answer shows one basis. */
-  basis?: string }
+  basis?: string
+  /** A disclosed receipt's owner, source, amount and period, carried past any change to the fact's wording. */
+  receipt?: ReceiptFact }
 const n = (value: number) => value.toLocaleString('en-AU')
 /** The lead line for one count or trend result: what was counted, where, over which period, grouped how. */
 export function countLead(filter: Record<string, unknown>, by: string): string {
@@ -260,7 +262,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
   const facts: Fact[] = []
   const notes = new Set<string>()
   let entities: string[] = []
-  const add = (text: string, cite: Cite, bound = entities, layout: Pick<Fact, 'group' | 'row' | 'basis'> = {}) => facts.push({ id: facts.length + 1, text, cite, entities: bound, ...layout })
+  const add = (text: string, cite: Cite, bound = entities, layout: Pick<Fact, 'group' | 'row' | 'basis' | 'receipt'> = {}) => facts.push({ id: facts.length + 1, text, cite, entities: bound, ...layout })
   for (const r of results) {
     if (!r.ok) continue
     r.notes.forEach((n) => notes.add(n))
@@ -290,9 +292,13 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       if (d.person) add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: aye ${s.aye}, no ${s.no}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
       else add(`${who} in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
     } else if (r.tool === 'party_receipts') {
+      const years = (d.years as (number | null)[] | undefined) ?? [], fy = (year: number) => `${year}-${String(year + 1).slice(-2)}`
+      const period = `${fy(years[0] ?? 1998)} to ${fy(years[1] ?? 2025)}`, industry = typeof d.industry === 'string' ? d.industry : undefined
       if (d.party) {
-        ;(d.rows as { donor: string; total_aud: number; return_reference?:string }[]).forEach((row, i) => add(`${d.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${row.donor} (federal disclosures; financial years ${((d.years as (number|null)[]|undefined)?.[0] ?? 1998)}-${String(((d.years as (number|null)[]|undefined)?.[0] ?? 1998)+1).slice(-2)} to ${((d.years as (number|null)[]|undefined)?.[1] ?? 2025)}-${String(((d.years as (number|null)[]|undefined)?.[1] ?? 2025)+1).slice(-2)})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1]))
-      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${d.industry} sources (federal disclosures)`, r.cite[i], [`party:${row.party}`]))
+        ;(d.rows as { donor: string; total_aud: number; return_reference?: string; industry?: string | null }[]).forEach((row, i) => add(`${d.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${row.donor} (federal disclosures; financial years ${period})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1], entities,
+          { receipt: { party: String(d.party), source: row.donor, amount: row.total_aud, period, ...(industry ?? row.industry ? { industry: (industry ?? row.industry)! } : {}) } }))
+      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${d.industry} sources (federal disclosures; financial years ${period})`, r.cite[i], [`party:${row.party}`],
+        { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, ...(industry ? { industry } : {}) } }))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]
       if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, r.cite[0])
@@ -502,7 +508,7 @@ export interface AgenticPayload {
   answer_source: 'model' | 'template' | 'none'
   shape: Plan['shape'] | null
   period: Period
-  facts: { id: number; text: string; url: string; kind: string; value?: number | string }[]
+  facts: { id: number; text: string; url: string; kind: string; value?: number | string; receipt?: ReceiptFact }[]
   notes: string[]
   steps: { tool: string; args: unknown; ok: boolean; error?: string; ms?: number; label?: string }[]
   events: StepEvent[]
@@ -584,7 +590,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
-    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind==='count'?'count':f.kind==='export'?'export':'record',url:f.url,label:f.text,value:f.value}}))
+    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind==='count'?'count':f.kind==='export'?'export':'record',url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{})}))
     // Passage points have already been written and checked by the model; retain the 16 Oct loose-point contract.
     if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
@@ -593,7 +599,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!sheet.length) return run
     await progress('status', {phase:'writing'})
     const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
-    if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text}))
+    if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
     const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
@@ -846,7 +852,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   timings.tools_ms = Date.now() - tTools
   const { facts } = factSheet(results)
   const { notes } = factSheet(researched ? results.filter(r => !['search', 'read_passage'].includes(r.tool)) : results)
-  const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value }))
+  const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value, ...(f.receipt ? { receipt: f.receipt } : {}) }))
   if (!facts.length) return base({ reason: 'no_supported_claim', notes })
   await progress('status', { phase: 'writing' })
   const tCompose = Date.now()

@@ -13,12 +13,18 @@ export function answerDecision(payload) {
   if(['checked_points_with_limit','combined_count_limit','specific_limitation'].includes(payload?.coherence?.method))return 'limitation'
   return ['answer','limitation','clarification','refusal','preserve'].includes(payload?.answer_decision)?payload.answer_decision:undefined
 }
+/** A question asserting that money bought or moved something: the hard line that stays a decline. */
+export const CAUSAL_ASK=/\b(?:buy|bought|bribe|because|influenc|cause)\w*\b/i
+const DONOR_RANKING=/\b(?:who|which (?:\w+ )?(?:company|companies|corporation|person|individual|donors?|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i
+export const donorRankingAsked=question=>DONOR_RANKING.test(question)
 export function protectedDecision(payload) {const decision=answerDecision(payload);return !!decision&&decision!=='answer'}
 function donorRows(question,sources=[],requireRanking=true,constraints={}) {
   sources=Array.isArray(sources)?sources.filter(s=>s&&typeof s==='object'):[]
-  if((requireRanking&&!/\b(?:who|which (?:company|corporation|person|individual|donor|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i.test(question))||!/donor|donat|giv|gave|funding|take.*money|money.*from/i.test(question)||/\bwhich Smith\b|\b(?:buy|bought|bribe|because|influenc|cause)\w*\b/i.test(question))return []
+  if((requireRanking&&!DONOR_RANKING.test(question))||!/donor|donat|giv|gave|funding|take.*money|money.*from|disclos|receipts?/i.test(question)||/\bwhich Smith\b/i.test(question)||CAUSAL_ASK.test(question))return []
   const rows=[],coverage=sources.map(s=>s.snippet??'').join('\n')
   for(const source of sources){
+    const receipt=source.receipt
+    if(receipt){rows.push({name:receipt.source,party:receipt.party,amount:'$'+receipt.amount.toLocaleString('en-AU'),value:receipt.amount,period:receipt.period,industry:receipt.industry,source});continue}
     // ranked_money also supplies a native, privacy-filtered Source table (legacy Donor headers remain readable).
     const native=(String(source.snippet??'')+'\n'+String(source.title??'')).replace(/\*\*/g,'')
     if(/^fact-\d+$/.test(source.resource??'')&&source.kind==='record'&&/\/money(?:[/?]|$)/.test(String(source.url??source.href??''))&&/\|\s*(?:Source|Donor)\s*\|\s*Disclosed receipts\s*\|/i.test(native)){
