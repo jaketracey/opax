@@ -45,7 +45,9 @@ export function leadWithFinding<T extends Record<string,unknown>>(payload:T,ques
   if(!parts.length||(question?direct(parts[0].text):!limitation(parts[0].text)))return payload
   const entries=Object.entries(payload.citations??{})
   const cp=(n:number)=>Array.from(answer.slice(0,n)).length
-  const finding=question?parts.slice(1).find(p=>direct(p.text)):parts.slice(1).find(p=>!limitation(p.text)&&/\$|[“”]|\b\d[\d,]* (?:speeches|votes|divisions|contracts|grants)\b/.test(p.text)&&entries.some(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<cp(p.at+p.text.length)&&r[1]>cp(p.at))))
+  // A caveat is never promoted to lead: it qualifies the answer, whatever it happens to look like.
+  const caveat=(p:{at:number;text:string})=>{const from=cp(p.at),until=cp(p.at+p.text.length),cited=entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<until&&r[1]>from)).map(([id])=>id),records=((Array.isArray(payload.sources)?payload.sources:[]) as {resource?:string;coverage?:boolean}[]);return cited.length>0&&cited.every(id=>/^coverage(?:-|\/|$)/.test(id)||records.some(s=>s.coverage&&(id===s.resource||id.startsWith(s.resource+'/'))))}
+  const finding=question?parts.slice(1).find(p=>direct(p.text)&&!caveat(p)):parts.slice(1).find(p=>!limitation(p.text)&&/\$|[“”]|\b\d[\d,]* (?:speeches|votes|divisions|contracts|grants)\b/.test(p.text)&&entries.some(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<cp(p.at+p.text.length)&&r[1]>cp(p.at))))
   if(!finding)return payload
   const chars=Array.from(answer),from=cp(finding.at),until=cp(finding.at+finding.text.length)
   // A permutation of original characters keeps short legacy evidence anchors just as precisely as full spans.

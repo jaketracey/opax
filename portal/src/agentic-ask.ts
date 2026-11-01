@@ -22,6 +22,7 @@ import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
+import { CAUSAL } from './research-coherence.mjs'
 
 export const AGENTIC_PROMPT_VERSION = `agentic-ask-7-research/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = 40_000
@@ -91,7 +92,7 @@ export function inferPeriod(question: string, override?: unknown): Period {
   if (tokens.length) {
     const shift = (date: string, days: number) => new Date(Date.parse(date) + days * 86400000).toISOString().slice(0, 10)
     const bounds = tokens.map(({ start, end, index }) => {
-      const operator = dated.slice(0, index).match(/\b(since|from|after|before|until|through|to)\s*$/)?.[1]
+      const operator = dated.slice(0, index).match(/\b(since|from|after|before|until|through|to)\s+(?:the\s+)?$/)?.[1]
       return { start: operator === 'after' ? shift(end, 1) : start, end: operator === 'before' ? shift(start, -1) : end, operator }
     })
     const starts = bounds.filter(b => !['before', 'until', 'through', 'to'].includes(b.operator ?? ''))
@@ -290,26 +291,25 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       if (!s.divisions || !r.cite[0]) { notes.add('The title search found no matching recorded divisions; it does not establish how the member or party voted.'); continue }
       const url = r.cite[0].url
       if (d.person) add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: aye ${s.aye}, no ${s.no}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
-      else add(`${who} in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
+      else add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
     } else if (r.tool === 'party_receipts') {
       const years = (d.years as (number | null)[] | undefined) ?? [], fy = (year: number) => `${year}-${String(year + 1).slice(-2)}`
       const period = `${fy(years[0] ?? 1998)} to ${fy(years[1] ?? 2025)}`, industry = typeof d.industry === 'string' ? d.industry : undefined
       if (d.party) {
         ;(d.rows as { donor: string; total_aud: number; return_reference?: string; industry?: string | null }[]).forEach((row, i) => add(`${d.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${row.donor} (federal disclosures; financial years ${period})${row.return_reference ? " — "+row.return_reference : ""}`, r.cite[i + 1], entities,
-          { receipt: { party: String(d.party), source: row.donor, amount: row.total_aud, period, ...(industry ?? row.industry ? { industry: (industry ?? row.industry)! } : {}) } }))
+          { receipt: { party: String(d.party), source: row.donor, amount: row.total_aud, period, jurisdiction: 'federal', ...(row.industry ? { industry: row.industry } : {}), ...(industry ? { filter: industry } : {}) } }))
       } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${d.industry} sources (federal disclosures; financial years ${period})`, r.cite[i], [`party:${row.party}`],
-        { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, ...(industry ? { industry } : {}) } }))
+        { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, jurisdiction: 'federal', aggregate: true, ...(industry ? { industry, filter: industry } : {}) } }))
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null }[])[0]
-      if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, r.cite[0])
+      if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, { ...r.cite[0], kind: 'person' })
     } else if (r.tool === 'find_quotes') {
-      ;(d.passages as { title: string; text: string }[]).slice(0, 3).forEach((p, i) => add(`Passage from ${p.title}: "${p.text.slice(0, 400)}"`, r.cite[i]))
+      ;(d.passages as { title: string; text: string }[]).slice(0, 3).forEach((p, i) => add(`Passage from ${p.title}: "${p.text.slice(0, 400)}"`, { ...r.cite[i], kind: 'speech' }))
     }
   }
   return { facts, notes: [...notes] }
 }
 const NUMBER_WORD = /\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?|millions?|billions?|trillions?|hundredth|thousandth|millionth|billionth|trillionth|half|halves|quarter|quarters|dozen|dozens|twice|thrice|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|\w+teenth|\w+tieth)\b/i
-export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
 /** Defensive boundary for any future connective prose. No model-authored
  * numeric characters or number words are accepted, including citation ids,
  * dates, percentages and money.
@@ -590,7 +590,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
-    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind==='count'?'count':f.kind==='export'?'export':'record',url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{})}))
+    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind as Fact['cite']['kind'],url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{})}))
     // Passage points have already been written and checked by the model; retain the 16 Oct loose-point contract.
     if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative

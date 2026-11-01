@@ -3,7 +3,13 @@ import type { PlanStep, Period, NamedScope, Fact, Progress } from './agentic-ask
 import type { ToolDeps, ToolResult } from './agentic-tools'
 
 /** One disclosed receipt as the tool holds it, so no reader of it has to parse the fact's wording. */
-export interface ReceiptFact { party: string; source: string; amount: number; period: string; industry?: string }
+export interface ReceiptFact {
+  party: string; source: string; amount: number; period: string; jurisdiction?: string
+  /** The row's own industry, and the filter the tool ran with: a filtered list cannot answer an unfiltered question. */
+  industry?: string; filter?: string
+  /** A sum across many sources, not one source's receipts. */
+  aggregate?: boolean
+}
 export interface ResearchPayload {
   mode: 'loop' | 'planner'
   rounds: number
@@ -35,7 +41,7 @@ export interface QualitativeAnswer {
   /** Resolved question constraints survive writing and cached response boundaries. */
   answer_scope?: Partial<import('./ask-constraints').AskConstraints> & {entity_type?:string}
   citations: Record<string, [number, number][]>
-  sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; kind: string; claim_atoms?: (ClaimAtom & {periodEvidenceId?:string})[]; receipt?: ReceiptFact; coverage?: boolean }[]
+  sources: { resource: string; slug: string; title: string; href: string; url: string; snippet: string; cited: boolean; date?: string; speaker?: string; kind: string; claim_atoms?: (ClaimAtom & {periodEvidenceId?:string})[]; receipt?: ReceiptFact; coverage?: boolean; entities?: string[] }[]
   /** Some or all of the answer's points could not be matched to a passage and carry no citation. */
   answer_status?: 'uncited' | 'partly_cited'
   coherence?: { fallback?: boolean; method?: string; stripped_ratio?: number }

@@ -1,8 +1,9 @@
 // Repair permission uses evidence scope, never a donor's name or an unrelated coverage paragraph.
 export const jurisdictions=[['federal',/\b(?:federal|commonwealth)\b/i],['nsw',/\b(?:nsw|new south wales)\b/i],['vic',/\b(?:vic|victoria|victorian)\b/i],['qld',/\b(?:qld|queensland)\b/i],['sa',/\b(?:sa|south australia|south australian)\b/i],['wa',/\b(?:wa|western australia|western australian)\b/i],['tas',/\b(?:tas|tasmania|tasmanian)\b/i],['act',/\b(?:act|australian capital territory)\b/i],['nt',/\b(?:nt|northern territory)\b/i]]
+export const jurisdictionNames={federal:'federal',nsw:'NSW',vic:'Victorian',qld:'Queensland',sa:'South Australian',wa:'Western Australian',tas:'Tasmanian',act:'ACT',nt:'Northern Territory'}
 export const partyAliases=[['One Nation',/\b(?:one nation|phon|pauline hanson[’']s one nation|pauline hanson[’']?s? party)\b/i],['Labor',/\b(?:labor|alp|australian labor party)\b/i],['Liberal',/\bliberal(?: party)?\b/i],['Greens',/\bgreens?\b/i],['Nationals',/\b(?:nationals?|national party)\b/i],['LNP',/\b(?:lnp|liberal national party)\b/i]]
 const one=(values)=>{const unique=[...new Set(values.filter(Boolean))];return unique.length===1?unique[0]:unique.length?'conflict':undefined}
-const party=value=>one(partyAliases.filter(([,re])=>re.test(String(value??'').replace(/\bliberal national party\b/ig,'LNP'))).map(([name])=>name))
+export const partyNamed=value=>one(partyAliases.filter(([,re])=>re.test(String(value??'').replace(/\bliberal national party\b/ig,'LNP'))).map(([name])=>name))
 const jurisdiction=value=>jurisdictions.find(([,re])=>re.test(String(value??'')))?.[0]
 const chamber=value=>one([/\bsenat(?:e|ors?)\b/i.test(String(value))?'senate':undefined,/\b(?:house(?: of representatives)?|representatives|lower house)\b/i.test(String(value))?'representatives':undefined])
 const entity=value=>({individual:'person',person:'person',company:'company',corporation:'company',organisation:'organisation',organization:'organisation',donor:'donor'})[String(value??'').toLowerCase()]
@@ -33,11 +34,11 @@ export function resolvedRankingScope(question,constraints={}){
  const explicitType=/\bwhich (?:company|corporation)\b/i.test(question)?'company':/\bwhich (?:person|individual)\b/i.test(question)?'person':/\bwhich organi[sz]ation\b/i.test(question)?'organisation':undefined
  const explicitPeriod=period(question),resolvedPeriod=period(constraints.period)
  // Unqualified receipt questions use the same federal default as receiptGraphForQuestion.
- return {jurisdiction:explicitJur==='act'&&constraints.actUnfiltered?'unknown':one([explicitJur,constraints.jurisdiction?jurisdiction(constraints.jurisdiction)??'unknown':undefined])??'federal',chamber:one([chamber(question),constraints.chamber?chamber(constraints.chamber)??'unknown':undefined]),party:one([party(question),constraints.party?party(constraints.party)??'unknown':undefined]),entity_type:one([explicitType,constraints.entity_type?entity(constraints.entity_type)??'unknown':undefined]),period:explicitPeriod&&resolvedPeriod&&!periodAgrees(resolvedPeriod,explicitPeriod)?'conflict':explicitPeriod??resolvedPeriod}
+ return {jurisdiction:explicitJur==='act'&&constraints.actUnfiltered?'unknown':one([explicitJur,constraints.jurisdiction?jurisdiction(constraints.jurisdiction)??'unknown':undefined])??'federal',chamber:one([chamber(question),constraints.chamber?chamber(constraints.chamber)??'unknown':undefined]),party:one([partyNamed(question),constraints.party?partyNamed(constraints.party)??'unknown':undefined]),entity_type:one([explicitType,constraints.entity_type?entity(constraints.entity_type)??'unknown':undefined]),period:explicitPeriod&&resolvedPeriod&&!periodAgrees(resolvedPeriod,explicitPeriod)?'conflict':explicitPeriod??resolvedPeriod}
 }
 export function sourceMetadata(source){
  let params=new URLSearchParams(),pathParty='';try{const url=new URL(source.url??source.href,'https://opax.invalid');params=url.searchParams;pathParty=decodeURIComponent(/^\/money\/party\/([^/]+)/.exec(url.pathname)?.[1]??'')}catch{}
- return {party:source.scope?.party??source.party??params.get('party')??pathParty,jurisdiction:source.scope?.jurisdiction??source.jurisdiction??params.get('jur')??params.get('jurisdiction')??params.get('state')??'',chamber:source.scope?.chamber??source.chamber??params.get('chamber'),entity_type:source.scope?.entity_type??source.entity_type??params.get('entity_type')}
+ return {party:source.receipt?.party??source.scope?.party??source.party??params.get('party')??pathParty,jurisdiction:source.receipt?.jurisdiction??source.scope?.jurisdiction??source.jurisdiction??params.get('jur')??params.get('jurisdiction')??params.get('state')??'',chamber:source.scope?.chamber??source.chamber??params.get('chamber'),entity_type:source.scope?.entity_type??source.entity_type??params.get('entity_type')}
 }
 function periodAgrees(wanted,actual){
  if(wanted===actual)return true
@@ -48,18 +49,22 @@ function periodAgrees(wanted,actual){
 function evidenceScope(row){
  const meta=sourceMetadata(row.source)
  const actualJur=meta.jurisdiction?jurisdiction(meta.jurisdiction):(/\(federal disclosures\b|\bFederal \(AEC\)|\bFederal AEC (?:donation returns|disclosed receipts)\b|\bBased on AEC political disclosure records\b/i.test(row.source.snippet??'')||/\bfederal (?:disclosed )?(?:donor|disclosure|receipt|political|record)/i.test(row.source.title??'')?'federal':undefined)
- return {jurisdiction:actualJur,chamber:chamber(meta.chamber),party:one([party(row.party),party(meta.party)]),entity_type:entity(row.entity_type??meta.entity_type),period:period(row.period)}
+ return {jurisdiction:actualJur,chamber:chamber(meta.chamber),party:one([partyNamed(row.party),partyNamed(meta.party)]),entity_type:entity(row.entity_type??meta.entity_type),period:period(row.period)}
+}
+/** Each dimension on which this row differs from what was asked, or cannot be shown to agree. */
+export function rankingScopeGaps(question,row,constraints={}){
+ const required=resolvedRankingScope(question,constraints),actual=evidenceScope(row)
+ // A question about donors permits any donor type; a company/person restriction needs typed evidence.
+ return Object.entries(required).flatMap(([dimension,wanted])=>{
+  if(!wanted)return []
+  const have=actual[dimension],agrees=wanted!=='conflict'&&wanted!=='unknown'&&!!have&&have!=='conflict'&&(dimension==='period'?periodAgrees(wanted,actual.period):have===wanted)
+  return agrees?[]:[{dimension,wanted,have}]
+ })
 }
 export function rankingScopeMatches(question,row,constraints={}){
  const required=resolvedRankingScope(question,constraints),actual=evidenceScope(row)
  if(!actual.jurisdiction||!actual.period||actual.period==='unknown'||row.donor!==false&&(!actual.party||!required.party))return false
- // A question about donors permits any donor type; a company/person restriction needs typed evidence.
- return Object.entries(required).every(([dimension,wanted])=>{
-  if(!wanted)return true
-  if(wanted==='conflict'||wanted==='unknown'||!actual[dimension]||actual[dimension]==='conflict')return false
-  if(dimension==='period')return periodAgrees(wanted,actual.period)
-  return actual[dimension]===wanted
- })
+ return !rankingScopeGaps(question,row,constraints).length
 }
 
 /** Coverage can join a repaired ranking only when its own selection scope agrees. */
@@ -70,18 +75,6 @@ export function rankingCoverageMatches(question,source,rows,constraints={}){
   return ['jurisdiction','party','period'].every(dimension=>scope[dimension]===fact[dimension])
  })
 }
-/** Legacy exports may borrow a period only from coverage for that same selection. */
-export function associatedRankingPeriod(source,recipient,sources){
- const fact=evidenceScope({source,party:recipient}),matches=[]
- for(const coverage of sources){
-  const label=/financial years ((?:19|20)\d{2}[–-]\d{2} to (?:19|20)\d{2}[–-]\d{2})/i.exec(coverage.snippet??'')?.[1]
-  if(!label)continue
-  const scope=evidenceScope({source:coverage,party:sourceMetadata(coverage).party,period:label})
-  if(fact.jurisdiction&&fact.party&&['jurisdiction','party','chamber','entity_type'].every(dimension=>fact[dimension]===scope[dimension]))matches.push(label)
- }
- return new Set(matches.map(period)).size===1?matches[0]:undefined
-}
-
 /** Non-donor ranking facts need the same conjunction, with their own typed figure scope. */
 function atomMatches(question,source,atom,constraints){
  const declared=chamber(sourceMetadata(source).chamber),owned=chamber(atom.chamber)

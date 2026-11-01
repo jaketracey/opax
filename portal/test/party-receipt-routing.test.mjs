@@ -121,17 +121,13 @@ test('mixed receipt headers and charts use source and receipt labels without cha
  assert.equal(epochs.length,2);assert.equal(epochs[0],epochs[1]);assert.ok(epochs[0]>='2026-10-25-receipts-r6',`stale CACHE_EPOCH ${epochs[0]}`)
 })
 
-test('Source headers retain evidence direction and amounts, with legacy Donor compatibility',async()=>{
- const {donorRanking}=await import('../src/research-coherence.mjs'),{auditPayload}=await import('../src/research-claim-audit.mjs')
- const question='Who gives the most money to Labor?',answer='Labor disclosed $90,000,000 in receipts from Example Bank Ltd.'
- const source=header=>({resource:'fact-1',kind:'record',cited:true,url:'/money?jur=federal&party=party:Labor',snippet:`Example Bank Ltd has the largest disclosed total to Labor in this published selection: $90,000,000.\nFinancial years: 2020–21.\n| ${header} | Disclosed receipts | Records |\n| Example Bank Ltd | $90,000,000 | 2 |`})
- const ranked=header=>donorRanking(question,[source(header)]).map(({name,party,value})=>({name,party,value}))
- assert.deepEqual(ranked('Source'),[{name:'Example Bank Ltd',party:'Labor',value:90000000}]);assert.deepEqual(ranked('Source'),ranked('Donor'))
- const audited=header=>auditPayload(question,{answer,sources:[source(header)],citations:{'fact-1':[[0,Array.from(answer).length]]}})
- assert.deepEqual(audited('Source'),audited('Donor'))
+test('ranked_money rows carry their direction and amounts as data',async()=>{
+ const {donorRanking}=await import('../src/research-coherence.mjs')
+ const question='Who gives the most money to Labor?'
  const calculated=await api.federalPartyMoneyAnswer({question},assets)
  assert.match(calculated.sources[0].snippet,/grouped by source/);assert.doesNotMatch(calculated.sources[0].snippet,/donors during/)
  assert.equal(donorRanking(question,calculated.sources)[0].name,'Westpac Banking Corporation')
+ assert.deepEqual(calculated.sources[1].receipt,{...calculated.sources[1].receipt,party:'Labor',source:'Westpac Banking Corporation',jurisdiction:'federal'});assert.equal(calculated.sources[0].coverage,true)
  const app=fs.readFileSync(root+'public/app.js','utf8');assert.doesNotMatch(app,/heading: "Largest donors"|"major donors disclosed"|`disclosed donation\$/)
 })
 

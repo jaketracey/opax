@@ -1,6 +1,7 @@
 import { originalContext, unsupportedQuotes } from './ask-evidence'
 import { firstSpeechTurn, positionEvidence, positionPointSupported, isPositionEligibilityQuestion, isPositionDetailQuestion, positionEligibilityQuotes } from './position-evidence'
-import { CAUSAL, normaliseQuestion, type NamedScope } from './agentic-ask'
+import { normaliseQuestion, type NamedScope } from './agentic-ask'
+import { CAUSAL } from './research-coherence.mjs'
 import { claimMatchesSpeaker, personMentions } from './ask-attribution'
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { Passage, QualitativeAnswer } from './research-types'

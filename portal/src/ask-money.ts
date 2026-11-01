@@ -5,6 +5,7 @@ import type { MoneyFacts } from './ask-money-overview'
 import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, samePeriodFundingComparison} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
+import type {ReceiptFact} from './research-types'
 
 const comparisonQuestion = (q:string) => /\b(?:more|less|higher|lower|compare|versus|vs)\b/i.test(q)
 const yearComparisonQuestion = (q:string) => /\b(?:change[sd]?|increase[sd]?|decrease[sd]?|grew|growth|rose|fell)\b/i.test(q)
@@ -263,7 +264,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   const donorIntent = !/\b(?:receiv\w*|takes?|gets?)\b/i.test(query) && (/\b(?:biggest|largest|top)\b[^?.]{0,60}\bdonors?\b/i.test(query) || (/^who\s+donat\w*\b/i.test(query) && !/\bto who(?:m)?\b/i.test(query)))
   const fromDonors=result.selected_parties.length>0 || donorIntent
   const allFlows=!result.selected_parties.length && !result.selected_industries.length && !result.selected_donors.length && !fromDonors
-  const rows=(allFlows ? result.flows.map(r=>({name:`${r.donor} → ${r.party}`,total_aud:r.total_aud,receipts:r.receipts,id:r.donor_id,party:r.party}))
+  const rows=(allFlows ? result.flows.map(r=>({name:`${r.donor} → ${r.party}`,donor:r.donor,total_aud:r.total_aud,receipts:r.receipts,id:r.donor_id,party:r.party}))
     : (fromDonors?result.by_donor:result.by_party).map(r=>({...r,party:fromDonors?result.selected_parties[0]:r.name}))).slice(0,5)
   if(!rows.length){
     if(jurisdiction==='federal'&&federalPartyRankingQuestion(input.question??'')&&result.selected_parties.length===1){
@@ -279,14 +280,14 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
     : fromDonors ? `The largest disclosed receipts${recipient?` to ${plain(recipient)}`:''}${sector?` among ${plain(sector)} sources`:''} in this published selection are from **${plain(who.name)}: ${aud(who.total_aud)}** across ${who.receipts.toLocaleString('en-AU')} records.`
     : `**${plain(who.name)}** received the most disclosed receipts${sector?` from ${plain(sector)} receipt sources`:` from ${plain(result.subject)}`} in this published selection: **${aud(who.total_aud)}**.`
     : result.answer
-  const sources: {resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string}[]=[]
+  const sources: {resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact;coverage?:boolean}[]=[]
   const citations: Record<string,number[][]>={}
   let answer=lead
   if (jurisdiction==='federal') answer+=' '+FEDERAL_RECEIPTS_NOTE
-  const cite=(title:string,href:string,snippet:string,offset=0)=>{
+  const cite=(title:string,href:string,snippet:string,offset=0,typed:Pick<ReceiptFact,'party'|'source'|'amount'|'aggregate'>|null=null)=>{
     const resource=`receipt-ranking-${sources.length}`
     citations[resource]=[[Array.from(answer).length-offset-1,Array.from(answer).length-offset]]
-    sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by Opax',date:typeof graph.meta.generated==='string'?graph.meta.generated:undefined})
+    sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by Opax',date:typeof graph.meta.generated==='string'?graph.meta.generated:undefined,...(typed?{receipt:{...typed,period:result.period??'',jurisdiction:result.jurisdiction,...(result.selected_industries[0]?{filter:result.selected_industries[0]}:{})}}:{coverage:true})})
   }
   cite('How these receipt totals were calculated',result.sources[0].url,`${who.name}: ${aud(who.total_aud)}, ${recordCount(who.receipts)}.${recipient?` Receipts to ${plain(recipient)}.`:''} Period: ${result.period}. Opax added the disclosed receipts matching this question, grouped by ${fromDonors?'source':allFlows?'source and recipient party':'recipient party'}. This selection covers ${result.by_donor.length.toLocaleString('en-AU')} receipt sources during ${result.period}. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.`)
   citations['receipt-ranking-0']=[[0,Array.from(answer).length]]
@@ -301,7 +302,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
       const params=new URLSearchParams(new URL(result.sources[0].url).search)
       if(row.party)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.party)?.id||row.party)
       if(fromDonors||allFlows)params.set('focus',row.id)
-      cite(`${row.name}: ${aud(row.total_aud)}`, '/money?'+params,`${row.name}: ${aud(row.total_aud)}, ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
+      cite(`${row.name}: ${aud(row.total_aud)}`, '/money?'+params,`${row.name}: ${aud(row.total_aud)}, ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2,{party:row.party,source:fromDonors?row.name:allFlows?String((row as {donor?:string}).donor):plain(result.subject),amount:row.total_aud,...(fromDonors||allFlows?{}:{aggregate:true})})
     }
   }
   answer+='\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.'

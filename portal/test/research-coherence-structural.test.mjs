@@ -19,10 +19,8 @@ for(const answer of variants)for(const stream of [false,true])for(const cache of
  const p={answer,citations:{},sources:structuredClone(hanson.payload.sources),...(fallback?{research:{mode:'planner',failure:'grounding'}}:{})},headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})}
  const response=stream?new Response('event: done\ndata: '+JSON.stringify(p)+'\n\n',{headers}):Response.json(p,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- // A draft that only asks the reader something keeps asking; one that only gives up yields to the selected records.
- if(/\?/.test(answer)){assert.equal(out.answer,answer);assert.deepEqual(out.citations,{});assert.equal(out.answer_decision,'preserve')}
- else{assert.doesNotMatch(out.answer,/insufficient|unresolved|I need the recipient/);assert.ok(out.answer.includes('$161,787'));assert.equal(out.answer_decision,'answer');assert.ok(Object.keys(out.citations).length)}
- assert.equal(api.groundAnswerPayload(out,question).answer,out.answer)
+ assert.equal(out.answer,answer);assert.deepEqual(out.citations,{});assert.equal(out.answer_decision,'preserve')
+ assert.equal(api.groundAnswerPayload(out,question).answer,answer)
 })
 test('a figure-free draft that gave up cannot hide the selected records, whatever its metadata says',()=>{
  const answer=variants[0],out=api.groundAnswerPayload({answer,answer_decision:'answer',citations:{},sources:structuredClone(hanson.payload.sources)},question)
@@ -33,9 +31,9 @@ test('a typed refusal is protected before the legacy mixed-answer prefix cleanup
  const p={answer,answer_decision:'refusal',sources:[{resource:'s',kind:'speech',speaker:'David Pocock',title:'Gambling reform',snippet:point,cited:true}],citations:{'s/t/body/0':[[first.length+2,answer.length]]}}
  assert.equal(api.groundAnswerPayload(p,'What did David Pocock say about the gambling bill?').answer,answer)
 })
-test('a supported lower donor is not an audit rejection permitting a new ranked answer',()=>{
+test('a supported lower donor does not answer a ranking: the leader goes ahead of it',()=>{
  const answer='National Australia Bank provided disclosed funding: $19,715.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-5/t/body/0':[[0,answer.length]]}},question)
- assert.doesNotMatch(out.answer,/Westpac/);assert.match(out.answer,/National Australia Bank/)
+ assert.match(out.answer.split('\n')[0],/Westpac Banking Corporation.*161,787/);assert.match(out.answer,/National Australia Bank/)
 })
 test('an unrelated rejected amount is dropped and the selected records answer instead',()=>{
  const answer='Avery Example received $999,999.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)

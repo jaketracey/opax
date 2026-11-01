@@ -328,7 +328,7 @@ export const tool: ToolDefinition = {
     if (!result.ok) return { rows: [], citations: [], notes: result.notes, error: result.error ?? 'Electorate data unavailable.' }
     const data = result.data!
     return { ...data, rows: Array.isArray(data.rows) ? data.rows : [],
-      citations: electorateFacts(result).map(f => ({ text: f.text, url: f.cite.url, value: f.cite.value, kind: f.cite.kind })),
+      citations: electorateFacts(result).map(f => ({ text: f.text, url: f.cite.url, value: f.cite.value, kind: f.cite.kind as 'export' })),
       notes: result.notes, query: result.query,
     }
   },

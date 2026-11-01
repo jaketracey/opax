@@ -1,7 +1,7 @@
 import {sentenceParts,auditPayload} from './research-claim-audit.mjs'
 import {answerStyleChecks} from './research-answer-style.mjs'
 import {rankingRepairQuestion,repairSlotsMatch} from './research-ranking-repair.mjs'
-import {partyAliases,sourceMetadata,rankingScopeMatches,associatedRankingPeriod} from './research-ranking-scope.mjs'
+import {sourceMetadata,rankingScopeMatches} from './research-ranking-scope.mjs'
 // Shared, deterministic checks; evidence remains data and the claim audit remains authoritative.
 export const danglingOpener = /^(?:[-*•]\s*|\d+[.)]\s*)?(?:other\b|also\b|in addition\b|further(?:more)?\b|however\b|meanwhile\b|additionally\b|moreover\b|and\b|another\b|the runners-up\b)/i
 const folded = s => String(s??'').toLowerCase().replace(/[–—]/g,'-').replace(/[^\p{L}\p{N}]+/gu,' ').trim()
@@ -14,44 +14,17 @@ export function answerDecision(payload) {
   return ['answer','limitation','clarification','refusal','preserve'].includes(payload?.answer_decision)?payload.answer_decision:undefined
 }
 /** A question asserting that money bought or moved something: the hard line that stays a decline. */
-export const CAUSAL_ASK=/\b(?:buy|bought|bribe|because|influenc|cause)\w*\b/i
+const CAUSAL_ASK=/\b(?:buy|bought|bribe|because|influenc|cause)\w*\b|\bsw[ae]y\w*\b|\baffect\w*\b|\bchang\w* (?:how|what|the way|whether|their|its|his|her)\b|\bin return\b/i
+export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
+/** The one test of a causal ask: what a claim may not say, and what a question may not be answered with. */
+export const causalAsk=question=>CAUSAL.test(question)||CAUSAL_ASK.test(question)
 const DONOR_RANKING=/\b(?:who|which (?:\w+ )?(?:company|companies|corporation|person|individual|donors?|organisation|organization))\b.*\b(?:most|largest|biggest)\b|\b(?:top|largest|biggest|leading) (?:\w+ )?donors?\b/i
 export const donorRankingAsked=question=>DONOR_RANKING.test(question)
 export function protectedDecision(payload) {const decision=answerDecision(payload);return !!decision&&decision!=='answer'}
 function donorRows(question,sources=[],requireRanking=true,constraints={}) {
   sources=Array.isArray(sources)?sources.filter(s=>s&&typeof s==='object'):[]
-  if((requireRanking&&!DONOR_RANKING.test(question))||!/donor|donat|giv|gave|funding|take.*money|money.*from|disclos|receipts?/i.test(question)||/\bwhich Smith\b/i.test(question)||CAUSAL_ASK.test(question))return []
-  const rows=[],coverage=sources.map(s=>s.snippet??'').join('\n')
-  for(const source of sources){
-    const receipt=source.receipt
-    if(receipt){rows.push({name:receipt.source,party:receipt.party,amount:'$'+receipt.amount.toLocaleString('en-AU'),value:receipt.amount,period:receipt.period,industry:receipt.industry,source});continue}
-    // ranked_money also supplies a native, privacy-filtered Source table (legacy Donor headers remain readable).
-    const native=(String(source.snippet??'')+'\n'+String(source.title??'')).replace(/\*\*/g,'')
-    if(/^fact-\d+$/.test(source.resource??'')&&source.kind==='record'&&/\/money(?:[/?]|$)/.test(String(source.url??source.href??''))&&/\|\s*(?:Source|Donor)\s*\|\s*Disclosed receipts\s*\|/i.test(native)){
-      const party=/has the largest disclosed total to (.+?) in this published selection/.exec(native)?.[1]
-      const period=/Financial years:\s*([^\n.]+)/i.exec(native)?.[1]?.trim()
-      if(party&&period)for(const line of native.split('\n')){
-        const row=/^\|\s*(?:\[([^\]]+)\]\([^)]+\)|([^|]+))\s*\|\s*(\$\d(?:[\d,]*\d)?(?:\.\d+)?)\s*\|/.exec(line)
-        if(row)rows.push({name:(row[1]??row[2]).trim(),party,amount:row[3],value:Number(row[3].replace(/[$,]/g,'')),period,source})
-      }
-    }
-    if(source.kind==='receipt'&&/^receipt-ranking-\d+$/.test(source.resource??'')&&/grouped by (?:source|donor)/i.test(coverage)){
-      const m=/^([^:\n]+): (\$\d(?:[\d,]*\d)?(?:\.\d+)?)/.exec(source.snippet??'')
-      const period=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(source.snippet??'')?.[1]
-      const explicit=sourceMetadata(source).party
-      const party=partyAliases.find(([,re])=>re.test(explicit||[source.title,source.snippet].join(' ')))?.[0]
-      if(m&&party)rows.push({name:m[1],party,amount:m[2],value:Number(m[2].replace(/[$,]/g,'')),period,source})
-    }
-    if(!/^fact-\d+$/.test(source.resource??'')||source.kind!=='export')continue
-    for(const line of String(source.snippet??'').split('\n')){
-      const m=/^(.+?) gave (.+?) (\$[\d,]+(?:\.\d+)?) \(federal disclosures(?:[^)]*)\)/.exec(line)
-      if(!m)continue
-      const span=/financial years ((?:19|20)\d{2}[–-]\d{2}(?: to (?:19|20)\d{2}[–-]\d{2})?)/i.exec(line)?.[1]
-      // Return-reference years are not the period of an aggregated total.
-      const period=span??associatedRankingPeriod(source,m[2],sources)
-      rows.push({name:m[1],party:m[2],amount:m[3],value:Number(m[3].replace(/[$,]/g,'')),period,source})
-    }
-  }
+  if((requireRanking&&!DONOR_RANKING.test(question))||!/donor|donat|giv|gave|funding|take.*money|money.*from|disclos|receipts?/i.test(question)||/\bwhich Smith\b/i.test(question)||causalAsk(question))return []
+  const rows=sources.flatMap(source=>{const r=source.receipt;return r?[{name:r.source,party:r.party,amount:'$'+r.amount.toLocaleString('en-AU'),value:r.amount,period:r.period,filter:r.filter,aggregate:r.aggregate,source}]:[]})
   for(const row of rows)row.entity_type=sourceMetadata(row.source).entity_type??'donor'
   const scoped=rows.filter(r=>rankingScopeMatches(question,r,constraints))
   return scoped.filter((r,i)=>scoped.findIndex(x=>x.name===r.name&&x.party===r.party&&x.value===r.value)===i).sort((a,b)=>b.value-a.value)

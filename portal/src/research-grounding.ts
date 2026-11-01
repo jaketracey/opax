@@ -1,8 +1,9 @@
 import {auditPayload,quotationSpans,sentenceParts} from './research-claim-audit.mjs'
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
-import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,canReconstructRanking,CAUSAL_ASK} from './research-coherence.mjs'
-import {proseFallback,writingFacts,appendWrittenPoints,usableFact,tokens,type WritingInput} from './research-writing'
+import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,canReconstructRanking,causalAsk} from './research-coherence.mjs'
+import {proseFallback,writingFacts,appendWrittenPoints,usableFact,foundFacts,besideLimitation,emptyAnswer,renderedKind,tokens,RANKING_WORDS,type WritingInput} from './research-writing'
+import {inferPeriod} from './agentic-ask'
 import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
@@ -11,7 +12,9 @@ import {plainCoverageRefusal} from './research-coverage'
 function checkedClaims(payload:Record<string,unknown>,question:string,promote=true):Record<string,unknown> {
   let out=neutralAnonymousAttribution(plainAnswerPayload(payload))
   const auditFor=(value:Record<string,unknown>)=>{
-    const audit=auditPayload(question,value)
+    const audit=auditPayload(question,value),records=((Array.isArray(value.sources)?value.sources:[]) as SelectedSource[]).filter(s=>renderedKind(s.kind))
+    // A line copied from a selected record is that record; every other line, including points beside it, is audited.
+    audit.findings=audit.findings.filter(f=>{const line=f.text.endsWith('.')?f.text.slice(0,-1):f.text;return !records.some(s=>String(s.snippet??'').includes(line))})
     // Keep the decision itself; audit any accompanying substantive points without promoting them.
     if(!promote){const text=String(value.answer??''),end=text.indexOf('\n\n');audit.findings=audit.findings.filter(f=>{const inDecision=(f.offset??text.indexOf(f.text))<(end<0?text.length:end);const questionEcho=f.type==='quote'&&!f.entity&&!!f.quote&&question.includes(f.quote);const nonFactualIdentity=f.type==='entity'&&f.metric==='identity'&&!audit.claims.some(c=>c.text===f.text&&['figure','quote'].includes(c.type));return !inDecision||f.type!=='period'&&!questionEcho&&!nonFactualIdentity})}
     return audit
@@ -119,47 +122,46 @@ function foundInput(payload:Record<string,unknown>,question:string):WritingInput
   const sources=found?.length?found:((Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]).filter(s=>s.cited===true)
   // writingFacts re-derives what it added to a receipt's snippet, so only the fact itself goes back in.
   const facts=writingFacts({answer:'',citations:{},sources:sources.map(s=>({...s,cited:true,...(s.receipt?{snippet:s.snippet.split('\n')[0]}:{})}))})
-  return {question,period:scope?.period??{kind:'all',label:''},facts,constraints:scope}
+  return {question,period:scope?.period??inferPeriod(question),facts,constraints:scope}
 }
-/** A wrong-period total is not an answer for that period: the limitation that says so stands. */
-function outsideRequest(fact:WritingInput['facts'][number],input:WritingInput):boolean {
-  const {period,question}=input,notes=input.facts.filter(f=>f.coverage).map(f=>f.text).join('\n')
-  const held=fact.source.receipt?.period??/financial years:?\s*([^.;)\n]+)/i.exec(fact.text+'\n'+fact.source.snippet+'\n'+notes)?.[1]??''
-  const years=[...held.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0]))
-  const asked=[period.since,period.until,...question.match(/\b(?:19|20)\d{2}\b/g)??[]].filter(Boolean).map(y=>Number(String(y).slice(0,4)))
-  return !!years.length&&!!asked.length&&(Math.max(...asked)<Math.min(...years)||Math.min(...asked)>Math.max(...years)+1)
-}
-/** The terminal rule. Whatever happened above, usable found facts reach the reader as an answer; only a typed
- * refusal or clarification, or a causal ask, keeps them back. A figure question also leads with figures, ahead of
- * any points beside them. */
-function answerFromFound(out:Record<string,unknown>,question:string,found:Record<string,unknown>):Record<string,unknown> {
-  const decision=answerDecision(out),method=(out.coherence as {method?:string}|undefined)?.method
-  // A model's own unanswered question, and a limit already set beside the checked points, stay as they are.
-  if(decision==='refusal'||decision==='clarification'||CAUSAL_ASK.test(question)||method==='checked_points_with_limit'||method==='combined_count_limit')return out
-  if(decision==='preserve'&&/\?|^Please (?:specify|name|give|clarify)\b/i.test(String(out.answer??'')))return out
-  const input=foundInput(found,question),usable=input.facts.filter(f=>usableFact(f)&&!outsideRequest(f,input))
-  if(!usable.length)return out
+/** The terminal rule.
+ * 1. The system's own empty sentence gives way to on-topic facts.
+ * 2. A limit that says something stays first and unchanged, with what was found beside it.
+ * 3. Typed refusals and clarifications, causal asks, period guards and drafts that say nothing about the record are left alone.
+ * An answer with no limit to keep, but none of the figures asked for, gets them ahead of it. */
+function answerFromFound(out:Record<string,unknown>,question:string,evidence:Record<string,unknown>):Record<string,unknown> {
+  const decision=answerDecision(out),method=(out.coherence as {method?:string}|undefined)?.method,text=String(out.answer??''),empty=emptyAnswer(text)
+  if(decision==='refusal'||decision==='clarification'||causalAsk(question)||(out.coverage as {matched?:boolean}|undefined)?.matched===false)return out
+  if(!empty&&(out.answer_status==='coverage_only'||['checked_points_with_limit','combined_count_limit','facts_beside'].includes(String(method))))return out
+  const input=foundInput(evidence,question),found=foundFacts(input)
+  if(!found.length)return out
   const figuresOf=(f:WritingInput['facts'][number])=>(f.atoms??[]).map(a=>a.value).filter(v=>v.length>2)
-  const values=usable.flatMap(figuresOf),said=tokens(String(out.answer??''))
+  const values=found.flatMap(figuresOf),said=tokens(text)
   // A ranking of receipts is only answered by its leader, not by a lower row that survived.
-  const leader=/\b(?:most|largest|biggest|highest|top)\b/i.test(question)?usable.find(f=>f.source.receipt||f.source.kind==='receipt'):undefined
+  const leader=RANKING_WORDS.test(question)?found.find(f=>f.source.receipt):undefined
   const shown=(leader?figuresOf(leader):values).some(v=>said.includes(v))
+  const {answer_status:_status,...rest}=out,diagnostics=(out.coherence??{}) as object
+  if(!empty&&decision!=='answer'){
+    // A figure-free draft naming nothing that was found says nothing about the record: it may be asking the reader something.
+    if(shown||decision==='preserve'&&!found.some(f=>(f.atoms??[]).some(a=>a.entity&&text.includes(a.entity))))return out
+    const beside=besideLimitation(input)
+    if(!beside)return out
+    const lead=text.trim()+'\n\n',offset=Array.from(lead).length,citations=Object.fromEntries(Object.entries((out.citations??{}) as Record<string,number[][]>).map(([id,ranges])=>[id,[...ranges]]))
+    for(const [id,ranges] of Object.entries(beside.citations))(citations[id]??=[]).push(...ranges.map(([a,b])=>[a+offset,b+offset]))
+    return {...out,answer:lead+beside.answer,citations,sources:[...((out.sources??[]) as SelectedSource[]).filter(s=>!beside.sources.some(b=>b.resource===s.resource)),...beside.sources],coherence:{...diagnostics,method:'facts_beside'}}
+  }
   const sources=(Array.isArray(out.sources)?out.sources:[]) as SelectedSource[],citedBy=Object.entries((out.citations??{}) as Record<string,unknown[]>).filter(([,ranges])=>Array.isArray(ranges)&&ranges.length).flatMap(([id])=>sources.filter(s=>id===s.resource||id.startsWith(s.resource+'/')))
-  const passage=citedBy.some(s=>['speech','bill'].includes(s.kind))||['uncited','partly_cited'].includes(String(out.answer_status))
-  const record=citedBy.some(s=>!s.coverage&&!/^(?:period-)?coverage(?:-|$)/.test(s.resource))
-  const answered=shown||passage||decision==='answer'&&record
   const figureAsked=/\bhow (?:much|many)\b|\b(?:most|least|fewest|largest|biggest|highest|lowest|top)\b/i.test(question)
-  if(answered&&(shown||!figureAsked||!values.length))return out
-  const facts=proseFallback({...input,facts:input.facts.filter(f=>usable.includes(f)||!usableFact(f))})
+  if(!empty&&(shown||!figureAsked||!values.length)&&citedBy.some(s=>!s.coverage&&!/^(?:period-)?coverage(?:-|$)/.test(s.resource)))return out
+  if(!empty&&['uncited','partly_cited'].includes(String(out.answer_status))&&(shown||!figureAsked||!values.length))return out
+  // This path answers from the facts' own dates, never from the period asked for.
+  const facts=proseFallback({...input,period:{kind:'all',label:''},facts:input.facts.filter(f=>found.includes(f)||!usableFact(f))})
   if(facts.answer_decision==='limitation'&&!tokens(facts.answer).some(v=>values.includes(v)))return out
-  const {answer_status:_status,...rest}=out
-  const merged=answered?appendWrittenPoints(facts,rest as unknown as QualitativeAnswer):facts
-  return {...rest,...merged,coherence:{...((out.coherence??{}) as object),...merged.coherence,fallback:true,method:'facts_rendered'}}
+  const merged=empty?facts:appendWrittenPoints(facts,rest as unknown as QualitativeAnswer)
+  return {...rest,...merged,coherence:{...diagnostics,...merged.coherence,fallback:true,method:'facts_rendered'}}
 }
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
-  // Rendered from the found facts, so no later pass may reword or remove them.
-  if((payload.coherence as {method?:string}|undefined)?.method==='facts_rendered')return payload
   return answerFromFound(checkedAnswer(payload,question),question,payload)
 }
 function checkedAnswer(payload:Record<string,unknown>,question:string):Record<string,unknown> {

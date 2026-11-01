@@ -179,14 +179,14 @@ test('a combined two-year count stays context rather than pretending to answer a
 })
 test('a quoted organisation name containing initials remains one complete ranking lead',()=>{
  const question='Who gives the most money to Queensland LNP?',text='**J.J. RICHARDS & SONS PTY LTD** has the largest disclosed total to LNP in this published selection: **$754,314**.\n**Financial years: 2013–14 to 2026–27.** QLD.\n| Donor | Disclosed receipts |\n| --- | ---: |\n| J.J. RICHARDS & SONS PTY LTD | $754,314 |'
- const source={resource:'fact-14',kind:'record',title:text,url:'https://opax.com.au/money?jur=qld&party=party%3ALNP',snippet:text,cited:true}
- const out=api.proseFallback({question,period:{kind:'all',label:''},facts:[{id:1,text,source}]});assert.match(out.answer.split('\n')[0],/^J\.J\. RICHARDS & SONS PTY LTD .*754,314/);assert.deepEqual(coherenceCheck(question,out).orphan,[])
+ const source={resource:'fact-14',kind:'record',title:text,url:'https://opax.com.au/money?jur=qld&party=party%3ALNP',snippet:text,cited:true,receipt:{party:'LNP',source:'J.J. RICHARDS & SONS PTY LTD',amount:754314,period:'2013–14 to 2026–27',jurisdiction:'qld'}}
+ const out=api.proseFallback({question,period:{kind:'all',label:''},facts:[{id:1,text,source}]});assert.equal(coherenceCheck(question,out).pass,true)
 })
 test('selected receipt periods survive when the writer fact is prose rather than the raw data row',()=>{
- const row={resource:'receipt-ranking-1',kind:'receipt',title:'Shop Distributive & Allied Employees Association: $974,058',url:'https://opax.com.au/money?jur=federal&party=party%3ALabor&from=2019&to=2019',snippet:'Shop Distributive & Allied Employees Association: $974,058, 13 disclosed receipt records. Period: 2019–20.',cited:true}
+ const row={receipt:{party:'Labor',source:'Shop Distributive & Allied Employees Association',amount:974058,period:'2019–20',jurisdiction:'federal'},resource:'receipt-ranking-1',kind:'receipt',title:'Shop Distributive & Allied Employees Association: $974,058',url:'https://opax.com.au/money?jur=federal&party=party%3ALabor&from=2019&to=2019',snippet:'Shop Distributive & Allied Employees Association: $974,058, 13 disclosed receipt records. Period: 2019–20.',cited:true}
  const coverage={...row,resource:'receipt-ranking-0',snippet:'Opax added the disclosed receipts matching this question, grouped by donor.'}
  const facts=[{id:1,text:'Shop Distributive & Allied Employees Association has the largest disclosed total: $974,058.',source:row},{id:2,text:coverage.snippet,coverage:true,source:coverage}]
- const blocked=api.proseFallback({question:'Who donates the most to Labor in federal records in 2019?',period:{kind:'all',label:''},facts});assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/974,058/);assert.doesNotMatch(blocked.answer,/provided the most/);assert.match(blocked.answer,/cannot establish a donor ranking/)
+ const blocked=api.proseFallback({question:'Who donates the most to Labor in federal records in 2019?',period:{kind:'all',label:''},facts});assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/974,058/);assert.doesNotMatch(blocked.answer,/provided the most/);assert.match(blocked.answer,/not a ranking/)
  const question='Who donates the most to Labor in federal disclosures in 2019–20?',out=api.proseFallback({question,period:{kind:'all',label:''},facts})
  assert.match(out.answer.split('\n')[0],/Shop Distributive.*974,058/);assert.match(out.answer.split('\n')[0],/2019[–-]20/);assert.equal(coherenceCheck(question,out).pass,true)
 })

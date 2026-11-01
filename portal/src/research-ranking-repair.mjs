@@ -6,6 +6,8 @@ const partySlot=new RegExp('^(?:the )?('+[...partyAliases].sort(([a],[b])=>(Numb
 const jurSlot=new RegExp('^('+jurisdictions.map(([,re])=>re.source).join('|')+')(?= |$)','i')
 // An industry slot is typed tool scope, so a list of a party's largest sources cannot answer for one industry.
 const industries={gambling:'gambling',mining:'mining','fossil fuel':'fossil_fuels',finance:'finance',property:'property',health:'health',hospitality:'hospitality',media:'media',tech:'tech'}
+/** The industry a question names, by the tool's own vocabulary. */
+export const questionIndustry=question=>Object.entries(industries).find(([word])=>new RegExp('\\b'+word+'\\b','i').test(question))?.[1]
 const exact=(re,text)=>new RegExp('^(?:'+re.source+')$','i').test(text)
 export function rankingRepairQuestion(question,constraints={}, {unqualified=false}={}){
  let rest=normal(constraints.resolved_question??question),company=false,hanson=false,industry
@@ -17,11 +19,13 @@ export function rankingRepairQuestion(question,constraints={}, {unqualified=fals
  else if(rest.startsWith('top donors to '))rest=rest.slice('top donors to '.length)
  else if(rest.startsWith('who does ')){hanson=true;rest=rest.slice('who does '.length)}
  else return null
+ const named=jurSlot.exec(rest),before=named&&partySlot.test(rest.slice(named[0].length+1))?named:null
+ if(before)rest=rest.slice(before[0].length+1)
  const match=partySlot.exec(rest);if(!match)return null
  const party=partyAliases.find(([,re])=>exact(re,match[1]))?.[0];if(!party)return null
  rest=rest.slice(match[0].length)
  if(hanson){const ending=' take the most money from';if(!rest.startsWith(ending))return null;rest=rest.slice(ending.length)}
- let jurisdiction,period
+ let jurisdiction=before?jurisdictions.find(([,re])=>exact(re,before[1]))?.[0]:undefined,period
  while(rest){
   if(!rest.startsWith(' in '))return null
   rest=rest.slice(4)
@@ -42,7 +46,7 @@ export function rankingRepairQuestion(question,constraints={}, {unqualified=fals
 }
 /** All fact slots must match; donor is a typed tool relationship, never a name heuristic. */
 export function repairSlotsMatch(form,question,row,constraints={}){
- if(!form||!rankingScopeMatches(question,row,constraints)||form.industry&&row.industry!==form.industry)return false
+ if(!form||!rankingScopeMatches(question,row,constraints)||row.aggregate||(row.filter||undefined)!==form.industry)return false
  if(constraints.chamber||!form.period&&constraints.period&&constraints.period.kind!=='all')return false
  const meta=sourceMetadata(row.source),actual=resolvedRankingScope('',{jurisdiction:meta.jurisdiction||'federal',party:row.party})
  if(meta.chamber)return false // The grammar has no chamber slot.

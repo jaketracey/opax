@@ -59,8 +59,8 @@ test('at most one second writer uses surviving facts, same model/token ceiling a
  for(const c of model.doGenerateCalls)assert.equal(c.maxOutputTokens,1400)
 })
 test('a supported donor draft uses its aggregate period and passes both existing checkers',()=>{
- const text='Westpac Banking Corporation gave One Nation $161,787 (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/'
- const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'export',url:'https://example.org/aec',label:'Disclosed donation'}}])
+ const text='One Nation disclosed $161,787 in receipts from Westpac Banking Corporation (federal disclosures; financial years 1998-99 to 2025-26) — AEC annual return · 2011-12 · https://transparency.aec.gov.au/'
+ const facts=api.writingFacts(undefined,[{id:1,text,cite:{kind:'export',url:'https://example.org/aec',label:'Disclosed donation'},receipt:{party:'One Nation',source:'Westpac Banking Corporation',amount:161787,period:'1998-99 to 2025-26',jurisdiction:'federal'}}])
  const input={question:fixture.question,period:{kind:'all',label:''},facts}
  const line='Westpac Banking Corporation provided the most disclosed funding to One Nation, with $161,787 in financial years 1998-99 to 2025-26.'
  const out=api.verifyWrittenAnswer({sentences:[{text:line,facts:[1]}]},input)
@@ -84,11 +84,12 @@ test('a second writer receives only surviving evidence, with both reservations s
 })
 test('year-filtered disclosed-donor tables recover their leading donor and period',()=>{
  const source=(resource,snippet)=>({resource,snippet,kind:'receipt',title:'Labor federal disclosed donor records',cited:true})
- const sources=[source('receipt-ranking-1','Pratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-2','United Workers Union: $953,447, 14 disclosed receipt records. Period: 2023–24.'),source('receipt-ranking-0','Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 119 donors during 2023–24. It excludes government funding.')]
+ const typed=(s,name,amount)=>({...s,receipt:{party:'Labor',source:name,amount,period:'2023–24',jurisdiction:'federal'}})
+ const sources=[typed(source('receipt-ranking-1','Pratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records. Period: 2023–24.'),'Pratt Holdings Pty Ltd',2000000),typed(source('receipt-ranking-2','United Workers Union: $953,447, 14 disclosed receipt records. Period: 2023–24.'),'United Workers Union',953447),source('receipt-ranking-0','Opax added the disclosed receipts matching this question, grouped by donor. This selection covers 119 donors during 2023–24. It excludes government funding.')]
  const bad='Avery Example received $2,000,000.',answer=bad+'\n\nOther donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-1/t/body/0':[[0,bad.length]],'receipt-ranking-2/t/body/0':[[bad.length+2,answer.length]]}}
  // The former phrasing is now outside the repair allowlist; keep its checked point.
  const blocked=api.groundAnswerPayload(structuredClone(p),'Who gave the most disclosed funding to Labor in 2023?')
- assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/Pratt Holdings Pty Ltd.*2,000,000/);assert.match(blocked.answer,/United Workers Union.*953,447/);assert.doesNotMatch(blocked.answer,/provided the most|Avery Example/);assert.match(blocked.answer,/cannot establish a donor ranking/)
+ assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/2,000,000 in receipts from Pratt Holdings Pty Ltd/);assert.match(blocked.answer,/953,447 in receipts from United Workers Union/);assert.doesNotMatch(blocked.answer,/provided the most|Avery Example/);assert.match(blocked.answer,/not a ranking/)
  const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(p,question)
  assert.match(out.answer.split('\n')[0],/2023–24.*Pratt Holdings Pty Ltd.*2,000,000/)
  assert.equal(coherenceCheck(question,out).pass,true);assert.equal(auditPayload('',out).findings.length,0)
@@ -101,7 +102,7 @@ test('an incorrect party adjective is repaired without changing quotation owners
 })
 test('selected donor initials never turn a complete organisation name into a sentence fragment',()=>{
  const rows=[['LGT Crestone Wealth Management Limited','$8,857,209'],['J.J. Richards & Sons Pty Ltd','$1,000,000']]
- const facts=rows.map(([name,amount],i)=>{const text=`${name} gave LNP ${amount} (federal disclosures; financial years 1998-99 to 2025-26)`;return {id:i+1,text,source:{resource:'fact-'+(i+1),kind:'export',title:name,snippet:text,cited:true}}})
+ const facts=rows.map(([name,amount],i)=>{const text=`LNP disclosed ${amount} in receipts from ${name} (federal disclosures; financial years 1998-99 to 2025-26)`;return {id:i+1,text,source:{resource:'fact-'+(i+1),kind:'export',title:name,snippet:text,cited:true,receipt:{party:'LNP',source:name,amount:Number(amount.replace(/[$,]/g,'')),period:'1998-99 to 2025-26',jurisdiction:'federal'}}}})
  const input={question:'Who gives the most money to LNP?',period:{kind:'all',label:''},facts}
  const out=api.groundAnswerPayload(api.proseFallback(input),input.question)
  assert.match(out.answer,/“J\.J\. Richards & Sons Pty Ltd”.*1,000,000/);assert.ok(out.citations['fact-2/t/body/0']);assert.equal(auditPayload(input.question,out).findings.length,0);assert.equal(coherenceCheck(input.question,out).pass,true)

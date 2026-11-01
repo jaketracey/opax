@@ -54,7 +54,7 @@ export interface ToolDeps {
   signal?: AbortSignal
   withSignal?: (signal: AbortSignal) => Pick<ToolDeps, 'kb' | 'asset'>
 }
-export interface Cite { kind: 'count' | 'record' | 'export'; label: string; url: string; value?: number | string }
+export interface Cite { kind: 'count' | 'record' | 'export' | 'person' | 'speech'; label: string; url: string; value?: number | string }
 export interface ToolResult { coverage?: import('./ask-constraints').Coverage; tool: string; ok: boolean; error?: string; data?: Json; cite: Cite[]; query?: unknown; notes: string[]; ms?: number }
 
 // ---------------------------------------------------------------- filters

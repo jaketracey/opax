@@ -67,7 +67,14 @@
             },
             "evidenceId": "fact-1/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "Westpac Banking Corporation",
+          "amount": 161787,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-2",
@@ -101,7 +108,14 @@
             },
             "evidenceId": "fact-2/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "Australian Hotels Association (NSW)",
+          "amount": 126996,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-5",
@@ -135,7 +149,14 @@
             },
             "evidenceId": "fact-5/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "National Australia Bank",
+          "amount": 19715,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-9",
@@ -169,7 +190,14 @@
             },
             "evidenceId": "fact-9/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+          "amount": 3000,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "coverage",
@@ -273,7 +301,14 @@
             },
             "evidenceId": "fact-1/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "Westpac Banking Corporation",
+          "amount": 161787,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-2",
@@ -307,7 +342,14 @@
             },
             "evidenceId": "fact-2/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "Australian Hotels Association (NSW)",
+          "amount": 126996,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-5",
@@ -341,7 +383,14 @@
             },
             "evidenceId": "fact-5/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "National Australia Bank",
+          "amount": 19715,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-9",
@@ -375,7 +424,14 @@
             },
             "evidenceId": "fact-9/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "One Nation",
+          "source": "Registered Clubs Association of NSW (t/as ClubsNSW)",
+          "amount": 3000,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "coverage",

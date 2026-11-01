@@ -8,9 +8,9 @@ import {resolvedRankingScope,rankingScopeMatches} from '../src/research-ranking-
 const built=await build({stdin:{contents:"export * from './src/research-grounding';export * from './src/research-response';export * from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const hanson=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-pauline.json',import.meta.url))),golds=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-donor-golds.json',import.meta.url)))
-const shownUnranked=(out,figure)=>{assert.doesNotMatch(out.answer,/provided the most|received the most|led the selected ranking/);assert.ok(out.answer.includes(figure));assert.match(out.answer,/cannot establish a donor ranking|do not establish whether giving occurred in most years/);assert.ok(Object.keys(out.citations).length)}
+const shownUnranked=(out,figure)=>{assert.doesNotMatch(out.answer,/\b(?:most|largest|biggest|highest|top|leading|led|first)\b(?! years)/i);assert.doesNotMatch(out.answer,/unknown/i);assert.ok(out.answer.includes(figure));assert.match(out.answer,/\bThese (?:are|rows|records)\b|could not confirm|not a ranking|do not establish whether/);assert.ok(Object.keys(out.citations).length)}
 function synthetic(period='2019–20',entity_type='company'){
- return {resource:'fact-1',kind:'record',cited:true,url:'/money?jur=federal&party=party:One%20Nation',entity_type,snippet:`Selected Company has the largest disclosed total to One Nation in this published selection: $161,787.\nFinancial years: ${period}.\n| Donor | Disclosed receipts | Records |\n| Selected Company | $161,787 | 2 |`}
+ return {resource:'fact-1',kind:'record',cited:true,url:'/money?jur=federal&party=party:One%20Nation',entity_type,receipt:{party:'One Nation',source:'Selected Company',amount:161787,period,jurisdiction:'federal'},snippet:`Selected Company: $161,787, 2 disclosed receipt records. Period: ${period}.`}
 }
 const variants=[
  'Who is the largest individual donor to One Nation in federal disclosures?',
@@ -77,7 +77,7 @@ for(const [question,evidence,allowed] of [
  ['Which company donated the most to One Nation?',synthetic('2019–20','person'),false],
  ['Who gives the most money to One Nation?',synthetic('2019–20','unknown'),false],
  ['Who gives the most money to One Nation?',{...synthetic(),chamber:'senate'},false],
-])test(`exact slots: ${question}/${evidence.entity_type}/${evidence.snippet.match(/Financial years: ([^.]+)/)[1]}`,()=>{
+])test(`exact slots: ${question}/${evidence.entity_type}/${evidence.receipt.period}`,()=>{
  const answer='Avery Example received $161,787.'
  assert.equal(canReconstructRanking({answer,sources:[evidence],citations:{'fact-1/t/body/0':[[0,answer.length]]}},question),allowed)
 })

@@ -101,7 +101,14 @@
             },
             "evidenceId": "receipt-ranking-1"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "Labor",
+          "source": "Pratt Holdings Pty Ltd",
+          "amount": 2000000,
+          "period": "2023–24",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "receipt-ranking-2",
@@ -134,7 +141,14 @@
             "period": {},
             "evidenceId": "receipt-ranking-2"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "Labor",
+          "source": "Shop Distributive & Allied Employees' Association Vic Branch",
+          "amount": 1128644,
+          "period": "2023–24",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "receipt-ranking-3",
@@ -167,7 +181,14 @@
             "period": {},
             "evidenceId": "receipt-ranking-3"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "Labor",
+          "source": "United Workers Union",
+          "amount": 953447,
+          "period": "2023–24",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "receipt-ranking-4",
@@ -200,7 +221,14 @@
             "period": {},
             "evidenceId": "receipt-ranking-4"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "Labor",
+          "source": "Commonwealth Bank of Australia",
+          "amount": 659452,
+          "period": "2023–24",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "receipt-ranking-5",
@@ -233,7 +261,14 @@
             "period": {},
             "evidenceId": "receipt-ranking-5"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "Labor",
+          "source": "CFMEU Mining & Energy Division",
+          "amount": 588262,
+          "period": "2023–24",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "receipt-ranking-0",
@@ -270,7 +305,8 @@
             },
             "evidenceId": "receipt-ranking-0"
           }
-        ]
+        ],
+        "coverage": true
       }
     ]
   }

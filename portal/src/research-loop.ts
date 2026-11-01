@@ -311,7 +311,7 @@ export function createResearch(options: ResearchOptions): Research {
         const start = Array.from(text).length
         text += fact.text
         citations[`fact-${fact.id}/t/body/0`] = [[start, Array.from(text).length]]
-        sources.push({ resource: `fact-${fact.id}`, slug: '', title: fact.cite.label, href: fact.cite.url, url: fact.cite.url, snippet: fact.text, cited: true, kind: fact.cite.kind, ...(fact.receipt ? { receipt: fact.receipt } : {}), ...(coverage ? { coverage: true } : {}) })
+        sources.push({ resource: `fact-${fact.id}`, slug: '', title: fact.cite.label, href: fact.cite.url, url: fact.cite.url, snippet: fact.text, cited: true, kind: fact.cite.kind, ...(fact.receipt ? { receipt: fact.receipt } : {}), ...(fact.entities?.length ? { entities: fact.entities } : {}), ...(coverage ? { coverage: true } : {}) })
       }
       if (points) {
         const offset = text ? Array.from(text).length + 1 : 0

@@ -50,7 +50,14 @@
             },
             "evidenceId": "fact-2/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "Labor",
+          "source": "Shop Distributive & Allied Employees' Association Vic Branch",
+          "amount": 42837142,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-3",
@@ -73,7 +80,14 @@
             },
             "evidenceId": "fact-3/t/body/0"
           }
-        ]
+        ],
+        "receipt": {
+          "party": "Labor",
+          "source": "CFMEU Mining & Energy Division",
+          "amount": 32152941,
+          "period": "1998-99 to 2025-26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "fact-11",
@@ -84,7 +98,14 @@
         "snippet": "**Westpac Banking Corporation** has the largest disclosed total to Labor in this published selection: **$55,227,183**. These figures rank disclosed receipts, which include more than gifts; they are not a donations-only ranking.\n\n**Financial years: 1998–99 to 2025–26.** 306 donors with matching receipts in Opax’s selected map. Federal (AEC). Disclosed party receipts, including more than gifts; amounts in Australian dollars, without inflation adjustment.\n\n| Donor | Disclosed receipts | Records |\n| --- | ---: | ---: |\n| [Westpac Banking Corporation](/subject/donor/Westpac%20Banking%20Corporation) | $55,227,183 | 500 |\n| [Shop Distributive & Allied Employees' Association Vic Branch](/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association) | $42,837,142 | 533 |\n| [CFMEU Mining & Energy Division](/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union) | $32,152,941 | 751 |\n| [Australian Workers Union](/subject/donor/The%20Australian%20Workers%27%20Union) | $19,907,893 | 588 |\n| [Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division](/subject/donor/Communications%2C%20Electrical%20and%20Plumbing%20Union%20of%20Australia) | $17,926,857 | 696 |\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.\n\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.\n\n[Explore these records](https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor) · [Download the calculation data](https://opax.com.au/graph/money.json)\nCoverage: Only receipts included in Opax’s published map are ranked. This is a selection, not every donor or an exhaustive industry total. Years use the first year of each financial year; election returns may use the polling year. Undated records are excluded from year-filtered answers.",
         "cited": true,
         "kind": "record",
-        "claim_atoms": []
+        "claim_atoms": [],
+        "receipt": {
+          "party": "Labor",
+          "source": "Westpac Banking Corporation",
+          "amount": 55227183,
+          "period": "1998–99 to 2025–26",
+          "jurisdiction": "federal"
+        }
       },
       {
         "resource": "coverage",

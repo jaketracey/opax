@@ -8,9 +8,9 @@ import {rankingSourceMatches} from '../src/research-ranking-scope.mjs'
 const built=await build({stdin:{contents:"export * from './src/research-grounding';export * from './src/research-response';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const qld=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-lnp-qld.json',import.meta.url)))
-const shownUnranked=(out,figure)=>{assert.doesNotMatch(out.answer,/provided the most|received the most|led the selected ranking/);assert.ok(out.answer.includes(figure));assert.match(out.answer,/cannot establish a donor ranking|do not establish whether giving occurred in most years/);assert.ok(Object.keys(out.citations).length)}
+const shownUnranked=(out,figure)=>{assert.doesNotMatch(out.answer,/\b(?:most|largest|biggest|highest|top|leading|led|first)\b(?! years)/i);assert.doesNotMatch(out.answer,/unknown/i);assert.ok(out.answer.includes(figure));assert.match(out.answer,/\bThese (?:are|rows|records)\b|could not confirm|not a ranking|do not establish whether/);assert.ok(Object.keys(out.citations).length)}
 function source({jur='federal',party='LNP',period='2019–20',chamber,entity_type}={}){
- return {resource:'fact-1',kind:'record',title:'Selected donor ranking',url:`/money?jur=${jur}&party=party:${party}`,cited:true,...(chamber?{chamber}:{}),...(entity_type?{entity_type}:{}),snippet:`Selected Company has the largest disclosed total to ${party} in this published selection: $754,314.\nFinancial years: ${period}.\n| Donor | Disclosed receipts | Records |\n| Selected Company | $754,314 | 2 |\nThese are party receipts, not personal payments.`}
+ return {resource:'fact-1',kind:'record',title:'Selected donor ranking',url:`/money?jur=${jur}&party=party:${party}`,cited:true,...(chamber?{chamber}:{}),...(entity_type?{entity_type}:{}),...(jur?{receipt:{party,source:'Selected Company',amount:754314,period,jurisdiction:jur}}:{receipt:{party,source:'Selected Company',amount:754314,period}}),snippet:`Selected Company: $754,314, 2 disclosed receipt records. Period: ${period}.`}
 }
 const cases=[
  ['review: federal excludes saved Queensland fact','Who gives the most money to the LNP in federal disclosures?',qld,false],
@@ -51,6 +51,7 @@ for(const [name,question,evidence,allowed] of cases)for(const stream of [false,t
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})},response=stream?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
  if(allowed){assert.match(out.answer,/provided the most disclosed funding/);assert.match(out.answer,/754,314/);assert.ok(out.citations['fact-1/t/body/0'])}
+ else if(/excludes (?:Liberal|Labor)/.test(name)){assert.doesNotMatch(out.answer,/754,314/);assert.deepEqual(out.citations,{})}
  else shownUnranked(out,'$754,314')
 })
 test('each row used by a repair agrees with scope; a matching row cannot admit a mismatched row',()=>{
@@ -69,7 +70,8 @@ for(const [dimension,scope,evidence] of [
  assert.equal(canReconstructRanking(payload,question),false)
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})},response=stream?new Response('event: done\ndata: '+JSON.stringify(payload)+'\n\n',{headers}):Response.json(payload,{headers})
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- shownUnranked(out,'$754,314')
+ if(dimension==='party'){assert.doesNotMatch(out.answer,/754,314/);assert.deepEqual(out.citations,{})}
+ else shownUnranked(out,'$754,314')
 })
 test('writer retains resolved constraints on the draft and its checked result',async()=>{
  const writing=await build({stdin:{contents:"export * from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'}),writer=await import('data:text/javascript;base64,'+Buffer.from(writing.outputFiles[0].text).toString('base64'))
@@ -90,10 +92,4 @@ test('reconstruction excludes mismatched selected coverage and donor facts',()=>
  const question='Who gives the most money to the LNP in federal disclosures?',answer='Avery Example received $754,314.',wrong={...source({jur:'qld'}),resource:'fact-2',snippet:source({jur:'qld'}).snippet.replaceAll('Selected Company','Wrong Company').replaceAll('754,314','900,000')},coverage={...source({jur:'qld'}),resource:'coverage',snippet:'Financial years: 2019–20. Only the published selection is covered.'}
  const out=api.groundAnswerPayload({answer,sources:[source(),wrong,coverage],citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
  assert.match(out.answer,/Selected Company.*754,314/);assert.doesNotMatch(out.answer,/Wrong Company|900,000/);assert.deepEqual(Object.keys(out.citations),['fact-1/t/body/0']);assert.deepEqual(out.sources.map(s=>s.resource),['fact-1'])
-})
-test('a legacy figure cannot borrow the period of an unrelated selection',()=>{
- const fact={resource:'fact-1',kind:'export',cited:true,snippet:'Selected Company gave One Nation $754,314 (federal disclosures).'},coverage={resource:'coverage',kind:'record',url:'/money?jur=qld&party=party:One%20Nation',snippet:'Financial years 1998–99 to 2025–26.'},question='Who gives the most money to One Nation in federal disclosures?'
- assert.deepEqual(donorRanking(question,[fact,coverage]),[])
- assert.equal(donorRanking(question,[fact,{...coverage,url:'/money?jur=federal&party=party:One%20Nation'}]).length,1)
- assert.deepEqual(donorRanking(question,[fact,{...coverage,url:'/money?jur=federal&party=party:Labor'}]),[])
 })

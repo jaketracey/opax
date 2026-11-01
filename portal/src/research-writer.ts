@@ -39,9 +39,7 @@ export function createAnswerWriter(options: ResearchOptions) {
       const receipt=fact.source.receipt
       if(receipt)return {owner:receipt.source,amount:'$'+receipt.amount.toLocaleString('en-AU'),party:receipt.party}
       const rate=/^([^:]+): (\$[\d,]+)/.exec(fact.text)
-      if(rate)return {owner:rate[1],amount:rate[2]}
-      const donation=/^(.+?) gave (.+?) (\$[\d,]+)/.exec(fact.text)
-      return donation?{owner:donation[1],amount:donation[3],party:donation[2]}:null
+      return rate?{owner:rate[1],amount:rate[2]}:null
     }
     const named=input.facts.filter(f=>{const pair=ownerFigure(f);return pair&&input.question.toLowerCase().includes(pair.owner.toLowerCase())&&(!pair.party||input.question.toLowerCase().includes(pair.party.toLowerCase()))})
     const recipientFacts=/\b(?:which|what) parties\b/i.test(input.question)?input.facts.flatMap(f=>{const m=/^Disclosed receipt:\s*(.+?)\s*→\s*(.+?)\s*—/.exec(f.text);return m?[{f,party:m[2]}]:[]}):[]

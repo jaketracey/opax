@@ -111,7 +111,7 @@ test('a loop timeout with only record facts in hand answers from those facts, ca
  const run=await f.run();
  assert.equal(run.answered,true);assert.match(run.answer,/Labor disclosed \$2,371,237 in receipts from Tabcorp Holdings Limited/);
  assert.equal(run.research.answer_stats.mode,'facts');assert.equal(run.research.answer_stats.salvaged,'timeout');
- assert.deepEqual(run.qualitative.sources[0].receipt,{party:'Labor',source:'Tabcorp Holdings Limited',amount:2371237,period:'1998-99 to 2025-26',industry:'gambling'});
+ assert.deepEqual(run.qualitative.sources[0].receipt,{party:'Labor',source:'Tabcorp Holdings Limited',amount:2371237,period:'1998-99 to 2025-26',jurisdiction:'federal',industry:'gambling',filter:'gambling'});
 });
 
 test('a loop timeout before any draft answers from the verified passages it already holds',async()=>{
