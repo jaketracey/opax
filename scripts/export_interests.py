@@ -50,8 +50,8 @@ first (by their submitted date), then statement rows in document order. The
 count is the bucket's full row count. A row is one cell of the form, so a
 comma list of eight memberships typed in one cell counts once; rows whose
 every field is a nil placeholder ("Nil applicable") are dropped. Item
-descriptions are the printed cell values joined with " · " and cut at ~120
-characters. The page link is built client-side as source_url + "#page=" +
+descriptions retain the complete printed cell values joined with " · ", so
+correction endings and receipt dates are not lost. The page link is built client-side as source_url + "#page=" +
 page; an item carries its own "url" only when it comes from a different
 document than the person's primary one. Senate rows have no page (the
 register is an HTML page). "ocr" is set on rows machine-read from a scan.
@@ -82,7 +82,9 @@ from datetime import date
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 PER_BUCKET = 6
 RECENT_LIMIT = 300
-DESC_CHARS = 120
+# Canonical rows retain the complete source cell, including correction endings.
+# Callers making a summary may still request an explicit character limit.
+DESC_CHARS = None
 
 BUCKETS = ["shareholdings", "real_estate", "trusts", "directorships", "gifts",
            "travel", "memberships", "liabilities", "other"]
