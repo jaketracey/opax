@@ -2,7 +2,7 @@ import {auditPayload,quotationSpans,sentenceParts} from './research-claim-audit.
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
 import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,canReconstructRanking,causalAsk} from './research-coherence.mjs'
-import {proseFallback,writingFacts,appendWrittenPoints,usableFact,foundFacts,besideLimitation,receiptsAsLimitation,emptyAnswer,renderedKind,tokens,RANKING_WORDS,type WritingInput} from './research-writing'
+import {causalDecline,proseFallback,writingFacts,appendWrittenPoints,usableFact,foundFacts,besideLimitation,receiptsAsLimitation,emptyAnswer,renderedKind,tokens,RANKING_WORDS,type WritingInput} from './research-writing'
 import {inferPeriod} from './agentic-ask'
 import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
@@ -127,11 +127,17 @@ function foundInput(payload:Record<string,unknown>,question:string):WritingInput
 /** The terminal rule.
  * 1. The system's own empty sentence gives way to on-topic facts.
  * 2. A limit that says something stays first and unchanged, with what was found beside it.
- * 3. Typed refusals and clarifications, causal asks, period guards and drafts that say nothing about the record are left alone.
+ * 3. Typed refusals and clarifications, causal asks, period guards and drafts that say nothing about the record are left alone,
+ *    except that a draft answering an explicit causal ask with receipt figures gives way to the decline.
  * An answer with no limit to keep, but none of the figures asked for, gets them ahead of it. */
 function answerFromFound(out:Record<string,unknown>,question:string,evidence:Record<string,unknown>):Record<string,unknown> {
   const decision=answerDecision(out),method=(out.coherence as {method?:string}|undefined)?.method,text=String(out.answer??''),empty=emptyAnswer(text)
-  if(decision==='refusal'||decision==='clarification'||causalAsk(question)||(out.coverage as {matched?:boolean}|undefined)?.matched===false)return out
+  if(decision==='refusal'||decision==='clarification')return out
+  if(causalAsk(question)){
+    const said=tokens(text),receiptFigure=foundInput(evidence,question).facts.some(f=>f.source.receipt&&(f.atoms??[]).some(a=>a.value.length>2&&said.includes(a.value)))
+    return receiptFigure?{...out,...causalDecline()}:out
+  }
+  if((out.coverage as {matched?:boolean}|undefined)?.matched===false)return out
   if(!empty&&(out.answer_status==='coverage_only'||['checked_points_with_limit','combined_count_limit','facts_beside'].includes(String(method))))return out
   const input=foundInput(evidence,question),found=foundFacts(input)
   if(!found.length)return out

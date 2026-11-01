@@ -303,10 +303,10 @@ test('spoken points can answer a position question: the shape rule stands aside'
  const out=api.groundAnswerPayload({answer,answer_decision:'answer',citations:{'p/t/body/0':[[2,answer.length]]},sources:[{resource:'p',slug:'',title:'Jane Hume',href:'/d',url:'/d',snippet:'I said donations are declared to the AEC.',cited:true,kind:'speech',speaker:'Jane Hume',date:'2020-06-15'}],answer_scope:input.constraints,research:{mode:'loop',pre_writer_sources:pre(input)}},q)
  assert.equal(out.answer,answer);assert.equal(out.answer_decision,'answer')
 })
-test('a genuine two-part question keeps its rows, votes and caveat',()=>{
+test('a two-part question keeps its rows, votes and caveat, under the limit',()=>{
  const q='Who gave the most money to Labor and how did Labor vote on pokies?',input=allRows(q,'Labor',{}),vote='Labor voted in 13 divisions with "pokies" in the title: all aye in 9, all no in 4, split in 0'
  input.facts.push({id:50,text:vote,source:src('votes',vote)})
- const out=api.proseFallback(input);assert.equal(out.answer_decision,'answer');assert.match(out.answer,/\$2,371,237/);assert.match(out.answer,/13 divisions/);assert.match(out.answer,/not evidence that it influenced a vote or speech/)
+ const out=api.proseFallback(input);assert.equal(out.answer_decision,'limitation');assert.match(out.answer,/^Public donation and voting records do not establish that money caused a vote\./);assert.match(out.answer,/\$2,371,237/);assert.match(out.answer,/13 divisions/);assert.match(out.answer,/not evidence that it influenced a vote or speech/)
 })
 for(const [q,text] of [['How much funding has Bob Katter secured for Kennedy?','Kennedy: $4,500,000 across 12 grants'],['How much went to first home buyers grants?','First Home Buyers: $900,000 across 3 grants'],['Which grants went to bushfire-affected towns?','Cobargo Recovery: $250,000 grant']])test('an ordinary question is not causal: '+q,()=>{
  const input=plain(q,[text]),out=api.groundAnswerPayload({answer:refusal,answer_decision:'limitation',citations:{},sources:[],research:{mode:'loop',pre_writer_sources:pre(input)}},q)
@@ -334,4 +334,22 @@ test('review finding 6: a named donor is checked before its industry',()=>{
  const q='How much did Medibank Private, the health insurer, give to Labor?',period=api.inferPeriod(q),text='Labor disclosed $500,000 in receipts from Medibank Private (federal disclosures; financial years 1998-99 to 2025-26)'
  const sources=[src('fact-1',text,'export',{receipt:{party:'Labor',source:'Medibank Private',amount:500000,period:'1998-99 to 2025-26',jurisdiction:'federal',industry:'finance'}})]
  assert.match(api.proseFallback({question:q,period,constraints:{period,party:'Labor'},facts:api.writingFacts({answer:'',citations:{},sources})}).answer,/\$500,000/)
+})
+const voteFact=input=>{const text='Labor voted in 13 divisions with "gambling" in the title: all aye in 5, all no in 7, split in 1.';return {...input,facts:[...input.facts,{id:90,text,source:{resource:'fact-90',slug:'',title:text,href:'https://opax.com.au/x',url:'https://opax.com.au/x',snippet:text,cited:true,kind:'record'}}]}}
+const evidence=input=>({mode:'loop',pre_writer_sources:input.facts.map(f=>({...f.source,snippet:f.text}))})
+for(const question of ['Why did Labor oppose pokies reform?',"Did Tabcorp money change Labor's vote on pokies?"])test('receipts beside a votes fact still sit under the limit: '+question,()=>{
+ const out=api.groundAnswerPayload(api.proseFallback(voteFact(moneyInput(question,'Labor'))),question)
+ assert.equal(out.answer_decision,'limitation');assert.match(out.answer,/^Public donation and voting records do not establish that money caused a vote\./);assert.ok(out.answer.includes('$2,371,237'))
+})
+for(const question of ['Which mining donor bought votes?','Did gambling donors sway Labor?','What did Tabcorp get in return for its money?'])test('a receipt draft on an explicit causal ask gives way to the decline: '+question,async()=>{
+ const input=moneyInput(question,'Labor'),draft='Labor disclosed $2,371,237 in receipts from Tabcorp Holdings Limited across financial years 1998-99 to 2025-26.'
+ const written=await writer(()=>({answer_decision:'answer',sentences:[{text:draft,facts:[1]}]})).write(input,stats(),undefined,3000)
+ const out=api.groundAnswerPayload({...written,research:evidence(input)},question)
+ assert.equal(out.answer_decision,'refusal');assert.doesNotMatch(out.answer,/\$\d/);assert.match(out.answer,/do not establish that money caused a vote/);assert.deepEqual(out.citations,{})
+})
+test('the causal decline only replaces receipt figures, not a passage answer',()=>{
+ const question='Did gambling donors sway Labor?',input=moneyInput(question,'Labor'),draft='- In 2020, Avery Example said the lobby spent $5,000,000 on advertising.'
+ const passage={resource:'p',slug:'',title:'Avery Example',href:'https://opax.com.au/x',url:'https://opax.com.au/x',snippet:'In 2020, Avery Example said the lobby spent $5,000,000 on advertising.',cited:true,kind:'speech',speaker:'Avery Example'}
+ const out=api.groundAnswerPayload({answer:draft,answer_decision:'answer',citations:{'p/t/body/0':[[2,draft.length]]},sources:[passage],research:evidence(input)},question)
+ assert.notEqual(out.answer_decision,'refusal');assert.ok(out.answer.includes('$5,000,000'))
 })

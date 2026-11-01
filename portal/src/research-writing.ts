@@ -228,10 +228,12 @@ function factList(input:WritingInput,note?:string,leads:string[]=[]):Qualitative
 /** Case 2 of the terminal rule: the limitation keeps its place, and this goes beside it. */
 export const besideLimitation=(input:WritingInput)=>factList(input,undefined,['What the records do show:'])
 const NO_CAUSATION='Public donation and voting records do not establish that money caused a vote.'
-/** Receipts alone do not answer a question about a vote, a position or why. They are shown, under the limit that says so. */
+/** Money does not explain a vote: an explicit causal ask is declined, whichever path reaches it. */
+export const causalDecline=():QualitativeAnswer=>({answer:NO_CAUSATION+' I can help compare the disclosed records without making that allegation.',answer_decision:'refusal',citations:{},sources:[]})
+/** Receipts do not answer a question about a vote, a position or why, even beside other records. They are shown, under the limit that says so. */
 export function receiptsAsLimitation(input:WritingInput):QualitativeAnswer|null {
   const found=foundFacts(input)
-  if(!found.length||!found.every(f=>f.source.receipt)||!receiptsCannotAnswer(input.question))return null
+  if(!found.length||!found.some(f=>f.source.receipt)||!receiptsCannotAnswer(input.question))return null
   const list=factList(input,undefined,[NO_CAUSATION,'What the records do show:'])
   return list&&{...list,answer_decision:'limitation',coherence:{...list.coherence,method:'facts_beside'}}
 }/** The system's own empty sentences, as opposed to a limit that says something. */
@@ -271,8 +273,7 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   }
   const donors=repairDonorRanking(input.question,input.facts.map(f=>f.source),input.constraints)
   const donorEvidence=input.facts.some(f=>f.source.receipt)
-  // Money does not explain a vote: this line declines even when the model did not.
-  if(donorEvidence&&causalAsk(input.question))return {answer:NO_CAUSATION+' I can help compare the disclosed records without making that allegation.',answer_decision:'refusal',citations:{},sources:[]}
+  if(donorEvidence&&causalAsk(input.question))return causalDecline()
   const receiptsOnly=receiptsAsLimitation(input);if(receiptsOnly)return receiptsOnly
   // Dates that could not be confirmed cannot carry a ranking or the requested period.
   if(input.facts.some(f=>f.text.includes(UNCONFIRMED_PERIOD))){const list=factList(input);if(list)return list}
