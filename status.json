@@ -1,0 +1,108 @@
+{
+ "date": "2026-11-02",
+ "status": "failed",
+ "started": "2026-11-01T16:15:40Z",
+ "finished": "2026-11-01T18:49:47Z",
+ "commit": "9ffe7fa82",
+ "deploy": "started by the push (deploy.yml, corpus.json changed)",
+ "summary": "991,555 resources (+45: press_release +5, division +40); divisions: 0 new; federal latest 2026-10-28; bills: 0 new, 0 changed, 0 titles filled, 0 sponsor IDs filled; evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); Paused sources: bills, committees, diaries_qld, grants_fetch, interests_federal, qld, qld_contracts, sa",
+ "failures": [
+  "portal tests red (test/research-followups.test.mjs) and no time left in the 45m gate budget to find out why: divisions seovotes money grants suppliers access interests fits speakers pay discovery taxcharity votes held, not published tonight"
+ ],
+ "warnings": [
+  "a source refused to change its register tonight (kept the last good rows): frl_acts",
+  "the roster export has sitting members the shipped roster lacks, held for review into scripts/roster_accept.json (scripts/roster_accept.py --propose): kept 1618 shipped records (417 differ in the export: speeches 375, recorded_parties 32, full 18, transcript 18, separated_witnesses 17, speech_count_basis 16); held 7 new row(s): Chris Gatenby, Farlow, Ham, Maclaren-Jones, Mookhey, Scully, The; 1 held row(s) are sitting members: Chris Gatenby; kept 1 row(s) the export dropped: Paul Calvert",
+  "evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); catch-up retained; export skipped",
+  "division export retained 28 pinned records; explicit coverage flags identify degraded source coverage",
+  "SEO recent votes retained 942 published source URLs across 23 divisions: Victorian Hansard asset paths changed; unchanged recorded votes kept their prior citations"
+ ],
+ "paused_sources": {
+  "committees": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-11-01T16:19:12.478128+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "data.parliament.qld.gov.au",
+   "checked_at": "2026-11-01T16:19:08.572309+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "bills": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-11-01T18:16:48.844957+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "sa": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "hansardsearch.parliament.sa.gov.au",
+   "checked_at": "2026-11-01T16:19:13.946011+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld_contracts": {
+   "status": "paused",
+   "reason": "redirect refused: destination robots policy is unavailable",
+   "host": "www.data.qld.gov.au",
+   "checked_at": "2026-11-01T17:45:09.708684+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "grants_fetch": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "www.grants.gov.au",
+   "checked_at": "2026-11-01T16:32:00.988073+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "interests_federal": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "www.aph.gov.au",
+   "checked_at": "2026-11-01T16:42:32.634642+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "diaries_qld": {
+   "status": "paused",
+   "reason": "challenge/WAF page",
+   "host": "cabinet.qld.gov.au",
+   "checked_at": "2026-11-01T17:45:12.446063+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  }
+ },
+ "periodic_state": {
+  "schema": 1,
+  "observed_through": "2026-11-02",
+  "groups": {
+   "frl": {
+    "last_success": "2026-10-31",
+    "last_attempt": "2026-10-31",
+    "commit": "cd31ffc8b291e95d170d6be4bdc9909b73363b90"
+   },
+   "monthly": {
+    "pending_since": "2026-11-01",
+    "due": "2026-11-01",
+    "last_success": "2026-10-19",
+    "last_attempt": "2026-11-02",
+    "commit": "77401b801e5f3c05d66414cacc87eb04a70f406f"
+   },
+   "weekly": {
+    "pending_since": "2026-10-25",
+    "due": "2026-11-01",
+    "last_attempt": "2026-11-02"
+   }
+  }
+ }
+}
