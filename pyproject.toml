@@ -3,7 +3,7 @@ name = "opax"
 version = "1.0.0"
 description = "OPAX data pipeline and knowledge-box tooling (Open Parliamentary Accountability eXchange)"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "AGPL-3.0-only" }
 dependencies = [
     # Fetching and parsing the record

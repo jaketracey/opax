@@ -35,7 +35,7 @@ Census indicators retain the original 2021 geography and the existing OPAX impor
 
 ## Refresh and export
 
-Python 3.10+ is required. Install project dependencies, including the optional geometry extra:
+Python 3.11+ is required. Install project dependencies, including the optional geometry extra:
 
 ```sh
 pip install -e '.[electorates]'
