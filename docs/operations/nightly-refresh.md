@@ -988,7 +988,7 @@ accepting the gap and listing it in `source_limitations`. Re-run `scripts/vm/pro
 ## Tests
 
 ```
-# unit tests (Python 3.10+, run in the pipeline venv or with `requests` installed)
+# unit tests (Python 3.11+, run in the pipeline venv or with `requests` installed)
 python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py
 
 # bills step: fixture git checkout, stubbed acquisition/export/fill, real guards/verifier/sweep
