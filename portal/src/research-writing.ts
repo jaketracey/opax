@@ -112,6 +112,8 @@ function basisSentence(all:WritingFact[]):WrittenSentence|undefined {
   }
   const ids=all.map(f=>f.id)
   if(/party receipts|donation|AEC|disclosed receipt|published map|published selection|industry total/i.test(text))return {text:'These disclosed party receipts include more than gifts and cover only the published selection; undisclosed receipts below the disclosure threshold make totals a lower bound, rather than an exhaustive industry total or personal payments, and a donation is not evidence that it influenced a vote or speech.',facts:ids,coverage:true}
+  // A vote count keeps its caveat: a title search misses divisions, and a vote states no reasons.
+  if(/divisions are matched by a word|recorded vote is not a statement of reasons/i.test(text))return {text:'Divisions are matched by a word in the division or bill title, so related divisions under other titles are missed, and a recorded vote is not a statement of reasons; the speeches hold those.',facts:ids,coverage:true}
   if(/contract/i.test(text))return {text:'These are published contract values, including amendments, rather than payments.',facts:ids,coverage:true}
   if(/topic|Hansard|committee|labelled speeches/i.test(text))return {text:'Topic-labelled speech records are incomplete, with older years and known Hansard gaps undercounted'+(/committee.*exclud|exclud.*committee/i.test(text)?' and committee-hearing turns excluded':'')+'.',facts:ids,coverage:true}
   if(/unknown|unavailable|cannot establish|not.*covered/i.test(text))return {text:'Some selected records lack verified coverage for the requested scope, so they cannot establish a complete historical total.',facts:ids,coverage:true}
