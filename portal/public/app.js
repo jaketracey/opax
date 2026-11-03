@@ -3046,7 +3046,29 @@ function renderResearchSources(container, extras, { alone = false } = {}) {
   container.hidden = false;
 }
 
+/* A source row names and opens its record; it never repeats the answer. Rows from answers saved before the
+   Worker tidied them (a chat session, a cached page) get the same treatment here: no bare URLs pasted into
+   titles, no repeated or internal checking lines, no party link to the retired /money/party/<name> path. */
+function sourceText(text) {
+  return String(text || "").replace(/\s*(?:·|—|-)?\s*https?:\/\/[^\s)]+/g, "").replace(/\s*·\s*$/, "").replace(/[ \t]{2,}/g, " ").trim();
+}
+function tidySource(s) {
+  const SOURCE_CHECK_LINE = /^Donor: .+ — \$[\d,.]+\. Financial years: .+\.$/;
+  const seen = new Set();
+  const snippet = String(s.snippet || "").split("\n").map(sourceText)
+    .filter((line) => { const k = line.replace(/\s+/g, " ").toLowerCase(); if (!line || SOURCE_CHECK_LINE.test(line) || seen.has(k)) return false; seen.add(k); return true; })
+    .join("\n");
+  const title = sourceText(s.title) || s.title;
+  let href = s.href || s.url;
+  const party = /^(?:https:\/\/opax\.com\.au)?\/money\/party\/([^/?#]+)$/.exec(String(href || ""));
+  if (party) href = `/money?jur=federal&type=receipts&party=${encodeURIComponent("party:" + decodeURIComponent(party[1]))}`;
+  // A quote that only restates the row's title adds nothing.
+  const same = snippet.replace(/\s+/g, " ").replace(/[.]$/, "").toLowerCase() === String(title || "").replace(/\s+/g, " ").replace(/[.]$/, "").toLowerCase();
+  return { ...s, title, snippet: same ? "" : snippet, ...(party ? { href, url: href } : {}) };
+}
+
 function sourceItem(s, num, passage = false) {
+  s = tidySource(s);
   const li = document.createElement("li");
   const btn = document.createElement("a");
   btn.className = "link source-title";
@@ -3058,7 +3080,8 @@ function sourceItem(s, num, passage = false) {
   const nameOnly = !isMultiSpeaker(s) && !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
-  const target = new URL(searchResultHref(s), location.origin);
+  // A row with no page of its own (no link and no record slug) is shown as plain text, never a dead /doc/ link.
+  const target = s.href || s.url || s.slug ? new URL(searchResultHref(s), location.origin) : new URL("about:blank");
   if (receiptCalculation && /^\/graph\/money(?:\.[a-z]+)?\.json$/.test(target.pathname)) {
     target.pathname = "/methods";
     target.search = "";
@@ -10418,7 +10441,8 @@ function moneyNextSteps(answer) {
   let donor = "";
   if (table?.[1] === "Source" || table?.[1] === "Donor") donor = table[2];
   else if (table?.[1] === "Source → party" || table?.[1] === "Donor → party") donor = table[2].split(" → ")[0].trim();
-  donor = donor.replace(/\*\*/g, "").trim();
+  // A table cell can be a markdown link to the donor's page: the step names the donor, never the markup.
+  donor = donor.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/\*\*/g, "").trim();
   let receipts = null;
   if (map) {
     const url = new URL(map, "https://opax.com.au");

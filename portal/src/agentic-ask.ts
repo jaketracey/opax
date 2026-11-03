@@ -15,7 +15,7 @@ import { receiptYearWindow } from './receipt-period'
  * it never counts or phrases numerical claims. `answered: false` with a reason
  * when no tool result supports an answer (the web-ask-no-answer contract).
  */
-import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite } from './agentic-tools'
+import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite, type RelatedCite } from './agentic-tools'
 import { isElectorateDataQuestion, electoratePlan } from './agentic-tool-electorates'
 import { getAskTool } from './tools'
 import type { AnswerTally } from './research-evidence'
@@ -289,9 +289,10 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       const s = d.summary as Record<string, number>
       const who = (d.person ?? d.party) as string
       if (!s.divisions || !r.cite[0]) { notes.add('The title search found no matching recorded divisions; it does not establish how the member or party voted.'); continue }
-      const url = r.cite[0].url
-      if (d.person) add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: aye ${s.aye}, no ${s.no}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
-      else add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url })
+      // The count opens the list of divisions searched; each counted division is its own source row.
+      const url = r.list ?? r.cite[0].url, related = r.cite.map(c => ({ label: c.label, url: c.url }))
+      if (d.person) add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: aye ${s.aye}, no ${s.no}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url, related })
+      else add(`${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url, related })
     } else if (r.tool === 'party_receipts') {
       const years = (d.years as (number | null)[] | undefined) ?? [], fy = (year: number) => `${year}-${String(year + 1).slice(-2)}`
       const period = `${fy(years[0] ?? 1998)} to ${fy(years[1] ?? 2025)}`, industry = typeof d.industry === 'string' ? d.industry : undefined
@@ -308,6 +309,14 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     }
   }
   return { facts, notes: [...notes] }
+}
+/** Where an answer's source rows lead: each result's whole-selection page, and each counted fact's own records. */
+export interface SourceLinks { lists: string[]; related: Record<string, RelatedCite[]> }
+export function sourceLinks(results: ToolResult[]): SourceLinks {
+  const ok = results.filter(r => r.ok)
+  const related: Record<string, RelatedCite[]> = {}
+  for (const f of factSheet(ok).facts) if (f.cite?.related?.length) related[f.cite.url] = f.cite.related.slice(0, 12)
+  return { lists: ok.flatMap(r => r.list ? [r.list] : []), related }
 }
 const NUMBER_WORD = /\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?|millions?|billions?|trillions?|hundredth|thousandth|millionth|billionth|trillionth|half|halves|quarter|quarters|dozen|dozens|twice|thrice|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|\w+teenth|\w+tieth)\b/i
 /** Defensive boundary for any future connective prose. No model-authored
@@ -523,6 +532,8 @@ export interface AgenticPayload {
   passage_answer?: QualitativeAnswer
   chosen_facts?: number[]
   research_failure?: string
+  /** Not sent: read by linkAskSources when the response is built. */
+  source_links?: SourceLinks
 }
 /** Race as well as abort: a stub/provider ignoring cancellation cannot hold the route open. */
 export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: number, parent?: AbortSignal): Promise<T> {
@@ -667,7 +678,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
     ...(researched?.constraints?{answer_scope:researched.constraints}:{}),
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
     ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
-    ...over, timings: { ...timings, total_ms: Date.now() - t0 } })
+    ...over, source_links: sourceLinks(results), timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
   if (!deps.research && !electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
   let named: NamedScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false }
