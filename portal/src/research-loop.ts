@@ -325,7 +325,8 @@ export function createResearch(options: ResearchOptions): Research {
       if (notes.length) {
         const noteText = notes.join(' '), offset = Array.from(text).length + 2
         text += '\n\n' + noteText
-        const url = results.find(r => used.has(r.tool) && r.cite.length)?.cite[0].url
+        // The page listing the whole selection, not the first record that happens to be in it.
+        const first = results.find(r => r.ok && used.has(r.tool) && (r.list || r.cite.length)), url = first?.list ?? first?.cite[0]?.url
         if (url) { citations['coverage/t/body/0'] = [[offset, Array.from(text).length]]; sources.push({ resource: 'coverage', slug: '', title: 'Coverage of the selected records', href: url, url, snippet: noteText, cited: true, kind: 'record' }) }
       }
       // Record facts are always cited: uncited points beside them make the answer partly cited.

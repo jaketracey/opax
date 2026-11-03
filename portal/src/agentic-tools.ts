@@ -22,7 +22,7 @@ import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../pub
 import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
 import type { ToolEnv } from './tools'
 import { receiptYearWindow } from './receipt-period'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-16-receipts-wording/' + TOOL_REGISTRY_VERSION
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-17-source-links/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -54,8 +54,12 @@ export interface ToolDeps {
   signal?: AbortSignal
   withSignal?: (signal: AbortSignal) => Pick<ToolDeps, 'kb' | 'asset'>
 }
-export interface Cite { kind: 'count' | 'record' | 'export' | 'person' | 'speech'; label: string; url: string; value?: number | string }
-export interface ToolResult { coverage?: import('./ask-constraints').Coverage; tool: string; ok: boolean; error?: string; data?: Json; cite: Cite[]; query?: unknown; notes: string[]; ms?: number }
+export interface Cite { kind: 'count' | 'record' | 'export' | 'person' | 'speech'; label: string; url: string; value?: number | string; related?: RelatedCite[] }
+export interface ToolResult { coverage?: import('./ask-constraints').Coverage; tool: string; ok: boolean; error?: string; data?: Json; cite: Cite[]; query?: unknown; notes: string[]; ms?: number
+  /** A page listing the whole selection this result counted or ranked (not one of its rows): the coverage row opens it. */
+  list?: string }
+/** A counted fact's own records, each with its own page, shown as source rows beside the fact. */
+export interface RelatedCite { label: string; url: string }
 
 // ---------------------------------------------------------------- filters
 const label = (labelset: string, l: string) => ({ prop: 'label', labelset, label: l })
@@ -320,6 +324,7 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
 }
 
 // ---------------------------------------------------------------- member_votes
+const voteWord = (vote: string) => vote === 'aye' ? 'voted aye' : vote === 'no' ? 'voted no' : vote === 'paired' ? 'paired' : vote
 interface DivisionMember { name: string; party?: string; vote: string }
 interface DivisionFile { key: string; date: string; name?: string; house?: string; jurisdiction?: string; ayes?: number; noes?: number; members?: DivisionMember[]; bills?: { key?: string; title?: string }[] }
 export async function memberVotes(deps: ToolDeps, input: { keyword: string; person?: string | null; party?: string | null; limit?: number; since?: string; until?: string }): Promise<ToolResult> {
@@ -351,7 +356,9 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
   return {
     tool: 'member_votes', ok: true,
     data: { keyword, person: input.person ?? null, party: input.party ?? null, summary, rows: rows.slice(0, Math.min(Number(input.limit) || 40, 80)) },
-    cite: rows.slice(0, 12).map((r) => ({ kind: 'record' as const, label: `${r.date}: ${r.name}`, url: `${origin}/doc/${r.division}` })),
+    cite: rows.slice(0, 12).map((r) => ({ kind: 'record' as const, label: `${String(r.date).slice(0, 10)}: ${r.name}${input.person ? ` (${voteWord(String(r.vote))})` : ` (aye ${r.aye}, no ${r.no})`}`, url: `${origin}/doc/${r.division}` })),
+    // The same title search over divisions, as a list a reader can open.
+    list: `${origin}/search?${new URLSearchParams({ kind: 'division', q: keyword, mode: 'keyword' })}`,
     query: { kb: 'catalog title search, kind division', keyword, divisions_found: slugs.length },
     notes: ['Divisions are matched by a word in the division or bill title, so related divisions under other titles are missed.', 'A recorded vote is not a statement of reasons; read the speeches for those.'],
   }
@@ -383,6 +390,16 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
   const g = await money(deps)
   const node = new Map(g.nodes.map((n) => [n.id, n]))
   const from = dated ? window.from_year : Number(input.from_year) || undefined, to = dated ? window.to_year : Number(input.to_year) || undefined
+  // The receipts map filtered to this selection: /money/party/<party> was never a page.
+  const mapUrl = (party?: string, extra: Record<string, string> = {}) => {
+    const p = new URLSearchParams({ jur: 'federal', type: 'receipts' })
+    if (party) p.set('party', `party:${party}`)
+    if (input.industry) p.set('industry', input.industry)
+    if (from) p.set('from', String(from))
+    if (to) p.set('to', String(to))
+    for (const [k, v] of Object.entries(extra)) p.set(k, v)
+    return `${origin}/money?${p}`
+  }
   const limit = Math.min(Number(input.limit) || 5, 15)
   const notes = ['Federal AEC disclosed receipts, financial years 1998-99 to 2025-26, in the published selection of the 250 largest donors (so totals are lower bounds).', FEDERAL_RECEIPTS_NOTE, 'These are party receipts, not personal payments to politicians, and a receipt is not evidence that it influenced any vote or speech.']
   const coverage = { since: `${Math.max(from ?? 1998, 1998)}-07-01`, until: `${Math.min(to ?? 2025, 2025) + 1}-06-30`, as_of: null,
@@ -396,12 +413,14 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     const rows = ranked.slice(0,limit).map(({e,v})=>{
       const donor=node.get(e.source)!,view=donorDisclosure(donor)
       const reference=(donor.returnReferences || []).find(ref=>(!from || Number(String(ref.year).slice(0,4))>=from) && (!to || Number(String(ref.year).slice(0,4))<=to))
-      return {donor:view.name,href:view.href,return_reference:reference ? returnReference(reference) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1]}
+      return {donor:view.name,href:view.href,id:e.source,return_reference:reference ? returnReference(reference) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1]}
     })
     return {
       tool: 'party_receipts', ok: true,
-      data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows,coverage},
-      cite: [{kind:'export',label:`Disclosed receipts to ${input.party} (AEC returns)`,url:`${origin}/money/party/${encodeURIComponent(input.party)}`},...rows.map(r=>({kind:'export' as const,label:`${r.donor} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : 'https://transparency.aec.gov.au/'}))],
+      data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows:rows.map(({id:_id,...row})=>row),coverage},
+      // A source with no public donor page opens the same map focused on it, never the AEC home page.
+      cite: [{kind:'export',label:`Disclosed receipts to ${input.party} (AEC returns)`,url:mapUrl(input.party)},...rows.map(r=>({kind:'export' as const,label:`${r.donor} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : mapUrl(input.party!,{focus:r.id})}))],
+      list: mapUrl(input.party),
       query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to }, notes,
     }
   }
@@ -416,7 +435,8 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     const rows = [...sums].map(([party, [t, c]]) => ({ party, total_aud: t, receipts: c })).filter((r) => r.total_aud > 0).sort((a, b) => b.total_aud - a.total_aud)
     return {
       tool: 'party_receipts', ok: true, data: { industry: input.industry, years: [from ?? null, to ?? null], rows, coverage },
-      cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} receipt sources to ${r.party}`, value: r.total_aud, url: `${origin}/money/party/${encodeURIComponent(r.party)}` })),
+      cite: rows.map((r) => ({ kind: 'export' as const, label: `${input.industry} receipt sources to ${r.party}`, value: r.total_aud, url: mapUrl(r.party) })),
+      list: mapUrl(),
       query: { file: '/graph/money.json', industry: input.industry, from, to }, notes,
     }
   }

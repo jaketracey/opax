@@ -98,6 +98,7 @@ import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, int
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type NamedScope, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
 import { agenticAskPayload } from './agentic-response'
+import { linkAskSources } from './ask-source-links'
 import { recordAgenticRun } from './agentic-monitor'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
@@ -6337,7 +6338,7 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const bad = validateFilters(k => input[k]); if (bad) return json({ error: bad }, 400)
   const limited = await rateLimited(env.ASK_LIMITER, request); if (limited) return limited
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
-  return json(agenticAskPayload(run, q))
+  return json(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN))
 }
 async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const override = request.headers.get('x-opax-research')
@@ -6504,7 +6505,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     }
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
-      const finalPayload=loopRoute?groundAnswerPayload(payload,question):payload
+      // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
+      const finalPayload=linkAskSources(loopRoute?groundAnswerPayload(payload,question):payload,run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
@@ -6513,7 +6515,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     if (!streaming) {
       try {
         const run = await executeAgentic(input, env, ctx, undefined, budget.signal, budget.remaining, namedScope, trackRun)
-        if (request.signal.aborted) return json(agenticAskPayload(run, question))
+        if (request.signal.aborted) return json(linkAskSources(agenticAskPayload(run, question),run.source_links,SITE_ORIGIN))
         if (!loopRoute || run.answered && !run.over_budget) budget.signal.throwIfAborted()
         return electorateData || run.answered && !run.over_budget ? withCacheStatus(finish(run), 'MISS', false) : await routedFallback(run.research)
       } catch { return loopRoute ? await routedFallback(lastResearch) : expired() }

@@ -55,6 +55,7 @@ export async function callTool(env: ToolEnv, name: string, args: unknown): Promi
     return { rows: [], citations: [], notes: [], error: 'Published tool data is temporarily unavailable.' }
   }
 }
+const REGISTER_PAGES: Record<string, string> = { contracts: '/money/contracts', grants: '/money/grants' }
 /** Minimal adapter for the route lane's current ToolSpec/ToolResult contract. */
 export const askToolSpecs: ToolSpec[] = tools.map(tool => ({
   name: tool.askName ?? tool.name, description: tool.description, input: tool.inputSchema,
@@ -63,6 +64,8 @@ export const askToolSpecs: ToolSpec[] = tools.map(tool => ({
     return { tool: tool.askName ?? tool.name, ok: !data.error, ...(data.error ? { error: data.error } : {}), data,
       cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }) })),
       notes: data.notes, query: data.query,
+      // The register a result was drawn from: its coverage row opens this, not one of its records.
+      ...(REGISTER_PAGES[tool.name] ? { list: `${deps.origin ?? 'https://opax.com.au'}${REGISTER_PAGES[tool.name]}` } : {}),
     }
   },
 }))
