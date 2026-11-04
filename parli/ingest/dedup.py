@@ -82,5 +82,9 @@ class LazyDateSeen:
         self._load(self._date_of(key))
         self.keys.add(key)
 
+    def discard(self, key: str) -> None:
+        self._load(self._date_of(key))
+        self.keys.discard(key)
+
     def __len__(self) -> int:
         return len(self.keys)

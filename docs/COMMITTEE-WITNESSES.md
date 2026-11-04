@@ -171,6 +171,54 @@ About 2,850 requests for the three new datasets (104 listing pages, 484 TOCs, 2,
 `--adopt-legacy`, at one a second: one hour and a quarter. After a change to the witness-list parser,
 `committee_witnesses fetch --refetch` re-reads every hearing's attendance from the cached pages (no requests).
 
+## Local PDF import: 26–29 October 2026 supplementary estimates (staged 4 Nov 2026)
+
+ParlInfo has refused the honest agent since 10 Oct 2026 (HTTP 403; `parli/ingest/http.py` PAUSED_HOSTS), so the
+`committees` step is paused and the HTML ingest cannot read new hearings. On 4 Nov 2026 Jake saved the round's published
+transcripts in a browser (the Codex in-app browser, from APH's Estimates Transcript Schedule; no crawler, no user-agent
+change). `parli.ingest.committee_pdf` turns those PDFs into the rows the HTML ingest would have written. Automated APH
+acquisition stays paused: the import makes no request to any APH host.
+
+- **What came in**: 14 hearings (`committees/estimate/30030`–`30043`), 1,782 pages, all **Proof**. Staged in
+  [`data/staged/committee-pdf/2026-10-supp-estimates/`](../data/staged/committee-pdf/2026-10-supp-estimates/manifest.json):
+  the manifest (provenance, counts, the sha256 of every staged file), one JSONL of turns and one of In Attendance people per
+  hearing, and a per-page character account. The PDFs stay out of git; the originals are archived on the desktop under
+  `~/opax-staging/committee-pdf/2026-10-supp-estimates/` with their checksums.
+- **Pending, not missing**: 30044 (Economics, 29 Oct) and 30045 (Community Affairs, 29 Oct) were "Pending" on APH's
+  schedule when the files were saved. They are recorded as pending in the manifest and in the apply log.
+- **Provenance on every row**: origin `local_pdf`; `source_url` is the ParlInfo display URL from the browser manifest;
+  `source_attribution` names the revision (Proof), the committee, date and hearing, the PDF's sha256 and the acquisition
+  note ("saved in a browser by Jake, 4 Nov 2026"); `citation_anchor` is the stable turn id. `ext_committee_pdf_hearings`
+  and `ext_committee_pdf_turns` keep the rest, including PDF and printed page numbers.
+- **Ids**: `speeches.hearing_id` is `committees/estimate/<ref>/lpdf` (four characters where the HTML ingest has a
+  four-digit fragment, so every `rsplit('/')` and `substr(..., len-5)` still finds the hearing, and it can never equal a
+  fragment). A turn's id is `committees/estimate/<ref>/lpdf/<seq>`: the parse is deterministic, so the same PDF gives the
+  same ids, and a re-apply adds nothing.
+- **Who is speaking** follows the rules above. Witnesses come from the PDF's own In Attendance blocks (full name, position,
+  organisation, `speaker_type=witness`, no person_id). CHAIR rows stay chair rows. The PDF carries no member links, so a
+  senator's Handbook id comes from a label → PHID table built from APH's own member links in the cached ParlInfo
+  fragments of earlier hearings (`senators.json`; Feb 2025–Jun 2026), never from a surname match against `members`; the
+  box maps the PHID to the person, full name and canonical party as `resolve` does. Two senators who joined since
+  (labels BLEYER and GATENBY, 280 turns) are not in that table and stay unlinked. `apply --senate-roster-fallback`
+  would link such labels to the one current senator of that name in `ext_handbook_people` who is also on the hearing's
+  "Members in attendance" line; it is a name match, so it is off and not used by the nightly.
+- **Nightly**: the `committee_pdf` step of `scripts/daily_refresh.sh`, right after `committees`. It checks every staged
+  sha256 first (a mismatch refuses the step, exit 2, nothing written), writes in one transaction that is checked and rolled
+  back on any problem, and leaves an applied hearing alone. The rows are already typed and resolved, so `link_speakers`
+  skips them and the attendance fetch (which would ask ParlInfo) is not triggered; `fts_sync`, `classify` and the push
+  then carry them to the knowledge box.
+- **Supersession** (the rule): HTML beats PDF, and Official beats Proof. When the HTML ingest syncs a hearing that has
+  local-PDF rows (once APH allows it), it fetches every fragment first; only then does it delete the PDF rows, queue a
+  knowledge-box DELETE for each, and store the fragments' rows. A partial fetch keeps the PDF rows. The import never adds
+  rows to a hearing the HTML ingest holds. A later staged PDF of the same hearing (the Official, or a corrected copy) is
+  aligned turn by turn and updated in place (same speech_id, a text PATCH for the box; turns it drops are deleted and
+  queued); an older revision never replaces a newer one.
+
+Verify after the nightly that applied it: `daily.log` shows `[committee_pdf] OK` with about 23,800 rows added and the
+summary line `committee_senate newest 2026-10-29`; `corpus.json` `refresh.latest_source_dates.committee_senate` is
+`2026-10-29` while `refresh.source_access.committees.status` stays `paused`; the search phrases in the import's handover
+note each return their hearing.
+
 ## On the portal
 
 - Search results carry `chamber`, `person_id`, `speaker_type`, `role` and `organisation`.

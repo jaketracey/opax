@@ -179,23 +179,36 @@ def parse_attendance(page: str) -> list[dict]:
     """The people named in a transcript's In Attendance block, in order."""
     start = page.find('class="docDiv"')
     doc = page[start:] if start >= 0 else page
-    paras = PARA_RE.findall(doc)
+    return attendance_from_paragraphs(
+        (clean_text(inner), "font-weight:bold" in inner, bool(SPEAKER_SPAN_RE.search(inner)))
+        for _attrs, inner in PARA_RE.findall(doc))
+
+
+REMOTE_RE = re.compile(r"\s*\[(?:by|via)\s+[^\]]*\]\s*", re.I)      # 'Ms Jane Doe AO [by video link]'
+
+
+def attendance_from_paragraphs(paras) -> list[dict]:
+    """The people of the first In Attendance block in a run of paragraphs, each (text, bold, opens with a speaker
+    label[, is a person's entry]). The ParlInfo page (parse_attendance) and the PDF import (parli.ingest.committee_pdf)
+    both read it here. The optional fourth item comes from the PDF's layout (an indented, non-bold entry line): such a
+    line is a person even when the list prints no honorific ('Jane Doe, Assistant Secretary')."""
     rows: list[dict] = []
     seen_head = False
     organisation = None
     group = None
     seq = 0
-    for attrs, inner in paras:
-        text = clean_text(inner)
+    for item in paras:
+        text, bold, speaker = item[0], item[1], item[2]
+        person_line = len(item) > 3 and bool(item[3])
+        text = REMOTE_RE.sub(" ", text).strip()
         if not seen_head:
             if re.fullmatch(r"in attendance:?", text, re.I):
                 seen_head = True
             continue
         if not text:
             continue
-        if SPEAKER_SPAN_RE.search(inner) or STOP_RE.match(text) or CHAIR_RE.match(text):
+        if speaker or STOP_RE.match(text) or CHAIR_RE.match(text):
             break
-        bold = "font-weight:bold" in inner
         hon, cls, rest = split_honorific(text)
         if hon and cls:
             name_part, _, position = rest.partition(",")
@@ -211,6 +224,18 @@ def parse_attendance(page: str) -> list[dict]:
                 "group_heading": group, "kind": kind,
             })
             continue
+        if person_line and not bold:
+            name_part, _, position = text.partition(",")
+            name, post = strip_postnominals(name_part.strip())
+            if 2 <= len(name.split()) <= 4 and not re.search(r"\d", name) and not ORG_HINT_RE.search(name):
+                position = re.sub(r"\s+", " ", position).strip(" ,")
+                seq += 1
+                rows.append({
+                    "seq": seq, "honorific": None, "honorific_class": None, "name": name, "surname": surname_of(name),
+                    "postnominals": post or None, "position": position or None, "organisation": organisation,
+                    "group_heading": group, "kind": "minister" if re.search(r"\bminister\b", position, re.I) else "official",
+                })
+                continue
         # A heading: an organisation, or a group inside the current one.
         if bold or ORG_HINT_RE.search(text) or text.isupper():
             if ORG_HINT_RE.search(text) or text.isupper() or organisation is None:
@@ -436,11 +461,16 @@ def match_roster(tail: str, hon_class: str | None, roster: list[dict]) -> dict |
 
 
 def trusted_hearings(db: sqlite3.Connection) -> set[str]:
-    """Hearings whose rows the committee ingest wrote with a speaker_type read from the transcript's markup."""
-    try:
-        return {r[0] for r in db.execute("SELECT hearing_base FROM ext_committee_hearings WHERE parser_version >= 2")}
-    except sqlite3.OperationalError:
-        return set()
+    """Hearings whose rows the committee ingest wrote with a speaker_type read from the transcript's markup, and the
+    ones the local-PDF import (parli.ingest.committee_pdf) wrote from the transcript's layout."""
+    out: set[str] = set()
+    for sql in ("SELECT hearing_base FROM ext_committee_hearings WHERE parser_version >= 2",
+                "SELECT hearing_base FROM ext_committee_pdf_hearings WHERE status = 'applied'"):
+        try:
+            out |= {r[0] for r in db.execute(sql)}
+        except sqlite3.OperationalError:
+            pass
+    return out
 
 
 def pushed_checkpoint() -> int | None:

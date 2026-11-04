@@ -364,10 +364,55 @@ def get_ingested_hearings(db: sqlite3.Connection, since: str | None = None) -> s
         if since:
             sql += " AND date >= ?"
             params.append(since)
-        known |= {r[0].rsplit("/", 1)[0] for r in db.execute(sql, params) if r[0]}
+        # rows the local-PDF import wrote (<base>/lpdf) do not make a hearing "ingested": the transcript is to be synced
+        # all the same, and sync_hearing replaces those rows (local_pdf_rows / supersede_local_pdf)
+        known |= {r[0].rsplit("/", 1)[0] for r in db.execute(sql, params) if r[0] and not r[0].endswith("/" + LOCAL_PDF_SUFFIX)}
     except sqlite3.OperationalError:
         pass
     return known
+
+
+# ---------------------------------------------------------------------------
+# Rows imported from a locally saved PDF (parli.ingest.committee_pdf) give way to the transcript's fragments
+# ---------------------------------------------------------------------------
+
+LOCAL_PDF_SUFFIX = "lpdf"     # committee_pdf.ROW_SUFFIX: speeches.hearing_id = <hearing base>/lpdf
+
+
+def local_pdf_rows(db: sqlite3.Connection, hearing: HearingMetadata) -> list[sqlite3.Row | tuple]:
+    """(speech_id, speaker_name, date, text) of the rows the local-PDF import stored for this hearing."""
+    source = DATASET_MAP[hearing.dataset]
+    sql = "SELECT speech_id, speaker_name, date, text FROM speeches WHERE source = ? AND hearing_id = ?"
+    params: list = [source, f"{hearing.hearing_id}/{LOCAL_PDF_SUFFIX}"]
+    if hearing.date:
+        sql += " AND date = ?"
+        params.append(hearing.date)
+    return db.execute(sql, params).fetchall()
+
+
+def supersede_local_pdf(db: sqlite3.Connection, hearing: HearingMetadata, rows, seen, status: str | None,
+                        stamp: str) -> int:
+    """Delete the local-PDF rows of a hearing whose fragments are about to be stored, and queue a knowledge-box DELETE
+    for each (kb_text_patch sends a DELETE only for rows at or below the push checkpoint; the others never reached the
+    box). Their dedup keys leave `seen`, so the fragments' identical turns are stored rather than skipped as repeats.
+    Returns the number of rows removed."""
+    for r in rows:
+        sid, speaker, day, text = r[0], r[1], r[2], r[3]
+        db.execute("DELETE FROM speeches WHERE speech_id = ?", (sid,))
+        kb_text_patch.queue(db, KB_QUEUE, sid, "delete", f"local PDF row superseded by the ParlInfo {status or 'transcript'}", stamp)
+        discard = getattr(seen, "discard", None)
+        if discard:
+            discard(f"{speaker}|{day}|{text_hash(text)}")
+    try:
+        db.execute("UPDATE ext_committee_pdf_turns SET speech_id = NULL, skipped = 'superseded' WHERE hearing_base = ?",
+                   (hearing.hearing_id,))
+        db.execute("UPDATE ext_committee_pdf_hearings SET status = 'superseded', superseded_by = ?, superseded_at = ? "
+                   "WHERE hearing_base = ?", (f"html:{status or 'unknown'}", stamp, hearing.hearing_id))
+    except sqlite3.OperationalError:
+        pass                     # the import's tables only exist where it has run
+    db.execute("DELETE FROM ext_committee_attendance WHERE hearing_base = ? AND fragment = ?",
+               (hearing.hearing_id, LOCAL_PDF_SUFFIX))
+    return len(rows)
 
 
 def _execute_with_retry(db: sqlite3.Connection, sql: str, params: tuple, retries: int = 15) -> None:
@@ -577,10 +622,11 @@ class SyncResult:
     status_changed: bool = False
     is_new: bool = False
     skipped: str | None = None
+    superseded_pdf: int = 0          # rows the local-PDF import had stored for this hearing, replaced by its fragments
 
     @property
     def changed(self) -> bool:
-        return bool(self.inserted or self.updated or self.deleted or self.status_changed)
+        return bool(self.inserted or self.updated or self.deleted or self.status_changed or self.superseded_pdf)
 
 
 def _write_witness_lists(db: sqlite3.Connection, base: str, witnesses: list[tuple[str, object]], stamp: str) -> None:
@@ -628,6 +674,24 @@ def sync_hearing(http: RateLimitedSession, db: sqlite3.Connection, cache: Fragme
     res.fragments_expected = len(frags)
     res.status = hearing.status
 
+    # Rows the local-PDF import stored for this hearing (parli.ingest.committee_pdf) give way to the transcript's
+    # fragments, never sit beside them. They go only once every fragment is in hand: a partial fetch keeps them and
+    # writes nothing, so the hearing is simply tried again on a later run.
+    prefetched: dict[str, str] = {}
+    pdf_rows = local_pdf_rows(db, hearing)
+    if pdf_rows:
+        for frag in frags:
+            page = cache.get(http, base, frag, refresh=refresh)
+            if page is None:
+                res.failed_fragments.append(frag)
+            else:
+                prefetched[frag] = page
+        if res.failed_fragments:
+            res.skipped = (f"{len(pdf_rows)} local-PDF rows kept: fragment(s) {','.join(res.failed_fragments)} could not "
+                           "be fetched, so the transcript does not replace them yet")
+            return res
+        res.superseded_pdf = supersede_local_pdf(db, hearing, pdf_rows, seen, hearing.status, stamp)
+
     legacy = res.is_new and _has_rows(db, hearing)          # stored by the older ingest: adopt, do not duplicate
     if res.is_new:
         db.execute(
@@ -647,7 +711,7 @@ def sync_hearing(http: RateLimitedSession, db: sqlite3.Connection, cache: Fragme
     witnesses: list[tuple[str, object]] = []
     turns_total = 0
     for frag in frags:
-        page = cache.get(http, base, frag, refresh=refresh)
+        page = prefetched.get(frag) or cache.get(http, base, frag, refresh=refresh)
         if page is None:
             res.failed_fragments.append(frag)
             continue
@@ -711,7 +775,7 @@ def sync_hearing(http: RateLimitedSession, db: sqlite3.Connection, cache: Fragme
     res.status_changed = (not res.is_new) and hearing.status != prev_status
     complete = not res.failed_fragments
     content = hearing_hash(frag_hashes) if complete else None
-    changed_now = bool(res.inserted or res.updated or res.deleted or res.status_changed) and not res.is_new
+    changed_now = bool(res.inserted or res.updated or res.deleted or res.status_changed or res.superseded_pdf) and not res.is_new
     db.execute(
         "UPDATE ext_committee_hearings SET committee_name = ?, inquiry_title = ?, hearing_date = ?, category = ?, status = ?, "
         "fragments_expected = ?, fragments_ok = ?, turns_stored = ?, content_hash = ?, last_checked = ?, "
@@ -866,7 +930,7 @@ def main(argv: list[str] | None = None) -> int:
         log(f"  {len(known)} hearings already ingested (since {since})")
 
     exit_code = 0
-    total_ins = total_upd = total_del = 0
+    total_ins = total_upd = total_del = total_pdf = 0
     try:
         # --- discovery
         hearings: list[HearingMetadata]
@@ -924,8 +988,11 @@ def main(argv: list[str] | None = None) -> int:
                 total_ins += r.inserted
                 total_upd += r.updated
                 total_del += r.deleted
+                total_pdf += r.superseded_pdf
                 bits = [f"{r.fragments_ok}/{r.fragments_expected} fragments", f"status {r.status or '?'}",
                         f"+{r.inserted} rows"]
+                if r.superseded_pdf:
+                    bits.append(f"{r.superseded_pdf} local-PDF rows replaced")
                 if not r.is_new:
                     bits += [f"{r.updated} updated ({r.relabelled} relabelled)", f"{r.unchanged_fragments} fragments unchanged"]
                 if r.orphaned:
@@ -950,8 +1017,10 @@ def main(argv: list[str] | None = None) -> int:
 
     log(f"\n{'=' * 60}")
     log(f"Ingestion complete: {total_ins} speeches inserted, {total_upd} updated in place, {total_del} removed; {http.requests} requests")
-    if total_upd or total_del:
-        log(f"COMMITTEES_CHANGED rows_updated={total_upd} rows_removed={total_del}")
+    if total_pdf:
+        log(f"Local-PDF rows replaced by ParlInfo transcripts: {total_pdf}")
+    if total_upd or total_del or total_pdf:
+        log(f"COMMITTEES_CHANGED rows_updated={total_upd} rows_removed={total_del + total_pdf}")
     total_committee = db.execute(
         "SELECT COUNT(*) FROM speeches WHERE source IN (%s)" % ",".join("?" * len(COMMITTEE_SOURCES)), COMMITTEE_SOURCES).fetchone()[0]
     log(f"Total committee speeches in DB: {total_committee}")
