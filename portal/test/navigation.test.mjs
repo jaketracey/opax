@@ -10,8 +10,8 @@ import { workerFetch } from './helpers/worker-fetch.mjs';
 await import('../public/navigation.js');
 const nav = globalThis.OpaxNavigation;
 const read = name => readFileSync(new URL('../public/' + name, import.meta.url), 'utf8');
-const hubs = JSON.parse(read('hubs/index.json'));
-const estimatesHref = `/estimates/${hubs.weeks.find(w => w.estimates).estimates}`;
+// A round of Senate estimates: a record inside the Senate estimates section.
+const estimatesHref = '/estimates/2026-10';
 const menuLinks = nav.groups.flatMap(g => g.columns.flatMap(c => [...c.links, ...(c.section ? [c.section] : [])]));
 const menuHrefs = new Set([...menuLinks, ...nav.footerOnly].map(l => l.href));
 const label = steps => steps.map(s => s.label).join(' › ');
@@ -32,7 +32,7 @@ function probe(path, name, { env, media } = {}) {
 // link, as a record inside a section the menus link, or from a documented place
 // in context. A new page kind has to be added here, with its way in.
 const ROUTES = [
-  ...[...menuHrefs].map(href => ({ route: href === '/estimates' ? estimatesHref : href, way: 'menu' })),
+  ...[...menuHrefs].map(href => ({ route: href, way: 'menu' })),
   ...['/sitting/2026-10-12', estimatesHref, '/bill/au-federal-r7549', '/instrument/F2026L00001', '/audit/2025-1',
     '/subject/person/anthony-albanese', '/subject/party/Australian%20Labor%20Party', '/subject/electorate/grayndler',
     '/subject/donor/an-organisation', '/subject/supplier/1', '/subject/agency/1', '/subject/campaigner/a-campaigner',
@@ -55,7 +55,7 @@ const PANEL_ROUTES = { 'money-records': '/money/receipts', connections: '/connec
 test('every page kind is reachable from the menus or a documented entry', () => {
   const known = new Set(ROUTES.map(r => r.route));
   for (const { route, way, entry, control, from } of ROUTES) {
-    if (way === 'menu') assert.ok(menuHrefs.has(route) || route === estimatesHref, route);
+    if (way === 'menu') assert.ok(menuHrefs.has(route), route);
     else if (way === 'section') {
       const section = nav.trail(route).find(s => s.href);
       assert.ok(section && menuHrefs.has(section.href), `${route} sits in a menu section (${label(nav.trail(route))})`);
@@ -77,7 +77,7 @@ test('every page kind is reachable from the menus or a documented entry', () => 
 });
 
 test('every menu, footer and shortcut link is a page the Worker serves', async () => {
-  const hrefs = new Set([...menuHrefs, ...nav.shortcuts.map(s => s.href)].map(h => h === '/estimates' ? estimatesHref : h));
+  const hrefs = new Set([...menuHrefs, ...nav.shortcuts.map(s => s.href)]);
   for (const href of hrefs) {
     // New coverage lanes remain staged until orchestrator promotion.
     const fixtures = href === '/register/government-finance' ? {'/government-finance/data.json': JSON.parse(readFileSync(new URL('../../data/staged/abs-gfs/hub.json',import.meta.url),'utf8'))}
@@ -94,7 +94,7 @@ test('every menu, footer and shortcut link is a page the Worker serves', async (
 });
 
 test('a section page\'s trail is its menu name; About\'s pages sit under About OPAX', () => {
-  for (const link of [...menuLinks, ...nav.footerOnly].filter(l => !l.record && l.href !== '/estimates')) {
+  for (const link of [...menuLinks, ...nav.footerOnly].filter(l => !l.record)) {
     const steps = nav.trail(link.href);
     assert.equal(steps.at(-1).label, link.label, link.href);
     assert.equal(steps.at(-1).href, undefined, `${link.href}: the page itself is plain`);
@@ -107,6 +107,7 @@ test('a section page\'s trail is its menu name; About\'s pages sit under About O
 const TRAILS = [
   ['/sitting', 'Sitting weeks'],
   ['/sitting/2026-10-12', 'Sitting weeks › 12 Oct 2026 – 15 Oct 2026'],
+  ['/estimates', 'Senate estimates'],
   [estimatesHref, 'Senate estimates › Supplementary Budget estimates 2026–27'],
   ['/bills', 'Bills'],
   ['/instruments', 'Legislative instruments'],

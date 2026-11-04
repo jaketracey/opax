@@ -183,6 +183,23 @@ test('an older round reads the same way; an unknown round is not found; a knowle
   assert.match(main(none.html), /One day of hearings was held/);
 });
 
+test('Senate estimates is a permanent menu link: no gate, in the menus, the sheet, the footer and the trails', async () => {
+  const parliament = nav.groups.find(g => g.id === 'parliament');
+  const link = parliament.columns.find(c => c.heading === 'In the chamber').links.find(l => l.href === '/estimates');
+  assert.ok(link && !link.gate, 'no gate on the entry');
+  assert.equal(nav.published('estimates'), false, 'there is no estimates gate to open');
+  const footer = nav.footerHTML(() => true, { slot: false });
+  assert.match(footer, /<a class="footer-link" href="\/estimates">Senate estimates<\/a>/);
+  assert.doesNotMatch(nav.footerHTML(), /data-gate-slot="estimates"/);
+  assert.deepEqual(nav.trail('/estimates').map(s => s.label), ['Senate estimates']);
+  assert.deepEqual(nav.trail('/estimates/2026-10', 'Supplementary Budget estimates 2026–27'), [{ label: 'Senate estimates', href: '/estimates' }, { label: 'Supplementary Budget estimates 2026–27' }]);
+  assert.equal(nav.active('/estimates'), 'parliament');
+  // The static footer index the build stamps into every page carries the link with no sitting week in sight.
+  assert.match(readFileSync(new URL('../public/index.html', import.meta.url), 'utf8'), /<a class="footer-link" href="\/estimates">Senate estimates<\/a>/);
+  // The menu link the Worker serves.
+  assert.equal((await workerFetch('/estimates', {})).status, 200);
+});
+
 test('the index and every round are in the sitemap and the IndexNow journal', () => {
   const paths = hubs.pages.map(p => p.path);
   assert.ok(paths.includes('/estimates'));
