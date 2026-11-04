@@ -17,7 +17,10 @@ const compile = async entry => {
   return import('data:text/javascript;base64,'+Buffer.from(r.outputFiles[0].text).toString('base64'));
 };
 const {renderVicElection,vicElectionPage,findSeats} = await compile('../src/vic-election.ts');
-const {renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
+const {renderSittingIndex,hubPage} = await compile('../src/hubs.ts');
+const {renderEstimatesRound,renderEstimatesIndex} = await compile('../src/estimates.ts');
+const estimatesRounds = JSON.parse(await readFile(new URL('../../scripts/hubs/estimates-rounds.json',import.meta.url),'utf8'));
+const renderEstimates = (money, footer) => renderEstimatesRound(estimatesRounds,estimatesRounds.rounds.find(r => r.id === money.id),null,'2026-11-04',money,footer);
 const {default:worker} = await compile('../src/index.ts');
 const data = await json('hubs/vic-election-2026.json');
 const places = await json(VIC_ELECTION_PLACES.slice(1));
@@ -131,7 +134,7 @@ test('production config publishes with the exact line; staging explicitly stays 
 test('federal hub footer values remain optional, escaped and safe',async()=>{
   const cfg={AUTHORISATION_LINE:'Authorised by <Approved Person>, Melbourne',CORRECTION_CONTACT:'/corrections'};
   const weeks=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');
-  const pages=[renderSittingIndex(weeks,'2026-10-10',cfg),renderEstimates(estimates,cfg),await hubPage('sitting','bad',read,[],new Map(),undefined,cfg),await hubPage('sitting',weeks.weeks[0].start,read,[],new Map(),undefined,cfg)];
+  const pages=[renderSittingIndex(weeks,'2026-10-10',cfg),renderEstimates(estimates,cfg),renderEstimatesIndex(estimatesRounds,new Map(),'2026-11-04',cfg),await hubPage('sitting','bad',read,[],new Map(),undefined,cfg),await hubPage('sitting',weeks.weeks[0].start,read,[],new Map(),undefined,cfg)];
   for(const p of pages){assert.match(p.html,/<div class="authorisation">[\s\S]*Authorised by &lt;Approved Person&gt;, Melbourne[\s\S]*href="\/corrections">Report a correction[\s\S]*<\/div>/);assert.doesNotMatch(p.html,/48 hours/);}
   for(const cfg of [{},{AUTHORISATION_LINE:null,CORRECTION_CONTACT:null}])assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',cfg).html,/authorisation-line|Report a correction/);
   assert.doesNotMatch(renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'javascript:alert(1)'}).html,/href="javascript:/);

@@ -19,7 +19,7 @@
         { heading: 'In the chamber', links: [
           page('/sitting', 'Sitting weeks', 'Every division and every new bill, week by week.'),
           page('/video/senate', 'Senate video', 'Question Time and first speeches, back to 2020.'),
-          page('/estimates', 'Senate estimates', 'Hearings, the agencies called and their recent awards.', { gate: 'estimates' }),
+          page('/estimates', 'Senate estimates', 'Every round\'s hearing transcripts, by committee and day.'),
         ] },
         { heading: 'Laws', links: [
           page('/bills', 'Bills', 'Each bill\'s stages, its votes, the debate and a summary.'),
@@ -149,7 +149,7 @@
     if (path === '/chat') return { parent: ASK, page: CHAT };
     if (path === EXPLAIN.href) return { parent: sectionPages.get('/money'), page: EXPLAIN };
     if (path.startsWith('/doc/')) return { section: SEARCH };
-    if (path.startsWith('/estimates/')) return { section: sectionPages.get('/sitting') };
+    if (path.startsWith('/estimates/')) return { section: sectionPages.get('/estimates') };
     if (path.startsWith('/instrument/')) return { section: sectionPages.get('/instruments') };
     if (path.startsWith('/bill/')) return { section: sectionPages.get('/bills') };
     if (path === '/explore' && params.get('game')) return { section: sectionPages.get('/explore') };
@@ -197,8 +197,8 @@
 
   // --- gates: optional sections published on some deployments only -----------
   // The Worker marks the ones it knows (<html data-nav-gates="vic-election reports">);
-  // the instruments catalogue and the estimates round are read from their data.
-  const gates = { instruments: false, 'vic-election': false, estimates: false, reports: false };
+  // the instruments catalogue is read from its data.
+  const gates = { instruments: false, 'vic-election': false, reports: false };
   // In a page, a section the Worker withholds names no step of a trail: its
   // addresses are not-found pages there. (The server's own trails are drawn only
   // for pages it serves, so it never asks.)
@@ -242,8 +242,6 @@
       const today = sydneyDay();
       const weeks = (index?.weeks || []).filter(w => /^\d{4}-\d{2}-\d{2}$/.test(w.start) && w.end >= today).sort((a, b) => a.start.localeCompare(b.start));
       const next = weeks[0];
-      const estimates = weeks.find(w => w.estimates);
-      if (estimates && /^[\w-]+$/.test(estimates.estimates)) openGate('estimates', `/estimates/${estimates.estimates}`);
       if (!next) return null;
       week = { href: `/sitting/${next.start}`, now: next.start <= today, range: dateRange(next.start, next.end),
         houses: next.houses.map(h => HOUSES[h] || h).join(' and ') };
@@ -505,7 +503,7 @@
   globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, tools, money, active, trail, moneyNav, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, published, FULL_NAV };
   if (typeof document === 'undefined') return;
   document[initialised] = true;
-  for (const name of (document.documentElement.dataset.navGates || '').split(/\s+/)) if (name in gates && name !== 'estimates') gates[name] = true;
+  for (const name of (document.documentElement.dataset.navGates || '').split(/\s+/)) if (name in gates) gates[name] = true;
   // Audit and instrument pages carry no person links (the Worker strips them
   // from the server HTML); the menus drawn here follow the same rule.
   const instrumentPage = /^\/(?:instruments?|audit)(\/|$)/.test(location.pathname);

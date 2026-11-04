@@ -1,0 +1,32 @@
+{
+  "updated": "2026-11-04",
+  "note": "The Senate estimates rounds the record holds hearing transcripts for, newest first. Hearing days are the scheduled days of each round (and known spill-over days); which committees sat on each day is read from the record (Committee Hansard transcripts in the knowledge box) when the page is served. Dates checked against APH's estimates pages and the transcripts' own dates, 4 Nov 2026. Add the next round here when the Senate sets its dates.",
+  "source_url": "https://www.aph.gov.au/Parliamentary_Business/Senate_estimates",
+  "committees": [
+    {"id": "community-affairs", "name": "Community Affairs", "full": "Community Affairs Legislation Committee"},
+    {"id": "economics", "name": "Economics", "full": "Economics Legislation Committee"},
+    {"id": "education-and-employment", "name": "Education and Employment", "full": "Education and Employment Legislation Committee"},
+    {"id": "environment-and-communications", "name": "Environment and Communications", "full": "Environment and Communications Legislation Committee"},
+    {"id": "finance-and-public-administration", "name": "Finance and Public Administration", "full": "Finance and Public Administration Legislation Committee"},
+    {"id": "foreign-affairs-defence-and-trade", "name": "Foreign Affairs, Defence and Trade", "full": "Foreign Affairs, Defence and Trade Legislation Committee"},
+    {"id": "legal-and-constitutional-affairs", "name": "Legal and Constitutional Affairs", "full": "Legal and Constitutional Affairs Legislation Committee"},
+    {"id": "rural-and-regional-affairs-and-transport", "name": "Rural and Regional Affairs and Transport", "full": "Rural and Regional Affairs and Transport Legislation Committee"}
+  ],
+  "rounds": [
+    {"id": "2026-10", "type": "supplementary", "name": "Supplementary Budget estimates 2026–27", "start": "2026-10-26", "end": "2026-10-29",
+      "days": ["2026-10-26", "2026-10-27", "2026-10-28", "2026-10-29", "2026-10-30"]},
+    {"id": "2026-05", "type": "budget", "name": "Budget estimates 2026–27", "start": "2026-05-25", "end": "2026-06-05",
+      "days": ["2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05"]},
+    {"id": "2026-02", "type": "additional", "name": "Additional estimates 2025–26", "start": "2026-02-09", "end": "2026-02-12",
+      "days": ["2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13"]},
+    {"id": "2025-10", "type": "supplementary", "name": "Supplementary Budget estimates 2025–26", "start": "2025-10-07", "end": "2025-12-04",
+      "blocks": [{"start": "2025-10-07", "end": "2025-10-10"}, {"start": "2025-12-01", "end": "2025-12-04"}],
+      "note": "Held in two blocks: 7–10 October and 1–4 December 2025.",
+      "days": ["2025-10-07", "2025-10-08", "2025-10-09", "2025-10-10", "2025-11-06", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05"]},
+    {"id": "2025-03", "type": "budget", "name": "Budget estimates 2025–26", "start": "2025-03-27", "end": "2025-03-27",
+      "note": "One day of hearings was held. Parliament was prorogued on 28 March 2025 for the federal election, and the remaining hearings were cancelled.",
+      "days": ["2025-03-27"]},
+    {"id": "2025-02", "type": "additional", "name": "Additional estimates 2024–25", "start": "2025-02-24", "end": "2025-02-28",
+      "days": ["2025-02-24", "2025-02-25", "2025-02-26", "2025-02-27", "2025-02-28"]}
+  ]
+}

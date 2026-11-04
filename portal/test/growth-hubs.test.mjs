@@ -17,7 +17,11 @@ const compile = async entry => {
   const compiled = await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-og',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'hub-test'}));b.onLoad({filter:/.*/,namespace:'hub-test'},()=>({contents:'export const renderOgPng=async()=>null; export const renderOgJpeg=renderOgPng;',loader:'js'}));}}]});
   return import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
 };
-const {renderSittingWeek: rawSittingWeek,renderSittingIndex,renderEstimates,hubPage} = await compile('../src/hubs.ts');
+const {renderSittingWeek: rawSittingWeek,renderSittingIndex,hubPage} = await compile('../src/hubs.ts');
+const {renderEstimatesRound,estimatesPage} = await compile('../src/estimates.ts');
+const rounds = JSON.parse(await readFile(new URL('../../scripts/hubs/estimates-rounds.json',import.meta.url),'utf8'));
+// A round page with its agencies block, as the Worker draws it when the transcripts cannot be read.
+const renderEstimates = (money, footer) => renderEstimatesRound(rounds,rounds.rounds.find(r => r.id === money.id),null,'2026-11-04',money,footer);
 const renderSittingWeek = (data, week, people, slugs, today, footer, query) => rawSittingWeek(data, week, people, slugs, today, footer, query);
 const period = calendar.periods.find(w => w.start === '2026-10-12');
 const fixtureWeek = deriveWeek(period,records.bills,records.divisions,calendar.updated);
@@ -92,7 +96,7 @@ test('missing divisions state actual federal export coverage rather than an upst
 test('every hub and hub 404 omits the pending correction contact and response commitment',async()=>{
   const index=await json('hubs/index.json');const estimates=await json('hubs/estimates-2026-10.json');
   const pages=[renderSittingIndex(index,'2026-10-10'),renderEstimates(estimates),...index.weeks.map(w=>renderSittingWeek(index,w,[],new Map(),'2026-10-10')),
-    await hubPage('sitting','bad-week',async()=>index,[],new Map()),await hubPage('estimates','unknown',async()=>estimates,[],new Map())];
+    await hubPage('sitting','bad-week',async()=>index,[],new Map()),await estimatesPage('unknown',async()=>rounds,'2026-11-04',async()=>null,async()=>null)];
   for (const page of pages) assert.doesNotMatch(page.html,/Report a correction|48 hours|authorisation-corrections/);
 });
 test('calendar is the bills guard source of truth for the four remaining periods',()=>{
@@ -124,11 +128,11 @@ test('estimates config renders all committees, dates, portfolio fallback, agency
   const estimates = await json('hubs/estimates-2026-10.json');
   const page = renderEstimates(estimates);
   assert.equal(config.fetch.status,200);assert.equal(config.committees.length,8);
-  for (const text of ['26 Oct 2026','27 Oct 2026','28 Oct 2026','29 Oct 2026','Group A','Group B','Environment and Communications','Finance and Public Administration','Economics','Portfolio agencies (program not yet published)','AusTender','GrantConnect']) assert.ok(page.html.includes(text),text);
+  for (const text of ['26 Oct 2026','27 Oct 2026','28 Oct 2026','29 Oct 2026','Group A','Group B','Environment and Communications','Finance and Public Administration','Economics','Agencies are listed by portfolio allocation','AusTender','GrantConnect']) assert.ok(page.html.includes(text),text);
   assert.match(page.html,/href="\/subject\/agency\/a-[a-f0-9]{20}"/);
   assert.match(page.html,/Published \d+ \w+ 2026/);assert.match(page.html,/Agreement \d+ \w+ 2026/);
   assert.equal(page.jsonLd['@graph'][0]['@type'],'Event');
-  assert.equal(page.jsonLd['@graph'][1].numberOfItems,estimates.agencies.length);
+  assert.equal(page.jsonLd['@graph'][1]['@type'],'ItemList');
   assert.match(page.html,/<summary>Largest recorded awards, by value<\/summary>/);
   assert.doesNotMatch(page.html,/<summary>[^<]*\b(top|best)\b/i);
   const published = structuredClone(estimates);published.committees[0].program={source_url:config.source_url,agencies:[published.agencies[0].name]};
@@ -152,12 +156,12 @@ test('estimates defines both financial windows once and reports zero grants as a
 test('hubs have their own sitemap type, record lastmods, canonical links and llms entries',async()=>{
   const index = await json('hubs/index.json');const manifest=await json('crawl/manifest.json');
   const estimates = await json('hubs/estimates-2026-10.json');
-  assert.equal(index.pages.find(p=>p.path==='/estimates/2026-10').lastmod,latest([estimates.updated,estimates.contractUpdated,estimates.grantUpdated]));
-  assert.equal(manifest.counts.hubs,7);assert.equal(manifest.lastmodFallbacks.hubs,0);
+  assert.equal(index.pages.find(p=>p.path==='/estimates/2026-10').lastmod,latest([estimates.updated,estimates.contractUpdated,estimates.grantUpdated,'2026-10-29']));
+  assert.equal(manifest.counts.hubs,index.pages.length);assert.equal(manifest.lastmodFallbacks.hubs,0);
   const body=await readFile(new URL('crawl/sitemaps/hubs-1.xml',root),'utf8');
   for (const p of index.pages) assert.ok(body.includes(`<loc>https://opax.com.au${p.path}</loc><lastmod>${p.lastmod}</lastmod>`));
   assert.match(sitemapFiles({hubs:[{path:'/sitting/2026-10-12',lastmod:fixtureWeek.lastmod}]}).files[0].body,/<lastmod>2026-10-15/);
-  const llms=await readFile(new URL('crawl/llms.txt',root),'utf8');assert.match(llms,/https:\/\/opax.com.au\/sitting\)/);assert.match(llms,/https:\/\/opax.com.au\/estimates\/2026-10/);
+  const llms=await readFile(new URL('crawl/llms.txt',root),'utf8');assert.match(llms,/https:\/\/opax.com.au\/sitting\)/);assert.match(llms,/https:\/\/opax.com.au\/estimates\)/);
 });
 
 test('bad weeks return a real 404 with noindex; hubs keep SSR and remove SPA startup scripts',async()=>{

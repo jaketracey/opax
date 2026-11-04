@@ -53,11 +53,12 @@ export async function* pageSearchRecords(read, readConfig, {reports = reportsPub
  const calendar = await readConfig('sitting-2026.json');
  for(const w of calendar.periods) yield record('sitting:'+w.start,'sitting',`Sitting week ${w.start} to ${w.end}`,'/sitting/'+w.start,
   `${w.houses.map(houseName).join('; ')}. Bills introduced and recorded divisions during this sitting period.`,{date:w.start,state:'federal',aliases:w.houses.map(houseName).join(' '),source:'Parliamentary sitting calendar'});
+ const rounds = await readConfig('estimates-rounds.json');
+ for(const r of rounds.rounds) yield record('estimates:'+r.id,'estimates','Senate '+r.name,'/estimates/'+r.id,
+  `${r.start} to ${r.end}. Hearing transcripts by committee and day.${r.note ? ' '+r.note : ''}`,{date:r.start,state:'federal',source:'Senate estimates',aliases:'Senate estimates hearings committee transcripts '+r.type,url:rounds.source_url});
  const estimates = await readConfig('estimates-2026-10.json');
- yield record('estimates:'+estimates.id,'estimates',estimates.name,'/estimates/'+estimates.id,
-  `${estimates.start} to ${estimates.end}. ${estimates.published_status}. Portfolio agencies and recorded awards; portfolio lists do not establish confirmed appearances.`,{date:estimates.start,state:'federal',source:'Senate estimates',url:estimates.source_url});
  for(const c of estimates.committees) yield record('estimates:'+estimates.id+':'+c.id,'estimates',c.name+' — Senate estimates','/estimates/'+estimates.id+'#group-'+c.group,
-  `${estimates.name}. ${(c.portfolios || []).map(p=>p.name).join('; ')}. ${estimates.published_status}.`,{date:estimates.start,state:'federal',source:'Senate estimates',aliases:'committee hearing '+c.name,url:estimates.source_url});
+  `${estimates.name}. ${(c.portfolios || []).map(p=>p.name).join('; ')}. Portfolio agencies and recorded awards; portfolio lists do not establish confirmed appearances.`,{date:estimates.start,state:'federal',source:'Senate estimates',aliases:'committee hearing '+c.name,url:estimates.source_url});
  const video = await optional(read,'video/senate.json');
  for(const v of video?.videos || []) yield record('video:'+v.id,'video',v.title,'/video/senate?'+new URLSearchParams({kind:v.kind === 'first_speech' ? 'first-speech' : v.kind === 'question_time' ? 'question-time' : 'other'})+'#'+(v.kind==='other'?'other-video':'m'+String(v.date || v.published).slice(0,7)),
   'Official Senate video. Find the dated video in the archive or open the original recording.',{aliases:v.person?.name || '',date:v.date,state:'federal',source:'AuSenate YouTube channel',url:v.url,record_id:v.id});
@@ -76,7 +77,7 @@ export async function* pageSearchRecords(read, readConfig, {reports = reportsPub
  for(const [i,r] of (saBudget ? clearedSABudget(saBudget) : []).entries()) yield record('sa-budget:'+i,'register',`${r.measure_as_published} — ${r.fiscal_year}`,'/budget#sa-budget',`South Australian budget. ${r.section_as_published}. ${r.estimate_or_actual}. ${r.units}.`,{from:Number(r.fiscal_year.slice(0,4)),state:'sa',source:'South Australian budget',url:r.source_url});
  const gifts = await optional(read,'vic-gifts/data.json');
  for(const reg of gifts ? clearedGiftRegisters(gifts) : []) for(const r of reg.rows) yield record('gift:'+r.id,'register',`${r.office_holder} — ministerial gift register`,'/register/vic-gifts?'+new URLSearchParams({'vicGifts.q':r.office_holder}),`${r.period}. ${r.description || ''}. ${r.giver || ''}. ${r.portfolio || ''}.`,{state:'vic',source:'Victorian ministerial gift register',url:r.source_url});
- const gates = {instruments:instrumentsReady,estimates:true,reports,'vic-election':vicElectionEnabled(vicElection ? 'true' : 'false')};
+ const gates = {instruments:instrumentsReady,reports,'vic-election':vicElectionEnabled(vicElection ? 'true' : 'false')};
  const nav = globalThis.OpaxNavigation;
  const seen = new Set();
  const pages = [...nav.groups.flatMap(g=>g.columns.flatMap(c=>[...(c.section?[c.section]:[]),...c.links])),...nav.footerOnly,

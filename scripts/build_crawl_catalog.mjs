@@ -81,7 +81,7 @@ OPAX code is AGPL-3.0. Source data retains its own terms: parliamentary material
 - [Sitting weeks](${ORIGIN}/sitting): Sitting dates, introduced bills, divisions and sourced Senate cut-off dates.
 - [Senate video](${ORIGIN}/video/senate): Senate Question Time back to February 2020 and senators' first speeches, linked from the Senate's own YouTube channel; click to play, never re-hosted. \`?kind=question-time|first-speech|other\`.
 - [12–15 October sitting week](${ORIGIN}/sitting/2026-10-12): Calendar and published records for this period.
-- [Supplementary Budget Estimates](${ORIGIN}/estimates/2026-10): 26–29 October 2026; committee dates, portfolio agencies and recent contract and grant awards. Portfolio lists are not confirmed appearances while programs remain unpublished. No donor records.
+- [Senate estimates](${ORIGIN}/estimates): every round of Senate estimates hearings in the record since February 2025; \`/estimates/{YYYY-MM}\` lists a round's hearing transcripts by committee and day, with links to each hearing's records. The 26–29 October 2026 round also lists portfolio agencies with recent contract and grant awards (award values, not payments). No donor records.
 ${catalogueComplete(instruments) ? '- [Federal legislative instruments](' + ORIGIN + '/instruments): \`/instrument/{frl-id}\`; metadata only, with dates and links to authoritative FRL versions. No model summaries or person entities.\n' : ''}
 ${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`/audit/{report-id}\`; index and HTML recommendations under the report pages\' CC BY 4.0 grant, with original page exceptions retained. Full PDF links show each document\'s terms; document-level terms hold PDF bodies and responses. Recommendations retain source provenance. State of Queensland attribution.\n' : ''}
 - [Divisions and source records](${ORIGIN}/ask): \`/doc/division-{division-key}\` for votes; \`/doc/{resource-slug}\` for speeches and other source records.
@@ -195,7 +195,15 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
   if (hubs) {
     groups.hubs = hubs.pages;
     fallbacks.hubs = 0;
-    for (const page of hubs.pages) snapshot.set(page.path,hash(page.path.startsWith('/estimates/') ? await read(`hubs/estimates-${page.path.split('/').at(-1)}.json`) : page.path === '/sitting' ? hubs : hubs.weeks.find(w => page.path === `/sitting/${w.start}`)));
+    // An estimates round is fingerprinted by its calendar entry and its lastmod (the transcripts are read
+    // live), plus the agencies block where the round has one; the index by the whole calendar.
+    const rounds = await optional('hubs/estimates-rounds.json');
+    const estimatesSnapshot = async page => {
+      if (page.path === '/estimates') return {rounds, lastmod: page.lastmod};
+      const id = page.path.split('/').at(-1);
+      return {round: rounds?.rounds.find(r => r.id === id) ?? null, lastmod: page.lastmod, agencies: await optional(`hubs/estimates-${id}.json`)};
+    };
+    for (const page of hubs.pages) snapshot.set(page.path,hash(page.path === '/estimates' || page.path.startsWith('/estimates/') ? await estimatesSnapshot(page) : page.path === '/sitting' ? hubs : hubs.weeks.find(w => page.path === `/sitting/${w.start}`)));
   }
   const instruments = await optional('instruments/manifest.json').catch(() => null);
   addInstrumentDiscovery(groups, instruments);

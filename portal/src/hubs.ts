@@ -123,51 +123,41 @@ export function renderSittingWeek(data: HubIndex, week: Week, people: SponsorCan
   }
   return {title,description,html:shell(body,footer,trail('/sitting',range(week.start,week.end))),jsonLd:{'@graph':[event(path,title,week.start,week.end,data.sources[0].url),itemList(path,rows)]}}
 }
-export function renderEstimates(data: Estimates, footer: HubFooterConfig = {}) {
-  const title = `Senate ${data.name}: ${range(data.start,data.end)}`
-  const description = 'Committee dates and portfolio agencies, with recent AusTender contracts and GrantConnect awards.'
+/** The agencies block of a round page (the round's portfolio agencies, with
+ *  their recent contract and grant awards), grouped as the committees sit. */
+export function renderEstimatesMoney(data: Estimates) {
   const unconfirmed = data.committees.some(c => !c.program)
-  // The hearing dates' source line; which agencies a committee lists, and why, sit in its sheet.
-  let body = header(title,data.published_status,'meta',sourceLineHTML({updated:data.updated,dateLabel:'Checked',source:'APH next hearings',
-    originals:[{href:data.source_url,label:'Dates and hearing programs'},{href:data.portfolio_source_url,label:'Portfolio allocations'}],
-    notes:[...(unconfirmed ? ['Portfolio agencies are listed until a committee publishes its hearing program; they are not confirmed hearing appearances.'] : []),
-      `Portfolio allocations checked ${esc(date(data.portfolio_checked))} on the Australian Government Organisations Register.`,esc(data.portfolio_note)]}))
-  body += `<nav class="hub-toc" aria-labelledby="hub-toc-head"><p class="ui-toc-head" id="hub-toc-head">On this page</p><ul class="ui-toc-list" role="list">${data.groups.map(g => `<li><a href="#group-${esc(g.id)}"><span>Group ${esc(g.id)}</span><span class="hub-meta">${esc(range(g.start,g.end))}</span></a></li>`).join('')}</ul></nav>`
   // The money block: its one inline caveat, then one source line for both registers.
   const moneyUpdated = [data.contractUpdated,data.grantUpdated].filter(Boolean).sort()[0] || ''
-  body += `<div class="hub-coverage"><p>Contract and grant figures are recorded award values, not payments.</p>${sourceLineHTML({updated:moneyUpdated,source:'AusTender and GrantConnect',
-    originals:[{href:'https://www.tenders.gov.au/',label:'AusTender register'},{href:'https://www.grants.gov.au/Ga/List',label:'GrantConnect register'}],
-    notes:[`Period covered: contracts published ${esc(range(data.contractWindow.start,data.contractWindow.end))}; grants agreed ${esc(range(data.grantWindow.start,data.grantWindow.end))}. Counts cover the published records; gaps in them remain.`,
+  let html = `<section class="ui-section hub-section" id="agencies"><h2 class="ui-section-title">Agencies and recorded awards</h2>`
+  html += `<div class="hub-coverage"><p>Contract and grant figures are recorded award values, not payments.</p>${sourceLineHTML({updated:moneyUpdated,source:'AusTender and GrantConnect',
+    originals:[{href:'https://www.tenders.gov.au/',label:'AusTender register'},{href:'https://www.grants.gov.au/Ga/List',label:'GrantConnect register'},{href:data.portfolio_source_url,label:'Portfolio allocations'}],
+    notes:[...(unconfirmed ? ['Agencies are listed by portfolio allocation; a listed agency is not a confirmed hearing appearance.'] : []),
+      `Portfolio allocations checked ${esc(date(data.portfolio_checked))} on the Australian Government Organisations Register.`,esc(data.portfolio_note),
+      `Period covered: contracts published ${esc(range(data.contractWindow.start,data.contractWindow.end))}; grants agreed ${esc(range(data.grantWindow.start,data.grantWindow.end))}. Counts cover the published records; gaps in them remain.`,
       `AusTender, updated ${esc(date(data.contractUpdated))}: one latest notice per contract; amendments are not added together. Dates are publication dates. A register link is labelled when a notice URL is unavailable.`,
-      `GrantConnect, updated ${esc(date(data.grantUpdated))}: dates are agreement dates. Agreements dated after that update are excluded. No donor records are used.`]})}</div>`
-  const list = new Map<string,{href:string;name:string}>()
+      `GrantConnect, updated ${esc(date(data.grantUpdated))}: dates are agreement dates. Agreements dated after that update are excluded. No donor records are used.`]})}</div></section>`
   for (const group of data.groups) {
-    body += `<section class="ui-section hub-section" id="group-${group.id}"><h2 class="ui-section-title">Group ${group.id}</h2><p class="hub-meta">${range(group.start,group.end)}</p>`
+    html += `<section class="ui-section hub-section" id="group-${group.id}"><h2 class="ui-section-title">Group ${group.id}</h2><p class="hub-meta">${range(group.start,group.end)}</p>`
     for (const c of data.committees.filter(c => c.group === group.id)) {
       const names = c.program?.agencies || c.portfolios.flatMap(p => p.agencies)
       const agencies = [...new Set(names)].map(n => data.agencies.find(a => a.name === n)!).sort((a,b) => a.name.localeCompare(b.name,'en'))
-      body += `<details class="ui-disclosure hub-committee"${c === data.committees[0] ? ' open' : ''}><summary><h3>${esc(c.name)}</h3><span class="hub-meta">${agencies.length} agencies</span></summary><div class="ui-disclosure-body hub-committee-body"><p>${esc(c.portfolios.map(p => p.name).join(' · '))}</p><p class="hub-fallback">${c.program ? link(c.program.source_url,'Published hearing program') : 'Portfolio agencies (program not yet published)'}</p>`
+      html += `<details class="ui-disclosure hub-committee"${c === data.committees[0] ? ' open' : ''}><summary><h3>${esc(c.name)}</h3><span class="hub-meta">${agencies.length} agencies</span></summary><div class="ui-disclosure-body hub-committee-body"><p>${esc(c.portfolios.map(p => p.name).join(' · '))}</p>${c.program ? `<p class="hub-fallback">${link(c.program.source_url,'Published hearing program')}</p>` : ''}`
       for (const a of agencies) {
         const href = `/subject/agency/${a.id}`
-        list.set(a.id,{href,name:a.name})
-        body += `<article class="hub-agency"><h4>${link(href,a.name)}</h4><dl class="hub-totals"><div><dt>Contracts</dt><dd>${count(a.contracts.count)} · ${money(a.contracts.total)}</dd></div><div><dt>Grants</dt><dd>${a.grants.count ? `${count(a.grants.count)} · ${money(a.grants.total)}` : 'No grants in this period'}</dd></div></dl>`
+        html += `<article class="hub-agency"><h4>${link(href,a.name)}</h4><dl class="hub-totals"><div><dt>Contracts</dt><dd>${count(a.contracts.count)} · ${money(a.contracts.total)}</dd></div><div><dt>Grants</dt><dd>${a.grants.count ? `${count(a.grants.count)} · ${money(a.grants.total)}` : 'No grants in this period'}</dd></div></dl>`
         // Award rows are titled by what was bought or funded; the notice id is meta.
-        if (a.contracts.largest.length || a.grants.largest.length) body += `<details class="ui-disclosure hub-largest"><summary>Largest recorded awards, by value</summary>${a.contracts.largest.length ? `<h5>Contracts</h5><ul>${a.contracts.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (AusTender register)' : ''}</p><p class="hub-meta">${esc(r.supplier)} · ${money(r.amount)} · Published ${date(r.published)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}${a.grants.largest.length ? `<h5>Grants</h5><ul>${a.grants.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (GrantConnect register)' : ''}</p><p class="hub-meta">${esc(r.recipient)} · ${money(r.value)} · Agreement ${date(r.date)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}</details>`
-        body += '</article>'
+        if (a.contracts.largest.length || a.grants.largest.length) html += `<details class="ui-disclosure hub-largest"><summary>Largest recorded awards, by value</summary>${a.contracts.largest.length ? `<h5>Contracts</h5><ul>${a.contracts.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (AusTender register)' : ''}</p><p class="hub-meta">${esc(r.supplier)} · ${money(r.amount)} · Published ${date(r.published)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}${a.grants.largest.length ? `<h5>Grants</h5><ul>${a.grants.largest.map(r => `<li><p>${link(r.url,r.title || r.id)}${r.link_scope === 'source_register' ? ' (GrantConnect register)' : ''}</p><p class="hub-meta">${esc(r.recipient)} · ${money(r.value)} · Agreement ${date(r.date)} · ${esc(r.id)}</p></li>`).join('')}</ul>` : ''}</details>`
+        html += '</article>'
       }
-      body += '</div></details>'
+      html += '</div></details>'
     }
-    body += '</section>'
+    html += '</section>'
   }
-  return {title,description,html:shell(body,footer,trail(`/estimates/${data.id}`,data.name)),jsonLd:{'@graph':[event(`/estimates/${data.id}`,title,data.start,data.end,data.source_url),itemList(`/estimates/${data.id}`,[...list.values()])]}}
+  return {html, groups: data.groups}
 }
-export async function hubPage(kind: 'sitting' | 'estimates', id: string | null, read: ReadAsset, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}, tableQuery: Query = {}) {
+export async function hubPage(kind: 'sitting', id: string | null, read: ReadAsset, people: SponsorCandidate[], slugs: Map<string,string>, today = sydneyDay(), footer: HubFooterConfig = {}, tableQuery: Query = {}) {
   const missing = {title:'Hub not found',description:'This period is not in the published calendar.',html:shell(header('Hub not found','Browse the published sitting weeks.'),footer),jsonLd:null,status:404}
-  if (kind === 'estimates') {
-    if (id !== '2026-10') return missing
-    const data = await read<Estimates>(`/hubs/estimates-${id}.json`)
-    return {...renderEstimates(data,footer),status:200}
-  }
   if (id !== null && !/^\d{4}-\d{2}-\d{2}$/.test(id)) return missing
   const [data, video] = await Promise.all([read<HubIndex>('/hubs/index.json'), read<{videos: Video[]}>('/video/senate.json').catch(() => null)])
   const videos = Array.isArray(video?.videos) ? video.videos : []
