@@ -42,6 +42,9 @@
 .video-empty { margin-top: var(--space-group); }
 .hub-count { color: var(--ink-soft); font: var(--type-body); margin-left: var(--space-tight); font-variant-numeric: tabular-nums; }
 .hub-records { max-width: 46rem; }
+/* A committee's hearing days in a round: one line each, the day linking to its records, the original after it. */
+.hub-hearing-days { margin: var(--space-tight) 0; padding: 0; list-style: none; font: var(--type-body); }
+.hub-hearing-days > li { padding-block: var(--space-line); }
 .hub-summary { margin: var(--space-row) 0 0; }
 .hub-summary .hub-date { margin-left: var(--space-tight); }
 .hub-summary > p { font: var(--type-body); margin: var(--space-tight) 0 0; }

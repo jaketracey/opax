@@ -46,6 +46,8 @@ import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import { hubPage } from './hubs'
+import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
+import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
 import { vicElectionPage, type VicElection } from './vic-election'
@@ -3293,6 +3295,43 @@ async function topicCensus(env: Env, ctx: ExecutionContext, refresh = false): Pr
   return res.ok ? (await res.json()) as TopicCensus : null
 }
 
+// --- Senate estimates transcripts (src/estimates.ts) ----------------------------
+// A round's transcripts, read from the knowledge box: one count read per
+// committee per scheduled hearing day (about 40 for a four-day round), four at
+// a time, kept with the other aggregates (serve stale, rebuild in the cron).
+// A round whose transcripts can still change (hearings under way, Proof
+// transcripts arriving and being replaced) is rebuilt hourly; an older one daily.
+const ESTIMATES_RECENT_DAYS = 60
+const estimatesCachePath = (id: string) => `/api/estimates-round?id=${encodeURIComponent(id)}`
+const estimatesTtl = (round: EstimatesRound) =>
+  Date.now() - Date.parse(`${round.end}T00:00:00Z`) < ESTIMATES_RECENT_DAYS * 86_400_000 ? 3600 : 86_400
+
+async function estimatesRecord(env: Env, ctx: ExecutionContext, round: EstimatesRound, committees: EstimatesCommittee[], refresh = false): Promise<EstimatesRecord | null> {
+  if (!env.ARAG_KB_ID || !env.ARAG_KB_TOKEN) return null
+  const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
+  const build = async () => {
+    const record = await readEstimatesRecord(round, committees, async body => {
+      const res = await aggregateFetch(env, '/search', { body }, wait)
+      if (!res.ok) throw new Error(`search ${res.status}`)
+      return await res.json()
+    })
+    const out = json(record)
+    // A partial read is shown once and never kept: the next visit reads again.
+    if (record.incomplete) out.headers.set('cache-control', 'no-store')
+    return out
+  }
+  const res = typeof caches === 'undefined' ? await build().catch(() => json({ error: 'catalog failed' }, 502))
+    : await cachedJson(estimatesCachePath(round.id), build, ctx, estimatesTtl(round), refresh)
+  return res.ok ? await res.json() as EstimatesRecord : null
+}
+
+/** The round's transcripts if they are already cached; the index lists rounds without waiting on the knowledge box. */
+async function cachedEstimatesRecord(round: EstimatesRound): Promise<EstimatesRecord | null> {
+  if (typeof caches === 'undefined') return null
+  const hit = await caches.default.match(new Request(`https://opax.com.au${estimatesCachePath(round.id)}`))
+  return hit?.ok ? await hit.json() as EstimatesRecord : null
+}
+
 /** GET aggregates: long storage TTL, the existing browser TTL, and background refresh. */
 async function cachedJson(
   cachePath: string,
@@ -3351,8 +3390,11 @@ async function warmCatalog(env: Env, ctx: ExecutionContext): Promise<void> {
   if (catalogWarmup) return catalogWarmup
   catalogWarmup = (async () => {
     // The topic census goes first: topics, matrix and every topic page read it.
+    // Every published estimates round (most cost nothing: only stale ones are read).
+    const estimates = await assetJson<EstimatesRounds>(env, '/hubs/estimates-rounds.json').catch(() => null)
     const refreshes = [
       () => topicCensus(env, ctx, true),
+      ...(estimates?.rounds ?? []).map(round => () => estimatesRecord(env, ctx, round, estimates!.committees, true)),
       () => apiStats(env, ctx, true),
       () => apiTopics(env, ctx, true),
       () => apiParties(env, ctx, true),
@@ -4397,6 +4439,11 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
         // ?kind= filters the one list; every filtered view's canonical is the bare page.
         const people = await loadPeople(env).catch(() => null)
         const page = await senateVideoPage(<T>(path: string) => assetJson<T>(env,path),url.searchParams.get('kind'),people?.bySlug)
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
+      }
+      if (route.hub === 'estimates') {
+        const page = await estimatesPage(route.id,<T>(path: string) => assetJson<T>(env,path),sydneyDay(),
+          (round,committees) => estimatesRecord(env,ctx,round,committees),round => cachedEstimatesRecord(round),env)
         return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status})
       }
       const people = route.hub === 'sitting' && route.id ? await loadPeople(env) : null

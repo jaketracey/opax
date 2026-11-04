@@ -107,7 +107,7 @@ test('a section page\'s trail is its menu name; About\'s pages sit under About O
 const TRAILS = [
   ['/sitting', 'Sitting weeks'],
   ['/sitting/2026-10-12', 'Sitting weeks › 12 Oct 2026 – 15 Oct 2026'],
-  [estimatesHref, 'Sitting weeks › Supplementary Budget Estimates'],
+  [estimatesHref, 'Senate estimates › Supplementary Budget estimates 2026–27'],
   ['/bills', 'Bills'],
   ['/instruments', 'Legislative instruments'],
   ['/audit', 'Queensland audit reports'],

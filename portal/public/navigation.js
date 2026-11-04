@@ -149,7 +149,7 @@
     if (path === '/chat') return { parent: ASK, page: CHAT };
     if (path === EXPLAIN.href) return { parent: sectionPages.get('/money'), page: EXPLAIN };
     if (path.startsWith('/doc/')) return { section: SEARCH };
-    if (path.startsWith('/estimates/')) return { section: sectionPages.get('/sitting') };
+    if (path.startsWith('/estimates/')) return { section: sectionPages.get('/estimates') };
     if (path.startsWith('/instrument/')) return { section: sectionPages.get('/instruments') };
     if (path.startsWith('/bill/')) return { section: sectionPages.get('/bills') };
     if (path === '/explore' && params.get('game')) return { section: sectionPages.get('/explore') };

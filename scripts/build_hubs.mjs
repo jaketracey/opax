@@ -7,8 +7,8 @@ import { day, deriveWeek, latest, recentWindow, recentRecords } from '../portal/
 export async function buildHubs(root, configRoot = fileURLToPath(new URL('./hubs/', import.meta.url))) {
   const read = async p => JSON.parse(await readFile(join(root, p.replace(/^\//, '')), 'utf8'));
   const config = async p => JSON.parse(await readFile(join(configRoot, p), 'utf8'));
-  const [calendar, estimates, billsIndex, divisionsIndex, agencies, grants, corpus] = await Promise.all([
-    config('sitting-2026.json'), config('estimates-2026-10.json'), read('bills/index.json'),
+  const [calendar, estimates, rounds, billsIndex, divisionsIndex, agencies, grants, corpus] = await Promise.all([
+    config('sitting-2026.json'), config('estimates-2026-10.json'), config('estimates-rounds.json'), read('bills/index.json'),
     read('divisions/index.json'), read('agencies.json'), read('graph/grants.federal.json'), read('corpus.json'),
   ]);
   const titles = new Map();
@@ -59,7 +59,13 @@ export async function buildHubs(root, configRoot = fileURLToPath(new URL('./hubs
   const estimatePage = { ...estimates,contractWindow,grantWindow,contractUpdated:agencies.meta.generated_at,grantUpdated:grants.meta.generated,
     agencies:[...records.values()].sort((a,b) => a.name.localeCompare(b.name,'en')) };
   const estimatesLastmod = latest([estimates.updated,agencies.meta.generated_at,grants.meta.generated]);
-  const pages = [{path:'/sitting',lastmod:latest(weeks.map(w => w.lastmod))},...weeks.map(w => ({path:`/sitting/${w.start}`,lastmod:w.lastmod})),{path:`/estimates/${estimates.id}`,lastmod:estimatesLastmod}];
+  // Every round in the estimates calendar is a page. A round's transcripts are read live, so its date
+  // here is the later of the calendar check and its last hearing day (plus the agencies block's data).
+  if (!rounds.rounds.some(r => r.id === estimates.id)) throw new Error(`Estimates round ${estimates.id} is not in estimates-rounds.json`);
+  for (const r of rounds.rounds) if (!/^\d{4}-\d{2}$/.test(r.id) || !r.days.every(d => /^\d{4}-\d{2}-\d{2}$/.test(d) && d >= r.start)) throw new Error(`Bad estimates round ${r.id}`);
+  const roundLastmod = r => latest([r.id === estimates.id ? estimatesLastmod : '', r.end <= rounds.updated ? r.end : rounds.updated]);
+  const pages = [{path:'/sitting',lastmod:latest(weeks.map(w => w.lastmod))},...weeks.map(w => ({path:`/sitting/${w.start}`,lastmod:w.lastmod})),
+    {path:'/estimates',lastmod:latest(rounds.rounds.map(roundLastmod))},...rounds.rounds.map(r => ({path:`/estimates/${r.id}`,lastmod:roundLastmod(r)}))];
   await mkdir(join(root,'hubs'),{recursive:true});
   const billUpdated = day(billsIndex.generated_at);
   if (!billUpdated) throw new Error('The retained bills snapshot must have its own date');
@@ -67,6 +73,8 @@ export async function buildHubs(root, configRoot = fileURLToPath(new URL('./hubs
   if (!snapshotDate) throw new Error('The published corpus snapshot must have a date');
   await writeFile(join(root,'hubs/index.json'),JSON.stringify({updated:calendar.updated,snapshotDate,billUpdated,latestFederalDivision,sources:calendar.sources,weeks,pages})+'\n');
   await writeFile(join(root,`hubs/estimates-${estimates.id}.json`),JSON.stringify(estimatePage)+'\n');
+  const {note: _note, ...publishedRounds} = rounds;
+  await writeFile(join(root,'hubs/estimates-rounds.json'),JSON.stringify(publishedRounds)+'\n');
   return {weeks:weeks.length,agencies:records.size,pages:pages.length};
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) console.log('Hubs:',JSON.stringify(await buildHubs(fileURLToPath(new URL('../portal/public/',import.meta.url)))));
