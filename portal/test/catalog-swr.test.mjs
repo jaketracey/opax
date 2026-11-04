@@ -49,6 +49,9 @@ function harness({upstream, timeout = AbortSignal.timeout.bind(AbortSignal)} = {
     expireVoiceSessions: async () => {jobs.push('expiry');},
     deliverReplyEmails: async () => {jobs.push('email');},
     runSocialPublication: async () => {jobs.push('social');},
+    // No published estimates calendar here, so the warm-up reads no estimates rounds
+    // (their reads are covered by estimates-browse.test.mjs); the counts below stay exact.
+    assetJson: async () => {throw new Error('no asset fixture');},
     MAX_SPEAKER_CHARS: 160, NAME_RE: /^[\w ]+$/,
     canonicalSpeaker: name => name, speakerAttribution: async () => null, speakerPrints: async () => null,
   };
