@@ -720,6 +720,7 @@ if [ "${1:-}" = "-" ]; then
 fi
 if [ "${1:-}" = "-m" ]; then
   [ "$2" = parli.ingest.committee_hearings ] && [ -n "${COMMITTEES_CHANGED:-}" ] && echo "COMMITTEES_CHANGED rows_updated=$COMMITTEES_CHANGED rows_removed=0"
+  [ "$2" = parli.ingest.committee_pdf ] && [ -n "${PDF_QUEUED:-}" ] && echo "COMMITTEE_PDF_QUEUED $PDF_QUEUED"
   for f in ${PAUSE_STEPS:-}; do
     if [ "$2" = "parli.ingest.$f" ]; then
       mkdir -p "$(dirname "$OPAX_SOURCE_STATUS_FILE")"
@@ -837,6 +838,29 @@ check "rows changed in place (Proof -> Final) with none added: fetch and resolve
 new_refresh_sandbox r19c
 COMMITTEE_ADDS=3 OPAX_SYNC_KB=1 OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve FAIL_STEPS="committee_witnesses" refresh
 check "a failing resolve holds the KB push back" bash -c "! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
+
+echo "== 19e. daily_refresh.sh: the staged local-PDF committee rounds are applied after the committees step, before indexing and the push"
+new_refresh_sandbox r19e
+OPAX_SYNC_KB=1 OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve PAUSE_STEPS=committee_hearings refresh
+check "exit 0 with committees paused" test "$RRC" -eq 0
+check "apply ran against the database" grep -q 'parli.ingest.committee_pdf apply --db' "$RS_CALLS"
+check "after the committees step, before fts_sync, link_speakers and the KB push" bash -c "
+  n() { grep -n \"\$1\" '$RS_CALLS' | head -1 | cut -d: -f1; }
+  [ \"\$(n parli.ingest.committee_hearings)\" -lt \"\$(n parli.ingest.committee_pdf)\" ] && [ \"\$(n parli.ingest.committee_pdf)\" -lt \"\$(n scripts/fts_sync.py)\" ] && [ \"\$(n parli.ingest.committee_pdf)\" -lt \"\$(n parli.ingest.link_speakers)\" ] && [ \"\$(n parli.ingest.committee_pdf)\" -lt \"\$(n parli.ingest.arag_sync)\" ]"
+check "it never starts the attendance fetch (which would ask ParlInfo), so the gate still lets the push run" bash -c "! grep -q 'committee_witnesses' '$RS_CALLS' && grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
+check "committees stays paused in the summary" grep -q 'Paused sources: .*committees' "$HOME/.cache/autoresearch/pipeline/daily.log"
+check "no committee KB patch run when the apply queued nothing" bash -c "! grep -q 'committee_hearings --patch-kb' '$RS_CALLS'"
+new_refresh_sandbox r19f
+PDF_QUEUED=3 OPAX_SYNC_KB=1 refresh
+check "rows already in the box changed (Official over Proof): the committee queue is sent after the push" bash -c "
+  n() { grep -n \"\$1\" '$RS_CALLS' | head -1 | cut -d: -f1; }
+  [ -n \"\$(n 'committee_hearings --patch-kb')\" ] && [ \"\$(n parli.ingest.arag_sync)\" -lt \"\$(n 'committee_hearings --patch-kb')\" ]"
+new_refresh_sandbox r19g
+PDF_QUEUED=3 refresh
+check "without OPAX_SYNC_KB nothing is sent to the box" bash -c "! grep -q 'committee_hearings --patch-kb' '$RS_CALLS'"
+new_refresh_sandbox r19h
+FAIL_STEPS=committee_pdf FAIL_RC=2 OPAX_SYNC_KB=1 refresh
+check "a refused apply (hash mismatch, exit 2) fails the night loudly" bash -c "[ '$RRC' -eq 1 ] && grep -q 'Incomplete refresh: failed steps.*committee_pdf' '$HOME/.cache/autoresearch/pipeline/daily.log'"
 
 echo "== 20. daily_refresh.sh: releases, AusTender, GrantConnect and the state votes run every night"
 new_refresh_sandbox r20

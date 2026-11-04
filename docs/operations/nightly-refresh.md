@@ -935,6 +935,14 @@ knowledge-box push, and the push waits for them (`OPAX_SYNC_GATE`). `resolve` li
 Handbook id in the transcript, never by surname. Draining the speaker-field patch queue (`scripts/arag_patch_speakers.py`) is
 not part of the nightly; it read-merge-writes the classifications, so the Worker's topic labels survive it.
 
+**Local-PDF committee rounds** (`docs/COMMITTEE-WITNESSES.md`): while ParlInfo refuses the honest agent, a round of
+Senate estimates transcripts saved by hand is staged under `data/staged/committee-pdf/<round>/` and the `committee_pdf`
+step (right after `committees`) applies it: every staged sha256 is checked first (a mismatch fails the step with exit 2
+and writes nothing), the rows go in in one checked transaction, an applied hearing is left alone, and a hearing the
+HTML ingest holds is never touched. No request to APH. The rows are typed and resolved already, so the attendance fetch
+is not triggered and the KB gate is unaffected. If a later staged copy (an Official) changes rows the box already holds,
+the step prints `COMMITTEE_PDF_QUEUED n` and `committee_kb_patch` sends the PATCH/DELETEs after the push.
+
 ## Recovery
 
 | Symptom | What to do |

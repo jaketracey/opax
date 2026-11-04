@@ -148,6 +148,14 @@ run_step qld "SELECT COUNT(*) FROM speeches WHERE source='qld_hansard'" \
   "$PY" -m parli.ingest.qld_parliament --hansard-only --start "$QLD_START"
 run_step committees "SELECT COUNT(*) FROM speeches WHERE source LIKE 'committee_%'" \
   "$PY" -m parli.ingest.committee_hearings
+# Senate estimates transcripts saved by hand as PDFs (parli.ingest.committee_pdf, docs/COMMITTEE-WITNESSES.md): the
+# rounds staged under data/staged/committee-pdf/ are applied to parli.db. Every staged file's sha256 is checked first (a
+# mismatch refuses the whole step, exit 2, nothing written); the rows go in one transaction that is checked and rolled
+# back on any problem; a hearing already applied, or held by the HTML ingest above, is left as it is. No request to APH
+# (the committees step stays paused). The rows arrive typed and resolved, so link_speakers leaves them alone and the
+# attendance fetch (which would ask ParlInfo) is not triggered; fts_sync and classify below pick them up, then the push.
+run_step committee_pdf "SELECT COUNT(*) FROM speeches WHERE hearing_id IS NOT NULL AND hearing_id GLOB 'committees/estimate/*/lpdf'" \
+  "$PY" -m parli.ingest.committee_pdf apply --db "$DB"
 run_step nsw "SELECT COUNT(*) FROM speeches WHERE source='nsw_hansard'" \
   "$PY" -m parli.ingest.nsw_hansard --start "$NSW_START"
 run_step sa "SELECT COUNT(*) FROM speeches WHERE source='sa_hansard'" \
@@ -297,6 +305,12 @@ PYEOF
     # ACT turns that changed after they were pushed (proof -> final): text-only PATCH, deletes of removed turns
     run_step act_kb_patch "SELECT COUNT(*) FROM act_hansard_kb_queue WHERE done_at IS NULL" \
       "$PY" -m parli.ingest.act_hansard --patch-kb
+    # local-PDF rows the box already holds that a later staged copy changed (Official replacing Proof): text PATCH /
+    # DELETE from committee_kb_queue. Only when the apply step queued some; a first import queues nothing.
+    if grep -q '^COMMITTEE_PDF_QUEUED ' "$PIPE/committee_pdf.log" 2>/dev/null; then
+      run_step committee_kb_patch "SELECT COUNT(*) FROM committee_kb_queue WHERE done_at IS NULL" \
+        "$PY" -m parli.ingest.committee_hearings --patch-kb --db "$DB"
+    fi
   else
     log "[arag_sync] SKIP: $STATE missing or implausible; refusing --full without a checkpoint"
   fi
