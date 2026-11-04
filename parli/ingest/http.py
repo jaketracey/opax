@@ -6,12 +6,14 @@ that permits a staged/empty register to be applied.
 """
 from __future__ import annotations
 
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from functools import wraps
 from html.parser import HTMLParser
 import io
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -80,6 +82,9 @@ _lock = threading.Lock()
 _next_at: dict[str, float] = {}
 _logged: set[str] = set()
 _status_lock = threading.Lock()
+_SA_HOST = "hansardsearch.parliament.sa.gov.au"
+_SA_INTERVAL = 1.0
+_SA_PACING_FILE = Path("~/.cache/autoresearch/pipeline/sa-hansard-http-pacing.json").expanduser()
 
 
 class SourceRefused(SystemExit):
@@ -162,6 +167,98 @@ def pace(url, interval=0.7):
         _next_at[host] = time.monotonic() + interval
 
 
+def _is_sa(url):
+    return urlsplit(url).hostname == _SA_HOST
+
+
+@contextmanager
+def _sa_attempt(url):
+    """Serialise SA attempts across this host's processes running as one user.
+
+    The stable lock inode and state must be shared by all crawler processes.
+    A pending marker survives an interrupted attempt; corrupt or backwards-clock
+    state requires review rather than resetting the limit. This is deliberately
+    conservative: the next attempt waits a second after completion, not start.
+    It is not a limiter across users or machines, and does not grant source access.
+    """
+    if not _is_sa(url):
+        yield
+        return
+    ensure_allowed(url)
+    try:
+        import fcntl
+        path = _SA_PACING_FILE
+        path.parent.mkdir(parents=True, exist_ok=True)
+        lock_fd = os.open(str(path) + ".lock", os.O_CREAT | os.O_RDWR, 0o600)
+    except (ImportError, OSError):
+        raise SourceRefused(url, "SA pacing coordination unavailable; request not sent") from None
+    try:
+        try:
+            fcntl.flock(lock_fd, fcntl.LOCK_EX)
+            try:
+                state_fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
+                created = True
+            except FileExistsError:
+                state_fd = os.open(path, os.O_RDWR)
+                created = False
+            state_file = os.fdopen(state_fd, "r+", encoding="utf-8")
+        except OSError:
+            raise SourceRefused(url, "SA pacing coordination unavailable; request not sent") from None
+        with state_file:
+            def store(pending, now, cooldown=_SA_INTERVAL):
+                state_file.seek(0)
+                json.dump({"version": 1, "pending": pending, "observed_at": now,
+                           "not_before": now + cooldown}, state_file)
+                state_file.truncate()
+                state_file.flush()
+                os.fsync(state_file.fileno())
+
+            try:
+                now = time.monotonic()
+                if not math.isfinite(now):
+                    raise ValueError("clock unavailable")
+                if not created:
+                    state = json.load(state_file)
+                    observed = state["observed_at"]
+                    deadline = state["not_before"]
+                    if (state["version"] != 1 or type(state["pending"]) is not bool
+                            or type(observed) not in (int, float) or type(deadline) not in (int, float)
+                            or not math.isfinite(observed) or not math.isfinite(deadline)
+                            or deadline < observed + _SA_INTERVAL):
+                        raise ValueError("invalid state")
+                    if state["pending"]:
+                        raise ValueError("interrupted request pending; manual review required")
+                    if now < observed:
+                        raise ValueError("monotonic clock moved backwards; manual review required")
+                    while now < deadline:
+                        time.sleep(deadline - now)
+                        later = time.monotonic()
+                        if not math.isfinite(later) or later < now:
+                            raise ValueError("monotonic clock moved backwards; manual review required")
+                        now = later
+                store(True, now)
+            except (OSError, ValueError, TypeError, KeyError, OverflowError) as error:
+                reason = str(error) if isinstance(error, ValueError) and not isinstance(error, json.JSONDecodeError) else "invalid or unavailable coordination state"
+                raise SourceRefused(url, f"SA pacing refused: {reason}; request not sent") from None
+            lease = {"cooldown": _SA_INTERVAL}
+            try:
+                yield lease
+            finally:
+                try:
+                    finished = time.monotonic()
+                    cooldown = max(_SA_INTERVAL, float(lease["cooldown"]))
+                    if not math.isfinite(finished) or finished < now or not math.isfinite(cooldown):
+                        raise ValueError("monotonic clock moved backwards")
+                    store(False, finished, cooldown)
+                except (OSError, ValueError, TypeError, KeyError, OverflowError):
+                    raise SourceRefused(url, "SA pacing completion could not be recorded; manual review required") from None
+    finally:
+        try:
+            os.close(lock_fd)
+        except OSError:
+            raise SourceRefused(url, "SA pacing lock could not be closed; manual review required") from None
+
+
 def honest_headers(headers=None):
     result = {k: v for k, v in (headers or {}).items() if k.lower() != "user-agent"}
     result["User-Agent"] = USER_AGENT
@@ -187,7 +284,36 @@ class Session(requests.Session):
         ensure_allowed(request.url)
         request.headers["User-Agent"] = USER_AGENT
         kwargs["proxies"] = {}
-        return super().send(request, **kwargs)
+        if _is_sa(request.url):
+            hooks = request.hooks.get("response") or []
+            if type(hooks) not in (list, tuple) or any(hook is not Session._check for hook in hooks):
+                raise SourceRefused(request.url, "SA response hooks can retry outside coordinated pacing; request not sent")
+            if not hooks:
+                request.hooks["response"] = [Session._check]
+            adapter = self.get_adapter(request.url)
+            retries = getattr(adapter, "max_retries", None)
+            if (type(adapter) is not requests.adapters.HTTPAdapter
+                    or type(retries) is not requests.adapters.Retry
+                    or retries.total != 0
+                    or any(getattr(retries, key, None) not in (None, 0, False)
+                           for key in ("connect", "read", "redirect", "status", "other"))):
+                raise SourceRefused(request.url, "SA transport has custom or hidden retries; request not sent")
+        with _sa_attempt(request.url) as lease:
+            if not _is_sa(request.url):
+                return super().send(request, **kwargs)
+
+            def check_sa_response(response, **hook_kwargs):
+                # Preserve server cooldown even if body reading or policy validation raises.
+                if response.status_code in (429, 503):
+                    lease["cooldown"] = max(_SA_INTERVAL, retry_after(response.headers.get("Retry-After")))
+                return Session._check(response, **hook_kwargs)
+
+            hooks = request.hooks["response"]
+            request.hooks["response"] = [check_sa_response]
+            try:
+                return super().send(request, **kwargs)
+            finally:
+                request.hooks["response"] = hooks
 
     def resolve_redirects(self, response, request, *args, **kwargs):
         # Requests also prepares an unfollowed next request when redirects are
@@ -206,7 +332,8 @@ class Session(requests.Session):
         kwargs["proxies"] = {}
         kwargs.setdefault("timeout", 60)
         for attempt in range(3):
-            pace(url)
+            if not _is_sa(url):
+                pace(url)
             response = super().request(method, url, **kwargs)
             if response.status_code not in (429, 503):
                 return response
@@ -259,20 +386,37 @@ def open_url(opener, req, *args, **kwargs):
     req.add_header("User-Agent", USER_AGENT)
     url = req.full_url
     ensure_allowed(url)
+    _check_sa_opener(opener, url)
     for attempt in range(3):
-        pace(url)
+        if not _is_sa(url):
+            pace(url)
         try:
-            with opener.open(req, *args, **kwargs) as response:
-                body = response.read()
-                check_response(response.geturl(), response.getcode(), body, response.headers,
-                               expects_json(dict(req.header_items())))
-                return _Response(response, body)
+            with _sa_attempt(url) as lease:
+                try:
+                    with opener.open(req, *args, **kwargs) as response:
+                        if _is_sa(url) and response.getcode() in (429, 503):
+                            lease["cooldown"] = max(_SA_INTERVAL, retry_after(response.headers.get("Retry-After")))
+                        body = response.read()
+                        check_response(response.geturl(), response.getcode(), body, response.headers,
+                                       expects_json(dict(req.header_items())))
+                        return _Response(response, body)
+                except urllib.error.HTTPError as error:
+                    if _is_sa(url):
+                        if error.code in (429, 503):
+                            lease["cooldown"] = max(_SA_INTERVAL, retry_after(error.headers.get("Retry-After")))
+                        try:
+                            check_response(url, error.code, error.read(), error.headers)
+                        finally:
+                            error.close()
+                    raise
         except urllib.error.HTTPError as error:
-            check_response(url, error.code, error.read(), error.headers)
+            if not _is_sa(url):
+                check_response(url, error.code, error.read(), error.headers)
             if error.code not in (429, 503):
                 raise
             delay = retry_after(error.headers.get("Retry-After"))
-            error.close()
+            if not _is_sa(url):
+                error.close()
             if attempt == 2:
                 raise SourceRefused(url, f"HTTP {error.code}; throttled, retry next run") from None
             time.sleep(max(delay, 2 ** attempt))
@@ -282,6 +426,18 @@ class _Redirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         fp.close()
         refuse_unchecked_redirect(newurl)
+
+
+def _check_sa_opener(opener, url):
+    """Auth/custom handlers can issue their own unpaced requests inside open()."""
+    if not _is_sa(url):
+        return
+    safe = {urllib.request.UnknownHandler, urllib.request.HTTPHandler,
+            urllib.request.HTTPDefaultErrorHandler, urllib.request.FTPHandler,
+            urllib.request.FileHandler, urllib.request.DataHandler,
+            urllib.request.HTTPSHandler, urllib.request.HTTPErrorProcessor, _Redirect}
+    if type(opener) is not urllib.request.OpenerDirector or any(type(handler) not in safe for handler in opener.handlers):
+        raise SourceRefused(url, "SA opener has auth or custom handlers that can retry outside coordinated pacing; request not sent")
 
 
 def build_opener(*handlers):
@@ -308,6 +464,8 @@ def aiohttp_trace():
 
     async def start(session, context, params):
         ensure_allowed(str(params.url))
+        if _is_sa(str(params.url)):
+            raise SourceRefused(str(params.url), "SA async transport lacks coordinated pacing; use the synchronous source transport")
         params.headers["User-Agent"] = USER_AGENT
 
     async def end(session, context, params):
