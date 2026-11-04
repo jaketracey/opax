@@ -3300,11 +3300,12 @@ async function topicCensus(env: Env, ctx: ExecutionContext, refresh = false): Pr
 // committee per scheduled hearing day (about 40 for a four-day round), four at
 // a time, kept with the other aggregates (serve stale, rebuild in the cron).
 // A round whose transcripts can still change (hearings under way, Proof
-// transcripts arriving and being replaced) is rebuilt hourly; an older one daily.
+// transcripts arriving and being replaced) is rebuilt every six hours: new
+// transcripts reach the knowledge box only through the nightly. An older one daily.
 const ESTIMATES_RECENT_DAYS = 60
 const estimatesCachePath = (id: string) => `/api/estimates-round?id=${encodeURIComponent(id)}`
 const estimatesTtl = (round: EstimatesRound) =>
-  Date.now() - Date.parse(`${round.end}T00:00:00Z`) < ESTIMATES_RECENT_DAYS * 86_400_000 ? 3600 : 86_400
+  Date.now() - Date.parse(`${round.end}T00:00:00Z`) < ESTIMATES_RECENT_DAYS * 86_400_000 ? 21_600 : 86_400
 
 async function estimatesRecord(env: Env, ctx: ExecutionContext, round: EstimatesRound, committees: EstimatesCommittee[], refresh = false): Promise<EstimatesRecord | null> {
   if (!env.ARAG_KB_ID || !env.ARAG_KB_TOKEN) return null
