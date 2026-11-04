@@ -1,0 +1,1448 @@
+{
+ "hearing_id": "committees/estimate/30040",
+ "pdf_sha256": "9e4798e7030eef9d1d3c924a459b8b1ad40fd347cbf726d4ddc2b2025875b1a8",
+ "pages": [
+  {
+   "page": 1,
+   "printed": null,
+   "chars": 301,
+   "classes": {
+    "cover": 301
+   }
+  },
+  {
+   "page": 2,
+   "printed": null,
+   "chars": 248,
+   "classes": {
+    "front": 248
+   }
+  },
+  {
+   "page": 3,
+   "printed": 1,
+   "chars": 2329,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "attendance": 2249,
+    "heading": 17
+   }
+  },
+  {
+   "page": 4,
+   "printed": 2,
+   "chars": 2932,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "attendance": 2869
+   }
+  },
+  {
+   "page": 5,
+   "printed": 3,
+   "chars": 2066,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "attendance": 2003
+   }
+  },
+  {
+   "page": 6,
+   "printed": 4,
+   "chars": 2224,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "attendance": 2161
+   }
+  },
+  {
+   "page": 7,
+   "printed": 5,
+   "chars": 3608,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "attendance": 792,
+    "procedural": 19,
+    "label": 23,
+    "speech": 2711
+   }
+  },
+  {
+   "page": 8,
+   "printed": 6,
+   "chars": 4022,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "heading": 23,
+    "procedural": 7,
+    "label": 53,
+    "speech": 3876
+   }
+  },
+  {
+   "page": 9,
+   "printed": 7,
+   "chars": 4982,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "label": 12,
+    "speech": 4907
+   }
+  },
+  {
+   "page": 10,
+   "printed": 8,
+   "chars": 4882,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "label": 26,
+    "speech": 4793
+   }
+  },
+  {
+   "page": 11,
+   "printed": 9,
+   "chars": 4350,
+   "classes": {
+    "header": 34,
+    "footer": 29,
+    "label": 130,
+    "speech": 4157
+   }
+  },
+  {
+   "page": 12,
+   "printed": 10,
+   "chars": 4326,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 170,
+    "speech": 4092
+   }
+  },
+  {
+   "page": 13,
+   "printed": 11,
+   "chars": 4220,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 173,
+    "speech": 3983
+   }
+  },
+  {
+   "page": 14,
+   "printed": 12,
+   "chars": 3776,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 205,
+    "speech": 3507
+   }
+  },
+  {
+   "page": 15,
+   "printed": 13,
+   "chars": 3584,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 255,
+    "speech": 3265
+   }
+  },
+  {
+   "page": 16,
+   "printed": 14,
+   "chars": 4086,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 213,
+    "speech": 3809
+   }
+  },
+  {
+   "page": 17,
+   "printed": 15,
+   "chars": 3604,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 246,
+    "speech": 3294
+   }
+  },
+  {
+   "page": 18,
+   "printed": 16,
+   "chars": 3927,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 225,
+    "speech": 3638
+   }
+  },
+  {
+   "page": 19,
+   "printed": 17,
+   "chars": 3675,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 294,
+    "speech": 3317
+   }
+  },
+  {
+   "page": 20,
+   "printed": 18,
+   "chars": 4845,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 80,
+    "speech": 4701
+   }
+  },
+  {
+   "page": 21,
+   "printed": 19,
+   "chars": 4419,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 137,
+    "speech": 4218
+   }
+  },
+  {
+   "page": 22,
+   "printed": 20,
+   "chars": 3947,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 285,
+    "speech": 3598
+   }
+  },
+  {
+   "page": 23,
+   "printed": 21,
+   "chars": 4318,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 171,
+    "speech": 4083
+   }
+  },
+  {
+   "page": 24,
+   "printed": 22,
+   "chars": 4298,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 95,
+    "speech": 4139
+   }
+  },
+  {
+   "page": 25,
+   "printed": 23,
+   "chars": 4066,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 222,
+    "speech": 3780
+   }
+  },
+  {
+   "page": 26,
+   "printed": 24,
+   "chars": 3173,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 397,
+    "speech": 2712
+   }
+  },
+  {
+   "page": 27,
+   "printed": 25,
+   "chars": 4298,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 209,
+    "speech": 4025
+   }
+  },
+  {
+   "page": 28,
+   "printed": 26,
+   "chars": 4179,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "heading": 22,
+    "procedural": 36,
+    "label": 133,
+    "speech": 3924
+   }
+  },
+  {
+   "page": 29,
+   "printed": 27,
+   "chars": 4870,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "speech": 4806
+   }
+  },
+  {
+   "page": 30,
+   "printed": 28,
+   "chars": 4714,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 34,
+    "speech": 4616
+   }
+  },
+  {
+   "page": 31,
+   "printed": 29,
+   "chars": 3982,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 130,
+    "speech": 3788
+   }
+  },
+  {
+   "page": 32,
+   "printed": 30,
+   "chars": 4271,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 127,
+    "speech": 4080
+   }
+  },
+  {
+   "page": 33,
+   "printed": 31,
+   "chars": 4524,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 107,
+    "speech": 4353
+   }
+  },
+  {
+   "page": 34,
+   "printed": 32,
+   "chars": 4216,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 135,
+    "speech": 4017
+   }
+  },
+  {
+   "page": 35,
+   "printed": 33,
+   "chars": 4551,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 88,
+    "speech": 4399
+   }
+  },
+  {
+   "page": 36,
+   "printed": 34,
+   "chars": 4484,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 99,
+    "speech": 4321
+   }
+  },
+  {
+   "page": 37,
+   "printed": 35,
+   "chars": 4403,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 106,
+    "speech": 4233
+   }
+  },
+  {
+   "page": 38,
+   "printed": 36,
+   "chars": 4542,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 131,
+    "speech": 4347
+   }
+  },
+  {
+   "page": 39,
+   "printed": 37,
+   "chars": 4517,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 143,
+    "speech": 4310
+   }
+  },
+  {
+   "page": 40,
+   "printed": 38,
+   "chars": 4038,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 187,
+    "speech": 3787
+   }
+  },
+  {
+   "page": 41,
+   "printed": 39,
+   "chars": 4094,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 191,
+    "speech": 3839
+   }
+  },
+  {
+   "page": 42,
+   "printed": 40,
+   "chars": 4271,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 183,
+    "speech": 4024
+   }
+  },
+  {
+   "page": 43,
+   "printed": 41,
+   "chars": 2914,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "procedural": 36,
+    "label": 341,
+    "speech": 2473
+   }
+  },
+  {
+   "page": 44,
+   "printed": 42,
+   "chars": 3057,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 325,
+    "speech": 2668
+   }
+  },
+  {
+   "page": 45,
+   "printed": 43,
+   "chars": 3857,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 202,
+    "speech": 3591
+   }
+  },
+  {
+   "page": 46,
+   "printed": 44,
+   "chars": 3761,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "procedural": 36,
+    "label": 223,
+    "speech": 3438
+   }
+  },
+  {
+   "page": 47,
+   "printed": 45,
+   "chars": 3549,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 359,
+    "speech": 3126
+   }
+  },
+  {
+   "page": 48,
+   "printed": 46,
+   "chars": 3940,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 227,
+    "speech": 3649
+   }
+  },
+  {
+   "page": 49,
+   "printed": 47,
+   "chars": 3453,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 450,
+    "speech": 2939
+   }
+  },
+  {
+   "page": 50,
+   "printed": 48,
+   "chars": 3934,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 316,
+    "speech": 3554
+   }
+  },
+  {
+   "page": 51,
+   "printed": 49,
+   "chars": 3899,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 311,
+    "speech": 3524
+   }
+  },
+  {
+   "page": 52,
+   "printed": 50,
+   "chars": 3713,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 301,
+    "speech": 3348
+   }
+  },
+  {
+   "page": 53,
+   "printed": 51,
+   "chars": 3417,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 286,
+    "speech": 3067
+   }
+  },
+  {
+   "page": 54,
+   "printed": 52,
+   "chars": 3385,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 242,
+    "speech": 3079
+   }
+  },
+  {
+   "page": 55,
+   "printed": 53,
+   "chars": 3746,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 307,
+    "speech": 3375
+   }
+  },
+  {
+   "page": 56,
+   "printed": 54,
+   "chars": 3383,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 316,
+    "speech": 3003
+   }
+  },
+  {
+   "page": 57,
+   "printed": 55,
+   "chars": 3875,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 229,
+    "speech": 3582
+   }
+  },
+  {
+   "page": 58,
+   "printed": 56,
+   "chars": 3372,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 288,
+    "speech": 3020
+   }
+  },
+  {
+   "page": 59,
+   "printed": 57,
+   "chars": 3458,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "procedural": 36,
+    "label": 291,
+    "speech": 3067
+   }
+  },
+  {
+   "page": 60,
+   "printed": 58,
+   "chars": 3162,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 410,
+    "speech": 2688
+   }
+  },
+  {
+   "page": 61,
+   "printed": 59,
+   "chars": 2894,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 405,
+    "speech": 2425
+   }
+  },
+  {
+   "page": 62,
+   "printed": 60,
+   "chars": 3492,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 340,
+    "speech": 3088
+   }
+  },
+  {
+   "page": 63,
+   "printed": 61,
+   "chars": 2685,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 497,
+    "speech": 2124
+   }
+  },
+  {
+   "page": 64,
+   "printed": 62,
+   "chars": 3266,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 350,
+    "speech": 2852
+   }
+  },
+  {
+   "page": 65,
+   "printed": 63,
+   "chars": 2878,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 349,
+    "speech": 2465
+   }
+  },
+  {
+   "page": 66,
+   "printed": 64,
+   "chars": 3521,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 284,
+    "speech": 3173
+   }
+  },
+  {
+   "page": 67,
+   "printed": 65,
+   "chars": 3936,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "procedural": 36,
+    "label": 184,
+    "speech": 3652
+   }
+  },
+  {
+   "page": 68,
+   "printed": 66,
+   "chars": 4539,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 107,
+    "speech": 4368
+   }
+  },
+  {
+   "page": 69,
+   "printed": 67,
+   "chars": 3643,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 320,
+    "speech": 3259
+   }
+  },
+  {
+   "page": 70,
+   "printed": 68,
+   "chars": 3476,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 355,
+    "speech": 3057
+   }
+  },
+  {
+   "page": 71,
+   "printed": 69,
+   "chars": 3931,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 319,
+    "speech": 3548
+   }
+  },
+  {
+   "page": 72,
+   "printed": 70,
+   "chars": 3991,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 323,
+    "speech": 3604
+   }
+  },
+  {
+   "page": 73,
+   "printed": 71,
+   "chars": 3211,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 387,
+    "speech": 2760
+   }
+  },
+  {
+   "page": 74,
+   "printed": 72,
+   "chars": 3241,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 423,
+    "speech": 2754
+   }
+  },
+  {
+   "page": 75,
+   "printed": 73,
+   "chars": 3358,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 304,
+    "speech": 2990
+   }
+  },
+  {
+   "page": 76,
+   "printed": 74,
+   "chars": 3725,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 333,
+    "speech": 3328
+   }
+  },
+  {
+   "page": 77,
+   "printed": 75,
+   "chars": 3801,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 321,
+    "speech": 3416
+   }
+  },
+  {
+   "page": 78,
+   "printed": 76,
+   "chars": 3865,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 295,
+    "speech": 3506
+   }
+  },
+  {
+   "page": 79,
+   "printed": 77,
+   "chars": 3245,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 397,
+    "speech": 2784
+   }
+  },
+  {
+   "page": 80,
+   "printed": 78,
+   "chars": 3852,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 271,
+    "speech": 3517
+   }
+  },
+  {
+   "page": 81,
+   "printed": 79,
+   "chars": 3717,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 310,
+    "speech": 3343
+   }
+  },
+  {
+   "page": 82,
+   "printed": 80,
+   "chars": 4592,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 154,
+    "speech": 4374
+   }
+  },
+  {
+   "page": 83,
+   "printed": 81,
+   "chars": 4058,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 159,
+    "speech": 3835
+   }
+  },
+  {
+   "page": 84,
+   "printed": 82,
+   "chars": 3695,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 349,
+    "speech": 3282
+   }
+  },
+  {
+   "page": 85,
+   "printed": 83,
+   "chars": 3098,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 503,
+    "speech": 2531
+   }
+  },
+  {
+   "page": 86,
+   "printed": 84,
+   "chars": 3989,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 259,
+    "speech": 3666
+   }
+  },
+  {
+   "page": 87,
+   "printed": 85,
+   "chars": 3619,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 314,
+    "speech": 3241
+   }
+  },
+  {
+   "page": 88,
+   "printed": 86,
+   "chars": 4336,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 127,
+    "speech": 4145
+   }
+  },
+  {
+   "page": 89,
+   "printed": 87,
+   "chars": 3887,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 264,
+    "speech": 3559
+   }
+  },
+  {
+   "page": 90,
+   "printed": 88,
+   "chars": 4027,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 298,
+    "speech": 3665
+   }
+  },
+  {
+   "page": 91,
+   "printed": 89,
+   "chars": 3768,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "heading": 92,
+    "procedural": 36,
+    "label": 166,
+    "speech": 3410
+   }
+  },
+  {
+   "page": 92,
+   "printed": 90,
+   "chars": 4540,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 120,
+    "speech": 4356
+   }
+  },
+  {
+   "page": 93,
+   "printed": 91,
+   "chars": 3855,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 227,
+    "speech": 3564
+   }
+  },
+  {
+   "page": 94,
+   "printed": 92,
+   "chars": 3969,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 273,
+    "speech": 3632
+   }
+  },
+  {
+   "page": 95,
+   "printed": 93,
+   "chars": 4603,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 102,
+    "speech": 4437
+   }
+  },
+  {
+   "page": 96,
+   "printed": 94,
+   "chars": 4273,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 123,
+    "speech": 4086
+   }
+  },
+  {
+   "page": 97,
+   "printed": 95,
+   "chars": 4222,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 224,
+    "speech": 3934
+   }
+  },
+  {
+   "page": 98,
+   "printed": 96,
+   "chars": 3657,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 297,
+    "speech": 3296
+   }
+  },
+  {
+   "page": 99,
+   "printed": 97,
+   "chars": 4190,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 231,
+    "speech": 3895
+   }
+  },
+  {
+   "page": 100,
+   "printed": 98,
+   "chars": 4222,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 195,
+    "speech": 3963
+   }
+  },
+  {
+   "page": 101,
+   "printed": 99,
+   "chars": 4335,
+   "classes": {
+    "header": 35,
+    "footer": 29,
+    "label": 182,
+    "speech": 4089
+   }
+  },
+  {
+   "page": 102,
+   "printed": 100,
+   "chars": 4041,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 244,
+    "speech": 3732
+   }
+  },
+  {
+   "page": 103,
+   "printed": 101,
+   "chars": 3787,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 273,
+    "speech": 3449
+   }
+  },
+  {
+   "page": 104,
+   "printed": 102,
+   "chars": 3549,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 345,
+    "speech": 3139
+   }
+  },
+  {
+   "page": 105,
+   "printed": 103,
+   "chars": 4044,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 189,
+    "speech": 3790
+   }
+  },
+  {
+   "page": 106,
+   "printed": 104,
+   "chars": 3786,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 291,
+    "speech": 3430
+   }
+  },
+  {
+   "page": 107,
+   "printed": 105,
+   "chars": 4201,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 200,
+    "speech": 3936
+   }
+  },
+  {
+   "page": 108,
+   "printed": 106,
+   "chars": 4046,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 308,
+    "speech": 3673
+   }
+  },
+  {
+   "page": 109,
+   "printed": 107,
+   "chars": 3850,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 259,
+    "speech": 3526
+   }
+  },
+  {
+   "page": 110,
+   "printed": 108,
+   "chars": 3577,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 335,
+    "speech": 3177
+   }
+  },
+  {
+   "page": 111,
+   "printed": 109,
+   "chars": 3332,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "heading": 22,
+    "procedural": 7,
+    "label": 235,
+    "speech": 3003
+   }
+  },
+  {
+   "page": 112,
+   "printed": 110,
+   "chars": 3793,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 220,
+    "speech": 3508
+   }
+  },
+  {
+   "page": 113,
+   "printed": 111,
+   "chars": 3291,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "heading": 37,
+    "procedural": 36,
+    "label": 247,
+    "speech": 2906
+   }
+  },
+  {
+   "page": 114,
+   "printed": 112,
+   "chars": 3469,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 201,
+    "speech": 3203
+   }
+  },
+  {
+   "page": 115,
+   "printed": 113,
+   "chars": 3249,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 288,
+    "speech": 2896
+   }
+  },
+  {
+   "page": 116,
+   "printed": 114,
+   "chars": 3459,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "heading": 42,
+    "procedural": 7,
+    "label": 227,
+    "speech": 3118
+   }
+  },
+  {
+   "page": 117,
+   "printed": 115,
+   "chars": 4532,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 113,
+    "speech": 4354
+   }
+  },
+  {
+   "page": 118,
+   "printed": 116,
+   "chars": 3572,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 323,
+    "speech": 3184
+   }
+  },
+  {
+   "page": 119,
+   "printed": 117,
+   "chars": 3437,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "heading": 39,
+    "procedural": 7,
+    "label": 256,
+    "speech": 3070
+   }
+  },
+  {
+   "page": 120,
+   "printed": 118,
+   "chars": 3447,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 260,
+    "speech": 3122
+   }
+  },
+  {
+   "page": 121,
+   "printed": 119,
+   "chars": 4122,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 199,
+    "speech": 3858
+   }
+  },
+  {
+   "page": 122,
+   "printed": 120,
+   "chars": 2847,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 336,
+    "speech": 2446
+   }
+  },
+  {
+   "page": 123,
+   "printed": 121,
+   "chars": 3319,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 304,
+    "speech": 2950
+   }
+  },
+  {
+   "page": 124,
+   "printed": 122,
+   "chars": 3311,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 334,
+    "speech": 2912
+   }
+  },
+  {
+   "page": 125,
+   "printed": 123,
+   "chars": 3341,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 327,
+    "speech": 2949
+   }
+  },
+  {
+   "page": 126,
+   "printed": 124,
+   "chars": 2713,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 431,
+    "speech": 2217
+   }
+  },
+  {
+   "page": 127,
+   "printed": 125,
+   "chars": 3100,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 372,
+    "speech": 2663
+   }
+  },
+  {
+   "page": 128,
+   "printed": 126,
+   "chars": 2947,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 374,
+    "speech": 2508
+   }
+  },
+  {
+   "page": 129,
+   "printed": 127,
+   "chars": 3174,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "label": 341,
+    "speech": 2768
+   }
+  },
+  {
+   "page": 130,
+   "printed": 128,
+   "chars": 3155,
+   "classes": {
+    "header": 36,
+    "footer": 29,
+    "procedural": 25,
+    "label": 338,
+    "speech": 2727
+   }
+  }
+ ],
+ "notes": []
+}

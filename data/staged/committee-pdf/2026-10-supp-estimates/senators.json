@@ -1,0 +1,576 @@
+{
+ "built_from": "member links (handbook/allmps/<PHID>) in cached ParlInfo Senate committee fragments",
+ "hearings_read": 102,
+ "labels": {
+  "senator allman-payne": {
+   "label": "Senator ALLMAN-PAYNE",
+   "last_seen": "2026-06-05",
+   "links": 1261,
+   "phid": "298839",
+   "seen": 1261
+  },
+  "senator ananda-rajah": {
+   "label": "Senator ANANDA-RAJAH",
+   "last_seen": "2026-06-05",
+   "links": 491,
+   "phid": "290544",
+   "seen": 466
+  },
+  "senator antic": {
+   "label": "Senator ANTIC",
+   "last_seen": "2026-02-11",
+   "links": 193,
+   "phid": "269375",
+   "seen": 193
+  },
+  "senator askew": {
+   "label": "Senator ASKEW",
+   "last_seen": "2026-06-05",
+   "links": 428,
+   "phid": "281558",
+   "seen": 428
+  },
+  "senator ayres": {
+   "label": "Senator Ayres",
+   "last_seen": "2026-06-05",
+   "links": 3496,
+   "phid": "16913",
+   "seen": 3494
+  },
+  "senator barbara pocock": {
+   "label": "Senator BARBARA POCOCK",
+   "last_seen": "2026-06-05",
+   "links": 2685,
+   "phid": "BFQ",
+   "seen": 2685
+  },
+  "senator bell": {
+   "label": "Senator BELL",
+   "last_seen": "2026-06-05",
+   "links": 137,
+   "phid": "319142",
+   "seen": 137
+  },
+  "senator bilyk": {
+   "label": "Senator BILYK",
+   "last_seen": "2025-03-27",
+   "links": 95,
+   "phid": "HZB",
+   "seen": 95
+  },
+  "senator blyth": {
+   "label": "Senator BLYTH",
+   "last_seen": "2026-06-03",
+   "links": 712,
+   "phid": "315170",
+   "seen": 712
+  },
+  "senator bragg": {
+   "label": "Senator BRAGG",
+   "last_seen": "2026-06-05",
+   "links": 3024,
+   "phid": "256063",
+   "seen": 3024
+  },
+  "senator brockman": {
+   "label": "Senator BROCKMAN",
+   "last_seen": "2026-06-02",
+   "links": 289,
+   "phid": "30484",
+   "seen": 289
+  },
+  "senator cadell": {
+   "label": "Senator CADELL",
+   "last_seen": "2026-06-05",
+   "links": 2241,
+   "phid": "300134",
+   "seen": 2241
+  },
+  "senator canavan": {
+   "label": "Senator CANAVAN",
+   "last_seen": "2026-06-05",
+   "links": 7331,
+   "phid": "245212",
+   "seen": 7331
+  },
+  "senator carol brown": {
+   "label": "Senator CAROL BROWN",
+   "last_seen": "2026-06-05",
+   "links": 149,
+   "phid": "F49",
+   "seen": 136
+  },
+  "senator cash": {
+   "label": "Senator CASH",
+   "last_seen": "2026-05-28",
+   "links": 3064,
+   "phid": "I0M",
+   "seen": 3061
+  },
+  "senator chandler": {
+   "label": "Senator CHANDLER",
+   "last_seen": "2026-06-05",
+   "links": 2027,
+   "phid": "264449",
+   "seen": 2027
+  },
+  "senator chisholm": {
+   "label": "Senator Chisholm",
+   "last_seen": "2026-06-04",
+   "links": 1025,
+   "phid": "39801",
+   "seen": 1023
+  },
+  "senator ciccone": {
+   "label": "Senator CICCONE",
+   "last_seen": "2025-03-27",
+   "links": 4,
+   "phid": "281503",
+   "seen": 4
+  },
+  "senator colbeck": {
+   "label": "Senator COLBECK",
+   "last_seen": "2026-06-04",
+   "links": 1205,
+   "phid": "00AOL",
+   "seen": 1204
+  },
+  "senator collins": {
+   "label": "Senator COLLINS",
+   "last_seen": "2026-06-04",
+   "links": 847,
+   "phid": "297964",
+   "seen": 847
+  },
+  "senator cox": {
+   "label": "Senator COX",
+   "last_seen": "2026-05-28",
+   "links": 362,
+   "phid": "296215",
+   "seen": 362
+  },
+  "senator darmanin": {
+   "label": "Senator DARMANIN",
+   "last_seen": "2026-05-28",
+   "links": 175,
+   "phid": "301128",
+   "seen": 175
+  },
+  "senator davey": {
+   "label": "Senator DAVEY",
+   "last_seen": "2025-03-27",
+   "links": 638,
+   "phid": "281697",
+   "seen": 638
+  },
+  "senator david pocock": {
+   "label": "Senator DAVID POCOCK",
+   "last_seen": "2026-06-05",
+   "links": 3327,
+   "phid": "256136",
+   "seen": 3281
+  },
+  "senator dean smith": {
+   "label": "Senator DEAN SMITH",
+   "last_seen": "2026-06-05",
+   "links": 2098,
+   "phid": "241710",
+   "seen": 2098
+  },
+  "senator dolega": {
+   "label": "Senator DOLEGA",
+   "last_seen": "2026-06-04",
+   "links": 298,
+   "phid": "316935",
+   "seen": 298
+  },
+  "senator dowling": {
+   "label": "Senator DOWLING",
+   "last_seen": "2026-02-10",
+   "links": 25,
+   "phid": "55842",
+   "seen": 25
+  },
+  "senator duniam": {
+   "label": "Senator DUNIAM",
+   "last_seen": "2026-05-28",
+   "links": 2451,
+   "phid": "263418",
+   "seen": 2451
+  },
+  "senator farrell": {
+   "label": "Senator Farrell",
+   "last_seen": "2026-05-26",
+   "links": 912,
+   "phid": "I0N",
+   "seen": 912
+  },
+  "senator faruqi": {
+   "label": "Senator FARUQI",
+   "last_seen": "2026-06-05",
+   "links": 959,
+   "phid": "250362",
+   "seen": 959
+  },
+  "senator fawcett": {
+   "label": "Senator FAWCETT",
+   "last_seen": "2025-02-27",
+   "links": 94,
+   "phid": "DYU",
+   "seen": 94
+  },
+  "senator gallagher": {
+   "label": "Senator Gallagher",
+   "last_seen": "2026-06-05",
+   "links": 3669,
+   "phid": "ING",
+   "seen": 3587
+  },
+  "senator ghosh": {
+   "label": "Senator GHOSH",
+   "last_seen": "2026-06-05",
+   "links": 274,
+   "phid": "257613",
+   "seen": 274
+  },
+  "senator green": {
+   "label": "Senator Green",
+   "last_seen": "2026-06-03",
+   "links": 1003,
+   "phid": "259819",
+   "seen": 979
+  },
+  "senator grogan": {
+   "label": "Senator GROGAN",
+   "last_seen": "2025-10-09",
+   "links": 104,
+   "phid": "296331",
+   "seen": 104
+  },
+  "senator hanson": {
+   "label": "Senator HANSON",
+   "last_seen": "2026-06-03",
+   "links": 234,
+   "phid": "BK6",
+   "seen": 234
+  },
+  "senator hanson-young": {
+   "label": "Senator HANSON-YOUNG",
+   "last_seen": "2026-02-10",
+   "links": 1501,
+   "phid": "I0U",
+   "seen": 1501
+  },
+  "senator henderson": {
+   "label": "Senator HENDERSON",
+   "last_seen": "2026-06-03",
+   "links": 6390,
+   "phid": "ZN4",
+   "seen": 6390
+  },
+  "senator hodgins-may": {
+   "label": "Senator HODGINS-MAY",
+   "last_seen": "2026-06-04",
+   "links": 1334,
+   "phid": "310860",
+   "seen": 1334
+  },
+  "senator hughes": {
+   "label": "Senator HUGHES",
+   "last_seen": "2025-02-27",
+   "links": 174,
+   "phid": "273828",
+   "seen": 174
+  },
+  "senator hume": {
+   "label": "Senator HUME",
+   "last_seen": "2026-06-05",
+   "links": 4707,
+   "phid": "266499",
+   "seen": 4707
+  },
+  "senator kovacic": {
+   "label": "Senator KOVACIC",
+   "last_seen": "2026-06-05",
+   "links": 3161,
+   "phid": "306168",
+   "seen": 3159
+  },
+  "senator lambie": {
+   "label": "Senator LAMBIE",
+   "last_seen": "2026-06-03",
+   "links": 176,
+   "phid": "250026",
+   "seen": 176
+  },
+  "senator liddle": {
+   "label": "Senator LIDDLE",
+   "last_seen": "2026-06-05",
+   "links": 1727,
+   "phid": "300644",
+   "seen": 1727
+  },
+  "senator mcallister": {
+   "label": "Senator McAllister",
+   "last_seen": "2026-06-05",
+   "links": 1328,
+   "phid": "121628",
+   "seen": 1326
+  },
+  "senator mccarthy": {
+   "label": "Senator McCarthy",
+   "last_seen": "2026-05-27",
+   "links": 656,
+   "phid": "122087",
+   "seen": 656
+  },
+  "senator mcdonald": {
+   "label": "Senator McDONALD",
+   "last_seen": "2026-06-05",
+   "links": 3162,
+   "phid": "123072",
+   "seen": 3162
+  },
+  "senator mcgrath": {
+   "label": "Senator McGRATH",
+   "last_seen": "2026-06-04",
+   "links": 2143,
+   "phid": "217241",
+   "seen": 2143
+  },
+  "senator mckenzie": {
+   "label": "Senator McKENZIE",
+   "last_seen": "2026-06-02",
+   "links": 7592,
+   "phid": "207825",
+   "seen": 7592
+  },
+  "senator mckim": {
+   "label": "Senator McKIM",
+   "last_seen": "2026-06-05",
+   "links": 867,
+   "phid": "JKM",
+   "seen": 867
+  },
+  "senator mclachlan": {
+   "label": "Senator McLACHLAN",
+   "last_seen": "2026-06-04",
+   "links": 199,
+   "phid": "287062",
+   "seen": 199
+  },
+  "senator mulholland": {
+   "label": "Senator MULHOLLAND",
+   "last_seen": "2026-06-05",
+   "links": 282,
+   "phid": "277110",
+   "seen": 282
+  },
+  "senator nampijinpa price": {
+   "label": "Senator NAMPIJINPA PRICE",
+   "last_seen": "2026-06-05",
+   "links": 937,
+   "phid": "263528",
+   "seen": 937
+  },
+  "senator o'neill": {
+   "label": "Senator O'NEILL",
+   "last_seen": "2026-06-05",
+   "links": 567,
+   "phid": "140651",
+   "seen": 567
+  },
+  "senator o'sullivan": {
+   "label": "Senator O'SULLIVAN",
+   "last_seen": "2026-06-05",
+   "links": 1999,
+   "phid": "283585",
+   "seen": 1999
+  },
+  "senator paterson": {
+   "label": "Senator PATERSON",
+   "last_seen": "2026-06-04",
+   "links": 5317,
+   "phid": "144138",
+   "seen": 5317
+  },
+  "senator payman": {
+   "label": "Senator PAYMAN",
+   "last_seen": "2026-02-12",
+   "links": 553,
+   "phid": "300707",
+   "seen": 553
+  },
+  "senator polley": {
+   "label": "Senator POLLEY",
+   "last_seen": "2026-06-02",
+   "links": 347,
+   "phid": "e5x",
+   "seen": 347
+  },
+  "senator pratt": {
+   "label": "Senator PRATT",
+   "last_seen": "2025-02-27",
+   "links": 65,
+   "phid": "I0T",
+   "seen": 65
+  },
+  "senator rennick": {
+   "label": "Senator RENNICK",
+   "last_seen": "2025-02-27",
+   "links": 197,
+   "phid": "283596",
+   "seen": 197
+  },
+  "senator reynolds": {
+   "label": "Senator REYNOLDS",
+   "last_seen": "2025-02-27",
+   "links": 486,
+   "phid": "250216",
+   "seen": 486
+  },
+  "senator roberts": {
+   "label": "Senator ROBERTS",
+   "last_seen": "2026-06-05",
+   "links": 3678,
+   "phid": "266524",
+   "seen": 3664
+  },
+  "senator ruston": {
+   "label": "Senator RUSTON",
+   "last_seen": "2026-06-05",
+   "links": 4594,
+   "phid": "243273",
+   "seen": 4241
+  },
+  "senator scarr": {
+   "label": "Senator SCARR",
+   "last_seen": "2026-06-05",
+   "links": 1428,
+   "phid": "282997",
+   "seen": 1428
+  },
+  "senator sharma": {
+   "label": "Senator SHARMA",
+   "last_seen": "2026-06-05",
+   "links": 2579,
+   "phid": "274506",
+   "seen": 2579
+  },
+  "senator sheldon": {
+   "label": "Senator SHELDON",
+   "last_seen": "2026-06-03",
+   "links": 247,
+   "phid": "168275",
+   "seen": 247
+  },
+  "senator shoebridge": {
+   "label": "Senator SHOEBRIDGE",
+   "last_seen": "2026-06-04",
+   "links": 9021,
+   "phid": "169119",
+   "seen": 9021
+  },
+  "senator steele-john": {
+   "label": "Senator STEELE-JOHN",
+   "last_seen": "2026-06-05",
+   "links": 1097,
+   "phid": "250156",
+   "seen": 1012
+  },
+  "senator stewart": {
+   "label": "Senator STEWART",
+   "last_seen": "2025-12-04",
+   "links": 78,
+   "phid": "299352",
+   "seen": 78
+  },
+  "senator thorpe": {
+   "label": "Senator THORPE",
+   "last_seen": "2026-05-26",
+   "links": 538,
+   "phid": "280304",
+   "seen": 538
+  },
+  "senator tyrrell": {
+   "label": "Senator TYRRELL",
+   "last_seen": "2026-05-28",
+   "links": 32,
+   "phid": "300639",
+   "seen": 32
+  },
+  "senator urquhart": {
+   "label": "Senator URQUHART",
+   "last_seen": "2025-02-27",
+   "links": 107,
+   "phid": "231199",
+   "seen": 107
+  },
+  "senator van": {
+   "label": "Senator VAN",
+   "last_seen": "2025-03-27",
+   "links": 87,
+   "phid": "283601",
+   "seen": 87
+  },
+  "senator walker": {
+   "label": "Senator WALKER",
+   "last_seen": "2026-06-05",
+   "links": 96,
+   "phid": "316818",
+   "seen": 96
+  },
+  "senator walsh": {
+   "label": "Senator Walsh",
+   "last_seen": "2026-06-05",
+   "links": 391,
+   "phid": "252157",
+   "seen": 391
+  },
+  "senator waters": {
+   "label": "Senator WATERS",
+   "last_seen": "2026-06-04",
+   "links": 1140,
+   "phid": "192970",
+   "seen": 1140
+  },
+  "senator watt": {
+   "label": "Senator Watt",
+   "last_seen": "2026-06-02",
+   "links": 3154,
+   "phid": "245759",
+   "seen": 3154
+  },
+  "senator whish-wilson": {
+   "label": "Senator WHISH-WILSON",
+   "last_seen": "2026-06-03",
+   "links": 1003,
+   "phid": "195565",
+   "seen": 1003
+  },
+  "senator whiteaker": {
+   "label": "Senator WHITEAKER",
+   "last_seen": "2026-06-05",
+   "links": 328,
+   "phid": "316555",
+   "seen": 328
+  },
+  "senator whitten": {
+   "label": "Senator WHITTEN",
+   "last_seen": "2026-06-03",
+   "links": 657,
+   "phid": "317026",
+   "seen": 657
+  },
+  "senator wong": {
+   "label": "Senator Wong",
+   "last_seen": "2026-06-05",
+   "links": 3552,
+   "phid": "00AOU",
+   "seen": 3549
+  }
+ },
+ "min_seen": 3,
+ "min_share": 0.85,
+ "phids_with_several_labels": []
+}
