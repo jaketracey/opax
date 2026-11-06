@@ -1,9 +1,9 @@
 {
-  "version": "2026-11-06",
-  "expected_resources": 1002036,
+  "version": "2026-11-07",
+  "expected_resources": 1002046,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 1002027,
-    "new_press_release_resources": 9
+    "live_index_before_refresh": 1002036,
+    "new_press_release_resources": 10
   },
   "collected_speeches": 963384,
   "sources": [
@@ -69,7 +69,7 @@
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5551,
+      "docs": 5561,
       "coverage": "2024–2026"
     },
     {
@@ -152,12 +152,12 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-11-05T19:04:52+00:00",
+    "checked_at": "2026-11-06T19:47:33+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
     "latest_bill_introduced": "2026-09-17",
-    "latest_nsw_release": "2026-11-05",
+    "latest_nsw_release": "2026-11-06",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
       "Federal Hansard is current to 2026-10-29 (no sittings since); NSW Parliament to 2026-10-22; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-10-29. Federal committee hearings (Senate, House and Joint) are current to 2026-10-29.",
@@ -197,7 +197,7 @@
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 995,
-      "press_release": 6922,
+      "press_release": 6932,
       "research_report": 35,
       "speech": 963384
     },
@@ -206,13 +206,13 @@
       "nsw_speeches": 0,
       "vic_speeches": 0,
       "act_speeches": 0,
-      "nsw_releases": 9,
-      "austender_contracts": 8
+      "nsw_releases": 10,
+      "austender_contracts": 2
     },
     "structured_sources": {
       "grantconnect_awards": 367482,
-      "austender_latest_contracts": 875047,
-      "published_supplier_contracts": 109993,
+      "austender_latest_contracts": 875202,
+      "published_supplier_contracts": 110226,
       "lobbyist_firms": 1962,
       "lobbyist_client_links": 15144,
       "lobbyist_people": 6022,
@@ -241,13 +241,13 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-05T18:31:39.529873+00:00",
+        "checked_at": "2026-11-06T19:15:27.817116+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-05T16:19:23.232678+00:00",
+        "checked_at": "2026-11-06T16:19:26.968711+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "diaries_qld": {
@@ -259,19 +259,19 @@
       "grants_fetch": {
         "status": "paused",
         "host": "www.grants.gov.au",
-        "checked_at": "2026-11-05T16:31:31.523402+00:00",
+        "checked_at": "2026-11-06T16:31:37.326119+00:00",
         "reason": "HTTP 403"
       },
       "interests_federal": {
         "status": "paused",
         "host": "www.aph.gov.au",
-        "checked_at": "2026-11-05T16:42:15.474968+00:00",
+        "checked_at": "2026-11-06T16:42:17.467417+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld": {
         "status": "paused",
         "host": "data.parliament.qld.gov.au",
-        "checked_at": "2026-11-05T16:19:18.808745+00:00",
+        "checked_at": "2026-11-06T16:19:22.651095+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld_contracts": {
@@ -283,7 +283,7 @@
       "sa": {
         "status": "paused",
         "host": "hansardsearch.parliament.sa.gov.au",
-        "checked_at": "2026-11-05T16:19:26.465034+00:00",
+        "checked_at": "2026-11-06T16:19:30.053168+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       }
     },
