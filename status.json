@@ -1,0 +1,109 @@
+{
+ "date": "2026-11-07",
+ "status": "failed",
+ "started": "2026-11-06T16:15:39Z",
+ "finished": "2026-11-06T19:47:53Z",
+ "commit": "66aacf1fd",
+ "deploy": "started by the push (deploy.yml, corpus.json changed)",
+ "summary": "1,002,046 resources (+10: press_release +10); divisions: 0 new; federal latest 2026-10-29; bills: 0 new, 0 changed, 0 titles filled, 0 sponsor IDs filled; evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); Paused sources: bills, committees, diaries_qld, grants_fetch, interests_federal, qld, qld_contracts, sa",
+ "failures": [
+  "daily_refresh.sh reported failed steps: releases (rc=1); the rest was still published"
+ ],
+ "warnings": [
+  "a source refused to change its register tonight (kept the last good rows): frl_instruments",
+  "evidence: waiting for inputs (missing: /home/ubuntu/.cache/autoresearch/evidence-layers-full.sqlite, /home/ubuntu/.cache/autoresearch/evidence-places.sqlite, /home/ubuntu/.cache/autoresearch/evidence-identity-decisions.sqlite, /home/ubuntu/.cache/autoresearch/evidence-additional-mentions.sqlite); catch-up retained; export skipped",
+  "division export retained 28 pinned records; explicit coverage flags identify degraded source coverage",
+  "SEO recent votes retained 942 published source URLs across 23 divisions: Victorian Hansard asset paths changed; unchanged recorded votes kept their prior citations"
+ ],
+ "paused_sources": {
+  "committees": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-11-06T16:19:26.968711+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "data.parliament.qld.gov.au",
+   "checked_at": "2026-11-06T16:19:22.651095+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "bills": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "parlinfo.aph.gov.au",
+   "checked_at": "2026-11-06T19:15:27.817116+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "sa": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "hansardsearch.parliament.sa.gov.au",
+   "checked_at": "2026-11-06T16:19:30.053168+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "qld_contracts": {
+   "status": "paused",
+   "reason": "redirect refused: destination robots policy is unavailable",
+   "host": "www.data.qld.gov.au",
+   "checked_at": "2026-11-05T18:05:18.477278+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "grants_fetch": {
+   "status": "paused",
+   "reason": "HTTP 403",
+   "host": "www.grants.gov.au",
+   "checked_at": "2026-11-06T16:31:37.326119+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "interests_federal": {
+   "status": "paused",
+   "reason": "HTTP 403 verified 2026-10-10; permission requested",
+   "host": "www.aph.gov.au",
+   "checked_at": "2026-11-06T16:42:17.467417+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  },
+  "diaries_qld": {
+   "status": "paused",
+   "reason": "challenge/WAF page",
+   "host": "cabinet.qld.gov.au",
+   "checked_at": "2026-11-05T18:05:20.182814+00:00",
+   "message": "source paused: honest agent refused (awaiting permission)",
+   "permission": "permission requested"
+  }
+ },
+ "periodic_state": {
+  "schema": 1,
+  "observed_through": "2026-11-07",
+  "groups": {
+   "frl": {
+    "pending_since": "2026-11-05",
+    "due": "2026-11-05",
+    "last_success": "2026-10-31",
+    "last_attempt": "2026-11-07",
+    "commit": "cd31ffc8b291e95d170d6be4bdc9909b73363b90"
+   },
+   "monthly": {
+    "pending_since": "2026-11-01",
+    "due": "2026-11-01",
+    "last_success": "2026-10-19",
+    "last_attempt": "2026-11-06",
+    "commit": "77401b801e5f3c05d66414cacc87eb04a70f406f"
+   },
+   "weekly": {
+    "pending_since": "2026-10-25",
+    "due": "2026-11-01",
+    "last_attempt": "2026-11-06"
+   }
+  }
+ }
+}
