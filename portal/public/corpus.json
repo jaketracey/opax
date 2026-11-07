@@ -152,7 +152,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-11-06T19:47:33+00:00",
+    "checked_at": "2026-11-07T19:07:45+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -213,10 +213,10 @@
       "grantconnect_awards": 367482,
       "austender_latest_contracts": 875202,
       "published_supplier_contracts": 110226,
-      "lobbyist_firms": 1962,
-      "lobbyist_client_links": 15144,
-      "lobbyist_people": 6022,
-      "lobbyist_contact_disclosures": 8358
+      "lobbyist_firms": 1963,
+      "lobbyist_client_links": 15145,
+      "lobbyist_people": 6027,
+      "lobbyist_contact_disclosures": 8363
     },
     "enrichment_queued": {
       "new_speech_resources": 2016,
@@ -241,49 +241,49 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-06T19:15:27.817116+00:00",
+        "checked_at": "2026-11-07T18:35:14.435705+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-06T16:19:26.968711+00:00",
+        "checked_at": "2026-11-07T16:19:18.078580+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "diaries_qld": {
         "status": "paused",
         "host": "cabinet.qld.gov.au",
-        "checked_at": "2026-11-05T18:05:20.182814+00:00",
+        "checked_at": "2026-11-07T18:04:57.435998+00:00",
         "reason": "challenge/WAF page"
       },
       "grants_fetch": {
         "status": "paused",
         "host": "www.grants.gov.au",
-        "checked_at": "2026-11-06T16:31:37.326119+00:00",
+        "checked_at": "2026-11-07T16:31:36.100758+00:00",
         "reason": "HTTP 403"
       },
       "interests_federal": {
         "status": "paused",
         "host": "www.aph.gov.au",
-        "checked_at": "2026-11-06T16:42:17.467417+00:00",
+        "checked_at": "2026-11-07T16:42:07.901677+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld": {
         "status": "paused",
         "host": "data.parliament.qld.gov.au",
-        "checked_at": "2026-11-06T16:19:22.651095+00:00",
+        "checked_at": "2026-11-07T16:19:13.818944+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld_contracts": {
         "status": "paused",
         "host": "www.data.qld.gov.au",
-        "checked_at": "2026-11-05T18:05:18.477278+00:00",
+        "checked_at": "2026-11-07T18:04:54.940088+00:00",
         "reason": "redirect refused: destination robots policy is unavailable"
       },
       "sa": {
         "status": "paused",
         "host": "hansardsearch.parliament.sa.gov.au",
-        "checked_at": "2026-11-06T16:19:30.053168+00:00",
+        "checked_at": "2026-11-07T16:19:24.199540+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       }
     },
