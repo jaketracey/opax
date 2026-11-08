@@ -346,6 +346,7 @@ describe('location', () => {
         (n) => typeof n.type === 'string' && style(n).flexDirection,
       )!;
       expect(style(container).flexDirection).toBe('column');
+      expect(style(container).flexWrap).toBe('nowrap');
     }
     await act(async () => r.unmount());
   });

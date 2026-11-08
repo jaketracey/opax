@@ -237,6 +237,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.line,
   },
-  metaStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  // A wrapping column lays text out at max-content width (build 33).
+  metaStacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  },
   metaText: { flexShrink: 1 },
 });
