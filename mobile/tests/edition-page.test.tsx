@@ -21,7 +21,7 @@ import { ApiError } from '../src/api/errors';
 import editionJSON from '../scripts/fixtures/edition-latest.json';
 import personJSON from '../scripts/fixtures/edition-politician.json';
 import { bills, pinned, roster, slugs } from './pinned';
-import { SourceLine } from '../src/design/source';
+import { SourceLine, SourceSheet } from '../src/design/source';
 import { FigureBlock } from '../src/design/record';
 import { Card } from '../src/design/card';
 import { Button } from '../src/design/controls';
@@ -37,6 +37,8 @@ import {
   editionQuestion,
   editionSubject,
   editionTier,
+  editionSources,
+  EDITION_RULE,
 } from '../src/features/edition/model';
 import { editionRoute } from '../src/navigation/routes/edition';
 import { billRoute } from '../src/navigation/routes/bills';
@@ -93,8 +95,11 @@ jest.mock('../src/navigation/external', () => ({
   ...jest.requireActual('../src/navigation/external'),
   openOnWeb: jest.fn(),
 }));
+let mockCanShare = true;
 jest.mock('../src/navigation/share', () => ({
-  canShare: true,
+  get canShare() {
+    return mockCanShare;
+  },
   shareRecord: jest.fn(),
   copyRecordLink: jest.fn(),
 }));
@@ -156,6 +161,7 @@ async function render(element: ReactElement) {
 }
 beforeEach(() => {
   jest.clearAllMocks();
+  mockCanShare = true;
   Platform.OS = 'android';
   Dimensions.set({
     window: { width: 390, height: 844, scale: 3, fontScale: 1 },
@@ -207,6 +213,57 @@ describe('edition freshness in Sydney', () => {
   });
 });
 
+describe('edition source payloads', () => {
+  test.each([
+    'bill',
+    'politician',
+    'topic',
+    'program',
+    'grant',
+    'largest',
+  ] as const)('%s cites the published edition and its rule', (kind) => {
+    const view = { ...edition, kind };
+    const source = editionSources(view);
+    expect(source.originals).toContainEqual({
+      label: 'OPAX daily edition',
+      url: view.path,
+      asOf: view.date,
+    });
+    expect(source.notes).toEqual([...view.sourceRows, EDITION_RULE]);
+    expect(source.originals!.map((original) => original.url)).toEqual(
+      ['program', 'grant', 'largest'].includes(kind)
+        ? [view.path, 'https://www.grants.gov.au/']
+        : [view.path],
+    );
+  });
+  test('an award identifies its GA record at the existing GrantConnect register URL', () => {
+    expect(
+      editionSources({
+        ...edition,
+        kind: 'grant',
+        path: '/money/grants/federal/recipient/abn:83140439239?award=GA12345',
+      }).originals,
+    ).toContainEqual({
+      label: 'GrantConnect',
+      url: 'https://www.grants.gov.au/',
+      record: 'record GA12345',
+    });
+  });
+  test('bill documents are added alongside the published edition', () => {
+    const document = decodeBill(pinned('/bills/au-federal-r7529.json'))
+      .sources[0]!;
+    const original = {
+      label: 'Explanatory memorandum',
+      url: document.url,
+      asOf: document.document_date,
+    };
+    expect(editionSources(edition, [original]).originals).toEqual([
+      { label: 'OPAX daily edition', url: edition.path, asOf: edition.date },
+      original,
+    ]);
+  });
+});
+
 describe('the replacement edition card', () => {
   test('one zoom link into the reader, first paragraph only, with a separate source target', async () => {
     const { root } = await render(
@@ -224,12 +281,56 @@ describe('the replacement edition card', () => {
     ).toBeUndefined();
     await press(root, 'today-edition');
     expect(router.push).toHaveBeenLastCalledWith(editionRoute());
+    jest.mocked(router.push).mockClear();
+    expect(root.findByType(SourceLine).props.onPress).toBeUndefined();
     await press(root, 'today-edition-sources');
-    expect(router.push).toHaveBeenLastCalledWith(
-      expect.objectContaining({ pathname: '/source' }),
+    const sheet = root.findByType(SourceSheet);
+    expect(sheet.props.visible).toBe(true);
+    expect(sheet.props.originals).toContainEqual({
+      label: 'OPAX daily edition',
+      url: edition.path,
+      asOf: edition.date,
+    });
+    expect(sheet.props.originals).toContainEqual(
+      expect.objectContaining({
+        label: 'Explanatory memorandum',
+        url: expect.stringContaining('parlinfo.aph.gov.au/parlInfo/'),
+      }),
     );
+    expect(router.push).not.toHaveBeenCalled();
     expect(openOnWeb).not.toHaveBeenCalled();
   });
+  test.each([true, false])(
+    'Share accessibility action follows canShare=%s',
+    async (enabled) => {
+      mockCanShare = enabled;
+      const { root } = await render(
+        <EditionCard edition={ready} today="2026-10-05" />,
+      );
+      const card = root.findByType(Card);
+      expect(
+        card.props.accessibilityActions.map(
+          (action: { name: string }) => action.name,
+        ),
+      ).toEqual(enabled ? ['Sources', 'Share'] : ['Sources']);
+      if (enabled) {
+        act(() =>
+          card.props.accessibilityActions
+            .find((action: { name: string }) => action.name === 'Share')
+            .onAction(),
+        );
+        expect(shareRecord).toHaveBeenCalledWith({
+          path: edition.path,
+          title: edition.title,
+        });
+      } else
+        expect(
+          card.props.menu.some(
+            (item: { title: string }) => item.title === 'Share',
+          ),
+        ).toBe(false);
+    },
+  );
   test('a recent card has its weekday date and a saved copy keeps the edition age', async () => {
     const savedAt = Date.parse('2026-10-10T00:00:00Z');
     const { root } = await render(
@@ -245,6 +346,7 @@ describe('the replacement edition card', () => {
       dateLabel: 'Saved 10 Oct 2026',
       asOf: edition.date,
     });
+    expect(root.findByType(SourceLine).props.notes).toContain(EDITION_RULE);
   });
   test.each(['missing', 'error'] as const)(
     '%s cards collapse',
@@ -282,6 +384,40 @@ describe('the replacement edition card', () => {
 });
 
 describe('the native edition reader', () => {
+  test.each(['edition-sources', 'edition-fact-0-sources'])(
+    '%s opens its own originals',
+    async (id) => {
+      const { root } = await render(<EditionStory />);
+      const line = root
+        .findAllByType(SourceLine)
+        .find((node) => node.props.testID === id)!;
+      expect(line.props.onPress).toBeUndefined();
+      await press(root, id);
+      const sheet = root
+        .findAllByType(SourceSheet)
+        .find((node) => node.props.testID === `${id}-sheet`)!;
+      expect(sheet.props).toMatchObject({
+        visible: true,
+        asOf: edition.date,
+        originals: line.props.originals,
+      });
+      expect(sheet.props.originals).toEqual(
+        expect.arrayContaining([
+          {
+            label: 'OPAX daily edition',
+            url: edition.path,
+            asOf: edition.date,
+          },
+          expect.objectContaining({
+            label: 'Explanatory memorandum',
+            url: expect.stringContaining('parlinfo.aph.gov.au/parlInfo/'),
+          }),
+        ]),
+      );
+      expect(sheet.props.notes).toContain(EDITION_RULE);
+      expect(router.push).not.toHaveBeenCalled();
+    },
+  );
   test('keeps the full title, all paragraphs, dated timeline and native bill subject', async () => {
     const { root } = await render(<EditionStory />);
     expect(host(root, 'edition-plate-title')[0]!.props.children).toBe(
@@ -303,9 +439,11 @@ describe('the native edition reader', () => {
         .findAllByType(SourceLine)
         .every((line) => line.props.asOf === edition.date),
     ).toBe(true);
-    expect(root.findAllByType(SourceLine)[0]!.props.originals[0].url).toMatch(
-      /^https:\/\//,
-    );
+    expect(root.findAllByType(SourceLine)[0]!.props.originals).toContainEqual({
+      label: 'OPAX daily edition',
+      url: edition.path,
+      asOf: edition.date,
+    });
     expect(openOnWeb).not.toHaveBeenCalled();
     act(() =>
       host(root, 'edition-screen')[0]!.props.onScroll({
@@ -474,7 +612,12 @@ describe('the native edition reader', () => {
     expect(root.findByType(FigureBlock).props.source).toMatchObject({
       asOf: edition.date,
       citation: 'OPAX daily edition',
-      originals: [expect.objectContaining({ label: 'GrantConnect' })],
+      originals: expect.arrayContaining([
+        expect.objectContaining({
+          label: 'GrantConnect',
+          url: 'https://www.grants.gov.au/',
+        }),
+      ]),
     });
     expect(root.findByType(BarSeries).props).toMatchObject({
       values: 'all',

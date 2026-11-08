@@ -1,5 +1,5 @@
 import { Fragment, useRef } from 'react';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { EditionView } from '../../api/selectors';
@@ -19,7 +19,6 @@ import { copy } from '../../design/copy';
 import { colors, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
 import { headerItems, pageItems } from '../../navigation/chrome';
-import { sourceRoute } from '../../navigation/routes/sheets';
 import { canShare } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useOpenAsk } from '../ask/open';
@@ -54,17 +53,18 @@ export function EditionStory() {
   };
   const source = edition
     ? {
-        ...editionSources(edition),
-        ...(subject.originals?.length ? { originals: subject.originals } : {}),
+        ...editionSources(edition, subject.originals),
         notes:
           block?.stale && block.savedAt != null
-            ? [copy.savedCopyNote(block.savedAt), ...edition.sourceRows]
-            : edition.sourceRows,
+            ? [
+                copy.savedCopyNote(block.savedAt),
+                ...(editionSources(edition).notes ?? []),
+              ]
+            : editionSources(edition).notes,
         dateLabel:
           block?.stale && block.savedAt != null
             ? `Saved ${formatDate(block.savedAt, 'short')}`
             : undefined,
-        onPress: () => router.push(sourceRoute({ block: 'edition' })),
       }
     : null;
   const destination = edition ? editionSubject(edition, subject.slug) : null;
@@ -276,7 +276,7 @@ function EditionFacts({
   provenance: source,
 }: {
   edition: EditionView;
-  provenance: ReturnType<typeof editionSources> & { onPress: () => void };
+  provenance: ReturnType<typeof editionSources>;
 }) {
   const { figures, bars, events, division } = edition.facts;
   const provenance = {

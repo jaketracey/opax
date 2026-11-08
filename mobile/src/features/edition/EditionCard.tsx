@@ -12,6 +12,7 @@ import { sourceRoute } from '../../navigation/routes/sheets';
 import { formatDate } from '../../design/format';
 import { copy } from '../../design/copy';
 import { symbols } from '../../design/symbols';
+import { canShare } from '../../navigation/share';
 import { editionSources, editionTier, type EditionTier } from './model';
 import { editionMenu, shareEdition } from './actions';
 import { useEditionSubject } from './data';
@@ -55,10 +56,7 @@ export function EditionCard({
     (tier ?? editionTier(edition.date, today)) === 'old'
   )
     return null;
-  const source = {
-    ...editionSources(edition),
-    ...(subject.originals?.length ? { originals: subject.originals } : {}),
-  };
+  const source = editionSources(edition, subject.originals);
   const openSources = () => router.push(sourceRoute({ block: 'edition' }));
   const figure = edition.facts.figures[0];
   const division = edition.facts.division;
@@ -68,11 +66,15 @@ export function EditionCard({
       ? `${figure.value}, ${figure.label}.`
       : '';
   const menu = [
-    {
-      title: 'Share',
-      symbol: 'square.and.arrow.up' as const,
-      onPress: () => void shareEdition(edition),
-    },
+    ...(canShare
+      ? [
+          {
+            title: 'Share',
+            symbol: 'square.and.arrow.up' as const,
+            onPress: () => void shareEdition(edition),
+          },
+        ]
+      : []),
     ...editionMenu(edition),
   ];
   return (
@@ -88,6 +90,15 @@ export function EditionCard({
           accessibilityHint="Double-tap to read."
           accessibilityActions={[
             { name: 'Sources', label: 'Sources', onAction: openSources },
+            ...(canShare
+              ? [
+                  {
+                    name: 'Share',
+                    label: 'Share',
+                    onAction: () => void shareEdition(edition),
+                  },
+                ]
+              : []),
           ]}
         >
           <View
@@ -120,8 +131,8 @@ export function EditionCard({
             {...source}
             notes={
               block.stale && block.savedAt != null
-                ? [copy.savedCopyNote(block.savedAt), ...edition.sourceRows]
-                : edition.sourceRows
+                ? [copy.savedCopyNote(block.savedAt), ...(source.notes ?? [])]
+                : source.notes
             }
             dateLabel={
               block.stale && block.savedAt != null
@@ -129,7 +140,6 @@ export function EditionCard({
                 : undefined
             }
             testID="today-edition-sources"
-            onPress={openSources}
           />
         </View>
       </View>

@@ -1,6 +1,6 @@
 import type { Href } from 'expo-router';
 import type { EditionView } from '../../api/selectors';
-import type { SourceDetails } from '../../design/source';
+import type { SourceDetails, SourceOriginal } from '../../design/source';
 import type { Accent } from '../../design/tokens';
 import type { SFSymbol } from '../../design/icon';
 import { billRoute } from '../../navigation/routes/bills';
@@ -15,6 +15,9 @@ import { personRoute } from '../../navigation/routes/people';
 import { topicRoute } from '../../navigation/routes/search';
 import { topics } from '../search/contracts';
 import { symbols } from '../../design/symbols';
+
+export const EDITION_RULE =
+  'Rotates by weekday from the public record: Sunday a bill, Monday a grant program, Tuesday a parliamentarian, Wednesday a grant, Thursday a bill, Friday the largest grants, Saturday a topic. Editions up to 3 days old appear at the top; up to 14 days old, lower on the page; older editions are not shown here.';
 
 export type EditionTier = 'fresh' | 'recent' | 'old';
 const sydneyDay = (date: Date) =>
@@ -137,32 +140,32 @@ export function editionQuestion(edition: EditionView): string {
 /** Dates describe the frozen edition, never the time this phone saved it. */
 export function editionSources(
   edition: EditionView,
+  documents: readonly SourceOriginal[] = [],
 ): SourceDetails & { title: string } {
   const isMoney = ['program', 'grant', 'largest'].includes(edition.kind);
   const u = new URL(edition.path, 'https://opax.invalid');
   const award = u.searchParams.get('award') ?? u.searchParams.get('open');
-  const citation = isMoney
-    ? 'GrantConnect'
-    : edition.kind === 'bill'
-      ? 'ParlInfo'
-      : 'Parliament of Australia';
-  const url = isMoney
-    ? `https://www.grants.gov.au/Search/KeywordSearch${award ? `?Keyword=${encodeURIComponent(award)}` : ''}`
-    : edition.kind === 'bill'
-      ? 'https://parlinfo.aph.gov.au/'
-      : 'https://www.aph.gov.au/';
   return {
     title: 'Daily edition',
     asOf: edition.date,
     citation: 'OPAX daily edition',
     originals: [
       {
-        label: citation,
-        url,
-        record: award ?? edition.title,
+        label: 'OPAX daily edition',
+        url: edition.path,
         asOf: edition.date,
       },
+      ...(isMoney
+        ? [
+            {
+              label: 'GrantConnect',
+              url: 'https://www.grants.gov.au/',
+              ...(award ? { record: `record ${award}` } : {}),
+            },
+          ]
+        : []),
+      ...documents,
     ],
-    notes: edition.sourceRows,
+    notes: [...edition.sourceRows, EDITION_RULE],
   };
 }
