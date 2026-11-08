@@ -397,7 +397,11 @@ test('the sources sheet never repeats a record title as a serif line', () => {
     );
   for (const n of [1, 2, 3, 4]) expect(titled(n)).toHaveLength(1);
   const { words } = helpers(renderer);
-  expect(words()).toContain('Cited in the answer');
+  // The group is headed "Cited": the details it sits in already say answer.
+  expect(
+    renderer.root.findAll((n) => n.props.header === 'Cited').length,
+  ).toBeGreaterThan(0);
+  expect(words()).not.toContain('Cited in the answer');
   expect(words()).toContain('Also found, not cited');
   expect(words()).not.toMatch(/retrieved|—/);
 });

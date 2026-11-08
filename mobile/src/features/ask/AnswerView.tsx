@@ -417,9 +417,7 @@ export function askSourceDetails({
         </Text>
         <Text variant="groupHeader">{answeredLong(turn, legacy)}</Text>
         {groups.cited.length ? (
-          <InsetGroup
-            header={groups.numbered ? 'Cited in the answer' : 'Found'}
-          >
+          <InsetGroup header={groups.numbered ? 'Cited' : 'Found'}>
             {groups.cited.map((source, i) => (
               <CitedRecordRow
                 key={source.resource}
