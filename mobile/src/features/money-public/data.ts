@@ -10,7 +10,12 @@ import {
   url,
   invalid,
 } from '../../api/validation';
-import { publicRecipient, isOrganisation, unnamedSupplier } from './privacy';
+import {
+  publicRecipient,
+  isOrganisation,
+  unnamedRecipient,
+  unnamedSupplier,
+} from './privacy';
 const opt = (v: unknown) => optional(text)(v) ?? '';
 const abnType = (r: Record<string, unknown>) =>
   opt(r.abn_type ?? (r.abr ? object(r.abr).etype : undefined) ?? r.entity_type);
@@ -32,6 +37,13 @@ export function decodeMeta(v: unknown) {
     ),
     coverage: opt(m.coverage ?? m.year_basis),
     threshold: opt(m.threshold),
+    /** The export's financial years, oldest first ("2010-11"). */
+    years: m.years === undefined ? [] : strings(m.years),
+    /**
+     * The latest year whose source is complete (data item D1). Set by the
+     * data lane, never computed here; empty until it ships.
+     */
+    latestCompleteYear: opt(m.latest_complete_year),
   };
 }
 export function decodeGrantIndex(v: unknown) {
@@ -48,7 +60,19 @@ export function decodeGrantIndex(v: unknown) {
       donorRecipients: count(c.donor_recipients),
       donorDollars: number(c.donor_dollars),
       donorShare: number(c.donor_share),
+      recipientsListed: count(c.recipients_listed ?? 0),
+      undisclosedDollars: number(c.undisclosed_dollars ?? 0),
+      electorateKnownShare: number(c.electorate_known_share ?? 0),
     },
+    /** Totals by financial year ("2024-25"), where the export has them. */
+    byYear: Object.fromEntries(
+      Object.entries(d.years === undefined ? {} : object(d.years)).map(
+        ([fy, v]) => {
+          const y = object(v);
+          return [fy, { total: number(y.t), count: count(y.c) }];
+        },
+      ),
+    ) as Record<string, { total: number; count: number }>,
     programs: array((v) => {
       const r = object(v);
       return {
@@ -78,6 +102,8 @@ export function decodeGrantIndex(v: unknown) {
       return {
         id: nonempty(r.id),
         ...publicRecipient(nonempty(r.n), opt(r.k), abnType(r), opt(r.id)),
+        total: r.t === undefined ? 0 : number(r.t),
+        count: r.c === undefined ? 0 : count(r.c),
       };
     })(d.recipients),
   };
@@ -96,6 +122,25 @@ export function decodeProgram(v: unknown) {
     count: count(d.c),
     listed: count(d.grants_listed),
     available: count(d.grants_total),
+    /** First and last financial year of the program's grants. */
+    years: [opt(d.y0), opt(d.y1)] as [string, string],
+    /**
+     * Every electorate's total and grant count across all the program's
+     * grants, not only the listed ones. Null in a cached file from before
+     * the field was decoded.
+     */
+    electorates:
+      d.electorates === undefined
+        ? null
+        : array((v) => {
+            const e = object(v);
+            return {
+              name: nonempty(e.n),
+              state: opt(e.st),
+              total: number(e.t),
+              count: count(e.c),
+            };
+          })(d.electorates),
     grants: array((v) => {
       const g = object(v);
       const recipient = publicRecipient(
@@ -110,6 +155,7 @@ export function decodeProgram(v: unknown) {
         ...recipient,
         recipientId: recipient.organisation ? opt(g.rid) : '',
         title: recipient.organisation ? opt(g.n) : '',
+        guid: recipient.organisation ? guid : '',
         value: number(g.v),
         seat: opt(g.el),
         state: opt(g.elst),
@@ -248,9 +294,15 @@ export function largestFor(
   });
 }
 export function decodeAgencies(v: unknown) {
-  const d = object(v);
+  const d = object(v),
+    m = object(d.meta);
   return {
     meta: decodeMeta(d.meta),
+    /** Notice publication window (calendar dates). */
+    publishedFrom: m.published_from === undefined ? '' : date(m.published_from),
+    publishedTo: m.published_to === undefined ? '' : date(m.published_to),
+    /** What an agency's `years` count: calendar years of contract start. */
+    yearBasis: opt(m.year_basis),
     agencies: array((v) => {
       const a = object(v);
       const id = nonempty(a.id),
@@ -275,6 +327,8 @@ export function decodeAgency(v: unknown) {
     name: nonempty(d.name),
     total: number(d.total),
     count: count(d.count),
+    firstYear: d.first_year == null ? null : count(d.first_year),
+    lastYear: d.last_year == null ? null : count(d.last_year),
     years: array((v) => {
       const y = object(v);
       return {
@@ -296,12 +350,14 @@ export function decodeAgency(v: unknown) {
         count: count(s.count),
       };
     })(d.suppliers),
+    supplierCount: d.supplier_count === undefined ? 0 : count(d.supplier_count),
     contracts: array((v) => {
       const c = object(v),
         name = nonempty(c.supplier),
         organisation = isOrganisation(name, opt(c.entity_type), abnType(c));
       return {
         id: nonempty(c.id),
+        supplierId: opt(c.supplier_id),
         title: organisation ? nonempty(c.title) : '',
         supplier: organisation ? name : unnamedSupplier,
         value: number(c.amount),
@@ -336,6 +392,13 @@ export function decodeAllocation(v: unknown) {
       status: award ? 'Published award' : nonempty(p.status),
       date: opt(p.publish_date),
       sourceUrl: url(p.source_url),
+      /** The organisation as registered, "Individual recipient", or ''. */
+      recipient: recipient
+        ? privateRecipient
+          ? unnamedRecipient
+          : recipient
+        : '',
+      area: opt(p.lga),
     };
   };
   return {
@@ -348,17 +411,6 @@ export function decodeAllocation(v: unknown) {
       (p) => p.status !== 'Withdrawn',
     ),
     awards: array((v) => project(v, true))(d.awards),
-    seats: array((v) => {
-      const s = object(v);
-      return {
-        name: nonempty(s.name),
-        state: nonempty(s.state),
-        party: nonempty(s.party),
-        margin: number(s.margin),
-        status: nonempty(s.status),
-        baseline: nonempty(s.baseline),
-      };
-    })(d.seats),
     comparison: array((v) => {
       const r = object(v);
       return {
@@ -460,6 +512,9 @@ export function decodeEvidence(v: unknown) {
         id,
         {
           id: nonempty(e.id),
+          name: opt(e.name),
+          kind: opt(e.kind),
+          abn: opt(e.abn),
           excerpts: array((v) => {
             const x = object(v);
             return {
@@ -472,6 +527,8 @@ export function decodeEvidence(v: unknown) {
                 : nonempty(x.text),
               date: opt(x.date),
               source: nonempty(x.source_kind),
+              table: opt(x.source_table),
+              matched: opt(x.matched_text),
               url: optional(url)(x.source_url),
             };
           })(e.excerpts),

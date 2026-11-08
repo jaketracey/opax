@@ -44,9 +44,11 @@ export const grantProgramRoute = (
   id: string,
   jur = 'federal',
   name?: string,
+  /** A seat view of the program: `seat` and `state` (specs/money.md 2.4). */
+  seat?: { seat: string; state: string },
 ) => ({
   pathname: '/grant-program' as const,
-  params: { id, jur, ...(name ? { name } : {}) },
+  params: { id, jur, ...(name ? { name } : {}), ...(seat ?? {}) },
 });
 export const largestGrantsRoute = (month?: string) => ({
   pathname: '/largest-grants' as const,
