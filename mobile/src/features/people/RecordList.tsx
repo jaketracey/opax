@@ -93,6 +93,8 @@ export default function RecordList({
     [kind, name],
   );
   useEffect(() => {
+    // News is not listed yet: nothing to read.
+    if (kind === 'news') return;
     let active = true;
     pages.current = 1;
     read(1)
@@ -117,7 +119,7 @@ export default function RecordList({
     return () => {
       active = false;
     };
-  }, [read, attempt]);
+  }, [read, attempt, kind]);
   const next = () => {
     if (load.status !== 'ready' || !load.more || load.paging) return;
     const page = pages.current + 1;
@@ -203,7 +205,15 @@ export default function RecordList({
           ),
         }}
       />
-      {load.status === 'error' || kind === 'news' ? (
+      {kind === 'news' ? (
+        <View style={styles.page} testID="record-list-screen">
+          <ContentUnavailable
+            symbol="newspaper"
+            title="News isn’t available yet"
+            testID="record-list-unavailable"
+          />
+        </View>
+      ) : load.status === 'error' ? (
         <View style={styles.page} testID="record-list-screen">
           <ContentUnavailable
             symbol={
