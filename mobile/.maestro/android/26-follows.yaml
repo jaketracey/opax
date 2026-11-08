@@ -6,7 +6,7 @@ name: 26 Android follow a member, a bill and an electorate; Today shows what cha
 # Android differs from the iPhone flow where the platform does: Back leaves a
 # pushed page (the bar has no back title or Today tab text to tap), the seat
 # line is found by its ID, the copy says "this phone", and Unfollow comes
-# from the row's touch-and-hold sheet rather than an iOS-style swipe.
+# from the row's touch-and-hold sheet; Edit and Unfollow all from the bar.
 # The fixture serves the pinned catalogs until the app revalidates the bill or
 # register index (Today's pull to refresh), then one new declared entry for
 # Anthony Albanese and the Ending Financial Abuse bill as passed. clearState,
@@ -276,75 +276,49 @@ name: 26 Android follow a member, a bill and an electorate; Today shows what cha
     speed: 20
 - takeScreenshot: ${EVIDENCE}/26-today-bill-seen
 
-# Unfollow the electorate under Your MP's Manage follows.
-- tapOn:
-    id: tab-your-mp
+# /follows from Today (Your MP no longer has a Following section). The
+# member's new declared entry puts them in Changed, the first group.
 - scrollUntilVisible:
     element:
-      id: your-following-manage
-    timeout: 90000
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: your-following-count
-      text: 3 follows saved on this phone\. Today shows what changed in each\.
+      id: today-following-manage
     direction: UP
     timeout: 90000
-    visibilityPercentage: 10
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/26-your-mp-following
-- scrollUntilVisible:
-    element:
-      id: your-following-manage
-    timeout: 90000
     centerElement: true
     speed: 20
 - tapOn:
-    id: your-following-manage
+    id: today-following-manage
 - extendedWaitUntil:
     visible:
       id: follows-screen
     timeout: 15000
-- takeScreenshot: ${EVIDENCE}/26-manage
-# Unfollow from the row's touch-and-hold actions: Android's bottom sheet,
-# titled with the follow (pass 4F). The row's swipe action stays for
-# TalkBack and the iPhone.
+- assertVisible:
+    id: follows-changed
+- assertNotVisible: Saved on this phone.*
+- takeScreenshot: ${EVIDENCE}/26-following
+# Unfollow from the row's touch-and-hold sheet: Unfollow is its last item.
 - scrollUntilVisible:
     element:
-      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+      id: follows-row-electorate-el_5d600e7f6dca5b72ae04d686
     timeout: 90000
     centerElement: true
     speed: 20
 - longPressOn:
-    id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+    id: follows-row-electorate-el_5d600e7f6dca5b72ae04d686
 - extendedWaitUntil:
     visible:
       id: android-menu
     timeout: 15000
-- assertVisible:
-    text: Grayndler
-    childOf:
-      id: android-menu
 - waitForAnimationToEnd
-- takeScreenshot: ${EVIDENCE}/26-manage-menu
+- takeScreenshot: ${EVIDENCE}/26-following-menu
 - tapOn:
     text: Unfollow
     childOf:
       id: android-menu
 - extendedWaitUntil:
     notVisible:
-      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+      id: follows-row-electorate-el_5d600e7f6dca5b72ae04d686
     timeout: 15000
-- scrollUntilVisible:
-    element:
-      id: follows-count
-      text: Following 2 of at most 50
-    direction: UP
-    timeout: 90000
-    centerElement: true
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/26-manage-unfollowed
+- takeScreenshot: ${EVIDENCE}/26-following-unfollowed
 
 # Follows, and what was seen, survive a relaunch.
 - launchApp
@@ -377,7 +351,7 @@ name: 26 Android follow a member, a bill and an electorate; Today shows what cha
     id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
 - takeScreenshot: ${EVIDENCE}/26-after-relaunch
 
-# Unfollow all from Today's Manage follows.
+# Unfollow all: Edit in the bar, the foot row, then the sheet's button.
 - scrollUntilVisible:
     element:
       id: today-following-manage
@@ -390,26 +364,34 @@ name: 26 Android follow a member, a bill and an electorate; Today shows what cha
     visible:
       id: follows-screen
     timeout: 15000
+- tapOn:
+    id: header-edit
+- extendedWaitUntil:
+    visible:
+      id: follows-editing
+    timeout: 15000
 - scrollUntilVisible:
     element:
-      id: follows-clear
+      id: follows-unfollow-all
     timeout: 90000
     centerElement: true
     speed: 20
 - tapOn:
-    id: follows-clear
-- assertVisible: Unfollow all 2\?
+    id: follows-unfollow-all
+- extendedWaitUntil:
+    visible:
+      id: android-menu
+    timeout: 15000
+- assertVisible: Unfollow all 2\?.*
 - takeScreenshot: ${EVIDENCE}/26-clear-confirm
-# The alert's positive button; the rows behind it also hold "Unfollow".
 - tapOn:
-    id: android:id/button1
-- scrollUntilVisible:
-    element:
+    text: Unfollow all
+    childOf:
+      id: android-menu
+- extendedWaitUntil:
+    visible:
       id: follows-empty
-    direction: UP
     timeout: 30000
-    centerElement: true
-    speed: 20
 - pressKey: Back
 - assertVisible:
     id: today-screen

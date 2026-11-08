@@ -272,66 +272,51 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     speed: 20
 - takeScreenshot: ${EVIDENCE}/26-today-bill-seen
 
-# Unfollow the electorate under Your MP's Manage follows.
-- tapOn:
-    id: tab-your-mp
+# /follows from Today (Your MP no longer has a Following section). The
+# member's new declared entry puts them in Changed, the first group.
 - scrollUntilVisible:
     element:
-      id: your-following-manage
-    timeout: 90000
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: your-following-count
-      text: 3 follows saved on this iPhone\. Today shows what changed in each\.
+      id: today-following-manage
     direction: UP
     timeout: 90000
-    visibilityPercentage: 10
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/26-your-mp-following
-- scrollUntilVisible:
-    element:
-      id: your-following-manage
-    timeout: 90000
     centerElement: true
     speed: 20
 - tapOn:
-    id: your-following-manage
+    id: today-following-manage
 - extendedWaitUntil:
     visible:
       id: follows-screen
     timeout: 15000
-- takeScreenshot: ${EVIDENCE}/26-manage
-# Unfollow sits behind a leftward swipe on the row (and its touch-and-hold
-# menu); the swipe brings the action on screen.
-- scrollUntilVisible:
-    element:
-      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
-    timeout: 90000
-    centerElement: true
-    speed: 20
-- swipe:
-    from:
-      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
-    direction: LEFT
-- waitForAnimationToEnd
-- takeScreenshot: ${EVIDENCE}/26-manage-swipe
-- tapOn:
-    id: follows-unfollow-electorate-el_5d600e7f6dca5b72ae04d686
+- assertVisible:
+    id: follows-changed
+- assertNotVisible: Following \d+ of at most 50
+- assertNotVisible: Saved on this iPhone.*
+- takeScreenshot: ${EVIDENCE}/26-following
+# Edit, then the electorate's minus button unfollows it at once.
+- tapOn: Edit
 - extendedWaitUntil:
-    notVisible:
-      id: follows-open-electorate-el_5d600e7f6dca5b72ae04d686
+    visible:
+      id: follows-editing
     timeout: 15000
 - scrollUntilVisible:
     element:
-      id: follows-count
-      text: Following 2 of at most 50
-    direction: UP
+      id: follows-remove-electorate-el_5d600e7f6dca5b72ae04d686
     timeout: 90000
     centerElement: true
     speed: 20
-- takeScreenshot: ${EVIDENCE}/26-manage-unfollowed
+- takeScreenshot: ${EVIDENCE}/26-following-edit
+- tapOn:
+    id: follows-remove-electorate-el_5d600e7f6dca5b72ae04d686
+- extendedWaitUntil:
+    notVisible:
+      id: follows-row-electorate-el_5d600e7f6dca5b72ae04d686
+    timeout: 15000
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: follows-browsing
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/26-following-unfollowed
 
 # Follows, and what was seen, survive a relaunch.
 - launchApp
@@ -364,8 +349,7 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
 - takeScreenshot: ${EVIDENCE}/26-after-relaunch
 
-# Unfollow all from Today's Manage follows: the action sits in the section's
-# heading, above the row just centred.
+# Unfollow all: Edit, the foot row, then the action sheet's button.
 - scrollUntilVisible:
     element:
       id: today-following-manage
@@ -379,24 +363,29 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     visible:
       id: follows-screen
     timeout: 15000
+- tapOn: Edit
 - scrollUntilVisible:
     element:
-      id: follows-clear
+      id: follows-unfollow-all
     timeout: 90000
     centerElement: true
     speed: 20
 - tapOn:
-    id: follows-clear
+    id: follows-unfollow-all
 - assertVisible: Unfollow all 2\?
+- assertVisible: Today stops showing their changes\.
 - takeScreenshot: ${EVIDENCE}/26-clear-confirm
-- tapOn: Unfollow
-- scrollUntilVisible:
-    element:
+# The sheet's destructive button; the foot row behind it has the same words
+# and comes first in the hierarchy.
+- tapOn:
+    text: Unfollow all
+    index: 1
+- extendedWaitUntil:
+    visible:
       id: follows-empty
-    direction: UP
     timeout: 30000
-    centerElement: true
-    speed: 20
+- assertVisible: Nothing followed yet
+- assertNotVisible: Edit
 - tapOn: Today
 - assertVisible:
     id: today-screen
