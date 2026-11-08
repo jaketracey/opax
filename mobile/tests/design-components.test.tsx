@@ -9,6 +9,12 @@ import {
 } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { SymbolView } from 'expo-symbols';
+import { Picker, Text as SwiftText } from '@expo/ui/swift-ui';
+import {
+  ChoiceChips,
+  PopUpButton,
+  SegmentedPicker,
+} from '../src/design/controls';
 import { openSource } from '../src/navigation/external';
 import {
   contrastRatio,
@@ -387,6 +393,92 @@ describe('ChoiceChip on Android', () => {
       expect(style.alignSelf).toBe('stretch');
       expect(style.borderRadius).toBe(radii.md);
     });
+  });
+});
+
+describe('compact iOS choices', () => {
+  const segments = Array.from({ length: 9 }, (_, i) => ({
+    value: String(i),
+    label: `Choice ${i}`,
+    testID: `choice-${i}`,
+  }));
+  test.each([2, 3, 4, 5, 9])(
+    '%s peers select through one native control',
+    (count) => {
+      const changed = jest.fn();
+      const root = render(
+        <ChoiceChips
+          segments={segments.slice(0, count)}
+          value="0"
+          onChange={changed}
+          accessibilityLabel="State or territory"
+          testID="choices"
+        />,
+      ).root;
+      expect(root.findAllByType(ChoiceChip)).toHaveLength(0);
+      expect(
+        root.findAllByType(count <= 4 ? SegmentedPicker : PopUpButton),
+      ).toHaveLength(1);
+      const picker = root.findByType(Picker);
+      expect(picker.props.selection).toBe('0');
+      expect(picker.props.modifiers).toContainEqual(
+        expect.objectContaining({
+          $type: 'pickerStyle',
+          style: count <= 4 ? 'segmented' : 'menu',
+        }),
+      );
+      const options = root
+        .findAllByType(SwiftText)
+        .filter((node) =>
+          node.props.modifiers?.some(
+            (modifier: { $type: string }) => modifier.$type === 'tag',
+          ),
+        );
+      expect(options).toHaveLength(count);
+      for (let i = 0; i < count; i++)
+        expect(options[i].props.modifiers).toContainEqual(
+          expect.objectContaining({
+            $type: 'accessibilityIdentifier',
+            identifier: `choice-${i}`,
+          }),
+        );
+      act(() => picker.props.onSelectionChange('1'));
+      expect(changed).toHaveBeenCalledWith('1');
+    },
+  );
+  test('accessibility sizes replace segments with a single menu row', () => {
+    atSize(AX5, () => {
+      const root = render(
+        <ChoiceChips
+          segments={segments.slice(0, 4)}
+          value="0"
+          onChange={noop}
+        />,
+      ).root;
+      expect(root.findByType(Picker).props.modifiers).toContainEqual(
+        expect.objectContaining({ $type: 'pickerStyle', style: 'menu' }),
+      );
+      expect(root.findAllByType(ChoiceChip)).toHaveLength(0);
+    });
+  });
+  test('Android keeps selectable chips and their identifiers', () => {
+    const originalOS = Platform.OS;
+    Platform.OS = 'android';
+    try {
+      const changed = jest.fn();
+      const root = render(
+        <ChoiceChips
+          segments={segments.slice(0, 3)}
+          value="0"
+          onChange={changed}
+        />,
+      ).root;
+      expect(root.findAllByType(ChoiceChip)).toHaveLength(3);
+      act(() => root.findAllByType(ChoiceChip)[1].props.onPress());
+      expect(changed).toHaveBeenCalledWith('1');
+    } finally {
+      Platform.OS = originalOS;
+    }
   });
 });
 

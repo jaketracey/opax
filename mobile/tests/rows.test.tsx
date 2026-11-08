@@ -751,7 +751,7 @@ test('figures retain their required date and source; stat strips stack at AX1', 
   ).root;
   expect(flat(host(strip, 'strip').props.style).flexDirection).toBe('column');
 });
-test('MachinePill is a named button on a navy wash and iOS choices draw checkmarks', () => {
+test('MachinePill is a named button on a navy wash and standalone choices stay compact', () => {
   const root = render(
     <MachinePill
       note={{
@@ -771,11 +771,11 @@ test('MachinePill is a named button on a navy wash and iOS choices draw checkmar
   const choice = render(
     <ChoiceChip label="Bills" selected onPress={jest.fn()} />,
   ).root;
-  expect(glyphs(choice)).toContain('checkmark');
-  expect(
-    rowStyle(choice.find((node) => typeof node.props.style === 'function'))
-      .minHeight,
-  ).toBeGreaterThanOrEqual(44);
+  expect(glyphs(choice)).not.toContain('checkmark');
+  const chip = choice.find((node) => typeof node.props.style === 'function');
+  expect(rowStyle(chip)).toMatchObject({ minHeight: 36 });
+  expect(rowStyle(chip).width).toBeUndefined();
+  expect(chip.props.hitSlop).toBe(4);
 });
 test('PageFoot orders authorisation, the correction link and response time', () => {
   expect(strings(render(<PageFoot variant="today" />).root)).toContain(

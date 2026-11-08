@@ -249,7 +249,7 @@ export function MachineLabel({
  * its place ("2 of 4"), as a segment does. Use FilterChip to remove an
  * applied filter, and a row or link to navigate.
  */
-/** @deprecated iOS uses checkmark rows or SegmentedPicker; Android retains chips. */
+/** @deprecated Use ChoiceChips to group peers into a native picker on iOS. */
 export function ChoiceChip({
   label,
   selected,
@@ -269,28 +269,6 @@ export function ChoiceChip({
   testID?: string;
 }) {
   const fixed = useAccessibilitySize();
-  if (Platform.OS === 'ios')
-    return (
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel ?? label}
-        accessibilityState={{ selected, disabled }}
-        testID={testID}
-        disabled={disabled}
-        onPress={onPress}
-        style={({ pressed }) => [
-          styles.iosChoice,
-          pressed ? { backgroundColor: colors.sunken } : null,
-        ]}
-      >
-        <Text wordSafe variant="body" style={styles.shrink}>
-          {label}
-        </Text>
-        {selected ? (
-          <Icon name={choiceCheckmark} size={13} tone="navy" />
-        ) : null}
-      </Pressable>
-    );
   return (
     <Pressable
       accessibilityRole="button"
@@ -329,20 +307,9 @@ export function ChoiceChip({
   );
 }
 
-const choiceCheckmark = 'checkmark';
 const machineSymbol = 'sparkles';
 
 const styles = StyleSheet.create({
-  iosChoice: {
-    alignSelf: 'stretch',
-    width: '100%',
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: rhythm.tight,
-  },
   hug: { alignSelf: 'flex-start', maxWidth: '100%' },
   fixed: { alignSelf: 'stretch' },
   shrink: { flexShrink: 1 },
