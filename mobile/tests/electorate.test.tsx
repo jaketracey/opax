@@ -9,6 +9,8 @@ import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
 import { termSpan } from '../src/features/directories/ElectorateHistory';
 import { sinceLine } from '../src/features/your-mp/RepresentativeRows';
+import { loadChoice } from '../src/features/your-mp/choice-store';
+import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
@@ -132,6 +134,7 @@ const menuItems = () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  resetSeatForTests();
   mockOptions.length = 0;
   mockFollow.follows = [];
   mockFollow.states = new Map();
@@ -230,6 +233,28 @@ test('the bar menu: no Set as my electorate is ever disabled; Ask drafts without
   await act(async () => r.unmount());
 });
 
+test("no Set as my electorate when it is already the reader's seat", async () => {
+  load('Grayndler');
+  (loadChoice as jest.Mock).mockResolvedValueOnce({
+    version: 1,
+    seatId: seat('Grayndler').electorate_id,
+    stateSeatIds: [],
+  });
+  const r = await render(<Electorate />);
+  const menu = menuItems().find((i) => i.type === 'menu')!;
+  expect(menu.menu!.items.map((i) => i.label)).toEqual([
+    'View on a date',
+    'Ask about Grayndler',
+    'Copy link',
+    'Open on opax.com.au',
+  ]);
+  // No disabled item anywhere in the menu.
+  expect(
+    menu.menu!.items.filter((i) => (i as { disabled?: boolean }).disabled),
+  ).toEqual([]);
+  await act(async () => r.unmount());
+});
+
 test('a chosen date shows the members on that date and Back to today', async () => {
   load('Grayndler');
   const r = await render(<Electorate />);
@@ -284,6 +309,30 @@ test('a changed followed electorate shows its Added since group after the title 
     'electorate-added-since',
     'electorate-members',
   ]);
+  await act(async () => r.unmount());
+});
+
+test('a followed electorate with no change draws no Added since group', async () => {
+  load('Grayndler');
+  const id = seat('Grayndler').electorate_id;
+  mockFollow.follows = [
+    { kind: 'electorate', id, title: 'Grayndler', followedAt: 1 },
+  ];
+  mockFollow.states = new Map([
+    [
+      `electorate:${id}`,
+      {
+        status: 'ready',
+        title: 'Grayndler',
+        current: {},
+        keys: [],
+        changes: [],
+      },
+    ],
+  ]);
+  const r = await render(<Electorate />);
+  expect(has(r, 'electorate-follow')).toBe(true);
+  expect(has(r, 'electorate-added-since')).toBe(false);
   await act(async () => r.unmount());
 });
 
