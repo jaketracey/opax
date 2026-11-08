@@ -1,6 +1,6 @@
 import { fromWebPath } from '../../navigation/routes';
 import { moneyRecordRoute } from '../../navigation/routes/public-money';
-import { formatFinancialYear } from '../../design/format';
+import { formatCount, formatFinancialYear } from '../../design/format';
 import {
   moneyCatalogs,
   type MoneyFigures,
@@ -263,4 +263,28 @@ export function moneyProfile(node: MoneyNode) {
         ? `/subject/${node.kind}/${encodeURIComponent(node.label)}`
         : '/money';
   return { path, native: fromWebPath(path) };
+}
+
+/**
+ * A donor row's detail line in a view: its years, then how many parties it
+ * gave to ("2004–05 to 2024–25 · 5 parties").
+ */
+export function donorDetails(view: MoneyGraph) {
+  const nodes = new Map(view.nodes.map((n) => [n.id, n]));
+  const byDonor = new Map<string, Set<string>>();
+  for (const edge of view.edges)
+    if (nodes.get(edge.target)?.kind === 'party') {
+      const set = byDonor.get(edge.source) ?? new Set<string>();
+      set.add(edge.target);
+      byDonor.set(edge.source, set);
+    }
+  return (node: MoneyNode) => {
+    const count = byDonor.get(node.id)?.size ?? 0;
+    return [
+      moneyYears(node.firstYear, node.lastYear),
+      count ? `${formatCount(count)} ${count === 1 ? 'party' : 'parties'}` : null,
+    ]
+      .filter(Boolean)
+      .join(' · ');
+  };
 }

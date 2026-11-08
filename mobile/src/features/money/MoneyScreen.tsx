@@ -62,6 +62,7 @@ import {
 import { moneyPartyGroups, PartyMoneyRow } from './parts';
 import {
   donationsCaveat,
+  donorDetails,
   filtersFromParams,
   industryWords,
   isAllYears,
@@ -528,26 +529,7 @@ function MoneyBody({
   const top = named
     .filter((n) => n.via !== 'public_money')
     .slice(0, TOP_DONORS);
-  const parties = useMemo(() => {
-    const byDonor = new Map<string, Set<string>>();
-    const nodes = new Map(view.nodes.map((n) => [n.id, n]));
-    for (const edge of view.edges)
-      if (nodes.get(edge.target)?.kind === 'party') {
-        const set = byDonor.get(edge.source) ?? new Set<string>();
-        set.add(edge.target);
-        byDonor.set(edge.source, set);
-      }
-    return byDonor;
-  }, [view]);
-  const donorDetail = (node: MoneyNode) => {
-    const count = parties.get(node.id)?.size ?? 0;
-    return [
-      moneyYears(node.firstYear, node.lastYear),
-      count ? `${formatCount(count)} ${count === 1 ? 'party' : 'parties'}` : null,
-    ]
-      .filter(Boolean)
-      .join(' · ');
-  };
+  const donorDetail = useMemo(() => donorDetails(view), [view]);
   const partyNodes = moneyPartyGroups(
     view.nodes.filter((n) => n.kind === 'party'),
     (n) => n.label,

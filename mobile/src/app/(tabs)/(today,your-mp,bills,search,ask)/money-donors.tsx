@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="money-donors" title="Donors" />;
-}
+export { default } from '../../../features/money/MoneyDonors';
