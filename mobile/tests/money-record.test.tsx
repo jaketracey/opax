@@ -7,7 +7,16 @@ import MoneyRecordScreen, {
   individualsNote,
 } from '../src/features/money/MoneyRecord';
 import { bothRegistersCaveat } from '../src/features/money/records';
-import { forgetMoneyGraphs } from '../src/features/money/lookup';
+import { decodeMoneyGraph } from '../src/features/money/data';
+import {
+  donorNodeFor,
+  forgetMoneyGraphs,
+  rememberMoneyGraph,
+} from '../src/features/money/lookup';
+import {
+  agencyRoute,
+  moneyRecordRoute,
+} from '../src/navigation/routes/public-money';
 import {
   ContentUnavailable,
   FigureBlock,
@@ -312,6 +321,36 @@ test('a supplier through its agency: contract rows push money-item without "Open
       }),
     }),
   );
+  // Its agency opens the native agency page with the contracts symbol.
+  const agencyRow = r.root
+    .findAllByType(LinkRow)
+    .find((x) => x.props.testID === 'money-record-agency')!;
+  expect(agencyRow.props.symbol).toBe('building.2');
+  expect(agencyRow.props.href).toEqual(
+    agencyRoute(agency.id, agencyRow.props.title),
+  );
+  await act(async () => r.unmount());
+}, 30000);
+
+test('a recipient that also donates opens the donor’s own money record', async () => {
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+  const index = pinned('/graph/grants.federal.json') as {
+    recipients: { id: string; n: string; k: string; c: number }[];
+  };
+  const recipient = index.recipients.find((x) =>
+    donorNodeFor({ rid: x.id, name: x.n }, graph),
+  )!;
+  expect(recipient).toBeDefined();
+  rememberMoneyGraph('federal', graph);
+  const donor = donorNodeFor({ rid: recipient.id, name: recipient.n }, graph)!;
+  const r = await render({ rid: recipient.id, jur: 'federal' });
+  const row = r.root
+    .findAllByType(LinkRow)
+    .find((x) => x.props.testID === 'money-record-donor')!;
+  expect(row.props.href).toEqual(
+    moneyRecordRoute({ node: donor.id }, donor.label),
+  );
+  expect(row.props.href.params).not.toHaveProperty('from');
   await act(async () => r.unmount());
 }, 30000);
 

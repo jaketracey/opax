@@ -41,8 +41,10 @@ import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
 import {
+  agencyRoute,
   leadRoute,
   moneyItemRoute,
+  moneyRecordRoute,
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { donorNotNamed } from '../../privacy/donorEntity';
@@ -1126,20 +1128,7 @@ function RecipientBody({
           <LinkRow
             title={donor.label}
             detail="Donor on the money map"
-            href={moneyFocusRoute(
-              donor.id,
-              'federal',
-              {
-                from: 0,
-                to: 9999,
-                industry: null,
-                donations: true,
-                grants: true,
-                contracts: true,
-                inflation: false,
-              },
-              donor.label,
-            )}
+            href={moneyRecordRoute({ node: donor.id }, donor.label)}
             testID="money-record-donor"
           />
         ) : null}
@@ -1295,31 +1284,15 @@ function SupplierBody({
       <More>
         <LinkRow
           title={agency.name}
-          symbol="building.columns"
-          href={{
-            pathname: '/agency',
-            params: { id: agency.id, name: agency.name },
-          }}
+          symbol={symbols.contracts}
+          href={agencyRoute(agency.id, agency.name)}
           testID="money-record-agency"
         />
         {donor ? (
           <LinkRow
             title={donor.label}
             detail="Donor on the money map"
-            href={moneyFocusRoute(
-              donor.id,
-              'federal',
-              {
-                from: 0,
-                to: 9999,
-                industry: null,
-                donations: true,
-                grants: true,
-                contracts: true,
-                inflation: false,
-              },
-              donor.label,
-            )}
+            href={moneyRecordRoute({ node: donor.id }, donor.label)}
             testID="money-record-donor"
           />
         ) : null}
