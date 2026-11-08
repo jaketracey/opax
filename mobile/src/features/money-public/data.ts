@@ -20,6 +20,22 @@ const opt = (v: unknown) => optional(text)(v) ?? '';
 const abnType = (r: Record<string, unknown>) =>
   opt(r.abn_type ?? (r.abr ? object(r.abr).etype : undefined) ?? r.entity_type);
 const strings = array(nonempty);
+/**
+ * A program's name for its row and heading. GrantConnect files a few
+ * programs under a sentence of description ("This is a demand-driven grant
+ * program that was announced on 3 August 2020 ..."), which read as the name
+ * (wave 4 money-08); those take the program's ID instead.
+ */
+export function programName(name: string, id: string): string {
+  const trimmed = name.trim().replace(/(?<![A-Z.])\.$/, '');
+  const described =
+    /^(?:this|these|it) (?:is|are|was|were|program|programme|grant)\b/i.test(
+      trimmed,
+    ) || /^an extra \$/i.test(trimmed);
+  return described && /^GO\d+$/i.test(id)
+    ? `Grant program ${id.toUpperCase()}`
+    : trimmed;
+}
 export type Jurisdiction = 'federal' | 'qld';
 export const jurisdiction = (v: unknown): Jurisdiction =>
   v === 'federal' || v === 'qld' ? v : invalid();
@@ -78,7 +94,9 @@ export function decodeGrantIndex(v: unknown) {
       return {
         id: nonempty(r.id),
         key: nonempty(r.key),
-        name: nonempty(r.n),
+        name: programName(nonempty(r.n), nonempty(r.id)),
+        /** The name as GrantConnect files it, which other exports join on. */
+        listedAs: nonempty(r.n),
         total: number(r.t),
         count: count(r.c),
         recipients: count(r.r),
@@ -115,7 +133,7 @@ export function decodeProgram(v: unknown) {
     id: nonempty(d.id),
     key: nonempty(d.key),
     jur: jurisdiction(d.jur),
-    name: nonempty(d.n),
+    name: programName(nonempty(d.n), nonempty(d.id)),
     agency: nonempty(d.ag),
     asOf: date(d.generated),
     total: number(d.t),

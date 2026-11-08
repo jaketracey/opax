@@ -251,7 +251,7 @@ export async function loadMoneyItem(
         (x) => x.id === params.id,
       );
       if (!r) throw gone();
-      const program = index.data.programs.find((p) => p.name === r.program);
+      const program = index.data.programs.find((p) => p.listedAs === r.program);
       return {
         ...combine([largest, index], null),
         data: {

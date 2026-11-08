@@ -115,6 +115,29 @@ describe('public-money privacy before presentation', () => {
     expect(safe.purpose).toBe('');
     expect(safe.recipientId).toBe('');
   });
+  test('a program filed under a sentence of description is named by its ID, and still joins on the filed name (money-08)', () => {
+    const input = raw('/graph/grants.federal.json');
+    const index = d.decodeGrantIndex(input);
+    const byId = (id: string) => index.programs.find((p) => p.id === id)!;
+    expect(byId('GO5789').name).toBe('Grant program GO5789');
+    expect(byId('GO4491').name).toBe('Grant program GO4491');
+    expect(byId('GO5789').listedAs).toMatch(/^This is a demand-driven/);
+    expect(byId('GO3141').name).toBe('Community Development Grants');
+    for (const p of index.programs) {
+      expect(p.name).not.toMatch(/^This is /);
+      expect(p.listedAs).toBe(
+        (input.programs as { id: string; n: string }[]).find(
+          (r) => r.id === p.id,
+        )!.n,
+      );
+    }
+    expect(d.programName('Security screening activities.', 'GO4204')).toBe(
+      'Security screening activities',
+    );
+    expect(d.programName('This is a program', 'activity:x')).toBe(
+      'This is a program',
+    );
+  });
   test('unknown monthly recipients default conservatively', () => {
     const largest = d.decodeLargest(raw('/social/grants-largest.json'));
     largest.months[largest.latest]![0]!.recipient = 'Ada Example';

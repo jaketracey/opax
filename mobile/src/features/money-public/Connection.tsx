@@ -354,7 +354,7 @@ function useDestinations(
         .grants('federal')
         .then((grants) => {
           const program = grants.data.programs.find(
-            (p) => lower(p.name) === lower(name),
+            (p) => lower(p.listedAs) === lower(name),
           );
           if (program)
             add({
