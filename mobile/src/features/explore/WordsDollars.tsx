@@ -202,12 +202,23 @@ export default function WordsDollars() {
             testID="wd-error"
           />
         ) : !money.record || !figures ? (
-          <Skeleton
-            shape="rows"
-            count={6}
-            label="Loading donations and speeches"
+          <View
+            accessible
+            accessibilityRole="progressbar"
+            accessibilityLabel="Loading donations and speeches"
+            accessibilityState={{ busy: true }}
             testID="wd-loading"
-          />
+          >
+            {/* The page's final shape: the figure, then four party rows. */}
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              style={styles.body}
+            >
+              <Skeleton shape="figure" count={1} />
+              <Skeleton shape="rows" count={4} />
+            </View>
+          </View>
         ) : (
           <View style={styles.body}>
             {figures.empty ? (

@@ -561,6 +561,43 @@ describe('words per dollar', () => {
       (n) => n.props.testID === 'wd-as-at' && !!n.props.accessibilityLabel,
     )[0]!.props.accessibilityLabel as string;
 
+  test('loading draws the final shape as one loader: a figure and four party rows', async () => {
+    reports().money.mockReturnValue(new Promise(() => {}));
+    explore().matrix.mockReturnValue(new Promise(() => {}));
+    const r = await render(createElement(WD().default));
+    const loading = host(r, 'wd-loading')!;
+    expect(loading.props.accessibilityLabel).toBe(
+      'Loading donations and speeches',
+    );
+    // VoiceOver hears one loader: every other progressbar is hidden.
+    const hiddenUnder = (
+      n: import('react-test-renderer').ReactTestInstance,
+    ) => {
+      for (let p = n.parent; p; p = p.parent)
+        if (p.props.importantForAccessibility === 'no-hide-descendants')
+          return true;
+      return false;
+    };
+    const loaders = r.root.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.accessibilityRole === 'progressbar' &&
+        !hiddenUnder(n),
+    );
+    expect(loaders).toEqual([loading]);
+    expect(
+      loading.findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          n.props.accessibilityRole === 'progressbar' &&
+          n !== loading,
+      ),
+    ).toHaveLength(2);
+    expect(uiTexts(r).join(' ')).toContain('Comparison, never causation');
+    expect(host(r, 'wd-subject')).toBeDefined();
+    r.unmount();
+  });
+
   test('line values carry no prefixes and say a missing value in words', () => {
     const { pairMoneyText, pairSpeechText } = Pair();
     expect(pairMoneyText({ party: 'Labor', money: 10_763_834 })).toBe(
