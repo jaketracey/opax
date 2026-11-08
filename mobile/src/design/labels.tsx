@@ -334,6 +334,8 @@ const machineSymbol = 'sparkles';
 
 const styles = StyleSheet.create({
   iosChoice: {
+    alignSelf: 'stretch',
+    width: '100%',
     minHeight: minimumTarget,
     paddingVertical: rhythm.row,
     flexDirection: 'row',

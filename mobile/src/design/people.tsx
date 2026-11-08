@@ -256,7 +256,7 @@ export function PartyLabel({
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={[
-            onDeep ? styles.dotRinged : null,
+            styles.dotRinged,
             {
               width: dotSize,
               height: dotSize,

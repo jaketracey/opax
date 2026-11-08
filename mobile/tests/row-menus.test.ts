@@ -1,3 +1,8 @@
+import { pageActions } from '../src/features/people/PageActions';
+import {
+  recordPageActions,
+  RecordActions,
+} from '../src/features/records/RecordActions';
 import { canonicalUrl } from '../src/navigation/external';
 import { ActionSheetIOS } from 'react-native';
 import {
@@ -10,6 +15,10 @@ import {
 import { confirmAction } from '../src/design/menu';
 import { haptic } from '../src/design/haptics';
 import { copyText } from '../src/features/records/actions';
+
+jest.mock('../src/features/follows/FollowToggle', () => ({
+  FollowToggle: () => null,
+}));
 
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
 jest.mock('../src/features/records/actions', () => ({
@@ -165,4 +174,30 @@ test('confirmation marks destructive choices and always adds Cancel', () => {
     destructiveButtonIndex: [0],
   });
   sheet.mockRestore();
+});
+
+test('page bar actions keep Ask, Copy link and Open on web without a second Follow or Share', () => {
+  const actions = pageActions({
+    kind: 'person',
+    name: 'Anne',
+    webPath: '/subject/person/anne',
+    onAsk: jest.fn(),
+  });
+  expect(menuLeaves(actions).map((action) => action.title)).toEqual([
+    'Ask about Anne',
+    'Copy link',
+    'Open on opax.com.au',
+  ]);
+});
+test('record bar actions expose Cite in an inline section and remove the in-content menu', () => {
+  const target = { slug: 'speech-123', title: 'A speech' };
+  const actions = recordPageActions(target);
+  expect(actions[0]).toMatchObject({ title: '', inline: true });
+  expect(menuLeaves(actions).map((action) => action.title)).toEqual([
+    'Cite',
+    'Copy link',
+    'Open on opax.com.au',
+  ]);
+  expect(RecordActions(target)).toBeNull();
+  expect(recordPageActions({ slug: '../bad', title: 'A speech' })).toEqual([]);
 });
