@@ -294,12 +294,13 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: money-view-summary
     timeout: 90000
-- runFlow:
-    file: support/restore-tab-bar.yaml
-    env:
-      TOP_ID: money-mode-3d
-      TAB_ID: tab-today
-- tapOn: United Australia Party
+# Pushed in the current tab: the tab bar is still there, full or minimised.
+- assertVisible: Tab Bar
+# Back to the lead by the back button's id: its label is the lead's title
+# only once Lead detail names its screen.
+- tapOn:
+    id: BackButton
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: lead-link-web
@@ -322,14 +323,13 @@ name: 27 Leads and the declared-interests feed
     timeout: 20000
 - takeScreenshot: ${EVIDENCE}/27-web-link
 - tapOn: OK
-# The declared-interests feed behind Today's recent declarations.
+# The declared-interests feed behind Today's recent declarations. Back to
+# the Today root, which kept its place at the Leads entry.
 - runFlow:
     file: support/restore-tab-bar.yaml
     env:
-      TOP_ID: lead-heading
+      TOP_ID: today-leads-open
       TAB_ID: tab-today
-- tapOn:
-    id: tab-today
 - extendedWaitUntil:
     visible:
       id: today-screen
@@ -378,18 +378,19 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: declarations-chamber
     timeout: 15000
-# At accessibility sizes the segmented choice becomes one native menu row.
+# The chamber choice is native: segments when every label fits, otherwise
+# (and at accessibility sizes) a pop-up button whose menu lists the chambers.
+# Native segments and menu items are reached by their label text.
 - runFlow:
     when:
-      notVisible:
-        id: declarations-chamber-house
+      notVisible: House of Representatives
     commands:
       - tapOn:
           id: declarations-chamber
       - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/27-declarations-filters
-- tapOn:
-    id: declarations-chamber-house
+- tapOn: House of Representatives
+- waitForAnimationToEnd
 - tapOn: Done
 - extendedWaitUntil:
     notVisible:
