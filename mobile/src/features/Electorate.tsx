@@ -28,11 +28,15 @@ import {
   formatPercent,
 } from '../design/format';
 import { useEffect, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { Linking, RefreshControl, StyleSheet, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import { ApiError } from '../api/errors';
-import { layout, rhythm } from '../design/tokens';
+import { colors, hairline, layout, rhythm } from '../design/tokens';
+import {
+  AUTHORISATION_LINE,
+  CORRECTION_CONTACT,
+} from '../design/authorisation';
 import {
   CHAMBER_NOT_RECORDED,
   chamberName,
@@ -379,6 +383,29 @@ export function ElectorateScreen({
                 <EmptyState message="No related constituencies are recorded." />
               )}
             </Section>
+            {view.identity.data &&
+            view.identity.data.jurisdiction !== 'federal' ? (
+              <View
+                style={styles.authorisation}
+                testID="electorate-authorisation"
+              >
+                <Text variant="fine" tone="inkSoft">
+                  {AUTHORISATION_LINE}
+                </Text>
+                <Text
+                  variant="fine"
+                  tone="inkSoft"
+                  accessibilityRole="link"
+                  onPress={() => void Linking.openURL(CORRECTION_CONTACT)}
+                  testID="electorate-correction"
+                >
+                  Report a correction: corrections@opax.com.au
+                </Text>
+                <Text variant="fine" tone="inkSoft">
+                  We aim to respond within 2 business days.
+                </Text>
+              </View>
+            ) : null}
             {/* The page's end, for journeys that scroll to it; nothing drawn. */}
             <View
               testID="electorate-end"
@@ -476,6 +503,12 @@ export function censusCaveat(note: string, vintage: string): string {
 }
 
 const styles = StyleSheet.create({
+  authorisation: {
+    borderTopWidth: hairline,
+    borderTopColor: colors.line,
+    paddingTop: rhythm.block,
+    gap: rhythm.line,
+  },
   // One point, at the foot of the last section rather than a section below.
   end: { height: 1, marginTop: -layout.sectionGap },
 });
