@@ -1,6 +1,3 @@
-jest.mock('../src/api/runtime', () => ({ catalogs: {}, portraits: null }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-
 import {
   LATELY_RULE,
   latelyFor,
@@ -12,6 +9,10 @@ import { tenureYear } from '../src/features/your-mp/RepresentativesGroup';
 import { stateInRunningCopy } from '../src/features/your-mp/state-names';
 import { NO_SEAT_ID } from '../src/features/your-mp/forget';
 import { decodeChoice } from '../src/features/your-mp/model';
+
+// Hoisted above the imports by babel-jest.
+jest.mock('../src/api/runtime', () => ({ catalogs: {}, portraits: null }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 type Vote = {
   name: string;
