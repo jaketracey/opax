@@ -1,6 +1,6 @@
 import { useRefreshCommand } from '../../design/keyboard';
 import { headerItems, pageItems } from '../../navigation/chrome';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode, type Ref } from 'react';
 import {
   AccessibilityInfo,
   FlatList,
@@ -421,6 +421,7 @@ export function MoneyList<T>({
   id,
   loaded,
   onScroll,
+  listRef,
 }: {
   rows: T[];
   rowKey: (row: T) => string;
@@ -436,12 +437,15 @@ export function MoneyList<T>({
   id: string;
   loaded: boolean;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  /** The list itself, for a screen that scrolls it (Largest's month). */
+  listRef?: Ref<FlatList<T>>;
 }) {
   const column = useScreenColumn('readable');
   useRefreshCommand(refresh, refreshing);
   return (
     <SidebarSafe style={styles.screen}>
       <FlatList
+        ref={listRef}
         data={rows}
         keyExtractor={rowKey}
         testID={id}

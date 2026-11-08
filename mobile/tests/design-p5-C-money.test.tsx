@@ -12,9 +12,12 @@ import { MoneyRow } from '../src/design/rows';
 import { SourceLine } from '../src/design/source';
 import Grants from '../src/features/money-public/Grants';
 import Largest, {
+  MONTH_FADE_MS,
   monthName,
   shiftMonth,
 } from '../src/features/money-public/Largest';
+import { Animated, FlatList } from 'react-native';
+import { useReduceMotion } from '../src/design/accessibility';
 import Agencies from '../src/features/money-public/Agencies';
 import Allocation, { inState } from '../src/features/money-public/Allocation';
 import Connections, {
@@ -33,6 +36,10 @@ import { decodeAllocation } from '../src/features/money-public/data';
 // (P2-15, which replaced the chips), months by name and dates in words
 // (P3-12), and money figures in the money accent (P3-3).
 const mockParams: Record<string, string> = {};
+jest.mock('../src/design/accessibility', () => ({
+  ...jest.requireActual('../src/design/accessibility'),
+  useReduceMotion: jest.fn(() => false),
+}));
 const mockOptions: { current: Record<string, unknown> } = { current: {} };
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -275,6 +282,49 @@ describe('P3-12: months by name and dates in words', () => {
       expect(option.label).toMatch(/^[A-Z][a-z]+ \d{4}$/);
     await act(async () => r.unmount());
   });
+  test.each([
+    [false, 1],
+    [true, 0],
+  ])(
+    'a new month starts at the top; rows fade in unless Reduce Motion (%s)',
+    async (reduced, fades) => {
+      jest.mocked(useReduceMotion).mockReturnValue(reduced);
+      const scroll = jest.spyOn(FlatList.prototype, 'scrollToOffset');
+      // A stub: the test renderer can't connect native-driven views.
+      const timing = jest.spyOn(Animated, 'timing').mockReturnValue({
+        start: jest.fn(),
+        stop: jest.fn(),
+        reset: jest.fn(),
+      });
+      try {
+        const r = await render(Largest);
+        const months: string[] = r.root
+          .findByType(PopUpButton)
+          .props.options.map((o: { value: string }) => o.value);
+        expect(months.length).toBeGreaterThan(1);
+        // The first month shown neither scrolls nor fades.
+        expect(scroll).not.toHaveBeenCalled();
+        expect(timing).not.toHaveBeenCalled();
+        mockParams.month = months[1]!;
+        await act(async () => r.update(<Largest />));
+        expect(scroll).toHaveBeenCalledTimes(1);
+        expect(scroll.mock.calls[0]![0]).toMatchObject({ animated: false });
+        expect(scroll.mock.calls[0]![0].offset).toBeLessThanOrEqual(0);
+        expect(timing).toHaveBeenCalledTimes(fades);
+        if (fades)
+          expect(timing.mock.calls[0]![1]).toMatchObject({
+            toValue: 1,
+            duration: MONTH_FADE_MS,
+          });
+        expect(MONTH_FADE_MS).toBe(150);
+        await act(async () => r.unmount());
+      } finally {
+        scroll.mockRestore();
+        timing.mockRestore();
+        jest.mocked(useReduceMotion).mockReturnValue(false);
+      }
+    },
+  );
   test('a list’s notes say dates in words, never ISO dates', async () => {
     expect(readableDates('awards published 2011-03-30 to 2028-05-01')).toBe(
       'awards published 30 Mar 2011 to 1 May 2028',

@@ -1,6 +1,13 @@
-import { useCallback, useRef } from 'react';
-import { View } from 'react-native';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Animated, type FlatList, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useReduceMotion } from '../../design/accessibility';
 import { PopUpButton } from '../../design/controls';
 import { formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
@@ -8,6 +15,7 @@ import { MoneyRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
 import { ContentUnavailable } from '../../design/states';
 import { Heading, Text } from '../../design/text';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
@@ -55,6 +63,8 @@ export default function Largest() {
   const title = useTitleOnScroll(titleRef, 'Largest grants');
   const saved = recordSource(status.record);
   const label = monthName(month);
+  const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
+  const fade = useMonthChange(listRef, data ? month : null);
   return (
     <>
       <Stack.Screen
@@ -70,6 +80,7 @@ export default function Largest() {
       <MoneyList
         loaded={!!data}
         id="largest-list"
+        listRef={listRef}
         rows={rows}
         rowKey={(r) => r.id}
         refreshing={status.refreshing}
@@ -143,25 +154,71 @@ export default function Largest() {
           ) : null
         }
         render={(r, i) => (
-          <MoneyRow
-            name={r.recipient}
-            detail={[
-              r.program,
-              `from ${formatDate(r.start, 'short').replace(/ \d{4}$/, '')}`,
-            ]
-              .filter(Boolean)
-              .join(' · ')}
-            amount={r.value}
-            href={moneyItemHref(
-              { kind: 'largest', month, id: r.id },
-              { name: r.recipient },
-            )}
-            testID={`largest-recipient-${i}`}
-          />
+          <Animated.View style={{ opacity: fade }}>
+            <MoneyRow
+              name={r.recipient}
+              detail={[
+                r.program,
+                `from ${formatDate(r.start, 'short').replace(/ \d{4}$/, '')}`,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+              amount={r.value}
+              href={moneyItemHref(
+                { kind: 'largest', month, id: r.id },
+                { name: r.recipient },
+              )}
+              testID={`largest-recipient-${i}`}
+            />
+          </Animated.View>
         )}
       />
     </>
   );
+}
+
+/** How long a new month's rows take to fade in. */
+export const MONTH_FADE_MS = 150;
+
+/**
+ * A new month starts at the top of the list, its rows fading in over
+ * 150 ms; with Reduce Motion they appear at once. The first month shown
+ * (`month` goes from null to a value once the data loads) does neither.
+ * Content y 0 sits behind the native header, so the top is minus the
+ * header's bottom (useHeaderBottom).
+ */
+function useMonthChange<T>(
+  listRef: React.RefObject<FlatList<T> | null>,
+  month: string | null,
+) {
+  const [fade] = useState(() => new Animated.Value(1));
+  const shown = useRef<string | null>(null);
+  const fading = useRef(false);
+  const reduceMotion = useReduceMotion();
+  const headerBottom = useHeaderBottom();
+  // Before paint: back to the top, and the new rows start clear so they
+  // never show at full opacity first.
+  useLayoutEffect(() => {
+    if (month === null || month === shown.current) return;
+    const first = shown.current === null;
+    shown.current = month;
+    if (first) return;
+    listRef.current?.scrollToOffset({ offset: -headerBottom, animated: false });
+    if (reduceMotion) return;
+    fade.setValue(0);
+    fading.current = true;
+  }, [month, listRef, fade, reduceMotion, headerBottom]);
+  // After the old rows have let go of the value: fade the new ones in.
+  useEffect(() => {
+    if (!fading.current) return;
+    fading.current = false;
+    Animated.timing(fade, {
+      toValue: 1,
+      duration: MONTH_FADE_MS,
+      useNativeDriver: true,
+    }).start();
+  }, [month, fade]);
+  return fade;
 }
 
 const MONTH = /^\d{4}-(?:0[1-9]|1[0-2])$/;
