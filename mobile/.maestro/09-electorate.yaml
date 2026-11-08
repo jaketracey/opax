@@ -23,23 +23,20 @@ name: 09 Electorate representation, elections, Census context and sources
     commands:
       - tapOn: 'More for .*'
       - tapOn: Change electorate
-- scrollUntilVisible:
-    element:
-      id: seat-search
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: seat-search
+# The seat chooser's native search field has no test id: it is reached by
+# its placeholder.
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 15000
+- tapOn: Electorate or member.s name
 - inputText: Grayndler
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-federal-representatives-nsw-grayndler
-    centerElement: true
-    timeout: 300000
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-nsw-grayndler
+    timeout: 30000
 - tapOn:
-    id: seat-choice-federal-representatives-nsw-grayndler
+    id: seat-row-federal-representatives-nsw-grayndler
 - scrollUntilVisible:
     element:
       id: your-electorate

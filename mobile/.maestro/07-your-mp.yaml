@@ -17,22 +17,21 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - takeScreenshot: ${EVIDENCE}/07-invitation
 - tapOn:
     id: your-invitation-find
+# The seat chooser's native search field has no test id: it is reached by
+# its placeholder.
 - extendedWaitUntil:
     visible:
-      id: seat-search
+      id: seat-sheet
     timeout: 15000
-- tapOn:
-    id: seat-search
+- tapOn: Electorate or member.s name
 - inputText: Albanese
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-federal-representatives-nsw-grayndler
-    centerElement: true
-    timeout: 300000
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-nsw-grayndler
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/07-chooser-match
 - tapOn:
-    id: seat-choice-federal-representatives-nsw-grayndler
+    id: seat-row-federal-representatives-nsw-grayndler
 - extendedWaitUntil:
     visible:
       id: your-seat-name
@@ -111,18 +110,23 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - tapOn: Change electorate
 - extendedWaitUntil:
     visible:
-      id: seat-search
+      id: seat-sheet
     timeout: 15000
-- tapOn:
-    id: seat-search
+- tapOn: Electorate or member.s name
 - inputText: No matching electorate
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
+- extendedWaitUntil:
+    visible:
       id: seat-no-results
-    timeout: 300000
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/07-no-match
+# The first Cancel may only end the search; the sheet's Cancel closes it.
 - tapOn: Cancel
+- runFlow:
+    when:
+      visible:
+        id: seat-sheet
+    commands:
+      - tapOn: Cancel
 - assertVisible:
     id: your-seat-name
 # Forget: the tab returns to the invitation, with no stale member.
