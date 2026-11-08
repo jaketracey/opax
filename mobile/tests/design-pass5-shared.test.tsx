@@ -19,6 +19,8 @@ import {
   Text,
 } from '../src/design/primitives';
 import { partyDotSize } from '../src/design/people';
+import { SourceSheet as LegacySourceSheet } from '../src/design/source';
+import { sheetPayload } from '../src/navigation/sheets';
 import { licenceText } from '../src/design/source';
 import { textContent, titleSizeCap } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
@@ -74,7 +76,19 @@ const openSheet = (root: ReactTestInstance, testID: string) => {
     (n) => n.props.testID === testID && typeof n.props.onPress === 'function',
   );
   act(() => line.props.onPress());
-  return root.findByType(Modal);
+  const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+    params: { key: string };
+  };
+  const payload = sheetPayload(params.key, 'source')!;
+  return render(
+    <LegacySourceSheet
+      visible
+      onClose={() => {}}
+      title="Sources"
+      testID={`${testID}-sheet`}
+      {...payload.details}
+    />,
+  ).root.findByType(Modal);
 };
 
 describe('sourceLabel (P2-5)', () => {
@@ -245,7 +259,7 @@ describe('SourceLine and its sheet (P2-4)', () => {
         typeof n.type !== 'string',
     );
     act(() => row.props.onPress());
-    act(() => renderer.root.findByType(Modal).props.onDismiss());
+    act(() => sheet.props.onDismiss());
     expect(router.push).toHaveBeenCalledWith({
       pathname: '/account/sources',
       params: { dataset: 'release' },

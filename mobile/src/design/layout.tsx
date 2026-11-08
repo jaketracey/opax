@@ -37,6 +37,8 @@ import {
   useMeasuredRegion,
 } from './adaptive';
 import { type InfoNotes } from './info';
+// The compatibility button's notes-only adapter now presents /rule.
+export { InfoButton } from './info';
 import { type Href } from 'expo-router';
 import {
   NavigationContext,

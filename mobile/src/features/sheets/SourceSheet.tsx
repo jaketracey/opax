@@ -1,0 +1,275 @@
+import { router } from 'expo-router';
+import { Alert, Appearance, View } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import { hasSourcePreview, isE2E, webOrigin } from '../../design/environment';
+import { dark, light } from '../../design/palette';
+import {
+  presentSourceDestination,
+  recordExternalURL,
+} from '../../navigation/source-destination';
+import { copy } from '../../design/copy';
+import { calendarDate, formatDate, type DateInput } from '../../design/format';
+import { InsetGroup } from '../../design/layout';
+import { LinkRow } from '../../design/rows';
+import { Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
+import {
+  sourceCitations,
+  licenceText,
+  type SourceDetails,
+  type SourceOriginal,
+} from '../../design/source';
+import {
+  canonicalUrl,
+  fromWebPath,
+  openCorrection,
+  openSource,
+  sourceUrl,
+} from '../../navigation/external';
+import { licenceRoute } from '../../navigation/routes/reference';
+import { useSheetPayload } from '../../navigation/sheets';
+import { MissingPayload, SheetFrame } from './frame';
+
+export function sourceDate(value: DateInput | null | undefined, short = false) {
+  return typeof value === 'string' && /^\d{4}$/.test(value)
+    ? value
+    : value == null
+      ? ''
+      : formatDate(value, short ? 'short' : 'long');
+}
+export function sourceHeader(details: SourceDetails) {
+  const newest = sourceCitations(details.citation)
+    .flatMap(({ asOf }) => {
+      const day = asOf == null ? null : calendarDate(asOf);
+      return day && asOf != null
+        ? [{ asOf, order: day.year * 10000 + day.month * 100 + day.day }]
+        : [];
+    })
+    .sort((a, b) => b.order - a.order)[0]?.asOf;
+  const date = sourceDate(details.asOf ?? newest);
+  return date
+    ? `${details.dateRole === 'recorded' ? 'Recorded' : details.dateRole === 'found' ? 'Found' : 'As at'} ${date}`
+    : 'Date not published';
+}
+/** One action reaches the original. Above a modal, keep both underlying routes. */
+export function openOriginal(original: SourceOriginal, overModal: boolean) {
+  let path = original.url;
+  if (path.startsWith('https://')) {
+    try {
+      const url = new URL(path);
+      if (
+        url.origin === new URL(canonicalUrl('/')).origin ||
+        url.hostname === 'opax.com.au' ||
+        url.hostname === 'www.opax.com.au'
+      )
+        path = url.pathname + url.search + url.hash;
+    } catch {
+      /* openSource validates external addresses */
+    }
+  }
+  const native = path.startsWith('/') ? fromWebPath(path) : null;
+  if (native && !overModal) {
+    router.back();
+    router.push(native);
+  } else if (overModal && native) {
+    // openSource normally resolves OPAX records to native routes. Here the
+    // browser must stay above Account/Talk and the source sheet beneath it.
+    void openAboveModal(
+      path.startsWith('/') ? new URL(path, webOrigin).toString() : original.url,
+      original.label,
+    );
+  } else
+    void openSource(
+      path.startsWith('/') ? new URL(path, webOrigin).toString() : original.url,
+      original.label,
+    );
+}
+async function openAboveModal(url: string, citation: string) {
+  try {
+    const checked = sourceUrl(url);
+    recordExternalURL(checked);
+    if (isE2E) {
+      if (hasSourcePreview)
+        presentSourceDestination({ url: checked, citation });
+      else Alert.alert(`Source record: ${citation}`, checked);
+      return;
+    }
+    await WebBrowser.openBrowserAsync(checked, {
+      controlsColor: (Appearance.getColorScheme() === 'dark' ? dark : light)
+        .navy,
+      dismissButtonStyle: 'done',
+      presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
+      readerMode: false,
+    });
+  } catch {
+    Alert.alert("Couldn't open the original", 'Check your connection.');
+  }
+}
+export function OriginalsGroup({
+  details,
+  overModal = false,
+  testID,
+  header,
+}: {
+  details: SourceDetails;
+  overModal?: boolean;
+  testID?: string;
+  header?: string;
+}) {
+  const originals = (details.originals ?? []).filter(
+    (original, index, all) =>
+      (original.url.startsWith('https://') || original.url.startsWith('/')) &&
+      all.findIndex((other) => other.url === original.url) === index,
+  );
+  if (!originals.length)
+    return header ? (
+      <Text variant="groupHeader" accessibilityRole="header">
+        {header}
+      </Text>
+    ) : null;
+  return (
+    <View style={{ gap: rhythm.groupHeader }}>
+      {header ? (
+        <Text variant="groupHeader" accessibilityRole="header">
+          {header}
+        </Text>
+      ) : null}
+      <InsetGroup>
+        {originals.map((original, index) => (
+          <LinkRow
+            key={original.url}
+            title={original.label}
+            detail={
+              [
+                original.record,
+                sourceDate(original.asOf, true),
+                index === 0 ? details.coverage : null,
+              ]
+                .filter(Boolean)
+                .join(' · ') || undefined
+            }
+            external
+            onPress={() => openOriginal(original, overModal)}
+            testID={testID ? `${testID}-original-${index}` : undefined}
+          />
+        ))}
+      </InsetGroup>
+    </View>
+  );
+}
+export function Paragraphs({
+  paragraphs,
+}: {
+  paragraphs: readonly (string | false | null | undefined)[];
+}) {
+  return (
+    <View style={{ gap: rhythm.block }}>
+      {paragraphs
+        .filter((p): p is string => !!p)
+        .map((p, index) => (
+          <Text key={index} wordSafe variant="body">
+            {p}
+          </Text>
+        ))}
+    </View>
+  );
+}
+export function SourceContent({
+  details,
+  overModal = false,
+  testID,
+}: {
+  details: SourceDetails;
+  overModal?: boolean;
+  testID?: string;
+}) {
+  const notes = [
+    details.savedAt != null ? copy.savedCopyNote(details.savedAt) : null,
+    details.state === 'partial' ? copy.partialNote : null,
+    ...(details.notes ?? []),
+  ].filter(Boolean);
+  const sources = sourceCitations(details.citation);
+  const sourceDates = new Set(
+    sources.map((source) => sourceDate(source.asOf ?? details.asOf)),
+  );
+  return (
+    <>
+      <OriginalsGroup
+        details={details}
+        overModal={overModal}
+        testID={testID}
+        header={sourceHeader(details)}
+      />
+      {!details.originals?.length && sources.length ? (
+        <Paragraphs
+          paragraphs={sources.map((s) =>
+            [
+              s.title,
+              sourceDates.size > 1
+                ? sourceDate(s.asOf ?? details.asOf, true)
+                : null,
+            ]
+              .filter(Boolean)
+              .join(' · '),
+          )}
+        />
+      ) : null}
+      {details.rule ? (
+        <InsetGroup header={copy.howChosen}>
+          <Paragraphs paragraphs={[details.rule]} />
+        </InsetGroup>
+      ) : null}
+      {notes.length ? (
+        <InsetGroup header="Notes">
+          <Paragraphs paragraphs={notes} />
+        </InsetGroup>
+      ) : null}
+      {details.extra}
+      <InsetGroup>
+        {details.licenceDataset ? (
+          <LinkRow
+            title="Licence"
+            value={details.licence ? licenceText(details.licence) : undefined}
+            href={licenceRoute(details.licenceDataset)}
+            testID={testID && `${testID}-licence`}
+          />
+        ) : null}
+        <LinkRow
+          title="Sources and licences"
+          onPress={() =>
+            router.push({
+              pathname: '/licences',
+              params: details.licenceDataset
+                ? { dataset: details.licenceDataset }
+                : {},
+            })
+          }
+          testID={testID && `${testID}-licences`}
+        />
+        <LinkRow
+          title={details.report?.label ?? copy.reportCorrection}
+          accessory="none"
+          onPress={details.report?.onPress ?? (() => void openCorrection())}
+          testID={testID && `${testID}-correction`}
+        />
+      </InsetGroup>
+    </>
+  );
+}
+export default function SourceSheet() {
+  const payload = useSheetPayload('source');
+  const testID = payload?.testID ? `${payload.testID}-sheet` : 'source-sheet';
+  return (
+    <SheetFrame title={copy.sources} testID={testID}>
+      {payload ? (
+        <SourceContent
+          details={payload.details}
+          overModal={payload.overModal}
+          testID={testID}
+        />
+      ) : (
+        <MissingPayload />
+      )}
+    </SheetFrame>
+  );
+}

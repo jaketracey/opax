@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
-import { useRef, useState, type ReactNode, type Ref } from 'react';
+import { presentSheet, presentSource } from '../navigation/sheets';
+import { useEffect, useRef, type ReactNode, type Ref } from 'react';
 import {
   Modal,
   Platform,
@@ -53,14 +54,19 @@ export interface SourceCitation {
 export type SourceState = 'partial' | 'saved' | 'offline';
 const stateWords: Record<SourceState, string> = {
   partial: 'partial',
-  saved: 'saved copy',
-  offline: 'offline',
+  saved: '',
+  offline: '',
 };
 
 /** Everything one block's source sheet says. */
 export interface SourceDetails {
   /** The source file's own date: meta.as_of, generated_at. */
   asOf?: DateInput | null;
+  dateRole?: 'recorded' | 'found';
+  /** How a rule-ordered block was selected. */
+  rule?: string;
+  /** Ask supplies its report action without placing it in route params. */
+  report?: { label: string; onPress: () => void };
   /**
    * Who holds the record: one name, or several. The line shows the first
    * short name ("and 2 more"); the sheet lists every full title, each with
@@ -161,6 +167,7 @@ export function sourceLineParts({
   savedAt,
   state,
   dateLabel,
+  dateRole,
 }: SourceDetails): {
   date: string | null;
   name: string | null;
@@ -176,19 +183,36 @@ export function sourceLineParts({
   const saved = savedAt != null ? formatDate(savedAt, 'short') : '';
   const rest = [
     coverage || null,
-    shownState
-      ? shownState === 'saved' && saved
-        ? `Saved ${saved}`
-        : stateWords[shownState]
-      : null,
+    shownState === 'saved' && saved && dateLabel !== undefined
+      ? `Saved ${saved}`
+      : shownState
+        ? stateWords[shownState]
+        : null,
   ].filter((part): part is string => !!part);
   // Every block stays dated: an undated source says so.
   const date =
     dateLabel !== undefined
       ? dateLabel
-      : (updatedText(asOf ?? newestSourceDate(citation)) ??
-        'Date not published');
+      : dateRole && asOf != null
+        ? `${dateRole === 'found' ? 'Found ' : ''}${sheetDate(asOf, 'short')}`
+        : shownState === 'saved' && saved
+          ? `Saved ${saved}`
+          : (updatedText(asOf ?? newestSourceDate(citation)) ??
+            'Date not published');
   return { date, name, rest };
+}
+
+/** Adjacent blocks in one section can share one dated source line. */
+export function SourceLineGroup({
+  children,
+  ...details
+}: SourceDetails & { children: ReactNode; testID?: string }) {
+  return (
+    <View style={{ gap: rhythm.block }}>
+      {children}
+      <SourceLine {...details} />
+    </View>
+  );
 }
 
 /**
@@ -206,7 +230,7 @@ export function sourceLineParts({
  * that it opens the sources.
  */
 export function SourceLine({
-  title = 'Sources and notes',
+  title,
   label,
   accessibilityLabel,
   onPress,
@@ -223,7 +247,9 @@ export function SourceLine({
   onPress?: () => void;
   testID?: string;
 }) {
-  const [open, setOpen] = useState(false);
+  // Compatibility props remain accepted until their feature lanes migrate.
+  void title;
+  const hasPayload = Object.keys(details).length > 0;
   const parts = sourceLineParts(details);
   const visible = label
     ? { date: null, name: label, rest: [] as string[] }
@@ -240,21 +266,16 @@ export function SourceLine({
         rest={visible.rest}
         accessibilityLabel={accessibilityLabel ?? spoken}
         accessibilityHint={
-          onPress ? 'Opens the source' : 'Opens the sources, notes and licence'
+          !hasPayload && onPress ? 'Opens the source' : 'Opens the sources'
         }
-        accessibilityRole={onPress ? 'link' : 'button'}
-        onPress={onPress ?? (() => setOpen(true))}
+        accessibilityRole={!hasPayload && onPress ? 'link' : 'button'}
+        onPress={() =>
+          hasPayload || !onPress
+            ? presentSource(details, { testID })
+            : onPress()
+        }
         testID={testID}
       />
-      {onPress ? null : (
-        <SourceSheet
-          visible={open}
-          onClose={() => setOpen(false)}
-          title={title}
-          testID={testID ? `${testID}-sheet` : undefined}
-          {...details}
-        />
-      )}
     </>
   );
 }
@@ -354,6 +375,7 @@ function lineChildren(
  * the sources, the notes and caveats in full, the licence, and a row to
  * Sources and licences. With notes alone it is the notes sheet (ⓘ).
  */
+/** @deprecated Use presentSource and the /source route. */
 export function SourceSheet({
   visible,
   onClose,
@@ -376,6 +398,15 @@ export function SourceSheet({
     if (Platform.OS !== 'ios') action();
   };
   useKeyCommand('list-escape', onClose, visible);
+  // InfoSheet's compatibility API passes notes and extra only. Its callers
+  // retain their props while the visible sheet now belongs to the root stack.
+  const notesOnly = Object.keys(details).every(
+    (key) => key === 'notes' || key === 'extra',
+  );
+  if (visible && notesOnly)
+    return (
+      <LegacyRuleBridge details={details} onClose={onClose} testID={testID} />
+    );
   return (
     <Modal
       visible={visible}
@@ -393,6 +424,30 @@ export function SourceSheet({
       </SheetBody>
     </Modal>
   );
+}
+
+function LegacyRuleBridge({
+  details,
+  onClose,
+  testID,
+}: {
+  details: SourceDetails;
+  onClose: () => void;
+  testID?: string;
+}) {
+  const presented = useRef(false);
+  useEffect(() => {
+    if (presented.current) return;
+    presented.current = true;
+    presentSheet({
+      kind: 'rule',
+      rule: (details.notes ?? []).filter(Boolean).join('\n\n'),
+      extra: details.extra,
+      testID: testID?.replace(/-sheet$/, ''),
+    });
+    onClose();
+  }, [details, onClose, testID]);
+  return null;
 }
 
 function SourceDetailsBody({
@@ -609,6 +664,7 @@ function OriginalRow({
 }
 
 /** A page sheet's bar (grab handle, title, Done) over its scrolling body. */
+/** @deprecated Use route sheets with a native bar. */
 export function SheetBody({
   title,
   onClose,

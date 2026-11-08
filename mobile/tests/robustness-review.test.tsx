@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+import { sheetPayload } from '../src/navigation/sheets';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -29,6 +31,10 @@ import { CatalogState } from '../src/features/CatalogState';
 import { SourceAffordance } from '../src/design/source';
 import { catalogs, index, manifest, pinned, replaceAt, slugs } from './pinned';
 
+jest.mock('expo-router', () => ({
+  ...jest.requireActual('expo-router'),
+  router: { push: jest.fn() },
+}));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { followSources: jest.fn() },
 }));
@@ -365,10 +371,17 @@ test('decode fallback and partial screens state the problem without claiming off
     if (element.type === CatalogState) {
       act(() => renderer.root.findByType(SourceAffordance).props.onPress());
     }
-    const words = renderer.root
+    let words = renderer.root
       .findAllByType(NativeText)
       .map((n) => [n.props.children].flat(3).join(''))
       .join(' ');
+    if (element.type === CatalogState) {
+      const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+        params: { key: string };
+      };
+      words +=
+        ' ' + sheetPayload(params.key, 'source')?.details.notes?.join(' ');
+    }
     expect(words).toContain(
       'The latest records could not be read. Showing the saved copy.',
     );

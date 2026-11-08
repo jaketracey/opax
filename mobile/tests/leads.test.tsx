@@ -1,3 +1,5 @@
+import { sheetPayload } from '../src/navigation/sheets';
+import { sourceHeader } from '../src/features/sheets/SourceSheet';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -149,6 +151,13 @@ const press = (root: ReactTestInstance, testID: string) =>
       )
       .props.onPress(),
   );
+
+function lastSource() {
+  const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+    params: { key: string };
+  };
+  return sheetPayload(params.key, 'source')!.details;
+}
 
 describe('the discovery export', () => {
   test('decodes whole: 60 signals in three categories, every one with caveats', () => {
@@ -585,9 +594,8 @@ describe('the Leads screen', () => {
     const first = signals[0]!;
     await press(root, 'leads-source');
     for (const method of discovery.methodology)
-      expect(texts(root)).toContain(method);
-    expect(texts(root)).toContain('21 September 2026');
-    await press(root, 'leads-source-sheet-done');
+      expect(lastSource().notes).toContain(method);
+    expect(sourceHeader(lastSource())).toBe('As at 21 September 2026');
     await press(root, 'lead-0-source');
     for (const caveat of first.caveats) expect(texts(root)).toContain(caveat);
     // Each example record opens from the sheet, named by its register, with
@@ -687,9 +695,9 @@ describe('a lead’s comparison', () => {
     expect(labels(root)).toContain('Updated 21 Sep 2026, AEC annual returns');
     expect(texts(root)).not.toContain(aboutLede(discovery));
     await press(root, 'lead-source');
-    expect(texts(root)).toContain(aboutLede(discovery));
+    expect(lastSource().notes).toContain(aboutLede(discovery));
     for (const method of discovery.methodology)
-      expect(texts(root)).toContain(method);
+      expect(lastSource().notes).toContain(method);
     // The heading says the lead's category once, as its meta line.
     expect(texts(root)).toContain('Lead · Party funding');
     expect(
@@ -849,7 +857,7 @@ describe('the declared-interests feed', () => {
     ).toBe(true);
     // The export's coverage note is in its one source line's sheet, in full.
     await press(root, 'declarations-source');
-    expect(texts(root)).toContain(
+    expect(lastSource().notes).toContain(
       'Showing the newest 300 of 1,660 dated register changes. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact name matches, ignoring case and spacing.',
     );
     act(() => renderer.unmount());

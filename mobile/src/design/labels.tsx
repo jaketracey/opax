@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
-import { InfoSheet } from './info';
+import { presentSheet } from '../navigation/sheets';
 import { Text } from './text';
-import { SourceLine, type SourceDetails } from './source';
+import { type SourceDetails } from './source';
 import { SurfaceContext, useRowHighlight } from './row-padding';
 import { useContext } from 'react';
 import {
@@ -195,7 +195,6 @@ export function MachineLabel({
    */
   children?: ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
   const fixed = useAccessibilitySize();
   const sentence = explanation.trim().replace(/\.?$/, '.');
   return (
@@ -205,7 +204,13 @@ export function MachineLabel({
         accessibilityLabel={`${MACHINE_LABEL}. ${sentence}`}
         accessibilityHint="Opens the explanation"
         testID={testID}
-        onPress={() => setOpen(true)}
+        onPress={() =>
+          presentSheet({
+            kind: 'machine',
+            note: { title: MACHINE_LABEL, body: [sentence, MACHINE_GUIDANCE] },
+            testID,
+          })
+        }
         style={[styles.machineTarget, fixed ? styles.fixed : styles.hug]}
       >
         {({ pressed }) =>
@@ -232,13 +237,6 @@ export function MachineLabel({
           )
         }
       </Pressable>
-      <InfoSheet
-        visible={open}
-        onClose={() => setOpen(false)}
-        title={MACHINE_LABEL}
-        notes={[sentence, MACHINE_GUIDANCE]}
-        testID={testID ? `${testID}-sheet` : undefined}
-      />
     </>
   );
 }
@@ -418,7 +416,6 @@ export function MachinePill({
   note: MachineNote;
   testID?: string;
 }) {
-  const [open, setOpen] = useState(false);
   const highlight = useRowHighlight();
   return (
     <>
@@ -429,7 +426,7 @@ export function MachinePill({
         accessibilityShowsLargeContentViewer
         accessibilityLargeContentTitle="Machine-written"
         testID={testID}
-        onPress={() => setOpen(true)}
+        onPress={() => presentSheet({ kind: 'machine', note, testID })}
         style={styles.machineTarget}
       >
         {({ pressed }) => (
@@ -447,14 +444,6 @@ export function MachinePill({
           </View>
         )}
       </Pressable>
-      <InfoSheet
-        visible={open}
-        onClose={() => setOpen(false)}
-        title={note.title}
-        notes={note.body}
-        extra={note.sources ? <SourceLine {...note.sources} /> : undefined}
-        testID={testID && `${testID}-sheet`}
-      />
     </>
   );
 }

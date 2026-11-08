@@ -1,2 +1,1 @@
-import { SheetSpike } from '../features/sheets/Spike';
-export default SheetSpike;
+export { default } from '../features/sheets/SourceSheet';

@@ -1,3 +1,4 @@
+import { sheetPayload } from '../src/navigation/sheets';
 import {
   portraits as portraitService,
   catalogs as runtime,
@@ -241,9 +242,12 @@ test('electorate preserves Census vintage and renders candidates as plain public
   await act(async () =>
     pressable(r, 'electorate-representatives-source').props.onPress(),
   );
-  expect(text(r)).toContain(
-    'Election winners and present-day representation can differ',
-  );
+  const { params: sourceParams } = jest
+    .mocked(router.push)
+    .mock.calls.at(-1)![0] as { params: { key: string } };
+  expect(
+    sheetPayload(sourceParams.key, 'source')?.details.notes?.join(' '),
+  ).toContain('Election winners and present-day representation can differ');
   await act(async () => {
     r.root
       .find(
@@ -788,7 +792,12 @@ test('missing register ties do not refer to an existing file; expense copy uses 
   expect(text(a)).not.toContain('A bar past its tick');
   // The benchmark method is in the block's source sheet, in full.
   await act(async () => pressable(a, 'person-expenses-source').props.onPress());
-  expect(text(a)).toContain('divided by its covered calendar years');
+  const { params: sourceParams } = jest
+    .mocked(router.push)
+    .mock.calls.at(-1)![0] as { params: { key: string } };
+  expect(
+    sheetPayload(sourceParams.key, 'source')?.details.notes?.join(' '),
+  ).toContain('divided by its covered calendar years');
   await act(async () => a.unmount());
 });
 

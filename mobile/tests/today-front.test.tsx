@@ -196,7 +196,7 @@ describe('a Today feed', () => {
     expect(strings(root)).toContain('Showing the saved copy.');
     expect(
       host(root, 'today-bills-as-at')[0]!.props.accessibilityLabel,
-    ).toMatch(/^Updated .+, ParlInfo bill records, Saved 3 Oct 2026$/);
+    ).toMatch(/^Saved 3 Oct 2026, ParlInfo bill records$/);
   });
   test('failure and an empty feed sit on the paper, not in a box', () => {
     const failed = draw({

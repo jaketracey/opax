@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+import { sheetPayload } from '../src/navigation/sheets';
 // Design pass 5, lane B (docs/design/review-2026-10/pass5-app-critique.md):
 // profiles and places. Each test names the critique item it holds.
 import { catalogs as runtime } from '../src/api/runtime';
@@ -215,7 +217,12 @@ describe('profile', () => {
     const identity = lines(r).find((l) => l.id === 'person-source')!;
     expect(identity.words).not.toContain('OPAX existing parliamentary person');
     await act(async () => pressable(r, 'person-source').props.onPress());
-    const sheet = text(r);
+    const { params: sourceParams } = jest
+      .mocked(router.push)
+      .mock.calls.at(-1)![0] as { params: { key: string } };
+    const sheet = JSON.stringify(
+      sheetPayload(sourceParams.key, 'source')?.details,
+    );
     expect(sheet).toContain('Matched to OPAX’s people list.');
     expect(sheet).not.toContain(
       'OPAX existing parliamentary person identifiers',
@@ -272,7 +279,12 @@ describe('electorate', () => {
     expect(outline.words).toContain('AEC');
     expect(text(r)).not.toContain('View original');
     await act(async () => pressable(r, 'outline-source').props.onPress());
-    expect(text(r)).toContain('Not for address allocation.');
+    const { params: sourceParams } = jest
+      .mocked(router.push)
+      .mock.calls.at(-1)![0] as { params: { key: string } };
+    expect(
+      sheetPayload(sourceParams.key, 'source')?.details.notes?.join(' '),
+    ).toContain('Not for address allocation.');
     await act(async () => r.unmount());
   });
 
@@ -319,7 +331,12 @@ describe('Your MP chooser', () => {
     expect(text(r)).toContain('Used once on this iPhone; not sent or saved.');
     expect(text(r)).not.toContain('It is not sent, saved or logged.');
     await act(async () => pressable(r, 'location-privacy').props.onPress());
-    expect(text(r)).toContain('It is not sent, saved or logged.');
+    const { params: ruleParams } = jest
+      .mocked(router.push)
+      .mock.calls.at(-1)![0] as { params: { key: string } };
+    expect(sheetPayload(ruleParams.key, 'rule')?.rule).toContain(
+      'It is not sent, saved or logged.',
+    );
     await act(async () => r.unmount());
   });
 });

@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+import { sheetPayload } from '../src/navigation/sheets';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -130,7 +132,12 @@ describe('a lead’s card', () => {
     );
     // The page's About sheet still says how leads are read.
     await press(r.root, 'leads-source');
-    expect(texts(r.root).length).toBeGreaterThan(shown.length);
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    expect(
+      sheetPayload(params.key, 'source')?.details.notes?.length,
+    ).toBeGreaterThan(0);
     await act(async () => r.unmount());
   });
 });
