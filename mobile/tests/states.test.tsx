@@ -30,12 +30,13 @@ import {
   Collapse,
   ContentUnavailable,
   InlineError,
+  ErrorState,
   OfflineLine,
   Skeleton,
   StatePageProvider,
   errorMessage,
 } from '../src/design/states';
-import { recordSourceState } from '../src/features/RecordStatus';
+import { RecordStatus, recordSourceState } from '../src/features/RecordStatus';
 import { catalogStateNote } from '../src/features/CatalogNotice';
 import { copy } from '../src/design/copy';
 import { symbols } from '../src/design/symbols';
@@ -978,6 +979,135 @@ describe('shared state kit', () => {
     act(() => jest.runOnlyPendingTimers());
     expect(announce).toHaveBeenCalledTimes(2);
   });
+  test('ErrorState alerts and focuses changed messages; InlineError only announces the page', () => {
+    const focus = jest
+      .spyOn(AccessibilityInfo, 'sendAccessibilityEvent')
+      .mockImplementation(noop);
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(noop);
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <ErrorState
+          message="Enter a valid email address. Try again."
+          onRetry={noop}
+        />,
+        { createNodeMock: () => ({}) },
+      );
+    });
+    mounted.push(r);
+    expect(
+      r.root.findAll((node) => node.props.accessibilityRole === 'alert').length,
+    ).toBeGreaterThan(0);
+    expect(
+      r.root.findAllByType(Text).map((node) => node.props.children),
+    ).toContain('Enter a valid email address.');
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(focus.mock.calls[0]![1]).toBe('focus');
+    act(() => r.update(<ErrorState message="The code has expired." />));
+    expect(focus).toHaveBeenCalledTimes(2);
+    expect(announce).not.toHaveBeenCalled();
+    const inline = mount(
+      <InlineError subject="Bills" required onRetry={noop} />,
+    );
+    expect(
+      inline.root.findAll((node) => node.props.accessibilityRole === 'alert'),
+    ).toHaveLength(0);
+    expect(focus).toHaveBeenCalledTimes(2);
+    expect(announce).toHaveBeenCalledWith(copy.someSectionsFailed);
+    const outer = inline.root.findByType(View);
+    expect(StyleSheet.flatten(outer.props.style)).toMatchObject({
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+    });
+    expect(inline.root.findByType(Button).props.variant).toBe('plain');
+  });
+  test.each([false, true])(
+    'RecordStatus notesInSource=%s keeps exactly one home for saved and partial notes',
+    (notesInSource) => {
+      const r = mount(
+        <RecordStatus
+          record={{
+            stale: true,
+            savedAt: Date.UTC(2026, 9, 3),
+            staleReason: 'unreadable',
+            partial: true,
+          }}
+          error={null}
+          refreshing
+          refresh={noop}
+          retry={noop}
+          label="Loading"
+          testID="record"
+          notesInSource={notesInSource}
+        />,
+      );
+      const notes = r.root.findAllByType(Text);
+      expect(
+        notes.filter((node) => node.props.testID === 'record-saved-copy'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+      expect(
+        notes.filter((node) => node.props.testID === 'record-partial'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+      if (!notesInSource) {
+        expect(notes.every((node) => node.props.variant === 'footnote')).toBe(
+          true,
+        );
+        expect(
+          notes.find((node) => node.props.testID === 'record-saved-copy')!.props
+            .children,
+        ).toContain('Checking for a newer copy.');
+      }
+      expect(r.root.findAllByType(Button)).toHaveLength(0);
+    },
+  );
+  test.each([false, true])(
+    'RecordStatus offline notesInSource=%s retains the offline line',
+    (notesInSource) => {
+      const r = mount(
+        <RecordStatus
+          record={{ stale: true, savedAt: Date.UTC(2026, 9, 3) }}
+          error={null}
+          refreshing={false}
+          refresh={noop}
+          retry={noop}
+          label="Loading"
+          testID="record"
+          notesInSource={notesInSource}
+        />,
+      );
+      expect(r.root.findAllByType(OfflineLine)).toHaveLength(1);
+      expect(
+        r.root
+          .findAllByType(Text)
+          .filter((node) => node.props.testID === 'record-stale'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+    },
+  );
+  test.each([false, true])(
+    'RecordStatus partial notesInSource=%s retains its legacy note by default',
+    (notesInSource) => {
+      const r = mount(
+        <RecordStatus
+          record={{ stale: false, savedAt: null, partial: true }}
+          error={null}
+          refreshing={false}
+          refresh={noop}
+          retry={noop}
+          label="Loading"
+          testID="record"
+          notesInSource={notesInSource}
+        />,
+      );
+      expect(
+        r.root
+          .findAllByType(Text)
+          .filter((node) => node.props.testID === 'record-partial'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+    },
+  );
   test('separate pages announce independently', () => {
     jest.useFakeTimers();
     const announce = jest
@@ -1050,7 +1180,17 @@ describe('shared state kit', () => {
     );
     const host = r.root.findByType(Host);
     expect(host.props.matchContents).toEqual({ vertical: true });
-    expect(StyleSheet.flatten(host.props.style)).toMatchObject({ width: 343 });
+    expect(StyleSheet.flatten(host.props.style)).toMatchObject({ width: 335 });
+    act(() =>
+      r.root
+        .find(
+          (node) =>
+            node.props.testID === 'missing' &&
+            typeof node.props.onLayout === 'function',
+        )
+        .props.onLayout({ nativeEvent: { layout: { width: 310 } } }),
+    );
+    expect(StyleSheet.flatten(host.props.style).width).toBe(310);
     expect(StyleSheet.flatten(host.props.style).height).toBeUndefined();
     expect(StyleSheet.flatten(host.props.style).maxHeight).toBeUndefined();
     expect(r.root.findByType(ContentUnavailableView).props).toMatchObject({

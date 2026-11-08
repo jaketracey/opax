@@ -8,13 +8,13 @@ import {
   useMemo,
   useSyncExternalStore,
   type ReactNode,
+  type Ref,
 } from 'react';
 import {
   AccessibilityInfo,
   Platform,
   StyleSheet,
   View,
-  useWindowDimensions,
   type DimensionValue,
 } from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
@@ -27,7 +27,14 @@ import { staleText, type DateInput } from './format';
 import { Icon, type SFSymbol } from './icon';
 import { symbols } from './symbols';
 import { Text } from './text';
-import { colors, radii, rhythm, spacing, type Accent } from './tokens';
+import {
+  colors,
+  radii,
+  rhythm,
+  rhythmRegular,
+  spacing,
+  type Accent,
+} from './tokens';
 import { columns, useLayout } from './adaptive';
 
 export const stateCopy = {
@@ -254,18 +261,24 @@ export function ContentUnavailable({
   action?: { label: string; onPress: () => void; testID?: string };
   testID?: string;
 }) {
-  const { width } = useWindowDimensions();
-  const region = useLayout();
-  const columnWidth = Math.max(
-    0,
-    Math.min(
-      width - (width < 414 ? 16 : 20) * 2,
-      region.width,
-      columns.readable,
-    ),
-  );
+  const layout = useLayout();
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  const columnWidth =
+    measuredWidth ??
+    Math.max(
+      0,
+      Math.min(
+        layout.width -
+          2 * (layout.regular ? rhythmRegular.screen : rhythm.screen),
+        columns.readable,
+      ),
+    );
   return (
-    <View testID={testID} style={styles.unavailable}>
+    <View
+      testID={testID}
+      style={styles.unavailable}
+      onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
+    >
       {Platform.OS === 'ios' ? (
         // Verified in @expo/ui 57.0.21 HostProps: boolean | { vertical?, horizontal? }.
         // Propose the column width; only height follows SwiftUI, including AX5.
@@ -334,42 +347,27 @@ export function EmptyState({
   );
 }
 
-export function InlineError({
-  subject,
-  message,
+function ErrorSentence({
+  sentence,
   onRetry,
-  required = false,
   testID,
+  alert = false,
+  sentenceRef,
 }: {
-  subject: string;
-  message?: string;
+  sentence: string;
   onRetry?: () => void;
-  required?: boolean;
   testID?: string;
+  alert?: boolean;
+  sentenceRef?: Ref<View>;
 }) {
-  const page = usePageState();
-  const [id] = useState(() => Symbol('failure'));
-  const ref = useRef<View>(null);
-  const sentence = (message ?? copy.couldNotLoad(subject)).replace(
-    /\s*Try again\.$/,
-    '',
-  );
-  useEffect(() => {
-    // required means this is the only content available to read.
-    if (required) {
-      if (ref.current)
-        AccessibilityInfo.sendAccessibilityEvent(ref.current, 'focus');
-      return;
-    }
-    return page.fail(id);
-  }, [page, id, required, sentence]);
   return (
     <View style={styles.error}>
       <View
-        ref={ref}
+        ref={sentenceRef}
         accessible
+        accessibilityRole={alert ? 'alert' : undefined}
         accessibilityLabel={sentence}
-        style={styles.inline}
+        style={styles.errorSentence}
       >
         <Icon name={symbols.error} size={18} tone="danger" />
         <Text
@@ -377,7 +375,7 @@ export function InlineError({
           variant="body"
           tone="inkSoft"
           testID={testID}
-          style={styles.grow}
+          style={styles.shrink}
         >
           {sentence}
         </Text>
@@ -393,14 +391,58 @@ export function InlineError({
     </View>
   );
 }
-/** Existing caller API, now with the same quiet block treatment. */
-export function ErrorState(props: {
+
+/** A block load failure: one page announcement, no alert or focus movement. */
+export function InlineError({
+  subject,
+  message,
+  onRetry,
+  testID,
+}: {
+  subject: string;
+  message?: string;
+  onRetry?: () => void;
+  required?: boolean;
+  testID?: string;
+}) {
+  const page = usePageState();
+  const [id] = useState(() => Symbol('failure'));
+  const sentence = (message ?? copy.couldNotLoad(subject)).replace(
+    /\s*Try again\.$/,
+    '',
+  );
+  useEffect(() => page.fail(id), [page, id, sentence]);
+  return (
+    <ErrorSentence sentence={sentence} onRetry={onRetry} testID={testID} />
+  );
+}
+
+/** Legacy form/action errors announce as alerts and focus their changed sentence. */
+export function ErrorState({
+  message,
+  onRetry,
+  testID,
+}: {
   message: string;
   onRetry?: () => void;
   required?: boolean;
   testID?: string;
 }) {
-  return <InlineError subject="The public record" {...props} />;
+  const ref = useRef<View>(null);
+  const sentence = message.replace(/\s*Try again\.$/, '');
+  useEffect(() => {
+    if (ref.current)
+      AccessibilityInfo.sendAccessibilityEvent(ref.current, 'focus');
+  }, [message]);
+  return (
+    <ErrorSentence
+      sentence={sentence}
+      onRetry={onRetry}
+      testID={testID}
+      alert
+      sentenceRef={ref}
+    />
+  );
 }
 
 /** First registered line owns the page's offline sentence, including legacy callers. */
@@ -498,7 +540,21 @@ const styles = StyleSheet.create({
   grow: { flex: 1, gap: spacing.s3 },
   figures: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s4 },
   figure: { gap: spacing.s3, minWidth: 140 },
-  error: { gap: rhythm.heading, alignItems: 'flex-start' },
+  error: {
+    gap: rhythm.heading,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  errorSentence: {
+    flexDirection: 'row',
+    gap: spacing.s3,
+    alignItems: 'flex-start',
+    flexShrink: 1,
+    maxWidth: '100%',
+  },
+  shrink: { flexShrink: 1 },
   unavailable: {
     alignItems: 'center',
     gap: rhythm.heading,

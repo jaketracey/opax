@@ -9,6 +9,8 @@ import {
 } from '../design/states';
 import { copy } from '../design/copy';
 import { symbols } from '../design/symbols';
+import { Text } from '../design/text';
+import { Group } from '../design/layout';
 import { staleText } from '../design/format';
 
 /**
@@ -37,16 +39,19 @@ export function savedSentence(
 /**
  * The state of one whole-screen catalog read (useCatalogRecord): loading,
  * a first load that failed (offline or not), or a saved copy shown stale.
- * Renders nothing when a fresh record is on screen.
+ * Saved and partial notes stay visible by default. Set notesInSource only
+ * when the screen passes recordSourceState(record) to its SourceLine, so those
+ * sentences have one home. The page offline line remains visible either way.
+ * Renders nothing when a fresh, complete record is on screen.
  */
 export function RecordStatus({
   record,
   error,
-  refreshing: _refreshing,
-  refresh: _refresh,
+  refreshing,
   retry,
   label,
   testID,
+  notesInSource = false,
 }: {
   record: {
     stale: boolean;
@@ -57,15 +62,40 @@ export function RecordStatus({
   error: unknown;
   refreshing: boolean;
   refresh: () => void;
+  notesInSource?: boolean;
   retry: () => void;
   /** What VoiceOver announces while loading: "Loading the leads". */
   label: string;
   testID: string;
 }) {
-  if (record)
-    return record.stale && !record.staleReason ? (
-      <OfflineLine savedAt={record.savedAt} testID={`${testID}-offline`} />
-    ) : null;
+  if (record) {
+    const sentence = record.stale
+      ? savedSentence(record.staleReason, record.savedAt, refreshing)
+      : '';
+    if (!record.partial && !record.stale) return null;
+    if (notesInSource && !(record.stale && !record.staleReason)) return null;
+    return (
+      <Group>
+        {record.stale && !record.staleReason ? (
+          <OfflineLine savedAt={record.savedAt} testID={`${testID}-offline`} />
+        ) : null}
+        {!notesInSource && sentence ? (
+          <Text
+            wordSafe
+            variant="footnote"
+            testID={`${testID}-${record.staleReason ? 'saved-copy' : 'stale'}`}
+          >
+            {sentence}
+          </Text>
+        ) : null}
+        {!notesInSource && record.partial ? (
+          <Text wordSafe variant="footnote" testID={`${testID}-partial`}>
+            {partialNote}
+          </Text>
+        ) : null}
+      </Group>
+    );
+  }
   if (error instanceof ApiError && ['offline', 'timeout'].includes(error.code))
     return (
       <ContentUnavailable

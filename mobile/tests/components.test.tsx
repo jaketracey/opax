@@ -330,7 +330,7 @@ describe('states', () => {
       />,
     );
     expect(
-      byLabel(root, 'The public record could not be loaded. Try again.').props
+      byLabel(root, 'The public record could not be loaded.').props
         .accessibilityRole,
     ).toBe('alert');
     expect(byLabel(root, 'Try again').props.accessibilityRole).toBe('button');
