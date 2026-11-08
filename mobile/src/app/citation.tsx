@@ -1,4 +1,4 @@
-import { RoutePlaceholder } from '../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="citation" title="Citation" />;
+import { SheetSpike } from '../features/sheets/Spike';
+export default function SearchSpike() {
+  return <SheetSpike search />;
 }
