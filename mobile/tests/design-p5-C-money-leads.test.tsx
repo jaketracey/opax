@@ -6,35 +6,66 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { catalogs as runtime } from '../src/api/runtime';
 import { decodeDiscovery } from '../src/api/catalogs';
 import type { RecordResult } from '../src/api/client';
-import { Heading, SourceSheet } from '../src/design/primitives';
+import {
+  Card,
+  Heading,
+  SourceSheet,
+  Text as DesignText,
+} from '../src/design/primitives';
+import { accents } from '../src/design/tokens';
+import { leadRoute } from '../src/navigation/routes/public-money';
 import Leads from '../src/features/leads/Leads';
 import LeadDetail from '../src/features/leads/LeadDetail';
 import { LeadFeedCard } from '../src/features/leads/LeadFeedCard';
+import { publicDiscovery } from '../src/features/money-public/discovery';
 import {
-  discoveryAsOf,
-  evidenceLink,
+  leadCardFigure,
   leadFigure,
   leadsFor,
+  plainCaveat,
 } from '../src/features/leads/model';
 import { pinned } from './pinned';
 
-// Design programme pass 5, P2-13 (docs/design/review-2026-10/
-// pass5-app-critique.md): a lead's card is its title, one figure, one
-// sentence and "Evidence (n) ›"; its caveats are in the card's sheet and on
-// the comparison, in full. The comparison's "How this lead was found" holds
-// the method and the caveats, not the claim again.
+// Design programme pass 5, P2-13, as the money spec (specs/money.md 2.9 and
+// 2.10) redrew it: a lead's card is one link holding its title and one
+// money-ink figure with a plain label; no summary, kicker, caveat line or
+// "Evidence (n)" target. Caveats live on the lead's page under "How this
+// lead was found", in plain words, with the method note and the example
+// records; the card's title and sentence are not said again there.
 jest.mock('../src/api/runtime', () => ({
   catalogs: { discovery: jest.fn() },
 }));
-const mockParams: { id?: string } = {};
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => mockParams,
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+jest.mock('../src/features/money-public/runtime', () => ({
+  money: { agencies: jest.fn(async () => ({ data: { agencies: [] } })) },
 }));
-const discovery = decodeDiscovery(pinned('/discovery.json'));
+const mockParams: { id?: string } = {};
+jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  const router = { push: jest.fn(), navigate: jest.fn() };
+  const Link = Object.assign(
+    ({ href, children }: { href: unknown; children?: unknown }) =>
+      React.createElement('ExpoLink', { href }, children),
+    {
+      Trigger: ({ children }: { children?: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    },
+  );
+  return {
+    router,
+    useRouter: () => router,
+    useSegments: () => [],
+    useLocalSearchParams: () => mockParams,
+    Link,
+    Stack: { Screen: () => null },
+  };
+});
+const discovery = publicDiscovery(decodeDiscovery(pinned('/discovery.json')));
 const leads = leadsFor(discovery);
 beforeEach(() => {
+  jest.mocked(router.push).mockReset();
   jest.mocked(runtime.discovery).mockResolvedValue({
     data: discovery,
     stale: false,
@@ -56,6 +87,10 @@ const texts = (root: ReactTestInstance) =>
     .filter(Boolean);
 const byID = (root: ReactTestInstance, testID: string) =>
   root.findAll((n) => typeof n.type === 'string' && n.props.testID === testID);
+const pressables = (root: ReactTestInstance) =>
+  root.findAll(
+    (n) => typeof n.type !== 'string' && typeof n.props.onPress === 'function',
+  );
 const press = (root: ReactTestInstance, testID: string) =>
   act(async () =>
     root
@@ -76,14 +111,6 @@ describe('a lead’s card', () => {
     }
     expect(leadFigure({ metrics: [] })).toBeNull();
   });
-  test('"Evidence (n)" names the example records; with none it opens the caveats', () => {
-    expect(evidenceLink(2)).toEqual({
-      text: 'Evidence (2)',
-      spoken: 'Evidence, 2 example records',
-    });
-    expect(evidenceLink(1).spoken).toBe('Evidence, 1 example record');
-    expect(evidenceLink(0).text).toBe('Caveats');
-  });
   test.each(
     // One lead of each kind.
     [...new Map(leads.map((l) => [l.category, l])).values()].map((l) => [
@@ -91,47 +118,57 @@ describe('a lead’s card', () => {
       l,
     ]),
   )(
-    '%s: one figure, one sentence, Evidence, and no caveat line',
+    '%s: one link, its title and one money-ink figure, nothing else',
     async (_k, lead) => {
-      const r = await render(
-        <LeadFeedCard
-          lead={lead}
-          asOf={discoveryAsOf(discovery)}
-          testID="card"
-        />,
+      const r = await render(<LeadFeedCard lead={lead} testID="card" />);
+      const figure = leadCardFigure(lead)!;
+      // One target: the whole card, a link to the lead.
+      const card = r.root.findByType(Card);
+      expect(card.props.href).toEqual(leadRoute(lead.id));
+      expect(card.props.accessibilityRole).toBe('link');
+      expect(card.props.accessibilityLabel).toBe(
+        `${lead.title}. ${figure.spoken}, ${figure.label}.`,
       );
+      expect(card.props.accessibilityHint).toBe('Opens the lead.');
+      expect(
+        pressables(r.root).filter((n) => n.props.testID !== 'card'),
+      ).toHaveLength(0);
+      expect(r.root.findAllByType(SourceSheet)).toHaveLength(0);
+      // Title, one figure and its label.
+      expect(byID(r.root, 'card-title')[0]!.props.children).toBe(lead.title);
       expect(byID(r.root, 'card-figure')).toHaveLength(1);
       expect(byID(r.root, 'card-figure-1')).toHaveLength(0);
+      expect(texts(byID(r.root, 'card-figure')[0]!)).toEqual([
+        figure.text,
+        figure.label,
+      ]);
+      const [value] = byID(r.root, 'card-figure')[0]!.findAllByType(DesignText);
+      expect(value!.props.variant).toBe('tileFigure');
+      expect(value!.props.tone).toBe(accents.money.ink);
+      // Nothing else: no kicker, summary, caveat or Evidence line.
+      expect(texts(r.root)).toEqual([lead.title, figure.text, figure.label]);
+      expect(byID(r.root, 'card-kind')).toHaveLength(0);
       expect(byID(r.root, 'card-caveat')).toHaveLength(0);
-      const shown = texts(r.root);
-      for (const caveat of lead.caveats) expect(shown).not.toContain(caveat);
-      expect(shown).toContain(lead.summary);
-      const n = lead.evidence.length;
-      expect(shown).toContain(n ? `Evidence (${n})` : 'Caveats');
-      const evidence = byID(r.root, 'card-source')[0]!;
-      expect(evidence.props.accessibilityRole).toBe('button');
-      expect(evidence.props.accessibilityLabel).toBe(evidenceLink(n).spoken);
-      // The sheet holds every caveat, in the export's words, and the records.
-      await press(r.root, 'card-source');
-      const sheet = r.root.findByType(SourceSheet);
-      expect(sheet.props.visible).toBe(true);
-      expect(sheet.props.title).toBe('Evidence and caveats');
-      for (const caveat of lead.caveats)
-        expect(texts(r.root)).toContain(caveat);
-      expect(sheet.props.originals.length).toBe(
-        lead.evidence.filter((e) => e.url).length,
-      );
+      expect(byID(r.root, 'card-source')).toHaveLength(0);
       await act(async () => r.unmount());
     },
   );
-  test('the feed’s cards carry no per-card caveat lines', async () => {
+  test('in search results the card names its kind first', async () => {
+    const lead = leads.find((l) => l.category === 'recipient_concentration')!;
+    const r = await render(<LeadFeedCard lead={lead} kindMeta testID="card" />);
+    expect(byID(r.root, 'card-kind')[0]!.props.children).toBe('Party funding');
+    expect(r.root.findByType(Card).props.accessibilityLabel).toMatch(
+      /^Party funding\. /,
+    );
+    await act(async () => r.unmount());
+  });
+  test('the feed’s cards carry no caveat lines; each section’s source sheet says how leads are read', async () => {
     const r = await render(<Leads />);
     const shown = texts(r.root);
     expect(shown.join('\n')).not.toMatch(
-      /Matching names are not verified|This share describes available records only/,
+      /Matching names are not verified|This share describes available records only|Evidence \(|Caveats/,
     );
-    // The page's About sheet still says how leads are read.
-    await press(r.root, 'leads-source');
+    await press(r.root, 'leads-source-recipient_concentration');
     const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
       params: { key: string };
     };
@@ -142,8 +179,8 @@ describe('a lead’s card', () => {
   });
 });
 
-describe('a lead’s comparison', () => {
-  test('"How this lead was found": the method and every caveat, not the claim again', async () => {
+describe('a lead’s page', () => {
+  test('"How this lead was found": the method and every caveat in plain words, not the claim again', async () => {
     const lead = leads.find((l) => l.category === 'recipient_concentration')!;
     mockParams.id = lead.id;
     const r = await render(<LeadDetail />);
@@ -154,21 +191,26 @@ describe('a lead’s comparison', () => {
     expect(headings).not.toContain('The lead and its caveats');
     expect(byID(r.root, 'lead-card')).toHaveLength(0);
     const shown = texts(r.root);
-    // The feed card's title and sentence are not restated, nor any of the
-    // export's figures: the takeaway and the chart say them at the top.
+    // The feed card's title and the export's sentence are not restated, nor
+    // the export's metric labels: the takeaway and the chart say them.
     expect(shown.filter((t) => t === lead.title)).toHaveLength(0);
     expect(shown.filter((t) => t === lead.summary)).toHaveLength(0);
     expect(shown.filter((t) => t === 'Lead · Party funding')).toHaveLength(1);
     for (const metric of lead.metrics)
       expect(shown).not.toContain(metric.label);
-    // The method note, every caveat, and the example records.
+    // The method note, every caveat in plain words, and the example records.
     expect(byID(r.root, 'lead-note')[0]!.props.children).toBe(
       lead.comparison.note,
     );
     lead.caveats.forEach((caveat, i) =>
-      expect(byID(r.root, `lead-caveat-${i}`)[0]!.props.children).toBe(caveat),
+      expect(byID(r.root, `lead-caveat-${i}`)[0]!.props.children).toBe(
+        plainCaveat(caveat),
+      ),
     );
-    expect(shown).toContain(`Example records (${lead.evidence.length})`);
+    expect(shown.join('\n')).not.toMatch(/donation_type|ingestion/);
+    // "Example records", no count: the rows are the count.
+    expect(shown).toContain('Example records');
+    expect(shown.join('\n')).not.toMatch(/Example records \(/);
     lead.evidence.forEach((_e, i) =>
       expect(byID(r.root, `lead-evidence-${i}`)).toHaveLength(1),
     );
