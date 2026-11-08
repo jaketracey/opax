@@ -5,6 +5,7 @@
 import { act } from 'react';
 import { useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { billTimeline } from '../src/api/bill-transforms';
 import * as d from '../src/api/catalogs';
 import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
@@ -351,6 +352,18 @@ const expandedVotes = (root: ReactTestInstance) =>
     )
     .map((node) => node.props.testID as string);
 
+/** Opens "All N stages", where the date rows are. */
+const openAllStages = (root: ReactTestInstance) =>
+  act(async () =>
+    root
+      .find(
+        (node) =>
+          node.props.testID === 'bill-dates-all' &&
+          typeof node.props.onPress === 'function',
+      )
+      .props.onPress(),
+  );
+
 describe('the bill page', () => {
   test('?division= reveals the seventh vote, expanded, and nothing else', async () => {
     const { main } = orderDivisions(
@@ -437,6 +450,74 @@ describe('the bill page', () => {
     await act(async () => group.props.onRowPress(group.props.changes[0]));
     expect(expandedVotes(root)).toEqual(['bill-division-7-more']);
     expect(host(root, 'bill-division-7-new')).toHaveLength(1);
+  });
+
+  test('a vote on the same day as a stage marks the vote, never the stage row', async () => {
+    const data = view('au-federal-r7520');
+    const { main } = orderDivisions(data.divisions.data!.rows);
+    const entries = billTimeline(data.keyDates.data ?? []).entries;
+    const target = main
+      .slice(0, 5)
+      .find((v) => entries.some((e) => e.from === v.date))!;
+    expect(target).toBeDefined();
+    const index = main.indexOf(target);
+    // The people feed's fallback key carries the date, as speech slugs do.
+    follows([
+      {
+        marker: 'division',
+        text: 'Vote recorded',
+        citation: 'They Vote For You',
+        asAt: target.date,
+        key: `vote:federal:${target.date}:Bill:${target.stage}`,
+        record: {
+          key: `vote:federal:${target.date}:Bill:${target.stage}`,
+          kind: 'vote',
+          date: target.date,
+          title: 'Bill',
+          stage: target.stage,
+          divisionKey: target.key,
+        },
+      },
+    ]);
+    const root = await render();
+    await openAllStages(root);
+    expect(host(root, 'bill-date-0').length).toBe(1);
+    expect(host(root, `bill-division-${index}-new`)).toHaveLength(1);
+    expect(
+      root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          /^bill-date-\d+-new$/.test(node.props.testID ?? ''),
+      ),
+    ).toHaveLength(0);
+  });
+
+  test('a stage change marks the date row its day falls in', async () => {
+    const entries = billTimeline(
+      view('au-federal-r7520').keyDates.data ?? [],
+    ).entries;
+    const last = entries.length - 1;
+    const date = entries[last]!.to ?? entries[last]!.from;
+    follows([
+      {
+        marker: 'stage',
+        text: 'Moved',
+        citation: 'ParlInfo',
+        asAt: date,
+        key: `stage:${date}`,
+        record: { key: `stage:${date}`, kind: 'stage', date, title: 'Bill' },
+      },
+    ]);
+    const root = await render();
+    await openAllStages(root);
+    const marked = root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          /^bill-date-\d+-new$/.test(node.props.testID ?? ''),
+      )
+      .map((node) => node.props.testID);
+    expect(marked).toEqual([`bill-date-${last}-new`]);
   });
 
   test('an unchanged bill shows neither Added since nor a new dot', async () => {

@@ -496,13 +496,23 @@ function useBillChanges(key: string | null) {
   const keys = changes
     .flatMap((c) => [c.record?.divisionKey, c.record?.key, c.key])
     .filter((k): k is string => !!k);
-  const signature = keys.join('|');
+  // Stage rows match stage changes by date, never a vote or speech that
+  // happens to carry the same day in its key.
+  const stageDates = changes
+    .filter((c) => c.record?.kind === 'stage' && !!c.record.date)
+    .map((c) => c.record!.date.slice(0, 10));
+  const signature = [...keys, ...stageDates.map((d) => `stage@${d}`)].join('|');
   const [seen, setSeen] = useState<{
     signature: string;
     keys: ReadonlySet<string>;
-  }>({ signature: '', keys: new Set() });
+    stageDates: ReadonlySet<string>;
+  }>({ signature: '', keys: new Set(), stageDates: new Set() });
   if (signature && signature !== seen.signature)
-    setSeen({ signature, keys: new Set([...seen.keys, ...keys]) });
+    setSeen({
+      signature,
+      keys: new Set([...seen.keys, ...keys]),
+      stageDates: new Set([...seen.stageDates, ...stageDates]),
+    });
   const fresh = seen.keys;
   return {
     group:
@@ -514,6 +524,7 @@ function useBillChanges(key: string | null) {
           } as BillFollow)
         : null,
     fresh,
+    freshStages: seen.stageDates,
   };
 }
 type FollowInfo = ReturnType<typeof useBillChanges>;
@@ -622,7 +633,7 @@ function BillPage({
         anchor={datesRef}
         open={allStages}
         onToggle={setAllStages}
-        fresh={follow.fresh}
+        freshStages={follow.freshStages}
       />
       <Votes view={view} votes={votes} savedAt={savedAt} targets={targets} />
       <Speeches
@@ -1004,12 +1015,19 @@ export function rulerPoints(
   return points;
 }
 
+/** Whether a stage change dated `date` falls on this entry's day or span. */
+function entryHas(entry: BillTimelineEntry, dates: ReadonlySet<string>) {
+  const to = entry.to ?? entry.from;
+  for (const date of dates) if (date >= entry.from && date <= to) return true;
+  return false;
+}
+
 function DateRows({
   entries,
-  fresh,
+  freshStages,
 }: {
   entries: readonly BillTimelineEntry[];
-  fresh?: ReadonlySet<string>;
+  freshStages: ReadonlySet<string>;
 }) {
   return (
     <View style={styles.dates}>
@@ -1032,7 +1050,7 @@ function DateRows({
               </Text>
             ))}
           </View>
-          {fresh && [...fresh].some((k) => k.includes(entry.from)) ? (
+          {entryHas(entry, freshStages) ? (
             <NewDot testID={`bill-date-${index}-new`} />
           ) : null}
         </View>
@@ -1047,14 +1065,15 @@ function KeyDates({
   anchor,
   open,
   onToggle,
-  fresh,
+  freshStages,
 }: {
   view: BillView;
   savedAt: number | null;
   anchor: RefObject<View | null>;
   open: boolean;
   onToggle: (open: boolean) => void;
-  fresh: ReadonlySet<string>;
+  /** Dates of the follow's stage changes. */
+  freshStages: ReadonlySet<string>;
 }) {
   const timeline = billTimeline(view.keyDates.data ?? []);
   const entries = timeline.entries;
@@ -1089,7 +1108,7 @@ function KeyDates({
           </View>
         ) : null}
         {entries.length === 1 ? (
-          <DateRows entries={entries} fresh={fresh} />
+          <DateRows entries={entries} freshStages={freshStages} />
         ) : entries.length > points.length ? (
           <Disclosure
             label={`All ${formatCount(timeline.runs)} stages`}
@@ -1097,7 +1116,7 @@ function KeyDates({
             onToggle={onToggle}
             testID="bill-dates-all"
           >
-            <DateRows entries={entries} fresh={fresh} />
+            <DateRows entries={entries} freshStages={freshStages} />
           </Disclosure>
         ) : null}
         <SourceLine
