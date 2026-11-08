@@ -25,12 +25,19 @@ export interface FilterToggle<S> {
   label: string;
   value: (state: S) => boolean;
   select: (state: S, value: boolean) => S;
+  group?: string;
+}
+export interface FilterToggleGroup {
+  key: string;
+  header?: string;
+  footer?: string;
 }
 export interface FilterModel<S> {
   list: FilterList;
   initial: S;
   rows: FilterRow<S>[];
   toggles?: FilterToggle<S>[];
+  toggleGroups?: FilterToggleGroup[];
   segments?: {
     key: string;
     label: string;

@@ -1,12 +1,21 @@
-import { act, type ReactElement } from 'react';
+import { act, Children, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Dimensions, StyleSheet } from 'react-native';
+import { InsetGroup } from '../src/design/layout';
+import { Text } from '../src/design/text';
+import { minimumTarget, rhythm } from '../src/design/tokens';
 import { router, Stack } from 'expo-router';
 import {
   FilterSheet,
   FilterFacet,
   FilterYears,
 } from '../src/design/filter-sheet';
-import { Button, PopUpButton, SegmentedPicker } from '../src/design/controls';
+import {
+  Button,
+  PopUpButton,
+  SegmentedPicker,
+  SwitchRow,
+} from '../src/design/controls';
 import { LinkRow } from '../src/design/rows';
 import {
   beginFilterSession,
@@ -56,6 +65,12 @@ function render(element: ReactElement) {
 }
 beforeEach(() => {
   jest.clearAllMocks();
+  act(() =>
+    Dimensions.set({
+      window: { width: 390, height: 844, scale: 3, fontScale: 1 },
+      screen: { width: 390, height: 844, scale: 3, fontScale: 1 },
+    }),
+  );
   mockParams = {};
 });
 afterEach(() =>
@@ -134,22 +149,27 @@ test('divisions omit Kind until stage classifications are supplied', () => {
   expect(model.isDefault(next)).toBe(false);
   expect(model.reset(next).kind).toBe('');
 });
-test('declarations only offer Parliament when there is more than one', () => {
+test('declarations only offer Parliament for multiple jurisdictions', () => {
   expect(
     declarationsFilterModel({
-      parliaments: [{ value: 'federal', label: 'Federal Parliament' }],
+      jurisdictions: [{ value: 'federal', label: 'Federal Parliament' }],
     }).rows.map((item) => item.key),
   ).toEqual(['chamber']);
   const model = declarationsFilterModel({
-    parliaments: [
+    jurisdictions: [
       { value: 'federal', label: 'Federal Parliament' },
       { value: 'nsw', label: 'New South Wales Parliament' },
     ],
   });
-  expect(row(model, 'parliament').choices(model.initial)).toHaveLength(3);
-  expect(model.reset({ ...model.initial, parliament: 'nsw' }).parliament).toBe(
-    '',
-  );
+  expect(model.rows.map((item) => [item.key, item.title])).toEqual([
+    ['chamber', 'Chamber'],
+    ['jurisdiction', 'Parliament'],
+  ]);
+  expect(row(model, 'jurisdiction').choices(model.initial)).toHaveLength(3);
+  expect(model.initial).not.toHaveProperty('parliament');
+  expect(
+    model.reset({ ...model.initial, jurisdiction: 'nsw' }).jurisdiction,
+  ).toBe('all');
 });
 test('connections has all five kinds and clears the chosen kind', () => {
   const model = connectionsFilterModel();
@@ -425,4 +445,177 @@ test('loaded choices refresh an open store while retaining live switches', () =>
   expect(store.get()).toMatchObject({ from: 2023, to: 2024, inflation: true });
   session.cancel();
   expect(store.get()).toMatchObject({ from: 2023, to: 2024, inflation: false });
+});
+
+test('bills ignore stale Year filters and drop them during normalisation', () => {
+  const model = billsFilterModel();
+  const stale = { ...model.initial, year: 2024 };
+  expect(model.initial).not.toHaveProperty('year');
+  expect(model.isDefault(stale)).toBe(true);
+  expect(model.summary(stale)).toBe('');
+  expect(model.normalise!(stale)).not.toHaveProperty('year');
+  expect(stale.year).toBe(2024);
+});
+test.each([
+  [1, '1 vote matches'],
+  [1204, '1,204 votes match'],
+  [0, 'No votes match'],
+])('divisions result count %s uses public vote wording', (count, expected) => {
+  const model = divisionsFilterModel({ resultCount: () => Number(count) });
+  expect(model.resultLine!(model.initial)).toBe(expected);
+});
+test('divisions have Any chamber and an optional procedural filter that Reset clears', () => {
+  const model = divisionsFilterModel();
+  expect(row(model, 'chamber').choices(model.initial)[0]?.label).toBe('Any');
+  const procedural = model.toggles!.find((item) => item.key === 'procedural')!;
+  expect(procedural.label).toBe('Leave out procedural votes');
+  expect(procedural.value(model.initial)).toBe(false);
+  const changed = procedural.select(model.initial, true);
+  expect(model.isDefault(changed)).toBe(false);
+  expect(model.summary(changed)).toBe('1 filter');
+  expect(model.reset(changed).procedural).toBe(false);
+});
+test.each(['person', 'electorate'] as const)(
+  'directory %s Party starts with All parties',
+  (kind) => {
+    const model = directoryFilterModel({ kind });
+    expect(row(model, 'party').choices(model.initial)[0]).toEqual({
+      value: '',
+      label: 'All parties',
+    });
+    const nonParty = model.rows.find(
+      (item) => item.key !== 'party' && item.key !== 'sort',
+    )!;
+    expect(nonParty.choices(model.initial)[0]?.label).toBe('All');
+  },
+);
+test('Ask and Search default Years span 1993 to the current Sydney year', () => {
+  jest.useFakeTimers().setSystemTime(new Date('2026-12-31T13:30:00Z'));
+  try {
+    for (const model of [askFilterModel(), searchFilterModel()]) {
+      expect(model.years!.options).toHaveLength(2027 - 1993 + 1);
+      expect(model.years!.options[0]).toEqual({ value: '1993', label: '1993' });
+      expect(model.years!.options.at(-1)).toEqual({
+        value: '2027',
+        label: '2027',
+      });
+      const root = render(
+        <FilterYears
+          model={model}
+          value={{ ...model.initial, from: '2026' }}
+          onChange={jest.fn()}
+        />,
+      ).root;
+      const [from, to] = root.findAllByType(PopUpButton);
+      expect(from!.props.options[0]).toEqual({ value: '', label: 'Any' });
+      expect(
+        to!.props.options.map((item: { value: string }) => item.value),
+      ).toEqual(['', '2026', '2027']);
+    }
+    expect(searchFilterModel({ years: [] }).years!.options).toEqual([]);
+  } finally {
+    jest.useRealTimers();
+  }
+});
+test.each([
+  [1, 'row'],
+  [3.571, 'column'],
+])(
+  'Years draw as two grouped rows at font scale %s',
+  (fontScale, direction) => {
+    act(() =>
+      Dimensions.set({
+        window: {
+          width: 390,
+          height: 844,
+          scale: 3,
+          fontScale: Number(fontScale),
+        },
+        screen: {
+          width: 390,
+          height: 844,
+          scale: 3,
+          fontScale: Number(fontScale),
+        },
+      }),
+    );
+    const model = searchFilterModel({ years: [2026] });
+    const root = render(
+      <FilterYears model={model} value={model.initial} onChange={jest.fn()} />,
+    ).root;
+    const group = root.findByType(InsetGroup);
+    expect(Children.toArray(group.props.children)).toHaveLength(2);
+    for (const [index, label] of ['From', 'To'].entries()) {
+      const picker = root.findAllByType(PopUpButton)[index]!;
+      const row = picker.parent!;
+      expect(
+        row
+          .findAllByType(Text)
+          .some(
+            (node) =>
+              node.props.children === label && node.props.variant === 'body',
+          ),
+      ).toBe(true);
+      expect(StyleSheet.flatten(row.props.style)).toMatchObject({
+        minHeight: minimumTarget,
+        paddingVertical: rhythm.row,
+        flexDirection: direction,
+      });
+    }
+  },
+);
+test('money groups the three Show switches separately from inflation and its footer', () => {
+  const model = moneyFilterModel({ dollarsYear: 2025 });
+  const root = render(
+    <FilterSheet
+      model={model}
+      value={model.initial}
+      onChange={jest.fn()}
+      onDone={jest.fn()}
+      onCancel={jest.fn()}
+    />,
+  ).root;
+  const groups = root.findAllByType(InsetGroup);
+  const show = groups.find(
+    (node) => node.props.testID === 'filters-toggle-group-show',
+  )!;
+  const inflation = groups.find(
+    (node) => node.props.testID === 'filters-toggle-group-inflation',
+  )!;
+  expect(show.props.header).toBe('Show');
+  expect(show.findAllByType(SwitchRow).map((node) => node.props.label)).toEqual(
+    ['Donations to parties', 'Grants to donors', 'Contracts to donors'],
+  );
+  expect(
+    inflation.findAllByType(SwitchRow).map((node) => node.props.label),
+  ).toEqual(['Adjust for inflation']);
+  expect(inflation.props.footer).toBe('In 2025–26 dollars.');
+  expect(
+    inflation
+      .findAllByType(Text)
+      .find((node) => node.props.children === 'In 2025–26 dollars.')?.props
+      .variant,
+  ).toBe('footnote');
+  expect(model.footer).toBeUndefined();
+});
+test('a lone toggle group has no group header', () => {
+  const money = moneyFilterModel();
+  const model = {
+    ...money,
+    rows: [],
+    toggles: money.toggles!.filter((toggle) => toggle.group === 'show'),
+  };
+  const root = render(
+    <FilterSheet
+      model={model}
+      value={model.initial}
+      onChange={jest.fn()}
+      onDone={jest.fn()}
+      onCancel={jest.fn()}
+    />,
+  ).root;
+  const show = root
+    .findAllByType(InsetGroup)
+    .find((node) => node.props.testID === 'filters-toggle-group-show')!;
+  expect(show.props.header).toBeUndefined();
 });

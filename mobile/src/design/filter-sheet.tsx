@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { router, Stack, type NativeStackHeaderItem } from 'expo-router';
-import { Platform, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { InsetGroup, Screen } from './layout';
 import { Button, PopUpButton, SegmentedPicker, SwitchRow } from './controls';
 import { LinkRow } from './rows';
@@ -8,17 +8,23 @@ import { Text } from './text';
 import { ContentUnavailable } from './states';
 import { copy } from './copy';
 import { haptic } from './haptics';
-import { colors, rhythm } from './tokens';
+import { colors, minimumTarget, rhythm } from './tokens';
+import { useAccessibilitySize } from './accessibility';
 import { useKeyCommand } from './keyboard';
 import { useListSearchBar } from './search-bar';
 import { androidHeaderBar, headerItems } from '../navigation/chrome';
 import { filterFacetRoute } from '../navigation/routes/filters';
-import type { FilterModel, FilterRow } from '../features/sheets/filter-model';
+import type {
+  FilterModel,
+  FilterRow,
+  FilterToggle,
+} from '../features/sheets/filter-model';
 export type {
   FilterModel,
   FilterRow,
   FilterChoice,
   FilterToggle,
+  FilterToggleGroup,
   FilterValues,
 } from '../features/sheets/filter-model';
 export {
@@ -81,28 +87,37 @@ export function FilterSheet<S extends object>({
   onFacet?: (facet: string) => void;
 }) {
   useKeyCommand('list-escape', onDone);
+  const toggleGroups = new Map<string | undefined, FilterToggle<S>[]>();
+  for (const toggle of model.toggles ?? []) {
+    const group = toggleGroups.get(toggle.group) ?? [];
+    group.push(toggle);
+    toggleGroups.set(toggle.group, group);
+  }
+  const groupCount = (model.rows.length ? 1 : 0) + toggleGroups.size;
   return (
     <>
       <Stack.Screen
         options={{ title: 'Filters', ...filterBar(onDone, onCancel) }}
       />
       <Screen grouped testID="filters-screen">
-        <InsetGroup>
-          {model.rows.map((row) => (
-            <LinkRow
-              key={row.key}
-              title={row.title}
-              value={filterRowValue(row, value)}
-              disabled={row.disabled}
-              testID={`filters-row-${row.key}`}
-              onPress={() =>
-                onFacet
-                  ? onFacet(row.key)
-                  : router.push(filterFacetRoute(model.list, row.key, owner))
-              }
-            />
-          ))}
-        </InsetGroup>
+        {model.rows.length ? (
+          <InsetGroup>
+            {model.rows.map((row) => (
+              <LinkRow
+                key={row.key}
+                title={row.title}
+                value={filterRowValue(row, value)}
+                disabled={row.disabled}
+                testID={`filters-row-${row.key}`}
+                onPress={() =>
+                  onFacet
+                    ? onFacet(row.key)
+                    : router.push(filterFacetRoute(model.list, row.key, owner))
+                }
+              />
+            ))}
+          </InsetGroup>
+        ) : null}
         {model.segments ? (
           <SegmentedPicker
             options={model.segments.options}
@@ -112,19 +127,27 @@ export function FilterSheet<S extends object>({
             testID={`filters-${model.segments.key}`}
           />
         ) : null}
-        {model.toggles?.length ? (
-          <InsetGroup>
-            {model.toggles.map((toggle) => (
-              <SwitchRow
-                key={toggle.key}
-                label={toggle.label}
-                value={toggle.value(value)}
-                onValueChange={(next) => onChange(toggle.select(value, next))}
-                testID={`filters-row-${toggle.key}`}
-              />
-            ))}
-          </InsetGroup>
-        ) : null}
+        {[...toggleGroups].map(([key, toggles]) => {
+          const group = model.toggleGroups?.find((group) => group.key === key);
+          return (
+            <InsetGroup
+              key={key ?? 'toggles'}
+              header={groupCount > 1 ? group?.header : undefined}
+              footer={group?.footer}
+              testID={key && `filters-toggle-group-${key}`}
+            >
+              {toggles.map((toggle) => (
+                <SwitchRow
+                  key={toggle.key}
+                  label={toggle.label}
+                  value={toggle.value(value)}
+                  onValueChange={(next) => onChange(toggle.select(value, next))}
+                  testID={`filters-row-${toggle.key}`}
+                />
+              ))}
+            </InsetGroup>
+          );
+        })}
         {model.resultLine ? (
           <Text
             variant="footnote"
@@ -157,6 +180,7 @@ export function FilterYears<S extends object>({
   value: S;
   onChange: (next: S) => void;
 }) {
+  const stacked = useAccessibilitySize();
   const years = model.years;
   if (!years) return null;
   const from = String(value[years.from] ?? ''),
@@ -174,7 +198,10 @@ export function FilterYears<S extends object>({
   };
   return (
     <InsetGroup>
-      <View style={{ gap: rhythm.block }}>
+      <View
+        testID="filters-years-from-row"
+        style={[styles.yearRow, stacked && styles.yearRowStacked]}
+      >
         <Text variant="body">From</Text>
         <PopUpButton
           label="From"
@@ -186,6 +213,11 @@ export function FilterYears<S extends object>({
           onChange={(next) => select('from', next)}
           testID="filters-years-from"
         />
+      </View>
+      <View
+        testID="filters-years-to-row"
+        style={[styles.yearRow, stacked && styles.yearRowStacked]}
+      >
         <Text variant="body">To</Text>
         <PopUpButton
           label="To"
@@ -203,6 +235,18 @@ export function FilterYears<S extends object>({
     </InsetGroup>
   );
 }
+
+const styles = StyleSheet.create({
+  yearRow: {
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.row,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: rhythm.tight,
+  },
+  yearRowStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+});
 export function FilterFacet<S extends object>({
   model,
   facet,

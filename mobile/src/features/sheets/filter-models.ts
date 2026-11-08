@@ -5,7 +5,10 @@ import {
   type Facet,
 } from '../directories/model';
 import { parties, topics, defaultFilters } from '../search/contracts';
-import { formatFinancialYear as financialYear } from '../../design/format';
+import {
+  formatCount,
+  formatFinancialYear as financialYear,
+} from '../../design/format';
 import {
   defineModel,
   facet,
@@ -57,11 +60,10 @@ export function billsFilterModel(
     resultCount?: (state: FilterValues) => number;
   } = {},
 ) {
-  return defineModel({
+  const model = defineModel({
     list: 'bills',
     initial: {
       parliament: undefined,
-      year: undefined,
       status: undefined,
       chamber: undefined,
       portfolio: undefined,
@@ -113,17 +115,31 @@ export function billsFilterModel(
         }
       : undefined,
   });
+  return {
+    ...model,
+    normalise: (state: FilterValues) => {
+      const current = { ...state };
+      delete current.year;
+      return model.normalise!(current);
+    },
+  };
 }
-export function divisionsFilterModel(options: { kinds?: FilterChoice[] } = {}) {
+export function divisionsFilterModel(
+  options: {
+    kinds?: FilterChoice[];
+    resultCount?: (state: FilterValues) => number;
+  } = {},
+) {
   return defineModel({
     list: 'divisions',
     initial: {
       chamber: '',
       outcome: '',
+      procedural: false,
       ...(options.kinds ? { kind: '' } : {}),
     },
     rows: [
-      facet('chamber', 'Chamber', [any('Both'), ...bothChambers.slice(1)]),
+      facet('chamber', 'Chamber', bothChambers),
       facet('outcome', 'Outcome', [
         any(),
         { value: 'agreed', label: 'Agreed to' },
@@ -133,26 +149,31 @@ export function divisionsFilterModel(options: { kinds?: FilterChoice[] } = {}) {
         ? [facet('kind', 'Kind', [any('All divisions'), ...options.kinds])]
         : []),
     ],
+    toggles: [toggle('procedural', 'Leave out procedural votes')],
+    resultLine: options.resultCount
+      ? (state) => {
+          const count = options.resultCount!(state);
+          return count
+            ? `${formatCount(count)} ${count === 1 ? 'vote matches' : 'votes match'}`
+            : 'No votes match';
+        }
+      : undefined,
   });
 }
 export function declarationsFilterModel(
   options: {
     chambers?: FilterChoice[];
-    parliaments?: FilterChoice[];
     jurisdictions?: FilterChoice[];
   } = {},
 ) {
   return defineModel({
     list: 'declarations',
-    initial: { chamber: 'all', jurisdiction: 'all', parliament: '' },
+    initial: { chamber: 'all', jurisdiction: 'all' },
     rows: [
       facet('chamber', 'Chamber', [
         { value: 'all', label: 'Both' },
         ...(options.chambers ?? bothChambers.slice(1)),
       ]),
-      ...(options.parliaments && options.parliaments.length > 1
-        ? [facet('parliament', 'Parliament', [any(), ...options.parliaments])]
-        : []),
       ...(options.jurisdictions && options.jurisdictions.length > 1
         ? [
             facet('jurisdiction', 'Parliament', [
@@ -188,7 +209,7 @@ export function directoryFilterModel(
     options.facets?.find((item) => item.key === key)?.choices ?? [];
   const choose = (key: string, title: string, fallback: FilterChoice[] = []) =>
     facet(key, title, [
-      any('All'),
+      any(key === 'party' ? 'All parties' : 'All'),
       ...alphabetical(supplied(key).length ? supplied(key) : fallback),
     ]);
   const rows =
@@ -266,7 +287,21 @@ export function recordFilterModel(
     defaultKind?: string;
   } = {},
 ) {
-  const years = [...new Set(options.years ?? [])]
+  const currentYear = Number(
+    new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'Australia/Sydney',
+      year: 'numeric',
+    }).format(new Date()),
+  );
+  const years = [
+    ...new Set(
+      options.years ??
+        Array.from(
+          { length: currentYear - 1993 + 1 },
+          (_, index) => 1993 + index,
+        ),
+    ),
+  ]
     .sort((a, b) => a - b)
     .map((year) => ({ value: String(year), label: String(year) }));
   const initial = {
@@ -438,15 +473,21 @@ export function moneyFilterModel(
     ],
     years: { options: yearChoices, from: 'from', to: 'to', numeric: true },
     toggles: [
-      toggle('donations', 'Donations to parties'),
-      toggle('grants', 'Grants to donors'),
-      toggle('contracts', 'Contracts to donors'),
-      toggle('inflation', 'Adjust for inflation'),
+      { ...toggle('donations', 'Donations to parties'), group: 'show' },
+      { ...toggle('grants', 'Grants to donors'), group: 'show' },
+      { ...toggle('contracts', 'Contracts to donors'), group: 'show' },
+      { ...toggle('inflation', 'Adjust for inflation'), group: 'inflation' },
     ],
-    footer:
-      options.dollarsYear != null
-        ? `In ${financialYear(options.dollarsYear)} dollars.`
-        : undefined,
+    toggleGroups: [
+      { key: 'show', header: 'Show' },
+      {
+        key: 'inflation',
+        footer:
+          options.dollarsYear != null
+            ? `In ${financialYear(options.dollarsYear)} dollars.`
+            : undefined,
+      },
+    ],
   });
 }
 export function allocationFilterModel(
