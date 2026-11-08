@@ -311,7 +311,7 @@ test('People in this answer are full person rows, the reader’s own member mark
 });
 
 test('the foot is the dated Answered line and one answer menu', async () => {
-  const { ids, press, menuButton } = draw();
+  const { ids, press, menuButton, renderer } = draw();
   const foot = ids('ask-answer-sources')[0]!;
   // The reader's zone, the turn's own time (Sydney: 9 Nov 2026, 9:41 am).
   expect(foot.props.name).toMatch(
@@ -326,6 +326,12 @@ test('the foot is the dated Answered line and one answer menu', async () => {
     'Report a problem',
   ])
     expect(menuButton(label)).toBeTruthy();
+  // The ⋯ label itself is a 44 by 44 target.
+  const menu = renderer.root.find((n) => n.props.swift === 'Menu');
+  expect(menu.props.modifiers).toContainEqual({
+    modifier: 'frame',
+    args: [{ minWidth: 44, minHeight: 44 }],
+  });
   await act(async () => menuButton('Copy answer').props.onPress());
   expect(copyText).toHaveBeenCalledWith(expect.stringContaining(question.text));
   expect(haptic).toHaveBeenCalledWith('success');

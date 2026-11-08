@@ -16,6 +16,7 @@ import {
 } from '@expo/ui/swift-ui';
 import {
   accessibilityIdentifier,
+  frame,
   labelStyle,
 } from '@expo/ui/swift-ui/modifiers';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -621,6 +622,8 @@ function AnswerMenu({
         systemImage="ellipsis.circle"
         modifiers={[
           labelStyle('iconOnly'),
+          // The glyph alone is 22 pt: the tappable label is 44 by 44.
+          frame({ minWidth: 44, minHeight: 44 }),
           accessibilityIdentifier('ask-answer-menu'),
         ]}
       >
