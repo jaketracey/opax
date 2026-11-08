@@ -1,301 +1,335 @@
-import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Screen,
-  Section,
-  Group,
-  Text,
-  Heading,
-  Button,
-  SegmentedControl,
-  Field,
-  LinkRow,
-  SourceLine,
-  BigFigure,
-} from '../../design/primitives';
-import { isE2E } from '../../design/environment';
-import { copyText } from '../records/actions';
-import { CachedPortrait } from '../CachedPortrait';
-import { openRecord } from '../reports/open';
+  AccessibilityInfo,
+  StyleSheet,
+  View,
+  type ScrollView,
+} from 'react-native';
+import { useReduceMotion } from '../../design/accessibility';
+import { useLayout } from '../../design/adaptive';
+import { Button } from '../../design/controls';
+import { formatCount } from '../../design/format';
+import { Screen } from '../../design/layout';
+import { rhythm } from '../../design/tokens';
+import { ExploreChrome, toolName } from './parts';
+import {
+  answerComplete,
+  quizShareText,
+  rankFor,
+  resumeLabel,
+  scoreAnswer,
+  type Answer,
+  type Deck,
+  type QuizRecord,
+  type QuizResponse,
+} from './quiz-model';
+import {
+  quizSession,
+  useQuizInProgress,
+  useQuizSession,
+  type QuizRound,
+} from './quiz-session';
 import { quizStore } from './quiz-store';
-import { grade, rankFor, type Question, type Answer } from './quiz-model';
-import snapshot from './quiz-rounds.json';
-import { ExploreHeader } from './parts';
-import { quizRecordPath } from './quiz-links';
-type Deck = 'mixed' | 'money' | 'words';
-const decks = [
-  { value: 'money', label: 'Money' },
-  { value: 'words', label: 'Words' },
-  { value: 'mixed', label: 'Mixed' },
-];
-export default function Quiz() {
-  const [deck, setDeck] = useState<Deck>('mixed'),
-    [round, setRound] = useState<Question[] | null>(null),
-    [index, setIndex] = useState(0),
-    [answer, setAnswer] = useState<Answer | undefined>(),
-    [revealed, setRevealed] = useState(false),
-    [points, setPoints] = useState(0),
-    [correct, setCorrect] = useState(0),
-    [streak, setStreak] = useState(0),
-    [best, setBest] = useState(0),
-    [copied, setCopied] = useState(false),
-    [saveError, setSaveError] = useState(false),
-    [saved, setSaved] = useState(false);
-  const [ready, setReady] = useState(false),
-    [attempts, setAttempts] = useState<string[]>([]);
-  const answered = useRef(false),
-    advancing = useRef(false);
+import { drawRound, frontPageQuestion } from './quiz/data';
+import { ProgressStrip } from './quiz/ProgressStrip';
+import { QuestionView } from './quiz/QuestionView';
+import { QuizFooter, type FooterAction } from './quiz/QuizFooter';
+import { QuizIntro } from './quiz/QuizIntro';
+import { ResultView } from './quiz/ResultView';
+
+type Mode = 'intro' | 'round' | 'result' | 'single';
+const quizName = toolName('quiz');
+const todayName = "Today's question";
+
+/**
+ * The record quiz: one screen, four phases (intro, a round of eight with
+ * its reveals, the result, and Today's question). This controller holds the
+ * phase, the scoring, the saved best streak and the in-memory round; the
+ * views are in `quiz/`.
+ */
+export default function Quiz({
+  q: questionId,
+  resume = false,
+}: {
+  /** Today's question: the front-page deck's id. Unknown ids open the intro. */
+  q?: string;
+  /** Open straight on the round in progress. */
+  resume?: boolean;
+}) {
+  const session = useQuizSession();
+  const inProgress = useQuizInProgress();
+  const single = useMemo(() => frontPageQuestion(questionId), [questionId]);
+  const [mode, setMode] = useState<Mode>(() =>
+    single ? 'single' : resume && quizSession.inProgress() ? 'round' : 'intro',
+  );
+  const [deck, setDeck] = useState<Deck>(
+    () => quizSession.current()?.deck ?? 'mixed',
+  );
+  // Start waits for this read (a few milliseconds); it is never drawn
+  // disabled while it runs.
+  const [reading] = useState(() => quizStore.read().catch(() => null));
+  const [record, setRecord] = useState<QuizRecord | null>(null);
+  const [draft, setDraft] = useState<Answer | undefined>();
+  const [editing, setEditing] = useState(false);
+  const [summary, setSummary] = useState<QuizRound | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const [singleResponse, setSingleResponse] = useState<QuizResponse | null>(
+    null,
+  );
+  const [width, setWidth] = useState<number>();
+  const scrollRef = useRef<ScrollView>(null);
+  const promptRef = useRef<View>(null);
+  const starting = useRef(false);
+  const reduceMotion = useReduceMotion();
   useEffect(() => {
-    void quizStore.read().then((v) => {
-      setBest(v?.bestStreak ?? 0);
-      setReady(true);
+    let live = true;
+    void reading.then((saved) => {
+      if (live) setRecord(saved);
     });
-  }, []);
-  const q = round?.[index],
-    done = !!round && index === round.length,
-    rank = rankFor(correct, round?.length ?? 8);
-  const start = () => {
-    const rounds = snapshot.rounds[deck];
-    setRound(
-      rounds[
-        isE2E ? 0 : Math.floor(Math.random() * rounds.length)
-      ] as Question[],
-    );
-    setIndex(0);
-    setPoints(0);
-    setCorrect(0);
-    setStreak(0);
-    setAnswer(undefined);
-    setRevealed(false);
-    setSaved(false);
-    setSaveError(false);
-    setCopied(false);
-    setAttempts([]);
-    answered.current = false;
-    advancing.current = false;
+    return () => {
+      live = false;
+    };
+  }, [reading]);
+
+  const round = mode === 'round' ? session : null;
+  const q =
+    mode === 'single' ? single : round ? round.round[round.index] : undefined;
+  const response =
+    mode === 'single'
+      ? singleResponse
+      : round
+        ? (round.answers[round.index] ?? null)
+        : null;
+  const questionKey =
+    mode === 'single' ? `single-${single?.id}` : `${round?.index}`;
+  useEffect(() => {
+    if (mode !== 'round' && mode !== 'single') return;
+    const target = promptRef.current;
+    if (target) AccessibilityInfo.sendAccessibilityEvent(target, 'focus');
+  }, [mode, questionKey]);
+
+  const toTop = () =>
+    scrollRef.current?.scrollTo({ y: 0, animated: !reduceMotion });
+  const start = async (choice: Deck) => {
+    if (starting.current) return;
+    starting.current = true;
+    try {
+      const saved = await reading;
+      quizSession.begin(choice, drawRound(choice), saved?.bestStreak ?? 0);
+      setDeck(choice);
+      setDraft(undefined);
+      setEditing(false);
+      setSummary(null);
+      setSaveFailed(false);
+      setMode('round');
+      toTop();
+    } finally {
+      starting.current = false;
+    }
   };
-  const confirm = () => {
-    if (!q || answer === undefined || answered.current) return;
-    answered.current = true;
-    advancing.current = false;
-    const result = grade(q, answer),
-      nextStreak = result.correct ? streak + 1 : 0,
-      gained = result.base * (result.correct ? Math.min(streak + 1, 4) : 1);
-    setPoints((v) => v + gained);
-    setCorrect((v) => v + Number(result.correct));
-    setStreak(nextStreak);
-    setBest((v) => Math.max(v, nextStreak));
-    setRevealed(true);
-    setAttempts((v) => [...v, `${index + 1}. ${q.prompt} — ${q.fact}`]);
-    AccessibilityInfo.announceForAccessibility(`${result.detail} ${q.fact}`);
+  const resumeRound = () => {
+    if (!quizSession.inProgress()) return;
+    setDraft(undefined);
+    setEditing(false);
+    setMode('round');
+    toTop();
   };
-  const persist = () => {
-    setSaved(false);
-    void quizStore
-      .save({
-        version: 1,
-        bestStreak: best,
-        lastPoints: points,
-        lastCorrect: correct,
-      })
+  const check = () => {
+    if (!q || response || !answerComplete(q, draft)) return;
+    if (mode === 'single') {
+      const scored = scoreAnswer(q, draft!, 0);
+      setSingleResponse(scored.response);
+      announce(scored.response, q.fact);
+      return;
+    }
+    const current = quizSession.current();
+    if (!current || current.answers.length > current.index) return;
+    const scored = scoreAnswer(q, draft!, current.streak);
+    quizSession.update({
+      ...current,
+      answers: [...current.answers, scored.response],
+      points: current.points + scored.response.gained,
+      correct: current.correct + Number(scored.response.correct),
+      streak: scored.streak,
+      best: Math.max(current.best, scored.streak),
+    });
+    announce(scored.response, q.fact);
+  };
+  const persist = (done: QuizRound) => {
+    const next: QuizRecord = {
+      version: 1,
+      bestStreak: done.best,
+      lastPoints: done.points,
+      lastCorrect: done.correct,
+    };
+    quizStore
+      .save(next)
       .then(() => {
-        setSaved(true);
-        setSaveError(false);
+        setRecord(next);
+        setSaveFailed(false);
       })
-      .catch(() => setSaveError(true));
+      .catch(() => setSaveFailed(true));
   };
   const next = () => {
-    if (!round || !revealed || advancing.current) return;
-    advancing.current = true;
-    setIndex((i) => i + 1);
-    setAnswer(undefined);
-    setRevealed(false);
-    answered.current = false;
-    if (index + 1 === round.length) persist();
+    const current = quizSession.current();
+    if (!current || current.answers.length <= current.index) return;
+    setDraft(undefined);
+    setEditing(false);
+    if (current.index + 1 < current.round.length) {
+      quizSession.update({ ...current, index: current.index + 1 });
+      toTop();
+      return;
+    }
+    const done = { ...current, index: current.round.length };
+    quizSession.clear();
+    setSummary(done);
+    setMode('result');
+    persist(done);
+    toTop();
     AccessibilityInfo.announceForAccessibility(
-      index + 1 === round.length
-        ? `You scored ${points} points, with ${correct} out of ${round.length} right. Your rank: ${rank.name}.`
-        : `Question ${index + 2} of ${round.length}`,
+      `You scored ${formatCount(done.points)} points, with ${done.correct} of ${done.round.length} right. Your rank: ${rankFor(done.correct, done.round.length).name}.`,
     );
   };
-  const measured = q?.kind === 'year' || q?.kind === 'slider';
-  const valid =
-    q &&
-    answer !== undefined &&
-    (q.kind === 'order'
-      ? Array.isArray(answer) && answer.length === q.options?.length
-      : measured
-        ? Number.isFinite(Number(answer)) &&
-          Number(answer) >= q.min! &&
-          Number(answer) <= q.max!
-        : true);
-  const resultText = `The Record Quiz — ${deck[0]!.toUpperCase() + deck.slice(1)}\n${points.toLocaleString('en-AU')} points · ${correct}/8 right · best streak ${best}\n${rank.name}: ${rank.blurb}\n\n${attempts.join('\n')}`;
+
+  const footer: FooterAction | null =
+    (mode === 'round' || mode === 'single') && q
+      ? !response
+        ? {
+            label: 'Check answer',
+            onPress: check,
+            disabled: !answerComplete(q, draft),
+            testID: 'quiz-confirm',
+          }
+        : mode === 'round' && round
+          ? {
+              label:
+                round.index + 1 < round.round.length
+                  ? 'Next question'
+                  : 'See result',
+              onPress: next,
+              testID: 'quiz-next',
+            }
+          : inProgress
+            ? {
+                label: resumeLabel(inProgress.index),
+                onPress: resumeRound,
+                testID: 'quiz-resume',
+              }
+            : {
+                label: 'Play a round',
+                onPress: () => void start('mixed'),
+                testID: 'quiz-play',
+              }
+      : mode === 'result' && summary
+        ? {
+            label: 'Play again',
+            onPress: () => void start(summary.deck),
+            testID: 'quiz-again',
+          }
+        : null;
+
+  const fixedTitle =
+    mode === 'single' ? todayName : mode === 'round' ? quizName : undefined;
   return (
     <>
-      <ExploreHeader title="Quiz" game="quiz" />
+      <ExploreChrome
+        title={fixedTitle}
+        game="quiz"
+        params={mode === 'single' && single ? { q: single.id } : undefined}
+        name={mode === 'single' ? todayName : quizName}
+        share={
+          mode === 'result' && summary
+            ? {
+                title: quizShareText(
+                  summary.points,
+                  summary.correct,
+                  summary.round.length,
+                ),
+              }
+            : undefined
+        }
+      />
       <Screen
-        column="wide"
-        key={round ? index : 'intro'}
+        grouped
+        scrollRef={scrollRef}
+        barTitle={fixedTitle ? undefined : quizName}
         testID="explore-quiz-screen"
       >
-        {!round ? (
-          <Section rule={false}>
-            <Text variant="body" wordSafe>
-              A game from the public record
-            </Text>
-            <Heading level={3}>Choose a deck</Heading>
-            <SegmentedControl
-              segments={decks}
-              value={deck}
-              onChange={(v) => setDeck(v as Deck)}
-            />
-            <Text wordSafe variant="metadata" testID="quiz-best">
-              Best streak {best}
-            </Text>
+        <ColumnWidth onWidth={setWidth} />
+        {mode === 'round' && round && q ? (
+          <ProgressStrip
+            index={round.index}
+            total={round.round.length}
+            points={round.points}
+          />
+        ) : null}
+        {(mode === 'round' || mode === 'single') && q ? (
+          <QuestionView
+            key={questionKey}
+            q={q}
+            index={mode === 'round' && round ? round.index : 0}
+            answer={draft}
+            response={response}
+            scored={mode === 'round'}
+            promptRef={promptRef}
+            onAnswer={setDraft}
+            onEditing={setEditing}
+          />
+        ) : mode === 'result' && summary ? (
+          <ResultView
+            summary={summary}
+            saveFailed={saveFailed}
+            onRetrySave={() => persist(summary)}
+            onDecks={() => {
+              setSummary(null);
+              setMode('intro');
+              toTop();
+            }}
+          />
+        ) : (
+          <QuizIntro
+            deck={deck}
+            record={record}
+            resumeAt={inProgress?.index ?? null}
+            onDeck={setDeck}
+            onStart={() => void start(deck)}
+            onResume={resumeRound}
+          />
+        )}
+        <QuizFooter action={footer} placement="content" hidden={editing} />
+        {mode === 'single' && response && inProgress ? (
+          <View style={styles.after}>
             <Button
-              label="Start 8 questions"
-              variant="primary"
-              onPress={start}
-              disabled={!ready}
+              label="Start a new round"
+              variant="plain"
+              fullWidth
+              onPress={() => void start('mixed')}
               testID="quiz-start"
             />
-            <SourceLine
-              asOf={snapshot.generated}
-              citation="OPAX quiz questions"
-              testID="quiz-as-at"
-            />
-          </Section>
-        ) : done ? (
-          <Section title="Your result">
-            <BigFigure
-              value={points.toLocaleString('en-AU')}
-              label="points"
-              accent="votes"
-            />
-            <Heading level={3} testID="quiz-rank">
-              {rank.name}
-            </Heading>
-            <Text wordSafe>{rank.blurb}</Text>
-            <Text testID="quiz-result">
-              {correct}/8 right · best streak {best}
-            </Text>
-            <Text variant="metadata" testID="quiz-save">
-              {saved
-                ? 'Streak saved on this device'
-                : saveError
-                  ? 'Your streak could not be saved. Try again.'
-                  : 'Saving your streak'}
-            </Text>
-            {saveError ? <Button label="Try again" onPress={persist} /> : null}
-            <Button
-              label={copied ? 'Copied' : 'Copy result'}
-              onPress={() => void copyText(resultText).then(setCopied)}
-              testID="quiz-copy"
-            />
-            <Button label="Play again" onPress={start} testID="quiz-again" />
-          </Section>
-        ) : q ? (
-          <Section title={`Question ${index + 1} of 8`}>
-            <Text variant="metadata">
-              {points.toLocaleString('en-AU')} points · {streak} streak
-            </Text>
-            <Heading level={3} testID="quiz-question">
-              {q.prompt}
-            </Heading>
-            {q.comparison ? (
-              <Text wordSafe>
-                {q.comparison.shownLabel}: {q.comparison.shownDisplay} ·{' '}
-                {q.comparison.hiddenLabel}:{' '}
-                {revealed ? q.comparison.hiddenDisplay : '?'}
-              </Text>
-            ) : null}
-            {measured ? (
-              <Field
-                label={q.kind === 'year' ? 'Choose a year' : 'Guess the figure'}
-                hint={`${q.min!.toLocaleString('en-AU')} to ${q.max!.toLocaleString('en-AU')}`}
-                value={answer === undefined ? '' : String(answer)}
-                onChangeText={(v) =>
-                  setAnswer(v.trim() ? Number(v) : undefined)
-                }
-                keyboardType="numeric"
-                editable={!revealed}
-                testID="quiz-number"
-              />
-            ) : (
-              <Group>
-                {q.options?.map((option, i) => {
-                  const chosen = Array.isArray(answer)
-                    ? answer.indexOf(option.label)
-                    : -1;
-                  return (
-                    <Group key={option.label}>
-                      {q.kind === 'portrait' ? (
-                        <CachedPortrait name={option.label} />
-                      ) : null}
-                      <Button
-                        key={option.label}
-                        label={`${q.kind === 'order' && chosen >= 0 ? `${chosen + 1}. ` : ''}${option.label}${revealed && option.correct ? ' · Correct' : ''}`}
-                        disabled={revealed}
-                        variant={
-                          answer === i || chosen >= 0 ? 'primary' : 'default'
-                        }
-                        testID={`quiz-answer-${i}`}
-                        onPress={() =>
-                          setAnswer(
-                            q.kind === 'order'
-                              ? chosen >= 0
-                                ? (answer as string[]).filter(
-                                    (v) => v !== option.label,
-                                  )
-                                : [
-                                    ...(Array.isArray(answer) ? answer : []),
-                                    option.label,
-                                  ]
-                              : i,
-                          )
-                        }
-                      />
-                    </Group>
-                  );
-                })}
-              </Group>
-            )}
-            {revealed ? (
-              <Group>
-                <Text variant="strong">{grade(q, answer!).detail}</Text>
-                <Text wordSafe>{q.fact}</Text>
-                <Text wordSafe>{q.explanation}</Text>
-                {quizRecordPath(q.link.href) ? (
-                  <LinkRow
-                    title={q.link.label}
-                    onPress={() =>
-                      openRecord(quizRecordPath(q.link.href)!, q.link.label)
-                    }
-                  />
-                ) : (
-                  <Text wordSafe variant="metadata">
-                    {q.link.label}
-                  </Text>
-                )}
-                <Button
-                  label={index === 7 ? 'See result' : 'Next question'}
-                  variant="primary"
-                  onPress={next}
-                  testID="quiz-next"
-                />
-              </Group>
-            ) : (
-              <Button
-                label="Confirm answer"
-                variant="primary"
-                disabled={!valid}
-                onPress={confirm}
-                testID="quiz-confirm"
-              />
-            )}
-          </Section>
+          </View>
         ) : null}
       </Screen>
+      <QuizFooter
+        action={footer}
+        placement="toolbar"
+        hidden={editing}
+        width={width}
+      />
     </>
   );
 }
+
+function announce(response: QuizResponse, fact: string) {
+  AccessibilityInfo.announceForAccessibility(`${response.grade}. ${fact}`);
+}
+
+/** Reports the content column's width, so the footer capsule lines up. */
+function ColumnWidth({ onWidth }: { onWidth: (width: number) => void }) {
+  const { width } = useLayout();
+  useEffect(() => onWidth(width), [width, onWidth]);
+  return null;
+}
+
+const styles = StyleSheet.create({
+  after: { marginTop: -rhythm.block },
+});
