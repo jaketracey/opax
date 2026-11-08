@@ -508,7 +508,9 @@ function ReaderHeader({
     Number.isFinite(ayes) &&
     Number.isFinite(noes) &&
     doc.metadata.ayes_count != null &&
-    doc.metadata.noes_count != null;
+    doc.metadata.noes_count != null &&
+    // The split's spoken label names its date; an undated division has none.
+    !!day;
   return (
     <View>
       {meta ? (
@@ -555,7 +557,7 @@ function ReaderHeader({
             noes={noes}
             countsStyle="ayesNoes"
             {...{
-              dateRange: { start: day ?? '', end: day ?? '' },
+              dateRange: { start: day!, end: day! },
               source: recordSource(doc).citation.label,
             }}
           />

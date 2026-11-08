@@ -187,6 +187,33 @@ test.each([
   },
 );
 
+test('an undated division draws no vote split', async () => {
+  const division = decodeDocument(
+    responses['/api/resource/division-federal-senate-10701'],
+  );
+  mockParams = { slug: 'division-federal-senate-10701' };
+  jest.mocked(records.document).mockResolvedValue(record(division));
+  const dated = await mount(<DocumentReader />);
+  expect(
+    dated.root.findAllByProps({ testID: 'doc-votes' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => dated.unmount());
+  // No date anywhere: not in the record, its metadata or its title.
+  const { date: _date, ...metadata } = division.metadata;
+  jest.mocked(records.document).mockResolvedValue(
+    record({
+      ...division,
+      date: undefined,
+      title: 'That the motion be agreed to',
+      metadata,
+    } as never),
+  );
+  mockParams = { slug: 'division-federal-senate-10701' };
+  const view = await mount(<DocumentReader />);
+  expect(view.root.findAllByProps({ testID: 'doc-votes' })).toHaveLength(0);
+  await act(async () => view.unmount());
+});
+
 test.each([
   [
     'offline',
