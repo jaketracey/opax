@@ -101,7 +101,9 @@ export function StateMembers({
             testID="choose-state-seat"
           />
         </InsetGroup>
-      ) : stateSeatIds.length && !view && seats.length !== stateSeatIds.length ? (
+      ) : stateSeatIds.length &&
+        !view &&
+        seats.length !== stateSeatIds.length ? (
         <Skeleton shape="people" count={stateSeatIds.length} />
       ) : (
         <>
@@ -130,6 +132,7 @@ export function StateMembers({
                     slug: representativeProfile(r.person_id, directory)?.slug,
                   }))}
                 href={membersRoute(region.electorate_id)}
+                menu={menuSections(stateMenu)}
                 testID="your-state-region"
               />
             ) : null}
