@@ -1,5 +1,6 @@
 import { fromWebPath } from '../../navigation/routes';
-import { formatDisclosureYear, formatCount } from '../../design/format';
+import { moneyRecordRoute } from '../../navigation/routes/public-money';
+import { formatFinancialYear } from '../../design/format';
 import {
   moneyCatalogs,
   type MoneyFigures,
@@ -7,7 +8,13 @@ import {
   type MoneyNode,
   type MoneyJurisdiction,
 } from './data';
-import { defaultMoneyFilters, yearExtent, type MoneyFilters } from './view';
+import {
+  defaultMoneyFilters,
+  moneyView,
+  windowFigures,
+  yearExtent,
+  type MoneyFilters,
+} from './view';
 
 export type MoneyParams = Record<string, string | string[]>;
 export const param = (value: string | string[] | undefined) =>
@@ -50,31 +57,39 @@ export function filtersFromParams(
     inflation: param(params.inflation) === '1',
   };
 }
+/** The filters as route params, so a pushed page and a shared link rebuild them. */
+export function moneyWindowParams(filters: MoneyFilters) {
+  return {
+    from: String(filters.from),
+    to: String(filters.to),
+    industry: filters.industry ?? '',
+    layers: (['donations', 'grants', 'contracts'] as const)
+      .filter((k) => filters[k])
+      .join(','),
+    inflation: filters.inflation ? '1' : '0',
+  };
+}
+/** A node's money record, pushed in the current tab with the map's window. */
 export function moneyFocusRoute(
   node: string,
   jurisdiction: MoneyJurisdiction,
   filters: MoneyFilters,
+  name?: string,
 ) {
-  return {
-    pathname: '/money-node' as const,
-    params: {
-      node,
-      jurisdiction,
-      from: String(filters.from),
-      to: String(filters.to),
-      industry: filters.industry ?? '',
-      layers: (['donations', 'grants', 'contracts'] as const)
-        .filter((k) => filters[k])
-        .join(','),
-      inflation: filters.inflation ? '1' : '0',
-    },
-  };
+  return moneyRecordRoute(
+    { node, jurisdiction, ...moneyWindowParams(filters) },
+    name,
+  );
 }
+/**
+ * Graph `byYear` keys are the first year of a financial year (election
+ * returns by polling year, said in the Notes): "1998–99 to 2025–26".
+ */
 export function moneyYears(first: number | null, last: number | null) {
   if (first === null || last === null) return 'Year not recorded';
   return first === last
-    ? formatDisclosureYear(first)
-    : `${formatDisclosureYear(first)} to ${formatDisclosureYear(last)}`;
+    ? formatFinancialYear(first)
+    : `${formatFinancialYear(first)} to ${formatFinancialYear(last)}`;
 }
 export function moneyWindowYears(
   figures: MoneyFigures,
@@ -85,10 +100,106 @@ export function moneyWindowYears(
     return `${awarded ? 'nothing awarded' : 'nothing disclosed'} in ${moneyYears(filters.from, filters.to)}`;
   return moneyYears(figures.firstYear, figures.lastYear);
 }
-export function publicMoneyLabel(node: MoneyNode) {
-  return node.flow === 'contracts'
-    ? `held by donors on this map across ${formatCount(node.count)} contracts`
-    : `awarded to donors on this map across ${formatCount(node.count)} grants`;
+/** Said in every money source sheet that shows graph years. */
+export const moneyYearNote =
+  "Years are financial years. Election returns are counted in the financial year that starts in the election's year.";
+/** The one caveat every donations figure carries. */
+export const donationsCaveat =
+  "Totals are a minimum: donations under the disclosure threshold aren't published.";
+/** Under public money beside donations (the map, a lead). */
+export const publicMoneyCaveat =
+  "Shown beside donations, never added to them. It doesn't show that one led to the other.";
+/** On an organisation page drawn from more than one register. */
+export const bothRegistersCaveat =
+  "Appearing in both registers doesn't show that one led to the other.";
+
+/** "mining & energy" → "Mining and energy": the group's name, never the raw key. */
+export function industryLabel(group: string) {
+  const words = group
+    .replace(/_/g, ' ')
+    .replace(/\s*&\s*/g, ' and ')
+    .trim();
+  return words ? `${words.charAt(0).toLocaleUpperCase('en-AU')}${words.slice(1)}` : words;
+}
+/** In a sentence: "mining and energy". */
+export const industryWords = (group: string) =>
+  industryLabel(group).toLocaleLowerCase('en-AU');
+
+/** The window is every year the graph holds and nothing is adjusted. */
+export function isAllYears(graph: MoneyGraph, filters: MoneyFilters) {
+  const extent = yearExtent(graph);
+  return filters.from <= extent.from && filters.to >= extent.to;
+}
+
+/**
+ * The latest complete financial year, as the first year ("2024" for
+ * 2024–25). The data lane's `meta.latestCompleteYear` wins when published
+ * (journeys/money.md D1). Until then it is the newest year whose annual
+ * returns the AEC has published by the export's date: a financial year's
+ * returns are published the February after it ends, so 2024–25 is complete
+ * from February 2026. Only a year the data holds is returned.
+ */
+export function latestCompleteYear(graph: MoneyGraph): number | null {
+  const years = new Set(
+    graph.nodes
+      .filter((n) => n.kind === 'party')
+      .flatMap((n) => Object.keys(n.byYear ?? {}).map(Number)),
+  );
+  const declared =
+    graph.meta.latestCompleteYear ?? graph.meta.latest_complete_year;
+  const published =
+    typeof declared === 'number'
+      ? declared
+      : typeof declared === 'string' && /^\d{4}/.test(declared)
+        ? Number(declared.slice(0, 4))
+        : null;
+  if (published !== null) return years.has(published) ? published : null;
+  const generated = /^(\d{4})-(\d{2})/.exec(graph.meta.generated);
+  if (!generated) return null;
+  const year = Number(generated[1]),
+    month = Number(generated[2]);
+  // Returns for the year starting Y are out from February of Y + 2.
+  const newest = month >= 2 ? year - 2 : year - 3;
+  const held = [...years].filter((y) => y <= newest).sort((a, b) => b - a);
+  return held[0] ?? null;
+}
+
+/**
+ * Donations to parties in a window: the party nodes' own receipts (every
+ * cleaned row but public funding), one computation shared with the hub's
+ * Parties card. Party receipts cannot be split by industry, so with an
+ * industry filter the figure is the donor-to-party flows from that
+ * industry's donors on the map, and `subset` says so.
+ */
+export function partyDonationsTotal(
+  graph: MoneyGraph,
+  window: Pick<MoneyFilters, 'from' | 'to'> &
+    Partial<Pick<MoneyFilters, 'inflation' | 'industry'>>,
+): MoneyFigures & { subset: boolean } {
+  const parts: MoneyFigures[] = window.industry
+    ? moneyView(graph, {
+        ...defaultMoneyFilters(graph),
+        from: window.from,
+        to: window.to,
+        inflation: !!window.inflation,
+        industry: window.industry,
+        grants: false,
+        contracts: false,
+      }).edges
+    : graph.nodes
+        .filter((n) => n.kind === 'party')
+        .map((n) =>
+          windowFigures(n, window.from, window.to, !!window.inflation),
+        );
+  const first = parts.flatMap((p) => (p.firstYear === null ? [] : [p.firstYear]));
+  const last = parts.flatMap((p) => (p.lastYear === null ? [] : [p.lastYear]));
+  return {
+    total: parts.reduce((sum, p) => sum + p.total, 0),
+    count: parts.reduce((sum, p) => sum + p.count, 0),
+    firstYear: first.length ? Math.min(...first) : null,
+    lastYear: last.length ? Math.max(...last) : null,
+    subset: !!window.industry,
+  };
 }
 export function moneySource(graph: MoneyGraph) {
   const federal =
@@ -132,12 +243,12 @@ export function moneyCaveats(graph: MoneyGraph): string[] {
     return [
       `Source: ${graph.meta.commission ?? graph.meta.sourceShort ?? graph.meta.source}, ${graph.meta.coverage}.`,
       graph.meta.threshold ?? '',
-      'Totals are a floor, not a ceiling.',
+      donationsCaveat,
       'Donor totals exclude gifts to candidates and committees, public funding and internal party transfers. Party receipts exclude public funding and include internal party transfers.',
       graph.meta.not_summed ?? '',
     ].filter(Boolean);
   return [
-    'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
+    donationsCaveat,
     `Source: Australian Electoral Commission annual and election returns, ${graph.meta.coverage}.`,
     'Donor totals exclude public electoral funding and internal party transfers. Party receipts exclude public electoral funding and include internal party transfers.',
     'State and federal returns are not summed: AEC returns already include state branch receipts.',
