@@ -43,10 +43,12 @@ export function useTodayRead<T>(
     // The first read of a key uses the cache; later attempts revalidate.
     const refresh = first.current === key && attempt > 0;
     first.current = key;
-    loader
-      .current(refresh)
+    // A loader that throws before its promise is a failed read, like a
+    // rejection: the block keeps what it drew.
+    Promise.resolve()
+      .then(() => loader.current(refresh))
       .then((value) => {
-        if (active) setState({ key, value });
+        if (active && value !== undefined) setState({ key, value });
       })
       .catch(() => undefined);
     return () => {

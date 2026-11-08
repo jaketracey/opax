@@ -177,7 +177,13 @@ export function DailyPair({
   const read = useTodayRead(
     'pictures',
     // The manifest is optional: a failed read collapses the archive card.
-    () => explore.pictures().catch(() => null),
+    async () => {
+      try {
+        return await explore.pictures();
+      } catch {
+        return null;
+      }
+    },
     attempt,
   );
   const loading = read === null && attempt === 0;

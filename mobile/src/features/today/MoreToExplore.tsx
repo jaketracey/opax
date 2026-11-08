@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Tile, TileGrid } from '../../design/card';
 import { InsetGroup, SectionHeader } from '../../design/layout';
@@ -11,8 +12,6 @@ import {
   publicMoneyRoute,
   recentRecordsRoute,
 } from '../../navigation/routes';
-import { DailyPair } from './DailyPair';
-import type { SydneyDate } from './rules';
 
 /**
  * The four ways in, in this order (today.md 5.10, the brief's tile list).
@@ -62,20 +61,16 @@ export const exploreTiles = [
  * hub. Every push stays inside Today.
  */
 export function MoreToExplore({
-  withPair,
-  today,
-  attempt,
+  pair = null,
 }: {
-  /** Case A: the daily pair is here, under the header. */
-  withPair: boolean;
-  today: SydneyDate;
-  attempt: number;
+  /** Case A: the daily pair, drawn here under the header. */
+  pair?: ReactNode;
 }) {
   return (
     <View testID="today-explore" style={styles.section}>
       <SectionHeader title="More to explore" testID="today-explore-title" />
       <View style={styles.body}>
-        {withPair ? <DailyPair today={today} attempt={attempt} /> : null}
+        {pair}
         <TileGrid testID="today-explore-tiles">
           {exploreTiles.map((tile) => (
             <Tile key={tile.testID} {...tile} />

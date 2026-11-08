@@ -103,7 +103,7 @@ export function Masthead({
       <Text wordSafe variant="secondary" testID="today-screen-message">
         {mastheadDate(now)}
       </Text>
-      {offlineSavedAt !== undefined ? (
+      {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
         <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
       ) : null}
     </View>
