@@ -5,9 +5,11 @@ export function recordsScreens() {
     // The bar stays empty until the title scrolls under it; the stack's
     // title remains the back label for the next screen.
     screen('doc/[slug]', 'Record', { headerTitle: '' }),
-    // A route sheet that holds still at its medium detent while the
-    // citation's length changes with the style (records.md 3.2).
-    screen('doc-cite/[slug]', 'Citation formats', sheetOptions),
+    // Detents stay [0.5, 1]; it opens large per the wave 2 simulator check.
+    screen('doc-cite/[slug]', 'Citation formats', {
+      ...sheetOptions,
+      sheetInitialDetentIndex: 1,
+    }),
     screen('bill-text/[key]', 'Bill text', { headerTitle: '' }),
     screen('recent-records', 'Just added'),
     screen('record-list', 'Records'),

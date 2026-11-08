@@ -35,7 +35,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/32-reader-more
 - tapOn: Citation formats…
-# Citation formats opens at its medium detent; one style shows at a time.
+# Citation formats opens at its large detent; one style shows at a time.
 - extendedWaitUntil:
     visible:
       id: doc-citations

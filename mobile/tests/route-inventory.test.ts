@@ -474,6 +474,7 @@ test('sheet presentations and named fallback titles come from the owning modules
   ).toEqual(['Share', 'More']);
   expect(options('doc-cite/[slug]')).toMatchObject({
     sheetAllowedDetents: [0.5, 1],
+    sheetInitialDetentIndex: 1,
     sheetExpandsWhenScrolledToEdge: true,
     headerTransparent: false,
   });
