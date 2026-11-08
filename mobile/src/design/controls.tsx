@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type Ref, type RefObject } from 'react';
+import {
+  useRef,
+  useEffect,
+  useState,
+  type Ref,
+  type RefObject,
+  type ReactNode,
+} from 'react';
 import {
   ActivityIndicator,
   type AccessibilityState,
@@ -7,12 +14,38 @@ import {
   Keyboard,
   StyleSheet,
   Switch,
-  Text as NativeText,
   TextInput,
   View,
   useWindowDimensions,
   type TextInputProps,
 } from 'react-native';
+import { Stack } from 'expo-router';
+import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
+import {
+  Host,
+  Picker,
+  Text as SwiftText,
+  VStack,
+  HStack,
+  Image as SwiftImage,
+} from '@expo/ui/swift-ui';
+import {
+  accessibilityLabel as nativeLabel,
+  accessibilityIdentifier,
+  pickerStyle,
+  menuIndicator,
+  tag,
+  tint,
+  font,
+  frame,
+  padding,
+  background,
+  clipShape,
+} from '@expo/ui/swift-ui/modifiers';
+import type { FollowKind } from '../features/follows/store';
+import { haptic } from './haptics';
+import { showMenu } from './menu';
+import { symbols } from './symbols';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { Hoverable } from './adaptive';
 import { Icon, type SFSymbol } from './icon';
@@ -34,7 +67,13 @@ import {
 
 export { Tag, ChoiceChip } from './labels';
 
-export type ButtonVariant = 'primary' | 'default' | 'quiet' | 'danger';
+type LegacyButtonVariant = 'default' | 'quiet' | 'danger';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'plain'
+  | 'destructive'
+  | LegacyButtonVariant;
 type Fill = Role | null;
 interface ControlColours {
   fill: Fill;
@@ -43,8 +82,8 @@ interface ControlColours {
 }
 // Every state is opaque role colours, never opacity, so each drawn pair is in
 // the contrast table (contrast.ts) and checked by tests/contrast.test.ts.
-export const buttonStates: Record<
-  ButtonVariant,
+const originalButtonStates: Record<
+  'primary' | LegacyButtonVariant,
   Record<'rest' | 'pressed' | 'disabled', ControlColours>
 > = {
   primary: {
@@ -66,14 +105,19 @@ export const buttonStates: Record<
     disabled: { fill: null, border: null, label: 'inkSoft' },
   },
   danger: {
-    rest: { fill: 'raised', border: 'danger', label: 'danger' },
-    pressed: { fill: 'sunken', border: 'danger', label: 'danger' },
+    rest: { fill: null, border: null, label: 'danger' },
+    pressed: { fill: 'sunken', border: null, label: 'danger' },
     disabled: { fill: 'sunken', border: 'lineControl', label: 'inkSoft' },
   },
 };
-// A toggle Button (Follow): off is the default capsule, on is navy. The
-// state is also said ("switch, on") and drawn by the symbol, never by
-// colour alone.
+export const buttonStates = {
+  ...originalButtonStates,
+  secondary: originalButtonStates.default,
+  plain: originalButtonStates.quiet,
+  destructive: originalButtonStates.danger,
+};
+// Compatibility toggle colours. Follow explicitly uses the secondary variant
+// in both states; selected icon-only controls retain their existing navy fill.
 export const toggleStates: Record<
   'off' | 'on',
   Record<'rest' | 'pressed' | 'disabled', ControlColours>
@@ -96,6 +140,8 @@ export interface ButtonProps {
   size?: ControlSize;
   /** Leading SF Symbol, decorative. */
   icon?: SFSymbol;
+  symbol?: SFSymbol;
+  symbolAnimation?: 'bounce' | null;
   /** Trailing SF Symbol, decorative: the chevron on a "next" step. */
   trailingIcon?: SFSymbol;
   /** The spoken name when the visible label is short ("Next month, August 2026"). */
@@ -108,8 +154,8 @@ export interface ButtonProps {
   /** Disclosure state; disabled and busy remain controlled by the button. */
   expanded?: AccessibilityState['expanded'];
   /**
-   * A toggle (Follow): the default capsule while off, navy while on, said as
-   * a switch with its state. `variant` does not apply to a toggle; give the
+   * A legacy toggle, said as a switch with its state. Follow passes secondary
+   * explicitly so both states use the same tint capsule. `variant` does not apply to a toggle; give the
    * state's own `label` and `icon` ("Follow" with a plus, "Following" with
    * a check).
    */
@@ -127,6 +173,8 @@ export function Button({
   variant = 'default',
   size = 'default',
   icon,
+  symbol,
+  symbolAnimation,
   trailingIcon,
   disabled = false,
   loading = false,
@@ -140,7 +188,9 @@ export function Button({
 }: ButtonProps) {
   const toggle = on !== undefined;
   const states = toggle
-    ? toggleStates[on ? 'on' : 'off']
+    ? variant === 'secondary'
+      ? buttonStates.secondary
+      : toggleStates[on ? 'on' : 'off']
     : buttonStates[variant];
   const reduceMotion = useReduceMotion();
   // At accessibility sizes a hugging button takes the column's width: a
@@ -153,7 +203,7 @@ export function Button({
   return (
     <Hoverable
       effect={inert ? 'none' : 'highlight'}
-      cornerRadius={stacked ? radii.md : radii.pill}
+      cornerRadius={stacked ? radii.container : radii.pill}
       style={fullWidth || stacked ? styles.full : styles.hug}
     >
       <Pressable
@@ -164,7 +214,7 @@ export function Button({
         accessibilityState={{
           disabled: inert,
           busy: loading,
-          ...(toggle ? { checked: on } : {}),
+          ...(toggle ? { checked: on, selected: on } : {}),
           ...(expanded === undefined ? {} : { expanded }),
         }}
         testID={testID}
@@ -175,17 +225,29 @@ export function Button({
           const state = pressed && !inert ? states.pressed : resting;
           return [
             styles.button,
-            { minHeight: controlHeight[size] },
+            {
+              minHeight:
+                variant === 'primary' && fullWidth ? 50 : minimumTarget,
+            },
             fullWidth || stacked ? styles.full : styles.hug,
             stacked ? styles.buttonStacked : null,
             // A frameless button's label lines up with the text column; its
             // pressed wash bleeds into the margin. A stretched button reads
             // from the leading edge, its symbol beside its label.
-            variant === 'quiet' && !toggle ? styles.quiet : null,
+            (variant === 'quiet' ||
+              variant === 'plain' ||
+              variant === 'destructive' ||
+              variant === 'danger') &&
+            !toggle
+              ? styles.quiet
+              : null,
             stacked ? styles.leading : null,
             {
-              backgroundColor: fill(state.fill),
-              borderColor: fill(state.border),
+              backgroundColor:
+                variant === 'primary' || (toggle && variant === 'default')
+                  ? fill(state.fill)
+                  : 'transparent',
+              borderColor: 'transparent',
             },
           ];
         }}
@@ -201,11 +263,28 @@ export function Button({
                   itself, so iOS keeps build 34's tree. */}
               <View
                 collapsable={Platform.OS === 'android' ? false : undefined}
-                style={[styles.buttonContent, loading ? styles.hidden : null]}
+                style={[
+                  styles.buttonContent,
+                  {
+                    minHeight: 32,
+                    paddingVertical: 4,
+                    paddingHorizontal: 12,
+                    borderRadius: stacked ? radii.container : radii.capsule,
+                    borderCurve: 'continuous',
+                    backgroundColor: fill(state.fill),
+                  },
+                  loading ? styles.hidden : null,
+                ]}
               >
-                {icon ? <Icon name={icon} tone={state.label} /> : null}
+                {symbol || icon ? (
+                  <Icon
+                    name={(symbol ?? icon)!}
+                    tone={state.label}
+                    animation={symbolAnimation}
+                  />
+                ) : null}
                 <Text
-                  variant="control"
+                  variant="strong"
                   tone={state.label}
                   wordSafe
                   style={stacked ? styles.shrink : styles.center}
@@ -235,6 +314,282 @@ export function Button({
         }}
       </Pressable>
     </Hoverable>
+  );
+}
+
+/** Page-header follow control; the feature keeps persistence and limit handling. */
+export function FollowButton({
+  testID = 'follow',
+  ...props
+}: {
+  kind: FollowKind;
+  id: string;
+  title: string;
+  testID?: string;
+}) {
+  // Keep the follow engine out of screens that only import a field or button.
+  const { FollowToggle } =
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../features/follows/FollowToggle') as typeof import('../features/follows/FollowToggle');
+  return <FollowToggle {...props} testID={testID} />;
+}
+
+export interface PickerOption<T extends string> {
+  value: T;
+  label: string;
+  shortLabel?: string;
+}
+
+/** Native menu choice, with a compact capsule or an accessibility-size row. */
+function MenuPicker<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+  testID,
+  row = false,
+}: {
+  label: string;
+  value: T;
+  options: readonly PickerOption<T>[];
+  onChange: (value: T) => void;
+  testID?: string;
+  row?: boolean;
+}) {
+  const large = useAccessibilitySize();
+  const selected = options.find((option) => option.value === value);
+  const current =
+    (large ? selected?.shortLabel : undefined) ?? selected?.label ?? value;
+  const { width } = useWindowDimensions();
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  const spoken = `${label}, ${selected?.label ?? value}, pop-up button`;
+  if (Platform.OS !== 'ios')
+    return (
+      <Button
+        label={current}
+        variant="secondary"
+        trailingIcon={symbols.menu}
+        accessibilityLabel={spoken}
+        testID={testID}
+        onPress={() =>
+          showMenu(
+            label,
+            options.map((option) => ({
+              title: `${option.value === value ? '✓ ' : ''}${option.label}`,
+              onPress: () => {
+                if (option.value !== value) {
+                  haptic('selection');
+                  onChange(option.value);
+                }
+              },
+            })),
+          )
+        }
+      />
+    );
+  return (
+    <View
+      testID={testID}
+      style={row ? styles.menuRow : styles.hug}
+      onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
+    >
+      <Host
+        matchContents={{ vertical: true, horizontal: !row }}
+        style={
+          row
+            ? {
+                width: measuredWidth ?? width - (width < 414 ? 16 : 20) * 2,
+                maxWidth: '100%',
+              }
+            : { minHeight: minimumTarget, maxWidth: '100%' }
+        }
+      >
+        <Picker
+          selection={value}
+          onSelectionChange={(next: T) => {
+            if (next !== value) onChange(next);
+          }}
+          label={
+            row ? (
+              <HStack spacing={8}>
+                <VStack alignment="leading" spacing={4}>
+                  <SwiftText modifiers={[font({ textStyle: 'body' })]}>
+                    {label}
+                  </SwiftText>
+                  <SwiftText modifiers={[font({ textStyle: 'body' })]}>
+                    {current}
+                  </SwiftText>
+                </VStack>
+                <SwiftImage
+                  systemName={symbols.menu}
+                  modifiers={[font({ textStyle: 'footnote' })]}
+                />
+              </HStack>
+            ) : (
+              <HStack spacing={6}>
+                <SwiftText modifiers={[font({ textStyle: 'subheadline' })]}>
+                  {current}
+                </SwiftText>
+                <SwiftImage
+                  systemName={symbols.menu}
+                  modifiers={[font({ textStyle: 'footnote' })]}
+                />
+              </HStack>
+            )
+          }
+          modifiers={[
+            pickerStyle('menu'),
+            menuIndicator('hidden'),
+            tint(colors.navy),
+            font({ textStyle: 'subheadline' }),
+            ...(row
+              ? [frame({ minHeight: minimumTarget, alignment: 'leading' })]
+              : [
+                  padding({ horizontal: 12 }),
+                  frame({ minHeight: 32 }),
+                  background(colors.navyWash),
+                  clipShape('capsule'),
+                  frame({ minHeight: minimumTarget }),
+                ]),
+            nativeLabel(spoken),
+            ...(testID ? [accessibilityIdentifier(testID)] : []),
+          ]}
+        >
+          {options.map((option) => (
+            <SwiftText key={option.value} modifiers={[tag(option.value)]}>
+              {(large ? option.shortLabel : undefined) ?? option.label}
+            </SwiftText>
+          ))}
+        </Picker>
+      </Host>
+    </View>
+  );
+}
+
+export function PopUpButton<T extends string>(props: {
+  label: string;
+  value: T;
+  options: readonly PickerOption<T>[];
+  onChange: (value: T) => void;
+  testID?: string;
+}) {
+  return <MenuPicker {...props} />;
+}
+
+/** At AX1+ the full current choice reads beneath the title in a native menu row. */
+export function SegmentedPicker<T extends string>({
+  options,
+  value,
+  onChange,
+  accessibilityLabel,
+  testID,
+}: {
+  options: readonly PickerOption<T>[];
+  value: T;
+  onChange: (value: T) => void;
+  accessibilityLabel: string;
+  testID?: string;
+}) {
+  const large = useAccessibilitySize();
+  if (options.length < 2 || options.length > 4)
+    throw new RangeError('SegmentedPicker needs two to four options');
+  if (Platform.OS !== 'ios')
+    return (
+      <SegmentedControl
+        segments={options}
+        value={value}
+        onChange={onChange}
+        testID={testID}
+      />
+    );
+  if (large)
+    return (
+      <MenuPicker
+        row
+        label={accessibilityLabel}
+        value={value}
+        options={options}
+        onChange={onChange}
+        testID={testID}
+      />
+    );
+  return (
+    <Host
+      style={{ alignSelf: 'stretch', minHeight: minimumTarget }}
+      matchContents={{ vertical: true }}
+    >
+      <Picker
+        label={accessibilityLabel}
+        selection={value}
+        onSelectionChange={(next: T) => {
+          if (next !== value) onChange(next);
+        }}
+        modifiers={[
+          pickerStyle('segmented'),
+          nativeLabel(accessibilityLabel),
+          ...(testID ? [accessibilityIdentifier(testID)] : []),
+        ]}
+      >
+        {options.map((option) => (
+          <SwiftText key={option.value} modifiers={[tag(option.value)]}>
+            {option.label}
+          </SwiftText>
+        ))}
+      </Picker>
+    </Host>
+  );
+}
+
+/** Bottom toolbar, with disabled ends that retain their place. */
+export function MonthPager({
+  month,
+  previous,
+  next,
+}: {
+  month: string;
+  previous: { label: string; onPress: () => void } | null;
+  next: { label: string; onPress: () => void } | null;
+}) {
+  if (Platform.OS !== 'ios')
+    return (
+      <View style={styles.steps}>
+        <IconButton
+          symbol={symbols.previous}
+          accessibilityLabel={`Previous month${previous ? `, ${previous.label}` : ''}`}
+          disabled={!previous}
+          onPress={() => previous?.onPress()}
+        />
+        <Text variant="subsectionTitle" style={styles.shrink}>
+          {month}
+        </Text>
+        <IconButton
+          symbol={symbols.chevron}
+          accessibilityLabel={`Next month${next ? `, ${next.label}` : ''}`}
+          disabled={!next}
+          onPress={() => next?.onPress()}
+        />
+      </View>
+    );
+  return (
+    <Stack.Toolbar placement="bottom">
+      <Stack.Toolbar.Button
+        icon={symbols.previous}
+        disabled={!previous}
+        accessibilityLabel={`Previous month${previous ? `, ${previous.label}` : ''}`}
+        onPress={() => previous?.onPress()}
+      />
+      <Stack.Toolbar.Spacer />
+      <Stack.Toolbar.View>
+        <Text variant="subsectionTitle">{month}</Text>
+      </Stack.Toolbar.View>
+      <Stack.Toolbar.Spacer />
+      <Stack.Toolbar.Button
+        icon={symbols.chevron}
+        disabled={!next}
+        accessibilityLabel={`Next month${next ? `, ${next.label}` : ''}`}
+        onPress={() => next?.onPress()}
+      />
+    </Stack.Toolbar>
   );
 }
 
@@ -367,7 +722,12 @@ export function IconButton({
           const state = stateOf(pressed);
           return [
             styles.iconButton,
-            { width: box, height: box, borderRadius: box / 2 },
+            {
+              width: box,
+              height: box,
+              borderRadius: box / 2,
+              borderCurve: 'continuous',
+            },
             {
               backgroundColor: fill(state.fill),
               borderColor: fill(state.border),
@@ -390,10 +750,15 @@ export function IconButton({
                 accessibilityElementsHidden
                 importantForAccessibility="no-hide-descendants"
               >
-                {/* The count is in the label; the badge keeps its size. */}
-                <NativeText allowFontScaling={false} style={styles.badgeText}>
+                {/* The label carries the count; the capsule still follows Dynamic Type. */}
+                <Text
+                  variant="capsule"
+                  tone="onNavy"
+                  tabular
+                  style={styles.badgeText}
+                >
                   {String(badge)}
-                </NativeText>
+                </Text>
               </View>
             ) : null}
           </>
@@ -487,7 +852,12 @@ export function SegmentedControl<T extends string>({
             accessibilityState={{ selected }}
             accessibilityValue={{ text: `${index + 1} of ${segments.length}` }}
             testID={segment.testID}
-            onPress={() => onChange(segment.value)}
+            onPress={() => {
+              if (segment.value !== value) {
+                haptic('selection');
+                onChange(segment.value);
+              }
+            }}
             style={[styles.segment, stacked ? null : styles.segmentInline]}
           >
             {({ pressed }) => (
@@ -499,7 +869,7 @@ export function SegmentedControl<T extends string>({
                     styles.segmentFill,
                     {
                       backgroundColor: selected
-                        ? colors.navy
+                        ? colors.raised
                         : pressed
                           ? colors.sunken
                           : 'transparent',
@@ -508,7 +878,7 @@ export function SegmentedControl<T extends string>({
                 />
                 <Text
                   variant="control"
-                  tone={selected ? 'onNavy' : 'navy'}
+                  tone="ink"
                   wordSafe
                   style={styles.center}
                 >
@@ -627,6 +997,8 @@ export function Field({
   hint,
   error,
   required = false,
+  grouped = false,
+  labelHidden = false,
   testID,
   inputRef,
   ...input
@@ -638,6 +1010,8 @@ export function Field({
   hint?: string;
   error?: string | null;
   required?: boolean;
+  grouped?: boolean;
+  labelHidden?: boolean;
   testID?: string;
   /** The text input itself, to focus it from a keyboard shortcut. */
   inputRef?: RefObject<TextInput | null>;
@@ -650,49 +1024,56 @@ export function Field({
     .filter(Boolean)
     .join('. ');
   return (
-    <View style={styles.field}>
+    <View style={[styles.field, grouped ? styles.groupedFieldSpacing : null]}>
       {/* The input carries the label, so VoiceOver reads it once. */}
-      <Text
-        variant="control"
-        wordSafe
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        onPress={() => ref.current?.focus()}
-      >
-        {label}
-        {required ? (
-          <Text variant="metadata" tone="inkSoft">
-            {' '}
-            (required)
-          </Text>
-        ) : null}
-      </Text>
-      <TextInput
-        ref={ref}
-        {...input}
-        testID={testID}
-        accessibilityLabel={required ? `${label}, required` : label}
-        accessibilityHint={description || undefined}
-        onFocus={(event) => {
-          setFocused(true);
-          input.onFocus?.(event);
-        }}
-        onBlur={(event) => {
-          setFocused(false);
-          input.onBlur?.(event);
-        }}
-        allowFontScaling
-        maxFontSizeMultiplier={0}
-        // Faint text is for raised surfaces only; a disabled field is sunken.
-        placeholderTextColor={disabled ? colors.inkSoft : colors.inkFaint}
-        style={[
-          styles.input,
-          disabled ? styles.inputDisabled : null,
-          // Focus and error are 2pt, so neither depends on colour alone.
-          focused ? styles.inputFocused : null,
-          error ? styles.inputError : null,
-        ]}
-      />
+      {!labelHidden ? (
+        <Text
+          variant={grouped ? 'groupHeader' : 'secondary'}
+          tone="inkSoft"
+          wordSafe
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          onPress={() => ref.current?.focus()}
+        >
+          {label}
+          {required ? (
+            <Text variant="metadata" tone="inkSoft">
+              {' '}
+              (required)
+            </Text>
+          ) : null}
+        </Text>
+      ) : null}
+      <View style={grouped ? styles.groupedField : undefined}>
+        <TextInput
+          ref={ref}
+          {...input}
+          testID={testID}
+          accessibilityLabel={required ? `${label}, required` : label}
+          accessibilityHint={description || undefined}
+          onFocus={(event) => {
+            setFocused(true);
+            input.onFocus?.(event);
+          }}
+          onBlur={(event) => {
+            setFocused(false);
+            input.onBlur?.(event);
+          }}
+          clearButtonMode="while-editing"
+          allowFontScaling
+          maxFontSizeMultiplier={0}
+          // Faint text is for raised surfaces only; a disabled field is sunken.
+          placeholderTextColor={disabled ? colors.inkSoft : colors.inkFaint}
+          style={[
+            styles.input,
+            grouped ? styles.groupedInput : null,
+            disabled ? styles.inputDisabled : null,
+            // Focus changes the colour, never the boundary width.
+            focused ? styles.inputFocused : null,
+            error ? styles.inputError : null,
+          ]}
+        />
+      </View>
       {hint ? (
         <Text
           variant="fine"
@@ -718,16 +1099,7 @@ export function Field({
   );
 }
 
-const SEND_SCALE = 1.35;
-/**
- * A question composer: one rounded input surface with its send action inline
- * at the trailing edge, as Messages draws it. The send circle is navy once
- * there is text and drawn disabled (ink-soft on sunken) until then; while
- * working it keeps its place and shows a spinner. The screen's title names
- * the task, so the label is spoken, not drawn: the input reads as
- * `label` and the send button as `submitLabel`. `ref` is the whole surface,
- * so a keyboard-aware screen keeps the input and its action in view.
- */
+/** The frame only. Ask owns sessions, options, tags and stop behaviour. */
 export function Composer({
   ref,
   label,
@@ -738,30 +1110,37 @@ export function Composer({
   onFocus,
   placeholder,
   busy = false,
+  onStop,
+  leading,
+  tags = [],
+  note,
+  docked = false,
+  bottomOffset = 0,
   maxLength,
   testID,
   submitTestID,
   inputRef,
 }: {
   ref?: Ref<View>;
-  /** The text input itself, to focus it from a keyboard shortcut. */
   inputRef?: Ref<TextInput>;
-  /** The input's spoken name: "Your question". */
   label: string;
-  /** The send button's spoken name: "Ask the record". */
   submitLabel: string;
   value: string;
   onChangeText: (text: string) => void;
   onSubmit: () => void;
   onFocus?: TextInputProps['onFocus'];
   placeholder: string;
+  leading?: ReactNode;
+  tags?: { id: string; label: string; onRemove: () => void }[];
+  note?: string;
   busy?: boolean;
+  onStop?: () => void;
+  docked?: boolean;
+  bottomOffset?: number;
   maxLength?: number;
   testID?: string;
   submitTestID?: string;
 }) {
-  const [focused, setFocused] = useState(false);
-  const reduceMotion = useReduceMotion();
   const { fontScale, height } = useWindowDimensions();
   const [keyboardTop, setKeyboardTop] = useState<number | null>(() =>
     Platform.OS === 'ios' ? (Keyboard.metrics()?.screenY ?? null) : null,
@@ -779,104 +1158,78 @@ export function Composer({
       hidden.remove();
     };
   }, []);
-  // Android already resizes its window for the keyboard. On iOS reserve
-  // conversation space above it, including the shorter iPad landscape view.
   const visibleHeight =
     keyboardTop === null ? height : Math.max(0, Math.min(height, keyboardTop));
-  const ready = !!value.trim();
-  const inert = !ready || busy;
-  // The circle grows with the text a little, never past 1.35x.
-  const circle = Math.round(34 * Math.min(Math.max(fontScale, 1), SEND_SCALE));
+  const inputHeight = Math.max(
+    minimumTarget,
+    Math.min(23 * Math.max(1, fontScale) * 5 + 20, visibleHeight * 0.4 - 8),
+  );
+  const content = (
+    <View style={styles.composerBody}>
+      {tags.length ? (
+        <View style={styles.chips}>
+          {tags.map((item) => (
+            <Button
+              key={item.id}
+              label={item.label}
+              symbol={symbols.close}
+              variant="secondary"
+              accessibilityLabel={`Remove ${item.label}`}
+              onPress={item.onRemove}
+              testID={testID ? `${testID}-tag-${item.id}` : undefined}
+            />
+          ))}
+        </View>
+      ) : null}
+      <View style={styles.composer}>
+        {leading}
+        <TextInput
+          ref={inputRef}
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          multiline
+          scrollEnabled
+          maxLength={maxLength}
+          testID={testID}
+          accessibilityLabel={label}
+          onFocus={onFocus}
+          allowFontScaling
+          maxFontSizeMultiplier={0}
+          placeholderTextColor={colors.inkFaint}
+          style={[styles.composerInput, { maxHeight: inputHeight }]}
+        />
+        <IconButton
+          symbol={busy ? symbols.stop : symbols.send}
+          accessibilityLabel={busy ? 'Stop answering' : submitLabel}
+          disabled={busy ? !onStop : !value.trim()}
+          onPress={busy ? () => onStop?.() : onSubmit}
+          testID={submitTestID}
+        />
+      </View>
+      {note ? (
+        <Text variant="footnote" tone="inkSoft">
+          {note}
+        </Text>
+      ) : null}
+    </View>
+  );
+  const glass = Platform.OS === 'ios' && isLiquidGlassAvailable();
   return (
     <View
       ref={ref}
-      style={[styles.composer, focused ? styles.composerFocused : null]}
+      style={[
+        docked ? styles.composerDock : null,
+        docked ? { bottom: bottomOffset } : null,
+      ]}
     >
-      <TextInput
-        ref={inputRef}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        multiline
-        scrollEnabled
-        maxLength={maxLength}
-        testID={testID}
-        accessibilityLabel={label}
-        onFocus={(event) => {
-          setFocused(true);
-          onFocus?.(event);
-        }}
-        onBlur={() => setFocused(false)}
-        allowFontScaling
-        maxFontSizeMultiplier={0}
-        placeholderTextColor={colors.inkFaint}
-        // The native multiline input scrolls once it reaches the cap. Keep
-        // the send action visible and room above for the conversation, on
-        // either device and as the window rotates or resizes.
-        style={[
-          styles.composerInput,
-          {
-            maxHeight: Math.max(
-              minimumTarget,
-              visibleHeight * 0.4 - spacing.s1 * 2,
-            ),
-          },
-        ]}
-      />
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={submitLabel}
-        accessibilityState={{ disabled: inert, busy }}
-        accessibilityShowsLargeContentViewer
-        accessibilityLargeContentTitle={submitLabel}
-        testID={submitTestID}
-        disabled={inert}
-        onPress={onSubmit}
-        hitSlop={4}
-        style={styles.sendTarget}
-      >
-        {({ pressed }) => {
-          const state =
-            !ready && !busy
-              ? buttonStates.primary.disabled
-              : pressed && !inert
-                ? buttonStates.primary.pressed
-                : buttonStates.primary.rest;
-          return (
-            <View
-              style={[
-                styles.send,
-                {
-                  width: circle,
-                  height: circle,
-                  borderRadius: circle / 2,
-                  backgroundColor: fill(state.fill),
-                },
-              ]}
-            >
-              {busy ? (
-                reduceMotion ? (
-                  <View
-                    style={[
-                      styles.staticSpinner,
-                      { borderColor: colors[state.label] },
-                    ]}
-                  />
-                ) : (
-                  <ActivityIndicator color={colors[state.label]} />
-                )
-              ) : (
-                <Icon
-                  name="arrow.up"
-                  size={17}
-                  maxScale={SEND_SCALE}
-                  tone={state.label}
-                />
-              )}
-            </View>
-          );
-        }}
-      </Pressable>
+      {glass ? (
+        <GlassView style={styles.composerGlass} glassEffectStyle="regular">
+          {content}
+        </GlassView>
+      ) : (
+        <View style={styles.composerFallback}>{content}</View>
+      )}
     </View>
   );
 }
@@ -927,14 +1280,14 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     borderCurve: 'continuous',
     borderWidth: hairline,
-    paddingHorizontal: spacing.s4,
-    paddingVertical: spacing.s3,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonStacked: { borderRadius: radii.md },
+  buttonStacked: { borderRadius: radii.container, borderCurve: 'continuous' },
   leading: { alignItems: 'flex-start' },
-  quiet: { marginHorizontal: -spacing.s4 },
+  quiet: { marginHorizontal: -12 },
   shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
   full: { alignSelf: 'stretch' },
@@ -967,6 +1320,7 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
+    borderCurve: 'continuous',
     borderWidth: 2,
     borderStyle: 'dotted',
   },
@@ -981,18 +1335,15 @@ const styles = StyleSheet.create({
     top: -4,
     right: -4,
     minWidth: 22,
-    height: 22,
+    minHeight: 22,
     paddingHorizontal: 6,
     borderRadius: radii.pill,
+    borderCurve: 'continuous',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.bronzeInk,
+    backgroundColor: colors.navy,
   },
   badgeText: {
-    fontFamily: fonts.sansSemiBold,
-    fontSize: 13,
-    lineHeight: 16,
-    color: colors.onNavy,
     fontVariant: ['tabular-nums'],
   },
   switchRow: {
@@ -1019,7 +1370,11 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     borderCurve: 'continuous',
   },
-  chipStacked: { alignSelf: 'stretch', borderRadius: radii.md },
+  chipStacked: {
+    alignSelf: 'stretch',
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+  },
   chipText: { flexShrink: 1 },
   segmented: {
     flexDirection: 'row',
@@ -1029,12 +1384,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.s1,
     minHeight: controlHeight.default,
     borderWidth: hairline,
-    borderColor: colors.lineControl,
+    borderColor: colors.sunken,
     borderRadius: radii.pill,
     borderCurve: 'continuous',
-    backgroundColor: colors.raised,
+    backgroundColor: colors.sunken,
   },
-  segmentedStacked: { flexDirection: 'column', borderRadius: radii.md },
+  segmentedStacked: {
+    flexDirection: 'column',
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+  },
   segment: {
     minHeight: minimumTarget,
     minWidth: minimumTarget,
@@ -1055,11 +1414,38 @@ const styles = StyleSheet.create({
   segmentInline: { flex: 1, flexBasis: 0 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
   field: { gap: spacing.s3, alignSelf: 'stretch' },
+  menuRow: { alignSelf: 'stretch', minHeight: minimumTarget },
+  groupedFieldSpacing: { gap: rhythm.groupHeader },
+  groupedField: {
+    backgroundColor: colors.raised,
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+  },
+  groupedInput: { borderRadius: radii.container, borderCurve: 'continuous' },
+  composerBody: {
+    gap: 8,
+    backgroundColor: 'transparent',
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+  },
+  composerFallback: {
+    backgroundColor: colors.raised,
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+  },
+  composerGlass: {
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+  },
+  composerDock: { position: 'absolute', left: 0, right: 0 },
   input: {
     minHeight: controlHeight.default,
-    borderWidth: hairline,
+    borderWidth: 1,
     borderColor: colors.lineControl,
-    borderRadius: radii.sm,
+    borderRadius: radii.thumb,
+    borderCurve: 'continuous',
     paddingHorizontal: spacing.s4,
     paddingVertical: spacing.s3,
     fontFamily: fonts.sans,
@@ -1068,27 +1454,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.raised,
   },
   inputDisabled: { backgroundColor: colors.sunken },
-  // Focus thickens the boundary to 2pt and the padding gives the extra back,
-  // so the text never moves.
   composer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: spacing.s2,
     borderWidth: hairline,
     borderColor: colors.lineControl,
-    borderRadius: radii.md,
+    borderRadius: radii.container,
     borderCurve: 'continuous',
-    backgroundColor: colors.raised,
+    backgroundColor: 'transparent',
     paddingLeft: spacing.s4,
     paddingRight: spacing.s1,
     paddingVertical: spacing.s1,
-  },
-  composerFocused: {
-    borderWidth: 2,
-    borderColor: colors.navy,
-    paddingLeft: spacing.s4 - (2 - hairline),
-    paddingRight: spacing.s1 - (2 - hairline),
-    paddingVertical: spacing.s1 - (2 - hairline),
   },
   composerInput: {
     flex: 1,
@@ -1108,7 +1485,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   send: { alignItems: 'center', justifyContent: 'center' },
-  inputFocused: { borderColor: colors.navy, borderWidth: 2 },
-  inputError: { borderColor: colors.danger, borderWidth: 2 },
+  inputFocused: { borderColor: colors.navy },
+  inputError: { borderColor: colors.danger },
   error: { flexDirection: 'row', gap: spacing.s2, alignItems: 'flex-start' },
 });
