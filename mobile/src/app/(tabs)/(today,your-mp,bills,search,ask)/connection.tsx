@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="connection" title="Program or place" />;
-}
+export { default } from '../../../features/money-public/Connection';
