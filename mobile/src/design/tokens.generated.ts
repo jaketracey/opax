@@ -315,7 +315,7 @@ export const typeRoles = {
     font: 'serifBold',
     fontWeight: '700',
     fontSize: 28,
-    lineHeight: 34,
+    lineHeight: 36,
     dynamicTypeRamp: 'title1',
     color: 'ink',
   },
@@ -323,7 +323,7 @@ export const typeRoles = {
     font: 'serifBold',
     fontWeight: '700',
     fontSize: 22,
-    lineHeight: 28,
+    lineHeight: 30,
     dynamicTypeRamp: 'title2',
     color: 'ink',
   },
@@ -438,7 +438,7 @@ export const typeRoles = {
     font: 'serifBold',
     fontWeight: '700',
     fontSize: 28,
-    lineHeight: 34,
+    lineHeight: 36,
     dynamicTypeRamp: 'title1',
     color: 'ink',
   },
@@ -520,7 +520,7 @@ export const typeRoles = {
     font: 'serifBold',
     fontWeight: '700',
     fontSize: 28,
-    lineHeight: 34,
+    lineHeight: 36,
     dynamicTypeRamp: 'title1',
     color: 'ink',
   },
@@ -603,7 +603,7 @@ export const typeRoles = {
 /** Type steps at regular width (iPad). */
 export const typeRolesRegular = {
   /** @deprecated Use `recordTitle`. */
-  title: { fontSize: 28, lineHeight: 34 },
+  title: { fontSize: 28, lineHeight: 36 },
 } as const;
 
 /** One vertical rhythm, applied everywhere. */

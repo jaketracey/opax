@@ -1,7 +1,7 @@
 import { createElement, act } from 'react';
 import * as accessibility from '../src/design/accessibility';
 import TestRenderer from 'react-test-renderer';
-import { Text as NativeText, StyleSheet } from 'react-native';
+import { Text as NativeText, Platform, StyleSheet } from 'react-native';
 import {
   LINE_HEIGHT_NUDGE,
   nextWordSafeCap,
@@ -133,6 +133,50 @@ test('record titles cap at the title1 AX2 size; other roles stay uncapped', () =
   ] as const)
     expect(titleSizeCap(variant, 3.571, 'ios')).toBe(1);
 });
+
+test.each(['ios', 'android'] as const)(
+  '%s: only record title roles and their aliases request push-out line breaking',
+  (os) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    try {
+      for (const variant of Object.keys(
+        textStyles,
+      ) as (keyof typeof textStyles)[]) {
+        let renderer!: TestRenderer.ReactTestRenderer;
+        act(() => {
+          renderer = TestRenderer.create(
+            createElement(
+              Text,
+              { variant },
+              'Interactive Gambling (Cost Recovery Levy) Bill 2026',
+            ),
+          );
+        });
+        const title = [
+          'recordTitle',
+          'recordHeading',
+          'title',
+          'padTitle',
+        ].includes(variant);
+        expect(
+          renderer.root.findByType(NativeText).props.lineBreakStrategyIOS,
+        ).toBe(os === 'ios' && title ? 'push-out' : undefined);
+        act(() => renderer.unmount());
+      }
+    } finally {
+      Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  },
+);
+
+test.each(['recordTitle', 'recordHeading', 'rowRecord', 'recordText'] as const)(
+  '%s: Merriweather leading stays at least 1.28 times the size',
+  (variant) => {
+    const role = textStyles[variant];
+    expect(role.lineHeight / role.fontSize).toBeGreaterThanOrEqual(1.28);
+  },
+);
 
 test('Heading chooses record, long record, page and section roles with the header trait', () => {
   for (const [props, variant] of [

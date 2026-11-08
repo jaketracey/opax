@@ -518,6 +518,10 @@ export function Text({
       allowFontScaling
       maxFontSizeMultiplier={0}
       dynamicTypeRamp={role.dynamicTypeRamp}
+      {...(Platform.OS === 'ios' &&
+      ['recordTitle', 'recordHeading', 'title', 'padTitle'].includes(variant)
+        ? { lineBreakStrategyIOS: 'push-out' }
+        : {})}
       style={[
         {
           color: roleColour(tone ?? role.color, highContrast),
