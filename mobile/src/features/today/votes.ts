@@ -44,7 +44,9 @@ export const VOTES_RULE =
 const READING = /\b(second|third) reading\b/i;
 const AMENDMENT = /amendment/i;
 /** Second- and third-reading votes only; procedure and amendments are out. */
-export function isReadingVote(row: Pick<RecentDivision, 'stage' | 'question_type'>) {
+export function isReadingVote(
+  row: Pick<RecentDivision, 'stage' | 'question_type'>,
+) {
   const stage = String(row.stage ?? '').replace(/_/g, ' ');
   if (row.question_type === 'procedural' || row.question_type === 'amendment')
     return false;
@@ -62,7 +64,9 @@ export function chamberWord(chamber: string | null | undefined): string | null {
 /** "Second reading", "Third reading": the stage as a reader says it. */
 export function stageWords(stage: string | null | undefined): string | null {
   const match = READING.exec(String(stage ?? '').replace(/_/g, ' '));
-  return match ? `${match[1]![0]!.toUpperCase()}${match[1]!.slice(1).toLowerCase()} reading` : null;
+  return match
+    ? `${match[1]![0]!.toUpperCase()}${match[1]!.slice(1).toLowerCase()} reading`
+    : null;
 }
 
 /** The block's rows: the newest reading votes, newest first. */
