@@ -274,7 +274,10 @@ test('focus= pushes the party record once the graph loads', async () => {
 
 test('summary, caption and footnote helpers state the cut in plain words', () => {
   const all = defaultMoneyFilters(graph);
-  expect(moneySummary(graph, all)).toMatch(/^Donations to parties/);
+  // All years states the returns' span, not the later public-money years.
+  expect(moneySummary(graph, all)).toBe(
+    'Donations to parties, 1998–99 to 2025–26, and public money to donors on the map',
+  );
   expect(donorCaption(graph, { ...all, from: 2024, to: 2024 })).toBe(
     'Largest in 2024–25 among the 250 largest donors since 1998–99',
   );

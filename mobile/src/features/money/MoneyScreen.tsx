@@ -97,10 +97,20 @@ type Mode = 'list' | '3d';
 
 /** "Donations to parties, 1998–99 to 2025–26, and public money to donors on the map". */
 export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
+  // All years names the returns' own span: public money runs later, and
+  // the extent it reaches is not a span of donations.
+  const parties = graph.nodes.filter(
+    (n) => n.kind === 'party' && n.firstYear !== null && n.lastYear !== null,
+  );
+  const [from, to] =
+    filters.donations && isAllYears(graph, filters) && parties.length
+      ? [
+          Math.min(...parties.map((n) => n.firstYear!)),
+          Math.max(...parties.map((n) => n.lastYear!)),
+        ]
+      : [filters.from, filters.to];
   const window =
-    filters.from === filters.to
-      ? ` in ${moneyYears(filters.from, filters.to)}`
-      : `, ${moneyYears(filters.from, filters.to)}`;
+    from === to ? ` in ${moneyYears(from, to)}` : `, ${moneyYears(from, to)}`;
   const industry = filters.industry
     ? `, ${industryWords(filters.industry)} donors only`
     : '';
