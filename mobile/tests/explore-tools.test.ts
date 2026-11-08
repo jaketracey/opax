@@ -505,12 +505,39 @@ describe('words per dollar', () => {
   const explore = () =>
     jest.requireMock('../src/features/explore/runtime').explore;
   const reports = () => jest.requireMock('../src/api/runtime').reports;
-  const moneyRecord = () => ({
-    data: decodeIndustryMoney(read('graph/money.json')),
+  const WD = () => jest.requireActual('../src/features/explore/WordsDollars');
+  const Pair = () => jest.requireActual('../src/features/explore/PairRow');
+  const moneyRecord = (
+    data = decodeIndustryMoney(read('graph/money.json')),
+  ) => ({
+    data,
     stale: false,
     asOf: null,
     savedAt: 1000,
   });
+  const matrixRecord = (cells: Record<string, Record<string, number>> = {}) => {
+    const base = decodeDatedMatrix(matrixRaw);
+    const totals = Object.fromEntries(
+      Object.entries(cells).map(([k, v]) => [
+        k,
+        Object.values(v).reduce((a, b) => a + b, 0),
+      ]),
+    );
+    return {
+      data: {
+        ...base,
+        cells: { ...base.cells, ...cells } as Record<
+          string,
+          Record<string, number>
+        >,
+        totals: { ...base.totals, ...totals },
+        generated_at: '2026-11-02',
+      },
+      stale: false,
+      asOf: '2026-11-02',
+      savedAt: 1000,
+    };
+  };
   beforeEach(() => jest.clearAllMocks());
   const host = (
     r: import('react-test-renderer').ReactTestRenderer,
@@ -519,37 +546,100 @@ describe('words per dollar', () => {
     r.root.findAll(
       (n) => typeof n.type === 'string' && n.props.testID === id,
     )[0];
+  const order = (r: import('react-test-renderer').ReactTestRenderer) => [
+    ...new Set(
+      r.root
+        .findAll(
+          (n) =>
+            typeof n.type === 'string' && /^wd-/.test(n.props.testID ?? ''),
+        )
+        .map((n) => n.props.testID as string),
+    ),
+  ];
+  const sourceLabel = (r: import('react-test-renderer').ReactTestRenderer) =>
+    r.root.findAll(
+      (n) => n.props.testID === 'wd-as-at' && !!n.props.accessibilityLabel,
+    )[0]!.props.accessibilityLabel as string;
 
-  test('one subject in party-groups order, money opens the in-tab money map for that industry and party, speeches open the topic', async () => {
+  test('line values carry no prefixes and say a missing value in words', () => {
+    const { pairMoneyText, pairSpeechText } = Pair();
+    expect(pairMoneyText({ party: 'Labor', money: 10_763_834 })).toBe(
+      '$10,763,834',
+    );
+    expect(pairMoneyText({ party: 'Labor', money: 0 })).toBe('None disclosed');
+    expect(pairMoneyText({ party: 'Independent', money: 0 })).toBe(
+      'Not separated',
+    );
+    const speech = { count: 41, percent: '41%', speechMissing: false };
+    expect(pairSpeechText(speech)).toBe('41% · 41 speeches');
+    expect(pairSpeechText({ ...speech, percent: null })).toBe('41 speeches');
+    expect(pairSpeechText({ ...speech, count: 0 })).toBe(
+      'No speeches recorded',
+    );
+    expect(pairSpeechText({ ...speech, speechMissing: true })).toBe(
+      'Not loaded',
+    );
+  });
+
+  test('pairFigures scales both bars to the largest party on the subject', () => {
+    const { pairFigures } = WD();
+    const gambling = pairings.find((p) => p.topic === 'gambling')!;
+    const money = decodeIndustryMoney(read('graph/money.json'));
+    const donations = {
+      ...money,
+      nodes: [
+        {
+          id: 'd1',
+          label: 'Club',
+          kind: 'donor',
+          industry: 'gambling',
+          total: 0,
+          count: 0,
+        },
+      ],
+      edges: [
+        { source: 'd1', target: 'party:Greens', total: 9_000_000, count: 1 },
+        { source: 'd1', target: 'party:Labor', total: 10, count: 1 },
+      ],
+    };
+    const matrix = {
+      cells: { gambling: { Liberal: 300, Labor: 600, Greens: 100 } },
+      totals: { gambling: 1000 },
+      parties: ['Labor', 'Liberal', 'Greens'],
+    };
+    const figures = pairFigures(gambling, matrix, donations);
+    expect(figures.moneyMax).toBe(9_000_000);
+    expect(figures.shareMax).toBe(60);
+    expect(
+      figures.rows.map((r: { party: string; percent: string | null }) => [
+        r.party,
+        r.percent,
+      ]),
+    ).toEqual([
+      ['Labor', '60%'],
+      ['Liberal', '30%'],
+      ['Greens', '10%'],
+    ]);
+    expect(figures.empty).toBe(false);
+    // Speeches not loaded: no speech bar to scale, money still does.
+    const failed = pairFigures(gambling, null, donations);
+    expect(failed.shareMax).toBe(0);
+    expect(failed.moneyMax).toBe(9_000_000);
+    expect(failed.empty).toBe(false);
+  });
+
+  test('one subject in party-groups order: headers read both figures, money opens the in-tab money map, speeches open the topic, one source line after the rows', async () => {
     const money = moneyRecord();
     reports().money.mockResolvedValue(money);
-    const base = decodeDatedMatrix(matrixRaw);
-    const labels = {
-      ...base,
-      cells: {
-        ...base.cells,
-        agriculture: { Labor: 300, Nationals: 200 },
-      } as Record<string, Record<string, number>>,
-      totals: { ...base.totals, agriculture: 500 },
-      generated_at: '2026-11-02',
-    };
-    explore().matrix.mockResolvedValue({
-      data: labels,
-      stale: false,
-      asOf: '2026-11-02',
-      savedAt: 1000,
+    const matrix = matrixRecord({
+      agriculture: { Labor: 300, Nationals: 200 },
     });
-    const WordsDollars = jest.requireActual(
-      '../src/features/explore/WordsDollars',
-    ).default;
-    const { pairFigures } = jest.requireActual(
-      '../src/features/explore/WordsDollars',
-    );
-    const r = await render(createElement(WordsDollars));
+    explore().matrix.mockResolvedValue(matrix);
+    const r = await render(createElement(WD().default));
     expect(host(r, 'wd-loading')).toBeUndefined();
     const pair = pairings[0]!;
     expect(pair.topic).toBe('agriculture');
-    const { rows } = pairFigures(pair, labels, money.data);
+    const { rows } = WD().pairFigures(pair, matrix.data, money.data);
     const drawn = r.root
       .findAll(
         (n) =>
@@ -557,70 +647,99 @@ describe('words per dollar', () => {
       )
       .map((n) => n.props.testID.slice('wd-row-'.length));
     expect(drawn).toEqual(rows.map((row: { party: string }) => row.party));
+    const linkTo = (id: string) =>
+      r.root.findAll(
+        (n) =>
+          (n.type as unknown) === 'Link' &&
+          n.findAll((c) => c.props.testID === id).length > 0,
+      )[0];
     const paid = rows.find((row: { money: number }) => row.money > 0);
     expect(paid).toBeDefined();
-    {
-      const line = host(r, `wd-money-${paid.party}`)!;
-      expect(line.props.accessibilityRole).toBe('link');
-      const link = r.root.findAll(
-        (n) =>
-          (n.type as unknown) === 'Link' &&
-          n.findAll((c) => c.props.testID === `wd-money-${paid.party}`).length >
-            0,
-      )[0];
-      expect(link?.props.href).toEqual({
-        pathname: '/money',
-        params: { focus: `party:${paid.party}`, industry: pair.industries[0] },
-      });
-    }
-    const spoke = rows.find((row: { speech: string | null }) => row.speech);
-    expect(spoke).toBeDefined();
-    {
-      const link = r.root.findAll(
-        (n) =>
-          (n.type as unknown) === 'Link' &&
-          n.findAll((c) => c.props.testID === `wd-speech-${spoke.party}`)
-            .length > 0,
-      )[0];
-      expect(link?.props.href).toEqual({
-        pathname: '/topic/[slug]',
-        params: {
-          slug: pair.topic,
-          party: spoke.party,
-          name: topicLabel(pair.topic),
-        },
-      });
-    }
+    expect(host(r, `wd-money-${paid.party}`)!.props.accessibilityLabel).toBe(
+      `${paid.name}, donations from agriculture donors, ${Pair().pairMoneyText(paid)}. Opens the money map.`,
+    );
+    expect(linkTo(`wd-money-${paid.party}`)?.props.href).toEqual({
+      pathname: '/money',
+      params: { focus: `party:${paid.party}`, industry: pair.industries[0] },
+    });
+    const labor = rows.find((row: { party: string }) => row.party === 'Labor');
+    const laborMoney = Pair().pairMoneyText(labor);
+    const header = r.root.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.accessibilityRole === 'header' &&
+        /^Labor\. /.test(n.props.accessibilityLabel ?? ''),
+    )[0]!;
+    expect(header.props.accessibilityLabel).toBe(
+      `Labor. ${labor.money > 0 ? `${laborMoney} from agriculture donors` : laborMoney}. 60 percent of agriculture speeches with a recorded party.`,
+    );
+    expect(host(r, 'wd-speech-Labor')!.props.accessibilityLabel).toBe(
+      'Labor, 60 percent of agriculture speeches with a recorded party, 300 speeches. Opens the topic.',
+    );
+    expect(linkTo('wd-speech-Labor')?.props.href).toEqual({
+      pathname: '/topic/[slug]',
+      params: {
+        slug: pair.topic,
+        party: 'Labor',
+        name: topicLabel(pair.topic),
+      },
+    });
+    expect(host(r, 'wd-figure')!.props.accessibilityLabel).toMatch(
+      /^\$[\d,]+, disclosed by agriculture donors to political parties$/,
+    );
     const texts = uiTexts(r).join(' ');
     expect(texts).toContain('Comparison, never causation');
-    expect(texts).toContain(
-      'disclosed by agriculture donors to political parties',
-    );
     expect(texts).toContain('A floor, not a ceiling');
-    expect(texts).not.toMatch(/labelled|so far|\bpass\b|—/);
+    expect(texts).toContain('Share of Agriculture speeches');
+    expect(texts).not.toMatch(
+      /Money:|Speeches:|Speech:|What an industry|labelled|so far|\bpass\b|—/,
+    );
     // Every link stays in the app: no web page for money.
     expect(
       r.root
         .findAll((n) => (n.type as unknown) === 'Link')
         .every((n) => typeof n.props.href !== 'string'),
     ).toBe(true);
-    const line = r.root.findAll(
-      (n) => n.props.testID === 'wd-as-at' && !!n.props.accessibilityLabel,
-    )[0]!;
-    expect(line.props.accessibilityLabel).toMatch(
+    // One source line, after the figure and the party block.
+    const ids = order(r);
+    expect(ids.filter((id) => id === 'wd-as-at')).toHaveLength(1);
+    expect(ids.indexOf('wd-as-at')).toBeGreaterThan(
+      ids.indexOf(`wd-row-${rows.at(-1)!.party}`),
+    );
+    expect(ids.indexOf('wd-figure')).toBeLessThan(
+      ids.indexOf(`wd-row-${rows[0]!.party}`),
+    );
+    expect(sourceLabel(r)).toMatch(
       /^Updated .+, AEC annual returns and 1 more$/,
     );
     r.unmount();
   });
 
-  test('a failed speech read says Not loaded, never zero', async () => {
+  test('a subject with no donations and no speeches draws no $0 figure, only the line and the source', async () => {
+    const money = decodeIndustryMoney(read('graph/money.json'));
+    reports().money.mockResolvedValue(
+      moneyRecord({
+        ...money,
+        nodes: money.nodes.filter((n) => n.industry !== 'agriculture'),
+      }),
+    );
+    explore().matrix.mockResolvedValue(matrixRecord());
+    const r = await render(createElement(WD().default));
+    expect(host(r, 'wd-empty')).toBeDefined();
+    expect(host(r, 'wd-figure')).toBeUndefined();
+    expect(order(r).some((id) => /^wd-row-/.test(id))).toBe(false);
+    expect(uiTexts(r).join(' ')).not.toMatch(/\$0\b/);
+    expect(uiTexts(r)).toContain(
+      'No donations or speeches with a topic label are recorded for agriculture.',
+    );
+    expect(host(r, 'wd-as-at')).toBeDefined();
+    r.unmount();
+  });
+
+  test('a failed speech read says Not loaded, never zero, with the error under the rows and a partial source line', async () => {
     reports().money.mockResolvedValue(moneyRecord());
     explore().matrix.mockRejectedValue(new Error('500'));
-    const WordsDollars = jest.requireActual(
-      '../src/features/explore/WordsDollars',
-    ).default;
-    const r = await render(createElement(WordsDollars));
-    expect(host(r, 'wd-speech-error')).toBeDefined();
+    const r = await render(createElement(WD().default));
     const speech = r.root.findAll(
       (n) =>
         typeof n.type === 'string' &&
@@ -628,8 +747,17 @@ describe('words per dollar', () => {
         !!n.props.accessibilityLabel,
     );
     expect(speech.length).toBeGreaterThan(0);
-    for (const n of speech)
-      expect(n.props.accessibilityLabel).toMatch(/Speeches: Not loaded$/);
+    for (const n of speech) {
+      expect(n.props.accessibilityLabel).toMatch(/, Not loaded\.$/);
+      expect(n.props.accessibilityRole).not.toBe('link');
+    }
+    const ids = order(r);
+    const lastRow = ids.filter((id) => /^wd-row-/.test(id)).at(-1)!;
+    expect(ids.indexOf('wd-speech-error')).toBeGreaterThan(
+      ids.indexOf(lastRow),
+    );
+    expect(uiTexts(r).join(' ')).toContain("Speech shares couldn't be loaded.");
+    expect(sourceLabel(r)).toMatch(/partial$/);
     r.unmount();
   });
 });

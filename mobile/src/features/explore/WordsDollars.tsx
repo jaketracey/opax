@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
 import {
   ContentUnavailable,
-  FigureBlock,
   Heading,
   Icon,
   InlineError,
   PopUpButton,
   Screen,
   Skeleton,
+  SourceLine,
   Text,
   copy,
   haptic,
-  type FigureSource,
+  type SourceDetails,
+  type TextTone,
 } from '../../design/primitives';
 import { formatCount, formatMoney } from '../../design/format';
 import { symbols } from '../../design/symbols';
-import { rhythm } from '../../design/tokens';
+import { accents, rhythm } from '../../design/tokens';
 import { reports } from '../../api/runtime';
 import type { RecordResult } from '../../api/client';
 import type { IndustryMoney } from '../reports/model';
@@ -54,13 +55,15 @@ export function wordsSource(
   money: RecordResult<IndustryMoney>,
   matrix: RecordResult<Matrix> | null,
   pairing: Pairing,
-): FigureSource {
+  partial = false,
+): SourceDetails {
   const moneyAsOf = money.data.meta.generated ?? null;
   const topicsAsOf = matrix?.data.generated_at ?? null;
   const combined = combinedIndustryNote(pairing);
   return {
     asOf: moneyAsOf,
     savedAt: money.stale ? money.savedAt : null,
+    ...(partial ? { state: 'partial' as const } : {}),
     citation: [
       { label: 'AEC annual returns', asOf: moneyAsOf },
       { label: 'OPAX topics', asOf: topicsAsOf },
@@ -79,11 +82,13 @@ export function wordsSource(
       money.data.meta.methodology,
       ...(combined ? [combined] : []),
     ],
-    testID: 'wd-as-at',
   };
 }
 
-/** A pairing's parties as drawn: wordsPanel order, matrix shares. */
+/**
+ * A pairing's parties as drawn: wordsPanel order, matrix shares, and the
+ * largest party amount and share on this subject, which scale the bars.
+ */
 export function pairFigures(
   pairing: Pairing,
   matrix: Matrix | null,
@@ -92,19 +97,32 @@ export function pairFigures(
   const panel = wordsPanel(pairing, matrix, money);
   const cells = matrix?.cells[pairing.topic] ?? {};
   const shares = new Map(
-    partyShares(cells, panel.base).map((s) => [s.party, s.text]),
+    partyShares(cells, panel.base).map((s) => [s.party, s]),
   );
+  const rows = panel.rows.map((row): PairFigures => {
+    const share = shares.get(row.party);
+    return {
+      party: row.party,
+      name: row.name,
+      money: row.money,
+      count: row.speeches,
+      share: row.share,
+      percent:
+        share?.percent == null
+          ? null
+          : share.percent === 0
+            ? '<1%'
+            : `${share.percent}%`,
+      speechMissing: !matrix,
+    };
+  });
   return {
     panel,
-    rows: panel.rows.map(
-      (row): PairFigures => ({
-        party: row.party,
-        name: row.name,
-        money: row.money,
-        speech: row.speeches > 0 ? (shares.get(row.party) ?? null) : null,
-        speechMissing: !matrix,
-      }),
-    ),
+    rows,
+    moneyMax: Math.max(0, ...rows.map((r) => r.money)),
+    shareMax: matrix ? Math.max(0, ...rows.map((r) => r.share)) : 0,
+    /** Nothing to compare: no donations and, with speeches loaded, none. */
+    empty: panel.moneyTotal === 0 && !!matrix && rows.every((r) => !r.count),
   };
 }
 
@@ -154,21 +172,21 @@ export default function WordsDollars() {
         <Heading level={1} kind="page">
           Words per dollar
         </Heading>
-        <Text wordSafe variant="body">
-          What an industry disclosed to each party, beside how much of that
-          subject’s debate each party gave. Comparison, never causation.
-        </Text>
         <PopUpButton
           label="Subject"
           value={pairing.topic}
           options={SUBJECTS}
           onChange={(next) => {
-            haptic('selection');
+            // Android's menu already fires its own selection haptic.
+            if (Platform.OS === 'ios') haptic('selection');
             setTopic(next);
             saveExploreChoice({ subject: next });
           }}
           testID="wd-subject"
         />
+        <Text wordSafe variant="footnote">
+          Comparison, never causation
+        </Text>
         {!money.record && isOffline(money.error) ? (
           <ContentUnavailable
             symbol="wifi.slash"
@@ -192,68 +210,103 @@ export default function WordsDollars() {
           />
         ) : (
           <View style={styles.body}>
-            <FigureBlock
-              value={formatMoney(figures.panel.moneyTotal)}
-              ink="money"
-              label={`disclosed by ${pairing.industryNoun} to political parties`}
-              caveat="A floor, not a ceiling: donations under the disclosure threshold are not reported."
-              {...{
-                source: wordsSource(money.record, matrix.record, pairing),
-              }}
-              testID="wd-figure"
-            />
-            <View
-              style={styles.legend}
-              accessible
-              accessibilityLabel={`Money: disclosed by ${pairing.industryNoun}. Speeches: share of ${topicLabel(pairing.topic)} speeches with a recorded party.`}
-            >
-              <View style={styles.key}>
-                <Icon
-                  name={symbols.money}
-                  size={15}
-                  type="hierarchical"
-                  ink="money"
-                  maxScale={1.5}
-                />
-                <Text wordSafe variant="footnote" style={styles.grow}>
-                  {`Money: disclosed by ${pairing.industryNoun}`}
-                </Text>
-              </View>
-              <View style={styles.key}>
-                <Icon
-                  name={symbols.speech}
-                  size={15}
-                  tone="inkSoft"
-                  maxScale={1.5}
-                />
-                <Text wordSafe variant="footnote" style={styles.grow}>
-                  {`Speeches: share of ${topicLabel(pairing.topic)} speeches with a recorded party`}
-                </Text>
-              </View>
-            </View>
-            {matrix.error && !matrix.record ? (
-              <InlineError
-                subject="Speeches"
-                onRetry={matrix.retry}
-                testID="wd-speech-error"
-              />
-            ) : null}
-            {figures.rows.length ? (
-              <View>
-                {figures.rows.map((row) => (
-                  <PairRow key={row.party} row={row} pairing={pairing} />
-                ))}
-              </View>
+            {figures.empty ? (
+              <Text wordSafe variant="body" testID="wd-empty">
+                {`No donations or speeches with a topic label are recorded for ${topicLabel(pairing.topic).toLowerCase()}.`}
+              </Text>
             ) : (
-              <Text wordSafe variant="body">
-                No donations or speeches are recorded for this subject.
-              </Text>
+              <>
+                {figures.panel.moneyTotal > 0 ? (
+                  <View style={styles.figure}>
+                    <View
+                      accessible
+                      accessibilityLabel={`${formatMoney(figures.panel.moneyTotal)}, disclosed by ${pairing.industryNoun} to political parties`}
+                      testID="wd-figure"
+                    >
+                      <Text
+                        wordSafe
+                        variant="figure"
+                        tone={accents.money.ink as TextTone}
+                      >
+                        {formatMoney(figures.panel.moneyTotal)}
+                      </Text>
+                      <Text wordSafe variant="secondary">
+                        {`disclosed by ${pairing.industryNoun} to political parties`}
+                      </Text>
+                    </View>
+                    <Text wordSafe variant="footnote">
+                      A floor, not a ceiling: donations under the disclosure
+                      threshold are not reported.
+                    </Text>
+                  </View>
+                ) : null}
+                <View
+                  style={styles.legend}
+                  accessible
+                  accessibilityLabel={`Donations. Share of ${topicLabel(pairing.topic)} speeches.`}
+                >
+                  <View style={styles.key}>
+                    <Icon
+                      name={symbols.money}
+                      size={13}
+                      tone="inkSoft"
+                      maxScale={1.5}
+                    />
+                    <Text wordSafe variant="footnote">
+                      Donations
+                    </Text>
+                  </View>
+                  <View style={styles.key}>
+                    <Icon
+                      name={symbols.speech}
+                      size={13}
+                      tone="inkSoft"
+                      maxScale={1.5}
+                    />
+                    <Text wordSafe variant="footnote">
+                      {`Share of ${topicLabel(pairing.topic)} speeches`}
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  {figures.rows.map((row) => (
+                    <PairRow
+                      key={row.party}
+                      row={row}
+                      pairing={pairing}
+                      moneyMax={figures.moneyMax}
+                      shareMax={figures.shareMax}
+                    />
+                  ))}
+                </View>
+                {matrix.error && !matrix.record ? (
+                  <InlineError
+                    subject="Speech shares"
+                    message={
+                      isOffline(matrix.error)
+                        ? 'Speech shares need a connection.'
+                        : undefined
+                    }
+                    onRetry={matrix.retry}
+                    testID="wd-speech-error"
+                  />
+                ) : null}
+                {matrix.record && base > 0 && base < THIN_PARTY_BASE ? (
+                  <Text wordSafe variant="footnote" testID="wd-thin">
+                    {`A party is recorded for only ${formatCount(base)} speeches on this subject, so shares are not shown.`}
+                  </Text>
+                ) : null}
+              </>
             )}
-            {matrix.record && base > 0 && base < THIN_PARTY_BASE ? (
-              <Text wordSafe variant="footnote" testID="wd-thin">
-                {`A party is recorded for only ${formatCount(base)} of these speeches, so shares are not shown.`}
-              </Text>
-            ) : null}
+            <SourceLine
+              {...wordsSource(
+                money.record,
+                matrix.record,
+                pairing,
+                !!matrix.error && !matrix.record,
+              )}
+              testID="wd-as-at"
+            />
           </View>
         )}
       </Screen>
@@ -262,7 +315,12 @@ export default function WordsDollars() {
 }
 const styles = StyleSheet.create({
   body: { gap: rhythm.block },
-  legend: { gap: rhythm.line },
+  figure: { gap: rhythm.line },
+  legend: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    columnGap: rhythm.block,
+    rowGap: rhythm.line,
+  },
   key: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
 });
