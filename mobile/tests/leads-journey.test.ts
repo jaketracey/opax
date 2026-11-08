@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { formatMoney, moneyAccessibilityLabel } from '../src/design/format';
 import { plainCaveat } from '../src/features/leads/model';
 import { pinned } from './pinned';
 
@@ -62,8 +63,25 @@ function plain(value: unknown): string {
     throw new Error(`No plain wording for ${caveat}`);
   return caveat;
 }
+/** A metric object's value, or the value itself. */
+const amountOf = (value: unknown) =>
+  Number(
+    value && typeof value === 'object' && 'value' in value
+      ? (value as { value: unknown }).value
+      : value,
+  );
+/** Money read aloud in short: "77 million dollars", "2.3 billion dollars". */
+function spoken(value: unknown): string {
+  const amount = amountOf(value);
+  if (amount < 10_000) return `${grouped(Math.round(amount))} dollars`;
+  if (amount < 1e6) return `${Math.round(amount / 1e3)} thousand dollars`;
+  const [unit, word] = amount < 1e9 ? [1e6, 'million'] : [1e9, 'billion'];
+  return `${Number((amount / unit).toFixed(1))} ${word} dollars`;
+}
 function shown(value: unknown, as?: string): string {
   if (as === 'plain') return plain(value);
+  if (as === 'spoken') return spoken(value);
+  if (as === 'money') return `$${grouped(Math.round(amountOf(value)))}`;
   if (as === 'dollars') return `${grouped(Math.round(Number(value)))} dollars`;
   if (as === 'count') return grouped(Number(value));
   if (as === 'percent') return `${Number(value).toFixed(1)} percent`;
@@ -144,14 +162,17 @@ function checks(): Check[] {
 test('journey 27 checks the leads’ titles, dates, charts and caveats by JSON pointer', () => {
   const all = checks();
   const pointers = all.map((c) => c.pointer);
-  // A company lead's title and its caveats; the export's date (a source
-  // sheet's "As at"); the party lead's takeaway, chart and how it was found
-  // (specs/money.md 2.9, 2.10). The card's figure and the example records
-  // are not in the export's own words, so they are not checked by pointer.
+  // A company lead's card (its title and one figure), its caveats and its
+  // example records' originals; the export's date (a section source
+  // sheet's "As at"); the party lead's takeaway, chart, table and how it
+  // was found (specs/money.md 2.9, 2.10, 3).
   for (const pointer of [
     '/signals/0/title',
+    '/signals/0/metrics/0',
     '/signals/0/caveats/0',
     '/signals/0/caveats/2',
+    '/signals/0/evidence/0/url',
+    '/signals/0/evidence/1/record_id',
     '/generated_at',
     '/signals/1/chart/participants/0/name',
     '/signals/1/chart/participants/0/value',
@@ -159,6 +180,27 @@ test('journey 27 checks the leads’ titles, dates, charts and caveats by JSON p
   ])
     expect(pointers).toContain(pointer);
   expect(all.length).toBeGreaterThanOrEqual(20);
+  // Every caveat is checked as the lead page shows it, in plain words.
+  for (const check of all)
+    if (/^\/signals\/\d+\/caveats\//.test(check.pointer) && !check.absent)
+      expect(check.as).toBe('plain');
+});
+
+test('money "as spoken" and "as money" read as the app writes them', () => {
+  const discovery = pinned('/discovery.json') as {
+    signals: { metrics: { value: number; format: string }[] }[];
+  };
+  // Every money metric, read aloud as the app reads a card's figure.
+  for (const signal of discovery.signals)
+    for (const metric of signal.metrics.filter((m) => m.format === 'currency'))
+      expect(shown(metric, 'spoken')).toBe(
+        moneyAccessibilityLabel(metric.value, true),
+      );
+  expect(shown(at(discovery, '/signals/0/metrics/0'), 'spoken')).toBe(
+    '77 million dollars',
+  );
+  expect(shown(124655455, 'money')).toBe(formatMoney(124655455));
+  expect(shown(124655455, 'money')).toBe('$124,655,455');
 });
 
 test.each(checks().map((c) => [`${c.file}#${c.pointer} (line ${c.line})`, c]))(
