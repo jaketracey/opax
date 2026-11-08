@@ -1,6 +1,5 @@
 import { router, useSegments } from 'expo-router';
 import { askRoute } from '../../navigation/routes';
-import { arriveInAsk } from './session';
 
 type Scope = Parameters<typeof askRoute>[0];
 
@@ -17,6 +16,11 @@ export function useOpenAsk() {
   const inAskTab = useSegments().some((segment) => segment === '(ask)');
   return (scope: Scope) => {
     const route = askRoute(scope);
+    // Loaded at the tap: every row imports this hook, and the session
+    // reaches build-bound services (api/runtime) that rows never need.
+    const { arriveInAsk } =
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('./session') as typeof import('./session');
     arriveInAsk(scope, route.params.entry);
     if (inAskTab) router.dismissTo(route);
     else router.navigate(route);

@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -21,6 +22,7 @@ import { InsetGroup } from '../../design/layout';
 import { PaneBar, PaneHost, type SplitPane } from '../../design/split';
 import { Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
+import { useListKeys } from '../../design/list-keys';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { answerBlocks } from './answer-markdown';
@@ -280,6 +282,24 @@ function SourceList({
   const sources = answer.result?.sources ?? answer.sources ?? [];
   const { cited, also, numbered } = citedSources(sources);
   const source = numbered ? cited[marked - 1] : undefined;
+  // Up and Down move between the cited sources (journeys/ask.md 4.12);
+  // Return on a source found but not cited opens it in the pane.
+  const ordered = [...cited, ...also];
+  const cursor = useListKeys(
+    ordered.map((s) => s.resource),
+    (key) => {
+      const s = ordered.find((item) => item.resource === key);
+      if (s) open(s.href, s.title);
+    },
+    () => undefined,
+  );
+  const cursorAt = numbered
+    ? cited.findIndex((s) => s.resource === cursor) + 1
+    : 0;
+  useEffect(() => {
+    if (cursorAt && cursorAt !== marked) move(cursorAt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cursorAt]);
   return (
     <ScrollView
       style={styles.grow}
@@ -332,7 +352,7 @@ function SourceList({
                 key={s.resource}
                 record={s}
                 n={numbered ? i + 1 : undefined}
-                selected={numbered && marked === i + 1}
+                selected={numbered ? marked === i + 1 : cursor === s.resource}
                 onPress={() => (numbered ? move(i + 1) : open(s.href, s.title))}
                 testID={`ask-pane-source-${i + 1}`}
               />
@@ -348,6 +368,7 @@ function SourceList({
               <CitedRecordRow
                 key={s.resource}
                 record={s}
+                selected={cursor === s.resource}
                 onPress={() => open(s.href, s.title)}
               />
             ))}

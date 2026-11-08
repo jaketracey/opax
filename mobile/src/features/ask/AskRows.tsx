@@ -3,6 +3,7 @@ import { router, type Href } from 'expo-router';
 import { CitationBadge } from '../../design/citation-mark';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { Icon } from '../../design/icon';
+import { symbols } from '../../design/symbols';
 import { confirmAction } from '../../design/menu';
 import { PartyLabel } from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
@@ -141,7 +142,7 @@ export function CitedRecordRow({
         ) : null}
       </View>
       {stacked ? null : (
-        <Icon name="chevron.right" size={13} tone="inkFaint" maxScale={1.5} />
+        <Icon name={symbols.chevron} size={13} tone="inkFaint" maxScale={1.5} />
       )}
     </Pressable>
   );
@@ -216,7 +217,7 @@ export function AskSuggestionRow({
         pressed && !offline ? { backgroundColor: highlight } : null,
       ]}
     >
-      <Icon name="text.bubble" size={20} tone="navy" maxScale={1.5} />
+      <Icon name={symbols.ask} size={20} tone="navy" maxScale={1.5} />
       <Text
         wordSafe
         variant="body"
@@ -227,9 +228,10 @@ export function AskSuggestionRow({
       </Text>
       {offline ? null : (
         <Icon
-          // `arrow.up.circle` and `arrow.up.left` once the symbol vocabulary
-          // has them (follow-up for design/symbols.ts).
-          name={variant === 'send' ? 'arrow.up' : 'arrow.left'}
+          // Send asks; the pencil puts the question in the box to edit. The
+          // journey's `arrow.up.circle` and `arrow.up.left` wait for roles in
+          // design/symbols.ts (follow-up).
+          name={variant === 'send' ? symbols.send : symbols.newConversation}
           size={20}
           tone="inkFaint"
           maxScale={1.5}

@@ -20,7 +20,6 @@ export const askRoute = (
   },
 });
 export const askConsentRoute = { pathname: '/consent' as const };
-export const askFiltersRoute = { pathname: '/filters/ask' as const };
 export const conversationsRoute = { pathname: '/conversations' as const };
 /** `source`: a cited source's number, when reported from `/citation`. */
 export const askReportRoute = (turn: string, source?: number) => ({

@@ -11,6 +11,7 @@ import {
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { IconButton } from '../../design/controls';
 import { Icon } from '../../design/icon';
+import { symbols } from '../../design/symbols';
 import { InlineError } from '../../design/states';
 import { Text } from '../../design/text';
 import {
@@ -25,7 +26,7 @@ import {
 import { formatCount } from '../../design/format';
 import { chips, defaultOptions } from './model';
 import { askSession } from './session';
-import { topics } from './Options';
+import { topics } from './topics';
 
 export const composerCopy = {
   placeholder: 'Ask about the public record',
@@ -151,7 +152,7 @@ export function AskDock({
             testID="ask-options-clear"
           >
             <Icon
-              name="xmark.circle"
+              name={symbols.close}
               size={17}
               tone="inkFaint"
               maxScale={1.5}

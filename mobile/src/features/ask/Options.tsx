@@ -9,30 +9,10 @@ import {
 import { filtersRoute } from '../../navigation/routes/filters';
 import { defaultOptions, normaliseOptions, type AskOptions } from './model';
 import { askSession } from './session';
+import { topics } from './topics';
 
-export const topics: Record<string, string> = {
-  gambling: 'Gambling',
-  'financial-services': 'Financial services',
-  'mining-energy': 'Mining & energy',
-  'climate-environment': 'Climate & environment',
-  'property-construction': 'Property & construction',
-  housing: 'Housing',
-  health: 'Health',
-  'media-communications': 'Media & communications',
-  'hospitality-alcohol': 'Hospitality & alcohol',
-  'defence-security': 'Defence & security',
-  agriculture: 'Agriculture',
-  'unions-workplace': 'Unions & workplace',
-  immigration: 'Immigration',
-  'indigenous-affairs': 'Indigenous affairs',
-  'tax-budget': 'Tax & budget',
-  education: 'Education',
-  'welfare-social': 'Welfare & social services',
-  'integrity-democracy': 'Integrity & democracy',
-  'infrastructure-transport': 'Infrastructure & transport',
-  'justice-law': 'Justice & law',
-  'foreign-affairs': 'Foreign affairs',
-};
+export { topics };
+
 /** The filter sheet's owner key for Ask's options. */
 export const ASK_OPTIONS_OWNER = 'ask';
 const keys = ['speaker', 'party', 'state', 'topic', 'from', 'to'] as const;
