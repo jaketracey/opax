@@ -1,2 +1,1 @@
-import { SourcesScreen } from '../../../features/sources/SourcesScreen';
-export default SourcesScreen;
+export { SourcesScreen as default } from '../../../features/sources/SourcesScreen';
