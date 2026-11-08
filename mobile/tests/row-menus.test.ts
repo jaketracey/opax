@@ -21,6 +21,8 @@ jest.mock('../src/features/follows/FollowToggle', () => ({
 }));
 
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
+jest.mock('../src/api/runtime', () => ({ catalogs: {} }));
+jest.mock('../src/features/records/runtime', () => ({ records: {} }));
 jest.mock('../src/features/records/actions', () => ({
   copyText: jest.fn(async () => true),
 }));
@@ -192,9 +194,13 @@ test('page bar actions keep Ask, Copy link and Open on web without a second Foll
 test('record bar actions expose Cite in an inline section and remove the in-content menu', () => {
   const target = { slug: 'speech-123', title: 'A speech' };
   const actions = recordPageActions(target);
-  expect(actions[0]).toMatchObject({ title: '', inline: true });
+  expect(actions[0]).toMatchObject({ title: 'Cite', inline: true });
   expect(menuLeaves(actions).map((action) => action.title)).toEqual([
-    'Cite',
+    'Copy APA 7',
+    'Copy AGLC',
+    'Copy BibTeX',
+    'Copy RIS',
+    'Citation formats…',
     'Copy link',
     'Open on opax.com.au',
   ]);
