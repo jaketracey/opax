@@ -1,7 +1,12 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
-import { AccessibilityInfo, ScrollView, StyleSheet } from 'react-native';
+import {
+  AccessibilityInfo,
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import AskScreen from '../src/features/ask/AskScreen';
 import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
@@ -392,6 +397,12 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   expect(turn.findAllByProps({ testID: 'ask-user-question' })).not.toEqual([]);
   expect(textOf('ask-user-question')).toBe('Who spoke on housing?');
   expect(textOf('ask-status')).toBe('Reading your question');
+  // A system activity indicator leads the line and is never announced.
+  const spinner = byId('ask-progress')[0]!.findAllByType(ActivityIndicator)[0]!;
+  expect(spinner.props).toMatchObject({
+    accessibilityElementsHidden: true,
+    importantForAccessibility: 'no-hide-descendants',
+  });
   // Send has become Stop; the composer was cleared for the next question.
   expect(one('ask-stop').props.accessibilityLabel).toBe('Stop answering');
   expect(byId('ask-submit')).toEqual([]);
@@ -421,6 +432,48 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   expect(byId('ask-progress')).toEqual([]);
   // The failed question returns to the empty composer.
   expect(one('ask-question').props.value).toBe('Who spoke on housing?');
+});
+
+test('a stream that stops partway keeps its text under one pill, read as Markdown', async () => {
+  let on: StreamHandlers | undefined,
+    fail: (e: unknown) => void = () => {};
+  jest.mocked(client.askPost).mockImplementationOnce(
+    (_path, _body, _signal, handlers) =>
+      new Promise((_resolve, reject) => {
+        on = handlers;
+        fail = reject;
+      }),
+  );
+  await mount();
+  await type('Who spoke on housing?');
+  await press('ask-submit');
+  await act(async () => {
+    on!.delta(
+      'The bill had **support [1] across the House.\n\n| a | b |\n|---|---|\n| one | two',
+    );
+  });
+  await act(async () => {
+    fail(new AskFailure('partial', 'The answer stream failed.'));
+  });
+  const partial = byId('ask-partial');
+  expect(partial).not.toEqual([]);
+  // Every string drawn in the turn: no Markdown or raw markers survive.
+  const strings: string[] = [];
+  const walk = (node: unknown): void => {
+    if (typeof node === 'string') strings.push(node);
+    else if (Array.isArray(node)) node.forEach(walk);
+    else if (node && typeof node === 'object' && 'children' in node)
+      walk((node as { children: unknown }).children);
+  };
+  walk(view!.toJSON());
+  const drawn = strings.join(' ');
+  expect(drawn).toContain('across the House');
+  expect(drawn).not.toMatch(/[*|]|\[1\]/);
+  expect(
+    byId('ask-machine-label').filter((n) => typeof n.type === 'string'),
+  ).toHaveLength(1);
+  expect(drawn).toContain('This answer stopped partway.');
+  expect(byId('ask-retry')).not.toEqual([]);
 });
 
 test('Stop puts the question back in an empty composer and says so', async () => {

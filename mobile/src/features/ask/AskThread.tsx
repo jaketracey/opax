@@ -6,7 +6,7 @@ import { InlineError, Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { AnswerView, SearchOpaxRow, type LegacyDate } from './AnswerView';
-import { AskProgress } from './AskProgress';
+import { AskProgress, StreamedAnswer } from './AskProgress';
 import { AskSuggestionRow } from './AskRows';
 import { fillComposer } from './AskIdle';
 import type { AskState } from './controller';
@@ -202,9 +202,11 @@ export function AskThread({
         {failure ? (
           <View style={styles.block} testID={`ask-error-${s.error!.code}`}>
             {s.error!.code === 'partial' && s.streaming ? (
-              <Text wordSafe selectable testID="ask-partial">
-                {s.streaming}
-              </Text>
+              <StreamedAnswer
+                text={s.streaming}
+                pillTestID="ask-machine-label"
+                testID="ask-partial"
+              />
             ) : null}
             <InlineError
               subject="answer"
