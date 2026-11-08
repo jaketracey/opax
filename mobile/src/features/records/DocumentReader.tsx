@@ -1,4 +1,6 @@
-import { headerItems } from '../../navigation/chrome';
+import { headerItems, shareItem } from '../../navigation/chrome';
+import type { NativeStackHeaderItem } from 'expo-router';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import {
   useCallback,
   useEffect,
@@ -41,7 +43,7 @@ import {
 } from '../../design/primitives';
 import { formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
-import { colors, rhythm } from '../../design/tokens';
+import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
 import {
   billRoute,
@@ -253,9 +255,11 @@ export default function DocumentReader({
   const shown = speaker.ready ? doc : null;
   const headline = doc ? recordHeadline(doc) : '';
   const titleRef = useRef<View>(null);
+  const ios = Platform.OS === 'ios';
   const title = useTitleOnScroll(
     embedded ? null : titleRef,
     embedded || !shown ? undefined : headline,
+    { trailing: ios && canShare ? 2 : 1 },
   );
   const openAsk = useOpenAsk();
   const parts = useMemo(() => {
@@ -306,36 +310,50 @@ export default function DocumentReader({
     if (doc) void shareRecord({ path: `/doc/${doc.slug}`, title: headline });
   };
   const android = Platform.OS === 'android';
-  const askRow = embedded || android;
+  // iOS draws no bottom toolbar: iOS 26's floating tab bar stays up on
+  // pushes and covered it. Ask about this is a row in the header, Share
+  // sits beside ⋯, and the find bar's controls take the bar while open.
+  const askRow = embedded || android || ios;
+  const findBar = ios && !embedded && !!shown && find.open;
+  const headerBottom = useHeaderBottom();
   return (
     <>
       {embedded ? null : (
         <Stack.Screen
           options={{
             ...headerItems(
-              shown && target
-                ? recordBarItems(
-                    target,
-                    android
-                      ? [
-                          {
-                            title: 'Ask about this',
-                            symbol: symbols.ask,
-                            onPress: ask,
-                          },
-                          ...(canShare
-                            ? [
-                                {
-                                  title: 'Share',
-                                  symbol: 'square.and.arrow.up' as const,
-                                  onPress: share,
-                                },
-                              ]
-                            : []),
-                        ]
-                      : [],
-                  )
-                : undefined,
+              findBar
+                ? () => findItems(find)
+                : shown && target && ios
+                  ? () => [
+                      ...(canShare
+                        ? [shareItem({ name: 'this record', onPress: share })]
+                        : []),
+                      ...recordBarItems(target)(),
+                    ]
+                  : shown && target
+                    ? recordBarItems(
+                        target,
+                        android
+                          ? [
+                              {
+                                title: 'Ask about this',
+                                symbol: symbols.ask,
+                                onPress: ask,
+                              },
+                              ...(canShare
+                                ? [
+                                    {
+                                      title: 'Share',
+                                      symbol: 'square.and.arrow.up' as const,
+                                      onPress: share,
+                                    },
+                                  ]
+                                : []),
+                            ]
+                          : [],
+                      )
+                    : undefined,
             ),
           }}
         />
@@ -387,55 +405,60 @@ export default function DocumentReader({
           ) : null
         }
       />
-      {!embedded && !android && shown ? (
-        find.open ? (
-          <Stack.Toolbar placement="bottom">
-            <Stack.Toolbar.Button
-              accessibilityLabel={`Match ${find.total ? find.current + 1 : 0} of ${find.total} for ${find.query}`}
-              accessibilityHint="Go to match"
-              onPress={find.goTo}
-            >
+      {findBar ? (
+        <View
+          pointerEvents="box-none"
+          style={[styles.findLine, { top: headerBottom + rhythm.tight }]}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={findLabel(find)}
+            accessibilityHint="Go to match"
+            onPress={find.goTo}
+            testID="doc-find-status"
+            style={styles.findPill}
+          >
+            <Text variant="secondary" tabular wordSafe>
               {`${find.query} · ${find.total ? find.current + 1 : 0} of ${find.total}`}
-            </Stack.Toolbar.Button>
-            <Stack.Toolbar.Spacer />
-            <Stack.Toolbar.Button
-              icon="chevron.up"
-              accessibilityLabel="Previous match"
-              disabled={!find.total}
-              onPress={find.previous}
-            />
-            <Stack.Toolbar.Button
-              icon="chevron.down"
-              accessibilityLabel="Next match"
-              disabled={!find.total}
-              onPress={find.next}
-            />
-            <Stack.Toolbar.Button accessibilityLabel="Done" onPress={find.done}>
-              Done
-            </Stack.Toolbar.Button>
-          </Stack.Toolbar>
-        ) : (
-          <Stack.Toolbar placement="bottom">
-            <Stack.Toolbar.Button
-              icon={symbols.ask}
-              accessibilityLabel="Ask about this record"
-              onPress={ask}
-            >
-              Ask about this
-            </Stack.Toolbar.Button>
-            <Stack.Toolbar.Spacer />
-            {canShare ? (
-              <Stack.Toolbar.Button
-                icon="square.and.arrow.up"
-                accessibilityLabel="Share"
-                onPress={share}
-              />
-            ) : null}
-          </Stack.Toolbar>
-        )
+            </Text>
+          </Pressable>
+        </View>
       ) : null}
     </>
   );
+}
+
+type Find = ReturnType<typeof useFind>;
+const findLabel = (find: Find) =>
+  `Match ${find.total ? find.current + 1 : 0} of ${find.total} for ${find.query}`;
+/** The find bar's controls, in the navigation bar while it is open. */
+function findItems(find: Find): NativeStackHeaderItem[] {
+  return [
+    {
+      type: 'button',
+      label: 'Previous match',
+      accessibilityLabel: 'Previous match',
+      icon: { type: 'sfSymbol', name: 'chevron.up' },
+      disabled: !find.total,
+      onPress: find.previous,
+    },
+    {
+      type: 'button',
+      label: 'Next match',
+      accessibilityLabel: 'Next match',
+      icon: { type: 'sfSymbol', name: 'chevron.down' },
+      disabled: !find.total,
+      onPress: find.next,
+    },
+    {
+      type: 'button',
+      label: 'Done',
+      accessibilityLabel: 'Done',
+      variant: 'plain',
+      tintColor: colors.navy,
+      onPress: find.done,
+    },
+  ];
 }
 
 /** Bars in the header's final shape, then lines of text (records.md 2.5). */
@@ -947,6 +970,22 @@ function Similar({ doc }: { doc: DocumentRecord }) {
 }
 
 const styles = StyleSheet.create({
+  findLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  findPill: {
+    minHeight: minimumTarget,
+    justifyContent: 'center',
+    paddingHorizontal: rhythm.block,
+    borderRadius: radii.capsule,
+    borderCurve: 'continuous',
+    backgroundColor: colors.raised,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.dividerSubtle,
+  },
   meta: { marginBottom: rhythm.line },
   speaker: { marginTop: rhythm.block },
   source: { marginTop: rhythm.tight },

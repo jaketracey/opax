@@ -65,7 +65,10 @@ jest.mock('expo-router', () => {
       MenuAction: () => null,
     }),
     Stack: {
-      Screen: () => null,
+      Screen: ({ options }: { options?: Record<string, unknown> }) => {
+        if (options) mockOptions = options;
+        return null;
+      },
       Toolbar: Object.assign(part('Toolbar'), {
         Button: part('ToolbarButton'),
         Spacer: () => null,
@@ -90,8 +93,16 @@ const text = (view: TestRenderer.ReactTestRenderer) =>
     .flat(Infinity)
     .filter((c) => typeof c === 'string')
     .join('\n');
-const toolbarButtons = (view: TestRenderer.ReactTestRenderer) =>
-  view.root.findAll((node) => (node.type as unknown) === 'ToolbarButton');
+let mockOptions: Record<string, unknown> = {};
+const toolbars = (view: TestRenderer.ReactTestRenderer) =>
+  view.root.findAll((node) => (node.type as unknown) === 'Toolbar');
+/** The bar's items, as iOS draws them (the last is rightmost). */
+const barItems = () =>
+  (
+    mockOptions.unstable_headerRightItems as
+      | (() => { label: string; onPress?: () => void }[])
+      | undefined
+  )?.() ?? [];
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -109,11 +120,15 @@ beforeEach(() => {
   jest.mocked(records.similar).mockResolvedValue(record([]) as never);
 });
 
-test('Ask about this in the toolbar drafts a question and never sends it', async () => {
+test('Ask about this is a row that drafts a question and never sends it', async () => {
   const view = await mount(<DocumentReader />);
-  const ask = toolbarButtons(view).find(
-    (node) => node.props.accessibilityLabel === 'Ask about this record',
-  )!;
+  // iOS draws no bottom toolbar, which the floating tab bar would cover.
+  expect(toolbars(view)).toHaveLength(0);
+  const ask = view.root.find(
+    (node) =>
+      node.props.testID === 'doc-ask' &&
+      typeof node.props.onPress === 'function',
+  );
   await act(async () => ask.props.onPress());
   expect(mockOpenAsk).toHaveBeenCalledTimes(1);
   const scope = mockOpenAsk.mock.calls[0][0];
@@ -253,30 +268,30 @@ test('a link that names no record says so', async () => {
   await act(async () => view.unmount());
 });
 
-test('an incoming search query opens the find bar on its first match', async () => {
+test('an incoming search query puts the find controls in the bar, above the tab bar', async () => {
   mockParams = { slug: 'speech-1205524', q: 'paragraph' };
   const view = await mount(<DocumentReader />);
-  const labels = toolbarButtons(view).map(
-    (node) => node.props.accessibilityLabel as string,
+  expect(toolbars(view)).toHaveLength(0);
+  expect(barItems().map((item) => item.label)).toEqual([
+    'Previous match',
+    'Next match',
+    'Done',
+  ]);
+  const status = view.root.find(
+    (node) =>
+      node.props.testID === 'doc-find-status' &&
+      typeof node.props.onPress === 'function',
   );
-  expect(labels).toEqual(
-    expect.arrayContaining(['Previous match', 'Next match', 'Done']),
+  expect(status.props.accessibilityLabel).toMatch(
+    /^Match 1 of \d+ for paragraph$/,
   );
-  expect(labels).toEqual(
-    expect.arrayContaining([
-      expect.stringMatching(/^Match 1 of \d+ for paragraph$/),
-    ]),
+  // Done gives the bar back to ⋯.
+  const done = barItems().find((item) => item.label === 'Done')!;
+  await act(async () => done.onPress!());
+  expect(barItems().map((item) => item.label)).toContain('More');
+  expect(view.root.findAllByProps({ testID: 'doc-find-status' })).toHaveLength(
+    0,
   );
-  // Done returns the reading toolbar.
-  const done = toolbarButtons(view).find(
-    (node) => node.props.accessibilityLabel === 'Done',
-  )!;
-  await act(async () => done.props.onPress());
-  expect(
-    toolbarButtons(view).some(
-      (node) => node.props.accessibilityLabel === 'Ask about this record',
-    ),
-  ).toBe(true);
   await act(async () => view.unmount());
 });
 
