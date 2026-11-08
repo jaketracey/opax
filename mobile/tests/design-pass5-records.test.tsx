@@ -21,6 +21,7 @@ import DocumentReader, {
 } from '../src/features/records/DocumentReader';
 import BillTextReader from '../src/features/records/BillTextReader';
 import RecentRecords from '../src/features/records/RecentRecords';
+import * as recordReads from '../src/features/records/useRead';
 import {
   RecordActions,
   recordActions,
@@ -33,6 +34,9 @@ import {
   Button,
   IconButton,
   LinkRow,
+  EmptyState,
+  ErrorState,
+  LoadingState,
   MachineLabel,
   PersonRow,
   SourceLine,
@@ -288,10 +292,65 @@ test('Just added: the indexed-date note is in a source line, not an ⓘ', async 
   await act(async () => view.unmount());
 });
 
-test('Just added hides its empty section after a successful empty response', async () => {
+test('Just added explains a successful empty response and keeps its source line', async () => {
   jest.mocked(records.recent).mockResolvedValue(record([]));
   const view = await mount(<RecentRecords />);
-  expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(0);
-  expect(view.root.findAllByProps({ testID: 'recent-source' })).toHaveLength(0);
+  expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(1);
+  expect(view.root.findByType(EmptyState).props.message).toBe(
+    'No new records yet.',
+  );
+  expect(view.root.findAllByType(LoadingState)).toHaveLength(0);
+  expect(text(view)).not.toContain('Loading new records');
+  expect(
+    view.root.findAllByProps({ testID: 'recent-source' }).length,
+  ).toBeGreaterThan(0);
   await act(async () => view.unmount());
+});
+
+test('Just added shows its loading state without empty copy before the first response', async () => {
+  let finish!: (value: Awaited<ReturnType<typeof records.recent>>) => void;
+  jest.mocked(records.recent).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const view = await mount(<RecentRecords />);
+  expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(1);
+  expect(view.root.findByType(LoadingState).props.label).toBe(
+    'Loading new records',
+  );
+  expect(view.root.findAllByType(EmptyState)).toHaveLength(0);
+  expect(text(view)).not.toContain('No new records yet.');
+  await act(async () => finish(record([])));
+  expect(view.root.findAllByType(LoadingState)).toHaveLength(0);
+  expect(view.root.findByType(EmptyState).props.message).toBe(
+    'No new records yet.',
+  );
+  await act(async () => view.unmount());
+});
+
+test('Just added keeps a refresh error visible when its saved response is empty', async () => {
+  const retry = jest.fn();
+  const read = jest.spyOn(recordReads, 'useRead').mockReturnValue({
+    value: record([]),
+    error: new Error('Unavailable'),
+    retry,
+  });
+  let view: TestRenderer.ReactTestRenderer | undefined;
+  try {
+    view = await mount(<RecentRecords />);
+    expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(1);
+    const failure = view.root.findByType(ErrorState);
+    expect(view.root.findAllByType(LoadingState)).toHaveLength(0);
+    expect(view.root.findAllByType(EmptyState)).toHaveLength(0);
+    expect(
+      view.root.findAllByProps({ testID: 'recent-source' }).length,
+    ).toBeGreaterThan(0);
+    await act(async () => failure.props.onRetry());
+    expect(retry).toHaveBeenCalledTimes(1);
+  } finally {
+    if (view) await act(async () => view!.unmount());
+    read.mockRestore();
+  }
 });
