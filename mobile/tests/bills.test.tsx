@@ -483,24 +483,23 @@ const openAllStages = (root: ReactTestInstance) =>
   );
 
 describe('loading a bill (4.3)', () => {
-  // The mocked toolbar draws nothing: read its buttons from its children.
-  const toolbar = (root: ReactTestInstance) =>
-    Object.fromEntries(
-      root
-        .findAll((node) => node.type === Stack.Toolbar)
-        .flatMap((node) =>
-          (
-            [node.props.children].flat(2) as {
-              type?: unknown;
-              props?: { accessibilityLabel?: string; disabled?: boolean };
-            }[]
-          ).filter((child) => child?.type === Stack.Toolbar.Button),
-        )
-        .map((child) => [
-          child.props!.accessibilityLabel!,
-          !!child.props!.disabled,
+  // The bar's items (Share beside ⋯) as label: disabled, and whether the
+  // "Ask about this bill" row is drawn. iOS draws no bottom toolbar.
+  const actions = (root: ReactTestInstance) => {
+    const options = root.findAllByType(Stack.Screen).at(-1)!.props.options as {
+      unstable_headerRightItems?: () => { label: string; disabled?: boolean }[];
+    };
+    return {
+      ...Object.fromEntries(
+        (options.unstable_headerRightItems?.() ?? []).map((item) => [
+          item.label,
+          !!item.disabled,
         ]),
-    );
+      ),
+      ask: host(root, 'bill-ask').length === 1,
+      toolbars: root.findAllByType(Stack.Toolbar).length,
+    };
+  };
   const statusText = (root: ReactTestInstance) => {
     const status = host(root, 'bill-status')[0]!;
     return {
@@ -535,10 +534,12 @@ describe('loading a bill (4.3)', () => {
     expect(statusText(root).text).not.toMatch(/\d{4}/);
     expect(host(root, 'bill-follow-off')).toHaveLength(1);
     expect(host(root, 'bill-loading')).toHaveLength(1);
-    // Ask works on the title alone; Share waits for the bill.
-    expect(toolbar(root)).toEqual({
-      'Ask about this bill': false,
+    // Share and ⋯ wait for the bill; the Ask row comes with the page.
+    expect(actions(root)).toEqual({
       Share: true,
+      More: true,
+      ask: false,
+      toolbars: 0,
     });
     await act(async () => arrive());
     expect(host(root, 'bill-loading')).toHaveLength(0);
@@ -546,9 +547,11 @@ describe('loading a bill (4.3)', () => {
     expect(statusText(root).label).toBe(
       'Status: Passed. Royal Assent, 26 August 2026',
     );
-    expect(toolbar(root)).toEqual({
-      'Ask about this bill': false,
+    expect(actions(root)).toEqual({
       Share: false,
+      More: false,
+      ask: true,
+      toolbars: 0,
     });
   });
 
@@ -562,14 +565,51 @@ describe('loading a bill (4.3)', () => {
     expect(loading[0]!.props.accessibilityLabel).toBe('Loading the bill');
     expect(host(root, 'bill-title')).toHaveLength(0);
     expect(host(root, 'bill-status')).toHaveLength(0);
-    expect(toolbar(root)).toEqual({
-      'Ask about this bill': true,
+    expect(actions(root)).toEqual({
       Share: true,
+      More: true,
+      ask: false,
+      toolbars: 0,
     });
   });
 });
 
 describe('the bill page', () => {
+  test('iOS draws no bottom toolbar a tab bar would cover: Share is beside ⋯, Ask is a row', async () => {
+    const root = await render();
+    expect(root.findAllByType(Stack.Toolbar)).toHaveLength(0);
+    const options = root.findAllByType(Stack.Screen).at(-1)!.props.options;
+    const items = options.unstable_headerRightItems() as { label: string }[];
+    expect(items.map((item) => item.label)).toEqual(['Share', 'More']);
+    const ask = root.find(
+      (node) =>
+        node.props.testID === 'bill-ask' &&
+        typeof node.props.onPress === 'function',
+    );
+    expect(ask.props.title).toBe('Ask about this bill');
+  });
+  test('the bar title is the short name, anchored on the H1', async () => {
+    mockParams.key = 'au-federal-r7534';
+    const root = await render();
+    const heading = host(root, 'bill-title')[0]!;
+    let anchor: ReactTestInstance | null = heading.parent;
+    while (anchor && typeof anchor.props.onLayout !== 'function')
+      anchor = anchor.parent;
+    expect(anchor).not.toBeNull();
+  });
+  test('at AX5 the status capsule keeps to its word (w4-bill-ax5-01)', async () => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 402, height: 874, scale: 3, fontScale: 3.1 });
+    mockParams.key = 'au-federal-r7534';
+    const root = await render();
+    const capsule = root.findAllByType(StatusCapsule)[0]!;
+    const wrapper = capsule.parent!.parent!;
+    expect(StyleSheet.flatten(wrapper.props.style)).toMatchObject({
+      alignSelf: 'flex-start',
+    });
+  });
+
   test('?division= reveals the seventh vote, expanded, and nothing else', async () => {
     const { main } = orderDivisions(
       view('au-federal-r7520').divisions.data!.rows,
