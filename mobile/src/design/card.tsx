@@ -240,6 +240,8 @@ export function TileGrid({
         return (
           <View
             key={isValidElement(child) ? (child.key ?? index) : index}
+            // The cell: a column the row stretches to its line's height,
+            // which the tile inside fills with flexGrow (never a percentage).
             style={{
               width:
                 ((available - gap * (count - 1)) / count) * span +
@@ -275,7 +277,13 @@ const styles = StyleSheet.create({
     padding: rhythm.block,
     minHeight: minimumTarget,
     gap: rhythm.tight,
-    height: '100%',
+    // Fills its cell, so tiles on one line share the line's height: TileGrid
+    // stretches each cell to its line and the tile grows into it. Never a
+    // percentage: in a wrapping row Yoga resolves a percentage height
+    // against the whole grid's measured height, and every layout pass
+    // compounds it (build 36's More to explore grid laid out 48,000 pt tall
+    // once RowTrigger started carrying the tile's own style into the Link).
+    flexGrow: 1,
   },
   leadTile: { flexDirection: 'row', alignItems: 'center' },
   tileText: { flexShrink: 1, gap: rhythm.line },

@@ -3,6 +3,7 @@ import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Link, router } from 'expo-router';
 import { LinkRow, BillRow } from '../src/design/rows';
+import { Tile, TileGrid } from '../src/design/card';
 import { PersonRow } from '../src/design/people';
 import { RowLink, RowTrigger } from '../src/design/row-link';
 import { InsetGroup } from '../src/design/layout';
@@ -330,6 +331,103 @@ describe('rows keep one line in every host (iOS, through Link.Trigger)', () => {
       leading: symbolNamed(host(tree.root, 'money-map'), 'map'),
       text: textOf(tree.root, 'Money map'),
     });
+  });
+});
+
+/**
+ * Build 36: once RowTrigger carried the tile's own style into the Link, its
+ * `height: '100%'` reached Yoga inside TileGrid's wrapping row, where a
+ * percentage height resolves against the whole grid and compounds on every
+ * layout pass (Today's More to explore grid laid out about 48,000 pt tall;
+ * the Explore hub's quiz tile filled the screen). A tile fills its cell by
+ * growing, never by a percentage of anything.
+ */
+describe('tiles keep a bounded height through the Link slot', () => {
+  const dimensions = [
+    'height',
+    'minHeight',
+    'maxHeight',
+    'flexBasis',
+    'width',
+    'minWidth',
+    'maxWidth',
+  ] as const;
+  const percentages = (style: Record<string, unknown>) =>
+    dimensions.filter((key) => /%\s*$/.test(String(style[key] ?? '')));
+  const tiles = (
+    <TileGrid testID="grid">
+      <Tile
+        title="Public money"
+        line="Grants and contracts by program and place"
+        symbol="building.columns"
+        ink="money"
+        href="/money"
+        testID="tile-money"
+      />
+      <Tile
+        title="Leads"
+        line="Names that appear in both money and the record"
+        symbol="person.3"
+        ink="interests"
+        href="/leads"
+        testID="tile-leads"
+      />
+      <Tile
+        title="Largest grants"
+        line="The biggest new grant agreements each month"
+        symbol="dollarsign.circle"
+        ink="money"
+        href="/grants"
+        testID="tile-grants"
+      />
+    </TileGrid>
+  );
+
+  test('no host view under the grid carries a percentage dimension', () => {
+    const tree = render(tiles);
+    const grid = host(tree.root, 'grid');
+    const hosts = grid.findAll((node) => typeof node.type === 'string');
+    expect(hosts.length).toBeGreaterThan(3);
+    for (const node of hosts)
+      expect({
+        testID: node.props.testID,
+        bad: percentages(flat(node.props.style)),
+      }).toEqual({ testID: node.props.testID, bad: [] });
+  });
+
+  test('the tile Pressable grows into its cell in both pressed states', () => {
+    const tree = render(tiles);
+    const pressable = tree.root.findAll(
+      (node) =>
+        typeof node.type !== 'string' &&
+        node.props.testID === 'tile-money' &&
+        typeof node.props.style === 'function',
+    )[0];
+    expect(pressable).toBeDefined();
+    for (const pressed of [false, true]) {
+      const style = flat(pressable.props.style({ pressed }));
+      expect(percentages(style)).toEqual([]);
+      expect(style.flexGrow).toBe(1);
+      expect(style.minHeight).toBeGreaterThan(0);
+    }
+    // The host view the Pressable renders keeps the grown, bounded style.
+    const row = host(tree.root, 'tile-money');
+    expect(flat(row.props.style).flexGrow).toBe(1);
+    expect(flat(row.props.style).height).toBeUndefined();
+  });
+
+  test('the lead tile of the Explore hub grid is bounded too', () => {
+    const tree = render(
+      <TileGrid lead testID="hub">
+        {tiles.props.children}
+      </TileGrid>,
+    );
+    const hosts = host(tree.root, 'hub').findAll(
+      (node) => typeof node.type === 'string',
+    );
+    expect(hosts.length).toBeGreaterThan(3);
+    for (const node of hosts)
+      expect(percentages(flat(node.props.style))).toEqual([]);
   });
 });
 
