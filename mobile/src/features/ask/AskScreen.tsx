@@ -258,6 +258,7 @@ export default function AskScreen() {
       offline={false}
       inputError={inputError}
       onLayout={(e) => setDockHeight(e.nativeEvent.layout.height)}
+      keyboard={keyboard}
     />
   );
   const content = (

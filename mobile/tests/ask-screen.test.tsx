@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import {
-  COMPOSER_MAX_SCALE,
+  AskDock,
+  COMPOSER_HEIGHT_SHARE,
+  composerFieldCap,
   composerLines,
-  composerScale,
 } from '../src/features/ask/AskDock';
 import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
@@ -316,16 +317,18 @@ test('the composer sets its question in body text; the options line is a 44 pt t
   await mount();
   const input = StyleSheet.flatten(one('ask-question').props.style);
   const { fontScale } = Dimensions.get('window');
-  // Body text, scaled by the composer itself and capped at AX1.
-  const scale = composerScale(fontScale);
-  expect(one('ask-question').props.allowFontScaling).toBe(false);
+  // The body role at the reader's own size: the system scales it.
+  expect(one('ask-question').props.allowFontScaling).toBe(true);
   expect(input).toMatchObject({
     fontFamily: textStyles.body.fontFamily,
-    fontSize: textStyles.body.fontSize * scale,
-    lineHeight: textStyles.body.lineHeight * scale,
+    fontSize: textStyles.body.fontSize,
+    lineHeight: textStyles.body.lineHeight,
   });
+  // With room to spare and no keyboard, the lines rule alone sets the cap.
   expect(input.maxHeight).toBe(
-    textStyles.body.lineHeight * Math.max(1, scale) * composerLines(fontScale) +
+    textStyles.body.lineHeight *
+      Math.max(1, fontScale) *
+      composerLines(fontScale) +
       20,
   );
   const hit = (id: string) =>
@@ -725,15 +728,88 @@ test('an arrival while an answer runs waits in the composer and sends a new conv
   });
 });
 
-test('at AX5 the composer stops growing at AX1, two lines tall', () => {
-  expect(composerScale(1)).toBe(1);
-  expect(composerScale(0.82)).toBe(0.82);
-  expect(composerScale(3.12)).toBe(COMPOSER_MAX_SCALE);
-  // Two lines of AX1 body text and the field's padding: well under a third
-  // of a 874 pt screen, so the intro stays in view above it.
-  const tallest =
-    textStyles.body.lineHeight * composerScale(3.12) * composerLines(3.12) + 20;
-  expect(tallest).toBeLessThan(110);
+describe('the composer at AX5 (ask.md 2.11)', () => {
+  const original = Dimensions.get('window');
+  afterEach(() => act(() => Dimensions.set({ window: original })));
+  const dock = (keyboard?: number) => {
+    let r!: ReactTestRenderer;
+    act(() => {
+      r = create(
+        <AskDock
+          onSend={() => {}}
+          onStop={() => {}}
+          onOptions={() => {}}
+          offline={false}
+          keyboard={keyboard}
+        />,
+      );
+    });
+    const field = r.root.find(
+      (n) => n.props.testID === 'ask-question' && n.props.style !== undefined,
+    );
+    return { r, field, style: StyleSheet.flatten(field.props.style) };
+  };
+
+  test("the question keeps the reader's text size: no font cap", () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 3.12 },
+      }),
+    );
+    const { r, field, style } = dock();
+    expect(field.props.allowFontScaling).toBe(true);
+    expect(style.fontSize).toBe(textStyles.body.fontSize);
+    expect(style.lineHeight).toBe(textStyles.body.lineHeight);
+    act(() => r.unmount());
+  });
+
+  test('with the keyboard up the whole composer stays within 40% of what is visible', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 3.12 },
+      }),
+    );
+    for (const keyboard of [336, 420, 500]) {
+      const { r, style } = dock(keyboard);
+      // The composer's own chrome before measurement: its padding.
+      const chrome = 2 * rhythm.line;
+      expect(Number(style.maxHeight) + chrome).toBeLessThanOrEqual(
+        COMPOSER_HEIGHT_SHARE * (874 - keyboard) + 0.001,
+      );
+      act(() => r.unmount());
+    }
+    // The cap is the smaller rule, and never under one 44 pt line.
+    expect(
+      composerFieldCap({
+        fontScale: 3.12,
+        windowHeight: 874,
+        keyboard: 500,
+        chrome: 40,
+      }),
+    ).toBeCloseTo(0.4 * 374 - 40);
+    expect(
+      composerFieldCap({
+        fontScale: 3.12,
+        windowHeight: 874,
+        keyboard: 800,
+        chrome: 40,
+      }),
+    ).toBe(44);
+  });
+
+  test('at Large nothing changes: five lines, then the field scrolls', () => {
+    expect(
+      composerFieldCap({ fontScale: 1, windowHeight: 874, chrome: 8 }),
+    ).toBe(textStyles.body.lineHeight * 5 + 20);
+    expect(
+      composerFieldCap({
+        fontScale: 1,
+        windowHeight: 874,
+        keyboard: 336,
+        chrome: 8,
+      }),
+    ).toBe(textStyles.body.lineHeight * 5 + 20);
+  });
 });
 
 test('with the keyboard up the composer sits on a band of ground: nothing reads through it', () => {
