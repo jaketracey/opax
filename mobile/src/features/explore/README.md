@@ -62,8 +62,9 @@ caveats predate the money export's public-money additions; the app uses the
 export's current methodology wording. The engine's copy changes (explore spec
 4.9, E1 to E6: ids, publishers, no em dashes, "More" and "Fewer", plain words)
 belong to the engine. Until they land, `plainQuestion` replaces an em dash
-with a comma on screen, and `quizId` and `quizPublisher` supply ids and
-publishers.
+with a comma on screen and writes "and" in the topic and industry names in
+`quizAmpersandNames` (organisation and donor names keep their "&"), and
+`quizId` and `quizPublisher` supply ids and publishers.
 
 ### `quiz-front-page.json` (Today's question)
 

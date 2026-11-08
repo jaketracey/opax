@@ -4,6 +4,7 @@ import {
   formatMoneyCompact,
   formatMoneyWords,
 } from '../../design/format';
+import { topicNames } from '../reports/model';
 
 export type QuizKind =
   | 'mc'
@@ -319,9 +320,43 @@ export function quizId(q: Pick<Question, 'template' | 'prompt' | 'id'>) {
   return `q${hash.toString(16).padStart(8, '0')}`;
 }
 
-// Until the engine's E1 lands: no em dash reaches the screen or the share
-// text. "False {em dash} 691,104 are collected" reads "False, 691,104 are collected".
-const plain = (text: string) => text.replace(/\s*\u2014\s*/g, ', ');
+/**
+ * Topic and industry names the quiz writes with "&" (explore spec 1.5, E1).
+ * On screen they read "and"; organisation and donor names are proper names
+ * and keep their "&" as written. The report topics come from `topicNames`;
+ * "Climate & Energy" is the quiz's speech topic, which has no report name.
+ */
+export const quizAmpersandNames: readonly string[] = Object.freeze([
+  ...new Set(
+    [
+      ...Object.values(topicNames).filter((name) => name.includes(' & ')),
+      'Climate & Energy',
+      'Property & Construction',
+      'Pharmacies & Medicines',
+      'Farming & Agriculture',
+      'Finance & Banking',
+      'Pubs & Clubs',
+    ].map((name) => name.toLowerCase()),
+  ),
+]);
+const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const ampersandNames = new RegExp(
+  `\\b(?:${quizAmpersandNames
+    .map((name) => name.split(' & ').map(escape).join('\\s*&\\s*'))
+    .join('|')})\\b`,
+  'gi',
+);
+
+// Until the engine's E1 lands: no em dash and no "&" in a topic or industry
+// name reaches the screen or the share text. "False {em dash} 691,104 are
+// collected" reads "False, 691,104 are collected"; "climate & energy" reads
+// "climate and energy", in the source's case.
+const plain = (text: string) =>
+  text
+    .replace(/\s*\u2014\s*/g, ', ')
+    .replace(ampersandNames, (match: string) =>
+      match.replace(/\s*&\s*/, ' and '),
+    );
 /** The question as the app shows it: the engine's words, punctuation fixed. */
 export function plainQuestion<Q extends Question>(q: Q): Q {
   return {
@@ -338,11 +373,15 @@ export function plainQuestion<Q extends Question>(q: Q): Q {
           })),
         }
       : {}),
+    // An order question's answer is its option labels, so it changes with them.
+    ...(Array.isArray(q.answer) ? { answer: q.answer.map(plain) } : {}),
     ...(q.comparison
       ? {
           comparison: {
             ...q.comparison,
+            shownLabel: plain(q.comparison.shownLabel),
             shownDisplay: plain(q.comparison.shownDisplay),
+            hiddenLabel: plain(q.comparison.hiddenLabel),
             hiddenDisplay: plain(q.comparison.hiddenDisplay),
           },
         }

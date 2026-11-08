@@ -21,6 +21,7 @@ import {
   parseGuess,
   plainQuestion,
   pointsLine,
+  quizAmpersandNames,
   quizId,
   quizShareText,
   rangeLabels,
@@ -345,6 +346,82 @@ test('no question the quiz shows carries an em dash', () => {
       fact: 'False \u2014 691,104 are collected',
     }).fact,
   ).toBe('False, 691,104 are collected');
+});
+
+test('topic and industry names read "and" on screen; proper names keep "&"', () => {
+  expect(quizAmpersandNames).toEqual(
+    expect.arrayContaining([
+      'climate & energy',
+      'property & construction',
+      'pharmacies & medicines',
+      'farming & agriculture',
+      'finance & banking',
+      'pubs & clubs',
+    ]),
+  );
+  const shownFields = (q: Question) => [
+    q.prompt,
+    q.fact,
+    q.explanation,
+    q.link.label,
+    ...(q.options ?? []).map((option) => option.label),
+    ...(Array.isArray(q.answer) ? q.answer : []),
+    ...(q.comparison
+      ? [
+          q.comparison.shownLabel,
+          q.comparison.shownDisplay,
+          q.comparison.hiddenLabel,
+          q.comparison.hiddenDisplay,
+        ]
+      : []),
+  ];
+  for (const q of shownQuestions)
+    for (const text of shownFields(q)) {
+      expect(text).not.toContain('\u2014');
+      for (const name of quizAmpersandNames) {
+        const [left, right] = name.split(' & ');
+        expect(text.toLowerCase()).not.toMatch(
+          new RegExp(`\\b${left}\\s*&\\s*${right}\\b`),
+        );
+      }
+    }
+  const pharmacies = shownQuestions.filter((q) =>
+    q.prompt.startsWith('Put these pharmacies and medicines donors in order'),
+  );
+  expect(pharmacies.length).toBeGreaterThan(0);
+  const labels = pharmacies.flatMap((q) => q.options!.map((o) => o.label));
+  expect(labels.some((label) => label.includes('Merck Sharp & Dohme'))).toBe(
+    true,
+  );
+  expect(labels.some((label) => label.includes('Johnson & Johnson'))).toBe(
+    true,
+  );
+  // The pass changes names in words, never a link.
+  const engineHrefs = engineQuestions.map((q) => q.link.href);
+  for (const q of shownQuestions) expect(engineHrefs).toContain(q.link.href);
+  expect(
+    plainQuestion({
+      ...byTemplate('words-record-true-false'),
+      prompt: 'Who spoke more on Climate & Energy, or on pubs & clubs?',
+      fact: 'JJ Richards & Sons Pty Ltd gave to the ALH&MW Union',
+    }),
+  ).toMatchObject({
+    prompt: 'Who spoke more on Climate and Energy, or on pubs and clubs?',
+    fact: 'JJ Richards & Sons Pty Ltd gave to the ALH&MW Union',
+  });
+});
+
+test('after the pass, every order question grades its own answer as correct, and every choice has one right option', () => {
+  for (const q of shownQuestions) {
+    if (q.kind === 'order') {
+      const answer = q.answer as string[];
+      const labels = q.options!.map((option) => option.label);
+      for (const label of answer) expect(labels).toContain(label);
+      expect(grade(q, answer).correct).toBe(true);
+    } else if (['mc', 'tf', 'portrait', 'higher-lower'].includes(q.kind)) {
+      expect(q.options!.filter((option) => option.correct)).toHaveLength(1);
+    }
+  }
 });
 
 test('every question names who produced its fact, and Hansard never publishes a count or a brief', () => {
