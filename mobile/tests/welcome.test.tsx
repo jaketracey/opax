@@ -4,15 +4,21 @@ import { Dimensions, Text as NativeText } from 'react-native';
 import { router } from 'expo-router';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 import { releaseSplash } from '../src/launch/splash';
-import Welcome, {
-  continuePinned,
-  WELCOME_COLUMN,
-} from '../src/features/welcome/Welcome';
+import Welcome, { WELCOME_COLUMN } from '../src/features/welcome/Welcome';
 import ShortWelcome from '../src/features/welcome/ShortWelcome';
+import WelcomeLayout from '../src/app/welcome/_layout';
 import { replayWelcome } from '../src/features/welcome/replay';
 import { copy } from '../src/design/copy';
 
+const mockStack: { screenOptions?: unknown } = {};
 jest.mock('expo-router', () => ({
+  Stack: Object.assign(
+    ({ screenOptions }: { screenOptions: unknown }) => {
+      mockStack.screenOptions = screenOptions;
+      return null;
+    },
+    { Screen: () => null },
+  ),
   router: { push: jest.fn(), back: jest.fn() },
   useNavigation: () => ({
     getParent: () => undefined,
@@ -167,15 +173,37 @@ describe('the full welcome', () => {
     expect(has(replay, 'welcome-launch-cover')).toBe(false);
     await act(async () => replay.unmount());
   });
-  test('from AX3 up Continue scrolls in after the notice; below it is pinned', async () => {
-    expect(continuePinned(1)).toBe(true);
-    expect(continuePinned(2)).toBe(true);
-    expect(continuePinned(3.12)).toBe(false);
-    setFontScale(3.12);
+  test('Continue is pinned below the scroll at every size, AX5 included', async () => {
+    for (const scale of [1, 2, 3.12]) {
+      setFontScale(scale);
+      const r = await render(<Welcome />);
+      expect(words(r).indexOf(copy.deceasedNotice)).toBeGreaterThan(-1);
+      // Continue is never inside the ScrollView, so it cannot end up half
+      // off-screen at the end of a long AX5 scroll.
+      const scroll = r.root.find(
+        (n) => typeof n.type === 'string' && n.props.contentContainerStyle,
+      );
+      expect(
+        scroll.findAll((n) => n.props.testID === 'welcome-continue'),
+      ).toHaveLength(0);
+      expect(has(r, 'welcome-continue')).toBe(true);
+      await act(async () => r.unmount());
+    }
+    setFontScale(1);
+  });
+  test('the feature glyphs are the tint at full strength, not hierarchical', async () => {
     const r = await render(<Welcome />);
-    const text = words(r);
-    expect(text.indexOf(copy.deceasedNotice)).toBeGreaterThan(-1);
-    expect(has(r, 'welcome-continue')).toBe(true);
+    const glyphs = r.root.findAll(
+      (n) =>
+        n.props.name !== undefined &&
+        n.props.tone !== undefined &&
+        typeof n.type !== 'string',
+    );
+    expect(glyphs).toHaveLength(3);
+    for (const g of glyphs) {
+      expect(g.props.tone).toBe('navy');
+      expect(g.props.type).toBeUndefined();
+    }
     await act(async () => r.unmount());
   });
 });
@@ -242,5 +270,22 @@ describe('replay', () => {
       pathname: '/welcome',
       params: {},
     });
+  });
+});
+
+describe('the welcome stack', () => {
+  test('the page hides the hard top edge: no divider under the status bar', async () => {
+    const r = await render(<WelcomeLayout />);
+    const options = mockStack.screenOptions as (props: {
+      route: { name: string };
+    }) => { scrollEdgeEffects?: { top: string; bottom: string } };
+    expect(options({ route: { name: 'index' } }).scrollEdgeEffects?.top).toBe(
+      'hidden',
+    );
+    // The seat step keeps the stack's hard edge under its bar.
+    expect(
+      options({ route: { name: 'seat/index' } }).scrollEdgeEffects?.top,
+    ).toBe('hard');
+    await act(async () => r.unmount());
   });
 });
