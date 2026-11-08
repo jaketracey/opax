@@ -53,7 +53,7 @@ export const NOTHING_FOLLOWED_TITLE = 'Nothing followed yet';
 export const NOTHING_FOLLOWED =
   'Tap Follow on a person, bill, party or electorate to see what changes.';
 const SAVE_FAILED = () =>
-  phoneCopy('Your follows couldn’t be saved on this iPhone.');
+  phoneCopy("Your follows couldn't be saved on this iPhone.");
 
 export interface FollowEntry {
   follow: Follow;
@@ -267,7 +267,7 @@ export default function Following() {
       ) : failedAll ? (
         <InlineError
           subject="changes"
-          message="Changes couldn’t be checked."
+          message="Changes couldn't be checked."
           onRetry={() => setRefresh((n) => n + 1)}
           testID="follows-check-error"
         />
@@ -281,7 +281,7 @@ export default function Following() {
         />
       ) : !count ? (
         <ContentUnavailable
-          symbol="star"
+          symbol="bell"
           title={NOTHING_FOLLOWED_TITLE}
           body={NOTHING_FOLLOWED}
           testID="follows-empty"

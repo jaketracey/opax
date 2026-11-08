@@ -723,7 +723,7 @@ describe('Following', () => {
       (n) => n.props.testID === 'follows-empty' && 'title' in n.props,
     );
     expect(empty.props).toMatchObject({
-      symbol: 'star',
+      symbol: 'bell',
       title: NOTHING_FOLLOWED_TITLE,
       body: NOTHING_FOLLOWED,
     });
@@ -901,7 +901,7 @@ describe('Following', () => {
     const error = r.root.find(
       (n) => n.props.testID === 'follows-check-error' && 'subject' in n.props,
     );
-    expect(error.props.message).toBe('Changes couldn’t be checked.');
+    expect(error.props.message).toBe("Changes couldn't be checked.");
     expect(row(r, `follows-row-bill-${BILL}`).props.detail).toBe(
       'Not checked yet',
     );
