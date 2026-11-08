@@ -87,7 +87,7 @@ export function useChromeColours() {
 export type HeadingFace = 'system' | 'serif';
 const extra = Constants.expoConfig?.extra;
 export const headingFace: HeadingFace =
-  extra?.variant !== 'production' &&
+  (extra?.variant === 'development' || extra?.variant === 'e2e') &&
   (extra?.headingFace === 'system' || extra?.headingFace === 'serif')
     ? extra.headingFace
     : defaultHeadingFace;
@@ -277,9 +277,10 @@ export const deprecatedRoles = {
 export const deprecatedTextVariants = deprecatedRoles;
 
 /** Resolve both D1 faces without changing the record's typeface or figures. */
-export function textStylesFor(
-  face: HeadingFace,
-): Record<CurrentTextVariant, TextRole> & {
+export function textStylesFor(face: HeadingFace): Record<
+  CurrentTextVariant,
+  TextRole
+> & {
   [Name in keyof typeof deprecatedRoles]: TextRole;
 } {
   return Object.fromEntries(

@@ -97,8 +97,15 @@ test('invalid build switches fail early', () => {
   expect(() => build('e2e', 'typo')).toThrow('OPAX_HEADING_FACE');
   expect(() => build('e2e', 'system', 'dark')).toThrow('OPAX_APPEARANCE');
 });
-test('heading face resolves at module load, production uses the generated default', () => {
-  for (const variant of ['development', 'e2e', 'production']) {
+test('only development and e2e override the heading face at module load', () => {
+  for (const variant of [
+    'development',
+    'e2e',
+    'production',
+    'unknown',
+    undefined,
+  ]) {
+    const canOverride = variant === 'development' || variant === 'e2e';
     jest.isolateModules(() => {
       jest.doMock('expo-constants', () => ({
         __esModule: true,
@@ -106,11 +113,9 @@ test('heading face resolves at module load, production uses the generated defaul
       }));
       const tokens =
         require('../src/design/tokens') as typeof import('../src/design/tokens');
-      expect(tokens.headingFace).toBe(
-        variant === 'production' ? 'system' : 'serif',
-      );
+      expect(tokens.headingFace).toBe(canOverride ? 'serif' : 'system');
       expect(tokens.textStyles.pageTitle.fontFamily).toBe(
-        variant === 'production' ? undefined : 'Merriweather-Bold',
+        canOverride ? 'Merriweather-Bold' : undefined,
       );
       expect(tokens.textStyles.figure.fontFamily).toBeUndefined();
     });

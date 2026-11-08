@@ -314,7 +314,7 @@ export function Text({
   variant = 'body',
   tone,
   style,
-  wordSafe = !['body', 'recordText', 'record'].includes(variant),
+  wordSafe = false,
   tabular: tabularProp = false,
   onTextLayout,
   onLayout,
