@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Platform,
   ScrollView,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { router } from 'expo-router';
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -70,8 +72,17 @@ export const talkMachineNote = {
  * Talk screen to start once the sheet has gone; Not now and a swipe down
  * leave everything as it was.
  */
+/** The sheet's own bar when the stack has not measured it yet. */
+export const SHEET_HEADER = 56;
+
 export function ConsentSheet() {
   const insets = useSafeAreaInsets();
+  // A fitToContents sheet stops at full height, but its root would keep
+  // growing: cap it at the space the sheet can use, so at AX5 the text
+  // scrolls and the two buttons stay above the home indicator (7.7).
+  const { height: window } = useWindowDimensions();
+  const header = useContext(HeaderHeightContext) || SHEET_HEADER;
+  const maxHeight = Math.max(0, window - insets.top - header);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
   const [under, setUnder] = useState(false);
@@ -93,7 +104,7 @@ export function ConsentSheet() {
     router.back();
   };
   return (
-    <View style={styles.sheet} testID="talk-consent-sheet">
+    <View style={[styles.sheet, { maxHeight }]} testID="talk-consent-sheet">
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.body}
@@ -137,6 +148,7 @@ export function ConsentSheet() {
         ) : null}
       </ScrollView>
       <View
+        testID="talk-consent-footer"
         style={[
           styles.footer,
           under ? styles.separated : null,
