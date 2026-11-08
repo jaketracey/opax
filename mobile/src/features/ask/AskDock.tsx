@@ -150,12 +150,21 @@ export function AskDock({
             style={styles.clear}
             testID="ask-options-clear"
           >
-            <Icon name="xmark.circle" size={17} tone="inkFaint" maxScale={1.5} />
+            <Icon
+              name="xmark.circle"
+              size={17}
+              tone="inkFaint"
+              maxScale={1.5}
+            />
           </Pressable>
         </View>
       ) : null}
       {inputError ? (
-        <InlineError subject="question" message={inputError} testID="ask-input-error" />
+        <InlineError
+          subject="question"
+          message={inputError}
+          testID="ask-input-error"
+        />
       ) : null}
       <View style={styles.row}>
         <IconButton
@@ -201,7 +210,11 @@ export function AskDock({
   return (
     <View onLayout={onLayout} testID="ask-dock">
       {glass ? (
-        <GlassView style={styles.glass} glassEffectStyle="regular" isInteractive>
+        <GlassView
+          style={styles.glass}
+          glassEffectStyle="regular"
+          isInteractive
+        >
           {content}
         </GlassView>
       ) : (
@@ -237,7 +250,12 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.line,
   },
   optionsText: { flex: 1, minHeight: 28, justifyContent: 'center' },
-  clear: { minWidth: 28, minHeight: 28, alignItems: 'center', justifyContent: 'center' },
+  clear: {
+    minWidth: 28,
+    minHeight: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   row: { flexDirection: 'row', alignItems: 'flex-end' },
   input: {
     flex: 1,

@@ -68,19 +68,26 @@ export default function AskScreen() {
     askSession.snapshot,
     askSession.snapshot,
   );
-  const saved = useSyncExternalStore(subscribeChats, chatsSnapshot, chatsSnapshot);
+  const saved = useSyncExternalStore(
+    subscribeChats,
+    chatsSnapshot,
+    chatsSnapshot,
+  );
   const account = useAccount();
   const signedIn = !!account.status?.signedIn;
-  const params = useLocalSearchParams<Partial<Record<keyof AskScope | 'entry', string>>>();
+  const params =
+    useLocalSearchParams<Partial<Record<keyof AskScope | 'entry', string>>>();
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const { height: windowHeight } = useWindowDimensions();
   const [readFailed, setReadFailed] = useState(false);
   const [inputError, setInputError] = useState('');
-  const [failedAt, setFailedAt] = useState<number | null>(null);
   const [profiles, setProfiles] = useState<Map<string, AskPerson>>(new Map());
   const [names, setNames] = useState<string[]>([]);
   const [dockHeight, setDockHeight] = useState(0);
+  // Bar items are built during render, so New question touches no refs:
+  // it asks for the top, and an effect scrolls there.
+  const [topRequest, setTopRequest] = useState(0);
   const input = useRef<TextInput>(null);
   const scroll = useRef<ScrollView>(null);
   const root = useRef<View>(null);
@@ -93,7 +100,8 @@ export default function AskScreen() {
   // iPad: two columns when the room inside the sidebar's inset is regular.
   const [onRoom, room] = useMeasuredRegion();
   const outer = useLayout();
-  const docked = isPad && sizeClassFor(room?.width ?? outer.width) === 'regular';
+  const docked =
+    isPad && sizeClassFor(room?.width ?? outer.width) === 'regular';
   const column = useScreenColumn('readable');
   const keyboard = useKeyboardOverlap(root);
 
@@ -104,10 +112,17 @@ export default function AskScreen() {
   useEffect(() => {
     if (!params.entry) return;
     const scope: AskScope = { question: params.question ?? '' };
-    for (const k of ['speaker', 'party', 'state', 'topic', 'from', 'to', 'kind'] as const)
+    for (const k of [
+      'speaker',
+      'party',
+      'state',
+      'topic',
+      'from',
+      'to',
+      'kind',
+    ] as const)
       if (params[k]) scope[k] = params[k];
     arriveInAsk(scope, params.entry);
-    setInputError('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.entry]);
   // Each stage is announced once, politely; the line is not a live region.
@@ -115,9 +130,23 @@ export default function AskScreen() {
     if (s.stage && s.stage !== lastStage.current) announce(s.stage);
     lastStage.current = s.stage;
   }, [s.stage]);
-  useEffect(() => {
-    if (s.error) setFailedAt(Date.now());
-  }, [s.error]);
+  async function loadNames() {
+    if (loadingNames.current || names.length) return;
+    loadingNames.current = true;
+    try {
+      const [roster, slugs] = await Promise.all([
+        catalogs.roster(),
+        catalogs.slugs(),
+      ]);
+      setProfiles(rosterProfiles(roster.data, slugs.data));
+      setNames(roster.data.people.map((p) => p.name));
+    } catch {
+      /* People rows wait for the roster; the answer reads without them. */
+    } finally {
+      loadingNames.current = false;
+    }
+  }
+
   const latest = s.thread.at(-1);
   const wasBusy = useRef(false);
   useEffect(() => {
@@ -132,20 +161,6 @@ export default function AskScreen() {
   useEffect(() => {
     wasBusy.current = s.busy;
   }, [s.busy]);
-  async function loadNames() {
-    if (loadingNames.current || names.length) return;
-    loadingNames.current = true;
-    try {
-      const [roster, slugs] = await Promise.all([catalogs.roster(), catalogs.slugs()]);
-      setProfiles(rosterProfiles(roster.data, slugs.data));
-      setNames(roster.data.people.map((p) => p.name));
-    } catch {
-      /* People rows wait for the roster; the answer reads without them. */
-    } finally {
-      loadingNames.current = false;
-    }
-  }
-
   const scrollToTop = () =>
     scroll.current?.scrollTo({ y: -headerBottom, animated: false });
   // The new question goes just under the bar once its turn is laid out.
@@ -157,6 +172,10 @@ export default function AskScreen() {
       animated: !reduceMotion,
     });
   };
+  useEffect(() => {
+    if (topRequest) scrollToTop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topRequest]);
   const pinTurn = () => {
     pin.current = true;
     requestAnimationFrame(() => requestAnimationFrame(reveal));
@@ -170,7 +189,9 @@ export default function AskScreen() {
         const sheetTop = windowHeight / 2;
         const room = sheetTop - headerBottom - rhythm.block;
         const offset =
-          h > room ? y - headerBottom - rhythm.tight : y + h - sheetTop + rhythm.block;
+          h > room
+            ? y - headerBottom - rhythm.tight
+            : y + h - sheetTop + rhythm.block;
         scroll.current?.scrollTo({
           y: Math.max(offset, -headerBottom),
           animated: !reduceMotion,
@@ -202,7 +223,7 @@ export default function AskScreen() {
   function newConversation() {
     if (askSession.newConversation()) {
       setInputError('');
-      scrollToTop();
+      setTopRequest((n) => n + 1);
     }
   }
   const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
@@ -246,7 +267,9 @@ export default function AskScreen() {
         styles.content,
         column.content,
         // Room for the docked composer (and the keyboard under it).
-        { paddingBottom: dockHeight + rhythm.section + (docked ? 0 : keyboard) },
+        {
+          paddingBottom: dockHeight + rhythm.section + (docked ? 0 : keyboard),
+        },
       ]}
     >
       <RegionProvider value={column.inner}>
@@ -267,7 +290,6 @@ export default function AskScreen() {
             paneShowsSources={docked}
             onAsk={(q, carry) => void ask(q, carry)}
             onRetry={retry}
-            failedAt={failedAt}
             onTurnLayout={(y) => {
               turnY.current = y;
               reveal();
@@ -300,12 +322,17 @@ export default function AskScreen() {
       <AskRevealContext.Provider value={revealClaim}>
         {isPad ? (
           <SidebarSafe style={styles.fill}>
-            <View style={[styles.fill, docked ? styles.split : null]} onLayout={onRoom}>
+            <View
+              style={[styles.fill, docked ? styles.split : null]}
+              onLayout={onRoom}
+            >
               <RegionProvider value={room}>
                 {docked ? (
                   <>
                     <PadColumn dock={dock}>
-                      <AskPaneProvider value={sources.context}>{content}</AskPaneProvider>
+                      <AskPaneProvider value={sources.context}>
+                        {content}
+                      </AskPaneProvider>
                     </PadColumn>
                     {sources.pane}
                   </>
@@ -335,7 +362,13 @@ export default function AskScreen() {
  * bar minimises and expands (journeys/ask.md 4.4a); with the keyboard up the
  * composer sits on the keyboard instead.
  */
-function PhoneDock({ keyboard, children }: { keyboard: number; children: ReactNode }) {
+function PhoneDock({
+  keyboard,
+  children,
+}: {
+  keyboard: number;
+  children: ReactNode;
+}) {
   return (
     <SafeAreaView
       edges={keyboard ? [] : ['bottom']}
@@ -348,14 +381,25 @@ function PhoneDock({ keyboard, children }: { keyboard: number; children: ReactNo
   );
 }
 /** iPad regular: the composer docked under the conversation column. */
-function PadColumn({ dock, children }: { dock: ReactNode; children: ReactNode }) {
+function PadColumn({
+  dock,
+  children,
+}: {
+  dock: ReactNode;
+  children: ReactNode;
+}) {
   const ref = useRef<View>(null);
   const lift = useKeyboardOverlap(ref);
   return (
     <View ref={ref} style={[styles.fill, { paddingBottom: lift }]}>
       {children}
       <View style={styles.padDock}>
-        <View style={[styles.padDockColumn, { maxWidth: columns.readable - layout.screenMargin * 2 }]}>
+        <View
+          style={[
+            styles.padDockColumn,
+            { maxWidth: columns.readable - layout.screenMargin * 2 },
+          ]}
+        >
           {dock}
         </View>
       </View>

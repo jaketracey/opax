@@ -61,7 +61,9 @@ export default function AskSettings() {
             title={askSettingsCopy.deleteAll}
             destructive
             accessory="none"
-            onPress={() => confirmDeleteAll(status, conversationsCopy.deleteAll)}
+            onPress={() =>
+              confirmDeleteAll(status, conversationsCopy.deleteAll)
+            }
             testID="ask-settings-delete-all"
           />
         ) : null}

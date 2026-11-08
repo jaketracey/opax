@@ -272,7 +272,9 @@ export class AskController {
       });
     } catch {
       this.update({
-        notice: phoneCopy("This conversation couldn't be saved on this iPhone."),
+        notice: phoneCopy(
+          "This conversation couldn't be saved on this iPhone.",
+        ),
       });
     }
   }

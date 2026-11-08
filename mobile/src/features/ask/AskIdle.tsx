@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from 'react';
+import { useMemo, useState, useSyncExternalStore } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { haptic } from '../../design/haptics';
@@ -51,8 +51,12 @@ export function useSeatMember(): string | null {
     .find(Boolean);
   return member?.name ?? null;
 }
+// The member the seat starter put in Person, so a starter tapped next does
+// not inherit it.
+let seatFill: string | null = null;
 /** Fills the composer without sending: a starter to edit, or the seat starter. */
 export function fillComposer(question: string, speaker?: string) {
+  seatFill = speaker ?? null;
   if (speaker)
     askSession.options({ ...defaultOptions, speaker, kind: 'speech' });
   askSession.setDraft(question);
@@ -68,7 +72,7 @@ export function AskIdle({
   onAsk,
   offline,
   readFailed,
-  now = Date.now(),
+  now: nowProp,
   starterCount = 4,
   showConversations = true,
   testPrefix = 'ask',
@@ -82,11 +86,22 @@ export function AskIdle({
   /** `ask-pane` in the iPad pane, so its rows keep their own IDs. */
   testPrefix?: string;
 }) {
-  const saved = useSyncExternalStore(subscribeChats, chatsSnapshot, chatsSnapshot);
+  const saved = useSyncExternalStore(
+    subscribeChats,
+    chatsSnapshot,
+    chatsSnapshot,
+  );
   const member = useSeatMember();
+  // The day's starters are read once as the page mounts.
+  const [mounted] = useState(() => Date.now());
+  const now = nowProp ?? mounted;
   const day = Math.floor(now / 86_400_000);
   const starters = useMemo(
-    () => startersFor(day * 86_400_000 + 43_200_000, member ? starterCount - 1 : starterCount),
+    () =>
+      startersFor(
+        day * 86_400_000 + 43_200_000,
+        member ? starterCount - 1 : starterCount,
+      ),
     [day, member, starterCount],
   );
   const recent = saved.chats.slice(0, 3);
@@ -114,7 +129,15 @@ export function AskIdle({
               question={question}
               variant="send"
               offline={offline}
-              onPress={() => onAsk(question)}
+              onPress={() => {
+                if (
+                  seatFill &&
+                  askSession.composerOptions().speaker === seatFill
+                )
+                  askSession.options({ ...defaultOptions });
+                seatFill = null;
+                onAsk(question);
+              }}
               menu={menu(question)}
               testID={`${testPrefix}-starter-${i}`}
             />

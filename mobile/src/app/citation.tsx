@@ -16,7 +16,11 @@ import {
 } from '../features/ask/citation-state';
 import { citeStyles, copyCitation } from '../features/ask/cite';
 import { answerTurn } from '../features/ask/session';
-import { citedSources, sourceLink, sourceTitle } from '../features/ask/source-present';
+import {
+  citedSources,
+  sourceLink,
+  sourceTitle,
+} from '../features/ask/source-present';
 import { copyText } from '../features/records/actions';
 import { pageMenu } from '../navigation/chrome';
 import { askReportRoute } from '../navigation/routes/ask';
@@ -38,13 +42,18 @@ export default function Citation() {
     return citationSheetLeft;
   }, []);
   const found = selection ? answerTurn(selection.turn) : null;
-  const data = found
-    ? (found.answer.result ?? {
-        answer: found.answer.text,
-        sources: found.answer.sources ?? [],
-        citations: {},
-      })
-    : null;
+  const answer = found?.answer;
+  const data = useMemo(
+    () =>
+      answer
+        ? (answer.result ?? {
+            answer: answer.text,
+            sources: answer.sources ?? [],
+            citations: {},
+          })
+        : null,
+    [answer],
+  );
   const blocks = useMemo(() => (data ? answerBlocks(data) : []), [data]);
   const cited = data ? citedSources(data.sources).cited : [];
   const n = selection?.n ?? 0;
@@ -126,10 +135,12 @@ export default function Citation() {
       })}
     >
       <CitationContent
-        source={source}
+        record={source}
         n={n}
         focusKey={`${selection.turn}:${n}`}
-        onOpenRecord={href ? () => leaveThen(() => router.push(href)) : undefined}
+        onOpenRecord={
+          href ? () => leaveThen(() => router.push(href)) : undefined
+        }
       />
     </SheetFrame>
   );

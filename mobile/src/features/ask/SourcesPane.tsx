@@ -7,7 +7,12 @@ import {
   useState,
   type RefObject,
 } from 'react';
-import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 // From adaptive, not primitives: screen tests mock primitives' components.
 import { splitPaneWidth, useLayout, LayoutRegion } from '../../design/adaptive';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -224,7 +229,10 @@ function SourcesPane({
               />
             }
           >
-            <View key={`${top.kind}:${top.key}:${stack.length}`} style={styles.grow}>
+            <View
+              key={`${top.kind}:${top.key}:${stack.length}`}
+              style={styles.grow}
+            >
               <RecordDetail entry={top} />
             </View>
           </PaneHost>
@@ -300,7 +308,7 @@ function SourceList({
             </View>
           ) : null}
           <CitationContent
-            source={source}
+            record={source}
             n={marked}
             profiles={profiles}
             focusKey={`${answer.at ?? ''}:${marked}`}
@@ -314,13 +322,15 @@ function SourceList({
       {cited.length ? (
         <View style={styles.section}>
           <Text variant="groupHeader">
-            {numbered ? `Records cited (${cited.length})` : `Records found (${cited.length})`}
+            {numbered
+              ? `Records cited (${cited.length})`
+              : `Records found (${cited.length})`}
           </Text>
           <InsetGroup>
             {cited.map((s, i) => (
               <CitedRecordRow
                 key={s.resource}
-                source={s}
+                record={s}
                 n={numbered ? i + 1 : undefined}
                 selected={numbered && marked === i + 1}
                 onPress={() => (numbered ? move(i + 1) : open(s.href, s.title))}
@@ -337,7 +347,7 @@ function SourceList({
             {also.map((s) => (
               <CitedRecordRow
                 key={s.resource}
-                source={s}
+                record={s}
                 onPress={() => open(s.href, s.title)}
               />
             ))}

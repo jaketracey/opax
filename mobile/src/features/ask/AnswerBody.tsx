@@ -63,16 +63,17 @@ export function AnswerBody({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
-  let highlighted = false;
-  const spans = (items: Inline[], block: string): ReactNode =>
-    items.map((span, i) => {
-      const lit =
-        !streaming &&
-        claim?.block === block &&
-        claim.sentence === span.sentence &&
-        span.kind !== 'cite';
-      const first = lit && !highlighted;
-      if (lit) highlighted = true;
+  const isLit = (span: Inline, block: string) =>
+    !streaming &&
+    claim?.block === block &&
+    claim.sentence === span.sentence &&
+    span.kind !== 'cite';
+  // Only the claim's block lights, so its first lit span carries the ID.
+  const spans = (items: Inline[], block: string): ReactNode => {
+    const firstLit = items.findIndex((span) => isLit(span, block));
+    return items.map((span, i) => {
+      const lit = isLit(span, block);
+      const first = i === firstLit;
       const wash = lit ? styles.claim : null;
       const id = first ? 'ask-sentence-highlight' : undefined;
       switch (span.kind) {
@@ -127,6 +128,7 @@ export function AnswerBody({
           );
       }
     });
+  };
   const keep = (key: string) => (node: View | null) => {
     blockRefs?.current?.set(key, node);
   };
@@ -161,11 +163,7 @@ export function AnswerBody({
           case 'bullets':
           case 'numbered':
             return (
-              <View
-                key={key}
-                accessibilityRole="list"
-                style={styles.list}
-              >
+              <View key={key} accessibilityRole="list" style={styles.list}>
                 {block.items.map((item, i) => {
                   const itemKey = `${key}.${i}`;
                   return (
@@ -176,9 +174,7 @@ export function AnswerBody({
                       style={styles.item}
                     >
                       <Text variant="body" style={styles.marker}>
-                        {block.kind === 'bullets'
-                          ? '•'
-                          : `${block.start + i}.`}
+                        {block.kind === 'bullets' ? '•' : `${block.start + i}.`}
                       </Text>
                       <Text variant="body" style={styles.itemText}>
                         {spans(item, itemKey)}
@@ -276,7 +272,12 @@ const styles = StyleSheet.create({
   table: { minWidth: '100%' },
   tableRow: { flexDirection: 'row' },
   ruled: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
-  cell: { minWidth: 96, maxWidth: 220, paddingVertical: rhythm.tight, paddingRight: rhythm.tight },
+  cell: {
+    minWidth: 96,
+    maxWidth: 220,
+    paddingVertical: rhythm.tight,
+    paddingRight: rhythm.tight,
+  },
   stackedTable: { gap: rhythm.block },
   stackedRow: {
     gap: rhythm.tight,

@@ -1,4 +1,8 @@
-import { cleanRecordTitle, formatDate, recordTitleStage } from '../../design/format';
+import {
+  cleanRecordTitle,
+  formatDate,
+  recordTitleStage,
+} from '../../design/format';
 import { canonicalUrl } from '../../navigation/external';
 import { titleSubject } from '../records/citations';
 import { parliaments, sourceGroups, type Source } from './model';
@@ -12,9 +16,8 @@ import { parliaments, sourceGroups, type Source } from './model';
 export function personName(raw: string | null | undefined): string {
   const name = (raw ?? '').replace(/\s+/g, ' ').trim();
   // "WILKIE, Andrew, MP" and "Wilkie, Andrew" become "Andrew Wilkie".
-  const roster = /^([^,]+),\s*([^,]+?)(?:,\s*(?:MP|Senator|MLA|MLC|MHR))?$/i.exec(
-    name,
-  );
+  const roster =
+    /^([^,]+),\s*([^,]+?)(?:,\s*(?:MP|Senator|MLA|MLC|MHR))?$/i.exec(name);
   const ordered = roster ? `${roster[2]} ${roster[1]}` : name;
   return ordered
     .split(' ')
@@ -22,8 +25,9 @@ export function personName(raw: string | null | undefined): string {
       part.length > 1 && part === part.toUpperCase() && /[A-Z]/.test(part)
         ? part
             .toLowerCase()
-            .replace(/(^|[-'’])(\p{L})/gu, (_m, sep: string, ch: string) =>
-              sep + ch.toUpperCase(),
+            .replace(
+              /(^|[-'’])(\p{L})/gu,
+              (_m, sep: string, ch: string) => sep + ch.toUpperCase(),
             )
             .replace(/^Mc(\p{L})/u, (_m, ch: string) => `Mc${ch.toUpperCase()}`)
         : part,
@@ -80,7 +84,8 @@ export function sourceMeta(s: Source): string {
 export function sourceDate(s: Source): string | null {
   const date = s.date?.trim();
   if (!date) return null;
-  if (/^\d{4}-\d{2}-\d{2}/.test(date)) return formatDate(date.slice(0, 10), 'short');
+  if (/^\d{4}-\d{2}-\d{2}/.test(date))
+    return formatDate(date.slice(0, 10), 'short');
   return date.replace(/^(\d{4})-(\d{2})$/, '$1–$2');
 }
 /** The record's OPAX link, for the share payload and reports. */

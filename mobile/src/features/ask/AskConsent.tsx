@@ -54,7 +54,10 @@ export default function AskConsent() {
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={[
           styles.content,
-          { paddingHorizontal: margin, paddingBottom: rhythm.block + insets.bottom },
+          {
+            paddingHorizontal: margin,
+            paddingBottom: rhythm.block + insets.bottom,
+          },
         ]}
       >
         <View style={styles.lead}>

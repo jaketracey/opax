@@ -5,10 +5,7 @@ import { useAccessibilitySize } from '../../design/accessibility';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
 import { PartyLabel } from '../../design/people';
-import {
-  RowLink,
-  type RowMenuAction,
-} from '../../design/row-link';
+import { RowLink, type RowMenuAction } from '../../design/row-link';
 import {
   useRowCellStyle,
   useRowHighlight,
@@ -21,11 +18,7 @@ import { openSource } from '../../navigation/external';
 import { shareRecord } from '../../navigation/share';
 import { copyCitation, citeStyles } from './cite';
 import type { Source } from './model';
-import {
-  personName,
-  sourceMeta,
-  sourceTitle,
-} from './source-present';
+import { personName, sourceMeta, sourceTitle } from './source-present';
 
 /** A source's long-press menu, the same in Records cited, the sheet and the pane. */
 export function sourceMenu(
@@ -34,7 +27,13 @@ export function sourceMenu(
 ): RowMenuAction[] {
   return [
     ...(showPassage
-      ? [{ title: 'Show passage', symbol: 'text.quote' as const, onPress: showPassage }]
+      ? [
+          {
+            title: 'Show passage',
+            symbol: 'text.quote' as const,
+            onPress: showPassage,
+          },
+        ]
       : []),
     {
       title: 'Cite',
@@ -78,14 +77,14 @@ export function sourceRoute(source: Source): Href | null {
  * every citation, whatever the inline mark's size.
  */
 export function CitedRecordRow({
-  source,
+  record: source,
   n,
   onPress,
   onShowPassage,
   selected = false,
   testID,
 }: {
-  source: Source;
+  record: Source;
   /** The numeral; none for an uncited answer's "Records found". */
   n?: number;
   /** Replaces opening the record (the iPad pane, an open citation sheet). */
@@ -200,7 +199,8 @@ export function AskSuggestionRow({
         label: item.title,
       }))}
       onAccessibilityAction={(event) =>
-        leaves.find((item) => item.title === event.nativeEvent.actionName)
+        leaves
+          .find((item) => item.title === event.nativeEvent.actionName)
           ?.onPress()
       }
       onPress={offline ? undefined : onPress}
@@ -217,7 +217,12 @@ export function AskSuggestionRow({
       ]}
     >
       <Icon name="text.bubble" size={20} tone="navy" maxScale={1.5} />
-      <Text wordSafe variant="body" tone={offline ? 'inkSoft' : undefined} style={styles.main}>
+      <Text
+        wordSafe
+        variant="body"
+        tone={offline ? 'inkSoft' : undefined}
+        style={styles.main}
+      >
         {question}
       </Text>
       {offline ? null : (

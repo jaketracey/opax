@@ -73,9 +73,7 @@ export function peopleInAnswer(
     first.set(s.speaker, Math.min(first.get(s.speaker) ?? Infinity, at));
   }
   const cited = [...first.entries()]
-    .sort(
-      (a, b) => a[1] - b[1] || surname(a[0]).localeCompare(surname(b[0])),
-    )
+    .sort((a, b) => a[1] - b[1] || surname(a[0]).localeCompare(surname(b[0])))
     .map(([name]) => profiles.get(name)!);
   const text = answer.answer;
   const named = answer.sources

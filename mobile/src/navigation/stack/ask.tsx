@@ -46,8 +46,5 @@ export function askScreens(segment = '', signedIn = false) {
 }
 /** Account › Ask: the settings page and its Conversations, pushed in Account. */
 export function askAccountScreens() {
-  return [
-    screen('ask', 'Ask'),
-    screen('conversations', 'Conversations'),
-  ];
+  return [screen('ask', 'Ask'), screen('conversations', 'Conversations')];
 }

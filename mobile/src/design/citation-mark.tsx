@@ -85,7 +85,11 @@ export function CitationBadge({
       accessible={false}
       importantForAccessibility="no-hide-descendants"
     >
-      <Text variant="capsule" maxFontSizeMultiplier={1.5} style={styles.badgeText}>
+      <Text
+        variant="capsule"
+        maxFontSizeMultiplier={1.5}
+        style={styles.badgeText}
+      >
         {label}
       </Text>
     </View>

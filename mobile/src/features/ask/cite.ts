@@ -48,7 +48,10 @@ export function citeText(
   if (version) return text;
   return text
     .replace(/Public record, via OPAX corpus v\}/, 'Public record}')
-    .replace(/^N1 {2}- Via OPAX corpus v; official record: /m, 'N1  - Official record: ')
+    .replace(
+      /^N1 {2}- Via OPAX corpus v; official record: /m,
+      'N1  - Official record: ',
+    )
     .replace(/^N1 {2}- Via OPAX corpus v\n/m, '');
 }
 let version: Promise<string | null> | null = null;

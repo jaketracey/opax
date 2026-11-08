@@ -12,7 +12,12 @@ import { fillComposer } from './AskIdle';
 import type { AskState } from './controller';
 import type { Chat, Turn } from './model';
 import type { AskPerson } from './people';
-import { askErrorCopy, busyWait, clarifyCopy, showAnsweredAs } from './turn-copy';
+import {
+  askErrorCopy,
+  busyWait,
+  clarifyCopy,
+  showAnsweredAs,
+} from './turn-copy';
 
 /** A legacy answer's date: the first from `created`, later ones bound by `updated`. */
 export function legacyDate(
@@ -26,6 +31,14 @@ export function legacyDate(
   return first
     ? { at: chat.created, bound: false }
     : { at: chat.updated, bound: true };
+}
+
+// Each failure is a new object: a fresh key restarts Try again's wait.
+const failureKeys = new WeakMap<object, number>();
+let nextKey = 0;
+function errorKey(failure: object) {
+  if (!failureKeys.has(failure)) failureKeys.set(failure, ++nextKey);
+  return failureKeys.get(failure)!;
 }
 
 /** The reader's question as the turn's heading, with "Answered as" when the meaning changed. */
@@ -42,11 +55,22 @@ export function QuestionLine({
 }) {
   return (
     <View style={styles.question}>
-      <Text wordSafe selectable variant="subsectionTitle" accessibilityRole="header" testID={testID}>
+      <Text
+        wordSafe
+        selectable
+        variant="subsectionTitle"
+        accessibilityRole="header"
+        testID={testID}
+      >
         {turn.text}
       </Text>
       {showAnsweredAs(turn.text, turn.askedAs, { names, topics }) ? (
-        <Text wordSafe variant="footnote" tone="inkSoft" testID="ask-answered-as">
+        <Text
+          wordSafe
+          variant="footnote"
+          tone="inkSoft"
+          testID="ask-answered-as"
+        >
           {`Answered as: ${turn.askedAs}`}
         </Text>
       ) : null}
@@ -54,22 +78,20 @@ export function QuestionLine({
   );
 }
 
-/** Try again, held for 30 s after "OPAX is busy right now." */
+/** Try again, held for 30 s after "OPAX is busy right now." Keyed by failure. */
 function RetryButton({
-  waitFrom,
+  wait,
   onPress,
 }: {
-  waitFrom: number | null;
+  wait: boolean;
   onPress: () => void;
 }) {
-  const [waiting, setWaiting] = useState(waitFrom !== null);
+  const [waiting, setWaiting] = useState(wait);
   useEffect(() => {
-    if (waitFrom === null) return setWaiting(false);
-    setWaiting(true);
-    const left = Math.max(0, waitFrom + busyWait - Date.now());
-    const timer = setTimeout(() => setWaiting(false), left);
+    if (!wait) return;
+    const timer = setTimeout(() => setWaiting(false), busyWait);
     return () => clearTimeout(timer);
-  }, [waitFrom]);
+  }, [wait]);
   return (
     <Button
       label="Try again"
@@ -98,7 +120,6 @@ export function AskThread({
   onAsk,
   onRetry,
   onTurnLayout,
-  failedAt,
   minHeight,
 }: {
   s: AskState;
@@ -111,11 +132,11 @@ export function AskThread({
   onRetry: () => void;
   /** The current turn's top, so a new question can be brought under the bar. */
   onTurnLayout: (y: number) => void;
-  failedAt: number | null;
   minHeight: number;
 }) {
   const thread = s.thread;
-  const failure = s.error && s.error.code !== 'empty' ? askErrorCopy(s.error) : null;
+  const failure =
+    s.error && s.error.code !== 'empty' ? askErrorCopy(s.error) : null;
   const lastQuestion = thread.map((t) => t.role).lastIndexOf('user');
   // A failed or clarified question never joined the thread: it is drawn from
   // its own copy as the current turn's heading.
@@ -175,7 +196,9 @@ export function AskThread({
             </InsetGroup>
           </View>
         ) : null}
-        {s.busy ? <AskProgress stage={s.stage} streaming={s.streaming} /> : null}
+        {s.busy ? (
+          <AskProgress stage={s.stage} streaming={s.streaming} />
+        ) : null}
         {failure ? (
           <View style={styles.block} testID={`ask-error-${s.error!.code}`}>
             {s.error!.code === 'partial' && s.streaming ? (
@@ -183,10 +206,15 @@ export function AskThread({
                 {s.streaming}
               </Text>
             ) : null}
-            <InlineError subject="answer" message={failure.message} testID="ask-error" />
+            <InlineError
+              subject="answer"
+              message={failure.message}
+              testID="ask-error"
+            />
             {failure.retry ? (
               <RetryButton
-                waitFrom={s.error!.code === 'rate-limited' ? failedAt : null}
+                key={errorKey(s.error!)}
+                wait={s.error!.code === 'rate-limited'}
                 onPress={onRetry}
               />
             ) : null}
@@ -197,11 +225,19 @@ export function AskThread({
             {s.notice}
           </Text>
         ) : null}
-        {answer && !s.busy && !failure && (s.nextLoading || answer.next?.length) ? (
+        {answer &&
+        !s.busy &&
+        !failure &&
+        (s.nextLoading || answer.next?.length) ? (
           <View testID="ask-followups">
             <SectionHeader title="Ask next" />
             {s.nextLoading && !answer.next?.length ? (
-              <Skeleton shape="rows" count={2} label="Loading questions to ask next" testID="ask-next-loading" />
+              <Skeleton
+                shape="rows"
+                count={2}
+                label="Loading questions to ask next"
+                testID="ask-next-loading"
+              />
             ) : (
               <InsetGroup>
                 {answer.next!.map((next, i) => (

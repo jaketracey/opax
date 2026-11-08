@@ -363,7 +363,9 @@ export function dateRuler(sources: Source[]) {
 }
 /** One answer turn, addressed from a route (`/ask-report?turn=`, `/source`). */
 export const turnKey = (chatId: string, index: number) => `${chatId}:${index}`;
-export function parseTurnKey(key: string): { chat: string; index: number } | null {
+export function parseTurnKey(
+  key: string,
+): { chat: string; index: number } | null {
   const match = /^([\w-]{8,64}):(\d{1,4})$/.exec(key);
   return match ? { chat: match[1]!, index: Number(match[2]) } : null;
 }

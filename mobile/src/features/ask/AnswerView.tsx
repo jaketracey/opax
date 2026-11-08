@@ -84,9 +84,9 @@ export const answerNotes = {
       : 'This suggested question used a passage found for the previous answer.',
 };
 /** The thread scrolls a claim above the half-height citation sheet. */
-export const AskRevealContext = createContext<
-  ((target: View) => void) | null
->(null);
+export const AskRevealContext = createContext<((target: View) => void) | null>(
+  null,
+);
 /** A legacy answer's date: the conversation's created (first) or updated (later) time. */
 export type LegacyDate = { at: number; bound: boolean } | null;
 
@@ -128,11 +128,15 @@ export function AnswerView({
     const target = mine?.claim && blockRefs.current.get(mine.claim.block);
     if (target) reveal?.(target);
   }, [mine?.claim, reveal]);
-  const data = turn.result || {
-    answer: turn.text,
-    sources: turn.sources || [],
-    citations: {},
-  };
+  const data = useMemo(
+    () =>
+      turn.result || {
+        answer: turn.text,
+        sources: turn.sources || [],
+        citations: {},
+      },
+    [turn],
+  );
   const blocks = useMemo(() => answerBlocks(data), [data]);
   const overview = useMemo(
     () => (data.money_overview ? parseAnswer(data.money_overview) : null),
@@ -162,7 +166,9 @@ export function AnswerView({
   };
   const titleFor = (n: number) => {
     const s = groups.cited[n - 1];
-    return s ? [sourceTitle(s), sourceDate(s)].filter(Boolean).join(', ') : undefined;
+    return s
+      ? [sourceTitle(s), sourceDate(s)].filter(Boolean).join(', ')
+      : undefined;
   };
   const answered = answeredText(turn, legacy);
   const openSources = () =>
@@ -170,7 +176,8 @@ export function AnswerView({
       testID: 'ask-answer-sources',
     });
   const copyAnswer = async () => {
-    if (await copyText(answerCopyText(question, turn, legacy))) haptic('success');
+    if (await copyText(answerCopyText(question, turn, legacy)))
+      haptic('success');
   };
   const shareQuestion = () =>
     void shareRecord({
@@ -218,10 +225,12 @@ export function AnswerView({
       {figures.map((figure, i) => (
         <FigureBlock
           key={i}
+          // FigureBlock's `source` is its citation, not an image (follow-up:
+          // design/record.tsx renames it to `citation`).
+          {...{ source: { citation: figure.source, asOf: figure.asAt } }}
           value={figure.value}
           label={figure.label ?? `As at ${figure.asAt}`}
           caveat={note && isCalculated(data) ? note : undefined}
-          source={{ citation: figure.source, asOf: figure.asAt }}
           testID={i ? `ask-figure-${i}` : 'ask-figure'}
         />
       ))}
@@ -241,7 +250,7 @@ export function AnswerView({
             />
             {source ? (
               <CitedRecordRow
-                source={source}
+                record={source}
                 n={numbered ? n : undefined}
                 onPress={() =>
                   cite([n], { block: `excerpt.${i}`, sentence: 0 })
@@ -291,7 +300,7 @@ export function AnswerView({
             {groups.cited.map((source, i) => (
               <CitedRecordRow
                 key={source.resource}
-                source={source}
+                record={source}
                 n={numbered ? i + 1 : undefined}
                 selected={mine?.n === i + 1}
                 // An open citation sheet moves to this source instead.
@@ -407,11 +416,13 @@ export function askSourceDetails({
         </Text>
         <Text variant="groupHeader">{answeredLong(turn, legacy)}</Text>
         {groups.cited.length ? (
-          <InsetGroup header={groups.numbered ? 'Cited in the answer' : 'Found'}>
+          <InsetGroup
+            header={groups.numbered ? 'Cited in the answer' : 'Found'}
+          >
             {groups.cited.map((source, i) => (
               <CitedRecordRow
                 key={source.resource}
-                source={source}
+                record={source}
                 n={groups.numbered ? i + 1 : undefined}
                 onPress={() => leave(source)}
                 testID={`ask-sources-cited-${i + 1}`}
@@ -443,7 +454,7 @@ export function askSourceDetails({
             {groups.also.map((source) => (
               <CitedRecordRow
                 key={source.resource}
-                source={source}
+                record={source}
                 onPress={() => leave(source)}
               />
             ))}
@@ -529,11 +540,7 @@ function AnswerPeople({
         >
           <InsetGroup>
             {rest.map((person) => (
-              <AnswerPerson
-                key={person.slug}
-                person={person}
-                onOpen={onOpen}
-              />
+              <AnswerPerson key={person.slug} person={person} onOpen={onOpen} />
             ))}
           </InsetGroup>
         </Disclosure>
@@ -617,7 +624,11 @@ function AnswerMenu({
           accessibilityIdentifier('ask-answer-menu'),
         ]}
       >
-        <SwiftButton label="Copy answer" systemImage="doc.on.doc" onPress={onCopy} />
+        <SwiftButton
+          label="Copy answer"
+          systemImage="doc.on.doc"
+          onPress={onCopy}
+        />
         <SwiftButton
           label="Share question"
           systemImage="square.and.arrow.up"

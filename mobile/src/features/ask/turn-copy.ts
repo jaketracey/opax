@@ -79,7 +79,14 @@ export function showAnsweredAs(
   if (rewriteKind) return rewriteKind === 'meaning';
   if (q.split(' ').filter(Boolean).length <= 3) return true;
   // "This year" names a period, not something said earlier.
-  if (pronouns.test(question.replace(/\bthis (year|week|month|term|session|parliament)\b/gi, '')))
+  if (
+    pronouns.test(
+      question.replace(
+        /\bthis (year|week|month|term|session|parliament)\b/gi,
+        '',
+      ),
+    )
+  )
     return true;
   const qYears = new Set(question.match(years) ?? []);
   if ((askedAs.match(years) ?? []).some((y) => !qYears.has(y))) return true;

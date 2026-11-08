@@ -1,5 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { AccessibilityInfo, StyleSheet, View, findNodeHandle } from 'react-native';
+import {
+  AccessibilityInfo,
+  StyleSheet,
+  View,
+  findNodeHandle,
+} from 'react-native';
 import { router } from 'expo-router';
 import { CitationBadge } from '../../design/citation-mark';
 import { InsetGroup } from '../../design/layout';
@@ -12,7 +17,12 @@ import { openSource } from '../../navigation/external';
 import type { Source } from './model';
 import { sourcePassage } from './model';
 import type { AskPerson } from './people';
-import { personName, sourceDate, sourceMeta, sourceTitle } from './source-present';
+import {
+  personName,
+  sourceDate,
+  sourceMeta,
+  sourceTitle,
+} from './source-present';
 
 export const citationCopy = {
   previous: 'Previous source',
@@ -25,7 +35,8 @@ export function originName(url: string | undefined): string | null {
   if (!url?.startsWith('https://')) return null;
   const host = new URL(url).hostname.replace(/^www\./, '');
   if (host.endsWith('aph.gov.au')) return 'ParlInfo';
-  if (host.endsWith('legislation.gov.au')) return 'Federal Register of Legislation';
+  if (host.endsWith('legislation.gov.au'))
+    return 'Federal Register of Legislation';
   if (host.endsWith('aec.gov.au')) return 'AEC';
   if (host.endsWith('tenders.gov.au')) return 'AusTender';
   if (host.endsWith('grants.gov.au')) return 'GrantConnect';
@@ -40,14 +51,14 @@ export function originName(url: string | undefined): string | null {
  * by the sheet and the iPad pane.
  */
 export function CitationContent({
-  source,
+  record: source,
   n,
   profiles,
   onOpenRecord,
   onOpenPerson,
   focusKey,
 }: {
-  source: Source;
+  record: Source;
   n: number;
   profiles?: Map<string, AskPerson>;
   onOpenRecord?: () => void;
@@ -78,7 +89,12 @@ export function CitationContent({
         accessibilityLabel={`Source ${n}, ${title}`}
       >
         <CitationBadge label={String(n)} />
-        <Text wordSafe variant="recordHeading" style={styles.grow} testID="citation-title">
+        <Text
+          wordSafe
+          variant="recordHeading"
+          style={styles.grow}
+          testID="citation-title"
+        >
           {title}
         </Text>
       </View>
