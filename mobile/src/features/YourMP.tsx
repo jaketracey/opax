@@ -249,7 +249,7 @@ export default function YourMP() {
                 openAsk({
                   question: `What has ${memberName} said in parliament this year?`,
                   speaker: memberName,
-                  kind: 'speeches',
+                  kind: 'speech',
                 }),
             },
           ]
