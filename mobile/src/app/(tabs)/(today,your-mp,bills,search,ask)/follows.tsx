@@ -1,1 +1,1 @@
-export { default } from '../../../features/follows/ManageFollows';
+export { default } from '../../../features/follows/Following';

@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="members" title="Members" />;
-}
+export { default } from '../../../features/your-mp/Members';

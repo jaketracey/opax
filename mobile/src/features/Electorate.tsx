@@ -1,513 +1,158 @@
 import {
-  PadGrid,
-  Disclosure,
-  EmptyState,
-  ErrorState,
-  Group,
-  Heading,
-  KeyValueList,
-  LinkRow,
-  LoadingState,
-  RowList,
-  Screen,
-  Section,
-  Text,
-  errorMessage,
-  PartyLabel,
-} from '../design/primitives';
-import { ElectorateHistory } from './directories/ElectorateHistory';
-import { validDate } from './directories/model';
-import { SeatGrants } from './money-public/Grants';
-import { PageActions } from './people/PageActions';
-import { headerItems } from '../navigation/chrome';
-import { OutlineMap } from './electorate-map/OutlineMap';
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import {
-  formatCount,
-  formatDate,
-  formatMoney,
-  formatPercent,
-} from '../design/format';
-import { useEffect, useState } from 'react';
-import {
-  Linking,
   Pressable,
   RefreshControl,
   StyleSheet,
   View,
+  useWindowDimensions,
+  type ScrollView,
 } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import {
+  ContentUnavailable,
+  FollowButton,
+  Group,
+  Heading,
+  IconButton,
+  InsetGroup,
+  LinkRow,
+  PageFoot,
+  PartyLabel,
+  Screen,
+  SectionHeader,
+  Skeleton,
+  StatStrip,
+  Text,
+  TitleAnchor,
+  ValueRow,
+  copy,
+} from '../design/primitives';
+import { Icon } from '../design/icon';
+import { symbols } from '../design/symbols';
+import { RowLink, rowMenus, type RowMenuAction } from '../design/row-link';
+import { confirmAction } from '../design/menu';
+import {
+  ownsRowPadding,
+  useRowCellStyle,
+  useRowInset,
+} from '../design/row-padding';
+import { colors, minimumTarget, rhythm } from '../design/tokens';
+import { formatDate } from '../design/format';
+import { chamberName, jurisdictionName } from '../design/parliament';
 import { catalogs } from '../api/runtime';
 import { ApiError } from '../api/errors';
+import type { Electorate as Seat } from '../api/catalogs';
+import { glassBar, headerItems, pageItems } from '../navigation/chrome';
+import { copyRecordLink, shareRecord } from '../navigation/share';
+import { openOnWeb } from '../navigation/external';
 import {
-  colors,
-  hairline,
-  layout,
-  minimumTarget,
-  rhythm,
-} from '../design/tokens';
+  electionRoute,
+  electorateDateRoute,
+  electorateRoute,
+  membersRoute,
+} from '../navigation/routes';
+import { SeatGrants } from './money-public/Grants';
 import {
-  AUTHORISATION_LINE,
-  CORRECTION_CONTACT,
-} from '../design/authorisation';
+  OutlineMap,
+  OutlineSource,
+  hasOutline,
+  outlineSourceDetails,
+} from './electorate-map/OutlineMap';
+import { presentSource } from '../navigation/sheets';
 import {
-  CHAMBER_NOT_RECORDED,
-  chamberName,
-  jurisdictionName,
-} from '../design/parliament';
-import { electorateRoute } from '../navigation/routes';
-import { shareHeaderItem } from '../navigation/share';
+  DatedMembers,
+  ElectorateHistory,
+} from './directories/ElectorateHistory';
+import { onElectorateDate } from './directories/ElectorateDateSheet';
+import { validDate } from './directories/model';
 import {
   BlockSource,
-  RecordBlock,
   combinedBlock,
   representationBlock,
 } from './your-mp/Evidence';
-import { RepresentativeRows } from './your-mp/RepresentativeRows';
-import type { Directory, ElectorateView } from './your-mp/model';
-const indicators: Record<string, [string, 'count' | 'money' | 'percent']> = {
-  population: ['Population', 'count'],
-  median_age: ['Median age', 'count'],
-  average_household_size: ['Average household size', 'count'],
-  born_overseas_pct: ['Born overseas', 'percent'],
-  homeownership_pct: ['Home ownership', 'percent'],
-  indigenous_pct: ['Aboriginal and Torres Strait Islander people', 'percent'],
-  labour_force_participation: ['Labour force participation', 'percent'],
-  median_household_income_weekly: ['Median weekly household income', 'money'],
-  median_income: ['Median weekly personal income', 'money'],
-  median_mortgage_monthly: ['Median monthly mortgage repayment', 'money'],
-  median_rent_weekly: ['Median weekly rent', 'money'],
-  rental_pct: ['Renting', 'percent'],
-  unemployment_rate: ['Unemployment rate', 'percent'],
-  university_pct: ['University qualification', 'percent'],
-};
-export default function Electorate() {
-  const { id, asof } = useLocalSearchParams<{ id: string; asof?: string }>();
-  return <ElectorateScreen key={id} id={id} initialDate={asof} />;
-}
-export function ElectorateScreen({
-  id,
-  embedded = false,
-  initialDate = '',
-}: {
-  id: string;
-  embedded?: boolean;
-  initialDate?: string;
-}) {
-  const [localDate, setAsOf] = useState(
-    validDate(initialDate) ? initialDate : '',
-  );
-  const asof = embedded ? localDate : validDate(initialDate) ? initialDate : '';
-  const [view, setView] = useState<ElectorateView | null>(null),
-    [directory, setDirectory] = useState<Directory | null>(null),
-    [error, setError] = useState<string | null>(null),
-    [retry, setRetry] = useState(0),
-    [refreshing, setRefreshing] = useState(false),
-    [expanded, setExpanded] = useState<string[]>([]);
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      const d = await catalogs.directory();
-      const seat = d.electorates.data.electorates.find(
-        (s) => s.electorate_id === id || s.slug === id,
-      );
-      if (!seat)
-        throw new ApiError(
-          'not-found',
-          'This electorate is not in the release.',
-        );
-      const v = await catalogs.electorateFor(seat.detail_url);
-      if (v.data.identity.data?.id !== seat.electorate_id)
-        throw new ApiError(
-          'invalid-data',
-          'The electorate record does not match the selected seat. Try again.',
-        );
-      return { d, v: v.data };
-    })()
-      .then(({ d, v }) => {
-        if (active) {
-          setDirectory(d);
-          setView(v);
-        }
-      })
-      .catch((e) => {
-        if (active) setError(errorMessage(e));
-      })
-      .finally(() => {
-        if (active) setRefreshing(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [id, retry]);
-  const refresh = () => {
-      setRefreshing(true);
-      setError(null);
-      setRetry((v) => v + 1);
-    },
-    identity = view?.identity.data,
-    seat = directory?.electorates.data.electorates.find(
-      (s) => s.electorate_id === id || s.slug === id,
-    );
-  return (
-    <>
-      {embedded ? null : (
-        <Stack.Screen
-          options={{
-            title: identity?.name ?? '',
-            headerTitle: '',
-            ...headerItems(
-              identity && seat
-                ? () => [
-                    shareHeaderItem({
-                      path: seat.url + (asof ? `?asof=${asof}` : ''),
-                      title: identity.name,
-                    }),
-                  ]
-                : undefined,
-            ),
-          }}
-        />
-      )}
-      <Screen
-        column="wide"
-        testID="electorate-screen"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-        }
-      >
-        {error ? (
-          <ErrorState
-            message={error}
-            onRetry={refresh}
-            testID="electorate-error"
-          />
-        ) : null}
-        {!view && !error ? (
-          <LoadingState label="Loading the electorate record" />
-        ) : null}
-        {view && identity && directory ? (
-          <>
-            {/* Identity once: the name, where it sits, Follow and ⋯, and
-                the one line for where this record comes from. */}
-            <Group gap={rhythm.heading}>
-              <Group gap={rhythm.line}>
-                <Heading level={1} testID="electorate-name">
-                  {identity.name}
-                </Heading>
-                <Text wordSafe variant="metadata">
-                  {chamberName(identity.chamber, identity.jurisdiction) ??
-                    CHAMBER_NOT_RECORDED}{' '}
-                  ·{' '}
-                  {jurisdictionName(identity.state) ??
-                    jurisdictionName(identity.jurisdiction) ??
-                    'Jurisdiction not recorded'}
-                </Text>
-              </Group>
-              {identity.status === 'historical' ? (
-                <Text wordSafe testID="electorate-abolished">
-                  Abolished; not a current seat. This record describes a
-                  historical electorate.
-                </Text>
-              ) : null}
-              <PageActions
-                kind="electorate"
-                id={identity.id}
-                name={identity.name}
-                webPath={seat?.url ?? `/subject/electorate/${id}`}
-                testID="electorate"
-              />
-              {/* No source line here: the representation block below carries
-                  the record's (pass 5, P2-7). */}
-            </Group>
-            <PadGrid>
-              <SeatGrants
-                name={identity.name}
-                state={identity.state}
-                eligible={
-                  identity.jurisdiction === 'federal' &&
-                  identity.chamber === 'representatives'
-                }
-              />
-              <View testID="electorate-map">
-                <OutlineMap
-                  boundaries={view.boundaries}
-                  name={identity.name}
-                  state={identity.state}
-                />
-              </View>
-            </PadGrid>
-            <RecordBlock
-              title="Latest verified representation"
-              accent="people"
-              about={() => ({
-                title: 'About representation',
-                notes: [
-                  'Election winners and present-day representation can differ.',
-                  'Representation is shown only as recorded in the dated release.',
-                  view.coverageNote,
-                ],
-              })}
-              id="electorate-representatives"
-              block={representationBlock(view.representatives)}
-              retry={refresh}
-              missing={
-                identity.status === 'historical'
-                  ? 'Abolished; not a current seat. Past winners are listed under Elections.'
-                  : 'No verified representative is recorded for this date. This does not establish a vacancy.'
-              }
-            >
-              {(rows) => (
-                <RepresentativeRows
-                  rows={rows}
-                  directory={directory}
-                  asAt={view.representatives.asAt}
-                  id="electorate-member"
-                />
-              )}
-            </RecordBlock>
-            <ElectorateHistory
-              view={view}
-              directory={directory}
-              asof={asof}
-              onDate={(date) => {
-                if (embedded) setAsOf(date);
-                else router.setParams({ asof: date || undefined });
-              }}
-            />
-            <PadGrid>
-              <Section
-                title="Elections"
-                accent="votes"
-                testID="electorate-elections"
-              >
-                {view.elections.length ? (
-                  view.elections.map((b, i) => (
-                    <RecordBlock
-                      key={i}
-                      sub={i ? 'ruled' : 'first'}
-                      title={b.data?.election.name ?? 'Election'}
-                      id={`electorate-election-${i}`}
-                      block={b}
-                      missing="No election record is held."
-                      retry={refresh}
-                      footer={false}
-                    >
-                      {(e) => (
-                        <Group gap={rhythm.tight}>
-                          <Text wordSafe variant="metadata">
-                            {formatDate(e.election.poll_date)} ·{' '}
-                            {e.election.kind}
-                          </Text>
-                          <RowList>
-                            <Disclosure
-                              label="Candidates and recorded votes"
-                              value={String(e.candidates.length)}
-                              open={expanded.includes(e.election_id)}
-                              testID={`election-expand-${i}`}
-                              onToggle={() =>
-                                setExpanded((v) =>
-                                  v.includes(e.election_id)
-                                    ? v.filter((x) => x !== e.election_id)
-                                    : [...v, e.election_id],
-                                )
-                              }
-                            >
-                              {() => (
-                                <RowList>
-                                  {e.candidates.map((c, j) => (
-                                    <Group key={j} gap={rhythm.line}>
-                                      <Text wordSafe variant="strong">
-                                        {c.name}
-                                        {c.elected ? (
-                                          <Text
-                                            variant="strong"
-                                            tone="votesInk"
-                                          >
-                                            {'  ·  Elected'}
-                                          </Text>
-                                        ) : null}
-                                      </Text>
-                                      <PartyLabel
-                                        party={c.party}
-                                        status="unknown"
-                                        dense
-                                        linked={false}
-                                      />
-                                      <KeyValueList
-                                        items={c.votes.map((v) => ({
-                                          label:
-                                            v.kind === 'primary'
-                                              ? 'Primary votes'
-                                              : v.kind === 'tcp'
-                                                ? 'Two-candidate votes'
-                                                : v.kind.replaceAll('_', ' '),
-                                          value: formatCount(v.votes),
-                                        }))}
-                                      />
-                                    </Group>
-                                  ))}
-                                </RowList>
-                              )}
-                            </Disclosure>
-                          </RowList>
-                        </Group>
-                      )}
-                    </RecordBlock>
-                  ))
-                ) : (
-                  <EmptyState message="No election records are held for this electorate." />
-                )}
-                {view.elections.length ? (
-                  <BlockSource
-                    block={combinedBlock(view.elections)}
-                    title="About these elections"
-                    testID="electorate-elections-source"
-                  />
-                ) : null}
-              </Section>
-              <LocalContext view={view} retry={refresh} />
-            </PadGrid>
-            <Section title="Related constituencies" accent="people">
-              {view.related.length ? (
-                <RowList>
-                  {view.related.map((r, i) => (
-                    <LinkRow
-                      key={i}
-                      title={r.related.name}
-                      detail={`${
-                        (
-                          {
-                            within_upper_house:
-                              'Upper-house region covering this electorate',
-                            within_lower_house:
-                              'Lower-house district covering this electorate',
-                            overlaps: 'Overlapping electorate',
-                          } as Record<string, string>
-                        )[r.kind] ?? 'Related electorate'
-                      } · ${r.vintage}`}
-                      onPress={() =>
-                        router.push(electorateRoute(r.related.electorate_id))
-                      }
-                    />
-                  ))}
-                </RowList>
-              ) : (
-                <EmptyState message="No related constituencies are recorded." />
-              )}
-            </Section>
-            {view.identity.data &&
-            view.identity.data.jurisdiction !== 'federal' ? (
-              <View
-                style={styles.authorisation}
-                testID="electorate-authorisation"
-              >
-                <Text variant="footnote" tone="inkSoft">
-                  {AUTHORISATION_LINE}
-                </Text>
-                <Pressable
-                  accessibilityRole="link"
-                  accessibilityLabel="Report a correction by email to corrections@opax.com.au"
-                  onPress={() => void Linking.openURL(CORRECTION_CONTACT)}
-                  style={styles.correctionTarget}
-                  testID="electorate-correction"
-                >
-                  <Text variant="footnote" tone="inkSoft">
-                    Report a correction: corrections@opax.com.au
-                  </Text>
-                </Pressable>
-                <Text variant="footnote" tone="inkSoft">
-                  We aim to respond within 2 business days.
-                </Text>
-              </View>
-            ) : null}
-            {/* The page's end, for journeys that scroll to it; nothing drawn. */}
-            <View
-              testID="electorate-end"
-              collapsable={false}
-              style={styles.end}
-            />
-          </>
-        ) : null}
-      </Screen>
-    </>
-  );
-}
-/**
- * Local context: one Census a heading ("Census 2021") and its one caveat,
- * read from the export's note without the vintage it repeats; several
- * Census years each under their own heading.
- */
-function LocalContext({
-  view,
-  retry,
-}: {
+import { RepresentativeRows, sinceLine } from './your-mp/RepresentativeRows';
+import { FaceStackRow, byFamilyName } from './your-mp/FaceStackRow';
+import {
+  censusHeadline,
+  censusOtherRows,
+  electionSummary,
+  electionsNewestFirst,
+  newestCensus,
+  type ElectionRecord,
+} from './your-mp/election-summary';
+import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
+import { useOpenAsk } from './ask/open';
+import { AddedSinceGroup } from './follows/AddedSinceGroup';
+import { useFollowStates } from './follows/useFollowStates';
+import { followKey } from './follows/store';
+import {
+  representativeProfile,
+  type Directory,
+  type ElectorateView,
+} from './your-mp/model';
+
+export interface LoadedElectorate {
+  directory: Directory;
   view: ElectorateView;
-  retry: () => void;
-}) {
-  const one = view.census.length === 1 ? view.census[0]! : null;
-  return (
-    <Section
-      title={one?.data ? `Census ${one.data.year}` : 'Local context'}
-      accent="people"
-      testID="electorate-census"
-    >
-      {view.census.length ? (
-        view.census.map((b, i) => (
-          <RecordBlock
-            key={i}
-            sub={one ? 'bare' : i ? 'ruled' : 'first'}
-            title={`Census ${b.data?.year ?? ''}`}
-            id={`electorate-census-${i}`}
-            block={b}
-            missing="No Census indicators are held."
-            retry={retry}
-            footer={false}
-          >
-            {(d) => (
-              <Group gap={rhythm.tight}>
-                <Text wordSafe variant="metadata">
-                  {censusCaveat(d.note, d.vintage)}
-                </Text>
-                <KeyValueList
-                  items={Object.entries(d.indicators).map(([key, value]) => {
-                    const [label, kind] = indicators[key] ?? [
-                      key.replaceAll('_', ' '),
-                      'count',
-                    ];
-                    return {
-                      label,
-                      value:
-                        value === null
-                          ? 'Not recorded'
-                          : kind === 'money'
-                            ? formatMoney(value)
-                            : kind === 'percent'
-                              ? formatPercent(value)
-                              : formatCount(value),
-                    };
-                  })}
-                />
-              </Group>
-            )}
-          </RecordBlock>
-        ))
-      ) : (
-        <EmptyState message="No Census context is held for this electorate." />
-      )}
-      {view.census.length ? (
-        <BlockSource
-          block={combinedBlock(view.census)}
-          title="About the Census context"
-          testID="electorate-census-source"
-        />
-      ) : null}
-    </Section>
-  );
+  seat: Seat;
+  stale: boolean;
+  savedAt: number | null;
 }
+
+/** The directory row and the seat's file, checked to be the same seat. */
+export async function loadElectorate(id: string): Promise<LoadedElectorate> {
+  const directory = await catalogs.directory();
+  const seat = directory.electorates.data.electorates.find(
+    (s) => s.electorate_id === id || s.slug === id,
+  );
+  if (!seat)
+    throw new ApiError('not-found', "We couldn't find this electorate.");
+  const result = await catalogs.electorateFor(seat.detail_url);
+  if (result.data.identity.data?.id !== seat.electorate_id)
+    throw new ApiError('invalid-data', "This electorate couldn't be loaded.");
+  return {
+    directory,
+    view: result.data,
+    seat,
+    stale: !!result.stale,
+    savedAt: result.savedAt ?? null,
+  };
+}
+
+/** The identity line, said once: where the seat sits. */
+export function identityLine(identity: {
+  chamber: string;
+  jurisdiction: string;
+  state: string;
+}): string {
+  const state =
+    jurisdictionName(identity.state) ??
+    jurisdictionName(identity.jurisdiction) ??
+    '';
+  if (identity.jurisdiction === 'federal')
+    return identity.chamber === 'senate'
+      ? `Senate, ${state}`
+      : `House of Representatives, ${state}`;
+  const upper = /_(lc|uh)$|council/i.test(identity.chamber);
+  if (identity.jurisdiction.toLowerCase() === 'vic')
+    return upper
+      ? 'Legislative Council region, Victoria'
+      : 'Legislative Assembly district, Victoria';
+  if (!upper) return `${state} Legislative Assembly district`.trim();
+  return [chamberName(identity.chamber, identity.jurisdiction), state]
+    .filter(Boolean)
+    .join(', ');
+}
+
 /**
- * The export's Census note without the vintage the heading already says:
- * "2021 Census geography; values have not been redistributed…" reads
- * "Values have not been redistributed…".
+ * The export's Census note without the vintage the heading already says.
+ * @deprecated The page says one fixed caveat; kept for the copy tests.
  */
 export function censusCaveat(note: string, vintage: string): string {
   const rest = note.startsWith(vintage)
@@ -516,14 +161,737 @@ export function censusCaveat(note: string, vintage: string): string {
   return rest ? rest.charAt(0).toUpperCase() + rest.slice(1) : note;
 }
 
+export default function Electorate() {
+  const { id, asof, section } = useLocalSearchParams<{
+    id: string;
+    asof?: string;
+    section?: string;
+  }>();
+  return (
+    <ElectorateScreen
+      key={id}
+      id={id}
+      initialDate={asof}
+      section={section === 'changes' ? 'changes' : undefined}
+    />
+  );
+}
+
+export function ElectorateScreen({
+  id,
+  embedded = false,
+  initialDate = '',
+  section,
+}: {
+  id: string;
+  embedded?: boolean;
+  initialDate?: string;
+  section?: 'changes';
+}) {
+  const [chosen, setChosen] = useState<string | null>(null);
+  const asof =
+    chosen ?? (initialDate && validDate(initialDate) ? initialDate : '');
+  const [loaded, setLoaded] = useState<LoadedElectorate | null>(null);
+  const [failure, setFailure] = useState<ApiError | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  useEffect(() => {
+    let active = true;
+    loadElectorate(id)
+      .then((value) => {
+        if (active) {
+          setLoaded(value);
+          setFailure(null);
+        }
+      })
+      .catch((error: unknown) => {
+        if (active)
+          setFailure(
+            error instanceof ApiError
+              ? error
+              : new ApiError('http', "This electorate couldn't be loaded."),
+          );
+      })
+      .finally(() => {
+        if (active) setRefreshing(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [id, attempt]);
+  useEffect(
+    () =>
+      onElectorateDate((seatId, date) => {
+        if (
+          seatId === id ||
+          seatId === loaded?.seat.electorate_id ||
+          seatId === loaded?.seat.slug
+        )
+          setChosen(date);
+      }),
+    [id, loaded],
+  );
+  const refresh = () => {
+    setRefreshing(true);
+    setAttempt((n) => n + 1);
+  };
+  const scroll = useRef<ScrollView>(null);
+  const identity = loaded?.view.identity.data;
+  const offline = failure?.code === 'offline' || failure?.code === 'timeout';
+  return (
+    <>
+      {embedded ? null : <ElectorateBar loaded={loaded} asof={asof} />}
+      <Screen
+        grouped
+        column="readable"
+        testID="electorate-screen"
+        scrollRef={scroll}
+        barTitle={embedded ? undefined : identity?.name}
+        offline={loaded?.stale ? { savedAt: loaded.savedAt } : null}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        }
+      >
+        {failure && !loaded ? (
+          failure.code === 'not-found' ? (
+            <ContentUnavailable
+              symbol="map"
+              title="We couldn't find this electorate."
+              testID="electorate-error"
+            />
+          ) : (
+            <ContentUnavailable
+              symbol={offline ? 'wifi.slash' : 'exclamationmark.triangle'}
+              title={
+                offline ? copy.notSaved : "This electorate couldn't be loaded."
+              }
+              body={offline ? copy.notSavedBody : undefined}
+              action={
+                offline
+                  ? undefined
+                  : {
+                      label: copy.tryAgain,
+                      onPress: refresh,
+                      testID: 'electorate-retry',
+                    }
+              }
+              testID="electorate-error"
+            />
+          )
+        ) : null}
+        {!loaded && !failure ? <ElectorateSkeleton /> : null}
+        {loaded && identity ? (
+          <ElectoratePage
+            loaded={loaded}
+            asof={asof}
+            embedded={embedded}
+            section={section}
+            scroll={scroll}
+            onDate={setChosen}
+          />
+        ) : null}
+      </Screen>
+    </>
+  );
+}
+
+function ElectorateSkeleton() {
+  return (
+    <View testID="electorate-loading" style={{ gap: rhythm.section }}>
+      <Skeleton
+        shape="card"
+        count={1}
+        label="Loading the electorate"
+        onSunken
+      />
+      <Skeleton
+        shape="text"
+        count={3}
+        label="Loading the electorate"
+        onSunken
+      />
+      <Skeleton shape="people" count={1} label="Loading the members" onSunken />
+      <Skeleton shape="rows" count={2} label="Loading the elections" onSunken />
+    </View>
+  );
+}
+
+/** The bar's items: Share, then ⋯. Back and Share only while loading. */
+function ElectorateBar({
+  loaded,
+  asof,
+}: {
+  loaded: LoadedElectorate | null;
+  asof: string;
+}) {
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          headerTransparent: glassBar(),
+          ...(loaded ? {} : headerItems(undefined)),
+        }}
+      />
+      {loaded ? <ElectorateMenu seat={loaded.seat} asof={asof} /> : null}
+    </>
+  );
+}
+
+/** The ⋯ items in order; a hidden item is left out, never disabled. */
+export function useElectorateMenu(
+  seat: Seat,
+  asof: string,
+  onViewDate?: () => void,
+): { share: () => void; menu: RowMenuAction[] } {
+  const setMine = useSetAsMyElectorate(seat);
+  const openAsk = useOpenAsk();
+  const path = `${seat.url}${asof ? `?asof=${asof}` : ''}`;
+  const target = { path, title: seat.name };
+  const menu: RowMenuAction[] = [
+    ...(setMine.visible
+      ? [
+          {
+            title: setMine.label,
+            symbol: 'building.columns' as const,
+            onPress: () => {
+              void setMine.run();
+            },
+          },
+        ]
+      : []),
+    {
+      title: 'View on a date',
+      symbol: 'calendar',
+      onPress:
+        onViewDate ??
+        (() =>
+          router.push(
+            electorateDateRoute(seat.electorate_id, asof || undefined),
+          )),
+    },
+    {
+      title: `Ask about ${seat.name}`,
+      symbol: 'text.bubble',
+      onPress: () =>
+        openAsk({ question: `What has parliament said about ${seat.name}?` }),
+    },
+    {
+      title: copy.copyLink,
+      symbol: 'link',
+      onPress: () => {
+        void copyRecordLink(path);
+      },
+    },
+    {
+      title: copy.openOnWeb,
+      symbol: 'arrow.up.right.square',
+      onPress: () => {
+        void openOnWeb(path, seat.name, { preferNative: false });
+      },
+    },
+  ];
+  return {
+    share: () => {
+      void shareRecord(target);
+    },
+    menu,
+  };
+}
+
+function ElectorateMenu({ seat, asof }: { seat: Seat; asof: string }) {
+  const { share, menu } = useElectorateMenu(seat, asof);
+  return (
+    <Stack.Screen
+      options={headerItems(pageItems({ name: seat.name, share, menu }))}
+    />
+  );
+}
+
+/** Embedded panes (iPad, Talk) have no bar: the ⋯ items as one button. */
+function EmbeddedMenu({ seat, asof }: { seat: Seat; asof: string }) {
+  const { share, menu } = useElectorateMenu(seat, asof);
+  return (
+    <View style={{ alignItems: 'flex-end' }}>
+      <IconButton
+        symbol="ellipsis.circle"
+        accessibilityLabel={`More for ${seat.name}`}
+        testID="electorate-more"
+        onPress={() =>
+          confirmAction(seat.name, [
+            { title: copy.share, onPress: share },
+            ...menu.flatMap((item) =>
+              'items' in item
+                ? []
+                : [{ title: item.title, onPress: item.onPress }],
+            ),
+          ])
+        }
+      />
+    </View>
+  );
+}
+
+/** The follow's "Added since" group, when the reader follows this seat. */
+function useElectorateChanges(seatId: string) {
+  const { follows, states } = useFollowStates();
+  const follow = follows?.find(
+    (f) => f.kind === 'electorate' && f.id === seatId,
+  );
+  const state = follow ? states.get(followKey(follow)) : undefined;
+  return follow && state?.status === 'ready' ? { follow, state } : null;
+}
+
+function ElectoratePage({
+  loaded,
+  asof,
+  embedded,
+  section,
+  scroll,
+  onDate,
+}: {
+  loaded: LoadedElectorate;
+  asof: string;
+  embedded: boolean;
+  section?: 'changes';
+  scroll: RefObject<ScrollView | null>;
+  onDate: (date: string) => void;
+}) {
+  const { view, seat } = loaded;
+  const identity = view.identity.data!;
+  const changes = useElectorateChanges(identity.id);
+  const { height: windowHeight } = useWindowDimensions();
+  const scrolled = useRef(false);
+  const outline = hasOutline(view.boundaries);
+  const abolished = identity.status === 'historical';
+  const victorian = identity.jurisdiction.toLowerCase() === 'vic';
+  const upper = /_(lc|uh)$/i.test(identity.chamber);
+  const region =
+    victorian && !upper
+      ? view.related.find((r) => r.kind === 'within_upper_house')
+      : undefined;
+  const districts =
+    victorian && upper
+      ? view.related
+          .filter(
+            (r) =>
+              r.related.jurisdiction === identity.jurisdiction &&
+              r.related.chamber !== identity.chamber,
+          )
+          .sort((a, b) => a.related.name.localeCompare(b.related.name))
+      : [];
+  const sourceDetails = outlineSourceDetails(
+    view.boundaries,
+    identity.jurisdiction,
+  );
+  const page: ReactNode[] = [];
+  // 1, 2. The outline with its source as its caption.
+  if (outline)
+    page.push(
+      <Group key="outline" gap={rhythm.heading} testID="electorate-map">
+        <OutlineMap
+          boundaries={view.boundaries}
+          name={identity.name}
+          state={identity.state}
+          variant="header"
+          ground="sunken"
+          onSources={
+            sourceDetails ? () => presentSource(sourceDetails) : undefined
+          }
+        />
+        <OutlineSource
+          boundaries={view.boundaries}
+          jurisdiction={identity.jurisdiction}
+        />
+      </Group>,
+    );
+  // 3. Title block.
+  page.push(
+    <Group key="title" gap={rhythm.tight}>
+      <Group gap={rhythm.line}>
+        <TitleAnchor>
+          <Heading level={1} kind="page" testID="electorate-name">
+            {identity.name}
+          </Heading>
+        </TitleAnchor>
+        <Text wordSafe variant="secondary" testID="electorate-identity">
+          {identityLine(identity)}
+        </Text>
+        {abolished ? (
+          <Text wordSafe variant="secondary" testID="electorate-abolished">
+            Abolished.
+          </Text>
+        ) : null}
+      </Group>
+      <View style={{ alignItems: 'flex-start' }}>
+        <FollowButton
+          kind="electorate"
+          id={identity.id}
+          title={identity.name}
+          testID="electorate-follow"
+        />
+      </View>
+      {embedded ? <EmbeddedMenu seat={seat} asof={asof} /> : null}
+    </Group>,
+  );
+  // Added since, after the title block (follow.md 13.2).
+  if (
+    changes &&
+    changes.state.status === 'ready' &&
+    changes.state.changes.length
+  )
+    page.push(
+      <View
+        key="changes"
+        collapsable={false}
+        onLayout={(e) => {
+          const { y } = e.nativeEvent.layout;
+          if (section === 'changes' && !scrolled.current) {
+            scrolled.current = true;
+            // Only when the group would start below the first screen.
+            if (y > windowHeight * 0.6)
+              scroll.current?.scrollTo({
+                y: Math.max(0, y - rhythm.block),
+                animated: false,
+              });
+          }
+        }}
+      >
+        <AddedSinceGroup
+          follow={changes.follow}
+          changes={changes.state.changes}
+          current={changes.state.current}
+          stale={changes.state.stale}
+          savedAt={changes.state.savedAt}
+          testID="electorate-added-since"
+          onRowPress={(change) => {
+            if (change.record?.kind === 'member' && change.record.slug) return;
+            const key = change.record?.key;
+            const record = view.elections.find(
+              (b) => b.data?.election_id === key,
+            );
+            if (record?.data)
+              router.push(electionRoute(identity.id, record.data.election_id));
+          }}
+        />
+      </View>,
+    );
+  // 4. Region row or a region's districts.
+  if (region)
+    page.push(
+      <InsetGroup key="region" testID="electorate-region">
+        <LinkRow
+          title={`In ${region.related.name}`}
+          href={electorateRoute(region.related.electorate_id)}
+          testID="electorate-region-row"
+        />
+      </InsetGroup>,
+    );
+  if (districts.length)
+    page.push(
+      <View key="districts" style={{ gap: rhythm.heading }}>
+        <SectionHeader title="Districts" />
+        <InsetGroup testID="electorate-districts">
+          {districts.map((d) => (
+            <LinkRow
+              key={d.related.electorate_id}
+              title={d.related.name}
+              href={electorateRoute(d.related.electorate_id)}
+              testID={`electorate-district-${d.related.slug}`}
+            />
+          ))}
+        </InsetGroup>
+      </View>,
+    );
+  // 5. Members, past members and the dated view, under one source line.
+  page.push(
+    <MembersSection
+      key="members"
+      loaded={loaded}
+      asof={asof}
+      onBackToToday={() => onDate('')}
+    />,
+  );
+  // 6. Elections.
+  const elections = electionsNewestFirst(
+    view.elections.map((b) => b.data).filter((e): e is ElectionRecord => !!e),
+  );
+  if (elections.length)
+    page.push(
+      <View
+        key="elections"
+        testID="electorate-elections"
+        style={{ gap: rhythm.heading }}
+      >
+        <SectionHeader title="Elections" />
+        <InsetGroup>
+          {elections.map((e, i) => (
+            <ElectionRow
+              key={e.election_id}
+              record={e}
+              seatId={identity.id}
+              jurisdiction={identity.jurisdiction}
+              testID={`election-row-${i}`}
+            />
+          ))}
+        </InsetGroup>
+        <BlockSource
+          block={combinedBlock(view.elections)}
+          title="About these elections"
+          testID="electorate-elections-source"
+        />
+      </View>,
+    );
+  // 7. Census.
+  const census = newestCensus(view);
+  const headline = censusHeadline(census);
+  const censusBlock = view.census.find((b) => b.data === census);
+  if (census && headline && censusBlock) {
+    const others = censusOtherRows(census);
+    page.push(
+      <View
+        key="census"
+        testID="electorate-census"
+        style={{ gap: rhythm.heading }}
+      >
+        <SectionHeader title={headline.label} />
+        <StatStrip
+          tiles={headline.rows.map((r) => ({
+            value: r.value,
+            label:
+              r.key === 'population'
+                ? 'people'
+                : r.label.toLocaleLowerCase('en-AU'),
+          }))}
+          testID="electorate-census-strip"
+        />
+        <Text wordSafe variant="footnote" tone="inkSoft">
+          Not adjusted for boundary changes since the Census.
+        </Text>
+        {others.length ? (
+          <InsetGroup>
+            {others.map((r) => (
+              <ValueRow key={r.key} label={r.label} value={r.value} />
+            ))}
+          </InsetGroup>
+        ) : null}
+        <BlockSource
+          block={censusBlock}
+          title="About the Census figures"
+          notes={[
+            `Census figures are for the electorate's boundaries at the ${census.year} Census. Not adjusted for boundary changes since the Census.`,
+          ]}
+          testID="electorate-census-source"
+        />
+      </View>,
+    );
+  }
+  // 8. Grants: federal House seats that still exist.
+  if (
+    identity.jurisdiction === 'federal' &&
+    identity.chamber === 'representatives' &&
+    !abolished
+  )
+    page.push(
+      <SeatGrants
+        key="grants"
+        name={identity.name}
+        state={identity.state}
+        eligible
+      />,
+    );
+  // 9. Authorisation on state electorates.
+  if (identity.jurisdiction !== 'federal')
+    page.push(
+      <View key="authorisation" testID="electorate-authorisation">
+        <PageFoot variant="authorised" />
+      </View>,
+    );
+  // 10. The page's end, for journeys that scroll to it.
+  page.push(
+    <View
+      key="end"
+      testID="electorate-end"
+      collapsable={false}
+      style={styles.end}
+    />,
+  );
+  return <>{page}</>;
+}
+
+function MembersSection({
+  loaded,
+  asof,
+  onBackToToday,
+}: {
+  loaded: LoadedElectorate;
+  asof: string;
+  onBackToToday: () => void;
+}) {
+  const { view, directory } = loaded;
+  const identity = view.identity.data!;
+  const abolished = identity.status === 'historical';
+  const rows = [...(view.representatives.data ?? [])].sort(
+    byFamilyName((r) => r.person.name),
+  );
+  const many = view.capacity > 1 || rows.length > 1;
+  const senate = identity.chamber === 'senate';
+  const shown = rows.length > 6 ? rows.slice(0, 6) : rows;
+  const header = abolished
+    ? 'Past members'
+    : asof
+      ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
+      : many
+        ? 'Members'
+        : 'Member';
+  const observed =
+    view.terms
+      .map((t) => t.observed_through)
+      .sort()
+      .at(-1) ?? null;
+  const block = representationBlock({
+    ...combinedBlock([view.identity, view.representatives]),
+    asAt: observed ?? view.representatives.asAt ?? view.identity.asAt,
+  });
+  return (
+    <View testID="electorate-members" style={{ gap: rhythm.heading }}>
+      <SectionHeader title={header} testID="electorate-members-heading" />
+      {abolished ? null : asof ? (
+        <DatedMembers
+          view={view}
+          directory={directory}
+          asof={asof}
+          onBackToToday={onBackToToday}
+        />
+      ) : rows.length ? (
+        <InsetGroup>
+          <RepresentativeRows
+            rows={shown}
+            directory={directory}
+            id="electorate-member"
+            wrap={false}
+            detailFor={(personId) => sinceLine(view.terms, personId)}
+          />
+          {rows.length > shown.length ? (
+            <FaceStackRow
+              title={`All ${rows.length} ${senate ? 'senators' : 'members'}`}
+              people={rows.map((r) => ({
+                name: r.person.name,
+                slug: representativeProfile(r.person_id, directory)?.slug,
+              }))}
+              href={membersRoute(identity.id)}
+              testID="electorate-members-all"
+            />
+          ) : null}
+        </InsetGroup>
+      ) : (
+        <Text wordSafe testID="electorate-no-member">
+          No member is recorded for this seat yet.
+        </Text>
+      )}
+      <ElectorateHistory
+        view={view}
+        directory={directory}
+        header={!abolished}
+      />
+      <BlockSource
+        block={block}
+        title="About the members"
+        notes={[
+          'Election winners and present-day representation can differ.',
+          'A date with no recorded member does not establish a vacancy.',
+          'Gaps in the history mean the records do not cover that time.',
+        ]}
+        testID="electorate-representatives-source"
+      />
+    </View>
+  );
+}
+
+/** One election, closed: its title, winner, party and date. */
+function ElectionRow({
+  record,
+  seatId,
+  jurisdiction,
+  testID,
+}: {
+  record: ElectionRecord;
+  seatId: string;
+  jurisdiction: string;
+  testID: string;
+}) {
+  const cellStyle = useRowCellStyle();
+  useRowInset(0);
+  const summary = electionSummary(record, jurisdiction);
+  const href = electionRoute(seatId, summary.key);
+  const date = formatDate(summary.date, 'short');
+  const label = [
+    summary.title,
+    summary.winner
+      ? `${summary.winner.name}, ${summary.winner.party ?? 'Independent'}`
+      : null,
+    formatDate(summary.date),
+  ]
+    .filter(Boolean)
+    .join('. ');
+  return (
+    <RowLink
+      href={href}
+      menu={rowMenus.record({
+        title: summary.title,
+        path: `/subject/electorate/${seatId}`,
+      })}
+      preview={false}
+    >
+      <Pressable
+        testID={testID}
+        accessible
+        accessibilityRole="link"
+        accessibilityLabel={label}
+        accessibilityHint="Opens the election"
+        onPress={() => router.push(href)}
+        style={({ pressed }) => [
+          styles.electionRow,
+          cellStyle,
+          pressed && { backgroundColor: colors.sunken },
+        ]}
+      >
+        <View style={styles.electionWords}>
+          <Text wordSafe variant="subsectionTitle">
+            {summary.title}
+          </Text>
+          {summary.winner ? (
+            <>
+              <Text wordSafe variant="body">
+                {summary.winner.name}
+              </Text>
+              <PartyLabel
+                party={summary.winner.party ?? 'Independent'}
+                status="unknown"
+                dense
+                nested
+                linked={false}
+              />
+            </>
+          ) : null}
+          <Text wordSafe variant="secondary">
+            {date}
+          </Text>
+        </View>
+        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
+      </Pressable>
+    </RowLink>
+  );
+}
+ownsRowPadding(ElectionRow);
+
 const styles = StyleSheet.create({
-  correctionTarget: { minHeight: minimumTarget, justifyContent: 'center' },
-  authorisation: {
-    borderTopWidth: hairline,
-    borderTopColor: colors.line,
-    paddingTop: rhythm.block,
-    gap: rhythm.line,
+  electionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    paddingVertical: rhythm.row,
+    minHeight: minimumTarget,
   },
-  // One point, at the foot of the last section rather than a section below.
-  end: { height: 1, marginTop: -layout.sectionGap },
+  electionWords: { flex: 1, gap: rhythm.line },
+  end: { height: 1 },
 });

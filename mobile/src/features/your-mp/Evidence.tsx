@@ -305,7 +305,10 @@ export function RecordBlock<T>({
   sub,
   footer = true,
   licenceDataset,
+  collapse = false,
 }: {
+  /** An optional block that draws nothing when it has no data (Census). */
+  collapse?: boolean;
   /**
    * A block inside a section (one election, one Census year): a level 3
    * heading under a subtle rule ('ruled') or none for the first ('first');
@@ -330,6 +333,8 @@ export function RecordBlock<T>({
   /** The Sources and licences entry the source sheet's licence opens. */
   licenceDataset?: string;
 }) {
+  if (collapse && block.status !== 'loading' && block.data === null)
+    return null;
   const body = (
     <>
       {block.status === 'loading' && block.data === null ? (

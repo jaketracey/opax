@@ -7,10 +7,10 @@ import * as format from '../src/design/format';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import {
+  ActionSheetIOS,
   Image,
   Linking,
   RefreshControl,
-  ScrollView,
   StyleSheet,
 } from 'react-native';
 import { minimumTarget } from '../src/design/tokens';
@@ -30,7 +30,7 @@ import {
 import Person from '../src/features/Person';
 import YourMP from '../src/features/YourMP';
 import Electorate from '../src/features/Electorate';
-import { billRoute } from '../src/navigation/routes';
+import { billRoute, seatRoute } from '../src/navigation/routes';
 import {
   PersonRow,
   PartyLabel,
@@ -38,10 +38,15 @@ import {
   Button,
   LinkRow,
   OpaxWebLink,
-  StatusLabel,
-  Heading,
 } from '../src/design/primitives';
-import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
+import {
+  loadChoice,
+  saveChoice,
+  subscribeChoice,
+} from '../src/features/your-mp/choice-store';
+import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
+import { canShare } from '../src/navigation/share';
+import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn() },
   catalogs: {
@@ -56,16 +61,43 @@ jest.mock('../src/api/runtime', () => ({
 jest.mock('../src/features/your-mp/choice-store', () => ({
   loadChoice: jest.fn(),
   saveChoice: jest.fn(),
+  subscribeChoice: jest.fn(() => () => undefined),
 }));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 const mockParams: { slug?: string; id?: string } = {};
+const mockOptions: Record<string, unknown>[] = [];
+const mockOpenAsk = jest.fn();
+jest.mock('../src/features/ask/open', () => ({
+  useOpenAsk: () => mockOpenAsk,
+}));
 jest.mock('expo-router', () => ({
+  Link: Object.assign(
+    ({ children, ...props }: { children: unknown }) =>
+      jest
+        .requireActual('react')
+        .createElement(
+          jest.requireActual('react-native').Pressable,
+          props,
+          children,
+        ),
+    {
+      Trigger: ({ children }: { children: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    },
+  ),
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+  router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
+  Stack: {
+    Screen: ({ options }: { options: Record<string, unknown> }) => {
+      mockOptions.push(options);
+      return null;
+    },
+  },
 }));
 const result = <T,>(data: T) => ({
   data,
@@ -102,6 +134,7 @@ const text = (r: TestRenderer.ReactTestRenderer) =>
     .replace(/\s+/g, ' ');
 beforeEach(() => {
   jest.clearAllMocks();
+  resetSeatForTests();
   Object.values(mock).forEach((fn) => fn.mockReset());
   mockParams.slug = 'anthony-albanese';
   mockParams.id = index.electorates.find(
@@ -165,66 +198,6 @@ test('former roster identity never masquerades as a current affiliation', async 
   expect(text(r)).toContain('Historical entitlements are listed below');
   await act(async () => r.unmount());
 });
-test('chooser saves identifiers only after an explicit seat selection', async () => {
-  (loadChoice as jest.Mock).mockResolvedValue(null);
-  (saveChoice as jest.Mock).mockResolvedValue(undefined);
-  const seat = index.electorates.find((s) => s.name === 'Grayndler')!;
-  mock.yourMP.mockResolvedValue(
-    c.yourMPFor(seat.electorate_id, index, manifest),
-  );
-  mock.profileFor.mockResolvedValue(
-    c.profileFor(seat.representatives[0]!.person_id, catalogs),
-  );
-  const r = await render(<YourMP />);
-  await act(async () => {
-    r.root
-      .find(
-        (n) =>
-          n.props.testID === 'seat-search' &&
-          typeof n.props.onChangeText === 'function',
-      )
-      .props.onChangeText('Albanese');
-  });
-  expect(saveChoice).not.toHaveBeenCalled();
-  await act(async () => {
-    r.root
-      .find(
-        (n) =>
-          n.props.testID === `seat-choice-${seat.slug}` &&
-          typeof n.props.onPress === 'function',
-      )
-      .props.onPress();
-  });
-  expect(saveChoice).toHaveBeenCalledWith({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [],
-  });
-  expect(text(r)).toContain('No confirmed member list for');
-  expect(
-    r.root
-      .findAllByType(PersonRow)
-      .some((n) => n.props.name === 'Anthony Albanese'),
-  ).toBe(true);
-  await act(async () => r.unmount());
-});
-test('refresh completes while no seat has been chosen', async () => {
-  (loadChoice as jest.Mock).mockResolvedValue(null);
-  const r = await render(<YourMP />);
-  const control = () =>
-    r.root.find((n) => n.props.testID === 'your-mp-screen').props
-      .refreshControl as ReactElement<{
-      refreshing: boolean;
-      onRefresh: () => void;
-    }>;
-  expect(control().type).toBe(RefreshControl);
-  await act(async () => control().props.onRefresh());
-  expect(control().props.refreshing).toBe(false);
-  expect(text(r)).toContain(
-    'Your choice is saved on this device. Device backups may include it.',
-  );
-  await act(async () => r.unmount());
-});
 test('electorate preserves Census vintage and renders candidates as plain public-record text', async () => {
   const seat = index.electorates.find((s) => s.name === 'Grayndler')!;
   mock.electorateFor.mockResolvedValue(
@@ -237,7 +210,9 @@ test('electorate preserves Census vintage and renders candidates as plain public
   expect(text(r)).not.toContain('2021 Census geography');
   expect(text(r)).toContain('Updated 2021');
   expect(text(r)).not.toContain('1 January 2021');
-  expect(text(r)).toContain('not been redistributed');
+  expect(text(r)).toContain(
+    'Not adjusted for boundary changes since the Census.',
+  );
   // The representation caveat is in the block's source sheet, in full.
   await act(async () =>
     pressable(r, 'electorate-representatives-source').props.onPress(),
@@ -248,22 +223,30 @@ test('electorate preserves Census vintage and renders candidates as plain public
   expect(
     sheetPayload(sourceParams.key, 'source')?.details.notes?.join(' '),
   ).toContain('Election winners and present-day representation can differ');
-  await act(async () => {
-    r.root
-      .find(
-        (n) =>
-          n.props.testID === 'election-expand-0' &&
-          typeof n.props.onPress === 'function',
-      )
-      .props.onPress();
-  });
-  expect(text(r)).toContain('Rodney Smith');
+  // The newest election row links to its own screen; nothing expands here.
+  const link = r.root.findAll(
+    (n) => n.props.href?.pathname === '/election' && n.props.asChild,
+  )[0]!;
+  expect(link.findAll((n) => n.props.testID === 'election-row-0')).not.toEqual(
+    [],
+  );
   expect(
-    r.root
-      .findAllByType(PersonRow)
-      .some((n) => n.props.name === 'Rodney Smith'),
-  ).toBe(false);
+    r.root.findAll((n) => n.props.testID === 'election-expand-0'),
+  ).toHaveLength(0);
+  const electionParams = link.props.href.params;
   await act(async () => r.unmount());
+  // A candidate who never sat is public-record text: a row with no link.
+  Object.assign(mockParams, electionParams);
+  const Election = jest.requireActual('../src/features/your-mp/Election')
+    .default as () => ReactElement;
+  const e = await render(<Election />);
+  expect(text(e)).toContain('Rodney Smith');
+  const candidate = e.root
+    .findAllByType(PersonRow)
+    .find((n) => n.props.name === 'Rodney Smith')!;
+  expect(candidate.props.href).toBeUndefined();
+  expect(candidate.props.menu).toEqual([]);
+  await act(async () => e.unmount());
 });
 
 test('a malformed outline drops only itself: the Electorate screen still reads', async () => {
@@ -313,8 +296,12 @@ test('a malformed outline drops only itself: the Electorate screen still reads',
   );
   r = await render(<Electorate />);
   expect(text(r)).toContain('Census 2021');
+  // With no outline left the header drops; the title block leads.
   expect(
-    r.root.findAll((n) => n.props.testID === 'outline-unavailable').length,
+    r.root.findAll((n) => n.props.testID === 'electorate-map'),
+  ).toHaveLength(0);
+  expect(
+    r.root.findAll((n) => n.props.testID === 'electorate-name').length,
   ).toBeGreaterThan(0);
   await act(async () => r.unmount());
   warn.mockRestore();
@@ -395,7 +382,13 @@ test('a crossed electorate detail is rejected before names or figures render', a
   );
   const r = await render(<Electorate />);
   expect(text(r)).not.toContain('Brisbane');
-  expect(text(r)).toContain('does not match the selected seat');
+  expect(
+    r.root.findAll(
+      (n) =>
+        n.props.testID === 'electorate-error' &&
+        n.props.title === "This electorate couldn't be loaded.",
+    ).length,
+  ).toBeGreaterThan(0);
   await act(async () => r.unmount());
 });
 
@@ -512,28 +505,6 @@ test.each(['brown', 'james', 'cook'])(
   },
 );
 
-test('a saved abolished seat is identified and can be changed', async () => {
-  const seat = index.electorates.find((s) => s.name === 'Higgins')!;
-  (loadChoice as jest.Mock).mockResolvedValue({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [],
-  });
-  mock.yourMP.mockResolvedValue(
-    c.yourMPFor(seat.electorate_id, index, manifest),
-  );
-  const r = await render(<YourMP />);
-  expect(text(r)).toContain('Abolished; not a current seat');
-  expect(text(r)).not.toContain('does not establish a vacancy');
-  expect(
-    r.root.findAllByType(Button).some((n) => n.props.testID === 'change-seat'),
-  ).toBe(true);
-  expect(r.root.findAll((n) => n.props.testID === 'your-state')).toHaveLength(
-    0,
-  );
-  await act(async () => r.unmount());
-});
-
 test('historical electorate records retain the abolished notice', async () => {
   const seat = index.electorates.find((s) => s.name === 'Higgins')!;
   mockParams.id = seat.electorate_id;
@@ -541,180 +512,18 @@ test('historical electorate records retain the abolished notice', async () => {
     result(c.electorateFor(c.decodeElectorate(pinned(seat.detail_url)))),
   );
   const r = await render(<Electorate />);
-  expect(text(r)).toContain('Abolished; not a current seat');
+  // The title block says it once; the members section reads as history.
+  expect(text(r)).toContain('Abolished.');
+  expect(text(r)).not.toContain('Abolished; not a current seat');
+  expect(
+    r.root.findAll(
+      (n) =>
+        n.props.testID === 'electorate-members-heading' &&
+        n.props.children === 'Past members',
+    ).length,
+  ).toBeGreaterThan(0);
   expect(text(r)).not.toContain('does not establish a vacancy');
-  expect(text(r)).toContain('Past winners are listed under Elections');
   expect(text(r)).not.toContain('Historical representation is shown');
-  await act(async () => r.unmount());
-});
-
-test('state district correction and removal retain the federal choice', async () => {
-  const find = (name: string) =>
-    index.electorates.find((s) => s.name === name)!;
-  const seat = find('Ballarat'),
-    district = find('Wendouree'),
-    replacement = find('Eureka'),
-    region = find('Northern Metropolitan');
-  (loadChoice as jest.Mock).mockResolvedValue({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [district.electorate_id, region.electorate_id],
-  });
-  (saveChoice as jest.Mock).mockResolvedValue(undefined);
-  mock.yourMP.mockImplementation(async (id, chosen) =>
-    c.yourMPFor(id, index, manifest, chosen),
-  );
-  mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
-  const r = await render(<YourMP />);
-  const press = async (id: string) =>
-    act(async () => pressable(r, id).props.onPress());
-  await press('choose-state-seat');
-  await act(async () =>
-    r.root
-      .find(
-        (n) =>
-          n.props.testID === 'seat-search' &&
-          typeof n.props.onChangeText === 'function',
-      )
-      .props.onChangeText('Eureka'),
-  );
-  await press(`seat-choice-${replacement.slug}`);
-  expect(saveChoice).toHaveBeenLastCalledWith({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [region.electorate_id, replacement.electorate_id],
-  });
-  await press(`remove-state-seat-${region.electorate_id}`);
-  expect(saveChoice).toHaveBeenLastCalledWith({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [replacement.electorate_id],
-  });
-  await act(async () => r.unmount());
-});
-
-test('Your MP register disclosure is lazy and renders plain category/change labels', async () => {
-  const seat = index.electorates.find((s) => s.name === 'Ballarat')!;
-  (loadChoice as jest.Mock).mockResolvedValue({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [],
-  });
-  mock.yourMP.mockResolvedValue(
-    c.yourMPFor(seat.electorate_id, index, manifest),
-  );
-  mock.profileFor.mockImplementation(async (id, options) =>
-    c.profileFor(id, {
-      ...catalogs,
-      ...(options?.includeInterests
-        ? { interest: c.decodeInterest(pinned('/interests/10368.json')) }
-        : {}),
-    }),
-  );
-  const r = await render(<YourMP />);
-  expect(mock.profileFor).toHaveBeenLastCalledWith(
-    seat.representatives[0]!.person_id,
-    { includeInterests: false },
-  );
-  // Closed: the section and its disclosure row only; no register is loaded.
-  expect(
-    r.root.findAll((n) => n.props.testID === 'your-register-source'),
-  ).toHaveLength(0);
-  await act(async () => pressable(r, 'your-register-toggle').props.onPress());
-  expect(mock.profileFor).toHaveBeenLastCalledWith(
-    seat.representatives[0]!.person_id,
-    { includeInterests: true },
-  );
-  expect(text(r)).toContain('Gifts · added');
-  expect(text(r)).toContain('Gifts · deleted');
-  expect(text(r)).not.toContain('real_estate');
-  expect(text(r)).not.toContain('addition');
-  const toggle = () => pressable(r, 'your-register-toggle').props.onPress();
-  await act(async () => toggle());
-  let finish!: (value: Awaited<ReturnType<typeof mock.profileFor>>) => void;
-  const pending = new Promise<Awaited<ReturnType<typeof mock.profileFor>>>(
-    (resolve) => {
-      finish = resolve;
-    },
-  );
-  mock.profileFor.mockReturnValueOnce(pending);
-  await act(async () => toggle());
-  expect(text(r)).not.toContain('No register file is held');
-  expect(
-    r.root.findAll((n) => n.props.testID === 'your-register-missing'),
-  ).toHaveLength(0);
-  await act(async () =>
-    finish(
-      c.profileFor(seat.representatives[0]!.person_id, {
-        ...catalogs,
-        interest: c.decodeInterest(pinned('/interests/10368.json')),
-      }),
-    ),
-  );
-  expect(text(r)).toContain('Gifts · added');
-  await act(async () => r.unmount());
-});
-
-test('picker passes distinct chamber hints for repeated seat names', async () => {
-  (loadChoice as jest.Mock).mockResolvedValue(null);
-  const r = await render(<YourMP />);
-  await act(async () =>
-    r.root
-      .find(
-        (n) =>
-          n.props.testID === 'seat-search' &&
-          typeof n.props.onChangeText === 'function',
-      )
-      .props.onChangeText('Melbourne'),
-  );
-  const buttons = r.root
-    .findAllByType(LinkRow)
-    .filter((n) => n.props.title === 'Melbourne');
-  expect(buttons.map((n) => n.props.accessibilityHint)).toEqual(
-    expect.arrayContaining([
-      'House of Representatives · Victoria',
-      'Victorian Legislative Assembly · Victoria',
-    ]),
-  );
-  await act(async () => r.unmount());
-});
-
-test('Your MP shows six recorded bill votes in each direction', async () => {
-  const seat = index.electorates.find((s) => s.name === 'Grayndler')!;
-  (loadChoice as jest.Mock).mockResolvedValue({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [],
-  });
-  mock.yourMP.mockResolvedValue(
-    c.yourMPFor(seat.electorate_id, index, manifest),
-  );
-  const profile = c.profileFor(seat.representatives[0]!.person_id, catalogs);
-  expect(profile.blocks.votes.data!.for.length).toBeGreaterThanOrEqual(6);
-  expect(profile.blocks.votes.data!.against.length).toBeGreaterThanOrEqual(6);
-  mock.profileFor.mockResolvedValue(profile);
-  const r = await render(<YourMP />);
-  const sides = r.root.findAllByType(StatusLabel).map((n) => n.props.label);
-  expect(sides.filter((side) => side === 'Voted for')).toHaveLength(6);
-  expect(sides.filter((side) => side === 'Voted against')).toHaveLength(6);
-  const matched = [
-    ...profile.blocks.votes.data!.for.slice(0, 6),
-    ...profile.blocks.votes.data!.against.slice(0, 6),
-  ].filter((row) => row.billKey);
-  const links = r.root
-    .findAllByType(LinkRow)
-    .filter((n) => n.props.testID?.startsWith('your-mp-bill-'));
-  expect(links).toHaveLength(matched.length);
-  expect(matched.length).toBeGreaterThan(0);
-  const first = links[0]!;
-  const key = first.props.testID.replace('your-mp-bill-', '');
-  await act(async () => first.props.onPress());
-  expect(router.push).toHaveBeenCalledWith(billRoute(key));
-  expect(
-    r.root
-      .findAllByType(OpaxWebLink)
-      .some((n) => n.props.path.startsWith('/bill/')),
-  ).toBe(false);
   await act(async () => r.unmount());
 });
 
@@ -854,115 +663,6 @@ test('a surname profile retains its short route for portrait refusal after canon
   await act(async () => r.unmount());
 });
 
-test('Choose state electorate opens the chooser at the top of the page', async () => {
-  // TestFlight build 32 (ABy-GsOP): the button sits near the end of a long
-  // page; the short chooser drew above the retained offset, a blank screen.
-  const find = (name: string) =>
-    index.electorates.find((s) => s.name === name)!;
-  const seat = find('Ballarat');
-  (loadChoice as jest.Mock).mockResolvedValue({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [find('Wendouree').electorate_id],
-  });
-  mock.yourMP.mockImplementation(async (id, chosen) =>
-    c.yourMPFor(id, index, manifest, chosen),
-  );
-  mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
-  const r = await render(<YourMP />);
-  // A fresh scroll view starts at its rest position under the title; a
-  // negative scrollTo would stop at 0, behind the bar (pass 5).
-  const scrollView = () =>
-    r.root.find(
-      (n) => n.type === ScrollView && n.props.testID === 'your-mp-screen',
-    ).instance;
-  const page = scrollView();
-  await act(async () => pressable(r, 'choose-state-seat').props.onPress());
-  expect(
-    r.root
-      .findAllByType(Heading)
-      .some((n) => n.props.children === 'Choose your state electorate'),
-  ).toBe(true);
-  expect(
-    r.root.findAll(
-      (n) =>
-        n.props.testID === 'seat-search' &&
-        typeof n.props.onChangeText === 'function',
-    ).length,
-  ).toBeGreaterThan(0);
-  const chooser = scrollView();
-  expect(chooser).not.toBe(page);
-  // Cancel returns to the page, at its top again.
-  await act(async () =>
-    r.root
-      .findAllByType(Button)
-      .find((n) => n.props.label === 'Cancel')!
-      .props.onPress(),
-  );
-  expect(scrollView()).not.toBe(chooser);
-  await act(async () => r.unmount());
-});
-
-test('Register changes is one section with one heading, open or closed', async () => {
-  // TestFlight build 32 (AJkr7L7f): a "Register changes" disclosure row sat
-  // above a second "Register changes" section heading.
-  const seat = index.electorates.find((s) => s.name === 'Ballarat')!;
-  (loadChoice as jest.Mock).mockResolvedValue({
-    version: 1,
-    seatId: seat.electorate_id,
-    stateSeatIds: [],
-  });
-  mock.yourMP.mockResolvedValue(
-    c.yourMPFor(seat.electorate_id, index, manifest),
-  );
-  mock.profileFor.mockImplementation(async (id, options) =>
-    c.profileFor(id, {
-      ...catalogs,
-      ...(options?.includeInterests
-        ? { interest: c.decodeInterest(pinned('/interests/10368.json')) }
-        : {}),
-    }),
-  );
-  const r = await render(<YourMP />);
-  const headings = () =>
-    r.root
-      .findAllByType(Heading)
-      .filter((n) => n.props.children === 'Register changes').length;
-  // The heading's own text is the only place the words appear.
-  const words = () =>
-    r.root
-      .findAllByType(Text)
-      .filter((n) => n.props.children === 'Register changes').length;
-  expect(headings()).toBe(1);
-  expect(words()).toBe(1);
-  await act(async () => pressable(r, 'your-register-toggle').props.onPress());
-  expect(text(r)).toContain('Gifts · added');
-  expect(headings()).toBe(1);
-  expect(words()).toBe(1);
-  await act(async () => r.unmount());
-});
-
-test('Your MP shows its skeleton while the directory loads and no chooser empty state after failure', async () => {
-  let fail!: (e: Error) => void;
-  mock.directory.mockImplementationOnce(
-    () =>
-      new Promise((_, reject) => {
-        fail = reject;
-      }),
-  );
-  const r = await render(<YourMP />);
-  expect(
-    r.root.findAllByProps({ label: 'Loading your representatives' }).length,
-  ).toBeGreaterThan(0);
-  expect(r.root.findAllByProps({ testID: 'seat-no-results' })).toHaveLength(0);
-  await act(async () => fail(new Error('Offline')));
-  expect(
-    r.root.findAllByProps({ testID: 'your-mp-error' }).length,
-  ).toBeGreaterThan(0);
-  expect(r.root.findAllByProps({ testID: 'seat-no-results' })).toHaveLength(0);
-  await act(async () => r.unmount());
-});
-
 test.each(['federal', 'state'])(
   '%s electorate fine print uses the unchanged authorisation and corrections link',
   async (kind) => {
@@ -982,27 +682,36 @@ test.each(['federal', 'state'])(
       );
       expect(text(r)).toContain(AUTHORISATION_LINE);
       expect(text(r)).toContain('We aim to respond within 2 business days.');
-      const correction = pressable(r, 'electorate-correction');
+      // The page foot's correction link, inside the authorisation wrapper.
+      const correction = r.root
+        .findByProps({ testID: 'electorate-authorisation' })
+        .findAll(
+          (n) =>
+            n.props.accessibilityLabel ===
+              'Report a correction by email to corrections@opax.com.au' &&
+            typeof n.props.onPress === 'function',
+        )[0]!;
       expect(correction.props.accessibilityRole).toBe('link');
       expect(correction.props.accessibilityLabel).toBe(
         'Report a correction by email to corrections@opax.com.au',
       );
-      expect(StyleSheet.flatten(correction.props.style)).toMatchObject({
+      expect(
+        StyleSheet.flatten(correction.props.style({ pressed: false })),
+      ).toMatchObject({
         minHeight: minimumTarget,
         justifyContent: 'center',
       });
+      // The page foot draws the link in the link tint.
       const label = correction.findByType(Text);
       expect(label.props).toMatchObject({
         variant: 'footnote',
-        tone: 'inkSoft',
+        tone: 'navy',
       });
       expect(label.props.children).toBe(
         'Report a correction: corrections@opax.com.au',
       );
       const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
-      await act(async () =>
-        pressable(r, 'electorate-correction').props.onPress(),
-      );
+      await act(async () => correction.props.onPress());
       expect(open).toHaveBeenCalledWith(CORRECTION_CONTACT);
       open.mockRestore();
     } else {
@@ -1013,3 +722,308 @@ test.each(['federal', 'state'])(
     await act(async () => r.unmount());
   },
 );
+
+describe('Your MP tab', () => {
+  const seatNamed = (name: string) =>
+    index.electorates.find((s) => s.name === name)!;
+  const choose = (seatId: string, stateSeatIds: string[] = []) =>
+    (loadChoice as jest.Mock).mockResolvedValue({
+      version: 1,
+      seatId,
+      stateSeatIds,
+    });
+  const withRegister = () =>
+    mock.profileFor.mockImplementation(async (id, options) =>
+      c.profileFor(id, {
+        ...catalogs,
+        ...(options?.includeInterests
+          ? { interest: c.decodeInterest(pinned('/interests/10368.json')) }
+          : {}),
+      }),
+    );
+  const ids = (r: TestRenderer.ReactTestRenderer, prefix: string) =>
+    r.root.findAll(
+      (n) =>
+        typeof n.props.testID === 'string' &&
+        n.props.testID.startsWith(prefix) &&
+        typeof n.type !== 'string',
+    );
+  /** The records Lately draws, in order, from each row's props. */
+  const latest = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAll(
+        (n) =>
+          /^your-latest-\d+$/.test(n.props.testID ?? '') && !!n.props.record,
+      )
+      .map((n) => n.props.record as { href: unknown; key: string });
+  const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root.findAll((n) => n.props.testID === testID).length > 0;
+  /** Every menu item, however the sections nest. */
+  const menuItems = (
+    menu: unknown,
+  ): { title: string; onPress?: () => void }[] =>
+    Array.isArray(menu)
+      ? menu.flatMap(menuItems)
+      : menu && typeof menu === 'object'
+        ? 'items' in menu
+          ? menuItems((menu as { items: unknown }).items)
+          : 'title' in menu
+            ? [menu as { title: string; onPress?: () => void }]
+            : []
+        : [];
+
+  test('with no seat, the invitation opens the chooser and saves nothing', async () => {
+    (loadChoice as jest.Mock).mockResolvedValue(null);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seatNamed('Grayndler').electorate_id, index, manifest),
+    );
+    const r = await render(<YourMP />);
+    expect(has(r, 'your-invitation')).toBe(true);
+    expect(text(r)).toContain('Who represents you?');
+    // The privacy line lives in About › Privacy, not on the tab.
+    expect(text(r)).not.toContain('Device backups may include it.');
+    await act(async () => pressable(r, 'your-invitation-find').props.onPress());
+    expect(router.push).toHaveBeenCalledWith(seatRoute());
+    await act(async () =>
+      pressable(r, 'your-invitation-location').props.onPress(),
+    );
+    expect(router.push).toHaveBeenLastCalledWith(seatRoute(undefined, true));
+    expect(saveChoice).not.toHaveBeenCalled();
+    expect(mock.profileFor).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  });
+
+  test('refresh completes while no seat has been chosen', async () => {
+    (loadChoice as jest.Mock).mockResolvedValue(null);
+    const r = await render(<YourMP />);
+    const control = () =>
+      r.root.find((n) => n.props.testID === 'your-mp-screen').props
+        .refreshControl as ReactElement<{
+        refreshing: boolean;
+        onRefresh: () => void;
+      }>;
+    expect(control().type).toBe(RefreshControl);
+    await act(async () => control().props.onRefresh());
+    expect(control().props.refreshing).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('a saved abolished seat says so and returns to the invitation', async () => {
+    const seat = seatNamed('Higgins');
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    const r = await render(<YourMP />);
+    expect(text(r)).toContain('Higgins is no longer an electorate.');
+    expect(has(r, 'your-invitation-find')).toBe(true);
+    expect(has(r, 'your-seat-name')).toBe(false);
+    expect(has(r, 'your-state')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('the member, profile rows and senators draw for a chosen seat', async () => {
+    const seat = seatNamed('Grayndler');
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    const r = await render(<YourMP />);
+    expect(text(r)).toContain('Grayndler, New South Wales');
+    expect(has(r, 'your-member-anthony-albanese')).toBe(true);
+    for (const row of ['votes', 'interests', 'pay'])
+      expect(has(r, `your-profile-${row}`)).toBe(true);
+    expect(has(r, 'your-senators')).toBe(true);
+    // No Victorian section, so no authorisation line.
+    expect(has(r, 'your-state')).toBe(false);
+    expect(has(r, 'your-mp-end')).toBe(true);
+    await act(async () => r.unmount());
+  });
+
+  test('Lately loads the register with the profile and lists at most five records', async () => {
+    const seat = seatNamed('Ballarat');
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    withRegister();
+    const r = await render(<YourMP />);
+    expect(mock.profileFor).toHaveBeenLastCalledWith(
+      seat.representatives[0]!.person_id,
+      { includeInterests: true },
+    );
+    const rows = latest(r);
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.length).toBeLessThanOrEqual(5);
+    expect(has(r, 'your-latest-source')).toBe(true);
+    // Plain labels, never the register's keys.
+    expect(text(r)).not.toContain('real_estate');
+    expect(text(r)).not.toMatch(/\baddition\b/);
+    // One heading for the section.
+    expect(
+      r.root.findAllByType(Text).filter((n) => n.props.children === 'Lately'),
+    ).toHaveLength(1);
+    await act(async () => r.unmount());
+  });
+
+  test('a vote in Lately opens its bill page at the division or the divisions section', async () => {
+    const seat = seatNamed('Grayndler');
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    const r = await render(<YourMP />);
+    const bills = latest(r)
+      .map((row) => row.href as { pathname: string; params: object })
+      .filter((href) => href?.pathname === '/bill/[key]');
+    expect(bills.length).toBeGreaterThan(0);
+    for (const href of bills)
+      expect(
+        'division' in href.params ||
+          (href.params as { section?: string }).section === 'divisions',
+      ).toBe(true);
+    // No vote split or score reads in Lately.
+    expect(text(r)).not.toMatch(/\d+ ?(–|-|to) ?\d+/);
+    await act(async () => r.unmount());
+  });
+
+  test('state electorate: add opens the Victorian chooser; removal keeps the federal choice', async () => {
+    const seat = seatNamed('Ballarat'),
+      district = seatNamed('Wendouree'),
+      region = seatNamed('Northern Metropolitan');
+    (saveChoice as jest.Mock).mockResolvedValue(undefined);
+    mock.yourMP.mockImplementation(async (id, chosen) =>
+      c.yourMPFor(id, index, manifest, chosen),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    choose(seat.electorate_id);
+    let r = await render(<YourMP />);
+    expect(text(r)).toContain('Victorian Parliament');
+    expect(
+      r.root
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'choose-state-seat')!.props.href,
+    ).toEqual(seatRoute('vic'));
+    await act(async () => r.unmount());
+
+    resetSeatForTests();
+    choose(seat.electorate_id, [district.electorate_id, region.electorate_id]);
+    r = await render(<YourMP />);
+    // The region row carries the same state menu, Remove last.
+    const regionRow = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'your-state-region')!;
+    expect(menuItems(regionRow.props.menu).map((i) => i.title)).toEqual([
+      'Change state electorate',
+      'Remove state electorate',
+    ]);
+    const row = ids(r, 'your-state-member-')[0]!;
+    const items = menuItems(row.props.menu);
+    // Remove is the last item, in its own section.
+    expect(items.at(-1)!.title).toBe('Remove state electorate');
+    await act(async () => items.at(-1)!.onPress!());
+    expect(saveChoice).toHaveBeenLastCalledWith({
+      version: 1,
+      seatId: seat.electorate_id,
+      stateSeatIds: [],
+    });
+    await act(async () => r.unmount());
+  });
+
+  test('the bar menu: change, location, Ask, official page, Share, then Forget alone and last', async () => {
+    const seat = seatNamed('Grayndler');
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    // The store publishes what is saved, as choice-store does.
+    (saveChoice as jest.Mock).mockImplementation(async (choice) =>
+      (subscribeChoice as jest.Mock).mock.calls.at(-1)?.[0](choice),
+    );
+    const sheet = jest
+      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+      .mockImplementation((_options, done) => done(0));
+    mockOptions.length = 0;
+    const r = await render(<YourMP />);
+    type Row = {
+      type: string;
+      label: string;
+      inline?: boolean;
+      destructive?: boolean;
+      items?: Row[];
+      onPress?: () => void;
+    };
+    const header = mockOptions
+      .filter((o) => o.unstable_headerRightItems)
+      .at(-1)!.unstable_headerRightItems as () => {
+      type: string;
+      menu?: { items: Row[] };
+    }[];
+    const rows = header().find((i) => i.type === 'menu')!.menu!.items;
+    const name = 'Anthony Albanese';
+    const person = people.people.find(
+      (p) => p.person_id === seat.representatives[0]!.person_id,
+    );
+    const official = officialPageFor(person?.source_url, 'federal');
+    expect(rows.map((row) => row.label)).toEqual([
+      'Change electorate',
+      'Use my location',
+      `Ask about ${name}`,
+      ...(official ? ['Parliament of Australia page'] : []),
+      ...(canShare ? ['Share'] : []),
+      '',
+    ]);
+    const last = rows.at(-1)!;
+    expect(last).toMatchObject({ type: 'submenu', inline: true });
+    expect(last.items!.map((i) => [i.label, i.destructive])).toEqual([
+      ['Forget my electorate', true],
+    ]);
+    await act(async () =>
+      rows.find((row) => row.label === `Ask about ${name}`)!.onPress!(),
+    );
+    expect(mockOpenAsk).toHaveBeenCalledTimes(1);
+    expect(mockOpenAsk).toHaveBeenCalledWith({
+      question: `What has ${name} said in parliament this year?`,
+      speaker: name,
+      kind: 'speech',
+    });
+    expect(has(r, 'your-member-anthony-albanese')).toBe(true);
+    await act(async () => last.items![0]!.onPress!());
+    expect(sheet).toHaveBeenCalledTimes(1);
+    expect(has(r, 'your-invitation')).toBe(true);
+    expect(ids(r, 'your-member-')).toHaveLength(0);
+    sheet.mockRestore();
+    await act(async () => r.unmount());
+  });
+
+  test('a skeleton while the seat loads, then an error, never the chooser', async () => {
+    let fail!: (e: Error) => void;
+    (loadChoice as jest.Mock).mockResolvedValue(null);
+    mock.directory.mockImplementationOnce(
+      () =>
+        new Promise((_, reject) => {
+          fail = reject;
+        }),
+    );
+    const r = await render(<YourMP />);
+    expect(
+      r.root.findAllByProps({ label: 'Loading your MP' }).length,
+    ).toBeGreaterThan(0);
+    expect(has(r, 'your-invitation')).toBe(false);
+    await act(async () => fail(new Error('Offline')));
+    expect(has(r, 'your-mp-error')).toBe(true);
+    expect(has(r, 'seat-search')).toBe(false);
+    await act(async () => r.unmount());
+  });
+});

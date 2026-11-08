@@ -1,732 +1,554 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  PadGrid,
-  Button,
-  Disclosure,
-  EmptyState,
-  ErrorState,
-  Field,
-  Group,
-  Heading,
-  LinkRow,
-  LoadingState,
-  RowList,
-  Screen,
-  Section,
-  StatusLabel,
-  Text,
-  errorMessage,
-  isPad,
-  useLayout,
-} from '../design/primitives';
-import { SeatGrants } from './money-public/Grants';
-import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
-import { phoneCopy } from '../design/phone-copy';
-import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
-import { LocationSuggestion } from './electorate-map/LocationSuggestion';
-import { formatDate } from '../design/format';
-import { useCallback, useEffect, useState } from 'react';
-import { router, Stack } from 'expo-router';
-import { openSource } from '../navigation/external';
-import { AndroidFocusBack } from '../navigation/AndroidFocusBack';
-import {
-  Keyboard,
+  ActionSheetIOS,
   Platform,
   RefreshControl,
   StyleSheet,
   View,
 } from 'react-native';
+import { router, Stack } from 'expo-router';
+import type { BillIndex, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
-import type { Electorate } from '../api/catalogs';
+import { Button } from '../design/controls';
+import { Card } from '../design/card';
+import { confirmAction } from '../design/menu';
+import { InsetGroup, Screen, SectionHeader } from '../design/layout';
+import { PageFoot } from '../design/record';
+import { LinkRow } from '../design/rows';
+import { SourceLine } from '../design/source';
+import { InlineError, OfflineLine, Skeleton } from '../design/states';
+import { symbols } from '../design/symbols';
+import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
+import { thisDevice } from '../design/device';
 import {
-  CHAMBER_NOT_RECORDED,
-  chamberName,
-  jurisdictionName,
-} from '../design/parliament';
-import { billRoute, electorateRoute } from '../navigation/routes';
+  headerItems,
+  pageMenu,
+  rootHeaderItems,
+  type RowMenuAction,
+} from '../navigation/chrome';
+import { openSource } from '../navigation/external';
+import { shareRecord } from '../navigation/share';
+import { directoryRoute, seatRoute } from '../navigation/routes';
+import { useAccount } from './account/store';
+import { useOpenAsk } from './ask/open';
+import { followKey, useFollows } from './follows/store';
+import { useSeenOnView } from './follows/useSeenOnView';
+import { SeatGrants } from './money-public/Grants';
 import {
-  BlockSource,
-  EvidenceFooter,
-  RecordBlock,
-  combinedBlock,
-  votesSource,
-} from './your-mp/Evidence';
-import { RepresentativeRows } from './your-mp/RepresentativeRows';
-import { FollowingEntry } from './follows/FollowingEntry';
-import { loadChoice, saveChoice } from './your-mp/choice-store';
-import { useSeatChooserRequest } from './your-mp/chooser-request';
+  ElectorateCard,
+  ElectorateCardSkeleton,
+} from './your-mp/ElectorateCard';
+import { forgetSeat } from './your-mp/forget';
+import { LatestRows } from './your-mp/LatestRows';
 import {
-  matchingSeats,
-  replaceStateSeat,
-  registerCategoryLabel,
-  registerChangeLabel,
-  seatContext,
+  latelyFor,
+  latelySource,
+  LATELY_LIMIT,
+  markLatelySeen,
+} from './your-mp/latest';
+import { officialPageFor } from './your-mp/MemberHeroRow';
+import {
   type Directory,
-  type SeatChoice,
-  type YourMPView,
+  type ElectorateView,
   type ProfileView,
+  type YourMPView,
 } from './your-mp/model';
+import {
+  RepresentativesGroup,
+  RepresentativesSkeleton,
+} from './your-mp/RepresentativesGroup';
+import { seatLine } from './your-mp/state-names';
+import { showsVictorianSection, StateMembers } from './your-mp/StateMembers';
+import { migratedSeat, savedSeatDirectory, useSeat } from './your-mp/useSeat';
+
+const house = (s: Electorate) =>
+  s.jurisdiction === 'federal' && s.chamber === 'representatives';
+
+type Load<T> =
+  | { status: 'loading' }
+  | { status: 'error' }
+  | { status: 'ready'; data: T };
+
+/** One async block, keyed so a new seat never shows the old seat's data. */
+function useBlock<T>(
+  key: string | null,
+  load: () => Promise<T>,
+  attempt: number,
+): Load<T> {
+  const [state, setState] = useState<{ key: string; value: Load<T> } | null>(
+    null,
+  );
+  const loader = useRef(load);
+  useEffect(() => {
+    loader.current = load;
+  });
+  useEffect(() => {
+    if (!key) return;
+    let active = true;
+    loader
+      .current()
+      .then((data) => {
+        if (active) setState({ key, value: { status: 'ready', data } });
+      })
+      .catch(() => {
+        if (active) setState({ key, value: { status: 'error' } });
+      });
+    return () => {
+      active = false;
+    };
+  }, [key, attempt]);
+  return state?.key === key && key ? state.value : { status: 'loading' };
+}
+
 export default function YourMP() {
-  const layout = useLayout();
-  const [directory, setDirectory] = useState<Directory | null>(null),
-    [choice, setChoice] = useState<SeatChoice | null>(null),
-    [view, setView] = useState<YourMPView | null>(null);
-  const [ready, setReady] = useState(false),
-    [query, setQuery] = useState(''),
-    [choosing, setChoosing] = useState(false),
-    [stateChoosing, setStateChoosing] = useState(false),
-    [error, setError] = useState<string | null>(null),
-    [saving, setSaving] = useState(false),
-    [refresh, setRefresh] = useState(0),
-    [busy, setBusy] = useState(false),
-    [registerOpen, setRegisterOpen] = useState(false),
-    [registerLoadedFor, setRegisterLoadedFor] = useState<string | null>(null);
-  useEffect(() => {
-    let active = true;
-    Promise.all([catalogs.directory(), loadChoice()])
-      .then(([d, c]) => {
-        if (active) {
-          setDirectory(d);
-          setChoice(c);
-          setReady(true);
-          setError(null);
-        }
-      })
-      .catch((e) => {
-        if (active) {
-          setError(errorMessage(e));
-          setReady(true);
-        }
-      })
-      .finally(() => {
-        if (active) setBusy(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [refresh]);
-  useEffect(() => {
-    if (!choice) return;
-    let active = true;
-    catalogs
-      .yourMP(choice.seatId, choice.stateSeatIds)
-      .then((v) => {
-        if (active) {
-          setView(v);
-          setError(null);
-        }
-      })
-      .catch((e) => {
-        if (active) setError(errorMessage(e));
-      })
-      .finally(() => {
-        if (active) setBusy(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [choice, refresh]);
-  const [memberRecord, setMemberProfile] = useState<ProfileView | null>(null);
-  const [memberFailure, setMemberFailure] = useState<{
-    id: string;
-    message: string;
-  } | null>(null);
-  useEffect(() => {
-    let active = true;
-    const id =
-      view?.members.data?.length === 1
-        ? view.members.data[0]!.person_id
-        : undefined;
-    if (id)
-      catalogs
-        .profileFor(id, { includeInterests: registerOpen })
-        .then((p) => {
-          if (active) {
-            setMemberProfile(p);
-            setMemberFailure(null);
-            if (registerOpen) setRegisterLoadedFor(id);
-          }
-        })
-        .catch((e) => {
-          if (active) setMemberFailure({ id, message: errorMessage(e) });
-        });
-    return () => {
-      active = false;
-    };
-  }, [view, registerOpen]);
-  const memberProfile =
-    memberRecord?.personId === view?.members.data?.[0]?.person_id
-      ? memberRecord
+  const seat = useSeat();
+  const account = useAccount();
+  const openAsk = useOpenAsk();
+  const directory: Directory | null = savedSeatDirectory();
+  const [attempt, setAttempt] = useState(0);
+  const [pulledAt, setPulledAt] = useState<number | null>(null);
+  const choice = seat.status === 'chosen' ? seat.choice : null;
+  const federal =
+    choice && directory
+      ? (directory.electorates.data.electorates.find(
+          (s) => s.electorate_id === choice.seatId,
+        ) ?? null)
       : null;
-  const retry = () => {
-    setBusy(true);
-    setRefresh((v) => v + 1);
-  };
-  // The welcome tour's last step opens the chooser (src/onboarding/).
-  const openChooser = useCallback(() => {
-    setChoosing(true);
-    setStateChoosing(false);
-    setQuery('');
+  const home = !!federal && house(federal) && federal.status !== 'historical';
+  const stateSeatIds = useMemo(() => choice?.stateSeatIds ?? [], [choice]);
+  const seatKey = home
+    ? `${federal!.electorate_id}|${stateSeatIds.join(',')}`
+    : null;
+  const view = useBlock<YourMPView>(
+    seatKey,
+    () => catalogs.yourMP(federal!.electorate_id, stateSeatIds),
+    attempt,
+  );
+  const electorate = useBlock<ElectorateView>(
+    home ? federal!.detail_url : null,
+    async () => (await catalogs.electorateFor(federal!.detail_url)).data,
+    attempt,
+  );
+  const member =
+    view.status === 'ready' && view.data.members.data?.length === 1
+      ? view.data.members.data[0]!
+      : null;
+  const [profileAttempt, setProfileAttempt] = useState(0);
+  const profile = useBlock<ProfileView>(
+    member ? member.person_id : null,
+    () =>
+      catalogs.profileFor(member!.person_id, {
+        includeInterests: true,
+      }) as Promise<ProfileView>,
+    attempt + profileAttempt,
+  );
+  const bills = useBlock<{ data: BillIndex; asOf: string | null }>(
+    member ? 'bills' : null,
+    async () => {
+      const result = await catalogs.bills();
+      return {
+        data: result.data,
+        asOf:
+          (result.data as { meta?: { generated?: string } }).meta?.generated ??
+          null,
+      };
+    },
+    attempt,
+  );
+  // The spinner stays until the last block of the pull settles.
+  // With no seat there are no blocks, so the pull ends at once.
+  const refreshing =
+    pulledAt === attempt &&
+    home &&
+    (view.status === 'loading' ||
+      electorate.status === 'loading' ||
+      (!!member && profile.status === 'loading'));
+  const retry = useCallback(() => {
+    setAttempt((n) => {
+      setPulledAt(n + 1);
+      return n + 1;
+    });
   }, []);
-  useSeatChooserRequest(openChooser);
-  async function choose(seat: Electorate) {
-    const next: SeatChoice =
-      stateChoosing && choice
-        ? replaceStateSeat(choice, seat, view?.verifiedStateSeats ?? [])
-        : { version: 1, seatId: seat.electorate_id, stateSeatIds: [] };
-    await persist(next);
-  }
-  async function persist(next: SeatChoice) {
-    setSaving(true);
-    try {
-      await saveChoice(next);
-      Keyboard.dismiss();
-      setView(null);
-      setRegisterOpen(false);
-      setRegisterLoadedFor(null);
-      setChoice(next);
-      setChoosing(false);
-      setStateChoosing(false);
-      setQuery('');
-      setError(null);
-    } catch {
-      setError(
-        phoneCopy('Your seat could not be saved on this iPhone. Try again.'),
+  const memberName = member?.person.name ?? null;
+  const person =
+    member && directory
+      ? directory.people.data.people.find(
+          (p) => p.person_id === member.person_id,
+        )
+      : null;
+  const official = home
+    ? officialPageFor(person?.source_url, federal!.jurisdiction)
+    : null;
+  const victorian = showsVictorianSection(home ? federal : null, stateSeatIds);
+  const removeState = useCallback(() => {
+    void seat.removeState().catch(() => undefined);
+  }, [seat]);
+  const forget = useCallback(() => {
+    const run = () => void forgetSeat().catch(() => undefined);
+    const title = 'Forget your electorate?';
+    const message = 'Today and Your MP stop showing your representatives.';
+    if (Platform.OS === 'ios')
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          title,
+          message,
+          options: ['Forget', 'Cancel'],
+          destructiveButtonIndex: 0,
+          cancelButtonIndex: 1,
+        },
+        (index) => {
+          if (index === 0) run();
+        },
       );
-    } finally {
-      setSaving(false);
-    }
-  }
-  const chooser = ready && (!choice || choosing || stateChoosing);
-  // The chooser replaces a long page in place, and the chosen seat replaces
-  // the chooser. Each draws in a fresh scroll view, at its rest position
-  // under an expanded title: a kept offset drew the short chooser above a
-  // blank screen (TestFlight build 32), and the chosen seat under the bar
-  // after a confirm from lower in the chooser (pass 5). A negative scrollTo
-  // cannot reach that rest position: it stops at 0, behind the bar.
-  const seats = stateChoosing
-    ? (view?.verifiedStateSeats ?? [])
-    : (directory?.electorates.data.electorates ?? []);
-  const matches = matchingSeats(seats, query);
-  const selectedStateSeats =
-    view?.verifiedStateSeats.filter((s) =>
-      choice?.stateSeatIds.includes(s.electorate_id),
-    ) ?? [];
-  const seatName = view && !chooser ? view.seat.data!.name : null;
-  const padTitle = isPad && layout.regular;
+    else confirmAction(title, [{ title: 'Forget', onPress: run }]);
+  }, []);
+  const menu = useMemo((): RowMenuAction[] => {
+    if (!home || !federal) return [];
+    const vic = federal.state_code.toLowerCase() === 'vic';
+    return [
+      {
+        title: 'Change electorate',
+        symbol: 'building.columns',
+        onPress: () => router.push(seatRoute()),
+      },
+      {
+        title: 'Use my location',
+        symbol: 'location.fill',
+        onPress: () => router.push(seatRoute(undefined, true)),
+      },
+      ...(vic
+        ? stateSeatIds.length
+          ? [
+              {
+                title: 'Change state electorate',
+                symbol: 'building.columns' as const,
+                onPress: () => router.push(seatRoute('vic')),
+              },
+              {
+                title: 'Remove state electorate',
+                symbol: 'minus.circle' as const,
+                destructive: true,
+                onPress: removeState,
+              },
+            ]
+          : [
+              {
+                title: 'Add state electorate',
+                symbol: 'plus' as const,
+                onPress: () => router.push(seatRoute('vic')),
+              },
+            ]
+        : []),
+      ...(memberName
+        ? [
+            {
+              title: `Ask about ${memberName}`,
+              symbol: 'text.bubble' as const,
+              onPress: () =>
+                openAsk({
+                  question: `What has ${memberName} said in parliament this year?`,
+                  speaker: memberName,
+                  kind: 'speech',
+                }),
+            },
+          ]
+        : []),
+      ...(official
+        ? [
+            {
+              title: official.label,
+              symbol: 'arrow.up.right.square' as const,
+              onPress: () => void openSource(official.url, official.label),
+            },
+          ]
+        : []),
+      {
+        title: 'Share',
+        symbol: 'square.and.arrow.up',
+        onPress: () =>
+          void shareRecord({ title: federal.name, path: federal.url }),
+      },
+      // Last and alone: the one destructive item for the whole seat.
+      {
+        title: '',
+        inline: true,
+        items: [
+          {
+            title: 'Forget my electorate',
+            symbol: 'minus.circle',
+            destructive: true,
+            onPress: forget,
+          },
+        ],
+      },
+    ];
+  }, [
+    home,
+    federal,
+    stateSeatIds,
+    memberName,
+    official,
+    openAsk,
+    removeState,
+    forget,
+  ]);
+  const offline =
+    directory?.electorates.stale && directory.electorates.savedAt
+      ? directory.electorates.savedAt
+      : null;
   return (
     <Screen
-      key={chooser ? 'chooser' : 'page'}
-      column="wide"
+      grouped
       testID="your-mp-screen"
-      refreshControl={<RefreshControl refreshing={busy} onRefresh={retry} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={retry} />
+      }
     >
-      {/* One title: the chosen seat replaces "Your MP" (the tab still says
-          it); the chooser keeps "Your MP". */}
-      {/* On iPad the title sits in the readable column with the content it
-          heads, not at the detail's far edge (pass 5, P3-16). */}
       <Stack.Screen
         options={{
-          title: seatName ?? 'Your MP',
-          ...(padTitle
-            ? { headerLargeTitleEnabled: false, headerTitle: '' }
-            : null),
+          title: 'Your MP',
+          headerLargeTitleEnabled: true,
+          ...headerItems(() =>
+            rootHeaderItems({
+              segment: '(your-mp)',
+              signedIn: !!account.status?.signedIn,
+              extra: menu.length
+                ? [pageMenu({ name: federal?.name ?? 'Your MP', items: menu })]
+                : [],
+            }),
+          ),
         }}
       />
-      {padTitle ? (
-        <Heading level={1} testID="your-mp-title">
-          {seatName ?? 'Your MP'}
-        </Heading>
-      ) : null}
-      {Platform.OS === 'android' ? (
-        <AndroidFocusBack
-          active={choosing || stateChoosing}
-          onBack={() => {
-            setChoosing(false);
-            setStateChoosing(false);
-          }}
+      {seat.status === 'loading' ? (
+        <RepresentativesSkeleton />
+      ) : seat.status === 'error' ? (
+        <InlineError
+          subject="Your electorate"
+          message={`Your electorate couldn't be read on this ${thisDevice()}.`}
+          testID="your-mp-error"
         />
-      ) : null}
-      {error ? (
-        <ErrorState message={error} onRetry={retry} testID="your-mp-error" />
-      ) : null}
-      {error && choice && !view ? (
-        <Button
-          label="Change seat"
-          onPress={() => {
-            setChoosing(true);
-            setQuery('');
-          }}
-        />
-      ) : null}
-      {!ready || (choice && !view && !chooser && !error) ? (
-        <LoadingState shape="people" label="Loading your representatives" />
-      ) : null}
-      {chooser && directory ? (
-        <Group>
-          {stateChoosing ? (
-            <Heading level={2}>Choose your state electorate</Heading>
-          ) : null}
-          {directory?.electorates.partial ? (
-            <PartialNotice testID="seat-directory-partial" />
-          ) : null}
-          {directory?.electorates.staleReason ? (
-            <SavedCopyNotice reason={directory.electorates.staleReason} />
-          ) : null}
-          <Field
-            label="Electorate or member’s name"
-            hint="Your choice is saved on this device. Device backups may include it."
-            testID="seat-search"
-            value={query}
-            onChangeText={setQuery}
-            autoCorrect={false}
-            returnKeyType="done"
-            onSubmitEditing={() => Keyboard.dismiss()}
-          />
-          {/* The field is the chooser's main task, so it comes first; its
-              label says what to type, with no helper line repeating it
-              (pass 5, P2-20 and P3-1). */}
-          {!query.trim() || error ? null : !matches.length ? (
-            <EmptyState
-              message="No matching electorate or member."
-              testID="seat-no-results"
+      ) : home && federal && directory ? (
+        <>
+          <Text wordSafe variant="secondary" testID="your-seat-name">
+            {seatLine(federal.name, federal.state_code)}
+          </Text>
+          {offline ? <OfflineLine savedAt={offline} /> : null}
+          {view.status === 'loading' ? (
+            <RepresentativesSkeleton />
+          ) : view.status === 'error' ? (
+            <InlineError
+              subject="Your MP"
+              message="Your MP couldn't be loaded."
+              onRetry={retry}
+              testID="your-mp-error"
             />
           ) : (
-            <RowList>
-              {matches.map((s) => (
-                <LinkRow
-                  key={s.electorate_id}
-                  title={s.name}
-                  detail={[
-                    s.representatives.map((r) => r.person.name).join('; ') ||
-                      'No verified representative recorded',
-                    `${chamberName(s.chamber, s.jurisdiction) ?? CHAMBER_NOT_RECORDED} · ${
-                      jurisdictionName(s.state_code) ??
-                      jurisdictionName(s.jurisdiction) ??
-                      'Jurisdiction not recorded'
-                    }`,
-                  ].join('\n')}
-                  accessibilityHint={seatContext(s)}
-                  testID={`seat-choice-${s.slug}`}
-                  onPress={() => void choose(s)}
-                  disabled={saving}
-                />
-              ))}
-            </RowList>
+            <RepresentativesGroup
+              seat={federal}
+              view={view.data}
+              directory={directory}
+              electorate={
+                electorate.status === 'ready' ? electorate.data : null
+              }
+            />
           )}
-          {!stateChoosing && directory ? (
-            <LocationSuggestion
-              seats={directory.electorates.data.electorates}
-              onConfirm={(seat) => void choose(seat)}
-              disabled={saving}
+          {member ? (
+            <Lately
+              personId={member.person_id}
+              profile={profile}
+              bills={bills.status === 'ready' ? bills.data : null}
+              onRetry={() => setProfileAttempt((n) => n + 1)}
             />
           ) : null}
-          {/* The state district from the same tap, on the device against
-              bundled outlines (TestFlight build 32). The name search below
-              stays the fallback, including when permission is denied. */}
-          {stateChoosing && view ? (
-            <LocationSuggestion
-              scope="state"
-              seats={view.verifiedStateSeats}
-              onConfirm={(seat) => void choose(seat)}
-              disabled={saving}
+          {victorian ? (
+            <StateMembers
+              directory={directory}
+              stateSeatIds={stateSeatIds}
+              view={view.status === 'ready' ? view.data : null}
+              onRemove={removeState}
             />
           ) : null}
-          {!stateChoosing ? (
-            <RowList>
-              <LinkRow
-                title="Check your electorate with the AEC"
-                external
-                accessibilityHint="Opens the AEC electorate finder"
-                testID="seat-aec"
-                onPress={() =>
-                  void openSource(
-                    'https://electorate.aec.gov.au/',
-                    'AEC electorate finder',
-                  )
-                }
-              />
-            </RowList>
-          ) : null}
-          {choice ? (
-            <Button
-              label="Cancel"
-              variant="quiet"
-              onPress={() => {
-                setChoosing(false);
-                setStateChoosing(false);
-                setQuery('');
-              }}
-            />
-          ) : null}
-        </Group>
-      ) : null}
-      {chooser && !choice ? <FollowingEntry /> : null}
-      {view && directory && !chooser ? (
-        <>
-          <Group gap={rhythm.heading}>
-            <Text wordSafe variant="metadata" testID="your-seat-name">
-              {chamberName(
-                view.seat.data!.chamber,
-                view.seat.data!.jurisdiction,
-              ) ?? CHAMBER_NOT_RECORDED}{' '}
-              ·{' '}
-              {jurisdictionName(view.seat.data!.state_code) ??
-                'Jurisdiction not recorded'}
-            </Text>
-            {view.seat.data!.status === 'historical' ? (
-              <Text wordSafe testID="your-seat-abolished">
-                Abolished; not a current seat. Choose a current electorate to
-                update your saved choice.
-              </Text>
-            ) : null}
-            <RowList>
-              <LinkRow
-                title="Electorate record"
-                detail="Outline, elections and local context"
-                testID="your-electorate"
-                onPress={() =>
-                  router.push(electorateRoute(view.seat.data!.electorate_id))
-                }
-              />
-            </RowList>
-            <EvidenceFooter block={view.seat} id="your-seat" />
-          </Group>
+          {electorate.status === 'error' ? null : (
+            <View style={styles.section}>
+              <SectionHeader title="Your electorate" />
+              {electorate.status === 'loading' ? (
+                <ElectorateCardSkeleton />
+              ) : (
+                <ElectorateCard seat={federal} view={electorate.data} />
+              )}
+            </View>
+          )}
           <SeatGrants
-            name={view.seat.data!.name}
-            state={view.seat.data!.state_code}
-            eligible={
-              view.seat.data!.jurisdiction === 'federal' &&
-              view.seat.data!.chamber === 'representatives'
-            }
+            name={federal.name}
+            state={federal.state_code}
+            eligible={house(federal)}
           />
-          {view.seat.data!.chamber !== 'senate' ? (
-            <RecordBlock
-              title={
-                view.members.data && view.members.data.length > 1
-                  ? 'Your representatives'
-                  : 'Your member'
-              }
-              accent="people"
-              id="your-member"
-              block={view.members}
-              missing={
-                view.seat.data!.status === 'historical'
-                  ? 'Abolished; not a current seat. See the electorate record for its history.'
-                  : 'No verified representative is recorded for this date. This does not establish a vacancy.'
-              }
-              retry={retry}
-            >
-              {(rows) => (
-                <RepresentativeRows
-                  rows={rows}
-                  directory={directory}
-                  asAt={view.members.asAt}
-                  id="your-member"
-                />
-              )}
-            </RecordBlock>
-          ) : null}
-          {memberProfile ? (
-            <>
-              <PadGrid>
-                <PayBlock
-                  block={memberProfile.blocks.pay}
-                  retry={retry}
-                  id="your-pay"
-                />
-                <PartyReceiptsBlock
-                  block={memberProfile.blocks.partyReceipts}
-                  retry={retry}
-                  id="your-receipts"
-                />
-              </PadGrid>
-              <RecordBlock
-                title="Recent bill votes"
-                id="your-votes"
-                accent="votes"
-                block={memberProfile.blocks.votes}
-                missing="No recorded bill votes are held for this member."
-                retry={retry}
-                line={() => votesSource(memberProfile.blocks.votes)}
-                about={(v) =>
-                  v ? { title: 'About these votes', notes: [v.method] } : null
-                }
-              >
-                {(v) => (
-                  <Group gap={rhythm.tight}>
-                    <RowList>
-                      {[
-                        ...[...v.for]
-                          .sort((a, b) => b.date.localeCompare(a.date))
-                          .slice(0, 6)
-                          .map((row) => ({
-                            ...row,
-                            side: 'Voted for' as const,
-                          })),
-                        ...[...v.against]
-                          .sort((a, b) => b.date.localeCompare(a.date))
-                          .slice(0, 6)
-                          .map((row) => ({
-                            ...row,
-                            side: 'Voted against' as const,
-                          })),
-                      ]
-                        .sort((a, b) => b.date.localeCompare(a.date))
-                        .map((row, i) =>
-                          row.billKey ? (
-                            <LinkRow
-                              key={i}
-                              leading={<VoteLabel side={row.side} />}
-                              title={row.name}
-                              dragPath={`/bill/${row.billKey}`}
-                              detail={`${row.stage} · ${formatDate(row.date!, 'short')}`}
-                              accessibilityLabel={`${row.side}, ${row.name}, ${row.stage}, ${formatDate(row.date!)}. Bill record`}
-                              onPress={() =>
-                                router.push(billRoute(row.billKey!))
-                              }
-                              testID={`your-mp-bill-${row.billKey}`}
-                            />
-                          ) : (
-                            <View
-                              key={i}
-                              accessible
-                              accessibilityLabel={`${row.side}, ${row.name}, ${row.stage}, ${formatDate(row.date!)}. Not matched to a bill record`}
-                              style={styles.vote}
-                            >
-                              <VoteLabel side={row.side} />
-                              <Text wordSafe variant="strong">
-                                {row.name}
-                              </Text>
-                              <Text wordSafe variant="metadata">
-                                {row.stage} · {formatDate(row.date!, 'short')} ·
-                                Not matched to a bill record
-                              </Text>
-                            </View>
-                          ),
-                        )}
-                    </RowList>
-                    {!v.for.length && !v.against.length ? (
-                      <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
-                    ) : null}
-                  </Group>
-                )}
-              </RecordBlock>
-              {/* Read on demand, like a profile's topics: the section
-                  heading, then one row that opens the latest changes. */}
-              <Section
-                title="Register changes"
-                accent="interests"
-                testID="your-register"
-              >
-                <RowList>
-                  <Disclosure
-                    label={
-                      registerOpen
-                        ? 'Hide the latest changes'
-                        : 'Show the latest changes'
-                    }
-                    open={registerOpen}
-                    testID="your-register-toggle"
-                    onToggle={(open) => {
-                      setRegisterLoadedFor(null);
-                      setRegisterOpen(open);
-                    }}
-                  >
-                    {() =>
-                      registerLoadedFor !== memberProfile.personId ? (
-                        memberFailure?.id === memberProfile.personId ? (
-                          <ErrorState
-                            message={memberFailure.message}
-                            onRetry={retry}
-                          />
-                        ) : (
-                          <LoadingState label="Loading the member’s register" />
-                        )
-                      ) : (
-                        <RecordBlock
-                          title="Register changes"
-                          sub="bare"
-                          id="your-register"
-                          block={memberProfile.blocks.interests}
-                          missing="No register file is held for this member in the covered registers."
-                          retry={retry}
-                          about={() => ({
-                            title: 'About register changes',
-                            notes: [
-                              'Changes are shown only where the register records a date.',
-                              'Entries read by OCR from scanned pages may contain transcription errors; check the original register.',
-                            ],
-                          })}
-                        >
-                          {(r) => (
-                            <RowList>
-                              {Object.entries(r.buckets)
-                                .flatMap(([category, bucket]) =>
-                                  bucket.items
-                                    .filter((row) => row.date)
-                                    .map((row) => ({ ...row, category })),
-                                )
-                                .sort((a, b) =>
-                                  (b.date ?? '').localeCompare(a.date ?? ''),
-                                )
-                                .slice(0, 3)
-                                .map((row, i) => (
-                                  <Group key={i} gap={rhythm.line}>
-                                    <Text wordSafe variant="label">
-                                      {registerCategoryLabel(row.category)} ·{' '}
-                                      {registerChangeLabel(row.kind)}{' '}
-                                      {formatDate(row.date!, 'short')}
-                                    </Text>
-                                    <Text wordSafe>{row.description}</Text>
-                                    {row.ocr ? (
-                                      <Text wordSafe variant="fine">
-                                        OCR transcription; check the original
-                                        register.
-                                      </Text>
-                                    ) : null}
-                                  </Group>
-                                ))}
-                            </RowList>
-                          )}
-                        </RecordBlock>
-                      )
-                    }
-                  </Disclosure>
-                </RowList>
-              </Section>
-            </>
-          ) : memberFailure &&
-            memberFailure.id === view.members.data?.[0]?.person_id ? (
-            <ErrorState message={memberFailure!.message} onRetry={retry} />
-          ) : view.members.data?.length === 1 ? (
-            <LoadingState label="Loading the member’s public record" />
-          ) : null}
-          {view.seat.data!.status !== 'historical' ? (
-            <Section
-              title="Your senators"
-              accent="people"
-              testID="your-senators"
-            >
-              {view.senators.length ? (
-                <>
-                  {view.senators.map((b, i) => (
-                    <RepresentativeRows
-                      key={i}
-                      rows={b.data ?? []}
-                      directory={directory}
-                      asAt={b.asAt}
-                      id="your-senator"
-                    />
-                  ))}
-                  <BlockSource
-                    block={combinedBlock(view.senators)}
-                    title="About your senators"
-                    notes={[
-                      'Senators are shown as recorded in the dated release.',
-                    ]}
-                    testID="your-senators-end"
-                  />
-                </>
-              ) : (
-                <EmptyState message="No verified Senate roster is held for this jurisdiction." />
-              )}
-            </Section>
-          ) : null}
-          {view.seat.data!.status !== 'historical' ? (
-            <Section title="State members" accent="people" testID="your-state">
-              {view.stateRosterVerified ? (
-                <>
-                  {view.stateMembers.map((b, i) => (
-                    <Group key={i}>
-                      <RepresentativeRows
-                        rows={b.data ?? []}
-                        directory={directory}
-                        asAt={b.asAt}
-                        id="your-state-member"
-                      />
-                      {choice && selectedStateSeats[i] ? (
-                        <Button
-                          label={`Remove ${selectedStateSeats[i]!.name}`}
-                          variant="quiet"
-                          size="compact"
-                          icon="minus.circle"
-                          testID={`remove-state-seat-${selectedStateSeats[i]!.electorate_id}`}
-                          disabled={saving}
-                          onPress={() =>
-                            void persist({
-                              ...choice,
-                              stateSeatIds: choice.stateSeatIds.filter(
-                                (id) =>
-                                  id !== selectedStateSeats[i]!.electorate_id,
-                              ),
-                            })
-                          }
-                        />
-                      ) : null}
-                    </Group>
-                  ))}
-                  {view.stateMembers.length ? (
-                    <BlockSource
-                      block={combinedBlock(view.stateMembers)}
-                      testID="your-state-source"
-                    />
-                  ) : (
-                    <Text wordSafe>
-                      Choose your state electorate to see its verified
-                      representatives.
-                    </Text>
-                  )}
-                  <Button
-                    label="Choose state electorate"
-                    icon="plus"
-                    size="compact"
-                    testID="choose-state-seat"
-                    onPress={() => {
-                      setStateChoosing(true);
-                      setQuery('');
-                    }}
-                  />
-                </>
-              ) : (
-                <Text wordSafe>
-                  No confirmed member list for{' '}
-                  {jurisdictionName(view.seat.data!.state_code) ??
-                    'this jurisdiction'}{' '}
-                  yet.
-                </Text>
-              )}
-            </Section>
-          ) : null}
-          <FollowingEntry />
-          <Button
-            label="Change seat"
-            variant="quiet"
-            icon="arrow.triangle.2.circlepath"
-            testID="change-seat"
-            onPress={() => {
-              setChoosing(true);
-              setQuery('');
-            }}
-          />
-          <Text wordSafe variant="fine" testID="your-mp-end">
-            Your choice is saved on this device. Device backups may include it.
-          </Text>
+          {victorian ? <PageFoot variant="authorised" /> : null}
+          <PageEnd />
         </>
-      ) : null}
+      ) : directory ? (
+        <NoSeat
+          directory={directory}
+          stateSeatIds={stateSeatIds}
+          onRemoveState={removeState}
+        />
+      ) : (
+        <RepresentativesSkeleton />
+      )}
     </Screen>
   );
 }
-/** "Voted for" or "Voted against": the word carries the meaning. */
-function VoteLabel({ side }: { side: 'Voted for' | 'Voted against' }) {
+
+/** Lately: up to five newest dated records about the member. */
+function Lately({
+  personId,
+  profile,
+  bills,
+  onRetry,
+}: {
+  personId: string;
+  profile: Load<ProfileView>;
+  bills: { data: BillIndex; asOf: string | null } | null;
+  onRetry: () => void;
+}) {
+  const state =
+    profile.status === 'loading'
+      ? ({ status: 'loading' } as const)
+      : profile.status === 'error'
+        ? ({ status: 'error' } as const)
+        : latelyFor(profile.data, bills?.data, { limit: LATELY_LIMIT });
+  const ref = useRef<View>(null);
+  const follows = useFollows();
+  const own = follows?.find(
+    (f) =>
+      f.kind === 'person' &&
+      followKey(f) === followKey({ kind: 'person', id: personId }),
+  );
+  const keys = state.status === 'ready' ? state.records.map((r) => r.key) : [];
+  // Only when the reader follows their own MP: the rows shown become seen.
+  useSeenOnView(ref, own ? keys : [], (shown) => {
+    if (own && shown.length)
+      void markLatelySeen(own, shown).catch(() => undefined);
+  });
+  if (state.status === 'empty') return null;
   return (
-    <StatusLabel
-      label={side}
-      tone={side === 'Voted for' ? 'done' : 'ended'}
-      hidden
-    />
+    <View style={styles.section} testID="your-lately">
+      <SectionHeader title="Lately" />
+      {state.status === 'loading' ? (
+        <Skeleton
+          shape="rows"
+          count={LATELY_LIMIT}
+          label="Loading recent records"
+        />
+      ) : state.status === 'error' ? (
+        <InlineError
+          subject="Recent records"
+          message="Recent records couldn't be loaded."
+          onRetry={onRetry}
+        />
+      ) : (
+        <View ref={ref} collapsable={false} style={styles.group}>
+          <InsetGroup testID="your-latest">
+            <LatestRows records={state.records} testID="your-latest" />
+          </InsetGroup>
+          {profile.status === 'ready' ? (
+            <SourceLine
+              title="About these records"
+              {...latelySource(profile.data, bills)}
+              testID="your-latest-source"
+            />
+          ) : null}
+        </View>
+      )}
+    </View>
   );
 }
+
+/** No seat, an abolished seat, or a 1.0 choice the app no longer shows. */
+function NoSeat({
+  directory,
+  stateSeatIds,
+  onRemoveState,
+}: {
+  directory: Directory;
+  stateSeatIds: readonly string[];
+  onRemoveState: () => void;
+}) {
+  const old = migratedSeat();
+  const body = old
+    ? old.status === 'historical' && house(old)
+      ? `${old.name} is no longer an electorate.`
+      : 'Choose your House of Representatives electorate to see your MP.'
+    : 'Add your electorate to see your MP, how they vote and the grants in your area.';
+  return (
+    <>
+      <Card testID="your-invitation" padded>
+        <View style={styles.invitation}>
+          <Text variant="sectionTitle" accessibilityRole="header">
+            Who represents you?
+          </Text>
+          <Text wordSafe>{body}</Text>
+          <View style={styles.buttons}>
+            <Button
+              label="Find my electorate"
+              variant="primary"
+              onPress={() => router.push(seatRoute())}
+              testID="your-invitation-find"
+            />
+            <Button
+              label="Use my location"
+              variant="plain"
+              icon={symbols.location}
+              onPress={() => router.push(seatRoute(undefined, true))}
+              testID="your-invitation-location"
+            />
+          </View>
+        </View>
+      </Card>
+      {stateSeatIds.length ? (
+        <StateMembers
+          directory={directory}
+          stateSeatIds={stateSeatIds}
+          view={null}
+          onRemove={onRemoveState}
+        />
+      ) : null}
+      <InsetGroup>
+        <LinkRow
+          title="Parliamentarians"
+          symbol={symbols.person}
+          href={directoryRoute('person')}
+          testID="your-directory-people"
+        />
+        <LinkRow
+          title="Electorates"
+          symbol={symbols.electorate}
+          href={directoryRoute('electorate')}
+          testID="your-directory-electorates"
+        />
+      </InsetGroup>
+      {stateSeatIds.length ? <PageFoot variant="authorised" /> : null}
+      <PageEnd />
+    </>
+  );
+}
+
+/** The page's end, for journeys that scroll to it; nothing drawn. */
+function PageEnd() {
+  return <View testID="your-mp-end" collapsable={false} style={styles.end} />;
+}
+
 const styles = StyleSheet.create({
-  vote: { gap: rhythm.line, paddingVertical: rhythm.tight + 2 },
+  section: { gap: rhythm.heading },
+  end: { height: 1 },
+  group: { gap: rhythm.tight },
+  invitation: { gap: rhythm.tight },
+  buttons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    marginTop: rhythm.tight,
+  },
 });

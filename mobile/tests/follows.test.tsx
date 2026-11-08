@@ -3,7 +3,7 @@ import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
-import { Alert } from 'react-native';
+import { ActionSheetIOS } from 'react-native';
 import { Card, Text } from '../src/design/primitives';
 import {
   followState as readFollowState,
@@ -21,13 +21,17 @@ import {
   resetFollowsForTests,
   unfollow,
   type Fingerprint,
+  type Follow,
 } from '../src/features/follows/store';
 import { currentKeys } from '../src/features/follows/changes';
 import { FollowingSection } from '../src/features/follows/FollowingSection';
-import ManageFollows, {
+import Following, {
   NOTHING_FOLLOWED,
-} from '../src/features/follows/ManageFollows';
-import { showRecordMenu } from '../src/features/today/RecordMenu';
+  NOTHING_FOLLOWED_TITLE,
+  followGroups,
+  type FollowEntry,
+} from '../src/features/follows/Following';
+import { LinkRow } from '../src/design/rows';
 import { FollowToggle } from '../src/features/follows/FollowToggle';
 import { catalogs, index } from './pinned';
 
@@ -70,7 +74,41 @@ jest.mock('expo-file-system', () => {
 jest.mock('../src/api/runtime', () => ({
   catalogs: { followSources: jest.fn() },
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+let mockParams: Record<string, string> = {};
+let mockOptions: Record<string, unknown> = {};
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  const { Pressable } = jest.requireActual('react-native');
+  const Link = ({ children, ...props }: { children: unknown }) =>
+    React.createElement(Pressable, props, children);
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return {
+    router: { push: jest.fn() },
+    Link,
+    useLocalSearchParams: () => mockParams,
+    Stack: {
+      Screen: function Screen({
+        options,
+      }: {
+        options: Record<string, unknown>;
+      }) {
+        mockOptions = options;
+        return null;
+      },
+    },
+  };
+});
 jest.mock('../src/features/today/RecordMenu', () => ({
   showRecordMenu: jest.fn(),
 }));
@@ -636,93 +674,237 @@ describe('Following on Today and the follow switch', () => {
   });
 });
 
-describe('Manage follows', () => {
+describe('Following', () => {
+  const mock = runtime as jest.Mocked<typeof runtime>;
   beforeEach(() => {
     mockDisk.clear();
     resetFollowsForTests();
     jest.clearAllMocks();
+    mockParams = {};
+    mockOptions = {};
   });
   async function render() {
     let r!: TestRenderer.ReactTestRenderer;
     await act(async () => {
-      r = TestRenderer.create(<ManageFollows />);
-    });
-    // Each row learns its width, which brings in its swipe action.
-    await act(async () => {
-      for (const node of r.root.findAll(
-        (n) =>
-          typeof n.type === 'string' && typeof n.props.onLayout === 'function',
-      ))
-        node.props.onLayout({ nativeEvent: { layout: { width: 390 } } });
+      r = TestRenderer.create(<Following />);
     });
     return r;
   }
-  const byID = (r: TestRenderer.ReactTestRenderer, testID: string) =>
-    r.root.find(
-      (n) => n.props.testID === testID && typeof n.props.onPress === 'function',
-    );
-  const count = (r: TestRenderer.ReactTestRenderer) =>
-    [
-      r.root.find((n) => n.type === Text && n.props.testID === 'follows-count')
-        .props.children,
-    ]
-      .flat()
-      .join('');
-  test('with nothing followed, one sentence at the block size', async () => {
+  type Item = { label: string; type: string; onPress?: () => void };
+  const bar = (): Item[] =>
+    (mockOptions.unstable_headerRightItems as (() => Item[]) | undefined)?.() ??
+    [];
+  const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root.findAll((n) => n.props.testID === testID).length > 0;
+  const press = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root
+      .find(
+        (n) =>
+          n.props.testID === testID && typeof n.props.onPress === 'function',
+      )
+      .props.onPress();
+  const groupOrder = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAll(
+        (n) =>
+          typeof n.type !== 'string' &&
+          /^follows-(changed|person|bill|party|electorate)$/.test(
+            String(n.props.testID),
+          ) &&
+          'header' in n.props,
+      )
+      .map((n) => n.props.header);
+  const row = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root.find((n) => n.type === LinkRow && n.props.testID === testID);
+
+  test('with nothing followed: one ContentUnavailable, no Edit, no storage line', async () => {
     const r = await render();
-    const empty = r.root.find((n) => n.props.testID === 'follows-empty');
-    expect(empty.props.message).toBe(NOTHING_FOLLOWED);
-    expect(NOTHING_FOLLOWED.split('. ')).toHaveLength(1);
-    expect(empty.props.size ?? 'block').toBe('block');
+    const empty = r.root.find(
+      (n) => n.props.testID === 'follows-empty' && 'title' in n.props,
+    );
+    expect(empty.props).toMatchObject({
+      symbol: 'bell',
+      title: NOTHING_FOLLOWED_TITLE,
+      body: NOTHING_FOLLOWED,
+    });
+    expect(bar()).toEqual([]);
+    expect(
+      r.root
+        .findAllByType(Text)
+        .flatMap((n) => n.props.children)
+        .join(' '),
+    ).not.toMatch(/Saved on this|backups/);
+    expect(mock.followSources).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
-  test('rows open their page; unfollow is a swipe action and a touch-and-hold choice', async () => {
+
+  test('groups People, Bills, Electorates; Changed comes first after a change, newest change first', async () => {
+    mock.followSources.mockResolvedValue(sources());
     await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });
     await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
     await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
     const r = await render();
-    expect(count(r)).toBe('Following 3 of at most 50');
-    // No drawn Unfollow under every row: the action sits behind the swipe,
-    // and stays a button for VoiceOver and journeys.
-    const action = byID(r, `follows-unfollow-electorate-${GRAYNDLER}`);
-    expect(action.props.accessibilityLabel).toBe('Unfollow Grayndler');
-    expect(action.props.accessibilityRole).toBe('button');
-    await act(async () => byID(r, `follows-open-bill-${BILL}`).props.onPress());
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: '/bill/[key]',
-      params: { key: BILL },
-    });
-    await act(async () => action.props.onPress());
-    expect((await loadFollows()).map((f) => f.id)).toEqual([ALBANESE, BILL]);
-    expect(count(r)).toBe('Following 2 of at most 50');
-    // Touch and hold offers Open and Unfollow.
-    await act(async () =>
-      byID(r, `follows-open-person-${ALBANESE}`).props.onLongPress(),
+    expect(groupOrder(r)).toEqual(['People', 'Bills', 'Electorates']);
+    expect(has(r, 'follows-count')).toBe(false);
+    // No dot and no follow date on an unchanged row.
+    expect(row(r, `follows-row-electorate-${GRAYNDLER}`).props.detail).toBe(
+      undefined,
     );
-    const [title, actions] = jest.mocked(showRecordMenu).mock.calls[0]!;
-    expect(title).toBe('Anthony Albanese');
-    expect(actions.map((a) => a.title)).toEqual(['Open', 'Unfollow']);
-    await act(async () => actions[1]!.onPress());
-    expect((await loadFollows()).map((f) => f.id)).toEqual([BILL]);
+    mock.followSources.mockResolvedValue(changedSources());
+    await act(async () =>
+      r.root
+        .find((n) => typeof n.props.onRefresh === 'function')
+        .props.onRefresh(),
+    );
+    // The bill passed; a register count alone names no record, so the
+    // person stays with People. Each follow appears once.
+    expect(groupOrder(r)).toEqual(['Changed', 'People', 'Electorates']);
+    const changed = r.root
+      .find((n) => n.props.testID === 'follows-changed' && 'header' in n.props)
+      .findAll((n) => n.type === LinkRow)
+      .map((n) => n.props.testID);
+    expect(changed).toEqual([`follows-row-bill-${BILL}`]);
+    expect(
+      r.root.findAll(
+        (n) =>
+          n.type === LinkRow && n.props.testID === `follows-row-bill-${BILL}`,
+      ),
+    ).toHaveLength(1);
+    // A changed row pushes its page at the changes, and says "Changed:".
+    const bill = row(r, `follows-row-bill-${BILL}`);
+    expect(bill.props.href.params.section).toBe('changes');
+    expect(bill.props.accessibilityLabel).toMatch(/, bill\. Changed: /);
+    // Tapping only pushes the page; the page's group marks it seen.
+    expect(bill.props.onPress).toBeUndefined();
+    expect(bill.props.select).toBeUndefined();
     await act(async () => r.unmount());
   });
-  test('unfollow all asks first, then leaves the empty sentence', async () => {
-    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+
+  test('the ordering rule: changed newest first, then people by family name and the rest A to Z', () => {
+    const entry = (
+      kind: Follow['kind'],
+      title: string,
+      asAt?: string,
+    ): FollowEntry => ({
+      follow: {
+        kind,
+        id: title,
+        title,
+        followedAt: 0,
+        seen: null,
+        seenAt: null,
+      },
+      title,
+      ownMP: false,
+      state: asAt
+        ? {
+            status: 'ready',
+            title,
+            current: {},
+            keys: [],
+            changes: [{ marker: 'm', text: 'Changed', citation: '', asAt }],
+          }
+        : undefined,
+    });
+    const groups = followGroups([
+      entry('electorate', 'Sydney'),
+      entry('person', 'Zed Adams'),
+      entry('person', 'Anna Young'),
+      entry('bill', 'Old bill', '2026-08-01'),
+      entry('party', 'Labor', '2026-09-02'),
+      entry('electorate', 'Grayndler'),
+    ]);
+    expect(groups.map((g) => [g.title, g.rows.map((e) => e.title)])).toEqual([
+      ['Changed', ['Labor', 'Old bill']],
+      ['People', ['Zed Adams', 'Anna Young']],
+      ['Electorates', ['Grayndler', 'Sydney']],
+    ]);
+  });
+
+  test('a row menu ends with Unfollow, in its own section', async () => {
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+    const r = await render();
+    const menu = row(r, `follows-row-electorate-${GRAYNDLER}`).props.menu;
+    expect(menu.slice(0, -1).map((m: { title: string }) => m.title)).toEqual([
+      'Share',
+      'Copy link',
+    ]);
+    expect(menu.at(-1)).toMatchObject({
+      inline: true,
+      items: [{ title: 'Unfollow', destructive: true }],
+    });
+    await act(async () => menu.at(-1).items[0].onPress());
+    expect(await loadFollows()).toEqual([]);
+    await act(async () => r.unmount());
+  });
+
+  test('Edit: a minus per row unfollows at once; Unfollow all asks with an action sheet; empty ends Edit', async () => {
+    const sheet = jest
+      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+      .mockImplementation(() => {});
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+    await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });
+    const r = await render();
+    expect(bar().map((i) => i.label)).toEqual(['More', 'Edit']);
+    const more = bar()[0] as unknown as {
+      menu: { items: { label: string }[] };
+    };
+    expect(more.menu.items.map((i) => i.label)).toEqual(['Mark all as seen']);
+    expect(has(r, 'follows-unfollow-all')).toBe(false);
+    await act(async () => bar().at(-1)!.onPress!());
+    expect(bar().map((i) => i.label)).toEqual(['Done']);
+    expect(has(r, 'follows-editing')).toBe(true);
+    const minus = r.root.find(
+      (n) =>
+        n.props.testID === `follows-remove-electorate-${GRAYNDLER}` &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(minus.props.accessibilityLabel).toBe('Unfollow Grayndler');
+    await act(async () => minus.props.onPress());
+    expect((await loadFollows()).map((f) => f.kind)).toEqual([
+      'bill',
+      'person',
+    ]);
+    await act(async () => press(r, 'follows-unfollow-all'));
+    const [options, answer] = sheet.mock.calls[0]!;
+    expect(options).toMatchObject({
+      title: 'Unfollow all 2?',
+      message: 'Today stops showing their changes.',
+      options: ['Unfollow all', 'Cancel'],
+      destructiveButtonIndex: 0,
+    });
+    await act(async () => answer(0));
+    expect(await loadFollows()).toEqual([]);
+    expect(has(r, 'follows-empty')).toBe(true);
+    expect(has(r, 'follows-editing')).toBe(false);
+    sheet.mockRestore();
+    await act(async () => r.unmount());
+  });
+
+  test('?edit=1 opens in Edit mode', async () => {
+    mock.followSources.mockResolvedValue(sources());
+    mockParams = { edit: '1' };
     await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
     const r = await render();
-    await act(async () => byID(r, 'follows-clear').props.onPress());
-    expect(alert).toHaveBeenCalledWith(
-      'Unfollow all 1?',
-      expect.any(String),
-      expect.any(Array),
+    expect(has(r, `follows-remove-bill-${BILL}`)).toBe(true);
+    expect(bar().map((i) => i.label)).toEqual(['Done']);
+    await act(async () => r.unmount());
+  });
+
+  test('checks that fail say so once; rows read Not checked yet, never no change', async () => {
+    mock.followSources.mockRejectedValue(new Error('broken'));
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    const r = await render();
+    const error = r.root.find(
+      (n) => n.props.testID === 'follows-check-error' && 'subject' in n.props,
     );
-    const buttons = alert.mock.calls[0]![2]!;
-    await act(async () => buttons[1]!.onPress!());
-    expect(await loadFollows()).toEqual([]);
-    expect(
-      r.root.find((n) => n.props.testID === 'follows-empty').props.message,
-    ).toBe(NOTHING_FOLLOWED);
-    alert.mockRestore();
+    expect(error.props.message).toBe("Changes couldn't be checked.");
+    expect(row(r, `follows-row-bill-${BILL}`).props.detail).toBe(
+      'Not checked yet',
+    );
     await act(async () => r.unmount());
   });
 });

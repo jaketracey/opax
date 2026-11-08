@@ -167,7 +167,9 @@ describe('on-device state suggestion', () => {
   });
 });
 
-describe('Your MP state chooser', () => {
+// Your MP no longer draws the state chooser in place: "Add your state
+// electorate" pushes /seat?scope=vic, whose chooser w4-seat-welcome owns.
+describe.skip('Your MP state chooser', () => {
   const result = <T,>(data: T) => ({
     data,
     stale: false,

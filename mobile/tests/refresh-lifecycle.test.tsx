@@ -12,6 +12,7 @@ import {
   Screen,
   KeyboardStableScreen,
 } from '../src/design/primitives';
+import { Skeleton } from '../src/design/states';
 import About from '../src/features/About';
 import Electorate from '../src/features/Electorate';
 import Person from '../src/features/Person';
@@ -29,12 +30,35 @@ jest.mock('../src/api/runtime', () => ({
     electorateFor: jest.fn(),
   },
 }));
+// The Electorate menu reads the saved seat; keep its directory read out of
+// the refresh counts below.
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  ...jest.requireActual('../src/features/your-mp/useSeat'),
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
+}));
 const mockParams: { slug?: string; id?: string } = {};
 const mockFocus: {
   effect?: () => void | (() => void);
   cleanup?: void | (() => void);
 } = {};
 jest.mock('expo-router', () => ({
+  Link: Object.assign(
+    ({ children, ...props }: { children: unknown }) =>
+      jest
+        .requireActual('react')
+        .createElement(
+          jest.requireActual('react-native').Pressable,
+          props,
+          children,
+        ),
+    {
+      Trigger: ({ children }: { children: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    },
+  ),
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
@@ -148,12 +172,15 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
     expect(control().props.refreshing).toBe(false);
     // Idle Search draws no suggestions, so no placeholder stands in for them
     // while they load (TestFlight build 32); the other screens show one.
-    expect(renderer.root.findAllByType(LoadingState)).toHaveLength(
-      name === 'Search' ? 0 : 1,
-    );
+    // The Electorate page loads behind its skeleton.
+    const loading = () =>
+      renderer.root.findAllByType(
+        name === 'Electorate' ? Skeleton : LoadingState,
+      ).length;
+    expect(loading() > 0).toBe(name !== 'Search');
     await act(async () => finishInitial());
     expect(control().props.refreshing).toBe(false);
-    expect(renderer.root.findAllByType(LoadingState)).toHaveLength(0);
+    expect(loading()).toBe(0);
     await act(async () => control().props.onRefresh());
     expect(control().props.refreshing).toBe(true);
     if (name === 'Search')

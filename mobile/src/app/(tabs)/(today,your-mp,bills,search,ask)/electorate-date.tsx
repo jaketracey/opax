@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="electorate-date" title="Date" />;
-}
+export { default } from '../../../features/directories/ElectorateDateSheet';
