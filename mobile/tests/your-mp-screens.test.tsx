@@ -211,9 +211,10 @@ test('electorate preserves Census vintage and renders candidates as plain public
   expect(
     r.root.findAll((n) => n.props.testID === 'election-expand-0'),
   ).toHaveLength(0);
+  const electionParams = link.props.href.params;
   await act(async () => r.unmount());
   // A candidate who never sat is public-record text: a row with no link.
-  Object.assign(mockParams, link.props.href.params);
+  Object.assign(mockParams, electionParams);
   const Election = jest.requireActual('../src/features/your-mp/Election')
     .default as () => ReactElement;
   const e = await render(<Election />);
@@ -672,14 +673,17 @@ test.each(['federal', 'state'])(
       expect(correction.props.accessibilityLabel).toBe(
         'Report a correction by email to corrections@opax.com.au',
       );
-      expect(StyleSheet.flatten(correction.props.style)).toMatchObject({
+      expect(
+        StyleSheet.flatten(correction.props.style({ pressed: false })),
+      ).toMatchObject({
         minHeight: minimumTarget,
         justifyContent: 'center',
       });
+      // The page foot draws the link in the link tint.
       const label = correction.findByType(Text);
       expect(label.props).toMatchObject({
         variant: 'footnote',
-        tone: 'inkSoft',
+        tone: 'navy',
       });
       expect(label.props.children).toBe(
         'Report a correction: corrections@opax.com.au',
