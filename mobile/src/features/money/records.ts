@@ -136,6 +136,15 @@ export function industryLabel(group: string) {
 /** In a sentence: "mining and energy". */
 export const industryWords = (group: string) =>
   industryLabel(group).toLocaleLowerCase('en-AU');
+/** The donors of a group in a sentence: "union donors", "finance donors". */
+const singular: Record<string, string> = {
+  unions: 'union',
+  individuals: 'individual',
+};
+export const industryDonors = (group: string) => {
+  const words = industryWords(group);
+  return `${singular[words] ?? words} donors`;
+};
 
 /** The window is every year the graph holds and nothing is adjusted. */
 export function isAllYears(graph: MoneyGraph, filters: MoneyFilters) {

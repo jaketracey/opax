@@ -21,7 +21,7 @@ import { normaliseOrganisation } from './lookup';
 import {
   donorDetails,
   filtersFromParams,
-  industryWords,
+  industryDonors,
   isAllYears,
   moneyFocusRoute,
   moneyJurisdiction,
@@ -95,7 +95,7 @@ export default function MoneyDonors() {
           isAllYears(graph, filters)
             ? null
             : moneyYears(filters.from, filters.to),
-          filters.industry ? `${industryWords(filters.industry)} donors` : null,
+          filters.industry ? industryDonors(filters.industry) : null,
         ]
           .filter(Boolean)
           .join(' · ')

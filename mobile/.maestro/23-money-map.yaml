@@ -93,7 +93,7 @@ name: 23 Native money map, held figures, original source and ranked list
 - extendedWaitUntil:
     visible:
       id: money-view-summary
-      text: Donations to parties in 2024–25, unions donors only
+      text: Donations to parties in 2024–25, union donors only
     timeout: 30000
 # The focus action invokes the same callback as a tap on a node: it pushes
 # the node's money record.

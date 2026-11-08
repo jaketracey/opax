@@ -71,7 +71,7 @@ import {
   donationsCaveat,
   filtersFromParams,
   industryLabel,
-  industryWords,
+  industryDonors,
   isAllYears,
   moneyFocusRoute,
   moneyJurisdiction,
@@ -422,7 +422,7 @@ function LeadRows({ name }: { name: string | null }) {
 function windowNote(filters: MoneyFilters, graph: MoneyGraph) {
   const parts = [
     isAllYears(graph, filters) ? null : moneyYears(filters.from, filters.to),
-    filters.industry ? `${industryWords(filters.industry)} donors` : null,
+    filters.industry ? industryDonors(filters.industry) : null,
   ].filter(Boolean);
   return parts.length ? parts.join(' · ') : null;
 }

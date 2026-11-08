@@ -66,7 +66,7 @@ import {
   donationsCaveat,
   donorDetails,
   filtersFromParams,
-  industryWords,
+  industryDonors,
   isAllYears,
   moneyFocusRoute,
   moneyJurisdiction,
@@ -112,7 +112,7 @@ export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
   const window =
     from === to ? ` in ${moneyYears(from, to)}` : `, ${moneyYears(from, to)}`;
   const industry = filters.industry
-    ? `, ${industryWords(filters.industry)} donors only`
+    ? `, ${industryDonors(filters.industry)} only`
     : '';
   const publicMoney = filters.grants || filters.contracts;
   const narrowed = !isAllYears(graph, filters) || !!filters.industry;
@@ -521,7 +521,7 @@ function MoneyBody({
   const years = moneyYears(donations.firstYear, donations.lastYear);
   const inflation = filters.inflation ? ', in 2025–26 dollars' : '';
   const donationsLine = donations.subset
-    ? `from ${industryWords(filters.industry!)} donors on the map, ${years}${inflation}`
+    ? `from ${industryDonors(filters.industry!)} on the map, ${years}${inflation}`
     : `disclosed to parties, ${years}${inflation}`;
   const shortSource = moneyShortSource(graph);
   const grantsSource = publicMoneySource(graph, 'grants');

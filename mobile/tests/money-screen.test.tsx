@@ -282,6 +282,9 @@ test('summary, caption and footnote helpers state the cut in plain words', () =>
   expect(donorCaption(graph, { ...all, from: 2024, to: 2024 })).toBe(
     'Largest in 2024–25 among the 250 largest donors since 1998–99',
   );
+  expect(
+    moneySummary(graph, { ...all, from: 2024, to: 2024, industry: 'unions' }),
+  ).toBe('Donations to parties in 2024–25, union donors only');
   expect(individualDonorsLine([])).toBeNull();
 });
 
@@ -319,5 +322,17 @@ test('a donors search with no match keeps its caption over one plain line', asyn
   const none = byTestID(r, Text, 'money-donors-none')!;
   expect(none.props).toMatchObject({ variant: 'body', tone: 'inkSoft' });
   expect(none.props.children).toBe('No donors match “zzzz”.');
+  await act(async () => r.unmount());
+});
+
+test('the donors page states an industry window in plain words', async () => {
+  Object.assign(mockParams, { industry: 'unions' });
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<MoneyDonors />);
+  });
+  expect(byTestID(r, Text, 'money-donors-window')!.props.children).toBe(
+    'union donors',
+  );
   await act(async () => r.unmount());
 });

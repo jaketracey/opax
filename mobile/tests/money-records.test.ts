@@ -10,6 +10,7 @@ import {
   moneyWindowYears,
   latestCompleteYear,
   partyDonationsTotal,
+  industryDonors,
   industryLabel,
 } from '../src/features/money/records';
 import { moneyRoute } from '../src/navigation/routes';
@@ -184,4 +185,10 @@ test('the latest complete year follows the returns calendar, and party totals fo
   const industry = partyDonationsTotal(graph, { ...all, industry: group });
   expect(industry.total).toBeLessThan(partyDonationsTotal(graph, all).total);
   expect(industryLabel('mining & energy')).toBe('Mining and energy');
+  // In a sentence the donors read naturally; the Filters labels stay.
+  expect(industryLabel('unions')).toBe('Unions');
+  expect(industryDonors('unions')).toBe('union donors');
+  expect(industryDonors('individuals')).toBe('individual donors');
+  expect(industryDonors('mining & energy')).toBe('mining and energy donors');
+  expect(industryDonors('finance')).toBe('finance donors');
 });
