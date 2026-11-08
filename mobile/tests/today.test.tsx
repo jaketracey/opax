@@ -1,4 +1,5 @@
 import { act, type ReactElement, type ReactNode } from 'react';
+import { ActionSheetIOS } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import * as c from '../src/api/catalogs';
@@ -54,11 +55,12 @@ jest.mock('../src/features/today/edition-store', () => ({
   readCachedEdition: jest.fn(),
   rememberEdition: jest.fn(async () => undefined),
 }));
+// The launch read is set per test; the card's own "Not now" runs the real
+// store, so a test can read back what it saved.
 jest.mock('../src/features/today/invitation-store', () => ({
+  ...jest.requireActual('../src/features/today/invitation-store'),
   readInvitationDates: jest.fn(),
-  subscribeInvitation: jest.fn(() => () => undefined),
   overrideInvitationDates: jest.fn(),
-  hideInvitation: jest.fn(async () => undefined),
 }));
 // Following has its own tests (today-following): here, a marker in its slot.
 jest.mock('../src/features/follows/FollowingSection', () => ({
@@ -325,6 +327,86 @@ describe('the launch order', () => {
     );
     jest.mocked(welcomeDeclinedThisLaunch).mockReturnValue(false);
   });
+  test('touch and hold the invitation: Not now hides it, saved 30 days on', async () => {
+    setUp({ cached: 'missing' });
+    const r = await render(<Today />);
+    expect(blocks(r.root)[0]).toBe('today-invitation');
+    const press = r.root.find(
+      (n) =>
+        n.props.testID === 'today-invitation-press' &&
+        typeof n.props.onLongPress === 'function',
+    );
+    const sheet = jest
+      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+      .mockImplementation(() => undefined);
+    await act(async () => press.props.onLongPress());
+    expect(sheet.mock.calls.at(-1)![0].options).toEqual(['Not now', 'Cancel']);
+    await act(async () => {
+      sheet.mock.calls.at(-1)![1](0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(blocks(r.root)).not.toContain('today-invitation');
+    expect(blocks(r.root)[0]).toBe('today-pair');
+    const saved = await jest
+      .requireActual<
+        typeof import('../src/features/today/invitation-store')
+      >('../src/features/today/invitation-store')
+      .readInvitationDates();
+    expect(saved.hiddenUntil).toBe(addDays(today, 30));
+    sheet.mockRestore();
+  });
+  test('VoiceOver: Not now is the headline’s action', async () => {
+    setUp({ cached: 'missing' });
+    const r = await render(<Today />);
+    const title = r.root.find(
+      (n) =>
+        n.props.testID === 'today-invitation-title' &&
+        typeof n.props.onAccessibilityAction === 'function',
+    );
+    expect(title.props.accessibilityActions).toEqual([
+      { name: 'notNow', label: 'Not now' },
+    ]);
+    await act(async () => {
+      title.props.onAccessibilityAction({
+        nativeEvent: { actionName: 'notNow' },
+      });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(blocks(r.root)).not.toContain('today-invitation');
+  });
+  test('the invitation is a form: headline, body and two buttons, each its own element', async () => {
+    setUp({ cached: 'missing' });
+    const r = await render(<Today />);
+    const card = r.root.find(
+      (n) =>
+        typeof n.type === 'string' && n.props.testID === 'today-invitation',
+    );
+    // Nothing around them is an element, a button or a link.
+    const wrappers = card.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        (n.props.accessible === true ||
+          ['button', 'link'].includes(n.props.accessibilityRole)) &&
+        n.findAll(
+          (m) =>
+            typeof m.type === 'string' &&
+            m.props.testID === 'today-invitation-body',
+        ).length > 0,
+    );
+    expect(wrappers).toEqual([]);
+    expect(card.props.accessibilityRole).toBeUndefined();
+    const host = (id: string) =>
+      card.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+    expect(host('today-invitation-title')[0]!.props.accessibilityRole).toBe(
+      'header',
+    );
+    expect(host('today-invitation-body')).toHaveLength(1);
+    for (const id of ['today-invitation-find', 'today-invitation-location']) {
+      const button = host(id)[0]!;
+      expect(button.props.accessibilityRole).toBe('button');
+      expect(button.props.onLongPress).toBeUndefined();
+    }
+  });
   test('the card’s own Not now hides the invitation for 30 days', async () => {
     setUp({ cached: 'missing', hiddenUntil: addDays(today, 29) });
     const r = await render(<Today />);
@@ -334,6 +416,65 @@ describe('the launch order', () => {
 });
 
 describe('the page', () => {
+  const failed = (code: string) =>
+    ({
+      status: 'error',
+      data: null,
+      asAt: null,
+      sources: [],
+      stale: false,
+      savedAt: null,
+      error: { code, message: 'Failed.' },
+    }) as never;
+  const node = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  test('offline, never saved: Bills says so once with no Try again, and How parliament voted collapses', async () => {
+    setUp({ cached: 'missing' });
+    mock.todayBills.mockResolvedValue(failed('offline'));
+    mock.recentDivisions.mockResolvedValue(failed('offline'));
+    const r = await render(<Today />);
+    expect(node(r, 'today-bills-error')).toHaveLength(1);
+    expect(node(r, 'today-bills-error-retry')).toHaveLength(0);
+    expect(blocks(r.root)).not.toContain('today-votes');
+  });
+  test('offline, never saved: Just declared says so once with no Try again', async () => {
+    setUp({ cached: 'missing' });
+    mock.todayDeclarations.mockResolvedValue(failed('offline'));
+    mock.todayDeclarationsProfiled.mockResolvedValue(failed('offline'));
+    const r = await render(<Today />);
+    expect(node(r, 'today-declarations-error')).toHaveLength(1);
+    expect(node(r, 'today-declarations-error-retry')).toHaveLength(0);
+  });
+  test('an online failure keeps Try again on each block', async () => {
+    setUp({ cached: 'missing' });
+    mock.todayBills.mockResolvedValue(failed('server'));
+    mock.todayDeclarations.mockResolvedValue(failed('server'));
+    mock.todayDeclarationsProfiled.mockResolvedValue(failed('server'));
+    mock.recentDivisions.mockResolvedValue(failed('server'));
+    const r = await render(<Today />);
+    for (const id of ['today-bills', 'today-declarations', 'today-votes'])
+      expect(node(r, `${id}-error-retry`).length).toBeGreaterThan(0);
+  });
+  test('Your MP loading is one element, read once', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    mock.yourMP.mockImplementation(() => new Promise(() => {}));
+    const r = await render(<Today />);
+    // What VoiceOver can reach: not inside a hidden subtree.
+    const hidden = (n: ReactTestInstance | null): boolean =>
+      !!n &&
+      ((typeof n.type === 'string' &&
+        n.props.importantForAccessibility === 'no-hide-descendants') ||
+        hidden(n.parent));
+    const spoken = r.root.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.accessibilityLabel === 'Loading your MP' &&
+        n.props.accessible === true &&
+        !hidden(n.parent),
+    );
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.props.testID).toBe('today-your-mp-loading');
+  });
   test('releases the splash once its first reads answer', async () => {
     setUp({ cached: 'missing' });
     await render(<Today />);
