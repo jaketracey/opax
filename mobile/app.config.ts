@@ -98,7 +98,7 @@ const webOrigin = variant === 'e2e' ? 'https://opax.invalid' : origin;
 const config: ExpoConfig = {
   name: 'OPAX',
   slug: 'opax',
-  version: '1.0.0',
+  version: '1.1.0',
   scheme: 'opax',
   platforms: ['ios', 'android'],
   userInterfaceStyle:
