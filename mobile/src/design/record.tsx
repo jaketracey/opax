@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import { ownsRowPadding } from './row-padding';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { ownsRowPadding, useRowHighlight } from './row-padding';
 import { openOnWeb, openSource } from '../navigation/external';
 import { fromWebPath } from '../navigation/routes';
 import {
@@ -12,13 +12,27 @@ import {
   votesAsAtText,
   votesCaptionText,
   type AsAt,
+  type DateInput,
   type VotesMeta,
 } from './format';
-import { EXTERNAL_GLYPH } from './icon';
+import { useAccessibilitySize } from './accessibility';
+import { AUTHORISATION_LINE, CORRECTION_CONTACT } from './authorisation';
+import { copy } from './copy';
+import { confirmAction } from './menu';
+import { copyText } from '../features/records/actions';
+import { haptic } from './haptics';
+import { EXTERNAL_GLYPH, Icon } from './icon';
 import { LinkRow } from './rows';
-import { SourceAffordance, SourceLine } from './source';
+import { SourceAffordance, SourceLine, type SourceDetails } from './source';
 import { Text, type TextTone } from './text';
-import { accents, rhythm, type Accent } from './tokens';
+import {
+  accents,
+  colors,
+  hairline,
+  minimumTarget,
+  rhythm,
+  type Accent,
+} from './tokens';
 
 export type AsAtLineProps =
   | (AsAt & { testID?: string; votes?: never })
@@ -196,7 +210,7 @@ export function OpaxWebLink({
 
 type FigureSize = 'tile' | 'inline';
 /**
- * @deprecated Use `BigFigure` for the number a block is about. A count or
+ * @deprecated Use `FigureBlock` for the number a block is about. A count or
  * share with tabular figures; numbers get thousands separators.
  */
 export function Figure({
@@ -229,7 +243,7 @@ export function Figure({
 }
 
 /**
- * @deprecated Use `BigFigure` with `formatMoney`. Money with tabular
+ * @deprecated Use `FigureBlock` with `formatMoney`. Money with tabular
  * figures. To the dollar for records and rates of pay;
  * `compact` ("$4.2m", "$1.1bn") only in charts and tight figures.
  */
@@ -277,11 +291,11 @@ function FigureLayout({
       testID={testID}
       style={styles.figure}
     >
-      <Text variant={size === 'tile' ? 'display' : 'strong'} tabular>
+      <Text variant={size === 'tile' ? 'tileFigure' : 'strong'} tabular>
         {text}
       </Text>
       {label ? (
-        <Text wordSafe variant="metadata">
+        <Text wordSafe variant="secondary">
           {label}
         </Text>
       ) : null}
@@ -294,6 +308,7 @@ function FigureLayout({
  * expenses, 2017 to 2026". One VoiceOver element: `spoken` (money in words)
  * then the label. The accent tints the figure.
  */
+/** @deprecated Use FigureBlock with a required date and source. */
 export function BigFigure({
   value,
   spoken,
@@ -325,16 +340,16 @@ export function BigFigure({
     >
       <Text
         wordSafe
-        variant="display"
+        variant="figure"
         tone={accent ? (accents[accent].ink as TextTone) : undefined}
       >
         {value}
       </Text>
-      <Text wordSafe variant="metadata" tone="ink">
+      <Text wordSafe variant="secondary" tone="ink">
         {label}
       </Text>
       {detail ? (
-        <Text wordSafe variant="metadata">
+        <Text wordSafe variant="secondary">
           {detail}
         </Text>
       ) : null}
@@ -348,3 +363,217 @@ const styles = StyleSheet.create({
 });
 
 ownsRowPadding(OpaxWebLink);
+
+export type FigureSource = SourceDetails & {
+  asOf: DateInput | null;
+  citation: NonNullable<SourceDetails['citation']>;
+  testID?: string;
+};
+/** A figure is always dated, including an explicit unknown date, and sourced. */
+export function FigureBlock({
+  value,
+  ink,
+  label,
+  caveat,
+  source,
+  accessibilityLabel,
+  testID,
+}: {
+  value: string;
+  ink?: Accent;
+  label: string;
+  caveat?: string;
+  source: FigureSource;
+  accessibilityLabel?: string;
+  testID?: string;
+}) {
+  return (
+    <View testID={testID} style={{ gap: rhythm.line }}>
+      <View
+        accessible
+        accessibilityLabel={accessibilityLabel ?? `${value}, ${label}`}
+      >
+        <Text
+          wordSafe
+          variant="figure"
+          tone={ink ? (accents[ink].ink as TextTone) : undefined}
+        >
+          {value}
+        </Text>
+        <Text wordSafe variant="secondary">
+          {label}
+        </Text>
+      </View>
+      {caveat ? (
+        <Text wordSafe variant="footnote">
+          {caveat}
+        </Text>
+      ) : null}
+      <SourceLine {...source} />
+    </View>
+  );
+}
+export interface StatTileProps {
+  value: string;
+  label: string;
+  ink?: Accent;
+  onPress?: () => void;
+  testID?: string;
+}
+const statChevron = 'chevron.right';
+export function StatTile({
+  value,
+  label,
+  ink,
+  onPress,
+  testID,
+}: StatTileProps) {
+  const highlight = useRowHighlight();
+  const body = (
+    <>
+      <Text
+        wordSafe
+        variant="tileFigure"
+        tone={ink ? (accents[ink].ink as TextTone) : undefined}
+      >
+        {value}
+      </Text>
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', gap: rhythm.line }}
+      >
+        <Text wordSafe variant="footnote" style={{ flexShrink: 1 }}>
+          {label}
+        </Text>
+        {onPress ? (
+          <Icon name={statChevron} size={13} maxScale={1.5} tone="inkFaint" />
+        ) : null}
+      </View>
+    </>
+  );
+  const props = {
+    accessible: true,
+    accessibilityLabel: `${value}, ${label}`,
+    testID,
+  };
+  return onPress ? (
+    <Pressable
+      {...props}
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [
+        { minHeight: minimumTarget, gap: rhythm.line },
+        pressed ? { backgroundColor: highlight } : null,
+      ]}
+    >
+      {body}
+    </Pressable>
+  ) : (
+    <View {...props} style={{ minHeight: minimumTarget, gap: rhythm.line }}>
+      {body}
+    </View>
+  );
+}
+export function StatStrip({
+  tiles,
+  testID,
+}: {
+  tiles: StatTileProps[];
+  testID?: string;
+}) {
+  const stacked = useAccessibilitySize();
+  return (
+    <View
+      testID={testID}
+      style={{ flexDirection: stacked ? 'column' : 'row', gap: rhythm.block }}
+    >
+      {tiles.map((tile, index) => (
+        <View
+          key={tile.testID ?? tile.label}
+          style={stacked ? undefined : { flex: 1 }}
+        >
+          {index ? (
+            <View
+              style={
+                stacked
+                  ? {
+                      height: hairline,
+                      backgroundColor: colors.dividerSubtle,
+                      marginBottom: rhythm.block,
+                    }
+                  : {
+                      position: 'absolute',
+                      top: 0,
+                      bottom: 0,
+                      left: -rhythm.tight,
+                      width: hairline,
+                      backgroundColor: colors.dividerSubtle,
+                    }
+              }
+            />
+          ) : null}
+          <StatTile {...tile} />
+        </View>
+      ))}
+    </View>
+  );
+}
+/** One correction entry point, including a copy fallback when Mail is unavailable. */
+export async function openCorrection() {
+  try {
+    if (await Linking.canOpenURL(CORRECTION_CONTACT)) {
+      await Linking.openURL(CORRECTION_CONTACT);
+      return;
+    }
+  } catch {
+    /* Offer the address when Mail cannot open. */
+  }
+  confirmAction(copy.correctionsEmail, [
+    {
+      title: copy.copyAddress,
+      onPress: () => {
+        void copyText(copy.correctionsEmail).then((copied) => {
+          if (copied) haptic('success');
+        });
+      },
+    },
+  ]);
+}
+export function PageFoot({ variant }: { variant: 'today' | 'authorised' }) {
+  const highlight = useRowHighlight();
+  return (
+    <View style={{ gap: rhythm.tight }}>
+      {variant === 'today' ? (
+        <Text wordSafe variant="footnote">
+          {copy.independence}
+        </Text>
+      ) : (
+        <>
+          <View
+            style={{ height: hairline, backgroundColor: colors.dividerSubtle }}
+          />
+          <Text wordSafe variant="footnote">
+            {AUTHORISATION_LINE}
+          </Text>
+          <Text wordSafe variant="footnote">
+            We aim to respond within 2 business days.
+          </Text>
+        </>
+      )}
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel={copy.reportCorrection}
+        onPress={() => void openCorrection()}
+        style={({ pressed }) => [
+          { minHeight: minimumTarget, justifyContent: 'center' },
+          pressed ? { backgroundColor: highlight } : null,
+        ]}
+      >
+        <Text wordSafe variant="footnote" tone="navy">
+          {variant === 'today'
+            ? copy.reportCorrection
+            : `Report a correction: ${copy.correctionsEmail}`}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}

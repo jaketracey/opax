@@ -1,0 +1,803 @@
+import { act, useContext, type ReactElement, type ReactNode } from 'react';
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  Text as NativeText,
+} from 'react-native';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { Link, router } from 'expo-router';
+import { follow } from '../src/features/follows/store';
+import { NavigationContext } from 'expo-router/react-navigation';
+import {
+  LinkRow,
+  ValueRow,
+  BillRow,
+  RecordRow,
+  DivisionRow,
+  MoneyRow,
+  SuggestionRow,
+} from '../src/design/rows';
+import { PersonRow, Portrait, FaceStack } from '../src/design/people';
+import { RowLink, menuLeaves, rowMenus } from '../src/design/row-link';
+import { Icon } from '../src/design/icon';
+import { Text, Heading } from '../src/design/text';
+import {
+  InsetGroup,
+  Screen,
+  ScreenHeader,
+  SectionHeader,
+  TitleAnchor,
+  TitleAnchorContext,
+} from '../src/design/layout';
+
+import { Card, Tile, TileGrid } from '../src/design/card';
+import { FigureBlock, StatStrip, PageFoot } from '../src/design/record';
+import { StatusCapsule, MachinePill, ChoiceChip } from '../src/design/labels';
+import { SourceLine } from '../src/design/source';
+import { colors, radii } from '../src/design/tokens';
+
+jest.mock('../src/features/follows/store', () => ({
+  useFollows: () => [],
+  loadFollows: jest.fn(async () => []),
+  follow: jest.fn(async () => 'followed'),
+  unfollow: jest.fn(async () => undefined),
+}));
+
+jest.mock('../src/api/runtime', () => ({
+  catalogs: {
+    person: jest.fn(async () => ({
+      data: { canonicalPersonId: 'person_0123456789abcdef01234567' },
+    })),
+  },
+}));
+
+jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const Native = require('react-native');
+  const Wrap = ({ children, ...props }: { children?: ReactNode }) =>
+    React.createElement(Native.View, props, children);
+  const LinkRoot = (props: { children?: ReactNode }) =>
+    React.createElement(Wrap, props);
+  const Link = Object.assign(LinkRoot, {
+    Trigger: (props: { children?: ReactNode }) =>
+      React.createElement(Wrap, props),
+    Preview: () =>
+      React.createElement(Native.View, { testID: 'native-preview' }),
+    Menu: (props: { children?: ReactNode }) => React.createElement(Wrap, props),
+    MenuAction: (props: { children?: ReactNode }) =>
+      React.createElement(Wrap, props),
+  });
+  return {
+    Link,
+    router: { push: jest.fn(), navigate: jest.fn() },
+    useSegments: () => [],
+  };
+});
+const mounted: TestRenderer.ReactTestRenderer[] = [];
+const initialWindow = Dimensions.get('window'),
+  initialScreen = Dimensions.get('screen');
+const originalOS = Platform.OS;
+function size(fontScale = 1, width = 402) {
+  act(() =>
+    Dimensions.set({
+      window: { ...initialWindow, fontScale, width },
+      screen: { ...initialScreen, fontScale, width },
+    }),
+  );
+}
+function render(element: ReactElement) {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(element);
+  });
+  mounted.push(renderer);
+  return renderer;
+}
+function host(root: ReactTestInstance, testID: string) {
+  return root.find(
+    (node) => typeof node.type === 'string' && node.props.testID === testID,
+  );
+}
+function row(root: ReactTestInstance, testID = 'row') {
+  return root.find(
+    (node) =>
+      typeof node.props.style === 'function' && node.props.testID === testID,
+  );
+}
+const flat = (style: unknown) =>
+  StyleSheet.flatten(style as never) as Record<string, unknown>;
+const rowStyle = (node: ReactTestInstance, pressed = false) =>
+  flat(
+    typeof node.props.style === 'function'
+      ? node.props.style({ pressed })
+      : node.props.style,
+  );
+const strings = (root: ReactTestInstance) =>
+  root
+    .findAllByType(NativeText)
+    .map((node) => node.props.children)
+    .flat(4)
+    .filter((child): child is string => typeof child === 'string');
+const glyphs = (root: ReactTestInstance) =>
+  root.findAllByType(Icon).map((node) => node.props.name);
+beforeEach(() => {
+  size();
+  jest.clearAllMocks();
+});
+afterEach(() => {
+  act(() => {
+    mounted.splice(0).forEach((renderer) => renderer.unmount());
+    Dimensions.set({ window: initialWindow, screen: initialScreen });
+  });
+  Platform.OS = originalOS;
+});
+
+const href = '/person/person_0123456789abcdef01234567';
+for (const scale of [1, 1.786, 3.571]) {
+  describe(`row anatomy at fontScale ${scale}`, () => {
+    const rows: [string, ReactElement, boolean][] = [
+      [
+        'LinkRow',
+        <LinkRow key="LinkRow" title="Anne" href={href} testID="row" />,
+        true,
+      ],
+      [
+        'ValueRow',
+        <ValueRow
+          key="ValueRow"
+          label="Pay"
+          value="$25,000"
+          href={href}
+          testID="row"
+        />,
+        true,
+      ],
+      [
+        'PersonRow',
+        <PersonRow key="PersonRow" name="Anne" href={href} testID="row" />,
+        true,
+      ],
+      [
+        'BillRow',
+        <BillRow
+          key="BillRow"
+          title="Example Bill"
+          status="Before parliament"
+          date="Introduced 17 Sep 2026"
+          href={href}
+          testID="row"
+        />,
+        true,
+      ],
+      [
+        'RecordRow',
+        <RecordRow
+          key="RecordRow"
+          title="A speech"
+          meta="Speech · 17 Sep 2026"
+          href={href}
+          testID="row"
+        />,
+        true,
+      ],
+      [
+        'DivisionRow',
+        <DivisionRow
+          key="DivisionRow"
+          title="Example Bill"
+          meta="Third reading"
+          outcome="Agreed to"
+          ayes={76}
+          noes={55}
+          countsStyle="votes"
+          href={href}
+          testID="row"
+        />,
+        true,
+      ],
+      [
+        'MoneyRow',
+        <MoneyRow
+          key="MoneyRow"
+          name="Organisation"
+          amount={10000}
+          href={href}
+          testID="row"
+        />,
+        true,
+      ],
+      [
+        'SuggestionRow',
+        <SuggestionRow
+          key="SuggestionRow"
+          name="Anne"
+          kind="person"
+          portrait={null}
+          secondary="Member for Grayndler"
+          href={href}
+          testID="row"
+        />,
+        false,
+      ],
+    ];
+    test.each(rows)(
+      '%s keeps its target, navigation and accessories',
+      (_name, element, chevron) => {
+        size(scale);
+        const root = render(element).root;
+        expect(rowStyle(row(root)).minHeight).toBeGreaterThanOrEqual(44);
+        expect(root.findAllByType(RowLink)).toHaveLength(1);
+        expect(glyphs(root).includes('chevron.right')).toBe(chevron);
+      },
+    );
+    test.each([
+      <PersonRow
+        key="person"
+        name="Anne"
+        portrait={null}
+        href={href}
+        testID="row"
+      />,
+      <SuggestionRow
+        key="suggestion"
+        name="Anne"
+        kind="person"
+        portrait={null}
+        href={href}
+        testID="row"
+      />,
+    ])('portrait is before the name and stacks at AX1+', (element) => {
+      size(scale);
+      const root = render(element).root;
+      const portrait = root.findByType(Portrait);
+      const anatomy = portrait.parent!;
+      expect(flat(anatomy.props.style).flexDirection).toBe(
+        scale === 1 ? 'row' : 'column',
+      );
+      expect(anatomy.children[0]).toBe(portrait);
+      expect(
+        root.findAllByType(Text).some((node) => node.props.children === 'Anne'),
+      ).toBe(true);
+    });
+  });
+}
+
+test('BillRow showStatus and dateLabel vary independently; spoken status stays', () => {
+  for (const showStatus of [false, true]) {
+    const root = render(
+      <BillRow
+        title="Example"
+        status="Passed"
+        date="2026-09-17"
+        dateLabel="Assented"
+        showStatus={showStatus}
+        href={href}
+        testID="row"
+      />,
+    ).root;
+    expect(root.findAllByType(StatusCapsule)).toHaveLength(showStatus ? 1 : 0);
+    expect(strings(root)).toContain('Assented 17 Sep 2026');
+    expect(row(root).props.accessibilityLabel).toContain('Passed');
+  }
+  expect(
+    strings(
+      render(
+        <BillRow
+          title="Example"
+          status="Passed"
+          date="Introduced 17 Sep 2026"
+        />,
+      ).root,
+    ),
+  ).toContain('Introduced 17 Sep 2026');
+});
+test('LinkRow supports no accessory, explicit checkmark, selection on and off', () => {
+  for (const selected of [false, true]) {
+    const root = render(
+      <LinkRow
+        title="Labor"
+        accessory="none"
+        selected={selected}
+        onPress={jest.fn()}
+        testID="row"
+      />,
+    ).root;
+    expect(row(root).props.accessibilityState.selected).toBe(selected);
+    expect(glyphs(root)).toEqual(selected ? ['checkmark'] : []);
+  }
+  expect(
+    glyphs(render(<LinkRow title="Labor" accessory="checkmark" />).root),
+  ).toEqual(['checkmark']);
+});
+test('PersonRow only says Your MP when its caller passes yourMP', () => {
+  for (const yourMP of [false, true]) {
+    const root = render(
+      <PersonRow name="Anne" yourMP={yourMP} href={href} testID="row" />,
+    ).root;
+    expect(strings(root).includes('Your MP')).toBe(yourMP);
+    expect(row(root).props.accessibilityLabel.includes('Your MP')).toBe(yourMP);
+  }
+});
+test('RecordRow title can be omitted; stored stages move to the dated kind line', () => {
+  for (const showTitle of [false, true]) {
+    const root = render(
+      <RecordRow
+        title="Example Bill - Second reading"
+        meta="Speech · Senate · 17 Sep"
+        showTitle={showTitle}
+        href={href}
+        testID="row"
+      />,
+    ).root;
+    expect(strings(root).includes('Example Bill')).toBe(showTitle);
+    expect(strings(root)).toContain(
+      'Speech · Senate · 17 Sep · Second reading',
+    );
+    expect(row(root).props.accessibilityLabel).not.toContain(
+      ' - Second reading',
+    );
+  }
+  expect(strings(render(<RecordRow meta="Speech · 17 Sep" />).root)).toEqual([
+    'Speech · 17 Sep',
+  ]);
+});
+test('compact excerpts clamp at 3 lines, then 2 at AX1+, with no nested More', () => {
+  for (const scale of [1, 1.786]) {
+    size(scale);
+    const root = render(
+      <RecordRow
+        title="A speech"
+        meta="Speech"
+        excerpt={{
+          text: 'A full passage with evidence',
+          highlight: ['evidence'],
+        }}
+        compact
+        href={href}
+        testID="row"
+      />,
+    ).root;
+    const excerpt = root
+      .findAllByType(Text)
+      .find((node) => node.props.variant === 'recordText')!;
+    expect(excerpt.props.numberOfLines).toBe(scale === 1 ? 3 : 2);
+    expect(strings(root)).not.toContain('More');
+    expect(row(root).props.accessibilityLabel).toContain(
+      'A full passage with evidence',
+    );
+  }
+  const full = render(
+    <RecordRow
+      title="A speech"
+      meta="Speech"
+      excerpt={{ text: 'Full passage' }}
+    />,
+  );
+  expect(strings(full.root)).toContain('More');
+});
+test('DivisionRow expands party content in place and leaves the navigation variant unchanged', () => {
+  const renderer = render(
+    <DivisionRow
+      title="Example"
+      meta="Third reading"
+      outcome="Agreed to"
+      ayes={76}
+      noes={55}
+      countsStyle="ayesNoes"
+      expandable
+      testID="row"
+    >
+      <Text>Labor: 60 ayes</Text>
+    </DivisionRow>,
+  );
+  expect(row(renderer.root).props.accessibilityState).toEqual({
+    expanded: false,
+  });
+  expect(strings(renderer.root)).not.toContain('Labor: 60 ayes');
+  expect(glyphs(renderer.root)).toContain('chevron.down');
+  act(() => row(renderer.root).props.onPress());
+  expect(row(renderer.root).props.accessibilityState).toEqual({
+    expanded: true,
+  });
+  expect(strings(renderer.root)).toContain('Labor: 60 ayes');
+  act(() => row(renderer.root).props.onPress());
+  expect(strings(renderer.root)).not.toContain('Labor: 60 ayes');
+});
+test('DivisionRow split can describe the member against their party, or remain the whole vote', () => {
+  for (const split of [
+    undefined,
+    { ayes: 3, noes: 12, partyVote: 'no' as const },
+  ]) {
+    const root = render(
+      <DivisionRow
+        title="Example"
+        meta="Third reading"
+        outcome="Voted for"
+        ayes={76}
+        noes={55}
+        countsStyle="ayesNoes"
+        split={split}
+        href={href}
+        testID="row"
+      />,
+    ).root;
+    expect(strings(root)).toContain(
+      split ? '3 ayes, 12 noes' : '76 ayes, 55 noes',
+    );
+    expect(strings(root).includes('Party voted against')).toBe(!!split);
+  }
+});
+test('money rows use full dollars in ink, and private entities have no navigation accessory', () => {
+  const root = render(
+    <MoneyRow name="Private recipient" amount={1250000} testID="row" />,
+  ).root;
+  expect(strings(root)).toContain('$1,250,000');
+  expect(glyphs(root)).toEqual([]);
+  expect(row(root).props.accessibilityLabel).toContain('1,250,000 dollars');
+});
+
+test('every builder gives iOS the exact native menu leaves as accessibility actions', () => {
+  const follow = { following: true, onFollow: jest.fn() };
+  const menus = [
+    rowMenus.person({
+      name: 'Anne',
+      slug: 'anne',
+      ...follow,
+      setSeat: { label: 'Set Grayndler as my electorate', onSelect: jest.fn() },
+    }),
+    rowMenus.bill({
+      title: 'Bill',
+      billKey: 'au-federal-example',
+      onAsk: jest.fn(),
+      ...follow,
+    }),
+    rowMenus.record({ title: 'Speech', slug: 'speech-123' }),
+    rowMenus.place({
+      title: 'Grayndler',
+      path: '/subject/electorate/grayndler',
+      ...follow,
+    }),
+    rowMenus.following({
+      title: 'Anne',
+      path: '/subject/person/anne',
+      onUnfollow: jest.fn(),
+    }),
+    rowMenus.division({
+      billTitle: 'Bill',
+      billKey: 'au-federal-example',
+      ...follow,
+    }),
+  ];
+  for (const menu of menus) {
+    const root = render(
+      <RowLink href={href} menu={menu}>
+        <Pressable testID="row">
+          <Text>Anne</Text>
+        </Pressable>
+      </RowLink>,
+    ).root;
+    const leaves = menuLeaves(menu);
+    expect(
+      root.findAllByType(Link.MenuAction).map((node) => node.props.title),
+    ).toEqual(leaves.map((item) => item.title));
+    expect(
+      host(root, 'row').props.accessibilityActions.map(
+        (action: { name: string }) => action.name,
+      ),
+    ).toEqual(leaves.map((item) => item.title));
+    const action = jest.fn();
+    const target = render(
+      <RowLink href={href} menu={[{ title: 'Follow', onPress: action }]}>
+        <Pressable testID="row" />
+      </RowLink>,
+    ).root;
+    act(() =>
+      host(target, 'row').props.onAccessibilityAction({
+        nativeEvent: { actionName: 'Follow' },
+      }),
+    );
+    expect(action).toHaveBeenCalledTimes(1);
+  }
+});
+test('iPad selection prevents a push and suppresses the preview', () => {
+  const select = jest.fn(),
+    preventDefault = jest.fn();
+  const root = render(
+    <RowLink href={href} select={select}>
+      <Pressable testID="row" />
+    </RowLink>,
+  ).root;
+  expect(root.findAllByProps({ testID: 'native-preview' })).toHaveLength(0);
+  act(() => root.findByType(Link).props.onPress({ preventDefault }));
+  expect(preventDefault).toHaveBeenCalledTimes(1);
+  expect(select).toHaveBeenCalledTimes(1);
+  expect(router.push).not.toHaveBeenCalled();
+});
+test('Android uses Pressable navigation, long press and accessibility actions', () => {
+  Platform.OS = 'android';
+  const action = jest.fn();
+  const root = render(
+    <RowLink href={href} menu={[{ title: 'Copy link', onPress: action }]}>
+      <Pressable testID="row" />
+    </RowLink>,
+  ).root;
+  const control = root.find(
+    (node) =>
+      node.props.testID === 'row' && typeof node.props.onPress === 'function',
+  );
+  act(() => control.props.onPress());
+  expect(router.push).toHaveBeenCalledWith(href);
+  expect(typeof control.props.onLongPress).toBe('function');
+  act(() =>
+    host(root, 'row').props.onAccessibilityAction({
+      nativeEvent: { actionName: 'Copy link' },
+    }),
+  );
+  expect(action).toHaveBeenCalledTimes(1);
+});
+
+test.each([402, 414, 420])(
+  'Screen margin at %s pt and grouped inset surface',
+  (width) => {
+    size(1, width);
+    const root = render(
+      <Screen grouped testID="screen">
+        <InsetGroup header="Recent">
+          <LinkRow title="One" />
+          <LinkRow title="Two" />
+        </InsetGroup>
+      </Screen>,
+    ).root;
+    const scroll = root.findByType(ScrollView);
+    expect(flat(scroll.props.contentContainerStyle).paddingHorizontal).toBe(
+      width < 414 ? 16 : 20,
+    );
+    expect(flat(scroll.props.contentContainerStyle).paddingBottom).toBe(36);
+    expect(flat(scroll.props.style).backgroundColor).toEqual(colors.sunken);
+    expect(
+      root
+        .findAllByType(View)
+        .some(
+          (node) => flat(node.props.style)?.borderRadius === radii.container,
+        ),
+    ).toBe(true);
+  },
+);
+test('section actions stack at AX1+ and keep a named 44 pt target', () => {
+  size(1.786);
+  const root = render(
+    <SectionHeader
+      title="Bills"
+      action={{ accessibilityLabel: 'See all bills', href }}
+    />,
+  ).root;
+  expect(strings(root)).toEqual(['Bills', 'See all']);
+  expect(root.findByType(RowLink).props.href).toBe(href);
+  expect(
+    root.find((node) => typeof node.props.style === 'function').props
+      .accessibilityLabel,
+  ).toBe('See all bills');
+  expect(
+    rowStyle(root.find((node) => typeof node.props.style === 'function'))
+      .minHeight,
+  ).toBeGreaterThanOrEqual(44);
+});
+test('Screen registers its direct page heading as a title anchor', () => {
+  const root = render(
+    <Screen barTitle="Anne">
+      <Heading level={1} kind="page">
+        Anne
+      </Heading>
+    </Screen>,
+  ).root;
+  expect(root.findAllByType(TitleAnchor)).toHaveLength(1);
+});
+test('TileGrid lead spans the first pair, while the default spans an odd last tile', () => {
+  for (const lead of [false, true]) {
+    const root = render(
+      <TileGrid lead={lead}>
+        {[0, 1, 2].map((index) => (
+          <Tile
+            key={index}
+            title={`Tool ${index}`}
+            line="Explore the record"
+            symbol="number"
+            ink="navy"
+            href={href}
+          />
+        ))}
+      </TileGrid>,
+    ).root;
+    const tiles = root.findAllByType(Tile);
+    const widths = tiles.map(
+      (tile) => flat(tile.parent!.props.style).width as number,
+    );
+    expect(widths).toEqual(lead ? [402, 195, 195] : [195, 195, 402]);
+  }
+});
+test('cards have continuous corners and no outline; FaceStack stops at six', () => {
+  const root = render(
+    <Card testID="card">
+      <FaceStack
+        portraits={[null, null, null, null, null, null, null]}
+        max={10}
+      />
+    </Card>,
+  ).root;
+  expect(flat(host(root, 'card').props.style)).toMatchObject({
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+    padding: 20,
+  });
+  expect(flat(host(root, 'card').props.style).borderWidth).toBeUndefined();
+  expect(root.findAllByType(Portrait)).toHaveLength(6);
+});
+test('figures retain their required date and source; stat strips stack at AX1', () => {
+  size(1.786);
+  const source = { asOf: '2026-09-17', citation: 'ParlInfo' };
+  const root = render(
+    <FigureBlock
+      value="92"
+      label="Commonwealth grants"
+      source={source}
+      caveat="Recorded grants only"
+    />,
+  ).root;
+  expect(root.findByType(SourceLine).props).toMatchObject(source);
+  expect(strings(root)).toContain('Recorded grants only');
+  const strip = render(
+    <StatStrip
+      tiles={[
+        { value: '92', label: 'grants' },
+        { value: '12', label: 'programs' },
+      ]}
+      testID="strip"
+    />,
+  ).root;
+  expect(flat(host(strip, 'strip').props.style).flexDirection).toBe('column');
+});
+test('MachinePill is a named button on a navy wash and iOS choices draw checkmarks', () => {
+  const root = render(
+    <MachinePill
+      note={{
+        title: 'Machine-written',
+        body: ['Written from the public record.'],
+      }}
+      testID="machine"
+    />,
+  ).root;
+  expect(host(root, 'machine').props.accessibilityLabel).toBe(
+    'Machine-written',
+  );
+  expect(host(root, 'machine').props.accessibilityHint).toBe(
+    'Opens how this was written',
+  );
+  expect(root.findAllByType(Icon)[0]!.props.tone).toBe('navy');
+  const choice = render(
+    <ChoiceChip label="Bills" selected onPress={jest.fn()} />,
+  ).root;
+  expect(glyphs(choice)).toContain('checkmark');
+  expect(
+    rowStyle(choice.find((node) => typeof node.props.style === 'function'))
+      .minHeight,
+  ).toBeGreaterThanOrEqual(44);
+});
+test('PageFoot keeps independence and authorisation wording', () => {
+  expect(strings(render(<PageFoot variant="today" />).root)).toContain(
+    'OPAX is independent and non-partisan. It is not a government app.',
+  );
+  expect(
+    strings(render(<PageFoot variant="authorised" />).root).join(' '),
+  ).toContain('Authorised by Jake Tracey');
+});
+
+test('standard bill and person menus stay available when split rows select', () => {
+  for (const element of [
+    <BillRow
+      key="bill"
+      billKey="au-federal-example"
+      title="Bill"
+      status="Passed"
+      href="/bill/au-federal-example"
+      selected
+      select={jest.fn()}
+    />,
+    <PersonRow
+      key="person"
+      name="Anne"
+      href={href}
+      selected
+      select={jest.fn()}
+    />,
+  ]) {
+    const root = render(element).root;
+    const link = root.findByType(RowLink);
+    expect(typeof link.props.select).toBe('function');
+    expect(menuLeaves(link.props.menu).map((item) => item.title)).toContain(
+      'Follow',
+    );
+    expect(root.findAllByProps({ testID: 'native-preview' })).toHaveLength(0);
+  }
+});
+test('Screen sets the bar title only when the anchor threshold flips', () => {
+  const setOptions = jest.fn();
+  const navigation = {
+    setOptions,
+    isFocused: () => true,
+    addListener: () => () => undefined,
+  };
+  function MeasuredHeading() {
+    const report = useContext(TitleAnchorContext);
+    return (
+      <View testID="measured-heading" onLayout={() => report?.(100)}>
+        <Heading level={1} kind="page">
+          Anne
+        </Heading>
+      </View>
+    );
+  }
+  const root = render(
+    <NavigationContext.Provider value={navigation as never}>
+      <Screen barTitle="Anne">
+        <MeasuredHeading />
+      </Screen>
+    </NavigationContext.Provider>,
+  ).root;
+  act(() => host(root, 'measured-heading').props.onLayout());
+  setOptions.mockClear();
+  for (let index = 0; index < 40; index++)
+    act(() =>
+      root
+        .findByType(ScrollView)
+        .props.onScroll({ nativeEvent: { contentOffset: { y: 200 + index } } }),
+    );
+  expect(setOptions).toHaveBeenCalledTimes(1);
+  act(() =>
+    root
+      .findByType(ScrollView)
+      .props.onScroll({ nativeEvent: { contentOffset: { y: 0 } } }),
+  );
+  expect(setOptions).toHaveBeenCalledTimes(2);
+});
+
+test('a person menu follows the canonical identity instead of the route slug', async () => {
+  const root = render(<PersonRow name="Anne" href="/person/anne" />).root;
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  await act(async () => {
+    menuLeaves(root.findByType(RowLink).props.menu)
+      .find((item) => item.title === 'Follow')!
+      .onPress();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  expect(follow).toHaveBeenCalledWith({
+    kind: 'person',
+    id: 'person_0123456789abcdef01234567',
+    title: 'Anne',
+  });
+});
+
+test('Screen places its one offline line after the marked date', () => {
+  const root = render(
+    <Screen offline={{ savedAt: '2026-11-07' }}>
+      <ScreenHeader>
+        <Text>9 November</Text>
+      </ScreenHeader>
+      <Text>Latest records</Text>
+    </Screen>,
+  ).root;
+  expect(strings(root)).toEqual([
+    '9 November',
+    "You're offline. Showing what was saved on 7 Nov.",
+    'Latest records',
+  ]);
+});

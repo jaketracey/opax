@@ -2,6 +2,8 @@ import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import {
   asAtText,
+  cleanRecordTitle,
+  recordTitleStage,
   calendarDate,
   formatClock,
   formatCount,
@@ -204,5 +206,19 @@ describe('as-at lines', () => {
     );
     expect(votesAsAtText(null)).toBe('Record date not published');
     expect(votesAsAtText({ schema: 1 })).toBe('Record date not published');
+  });
+});
+
+describe('record row titles', () => {
+  test.each([
+    ['Example Bill - Second reading', 'Example Bill', 'Second reading'],
+    ['Example Bill \u2014 Third reading', 'Example Bill', 'Third reading'],
+    ['Budget \u2014 Economy \u2014 2026-09-17', 'Budget · Economy', null],
+    ['Economy · 2026-09-17T03:40:00Z', 'Economy', null],
+    ['A well-made plan', 'A well-made plan', null],
+    ['2026-09-17', '', null],
+  ])('cleans %s without a stage suffix or ISO date', (raw, title, stage) => {
+    expect(cleanRecordTitle(raw!)).toBe(title);
+    expect(recordTitleStage(raw!)).toBe(stage);
   });
 });
