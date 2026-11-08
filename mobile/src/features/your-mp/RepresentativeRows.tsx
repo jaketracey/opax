@@ -1,75 +1,115 @@
 import { CachedPortrait } from '../CachedPortrait';
 import { formatDate } from '../../design/format';
-import { router } from 'expo-router';
 import type { Electorate } from '../../api/catalogs';
 import { PersonRow, RowList } from '../../design/primitives';
-import {
-  CHAMBER_NOT_RECORDED,
-  chamberName,
-  jurisdictionName,
-} from '../../design/parliament';
+import { jurisdictionName } from '../../design/parliament';
 import { personRoute } from '../../navigation/routes';
 import { representativeProfile, type Directory } from './model';
+
+/**
+ * A seat's members as person rows. The place line ("Member for Grayndler,
+ * New South Wales") is left out by default: every screen that lists a
+ * seat's members already names the seat. `detailFor` gives each row its one
+ * fact ("Since 2 Mar 1996"); without it the row has no detail.
+ */
 export function RepresentativeRows({
   rows,
   directory,
-  asAt,
+  asAt: _asAt,
   id,
+  placeLine = false,
+  detailFor,
+  wrap = true,
 }: {
   rows: Electorate['representatives'];
   directory: Directory;
-  asAt: string | null;
+  /** @deprecated The block's date is in its source line. */
+  asAt?: string | null;
   id: string;
+  placeLine?: boolean;
+  detailFor?: (personId: string) => string | null | undefined;
+  /** False inside an InsetGroup, which owns the separators. */
+  wrap?: boolean;
 }) {
-  return (
-    <RowList>
-      {rows.map((r) => {
-        const profile = representativeProfile(r.person_id, directory);
-        const observations =
-          directory.people.data.people
-            .find((p) => p.person_id === r.person_id)
-            ?.electorates.filter((s) => s.current) ?? [];
-        const seat = profile?.seats[0] ?? observations[0];
-        const state = seat
-          ? directory.electorates.data.electorates.find(
-              (s) => s.electorate_id === seat.electorate_id,
-            )?.state_code
-          : undefined;
-        return (
-          <PersonRow
-            key={r.person_id}
-            testDrawnName
-            testID={`${id}-${profile?.slug ?? r.person_id}`}
-            name={r.person.name}
-            portrait={
-              <CachedPortrait name={r.person.name} slug={profile?.slug} />
-            }
-            party={profile?.party ?? r.party}
-            partyStatus={
-              profile?.partyStatus ??
-              (observations.length > 0 ? 'current' : 'unknown')
-            }
-            formerly={profile?.formerly}
-            place={
-              seat
-                ? `${seat.chamber === 'senate' ? 'Senator for' : 'Member for'} ${seat.name} · ${jurisdictionName(state ?? seat.jurisdiction) ?? 'Jurisdiction not recorded'}`
-                : undefined
-            }
-            // The chamber and the block's date are in its heading and caption.
-            detail={
-              seat
-                ? (chamberName(seat.chamber, seat.jurisdiction) ??
-                  CHAMBER_NOT_RECORDED)
-                : asAt
-                  ? `As at ${formatDate(asAt, 'short')}`
-                  : 'Date not published'
-            }
-            onPress={
-              profile ? () => router.push(personRoute(profile.slug)) : undefined
-            }
-          />
-        );
-      })}
-    </RowList>
-  );
+  const items = rows.map((r) => {
+    const profile = representativeProfile(r.person_id, directory);
+    const observations =
+      directory.people.data.people
+        .find((p) => p.person_id === r.person_id)
+        ?.electorates.filter((s) => s.current) ?? [];
+    const seat = profile?.seats[0] ?? observations[0];
+    const state = seat
+      ? directory.electorates.data.electorates.find(
+          (s) => s.electorate_id === seat.electorate_id,
+        )?.state_code
+      : undefined;
+    const place = jurisdictionName(state ?? seat?.jurisdiction);
+    return (
+      <PersonRow
+        key={r.person_id}
+        testDrawnName
+        testID={`${id}-${profile?.slug ?? r.person_id}`}
+        name={r.person.name}
+        portrait={<CachedPortrait name={r.person.name} slug={profile?.slug} />}
+        party={profile?.party ?? r.party}
+        // A current member's party is the roster's present party, never
+        // "unknown" when the roster row names one.
+        partyStatus={
+          profile?.partyStatus ??
+          (observations.length > 0 || r.party ? 'current' : 'unknown')
+        }
+        formerly={profile?.formerly}
+        place={
+          placeLine && seat
+            ? `${seat.chamber === 'senate' ? 'Senator for' : 'Member for'} ${seat.name}${place && place !== seat.name ? `, ${place}` : ''}`
+            : undefined
+        }
+        detail={detailFor?.(r.person_id) ?? undefined}
+        href={profile ? personRoute(profile.slug) : undefined}
+        menu={profile ? 'person' : []}
+      />
+    );
+  });
+  return wrap ? <RowList>{items}</RowList> : <>{items}</>;
+}
+
+/**
+ * "Since 2 Mar 1996" from the member's open term in this seat, at the
+ * precision the record gives; nothing when the start is less exact than a
+ * year (never guessed from the roster's first appearance).
+ */
+export function sinceLine(
+  terms: readonly {
+    person_id: string;
+    start: string | null;
+    start_precision: string;
+    end: string | null;
+    end_precision: string;
+  }[],
+  personId: string,
+): string | null {
+  const term = terms
+    .filter(
+      (t) => t.person_id === personId && (t.end_precision === 'open' || !t.end),
+    )
+    .sort((a, b) => (b.start ?? '').localeCompare(a.start ?? ''))[0];
+  const start = term && preciseDate(term.start, term.start_precision);
+  return start ? `Since ${start}` : null;
+}
+
+/** A date at its stated precision: "2 Mar 1996", "Mar 1996", "1996". */
+export function preciseDate(
+  date: string | null | undefined,
+  precision: string,
+): string | null {
+  if (!date) return null;
+  if (precision === 'day') return formatDate(date, 'short');
+  if (precision === 'month') {
+    const d = new Date(`${date.slice(0, 7)}-15T12:00:00`);
+    return Number.isFinite(d.getTime())
+      ? d.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' })
+      : null;
+  }
+  if (precision === 'year') return date.slice(0, 4);
+  return null;
 }

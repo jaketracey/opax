@@ -1,21 +1,13 @@
 import { useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { router } from 'expo-router';
+import { View } from 'react-native';
 import {
   Button,
-  EmptyState,
-  Field,
-  Group,
-  Heading,
-  InfoSheet,
-  LinkRow,
+  Disclosure,
+  InsetGroup,
   PersonRow,
-  RowList,
-  Section,
   Text,
 } from '../../design/primitives';
-import { formatCount, formatDate } from '../../design/format';
+import { formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import {
@@ -23,214 +15,45 @@ import {
   type Directory,
   type ElectorateView,
 } from '../your-mp/model';
-import { BlockSource, representationBlock } from '../your-mp/Evidence';
+import { preciseDate } from '../your-mp/RepresentativeRows';
 import { CachedPortrait } from '../CachedPortrait';
-import { representationAt, validDate } from './model';
+import { representationAt } from './model';
 
-/**
- * Representation over time: an "On a date" row that shows who represented
- * the seat on any date, then the dated service periods, newest first, and
- * one source line for both.
- */
-export function ElectorateHistory({
-  view,
-  directory,
-  asof,
-  onDate,
-}: {
-  view: ElectorateView;
-  directory: Directory;
-  /** The chosen date (YYYY-MM-DD), or '' for the latest check. */
-  asof: string;
-  onDate: (date: string) => void;
-}) {
-  // Each opening is a fresh sheet that starts from the chosen date.
-  const [open, setOpen] = useState(false),
-    [opening, setOpening] = useState(0);
-  const terms = [...view.terms].sort((a, b) =>
-    (b.start ?? '').localeCompare(a.start ?? ''),
-  );
-  const selected = asof ? representationAt(view, asof) : null;
-  const choose = (date: string) => {
-    setOpen(false);
-    onDate(date);
-    AccessibilityInfo.announceForAccessibility(
-      date
-        ? `Representation on ${formatDate(date)}`
-        : 'Latest verified representation',
+type Term = ElectorateView['terms'][number];
+const SHOWN = 4;
+
+/** Earlier service periods: ended terms, newest first. */
+export function pastTerms(view: Pick<ElectorateView, 'terms'>): Term[] {
+  return view.terms
+    .filter((t) => t.end_precision !== 'open' && !!t.end)
+    .sort(
+      (a, b) =>
+        (b.end ?? '').localeCompare(a.end ?? '') ||
+        (b.start ?? '').localeCompare(a.start ?? ''),
     );
-  };
-  const observed =
-    terms
-      .map((t) => t.observed_through)
-      .sort()
-      .at(-1) ?? null;
-  if (!terms.length && !selected) return null;
-  return (
-    <Section
-      title="Representation history"
-      accent="people"
-      testID="electorate-history"
-    >
-      <RowList>
-        <LinkRow
-          title="On a date"
-          value={asof ? formatDate(asof, 'short') : 'Latest'}
-          testID="electorate-date-picker"
-          accessibilityLabel={
-            asof
-              ? `View on a date, ${formatDate(asof)}`
-              : 'View representation on a date'
-          }
-          onPress={() => {
-            setOpening((n) => n + 1);
-            setOpen(true);
-          }}
-        />
-      </RowList>
-      {selected ? (
-        <Group gap={rhythm.tight} testID="electorate-dated-representation">
-          <Heading level={3}>{`Representation on ${formatDate(asof)}`}</Heading>
-          {selected.status === 'conflicting' ? (
-            <Text>Conflicting service records require review.</Text>
-          ) : selected.members.length ? (
-            <RowList>
-              {selected.members.map((r) => {
-                const person = view.people[r.person_id],
-                  profile = representativeProfile(r.person_id, directory);
-                return (
-                  <PersonRow
-                    key={r.person_id}
-                    name={
-                      person ? rosterName(person.name) : 'Unresolved person'
-                    }
-                    portrait={
-                      person ? (
-                        <CachedPortrait
-                          name={person.name}
-                          slug={profile?.slug}
-                        />
-                      ) : undefined
-                    }
-                    party={r.party}
-                    partyStatus="unknown"
-                    testID={`electorate-dated-${r.person_id}`}
-                    onPress={
-                      profile
-                        ? () => router.push(personRoute(profile.slug))
-                        : undefined
-                    }
-                  />
-                );
-              })}
-            </RowList>
-          ) : (
-            <EmptyState
-              message={
-                selected.status === 'verified'
-                  ? 'Vacant at this observation.'
-                  : 'No confirmed member for this date.'
-              }
-            />
-          )}
-          {/* The one caveat a dated answer needs, beside it. */}
-          <Text wordSafe variant="fine">
-            {selected.status === 'historical'
-              ? 'From dated service records; coverage may be incomplete.'
-              : selected.status === 'partial'
-                ? 'Partial roster; other members may be missing.'
-                : 'Election winners and present-day representation can differ.'}
-          </Text>
-          <Button
-            label="Latest check"
-            variant="quiet"
-            size="compact"
-            testID="electorate-date-latest"
-            onPress={() => choose('')}
-          />
-        </Group>
-      ) : null}
-      {terms.length ? (
-        <Text variant="fine">
-          {formatCount(terms.length)} service periods · newest first
-        </Text>
-      ) : null}
-      <RowList>
-        {terms.map((t, i) => {
-          const person = view.people[t.person_id],
-            profile = representativeProfile(t.person_id, directory);
-          const span = serviceSpan(t);
-          return (
-            <PersonRow
-              key={`${t.person_id}-${t.start}-${i}`}
-              name={person ? rosterName(person.name) : 'Unresolved person'}
-              portrait={
-                person ? (
-                  <CachedPortrait name={person.name} slug={profile?.slug} />
-                ) : undefined
-              }
-              detail={[
-                span,
-                t.party_periods
-                  .map((p) => p.party)
-                  .filter(Boolean)
-                  .join(' → '),
-                t.start_precision !== 'day'
-                  ? `Start precision: ${t.start_precision}`
-                  : null,
-              ]
-                .filter(Boolean)
-                .join('\n')}
-              testID={`electorate-history-${i}`}
-              onPress={
-                profile
-                  ? () => router.push(personRoute(profile.slug))
-                  : undefined
-              }
-            />
-          );
-        })}
-      </RowList>
-      {terms.length || selected ? (
-        <BlockSource
-          block={{
-            ...view.identity,
-            asAt: observed ?? view.identity.asAt,
-            sources: representationBlock({
-              ...view.identity,
-              sources: [
-                ...view.identity.sources,
-                ...(selected ? view.representatives.sources : []),
-              ],
-            }).sources,
-            stale:
-              view.identity.stale || (!!selected && view.representatives.stale),
-          }}
-          title="About representation history"
-          notes={[
-            'Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.',
-            'End dates are exclusive. Gaps indicate missing coverage.',
-            'On a date: representation is shown only as recorded in the dated release, and the outline is not a reconstruction of that date.',
-            'Explore each parliamentarian’s page for their speeches, divisions and other records.',
-          ]}
-          testID="electorate-history-source"
-        />
-      ) : null}
-      <DateSheet
-        key={opening}
-        view={view}
-        asof={asof}
-        open={open}
-        onClose={() => setOpen(false)}
-        onChoose={choose}
-      />
-    </Section>
-  );
 }
 
 /**
- * A service period in words: "2 Mar 1996 to 29 Jan 1996", and an open-ended
- * one as "Since 2 Mar 1996 (current at 9 Sep 2026)" (pass 5, P3-5).
+ * A past term in words: "13 Mar 1993 to 29 Jan 1996"; a start less exact
+ * than a day reads "From 1993 to 29 Jan 1996". The precision itself is
+ * never printed.
+ */
+export function termSpan(
+  t: Pick<Term, 'start' | 'start_precision' | 'end' | 'end_precision'>,
+): string | null {
+  const start = preciseDate(t.start, t.start_precision);
+  const end = preciseDate(t.end, t.end_precision);
+  if (!start && !end) return null;
+  if (!end) return start ? `Since ${start}` : null;
+  if (!start) return `To ${end}`;
+  return t.start_precision === 'day'
+    ? `${start} to ${end}`
+    : `From ${start} to ${end}`;
+}
+
+/**
+ * @deprecated The page reads termSpan; kept for the copy-helper tests.
+ * "13 Mar 1993 to 29 Jan 1996", or "Since 2 Mar 1996 (current at 9 Sep 2026)".
  */
 export function serviceSpan(t: {
   start?: string | null;
@@ -261,98 +84,146 @@ export function rosterName(name: string): string {
   );
 }
 
-/** The date picker: a native wheel, a typed date, and the roster's dates. */
-function DateSheet({
+function HistoryRow({
+  personId,
+  party,
+  detail,
   view,
-  asof,
-  open,
-  onClose,
-  onChoose,
+  directory,
+  testID,
+}: {
+  personId: string;
+  party: string | null;
+  detail: string | null;
+  view: ElectorateView;
+  directory: Directory;
+  testID: string;
+}) {
+  const person = view.people[personId];
+  const profile = representativeProfile(personId, directory);
+  const name = person ? rosterName(person.name) : 'Name not recorded';
+  return (
+    <PersonRow
+      name={name}
+      portrait={
+        person ? (
+          <CachedPortrait name={person.name} slug={profile?.slug} />
+        ) : undefined
+      }
+      party={party}
+      partyStatus="unknown"
+      detail={detail}
+      testID={testID}
+      // Only a member with a native profile links; others are plain text.
+      href={profile ? personRoute(profile.slug) : undefined}
+      menu={profile ? 'person' : []}
+    />
+  );
+}
+
+/**
+ * "Past members": earlier terms, newest first. Four rows, then "Show all
+ * {n}" with a fixed label. Nothing draws when the file holds none.
+ */
+export function ElectorateHistory({
+  view,
+  directory,
+  header = true,
 }: {
   view: ElectorateView;
-  asof: string;
-  open: boolean;
-  onClose: () => void;
-  onChoose: (date: string) => void;
+  directory: Directory;
+  /** False where the section header already says "Past members". */
+  header?: boolean;
 }) {
-  const dates = [...new Set(view.rosters.map((r) => r.as_of))].sort().reverse();
-  const [input, setInput] = useState(
-      asof || view.representatives.asAt || dates[0] || '',
-    ),
-    [invalid, setInvalid] = useState(false);
-  return (
-    <InfoSheet
-      visible={open}
-      onClose={onClose}
-      title="View on a date"
-      notes={[]}
-      testID="electorate-date-sheet"
-      extra={
-        <Group>
-          <DateTimePicker
-            testID="electorate-native-date-picker"
-            accessibilityLabel="View representation on a date"
-            value={
-              new Date(
-                `${validDate(input) ? input : dates[0] || '2000-01-01'}T12:00:00`,
-              )
-            }
-            mode="date"
-            display="spinner"
-            themeVariant="light"
-            onValueChange={(_, date) => {
-              if (date) {
-                setInput(
-                  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
-                );
-                setInvalid(false);
-              }
-            }}
-          />
-          <Field
-            label="Date (YYYY-MM-DD)"
-            testID="electorate-date-input"
-            value={input}
-            onChangeText={(date) => {
-              setInput(date);
-              setInvalid(false);
-            }}
-            autoCorrect={false}
-            autoCapitalize="none"
-            placeholder="YYYY-MM-DD"
-            multiline
-            scrollEnabled={false}
-            submitBehavior="blurAndSubmit"
-            keyboardType="numbers-and-punctuation"
-            returnKeyType="done"
-            error={invalid ? 'Enter a valid date as YYYY-MM-DD.' : undefined}
-          />
-          <Button
-            label="View"
-            variant="primary"
-            testID="electorate-date-view"
-            onPress={() => {
-              if (validDate(input)) onChoose(input);
-              else setInvalid(true);
-            }}
-          />
-          {dates.length ? (
-            <Group gap={rhythm.tight}>
-              <Heading level={3}>Roster observation dates</Heading>
-              <RowList>
-                {dates.map((date) => (
-                  <LinkRow
-                    key={date}
-                    title={formatDate(date)}
-                    testID={`electorate-date-${date}`}
-                    onPress={() => onChoose(date)}
-                  />
-                ))}
-              </RowList>
-            </Group>
-          ) : null}
-        </Group>
-      }
+  const [open, setOpen] = useState(false);
+  const terms = pastTerms(view);
+  if (!terms.length) return null;
+  const row = (t: Term, i: number) => (
+    <HistoryRow
+      key={`${t.person_id}-${t.start ?? ''}-${i}`}
+      personId={t.person_id}
+      party={t.party_periods.at(-1)?.party ?? t.source_party_label ?? null}
+      detail={termSpan(t)}
+      view={view}
+      directory={directory}
+      testID={`electorate-history-${i}`}
     />
+  );
+  return (
+    <View testID="electorate-past-members" style={{ gap: rhythm.groupHeader }}>
+      {header ? (
+        <Text variant="groupHeader" accessibilityRole="header">
+          Past members
+        </Text>
+      ) : null}
+      <InsetGroup>
+        {terms.slice(0, SHOWN).map(row)}
+        {terms.length > SHOWN ? (
+          <Disclosure
+            label={`Show all ${terms.length}`}
+            open={open}
+            onToggle={setOpen}
+            testID="electorate-history-all"
+          >
+            {() => <>{terms.slice(SHOWN).map((t, i) => row(t, i + SHOWN))}</>}
+          </Disclosure>
+        ) : null}
+      </InsetGroup>
+    </View>
+  );
+}
+
+/**
+ * The members recorded on a chosen date, in place of today's. The vacancy
+ * caveat lives in the section's source sheet.
+ */
+export function DatedMembers({
+  view,
+  directory,
+  asof,
+  onBackToToday,
+}: {
+  view: ElectorateView;
+  directory: Directory;
+  asof: string;
+  onBackToToday: () => void;
+}) {
+  const selected = representationAt(view, asof);
+  return (
+    <View
+      testID="electorate-dated-representation"
+      style={{ gap: rhythm.groupHeader }}
+    >
+      {selected.status === 'conflicting' ? (
+        <Text wordSafe testID="electorate-dated-conflict">
+          The records for this date disagree.
+        </Text>
+      ) : selected.members.length ? (
+        <InsetGroup>
+          {selected.members.map((r) => (
+            <HistoryRow
+              key={r.person_id}
+              personId={r.person_id}
+              party={r.party}
+              detail={null}
+              view={view}
+              directory={directory}
+              testID={`electorate-dated-${r.person_id}`}
+            />
+          ))}
+        </InsetGroup>
+      ) : (
+        <Text wordSafe testID="electorate-dated-none">
+          No member is recorded for this date.
+        </Text>
+      )}
+      <Button
+        label="Back to today"
+        variant="plain"
+        size="compact"
+        testID="electorate-date-latest"
+        onPress={onBackToToday}
+      />
+    </View>
   );
 }
