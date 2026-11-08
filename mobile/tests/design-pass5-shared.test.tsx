@@ -304,14 +304,17 @@ describe('title size cap at AX2 (P2-18)', () => {
   test('the title role stops at its AX2 size; other roles scale on', () => {
     expect(titleSizeCap('title', 1, 'ios')).toBe(1);
     expect(titleSizeCap('title', AX2, 'ios')).toBe(1);
-    // largeTitle ramp: 60pt at AX5, capped at AX2's 48pt.
-    expect(titleSizeCap('title', AX5, 'ios')).toBeCloseTo(48 / 60, 5);
-    expect(titleSizeCap('padTitle', AX5, 'ios')).toBeCloseTo(48 / 60, 5);
+    // recordTitle uses the title1 ramp: 58pt at AX5, capped at AX2's 43pt.
+    expect(titleSizeCap('title', AX5, 'ios')).toBeCloseTo(43 / 58, 5);
+    expect(titleSizeCap('padTitle', AX5, 'ios')).toBeCloseTo(43 / 58, 5);
     expect(titleSizeCap('heading', AX5, 'ios')).toBe(1);
     expect(titleSizeCap('body', AX5, 'ios')).toBe(1);
     expect(titleSizeCap('display', AX5, 'ios')).toBe(1);
-    // Android scales by the font scale itself: 34pt x 2 is held to 48pt.
-    expect(34 * 2 * titleSizeCap('title', 2, 'android')).toBeCloseTo(48, 5);
+    // Android scales by the font scale itself, capped at the same 43pt.
+    expect(titleSizeCap('title', 2, 'android')).toBeCloseTo(
+      43 / textStyles.recordTitle.fontSize / 2,
+      5,
+    );
   });
   test('a title at AX5 draws its font size scaled (the text cache ignores maxFontSizeMultiplier)', () => {
     setSize(AX5);

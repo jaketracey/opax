@@ -7,6 +7,7 @@ import { reconcileChats, pushChat } from '../src/features/ask/sync';
 import { useLocalSearchParams } from 'expo-router';
 import { chatsSnapshot } from '../src/features/ask/store';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
+import { rhythm } from '../src/design/tokens';
 const mockScroll = { scrollTo: jest.fn() };
 jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
@@ -255,7 +256,7 @@ test('a submitted question shows its live stages with Cancel and is revealed bel
     turn.props.onLayout({ nativeEvent: { layout: { y: 400 } } });
   });
   expect(mockScroll.scrollTo).toHaveBeenLastCalledWith(
-    expect.objectContaining({ y: 400 - 44 - 12 }),
+    expect.objectContaining({ y: 400 - 44 - rhythm.heading }),
   );
   await act(async () => {
     on!.stage('Searching the record');

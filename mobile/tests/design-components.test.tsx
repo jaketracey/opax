@@ -204,7 +204,9 @@ describe('StatusLabel', () => {
           <StatusLabel label="Before parliament" testID="s" />,
         ).root;
         s = flat(host(root, 's').props.style);
-        expect(nativeTexts(root)[0]!.props.dynamicTypeRamp).toBe('footnote');
+        expect(nativeTexts(root)[0]!.props.dynamicTypeRamp).toBe(
+          textStyles.capsule.dynamicTypeRamp,
+        );
       });
       return s;
     };
@@ -224,9 +226,7 @@ describe('Tag', () => {
     );
     expect(flat(face.props.style).borderRadius).toBe(radii.sm);
     expect(hex(flat(face.props.style).backgroundColor)).toBe(light.bronzeWash);
-    expect(hex(flat(nativeTexts(root)[0]!.props.style).color)).toBe(
-      light.bronzeInk,
-    );
+    expect(hex(flat(nativeTexts(root)[0]!.props.style).color)).toBe(light.navy);
     // No decorative hash: the label alone.
     expect(strings(root)).toEqual(['Housing']);
   });
@@ -462,7 +462,7 @@ describe('SourceLine and SourceSheet', () => {
     const [outer, name] = nativeTexts(root);
     expect(outer!.props.children[0]).toBe('Updated 4 Oct 2026 · ');
     expect(name!.props.children).toBe('AEC annual returns');
-    expect(hex(flat(name!.props.style).color)).toBe(light.bronzeInk);
+    expect(hex(flat(name!.props.style).color)).toBe(light.navy);
     expect(hex(flat(outer!.props.style).color)).toBe(light.inkSoft);
     // 32pt drawn, 44pt to touch.
     expect(pressedStyle(line, false).minHeight).toBe(
@@ -929,7 +929,7 @@ describe('Increase Contrast and Android high-contrast text', () => {
       lightHighContrast.inkSoft,
     );
     expect(strongHex(flat(name!.props.style).color)).toBe(
-      lightHighContrast.bronzeInk,
+      lightHighContrast.navy ?? light.navy,
     );
   });
   test('Android: High contrast text takes the same stronger roles', () => {

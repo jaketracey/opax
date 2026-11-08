@@ -369,8 +369,11 @@ describe('Android ⋯ menus', () => {
     const sheet = renderer.root.find(
       (n) => n.props.testID === 'android-menu' && typeof n.type === 'string',
     );
+    const { radii } = jest.requireActual<typeof import('../src/design/tokens')>(
+      '../src/design/tokens',
+    );
     expect(flat(sheet.props.style)).toMatchObject({
-      borderTopLeftRadius: 12,
+      borderTopLeftRadius: radii.md,
       // The gesture inset plus the tight rhythm.
       paddingBottom: 16 + 8,
     });
