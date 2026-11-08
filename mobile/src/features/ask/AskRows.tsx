@@ -64,9 +64,9 @@ export function sourceMenu(
 export function sourceRoute(source: Source): Href | null {
   if (!source.href.startsWith('/')) return null;
   try {
+    // A relative href needs no origin: drop any query or hash, keep the path.
     return (
-      fromWebPath(source.href) ??
-      fromWebPath(new URL(source.href, 'https://opax.com.au').pathname)
+      fromWebPath(source.href) ?? fromWebPath(source.href.split(/[?#]/, 1)[0]!)
     );
   } catch {
     return null;
