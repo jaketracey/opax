@@ -46,7 +46,7 @@ name: 03 Read a sourced profile
 # gone; e2e shows the destination locally.
 - tapOn:
     id: person-source
-- assertVisible: Original records
+- assertVisible: Sources
 - takeScreenshot: ${EVIDENCE}/03-source-sheet
 - tapOn: .*OpenAustralia parliamentary service records.*
 - extendedWaitUntil:

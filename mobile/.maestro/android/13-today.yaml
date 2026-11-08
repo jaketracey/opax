@@ -165,11 +165,10 @@ name: 13 Today front page, its native records and dated original sources
 - tapOn:
     id: today-sources
 - extendedWaitUntil:
-    visible: Original records
+    visible: Sources
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/13-sources-sheet
-- tapOn:
-    id: today-sources-sheet-done
+- tapOn: Done
 - assertVisible:
     id: today-screen
 # The independence line closes the page (design review D4).
