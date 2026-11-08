@@ -106,6 +106,8 @@ describe('iPhone suite', () => {
       .filter((name) => /^\d\d[a-z]?-.*\.yaml$/.test(name))
       .filter((name) => !/-(open-profile|scene-lifecycle)\.yaml$/.test(name))
       .filter((name) => !name.includes('ipad'))
+      // Needs the -OPAXSeedFollows e2e seed before it gets a separate run.
+      .filter((name) => name !== '26c-follow-limit.yaml')
       .map((name) => `.maestro/${name}`)
       .filter((path) => !covered.has(path));
     expect(missing).toEqual([]);
@@ -142,7 +144,9 @@ describe('Maestro lane ports', () => {
     (fixture) => {
       const result = port(fixture);
       expect(result.status).toBe(2);
-      expect(result.stderr).toContain('OPAX_FIXTURE_PORT must be in 8900..8999');
+      expect(result.stderr).toContain(
+        'OPAX_FIXTURE_PORT must be in 8900..8999',
+      );
     },
   );
 });

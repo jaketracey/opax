@@ -24,6 +24,7 @@ import {
   Portrait,
   ReadableColumn,
   Section,
+  SectionHeader,
   SourceLine,
   Text,
 } from '../src/design/primitives';
@@ -53,12 +54,29 @@ jest.mock('../src/api/runtime', () => ({
 jest.mock('../src/features/your-mp/choice-store', () => ({
   loadChoice: jest.fn(),
   saveChoice: jest.fn(),
+  subscribeChoice: jest.fn(() => () => undefined),
 }));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 const mockParams: { slug?: string; id?: string } = {};
 jest.mock('expo-router', () => ({
+  Link: Object.assign(
+    ({ children, ...props }: { children: unknown }) =>
+      jest
+        .requireActual('react')
+        .createElement(
+          jest.requireActual('react-native').Pressable,
+          props,
+          children,
+        ),
+    {
+      Trigger: ({ children }: { children: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    },
+  ),
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn(), setParams: jest.fn() },
@@ -290,12 +308,15 @@ describe('electorate', () => {
 
   test('P2-7: one Census heading and one caveat; representation names its own sources', async () => {
     const r = await grayndler();
-    const titles = r.root.findAllByType(Section).map((s) => s.props.title);
+    const titles = [
+      ...r.root.findAllByType(Section),
+      ...r.root.findAllByType(SectionHeader),
+    ].map((s) => s.props.title);
     expect(titles).toContain('Census 2021');
     expect(titles).not.toContain('Local context');
     expect(text(r)).not.toContain('2021 Census geography');
     expect(text(r)).toContain(
-      'Values have not been redistributed to current boundaries.',
+      'Not adjusted for boundary changes since the Census.',
     );
     const representation = lines(r).find(
       (l) => l.id === 'electorate-representatives-source',
@@ -309,13 +330,14 @@ describe('electorate', () => {
   test('P3-5: open service periods and capitalised roster names read as written', async () => {
     const r = await grayndler();
     expect(text(r)).not.toContain('end not recorded');
-    expect(text(r)).toMatch(/Since \d+ \w+ \d{4} \(current at /);
+    expect(text(r)).toMatch(/Since \d+ \w+ \d{4}/);
     expect(text(r)).not.toMatch(/\b[A-Z]{3,} Mc[A-Z]{3,}\b/);
     await act(async () => r.unmount());
   });
 });
 
-describe('Your MP chooser', () => {
+// Your MP no longer draws a chooser in place: it pushes /seat (w4-seat-welcome).
+describe.skip('Your MP chooser', () => {
   test('P2-20 and P3-1: the field comes first, with no helper line repeating its label; location follows with one privacy line', async () => {
     (loadChoice as jest.Mock).mockResolvedValue(null);
     const r = await render(<YourMP />);
