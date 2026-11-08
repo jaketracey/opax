@@ -239,7 +239,10 @@ describe('Account › Ask', () => {
     const [title, actions] = jest.mocked(confirmAction).mock.calls[0]!;
     expect(title).toBe('Delete all conversations?');
     expect(actions).toEqual([
-      expect.objectContaining({ title: 'Delete', destructive: true }),
+      expect.objectContaining({
+        title: 'Delete All Conversations',
+        destructive: true,
+      }),
     ]);
     await act(async () => actions[0]!.onPress());
     expect(clearAskConversations).toHaveBeenCalled();

@@ -4,11 +4,33 @@ import { Stack, Tabs, router, useLocalSearchParams } from 'expo-router';
 import { ExpoRoot } from 'expo-router/build/ExpoRoot';
 import { store } from 'expo-router/build/global-state/router-store';
 import { inMemoryContext } from 'expo-router/build/testing-library/context-stubs';
-import { Text } from 'react-native';
-import { AskAbout } from '../src/features/ask/AskAbout';
+import { Pressable, Text } from 'react-native';
+import { scopedQuestion } from '../src/features/ask/AskAbout';
 import { DocumentAsk } from '../src/features/ask/DocumentAsk';
+import { useOpenAsk } from '../src/features/ask/open';
+import { askSession } from '../src/features/ask/session';
+import { client } from '../src/api/runtime';
 import { decodeDocument } from '../src/features/records/model';
 import fixtures from '../scripts/fixtures/records/contracts.json';
+
+jest.mock('../src/api/runtime', () => ({
+  client: { askPost: jest.fn() },
+  catalogs: {
+    roster: jest.fn().mockRejectedValue(new Error('Offline')),
+    slugs: jest.fn(),
+  },
+}));
+jest.mock('../src/features/ask/store', () => {
+  const saved = { v: 1, active: null, chats: [] };
+  return {
+    chatsSnapshot: jest.fn(() => saved),
+    subscribeChats: () => () => {},
+    subscribeChatDeletion: () => () => {},
+    loadChats: jest.fn().mockResolvedValue(undefined),
+    saveChats: jest.fn().mockResolvedValue(undefined),
+    forgetActiveChat: jest.fn(),
+  };
+});
 
 const speech = Object.entries(fixtures.responses)
   .filter(([path]) => path.startsWith('/api/resource/'))
@@ -19,9 +41,16 @@ function AskDraft() {
   const params = useLocalSearchParams<{ question?: string }>();
   return <Text testID="ask-question">{params.question}</Text>;
 }
+// As profile, bill, party and seat pages call it (PageActions, BillDetail).
 const entry = (kind: 'person' | 'bill' | 'party' | 'electorate') =>
   function Entry() {
-    return <AskAbout kind={kind} name="Synthetic Example" />;
+    const openAsk = useOpenAsk();
+    return (
+      <Pressable
+        testID={`${kind}-ask`}
+        onPress={() => openAsk(scopedQuestion(kind, 'Sam Placeholder'))}
+      />
+    );
   };
 const record = () => <DocumentAsk doc={speech} />;
 const shared = {
@@ -67,6 +96,8 @@ async function render() {
 afterEach(async () => {
   await act(async () => mounted?.unmount());
   mounted = null;
+  askSession.start();
+  askSession.setDraft('');
 });
 async function press(view: TestRenderer.ReactTestRenderer, testID: string) {
   await act(async () => {
@@ -93,6 +124,10 @@ test.each(entries)(
     expect(route().pathname).toBe('/ask');
     expect(route().segments).toEqual(['(tabs)', '(today)', 'ask']);
     expect(route().params.question).toMatch(/\?$/);
+    // The draft is in the composer of a new conversation; nothing is sent.
+    expect(askSession.snapshot().draft).toBe(route().params.question);
+    expect(askSession.snapshot().thread).toEqual([]);
+    expect(client.askPost).not.toHaveBeenCalled();
   },
 );
 
@@ -135,3 +170,79 @@ test.each([
     }
   },
 );
+
+test('the drafts use the journey wording and the person entry sets Person and Speeches', () => {
+  expect(scopedQuestion('person', 'Sam Placeholder')).toEqual({
+    question: 'What has Sam Placeholder said in parliament this year?',
+    speaker: 'Sam Placeholder',
+    kind: 'speech',
+  });
+  expect(scopedQuestion('person', 'Sam Placeholder', 'housing').question).toBe(
+    'What did Sam Placeholder say about housing?',
+  );
+  expect(scopedQuestion('bill', 'Example Bill 2026').question).toBe(
+    'What did parliament say about the Example Bill 2026?',
+  );
+  expect(scopedQuestion('party', 'Example Party').question).toBe(
+    'What have Example Party members said in parliament this year?',
+  );
+  expect(scopedQuestion('electorate', 'Example').question).toBe(
+    'What has parliament said about Example?',
+  );
+});
+
+test('an arrival starts a new conversation even when one is open', async () => {
+  const view = await render();
+  // A finished conversation on screen.
+  jest.mocked(client.askPost).mockResolvedValueOnce({
+    answer: 'A fixture answer.',
+    citations: {},
+    sources: [],
+  });
+  await act(async () => {
+    await askSession.submit('An earlier question?');
+  });
+  const earlier = askSession.snapshot().id;
+  expect(askSession.snapshot().thread).toHaveLength(2);
+  await act(async () => router.push('/person/sam-placeholder'));
+  await press(view, 'person-ask');
+  expect(askSession.snapshot().id).not.toBe(earlier);
+  expect(askSession.snapshot().thread).toEqual([]);
+  expect(askSession.snapshot().options).toMatchObject({
+    speaker: 'Sam Placeholder',
+    kind: 'speech',
+  });
+  expect(client.askPost).toHaveBeenCalledTimes(1);
+});
+
+test('an arrival never cancels a running answer; its draft waits for a new conversation', async () => {
+  const view = await render();
+  let finish: (v: unknown) => void = () => {};
+  jest
+    .mocked(client.askPost)
+    .mockReset()
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+  let running!: Promise<void>;
+  act(() => {
+    running = askSession.submit('A running question?');
+  });
+  await act(async () => router.push('/party/example'));
+  await press(view, 'party-ask');
+  expect(askSession.snapshot()).toMatchObject({
+    busy: true,
+    fresh: true,
+    draft: 'What have Sam Placeholder members said in parliament this year?',
+  });
+  expect(client.askPost).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    finish({ answer: 'A fixture answer.', citations: {}, sources: [] });
+    await running;
+  });
+  expect(askSession.snapshot().thread).toHaveLength(2);
+  expect(askSession.snapshot().fresh).toBe(true);
+});

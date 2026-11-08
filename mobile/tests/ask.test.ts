@@ -464,7 +464,7 @@ describe('journeys/ask.md 4.2, 4.4 and 4.14: arrivals, stop and try again', () =
       path === '/api/followups'
         ? Promise.resolve({ questions: [] })
         : new Promise((resolve, reject) => {
-          release = resolve;
+            release = resolve;
             signal.addEventListener('abort', () =>
               reject(new AskFailure('cancelled', 'Cancelled.')),
             );
@@ -567,19 +567,63 @@ describe('Answered as (journeys/ask.md 4.5)', () => {
   const names = ['Sam Placeholder'];
   const topics = ['Housing'];
   test.each([
-    ['case only', 'what did parliament say about housing?', 'What did parliament say about housing?', false],
-    ['punctuation only', 'What did parliament say about housing', 'What did parliament say about housing?', false],
-    ['name expanded', 'What has Placeholder said about housing this year?', 'What has Sam Placeholder said about housing this year?', false],
-    ['pronoun resolved', 'How did they vote on it in the end?', 'How did each party vote on the Example Bill 2026?', true],
-    ['three-word reply', 'and the Greens', 'What have the Greens said about housing?', true],
-    ['person added', 'What was said about housing last week?', 'What did Sam Placeholder say about housing last week?', true],
-    ['year added', 'What was said about housing in parliament?', 'What was said about housing in parliament in 2025?', true],
-    ['topic added', 'What did the Example Party promise at the election?', 'What did the Example Party promise on housing at the election?', true],
+    [
+      'case only',
+      'what did parliament say about housing?',
+      'What did parliament say about housing?',
+      false,
+    ],
+    [
+      'punctuation only',
+      'What did parliament say about housing',
+      'What did parliament say about housing?',
+      false,
+    ],
+    [
+      'name expanded',
+      'What has Placeholder said about housing this year?',
+      'What has Sam Placeholder said about housing this year?',
+      false,
+    ],
+    [
+      'pronoun resolved',
+      'How did they vote on it in the end?',
+      'How did each party vote on the Example Bill 2026?',
+      true,
+    ],
+    [
+      'three-word reply',
+      'and the Greens',
+      'What have the Greens said about housing?',
+      true,
+    ],
+    [
+      'person added',
+      'What was said about housing last week?',
+      'What did Sam Placeholder say about housing last week?',
+      true,
+    ],
+    [
+      'year added',
+      'What was said about housing in parliament?',
+      'What was said about housing in parliament in 2025?',
+      true,
+    ],
+    [
+      'topic added',
+      'What did the Example Party promise at the election?',
+      'What did the Example Party promise on housing at the election?',
+      true,
+    ],
   ])('%s', (_label, question, askedAs, shown) => {
     expect(showAnsweredAs(question, askedAs, { names, topics })).toBe(shown);
   });
   test('the Worker’s rewrite kind settles it when sent', () => {
-    expect(showAnsweredAs('and the Greens', 'What have the Greens said?', { rewriteKind: 'wording' })).toBe(false);
+    expect(
+      showAnsweredAs('and the Greens', 'What have the Greens said?', {
+        rewriteKind: 'wording',
+      }),
+    ).toBe(false);
   });
 });
 
