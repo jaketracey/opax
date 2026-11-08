@@ -483,10 +483,6 @@ const uiTexts = (r: import('react-test-renderer').ReactTestRenderer) => {
     .map((n) => flat(n.props.children))
     .filter(Boolean);
 };
-const labelsOf = (r: import('react-test-renderer').ReactTestRenderer) =>
-  r.root
-    .findAll((n) => typeof n.props.accessibilityLabel === 'string')
-    .map((n) => n.props.accessibilityLabel as string);
 async function render(element: unknown) {
   const { act } = jest.requireActual('react');
   const TestRenderer = jest.requireActual('react-test-renderer');
