@@ -41,7 +41,12 @@ import {
 } from './your-mp/ElectorateCard';
 import { forgetSeat } from './your-mp/forget';
 import { LatestRows } from './your-mp/LatestRows';
-import { latelyFor, latelySource, LATELY_LIMIT, markLatelySeen } from './your-mp/latest';
+import {
+  latelyFor,
+  latelySource,
+  LATELY_LIMIT,
+  markLatelySeen,
+} from './your-mp/latest';
 import { officialPageFor } from './your-mp/MemberHeroRow';
 import {
   type Directory,
@@ -55,11 +60,7 @@ import {
 } from './your-mp/RepresentativesGroup';
 import { seatLine } from './your-mp/state-names';
 import { showsVictorianSection, StateMembers } from './your-mp/StateMembers';
-import {
-  migratedSeat,
-  savedSeatDirectory,
-  useSeat,
-} from './your-mp/useSeat';
+import { migratedSeat, savedSeatDirectory, useSeat } from './your-mp/useSeat';
 
 const house = (s: Electorate) =>
   s.jurisdiction === 'federal' && s.chamber === 'representatives';
@@ -156,8 +157,10 @@ export default function YourMP() {
     attempt,
   );
   // The spinner stays until the last block of the pull settles.
+  // With no seat there are no blocks, so the pull ends at once.
   const refreshing =
     pulledAt === attempt &&
+    home &&
     (view.status === 'loading' ||
       electorate.status === 'loading' ||
       (!!member && profile.status === 'loading'));
@@ -177,10 +180,7 @@ export default function YourMP() {
   const official = home
     ? officialPageFor(person?.source_url, federal!.jurisdiction)
     : null;
-  const victorian = showsVictorianSection(
-    home ? federal : null,
-    stateSeatIds,
-  );
+  const victorian = showsVictorianSection(home ? federal : null, stateSeatIds);
   const removeState = useCallback(() => {
     void seat.removeState().catch(() => undefined);
   }, [seat]);
@@ -421,12 +421,15 @@ function Lately({
   const ref = useRef<View>(null);
   const follows = useFollows();
   const own = follows?.find(
-    (f) => f.kind === 'person' && followKey(f) === followKey({ kind: 'person', id: personId }),
+    (f) =>
+      f.kind === 'person' &&
+      followKey(f) === followKey({ kind: 'person', id: personId }),
   );
   const keys = state.status === 'ready' ? state.records.map((r) => r.key) : [];
   // Only when the reader follows their own MP: the rows shown become seen.
   useSeenOnView(ref, own ? keys : [], (shown) => {
-    if (own && shown.length) void markLatelySeen(own, shown).catch(() => undefined);
+    if (own && shown.length)
+      void markLatelySeen(own, shown).catch(() => undefined);
   });
   if (state.status === 'empty') return null;
   return (
