@@ -8,6 +8,7 @@ import { MACHINE_BRIEF_EXPLANATION, MachineLabel } from '../../design/labels';
 import { RecordRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
 import { ContentUnavailable, Skeleton } from '../../design/states';
+import { phoneCopy } from '../../design/phone-copy';
 import { Text } from '../../design/text';
 import { chamberName } from '../../design/parliament';
 import { formatCount, formatDate } from '../../design/format';
@@ -212,7 +213,7 @@ export default function RecordList({
             }
             title={
               load.status === 'error' && load.offline
-                ? 'Not saved on this iPhone yet'
+                ? phoneCopy('Not saved on this iPhone yet')
                 : `Couldn’t load ${title.toLowerCase()}`
             }
             body={

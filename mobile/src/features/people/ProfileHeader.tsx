@@ -3,6 +3,7 @@ import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Link, type Href } from 'expo-router';
 import { Heading, Text } from '../../design/text';
 import { Icon } from '../../design/icon';
+import { symbols } from '../../design/symbols';
 import { LinkRow } from '../../design/rows';
 import { FollowButton } from '../../design/controls';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -42,6 +43,7 @@ export function PartyDot({ party }: { party: string | null | undefined }) {
         width: size,
         height: size,
         borderRadius: size / 2,
+        borderCurve: 'continuous',
         backgroundColor: colour,
       }}
     />
@@ -145,7 +147,7 @@ export function ProfileHeader({
             testID={`${testID}-your-mp`}
           >
             <Icon
-              name="building.columns"
+              name={symbols.yourMP}
               size={15}
               maxScale={1.5}
               tone="inkSoft"

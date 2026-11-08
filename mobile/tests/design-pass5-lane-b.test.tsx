@@ -176,9 +176,10 @@ describe('profile', () => {
         'More from the record',
       ].includes(t),
     );
+    // The pinned catalogs hold no register file for him, so Declared
+    // interests collapses (a file not held is not news).
     expect(order).toEqual([
       'Voting record',
-      'Declared interests',
       'Pay',
       'Expenses',
       'Party receipts',

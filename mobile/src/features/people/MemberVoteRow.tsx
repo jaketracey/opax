@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import type { Href } from 'expo-router';
 import { StatusCapsule } from '../../design/labels';
 import { Icon } from '../../design/icon';
+import { symbols } from '../../design/symbols';
 import { RowLink } from '../../design/row-link';
 import { Text } from '../../design/text';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -51,7 +52,7 @@ export function MemberVoteRow({
         </Text>
       </View>
       {href ? (
-        <Icon name="chevron.right" size={13} maxScale={1.5} tone="inkFaint" />
+        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkFaint" />
       ) : null}
     </View>
   );

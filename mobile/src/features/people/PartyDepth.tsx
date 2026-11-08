@@ -13,11 +13,11 @@ import {
   formatFinancialYear,
   formatMoney,
   formatMoneyCompact,
-  moneyAccessibilityLabel,
 } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
 import { ReadDate, useRead } from './Sections';
 import { receiptsSeries } from './model';
+import { Amount } from './FinancialBlocks';
 
 export type Funding = Awaited<ReturnType<typeof peopleDepth.funding>>;
 const fy = (year: string) => formatFinancialYear(Number(year.slice(0, 4)));
@@ -25,32 +25,6 @@ const fy = (year: string) => formatFinancialYear(Number(year.slice(0, 4)));
 /** The AEC annual-returns read, shared by Each year's return and Debts. */
 export function usePartyFunding() {
   return useRead(() => peopleDepth.funding(), 'funding');
-}
-
-/** A money figure and its line, the figure in money ink. */
-function MoneyFigure({
-  amount,
-  line,
-  testID,
-}: {
-  amount: number;
-  line: string;
-  testID?: string;
-}) {
-  return (
-    <View
-      accessible
-      accessibilityLabel={`${moneyAccessibilityLabel(amount)}, ${line}`}
-      testID={testID}
-    >
-      <Text wordSafe variant="figure" tone="moneyInk" tabular>
-        {formatMoney(amount)}
-      </Text>
-      <Text wordSafe variant="secondary">
-        {line}
-      </Text>
-    </View>
-  );
 }
 
 /** The notes the returns and debts carry into their section's source sheet. */
@@ -145,7 +119,7 @@ export function PartyDebts({
   return (
     <View style={styles.block} testID="party-debts">
       <Heading level={3}>Debts</Heading>
-      <MoneyFigure
+      <Amount
         amount={d.total}
         line={`owed at 30 June ${Number(d.year.slice(0, 4)) + 1}`}
         testID="party-debts-total"

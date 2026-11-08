@@ -28,8 +28,8 @@ import { payRateLine } from './model';
 export const possessive = (name: string) =>
   /s$/i.test(name) ? `${name}’` : `${name}’s`;
 
-/** The block's figure: `figure` role, money ink, its line under it. */
-function MoneyFigure({
+/** A block's amount: `figure` role, money ink, its line under it. */
+export function Amount({
   amount,
   line,
   testID,
@@ -107,7 +107,7 @@ export function PayBlock({
       {(p) => (
         <Group>
           {p.person.now ? (
-            <MoneyFigure
+            <Amount
               amount={p.person.now.salary}
               line={payRateLine(p).line}
               testID={`${id}-salary`}
@@ -223,7 +223,7 @@ export function ExpensesBlock({
     >
       {(e) => (
         <Group>
-          <MoneyFigure
+          <Amount
             amount={e.person.total}
             line={`claimed ${formatYearRange(e.person.from, e.person.to)}`}
             testID={`${id}-total`}

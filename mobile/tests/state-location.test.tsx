@@ -43,6 +43,12 @@ jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 jest.mock('expo-router', () => ({
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   useSegments: () => [],
   useLocalSearchParams: () => ({}),
   router: { push: jest.fn() },
@@ -181,7 +187,8 @@ describe('Your MP state chooser', () => {
   }
   const pressable = (r: TestRenderer.ReactTestRenderer, testID: string) =>
     r.root.findAll(
-      (n) => n.props?.testID === testID && typeof n.props.onPress === 'function',
+      (n) =>
+        n.props?.testID === testID && typeof n.props.onPress === 'function',
     )[0]!;
   const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
     r.root.findAll((n) => n.props?.testID === testID).length > 0;
@@ -213,7 +220,9 @@ describe('Your MP state chooser', () => {
     );
     expect(Location.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(has(r, 'state-location-suggestion')).toBe(true);
-    await act(async () => pressable(r, 'state-location-confirm').props.onPress());
+    await act(async () =>
+      pressable(r, 'state-location-confirm').props.onPress(),
+    );
     expect(saveChoice).toHaveBeenLastCalledWith(
       expect.objectContaining({ stateSeatIds: [essendon.electorate_id] }),
     );

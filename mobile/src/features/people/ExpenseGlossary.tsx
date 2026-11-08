@@ -162,7 +162,6 @@ export default function ExpenseGlossary() {
                           <Text
                             wordSafe
                             variant="strong"
-                            tone="moneyInk"
                             testID="expense-glossary-own"
                           >
                             {`${person} claimed ${formatMoney(amount)}${years ? `, ${years}` : ''}`}

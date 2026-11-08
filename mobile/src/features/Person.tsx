@@ -17,6 +17,7 @@ import { Group, Screen } from '../design/layout';
 import { LinkRow } from '../design/rows';
 import { StatStrip, type StatTileProps } from '../design/record';
 import { ContentUnavailable, LoadingState, Skeleton } from '../design/states';
+import { phoneCopy } from '../design/phone-copy';
 import { Text } from '../design/text';
 import { VoteSplit } from '../design/charts';
 import { isPartyLabel } from '../design/party';
@@ -311,7 +312,7 @@ export function ProfileScreen({
             load.offline ? (
               <ContentUnavailable
                 symbol="wifi.slash"
-                title="Not saved on this iPhone yet"
+                title={phoneCopy('Not saved on this iPhone yet')}
                 body="It will load when you’re back online."
                 action={{ label: 'Try again', onPress: refresh }}
                 testID="person-error"
