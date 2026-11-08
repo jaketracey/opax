@@ -1,16 +1,23 @@
 appId: au.com.opax.app
 ---
+# The List | Map picker sits just under the title and summary line; List is
+# its first segment.
 - runFlow:
     file: money-screen-scroll-up.yaml
     env:
-      TARGET_ID: money-mode-list
+      TARGET_ID: money-title
 # A hierarchy element can be reported visible while UIKit's bar covers its centre.
 - swipe:
     start: 97%, 30%
     end: 97%, 85%
     duration: 600
-- tapOn:
-    id: money-mode-list
+# A native segment: tap and assert it by its label.
+- tapOn: List
 - assertVisible:
-    id: money-mode-list
+    text: List
     selected: true
+# Donors is the List view's first section.
+- runFlow:
+    file: money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-donors

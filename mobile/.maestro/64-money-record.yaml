@@ -1,0 +1,119 @@
+appId: au.com.opax.app
+name: 64 Money record for a donor in two registers, a grant recipient, a supplier and a missing record
+---
+- launchApp
+# A donor on the map that also holds Commonwealth contracts: originals first,
+# then donations and contracts side by side under one caveat, never summed.
+- openLink: opax://money-record?node=donor%3Awestpac%20banking%20corporation
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Westpac Banking Corporation
+    timeout: 120000
+- assertVisible:
+    id: money-record-screen
+- assertVisible:
+    id: money-record-both-caveat
+    text: Appearing in both registers doesn.t show that one led to the other\.
+- assertVisible:
+    id: money-record-originals
+- assertVisible:
+    id: money-record-original-0
+    text: AEC Transparency Register · returns for Westpac Banking Corporation.*
+- assertVisible:
+    id: money-record-original-1
+    text: AusTender · contracts with Westpac Banking Corporation.*
+- takeScreenshot: ${EVIDENCE}/64-donor
+- scrollUntilVisible:
+    element:
+      id: money-record-donations
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: money-focus-amount
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- assertVisible: 105\.8 million dollars, disclosed to 8 parties, 1998–99 to 2025–26
+- assertVisible:
+    id: money-focus-flows
+- scrollUntilVisible:
+    element:
+      id: money-record-contracts
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: money-focus-contracts
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- assertVisible: 78\.1 million dollars, in 59 contracts, 2007–08 to 2025–26
+- takeScreenshot: ${EVIDENCE}/64-donor-contracts
+# A grant recipient by its rid and jurisdiction.
+- openLink: opax://money-record?rid=abn%3A11602416697&jur=federal
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: WA Primary Health Alliance Limited
+    timeout: 120000
+- assertVisible:
+    id: money-record-original-0
+    text: GrantConnect · awards to WA Primary Health Alliance Limited.*
+- scrollUntilVisible:
+    element:
+      id: money-focus-grants
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+# Totals only: the recipient's grants, counted, with their years.
+- assertVisible: 3\.2 billion dollars, in 162 grants, 2014–15 to 2026–27
+- takeScreenshot: ${EVIDENCE}/64-recipient
+# A supplier by its rid and the agency it holds contracts with (the
+# per-supplier files are not on the API allow-list).
+- openLink: opax://money-record?rid=s-d921acc93dfeadc7a1f7&agency=a-aaa167b0097858604254
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: FMS Account Reserve Bank of Australia
+    timeout: 120000
+- assertVisible:
+    id: money-record-original-0
+    text: AusTender · contracts with FMS Account Reserve Bank of Australia.*
+- scrollUntilVisible:
+    element:
+      id: money-focus-contracts
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- assertVisible: 28\.7 billion dollars, in 149 contracts with Department of Defence, started 2006 to 2026
+- scrollUntilVisible:
+    element:
+      id: money-record-contract-0
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/64-supplier
+# A record that isn't in the registers says so plainly.
+- openLink: opax://money-record?rid=abn%3A00000000000&jur=federal
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: money-node-missing
+    timeout: 120000
+- assertVisible: Not in the latest grant records
+- takeScreenshot: ${EVIDENCE}/64-missing

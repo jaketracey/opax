@@ -17,9 +17,13 @@ name: Cold money map and ranked list from disk cache with the fixture stopped
     visible:
       id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
     timeout: 90000
+# The map lands in the Today stack: the tab bar stays and the back button
+# names Today.
 - assertVisible:
     id: tab-today
 - assertVisible: Today
+- assertVisible:
+    id: money-view-summary
 - takeScreenshot: ${EVIDENCE}/23-offline-map
 - runFlow:
     file: money-screen-list.yaml
