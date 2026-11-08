@@ -40,7 +40,7 @@ appId: au.com.opax.app
                   notVisible: Select All
                 commands:
                   - tapOn:
-                      point: "73%,40%"
+                      point: '73%,40%'
       - tapOn: Select All
       - eraseText: 1
       - inputText: ${VOICE_EMAIL}
