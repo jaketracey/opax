@@ -20,7 +20,6 @@ import Person from '../src/features/Person';
 import YourMP from '../src/features/YourMP';
 import Electorate, { censusCaveat } from '../src/features/Electorate';
 import {
-  BigFigure,
   Portrait,
   ReadableColumn,
   Section,
@@ -53,12 +52,19 @@ jest.mock('../src/api/runtime', () => ({
 jest.mock('../src/features/your-mp/choice-store', () => ({
   loadChoice: jest.fn(),
   saveChoice: jest.fn(),
+  subscribeChoice: jest.fn(() => () => {}),
 }));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 const mockParams: { slug?: string; id?: string } = {};
 jest.mock('expo-router', () => ({
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn(), setParams: jest.fn() },
@@ -157,31 +163,25 @@ describe('profile', () => {
     ])
       expect(titles).not.toContain(one);
     expect(text(r)).not.toMatch(/\bShow (topics|speeches|news|mentions)\b/);
-    for (const id of [
-      'person-topics-toggle',
-      'person-speeches-toggle',
-      'person-mentions-toggle',
-      'people-news-toggle',
-    ])
+    for (const id of ['person-topics', 'person-speeches', 'person-mentions'])
       expect(has(r, id)).toBe(true);
-    // The block order is otherwise unchanged (P2-2 waits for a decision):
-    // receipts, votes, interests, then pay and expenses, then the rows.
+    // The block order follows PROFILE_SECTIONS (D6, recommended).
     const order = titles.filter((t) =>
       [
         'Party receipts',
         'Voting record',
         'Declared interests',
-        'Pay for the posts held',
-        'Claimed expenses',
+        'Pay',
+        'Expenses',
         'More from the record',
       ].includes(t),
     );
     expect(order).toEqual([
-      'Party receipts',
       'Voting record',
       'Declared interests',
-      'Pay for the posts held',
-      'Claimed expenses',
+      'Pay',
+      'Expenses',
+      'Party receipts',
       'More from the record',
     ]);
     await act(async () => r.unmount());
@@ -202,21 +202,19 @@ describe('profile', () => {
     expect(titles).not.toContain('Declared ties');
     expect(has(r, 'person-ties-source')).toBe(false);
     const interests = r.root.find((n) => n.props.testID === 'person-interests');
-    expect(
-      interests.findAll(
-        (n) =>
-          n.props.testID === 'person-ties' ||
-          n.props.testID === 'person-ties-missing',
-      ).length,
-    ).toBeGreaterThan(0);
+    const ties = (root: TestRenderer.ReactTestInstance) =>
+      root.findAll((n) => n.props.testID === 'person-ties').length;
+    expect(ties(interests)).toBe(ties(r.root));
     await act(async () => r.unmount());
   });
 
   test('P2-4: the identity sheet names OPAX’s people list in its notes, never as an original record', async () => {
     const r = await albanese();
-    const identity = lines(r).find((l) => l.id === 'person-source')!;
+    const identity = lines(r).find((l) => l.id === 'person-figures-source')!;
     expect(identity.words).not.toContain('OPAX existing parliamentary person');
-    await act(async () => pressable(r, 'person-source').props.onPress());
+    await act(async () =>
+      pressable(r, 'person-figures-source').props.onPress(),
+    );
     const { params: sourceParams } = jest
       .mocked(router.push)
       .mock.calls.at(-1)![0] as { params: { key: string } };
@@ -229,20 +227,25 @@ describe('profile', () => {
     );
     const originals = r.root
       .findAllByType(SourceLine)
-      .find((n) => n.props.testID === 'person-source')!.props.originals as {
-      url: string;
-    }[];
-    expect(originals.some((o) => o.url.includes('opax.com.au'))).toBe(false);
+      .find((n) => n.props.testID === 'person-figures-source')!.props
+      .originals as { url: string }[] | undefined;
+    expect((originals ?? []).some((o) => o.url.includes('opax.com.au'))).toBe(
+      false,
+    );
     await act(async () => r.unmount());
   });
 
   test('P3-3: money figures take the money accent (expenses, and pay where it is drawn)', async () => {
     const r = await albanese();
     const money = r.root
-      .findAllByType(BigFigure)
-      .filter((f) => String(f.props.value).startsWith('$'));
+      .findAllByType(Text)
+      .filter(
+        (f) =>
+          f.props.variant === 'figure' &&
+          String(f.props.children).startsWith('$'),
+      );
     expect(money.length).toBeGreaterThan(0);
-    for (const figure of money) expect(figure.props.accent).toBe('money');
+    for (const figure of money) expect(figure.props.tone).toBe('moneyInk');
     await act(async () => r.unmount());
   });
 

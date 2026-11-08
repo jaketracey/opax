@@ -184,7 +184,7 @@ test('page bar actions keep Ask, Copy link and Open on web without a second Foll
     onAsk: jest.fn(),
   });
   expect(menuLeaves(actions).map((action) => action.title)).toEqual([
-    'Ask about their speeches',
+    'Ask about Anne',
     'Copy link',
     'Open on opax.com.au',
   ]);
@@ -227,8 +227,8 @@ for (const following of [false, true]) {
   );
 }
 test.each([
-  ['person', 'Anne', 'Ask about their speeches'],
-  ['party', 'Labor', 'Ask about this party'],
+  ['person', 'Anne', 'Ask about Anne'],
+  ['party', 'Labor', 'Ask about Labor'],
   ['electorate', 'Grayndler', 'Ask about Grayndler'],
 ] as const)('page Ask title for %s', (kind, name, title) => {
   expect(

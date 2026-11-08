@@ -4,25 +4,40 @@ import { router } from 'expo-router';
 import TestRenderer from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
 import { catalogs, peopleDepth } from '../src/api/runtime';
+import type { PersonProfile } from '../src/api/person-identity';
 import {
   MoreFromRecord,
-  newsItem,
+  PersonDiary,
+  Topics,
   openRecord,
-  recordItem,
-  topicsItem,
 } from '../src/features/people/Sections';
 import { PartyAccess, PartyFunding } from '../src/features/people/PartyDepth';
-import ExpenseGlossary from '../src/features/people/ExpenseGlossary';
+import ExpenseGlossary, {
+  categoryKey,
+} from '../src/features/people/ExpenseGlossary';
 import { decodeExpenseCategories } from '../src/api/catalog-decoders';
-import {
-  decodeAccess,
-  decodeFunding,
-  decodeNews,
-} from '../src/features/people/model';
+import { decodeAccess, decodeFunding } from '../src/features/people/model';
+import { SegmentedPicker } from '../src/design/controls';
+import { LinkRow } from '../src/design/rows';
+import { recordListRoute } from '../src/navigation/routes';
 import { pinned } from './pinned';
+const mockParams: Record<string, string | undefined> = {};
+const mockOptions: { current?: Record<string, unknown> } = {};
 jest.mock('expo-router', () => ({
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+  useLocalSearchParams: () => mockParams,
+  Stack: {
+    Screen: ({ options }: { options?: Record<string, unknown> }) => {
+      mockOptions.current = options;
+      return null;
+    },
+  },
 }));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { expenseCategories: jest.fn() },
@@ -74,6 +89,7 @@ const words = (r: TestRenderer.ReactTestRenderer) =>
     .join(' ');
 beforeEach(() => {
   jest.clearAllMocks();
+  for (const key of Object.keys(mockParams)) delete mockParams[key];
   jest.mocked(peopleDepth.access).mockResolvedValue(result(access));
   jest.mocked(peopleDepth.funding).mockResolvedValue(result(funding));
 });
@@ -81,113 +97,26 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
   r.root
     .findAll((n) => typeof n.props?.testID === 'string')
     .map((n) => n.props.testID as string);
-test('paid person/party reads wait in one More from the record section; a tap loads its block in place, once', async () => {
-  const load = jest.fn(async () => 'Fixture result');
-  const r = await render(
-    <MoreFromRecord
-      testID="fixture-more"
-      items={[
-        {
-          id: 'fixture',
-          title: 'Fixture topics',
-          row: 'Topics',
-          load,
-          render: (data) => <NativeText>{String(data)}</NativeText>,
-        },
-        {
-          id: 'other',
-          title: 'Other',
-          row: 'Other rows',
-          load: async () => 'Other result',
-          render: (data) => <NativeText>{String(data)}</NativeText>,
-        },
-      ]}
-    />,
-  );
-  // One section of rows, never a section per "Show …" row (pass 5, P2-1).
-  expect(words(r)).toContain('More from the record');
-  expect(words(r)).not.toContain('Show ');
-  expect(load).not.toHaveBeenCalled();
-  expect(words(r)).not.toContain('Fixture result');
-  await press(r, 'fixture-toggle');
-  expect(load).toHaveBeenCalledTimes(1);
-  // The loaded block replaces its row with its own section.
-  expect(words(r)).toContain('Fixture topics');
-  expect(words(r)).toContain('Fixture result');
-  expect(ids(r)).not.toContain('fixture-toggle');
-  expect(ids(r)).toContain('other-toggle');
-  await press(r, 'other-toggle');
-  // Every row loaded: the section goes.
-  expect(words(r)).not.toContain('More from the record');
-  expect(load).toHaveBeenCalledTimes(1);
-  await act(async () => r.unmount());
-  const all = await render(
-    <>
-      <MoreFromRecord
-        items={[
-          topicsItem('Anthony Albanese'),
-          recordItem('Anthony Albanese', 'speeches'),
-          recordItem('Anthony Albanese', 'mentions'),
-          newsItem('Anthony Albanese'),
-        ]}
-      />
-      <MoreFromRecord
-        items={[recordItem('Labor', 'party'), newsItem('Labor')]}
-      />
-    </>,
-  );
-  for (const fn of [
-    peopleDepth.topics,
-    peopleDepth.speeches,
-    peopleDepth.mentions,
-    peopleDepth.news,
-  ])
-    expect(fn).not.toHaveBeenCalled();
-  expect(words(all)).toContain('Latest speeches');
-  expect(words(all)).toContain('News headlines');
-  await act(async () => all.unmount());
-});
-test('a failed read keeps its row with a retry', async () => {
-  const load = jest
-    .fn()
-    .mockRejectedValueOnce(new Error('offline'))
-    .mockResolvedValueOnce('Second try');
-  const r = await render(
-    <MoreFromRecord
-      items={[
-        {
-          id: 'fixture',
-          title: 'Fixture',
-          row: 'Fixture row',
-          load,
-          render: (data) => <NativeText>{String(data)}</NativeText>,
-        },
-      ]}
-    />,
-  );
-  await press(r, 'fixture-toggle');
-  expect(ids(r)).toContain('fixture-error');
-  expect(ids(r)).toContain('fixture-toggle');
-  await press(r, 'fixture-toggle');
-  expect(words(r)).toContain('Second try');
-  await act(async () => r.unmount());
-});
-test('All, Then and Now switch the loaded profiles without another request', async () => {
-  const era = (label: string, n: number) => ({
+const row = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+  r.root.findAllByType(LinkRow).find((n) => n.props.testID === testID);
+
+type Era = { from: number; to: number; share: number };
+function topics(eras: { all: Era; then: Era; now: Era }) {
+  const era = (label: string, e: Era) => ({
     label,
-    from: 2010,
-    to: 2019,
+    from: e.from,
+    to: e.to,
     labelled: 10,
-    topics: [{ slug: 'housing', count: n, share: n / 10 }],
+    topics: [{ slug: 'housing', count: e.share * 10, share: e.share }],
   });
-  jest.mocked(peopleDepth.topics).mockResolvedValue({
+  return {
     person: result({
       name: 'Fixture Member',
       indexed: 30,
       profiles: {
-        all: era('All years', 5),
-        then: era('2010s', 2),
-        now: era('2020–26', 8),
+        all: era('All years', eras.all),
+        then: era('Then', eras.then),
+        now: era('Now', eras.now),
       },
       coverage: undefined,
     }),
@@ -195,46 +124,177 @@ test('All, Then and Now switch the loaded profiles without another request', asy
       labelled: 20,
       topics: [{ slug: 'housing', count: 10 }],
     }),
-  });
-  const r = await render(
-    <MoreFromRecord items={[topicsItem('Fixture Member')]} />,
+  };
+}
+
+test('More from the record: Topics inline, then rows that push the record lists; nothing else loads in place', async () => {
+  jest.mocked(peopleDepth.topics).mockResolvedValue(
+    topics({
+      all: { from: 2010, to: 2026, share: 0.5 },
+      then: { from: 2010, to: 2019, share: 0.2 },
+      now: { from: 2020, to: 2026, share: 0.8 },
+    }),
   );
-  await press(r, 'person-topics-toggle');
-  expect(words(r)).toContain('Housing');
-  // On iOS the eras are one native segmented picker.
-  const eras = r.root.findAll(
-    (n) => typeof n.props?.onSelectionChange === 'function',
-  )[0]!;
-  for (const value of ['then', 'now', 'all']) {
-    await act(async () => eras.props.onSelectionChange(value));
-  }
+  const r = await render(
+    <>
+      <MoreFromRecord
+        subject={{ person: 'anthony-albanese', name: 'Anthony Albanese' }}
+        kinds={['mentions']}
+        topics
+        testID="person-more"
+      />
+      <MoreFromRecord
+        subject={{ party: 'labor', name: 'Labor' }}
+        kinds={['mentions']}
+        testID="party-more"
+      />
+    </>,
+  );
+  // One section each, never a section per row (pass 5, P2-1).
+  expect(words(r).match(/More from the record/g)).toHaveLength(2);
   expect(peopleDepth.topics).toHaveBeenCalledTimes(1);
-  await act(async () => r.unmount());
-});
-test('news has no In the news heading unless a headline matches', async () => {
-  jest.mocked(peopleDepth.news).mockResolvedValue(
-    result(
-      decodeNews({
-        items: [
-          {
-            title: 'Unrelated headline',
-            url: 'https://example.test/news',
-            source: 'ABC News',
-          },
-        ],
-      }),
+  expect(peopleDepth.topics).toHaveBeenCalledWith('Anthony Albanese');
+  for (const fn of [
+    peopleDepth.speeches,
+    peopleDepth.mentions,
+    peopleDepth.news,
+  ])
+    expect(fn).not.toHaveBeenCalled();
+  expect(words(r)).toContain('Housing');
+  expect(row(r, 'person-mentions')!.props.href).toEqual(
+    recordListRoute(
+      { person: 'anthony-albanese', kind: 'mentions' },
+      'Anthony Albanese',
     ),
   );
-  const r = await render(
-    <MoreFromRecord items={[newsItem('Anthony Albanese')]} />,
+  expect(row(r, 'party-mentions')!.props.href).toEqual(
+    recordListRoute({ party: 'labor', kind: 'mentions' }, 'Labor'),
   );
-  await press(r, 'people-news-toggle');
-  expect(words(r)).not.toContain('In the news');
-  expect(words(r)).toContain(
-    "Nothing in today's politics headlines mentions them.",
-  );
+  expect(row(r, 'person-mentions')!.props.title).toBe('Mentions in parliament');
+  // News ships only with a stated selection rule: no row (people.md 2.1).
+  expect(row(r, 'person-news')).toBeUndefined();
+  // The party has no Topics.
+  expect(
+    r.root.findAll(
+      (n) => n.props?.testID === 'person-topics' && typeof n.type === 'string',
+    ),
+  ).toHaveLength(1);
+  // Nothing on the old in-place pattern survives.
+  expect(words(r)).not.toMatch(/\bShow (topics|speeches|news|mentions)\b/);
+  expect(ids(r).some((id) => id.endsWith('-toggle'))).toBe(false);
   await act(async () => r.unmount());
 });
+
+test('a failed Topics read draws its own Try again, which reads Topics again', async () => {
+  jest
+    .mocked(peopleDepth.topics)
+    .mockRejectedValueOnce(new Error('offline'))
+    .mockResolvedValueOnce(
+      topics({
+        all: { from: 2010, to: 2026, share: 0.5 },
+        then: { from: 2010, to: 2019, share: 0.2 },
+        now: { from: 2020, to: 2026, share: 0.8 },
+      }),
+    );
+  const r = await render(<Topics name="Fixture Member" />);
+  expect(ids(r)).toContain('person-topics-error');
+  expect(words(r)).toContain("Topics couldn't be loaded.");
+  await act(async () => {
+    r.root
+      .find((n) => n.props?.testID === 'person-topics-error')
+      .find(
+        (n) =>
+          typeof n.props?.onPress === 'function' &&
+          n.props.accessibilityRole === 'button',
+      )
+      .props.onPress();
+  });
+  expect(peopleDepth.topics).toHaveBeenCalledTimes(2);
+  expect(words(r)).toContain('Housing');
+  await act(async () => r.unmount());
+});
+
+test('the Topics era switch is labelled from the data’s bounds and switches without another request', async () => {
+  jest.mocked(peopleDepth.topics).mockResolvedValue(
+    topics({
+      all: { from: 2010, to: 2026, share: 0.5 },
+      then: { from: 2010, to: 2019, share: 0.2 },
+      now: { from: 2020, to: 2026, share: 0.8 },
+    }),
+  );
+  const r = await render(<Topics name="Fixture Member" />);
+  const picker = r.root.findByType(SegmentedPicker);
+  expect(
+    (picker.props.options as { label: string }[]).map((o) => o.label),
+  ).toEqual(['All', '2010 to 2019', 'Since 2020']);
+  expect(words(r)).toContain('50%');
+  await act(async () => picker.props.onChange('now'));
+  expect(words(r)).toContain('80%');
+  await act(async () => picker.props.onChange('then'));
+  expect(words(r)).toContain('20%');
+  expect(peopleDepth.topics).toHaveBeenCalledTimes(1);
+  // "Then", "Now" and "labelled speeches so far" are gone.
+  expect(words(r)).not.toMatch(/\bThen\b|\bNow\b|so far/);
+  await act(async () => r.unmount());
+});
+
+test('without era bounds Topics draws no switch', async () => {
+  jest.mocked(peopleDepth.topics).mockResolvedValue(
+    topics({
+      all: { from: 0, to: 0, share: 0.5 },
+      then: { from: 0, to: 0, share: 0.2 },
+      now: { from: 0, to: 0, share: 0.8 },
+    }),
+  );
+  const r = await render(<Topics name="Fixture Member" />);
+  expect(r.root.findAllByType(SegmentedPicker)).toHaveLength(0);
+  expect(words(r)).toContain('Housing');
+  await act(async () => r.unmount());
+});
+
+const identity = (name: string, jurisdiction: string) =>
+  ({
+    slug: 'fixture',
+    name,
+    seats: [{ jurisdiction }],
+    rosterRow: undefined,
+  }) as unknown as PersonProfile;
+
+test('the ministerial diary is drawn only for a member it covers', async () => {
+  const federal = await render(
+    <PersonDiary identity={identity('Fixture Member', 'federal')} />,
+  );
+  expect(federal.toJSON()).toBeNull();
+  expect(peopleDepth.access).not.toHaveBeenCalled();
+  await act(async () => federal.unmount());
+
+  const [, minister] = Object.entries(access.ministers).find(
+    ([, m]) => m.jurisdiction === 'nsw' || m.jurisdiction === 'qld',
+  )!;
+  const covered = await render(
+    <PersonDiary identity={identity(minister.name, minister.jurisdiction)} />,
+  );
+  expect(ids(covered)).toContain('person-diary');
+  expect(words(covered)).toContain('Meetings disclosed');
+  expect(ids(covered)).toContain('person-diary-source');
+  await act(async () => covered.unmount());
+
+  // Eligible but not in the diary: the section collapses after its read.
+  const absent = await render(
+    <PersonDiary identity={identity('Nobody Fixture', 'nsw')} />,
+  );
+  expect(ids(absent)).not.toContain('person-diary');
+  await act(async () => absent.unmount());
+
+  jest.mocked(peopleDepth.access).mockRejectedValueOnce(new Error('offline'));
+  const failed = await render(
+    <PersonDiary identity={identity('Nobody Fixture', 'qld')} />,
+  );
+  expect(ids(failed)).toContain('person-diary-error');
+  expect(words(failed)).toContain("Ministerial diary couldn't be loaded.");
+  await act(async () => failed.unmount());
+});
+
 test('meetings, attendees, lobbying firms and creditors remain plain text; all 27 receipt years are available', async () => {
   const r = await render(
     <>
@@ -260,16 +320,21 @@ test('meetings, attendees, lobbying firms and creditors remain plain text; all 2
   ).toHaveLength(0);
   await act(async () => r.unmount());
 });
-test('glossary draws definitions, notes and group descriptions, with the originals in one source sheet', async () => {
+test('Expense categories: one name, Done only, definitions and notes, the originals in one source sheet', async () => {
   const data = decodeExpenseCategories(pinned('/expense-categories.json'));
   jest.mocked(catalogs.expenseCategories).mockResolvedValue(result(data));
   const r = await render(<ExpenseGlossary />);
+  expect(mockOptions.current?.title).toBe('Expense categories');
   const output = words(r);
+  expect(output).not.toMatch(/glossary/i);
   for (const c of data.categories) {
     expect(output).toContain(c.text);
     if (c.note) expect(output).toContain(c.note);
+    expect(ids(r)).toContain(`expense-category-${categoryKey(c.name)}`);
   }
   for (const g of data.groups) if (g.blurb) expect(output).toContain(g.blurb);
+  // Nothing names a member when the sheet is opened on its own.
+  expect(ids(r)).not.toContain('expense-glossary-own');
   // No ⓘ per group or category: one source line opens the definitions' links.
   expect(
     r.root.findAll(
@@ -303,6 +368,34 @@ test('glossary draws definitions, notes and group descriptions, with the origina
   expect(new Set(originals.map((original) => original.url)).size).toBe(
     urls.size,
   );
+  await act(async () => r.unmount());
+});
+
+test('opened from a profile, Expense categories names the member’s own amount at that category', async () => {
+  const data = decodeExpenseCategories(pinned('/expense-categories.json'));
+  jest.mocked(catalogs.expenseCategories).mockResolvedValue(result(data));
+  const category = data.categories[1]!;
+  Object.assign(mockParams, {
+    category: category.name,
+    person: 'Anthony Albanese',
+    amount: '1204330',
+    years: '2017 to 2026',
+  });
+  const r = await render(<ExpenseGlossary />);
+  const own = r.root.findAll((n) => n.props?.testID === 'expense-glossary-own');
+  expect(own.length).toBeGreaterThan(0);
+  expect(words(r)).toContain(
+    'Anthony Albanese claimed $1,204,330, 2017 to 2026',
+  );
+  // The line sits inside that category's block, and only there.
+  const block = r.root.find(
+    (n) =>
+      n.props?.testID === `expense-category-${categoryKey(category.name)}` &&
+      typeof n.type === 'string',
+  );
+  expect(
+    block.findAll((n) => n.props?.testID === 'expense-glossary-own').length,
+  ).toBeGreaterThan(0);
   await act(async () => r.unmount());
 });
 
