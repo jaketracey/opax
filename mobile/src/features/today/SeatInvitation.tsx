@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
 import { router } from 'expo-router';
-import { Canvas, Group, Path } from '@shopify/react-native-skia';
+import { Group, Path } from '@shopify/react-native-skia';
 import { useAccessibilitySize } from '../../design/accessibility';
+import { SizedCanvas } from '../../design/canvas';
 import { Card } from '../../design/card';
 import { Button } from '../../design/controls';
 import { confirmAction } from '../../design/menu';
@@ -61,7 +62,7 @@ function AustraliaOutline() {
       importantForAccessibility="no-hide-descendants"
       testID="today-invitation-art"
     >
-      <Canvas style={{ width, height }}>
+      <SizedCanvas width={width} height={height}>
         <Group transform={[{ scale }]}>
           {outline.states.map((s) => (
             <Group key={s.code}>
@@ -75,7 +76,7 @@ function AustraliaOutline() {
             </Group>
           ))}
         </Group>
-      </Canvas>
+      </SizedCanvas>
     </View>
   );
 }

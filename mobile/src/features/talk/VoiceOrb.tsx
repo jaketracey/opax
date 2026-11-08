@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react';
 import {
-  Canvas,
   Circle,
   Group,
   Path,
@@ -8,6 +7,7 @@ import {
   usePathValue,
   vec,
 } from '@shopify/react-native-skia';
+import { SizedCanvas } from '../../design/canvas';
 import {
   useDerivedValue,
   useFrameCallback,
@@ -274,8 +274,9 @@ export function VoiceOrb({
   const centre = useMemo(() => vec(c, c), [c]);
   const highlight = useMemo(() => vec(c - 0.32 * R, c - 0.38 * R), [c, R]);
   return (
-    <Canvas
-      style={{ width: size, height: size }}
+    <SizedCanvas
+      width={size}
+      height={size}
       accessible={false}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
@@ -333,6 +334,6 @@ export function VoiceOrb({
           color={colours.edge}
         />
       </Group>
-    </Canvas>
+    </SizedCanvas>
   );
 }

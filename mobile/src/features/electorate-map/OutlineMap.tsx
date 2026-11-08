@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useColorScheme, View } from 'react-native';
-import { Canvas, Path, useCanvasRef } from '@shopify/react-native-skia';
+import { Path, useCanvasRef } from '@shopify/react-native-skia';
+import { SizedCanvas } from '../../design/canvas';
 import { SourceLine } from '../../design/source';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { radii } from '../../design/tokens';
@@ -75,7 +76,10 @@ export function OutlineMap({
     boundary?.geometry && width > 32 && drawn > 32
       ? outlinePath(boundary.geometry, width, drawn)
       : '';
-  const probeID = useOutlineProbe(ref, path);
+  // Only the page's own drawing is probed. A thumb can sit on a tab that is
+  // mounted but not on screen (NativeTabs mounts every tab at launch), where
+  // the Skia view never lays out natively and a snapshot aborts the app.
+  const probeID = useOutlineProbe(ref, path, variant === 'header');
   if (!boundary?.geometry) return null;
   const { fill, stroke } = outlineColours(ground, scheme);
   const decorative = variant === 'thumb';
@@ -106,9 +110,10 @@ export function OutlineMap({
           : null),
       }}
     >
-      <Canvas
+      <SizedCanvas
         ref={ref}
-        style={{ width, height: drawn }}
+        width={width}
+        height={drawn}
         accessible={false}
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
@@ -125,7 +130,7 @@ export function OutlineMap({
             />
           </>
         ) : null}
-      </Canvas>
+      </SizedCanvas>
     </View>
   );
 }

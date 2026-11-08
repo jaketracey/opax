@@ -6,13 +6,23 @@ import {
 } from '@shopify/react-native-skia';
 import { isE2E } from '../../design/environment';
 
+/**
+ * E2E only: counts the outline's drawn pixels from the native raster and
+ * says so in the testID journey 24 waits for. `enabled` is the page's own
+ * drawing, on screen. A snapshot of a Skia view that UIKit has never laid
+ * out (a thumb on a tab NativeTabs mounted behind the current one) reads a
+ * -1 by -1 surface from the missing Metal context, and Metal aborts the app
+ * on the texture it is asked for; so a view that is not enabled is never
+ * snapshotted.
+ */
 export function useOutlineProbe(
   ref: ReturnType<typeof useCanvasRef>,
   path: string,
+  enabled = true,
 ) {
   const [pixels, setPixels] = useState(0);
   useEffect(() => {
-    if (!isE2E || !path) return;
+    if (!isE2E || !path || !enabled) return;
     let active = true,
       tries = 0;
     const timer = setInterval(() => {
@@ -45,7 +55,7 @@ export function useOutlineProbe(
       active = false;
       clearInterval(timer);
     };
-  }, [path, ref]);
+  }, [path, ref, enabled]);
   return isE2E && pixels > 40
     ? `electorate-outline-drawn-pixels-${pixels}`
     : 'electorate-outline';

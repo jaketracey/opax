@@ -4,6 +4,7 @@ import type { useCanvasRef } from '@shopify/react-native-skia';
 export function useOutlineProbe(
   _ref: ReturnType<typeof useCanvasRef>,
   _path: string,
+  _enabled = true,
 ) {
   return 'electorate-outline';
 }

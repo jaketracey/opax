@@ -7,7 +7,8 @@ import {
   useWindowDimensions,
   type AccessibilityActionEvent,
 } from 'react-native';
-import { Canvas, Rect } from '@shopify/react-native-skia';
+import { Rect } from '@shopify/react-native-skia';
+import { SizedCanvas } from './canvas';
 import { dark, darkHighContrast, light, lightHighContrast } from './palette';
 import { useAccessibilitySize, useIncreaseContrast } from './accessibility';
 import { Button } from './controls';
@@ -512,7 +513,7 @@ export function BarSeries({
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
-          <Canvas style={{ width, height: plotHeight }}>
+          <SizedCanvas width={width} height={plotHeight}>
             {!spark
               ? [0, 0.5, 1].map((position) => (
                   <Rect
@@ -544,7 +545,7 @@ export function BarSeries({
                 />
               );
             })}
-          </Canvas>
+          </SizedCanvas>
         </View>
         {!spark
           ? data.map((item, index) => {

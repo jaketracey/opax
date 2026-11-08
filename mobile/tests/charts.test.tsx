@@ -308,6 +308,10 @@ test('a selected series uses navy instead of a party colour', () => {
       onSelect={() => {}}
     />,
   );
+  // Nothing is drawn until the plot has a width: Skia never gets an empty box.
+  expect(r.root.findAllByType(Rect)).toHaveLength(0);
+  const plot = r.root.findByProps({ testID: 'bar-series-plot' });
+  act(() => plot.props.onLayout({ nativeEvent: { layout: { width: 200 } } }));
   expect(r.root.findAllByType(Rect).at(-1)!.props.color).toBe(light.navy);
 });
 
