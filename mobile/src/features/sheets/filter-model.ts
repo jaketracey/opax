@@ -17,6 +17,11 @@ export interface FilterRow<S> {
   select: (state: S, value: string) => S;
   disabled?: boolean;
   disabledLabel?: string;
+  /**
+   * The choices are still loading (shell 10 states): the row reads "All"
+   * and its pushed list draws a skeleton until the data arrives.
+   */
+  loading?: boolean;
   searchPlaceholder?: string;
   multiple?: boolean;
 }

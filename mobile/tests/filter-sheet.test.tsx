@@ -9,6 +9,7 @@ import {
   FilterSheet,
   FilterFacet,
   FilterYears,
+  filterRowValue,
 } from '../src/design/filter-sheet';
 import {
   Button,
@@ -215,7 +216,7 @@ test('directory copies available facet choices and existing sitting/votes state 
   const sitting = model.toggles!.find((item) => item.key === 'sitting')!;
   expect(sitting.select(model.initial, true).sitting).toBe('1');
 });
-test('D-8: Ask and Search share five row names, Type and the same Years data', () => {
+test('Search rows follow search 2.9 and Ask rows follow ask 4, with the same Years data', () => {
   const options = {
     years: [2024, 2025, 2026],
     members: [{ value: 'Member', label: 'Member' }],
@@ -223,17 +224,53 @@ test('D-8: Ask and Search share five row names, Type and the same Years data', (
   const search = searchFilterModel(options),
     ask = askFilterModel(options);
   expect(search.rows.map((item) => item.title)).toEqual([
+    'Type',
+    'Parliament',
+    'Years',
+    'Party or speaker',
+    'Topic',
+  ]);
+  expect(ask.rows.map((item) => item.title)).toEqual([
     'Member',
     'Party',
     'Parliament',
     'Topic',
     'Years',
   ]);
-  expect(ask.rows.map((item) => item.title)).toEqual(
-    search.rows.map((item) => item.title),
-  );
   expect(ask.years).toEqual(search.years);
-  expect(ask.segments?.options).toEqual(search.segments?.options);
+  expect(search.segments).toBeUndefined();
+  expect(ask.segments?.options.map((option) => option.label)).toEqual([
+    'All records',
+    'Speeches only',
+  ]);
+  // Search's default Type reads "Speeches"; every other default is "Any",
+  // except Party or speaker, which the spec names "Anyone".
+  expect(
+    search.rows.map((item) => filterRowValue(item, search.initial)),
+  ).toEqual(['Speeches', 'Any', 'Any', 'Anyone', 'Any']);
+  expect(ask.rows.map((item) => filterRowValue(item, ask.initial))).toEqual([
+    'Any',
+    'Any',
+    'Any',
+    'Any',
+    'Any',
+  ]);
+  expect(
+    row(search, 'kind')
+      .choices(search.initial)
+      .map((choice) => choice.label),
+  ).toEqual(['Speeches', 'Media releases and transcripts']);
+  const who = row(search, 'speaker');
+  const labor = who.select(search.initial, 'party:Labor');
+  expect(labor).toMatchObject({ party: 'Labor', speaker: '' });
+  expect(filterRowValue(who, labor)).toBe('Labor');
+  const member = who.select(labor, 'speaker:Member');
+  expect(member).toMatchObject({ party: '', speaker: 'Member' });
+  expect(filterRowValue(who, member)).toBe('Member');
+  const exact = search.toggles!.find((item) => item.key === 'mode')!;
+  expect(exact.label).toBe('Exact words only');
+  expect(exact.select(search.initial, true).mode).toBe('keyword');
+  expect(search.isDefault(exact.select(search.initial, true))).toBe(false);
   expect(search.initial.kind).toBe('speech');
   expect(ask.initial.kind).toBe('all');
   expect(
@@ -301,9 +338,30 @@ test('money computes Latest year from available annual returns and resets all la
       }),
     ),
   ).toBe(true);
+  // Shell 10: while the map loads, every data row reads "All" and pushes
+  // a skeleton list, never "Loads with the map".
+  const loading = moneyFilterModel({ loaded: false });
+  expect(loading.rows.every((item) => item.loading && !item.disabled)).toBe(
+    true,
+  );
   expect(
-    moneyFilterModel({ loaded: false }).rows.every((item) => item.disabled),
-  ).toBe(true);
+    loading.rows.map((item) => filterRowValue(item, loading.initial)),
+  ).toEqual(['All', 'All', 'All']);
+  const facetRoot = render(
+    <FilterFacet
+      model={loading}
+      facet="industry"
+      value={loading.initial}
+      onChange={jest.fn()}
+      onBack={jest.fn()}
+      onDone={jest.fn()}
+    />,
+  ).root;
+  expect(
+    facetRoot.findAll((node) => node.props.testID === 'filters-choices-loading')
+      .length,
+  ).toBeGreaterThan(0);
+  expect(facetRoot.findAllByType(LinkRow)).toHaveLength(0);
 });
 test('allocation uses full state names and data years newest first only for earlier grants', () => {
   expect(allocationFilterModel().rows.map((item) => item.key)).toEqual([
@@ -408,9 +466,12 @@ test('generic routes resolve a list model and handle missing lists and facets', 
   mockParams = { list: 'search', owner: 'route-test' };
   const root = render(<FilterRoute />).root;
   expect(root.findByType(FilterSheet).props.model.list).toBe('search');
-  expect(root.findByType(SegmentedPicker).props.accessibilityLabel).toBe(
-    'Type',
-  );
+  // search 2.9: Type is a labelled row, first, with the other rows.
+  expect(root.findAllByType(SegmentedPicker)).toHaveLength(0);
+  expect(root.findAllByType(LinkRow)[0]!.props).toMatchObject({
+    title: 'Type',
+    value: 'Speeches',
+  });
   mockParams = { list: 'search', facet: 'missing', owner: 'route-test' };
   expect(
     render(<FilterFacetRoute />).root.findAll(
@@ -486,7 +547,7 @@ test.each(['person', 'electorate'] as const)(
     const nonParty = model.rows.find(
       (item) => item.key !== 'party' && item.key !== 'sort',
     )!;
-    expect(nonParty.choices(model.initial)[0]?.label).toBe('All');
+    expect(nonParty.choices(model.initial)[0]?.label).toBe('Any');
   },
 );
 test('Ask and Search default Years span 1993 to the current Sydney year', () => {
@@ -618,4 +679,15 @@ test('a lone toggle group has no group header', () => {
     .findAllByType(InsetGroup)
     .find((node) => node.props.testID === 'filters-toggle-group-show')!;
   expect(show.props.header).toBeUndefined();
+});
+test('declarations Chamber reads Any by default, as every list without a named word', () => {
+  const model = declarationsFilterModel({
+    jurisdictions: [
+      { value: 'federal', label: 'Federal' },
+      { value: 'qld', label: 'Queensland' },
+    ],
+  });
+  expect(model.rows.map((item) => filterRowValue(item, model.initial))).toEqual(
+    ['Any', 'Any'],
+  );
 });
