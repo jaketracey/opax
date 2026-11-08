@@ -403,6 +403,11 @@ test('sheet presentations and named fallback titles come from the owning modules
   });
   expect(options('ask').headerLargeTitleEnabled).toBe(true);
   expect(options('money').headerLargeTitleEnabled).toBe(false);
+  expect(
+    options('money')
+      .unstable_headerRightItems()
+      .map((item: { label: string }) => item.label),
+  ).toEqual(['More', 'Share']);
   act(() => view.unmount());
 });
 

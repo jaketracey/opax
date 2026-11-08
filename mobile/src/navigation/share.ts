@@ -72,3 +72,10 @@ export function shareHeaderItem(target: ShareTarget): NativeStackHeaderItem {
     onPress: () => void shareRecord(target),
   };
 }
+
+/** Copy the same canonical address used by the native share sheet. */
+export async function copyRecordLink(path: string): Promise<void> {
+  if (!OpaxShare) return;
+  await OpaxShare.copyText(canonicalUrl(path));
+  haptic('success');
+}
