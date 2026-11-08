@@ -8,17 +8,16 @@ name: Android location consent, chooser Back, detail Back and edge gestures
     visible:
       id: your-seat-name
     timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: change-seat
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: change-seat
+# The chooser (/seat) opens over Your MP; Back closes it.
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: use-my-location
-    direction: UP
+    centerElement: true
     timeout: 90000
 - assertNotVisible:
     id: .*permissioncontroller:id/permission_deny_button
@@ -33,8 +32,12 @@ name: Android location consent, chooser Back, detail Back and edge gestures
     id: .*permissioncontroller:id/permission_deny_button
 - assertVisible:
     id: location-denied
+- assertVisible:
+    id: seat-location-settings
 - takeScreenshot: ${EVIDENCE}/location-denied
 - pressKey: Back
+- assertNotVisible:
+    id: seat-sheet
 - assertVisible:
     id: your-seat-name
 - scrollUntilVisible:

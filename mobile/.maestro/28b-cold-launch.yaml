@@ -1,10 +1,12 @@
 appId: au.com.opax.app
-name: 28b Cold launch recorded, splash then handoff then Today
+name: 28b Cold launch recorded, splash then one crossfade to Today, and to the welcome on a first launch
 ---
 # Run by path (the 28 shorthand runs only 28-welcome.yaml). Records a cold
-# launch for review: the native splash, the handoff's bronze rule and fade,
-# then Today. E2E builds treat the welcome tour as seen. Frames are cut from
-# the recording afterwards (README, "Launch and welcome tour").
+# launch for review: the native splash, then one 240 ms crossfade to Today
+# (no rule, no hold). E2E builds treat the welcome as seen. Then a first
+# launch: the splash dissolves straight into the full-screen welcome, with no
+# frame of Today. Frames are cut from the recordings afterwards (README,
+# "Launch and welcome tour").
 - launchApp
 - extendedWaitUntil:
     visible:
@@ -22,10 +24,33 @@ name: 28b Cold launch recorded, splash then handoff then Today
     visible:
       id: today-screen
     timeout: 60000
-# Let the handoff (at most 1.2 s) finish on the recording.
+# Let the handoff (at most 640 ms) finish on the recording.
 - extendedWaitUntil:
     visible: Not drawn by OPAX
     timeout: 2500
     optional: true
 - takeScreenshot: ${EVIDENCE}/28b-first-screen
+- stopRecording
+# A first launch: splash, then the welcome, presented with no animation.
+- stopApp
+- clearState
+- startRecording: ${EVIDENCE}/28b-first-launch
+- extendedWaitUntil:
+    visible: Not drawn by OPAX
+    timeout: 1500
+    optional: true
+- launchApp:
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- assertNotVisible:
+    id: today-screen
+- extendedWaitUntil:
+    visible: Not drawn by OPAX
+    timeout: 2500
+    optional: true
+- takeScreenshot: ${EVIDENCE}/28b-first-launch-welcome
 - stopRecording

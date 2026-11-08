@@ -1,0 +1,48 @@
+appId: au.com.opax.app
+name: 24 Cancel closes the chooser without a choice, one Cancel at a time
+---
+# The sheet's Cancel is leading; while the search field is active only the
+# field's own Cancel shows, and it closes the sheet. Neither saves a seat.
+# Bar buttons have no test ids: they are reached by their labels.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- assertVisible: Your electorate
+- assertVisible: Cancel
+- takeScreenshot: ${EVIDENCE}/24-cancel-sheet
+# The field is focused on arrival: type straight away, keyboard up.
+- tapOn: Electorate or member.s name
+- inputText: Gray
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-nsw-grayndler
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/24-cancel-keyboard
+- tapOn: Cancel
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
+- tapOn:
+    id: tab-your-mp
+- assertNotVisible:
+    id: your-seat-name
+# Again, without typing: the one Cancel showing closes it.
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- tapOn: Cancel
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
+- assertNotVisible:
+    id: your-seat-name

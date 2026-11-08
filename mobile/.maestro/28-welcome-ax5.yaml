@@ -1,0 +1,62 @@
+appId: au.com.opax.app
+name: 28 Welcome at AX5, the notice before Continue, the seat step without the keyboard, Not now
+---
+# Run on its own, by path, at AX5:
+#   OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large \
+#     scripts/e2e.sh <udid> .maestro/28-welcome-ax5.yaml
+# From AX3 up Continue unpins and becomes the last item in the scroll, under
+# the cultural notice, so the notice is always seen first. The seat step does
+# not focus its field at accessibility sizes.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-launch-cover
+    timeout: 10000
+- assertVisible:
+    id: welcome-title
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28-ax5-top
+- scrollUntilVisible:
+    element:
+      id: welcome-notice
+    visibilityPercentage: 10
+    timeout: 120000
+- takeScreenshot: ${EVIDENCE}/28-ax5-notice
+- scrollUntilVisible:
+    element:
+      id: welcome-continue
+    centerElement: true
+    timeout: 120000
+- assertVisible:
+    id: welcome-continue
+    below:
+      id: welcome-notice
+- takeScreenshot: ${EVIDENCE}/28-ax5-continue
+- tapOn:
+    id: welcome-continue
+- extendedWaitUntil:
+    visible:
+      id: welcome-seat
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28-ax5-seat-step
+# "Not now" records the decline and closes the welcome onto Today.
+- tapOn: Not now
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-seat
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/28-ax5-not-now

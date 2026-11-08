@@ -1,0 +1,60 @@
+appId: au.com.opax.app
+name: 24 Precise Location off, the row says so and offers the seats nearby
+---
+# Precise Location is turned off in the permission alert itself ("Precise:
+# On" toggles to Off), so the fix is a wide circle. The row reads "Precise
+# Location is off for OPAX." with Open Settings, and the seats within the
+# circle are ordinary rows, "Near your location".
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: use-my-location
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: use-my-location
+- extendedWaitUntil:
+    visible: Allow Once
+    timeout: 15000
+- tapOn: Precise.*On
+- extendedWaitUntil:
+    visible: Precise.*Off
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/24-approximate-alert
+- scrollUntilVisible:
+    element: Allow Once
+    centerElement: false
+    timeout: 300000
+- tapOn: Allow Once
+- scrollUntilVisible:
+    element:
+      id: location-approximate
+    centerElement: true
+    timeout: 300000
+- assertVisible: Precise Location is off for OPAX.
+- assertVisible:
+    id: seat-location-settings
+- assertVisible: Near your location
+- takeScreenshot: ${EVIDENCE}/24-approximate
+- tapOn:
+    id: seat-location-row-.*
+    index: 0
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
+- tapOn:
+    id: tab-your-mp
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/24-approximate-chosen

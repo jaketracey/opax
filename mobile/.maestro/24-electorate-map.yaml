@@ -1,19 +1,24 @@
 appId: au.com.opax.app
-name: 24 Electorate outline and on-device location suggestion
+name: 24 Electorate outline and on-device location in the seat chooser
 ---
 # Harness sets a Grayndler simulated fix; launch resets location permission.
+# Location is one ordinary answer row in the chooser: "From your location",
+# no checkmark until it is chosen, one tap to choose.
 - launchApp:
     clearState: true
     permissions:
       location: unset
-- tapOn:
-    id: tab-your-mp
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- assertVisible: Your electorate
 - scrollUntilVisible:
     element:
       id: use-my-location
-    direction: UP
     centerElement: true
-    timeout: 300000
+    timeout: 60000
 - tapOn:
     id: use-my-location
 - extendedWaitUntil:
@@ -27,29 +32,27 @@ name: 24 Electorate outline and on-device location suggestion
 - tapOn: Allow Once
 - scrollUntilVisible:
     element:
-      id: location-confirm
+      id: seat-location-row
     centerElement: true
     timeout: 300000
-- scrollUntilVisible:
-    element:
-      id: location-suggestion
-    # At AX5, centering Confirm has scrolled the preceding message above it.
-    direction: UP
-    centerElement: true
-    timeout: 300000
+- assertVisible:
+    id: location-suggestion
+- assertVisible: From your location
+- assertVisible: Based on the 2025 boundaries.*
 - takeScreenshot: ${EVIDENCE}/24-suggestion
-- scrollUntilVisible:
-    element:
-      id: location-confirm
-    centerElement: true
-    timeout: 300000
 - tapOn:
-    id: location-confirm
+    id: seat-location-row
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
+- tapOn:
+    id: tab-your-mp
 - extendedWaitUntil:
     visible:
       id: your-seat-name
     timeout: 30000
-- assertVisible: Grayndler
+- assertVisible: Grayndler.*
 - scrollUntilVisible:
     element:
       id: your-electorate

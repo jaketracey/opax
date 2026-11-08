@@ -48,6 +48,7 @@ jest.mock('expo-router', () => {
     Stack,
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
     useFocusEffect: jest.fn(),
+    useRootNavigationState: () => ({ key: 'root' }),
   };
 });
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
@@ -73,12 +74,18 @@ jest.mock('expo-constants', () => ({
     },
   },
 }));
-jest.mock('../src/launch/splash', () => ({}));
-jest.mock('../src/launch/LaunchHandoff', () => ({ LaunchHandoff: () => null }));
-jest.mock('../src/onboarding/WelcomeTour', () => ({ WelcomeTour: () => null }));
+jest.mock('../src/launch/splash', () => ({
+  decideSplashPlain: jest.fn(),
+  holdSplashForWelcome: jest.fn(),
+}));
+jest.mock('../src/launch/LaunchHandoff', () => ({
+  LaunchHandoff: () => null,
+  RootLaunchHandoff: () => null,
+}));
 jest.mock('../src/onboarding/state', () => ({
   checkFirstLaunch: jest.fn(async () => undefined),
   hideTour: jest.fn(),
+  isContentLink: () => false,
   leaveTour: jest.fn(async () => undefined),
   showTour: jest.fn(),
   useTourState: () => 'hidden',

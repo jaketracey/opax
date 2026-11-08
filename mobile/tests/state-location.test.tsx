@@ -120,10 +120,19 @@ describe('on-device state suggestion', () => {
       suggestState(victoria, [inside.longitude, inside.latitude], 20),
     ).toMatchObject({ kind: 'suggested', seat: { name: 'Essendon' } });
   });
-  test('an approximate fix near a line is a border, never a guess', () => {
-    expect(
-      suggestState(victoria, [inside.longitude, inside.latitude], 2000),
-    ).toEqual({ kind: 'border' });
+  test('a wide fix is never a guess: unavailable, or the nearby districts with Precise Location off', () => {
+    const point: [number, number] = [inside.longitude, inside.latitude];
+    expect(suggestState(victoria, point, 2000)).toEqual({
+      kind: 'unavailable',
+    });
+    const approximate = suggestState(victoria, point, 2000, undefined, true);
+    if (approximate.kind !== 'approximate') throw new Error(approximate.kind);
+    const names = approximate.seats.map((s) => s.name);
+    expect(names).toContain('Essendon');
+    expect(names.length).toBeLessThanOrEqual(5);
+    expect(names).toEqual(
+      [...names].sort((a, b) => a.localeCompare(b, 'en-AU')),
+    );
   });
   test('a fix in another state matches no district here', () => {
     // Sydney, against the Victorian seats the chooser offers.
@@ -181,7 +190,8 @@ describe('Your MP state chooser', () => {
   }
   const pressable = (r: TestRenderer.ReactTestRenderer, testID: string) =>
     r.root.findAll(
-      (n) => n.props?.testID === testID && typeof n.props.onPress === 'function',
+      (n) =>
+        n.props?.testID === testID && typeof n.props.onPress === 'function',
     )[0]!;
   const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
     r.root.findAll((n) => n.props?.testID === testID).length > 0;
@@ -213,7 +223,9 @@ describe('Your MP state chooser', () => {
     );
     expect(Location.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(has(r, 'state-location-suggestion')).toBe(true);
-    await act(async () => pressable(r, 'state-location-confirm').props.onPress());
+    await act(async () =>
+      pressable(r, 'state-location-confirm').props.onPress(),
+    );
     expect(saveChoice).toHaveBeenLastCalledWith(
       expect.objectContaining({ stateSeatIds: [essendon.electorate_id] }),
     );

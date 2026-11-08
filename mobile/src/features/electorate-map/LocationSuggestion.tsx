@@ -12,6 +12,7 @@ import { Button, Group, InfoSheet, Text } from '../../design/primitives';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { suggestFromLocation, suggestStateFromLocation } from './location';
 import type { Suggestion } from './suggestion';
+import type { StateSuggestion } from './state-suggestion';
 type Scope = 'federal' | 'state';
 const messages: Record<
   Scope,
@@ -26,6 +27,8 @@ const messages: Record<
       'No federal display outline matches your location. You may be offshore or outside the covered area. Choose your electorate by name above.',
     unavailable:
       'A location suggestion is unavailable. Choose your electorate by name above.',
+    approximate:
+      'Precise Location is off for OPAX. Choose your electorate by name above.',
   },
   state: {
     denied:
@@ -36,9 +39,15 @@ const messages: Record<
       'No district in this state matches your location. Choose your electorate by name above.',
     unavailable:
       'A location suggestion is unavailable. Choose your electorate by name above.',
+    approximate:
+      'Precise Location is off for OPAX. Choose your electorate by name above.',
   },
 };
 /**
+ * @deprecated The seat chooser's location row is `features/seat/LocationRow`.
+ * Kept, with `LocationProgress`, for Your MP's in-tab chooser and the
+ * workbench until wave 6.
+ *
  * "Use my location" in a seat chooser. `federal` matches the release's
  * federal display outlines; `state` (TestFlight build 32) matches the state
  * and territory district outlines bundled in the app. Either way the
@@ -59,7 +68,7 @@ export function LocationSuggestion({
   const said = messages[scope];
   const [busy, setBusy] = useState(false),
     [progress, setProgress] = useState<Progress>({ done: 0, total: 0 }),
-    [result, setResult] = useState<Suggestion | null>(null);
+    [result, setResult] = useState<Suggestion | StateSuggestion | null>(null);
   const [about, setAbout] = useState(false);
   const pending = useRef<AbortController | null>(null);
   useEffect(() => () => pending.current?.abort(), []);

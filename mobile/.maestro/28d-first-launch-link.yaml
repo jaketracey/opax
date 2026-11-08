@@ -1,0 +1,63 @@
+appId: au.com.opax.app
+name: 28d First launch from a link, the short welcome over the linked page
+---
+# The first launch's argument is kept for the link launch, which carries
+# none (launch-flag.e2e.ts). The app is installed and opened once without
+# being used, then stopped: the next launch, from a link, is the first one
+# that counts. The short welcome is Continue only, with no seat step, and
+# Continue marks the welcome as seen.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- stopApp
+- openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: welcome-short
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-launch-cover
+    timeout: 10000
+- assertVisible: Welcome to OPAX
+- scrollUntilVisible:
+    element:
+      id: welcome-notice
+    visibilityPercentage: 50
+    timeout: 30000
+- assertNotVisible: Not now
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28d-short-welcome
+- tapOn:
+    id: welcome-continue
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-short
+    timeout: 10000
+# The linked page is underneath, with no seat step in between.
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible: Anthony Albanese
+- assertNotVisible:
+    id: welcome-seat
+- takeScreenshot: ${EVIDENCE}/28d-linked-page
+# Seen: a plain relaunch goes straight to Today.
+- stopApp
+- launchApp:
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 60000
+- assertNotVisible:
+    id: welcome-screen

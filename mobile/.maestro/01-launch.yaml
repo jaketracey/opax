@@ -6,6 +6,9 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - launchApp:
     clearState: true
     permissions: {}
+# E2E builds treat the welcome as seen; the launch ends on Today.
+- assertNotVisible:
+    id: welcome-screen
 - assertVisible:
     id: today-screen
 - assertVisible:
@@ -37,7 +40,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - tapOn:
     id: tab-your-mp
 - assertVisible:
-    id: seat-search
+    id: your-invitation
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:

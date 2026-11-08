@@ -124,7 +124,19 @@ test('loads the complete pinned federal display set with bounded concurrency and
     boundary.geometry!.type === 'Polygon'
       ? boundary.geometry!.coordinates[0]![0]!
       : boundary.geometry!.coordinates[0]![0]![0]!;
-  expect(suggest(set, point, 20)).toEqual({ kind: 'border' });
+  // On Grayndler's line: the nearest seats (up to three), A to Z, Grayndler
+  // among them, each offered as an ordinary row.
+  const border = suggest(set, point, 20);
+  if (border.kind !== 'border') throw new Error(border.kind);
+  expect(border.vintage).toBe('2025 election');
+  expect(border.seats.length).toBeGreaterThanOrEqual(2);
+  expect(border.seats.length).toBeLessThanOrEqual(3);
+  expect(border.seats.map((s) => s.name)).toContain('Grayndler');
+  expect(border.seats.map((s) => s.name)).toEqual(
+    [...border.seats.map((s) => s.name)].sort((a, b) =>
+      a.localeCompare(b, 'en-AU'),
+    ),
+  );
   expect(suggest(set, [151.145, -33.9], null)).toEqual({
     kind: 'unavailable',
   });
@@ -165,12 +177,19 @@ test('overlapping outlines and approximate fixes fall back', () => {
   const seat = seats[0] as Electorate;
   const outlines = [{ seat, geometry: square }];
   const set = { outlines, vintage: '2025 election', skipped: [] };
+  // Two outlines of one seat: a border answer listing the seat once.
   expect(
     suggest({ ...set, outlines: [...outlines, ...outlines] }, [0.2, 0.2], 10),
-  ).toEqual({
-    kind: 'border',
+  ).toEqual({ kind: 'border', seats: [seat], vintage: '2025 election' });
+  // A fix wider than 1 km with Precise Location on (a poor fix indoors) is
+  // unavailable, never a list of border seats.
+  expect(suggest(set, [0.2, 0.2], 50000)).toEqual({ kind: 'unavailable' });
+  // With Precise Location off it is approximate: the seats within the radius.
+  expect(suggest(set, [0.2, 0.2], 50000, true)).toEqual({
+    kind: 'approximate',
+    seats: [seat],
+    vintage: '2025 election',
   });
-  expect(suggest(set, [0.2, 0.2], 50000)).toEqual({ kind: 'border' });
 });
 test('the border margin adds the outline error to the fix accuracy', () => {
   const seat = seats[0] as Electorate;
@@ -189,9 +208,13 @@ test('the border margin adds the outline error to the fix accuracy', () => {
   for (const accuracy of [0, 65, 250])
     expect(suggest(set, point, accuracy)).toMatchObject({ kind: 'suggested' });
   // At 300 m it is 550 m; max(500, accuracy) would have suggested a seat.
-  expect(suggest(set, point, 300)).toEqual({ kind: 'border' });
+  expect(suggest(set, point, 300)).toEqual({
+    kind: 'border',
+    seats: [seat],
+    vintage: '2025 election',
+  });
   expect(suggest(set, point, 269)).toMatchObject({ kind: 'suggested' });
-  expect(suggest(set, point, 271)).toEqual({ kind: 'border' });
+  expect(suggest(set, point, 271)).toMatchObject({ kind: 'border' });
 });
 test('the federal vintage comes from the release, the most common one winning', async () => {
   // Synthetic copies of pinned seat files with a relabelled vintage; the

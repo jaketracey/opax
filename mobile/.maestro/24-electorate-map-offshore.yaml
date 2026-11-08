@@ -5,14 +5,16 @@ name: 24 Offshore has no match and the manual chooser works
     clearState: true
     permissions:
       location: unset
-- tapOn:
-    id: tab-your-mp
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: use-my-location
-    direction: UP
     centerElement: true
-    timeout: 300000
+    timeout: 60000
 - tapOn:
     id: use-my-location
 - extendedWaitUntil:
@@ -28,6 +30,7 @@ name: 24 Offshore has no match and the manual chooser works
       id: location-no-match
     centerElement: true
     timeout: 300000
+- assertVisible: Your location isn.t inside a federal electorate. Search by name instead.
 - takeScreenshot: ${EVIDENCE}/24-offshore-no-match
 - runFlow:
     file: support/location-manual-seat.yaml

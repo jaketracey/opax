@@ -1,23 +1,35 @@
 appId: au.com.opax.app
 ---
-- scrollUntilVisible:
-    element:
-      id: seat-search
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: seat-search
+# Chooses Grayndler by name through the seat chooser (/seat), opening it
+# first unless the caller already has it open. The native search field has
+# no test id: it is reached by its placeholder.
+- runFlow:
+    when:
+      notVisible:
+        id: seat-sheet
+    commands:
+      - openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- tapOn: Electorate or member.s name
 - inputText: Grayndler
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-federal-representatives-nsw-grayndler
-    centerElement: true
-    timeout: 300000
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-nsw-grayndler
+    timeout: 30000
 - tapOn:
-    id: seat-choice-federal-representatives-nsw-grayndler
+    id: seat-row-federal-representatives-nsw-grayndler
+# Choosing closes the sheet after its checkmark.
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
+- tapOn:
+    id: tab-your-mp
 - extendedWaitUntil:
     visible:
       id: your-seat-name
     timeout: 30000
-- assertVisible: Grayndler
+- assertVisible: Grayndler.*

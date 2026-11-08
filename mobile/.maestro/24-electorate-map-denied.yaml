@@ -5,14 +5,16 @@ name: 24 Permission denied keeps the chooser available
     clearState: true
     permissions:
       location: unset
-- tapOn:
-    id: tab-your-mp
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: use-my-location
-    direction: UP
     centerElement: true
-    timeout: 300000
+    timeout: 60000
 - tapOn:
     id: use-my-location
 - extendedWaitUntil:
@@ -27,12 +29,18 @@ name: 24 Permission denied keeps the chooser available
     timeout: 300000
 - tapOn:
     text: Don’t Allow
-    point: "50%,10%"
+    point: '50%,10%'
 - scrollUntilVisible:
     element:
       id: location-denied
     centerElement: true
     timeout: 300000
+- assertVisible: Location access is off for OPAX.
+# The row stays, with the way to turn location on.
+- assertVisible:
+    id: use-my-location
+- assertVisible:
+    id: seat-location-settings
 - takeScreenshot: ${EVIDENCE}/24-permission-denied
 - runFlow:
     file: support/location-manual-seat.yaml
