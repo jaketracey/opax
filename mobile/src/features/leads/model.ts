@@ -69,6 +69,20 @@ export const categoryLabel = (category: LeadCategory) =>
   categoryWords[category].label;
 export const isCategory = (value: unknown): value is LeadCategory =>
   typeof value === 'string' && isLeadCategory(value);
+// Plain names a link may use for a kind ("opax://discover?category=party_funding").
+const categoryAliases: Record<string, LeadCategory> = {
+  government_contracts: 'procurement_concentration',
+  contracts: 'procurement_concentration',
+  party_funding: 'recipient_concentration',
+  companies_in_both: 'donor_contract_overlap',
+};
+/** A link's kind, by the export's name or its plain name; null otherwise. */
+export function categoryFrom(value: unknown): LeadCategory | null {
+  if (isCategory(value)) return value;
+  return typeof value === 'string' && Object.hasOwn(categoryAliases, value)
+    ? categoryAliases[value]!
+    : null;
+}
 export const categorySeeAll = (category: LeadCategory, count: number) =>
   `See all ${formatCount(count)} ${categoryWords[category].seeAll}`;
 export const categorySearch = (category: LeadCategory) =>
@@ -398,9 +412,11 @@ export type LeadFilter = 'all' | LeadCategory;
 export type LeadSort = 'value' | 'share';
 const shareOf = (signal: DiscoverySignal) =>
   Number(signal.chart?.participants[0]?.share ?? 0);
+// A company in both sorts by its party receipts, the figure its card shows,
+// so a list read top to bottom is largest first.
 const totalOf = (signal: DiscoverySignal) =>
   Number(
-    signal.chart?.group_total ?? metricValue(signal, 'Recorded contract value'),
+    signal.chart?.group_total ?? metricValue(signal, 'Recorded party receipts'),
   );
 const nameOf = (signal: DiscoverySignal) =>
   signal.chart?.group_label ?? signal.entity;
@@ -469,9 +485,13 @@ export function leadsAbout(
   return leadsFor(discovery)
     .filter((lead) => {
       const signal = discovery.signals.find((s) => s.id === lead.id);
-      const subjects = [lead.entity, signal?.chart?.group_label].filter(
-        (value): value is string => !!value,
-      );
+      // A concentration's subject is its group (the agency or party); its
+      // entity is the largest participant. A company in both is its entity.
+      const subjects = [
+        lead.category === 'donor_contract_overlap'
+          ? lead.entity
+          : signal?.chart?.group_label,
+      ].filter((value): value is string => !!value);
       return subjects.some(
         (subject) =>
           normaliseOrganisation(subject) === wanted ||

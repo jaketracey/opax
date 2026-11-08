@@ -31,7 +31,7 @@ import {
   categorySeeAll,
   categorySource,
   discoveryAsOf,
-  isCategory,
+  categoryFrom,
   leadSections,
   leadsHiddenNotes,
   searchLeads,
@@ -94,7 +94,10 @@ export function leadsCitation(leads: readonly LeadView[]) {
  */
 export default function Leads() {
   const params = useLocalSearchParams<{ category?: string; item?: string }>();
-  const category = isCategory(params.category) ? params.category : null;
+  const category = useMemo(
+    () => categoryFrom(params.category),
+    [params.category],
+  );
   const router = useRouter();
   const load = useCallback(
     (refresh: boolean) => catalogs.discovery(refresh),
