@@ -4,11 +4,28 @@ import { yearPictures } from '../../api/runtime';
 import { localImageURI } from '../../api/image-policy';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { useReduceMotion } from '../../design/accessibility';
-import { Button, Text } from '../../design/primitives';
-import { colors, light } from '../../design/tokens';
+import { Button, Icon, Text } from '../../design/primitives';
+import { colors, radii, rhythm } from '../../design/tokens';
+import { symbols } from '../../design/symbols';
 
-/** Mounted only inside the opened photo disclosure; native Image reads a cache file. */
-export function Picture({ file, ratio }: { file: string; ratio: number }) {
+/**
+ * One year photograph in its frame. Native Image reads only a device cache
+ * file, fetched when the frame mounts. The frame keeps its shape from
+ * placeholder to photo; a failure draws inside it, with Try again.
+ */
+export function Picture({
+  file,
+  ratio = 4 / 3,
+  ground = 'sunken',
+  rounded = true,
+}: {
+  file: string;
+  /** The frame's width over height; archive photographs are never cropped. */
+  ratio?: number;
+  /** The photo viewer draws on black. */
+  ground?: 'sunken' | 'black';
+  rounded?: boolean;
+}) {
   const [retry, setRetry] = useState(0);
   const [saved, setSaved] = useState<{
     file: string;
@@ -18,7 +35,6 @@ export function Picture({ file, ratio }: { file: string; ratio: number }) {
     onDisplay?: (visible: boolean) => void;
   } | null>(null);
   const [shown, setShown] = useState<string | null>(null);
-  const [cleared, setCleared] = useState<string | null>(null);
   const [reveal] = useState(() => new Animated.Value(0));
   const reduced = useReduceMotion();
   useEffect(() => {
@@ -40,20 +56,15 @@ export function Picture({ file, ratio }: { file: string; ratio: number }) {
                 setSaved({ file, retry, failed: true });
                 return;
               }
-              const identity = `${file}/${retry}`;
-              setShown(identity);
-              if (reduced) setCleared(identity);
-              else {
-                reveal.setValue(0);
+              setShown(`${file}/${retry}`);
+              reveal.setValue(reduced ? 1 : 0);
+              if (!reduced)
                 Animated.timing(reveal, {
                   toValue: 1,
-                  duration: 220,
+                  duration: 150,
                   easing: Easing.out(Easing.quad),
-                  useNativeDriver: false,
-                }).start(() => {
-                  if (active) setCleared(identity);
-                });
-              }
+                  useNativeDriver: true,
+                }).start();
             },
           });
       })
@@ -69,31 +80,28 @@ export function Picture({ file, ratio }: { file: string; ratio: number }) {
   try {
     if (current?.localURI) uri = localImageURI(current.localURI);
   } catch {
-    /* Keep the soft fallback. */
+    /* Keep the placeholder. */
   }
   const identity = `${file}/${retry}`;
   const ready = !!uri && shown === identity;
-  const veil = ready
-    ? cleared === identity
-      ? null
-      : reveal.interpolate({
-          inputRange: [0, 1],
-          outputRange: [light.sunken, `${light.sunken}00`],
-        })
-    : light.sunken;
   const key = yearPictureKey('/' + file);
   return (
-    <>
-      <View
-        testID={`tm-photo-${key}${ready ? '-loaded' : '-placeholder'}`}
-        accessibilityIgnoresInvertColors
-        style={{
-          width: '100%',
-          aspectRatio: ratio,
-          backgroundColor: colors.sunken,
-        }}
-      >
-        {uri ? (
+    <View
+      testID={`tm-photo-${key}${ready ? '-loaded' : '-placeholder'}`}
+      accessibilityIgnoresInvertColors
+      style={{
+        width: '100%',
+        aspectRatio: ratio,
+        backgroundColor: ground === 'black' ? '#000' : colors.sunken,
+        borderRadius: rounded ? radii.thumb : 0,
+        borderCurve: 'continuous',
+        overflow: 'hidden',
+      }}
+    >
+      {uri && !current?.failed ? (
+        <Animated.View
+          style={[StyleSheet.absoluteFill, { opacity: ready ? reveal : 0 }]}
+        >
           <Image
             key={identity}
             source={{ uri: localImageURI(uri) }}
@@ -104,22 +112,40 @@ export function Picture({ file, ratio }: { file: string; ratio: number }) {
             onLoad={() => current?.onDisplay?.(true)}
             onError={() => current?.onDisplay?.(false)}
           />
-        ) : null}
-        {veil ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[StyleSheet.absoluteFill, { backgroundColor: veil }]}
-          />
-        ) : null}
-      </View>
-      {current?.failed ? (
-        <>
-          <Text wordSafe variant="metadata">
-            This photograph is not available on this device.
-          </Text>
-          <Button label="Try again" onPress={() => setRetry((v) => v + 1)} />
-        </>
+        </Animated.View>
       ) : null}
-    </>
+      {current?.failed ? (
+        <View style={styles.failed}>
+          <Icon name={symbols.error} size={28} tone="inkSoft" />
+          <Text
+            wordSafe
+            variant="secondary"
+            tone="inkSoft"
+            style={styles.center}
+          >
+            {"Photo couldn't be loaded."}
+          </Text>
+          <Button
+            label="Try again"
+            variant="plain"
+            onPress={() => setRetry((v) => v + 1)}
+          />
+        </View>
+      ) : null}
+    </View>
   );
 }
+const styles = StyleSheet.create({
+  failed: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: rhythm.tight,
+    padding: rhythm.block,
+  },
+  center: { textAlign: 'center' },
+});

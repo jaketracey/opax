@@ -1,24 +1,87 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- jest.mock factories build inert host elements. */
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image } from 'react-native';
-import { Button, Disclosure } from '../src/design/primitives';
-import { YearPictures } from '../src/features/explore/YearPictures';
-import { apiClient, yearPictures } from '../src/api/runtime';
+import { Image, Platform, Text as NativeText } from 'react-native';
+import { router } from 'expo-router';
+import { Button } from '../src/design/primitives';
+import {
+  YearGallery,
+  creditText,
+  photoIndex,
+} from '../src/features/explore/YearGallery';
+import { apiClient, catalogs, yearPictures } from '../src/api/runtime';
+import { presentSheet } from '../src/navigation/sheets';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import type { YearPicture } from '../src/features/explore/pictures';
+
 const manifest = JSON.parse(
   readFileSync(
     resolve(__dirname, '../../portal/public/years/pictures.json'),
     'utf8',
   ),
+) as Record<string, YearPicture[]>;
+const year2025 = JSON.parse(
+  readFileSync(
+    resolve(__dirname, '../../portal/public/years/2025.json'),
+    'utf8',
+  ),
 );
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+jest.mock('expo-router', () => {
+  const React = require('react');
+  const part = (name: string) =>
+    function Part(props: object) {
+      return React.createElement(
+        name,
+        props,
+        (props as { children?: unknown }).children,
+      );
+    };
+  const Toolbar = Object.assign(part('Toolbar'), {
+    Button: part('ToolbarButton'),
+    Spacer: () => null,
+    View: part('ToolbarView'),
+  });
+  return {
+    router: { push: jest.fn(), back: jest.fn() },
+    Stack: { Screen: part('StackScreen'), Toolbar },
+    Link: Object.assign(part('Link'), {
+      Trigger: part('LinkTrigger'),
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    }),
+    useLocalSearchParams: jest.fn(() => ({})),
+    useSegments: () => ['(tabs)', '(today)'],
+  };
+});
+jest.mock('expo-glass-effect', () => ({
+  GlassView: () => null,
+  isLiquidGlassAvailable: () => false,
+}));
+jest.mock('../src/navigation/sheets', () => ({
+  presentSheet: jest.fn(),
+  presentSource: jest.fn((details, options) =>
+    jest
+      .requireMock('../src/navigation/sheets')
+      .presentSheet({ kind: 'source', details, ...options }),
+  ),
 }));
 jest.mock('../src/api/runtime', () => ({
   apiClient: { get: jest.fn(), getForAction: jest.fn() },
   yearPictures: { get: jest.fn() },
+  catalogs: {
+    bills: jest.fn(),
+    roster: jest.fn(),
+    slugs: jest.fn(),
+  },
+}));
+jest.mock('../src/storage/two-slot', () => ({
+  ...jest.requireActual('../src/storage/two-slot'),
+  TwoSlotStore: class {
+    read = async () => null;
+    save = async () => undefined;
+  },
 }));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => {
@@ -31,39 +94,36 @@ jest.mock('../src/design/accessibility', () => ({
   useReduceMotion: () => true,
   useAccessibilitySize: () => false,
 }));
-test('photo reads wait for explicit disclosure open, preserve frame during decode, use only local images and no paid read', async () => {
-  jest
-    .mocked(apiClient.get)
-    .mockResolvedValue({
-      data: manifest,
-      stale: false,
-      asOf: null,
-      savedAt: 1000,
-    });
+const texts = (r: TestRenderer.ReactTestRenderer) =>
+  r.root
+    .findAllByType(NativeText)
+    .map((n) => {
+      const flat = (c: unknown): string =>
+        typeof c === 'string' || typeof c === 'number'
+          ? String(c)
+          : Array.isArray(c)
+            ? c.map(flat).join('')
+            : c && typeof c === 'object' && 'props' in c
+              ? flat((c as { props: { children?: unknown } }).props.children)
+              : '';
+      return flat(n.props.children);
+    })
+    .filter(Boolean);
+beforeEach(() => {
+  jest.clearAllMocks();
   jest
     .mocked(yearPictures.get)
     .mockImplementation(async (key) => `file:///cache/${key}.webp`);
+});
+
+test('the gallery reads only local photos, keeps its frame while decoding, never a paid read, and retries in place', async () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(
-      <Disclosure label="Photographs" testID="photos">
-        {() => <YearPictures year={2025} />}
-      </Disclosure>,
+      <YearGallery year={2025} photos={manifest['2025']!} />,
     );
   });
-  expect(apiClient.get).not.toHaveBeenCalled();
-  expect(yearPictures.get).not.toHaveBeenCalled();
-  await act(async () => {
-    renderer.root
-      .findAllByProps({ testID: 'photos' })
-      .find((n) => n.props.onPress)!
-      .props.onPress();
-  });
-  expect(apiClient.get).toHaveBeenCalledWith(
-    '/years/pictures.json',
-    expect.any(Function),
-  );
-  expect(yearPictures.get).toHaveBeenCalledTimes(6);
+  expect(yearPictures.get).toHaveBeenCalledTimes(manifest['2025']!.length);
   const image = renderer.root.findAllByType(Image)[0]!;
   expect(image.props.source.uri).toBe(
     'file:///cache/2025-cooper-polling-place.webp',
@@ -79,18 +139,179 @@ test('photo reads wait for explicit disclosure open, preserve frame during decod
   ).toEqual(frame);
   expect(frame).toMatchObject({
     width: '100%',
-    aspectRatio: manifest['2025'][0].width / manifest['2025'][0].height,
+    aspectRatio: 4 / 3,
+    backgroundColor: expect.anything(),
   });
   expect(apiClient.getForAction).not.toHaveBeenCalled();
   const obsoleteError = image.props.onError;
   act(() => obsoleteError());
-  expect(yearPictures.get).toHaveBeenCalledTimes(6);
-  await act(async () => renderer.root.findAllByType(Button).find(n => n.props.label === 'Try again')!.props.onPress());
-  expect(yearPictures.get).toHaveBeenLastCalledWith('2025-cooper-polling-place', true);
-  act(() => obsoleteError()); // Obsolete decode callback cannot blank the retry.
+  expect(texts(renderer)).toContain("Photo couldn't be loaded.");
+  await act(async () =>
+    renderer.root
+      .findAllByType(Button)
+      .find((n) => n.props.label === 'Try again')!
+      .props.onPress(),
+  );
+  expect(yearPictures.get).toHaveBeenLastCalledWith(
+    '2025-cooper-polling-place',
+    true,
+  );
+  act(() => obsoleteError()); // An obsolete decode callback cannot blank the retry.
   const retried = renderer.root.findAllByType(Image)[0]!;
-  expect(retried.props.source.uri).toBe('file:///cache/2025-cooper-polling-place.webp');
   act(() => retried.props.onLoad());
-  expect(renderer.root.findAllByProps({ testID: 'tm-photo-2025-cooper-polling-place-loaded' })).not.toHaveLength(0);
+  expect(
+    renderer.root.findAllByProps({
+      testID: 'tm-photo-2025-cooper-polling-place-loaded',
+    }),
+  ).not.toHaveLength(0);
+  act(() => renderer.unmount());
+});
+
+test('every photograph has its caption and "Photo: author · licence" beneath, and the credit opens its source', async () => {
+  const photos = manifest['2025']!;
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <YearGallery year={2025} photos={photos} initial={null} />,
+    );
+  });
+  const all = texts(renderer);
+  expect(all).toContain(photos[0]!.caption);
+  expect(all).toContain(`Photo: ${creditText(photos[0]!)}`);
+  expect(all.join(' ')).not.toMatch(/https?:\/\//);
+  const credit = renderer.root.findAll(
+    (n) =>
+      n.props.testID === 'tm-photo-credit-2025-cooper-polling-place' &&
+      !!n.props.accessibilityLabel,
+  )[0]!;
+  expect(credit.props.accessibilityLabel).toBe(
+    `Photo: ${photos[0]!.author}, ${photos[0]!.licence}.`,
+  );
+  act(() => credit.props.onPress());
+  const sheet = jest.mocked(presentSheet).mock.calls[0]![0] as {
+    details: { originals: { label: string; url: string }[]; asOf: unknown };
+  };
+  expect(sheet.details.originals[0]).toMatchObject({
+    label: 'Wikimedia Commons',
+    url: photos[0]!.source_url,
+  });
+  expect(sheet.details.asOf).toBe(photos[0]!.date);
+  const adjustable = renderer.root.findAll(
+    (n) => n.props.accessibilityRole === 'adjustable',
+  )[0]!;
+  expect(adjustable.props.accessibilityLabel).toBe(
+    `Photograph 1 of ${photos.length}. ${photos[0]!.caption}. Photo: ${photos[0]!.author}, ${photos[0]!.licence}.`,
+  );
+  act(() =>
+    adjustable.props.onAccessibilityAction({
+      nativeEvent: { actionName: 'increment' },
+    }),
+  );
+  expect(texts(renderer)).toContain(photos[1]!.caption);
+  act(() =>
+    adjustable.props.onAccessibilityAction({
+      nativeEvent: { actionName: 'activate' },
+    }),
+  );
+  expect(router.push).toHaveBeenCalledWith({
+    pathname: '/explore/photo',
+    params: { year: '2025', photo: expect.stringMatching(/^2025-/) },
+  });
+  act(() => renderer.unmount());
+});
+
+test('an archive link opens its photograph; an unknown key opens the first', () => {
+  const photos = manifest['2009']!;
+  expect(photoIndex(photos, 'nonsense')).toBe(0);
+  expect(photoIndex(photos, null)).toBe(0);
+  const last = photos.at(-1)!;
+  expect(
+    photoIndex(
+      photos,
+      last.file.replace('years/pictures/2009/', '2009-').replace('.webp', ''),
+    ),
+  ).toBe(photos.length - 1);
+});
+
+test('the Time machine opens on a year at once, with its menu, pager, voices and dated OPAX lines', async () => {
+  const TimeMachine = require('../src/features/explore/TimeMachine')
+    .default as () => React.JSX.Element;
+  jest.mocked(apiClient.get).mockImplementation(async (path: string) => ({
+    data:
+      path === '/years/pictures.json'
+        ? manifest
+        : require('../src/features/explore/model').decodeYear(year2025, 2025),
+    stale: false,
+    asOf: path === '/years/pictures.json' ? null : year2025.generated_at,
+    savedAt: 1000,
+  }));
+  jest.mocked(catalogs.bills).mockResolvedValue({
+    data: { bills: [], generated_at: '2026-09-30', count: 0, meta: {} },
+    stale: false,
+    asOf: '2026-09-30',
+    savedAt: 1000,
+  } as never);
+  jest.mocked(catalogs.roster).mockResolvedValue({
+    data: { people: [{ name: 'Glenn Sterle' }], meta: {} },
+    stale: false,
+    asOf: null,
+    savedAt: 1000,
+  } as never);
+  jest.mocked(catalogs.slugs).mockResolvedValue({
+    data: { slugs: { 'glenn-sterle': 'Glenn Sterle' } },
+    stale: false,
+    asOf: null,
+    savedAt: 1000,
+  } as never);
+  const { useLocalSearchParams } = jest.requireMock('expo-router');
+  useLocalSearchParams.mockReturnValue({ year: '2025', photo: 'nonsense' });
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<TimeMachine />);
+  });
+  await act(async () => {});
+  expect(renderer.root.findAllByProps({ testID: 'tm-open' })).toHaveLength(0);
+  expect(
+    renderer.root.findAllByProps({ testID: 'tm-year-input' }),
+  ).toHaveLength(0);
+  const menu = renderer.root.findByProps({ testID: 'tm-year-menu' });
+  expect(menu.props.accessibilityLabel).toBe('Year, 2025');
+  expect(texts(renderer)).toContain('2025');
+  const all = texts(renderer);
+  expect(all).toContain(
+    'In debates on the housing crisis, cost of living, the under-16 social media ban and the energy transition',
+  );
+  // Glenn Sterle is on the roster: a person row; Inman Grant is text.
+  expect(
+    renderer.root.findAll(
+      (n) =>
+        typeof n.props.accessibilityLabel === 'string' &&
+        n.props.accessibilityLabel.startsWith('Inman Grant'),
+    ).length,
+  ).toBeGreaterThan(0);
+  expect(all).toContain('Glenn Sterle');
+  const buttons = renderer.root.findAll(
+    (n) => (n.type as unknown) === 'ToolbarButton',
+  );
+  if (Platform.OS === 'ios')
+    expect(buttons.map((b) => b.props.accessibilityLabel)).toEqual([
+      'Previous year, 2024',
+      'Next year, 2026',
+    ]);
+  const lines = renderer.root
+    .findAll((n) =>
+      ['tm-year-as-at', 'tm-voices-as-at'].includes(n.props.testID),
+    )
+    .map((n) => n.props.accessibilityLabel)
+    .filter(Boolean);
+  expect(lines.length).toBeGreaterThan(0);
+  for (const line of lines) {
+    expect(line).toContain('OPAX');
+    expect(line).not.toContain('Hansard');
+    expect(line).toContain('Updated 4 Sep 2026');
+  }
+  expect(all.join(' ')).not.toMatch(
+    /knowledge box|so far|static|manifest|register|\d{4}-\d{2}-\d{2}|—/,
+  );
   act(() => renderer.unmount());
 });

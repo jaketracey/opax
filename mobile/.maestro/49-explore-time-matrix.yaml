@@ -5,18 +5,22 @@ name: 49 Time machine and native debate matrix
     clearState: true
     permissions: {}
 - openLink: opax://explore/tm
-- tapOn:
-    id: tm-open
-- scrollUntilVisible:
-    element:
-      id: tm-selected-year
-    direction: DOWN
-    centerElement: true
+# The year shows at once: no field and no Open year.
+- extendedWaitUntil:
+    visible:
+      id: tm-year-menu
     timeout: 90000
-    speed: 20
 - assertVisible:
-    id: tm-selected-year
-    text: '2025'
+    id: tm-year-menu
+    text: 'Year, 2025'
+- assertNotVisible:
+    id: tm-open
+- extendedWaitUntil:
+    visible:
+      id: tm-photo-2025-cooper-polling-place-loaded
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/49-time-machine
 - scrollUntilVisible:
     element:
       id: explore-machine-pill
@@ -24,30 +28,21 @@ name: 49 Time machine and native debate matrix
     centerElement: true
     timeout: 90000
     speed: 20
-- takeScreenshot: ${EVIDENCE}/49-time-machine
+- takeScreenshot: ${EVIDENCE}/49-time-machine-brief
 - tapOn:
     id: explore-machine-pill
 - assertVisible:
     id: explore-machine-pill-sheet
 - takeScreenshot: ${EVIDENCE}/49-machine-note
 - tapOn: Done
-- scrollUntilVisible:
-    element:
-      id: tm-photos
-    direction: DOWN
-    centerElement: true
-    timeout: 90000
-    speed: 20
-- tapOn:
-    id: tm-photos
-- scrollUntilVisible:
-    element:
-      id: tm-photo-2025-cooper-polling-place-loaded
-    direction: DOWN
-    centerElement: true
+# The bottom pager's chevrons carry no visible year; the neighbour is in the label.
+- tapOn: 'Previous year, 2024'
+- extendedWaitUntil:
+    visible:
+      id: tm-year-menu
+      text: 'Year, 2024'
     timeout: 30000
-- waitForAnimationToEnd
-- takeScreenshot: ${EVIDENCE}/49-time-machine-photo-loaded
+- takeScreenshot: ${EVIDENCE}/49-time-machine-2024
 - openLink: opax://explore/matrix
 - scrollUntilVisible:
     element:
