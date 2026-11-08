@@ -26,6 +26,12 @@ jest.mock('../src/api/image-policy', () => ({
 }));
 const mockParams: { slug?: string } = {};
 jest.mock('expo-router', () => ({
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
@@ -128,8 +134,9 @@ test("Shorten's page shows his votes and Labor's receipts, not an unlinked notic
   });
   expect(mock.rosterProfileFor).toHaveBeenCalledWith(shorten);
   expect(text(r)).toContain('Bill Shorten');
-  expect(text(r)).toContain('Labor party receipts');
-  expect(text(r)).toContain('2,302 recorded divisions');
+  expect(text(r)).toContain('Former member');
+  expect(text(r)).toContain('Labor’s disclosed receipts');
+  expect(text(r)).toContain('Voted in 2,302 divisions, 2008 to 2024');
   for (const id of ['person-votes-unlinked', 'person-receipts-unlinked'])
     expect(r.root.findAll((n) => n.props.testID === id)).toHaveLength(0);
   await act(async () => r.unmount());

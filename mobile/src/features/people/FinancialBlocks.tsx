@@ -1,14 +1,9 @@
-import { router } from 'expo-router';
-import {
-  BigFigure,
-  Disclosure,
-  Group,
-  KeyValueList,
-  LinkRow,
-  OpaxWebLink,
-  RowList,
-  Text,
-} from '../../design/primitives';
+import { StyleSheet, View } from 'react-native';
+import { Disclosure } from '../../design/disclosure';
+import { Group } from '../../design/layout';
+import { LinkRow, ValueRow } from '../../design/rows';
+import { Text } from '../../design/text';
+import { isPartyLabel } from '../../design/party';
 import { rhythm } from '../../design/tokens';
 import {
   formatCount,
@@ -16,43 +11,95 @@ import {
   formatFinancialYear,
   formatMoney,
   formatPercent,
+  formatYearRange,
   moneyAccessibilityLabel,
 } from '../../design/format';
-import { moneyRoute, partyRoute } from '../../navigation/routes';
-import { RecordBlock } from '../your-mp/Evidence';
+import {
+  expenseGlossaryRoute,
+  moneyRoute,
+  partyRoute,
+} from '../../navigation/routes';
+import { NewDot } from '../follows/NewDot';
 import type { ProfileView } from '../your-mp/model';
+import { ProfileBlock } from './Block';
+import { payRateLine } from './model';
 
+/** "Labor's", "The Nationals'": the possessive follows the name. */
+export const possessive = (name: string) =>
+  /s$/i.test(name) ? `${name}’` : `${name}’s`;
+
+/** The block's figure: `figure` role, money ink, its line under it. */
+function MoneyFigure({
+  amount,
+  line,
+  testID,
+}: {
+  amount: number;
+  line: string;
+  testID?: string;
+}) {
+  return (
+    <View
+      accessible
+      accessibilityLabel={`${moneyAccessibilityLabel(amount)}, ${line}`}
+      testID={testID}
+    >
+      <Text wordSafe variant="figure" tone="moneyInk" tabular>
+        {formatMoney(amount)}
+      </Text>
+      <Text wordSafe variant="secondary">
+        {line}
+      </Text>
+    </View>
+  );
+}
+
+/**
+ * Pay (people.md 2.1): the annual figure dated by the rate's own effective
+ * date ("a year as Prime Minister, rate from 1 Jul 2026"), never the date
+ * the post began; the one standing caveat; the years and the posts, each
+ * post with its own dates. Arithmetic and qualifiers live in the sheet.
+ */
 export function PayBlock({
   block,
   retry,
   id,
-  figure = true,
 }: {
   block: ProfileView['blocks']['pay'];
   retry: () => void;
   id: string;
-  /**
-   * False where the page's figure strip already shows the rate (a profile):
-   * the rate joins the post's line instead of a second display figure.
-   */
+  /** @deprecated The block always shows its own dated figure. */
   figure?: boolean;
 }) {
   return (
-    <RecordBlock
-      title="Pay for the posts held"
+    <ProfileBlock
+      title="Pay"
       id={id}
       block={block}
       retry={retry}
-      accent="money"
+      skeleton="figure"
       licenceDataset="pay"
-      partialMissing="No record could be shown for this person. Some records could not be read."
-      unlinked="The app does not show this person's salary entitlements yet. See the record on opax.com.au."
-      missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
       about={(p) =>
         p
           ? {
-              title: 'About these entitlements',
-              notes: [p.method, ...p.notCovered.map((note) => note.text)],
+              title: 'Pay',
+              notes: [
+                p.person.now?.assumed
+                  ? 'The post is shown as named in the Opposition Leader’s notice.'
+                  : null,
+                p.person.now
+                  ? `Base salary ${formatMoney(p.base.amount)}${
+                      p.person.now.pct
+                        ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
+                        : ''
+                    }.`
+                  : null,
+                payRateLine(p).dated
+                  ? null
+                  : 'The date this rate took effect is not published in this record.',
+                p.method,
+                ...p.notCovered.map((note) => note.text),
+              ],
             }
           : null
       }
@@ -60,95 +107,185 @@ export function PayBlock({
       {(p) => (
         <Group>
           {p.person.now ? (
-            <>
-              {figure ? (
-                <BigFigure
-                  value={formatMoney(p.person.now.salary)}
-                  spoken={moneyAccessibilityLabel(p.person.now.salary)}
-                  label="a year"
-                  accent="money"
-                  testID={`${id}-salary`}
-                />
-              ) : null}
-              <Group gap={rhythm.line}>
-                <Text wordSafe variant="strong">
-                  {p.person.now.post}
-                  {p.person.now.assumed
-                    ? ' (if named in the Opposition Leader’s notice)'
-                    : ''}
-                </Text>
-                <Text wordSafe variant="metadata">
-                  {figure ? '' : `${formatMoney(p.person.now.salary)} a year: `}
-                  {figure ? 'Base salary' : 'base salary'}{' '}
-                  {formatMoney(p.base.amount)}
-                  {p.person.now.pct
-                    ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
-                    : ''}
-                  . Post held since {formatDate(p.person.now.since)}.
-                </Text>
-              </Group>
-            </>
+            <MoneyFigure
+              amount={p.person.now.salary}
+              line={payRateLine(p).line}
+              testID={`${id}-salary`}
+            />
           ) : (
-            <Text wordSafe>
-              No current pay rate is held. Historical entitlements are listed
-              below.
+            <Text wordSafe variant="secondary">
+              No current pay. Past entitlements below.
             </Text>
           )}
-          <Text wordSafe variant="fine">
-            These are entitlements set by instrument, not payslips.
+          <Text wordSafe variant="footnote" testID={`${id}-caveat`}>
+            Entitlements set by instrument, not payslips.
           </Text>
-          <RowList>
+          <View>
             <Disclosure
-              label="Salary by financial year"
+              label="By financial year"
               value={formatCount(p.person.by_year.length)}
               testID={`${id}-years`}
             >
-              {() => (
-                <KeyValueList
-                  items={p.person.by_year.map(([year, amount]) => ({
-                    label: formatFinancialYear(year),
-                    value: formatMoney(amount),
-                  }))}
-                />
-              )}
+              {() =>
+                [...p.person.by_year]
+                  .reverse()
+                  .map(([year, amount]) => (
+                    <ValueRow
+                      key={year}
+                      label={formatFinancialYear(year)}
+                      value={formatMoney(amount)}
+                    />
+                  ))
+              }
             </Disclosure>
             <Disclosure
               label="Posts held"
               value={formatCount(p.person.spells.length)}
               testID={`${id}-posts`}
             >
-              {() => (
-                <RowList>
-                  {[...p.person.spells]
-                    .reverse()
-                    .map(([from, to, post, pct, salary], i) => (
-                      <Group key={i} gap={rhythm.line}>
-                        <Text wordSafe variant="strong">
-                          {post}
-                        </Text>
-                        <Text wordSafe variant="fine">
-                          {formatDate(from)} to{' '}
-                          {to ? formatDate(to) : 'present'}
-                        </Text>
-                        <Text wordSafe variant="strong" tabular>
-                          {formatMoney(salary)} a year
-                        </Text>
-                        <Text wordSafe variant="metadata">
-                          {formatPercent(pct, Number.isInteger(pct) ? 0 : 1)}{' '}
-                          loading at the end of this spell
-                        </Text>
-                      </Group>
-                    ))}
-                </RowList>
-              )}
+              {() =>
+                [...p.person.spells]
+                  .reverse()
+                  .map(([from, to, post, , salary], i) => (
+                    <LinkRow
+                      key={`${from}-${i}`}
+                      title={post}
+                      detail={
+                        to
+                          ? `${formatDate(from, 'short')} to ${formatDate(to, 'short')}`
+                          : `Since ${formatDate(from, 'short')}`
+                      }
+                      value={formatMoney(salary)}
+                      accessory="none"
+                    />
+                  ))
+              }
             </Disclosure>
-          </RowList>
+          </View>
         </Group>
       )}
-    </RecordBlock>
+    </ProfileBlock>
   );
 }
 
+/**
+ * Expenses (people.md 2.1, money.md 2.15): the claimed total and the yearly
+ * average; no benchmark beside the member's figure (the median is in the
+ * sheet's notes). Each category opens Expense categories at that category,
+ * with the member's own amount.
+ */
+export function ExpensesBlock({
+  block,
+  retry,
+  id,
+  person,
+  newYear = false,
+}: {
+  block: ProfileView['blocks']['expenses'];
+  retry: () => void;
+  id: string;
+  /** The member's name, so the sheet can name their own amount. */
+  person?: string;
+  /** A newly published year since the reader last looked (the dot). */
+  newYear?: boolean;
+}) {
+  return (
+    <ProfileBlock
+      title="Expenses"
+      id={id}
+      block={block}
+      retry={retry}
+      skeleton="figure"
+      licenceDataset="ipea"
+      about={(e) =>
+        e
+          ? {
+              title: 'Expenses',
+              notes: [
+                `For reference, the median a year across all parliamentarians, ${formatYearRange(e.person.from, e.person.to)}, was ${formatMoney(e.benchmarks.totalMedian)}. Ministers’ and office holders’ claims include travel for that office.`,
+                `IPEA coverage starts in April 2017. This record covers ${e.coverage.from} to ${e.coverage.to}.`,
+                e.note,
+                e.categories
+                  ? `Category definitions: ${[
+                      e.categories.meta.source,
+                      e.categories.meta.updated
+                        ? `as at ${formatDate(e.categories.meta.updated)}`
+                        : null,
+                      e.categories.meta.licence,
+                    ]
+                      .filter(Boolean)
+                      .join(', ')}.`
+                  : null,
+              ],
+            }
+          : null
+      }
+    >
+      {(e) => (
+        <Group>
+          <MoneyFigure
+            amount={e.person.total}
+            line={`claimed ${formatYearRange(e.person.from, e.person.to)}`}
+            testID={`${id}-total`}
+          />
+          <View>
+            <ValueRow label="Average a year" value={formatMoney(e.annual)} />
+            <Disclosure
+              label="By year"
+              value={formatCount(e.person.by_year.length)}
+              testID={`${id === 'person-expenses' ? 'person' : id}-expense-years`}
+            >
+              {() =>
+                [...e.person.by_year].reverse().map(([year, amount], i) => (
+                  <View key={year} style={styles.dotted}>
+                    {newYear && i === 0 ? (
+                      <NewDot testID={`${id}-new-year`} />
+                    ) : null}
+                    <View style={styles.grow}>
+                      <ValueRow
+                        label={String(year)}
+                        value={formatMoney(amount)}
+                      />
+                    </View>
+                  </View>
+                ))
+              }
+            </Disclosure>
+            <Disclosure
+              label="By category"
+              value={formatCount(e.person.by_category.length)}
+              testID={`${id === 'person-expenses' ? 'person' : id}-expense-categories`}
+            >
+              {() =>
+                e.person.by_category.map(([name, amount], i) => (
+                  <ValueRow
+                    key={name}
+                    label={name}
+                    value={formatMoney(amount)}
+                    href={expenseGlossaryRoute({
+                      category: name,
+                      person,
+                      amount,
+                      years: formatYearRange(e.person.from, e.person.to),
+                    })}
+                    testID={`${id === 'person-expenses' ? 'person' : id}-expense-category-${i}`}
+                  />
+                ))
+              }
+            </Disclosure>
+          </View>
+        </Group>
+      )}
+    </ProfileBlock>
+  );
+}
+
+/**
+ * Party receipts (people.md 2.1): two rows, the standing caveat as the first
+ * row's fact line, no figure and so no source line. Not drawn for an
+ * independent or a label that is not a party; an unlinked party collapses
+ * into the page's foot row.
+ */
 export function PartyReceiptsBlock({
   block,
   retry,
@@ -160,51 +297,41 @@ export function PartyReceiptsBlock({
   retry: () => void;
   id: string;
 }) {
-  const linkID =
-    id === 'person-receipts' ? 'person-party-receipts' : `${id}-link`;
+  const party = block.data?.party;
+  if (block.status !== 'error' && block.status !== 'loading')
+    if (!party || !isPartyLabel(party)) return null;
+  const prefix = id === 'person-receipts' ? 'person' : id;
   return (
-    <RecordBlock
+    <ProfileBlock
       title="Party receipts"
       id={id}
       block={block}
       retry={retry}
-      accent="money"
-      licenceDataset="aec"
-      partialMissing="No record could be shown for this person. Some records could not be read."
-      missing="No receipts projection is linked for this person's party."
-      unlinked="The app does not show party receipts for this person's party yet. See the record on opax.com.au."
+      sourced={false}
     >
-      {(p) => (
-        <Group gap={rhythm.tight}>
-          <Text wordSafe variant="metadata">
-            {p.caption}
-          </Text>
-          <RowList>
-            {p.party ? (
-              <LinkRow
-                title={`${p.party} party receipts`}
-                testID={linkID}
-                onPress={() => router.push(partyRoute(p.party!))}
-              />
-            ) : (
-              <OpaxWebLink
-                label="Party receipts on opax.com.au"
-                path={p.url}
-                testID={linkID}
-              />
-            )}
+      {(p) =>
+        p.party ? (
+          <View>
+            <LinkRow
+              title={`${possessive(p.party)} disclosed receipts`}
+              detail="Party disclosures, not this person’s finances"
+              href={partyRoute(p.party, 'receipts')}
+              accessibilityHint="Opens the party page"
+              testID={`${prefix}-party-receipts`}
+            />
             <LinkRow
               title="Money map"
-              onPress={() => router.push(moneyRoute(p.party, jurisdiction))}
-              testID={
-                id === 'person-receipts'
-                  ? 'person-money-map'
-                  : `${id}-money-map`
-              }
+              href={moneyRoute(p.party, jurisdiction)}
+              testID={`${prefix}-money-map`}
             />
-          </RowList>
-        </Group>
-      )}
-    </RecordBlock>
+          </View>
+        ) : null
+      }
+    </ProfileBlock>
   );
 }
+
+const styles = StyleSheet.create({
+  dotted: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  grow: { flex: 1 },
+});

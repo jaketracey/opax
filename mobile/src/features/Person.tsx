@@ -1,25 +1,6 @@
-import { PayBlock, PartyReceiptsBlock } from './people/FinancialBlocks';
-import {
-  MoreFromRecord,
-  newsItem,
-  PersonDiary,
-  recordItem,
-  topicsItem,
-} from './people/Sections';
-import { PageActions } from './people/PageActions';
-import { headerItems } from '../navigation/chrome';
-import {
-  formatCount,
-  formatDate,
-  formatMoney,
-  formatPercent,
-  formatYearRange,
-  moneyAccessibilityLabel,
-} from '../design/format';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Platform,
-  Pressable,
   RefreshControl,
   StyleSheet,
   View,
@@ -27,115 +8,223 @@ import {
 } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
+import type { Electorate } from '../api/catalogs';
 import type { PersonProfile } from '../api/person-identity';
 import { CachedPortrait } from './CachedPortrait';
-import {
-  BigFigure,
-  Disclosure,
-  EmptyState,
-  ErrorState,
-  Group,
-  Heading,
-  KeyValueList,
-  LinkRow,
-  LoadingState,
-  OpaxWebLink,
-  PadGrid,
-  PartyLabel,
-  Portrait,
-  ReadableColumn,
-  RowList,
-  Screen,
-  SubSection,
-  Text,
-  errorMessage,
-  useAccessibilitySize,
-  useReduceMotion,
-} from '../design/primitives';
-import { formerMember } from '../design/party';
-import { colors, layout, radii, rhythm } from '../design/tokens';
+import { PadGrid } from '../design/adaptive';
+import { Disclosure } from '../design/disclosure';
+import { Group, Screen } from '../design/layout';
+import { LinkRow } from '../design/rows';
+import { StatStrip, type StatTileProps } from '../design/record';
+import { SourceLine } from '../design/source';
+import { ContentUnavailable, LoadingState, Skeleton } from '../design/states';
+import { Text } from '../design/text';
+import { VoteSplit } from '../design/charts';
+import { isPartyLabel } from '../design/party';
+import { useReduceMotion } from '../design/accessibility';
 import { useHeaderBottom } from '../design/useHeaderBottom';
-import {
-  CHAMBER_NOT_RECORDED,
-  chamberName,
-  jurisdictionName,
-} from '../design/parliament';
-import { shareHeaderItem } from '../navigation/share';
+import { formatCount, formatMoney } from '../design/format';
+import { rhythm } from '../design/tokens';
+import { headerItems, pageItems } from '../navigation/chrome';
+import { shareRecord } from '../navigation/share';
+import { openOnWeb } from '../navigation/external';
 import {
   billRoute,
   electorateRoute,
-  expenseGlossaryRoute,
+  partyRoute,
+  personSpeechesRoute,
 } from '../navigation/routes';
 import { profileGrid } from './split/grid';
-import { EvidenceFooter, RecordBlock, votesSource } from './your-mp/Evidence';
-import { DeclaredInterests, registerNotes } from './people/DeclaredInterests';
+import { votesSource } from './your-mp/Evidence';
 import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
-const partialMissing =
-  'No record could be shown for this person. Some records could not be read.';
-type Jump = 'votes' | 'interests' | 'pay';
+import { useIsMyMember } from './your-mp/useIsMyMember';
+import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
+import { AddedSinceGroup } from './follows/AddedSinceGroup';
+import type { Change } from './follows/changes';
+import { followKey, useFollows } from './follows/store';
+import { useFollowStates } from './follows/useFollowStates';
+import { ProfileBlock } from './people/Block';
+import { DeclaredInterests, registerNotes } from './people/DeclaredInterests';
+import {
+  ExpensesBlock,
+  PartyReceiptsBlock,
+  PayBlock,
+} from './people/FinancialBlocks';
+import { MemberVoteRow } from './people/MemberVoteRow';
+import { officialPageItem, usePageActions } from './people/PageActions';
+import { ProfileHeader, type IdentityRow } from './people/ProfileHeader';
+import { MoreFromRecord, PersonDiary } from './people/Sections';
+import {
+  annualPay,
+  diaryEligible,
+  interestsCount,
+  PROFILE_SECTIONS,
+  profileArrival,
+  roleLine,
+  seatRows,
+  stripSources,
+  voteRowKey,
+  votesCount,
+  votesSince,
+  type ProfileArrival,
+  type ProfileSection,
+} from './people/model';
+
+const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
+
 export default function Person() {
-  const { slug } = useLocalSearchParams<{ slug: string }>();
-  return <ProfileScreen key={slug} slug={slug} />;
+  const params = useLocalSearchParams<{
+    slug: string;
+    name?: string;
+    section?: string;
+  }>();
+  const slug = one(params.slug) ?? '';
+  return (
+    <ProfileScreen
+      key={slug}
+      slug={slug}
+      name={one(params.name)}
+      arrival={profileArrival(one(params.section))}
+    />
+  );
 }
+
+/** The member's own page on their parliament's site, from the release. */
+export function officialPage(
+  url: string | null | undefined,
+): { url: string; label: string } | null {
+  if (!url) return null;
+  let host: string;
+  try {
+    host = new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return null;
+  }
+  const label =
+    host === 'aph.gov.au'
+      ? 'Parliament of Australia page'
+      : host === 'parliament.vic.gov.au'
+        ? 'Parliament of Victoria page'
+        : host === 'parliament.nsw.gov.au'
+          ? 'Parliament of New South Wales page'
+          : host === 'parliament.qld.gov.au'
+            ? 'Queensland Parliament page'
+            : host === 'parliament.act.gov.au'
+              ? 'ACT Legislative Assembly page'
+              : null;
+  return label ? { url, label } : null;
+}
+
+type Loaded = {
+  profile: ProfileView;
+  official: { url: string; label: string } | null;
+  /** The sitting House member's seat, for "Set … as my electorate". */
+  seat: Electorate | null;
+};
+type Load =
+  | { status: 'loading' }
+  | { status: 'not-found' }
+  | { status: 'error'; offline: boolean }
+  | ({ status: 'ready' } & Loaded);
+
+const sittingFederal = (identity: PersonProfile) =>
+  identity.partyStatus !== 'former' &&
+  identity.seats.some((s) => s.current && s.jurisdiction === 'federal');
+
+async function loadProfile(slug: string): Promise<Loaded | null> {
+  let person;
+  try {
+    person = await catalogs.person(slug);
+  } catch (e) {
+    // The directory was read and holds no such person: a fact, not a fault.
+    if ((e as { code?: string }).code === 'not-found') return null;
+    throw e;
+  }
+  // The release joins the official page and the seat; a roster-only person
+  // needs it to prove they served, so only then is a failed read fatal.
+  const directory = person.data.canonicalPersonId
+    ? await Promise.resolve()
+        .then(() => catalogs.directory())
+        .catch(() => null)
+    : await catalogs.directory();
+  if (
+    !person.data.canonicalPersonId &&
+    !hasParliamentaryMembership(person.data, directory!)
+  )
+    return null;
+  // A former member outside the dated release still has the records held
+  // by their roster ID and names: votes, party receipts, pay.
+  const profile: ProfileView = person.data.canonicalPersonId
+    ? await catalogs.profileFor(person.data.canonicalPersonId)
+    : await catalogs.rosterProfileFor(person.data);
+  if (!person.data.canonicalPersonId) {
+    profile.blocks.identity.partial = person.partial;
+    profile.blocks.identity.staleReason = person.staleReason;
+    profile.blocks.identity.stale = person.stale;
+    profile.blocks.identity.savedAt = person.savedAt;
+  }
+  const released = directory?.people.data.people.find(
+    (p) => p.person_id === person.data.canonicalPersonId,
+  );
+  const sitting = person.data.partyStatus !== 'former';
+  const house = person.data.seats.find(
+    (s) => s.current && s.jurisdiction === 'federal' && s.chamber !== 'senate',
+  );
+  return {
+    profile,
+    official: sitting ? officialPage(released?.source_url) : null,
+    seat: house
+      ? (directory?.electorates.data.electorates.find(
+          (e) => e.electorate_id === house.electorate_id,
+        ) ?? null)
+      : null,
+  };
+}
+
+/** A stand-in seat the hook reads as not settable. */
+const noSeat = {
+  electorate_id: '',
+  name: '',
+  jurisdiction: '',
+  chamber: '',
+  status: 'historical',
+} as unknown as Electorate;
+
 export function ProfileScreen({
   slug,
+  name: routeName,
+  arrival,
   embedded = false,
 }: {
   slug: string;
+  /** The name a link already knows: the bar's title before the read. */
+  name?: string;
+  arrival?: ProfileArrival;
   embedded?: boolean;
 }) {
-  const [profile, setProfile] = useState<ProfileView | null>(null),
-    [error, setError] = useState<string | null>(null),
-    [retry, setRetry] = useState(0),
-    [refreshing, setRefreshing] = useState(false),
-    [noNativeProfile, setNoNativeProfile] = useState(false);
-  // The figure strip is the page's index: each figure scrolls to its block.
-  const scroll = useRef<ScrollView>(null),
-    blockY = useRef<Partial<Record<Jump, number>>>({}),
-    headerBottom = useHeaderBottom(),
-    reduceMotion = useReduceMotion();
-  const jump = (to: Jump) => {
-    const y = blockY.current[to];
-    if (y === undefined) return;
-    // The scroll view runs under the native header on iOS.
-    const top = Platform.OS === 'ios' ? headerBottom : 0;
-    scroll.current?.scrollTo({
-      y: y - top - rhythm.heading,
-      animated: !reduceMotion,
-    });
-  };
+  const [load, setLoad] = useState<Load>({ status: 'loading' });
+  const [attempt, setAttempt] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     let active = true;
-    (async () => {
-      const person = await catalogs.person(slug);
-      if (
-        !person.data.canonicalPersonId &&
-        !hasParliamentaryMembership(person.data, await catalogs.directory())
-      ) {
-        if (active) setNoNativeProfile(true);
-        return null;
-      }
-      // A former member outside the dated release still has the records
-      // held by their roster ID and names: votes, party receipts, pay.
-      const p: ProfileView = person.data.canonicalPersonId
-        ? await catalogs.profileFor(person.data.canonicalPersonId)
-        : await catalogs.rosterProfileFor(person.data);
-      if (!person.data.canonicalPersonId) {
-        p.blocks.identity.partial = person.partial;
-        p.blocks.identity.staleReason = person.staleReason;
-        p.blocks.identity.stale = person.stale;
-        p.blocks.identity.savedAt = person.savedAt;
-      }
-      return p;
-    })()
-      .then((p) => {
-        if (active) {
-          setProfile(p);
-          if (p) setNoNativeProfile(false);
-        }
+    loadProfile(slug)
+      .then((loaded) => {
+        if (!active) return;
+        setLoad(
+          loaded ? { status: 'ready', ...loaded } : { status: 'not-found' },
+        );
       })
-      .catch((e) => {
-        if (active) setError(errorMessage(e));
+      .catch((e: { code?: string }) => {
+        if (!active) return;
+        // A failed refresh keeps the page it has; the source lines say so.
+        setLoad((was) =>
+          was.status === 'ready'
+            ? was
+            : {
+                status: 'error',
+                offline: e?.code === 'offline' || e?.code === 'timeout',
+              },
+        );
       })
       .finally(() => {
         if (active) setRefreshing(false);
@@ -143,439 +232,660 @@ export function ProfileScreen({
     return () => {
       active = false;
     };
-  }, [slug, retry]);
+  }, [slug, attempt]);
+  // A block's Try again reads the profile again without clearing the page.
+  const retry = () => setAttempt((n) => n + 1);
   const refresh = () => {
-      setRefreshing(true);
-      setError(null);
-      setRetry((v) => v + 1);
-    },
-    identity = profile?.blocks.identity.data,
-    b = profile?.blocks;
-  const webPath = `/subject/person/${profile?.slug ?? slug}`;
+    setRefreshing(true);
+    retry();
+  };
+  const ready = load.status === 'ready' ? load : null;
+  const identity = ready?.profile.blocks.identity.data ?? null;
+  const name = identity?.name ?? routeName;
+  const webPath = `/subject/person/${ready?.profile.slug ?? slug}`;
+  const setSeat = useSetAsMyElectorate(ready?.seat ?? noSeat);
+  const menu = usePageActions({
+    kind: 'person',
+    name: name ?? 'this person',
+    webPath,
+    extra: [
+      ...(setSeat.visible
+        ? [
+            {
+              title: setSeat.label,
+              symbol: 'map' as const,
+              onPress: () => void setSeat.run(),
+            },
+          ]
+        : []),
+      ...(ready?.official ? [officialPageItem(ready.official)] : []),
+    ],
+  });
   return (
     <>
       {embedded ? null : (
         <Stack.Screen
           options={{
-            title: identity?.name ?? '',
-            headerTitle: '',
+            // The back button on the next page names this one.
+            ...(name ? { title: name } : {}),
             ...headerItems(
               identity
-                ? () => [
-                    shareHeaderItem({ path: webPath, title: identity.name }),
-                  ]
+                ? pageItems({
+                    name: identity.name,
+                    share: () =>
+                      void shareRecord({ path: webPath, title: identity.name }),
+                    menu,
+                  })
                 : undefined,
             ),
           }}
         />
       )}
-      <Screen
-        column="wide"
-        scrollRef={scroll}
-        testID={identity ? 'person-screen' : 'person-pending-screen'}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-        }
-      >
-        {error ? (
-          <ErrorState message={error} onRetry={refresh} testID="person-error" />
-        ) : null}
-        {noNativeProfile ? (
-          <Group testID="person-no-native-profile">
-            <EmptyState message="No native profile yet. Native profiles cover verified parliamentarians in the public record." />
-            <OpaxWebLink label="Public record on opax.com.au" path={webPath} />
-          </Group>
-        ) : null}
-        {!profile && !error && !noNativeProfile ? (
-          Platform.OS === 'android' ? (
-            <Group testID="person-loading">
-              <Portrait size="profile" testID="person-cold-portrait" />
-              <LoadingState
-                shape="text"
-                count={2}
-                label="Loading the public record"
-              />
-            </Group>
-          ) : (
-            <LoadingState
-              shape="people"
-              count={1}
-              label="Loading the public record"
-              testID="person-loading"
+      {load.status !== 'ready' ? (
+        <Screen
+          testID="person-pending-screen"
+          barTitle={load.status === 'not-found' ? 'Profile' : undefined}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          }
+        >
+          {load.status === 'not-found' ? (
+            <ContentUnavailable
+              symbol="person.crop.circle"
+              title="This person isn’t in OPAX"
+              body="Profiles cover people who have served in an Australian parliament."
+              action={{
+                label: 'Search',
+                onPress: () =>
+                  router.navigate({
+                    pathname: '/search',
+                    params: {
+                      q: routeName ?? slug.replace(/-/g, ' '),
+                      kind: 'all',
+                    },
+                  }),
+                testID: 'person-not-found-search',
+              }}
+              testID="person-not-found"
             />
-          )
-        ) : null}
-        {identity && b ? (
-          <>
-            {/* Identity once: portrait, Follow and ⋯; the name; the party;
-                where they sit; the figures the page is about, each opening
-                its block; and the one line for where this comes from. */}
-            <Group gap={rhythm.heading}>
-              <View style={styles.hero}>
-                <CachedPortrait
-                  name={identity.name}
-                  slug={slug}
-                  size="profile"
-                  testID="person-portrait"
-                  retryKey={retry}
-                />
-                <PageActions
-                  kind="person"
-                  id={profile.personId}
-                  name={identity.name}
-                  webPath={webPath}
-                  testID="person"
-                />
-              </View>
-              <Group gap={rhythm.line}>
-                <Heading level={1} testID="person-screen-title">
-                  {identity.name}
-                </Heading>
-                <PartyLabel
-                  party={identity.party}
-                  status={identity.partyStatus}
-                  formerly={identity.formerly}
-                  testID="person-party"
-                />
-                {formerMember(identity.partyStatus) ? (
-                  // Whether they sit is said here, never by the party label.
-                  <Text wordSafe variant="metadata" testID="person-former">
-                    {formerMember(identity.partyStatus)}
-                  </Text>
-                ) : null}
-                <SeatLines identity={identity} />
-              </Group>
-              {profile.personId === null ? (
-                // The one caveat the page needs: how its records are linked.
-                <Group gap={rhythm.tight}>
-                  <Text wordSafe variant="metadata">
-                    The dated electorate release does not include this person,
-                    so records here are linked by the parliamentary roster’s ID
-                    and name. Others may be on opax.com.au.
-                  </Text>
-                  <RowList>
-                    <OpaxWebLink
-                      label="Public record on opax.com.au"
-                      path={webPath}
-                      testID="person-web"
-                    />
-                  </RowList>
-                </Group>
-              ) : null}
-              <FigureStrip profile={profile} onJump={jump} />
-              <EvidenceFooter
-                block={b.identity}
-                id="person"
-                about={{
-                  title: 'About this profile',
-                  notes: [
-                    'These are dated public records. Representation may have changed since collection.',
-                  ],
+          ) : load.status === 'error' ? (
+            load.offline ? (
+              <ContentUnavailable
+                symbol="wifi.slash"
+                title="Not saved on this iPhone yet"
+                body="It will load when you’re back online."
+                action={{ label: 'Try again', onPress: refresh }}
+                testID="person-error"
+              />
+            ) : (
+              <ContentUnavailable
+                symbol="exclamationmark.triangle"
+                title="Couldn’t load this profile"
+                body="Check your connection and try again."
+                action={{
+                  label: 'Try again',
+                  onPress: refresh,
+                  testID: 'person-error-retry',
                 }}
+                testID="person-error"
               />
-            </Group>
-            <PartyReceiptsBlock
-              block={b.partyReceipts}
-              retry={refresh}
-              id="person-receipts"
-              jurisdiction={identity.seats[0]?.jurisdiction}
-            />
-            <View
-              onLayout={(e) => {
-                blockY.current.votes = e.nativeEvent.layout.y;
-              }}
-            >
-              <RecordBlock
-                title="Voting record"
-                id="person-votes"
-                accent="votes"
-                partialMissing={partialMissing}
-                block={b.votes}
-                missing="No voting summary is held for this person in the release."
-                retry={refresh}
-                licenceDataset="tvfy"
-                line={() => votesSource(b.votes)}
-                about={(v) =>
-                  v
-                    ? { title: 'About the voting record', notes: [v.method] }
-                    : null
-                }
-              >
-                {(v) => (
-                  <Group>
-                    <Group gap={rhythm.line}>
-                      <Text wordSafe variant="strong" tabular>
-                        {formatCount(v.ayes)} ayes · {formatCount(v.noes)} noes
-                      </Text>
-                      <Text wordSafe>
-                        {v.ayePct !== null
-                          ? `${formatPercent(v.ayePct, 0)} ayes in the ${formatCount(v.total)} recorded divisions`
-                          : `${formatCount(v.total)} recorded divisions`}
-                        {v.years.length === 2
-                          ? `, ${formatYearRange(v.years[0]!, v.years[1]!)}`
-                          : ''}
-                        .
-                      </Text>
-                    </Group>
-                    <RowList>
-                      <Disclosure
-                        label="Bill votes"
-                        value={formatCount(v.for.length + v.against.length)}
-                        testID="person-bill-votes"
-                      >
-                        {() => (
-                          <Group>
-                            {(['for', 'against'] as const).map((side) => (
-                              <SubSection
-                                key={side}
-                                title={
-                                  side === 'for' ? 'Voted for' : 'Voted against'
-                                }
-                              >
-                                {v[side].length ? (
-                                  <RowList>
-                                    {v[side].map((row, i) =>
-                                      row.billKey ? (
-                                        <LinkRow
-                                          key={i}
-                                          title={row.name}
-                                          detail={`${row.stage} · ${formatDate(row.date, 'short')}`}
-                                          accessibilityLabel={`Bill record: ${row.name}, ${row.stage}, ${formatDate(row.date)}`}
-                                          onPress={() =>
-                                            router.push(billRoute(row.billKey!))
-                                          }
-                                          testID={`person-bill-${side}-${i}`}
-                                        />
-                                      ) : (
-                                        <Group key={i} gap={rhythm.line}>
-                                          <Text wordSafe variant="strong">
-                                            {row.name}
-                                          </Text>
-                                          <Text wordSafe variant="metadata">
-                                            {row.stage} ·{' '}
-                                            {formatDate(row.date, 'short')} ·
-                                            Not matched to a bill record
-                                          </Text>
-                                        </Group>
-                                      ),
-                                    )}
-                                  </RowList>
-                                ) : (
-                                  <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
-                                )}
-                              </SubSection>
-                            ))}
-                          </Group>
-                        )}
-                      </Disclosure>
-                    </RowList>
-                  </Group>
-                )}
-              </RecordBlock>
-            </View>
-            <View
-              onLayout={(e) => {
-                blockY.current.interests = e.nativeEvent.layout.y;
-              }}
-              style={styles.blocks}
-            >
-              <RecordBlock
-                title="Declared interests"
-                id="person-interests"
-                accent="interests"
-                partialMissing={partialMissing}
-                block={b.interests}
-                missing="No register file is held for this person in the covered registers."
-                retry={refresh}
-                licenceDataset="interests"
-                about={(r) =>
-                  r
-                    ? {
-                        title: 'About the register',
-                        notes: registerNotes(r),
-                      }
-                    : null
-                }
-                line={(r) => ({ partial: !!r?.unread_pages })}
-              >
-                {(r) => (
-                  <Group>
-                    <DeclaredInterests register={r} figure={false} />
-                    <DeclaredTies block={b.ties} retry={refresh} />
-                  </Group>
-                )}
-              </RecordBlock>
-            </View>
-            <PersonDiary identity={identity} />
-            <View
-              onLayout={(e) => {
-                blockY.current.pay = e.nativeEvent.layout.y;
-              }}
-              style={styles.blocks}
-            >
-              <PadGrid {...profileGrid}>
-                <PayBlock
-                  block={b.pay}
-                  retry={refresh}
-                  id="person-pay"
-                  figure={false}
-                />
-                <RecordBlock
-                  title="Claimed expenses"
-                  id="person-expenses"
-                  accent="money"
-                  partialMissing={partialMissing}
-                  block={b.expenses}
-                  missing="No expense summary is held for this person. IPEA coverage starts in April 2017."
-                  retry={refresh}
-                  licenceDataset="ipea"
-                  about={(e) =>
-                    e
-                      ? {
-                          title: 'About these expenses',
-                          notes: [
-                            `Coverage: ${e.coverage.from} to ${e.coverage.to}.`,
-                            e.note,
-                            `Benchmark: ${formatCount(e.benchmarks.count)} members with records through ${e.benchmarks.latestQuarter}, starting in ${e.benchmarks.fromCutoff} or earlier. Partial calendar years can affect the comparison. The recorded annual average is the supplied total divided by its covered calendar years. This comparison is a lead, not a finding.`,
-                            e.categories
-                              ? `Category definitions: ${[
-                                  e.categories.meta.source,
-                                  e.categories.meta.updated
-                                    ? `as at ${formatDate(e.categories.meta.updated)}`
-                                    : null,
-                                  e.categories.meta.licence,
-                                ]
-                                  .filter(Boolean)
-                                  .join(', ')}.`
-                              : null,
-                          ],
-                        }
-                      : null
-                  }
-                >
-                  {(e) => (
-                    <Group>
-                      <BigFigure
-                        value={formatMoney(e.person.total)}
-                        spoken={moneyAccessibilityLabel(e.person.total)}
-                        label={`Recorded expenses, ${formatYearRange(e.person.from, e.person.to)}`}
-                        accent="money"
-                      />
-                      <KeyValueList
-                        items={[
-                          {
-                            label: 'Recorded annual average',
-                            value: `about ${formatMoney(e.annual)}`,
-                          },
-                          {
-                            label: 'Benchmark annual median',
-                            value: formatMoney(e.benchmarks.totalMedian),
-                          },
-                        ]}
-                      />
-                      <Text wordSafe variant="fine">
-                        The comparison is a lead, not a finding.
-                      </Text>
-                      <RowList>
-                        <LinkRow
-                          title="Expense category glossary"
-                          testID="person-expense-glossary"
-                          onPress={() => router.push(expenseGlossaryRoute)}
-                        />
-                        <Disclosure
-                          label="Expenses by year"
-                          value={formatCount(e.person.by_year.length)}
-                          testID="person-expense-years"
-                        >
-                          {() => (
-                            <KeyValueList
-                              items={e.person.by_year.map(([y, a]) => ({
-                                label: String(y),
-                                value: formatMoney(a),
-                              }))}
-                            />
-                          )}
-                        </Disclosure>
-                        <Disclosure
-                          label="Expense categories"
-                          value={formatCount(e.person.by_category.length)}
-                          testID="person-expense-categories"
-                        >
-                          {() => (
-                            <RowList>
-                              {e.person.by_category.map(([name, amount]) => {
-                                const category = e.categories?.categories.find(
-                                  (c) => c.name === name,
-                                );
-                                return (
-                                  <Group key={name} gap={rhythm.line}>
-                                    <View style={styles.category}>
-                                      <Text
-                                        wordSafe
-                                        variant="strong"
-                                        style={styles.grow}
-                                      >
-                                        {name}
-                                      </Text>
-                                      <Text variant="strong" tabular>
-                                        {formatMoney(amount)}
-                                      </Text>
-                                    </View>
-                                    {category ? (
-                                      <>
-                                        <Text wordSafe variant="metadata">
-                                          {category.text}
-                                        </Text>
-                                        {category.note ? (
-                                          <Text wordSafe variant="fine">
-                                            {category.note}
-                                          </Text>
-                                        ) : null}
-                                      </>
-                                    ) : null}
-                                  </Group>
-                                );
-                              })}
-                              {e.categories ? null : (
-                                <Text wordSafe variant="fine">
-                                  Category definitions could not be loaded.
-                                </Text>
-                              )}
-                            </RowList>
-                          )}
-                        </Disclosure>
-                      </RowList>
-                    </Group>
-                  )}
-                </RecordBlock>
-              </PadGrid>
-            </View>
-            {/* Read on demand, one row each: never a section around a single
-                "Show …" row (pass 5, P2-1). */}
-            <MoreFromRecord
-              testID="person-more"
-              items={[
-                topicsItem(identity.name),
-                recordItem(identity.name, 'speeches'),
-                recordItem(identity.name, 'mentions'),
-                newsItem(identity.name),
-              ]}
-            />
-            {/* The page's end, for journeys that scroll to it; nothing drawn. */}
-            <View testID="person-end" collapsable={false} style={styles.end} />
-          </>
-        ) : null}
-      </Screen>
+            )
+          ) : (
+            <>
+              <LoadingState
+                shape="people"
+                count={1}
+                label="Loading profile"
+                testID="person-loading"
+              />
+              <Skeleton shape="rows" count={3} label="Loading profile" />
+            </>
+          )}
+        </Screen>
+      ) : !identity ? null : (
+        <ProfileContent
+          slug={slug}
+          loaded={load}
+          identity={identity}
+          webPath={webPath}
+          arrival={arrival}
+          refreshing={refreshing}
+          refresh={refresh}
+          retry={retry}
+          attempt={attempt}
+        />
+      )}
     </>
   );
 }
 
+type VoteRowData = NonNullable<
+  ProfileView['blocks']['votes']['data']
+>['for'][number] & { position: 'for' | 'against' };
+
+function ProfileContent({
+  slug,
+  loaded,
+  identity,
+  webPath,
+  arrival,
+  refreshing,
+  refresh,
+  retry,
+  attempt,
+}: {
+  slug: string;
+  loaded: Loaded;
+  identity: PersonProfile;
+  webPath: string;
+  arrival?: ProfileArrival;
+  refreshing: boolean;
+  refresh: () => void;
+  retry: () => void;
+  attempt: number;
+}) {
+  const { profile } = loaded;
+  const b = profile.blocks;
+  const scroll = useRef<ScrollView>(null);
+  const y = useRef<Partial<Record<ProfileSection | 'changes', number>>>({});
+  const headerBottom = useHeaderBottom();
+  const reduceMotion = useReduceMotion();
+  const yourMP = useIsMyMember(slug);
+  const former = identity.partyStatus === 'former';
+  const sitting = sittingFederal(identity);
+
+  // A tile, a change row or `?section=` asks for a section; the scroll runs
+  // in an effect once its place is known.
+  const [goTo, setGoTo] = useState<{
+    to: ProfileSection | 'changes';
+    animated: boolean;
+    at: number;
+  } | null>(null);
+  const jump = (to: ProfileSection | 'changes') =>
+    setGoTo({ to, animated: !reduceMotion, at: Date.now() });
+  useEffect(() => {
+    if (!goTo) return;
+    const top = y.current[goTo.to];
+    if (top === undefined) return;
+    // The scroll view runs under the native header on iOS.
+    const offset = Platform.OS === 'ios' ? headerBottom : 0;
+    scroll.current?.scrollTo({
+      y: Math.max(0, top - offset - rhythm.heading),
+      animated: goTo.animated,
+    });
+  }, [goTo, headerBottom]);
+  // Arriving at a section (`?section=`): once, when its place is known.
+  const arrived = useRef(false);
+  const placed = (to: ProfileSection | 'changes') => (top: number) => {
+    y.current[to] = top;
+    if (arrival && !arrived.current && arrival === to) {
+      arrived.current = true;
+      setGoTo({ to, animated: false, at: Date.now() });
+    }
+  };
+
+  // What changed since the reader last looked, for a followed person.
+  const follows = useFollows();
+  const { states } = useFollowStates(attempt);
+  const follow = profile.personId
+    ? (follows ?? []).find(
+        (f) =>
+          followKey(f) === followKey({ kind: 'person', id: profile.personId! }),
+      )
+    : undefined;
+  const state = follow ? states.get(followKey(follow)) : undefined;
+  const changes = useMemo<readonly Change[]>(
+    () => (state?.status === 'ready' ? state.changes : []),
+    [state],
+  );
+  const fresh = useMemo(
+    () =>
+      new Set(
+        changes.flatMap((c) => [
+          ...(c.key ? [c.key] : []),
+          ...(c.record?.key ? [c.record.key] : []),
+        ]),
+      ),
+    [changes],
+  );
+  const freshTitles = useMemo(
+    () =>
+      new Set(
+        changes
+          .filter((c) => c.record?.kind === 'register')
+          .map((c) => c.record?.title ?? ''),
+      ),
+    [changes],
+  );
+
+  // Header: party, seats, the member's official page.
+  const party = identity.party;
+  const identityRows: IdentityRow[] = [
+    ...(party
+      ? [
+          {
+            kind: 'party' as const,
+            title: party,
+            dot: party,
+            detail: identity.formerly
+              ? `Formerly ${identity.formerly}`
+              : undefined,
+            href: isPartyLabel(party) ? partyRoute(party) : undefined,
+            accessibilityLabel: `Party, ${party}${identity.formerly ? `, formerly ${identity.formerly}` : ''}`,
+            accessibilityHint: isPartyLabel(party)
+              ? 'Opens the party page'
+              : undefined,
+            testID: 'person-party',
+          },
+        ]
+      : []),
+    ...seatRows(identity).map((seat, i) => ({
+      kind: 'seat' as const,
+      title: seat.title,
+      detail: seat.detail,
+      href: seat.electorateId ? electorateRoute(seat.electorateId) : undefined,
+      accessibilityHint: seat.electorateId ? 'Opens the electorate' : undefined,
+      testID: i ? `person-seat-${i}` : 'person-electorate',
+    })),
+    ...(loaded.official
+      ? [
+          {
+            kind: 'official' as const,
+            title: loaded.official.label,
+            external: loaded.official,
+            testID: 'person-official',
+          },
+        ]
+      : []),
+  ];
+
+  // The strip: each tile reads its section's selector and jumps there.
+  const tiles: StatTileProps[] = [];
+  const votes = votesCount(profile);
+  const since = votesSince(profile);
+  if (votes !== null && b.votes.status !== 'error')
+    tiles.push({
+      value: formatCount(votes),
+      label: since ? `votes since ${since}` : 'votes',
+      onPress: () => jump('votes'),
+      testID: 'person-figure-votes',
+    });
+  const interests = interestsCount(profile);
+  if (interests !== null && b.interests.status !== 'error')
+    tiles.push({
+      value: formatCount(interests),
+      label: 'declared interests',
+      onPress: () => jump('interests'),
+      testID: 'person-figure-interests',
+    });
+  const pay = annualPay(profile);
+  if (pay !== null && b.pay.status !== 'error')
+    tiles.push({
+      value: formatMoney(pay),
+      label: 'a year in pay',
+      onPress: () => jump('pay'),
+      testID: 'person-figure-pay',
+    });
+  const strip = stripSources(profile);
+  const stripPartial = [b.identity, b.votes, b.interests, b.pay].some(
+    (block) => block.partial,
+  );
+  const saved = [b.identity, b.votes, b.interests, b.pay]
+    .filter((block) => block.stale && block.savedAt != null)
+    .map((block) => block.savedAt!)
+    .sort()[0];
+
+  const unlinked = Object.values(b).some(
+    (block) => block.status === 'unlinked',
+  );
+  const footRow = unlinked || profile.personId === null;
+
+  const shows = (section: ProfileSection): boolean => {
+    switch (section) {
+      case 'votes':
+        return (
+          b.votes.status !== 'unlinked' &&
+          (b.votes.data !== null ||
+            b.votes.status === 'loading' ||
+            b.votes.status === 'error' ||
+            sitting)
+        );
+      case 'speeches':
+        return true;
+      case 'interests':
+        return (
+          b.interests.status !== 'unlinked' &&
+          (b.interests.data !== null ||
+            b.interests.status === 'loading' ||
+            b.interests.status === 'error' ||
+            sitting)
+        );
+      case 'pay':
+        return [b.pay, b.expenses].some(
+          (block) =>
+            block.status !== 'unlinked' &&
+            (block.data !== null ||
+              block.status === 'loading' ||
+              block.status === 'error'),
+        );
+      case 'expenses':
+        // Drawn beside Pay (one pair on iPad).
+        return false;
+      case 'receipts':
+        return (
+          b.partyReceipts.status === 'error' ||
+          b.partyReceipts.status === 'loading' ||
+          (!!b.partyReceipts.data?.party &&
+            isPartyLabel(b.partyReceipts.data.party))
+        );
+      case 'diary':
+        return diaryEligible(identity);
+      case 'more':
+        return true;
+    }
+  };
+
+  const voteRows = (v: NonNullable<typeof b.votes.data>): VoteRowData[] =>
+    [
+      ...v.for.map((r) => ({ ...r, position: 'for' as const })),
+      ...v.against.map((r) => ({ ...r, position: 'against' as const })),
+    ].sort((a, c) => (c.date ?? '').localeCompare(a.date ?? ''));
+  const voteRow = (row: VoteRowData, i: number) => {
+    const raw = row as VoteRowData & { key?: string; division_key?: string };
+    return (
+      <MemberVoteRow
+        key={`${row.position}-${row.name}-${row.stage}-${row.date}-${i}`}
+        position={row.position}
+        name={row.name}
+        stage={row.stage}
+        date={row.date}
+        href={
+          row.billKey
+            ? billRoute(row.billKey, undefined, {
+                section: 'divisions',
+                ...(raw.division_key ? { division: raw.division_key } : {}),
+              })
+            : undefined
+        }
+        isNew={fresh.has(raw.key ?? raw.division_key ?? voteRowKey(row))}
+        testID={`person-vote-${i}`}
+      />
+    );
+  };
+
+  const sections: Record<ProfileSection, () => ReactNode> = {
+    votes: () => (
+      <ProfileBlock
+        title="Voting record"
+        id="person-votes"
+        block={b.votes}
+        retry={retry}
+        errorSubject="Votes"
+        keepWhenEmpty={
+          sitting ? (
+            <Text wordSafe variant="body">
+              No recorded votes yet.
+            </Text>
+          ) : undefined
+        }
+        licenceDataset="tvfy"
+        line={() => ({
+          ...votesSource(b.votes),
+          ...(b.votes.asAt ? {} : { dateLabel: 'Date not published' }),
+        })}
+        about={(v) =>
+          v
+            ? {
+                title: 'Voting record',
+                notes: [
+                  `Of these divisions, voted for ${formatCount(v.ayes)} and voted against ${formatCount(v.noes)}. Most divisions are on procedural motions and amendments.`,
+                  'A division is a recorded vote: each member’s choice is counted and published.',
+                  v.method,
+                ],
+              }
+            : null
+        }
+      >
+        {(v) => {
+          if (!v.total)
+            return (
+              <Text wordSafe variant="body">
+                No recorded votes yet.
+              </Text>
+            );
+          const rows = voteRows(v);
+          const [from, to] = v.years;
+          return (
+            <Group gap={rhythm.tight}>
+              <Text wordSafe variant="secondary" testID="person-votes-summary">
+                {`Voted in ${formatCount(v.total)} divisions${from && to ? `, ${from === to ? from : `${from} to ${to}`}` : ''}`}
+              </Text>
+              {from && to ? (
+                <VoteSplit
+                  ayes={v.ayes}
+                  noes={v.noes}
+                  countsStyle="ayesNoes"
+                  {...{
+                    dateRange: { start: `${from}-01-01`, end: `${to}-12-31` },
+                    source: 'They Vote For You',
+                  }}
+                />
+              ) : null}
+              {rows.length ? (
+                <View testID="person-bill-votes">
+                  {rows.slice(0, 5).map(voteRow)}
+                  {rows.length > 5 ? (
+                    <Disclosure
+                      label={`Show all ${formatCount(rows.length)}`}
+                      testID="person-votes-all"
+                    >
+                      {() => rows.slice(5).map((row, i) => voteRow(row, i + 5))}
+                    </Disclosure>
+                  ) : null}
+                </View>
+              ) : null}
+            </Group>
+          );
+        }}
+      </ProfileBlock>
+    ),
+    speeches: () => (
+      <LinkRow
+        title="Speeches"
+        symbol="quote.bubble"
+        href={personSpeechesRoute(slug, identity.name)}
+        testID="person-speeches"
+      />
+    ),
+    interests: () => (
+      <ProfileBlock
+        title="Declared interests"
+        id="person-interests"
+        block={b.interests}
+        retry={retry}
+        keepWhenEmpty={
+          sitting &&
+          identity.seats.some((s) => s.jurisdiction === 'federal') ? (
+            <Text wordSafe variant="body" testID="person-interests-empty">
+              No interests declared in the current register.
+            </Text>
+          ) : undefined
+        }
+        licenceDataset="interests"
+        about={(r) =>
+          r
+            ? {
+                title: 'Declared interests',
+                notes: [
+                  ...registerNotes(r),
+                  b.ties.data?.length
+                    ? 'Organisations named are public disclosures, not findings of wrongdoing.'
+                    : null,
+                ],
+              }
+            : null
+        }
+        line={(r) => ({ partial: !!r?.unread_pages })}
+      >
+        {(r) =>
+          r.total ? (
+            <Group gap={rhythm.tight}>
+              <DeclaredInterests
+                register={r}
+                isNew={(row) =>
+                  freshTitles.has(row.description.split(' · ')[0]!.trim())
+                }
+              />
+              <Ties block={b.ties} retry={retry} />
+            </Group>
+          ) : sitting ? (
+            <Text wordSafe variant="body" testID="person-interests-empty">
+              No interests declared in the current register.
+            </Text>
+          ) : null
+        }
+      </ProfileBlock>
+    ),
+    pay: () => (
+      <Group gap={rhythm.section}>
+        <PadGrid {...profileGrid}>
+          <PayBlock block={b.pay} retry={retry} id="person-pay" />
+          <ExpensesBlock
+            block={b.expenses}
+            retry={retry}
+            id="person-expenses"
+            person={identity.name}
+            newYear={changes.some((c) => c.marker === 'expenses')}
+          />
+        </PadGrid>
+      </Group>
+    ),
+    expenses: () => null,
+    receipts: () => (
+      <PartyReceiptsBlock
+        block={b.partyReceipts}
+        retry={retry}
+        id="person-receipts"
+        jurisdiction={identity.seats[0]?.jurisdiction}
+      />
+    ),
+    diary: () => <PersonDiary identity={identity} />,
+    more: () => (
+      <MoreFromRecord
+        subject={{ person: slug, name: identity.name }}
+        kinds={['mentions', 'news']}
+        topics
+        testID="person-more"
+      />
+    ),
+  };
+
+  return (
+    <Screen
+      column="wide"
+      barTitle={identity.name}
+      scrollRef={scroll}
+      testID="person-screen"
+      offline={
+        b.identity.stale && b.identity.savedAt != null
+          ? { savedAt: b.identity.savedAt }
+          : null
+      }
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+      }
+    >
+      <View style={styles.top} testID="person">
+        <ProfileHeader
+          name={identity.name}
+          portrait={
+            <CachedPortrait
+              name={identity.name}
+              slug={slug}
+              size="profile"
+              testID="person-portrait"
+              retryKey={attempt}
+            />
+          }
+          role={roleLine(profile, former)}
+          yourMP={yourMP}
+          identityRows={identityRows}
+          follow={
+            profile.personId ? { kind: 'person', id: profile.personId } : null
+          }
+          testID="person"
+          titleTestID="person-screen-title"
+        />
+        {tiles.length ? (
+          <Group gap={rhythm.tight}>
+            <StatStrip tiles={tiles} testID="person-figures" />
+            <SourceLine
+              title="Profile sources"
+              asOf={strip.asOf}
+              citation={strip.citation}
+              state={stripPartial ? 'partial' : null}
+              savedAt={saved ?? null}
+              notes={[
+                stripPartial
+                  ? 'Some records for this person could not be read.'
+                  : null,
+                profile.personId === null
+                  ? 'This person is matched by the parliamentary roster’s ID and name. More records may be on opax.com.au.'
+                  : null,
+                'These are dated public records. Representation may have changed since collection.',
+              ]}
+              testID="person-figures-source"
+            />
+          </Group>
+        ) : null}
+      </View>
+      {follow && changes.length ? (
+        <View onLayout={(e) => placed('changes')(e.nativeEvent.layout.y)}>
+          <AddedSinceGroup
+            follow={follow}
+            changes={changes}
+            current={state?.status === 'ready' ? state.current : undefined}
+            stale={state?.status === 'ready' ? state.stale : undefined}
+            savedAt={state?.status === 'ready' ? state.savedAt : undefined}
+            testID="person-added-since"
+            onRowPress={(change) => {
+              const kind = change.record?.kind;
+              if (kind === 'vote') jump('votes');
+              else if (kind === 'register') jump('interests');
+              else if (change.marker === 'expenses' || change.marker === 'pay')
+                jump('pay');
+            }}
+          />
+        </View>
+      ) : null}
+      {PROFILE_SECTIONS.filter(shows).map((section) => (
+        <View
+          key={section}
+          onLayout={(e) => placed(section)(e.nativeEvent.layout.y)}
+        >
+          {sections[section]()}
+        </View>
+      ))}
+      {footRow ? (
+        <LinkRow
+          title={`${identity.name} on opax.com.au`}
+          external
+          onPress={() => void openOnWeb(webPath, identity.name)}
+          accessibilityHint="Opens in the in-app browser"
+          testID="person-web-foot"
+        />
+      ) : null}
+      {/* The page's end, for journeys that scroll to it; nothing drawn. */}
+      <View testID="person-end" collapsable={false} style={styles.end} />
+    </Screen>
+  );
+}
+
 /**
- * Declared organisation ties, inside Declared interests (pass 5, P3-4): one
- * line when the register file declares none, and no source line of their
- * own: the register's line dates them.
+ * Organisations named, inside Declared interests: a disclosure with the
+ * count; no line when there are none. Its caveat is in the sheet's Notes.
  */
-function DeclaredTies({
+function Ties({
   block,
   retry,
 }: {
@@ -585,271 +895,42 @@ function DeclaredTies({
   if (block.status === 'unlinked' || block.status === 'loading') return null;
   if (block.status === 'error')
     return (
-      <ErrorState
-        message={errorMessage(block.error)}
-        onRetry={retry}
-        testID="person-ties-error"
-      />
+      <View testID="person-ties-error">
+        <Text wordSafe variant="secondary">
+          Organisations named couldn’t be loaded.
+        </Text>
+        <LinkRow title="Try again" onPress={retry} accessory="none" />
+      </View>
     );
   const ties = block.data;
-  if (!ties?.length)
-    return (
-      <Text wordSafe variant="metadata" testID="person-ties-missing">
-        No declared organisation ties.
-      </Text>
-    );
+  if (!ties?.length) return null;
   return (
-    <Group gap={rhythm.tight} testID="person-ties">
-      <Text wordSafe variant="metadata">
-        Declared ties are public disclosures, not findings of wrongdoing.
-      </Text>
-      <RowList>
-        <Disclosure
-          label="Declared organisations"
-          value={formatCount(ties.length)}
-          testID="person-ties-detail"
-        >
-          {() => (
-            <RowList>
-              {ties.map((tie, i) => (
-                <Group key={i} gap={rhythm.line}>
-                  <Text wordSafe variant="strong">
-                    {tie.organisation}
-                  </Text>
-                  <Text wordSafe variant="fine">
-                    {tie.kinds.join('; ')}
-                  </Text>
-                  {tie.declarations.map((d, j) => (
-                    <Text wordSafe key={j}>
-                      {d.category}: {d.description}
-                    </Text>
-                  ))}
-                </Group>
-              ))}
-            </RowList>
-          )}
-        </Disclosure>
-      </RowList>
-    </Group>
-  );
-}
-
-/**
- * Where they sit, one line a seat: "Member for Grayndler · House of
- * Representatives", "Senator for South Australia". The line opens the
- * electorate record. Several seats each carry their as-at date.
- */
-function SeatLines({ identity }: { identity: PersonProfile }) {
-  // A hugging line's width follows its text, so word-safe sizing could chase
-  // its own frame: at accessibility sizes the line takes the column's width.
-  const fixed = useAccessibilitySize();
-  if (!identity.seats.length)
-    return (
-      <Text wordSafe variant="metadata">
-        No current electorate recorded.
-      </Text>
-    );
-  return (
-    <>
-      {identity.seats.map((seat) => {
-        const named = chamberName(seat.chamber, seat.jurisdiction);
-        const chamber = named ?? CHAMBER_NOT_RECORDED;
-        const place =
-          jurisdictionName(seat.jurisdiction) ?? 'Jurisdiction not recorded';
-        const senator = seat.chamber === 'senate';
-        // A named chamber already says where it sits ("House of
-        // Representatives", "Victorian Legislative Assembly").
-        const where = senator ? [] : named ? [chamber] : [chamber, place];
-        const asAt =
-          identity.seats.length > 1 && seat.as_of
-            ? `as at ${formatDate(seat.as_of, 'short')}`
-            : null;
-        const rest = [...where, asAt].filter(Boolean).join(' · ');
-        return (
-          <Pressable
-            key={seat.electorate_id}
-            accessibilityRole="link"
-            accessibilityLabel={`${senator ? 'Senator' : 'Member'} for ${seat.name}, ${chamber}, ${place}`}
-            accessibilityHint="Opens the electorate record"
-            testID="person-electorate"
-            hitSlop={{ top: 6, bottom: 6 }}
-            onPress={() => router.push(electorateRoute(seat.electorate_id))}
-            style={({ pressed }) => [
-              styles.seat,
-              fixed ? styles.seatFixed : null,
-              pressed ? styles.pressed : null,
-            ]}
-          >
-            {({ pressed }) => (
-              <Text wordSafe variant="metadata" testID="person-chamber">
-                {senator ? 'Senator for ' : 'Member for '}
-                <Text
-                  variant="metadata"
-                  tone="navy"
-                  style={pressed ? styles.underline : null}
-                >
-                  {seat.name}
-                </Text>
-                {rest ? ` · ${rest}` : ''}
-              </Text>
-            )}
-          </Pressable>
-        );
-      })}
-    </>
-  );
-}
-
-/**
- * Up to three figures the page is about, under the identity: divisions,
- * declared interests and pay. Each opens its block, where the figure is
- * dated and sourced, so the strip is the page's index too. One per line at
- * accessibility sizes.
- */
-function FigureStrip({
-  profile,
-  onJump,
-}: {
-  profile: ProfileView;
-  onJump: (to: Jump) => void;
-}) {
-  const stacked = useAccessibilitySize();
-  const { votes, interests, pay } = profile.blocks;
-  const salary = pay.data?.person.now?.salary;
-  const figures: {
-    to: Jump;
-    value: string;
-    spoken?: string;
-    label: string;
-    section: string;
-  }[] = [
-    ...(votes.data
-      ? [
-          {
-            to: 'votes' as const,
-            value: formatCount(votes.data.total),
-            label: 'divisions',
-            section: 'Voting record',
-          },
-        ]
-      : []),
-    ...(interests.data
-      ? [
-          {
-            to: 'interests' as const,
-            value: formatCount(interests.data.total),
-            label: 'declared interests',
-            section: 'Declared interests',
-          },
-        ]
-      : []),
-    ...(salary !== undefined
-      ? [
-          {
-            to: 'pay' as const,
-            value: formatMoney(salary),
-            spoken: moneyAccessibilityLabel(salary),
-            label: 'a year in pay',
-            section: 'Pay for the posts held',
-          },
-        ]
-      : []),
-  ];
-  if (!figures.length) return null;
-  // On iPad the strip keeps the readable width, never the detail's 1,000pt
-  // (pass 5, P2-22).
-  return (
-    <ReadableColumn style={styles.stripColumn}>
-      <View
-        style={[styles.strip, stacked ? styles.stripStacked : null]}
-        testID="person-figures"
+    <View testID="person-ties">
+      <Disclosure
+        label="Organisations named"
+        value={formatCount(ties.length)}
+        testID="person-ties-detail"
       >
-        {figures.map((f) => (
-          <Pressable
-            key={f.to}
-            accessibilityRole="button"
-            accessibilityLabel={`${f.spoken ?? f.value} ${f.label}`}
-            accessibilityHint={`Goes to ${f.section}`}
-            testID={`person-figure-${f.to}`}
-            onPress={() => onJump(f.to)}
-            style={({ pressed }) => [
-              styles.figure,
-              stacked ? null : styles.figureInline,
-              pressed ? styles.pressed : null,
-            ]}
-          >
-            <StripFigure value={f.value} label={f.label} />
-          </Pressable>
-        ))}
-      </View>
-    </ReadableColumn>
+        {() =>
+          ties.map((tie, i) => (
+            <View key={i} style={styles.tie}>
+              <Text wordSafe variant="body">
+                {tie.organisation}
+              </Text>
+              <Text wordSafe variant="secondary">
+                {tie.kinds.join('; ')}
+              </Text>
+            </View>
+          ))
+        }
+      </Disclosure>
+    </View>
   );
 }
-function StripFigure({
-  value,
-  label,
-}: {
-  value: string;
-  label: string;
-}): ReactNode {
-  return (
-    <>
-      <Text wordSafe variant="heading" tabular>
-        {value}
-      </Text>
-      <Text wordSafe variant="metadata">
-        {label}
-      </Text>
-    </>
-  );
-}
+
 const styles = StyleSheet.create({
-  hero: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    gap: rhythm.block,
-    flexWrap: 'wrap',
-  },
-  seat: {
-    alignSelf: 'flex-start',
-    maxWidth: '100%',
-    borderRadius: radii.sm,
-    paddingHorizontal: rhythm.line,
-    marginHorizontal: -rhythm.line,
-  },
-  seatFixed: { alignSelf: 'stretch' },
-  underline: { textDecorationLine: 'underline' },
-  pressed: { backgroundColor: colors.sunken },
-  stripColumn: { alignSelf: 'flex-start' },
-  strip: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    columnGap: rhythm.block,
-    rowGap: rhythm.tight,
-    paddingTop: rhythm.tight,
-  },
-  // A wrapping column lays its stretched figures out at max-content width
-  // (Yoga), so their text measures one width and draws in another: build 33
-  // at AX5 drew two figures blank and clipped "declared interests".
-  stripStacked: { flexDirection: 'column', flexWrap: 'nowrap' },
-  figure: {
-    gap: 2,
-    borderRadius: radii.sm,
-    paddingHorizontal: rhythm.line,
-    marginHorizontal: -rhythm.line,
-    paddingVertical: rhythm.line,
-  },
-  figureInline: { minWidth: 88, flexGrow: 1, flexBasis: 88 },
-  // Two blocks a figure opens, drawn as the screen's own sections.
-  blocks: { gap: layout.sectionGap },
-  category: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'baseline',
-    gap: rhythm.tight,
-  },
-  grow: { flexGrow: 1, flexShrink: 1 },
+  top: { gap: rhythm.block },
+  tie: { paddingVertical: rhythm.tight, gap: rhythm.line },
   // One point, at the foot of the last section rather than a section below.
-  end: { height: 1, marginTop: -layout.sectionGap },
+  end: { height: 1, marginTop: -rhythm.section },
 });

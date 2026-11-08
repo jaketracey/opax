@@ -45,7 +45,7 @@ export const peoplePaths = [
         return null;
       }
     }
-    if (/^\/expenses\/?$/.test(u.pathname)) return expenseGlossaryRoute;
+    if (/^\/expenses\/?$/.test(u.pathname)) return expenseGlossaryRoute();
     if (/^\/declared\/?$/.test(u.pathname))
       return {
         ...declarationsRoute,
