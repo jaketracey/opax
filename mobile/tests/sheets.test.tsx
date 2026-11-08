@@ -274,7 +274,7 @@ test('the source line glyph sits on the centre of the first text line', () => {
         (node) => node.type === View && node.props.testID === 'line-glyph',
       ).props.style,
     );
-  expect(glyph()).toMatchObject({ justifyContent: 'center', height: 18 });
+  expect(glyph()).toMatchObject({ justifyContent: 'center', minHeight: 18 });
   const lines = root
     .findAllByType(Text)
     .find((node) => node.props.onTextLayout)!;
@@ -288,7 +288,7 @@ test('the source line glyph sits on the centre of the first text line', () => {
       },
     }),
   );
-  expect(glyph().height).toBe(23);
+  expect(glyph().minHeight).toBe(23);
 });
 test('licence terms use their own route and Sources and licences is a separate modal', () => {
   const root = render(

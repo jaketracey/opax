@@ -345,7 +345,7 @@ export function SourceAffordance({
               that line whether the text wraps or not. */}
           <View
             testID={testID && `${testID}-glyph`}
-            style={[styles.glyph, { height: firstLine }]}
+            style={[styles.glyph, { minHeight: firstLine }]}
           >
             <Icon name={glyph} size={13} maxScale={1.5} tone="inkSoft" />
           </View>
