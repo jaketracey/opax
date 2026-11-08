@@ -2,14 +2,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Button, SegmentedPicker } from '../../design/controls';
-import { formatDate, formatMoneyCompact } from '../../design/format';
+import {
+  formatDate,
+  formatMoney,
+  formatMoneyCompact,
+} from '../../design/format';
 import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Heading, Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 import { ApiError } from '../../api/errors';
 import {
   agencyRoute,
+  grantProgramRoute,
   grantsRoute,
   largestGrantsRoute,
 } from '../../navigation/routes/public-money';
@@ -164,9 +170,17 @@ export default function Program() {
   const shown = seatGrants.filter((g) =>
     matches(search.query, g.name, g.id, g.title),
   );
-  const recipients = programRecipients(seatGrants).filter((r) =>
-    matches(search.query, r.name),
+  // Individuals are never a row (journeys/money.md 4.5): Recipients lists
+  // organisations, and the grants to individuals are a footnote.
+  const organisations = programRecipients(seatGrants).filter(
+    (r) => r.organisation,
   );
+  const recipients = organisations.filter((r) => matches(search.query, r.name));
+  const individualGrants = seatGrants.filter((g) => !g.organisation);
+  const individuals = {
+    count: individualGrants.length,
+    total: individualGrants.reduce((sum, g) => sum + g.value, 0),
+  };
   type Row =
     | ({ kind: 'recipient'; i: number } & (typeof recipients)[number])
     | ({ kind: 'grant'; i: number } & (typeof shown)[number]);
@@ -185,13 +199,13 @@ export default function Program() {
     : searching
       ? `${rows.length.toLocaleString('en-AU')} of ${
           view === 'recipients'
-            ? counted(programRecipients(seatGrants).length, 'recipient')
+            ? counted(organisations.length, 'recipient')
             : counted(seatGrants.length, 'grant')
         }`
       : seat && seatFigure
         ? view === 'grants'
           ? seatFigure.count && !seatGrants.length
-            ? `None of the ${counted(seatFigure.count, 'grant')} in ${seat} is among the ${program.listed.toLocaleString('en-AU')} listed`
+            ? `None of the ${counted(seatFigure.count, 'grant')} in ${seat} is in the listed grants`
             : seatGrants.length < seatFigure.count
               ? `${seatGrants.length.toLocaleString('en-AU')} of the ${counted(seatFigure.count, 'grant')} in ${seat} are listed, largest first`
               : `${counted(seatGrants.length, 'grant')} in ${seat}, largest first`
@@ -257,67 +271,69 @@ export default function Program() {
                     a zero total.
                   </Text>
                 ) : null}
-                <FigureBlock
-                  value={formatMoneyCompact(
-                    seatFigure?.line ? seatFigure.value : program.total,
-                  )}
-                  ink="money"
-                  label={
-                    seatFigure?.line
-                      ? seatFigure.line
-                      : `in ${counted(program.count, 'grant')}${program.years[0] ? `, ${fyRange(...program.years)}` : ''}`
-                  }
-                  caveat={
-                    seatFigure?.line
-                      ? seatFigure.caveat
-                      : program.listed < program.available
-                        ? `${program.listed.toLocaleString('en-AU')} of the ${program.available.toLocaleString('en-AU')} grants are listed below.`
-                        : undefined
-                  }
-                  {...{
-                    source: {
-                      asOf: program.asOf,
-                      citation: [register],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals: [
-                        ...(data.index.meta.sourceUrl
-                          ? [
-                              {
-                                label: register.label,
-                                url: data.index.meta.sourceUrl,
-                              },
-                            ]
-                          : []),
-                        ...(note?.audits ?? []).map((a) => ({
-                          label: a.title,
-                          url: a.url,
-                        })),
-                        ...(note?.sources ?? []).map((s) => ({
-                          label: s.title,
-                          url: s.url,
-                        })),
-                      ],
-                      notes: [
-                        seat
-                          ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
-                          : null,
-                        seat ? SEAT_RULE : null,
-                        note?.summary,
-                        ...(note?.audits ?? []).map(
-                          (a) => `${a.title}: ${a.finding}`,
-                        ),
-                        note && data.notes
-                          ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
-                          : null,
-                        ...saved.stateNotes,
-                      ].map(readableDates),
-                      licence: data.index.meta.licence,
-                      testID: 'program-source',
-                    },
-                  }}
-                  testID="program-total"
-                />
+                {seat && !seatFigure?.line ? null : (
+                  <FigureBlock
+                    value={formatMoneyCompact(
+                      seatFigure?.line ? seatFigure.value : program.total,
+                    )}
+                    ink="money"
+                    label={
+                      seatFigure?.line
+                        ? seatFigure.line
+                        : `in ${counted(program.count, 'grant')}${program.years[0] ? `, ${fyRange(...program.years)}` : ''}`
+                    }
+                    caveat={
+                      seatFigure?.line
+                        ? seatFigure.caveat
+                        : program.listed < program.available
+                          ? `${program.listed.toLocaleString('en-AU')} of the ${program.available.toLocaleString('en-AU')} grants are listed below.`
+                          : undefined
+                    }
+                    {...{
+                      source: {
+                        asOf: program.asOf,
+                        citation: [register],
+                        savedAt: saved.savedAt,
+                        state: saved.state,
+                        originals: [
+                          ...(data.index.meta.sourceUrl
+                            ? [
+                                {
+                                  label: register.label,
+                                  url: data.index.meta.sourceUrl,
+                                },
+                              ]
+                            : []),
+                          ...(note?.audits ?? []).map((a) => ({
+                            label: a.title,
+                            url: a.url,
+                          })),
+                          ...(note?.sources ?? []).map((s) => ({
+                            label: s.title,
+                            url: s.url,
+                          })),
+                        ],
+                        notes: [
+                          seat
+                            ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
+                            : null,
+                          seat ? SEAT_RULE : null,
+                          note?.summary,
+                          ...(note?.audits ?? []).map(
+                            (a) => `${a.title}: ${a.finding}`,
+                          ),
+                          note && data.notes
+                            ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
+                            : null,
+                          ...saved.stateNotes,
+                        ].map(readableDates),
+                        licence: data.index.meta.licence,
+                        testID: 'program-source',
+                      },
+                    }}
+                    testID="program-total"
+                  />
+                )}
                 <SegmentedPicker
                   accessibilityLabel="Show"
                   value={view}
@@ -353,7 +369,7 @@ export default function Program() {
               testID="program-empty"
             />
           ) : seat ? (
-            <View style={{ gap: 8 }}>
+            <View style={{ gap: rhythm.tight }}>
               <EmptyState
                 message={`No listed grants in ${seat}.`}
                 testID="program-seat-empty"
@@ -376,16 +392,14 @@ export default function Program() {
               detail={counted(r.count, 'grant')}
               amount={r.value}
               href={
-                r.organisation && r.recipientId
+                r.recipientId
                   ? organisationHref(r.recipientId, r.name, jur)
                   : moneyItemHref(
                       {
                         kind: 'recipient',
                         jur,
                         program: program!.key,
-                        recipient: r.organisation
-                          ? r.recipientId || r.name
-                          : 'individuals',
+                        recipient: r.name,
                       },
                       { name: r.name },
                     )
@@ -409,11 +423,27 @@ export default function Program() {
         }
         footer={
           program ? (
-            <LinkRow
-              title="Largest grants"
-              testID="program-largest"
-              href={largestGrantsRoute()}
-            />
+            <>
+              {view === 'recipients' && individuals.count ? (
+                <Text wordSafe variant="footnote" testID="program-individuals">
+                  {`${counted(individuals.count, 'grant')} to individual recipients, ${formatMoney(individuals.total)}, not named.`}
+                </Text>
+              ) : null}
+              {seat ? (
+                // The whole program, with no figure: nothing national is
+                // drawn on the seat view (journeys/money.md 4.5, 12.4).
+                <LinkRow
+                  title="All of this program"
+                  testID="program-national"
+                  href={grantProgramRoute(program.id, jur, program.name)}
+                />
+              ) : null}
+              <LinkRow
+                title="Largest grants"
+                testID="program-largest"
+                href={largestGrantsRoute()}
+              />
+            </>
           ) : null
         }
       />

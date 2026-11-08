@@ -206,6 +206,10 @@ test('private recipient names are absent from visible and accessibility props', 
     )
     .join(' ');
   expect(drawn).not.toContain('Ada Privacy Example');
-  expect(drawn).toContain(unnamedRecipient);
+  // Recipients lists organisations; individuals are a footnote, unnamed.
+  expect(drawn).not.toContain(unnamedRecipient);
+  expect(drawn).toMatch(
+    /1 grant to individual recipients, \$[\d,]+, not named\./,
+  );
   await act(async () => rendered.unmount());
 });
