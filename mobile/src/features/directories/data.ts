@@ -13,6 +13,27 @@ import {
 } from './model';
 import type { Electorate } from '../../api/catalog-decoders';
 import type { RecordResult } from '../../api/client';
+import { ApiError } from '../../api/errors';
+
+const outOfStep = (records: string) =>
+  new ApiError(
+    'invalid-data',
+    `The ${records} records are out of step. Try again shortly.`,
+  );
+/** The roster and the dated seats must come from one release. */
+async function directory(refresh: boolean) {
+  try {
+    return await catalogs.directory(refresh);
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      error.code === 'invalid-data' &&
+      /release is incomplete/.test(error.message)
+    )
+      throw outOfStep('people');
+    throw error;
+  }
+}
 
 export interface DirectoryRecord {
   people: PeopleRow[];
@@ -39,7 +60,7 @@ export async function loadDirectory(
   const sources: DirectoryRecord['sources'] = [];
   if (kind === 'person') {
     const [d, votes, photos, credits] = await Promise.all([
-      catalogs.directory(refresh),
+      directory(refresh),
       catalogs.votes(),
       catalogs.photoPeople(refresh),
       catalogs.photoCredits(refresh),
@@ -86,8 +107,7 @@ export async function loadDirectory(
     sources.push(
       {
         asAt: roster.data.meta.generated,
-        label:
-          'OPAX parliamentary roster (speech totals and directory members)',
+        label: 'OPAX parliamentary roster',
       },
       ...[
         [federal, 'AEC returns'],
@@ -102,15 +122,13 @@ export async function loadDirectory(
     const manifest = await catalogs.manifest(refresh),
       index = await catalogs.electorates(manifest.data, refresh);
     if (index.data.meta.release_id !== manifest.data.release_id)
-      throw new Error(
-        'The electorate records are out of step. Try again shortly.',
-      );
+      throw outOfStep('electorate');
     rows.electorates = index.data.electorates;
     rows.facets = electorateFacets(rows.electorates);
     records.push(manifest, index);
     sources.push({
       asAt: index.data.meta.generated,
-      label: 'OPAX electorate reference release',
+      label: 'OPAX electorate list',
     });
   }
   return {

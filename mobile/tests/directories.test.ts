@@ -23,7 +23,11 @@ import {
   partyRows,
   peopleRows,
   sittingGroup,
-  sittingGroupStarts,
+  peopleSections,
+  electorateSections,
+  placeLine,
+  partyName,
+  directoryCount,
   sortSummary,
   peopleFacets,
   representationAt,
@@ -151,7 +155,12 @@ describe('static directory transforms', () => {
   test('party and chamber and parliament filters compose; no committee-only profiles', () => {
     const found = matchingPeople(
       persons,
-      { party: 'Labor', chamber: 'representatives', state: 'federal' },
+      {
+        party: 'Labor',
+        chamber: 'representatives',
+        parliament: 'federal',
+        state: 'vic',
+      },
       '',
     );
     expect(found.length).toBeGreaterThan(0);
@@ -160,18 +169,27 @@ describe('static directory transforms', () => {
         (p) =>
           p.parties.includes('Labor') &&
           p.chambers.includes('representatives') &&
-          p.states.includes('federal'),
+          p.parliaments.includes('federal') &&
+          p.states.includes('vic'),
       ),
     ).toBe(true);
+    // "All senators for Victoria" (TestFlight build 32).
+    const senators = matchingPeople(
+      persons,
+      { chamber: 'senate', state: 'vic', sitting: '1' },
+      '',
+    );
+    expect(senators.length).toBeGreaterThan(5);
+    expect(senators.every((p) => placeLine(p) === 'Senator for Victoria')).toBe(
+      true,
+    );
     expect(
       matchingPeople(persons, { chamber: 'senate_committee' }, ''),
     ).toEqual([]);
   });
   test('vote and portrait checks use guarded index results', () => {
     expect(
-      matchingPeople(persons, { votes: '1', photo: '1' }, '').every(
-        (p) => p.divisions > 0 && p.portrait,
-      ),
+      matchingPeople(persons, { votes: '1' }, '').every((p) => p.divisions > 0),
     ).toBe(true);
     const unrelated = peopleRows(
       directory,
@@ -190,13 +208,15 @@ describe('static directory transforms', () => {
   });
   test('sitting members lead every sort; the group is the chip status', () => {
     const sorted = matchingPeople(persons, { sort: 'speeches' }, '');
-    const starts = [...sittingGroupStarts(sorted).values()];
-    expect(starts.map((s) => s.group)).toEqual([
-      'sitting',
-      'unrecorded',
-      'former',
+    const sections = peopleSections(sorted);
+    expect(sections.map((s) => [s.key, s.title])).toEqual([
+      ['sitting', 'Sitting members'],
+      ['unrecorded', 'Status not confirmed'],
+      ['former', 'Former members'],
     ]);
-    expect(starts.reduce((n, s) => n + s.count, 0)).toBe(persons.length);
+    expect(sections.reduce((n, s) => n + s.data.length, 0)).toBe(
+      persons.length,
+    );
     expect(sorted[0]!.profile.partyStatus).toBe('current');
     expect(sorted.at(-1)!.profile.partyStatus).toBe('former');
     // Most speeches: sitting by speeches, then former by speeches.
@@ -224,28 +244,75 @@ describe('static directory transforms', () => {
   });
   // TestFlight build 32 (10 Oct): ACzcQOFB asked for sitting members first,
   // ALUtpHq6 for a sitting-only filter, AILRB_Cd for one party rule.
-  test('the default order is named: sitting first, then most speeches', () => {
-    expect(sortSummary('person', undefined)).toBe(
-      'Sitting first, then most speeches',
-    );
-    expect(sortSummary('person', 'name')).toBe('Sitting first, then name A–Z');
-    expect(sortSummary('party', undefined)).toBe('Most speeches');
+  test('the default order is by name, sitting members first; sorts are named plainly', () => {
+    expect(sortSummary('person', undefined)).toBe('Name');
+    expect(sortSummary('person', 'speeches')).toBe('Most speeches');
+    expect(sortSummary('party', undefined)).toBe('Name');
+    expect(sortSummary('electorate', 'elections')).toBe('Most elections');
     const sorted = matchingPeople(persons, {}, '');
     const sitting = sorted.filter((p) => sittingGroup(p) === 'sitting');
     expect(sorted.slice(0, sitting.length)).toEqual(sitting);
     for (let i = 1; i < sitting.length; i++)
-      expect(sitting[i - 1]!.row?.speeches ?? 0).toBeGreaterThanOrEqual(
-        sitting[i]!.row?.speeches ?? 0,
-      );
+      expect(
+        sitting[i - 1]!.sortName.localeCompare(sitting[i]!.sortName),
+      ).toBeLessThanOrEqual(0);
+    expect(directoryCount('person', 1090)).toBe('1,090 parliamentarians');
+    expect(directoryCount('party', 1)).toBe('1 party');
+  });
+  test('place lines say the seat and state, never a count', () => {
+    const line = (name: string) =>
+      placeLine(persons.find((p) => p.name === name)!);
+    expect(line('Anthony Albanese')).toBe(
+      'Member for Grayndler, New South Wales',
+    );
+    expect(line('Julia Gillard')).toBe('Former member for Lalor, Victoria');
+    expect(line('Tony Abbott')).toBe(
+      'Former member for Warringah, New South Wales',
+    );
+    const lines = persons.map(placeLine).filter((l): l is string => !!l);
+    expect(lines.length).toBeGreaterThan(persons.length / 2);
+    expect(lines.some((l) => /^Senator for /.test(l))).toBe(true);
+    expect(
+      lines.some((l) =>
+        /^Member for .+, (Victorian|New South Wales|Queensland|South Australian) /.test(
+          l,
+        ),
+      ),
+    ).toBe(true);
+    expect(lines.filter((l) => /\d|minister|—/i.test(l))).toEqual([]);
+    // A sitting House member carries the seat a menu can set as theirs.
+    const albanese = persons.find((p) => p.name === 'Anthony Albanese')!;
+    expect(albanese.seat?.electorate_id).toBe(grayndler.electorate_id);
+    expect(
+      persons.find((p) => p.name === 'Julia Gillard')!.seat,
+    ).toBeUndefined();
+    // Matching extends to the seat and the state.
+    expect(
+      matchingPeople(persons, {}, 'grayndler').map((p) => p.name),
+    ).toContain('Anthony Albanese');
   });
   test('Sitting members only keeps dated sitting members, never an undated party', () => {
-    expect(peopleFacets(persons).map((f) => f.label)).toEqual(
-      expect.arrayContaining([
-        'Sitting members only',
-        'Voting record',
-        'Portrait',
-      ]),
-    );
+    expect(peopleFacets(persons).map((f) => [f.key, f.label])).toEqual([
+      ['party', 'Party'],
+      ['parliament', 'Parliament'],
+      ['chamber', 'Chamber'],
+      ['state', 'State'],
+    ]);
+    // Full party names; Independent is a choice.
+    const party = peopleFacets(persons)[0]!.choices!.map((c) => c.label);
+    expect(party).toContain('Independent');
+    expect(party).toContain('Liberal National Party of Queensland');
+    expect(party).toContain('Jacqui Lambie Network');
+    expect(party).not.toContain('LNP');
+    expect(partyName('JLN')).toBe('Jacqui Lambie Network');
+    // The party page's label finds the roster's code.
+    expect(
+      matchingPeople(
+        persons,
+        { party: 'Liberal National Party of Queensland' },
+        '',
+      ).length,
+    ).toBe(matchingPeople(persons, { party: 'LNP' }, '').length);
     const only = matchingPeople(persons, { sitting: '1' }, '');
     expect(only.length).toBeGreaterThan(200);
     expect(only.every((p) => p.profile.partyStatus === 'current')).toBe(true);
@@ -338,7 +405,9 @@ describe('static directory transforms', () => {
     },
   );
   test('parties contain party nodes and roster labels; no donors; commission receipts are never summed', () => {
-    expect(parties.length).toBe(19);
+    expect(parties.length).toBe(18);
+    // Independent is not a party (people.md 2.4).
+    expect(parties.map((p) => p.name)).not.toContain('Independent');
     expect(
       parties.every(
         (p) =>
@@ -356,22 +425,28 @@ describe('static directory transforms', () => {
       ),
     ).toBe(true);
   });
-  test.each(['speeches', 'members', 'money'])(
-    'party Show %s uses its stated basis',
-    (show) => {
-      const found = matchingParties(parties, { show }, '');
+  test.each(['has_speeches', 'has_members', 'has_donations'])(
+    'party switch %s uses its stated basis',
+    (key) => {
+      const found = matchingParties(parties, { [key]: '1' }, '');
       expect(found.length).toBeGreaterThan(0);
       expect(
         found.every((p) =>
-          show === 'speeches'
+          key === 'has_speeches'
             ? p.speeches > 0
-            : show === 'members'
+            : key === 'has_members'
               ? p.members > 0
               : Object.keys(p.money).length > 0,
         ),
       ).toBe(true);
     },
   );
+  test('parties default to name order', () => {
+    const names = matchingParties(parties, {}, '').map((p) =>
+      p.name.toLowerCase(),
+    );
+    expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
+  });
   test('party receipts sorting uses the selected commission, not AEC totals', () => {
     const rows = matchingParties(
       parties,
@@ -403,14 +478,31 @@ describe('static directory transforms', () => {
   });
   test('all six electorate filters are available and compose with search', () => {
     expect(index.electorates.length).toBe(625);
-    expect(electorateFacets(index.electorates).map((f) => f.key)).toEqual([
-      'jur',
-      'chamber',
-      'state',
-      'status',
-      'party',
-      'results',
+    // Status and results are switches in the filter sheet.
+    expect(
+      electorateFacets(index.electorates).map((f) => [f.key, f.label]),
+    ).toEqual([
+      ['jur', 'Parliament'],
+      ['chamber', 'Chamber'],
+      ['state', 'State'],
+      ['party', 'Member’s party'],
     ]);
+    expect(
+      electorateSections(matchingElectorates(index.electorates, {}, ''), 'name')
+        .map((s) => s.title)
+        .slice(0, 3),
+    ).toEqual(['A', 'B', 'C']);
+    expect(
+      electorateSections(index.electorates, 'elections').map((s) => s.title),
+    ).toEqual([null]);
+    expect(
+      matchingElectorates(index.electorates, {}, 'tasmania').every(
+        (e) => e.state_code === 'tas',
+      ),
+    ).toBe(true);
+    expect(
+      matchingElectorates(index.electorates, {}, 'albanese').map((e) => e.name),
+    ).toContain('Grayndler');
     const found = matchingElectorates(
       index.electorates,
       {
