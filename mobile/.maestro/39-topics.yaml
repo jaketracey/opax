@@ -1,11 +1,13 @@
 appId: au.com.opax.app
-name: 39 Topics A–Z, topic, stats and Methods
+name: 39 Topics, a topic page, coverage and Methods
 ---
 - launchApp:
     clearState: true
 - openLink: opax://topics
 - assertVisible:
     id: topics-screen
+- assertVisible:
+    id: topics-order
 - takeScreenshot: ${EVIDENCE}/39-topics
 # A tap target: centred at speed 20 (about half a screen per swipe), the
 # whole row in view. At the default speed the centring swipe left the row
@@ -23,49 +25,79 @@ name: 39 Topics A–Z, topic, stats and Methods
     id: topic-open-gambling
 - assertVisible:
     id: topic-screen
+- extendedWaitUntil:
+    visible:
+      id: topic-count
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/39-topic
 - scrollUntilVisible:
     element:
-      text: Who speaks on it, by party
+      id: topic-tide
     direction: DOWN
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
-- takeScreenshot: ${EVIDENCE}/39-parties
+- takeScreenshot: ${EVIDENCE}/39-over-time
 - scrollUntilVisible:
     element:
-      text: Which parliament argues it
+      id: topic-who
     direction: DOWN
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
-- takeScreenshot: ${EVIDENCE}/39-parliaments
+- takeScreenshot: ${EVIDENCE}/39-who-speaks
+# A Who speaks row filters Speeches in place: no screen is pushed, the
+# filters line appears, and Clear removes it.
 - scrollUntilVisible:
     element:
-      text: The money beside the words
+      id: topic-state-row-federal
     direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 100
+    centerElement: true
+- tapOn:
+    id: topic-state-row-federal
+- assertVisible:
+    id: topic-screen
+- scrollUntilVisible:
+    element:
+      id: topic-filters-line
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 100
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/39-filtered
+- tapOn:
+    id: topic-filters-clear
+- assertNotVisible:
+    id: topic-filters-line
+- scrollUntilVisible:
+    element:
+      id: topic-money-section
+    direction: UP
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/39-money
 - scrollUntilVisible:
     element:
-      text: The share over time
+      id: topic-speeches
     direction: DOWN
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
-- takeScreenshot: ${EVIDENCE}/39-decades
+- takeScreenshot: ${EVIDENCE}/39-speeches
 - scrollUntilVisible:
     element:
-      text: The arc of this debate
+      id: topic-speeches-more
     direction: DOWN
     timeout: 300000
+    visibilityPercentage: 100
     centerElement: true
-- takeScreenshot: ${EVIDENCE}/39-arc
-# Use the native header to leave the long, paginated speech window.
+- takeScreenshot: ${EVIDENCE}/39-all-speeches
+# Use the native header to leave the long speech list.
 - tapOn:
-    text: Topics A–Z
+    text: Topics
     index: 0
 - scrollUntilVisible:
     element:

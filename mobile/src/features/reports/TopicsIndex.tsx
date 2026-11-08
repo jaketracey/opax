@@ -1,186 +1,231 @@
+import { useCallback, useRef, useState } from 'react';
+import { RefreshControl, View } from 'react-native';
+import { Stack, router } from 'expo-router';
+import { reports } from '../../api/runtime';
 import {
-  Button,
+  ContentUnavailable,
   Group,
-  RowList,
+  Heading,
+  InsetGroup,
+  LinkRow,
   Screen,
-  Section,
-  SegmentedControl,
+  SegmentedPicker,
+  Skeleton,
   SourceLine,
   Text,
 } from '../../design/primitives';
+import { copy } from '../../design/copy';
+import { formatCount } from '../../design/format';
+import { useListSearchBar } from '../../design/search-bar';
+import { rhythm } from '../../design/tokens';
 import { headerItems } from '../../navigation/chrome';
-import { useState } from 'react';
-import { Stack } from 'expo-router';
-import { reports } from '../../api/runtime';
-import { RecordRow } from '../RecordRow';
 import { shareHeaderItem } from '../../navigation/share';
-import { topicDescriptions, topicNames } from './model';
-import { ReadState, ShareBars, announce, useRead } from './parts';
-import { openRecord } from './open';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { coverageRoute, methodsRoute } from '../../navigation/routes/reference';
+import { resultsRoute, topicRoute } from '../../navigation/routes/search';
+import { allTopics, matchTopics } from '../search/ranking';
+import { isOffline } from '../CatalogState';
+import { announce, useRead } from './parts';
+import { TOPIC_CITATION, topicNotes } from './topic-copy';
 
-const NOTES = [
-  'Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.',
-  'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. Not every speech is labelled yet.',
-];
+type Order = 'name' | 'count';
+type Row = { slug: string; title: string; description: string; count?: number };
 
-type TopicCount = { slug: string; count: number };
-/** The known topics that pass `keep`, A–Z or most discussed first. */
-function listed(
-  topics: readonly TopicCount[],
-  order: 'name' | 'count',
-  keep: (t: TopicCount) => boolean,
-) {
-  return topics
-    .filter((t) => topicNames[t.slug] && keep(t))
-    .sort((a, b) =>
-      order === 'name'
-        ? topicNames[a.slug]!.localeCompare(topicNames[b.slug]!)
-        : b.count - a.count,
-    );
+/** Topics with their counts, A–Z or most discussed first. */
+export function orderTopics(rows: readonly Row[], order: Order): Row[] {
+  return [...rows].sort((a, b) =>
+    order === 'count' && a.count !== undefined && b.count !== undefined
+      ? b.count - a.count || a.title.localeCompare(b.title, 'en-AU')
+      : a.title.localeCompare(b.title, 'en-AU'),
+  );
 }
 
 export default function TopicsIndex() {
-  const read = useRead(reports.topics),
-    tide = useRead(reports.tide);
-  const [order, setOrder] = useState<'name' | 'count'>('name');
+  const [refresh, setRefresh] = useState(0);
+  const load = useCallback(() => reports.topics(refresh > 0), [refresh]);
+  const read = useRead(load);
+  const [order, setOrder] = useState<Order>('name');
+  const [query, setQuery] = useState('');
+  const titleRef = useRef<View>(null);
+  const title = useTitleOnScroll(titleRef, 'Topics');
+  const search = useListSearchBar({
+    placeholder: 'Topics and subjects',
+    onChangeText: setQuery,
+    onSearchButtonPress: setQuery,
+    onCancelButtonPress: () => setQuery(''),
+  });
+  const data = read.record?.data ?? null;
+  const counts = new Map(data?.topics.map((t) => [t.slug, t.count]) ?? []);
+  const known = allTopics.map((t) => ({
+    slug: t.slug,
+    title: t.title,
+    description: t.description,
+    count: data ? (counts.get(t.slug) ?? 0) : undefined,
+  }));
+  const q = query.trim();
+  const matched = q ? new Set(matchTopics(q).map((t) => t.slug)) : null;
+  const shown = known.filter((t) => !matched || matched.has(t.slug));
+  const labelled = orderTopics(
+    shown.filter((t) => t.count === undefined || t.count > 0),
+    order,
+  );
+  const unlabelled = orderTopics(
+    shown.filter((t) => t.count === 0),
+    'name',
+  );
+  const failed = !read.record && read.error;
+  const loading = !read.record && !read.error;
   return (
     <>
       <Stack.Screen
         options={{
-          title: 'Topics A–Z',
+          title: 'Topics',
+          headerSearchBarOptions: { ...search, hideWhenScrolling: true },
           ...headerItems(() => [
-            shareHeaderItem({ path: '/subject/topic', title: 'Topics A–Z' }),
+            shareHeaderItem({ path: '/subject/topic', title: 'Topics' }),
           ]),
         }}
       />
-      <Screen column="wide" testID="topics-screen">
-        <Text>
-          Every debate in the record, by subject. Each topic opens its own page:
-          who speaks on it, the money beside the words, and the debate itself.
-        </Text>
-        <ReadState
-          read={read}
-          citation="OPAX labelled topic catalog"
-          foot={false}
-          testID="topics"
-        >
-          {(data, meta) => (
-            <Group>
-              <Text variant="metadata" testID="topics-count">
-                {data.labelled.toLocaleString()} speeches labelled so far ·{' '}
-                {data.topics.filter((t) => topicNames[t.slug]).length} topics
-              </Text>
-              <SegmentedControl
-                value={order}
-                segments={[
-                  { value: 'name', label: 'A–Z' },
-                  { value: 'count', label: 'Most discussed' },
-                ]}
-                onChange={(value) => {
-                  setOrder(value);
-                  announce(
-                    value === 'name'
-                      ? 'Topics A–Z'
-                      : 'Topics ordered by most discussed',
-                  );
-                }}
-              />
-              <RowList grid>
-                {listed(data.topics, order, (t) => t.count > 0).map((t) => {
-                  const points = tide.record?.data.topics[t.slug] ?? [];
-                  const decades = tide.record?.data.decades ?? [];
-                  const pct =
-                    data.labelled > 0 ? (t.count / data.labelled) * 100 : 0;
-                  return (
-                    <Group key={t.slug} gap={6}>
-                      <RecordRow
-                        path={`/subject/topic/${t.slug}`}
-                        title={topicNames[t.slug]!}
-                        detail={`${t.count.toLocaleString()} speeches labelled so far · ${pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)}% of the labelled record`}
-                        onPress={() =>
-                          openRecord(
-                            `/subject/topic/${t.slug}`,
-                            topicNames[t.slug]!,
-                          )
-                        }
-                        testID={`topic-open-${t.slug}`}
-                      />
-                      <Text wordSafe variant="metadata">
-                        {topicDescriptions[t.slug]}
-                      </Text>
-                      {points.length ? (
-                        <ShareBars
-                          compact
-                          label="Share of federal speeches by decade"
-                          points={points.map((p) => ({
-                            ...p,
-                            label:
-                              decades.find((d) => d.slug === p.decade)?.label ??
-                              p.decade,
-                          }))}
-                        />
-                      ) : null}
-                    </Group>
-                  );
-                })}
-              </RowList>
-              <SourceLine
-                {...meta}
-                citation="OPAX labelled topic catalog"
-                title="About these numbers"
-                notes={NOTES}
-                testID="topics-as-at"
-              />
-              {/* A topic no speech carries yet has no count or share to
-                  give: it is named here, apart, until the pass reaches it. */}
-              {data.topics.some((t) => topicNames[t.slug] && t.count === 0) ? (
-                <Section
-                  title="No labelled speeches yet"
-                  testID="topics-unlabelled"
-                >
-                  <RowList grid>
-                    {listed(data.topics, 'name', (t) => t.count === 0).map(
-                      (t) => (
-                        <RecordRow
-                          key={t.slug}
-                          path={`/subject/topic/${t.slug}`}
-                          title={topicNames[t.slug]!}
-                          detail={topicDescriptions[t.slug]}
-                          onPress={() =>
-                            openRecord(
-                              `/subject/topic/${t.slug}`,
-                              topicNames[t.slug]!,
-                            )
-                          }
-                          testID={`topic-open-${t.slug}`}
-                        />
-                      ),
-                    )}
-                  </RowList>
-                </Section>
-              ) : null}
-            </Group>
-          )}
-        </ReadState>
-        {tide.error ? (
-          <Button label="Try decade bars again" onPress={tide.retry} />
+      <Screen
+        testID="topics-screen"
+        onScroll={title.onScroll}
+        offline={
+          read.record?.stale && read.error && isOffline(read.error)
+            ? { savedAt: read.record.savedAt }
+            : null
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => setRefresh((n) => n + 1)}
+          />
+        }
+      >
+        <View ref={titleRef} onLayout={title.onTitleLayout}>
+          <Heading level={1} kind="page">
+            Topics
+          </Heading>
+        </View>
+        {!q ? (
+          <SegmentedPicker
+            accessibilityLabel="Order"
+            value={order}
+            options={[
+              { value: 'name', label: 'A–Z' },
+              { value: 'count', label: 'Most discussed' },
+            ]}
+            onChange={(value) => {
+              setOrder(value);
+              announce(
+                value === 'name' ? 'Sorted A to Z' : 'Sorted by most discussed',
+              );
+            }}
+            testID="topics-order"
+          />
         ) : null}
-        <Section testID="topics-more">
-          <RowList>
-            <RecordRow
-              path={'/stats'}
-              title="Coverage by source"
-              onPress={() => openRecord('/stats', 'Coverage by source')}
-              testID="topics-stats"
+        {failed && !q ? (
+          isOffline(read.error) ? (
+            <ContentUnavailable
+              symbol="wifi.slash"
+              title={copy.notSaved}
+              body={copy.notSavedBody}
+              testID="topics-offline"
             />
-            <RecordRow
-              path={'/methods'}
-              title="Methods"
-              onPress={() => openRecord('/methods', 'Methods')}
-              testID="topics-methods"
+          ) : (
+            <ContentUnavailable
+              symbol="exclamationmark.triangle"
+              title="Topics couldn't be loaded"
+              body="OPAX didn't respond."
+              action={{
+                label: 'Try again',
+                onPress: read.retry,
+                testID: 'topics-retry',
+              }}
+              testID="topics-error"
             />
-          </RowList>
-        </Section>
+          )
+        ) : loading && !q ? (
+          <Skeleton count={8} label="Loading topics" testID="topics-loading" />
+        ) : (
+          <>
+            {labelled.length ? (
+              <InsetGroup testID="topics-list">
+                {labelled.map((t) => (
+                  <LinkRow
+                    key={t.slug}
+                    title={t.title}
+                    value={
+                      t.count === undefined
+                        ? undefined
+                        : `${formatCount(t.count)} speeches`
+                    }
+                    detail={t.description}
+                    href={topicRoute(t.slug)}
+                    testID={`topic-open-${t.slug}`}
+                  />
+                ))}
+              </InsetGroup>
+            ) : null}
+            {unlabelled.length ? (
+              <InsetGroup
+                header="No labelled speeches yet"
+                testID="topics-unlabelled"
+              >
+                {unlabelled.map((t) => (
+                  <LinkRow
+                    key={t.slug}
+                    title={t.title}
+                    detail={t.description}
+                    accessory="none"
+                    testID={`topic-unlabelled-${t.slug}`}
+                  />
+                ))}
+              </InsetGroup>
+            ) : null}
+            {q && !labelled.length && !unlabelled.length ? (
+              <Group gap={rhythm.tight} testID="topics-no-match">
+                <Text wordSafe variant="secondary">
+                  {`No topics match “${q}”.`}
+                </Text>
+                <InsetGroup>
+                  <LinkRow
+                    title={`Search speeches for “${q}”`}
+                    symbol="magnifyingglass"
+                    onPress={() => router.push(resultsRoute('speeches', { q }))}
+                    testID="topics-search-speeches"
+                  />
+                </InsetGroup>
+              </Group>
+            ) : null}
+          </>
+        )}
+        {read.record ? (
+          <SourceLine
+            asOf={read.record.asOf}
+            citation={TOPIC_CITATION}
+            savedAt={read.record.stale ? read.record.savedAt : null}
+            title="About these topics"
+            notes={[
+              ...topicNotes(read.record.data.labelled),
+              read.record.stale && !isOffline(read.error)
+                ? 'The latest list could not be read.'
+                : null,
+            ]}
+            testID="topics-as-at"
+          />
+        ) : null}
+        <InsetGroup testID="topics-more">
+          <LinkRow
+            title="Coverage by parliament"
+            href={coverageRoute}
+            testID="topics-stats"
+          />
+          <LinkRow
+            title="Methods"
+            href={methodsRoute}
+            testID="topics-methods"
+          />
+        </InsetGroup>
       </Screen>
     </>
   );

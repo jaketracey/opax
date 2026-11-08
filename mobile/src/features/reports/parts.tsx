@@ -168,6 +168,10 @@ export function ReadState<T>({
     </Group>
   );
 }
+/**
+ * @deprecated The Topic page draws speeches as RecordRows. Still drawn by
+ * RecordsSheet (Explore's RecordsLine) and tests/topic-record-reader.test.tsx.
+ */
 export function SourceRows({
   sources,
   numbers,
@@ -528,6 +532,7 @@ export function ShareBars({
   points: { label: string; share: number; count?: number }[];
   label: string;
   onSelect?: (index: number) => void;
+  /** @deprecated No caller draws the compact strip since Topics dropped it. */
   compact?: boolean;
 }) {
   const max = Math.max(...points.map((p) => p.share), Number.EPSILON);

@@ -1,0 +1,429 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
+import { act, type ReactElement } from 'react';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { Dimensions, Platform } from 'react-native';
+import {
+  SafeAreaFrameContext,
+  SafeAreaInsetsContext,
+} from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { reports } from '../src/api/runtime';
+import {
+  chosenDecade,
+  decodeIndustryMoney,
+  normaliseTopicFilters,
+  topicFiltersLine,
+} from '../src/features/reports/model';
+import TopicPage, { topicQuestion } from '../src/features/reports/TopicPage';
+import TopicsIndex from '../src/features/reports/TopicsIndex';
+
+let mockParams: Record<string, string> = {};
+const mockScreens: { options?: Record<string, unknown> }[] = [];
+jest.mock('expo-router', () => {
+  const React = require('react');
+  return {
+    Link: Object.assign((props: object) => React.createElement('Link', props), {
+      Trigger: (props: object) => React.createElement('LinkTrigger', props),
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    }),
+    Stack: {
+      Screen: (props: { options?: Record<string, unknown> }) => {
+        mockScreens.push(props);
+        return null;
+      },
+    },
+    useLocalSearchParams: () => mockParams,
+    useSegments: () => ['(tabs)', '(search)'],
+    router: {
+      push: jest.fn(),
+      navigate: jest.fn(),
+      dismissTo: jest.fn(),
+      setParams: jest.fn(),
+    },
+  };
+});
+jest.mock('../src/api/runtime', () => ({
+  reports: {
+    topics: jest.fn(),
+    tide: jest.fn(),
+    topic: jest.fn(),
+    speeches: jest.fn(),
+    money: jest.fn(),
+  },
+}));
+jest.mock('../src/navigation/share', () => ({
+  canShare: true,
+  shareRecord: jest.fn(),
+  shareHeaderItem: jest.fn(() => ({ type: 'button', label: 'Share' })),
+  copyRecordLink: jest.fn(),
+}));
+jest.mock('../src/navigation/external', () => ({
+  ...jest.requireActual('../src/navigation/external'),
+  openOnWeb: jest.fn(),
+}));
+jest.mock('../src/navigation/useTitleOnScroll', () => ({
+  useTitleOnScroll: () => ({ onScroll: jest.fn(), onTitleLayout: jest.fn() }),
+  TitleAnchorContext: require('react').createContext(null),
+}));
+const mockOpenAsk = jest.fn();
+jest.mock('../src/features/ask/open', () => ({
+  useOpenAsk: () => mockOpenAsk,
+}));
+
+const result = <T,>(data: T) => ({
+  data,
+  stale: false,
+  savedAt: 0,
+  asOf: '2026-11-01',
+});
+const topic = {
+  slug: 'gambling',
+  count: 1234,
+  labelled: 200000,
+  parties: [
+    ['Liberal', 400],
+    ['Labor', 500],
+    ['LNP', 20],
+  ],
+  states: [
+    ['federal', 900, 0.01],
+    ['nsw', 100, 0.002],
+  ],
+};
+const tide = {
+  scope: 'federal',
+  decades: [
+    { slug: '1990s', label: '1993–99', from: 1993, to: 1999 },
+    { slug: '2000s', label: '2000s', from: 2000, to: 2009 },
+    { slug: '2010s', label: '2010s', from: 2010, to: 2019 },
+    { slug: '2020s', label: '2020–26', from: 2020, to: 2026 },
+  ].map((d) => ({ ...d, total: 1000, labelled: 800, coverage: 0.8 })),
+  topics: {
+    gambling: [
+      { decade: '1990s', count: 10, share: 0.01 },
+      { decade: '2010s', count: 40, share: 0.04 },
+    ],
+  },
+};
+const speeches = {
+  results: [
+    {
+      slug: 'speech-1',
+      title: 'Andrew Wilkie — Gambling Reform — 2024-03-01',
+      date: '2024-03-01',
+      speaker: 'Andrew Wilkie',
+      party: 'IND',
+      state: 'federal',
+      snippet: 'Poker machines',
+    },
+  ],
+};
+const money = decodeIndustryMoney({
+  meta: {
+    generated: '2026-10-01',
+    source: 'AEC',
+    coverage: 'financial years 1998-99 to 2025-26',
+    methodology: 'Disclosed donations summed by party.',
+    exclusions: [],
+  },
+  nodes: [
+    {
+      id: 'donor:tabcorp',
+      label: 'Tabcorp Holdings Limited',
+      kind: 'donor',
+      industry: 'gambling',
+      total: 1000000,
+      count: 3,
+    },
+  ],
+  edges: [
+    { source: 'donor:tabcorp', target: 'party:Labor', total: 600000, count: 2 },
+    {
+      source: 'donor:tabcorp',
+      target: 'party:Liberal',
+      total: 400000,
+      count: 1,
+    },
+  ],
+});
+
+let mounted: TestRenderer.ReactTestRenderer[] = [];
+async function render(element: ReactElement) {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <SafeAreaInsetsContext.Provider
+        value={{ top: 0, right: 0, bottom: 0, left: 0 }}
+      >
+        <SafeAreaFrameContext.Provider
+          value={{ x: 0, y: 0, width: 390, height: 844 }}
+        >
+          {element}
+        </SafeAreaFrameContext.Provider>
+      </SafeAreaInsetsContext.Provider>,
+    );
+  });
+  mounted.push(renderer);
+  return renderer;
+}
+const host = (root: ReactTestInstance, id: string) =>
+  root.findAll(
+    (node) => typeof node.type === 'string' && node.props.testID === id,
+  );
+const press = async (root: ReactTestInstance, id: string) => {
+  const target = root
+    .findAllByProps({ testID: id })
+    .find((node) => typeof node.props.onPress === 'function')!;
+  await act(async () => target.props.onPress());
+};
+const words = (renderer: TestRenderer.ReactTestRenderer) =>
+  renderer.root
+    .findAll((node) => typeof node.type === 'string')
+    .flatMap((node) =>
+      node.children.filter(
+        (child): child is string => typeof child === 'string',
+      ),
+    )
+    .join('\n');
+const lastParams = () =>
+  jest.mocked(router.setParams).mock.calls.at(-1)?.[0] as Record<
+    string,
+    string | undefined
+  >;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockScreens.length = 0;
+  mockParams = { slug: 'gambling' };
+  Platform.OS = 'android';
+  Dimensions.set({
+    window: { width: 390, height: 844, scale: 3, fontScale: 1 },
+    screen: { width: 390, height: 844, scale: 3, fontScale: 1 },
+  });
+  jest.mocked(reports.topic).mockResolvedValue(result(topic) as never);
+  jest.mocked(reports.tide).mockResolvedValue(result(tide) as never);
+  jest.mocked(reports.speeches).mockResolvedValue(result(speeches) as never);
+  jest.mocked(reports.money).mockResolvedValue(result(money) as never);
+  jest.mocked(reports.topics).mockResolvedValue(
+    result({
+      labelled: 200000,
+      topics: [{ slug: 'gambling', count: 1234 }],
+    }) as never,
+  );
+});
+afterEach(() => {
+  for (const renderer of mounted) act(() => renderer.unmount());
+  mounted = [];
+});
+
+describe('topic arrivals (specs/search.md 5.2.1)', () => {
+  it.each([
+    [
+      'decade-aligned years choose the decade',
+      { from: '2010', to: '2019' },
+      { from: '2010', to: '2019' },
+      '2010s',
+    ],
+    [
+      'non-aligned dates become plain years',
+      { from: '1998-01-01', to: '2004-12-31' },
+      { from: '1998', to: '2004' },
+      'From 1998 to 2004',
+    ],
+    [
+      'a debate is kept as words',
+      { debate: 'Gambling Reform' },
+      { debate: 'Gambling Reform' },
+      '“Gambling Reform”',
+    ],
+    [
+      'years outside the record are both dropped',
+      { from: '1950', to: '2004' },
+      {},
+      '',
+    ],
+    ['from after to drops both', { from: '2010', to: '2005' }, {}, ''],
+    ['an unknown parliament is dropped', { state: 'mars' }, {}, ''],
+  ])('%s', (_name, params, filters, line) => {
+    const out = normaliseTopicFilters(params);
+    expect(out).toEqual(filters);
+    expect(topicFiltersLine(out)).toBe(line);
+  });
+  it('matches a decade only on its exact years', () => {
+    expect(chosenDecade({ from: '2010', to: '2019' })?.slug).toBe('2010s');
+    expect(chosenDecade({ from: '2010', to: '2018' })).toBeNull();
+  });
+});
+
+describe('Topic page', () => {
+  it('says an unknown topic is not in OPAX and reads nothing', async () => {
+    mockParams = { slug: 'not-a-topic' };
+    const page = await render(<TopicPage />);
+    expect(host(page.root, 'topic-unknown')).toHaveLength(1);
+    expect(words(page)).toContain('Topic not found');
+    expect(words(page)).toContain("This topic isn't in OPAX.");
+    for (const read of Object.values(reports))
+      expect(jest.mocked(read)).not.toHaveBeenCalled();
+  });
+
+  it('filters Speeches in place and never pushes a route', async () => {
+    const page = await render(<TopicPage />);
+    await press(page.root, 'topic-state-row-federal');
+    expect(router.push).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(lastParams()).toMatchObject({ state: 'federal' });
+    expect(reports.speeches).toHaveBeenLastCalledWith(
+      'gambling',
+      expect.objectContaining({ state: 'federal' }),
+      false,
+    );
+    expect(host(page.root, 'topic-filters-line')).toHaveLength(1);
+    expect(words(page)).toContain('Federal Parliament');
+    await press(page.root, 'topic-tide-bar-1');
+    expect(router.push).not.toHaveBeenCalled();
+    expect(lastParams()).toMatchObject({
+      state: 'federal',
+      from: '2010',
+      to: '2019',
+    });
+    await press(page.root, 'topic-filters-clear');
+    expect(host(page.root, 'topic-filters-line')).toHaveLength(0);
+    expect(lastParams()).toEqual({
+      party: undefined,
+      state: undefined,
+      from: undefined,
+      to: undefined,
+      debate: undefined,
+    });
+  });
+
+  it('removes a filter when its chosen Who row is tapped again', async () => {
+    const page = await render(<TopicPage />);
+    await press(page.root, 'topic-party-row-Labor');
+    expect(lastParams()).toMatchObject({ party: 'Labor' });
+    const row = page.root.findByProps({ testID: 'topic-party-row-Labor' });
+    expect(row.props.selected).toBe(true);
+    await press(page.root, 'topic-party-row-Labor');
+    expect(lastParams()).toMatchObject({ party: undefined });
+    expect(
+      page.root.findByProps({ testID: 'topic-party-row-Labor' }).props.selected,
+    ).toBe(false);
+    expect(host(page.root, 'topic-filters-line')).toHaveLength(0);
+  });
+
+  it('draws Who rows as buttons without a chevron, parties in the neutral order', async () => {
+    const page = await render(<TopicPage />);
+    const who = host(page.root, 'topic-who')[0]!;
+    expect(
+      who.findAll((node) => node.props.name === 'chevron.right'),
+    ).toHaveLength(0);
+    const rows = who
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          /^topic-party-row-/.test(node.props.testID ?? ''),
+      )
+      .map((node) => node.props.testID);
+    expect(rows).toEqual([
+      'topic-party-row-Labor',
+      'topic-party-row-Liberal',
+      'topic-party-row-LNP',
+    ]);
+    for (const id of rows)
+      expect(host(page.root, id)[0]!.props.accessibilityRole).toBe('button');
+  });
+
+  it('shows donations as a comparison, sourced to AEC and OPAX', async () => {
+    const page = await render(<TopicPage />);
+    expect(host(page.root, 'topic-money-section')).toHaveLength(1);
+    const text = words(page);
+    expect(text).toContain('Donations from the gambling industry');
+    expect(text).toContain(
+      'Shown beside the debate for comparison, not as a cause.',
+    );
+    expect(text).toContain('AEC and OPAX');
+    expect(text).toContain('$1m');
+  });
+
+  it('offers All speeches on the topic, pushing results with the topic', async () => {
+    const page = await render(<TopicPage />);
+    expect(host(page.root, 'topic-speeches-more')).toHaveLength(1);
+    expect(words(page)).toContain('All speeches on gambling');
+    await press(page.root, 'topic-party-row-Labor');
+    await press(page.root, 'topic-speeches-more');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/results/[kind]',
+      params: {
+        kind: 'speeches',
+        topic: 'gambling',
+        q: 'Gambling',
+        party: 'Labor',
+      },
+    });
+  });
+
+  it('keeps All speeches while the speeches load', async () => {
+    jest.mocked(reports.speeches).mockReturnValue(new Promise(() => {}));
+    const page = await render(<TopicPage />);
+    expect(host(page.root, 'topic-speeches-loading')).toHaveLength(1);
+    expect(host(page.root, 'topic-speeches-more')).toHaveLength(1);
+  });
+
+  it('drafts a question in Ask from the ⋯ menu', async () => {
+    await render(<TopicPage />);
+    const options = mockScreens.at(-1)!.options as {
+      unstable_headerRightItems: () => {
+        type: string;
+        menu?: { items: { label: string; onPress: () => void }[] };
+      }[];
+    };
+    const more = options
+      .unstable_headerRightItems()
+      .find((item) => item.type === 'menu')!;
+    const labels = more.menu!.items.map((item) => item.label);
+    expect(labels).toEqual([
+      'Ask about gambling',
+      'Copy link',
+      'Open on opax.com.au',
+    ]);
+    act(() => more.menu!.items[0]!.onPress());
+    expect(mockOpenAsk).toHaveBeenCalledWith({
+      question: 'What has parliament said about gambling this year?',
+      topic: 'gambling',
+    });
+    expect(topicQuestion('gambling')).toBe(
+      'What has parliament said about gambling this year?',
+    );
+    expect(router.push).not.toHaveBeenCalled();
+  });
+
+  it('reads the arrival filters once, normalised', async () => {
+    mockParams = { slug: 'gambling', from: '1998-01-01', to: '2004-12-31' };
+    const page = await render(<TopicPage />);
+    expect(reports.speeches).toHaveBeenCalledWith(
+      'gambling',
+      { from: '1998', to: '2004' },
+      false,
+    );
+    expect(words(page)).toContain('From 1998 to 2004');
+  });
+});
+
+describe('Topics index', () => {
+  it('lists topics with counts, an order picker and no-label topics apart', async () => {
+    const page = await render(<TopicsIndex />);
+    expect(host(page.root, 'topics-screen')).toHaveLength(1);
+    expect(
+      page.root.findAllByProps({ testID: 'topics-order' }).length,
+    ).toBeGreaterThan(0);
+    expect(host(page.root, 'topic-open-gambling')).toHaveLength(1);
+    expect(words(page)).toContain('1,234 speeches');
+    expect(host(page.root, 'topics-unlabelled')).toHaveLength(1);
+    expect(host(page.root, 'topic-unlabelled-housing')).toHaveLength(1);
+    expect(host(page.root, 'topics-stats')).toHaveLength(1);
+    expect(host(page.root, 'topics-methods')).toHaveLength(1);
+    expect(words(page)).not.toContain(' & ');
+  });
+});
