@@ -395,6 +395,18 @@ test.each([
   if (descriptor) Object.defineProperty(Platform, 'Version', descriptor);
 });
 
+test('the tab layout records the selected tab for warm Money map links', () => {
+  const { selectedTab, setSelectedTab } = jest.requireActual(
+    '../src/navigation/link-tab',
+  );
+  setSelectedTab('(today)');
+  const Tabs = jest.requireActual('../src/app/(tabs)/_layout').default;
+  const view = tree(<Tabs />);
+  expect(selectedTab()).toBe('(ask)');
+  act(() => view.unmount());
+  setSelectedTab('(today)');
+});
+
 test('Reduce Motion cuts the bar title instead of animating it', () => {
   mockReducedMotion = true;
   const animation = jest.spyOn(Animated, 'timing');

@@ -372,22 +372,109 @@ describe('native incoming links', () => {
       'https://opax.com.au/subject/electorate/el_5d600e7f6dca5b72ae04d686',
       '/(tabs)/(today)/electorate/el_5d600e7f6dca5b72ae04d686',
     ],
-    ['opax://person/member?name=Untrusted', '/person/member'],
-    ['opax://money?name=Untrusted', '/money'],
+    ['opax://person/member?name=Untrusted', '/(tabs)/(today)/person/member'],
+    ['opax://money?name=Untrusted', '/(tabs)/(today)/money'],
   ])('%s arrives without a supplied back-button name', (path, target) => {
     expect(redirectSystemPath({ path, initial: false })).toBe(target);
   });
-  test('cold money opens in Today and warm money keeps its active stack', () => {
-    expect(redirectSystemPath({ path: 'opax://money', initial: true })).toBe(
-      '/(tabs)/(today)/money',
-    );
-    expect(redirectSystemPath({ path: 'opax://money', initial: false })).toBe(
-      '/money',
-    );
+  test('cold money opens in Today and warm money keeps the selected tab', () => {
+    const { setSelectedTab } = jest.requireActual<
+      typeof import('../src/navigation/link-tab')
+    >('../src/navigation/link-tab');
+    setSelectedTab('(search)');
+    try {
+      expect(redirectSystemPath({ path: 'opax://money', initial: true })).toBe(
+        '/(tabs)/(today)/money',
+      );
+      expect(redirectSystemPath({ path: 'opax://money', initial: false })).toBe(
+        '/(tabs)/(search)/money',
+      );
+      expect(
+        redirectSystemPath({
+          path: 'https://opax.com.au/money?node=party:Labor',
+          initial: false,
+        }),
+      ).toBe('/(tabs)/(search)/money-record?node=party%3ALabor');
+    } finally {
+      setSelectedTab('(today)');
+    }
     expect(fromWebPath('/subject/person/member?name=Untrusted')).toEqual({
       pathname: '/person/[slug]',
       params: { slug: 'member' },
     });
+  });
+});
+
+describe('incoming links open in the tab the shell spec gives them', () => {
+  const redirectSystemPath = jest.requireActual<
+    typeof import('../src/app/+native-intent')
+  >('../src/app/+native-intent').redirectSystemPath;
+  const { setSelectedTab, linkTab } = jest.requireActual<
+    typeof import('../src/navigation/link-tab')
+  >('../src/navigation/link-tab');
+  // Warm links arrive while another tab is selected: Bills, the tab the
+  // router used to pick for every shared-folder route.
+  beforeEach(() => setSelectedTab('(bills)'));
+  afterEach(() => setSelectedTab('(today)'));
+  test.each([true, false])('people open in Today (cold %s)', (initial) => {
+    for (const path of [
+      'opax://person/anthony-albanese',
+      'https://opax.com.au/subject/person/anthony-albanese',
+    ])
+      expect(redirectSystemPath({ path, initial })).toBe(
+        '/(tabs)/(today)/person/anthony-albanese',
+      );
+    expect(redirectSystemPath({ path: 'opax://party/labor', initial })).toBe(
+      '/(tabs)/(today)/party/labor',
+    );
+  });
+  test.each([true, false])(
+    'money pages and editions open in Today (cold %s)',
+    (initial) => {
+      for (const [path, target] of [
+        ['opax://public-money', '/(tabs)/(today)/public-money'],
+        ['opax://grants', '/(tabs)/(today)/grants'],
+        ['opax://agencies', '/(tabs)/(today)/agencies'],
+        ['opax://edition', '/(tabs)/(today)/edition'],
+      ])
+        expect(redirectSystemPath({ path: path!, initial })).toBe(target);
+    },
+  );
+  test('the Money map opens in Today cold and in the selected tab warm', () => {
+    expect(redirectSystemPath({ path: 'opax://money', initial: true })).toBe(
+      '/(tabs)/(today)/money',
+    );
+    expect(redirectSystemPath({ path: 'opax://money', initial: false })).toBe(
+      '/(tabs)/(bills)/money',
+    );
+  });
+  test.each([true, false])('bills open in Bills (cold %s)', (initial) => {
+    setSelectedTab('(today)');
+    expect(
+      redirectSystemPath({ path: 'opax://bill/au-federal-r7534', initial }),
+    ).toBe('/(tabs)/(bills)/bill/au-federal-r7534');
+    expect(redirectSystemPath({ path: 'opax://bills', initial })).toBe(
+      '/(tabs)/(bills)/bills',
+    );
+  });
+  test('a tab of its own: Search, Ask and Your MP pages', () => {
+    expect(linkTab('/results/person', false)).toBe('(search)');
+    expect(linkTab('/conversations', false)).toBe('(ask)');
+    expect(linkTab('/members', false)).toBe('(your-mp)');
+    expect(
+      redirectSystemPath({ path: 'opax://search?q=gambling', initial: false }),
+    ).toBe('/(tabs)/(search)/search?q=gambling');
+  });
+  test('root-stack routes and grouped paths are left alone', () => {
+    for (const path of ['/talk', '/account', '/seat', '/source', '/welcome'])
+      expect(linkTab(path, false)).toBeNull();
+    expect(linkTab('/(tabs)/(ask)/ask', true)).toBeNull();
+    expect(redirectSystemPath({ path: 'opax://talk', initial: false })).toBe(
+      '/talk',
+    );
+    expect(
+      redirectSystemPath({ path: 'opax://voice-bridge-test', initial: true }),
+    ).toBe('/voice-bridge-test');
   });
 });
 

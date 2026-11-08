@@ -99,6 +99,9 @@ name: 25 Native party members, pinned receipts, bill divisions and an unknown pa
       id: money-focus-name
       text: Labor
     timeout: 90000
+# The focus is pushed in the same tab stack: the tab bar is still there,
+# full or minimised (a pushed page at its top keeps a minimised bar).
+- assertVisible: Tab Bar
 - takeScreenshot: ${EVIDENCE}/25-native-money-focus
 - tapOn:
     text: Back

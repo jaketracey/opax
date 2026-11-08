@@ -2,12 +2,7 @@
 import { act, type ReactElement } from 'react';
 import * as RN from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import {
-  Host,
-  Picker,
-  Text as SwiftText,
-  Image as SwiftImage,
-} from '@expo/ui/swift-ui';
+import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import {
   Button,
   Composer,
@@ -21,7 +16,6 @@ import {
 import { Icon } from '../src/design/icon';
 import { Text } from '../src/design/text';
 import { haptic } from '../src/design/haptics';
-import { colors } from '../src/design/tokens';
 import { symbols } from '../src/design/symbols';
 import { follow, useFollows } from '../src/features/follows/store';
 import { showMenu } from '../src/design/menu';
@@ -188,9 +182,17 @@ test.each([1, 1.786])(
           $type: 'accessibilityLabel',
           label: 'Jurisdiction, All jurisdictions, pop-up button',
         }),
-        expect.objectContaining({ $type: 'frame', minHeight: 32 }),
+        // The system's own pop-up indicator, in the tint: not a bare tag.
+        expect.objectContaining({
+          $type: 'menuIndicator',
+          visibility: 'visible',
+        }),
+        expect.objectContaining({ $type: 'tint' }),
         expect.objectContaining({ $type: 'frame', minHeight: 44 }),
       ]),
+    );
+    expect(picker.props.modifiers).not.toContainEqual(
+      expect.objectContaining({ $type: 'background' }),
     );
     expect(picker.props.selection).toBe('all');
     expect(
@@ -500,7 +502,7 @@ test.each([false, true])(
     }
   },
 );
-test('the AX menu row measures its column and uses quiet value and chevron inks', () => {
+test('the AX menu row titles the choice and its pop-up spans the measured column', () => {
   size(2.143);
   const r = render(
     <SegmentedPicker
@@ -526,26 +528,66 @@ test('the AX menu row measures its column and uses quiet value and chevron inks'
   expect(RN.StyleSheet.flatten(r.root.findByType(Host).props.style).width).toBe(
     300,
   );
-  const value = r.root
-    .findAllByType(SwiftText)
-    .find((node) => node.props.children === 'All')!;
-  expect(value.props.modifiers).toContainEqual(
-    expect.objectContaining({
-      $type: 'foregroundStyle',
-      style: { type: 'color', color: colors.inkSoft },
-    }),
+  // The title is drawn once, as body text; the button speaks it with the value.
+  const title = r.root
+    .findAllByType(Text)
+    .find((node) => node.props.children === 'Status')!;
+  expect(title.props.variant).toBe('body');
+  expect(title.props.accessibilityElementsHidden).toBe(true);
+  const picker = r.root.findByType(Picker);
+  expect(picker.props.modifiers).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        $type: 'menuIndicator',
+        visibility: 'visible',
+      }),
+      expect.objectContaining({ $type: 'tint', tint: expect.anything() }),
+      expect.objectContaining({ $type: 'frame', alignment: 'leading' }),
+      expect.objectContaining({
+        $type: 'accessibilityLabel',
+        label: 'Status, All jurisdictions, pop-up button',
+      }),
+    ]),
   );
-  const image = r.root.findByType(SwiftImage);
-  expect(image.props.modifiers).toContainEqual(
-    expect.objectContaining({
-      $type: 'foregroundStyle',
-      style: { type: 'color', color: colors.inkFaint },
-    }),
-  );
-  expect(image.props.modifiers).toContainEqual(
-    expect.objectContaining({ $type: 'font', size: 13 }),
-  );
+  expect(
+    r.root.findAllByType(SwiftText).map((node) => node.props.children),
+  ).toContain('All');
 });
+
+test.each([
+  [1, 'beside'],
+  [2.143, 'under'],
+])(
+  'a titled PopUpButton row at font scale %s puts the button %s its title',
+  (scale, place) => {
+    size(scale as number);
+    const r = render(
+      <PopUpButton
+        row
+        label="State or territory"
+        value="all"
+        options={options}
+        onChange={noop}
+        testID="state"
+      />,
+    );
+    const title = r.root
+      .findAllByType(Text)
+      .find((node) => node.props.children === 'State or territory')!;
+    expect(title.props.variant).toBe('body');
+    const row = title.parent!.parent!;
+    expect(RN.StyleSheet.flatten(row.props.style).flexDirection).toBe(
+      place === 'beside' ? 'row' : 'column',
+    );
+    // The id sits on the button itself, so a tap by id opens the menu.
+    expect(
+      r.root.findAll(
+        (node) =>
+          node.props.testID === 'state' && typeof node.type === 'string',
+      ),
+    ).toHaveLength(1);
+  },
+);
 
 test('the follow limit comes from the store and Edit Following is driven by its state', async () => {
   jest.replaceProperty(

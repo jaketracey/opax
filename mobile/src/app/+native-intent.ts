@@ -1,5 +1,6 @@
 import { communityHome } from '../features/community/entry';
 import { fromWebPath } from '../navigation/external';
+import { inLinkTab } from '../navigation/link-tab';
 import { webOrigin } from '../design/environment';
 
 /** Names from links are never trusted as native back-button copy. */
@@ -36,12 +37,6 @@ export function redirectSystemPath({
         'params' in mapped ? { ...mapped.params } : {};
       delete params.name;
       let pathname: string = mapped.pathname;
-      const rootTab =
-        pathname === '/search'
-          ? '(search)'
-          : pathname === '/your-mp'
-            ? '(your-mp)'
-            : null;
       for (const [key, value] of Object.entries(params)) {
         const marker = `[${key}]`;
         if (pathname.includes(marker)) {
@@ -55,19 +50,14 @@ export function redirectSystemPath({
       const query = new URLSearchParams(
         Object.entries(params).map(([key, value]) => [key, String(value)]),
       );
-      // Universal subject links have one unambiguous native home. Other warm
-      // content links resolve in the currently selected shared tab stack.
-      if (
-        /^\/subject\/(person|electorate)\//.test(route) ||
-        (initial &&
-          !/^\/(account|community|talk|licence)(?:\/|$)/.test(pathname) &&
-          !rootTab &&
-          !pathname.startsWith('/(tabs)'))
-      )
-        pathname = `/(tabs)/(today)${pathname === '/' ? '' : pathname}`;
-      if (rootTab) pathname = `/(tabs)/${rootTab}${pathname}`;
+      // Shared-folder routes exist in every tab stack: name the link's tab
+      // (navigation/link-tab.ts) rather than let the router choose one.
+      pathname = inLinkTab(pathname, initial);
       return `${pathname}${query.size ? `?${query}` : ''}`;
     }
+    // App links to native routes (opax://person/...) are not web paths.
+    if (native && /^\/[^/]/.test(route))
+      return `${inLinkTab(route, initial)}${suffix}`;
     return `${route}${suffix}`;
   } catch {
     return path;

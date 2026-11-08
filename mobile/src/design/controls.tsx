@@ -21,14 +21,7 @@ import {
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
-import {
-  Host,
-  Picker,
-  Text as SwiftText,
-  VStack,
-  HStack,
-  Image as SwiftImage,
-} from '@expo/ui/swift-ui';
+import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import {
   accessibilityLabel as nativeLabel,
   accessibilityIdentifier,
@@ -36,13 +29,8 @@ import {
   menuIndicator,
   tag,
   tint,
-  font,
   frame,
-  padding,
-  background,
-  clipShape,
   disabled as nativeDisabled,
-  foregroundStyle,
 } from '@expo/ui/swift-ui/modifiers';
 import type { FollowKind } from '../features/follows/store';
 import { haptic } from './haptics';
@@ -348,7 +336,25 @@ export interface PickerOption<T extends string> {
   testID?: string;
 }
 
-/** Native menu choice, with a compact capsule or an accessibility-size row. */
+/** The content column's width before a control has measured its own. */
+function columnWidth(layout: ReturnType<typeof useLayout>) {
+  return Math.max(
+    0,
+    Math.min(
+      layout.width -
+        2 * (layout.regular ? rhythmRegular.screen : rhythm.screen),
+      columns.readable,
+    ),
+  );
+}
+
+/**
+ * Native menu choice drawn as an iOS pop-up button: the current value in
+ * the tint with the system's `chevron.up.chevron.down` indicator beside it.
+ * `row` adds the label as the row's title (body, leading) with the button
+ * trailing, the inset-group row form; at accessibility sizes the button
+ * moves under the title and takes the column width so long values wrap.
+ */
 function MenuPicker<T extends string>({
   label,
   value,
@@ -372,14 +378,7 @@ function MenuPicker<T extends string>({
     (large ? selected?.shortLabel : undefined) ?? selected?.label ?? value;
   const layout = useLayout();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
-  const fallbackWidth = Math.max(
-    0,
-    Math.min(
-      layout.width -
-        2 * (layout.regular ? rhythmRegular.screen : rhythm.screen),
-      columns.readable,
-    ),
-  );
+  const fallbackWidth = columnWidth(layout);
   const spoken = `${label}, ${selected?.label ?? value}, pop-up button`;
   if (Platform.OS !== 'ios')
     return (
@@ -406,79 +405,45 @@ function MenuPicker<T extends string>({
         }
       />
     );
-  return (
+  // At accessibility sizes the button spans the column, so a long value
+  // wraps under the title instead of running off the screen.
+  const wide = row && large;
+  const button = (
     <View
       testID={testID}
-      style={row ? styles.menuRow : styles.hug}
-      onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
+      style={wide ? styles.full : styles.hug}
+      onLayout={
+        wide
+          ? (event) => setMeasuredWidth(event.nativeEvent.layout.width)
+          : undefined
+      }
     >
       <Host
-        matchContents={{ vertical: true, horizontal: !row }}
+        matchContents={{ vertical: true, horizontal: !wide }}
         style={
-          row
-            ? {
-                width: measuredWidth ?? fallbackWidth,
-                maxWidth: '100%',
-              }
+          wide
+            ? { width: measuredWidth ?? fallbackWidth, maxWidth: '100%' }
             : { minHeight: minimumTarget, maxWidth: '100%' }
         }
       >
         <Picker
+          label={label}
           selection={value}
           onSelectionChange={(next: T) => {
             if (!disabled && next !== value) onChange(next);
           }}
-          label={
-            row ? (
-              <HStack spacing={8}>
-                <VStack alignment="leading" spacing={4}>
-                  <SwiftText modifiers={[font({ textStyle: 'body' })]}>
-                    {label}
-                  </SwiftText>
-                  <SwiftText
-                    modifiers={[
-                      font({ textStyle: 'body' }),
-                      foregroundStyle(colors.inkSoft),
-                    ]}
-                  >
-                    {current}
-                  </SwiftText>
-                </VStack>
-                <SwiftImage
-                  systemName={symbols.menu}
-                  modifiers={[
-                    font({ size: 13, textStyle: 'footnote' }),
-                    foregroundStyle(colors.inkFaint),
-                  ]}
-                />
-              </HStack>
-            ) : (
-              <HStack spacing={6}>
-                <SwiftText modifiers={[font({ textStyle: 'subheadline' })]}>
-                  {current}
-                </SwiftText>
-                <SwiftImage
-                  systemName={symbols.menu}
-                  modifiers={[font({ textStyle: 'footnote' })]}
-                />
-              </HStack>
-            )
-          }
           modifiers={[
             pickerStyle('menu'),
             nativeDisabled(disabled),
-            menuIndicator('hidden'),
+            // The system indicator, chevron.up.chevron.down, beside the
+            // value: what makes the control read as a pop-up, not a tag.
+            menuIndicator('visible'),
             tint(colors.navy),
-            font({ textStyle: 'subheadline' }),
-            ...(row
-              ? [frame({ minHeight: minimumTarget, alignment: 'leading' })]
-              : [
-                  padding({ horizontal: 12 }),
-                  frame({ minHeight: 32 }),
-                  background(colors.navyWash),
-                  clipShape('capsule'),
-                  frame({ minHeight: minimumTarget }),
-                ]),
+            frame({
+              minHeight: minimumTarget,
+              ...(wide ? { maxWidth: measuredWidth ?? fallbackWidth } : {}),
+              alignment: row ? 'leading' : 'center',
+            }),
             nativeLabel(spoken),
             ...(testID ? [accessibilityIdentifier(testID)] : []),
           ]}
@@ -500,8 +465,31 @@ function MenuPicker<T extends string>({
       </Host>
     </View>
   );
+  if (!row) return button;
+  return (
+    <View style={[styles.menuRow, large ? styles.menuRowStacked : null]}>
+      {/* The button speaks the title with its value; the drawn title is
+          not a second stop for VoiceOver. */}
+      <Text
+        variant="body"
+        wordSafe
+        style={large ? null : styles.menuRowTitle}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        {label}
+      </Text>
+      {button}
+    </View>
+  );
 }
 
+/**
+ * An iOS pop-up button: the current value in the tint with the
+ * `chevron.up.chevron.down` indicator, opening a checkmarked native menu.
+ * With `row`, the label is drawn as the row's title beside it; without, the
+ * caller draws the title (a filter row's "From").
+ */
 export function PopUpButton<T extends string>(props: {
   disabled?: boolean;
   label: string;
@@ -509,8 +497,50 @@ export function PopUpButton<T extends string>(props: {
   options: readonly PickerOption<T>[];
   onChange: (value: T) => void;
   testID?: string;
+  row?: boolean;
 }) {
   return <MenuPicker {...props} />;
+}
+
+/**
+ * UISegmentedControl's own label size at the regular control size: 13 pt,
+ * semibold on the selected segment. The fit estimate measures every label
+ * at the selected weight, so it errs towards the pop-up.
+ */
+export const segmentLabel = { fontSize: 13, padding: 6, trackInset: 2 };
+// SF Pro Semibold advance widths in em, coarse classes.
+const narrowGlyphs = new Set("ijlI.,:;'’!|()");
+const slimGlyphs = new Set('frt1 ');
+const wideGlyphs = new Set('mwMW@%');
+function estimatedLabelWidth(label: string, fontSize: number) {
+  let em = 0;
+  for (const glyph of label) {
+    if (narrowGlyphs.has(glyph)) em += 0.27;
+    else if (glyph === ' ') em += 0.26;
+    else if (slimGlyphs.has(glyph)) em += 0.37;
+    else if (wideGlyphs.has(glyph)) em += 0.85;
+    else if (glyph !== glyph.toLowerCase()) em += 0.66;
+    else em += 0.57;
+  }
+  return em * fontSize;
+}
+/**
+ * Whether two to four labels fit a segmented control `width` points wide
+ * at the reader's text size without truncating. Segments share the width
+ * equally, so the longest label decides. Text smaller than the default
+ * counts as the default.
+ */
+export function segmentsFit(
+  labels: readonly string[],
+  width: number,
+  fontScale = 1,
+): boolean {
+  if (labels.length < 2 || labels.length > 4 || !(width > 0)) return false;
+  const fontSize = segmentLabel.fontSize * Math.max(1, fontScale);
+  const share =
+    (width - 2 * segmentLabel.trackInset) / labels.length -
+    2 * segmentLabel.padding;
+  return labels.every((label) => estimatedLabelWidth(label, fontSize) <= share);
 }
 
 /** At AX1+ the full current choice reads beneath the title in a native menu row. */
@@ -940,14 +970,16 @@ export function SegmentedControl<T extends string>({
 
 /**
  * Compatibility for existing single-choice filters. iOS uses native segments
- * for two to four peers and one pop-up above four; Android retains chips.
+ * for two to four peers whose labels fit the column at the reader's text
+ * size, and one pop-up button otherwise; Android retains chips. The pop-up
+ * is a titled row when the caller names the choice (`accessibilityLabel`).
  */
 export function ChoiceChips<T extends string>({
   segments,
   value,
   onChange,
   testID,
-  accessibilityLabel = 'Options',
+  accessibilityLabel,
 }: {
   segments: readonly Segment<T>[];
   value: T;
@@ -955,27 +987,43 @@ export function ChoiceChips<T extends string>({
   testID?: string;
   accessibilityLabel?: string;
 }) {
+  const { fontScale } = useWindowDimensions();
+  const layout = useLayout();
+  const [measured, setMeasured] = useState<number | null>(null);
   if (Platform.OS === 'ios' && segments.length > 0) {
-    if (segments.length >= 2 && segments.length <= 4)
-      return (
-        <SegmentedPicker
-          options={segments}
-          value={value}
-          onChange={onChange}
-          accessibilityLabel={accessibilityLabel}
-          testID={testID}
-        />
-      );
+    const width = measured ?? columnWidth(layout);
+    const fits = segmentsFit(
+      segments.map((segment) => segment.label),
+      width,
+      fontScale,
+    );
     return (
-      <PopUpButton
-        label={accessibilityLabel}
-        options={segments}
-        value={value}
-        onChange={onChange}
-        testID={
-          testID ?? segments.find((segment) => segment.value === value)?.testID
-        }
-      />
+      <View
+        style={styles.full}
+        onLayout={(event) => setMeasured(event.nativeEvent.layout.width)}
+      >
+        {fits ? (
+          <SegmentedPicker
+            options={segments}
+            value={value}
+            onChange={onChange}
+            accessibilityLabel={accessibilityLabel ?? 'Options'}
+            testID={testID}
+          />
+        ) : (
+          <PopUpButton
+            row={accessibilityLabel !== undefined}
+            label={accessibilityLabel ?? 'Options'}
+            options={segments}
+            value={value}
+            onChange={onChange}
+            testID={
+              testID ??
+              segments.find((segment) => segment.value === value)?.testID
+            }
+          />
+        )}
+      </View>
     );
   }
   // At accessibility sizes each chip takes the full width, a fixed column
@@ -1482,7 +1530,19 @@ const styles = StyleSheet.create({
   segmentInline: { flex: 1, flexBasis: 0 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
   field: { gap: spacing.s3, alignSelf: 'stretch' },
-  menuRow: { alignSelf: 'stretch', minHeight: minimumTarget },
+  menuRow: {
+    alignSelf: 'stretch',
+    minHeight: minimumTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.s3,
+  },
+  menuRowStacked: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: spacing.s1,
+  },
+  menuRowTitle: { flex: 1 },
   groupedFieldSpacing: { gap: rhythm.groupHeader },
   groupedField: {
     backgroundColor: colors.raised,
