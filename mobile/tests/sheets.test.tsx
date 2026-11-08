@@ -38,6 +38,7 @@ import {
   setSheetSegments,
 } from '../src/navigation/sheets';
 import SourceSheet, {
+  TintRow,
   openOriginal,
   SourceContent,
   Paragraphs,
@@ -253,8 +254,41 @@ test('source dates stay on the record while saved and partial notes explain the 
   expect(text(root)).toContain(copy.partialNote);
   expect(root.findAllByType(LinkRow).map((node) => node.props.title)).toEqual([
     'Sources and licences',
-    copy.reportCorrection,
   ]);
+  // Shell 9: the correction is an action, drawn as a tint row last.
+  const correction = root.findByType(TintRow);
+  expect(correction.props.title).toBe(copy.reportCorrection);
+  expect(correction.findByType(Text).props.tone).toBe('navy');
+});
+test('the source line glyph sits on the centre of the first text line', () => {
+  const root = render(
+    <SourceLine
+      asOf="2026-10-04"
+      citation="OPAX daily edition"
+      testID="line"
+    />,
+  );
+  const glyph = () =>
+    StyleSheet.flatten(
+      root.find(
+        (node) => node.type === View && node.props.testID === 'line-glyph',
+      ).props.style,
+    );
+  expect(glyph()).toMatchObject({ justifyContent: 'center', height: 18 });
+  const lines = root
+    .findAllByType(Text)
+    .find((node) => node.props.onTextLayout)!;
+  act(() =>
+    lines.props.onTextLayout({
+      nativeEvent: {
+        lines: [
+          { height: 23, width: 200 },
+          { height: 23, width: 120 },
+        ],
+      },
+    }),
+  );
+  expect(glyph().height).toBe(23);
 });
 test('licence terms use their own route and Sources and licences is a separate modal', () => {
   const root = render(
