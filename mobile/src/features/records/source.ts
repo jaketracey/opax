@@ -1,8 +1,9 @@
-// Who holds a record the reader shows, for its one source line (pass 5,
-// P1-2): the original's publisher, its licence where Sources and licences
-// verifies one, and the notes that used to sit behind the Full text ⓘ.
-import type { SourceCitation } from '../../design/primitives';
-import { metaString, type DocumentRecord } from './model';
+// Who holds a record the reader shows, for its source line (records.md 2.6):
+// the original's publisher, its licence where Sources and licences verifies
+// one, and the notes on the text, in plain words.
+import type { SourceCitation, SourceOriginal } from '../../design/primitives';
+import { formatDate } from '../../design/format';
+import { recordDate, recordKind, type DocumentRecord } from './model';
 
 const host = (url: string | null) => {
   try {
@@ -17,9 +18,32 @@ export interface RecordSource {
   licence?: string;
   /** A `datasets.ts` id on Sources and licences. */
   licenceDataset?: string;
-  /** The original's own name in the sheet: "Original record". */
+  /** The Originals row's publisher: "Hansard", or a host the line never shows. */
   original: string;
   notes: string[];
+}
+
+const OPENAUSTRALIA_NOTE =
+  'This text comes from OpenAustralia\'s transcription of Hansard. It can join words together, for example "toSenator". Check the wording against Hansard before you quote it.';
+
+/** The one inline caveat (records.md 2.2): OpenAustralia text only. */
+export function recordCaveat(doc: DocumentRecord): string | null {
+  return doc.labels.source === 'openaustralia'
+    ? 'Third-party transcription. Check Hansard before quoting.'
+    : null;
+}
+
+/** Publishers named by their own site; any other host is "Original publisher". */
+function publisher(where: string): string | null {
+  if (where === 'pm.gov.au') return "Prime Minister's media releases";
+  if (/^minister\.[a-z0-9-]+\.gov\.au$/.test(where))
+    return 'Ministerial media releases';
+  if (where === 'grants.gov.au') return 'GrantConnect';
+  if (where === 'tenders.gov.au') return 'AusTender';
+  if (where === 'aph.gov.au' || where === 'parlinfo.aph.gov.au')
+    return 'Parliament of Australia';
+  if (where === 'legislation.gov.au') return 'Federal Register of Legislation';
+  return null;
 }
 
 /** The record's source, said as its line and sheet say it. */
@@ -28,13 +52,11 @@ export function recordSource(doc: DocumentRecord): RecordSource {
   const federal = (doc.labels.state ?? 'federal') === 'federal';
   const where = host(doc.url);
   const notes = [
-    doc.labels.source === 'openaustralia'
-      ? 'This text is reproduced from a third-party Hansard transcription and may contain concatenation artefacts (“toSenator”); verify wording against the official record before quoting.'
-      : null,
+    doc.labels.source === 'openaustralia' ? OPENAUSTRALIA_NOTE : null,
     kind === 'bill_text'
       ? doc.metadata.complete === false
-        ? 'Incomplete extracted bill text. Use the original document for the complete bill.'
-        : 'Published bill text. Check the original document for authoritative wording and formatting.'
+        ? 'This text is incomplete. Use the original document for the full bill.'
+        : 'Published bill text. The original document has the authoritative wording and layout.'
       : null,
   ].filter((note): note is string => !!note);
   if (kind === 'division' && where === 'theyvoteforyou.org.au')
@@ -45,7 +67,7 @@ export function recordSource(doc: DocumentRecord): RecordSource {
       },
       licence: 'ODbL',
       licenceDataset: 'tvfy',
-      original: 'Division record',
+      original: 'They Vote For You',
       notes,
     };
   if (kind === 'speech' || kind === 'division')
@@ -61,36 +83,52 @@ export function recordSource(doc: DocumentRecord): RecordSource {
       },
       // Only federal Hansard's terms are verified (Sources and licences).
       ...(federal ? { licence: 'CC BY-NC-ND', licenceDataset: 'hansard' } : {}),
-      original: kind === 'speech' ? 'Speech in Hansard' : 'Division in Hansard',
+      original: 'Hansard',
       notes,
     };
   if (kind === 'bill_text')
     return {
-      citation: {
-        label: 'Original bill document',
-        title: metaString(doc, 'title') || 'Original bill document',
-      },
+      citation: { label: 'Original bill document' },
       licenceDataset: 'bills',
       original: 'Original bill document',
       notes,
     };
-  if (where === 'aph.gov.au')
-    return {
-      citation: { label: 'Parliament of Australia' },
-      original: 'Original record',
-      notes,
-    };
+  const named = publisher(where);
   if (where === 'legislation.gov.au')
     return {
-      citation: { label: 'Federal Register of Legislation' },
+      citation: { label: named! },
       licence: 'CC BY 4.0',
       licenceDataset: 'frl',
-      original: 'Original record',
+      original: named!,
       notes,
     };
   return {
-    citation: { label: where || 'OPAX public record' },
-    original: 'Original record',
+    citation: { label: named ?? 'Original publisher' },
+    original: named ?? (where || 'Original publisher'),
     notes,
+  };
+}
+
+const kindWords: Record<string, string> = {
+  speech: 'speech',
+  division: 'division',
+  press_release: 'release',
+  bill_text: 'bill text',
+  grant_award: 'grant award',
+  grant_invitation: 'grant invitation',
+  contract: 'contract',
+  legal: 'Act',
+};
+
+/** The Originals row: "Hansard · speech, 18 Aug 2026". */
+export function recordOriginal(doc: DocumentRecord): SourceOriginal | null {
+  if (!doc.url) return null;
+  const source = recordSource(doc);
+  const day = recordDate(doc);
+  const what = kindWords[recordKind(doc)] ?? 'record';
+  return {
+    label: source.original,
+    url: doc.url,
+    record: day ? `${what}, ${formatDate(day, 'short')}` : what,
   };
 }
