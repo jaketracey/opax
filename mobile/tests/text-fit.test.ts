@@ -162,6 +162,13 @@ test.each(['ios', 'android'] as const)(
         expect(
           renderer.root.findByType(NativeText).props.lineBreakStrategyIOS,
         ).toBe(os === 'ios' && title ? 'push-out' : undefined);
+        // push-out does not move a Latin word, so record titles bind their
+        // short last word on every platform; other roles draw as given.
+        expect(renderer.root.findByType(NativeText).props.children).toBe(
+          title
+            ? 'Interactive Gambling (Cost Recovery Levy) Bill\u00A02026'
+            : 'Interactive Gambling (Cost Recovery Levy) Bill 2026',
+        );
         act(() => renderer.unmount());
       }
     } finally {

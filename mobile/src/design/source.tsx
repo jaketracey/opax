@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { presentSheet, presentSource } from '../navigation/sheets';
-import { useEffect, useRef, type ReactNode, type Ref } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type Ref } from 'react';
 import {
   Modal,
   Platform,
@@ -23,7 +23,14 @@ import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { useRowHighlight } from './row-padding';
 import { useKeyCommand } from './keyboard';
 import { Heading, Text } from './text';
-import { colors, hairline, minimumTarget, radii, rhythm } from './tokens';
+import {
+  colors,
+  hairline,
+  minimumTarget,
+  radii,
+  rhythm,
+  textStyles,
+} from './tokens';
 
 /** One original record or register behind a block. */
 export interface SourceOriginal {
@@ -313,6 +320,10 @@ export function SourceAffordance({
   // its own frame. At accessibility sizes it takes the column's full width.
   const fixed = useAccessibilitySize();
   const highlight = useRowHighlight();
+  // The footnote line until the text reports its own (Dynamic Type).
+  const [firstLine, setFirstLine] = useState<number>(
+    textStyles.footnote.lineHeight,
+  );
   return (
     <Pressable
       ref={ref}
@@ -329,8 +340,13 @@ export function SourceAffordance({
       ]}
     >
       {() => (
-        <>
-          <View style={styles.glyph}>
+        <View style={styles.lineContent}>
+          {/* As tall as the text's first line, so the glyph is centred on
+              that line whether the text wraps or not. */}
+          <View
+            testID={testID && `${testID}-glyph`}
+            style={[styles.glyph, { minHeight: firstLine }]}
+          >
             <Icon name={glyph} size={13} maxScale={1.5} tone="inkSoft" />
           </View>
           <Text
@@ -340,10 +356,15 @@ export function SourceAffordance({
             tone={name && !date && !rest.length ? 'navy' : undefined}
             accessible={false}
             style={styles.shrink}
+            onTextLayout={(event) => {
+              const height = event.nativeEvent.lines[0]?.height;
+              if (height && Math.abs(height - firstLine) > 0.5)
+                setFirstLine(height);
+            }}
           >
             {lineChildren(date, name, rest)}
           </Text>
-        </>
+        </View>
       )}
     </Pressable>
   );
@@ -734,8 +755,15 @@ const styles = StyleSheet.create({
   hug: { alignSelf: 'flex-start', maxWidth: '100%' },
   // The column's full width, whatever row the line sits in.
   fixed: { alignSelf: 'stretch', width: '100%' },
-  // The glyph sits on the first line's centre when the text wraps.
-  glyph: { alignSelf: 'flex-start', paddingTop: 2 },
+  // Glyph and text start together; the glyph's box is the first line's
+  // height, so the glyph sits on that line's centre (not the row's).
+  lineContent: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.line + 2,
+    flexShrink: 1,
+  },
+  glyph: { justifyContent: 'center' },
   shrink: { flexShrink: 1 },
   pressed: { backgroundColor: colors.sunken },
   group: { gap: rhythm.tight },

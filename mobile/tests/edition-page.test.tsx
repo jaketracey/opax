@@ -24,12 +24,13 @@ import { bills, pinned, roster, slugs } from './pinned';
 import { SourceLine, SourceSheet } from '../src/design/source';
 import { FigureBlock } from '../src/design/record';
 import { Card } from '../src/design/card';
-import { Button } from '../src/design/controls';
+
 import { MachinePill } from '../src/design/labels';
 import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
-import { LinkRow, ValueRow } from '../src/design/rows';
+import { BillRow, LinkRow, ValueRow } from '../src/design/rows';
 import { ContentUnavailable, Skeleton } from '../src/design/states';
 import { Text } from '../src/design/text';
+import { bindShortLastWord } from '../src/design/record-title';
 import { PersonRow } from '../src/design/people';
 import { colors } from '../src/design/tokens';
 import { symbols } from '../src/design/symbols';
@@ -41,6 +42,11 @@ import {
   editionSubject,
   editionTier,
   editionSources,
+  editionSourceRows,
+  eventDay,
+  plainSourceRow,
+  plateLine,
+  timelineProvenance,
   EDITION_RULE,
 } from '../src/features/edition/model';
 import { editionRoute } from '../src/navigation/routes/edition';
@@ -260,7 +266,13 @@ describe('edition source payloads', () => {
       url: view.path,
       asOf: view.date,
     });
-    expect(source.notes).toEqual([...view.sourceRows, EDITION_RULE]);
+    // Today 7.2: the rule has its own group; no licence text in the sheet.
+    expect(source.rule).toBe(EDITION_RULE);
+    expect(source.notes).toEqual([
+      'Explanatory memorandum on ParlInfo',
+      'Bill home page on ParlInfo',
+    ]);
+    expect(JSON.stringify(source)).not.toMatch(/CC BY/);
     expect(source.originals!.map((original) => original.url)).toEqual(
       ['program', 'grant', 'largest'].includes(kind)
         ? [view.path, 'https://www.grants.gov.au/']
@@ -288,10 +300,99 @@ describe('edition source payloads', () => {
       url: document.url,
       asOf: document.document_date,
     };
-    expect(editionSources(edition, [original]).originals).toEqual([
+    const details = editionSources(edition, [original]);
+    expect(details.originals).toEqual([
       { label: 'OPAX daily edition', url: edition.path, asOf: edition.date },
       original,
     ]);
+    // The row that names the listed document is not repeated as a note.
+    expect(details.notes).toEqual(['Bill home page on ParlInfo']);
+  });
+});
+
+describe('edition page text helpers', () => {
+  test('source row titles drop their licence and keep the words as published', () => {
+    expect(
+      plainSourceRow('Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0'),
+    ).toBe('Explanatory memorandum on ParlInfo');
+    expect(plainSourceRow('AEC Transparency Register, CC BY 4.0')).toBe(
+      'AEC Transparency Register',
+    );
+    expect(plainSourceRow('GrantConnect (CC BY 3.0 AU)')).toBe('GrantConnect');
+    expect(plainSourceRow('Wikimedia Commons, public domain')).toBe(
+      'Wikimedia Commons',
+    );
+    expect(plainSourceRow('Hansard, 18 August 2026')).toBe(
+      'Hansard, 18 August 2026',
+    );
+    expect(plainSourceRow('CC BY 4.0')).toBe('CC BY 4.0');
+  });
+  test('source rows are all dated or none are', () => {
+    const view = {
+      sourceRows: [
+        'Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0',
+        'Bill home page on ParlInfo, CC BY-NC-ND 4.0',
+      ],
+    };
+    const memo = {
+      label: 'Explanatory memorandum',
+      url: 'https://a.example/em',
+    };
+    const home = {
+      label: 'Bill home page',
+      url: 'https://a.example/home',
+      asOf: '2026-08-12',
+    };
+    const mixed = editionSourceRows(view, [memo, home]);
+    expect(mixed.map((row) => row.title)).toEqual([
+      'Explanatory memorandum on ParlInfo',
+      'Bill home page on ParlInfo',
+    ]);
+    expect(mixed.map((row) => row.original)).toEqual([memo, home]);
+    expect(mixed.every((row) => row.date === undefined)).toBe(true);
+    const dated = editionSourceRows(view, [
+      { ...memo, asOf: '2026-08-11' },
+      home,
+    ]);
+    expect(dated.map((row) => row.date)).toEqual(['2026-08-11', '2026-08-12']);
+  });
+  test('the plate line keeps only sentences the paragraphs below do not say', () => {
+    const line = 'This bill would keep funding grants. Passed 18 Sep 2026.';
+    expect(
+      plateLine(line, [
+        'This bill would keep funding grants.',
+        'Passed 18 Sep 2026.',
+      ]),
+    ).toBeNull();
+    expect(plateLine(line, ['This bill would keep  funding grants.'])).toBe(
+      'Passed 18 Sep 2026.',
+    );
+    expect(plateLine(line)).toBe(line);
+    expect(plateLine('Liberal · Mitchell, NSW', ['Something else.'])).toBe(
+      'Liberal · Mitchell, NSW',
+    );
+    expect(plateLine(null, ['x'])).toBeNull();
+  });
+  test('the timeline caption covers its first and latest stage, with no source suffix', () => {
+    expect(eventDay('12 Aug 2026')).toBe('2026-08-12');
+    expect(eventDay('5 September 2026')).toBe('2026-09-05');
+    expect(eventDay('2026-09-18')).toBe('2026-09-18');
+    expect(eventDay('sometime')).toBeNull();
+    expect(
+      timelineProvenance({
+        date: '2026-10-04',
+        facts: {
+          ...edition.facts,
+          events: [
+            { date: '12 Aug 2026', text: 'Introduced' },
+            { date: '18 Sep 2026', text: 'Royal Assent' },
+          ],
+        },
+      }),
+    ).toEqual({
+      dateRange: { start: '2026-08-12', end: '2026-09-18' },
+      source: '',
+    });
   });
 });
 
@@ -421,7 +522,7 @@ describe('the replacement edition card', () => {
       dateLabel: 'Saved 10 Oct 2026',
       asOf: edition.date,
     });
-    expect(root.findByType(SourceLine).props.notes).toContain(EDITION_RULE);
+    expect(root.findByType(SourceLine).props.rule).toBe(EDITION_RULE);
   });
   test.each(['missing', 'error'] as const)(
     '%s cards collapse',
@@ -502,40 +603,41 @@ describe('the native edition reader', () => {
       expect(style.paddingVertical).toBeGreaterThan(0);
     });
   });
-  test.each(['edition-sources', 'edition-fact-0-sources'])(
-    '%s opens its own originals',
-    async (id) => {
-      const { root } = await render(<EditionStory />);
-      const line = root
-        .findAllByType(SourceLine)
-        .find((node) => node.props.testID === id)!;
-      expect(line.props.onPress).toBeUndefined();
-      await press(root, id);
-      const details = openedSourceDetails(root, id);
-      expect(details).toMatchObject({
-        asOf: edition.date,
-        originals: line.props.originals,
-      });
-      expect(details.originals).toEqual(
-        expect.arrayContaining([
-          {
-            label: 'OPAX daily edition',
-            url: edition.path,
-            asOf: edition.date,
-          },
-          expect.objectContaining({
-            label: 'Explanatory memorandum',
-            url: expect.stringContaining('parlinfo.aph.gov.au/parlInfo/'),
-          }),
-        ]),
-      );
-      expect(details.notes).toContain(EDITION_RULE);
-    },
-  );
+  test.each(['edition-sources'])('%s opens its own originals', async (id) => {
+    const { root } = await render(<EditionStory />);
+    // One SourceLine on a bill day: the timeline's caption dates it, and
+    // the foot line sources the page.
+    expect(root.findAllByType(SourceLine)).toHaveLength(1);
+    const line = root
+      .findAllByType(SourceLine)
+      .find((node) => node.props.testID === id)!;
+    expect(line.props.onPress).toBeUndefined();
+    await press(root, id);
+    const details = openedSourceDetails(root, id);
+    expect(details).toMatchObject({
+      asOf: edition.date,
+      originals: line.props.originals,
+    });
+    expect(details.originals).toEqual(
+      expect.arrayContaining([
+        {
+          label: 'OPAX daily edition',
+          url: edition.path,
+          asOf: edition.date,
+        },
+        expect.objectContaining({
+          label: 'Explanatory memorandum',
+          url: expect.stringContaining('parlinfo.aph.gov.au/parlInfo/'),
+        }),
+      ]),
+    );
+    expect(details.rule).toBe(EDITION_RULE);
+    expect(details.notes ?? []).not.toContain(EDITION_RULE);
+  });
   test('keeps the full title, all paragraphs, dated timeline and native bill subject', async () => {
     const { root } = await render(<EditionStory />);
     expect(host(root, 'edition-plate-title')[0]!.props.children).toBe(
-      edition.title,
+      bindShortLastWord(edition.title),
     );
     expect(root.findByType(MachinePill).props.note.body).toEqual([
       edition.machineWritten!.attribution,
@@ -567,19 +669,24 @@ describe('the native edition reader', () => {
     expect(mockOnScroll).toHaveBeenCalledWith(240);
     expect(root.findByType(Plate).props.onTitleLayout).toBe(mockOnTitleLayout);
   });
-  test('bar contains only More and its three items; the bottom actions draft and share', async () => {
+  test('bar holds Share then More with its three items; Ask about this is a row that drafts', async () => {
     const { root } = await render(<EditionStory />);
     const options = root.findByType(Stack.Screen).props.options;
     const items = options.unstable_headerRightItems();
     expect(items.map((item: { label: string }) => item.label)).toEqual([
+      'Share',
       'More',
     ]);
     expect(
-      items[0].menu.items.map((item: { label: string }) => item.label),
+      items[1].menu.items.map((item: { label: string }) => item.label),
     ).toEqual(['Copy link', 'Open on opax.com.au', 'How this is chosen']);
     const ask = root
-      .findAllByType(Button)
-      .find((button) => button.props.label === 'Ask about this')!;
+      .findAllByType(LinkRow)
+      .find((row) => row.props.testID === 'edition-ask')!;
+    expect(ask.props).toMatchObject({
+      title: 'Ask about this',
+      symbol: symbols.ask,
+    });
     act(() => ask.props.onPress());
     expect(router.navigate).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -589,30 +696,36 @@ describe('the native edition reader', () => {
       }),
     );
     expect(catalogs.todayEdition).toHaveBeenCalledTimes(1);
-    const share = root
-      .findAllByType(Button)
-      .find((button) => button.props.label === 'Share')!;
-    act(() => share.props.onPress());
+    act(() => items[0].onPress());
     expect(shareRecord).toHaveBeenCalledWith({
       title: edition.title,
       path: edition.path,
     });
     expect(openOnWeb).not.toHaveBeenCalled();
-    act(() => items[0].menu.items[1].onPress());
+    act(() => items[1].menu.items[1].onPress());
     expect(openOnWeb).toHaveBeenCalledWith(edition.path, edition.title);
   });
-  test('iOS uses the native bottom toolbar', async () => {
+  test('iOS draws no bottom toolbar, which the floating tab bar would cover', async () => {
     Platform.OS = 'ios';
     const { root } = await render(<EditionStory />);
-    expect(root.findByType(Stack.Toolbar).props.placement).toBe('bottom');
-    expect(
-      root
-        .findAllByType(Stack.Toolbar.Button)
-        .map((button) => button.props.accessibilityLabel),
-    ).toEqual(['Ask about this', 'Share']);
-    expect(root.findAllByType(Stack.Toolbar.Button)[0]!.props.icon).toBe(
-      symbols.ask,
-    );
+    expect(root.findAllByType(Stack.Toolbar)).toHaveLength(0);
+    expect(host(root, 'edition-ask')).toHaveLength(1);
+  });
+  test('the bill subject is a BillRow that pushes the bill, not a RowLink href', async () => {
+    const { root } = await render(<EditionStory />);
+    const row = root
+      .findAllByType(BillRow)
+      .find((node) => node.props.testID === 'edition-subject')!;
+    expect(row.props.href).toBeUndefined();
+    act(() => row.props.onPress());
+    expect(router.push).toHaveBeenLastCalledWith(billRoute('au-federal-r7529'));
+  });
+  test('the plate shows no detail line that repeats the paragraphs below it', async () => {
+    const { root } = await render(<EditionStory />);
+    const shown = edition.paragraphs.join(' ');
+    const line = host(root, 'edition-plate-line')[0]?.props.children;
+    if (line) expect(shown).not.toContain(line);
+    expect(root.findByType(Plate).props.shownBelow).toEqual(edition.paragraphs);
   });
   test('a person resolves through the small indices, with no directory load or web fallback', async () => {
     jest
@@ -665,7 +778,7 @@ describe('the native edition reader', () => {
         root
           .findAllByType(LinkRow)
           .find((row) => row.props.testID === 'edition-subject')!.props.href,
-      ).toEqual(href);
+      ).toBeUndefined();
       await press(root, 'edition-subject');
       expect(router.push).toHaveBeenLastCalledWith(href);
       expect(openOnWeb).not.toHaveBeenCalled();
@@ -677,11 +790,13 @@ describe('the native edition reader', () => {
       data: { ...edition, kind: 'topic', path: '/reports/housing' },
     });
     const { root } = await render(<EditionStory />);
-    expect(
-      root
-        .findAllByType(LinkRow)
-        .find((row) => row.props.testID === 'edition-subject')!.props.href,
-    ).toMatchObject({ pathname: '/topic/[slug]', params: { slug: 'housing' } });
+    await press(root, 'edition-subject');
+    expect(router.push).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        pathname: '/topic/[slug]',
+        params: expect.objectContaining({ slug: 'housing' }),
+      }),
+    );
     expect(
       editionSubject({ ...edition, kind: 'topic', path: '/reports/' }),
     ).toBeNull();

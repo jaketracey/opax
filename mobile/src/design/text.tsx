@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useBoldText, useHighTextContrast } from './accessibility';
 import { useTextProbe } from './text-probe';
+import { bindRecordTitle, recordTitleRoles } from './record-title';
 import type { ProbeLine } from './text-probe.types';
 import { lightHighContrast } from './palette';
 import {
@@ -318,8 +319,23 @@ export function Text({
   tabular: tabularProp = false,
   onTextLayout,
   onLayout,
-  ...props
+  ...given
 }: OpaxTextProps) {
+  // A record title never ends on a lone short word (bindRecordTitle). The
+  // no-break space is for layout only: when binding changed the text, the
+  // label keeps the words as published (VoiceOver, and Maestro's text match
+  // through the accessibility label), unless the caller set its own.
+  const titleRole = recordTitleRoles.includes(variant);
+  const bound = titleRole ? bindRecordTitle(given.children) : given.children;
+  const props =
+    bound === given.children
+      ? given
+      : {
+          ...given,
+          children: bound,
+          accessibilityLabel:
+            given.accessibilityLabel ?? textContent(given.children),
+        };
   const bold = useBoldText();
   const highContrast = useHighTextContrast();
   const role = textStyles[variant];
@@ -518,8 +534,7 @@ export function Text({
       allowFontScaling
       maxFontSizeMultiplier={0}
       dynamicTypeRamp={role.dynamicTypeRamp}
-      {...(Platform.OS === 'ios' &&
-      ['recordTitle', 'recordHeading', 'title', 'padTitle'].includes(variant)
+      {...(Platform.OS === 'ios' && titleRole
         ? { lineBreakStrategyIOS: 'push-out' }
         : {})}
       style={[

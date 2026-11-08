@@ -38,6 +38,7 @@ import {
   setSheetSegments,
 } from '../src/navigation/sheets';
 import SourceSheet, {
+  TintRow,
   openOriginal,
   SourceContent,
   Paragraphs,
@@ -48,7 +49,11 @@ import RuleSheet from '../src/features/sheets/RuleSheet';
 import CitationSheet, {
   citationBar,
 } from '../src/features/sheets/CitationSheet';
-import { routeSheetOptions } from '../src/features/sheets/frame';
+import {
+  fittedBottom,
+  fittedHeaderOffset,
+  routeSheetOptions,
+} from '../src/features/sheets/frame';
 import { openCorrection, openSource } from '../src/navigation/external';
 import { LinkRow } from '../src/design/rows';
 
@@ -249,8 +254,41 @@ test('source dates stay on the record while saved and partial notes explain the 
   expect(text(root)).toContain(copy.partialNote);
   expect(root.findAllByType(LinkRow).map((node) => node.props.title)).toEqual([
     'Sources and licences',
-    copy.reportCorrection,
   ]);
+  // Shell 9: the correction is an action, drawn as a tint row last.
+  const correction = root.findByType(TintRow);
+  expect(correction.props.title).toBe(copy.reportCorrection);
+  expect(correction.findByType(Text).props.tone).toBe('navy');
+});
+test('the source line glyph sits on the centre of the first text line', () => {
+  const root = render(
+    <SourceLine
+      asOf="2026-10-04"
+      citation="OPAX daily edition"
+      testID="line"
+    />,
+  );
+  const glyph = () =>
+    StyleSheet.flatten(
+      root.find(
+        (node) => node.type === View && node.props.testID === 'line-glyph',
+      ).props.style,
+    );
+  expect(glyph()).toMatchObject({ justifyContent: 'center', minHeight: 18 });
+  const lines = root
+    .findAllByType(Text)
+    .find((node) => node.props.onTextLayout)!;
+  act(() =>
+    lines.props.onTextLayout({
+      nativeEvent: {
+        lines: [
+          { height: 23, width: 200 },
+          { height: 23, width: 120 },
+        ],
+      },
+    }),
+  );
+  expect(glyph().minHeight).toBe(23);
 });
 test('licence terms use their own route and Sources and licences is a separate modal', () => {
   const root = render(
@@ -336,6 +374,32 @@ test('short machine notes do not scroll, while tables do', () => {
   const table = render(<RuleSheet />);
   expect(table.findAllByType(ScrollView)).toHaveLength(1);
   expect(text(table)).toContain('Agreed');
+});
+test('short fitted sheets sit below the bar and leave the home indicator room to the sheet', () => {
+  jest
+    .mocked(useSafeAreaInsets)
+    .mockReturnValue({ top: 0, bottom: 34, left: 0, right: 0 });
+  presentSheet({
+    kind: 'machine',
+    note: { title: 'Ignored', body: ['Check the original.'] },
+  });
+  mockParams = { key: lastKey() };
+  const note = render(<MachineNoteSheet />);
+  const body = StyleSheet.flatten(
+    note.find(
+      (node) =>
+        node.type === View && node.props.testID === 'machine-note-sheet',
+    ).props.style,
+  );
+  // iOS sizes the sheet to content plus bar, but lays content out from the
+  // sheet's top edge: a relative top moves it below the bar without
+  // growing the measured height.
+  expect(body.top).toBe(fittedHeaderOffset(undefined));
+  expect(body.top).toBeGreaterThan(0);
+  expect(body.paddingTop).toBe(rhythm.group);
+  expect(body.paddingBottom).toBe(rhythm.group);
+  expect(fittedHeaderOffset(62)).toBe(62);
+  expect(fittedBottom(34)).toBe(rhythm.group);
 });
 test('citation bar slots put previous and next leading, then More and Done trailing', () => {
   const previous = jest.fn(),

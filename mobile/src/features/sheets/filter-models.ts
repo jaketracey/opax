@@ -171,7 +171,7 @@ export function declarationsFilterModel(
     initial: { chamber: 'all', jurisdiction: 'all' },
     rows: [
       facet('chamber', 'Chamber', [
-        { value: 'all', label: 'Both' },
+        { value: 'all', label: 'Any' },
         ...(options.chambers ?? bothChambers.slice(1)),
       ]),
       ...(options.jurisdictions && options.jurisdictions.length > 1
@@ -209,7 +209,8 @@ export function directoryFilterModel(
     options.facets?.find((item) => item.key === key)?.choices ?? [];
   const choose = (key: string, title: string, fallback: FilterChoice[] = []) =>
     facet(key, title, [
-      any(key === 'party' ? 'All parties' : 'All'),
+      // people 2.6 names "All parties"; the other rows say "Any".
+      any(key === 'party' ? 'All parties' : 'Any'),
       ...alphabetical(supplied(key).length ? supplied(key) : fallback),
     ]);
   const rows =
@@ -316,40 +317,104 @@ export function recordFilterModel(
     ['sa', 'South Australian Parliament'],
     ['act', 'ACT Legislative Assembly'],
   ].map(([value, label]) => ({ value: value!, label: label! }));
+  const members = alphabetical(options.members ?? []);
+  const partyChoices = alphabetical(
+    options.parties ?? parties.map((name) => ({ value: name, label: name })),
+  );
+  const parliamentRow = facet('state', 'Parliament', [any(), ...parliament]);
+  const topicRow = facet('topic', 'Topic', [
+    any(),
+    ...alphabetical(
+      options.topics ??
+        Object.entries(topics).map(([value, label]) => ({ value, label })),
+    ),
+  ]);
+  const yearsRow = facet('years', 'Years', [], {
+    kind: 'years',
+    value: (state) =>
+      state.from || state.to
+        ? `${state.from || 'Any'} to ${state.to || 'Any'}`
+        : 'Any',
+  });
+  const yearsControl = { options: years, from: 'from', to: 'to' } as const;
+  if (list === 'search')
+    // search 2.9: five rows in this order, Type first and labelled; "Party
+    // or speaker" is one row whose choice sets party or speaker and clears
+    // the other; "Exact words only" is the one switch.
+    return defineModel({
+      list,
+      initial,
+      rows: [
+        facet('kind', 'Type', [
+          { value: 'speech', label: 'Speeches' },
+          { value: 'press_release', label: 'Media releases and transcripts' },
+        ]),
+        parliamentRow,
+        yearsRow,
+        facet(
+          'speaker',
+          'Party or speaker',
+          [
+            any('Anyone'),
+            ...partyChoices.map((choice) => ({
+              ...choice,
+              value: `party:${choice.value}`,
+            })),
+            ...members.map((choice) => ({
+              ...choice,
+              value: `speaker:${choice.value}`,
+            })),
+          ],
+          {
+            searchPlaceholder: 'Party or name',
+            value: (state) =>
+              state.party
+                ? `party:${String(state.party)}`
+                : state.speaker
+                  ? `speaker:${String(state.speaker)}`
+                  : '',
+            select: (state, value) => {
+              const [kind, ...rest] = value.split(':');
+              const chosen = rest.join(':');
+              return {
+                ...state,
+                party: kind === 'party' ? chosen : '',
+                speaker: kind === 'speaker' ? chosen : '',
+              };
+            },
+          },
+        ),
+        topicRow,
+      ],
+      toggles: [
+        {
+          key: 'mode',
+          label: 'Exact words only',
+          value: (state) => state.mode === 'keyword',
+          select: (state, value) => ({
+            ...state,
+            mode: value ? 'keyword' : 'hybrid',
+          }),
+        },
+      ],
+      years: yearsControl,
+      footer: 'Put words in quotes to match an exact phrase.',
+    });
+  // ask 4: Member, Party, Parliament, Topic, Years, then the unlabelled
+  // "All records | Speeches only" control.
   return defineModel({
     list,
     initial,
     rows: [
-      facet(
-        'speaker',
-        'Member',
-        [any(), ...alphabetical(options.members ?? [])],
-        { searchPlaceholder: 'Name or electorate' },
-      ),
-      facet('party', 'Party', [
-        any(),
-        ...alphabetical(
-          options.parties ??
-            parties.map((name) => ({ value: name, label: name })),
-        ),
-      ]),
-      facet('state', 'Parliament', [any(), ...parliament]),
-      facet('topic', 'Topic', [
-        any(),
-        ...alphabetical(
-          options.topics ??
-            Object.entries(topics).map(([value, label]) => ({ value, label })),
-        ),
-      ]),
-      facet('years', 'Years', [], {
-        kind: 'years',
-        value: (state) =>
-          state.from || state.to
-            ? `${state.from || 'Any'} to ${state.to || 'Any'}`
-            : 'Any',
+      facet('speaker', 'Member', [any(), ...members], {
+        searchPlaceholder: 'Name or electorate',
       }),
+      facet('party', 'Party', [any(), ...partyChoices]),
+      parliamentRow,
+      topicRow,
+      yearsRow,
     ],
-    years: { options: years, from: 'from', to: 'to' },
+    years: yearsControl,
     segments: {
       key: 'kind',
       label: 'Type',
@@ -389,7 +454,9 @@ export function moneyFilterModel(
     value: String(year),
     label: financialYear(year),
   }));
-  const disabled = options.loaded === false || !years.length;
+  // Shell 10: while the map's data loads, rows read "All" and their lists
+  // draw a skeleton; they fill in place when the graph arrives.
+  const loading = options.loaded === false || !years.length;
   const yearRow = facet(
     'years',
     'Years',
@@ -407,8 +474,7 @@ export function moneyFilterModel(
       ...yearChoices.slice().reverse(),
     ],
     {
-      disabled,
-      disabledLabel: 'Loads with the map',
+      loading,
       value: (state) =>
         state.from === from && state.to === to
           ? ''
@@ -444,8 +510,7 @@ export function moneyFilterModel(
       yearRow,
       facet('range', 'Custom range', [], {
         kind: 'years',
-        disabled,
-        disabledLabel: 'Loads with the map',
+        loading,
         value: (state) =>
           state.from != null && state.to != null
             ? `${financialYear(Number(state.from))} to ${financialYear(Number(state.to))}`
@@ -465,10 +530,7 @@ export function moneyFilterModel(
             })),
           ),
         ],
-        {
-          disabled: options.loaded === false || !years.length,
-          disabledLabel: 'Loads with the map',
-        },
+        { loading },
       ),
     ],
     years: { options: yearChoices, from: 'from', to: 'to', numeric: true },

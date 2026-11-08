@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Alert, Appearance, View } from 'react-native';
+import { Alert, Appearance, Pressable, View } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { hasSourcePreview, isE2E, webOrigin } from '../../design/environment';
 import { dark, light } from '../../design/palette';
@@ -12,6 +12,11 @@ import { calendarDate, formatDate, type DateInput } from '../../design/format';
 import { InsetGroup } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { Text } from '../../design/text';
+import {
+  useRowCellStyle,
+  useRowHighlight,
+  useRowInset,
+} from '../../design/row-padding';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import {
   sourceCitations,
@@ -268,14 +273,51 @@ export function SourceContent({
           }
           testID={testID && `${testID}-licences`}
         />
-        <LinkRow
+        <TintRow
           title={details.report?.label ?? copy.reportCorrection}
-          accessory="none"
           onPress={details.report?.onPress ?? (() => void openCorrection())}
           testID={testID && `${testID}-correction`}
         />
       </InsetGroup>
     </>
+  );
+}
+/**
+ * An action row in a group (shell 9): the title in the tint, no accessory,
+ * so it reads as something to do rather than somewhere to go.
+ */
+export function TintRow({
+  title,
+  onPress,
+  testID,
+}: {
+  title: string;
+  onPress: () => void;
+  testID?: string;
+}) {
+  const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
+  useRowInset();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={title}
+      onPress={onPress}
+      testID={testID}
+      style={({ pressed }) => [
+        {
+          minHeight: minimumTarget,
+          paddingVertical: rhythm.row,
+          justifyContent: 'center',
+        },
+        cellStyle,
+        pressed ? { backgroundColor: highlight } : null,
+      ]}
+    >
+      <Text wordSafe variant="body" tone="navy">
+        {title}
+      </Text>
+    </Pressable>
   );
 }
 export default function SourceSheet() {

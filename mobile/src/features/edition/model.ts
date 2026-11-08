@@ -1,5 +1,6 @@
 import type { Href } from 'expo-router';
 import type { EditionView } from '../../api/selectors';
+import type { DateInput } from '../../design/format';
 import type { SourceDetails, SourceOriginal } from '../../design/source';
 import type { Accent } from '../../design/tokens';
 import type { SFSymbol } from '../../design/icon';
@@ -66,6 +67,74 @@ export function editionTopic(edition: EditionView) {
   return slug && Object.hasOwn(topics, slug)
     ? { slug, name: topics[slug as keyof typeof topics] }
     : null;
+}
+
+const sentences = (text: string) =>
+  text
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+/**
+ * The plate's detail line, less any sentence already shown below it. The
+ * cover line often restates the first paragraph ("This bill would … Passed
+ * 18 Sep 2026."), so the page, which shows every paragraph, draws no line,
+ * and the card, which shows the first, keeps only what the paragraph lacks.
+ */
+export function plateLine(
+  line: string | null,
+  shownBelow?: readonly string[],
+): string | null {
+  if (!line?.trim()) return null;
+  if (!shownBelow?.length) return line;
+  const below = new Set(shownBelow.flatMap(sentences));
+  const rest = sentences(line).filter((sentence) => !below.has(sentence));
+  return rest.length ? rest.join(' ') : null;
+}
+
+const MONTHS = [
+  'jan',
+  'feb',
+  'mar',
+  'apr',
+  'may',
+  'jun',
+  'jul',
+  'aug',
+  'sep',
+  'oct',
+  'nov',
+  'dec',
+];
+/** A timeline date as published ("12 Aug 2026", "12 August 2026") to ISO. */
+export function eventDay(date: string): string | null {
+  const match = /^(\d{1,2})\s+([a-z]{3,9})\.?\s+(\d{4})$/i.exec(date.trim());
+  if (!match)
+    return /^\d{4}-\d{2}-\d{2}$/.test(date.trim()) ? date.trim() : null;
+  const month = MONTHS.indexOf(match[2]!.slice(0, 3).toLowerCase());
+  if (month < 0) return null;
+  return `${match[3]}-${String(month + 1).padStart(2, '0')}-${match[1]!.padStart(2, '0')}`;
+}
+
+/**
+ * What the page's timeline caption covers: the first recorded stage to the
+ * latest, not the edition's own day (which made "4 October 2026 to 4
+ * October 2026"). The source is left to the page's one SourceLine below, so
+ * the caption is the date range alone.
+ */
+export function timelineProvenance(
+  edition: Pick<EditionView, 'date' | 'facts'>,
+) {
+  const days = edition.facts.events
+    .map((event) => eventDay(event.date))
+    .filter((day): day is string => !!day)
+    .sort();
+  return {
+    dateRange: {
+      start: days[0] ?? edition.date,
+      end: days.at(-1) ?? edition.date,
+    },
+    source: '',
+  };
 }
 
 export function editionPerson(edition: EditionView) {
@@ -177,6 +246,54 @@ export function editionSources(
         : []),
       ...documents,
     ],
-    notes: [...edition.sourceRows, EDITION_RULE],
+    // Today 7.2: the rule is its own "How this is chosen" group, and the
+    // sheet carries no licence text (that is Sources and licences'). A row
+    // that names a document already listed as an original is not repeated.
+    rule: EDITION_RULE,
+    notes: editionSourceRows(edition, documents)
+      .filter((row) => !row.original)
+      .map((row) => row.title),
   };
+}
+
+/**
+ * A licence the closing slide appends to a source row: ", CC BY-NC-ND 4.0",
+ * ", CC0", ", public domain", ", Crown copyright". Licences live behind
+ * Sources and licences, never in a row title.
+ */
+const licenceSuffix =
+  /\s*[,;(]\s*(?:CC[ -]?(?:BY|0)\b[^,;()]*|creative commons\b[^,;()]*|public domain|crown copyright\b[^,;()]*|licen[cs]ed? under\b[^,;()]*)\)?\s*$/i;
+
+/** A source row's plain title: the row as published, less its licence. */
+export function plainSourceRow(row: string): string {
+  let title = row.trim();
+  for (let next = title.replace(licenceSuffix, '').trim(); next !== title; ) {
+    title = next;
+    next = title.replace(licenceSuffix, '').trim();
+  }
+  return title || row.trim();
+}
+
+/**
+ * The page's Sources rows: plain titles, each matched to its original when
+ * the bill lists one. Dated only when every row has a date of its own, so
+ * the rows never mix dated and undated (the sheet dates each original).
+ */
+export function editionSourceRows(
+  edition: Pick<EditionView, 'sourceRows'>,
+  documents: readonly SourceOriginal[] = [],
+): { title: string; original?: SourceOriginal; date?: DateInput }[] {
+  const rows = edition.sourceRows.map((row) => {
+    const title = plainSourceRow(row);
+    const original = documents.find((item) =>
+      title
+        .toLocaleLowerCase('en-AU')
+        .startsWith(item.label.toLocaleLowerCase('en-AU')),
+    );
+    return { title, original };
+  });
+  const dated = rows.length > 0 && rows.every((row) => row.original?.asOf);
+  return rows.map((row) =>
+    dated ? { ...row, date: row.original!.asOf! } : row,
+  );
 }

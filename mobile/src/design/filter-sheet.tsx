@@ -5,7 +5,7 @@ import { InsetGroup, Screen } from './layout';
 import { Button, PopUpButton, SegmentedPicker, SwitchRow } from './controls';
 import { LinkRow } from './rows';
 import { Text } from './text';
-import { ContentUnavailable } from './states';
+import { ContentUnavailable, Skeleton } from './states';
 import { copy } from './copy';
 import { haptic } from './haptics';
 import { colors, minimumTarget, rhythm } from './tokens';
@@ -62,6 +62,7 @@ export function filterBar(onDone: () => void, onCancel?: () => void) {
 }
 export function filterRowValue<S extends object>(row: FilterRow<S>, value: S) {
   if (row.disabled) return row.disabledLabel ?? 'Loads with the list';
+  if (row.loading) return 'All';
   const selected = row.value(value);
   return (
     row.choices(value).find((choice) => choice.value === selected)?.label ??
@@ -285,6 +286,14 @@ export function FilterFacet<S extends object>({
           <ContentUnavailable
             title="Nothing to show"
             symbol="line.3.horizontal.decrease.circle"
+          />
+        ) : row.loading ? (
+          <Skeleton
+            shape="rows"
+            count={6}
+            onSunken
+            label={`Loading ${row.title.toLocaleLowerCase('en-AU')}`}
+            testID="filters-choices-loading"
           />
         ) : row.kind === 'years' ? (
           <FilterYears model={model} value={value} onChange={onChange} />
