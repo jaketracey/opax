@@ -61,12 +61,28 @@ name: 09 Electorate representation, elections, Census context and sources
 - takeScreenshot: ${EVIDENCE}/09-representative-name-settled
 - scrollUntilVisible:
     element:
-      id: election-expand-0
+      id: election-row-0
     centerElement: true
     timeout: 300000
+# The large title has scrolled away; the bar carries the seat's name.
+- assertVisible: Grayndler
+- takeScreenshot: ${EVIDENCE}/09-bar-title
+# The newest election opens its own screen, candidates by first preferences.
 - tapOn:
-    id: election-expand-0
+    id: election-row-0
+- extendedWaitUntil:
+    visible:
+      id: election-screen
+    timeout: 15000
+- assertVisible:
+    id: election-candidate-0-elected
+    text: Elected
 - takeScreenshot: ${EVIDENCE}/09-election-open
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: election-row-0
+    timeout: 15000
 - runFlow:
     file: review-pages.yaml
     env:
