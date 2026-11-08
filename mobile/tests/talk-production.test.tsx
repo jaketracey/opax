@@ -39,13 +39,13 @@ test.each(['0', '1'])(
       const config = jest.requireActual('../metro.config');
       const result = config.resolver.resolveRequest(
         {
-          originModulePath: path.join(__dirname, '../src/app/talk.tsx'),
+          originModulePath: path.join(__dirname, '../src/app/talk/index.tsx'),
           resolveRequest: () => ({
             type: 'sourceFile',
             filePath: path.join(__dirname, '../src/features/talk/entry.tsx'),
           }),
         },
-        '../features/talk/entry',
+        '../../features/talk/entry',
         'ios',
       );
       expect(result.filePath).toBe(

@@ -74,7 +74,8 @@ function appConfig(variant: string, voice = '1', microphone = '0') {
   };
 }
 const routes = [
-  'src/app/talk.tsx',
+  'src/app/talk/index.tsx',
+  'src/app/talk/_layout.tsx',
   'src/app/account/sign-in.tsx',
   'src/app/account/delete.tsx',
   'src/features/talk/TalkScreen.tsx',
