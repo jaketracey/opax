@@ -1,22 +1,63 @@
-import { Stack, router, type Href } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { Screen } from '../../design/primitives';
-import { accountCopy } from './copy';
-import { SignInFlow } from './SignInFlow';
+import {
+  signInCodeRoute,
+  talkSignInCodeRoute,
+} from '../../navigation/routes/account';
+import { finishSignIn, signInReturn } from './navigation';
+import { CodeStep, EmailStep } from './SignInFlow';
 
-export function SignInScreen() {
+type Base = 'account' | 'talk';
+const one = (value: string | string[] | undefined) =>
+  Array.isArray(value) ? value[0] : value;
+
+/**
+ * Sign in, the email step: `/account/sign-in`, or `/talk/sign-in` inside the
+ * Talk sheet (`base="talk"`). The bar title "Sign in" comes from the stack.
+ */
+export function SignInScreen({ base = 'account' }: { base?: Base }) {
+  const params = useLocalSearchParams<{ return?: string }>();
+  const to = signInReturn(one(params.return), base);
   return (
-    <>
-      <Stack.Screen options={{ title: accountCopy.signInForVoice }} />
-      <Screen testID="account-sign-in-screen">
-        <SignInFlow
-          onSignedIn={() =>
-            // Opened cold from a link, there is nothing to go back to.
-            router.canGoBack()
-              ? router.back()
-              : router.replace('/account' as Href)
-          }
-        />
-      </Screen>
-    </>
+    <Screen grouped testID="account-sign-in-screen">
+      <EmailStep
+        onSent={(email, challenge) =>
+          router.push(
+            base === 'talk'
+              ? talkSignInCodeRoute(email, challenge, to)
+              : signInCodeRoute(email, challenge, to),
+          )
+        }
+      />
+    </Screen>
   );
 }
+
+/** Sign in, the code step ("Check your email"). */
+export function SignInCodeScreen({ base = 'account' }: { base?: Base }) {
+  const params = useLocalSearchParams<{
+    email?: string;
+    challenge?: string;
+    return?: string;
+  }>();
+  const email = one(params.email) ?? '';
+  const to = signInReturn(one(params.return), base);
+  const challenge = one(params.challenge);
+  // Opened cold, with no code sent in this app session: start at the address.
+  if (!email || !challenge)
+    return (
+      <Redirect href={base === 'talk' ? '/talk/sign-in' : '/account/sign-in'} />
+    );
+  return (
+    <Screen grouped testID="account-sign-in-code-screen">
+      <CodeStep
+        email={email}
+        challenge={challenge}
+        onSignedIn={() => finishSignIn(to)}
+      />
+    </Screen>
+  );
+}
+
+export const TalkSignInScreen = () => <SignInScreen base="talk" />;
+export const TalkSignInCodeScreen = () => <SignInCodeScreen base="talk" />;

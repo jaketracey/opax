@@ -1,2 +1,2 @@
-// Included in production when the voice build switch enables account routes.
-export { SignInScreen as default } from '../../features/account/SignInScreen';
+// Voice-off production resolves features/account/entry.production.ts.
+export { SignInScreen as default } from '../../features/account/entry';
