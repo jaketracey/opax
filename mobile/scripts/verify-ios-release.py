@@ -131,7 +131,7 @@ def verify_voice_bundle(body, enabled):
     if strings is None:
         strings = {token.decode("latin-1") for token in PATH_TOKENS.findall(body)}
     if enabled:
-        require("./talk.tsx" in strings and "./account/index.tsx" in strings and
+        require(("./talk.tsx" in strings or "./talk/index.tsx" in strings) and "./account/index.tsx" in strings and
                 {"./account/sign-in.tsx", "./account/delete.tsx"} <= strings,
                 "production voice requires Talk, Account, sign-in and deletion route keys")
         found, _ = markers_in_entries(body, ("talk-consent", "account-sign-in-start"))

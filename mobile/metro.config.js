@@ -22,6 +22,7 @@ const productionStubs = [
   'src/onboarding/launch-flag',
   'src/features/electorate-map/outline-probe',
   'src/features/money/money-probe',
+  'src/navigation/dev-roots',
 ].map((module) => path.join(__dirname, module));
 const voiceEntries = [
   ...['account', 'talk'].map((feature) =>

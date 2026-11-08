@@ -1,4 +1,5 @@
 import type { TabSegment } from './chrome';
+import { devRoots } from './dev-roots';
 
 /**
  * The tab an incoming link opens in. Every shared-folder route exists in all
@@ -25,7 +26,7 @@ const tabPages: readonly (readonly [RegExp, TabSegment])[] = [
 const moneyMap = /^\/(money|money-record|money-node)(?:\/|$)/;
 // Root-stack routes: never inside a tab.
 const outsideTabs =
-  /^\/(account|community|talk|licence|licences|citation|machine-note|rule|seat|source|source-destination|welcome|workbench|money-map-spike|voice-bridge-test)(?:\/|$)/;
+  /^\/(account|community|talk|licence|licences|citation|machine-note|rule|seat|source|source-destination|welcome)(?:\/|$)/;
 const tabSegments = new Set<string>([
   '(today)',
   '(your-mp)',
@@ -50,6 +51,12 @@ export function selectedTab(): TabSegment | null {
  */
 export function linkTab(pathname: string, initial: boolean): TabSegment | null {
   if (pathname.startsWith('/(') || outsideTabs.test(pathname)) return null;
+  if (
+    devRoots.some(
+      (root) => pathname === `/${root}` || pathname.startsWith(`/${root}/`),
+    )
+  )
+    return null;
   for (const [pattern, tab] of tabPages) if (pattern.test(pathname)) return tab;
   if (moneyMap.test(pathname) && !initial && selected) return selected;
   return '(today)';
