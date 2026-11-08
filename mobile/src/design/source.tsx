@@ -398,14 +398,19 @@ export function SourceSheet({
     if (Platform.OS !== 'ios') action();
   };
   useKeyCommand('list-escape', onClose, visible);
-  // InfoSheet's compatibility API passes notes and extra only. Its callers
-  // retain their props while the visible sheet now belongs to the root stack.
-  const notesOnly = Object.keys(details).every(
-    (key) => key === 'notes' || key === 'extra',
-  );
+  // Interactive extra content must keep re-rendering with its legacy parent.
+  const notesOnly =
+    details.extra == null &&
+    details.notes?.some((note) => typeof note === 'string' && note.trim()) &&
+    Object.keys(details).every((key) => key === 'notes' || key === 'extra');
   if (visible && notesOnly)
     return (
-      <LegacyRuleBridge details={details} onClose={onClose} testID={testID} />
+      <LegacyRuleBridge
+        title={title}
+        details={details}
+        onClose={onClose}
+        testID={testID}
+      />
     );
   return (
     <Modal
@@ -427,10 +432,12 @@ export function SourceSheet({
 }
 
 function LegacyRuleBridge({
+  title,
   details,
   onClose,
   testID,
 }: {
+  title: string;
   details: SourceDetails;
   onClose: () => void;
   testID?: string;
@@ -441,12 +448,14 @@ function LegacyRuleBridge({
     presented.current = true;
     presentSheet({
       kind: 'rule',
-      rule: (details.notes ?? []).filter(Boolean).join('\n\n'),
-      extra: details.extra,
+      title,
+      rule: (details.notes ?? [])
+        .filter((note) => typeof note === 'string' && note.trim())
+        .join('\n\n'),
       testID: testID?.replace(/-sheet$/, ''),
     });
     onClose();
-  }, [details, onClose, testID]);
+  }, [title, details, onClose, testID]);
   return null;
 }
 

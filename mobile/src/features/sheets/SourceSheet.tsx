@@ -12,7 +12,7 @@ import { calendarDate, formatDate, type DateInput } from '../../design/format';
 import { InsetGroup } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
 import {
   sourceCitations,
   licenceText,
@@ -110,18 +110,25 @@ export function OriginalsGroup({
   overModal = false,
   testID,
   header,
+  showCitations = false,
 }: {
   details: SourceDetails;
   overModal?: boolean;
   testID?: string;
   header?: string;
+  showCitations?: boolean;
 }) {
   const originals = (details.originals ?? []).filter(
     (original, index, all) =>
       (original.url.startsWith('https://') || original.url.startsWith('/')) &&
       all.findIndex((other) => other.url === original.url) === index,
   );
-  if (!originals.length)
+  const sources =
+    showCitations && !originals.length ? sourceCitations(details.citation) : [];
+  const perSourceDate =
+    new Set(sources.map((source) => sourceDate(source.asOf ?? details.asOf)))
+      .size > 1;
+  if (!originals.length && !sources.length)
     return header ? (
       <Text variant="groupHeader" accessibilityRole="header">
         {header}
@@ -134,7 +141,7 @@ export function OriginalsGroup({
           {header}
         </Text>
       ) : null}
-      <InsetGroup>
+      <InsetGroup testID={testID && `${testID}-records`}>
         {originals.map((original, index) => (
           <LinkRow
             key={original.url}
@@ -153,6 +160,32 @@ export function OriginalsGroup({
             testID={testID ? `${testID}-original-${index}` : undefined}
           />
         ))}
+        {sources.map((source, index) => {
+          const date = perSourceDate
+            ? sourceDate(source.asOf ?? details.asOf, true) ||
+              'Date not published'
+            : null;
+          return (
+            <View
+              key={source.title}
+              testID={testID && `${testID}-citation-${index}`}
+              style={{
+                minHeight: minimumTarget,
+                paddingVertical: rhythm.row,
+                gap: rhythm.line,
+              }}
+            >
+              <Text wordSafe variant="body">
+                {source.title}
+              </Text>
+              {date ? (
+                <Text wordSafe variant="secondary">
+                  {date}
+                </Text>
+              ) : null}
+            </View>
+          );
+        })}
       </InsetGroup>
     </View>
   );
@@ -188,10 +221,6 @@ export function SourceContent({
     details.state === 'partial' ? copy.partialNote : null,
     ...(details.notes ?? []),
   ].filter(Boolean);
-  const sources = sourceCitations(details.citation);
-  const sourceDates = new Set(
-    sources.map((source) => sourceDate(source.asOf ?? details.asOf)),
-  );
   return (
     <>
       <OriginalsGroup
@@ -199,21 +228,8 @@ export function SourceContent({
         overModal={overModal}
         testID={testID}
         header={sourceHeader(details)}
+        showCitations
       />
-      {!details.originals?.length && sources.length ? (
-        <Paragraphs
-          paragraphs={sources.map((s) =>
-            [
-              s.title,
-              sourceDates.size > 1
-                ? sourceDate(s.asOf ?? details.asOf, true)
-                : null,
-            ]
-              .filter(Boolean)
-              .join(' · '),
-          )}
-        />
-      ) : null}
       {details.rule ? (
         <InsetGroup header={copy.howChosen}>
           <Paragraphs paragraphs={[details.rule]} />

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import { ScrollView, View, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { useScreenMargin } from '../../design/adaptive';
 import { useKeyCommand } from '../../design/keyboard';
@@ -51,11 +52,18 @@ export function SheetFrame({
 }) {
   const accessible = useAccessibilitySize();
   const margin = useScreenMargin();
+  const insets = useSafeAreaInsets();
   const done = closeSheetItem();
   useKeyCommand('list-escape', () => {
     if (done.type === 'button') done.onPress?.();
   });
-  const contentStyle = [styles.content, { paddingHorizontal: margin }];
+  const contentStyle = [
+    styles.content,
+    {
+      paddingHorizontal: margin,
+      paddingBottom: rhythm.section + insets.bottom,
+    },
+  ];
   return (
     <>
       <Stack.Screen
@@ -98,7 +106,6 @@ const styles = StyleSheet.create({
   screen: { backgroundColor: colors.sunken },
   content: {
     paddingTop: rhythm.group,
-    paddingBottom: rhythm.section + 34,
     gap: rhythm.group,
   },
 });

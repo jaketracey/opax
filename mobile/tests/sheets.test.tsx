@@ -1,9 +1,11 @@
-import { act, type ReactElement } from 'react';
+import { act, Children, type ReactElement } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import {
   ActionSheetIOS,
   Dimensions,
   Linking,
+  Modal,
+  StyleSheet,
   ScrollView,
   Text as NativeText,
 } from 'react-native';
@@ -14,7 +16,18 @@ import {
   SourceSheet as LegacySourceSheet,
   SheetBody,
 } from '../src/design/source';
-import { InfoButton } from '../src/design/layout';
+import { SwitchRow } from '../src/design/controls';
+import { FilterRoute } from '../src/features/sheets/FilterRoutes';
+import { billsFilterModel } from '../src/features/sheets/filter-models';
+import {
+  registerFilterModel,
+  filterStore,
+} from '../src/features/sheets/filter-model';
+import { InfoButton, InsetGroup } from '../src/design/layout';
+import { InfoSheet } from '../src/design/info';
+import { Text } from '../src/design/text';
+import { rhythm, minimumTarget } from '../src/design/tokens';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MachineLabel, MachinePill } from '../src/design/labels';
 import { copy } from '../src/design/copy';
 import {
@@ -41,6 +54,10 @@ jest.mock('../src/design/environment', () => ({
   ...jest.requireActual('../src/design/environment'),
   isE2E: false,
 }));
+jest.mock(
+  'react-native-safe-area-context',
+  () => jest.requireActual('react-native-safe-area-context/jest/mock').default,
+);
 let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => ({
   ...jest.requireActual('expo-router'),
@@ -92,6 +109,9 @@ function lastKey() {
 }
 beforeEach(() => {
   jest.clearAllMocks();
+  jest
+    .mocked(useSafeAreaInsets)
+    .mockReturnValue({ top: 0, bottom: 0, left: 0, right: 0 });
   Dimensions.set({
     window: { width: 390, height: 844, scale: 3, fontScale: 1 },
     screen: { width: 390, height: 844, scale: 3, fontScale: 1 },
@@ -372,4 +392,162 @@ test('InfoButton presents /rule through its retained notes adapter without chang
     params: { key: expect.any(String) },
   });
   expect(sheetPayload(lastKey(), 'rule')?.rule).toBe('A rule.\n\nA caveat.');
+});
+
+test.each([{ notes: [] as string[] }, { notes: ['A note.'] }])(
+  'InfoSheet with extra keeps its live legacy Modal (notes: $notes)',
+  ({ notes }) => {
+    const onClose = jest.fn();
+    const renderSheet = (value: string) => (
+      <InfoSheet
+        visible
+        onClose={onClose}
+        title="View on a date"
+        notes={notes}
+        extra={<Text testID="date-value">{value}</Text>}
+      />
+    );
+    const root = render(renderSheet('18 August 2026'));
+    const renderer = mounted.at(-1)!;
+    expect(root.findByType(Modal).props.visible).toBe(true);
+    expect(text(root)).toContain('View on a date');
+    expect(text(root)).toContain('18 August 2026');
+    act(() => renderer.update(renderSheet('9 November 2026')));
+    expect(text(root)).toContain('9 November 2026');
+    expect(text(root)).not.toContain('18 August 2026');
+    expect(router.push).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
+  },
+);
+test('notes-only InfoSheet carries its own title into the rule route', () => {
+  const onClose = jest.fn();
+  const root = render(
+    <InfoSheet
+      visible
+      onClose={onClose}
+      title="Your location"
+      notes={['Used once.', ' ', null]}
+    />,
+  );
+  expect(root.findAllByType(Modal)).toHaveLength(0);
+  expect(sheetPayload(lastKey(), 'rule')).toMatchObject({
+    title: 'Your location',
+    rule: 'Used once.',
+  });
+  expect(onClose).toHaveBeenCalledTimes(1);
+  mockParams = { key: lastKey() };
+  expect(
+    render(<RuleSheet />).findByType(Stack.Screen).props.options.title,
+  ).toBe('Your location');
+});
+test('an empty notes-only InfoSheet keeps its legacy modal', () => {
+  const root = render(
+    <InfoSheet visible onClose={jest.fn()} title="Notes" notes={[' ', null]} />,
+  );
+  expect(root.findByType(Modal).props.visible).toBe(true);
+  expect(router.push).not.toHaveBeenCalled();
+});
+test('sources without originals are individual non-link rows beneath their date header', () => {
+  const root = render(
+    <SourceContent
+      testID="grouped"
+      details={{
+        asOf: '2026-11-09',
+        citation: [
+          { label: 'A', title: 'First source', asOf: '2026-08-18' },
+          { label: 'B', title: 'Second source', asOf: '2026-11-08' },
+        ],
+      }}
+    />,
+  );
+  const group = root
+    .findAllByType(InsetGroup)
+    .find((node) => node.props.testID === 'grouped-records')!;
+  expect(Children.toArray(group.props.children)).toHaveLength(2);
+  expect(text(group)).toContain('First source');
+  expect(text(group)).toContain('18 Aug 2026');
+  expect(text(group)).toContain('Second source');
+  expect(text(group)).toContain('8 Nov 2026');
+  expect(group.findAllByType(LinkRow)).toHaveLength(0);
+  expect(
+    group.findAll((node) => typeof node.props?.onPress === 'function'),
+  ).toHaveLength(0);
+  expect(text(group.parent!)).toContain('As at 9 November 2026');
+  expect(StyleSheet.flatten(group.parent!.props.style).gap).toBe(
+    rhythm.groupHeader,
+  );
+  const row = group.findByProps({ testID: 'grouped-citation-0' });
+  expect(StyleSheet.flatten(row.props.style)).toMatchObject({
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.row,
+  });
+});
+test('source rows with the same date say that date only in the header', () => {
+  const root = render(
+    <SourceContent
+      testID="same-date"
+      details={{
+        asOf: '2026-11-09',
+        citation: [
+          { label: 'A', asOf: '2026-11-09' },
+          { label: 'B', asOf: '2026-11-09' },
+        ],
+      }}
+    />,
+  );
+  const group = root
+    .findAllByType(InsetGroup)
+    .find((node) => node.props.testID === 'same-date-records')!;
+  expect(text(group)).toBe('A\nB');
+  expect(text(root)).toContain('As at 9 November 2026');
+});
+test('sheet frame uses the bottom safe-area inset for its content padding', () => {
+  jest
+    .mocked(useSafeAreaInsets)
+    .mockReturnValue({ top: 0, bottom: 21, left: 0, right: 0 });
+  const root = render(<SourceSheet />);
+  expect(
+    StyleSheet.flatten(root.findByType(ScrollView).props.contentContainerStyle)
+      .paddingBottom,
+  ).toBe(rhythm.section + 21);
+});
+
+test('interactive dismissal of FilterRoute keeps a rendered switch change', () => {
+  const owner = 'route-dismissal-keep';
+  const model = billsFilterModel();
+  const store = registerFilterModel(model, { owner });
+  const opening = store.get();
+  mockParams = { list: 'bills', owner };
+  const root = render(<FilterRoute />);
+  const renderer = mounted.at(-1)!;
+  act(() => root.findByType(SwitchRow).props.onValueChange(true));
+  expect(root.findByType(SwitchRow).props.value).toBe(true);
+  act(() => renderer.unmount());
+  mounted.pop();
+  expect(filterStore('bills', owner)!.get()).toEqual({
+    ...opening,
+    divided: true,
+  });
+  expect(router.back).not.toHaveBeenCalled();
+});
+test('FilterRoute Cancel restores the opening snapshot after a rendered switch change', () => {
+  const owner = 'route-dismissal-cancel';
+  const model = billsFilterModel();
+  const store = registerFilterModel(model, {
+    owner,
+    value: { ...model.initial, parliament: 48 },
+  });
+  const opening = store.get();
+  mockParams = { list: 'bills', owner };
+  const root = render(<FilterRoute />);
+  act(() => root.findByType(SwitchRow).props.onValueChange(true));
+  expect(store.get().divided).toBe(true);
+  const cancel = root
+    .findByType(Stack.Screen)
+    .props.options.unstable_headerLeftItems()[0];
+  expect(cancel.label).toBe('Cancel');
+  act(() => cancel.onPress());
+  expect(filterStore('bills', owner)!.get()).toEqual(opening);
+  expect(root.findByType(SwitchRow).props.value).toBe(false);
+  expect(router.back).toHaveBeenCalledTimes(1);
 });

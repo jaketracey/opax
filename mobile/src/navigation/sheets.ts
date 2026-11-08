@@ -24,6 +24,7 @@ export type SheetPayload =
   | { kind: 'citation'; citation: Citation; testID?: string }
   | {
       kind: 'rule';
+      title?: string;
       rule: string;
       sources?: SourceDetails;
       extra?: ReactNode;

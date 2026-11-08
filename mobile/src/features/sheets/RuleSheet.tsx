@@ -15,7 +15,7 @@ export default function RuleSheet() {
   const testID = payload?.testID ? `${payload.testID}-sheet` : 'rule-sheet';
   return (
     <SheetFrame
-      title={variant === 'table' && table ? table.title : copy.howChosen}
+      title={payload?.title ?? copy.howChosen}
       short={variant !== 'table'}
       testID={testID}
     >
