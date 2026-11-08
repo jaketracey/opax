@@ -69,15 +69,25 @@ export function moneyWindowParams(filters: MoneyFilters) {
     inflation: filters.inflation ? '1' : '0',
   };
 }
-/** A node's money record, pushed in the current tab with the map's window. */
+/**
+ * A node's money record, pushed in the current tab with the map's window.
+ * `via: 'map'` marks a push that started on the map, so the record leaves
+ * out "Open in the money map" (journeys/money.md 4.10 item 6).
+ */
 export function moneyFocusRoute(
   node: string,
   jurisdiction: MoneyJurisdiction,
   filters: MoneyFilters,
   name?: string,
+  via?: 'map' | null,
 ) {
   return moneyRecordRoute(
-    { node, jurisdiction, ...moneyWindowParams(filters) },
+    {
+      node,
+      jurisdiction,
+      ...moneyWindowParams(filters),
+      ...(via ? { via } : {}),
+    },
     name,
   );
 }

@@ -283,3 +283,18 @@ test('summary, caption and footnote helpers state the cut in plain words', () =>
   );
   expect(individualDonorsLine([])).toBeNull();
 });
+
+test('every push from the map carries via=map', async () => {
+  const r = await render();
+  const rows = [
+    ...r.root.findAllByType(MoneyRow),
+    ...r.root.findAllByType(LinkRow),
+  ].filter((x) => x.props.href?.pathname === '/money-record');
+  expect(rows.length).toBeGreaterThan(20);
+  for (const row of rows) expect(row.props.href.params.via).toBe('map');
+  const all = r.root.findAll(
+    (x) => x.props.action?.testID === 'money-donors-all',
+  )[0]!;
+  expect(all.props.action.href.params.via).toBe('map');
+  await act(async () => r.unmount());
+});

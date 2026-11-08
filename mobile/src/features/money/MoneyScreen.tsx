@@ -213,7 +213,7 @@ export default function MoneyScreen() {
   const select = useCallback(
     (id: string, name?: string) => {
       if (filters)
-        router.push(moneyFocusRoute(id, jurisdiction, filters, name));
+        router.push(moneyFocusRoute(id, jurisdiction, filters, name, 'map'));
     },
     [router, filters, jurisdiction],
   );
@@ -569,7 +569,7 @@ function MoneyBody({
   );
   const individuals = individualDonorsLine(view.nodes);
   const record_ = (node: MoneyNode) =>
-    moneyFocusRoute(node.id, jurisdiction, filters, node.label);
+    moneyFocusRoute(node.id, jurisdiction, filters, node.label, 'map');
   const partyRow = (node: MoneyNode, index: number) => (
     <PartyMoneyRow
       key={node.id}
@@ -661,6 +661,7 @@ function MoneyBody({
                   href: moneyDonorsRoute({
                     jurisdiction,
                     ...moneyWindowParams(filters),
+                    via: 'map',
                   }),
                   testID: 'money-donors-all',
                 }}

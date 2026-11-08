@@ -26,6 +26,7 @@ import {
   moneyFocusRoute,
   moneyJurisdiction,
   moneyYears,
+  param,
   type MoneyParams,
 } from './records';
 import { moneyNotes, moneyOriginals, moneySourceDetails } from './sources';
@@ -46,6 +47,8 @@ export function donorsCaption(shown: number, all: number, searching: boolean) {
 export default function MoneyDonors() {
   const params = useLocalSearchParams<MoneyParams>();
   const jurisdiction = moneyJurisdiction(params.jurisdiction);
+  // Opened from the map's "See all": its rows count as coming from the map.
+  const via = param(params.via) === 'map' ? 'map' : null;
   const { record, error, refreshing, refresh, retry } =
     useMoneyRecord(jurisdiction);
   const [query, setQuery] = useState('');
@@ -166,6 +169,7 @@ export default function MoneyDonors() {
                         jurisdiction,
                         filters,
                         node.label,
+                        via,
                       )}
                       testID={`money-donor-${index}`}
                     />

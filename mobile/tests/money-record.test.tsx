@@ -322,3 +322,27 @@ test('a supplier without its agency cannot be found yet', async () => {
   );
   await act(async () => r.unmount());
 });
+
+test('"Open in the money map" shows only when the reader did not come from the map', async () => {
+  const has = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAllByType(LinkRow)
+      .some((x) => x.props.testID === 'money-record-map');
+  let r = await render({ node: 'party:Labor' });
+  expect(has(r)).toBe(true);
+  await act(async () => r.unmount());
+  r = await render({ node: 'party:Labor', via: 'map' });
+  expect(has(r)).toBe(false);
+  // A record pushed from this one keeps the way it arrived.
+  const flow = r.root
+    .findAllByType(MoneyRow)
+    .find((x) => x.props.testID === 'money-focus-flow-0')!;
+  expect(flow.props.href.params.via).toBe('map');
+  await act(async () => r.unmount());
+  r = await render({ node: 'party:Labor' });
+  const other = r.root
+    .findAllByType(MoneyRow)
+    .find((x) => x.props.testID === 'money-focus-flow-0')!;
+  expect(other.props.href.params.via).toBeUndefined();
+  await act(async () => r.unmount());
+});

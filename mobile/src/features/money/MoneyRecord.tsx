@@ -560,7 +560,13 @@ function NodeBody({
     })
     .sort((a, b) => b.edge.total - a.edge.total);
   const pushRecord = (other: MoneyNode) =>
-    moneyFocusRoute(other.id, jurisdiction, filters, other.label);
+    moneyFocusRoute(
+      other.id,
+      jurisdiction,
+      filters,
+      other.label,
+      fromMap ? 'map' : null,
+    );
   const profile = moneyProfile(node);
   const share = {
     path:
