@@ -9,6 +9,7 @@ import {
 export interface MenuAction {
   title: string;
   onPress: () => void;
+  destructive?: boolean;
 }
 type Menu = { title: string; actions: readonly MenuAction[] } | null;
 let menu: Menu = null;
@@ -25,7 +26,7 @@ function present(next: Menu) {
 }
 
 /** Android's bottom sheet of actions; iOS keeps its native action sheet. */
-export function showMenu(
+export function confirmAction(
   title: string,
   actions: readonly MenuAction[],
   anchor?: number,
@@ -43,6 +44,9 @@ export function showMenu(
       title,
       options: [...actions.map((action) => action.title), 'Cancel'],
       cancelButtonIndex: actions.length,
+      destructiveButtonIndex: actions.flatMap((action, index) =>
+        action.destructive ? [index] : [],
+      ),
       ...(Platform.OS === 'ios' && Platform.isPad && anchor ? { anchor } : {}),
     },
     (index) => {
@@ -51,6 +55,9 @@ export function showMenu(
     },
   );
 }
+
+/** @deprecated Use native Link.Menu on iOS, or confirmAction for confirmation. Android menus retain this entry point. */
+export const showMenu = confirmAction;
 
 export function AndroidMenuHost() {
   const current = useSyncExternalStore(subscribe, () => menu);
