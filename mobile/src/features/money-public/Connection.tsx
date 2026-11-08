@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { passageText } from '../../api/passage-text';
 import { catalogs } from '../../api/runtime';
@@ -220,13 +220,21 @@ type ExcerptData = NonNullable<
   ReturnType<typeof import('./data').decodeEvidence>[string]
 >['excerpts'][number];
 
+/** A passage this long may run past three lines at the default text size. */
+const LONG_PASSAGE = 140;
+/** Grows the "More" line to the 44 pt minimum target. */
+const MORE_SLOP = { top: 12, bottom: 12, left: 8, right: 8 };
+
 /**
  * One excerpt: its publisher and date, the passage with the matched name
- * highlighted, and the original where the record links one. Speeches open
- * no native page yet (the shard carries no document slug).
+ * highlighted (three lines, then "More" to read the rest in place), and the
+ * original where the record links one. Speeches open no native page yet
+ * (the shard carries no document slug).
  */
 function Excerpt({ excerpt, index }: { excerpt: ExcerptData; index: number }) {
   const text = passageText(excerpt.text);
+  const [open, setOpen] = useState(false);
+  const [long, setLong] = useState(text.length > LONG_PASSAGE);
   const at = excerpt.matched ? lower(text).indexOf(lower(excerpt.matched)) : -1;
   const meta = [
     publisher(excerpt.source),
@@ -235,7 +243,14 @@ function Excerpt({ excerpt, index }: { excerpt: ExcerptData; index: number }) {
     .filter(Boolean)
     .join(' · ');
   const body = (
-    <Text wordSafe variant="recordText" numberOfLines={6}>
+    <Text
+      wordSafe
+      variant="recordText"
+      numberOfLines={open ? undefined : 3}
+      onTextLayout={(e) => {
+        if (!open && e.nativeEvent.lines.length > 3) setLong(true);
+      }}
+    >
       {at >= 0 ? (
         <>
           {text.slice(0, at)}
@@ -255,6 +270,20 @@ function Excerpt({ excerpt, index }: { excerpt: ExcerptData; index: number }) {
         {meta}
       </Text>
       {body}
+      {long && !open ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`More, ${publisher(excerpt.source)} excerpt ${index + 1}`}
+          hitSlop={MORE_SLOP}
+          onPress={() => setOpen(true)}
+          style={styles.more}
+          testID={`connection-excerpt-${index}-more`}
+        >
+          <Text wordSafe tone="link">
+            {copy.more}
+          </Text>
+        </Pressable>
+      ) : null}
       {excerpt.url ? (
         <LinkRow
           title={`${publisher(excerpt.source)} original`}
@@ -286,7 +315,6 @@ function useDestinations(
       add({
         kind: 'organisation',
         title: displayName(name),
-        detail: 'Grants, contracts and donations',
         symbol: symbols.money,
         href: organisationHref(`abn:${abn}`, displayName(name)),
       });
@@ -336,4 +364,5 @@ function useDestinations(
 const styles = StyleSheet.create({
   excerpt: { gap: rhythm.line, paddingVertical: rhythm.tight },
   match: { backgroundColor: colors.navyWash },
+  more: { alignSelf: 'flex-start' },
 });

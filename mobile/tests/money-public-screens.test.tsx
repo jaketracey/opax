@@ -20,6 +20,8 @@ import Connections from '../src/features/money-public/Connections';
 import Connection from '../src/features/money-public/Connection';
 import MoneyItem from '../src/features/money-public/MoneyItem';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
+import { organisationHref } from '../src/features/money-public/routes';
+import { LinkRow } from '../src/design/rows';
 import {
   decodeGrantIndex,
   decodeProgram,
@@ -294,6 +296,60 @@ describe('a seat view draws nothing national', () => {
     expect(
       byID(r, 'program-national')[0]!.props.href.params,
     ).not.toHaveProperty('seat');
+    await act(async () => r.unmount());
+  });
+});
+
+describe('a program, place or organisation', () => {
+  test('the organisation row is its name only, and opens its money record', async () => {
+    const entity = (
+      raw('/evidence/index.json').entities as {
+        id: string;
+        kind: string;
+        abn?: string;
+      }[]
+    ).find((e) => e.kind === 'organisation' && e.abn)!;
+    Object.assign(mockParams, { id: entity.id });
+    const r = await mount(Connection);
+    const row = r.root.findAll(
+      (n) =>
+        n.props.testID === 'connection-destination-organisation' &&
+        n.type === LinkRow,
+    )[0]!;
+    expect(row.props.detail).toBeUndefined();
+    expect(row.props.href).toEqual(
+      organisationHref(`abn:${entity.abn}`, row.props.title),
+    );
+    await act(async () => r.unmount());
+  });
+
+  test('an excerpt is three lines, and More reads the rest in place', async () => {
+    Object.assign(mockParams, { id: connectionId() });
+    const r = await mount(Connection);
+    const more = r.root.findAll(
+      (n) =>
+        /^connection-excerpt-\d+-more$/.test(n.props.testID ?? '') &&
+        typeof n.type !== 'string' &&
+        !!n.props.onPress,
+    )[0]!;
+    const i = Number(more.props.testID.split('-')[2]);
+    expect(more.props.accessibilityRole).toBe('button');
+    expect(more.props.accessibilityLabel).toMatch(
+      new RegExp(`^More, .+ excerpt ${i + 1}$`),
+    );
+    expect(more.props.hitSlop).toMatchObject({ top: 12, bottom: 12 });
+    const passage = () =>
+      r.root
+        .findAll((n) => n.props.testID === `connection-excerpt-${i}`)[0]!
+        .findAll(
+          (n) => n.props.variant === 'recordText' && n.props.wordSafe,
+        )[0]!;
+    expect(passage().props.numberOfLines).toBe(3);
+    await act(async () => more.props.onPress());
+    expect(passage().props.numberOfLines).toBeUndefined();
+    expect(
+      r.root.findAll((n) => n.props.testID === `connection-excerpt-${i}-more`),
+    ).toHaveLength(0);
     await act(async () => r.unmount());
   });
 });
