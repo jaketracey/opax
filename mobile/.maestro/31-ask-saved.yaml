@@ -111,7 +111,7 @@ name: 31 Ask options, the options line, Conversations after relaunch, swipe Dele
     id: ask-settings-notice
 - tapOn:
     id: ask-settings-delete-all
-- tapOn: Delete All Conversations
+- tapOn: Delete
 - extendedWaitUntil:
     notVisible:
       id: ask-settings-delete-all

@@ -6,7 +6,6 @@ import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { useAccount } from '../account/store';
 import { confirmDeleteAll } from './conversation-actions';
-import { conversationsCopy } from './Conversations';
 import { resetAskConsent } from './consent';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
 
@@ -15,6 +14,7 @@ export const askSettingsCopy = {
   notice: 'Show the notice before asking',
   noticeDone: 'The notice will show before your next question.',
   deleteAll: 'Delete all conversations',
+  confirm: 'Delete',
 } as const;
 
 /**
@@ -61,9 +61,9 @@ export default function AskSettings() {
             title={askSettingsCopy.deleteAll}
             destructive
             accessory="none"
-            onPress={() =>
-              confirmDeleteAll(status, conversationsCopy.deleteAll)
-            }
+            // Conversations' bar menu says Delete All Conversations; here the
+            // row already names it, so the sheet's button is Delete.
+            onPress={() => confirmDeleteAll(status, askSettingsCopy.confirm)}
             testID="ask-settings-delete-all"
           />
         ) : null}

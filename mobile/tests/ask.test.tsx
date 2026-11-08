@@ -1,5 +1,6 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { router } from 'expo-router';
+import { ActionSheetIOS } from 'react-native';
 import {
   conversationMeta,
   conversationWhen,
@@ -239,11 +240,22 @@ describe('Account › Ask', () => {
     const [title, actions] = jest.mocked(confirmAction).mock.calls[0]!;
     expect(title).toBe('Delete all conversations?');
     expect(actions).toEqual([
-      expect.objectContaining({
-        title: 'Delete All Conversations',
-        destructive: true,
-      }),
+      expect.objectContaining({ title: 'Delete', destructive: true }),
     ]);
+    // confirmAction adds Cancel: the sheet reads Delete and Cancel.
+    const sheet = jest
+      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+      .mockImplementation(() => undefined);
+    jest
+      .requireActual<typeof import('../src/design/menu')>('../src/design/menu')
+      .confirmAction(title, actions);
+    expect(sheet.mock.calls[0]![0]).toMatchObject({
+      title: 'Delete all conversations?',
+      options: ['Delete', 'Cancel'],
+      cancelButtonIndex: 1,
+      destructiveButtonIndex: [0],
+    });
+    sheet.mockRestore();
     await act(async () => actions[0]!.onPress());
     expect(clearAskConversations).toHaveBeenCalled();
     expect(deleteAllRemoteChats).not.toHaveBeenCalled();
