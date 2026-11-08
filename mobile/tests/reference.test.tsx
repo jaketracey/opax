@@ -32,8 +32,12 @@ import Methods from '../src/features/methods/Methods';
 import Coverage from '../src/features/methods/Coverage';
 import { coverageSources } from '../src/features/methods/repository';
 import { methodsCopy } from '../src/features/methods/copy';
+import { paperBar } from '../src/features/sources/parts';
+import { opaqueBar } from '../src/navigation/chrome';
+import { colors } from '../src/design/tokens';
 import { pinned } from './pinned';
 
+let mockBar: unknown = null;
 jest.mock('expo-router', () => {
   const React = jest.requireActual<typeof import('react')>('react');
   const { Pressable } =
@@ -51,7 +55,14 @@ jest.mock('expo-router', () => {
   };
   return {
     Link,
-    Stack: { Screen: (props: unknown) => props },
+    Stack: {
+      Screen: (props: { name?: string; options?: unknown }) => {
+        // The stack modules read Screen elements' props; a page's own
+        // options are kept for the bar checks.
+        if (!props.name) mockBar = props.options;
+        return null;
+      },
+    },
     router: { push: jest.fn(), back: jest.fn() },
   };
 });
@@ -208,6 +219,13 @@ const lastOptions = () =>
   >;
 
 describe('Methods', () => {
+  test('on paper under a paper bar, inside the sunken Account sheet', async () => {
+    mockBar = null;
+    await render(<Methods />, false);
+    expect(mockBar).toEqual(paperBar);
+    expect(paperBar).toEqual(opaqueBar(colors.paper));
+  });
+
   test('a page title, then the sections in order', async () => {
     const page = await render(<Methods />, false);
     const headings = page.root.findAllByType(Heading);
@@ -225,6 +243,7 @@ describe('Methods', () => {
       'Contract values as last published, not amounts paid.',
       'Appearing in both registers doesn’t show that one led to the other.',
       'An exact match comes first',
+      'Within each, what is current ranks above what is past: a sitting member above a former one, a bill still before parliament above a passed or lapsed one, a registered party above a deregistered one. Then A to Z.',
     ])
       expect(words).toContain(sentence);
   });

@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Stack } from 'expo-router';
 import {
   Heading,
   InsetGroup,
@@ -17,6 +18,7 @@ import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { methodsCopy as text, type MethodsSection } from './copy';
 import { reference, stateCoverage } from './repository';
 import { useRead, useShareItem } from './read';
+import { paperBar } from '../sources/parts';
 
 /**
  * Methods (records.md 6): a reading page on paper, in the Account stack.
@@ -97,6 +99,8 @@ export default function Methods() {
   };
   return (
     <Screen testID="methods-screen" onScroll={bar.onScroll}>
+      {/* A reading page on paper, so its bar matches its ground. */}
+      <Stack.Screen options={paperBar} />
       <View ref={titleRef} onLayout={bar.onTitleLayout}>
         <Heading level={1} kind="page" testID="methods-title">
           {text.title}

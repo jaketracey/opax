@@ -46,7 +46,7 @@ export const methodsCopy = {
         'Search matches your words and their meaning, then ranks the passages it finds. Ask writes an answer from those passages only and cites each one. Answers are machine-written and can be wrong, so check the records they cite.',
         // The match-tier rule (journeys/search.md 3.3), the one rule that
         // orders suggestions, Top hits and the groups in All.
-        'Suggestions as you type match names: a person’s full name and surname, an electorate, a bill’s short title, a party’s full and short name, and a topic and its other names. An exact match comes first, then a name that starts with your words, then a name with a word that does. Within each, current comes before past: sitting members before former members, bills before parliament before passed or lapsed bills, registered parties before deregistered ones. Then A to Z. How often something is searched or reported never changes the order.',
+        'Suggestions as you type match names: a person’s full name and surname, an electorate, a bill’s short title, a party’s full and short name, and a topic and its other names. An exact match comes first, then a name that starts with your words, then a name with a word that does. Within each, what is current ranks above what is past: a sitting member above a former one, a bill still before parliament above a passed or lapsed one, a registered party above a deregistered one. Then A to Z. How often something is searched or reported never changes the order.',
       ],
     },
     {
