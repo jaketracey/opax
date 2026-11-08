@@ -8,7 +8,9 @@ import {
   moneySource,
   publicMoneySource,
   moneyWindowYears,
-  publicMoneyLabel,
+  latestCompleteYear,
+  partyDonationsTotal,
+  industryLabel,
 } from '../src/features/money/records';
 import { moneyRoute } from '../src/navigation/routes';
 import { pinned } from './pinned';
@@ -21,13 +23,13 @@ import {
 } from '../src/features/money/view';
 import { formatDisclosureYear } from '../src/design/format';
 
-test('empty recorded windows are distinct from undated-only returns, and polling years stay bare', () => {
+test('empty recorded windows are distinct from undated-only returns, and years are financial years', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
   const filters = { ...defaultMoneyFilters(graph), from: 2020, to: 2020 };
   const empty = { total: 0, count: 0, firstYear: null, lastYear: null };
-  expect(moneyWindowYears(empty, filters)).toBe('nothing disclosed in 2020');
+  expect(moneyWindowYears(empty, filters)).toBe('nothing disclosed in 2020–21');
   expect(moneyWindowYears(empty, filters, true)).toBe(
-    'nothing awarded in 2020',
+    'nothing awarded in 2020–21',
   );
   expect(moneyWindowYears({ ...empty, total: 5, count: 1 }, filters)).toBe(
     'Year not recorded',
@@ -38,8 +40,10 @@ test('empty recorded windows are distinct from undated-only returns, and polling
 test('public money is explicitly scoped and public-money donors have no donation rank', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
   const hubs = graph.nodes.filter((n) => n.kind === 'grantor');
-  for (const node of hubs)
-    expect(publicMoneyLabel(node)).toContain('donors on this map across');
+  expect(hubs.map((n) => n.label).sort()).toEqual([
+    'Commonwealth contracts',
+    'Commonwealth grants',
+  ]);
   const donors = rankedDonors(graph),
     ranks = donationRanks(donors);
   expect(donors.some((n) => n.via === 'public_money')).toBe(true);
@@ -89,7 +93,7 @@ test.each(Object.values(moneyCatalogs))(
     const source = moneySource(graph);
     expect(source.url.startsWith('https://')).toBe(true);
     expect(moneyCaveats(graph).join(' ').toLowerCase()).toContain(
-      'totals are a floor',
+      'totals are a minimum',
     );
     if (graph.meta.jurisdiction) {
       expect(source.licence).toBe(graph.meta.licence);
@@ -148,4 +152,36 @@ test('state representatives enter their supported jurisdiction, with federal fal
   expect(moneyRoute('Labor', 'au-nsw').params).toEqual({
     focus: 'party:Labor',
   });
+});
+
+test('the latest complete year follows the returns calendar, and party totals follow the window', () => {
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+  // Annual returns for a financial year are published the February after
+  // it ends: on 21 September 2026 the latest complete year is 2024–25.
+  expect(graph.meta.generated).toBe('2026-09-21');
+  expect(latestCompleteYear(graph)).toBe(2024);
+  expect(
+    latestCompleteYear({
+      ...graph,
+      meta: { ...graph.meta, latestCompleteYear: 2023 },
+    }),
+  ).toBe(2023);
+  const all = defaultMoneyFilters(graph);
+  const parties = graph.nodes.filter((n) => n.kind === 'party');
+  // The window sums whole-dollar years: within a few dollars of the totals.
+  expect(
+    Math.abs(
+      partyDonationsTotal(graph, all).total -
+        parties.reduce((sum, n) => sum + n.total, 0),
+    ),
+  ).toBeLessThan(parties.length);
+  const year = { ...all, from: 2024, to: 2024 };
+  const one = partyDonationsTotal(graph, year);
+  expect(one.total).toBeGreaterThan(0);
+  expect(one.total).toBeLessThan(partyDonationsTotal(graph, all).total);
+  // With an industry, only that industry's donors to parties count.
+  const group = graph.nodes.find((n) => n.kind === 'donor')!.group;
+  const industry = partyDonationsTotal(graph, { ...all, industry: group });
+  expect(industry.total).toBeLessThan(partyDonationsTotal(graph, all).total);
+  expect(industryLabel('mining & energy')).toBe('Mining and energy');
 });

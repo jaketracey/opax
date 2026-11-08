@@ -1,109 +1,93 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { AccessibilityInfo } from 'react-native';
 import { apiClient } from '../src/api/runtime';
-import MoneyScreen from '../src/features/money/MoneyScreen';
-import MoneyNodeScreen from '../src/features/money/MoneyNodeScreen';
+import MoneyScreen, {
+  donorCaption,
+  individualDonorsLine,
+  moneySummary,
+} from '../src/features/money/MoneyScreen';
 import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
+import { decodeMoneyGraph } from '../src/features/money/data';
+import { defaultMoneyFilters } from '../src/features/money/view';
+import { filterStore } from '../src/features/sheets/filter-model';
 import {
   Button,
-  BigFigure,
-  Disclosure,
-  InfoButton,
-  KeyValueList,
   LinkRow,
-  SegmentedControl,
+  MoneyRow,
+  PopUpButton,
+  SegmentedPicker,
   SourceLine,
-  ViewOriginal,
+  Text,
 } from '../src/design/primitives';
 import { pinned } from './pinned';
 
-test('the accessible list opens every party and public-money hub without the canvas', async () => {
-  const r = await render(<MoneyScreen />);
-  await act(async () =>
-    r.root
-      .findAllByType(Disclosure)
-      .find((x) => x.props.testID === 'money-list-records-toggle')!
-      .props.onToggle(true),
-  );
-  const raw = pinned('/graph/money.json') as {
-    nodes: { id: string; kind: string }[];
-  };
-  const targets = raw.nodes.filter(
-    (n) => n.kind === 'party' || n.kind === 'grantor',
-  );
-  for (const node of targets) {
-    const row = r.root
-      .findAllByType(LinkRow)
-      .find((x) => x.props.testID === `money-list-record-${node.id}`)!;
-    expect(row).toBeDefined();
-    await act(async () => row.props.onPress());
-    expect(mockRouter.push).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        pathname: '/money-node',
-        params: expect.objectContaining({ node: node.id }),
-      }),
-    );
-  }
-  await act(async () => r.unmount());
-});
-
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
 jest.mock('../src/features/money/NativeMoneyMap', () => ({
+  ...jest.requireActual('../src/features/money/NativeMoneyMap'),
   NativeMoneyMap: jest.fn(() => null),
 }));
-jest.mock('react-native-gesture-handler', () => {
-  const chain = () => {
-    const value: Record<string, unknown> = {};
-    for (const name of [
-      'runOnJS',
-      'activeOffsetX',
-      'failOffsetY',
-      'onBegin',
-      'onUpdate',
-      'onEnd',
-      'onFinalize',
-    ])
-      value[name] = () => value;
-    return value;
-  };
-  return {
-    GestureHandlerRootView: jest.requireActual('react-native').View,
-    GestureDetector: jest.requireActual('react-native').View,
-    Gesture: { Pan: chain, Tap: chain, Race: chain },
-  };
-});
+let mockReader: boolean | null = true;
+jest.mock('../src/features/money/hooks', () => ({
+  ...jest.requireActual('../src/features/money/hooks'),
+  useFirstScreenReader: () => mockReader,
+}));
+jest.mock('react-native-gesture-handler', () => ({
+  GestureHandlerRootView: jest.requireActual('react-native').View,
+  GestureDetector: jest.requireActual('react-native').View,
+  Gesture: {},
+}));
 const mockParams: Record<string, string> = {};
 const mockRouter = { push: jest.fn(), replace: jest.fn() };
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => mockParams,
-  useRouter: () => mockRouter,
-}));
-let readerAnswer!: (value: boolean) => void;
-let readerChanged: ((value: boolean) => void) | undefined;
-const removed = jest.fn();
-jest.spyOn(AccessibilityInfo, 'isScreenReaderEnabled').mockImplementation(
-  () =>
-    new Promise((resolve) => {
-      readerAnswer = resolve;
-    }),
-);
-jest
-  .spyOn(AccessibilityInfo, 'addEventListener')
-  .mockImplementation((event, listener) => {
-    if (event === 'screenReaderChanged')
-      readerChanged = listener as (value: boolean) => void;
-    return { remove: removed };
+const mockNavigation = { setParams: jest.fn() };
+let mockOptions: Record<string, unknown> = {};
+jest.mock('expo-router', () => {
+  const React = jest.requireActual<typeof import('react')>('react');
+  const Native =
+    jest.requireActual<typeof import('react-native')>('react-native');
+  const Wrap = ({ children, ...props }: { children?: React.ReactNode }) =>
+    React.createElement(Native.View, props, children);
+  const Link = Object.assign(Wrap, {
+    Trigger: Wrap,
+    Preview: () => null,
+    Menu: Wrap,
+    MenuAction: Wrap,
   });
-async function render(element: React.ReactElement) {
+  return {
+    Link,
+    get router() {
+      return mockRouter;
+    },
+    useLocalSearchParams: () => mockParams,
+    useRouter: () => mockRouter,
+    useNavigation: () => mockNavigation,
+    useFocusEffect: () => undefined,
+    useSegments: () => [],
+    Stack: {
+      Screen: ({ options }: { options: Record<string, unknown> }) => {
+        mockOptions = options;
+        return null;
+      },
+    },
+  };
+});
+
+const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+async function render() {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(element);
+    renderer = TestRenderer.create(<MoneyScreen />);
   });
   return renderer;
 }
+const byTestID = <T,>(
+  r: TestRenderer.ReactTestRenderer,
+  type: React.ComponentType<T>,
+  id: string,
+) => r.root.findAllByType(type).find((x) => x.props.testID === id);
 beforeEach(() => {
   jest.clearAllMocks();
+  mockReader = true;
+  mockOptions = {};
   Object.keys(mockParams).forEach((key) => delete mockParams[key]);
   jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
     data: decode(pinned(path)),
@@ -112,42 +96,159 @@ beforeEach(() => {
     savedAt: 1,
   }));
 });
-test('VoiceOver defaults to the ranked list, including before its asynchronous setting is known', async () => {
-  const r = await render(<MoneyScreen />);
-  expect(r.root.findByType(SegmentedControl).props.value).toBe('list');
+
+test('VoiceOver opens on the List view; without it the map draws', async () => {
+  let r = await render();
+  expect(r.root.findByType(SegmentedPicker).props.value).toBe('list');
+  expect(
+    r.root
+      .findByType(SegmentedPicker)
+      .props.options.map((o: { label: string }) => o.label),
+  ).toEqual(['List', 'Map']);
   expect(NativeMoneyMap).not.toHaveBeenCalled();
-  await act(async () => readerAnswer(true));
-  expect(r.root.findByType(SegmentedControl).props.value).toBe('list');
-  // One source line for the map; no per-row "View original" in the list.
-  const sources = r.root.findAllByType(SourceLine);
-  expect(sources.map((x) => x.props.testID)).toEqual(['money-as-at']);
-  expect(sources[0]!.props.originals).toContainEqual(
+  await act(async () => r.unmount());
+  mockReader = false;
+  r = await render();
+  expect(r.root.findByType(SegmentedPicker).props.value).toBe('3d');
+  expect(NativeMoneyMap).toHaveBeenCalled();
+  await act(async () => r.unmount());
+});
+
+test('the List view: donors first with the cut stated, parties in the money order, then public money', async () => {
+  const r = await render();
+  const sections = r.root
+    .findAll((x) =>
+      ['money-donors', 'money-parties', 'money-public'].includes(
+        x.props.testID,
+      ),
+    )
+    .map((x) => x.props.testID);
+  expect([...new Set(sections)]).toEqual([
+    'money-donors',
+    'money-parties',
+    'money-public',
+  ]);
+  expect(byTestID(r, Text, 'money-donor-caption')!.props.children).toBe(
+    'The 250 largest donors since 1998–99, largest first',
+  );
+  const donors = r.root
+    .findAllByType(MoneyRow)
+    .filter((x) => /^money-donor-\d+$/.test(x.props.testID));
+  expect(donors).toHaveLength(20);
+  // No rank numbers; the detail says the years and how many parties.
+  expect(donors[0]!.props.name).not.toMatch(/^\d+\. /);
+  expect(donors[0]!.props.detail).toMatch(
+    /^\d{4}–\d{2} to \d{4}–\d{2} · \d+ part/,
+  );
+  expect(donors[0]!.props.href).toEqual(
+    expect.objectContaining({
+      pathname: '/money-record',
+      params: expect.objectContaining({
+        node: expect.stringMatching(/^donor:/),
+      }),
+    }),
+  );
+  // Private individuals are one footnote, never a row.
+  expect(byTestID(r, Text, 'money-individual-donors')!.props.children).toMatch(
+    /^[\d,]+ individual donors?, \$[\d.]+[mkbn]*, not named\.$/,
+  );
+  expect(donors.some((x) => /individual/i.test(x.props.name))).toBe(false);
+  // Parties: Labor, the Coalition, then "Other parties" alphabetically.
+  const parties = r.root
+    .findAllByType(LinkRow)
+    .filter((x) => /^money-party-\d+$/.test(x.props.testID))
+    .map((x) => x.props.title as string);
+  expect(parties[0]).toMatch(/Labor/);
+  const otherAt = r.root.findAll(
+    (x) => x.props.title === 'Other parties' && x.props.level === 3,
+  ).length;
+  expect(otherAt).toBeGreaterThan(0);
+  // Every party and both public-money hubs open their money record.
+  const targets = graph.nodes.filter(
+    (n) => n.kind === 'party' || n.kind === 'grantor',
+  );
+  const hrefs = [
+    ...r.root.findAllByType(LinkRow),
+    ...r.root.findAllByType(MoneyRow),
+  ]
+    .map((x) => x.props.href?.params?.node)
+    .filter(Boolean);
+  for (const node of targets) expect(hrefs).toContain(node.id);
+  // See all carries the window to the donors page.
+  const all = r.root.findAll(
+    (x) => x.props.action?.testID === 'money-donors-all',
+  )[0]!;
+  expect(all.props.action.href).toEqual(
+    expect.objectContaining({
+      pathname: '/money-donors',
+      params: expect.objectContaining({ jurisdiction: 'federal' }),
+    }),
+  );
+  const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  expect(all.props.action.accessibilityLabel).toBe(
+    `See all ${named.length} donors`,
+  );
+  const source = byTestID(r, SourceLine, 'money-list-source')!;
+  expect(source.props.originals).toContainEqual(
     expect.objectContaining({ url: 'https://transparency.aec.gov.au/' }),
   );
-  expect(r.root.findAllByType(ViewOriginal)).toHaveLength(0);
-  expect(r.root.findAllByType(InfoButton)).toHaveLength(0);
-  // A donor row says its parties in its own detail line.
-  const first = r.root
-    .findAllByType(LinkRow)
-    .find((x) => x.props.testID === 'money-donor-0')!;
-  expect(first.props.title).toMatch(/^1\. /);
-  expect(first.props.detail).toMatch(/^Disclosed donations · .+ · .+/);
   await act(async () => r.unmount());
-  expect(removed).toHaveBeenCalled();
 });
-test('a setting change switches to the list and filters preserve the held year totals', async () => {
-  const r = await render(<MoneyScreen />);
-  await act(async () => readerAnswer(false));
-  expect(r.root.findByType(SegmentedControl).props.value).toBe('3d');
-  await act(async () => readerChanged?.(true));
-  expect(r.root.findByType(SegmentedControl).props.value).toBe('list');
-  const button = (id: string) =>
-    r.root.findAllByType(Button).find((x) => x.props.testID === id)!;
+
+test('Filters open /filters/money and apply live through the params', async () => {
+  const r = await render();
+  const items = (
+    mockOptions.unstable_headerRightItems as () => {
+      label?: string;
+      onPress?: () => void;
+    }[]
+  )();
+  const filters = items.find((item) => item.label === 'Filters')!;
+  await act(async () => filters.onPress!());
+  const href = mockRouter.push.mock.calls.at(-1)![0];
+  expect(href).toEqual(
+    expect.objectContaining({
+      pathname: '/filters/[list]',
+      params: expect.objectContaining({ list: 'money' }),
+    }),
+  );
+  const owner = href.params.owner as string;
+  const store = filterStore('money', owner)!;
+  expect(store).toBeDefined();
+  await act(async () =>
+    store.set({ ...store.get(), from: 2024, to: 2024 } as never),
+  );
+  expect(mockNavigation.setParams).toHaveBeenLastCalledWith(
+    expect.objectContaining({ from: '2024', to: '2024' }),
+  );
+  await act(async () => r.unmount());
+});
+
+test('the jurisdiction pop-up writes the jurisdiction and clears the window', async () => {
+  const r = await render();
+  const popup = r.root.findByType(PopUpButton);
+  expect(popup.props.testID).toBe('money-jurisdiction');
+  await act(async () => popup.props.onChange('qld'));
+  expect(mockNavigation.setParams).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      jurisdiction: 'qld',
+      from: undefined,
+      to: undefined,
+    }),
+  );
+  await act(async () => r.unmount());
+});
+
+test('test hooks write the year and push a party record with the window', async () => {
+  Object.assign(mockParams, { from: '2024', to: '2024' });
+  const r = await render();
+  const button = (id: string) => byTestID(r, Button, id)!;
   await act(async () => button('money-test-year').props.onPress());
+  expect(mockNavigation.setParams).toHaveBeenCalled();
   await act(async () => button('money-test-focus').props.onPress());
   expect(mockRouter.push).toHaveBeenLastCalledWith(
     expect.objectContaining({
-      pathname: '/money-node',
+      pathname: '/money-record',
       params: expect.objectContaining({
         node: 'party:Labor',
         from: '2024',
@@ -157,88 +258,25 @@ test('a setting change switches to the list and filters preserve the held year t
   );
   await act(async () => r.unmount());
 });
-test('the native focus record shows the pinned selected-year figure, years and original source', async () => {
-  Object.assign(mockParams, {
-    node: 'party:Labor',
-    from: '2024',
-    to: '2024',
-    industry: 'unions',
-    layers: 'donations',
-  });
-  const r = await render(<MoneyNodeScreen />);
-  // One display figure, in the money accent, with its years and count.
-  const figures = r.root.findAllByType(BigFigure);
-  expect(figures).toHaveLength(1);
-  expect(figures[0]!.props.value).toBe('$69,010,542');
-  expect(figures[0]!.props.spoken).toBe('69,010,542 dollars');
-  expect(figures[0]!.props.accent).toBe('money');
-  expect(figures[0]!.props.detail).toBe('2024 · 3,929 receipts');
-  // One source line per block, opening the AEC original.
-  const source = r.root
-    .findAllByType(SourceLine)
-    .find((x) => x.props.testID === 'money-source')!;
-  expect(source.props.originals).toEqual([
-    expect.objectContaining({ url: 'https://transparency.aec.gov.au/' }),
-  ]);
-  expect(source.props.notes).toContain(
-    'The party total covers all industries in these return years. The relationships below follow the industry filter.',
+
+test('focus= pushes the party record once the graph loads', async () => {
+  Object.assign(mockParams, { focus: 'party:Labor' });
+  const r = await render();
+  expect(mockRouter.push).toHaveBeenCalledTimes(1);
+  expect(mockRouter.push).toHaveBeenCalledWith(
+    expect.objectContaining({
+      pathname: '/money-record',
+      params: expect.objectContaining({ node: 'party:Labor' }),
+    }),
   );
-  expect(r.root.findAllByType(ViewOriginal)).toHaveLength(0);
-  expect(r.root.findAllByType(InfoButton)).toHaveLength(0);
   await act(async () => r.unmount());
 });
 
-test('a public-money focus figure states the mapped-donor scope and contract coverage', async () => {
-  const raw = pinned('/graph/money.json') as {
-    nodes: { id: string; kind: string; flow?: string; count: number }[];
-    meta: { contracts_coverage: string };
-  };
-  const hub = raw.nodes.find(
-    (n) => n.kind === 'grantor' && n.flow === 'contracts',
-  )!;
-  Object.assign(mockParams, { node: hub.id });
-  const r = await render(<MoneyNodeScreen />);
-  expect(r.root.findAllByType(BigFigure)[0]!.props.label).toContain(
-    'held by donors on this map across',
+test('summary, caption and footnote helpers state the cut in plain words', () => {
+  const all = defaultMoneyFilters(graph);
+  expect(moneySummary(graph, all)).toMatch(/^Donations to parties/);
+  expect(donorCaption(graph, { ...all, from: 2024, to: 2024 })).toBe(
+    'Largest in 2024–25 among the 250 largest donors since 1998–99',
   );
-  const source = r.root
-    .findAllByType(SourceLine)
-    .find((x) => x.props.testID === 'money-source')!;
-  expect(source.props.notes).toContain(`${raw.meta.contracts_coverage}.`);
-  // The hub's source is the contracts register, not the returns.
-  expect(source.props.citation).toBe('AusTender');
-  expect(source.props.licence).toBeNull();
-  await act(async () => r.unmount());
-});
-
-test('a donor shows public money beside its donations, in plain figures', async () => {
-  const raw = pinned('/graph/money.json') as {
-    nodes: {
-      id: string;
-      kind: string;
-      grants?: unknown;
-      contracts?: unknown;
-    }[];
-  };
-  const donor = raw.nodes.find(
-    (n) => n.kind === 'donor' && n.grants && n.contracts,
-  )!;
-  Object.assign(mockParams, { node: donor.id });
-  const r = await render(<MoneyNodeScreen />);
-  // The donations figure is the one accented figure; public money is a list.
-  expect(r.root.findAllByType(BigFigure)).toHaveLength(1);
-  const items = r.root.findByType(KeyValueList).props.items as {
-    testID: string;
-  }[];
-  expect(items.map((x) => x.testID)).toEqual([
-    'money-focus-grants',
-    'money-focus-contracts',
-  ]);
-  const source = r.root
-    .findAllByType(SourceLine)
-    .find((x) => x.props.testID === 'money-public-source')!;
-  expect(source.props.originals.map((o: { label: string }) => o.label)).toEqual(
-    ['GrantConnect', 'AusTender'],
-  );
-  await act(async () => r.unmount());
+  expect(individualDonorsLine([])).toBeNull();
 });

@@ -10,8 +10,9 @@ import {
 import { decodeInterest, decodeDiscovery } from '../src/api/catalog-decoders';
 import { decodeAccess } from '../src/features/people/model';
 import MoneyScreen from '../src/features/money/MoneyScreen';
-import MoneyNodeScreen from '../src/features/money/MoneyNodeScreen';
+import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
+import { forgetScreenReader } from '../src/features/money/hooks';
 import {
   decodeMoneyGraph,
   moneyCatalogs,
@@ -76,12 +77,30 @@ jest.mock('react-native-gesture-handler', () => {
 });
 const mockParams: Record<string, string> = {};
 const mockRouter = { push: jest.fn(), replace: jest.fn() };
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => mockParams,
-  useRouter: () => mockRouter,
-  useSegments: () => [],
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+jest.mock('expo-router', () => {
+  const React = jest.requireActual<typeof import('react')>('react');
+  const Native =
+    jest.requireActual<typeof import('react-native')>('react-native');
+  const Wrap = ({ children, ...props }: { children?: React.ReactNode }) =>
+    React.createElement(Native.View, props, children);
+  return {
+    useLocalSearchParams: () => mockParams,
+    useRouter: () => mockRouter,
+    useNavigation: () => ({ setParams: jest.fn() }),
+    useSegments: () => [],
+    router: { push: jest.fn() },
+    Stack: { Screen: () => null },
+    Link: Object.assign(Wrap, {
+      Trigger: Wrap,
+      Preview: () => null,
+      Menu: Wrap,
+      MenuAction: Wrap,
+    }),
+  };
+});
+jest.mock('@shopify/react-native-skia', () => ({
+  Canvas: jest.requireActual('react-native').View,
+  Rect: jest.requireActual('react-native').View,
 }));
 jest.mock('../src/navigation/external', () => ({
   ...jest.requireActual('../src/navigation/external'),
@@ -205,6 +224,7 @@ let answerReader: (value: boolean) => void = () => undefined;
 const decoded = new Map<string, unknown>();
 beforeEach(() => {
   Object.keys(mockParams).forEach((key) => delete mockParams[key]);
+  forgetScreenReader();
   jest
     .mocked(useWindowDimensions)
     .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
@@ -239,25 +259,17 @@ describe.each(Object.keys(moneyCatalogs) as MoneyJurisdiction[])(
     test('the ranked list and the 3D map name no withheld donor and fold them into counted aggregates', async () => {
       mockParams.jurisdiction = jurisdiction;
       const r = await render(<MoneyScreen />);
-      const list = r.root.findByProps({ testID: 'money-screen' });
-      const rows = list.props.data as {
-        id: string;
-        label: string;
-        withheldCount?: number;
-      }[];
-      const aggregates = rows.filter((n) => n.withheldCount);
-      expect(aggregates.reduce((n, a) => n + a.withheldCount!, 0)).toBe(
-        withheldDonors[jurisdiction].length,
-      );
+      // The List view draws its rows in place; private individuals are
+      // one counted footnote, never a row.
       const texts = shownStrings(r.root);
-      for (const [index, item] of rows.entries()) {
-        const row = await render(list.props.renderItem({ item, index }));
-        texts.push(...shownStrings(row.root));
-        if (item.withheldCount)
-          expect(shownStrings(row.root).join(' ')).not.toMatch(/^\d+\. /);
-        act(() => row.unmount());
-      }
-      expect(texts.join('\n')).toMatch(/Individual donors \(\d+\)/);
+      const footnote = r.root.findAll(
+        (n) => n.props.testID === 'money-individual-donors',
+      )[0];
+      expect(String(footnote?.props.children)).toMatch(
+        new RegExp(
+          `^${withheldDonors[jurisdiction].length.toLocaleString('en-AU')} individual donors?, `,
+        ),
+      );
       expect(leaks(texts, moneyNames)).toBe(0);
       // The 3D map: every prop handed to the native scene.
       await act(async () => answerReader(false));
@@ -284,7 +296,7 @@ describe.each(Object.keys(moneyCatalogs) as MoneyJurisdiction[])(
       expect(targets.some((n) => n.withheld)).toBe(true);
       for (const node of targets) {
         Object.assign(mockParams, { jurisdiction, node: node.id });
-        const r = await render(<MoneyNodeScreen />);
+        const r = await render(<MoneyRecordScreen />);
         const texts = shownStrings(r.root);
         expect([node.id, leaks(texts, moneyNames)]).toEqual([node.id, 0]);
         if (node.withheld) {
@@ -300,7 +312,7 @@ describe.each(Object.keys(moneyCatalogs) as MoneyJurisdiction[])(
     test('a deep link to a withheld donor resolves to the neutral record, with no name', async () => {
       for (const donor of withheldDonors[jurisdiction]) {
         Object.assign(mockParams, { jurisdiction, node: donor.id });
-        const r = await render(<MoneyNodeScreen />);
+        const r = await render(<MoneyRecordScreen />);
         const texts = shownStrings(r.root);
         expect([donor.id.length, texts.includes(donorNotNamed)]).toEqual([
           donor.id.length,
