@@ -64,18 +64,6 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
-  Link: Object.assign(
-    function Link({ children }: { children: unknown }) {
-      return children;
-    },
-    {
-      Trigger: function Trigger({ children }: { children: unknown }) {
-        return children;
-      },
-      Preview: () => null,
-      Menu: () => null,
-    },
-  ),
   useFocusEffect: (effect: () => void | (() => void)) => {
     jest.requireActual<typeof import('react')>('react').useEffect(() => {
       mockFocus.effect = effect;
