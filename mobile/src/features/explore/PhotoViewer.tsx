@@ -20,7 +20,7 @@ import {
 } from '../../design/accessibility';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/primitives';
-import { minimumTarget, rhythm } from '../../design/tokens';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { useRead } from '../reports/parts';
 import { explore } from './runtime';
@@ -28,8 +28,6 @@ import { PHOTO_BLACK, Picture } from './Picture';
 import { openPhotoSource, photoIndex, pictureKey } from './YearGallery';
 import type { YearPicture } from './pictures';
 
-const white = '#FFFFFF',
-  whiteSoft = 'rgba(255,255,255,0.78)';
 const close = () => router.back();
 /** "2 of 6"; "2/6" at accessibility sizes, before it would wrap. */
 export const pageTitle = (page: number, count: number, large = false) =>
@@ -198,7 +196,7 @@ export default function PhotoViewer() {
     type: 'button',
     label: 'Done',
     variant: 'plain',
-    tintColor: white,
+    tintColor: colors.onBand,
     accessibilityLabel: 'Done',
     onPress: close,
   };
@@ -208,7 +206,7 @@ export default function PhotoViewer() {
         label: 'More',
         accessibilityLabel: 'More for this photograph',
         icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
-        tintColor: white,
+        tintColor: colors.onBand,
         menu: {
           items: [
             {
@@ -236,8 +234,8 @@ export default function PhotoViewer() {
           title: current ? pageTitle(shown, photos.length, large) : '',
           headerTransparent: true,
           headerStyle: { backgroundColor: 'rgba(0,0,0,0.4)' },
-          headerTintColor: white,
-          headerTitleStyle: { color: white },
+          headerTintColor: colors.onBand,
+          headerTitleStyle: { color: colors.onBand },
           headerBackVisible: false,
           unstable_headerLeftItems: () => [doneItem],
           unstable_headerRightItems: () => (menuItem ? [menuItem] : []),
@@ -249,7 +247,9 @@ export default function PhotoViewer() {
                     onPress={close}
                     style={styles.androidDone}
                   >
-                    <NativeText style={{ color: white }}>Done</NativeText>
+                    <NativeText style={{ color: colors.onBand }}>
+                      Done
+                    </NativeText>
                   </Pressable>
                 ),
               }
@@ -308,7 +308,7 @@ export default function PhotoViewer() {
             />
           ) : null}
           <ScrollView contentContainerStyle={styles.panelContent}>
-            <Text wordSafe variant="body" style={{ color: white }}>
+            <Text wordSafe variant="body" style={{ color: colors.onBand }}>
               {current.caption}
             </Text>
             <Pressable
@@ -319,11 +319,18 @@ export default function PhotoViewer() {
               style={styles.credit}
               testID={`photo-viewer-credit-${pictureKey(current)}`}
             >
-              <Text wordSafe variant="footnote" style={{ color: whiteSoft }}>
+              <Text
+                wordSafe
+                variant="footnote"
+                style={{ color: colors.onBandSoft }}
+              >
                 {`Photo: ${current.author} · `}
                 <Text
                   variant="footnote"
-                  style={{ color: white, textDecorationLine: 'underline' }}
+                  style={{
+                    color: colors.onBand,
+                    textDecorationLine: 'underline',
+                  }}
                 >
                   {current.licence}
                 </Text>
