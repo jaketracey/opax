@@ -674,7 +674,6 @@ function RecordSourceLine({
   );
 }
 
-/** A grant or contract record names its recipient or supplier's money page. */
 /**
  * The grant recipient or contract supplier, when the record names an
  * organisation with an id. A private individual is never named or linked
