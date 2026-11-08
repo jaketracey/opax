@@ -37,7 +37,6 @@ import {
   Text,
   Button,
   LinkRow,
-  OpaxWebLink,
   SourceLine,
 } from '../src/design/primitives';
 import {
