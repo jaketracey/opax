@@ -1,7 +1,7 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
-import { AccessibilityInfo, ScrollView } from 'react-native';
+import { AccessibilityInfo, ScrollView, StyleSheet } from 'react-native';
 import AskScreen from '../src/features/ask/AskScreen';
 import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
@@ -10,7 +10,8 @@ import { reconcileChats, syncSubmittedChat } from '../src/features/ask/sync';
 import { chatsSnapshot } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
-import { rhythm } from '../src/design/tokens';
+import { colors, rhythm } from '../src/design/tokens';
+import { designFlags } from '../src/design/flags';
 import { conversationsRoute } from '../src/navigation/routes/ask';
 import { useSeat } from '../src/features/your-mp/useSeat';
 
@@ -233,6 +234,16 @@ test('a cold launch opens idle, with the last conversation first under Conversat
   expect(client.askPost).not.toHaveBeenCalled();
 });
 
+test('Ask stands on the grouped ground, so its inset groups read as raised', async () => {
+  expect(designFlags.groupedSurfaces).toBe(true);
+  await mount();
+  const scroll = view!.root
+    .findAllByType(ScrollView)
+    .find((n) => n.props.testID === 'ask-screen')!;
+  expect(StyleSheet.flatten(scroll.props.style).backgroundColor).toBe(
+    colors.sunken,
+  );
+});
 test('Conversations hides with none saved; the bar keeps Conversations, New question and Account', async () => {
   await mount();
   expect(byId('ask-conversations')).toEqual([]);

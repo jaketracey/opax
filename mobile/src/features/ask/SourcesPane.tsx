@@ -23,6 +23,8 @@ import { PaneBar, PaneHost, type SplitPane } from '../../design/split';
 import { Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import { useListKeys } from '../../design/list-keys';
+import { SurfaceContext } from '../../design/row-padding';
+import { askGround } from './ground';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { answerBlocks } from './answer-markdown';
@@ -205,6 +207,7 @@ function SourcesPane({
   const large = useAccessibilitySize();
   const paneWidth = splitPaneWidth(width, large);
   const top = stack.at(-1);
+  const ground = askGround();
   const pane: SplitPane<RecordEntry> = {
     push: (entry) => setStack((current) => [...current, entry]),
     back: () => {
@@ -218,51 +221,59 @@ function SourcesPane({
   };
   const below = stack.length > 1 ? stack.at(-2)! : null;
   return (
-    <View style={[styles.pane, { width: paneWidth }]} testID="ask-sources-pane">
-      <LayoutRegion style={styles.grow}>
-        {top ? (
-          <PaneHost
-            pane={pane}
-            bar={
-              <PaneBar
-                back={below ? entryLabel(below) : 'Sources'}
-                onBack={() => pane.back()}
-                actions={<RecordShare entry={top} />}
-              />
-            }
-          >
-            <View
-              key={`${top.kind}:${top.key}:${stack.length}`}
-              style={styles.grow}
+    <SurfaceContext.Provider value={ground}>
+      <View
+        style={[
+          styles.pane,
+          { width: paneWidth, backgroundColor: colors[ground] },
+        ]}
+        testID="ask-sources-pane"
+      >
+        <LayoutRegion style={styles.grow}>
+          {top ? (
+            <PaneHost
+              pane={pane}
+              bar={
+                <PaneBar
+                  back={below ? entryLabel(below) : 'Sources'}
+                  onBack={() => pane.back()}
+                  actions={<RecordShare entry={top} />}
+                />
+              }
             >
-              <RecordDetail entry={top} />
-            </View>
-          </PaneHost>
-        ) : answer ? (
-          <SourceList
-            answer={answer}
-            marked={marked}
-            move={move}
-            open={open}
-            profiles={profiles}
-          />
-        ) : (
-          <ScrollView
-            style={styles.grow}
-            contentContainerStyle={styles.content}
-            contentInsetAdjustmentBehavior="automatic"
-            testID="ask-pane-idle-list"
-          >
-            <AskIdle
-              onAsk={(q) => onAsk?.(q)}
-              offline={false}
-              readFailed={readFailed}
-              testPrefix="ask-pane"
+              <View
+                key={`${top.kind}:${top.key}:${stack.length}`}
+                style={styles.grow}
+              >
+                <RecordDetail entry={top} />
+              </View>
+            </PaneHost>
+          ) : answer ? (
+            <SourceList
+              answer={answer}
+              marked={marked}
+              move={move}
+              open={open}
+              profiles={profiles}
             />
-          </ScrollView>
-        )}
-      </LayoutRegion>
-    </View>
+          ) : (
+            <ScrollView
+              style={styles.grow}
+              contentContainerStyle={styles.content}
+              contentInsetAdjustmentBehavior="automatic"
+              testID="ask-pane-idle-list"
+            >
+              <AskIdle
+                onAsk={(q) => onAsk?.(q)}
+                offline={false}
+                readFailed={readFailed}
+                testPrefix="ask-pane"
+              />
+            </ScrollView>
+          )}
+        </LayoutRegion>
+      </View>
+    </SurfaceContext.Provider>
   );
 }
 
@@ -384,7 +395,6 @@ const styles = StyleSheet.create({
     height: '100%',
     borderLeftWidth: hairline,
     borderLeftColor: colors.dividerDefault,
-    backgroundColor: colors.paper,
   },
   grow: { flex: 1 },
   content: {

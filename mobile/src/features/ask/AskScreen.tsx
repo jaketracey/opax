@@ -32,6 +32,7 @@ import {
   useMeasuredRegion,
 } from '../../design/adaptive';
 import { designFlags } from '../../design/flags';
+import { SurfaceContext } from '../../design/row-padding';
 import { useFocusRequest } from '../../design/keyboard';
 import { useScreenColumn } from '../../design/layout';
 import { colors, hairline, layout, rhythm } from '../../design/tokens';
@@ -50,6 +51,7 @@ import { rosterProfiles, type AskPerson } from './people';
 import { arriveInAsk, askQuestion, askSession, type AskScope } from './session';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
+import { askGround } from './ground';
 import { stopCopy } from './turn-copy';
 
 const topicNames = Object.values(topics);
@@ -63,6 +65,8 @@ const announce = (text: string) =>
  * idle; within a session it keeps what was on screen.
  */
 export default function AskScreen() {
+  const ground = askGround();
+  const groundStyle = { backgroundColor: colors[ground] };
   const s = useSyncExternalStore(
     askSession.subscribe,
     askSession.snapshot,
@@ -254,7 +258,7 @@ export default function AskScreen() {
     <ScrollView
       ref={scroll}
       testID="ask-screen"
-      style={styles.fill}
+      style={[styles.fill, groundStyle]}
       contentInsetAdjustmentBehavior="automatic"
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={false}
@@ -304,55 +308,57 @@ export default function AskScreen() {
     </ScrollView>
   );
   return (
-    <View ref={root} style={styles.fill} collapsable={false}>
-      <Stack.Screen
-        options={{
-          ...askHeaderItems({
-            canStartNew: !s.busy && !idle,
-            historyEnabled: saved.chats.length > 0,
-            signedIn,
-            onNew: newConversation,
-            onHistory: () => router.push(conversationsRoute),
-          }),
-          // Two panes: an inline title (a large title over two scroll views
-          // collapses with whichever scrolls first).
-          ...(isPad ? { headerLargeTitleEnabled: !docked } : null),
-        }}
-      />
-      <AskRevealContext.Provider value={revealClaim}>
-        {isPad ? (
-          <SidebarSafe style={styles.fill}>
-            <View
-              style={[styles.fill, docked ? styles.split : null]}
-              onLayout={onRoom}
-            >
-              <RegionProvider value={room}>
-                {docked ? (
-                  <>
-                    <PadColumn dock={dock}>
-                      <AskPaneProvider value={sources.context}>
-                        {content}
-                      </AskPaneProvider>
-                    </PadColumn>
-                    {sources.pane}
-                  </>
-                ) : (
-                  <>
-                    {content}
-                    <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
-                  </>
-                )}
-              </RegionProvider>
-            </View>
-          </SidebarSafe>
-        ) : (
-          <>
-            {content}
-            <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
-          </>
-        )}
-      </AskRevealContext.Provider>
-    </View>
+    <SurfaceContext.Provider value={ground}>
+      <View ref={root} style={[styles.fill, groundStyle]} collapsable={false}>
+        <Stack.Screen
+          options={{
+            ...askHeaderItems({
+              canStartNew: !s.busy && !idle,
+              historyEnabled: saved.chats.length > 0,
+              signedIn,
+              onNew: newConversation,
+              onHistory: () => router.push(conversationsRoute),
+            }),
+            // Two panes: an inline title (a large title over two scroll views
+            // collapses with whichever scrolls first).
+            ...(isPad ? { headerLargeTitleEnabled: !docked } : null),
+          }}
+        />
+        <AskRevealContext.Provider value={revealClaim}>
+          {isPad ? (
+            <SidebarSafe style={[styles.fill, groundStyle]}>
+              <View
+                style={[styles.fill, groundStyle, docked ? styles.split : null]}
+                onLayout={onRoom}
+              >
+                <RegionProvider value={room}>
+                  {docked ? (
+                    <>
+                      <PadColumn dock={dock}>
+                        <AskPaneProvider value={sources.context}>
+                          {content}
+                        </AskPaneProvider>
+                      </PadColumn>
+                      {sources.pane}
+                    </>
+                  ) : (
+                    <>
+                      {content}
+                      <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
+                    </>
+                  )}
+                </RegionProvider>
+              </View>
+            </SidebarSafe>
+          ) : (
+            <>
+              {content}
+              <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
+            </>
+          )}
+        </AskRevealContext.Provider>
+      </View>
+    </SurfaceContext.Provider>
   );
 }
 
@@ -390,10 +396,11 @@ function PadColumn({
 }) {
   const ref = useRef<View>(null);
   const lift = useKeyboardOverlap(ref);
+  const ground = { backgroundColor: colors[askGround()] };
   return (
-    <View ref={ref} style={[styles.fill, { paddingBottom: lift }]}>
+    <View ref={ref} style={[styles.fill, ground, { paddingBottom: lift }]}>
       {children}
-      <View style={styles.padDock}>
+      <View style={[styles.padDock, ground]}>
         <View
           style={[
             styles.padDockColumn,
@@ -436,7 +443,7 @@ function useKeyboardOverlap(ref: RefObject<View | null>) {
   return overlap;
 }
 const styles = StyleSheet.create({
-  fill: { flex: 1, backgroundColor: colors.paper },
+  fill: { flex: 1 },
   content: { paddingTop: rhythm.block, gap: rhythm.section },
   split: { flexDirection: 'row' },
   phoneDock: { position: 'absolute', left: 0, right: 0, bottom: 0 },
@@ -447,7 +454,6 @@ const styles = StyleSheet.create({
   padDock: {
     borderTopWidth: hairline,
     borderTopColor: colors.dividerDefault,
-    backgroundColor: colors.paper,
     paddingHorizontal: layout.screenMargin,
     paddingTop: rhythm.tight,
     paddingBottom: rhythm.heading,
