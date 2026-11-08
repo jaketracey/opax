@@ -194,11 +194,6 @@ export default function About() {
       <Section title="Read the record">
         <RowList>
           <LinkRow
-            title="Reports"
-            onPress={() => openRecord('/reports', 'Reports')}
-            testID="about-reports"
-          />
-          <LinkRow
             title="Topics A–Z"
             onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
             testID="about-topics"

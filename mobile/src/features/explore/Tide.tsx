@@ -97,7 +97,7 @@ export default function Tide() {
             return (
               <Group>
                 <Text variant="fine" wordSafe>
-                  Shares of labelled speeches, not the whole corpus
+                  Shares of labelled speeches, not every speech
                 </Text>
                 <PadGrid>
                   {slugs.map((slug) => (

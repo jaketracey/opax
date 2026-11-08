@@ -1,0 +1,64 @@
+appId: au.com.opax.app
+name: 49 Time machine and native debate matrix
+---
+- launchApp:
+    clearState: true
+    permissions: {}
+- openLink: opax://explore/tm
+- tapOn:
+    id: tm-open
+- scrollUntilVisible:
+    element:
+      id: tm-selected-year
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- assertVisible:
+    id: tm-selected-year
+    text: '2025'
+- scrollUntilVisible:
+    element:
+      id: explore-machine-pill
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/49-time-machine
+- tapOn:
+    id: explore-machine-pill
+- assertVisible:
+    id: explore-machine-pill-sheet
+- takeScreenshot: ${EVIDENCE}/49-machine-note
+- tapOn: Done
+- scrollUntilVisible:
+    element:
+      id: tm-photos
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: tm-photos
+- scrollUntilVisible:
+    element:
+      id: tm-photo-2025-cooper-polling-place-loaded
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/49-time-machine-photo-loaded
+- openLink: opax://explore/matrix
+- scrollUntilVisible:
+    element:
+      id: matrix-cell-0-1
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/49-matrix
+- tapOn:
+    id: matrix-cell-0-1
+- assertVisible:
+    id: topic-screen
+- takeScreenshot: ${EVIDENCE}/49-native-topic

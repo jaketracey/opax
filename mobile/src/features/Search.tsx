@@ -70,7 +70,6 @@ import {
 } from './split/entry';
 import { RecordDetail, RecordShare } from './split/RecordDetail';
 import { billStatus } from '../design/parliament';
-import { updatedText } from '../design/source';
 import { RecordRow } from './RecordRow';
 import { Excerpt } from './search/Excerpt';
 import { ResultRow } from './search/ResultRow';
@@ -324,12 +323,7 @@ function SearchScreen({
   const showSuggestions = query.trim().length >= 2 && !submitted;
   const richer =
     sources && extraSources
-      ? richerSuggestions(
-          query,
-          sources.roster,
-          extraSources.manifest.data,
-          extraSources.reports.data,
-        )
+      ? richerSuggestions(query, sources.roster, extraSources.manifest.data)
       : null;
   const sourcesStale =
     sources && Object.values(sources.provenance).some((block) => block.stale);
@@ -339,6 +333,10 @@ function SearchScreen({
       ?.staleReason;
   const noSuggestions =
     showSuggestions &&
+    !refreshing &&
+    !sourceError &&
+    !extraError &&
+    extraSources &&
     suggestions &&
     groupSuggestions(suggestions).every((group) => group.rows.length === 0) &&
     (!richer || Object.values(richer).every((rows) => !rows.length));
@@ -357,7 +355,7 @@ function SearchScreen({
         savedAt={block.stale ? block.savedAt : null}
         state={block.partial ? 'partial' : saved.state}
         notes={[
-          block.partial ? 'Some rows in this export could not be read.' : null,
+          block.partial ? 'Some records could not be read.' : null,
           saved.note,
         ]}
       />
@@ -470,6 +468,8 @@ function SearchScreen({
           {!showSuggestions ||
           sourceError ||
           !sources ||
+          !extraSources ||
+          extraError ||
           sourcesStale ||
           noSuggestions ? (
             <Section
@@ -492,7 +492,8 @@ function SearchScreen({
                   needs none of them, so no placeholder stands in for them
                   (TestFlight build 32: rows that "disappear without loading
                   anything"). */}
-              {showSuggestions && !sources && !sourceError ? (
+              {showSuggestions &&
+              ((!sources && !sourceError) || (!extraSources && !extraError)) ? (
                 <LoadingState
                   label="Loading suggestions"
                   testID="search-suggestions-loading"
@@ -712,60 +713,14 @@ function SearchScreen({
                   <SourceLine asOf={null} citation="OPAX topic taxonomy" />
                 </Section>
               ) : null}
-              {richer.reports.length ? (
-                <Section
-                  title="Reports"
-                  accent="leads"
-                  testID="search-suggestions-reports"
-                >
-                  <RowList>
-                    {richer.reports.map((r) =>
-                      cursorRow(
-                        `report:${r.slug}`,
-                        null,
-                        () =>
-                          void open(() =>
-                            openSearchPath(`/reports/${r.slug}`, r.title),
-                          ),
-                        (state, onPress) => (
-                          <RecordRow
-                            key={r.slug}
-                            {...state}
-                            title={r.title}
-                            detail={[r.blurb, updatedText(r.updated)]
-                              .filter(Boolean)
-                              .join('\n')}
-                            testID={`search-suggestion-report-${r.slug}`}
-                            onPress={onPress}
-                          />
-                        ),
-                      ),
-                    )}
-                  </RowList>
-                  <SourceLine
-                    asOf={
-                      richer.reports
-                        .map((r) => r.updated)
-                        .sort()
-                        .at(-1) ?? null
-                    }
-                    citation="OPAX reports index"
-                  />
-                </Section>
-              ) : null}
-              {extraSources?.manifest.stale || extraSources?.reports.stale ? (
-                <SavedCopyNotice
-                  reason={
-                    extraSources.manifest.staleReason ??
-                    extraSources.reports.staleReason
-                  }
-                />
+              {extraSources?.manifest.stale ? (
+                <SavedCopyNotice reason={extraSources.manifest.staleReason} />
               ) : null}
             </>
           ) : null}
           {showSuggestions && extraError ? (
             <ErrorState
-              message="Party, topic and report suggestions are temporarily unavailable."
+              message="Party and topic suggestions are temporarily unavailable."
               onRetry={() => void loadSources(true)}
             />
           ) : null}
@@ -912,9 +867,7 @@ function SearchScreen({
                     : [],
                 )}
                 notes={[
-                  result.partial
-                    ? 'Some rows in this export could not be read.'
-                    : null,
+                  result.partial ? 'Some records could not be read.' : null,
                   savedCopy(result.stale, result.staleReason).note,
                   ...result.data.warnings,
                   result.data.coverage,

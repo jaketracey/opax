@@ -77,7 +77,6 @@ const fragmentViews = new Map<string, (rest: string[]) => boolean>([
   ['bills', anyRest],
   ['declared', anyRest],
   ['doc', (rest) => rest.length >= 1],
-  ['reports', anyRest],
   ['money', anyRest],
   ['discover', anyRest],
   ['connections', anyRest],
@@ -222,7 +221,10 @@ export function canonicalUrl(path: string, anchor?: string): string {
   )
     throw new Error('Canonical paths have no dot segments');
   const base = new URL(webOrigin);
-  if (/^\/explore\?game=(quiz|ballot|tm|tide|matrix|wd)$/.test(path) && anchor === undefined)
+  if (
+    /^\/explore\?game=(quiz|tm|tide|matrix|wd)$/.test(path) &&
+    anchor === undefined
+  )
     return new URL(path, base).toString();
   // This Search view now has a native draft screen. Preserve its reviewed
   // filters in shares, while sourceUrl still refuses opening paid web Search.
@@ -247,12 +249,21 @@ export function canonicalUrl(path: string, anchor?: string): string {
     const params = new URLSearchParams(path.split('?')[1]?.split('#')[0]);
     const asof = params.get('asof');
     if (params.has('asof')) {
-      if (params.getAll('asof').length !== 1 || !asof || !/^\d{4}-\d{2}-\d{2}$/.test(asof) || !Number.isFinite(Date.parse(asof)) || new Date(asof).toISOString().slice(0, 10) !== asof)
+      if (
+        params.getAll('asof').length !== 1 ||
+        !asof ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(asof) ||
+        !Number.isFinite(Date.parse(asof)) ||
+        new Date(asof).toISOString().slice(0, 10) !== asof
+      )
         throw new Error('Representation dates must be valid calendar dates');
       url.searchParams.set('asof', asof);
     }
   }
-  if (pathname === '/bills' && path.split('?')[1]?.split('#')[0] === 'view=divisions') {
+  if (
+    pathname === '/bills' &&
+    path.split('?')[1]?.split('#')[0] === 'view=divisions'
+  ) {
     url.search = '?view=divisions';
   }
   if (pathname === '/community') {
@@ -366,12 +377,22 @@ export async function openOnWeb(path: string, label: string): Promise<void> {
 /** Record links from Bill, Talk and other lanes converge on the same reader. */
 function openNativeRecord(address: string): boolean {
   const url = new URL(address);
-  const canonicalHost = url.hostname === 'opax.com.au' || url.hostname === new URL(webOrigin).hostname;
+  const canonicalHost =
+    url.hostname === 'opax.com.au' ||
+    url.hostname === new URL(webOrigin).hostname;
   if (!canonicalHost) return false;
-  const path = url.hash.startsWith('#/doc/') ? url.hash : `${url.pathname}${url.search}${url.hash}`;
+  const path = url.hash.startsWith('#/doc/')
+    ? url.hash
+    : `${url.pathname}${url.search}${url.hash}`;
   const route = fromWebPath(path);
   // Only these record routes change the external fallback in this lane.
-  if (!route || !['/doc/[slug]', '/bill-text/[key]', '/recent-records'].includes(route.pathname)) return false;
+  if (
+    !route ||
+    !['/doc/[slug]', '/bill-text/[key]', '/recent-records'].includes(
+      route.pathname,
+    )
+  )
+    return false;
   router.push(route);
   return true;
 }

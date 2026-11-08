@@ -4,14 +4,11 @@ import {
   arcPath,
   decodeIndustryMoney,
   decodeMatrix,
-  decodeReport,
-  decodeReportIndex,
   decodeSpeeches,
   decodeStats,
   decodeTide,
   decodeTopic,
   decodeTopics,
-  reportSlugs,
   topicNames,
   type SpeechFilters,
 } from './model';
@@ -44,12 +41,6 @@ export class ReportsRepository {
     });
     return request;
   }
-  index = () => this.read('/reports/index.json', decodeReportIndex);
-  report = (slug: string) => {
-    if (!reportSlugs.includes(slug as (typeof reportSlugs)[number]))
-      return Promise.reject(new Error('Unknown report'));
-    return this.read(`/reports/${slug}.json`, decodeReport);
-  };
   corpus = () => this.read('/corpus.json', decodeCorpus);
   money = () => this.read('/graph/money.json', decodeIndustryMoney);
   topics = () => this.read('/api/topics', decodeTopics, true);

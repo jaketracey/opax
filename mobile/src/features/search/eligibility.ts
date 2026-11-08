@@ -37,7 +37,6 @@ export function eligibleRecord(row: SearchRecord, roster: Roster) {
   if (row.kind === 'party') return !!row.href?.startsWith('/subject/party/');
   if (row.kind === 'agency') return !!row.href?.startsWith('/subject/agency/');
   if (row.kind === 'bill') return !!row.href?.match(/^\/bill\/[a-z0-9-]+$/);
-  if (row.kind === 'report') return !!row.href?.startsWith('/reports/');
   if (row.href && !/^\/(?:doc|bill)\//.test(row.href)) return false;
   if (
     [

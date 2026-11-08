@@ -7,7 +7,7 @@ export function YearPictures({ year }: { year: number }) {
   return (
     <ReadState
       read={read}
-      citation="OPAX year photograph manifest"
+      citation="OPAX year photographs"
       testID="tm-photo-manifest"
     >
       {(manifest) => {

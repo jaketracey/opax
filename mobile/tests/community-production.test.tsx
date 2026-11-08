@@ -157,12 +157,12 @@ test('Today has no Community tile; every other way in stays', () => {
     renderer = TestRenderer.create(<ExploreGrid />);
   });
   expect(ids(renderer)).not.toContain('today-community');
+  expect(ids(renderer)).not.toContain('today-reports');
   expect(words(renderer)).not.toContain('Community');
   for (const id of [
     'today-leads-open',
     'today-money-map',
     'today-public-money',
-    'today-reports',
     'today-explore-open',
     'today-records-open',
   ])

@@ -92,7 +92,7 @@
           "explanation": "Gambling appears in 3,335, making Immigration the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -188,7 +188,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -206,7 +206,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -267,7 +267,7 @@
           "explanation": "Sino Iron Pty Ltd & Korean Steel Pty Ltd disclosed $262 million and BMA Coal Pty Ltd disclosed $33.6 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -298,7 +298,7 @@
           "explanation": "First Nations appears in 16,923, making Immigration the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -498,7 +498,7 @@
           "explanation": "Jenny Macklin appears 189 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -554,7 +554,7 @@
           "explanation": "Climate & Energy appears in 53,156, making First Nations the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -595,7 +595,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -791,7 +791,7 @@
           "explanation": "Media Ownership appears in 19,456, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -849,7 +849,7 @@
           "explanation": "The Star Entertainment Group Limited disclosed $1.3 million and Crown Resorts Limited disclosed $2 million.",
           "source": "AEC disclosures via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -867,7 +867,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         }
@@ -894,7 +894,7 @@
           "explanation": "Anthony Albanese appears 596 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -925,7 +925,7 @@
           "explanation": "Climate & Energy appears in 53,156, making Gambling the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -987,7 +987,7 @@
           "explanation": "BHP Group Limited disclosed $13.7 million and Sino Iron Pty Ltd & Korean Steel Pty Ltd disclosed $262 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -1005,7 +1005,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -1023,7 +1023,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -1106,7 +1106,7 @@
           "explanation": "Media Ownership appears in 19,456, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -1244,7 +1244,7 @@
           "explanation": "Queensland Nickel Pty Ltd disclosed $43.3 million and BHP Group Limited disclosed $13.7 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -1262,7 +1262,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         }
@@ -1327,7 +1327,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -1434,7 +1434,7 @@
           "explanation": "Immigration appears in 24,028, making Gambling the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -1452,7 +1452,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         }
@@ -1527,7 +1527,7 @@
           "explanation": "Jenny Macklin appears 189 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -1554,7 +1554,7 @@
           "explanation": "Sino Iron Pty Ltd & Korean Steel Pty Ltd disclosed $262 million and BMA Coal Pty Ltd disclosed $33.6 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -1572,7 +1572,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -1665,7 +1665,7 @@
           "explanation": "Media Ownership appears in 19,456, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         }
@@ -1726,7 +1726,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -1839,7 +1839,7 @@
           "explanation": "Peter Dutton appears 541 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -1959,7 +1959,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -1987,7 +1987,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -2072,7 +2072,7 @@
           "explanation": "Climate & Energy appears in 53,156, making Housing the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         }
@@ -2092,7 +2092,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -2203,7 +2203,7 @@
           "explanation": "Scott Morrison appears 728 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -2234,7 +2234,7 @@
           "explanation": "Climate & Energy appears in 53,156, making First Nations the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -2407,7 +2407,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -2459,7 +2459,7 @@
           "explanation": "Village Roadshow Pty Ltd disclosed $4.1 million and Village Roadshow Ltd disclosed $1.9 million.",
           "source": "AEC disclosures via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -2490,7 +2490,7 @@
           "explanation": "Climate & Energy appears in 53,156, making Housing the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         }
@@ -2653,7 +2653,7 @@
           "explanation": "Queensland Nickel Pty Ltd disclosed $43.3 million and BHP Group Limited disclosed $13.7 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -2684,7 +2684,7 @@
           "explanation": "First Nations appears in 16,923, making Immigration the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -2702,7 +2702,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         }
@@ -2807,7 +2807,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -2832,7 +2832,7 @@
           "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -2860,7 +2860,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -2896,7 +2896,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         }
@@ -3011,7 +3011,7 @@
           "explanation": "Crown Resorts Limited disclosed $2 million and The Star Entertainment Group Limited disclosed $1.3 million.",
           "source": "AEC disclosures via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -3052,7 +3052,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -3070,7 +3070,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -3095,7 +3095,7 @@
           "explanation": "Tony Abbott appears 562 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         }
@@ -3115,7 +3115,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -3250,7 +3250,7 @@
           "explanation": "Scott Morrison appears 728 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -3407,7 +3407,7 @@
           "explanation": "Mt Thorley Warkworth disclosed $12.6 million and BHP Group Limited disclosed $13.7 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -3676,7 +3676,7 @@
           "explanation": "ISPT Pty Ltd ATF Superannuation Property Trust 1 disclosed $14.5 million and Pratt Holdings disclosed $8.8 million.",
           "source": "AEC disclosures via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -3789,7 +3789,7 @@
           "explanation": "BMA Coal Pty Ltd disclosed $33.6 million and BHP Group Limited disclosed $13.7 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -4226,7 +4226,7 @@
           "explanation": "Savills disclosed $9.4 million and ISPT Pty Ltd ATF Superannuation Property Trust 1 disclosed $14.5 million.",
           "source": "AEC disclosures via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -4511,7 +4511,7 @@
           "explanation": "Pratt Holdings Pty Ltd disclosed $23.1 million and Pratt Holdings disclosed $8.8 million.",
           "source": "AEC disclosures via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -4675,7 +4675,7 @@
           "explanation": "Queensland Nickel Pty Ltd disclosed $43.3 million and BMA Coal Pty Ltd disclosed $33.6 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -4910,7 +4910,7 @@
           "explanation": "Savills disclosed $9.4 million and Pratt Holdings disclosed $8.8 million.",
           "source": "AEC disclosures via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -5128,7 +5128,7 @@
           "explanation": "Registered Clubs Association of NSW (t/as ClubsNSW) disclosed $3.7 million and The Star Entertainment Group Limited disclosed $1.3 million.",
           "source": "AEC disclosures via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -5323,7 +5323,7 @@
           "explanation": "BMA Coal Pty Ltd disclosed $33.6 million and Mt Thorley Warkworth disclosed $12.6 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -5470,7 +5470,7 @@
           "explanation": "Pratt Holdings Pty Ltd disclosed $23.1 million and Pratt Holdings disclosed $8.8 million.",
           "source": "AEC disclosures via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -5740,7 +5740,7 @@
           "explanation": "Savills disclosed $9.4 million and Pratt Holdings disclosed $8.8 million.",
           "source": "AEC disclosures via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -6198,7 +6198,7 @@
           "explanation": "Crown Resorts Limited disclosed $2 million and The Star Entertainment Group Limited disclosed $1.3 million.",
           "source": "AEC disclosures via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -6394,7 +6394,7 @@
           "explanation": "Savills disclosed $9.4 million and Pratt Holdings Pty Ltd disclosed $23.1 million.",
           "source": "AEC disclosures via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -6630,7 +6630,7 @@
           "explanation": "Queensland Nickel Pty Ltd disclosed $43.3 million and BMA Coal Pty Ltd disclosed $33.6 million.",
           "source": "AEC disclosures via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -6733,7 +6733,7 @@
           "explanation": "Climate & Energy appears in 53,156, making Housing the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -6751,7 +6751,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -6801,7 +6801,7 @@
           "explanation": "Peter Dutton appears 541 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -6819,7 +6819,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -6847,7 +6847,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -6904,7 +6904,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -6922,7 +6922,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -6940,7 +6940,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -7040,7 +7040,7 @@
           "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -7071,7 +7071,7 @@
           "explanation": "Climate & Energy appears in 53,156, making Housing the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         }
@@ -7091,7 +7091,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -7116,7 +7116,7 @@
           "explanation": "Jenny Macklin appears 189 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -7134,7 +7134,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -7210,7 +7210,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -7241,7 +7241,7 @@
           "explanation": "Housing appears in 19,369, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -7301,7 +7301,7 @@
           "explanation": "Immigration appears in 24,028, making First Nations the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -7353,7 +7353,7 @@
           "explanation": "Greg Combet appears 476 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -7396,7 +7396,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -7424,7 +7424,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -7442,7 +7442,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -7485,7 +7485,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -7503,7 +7503,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -7556,7 +7556,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -7631,7 +7631,7 @@
           "explanation": "Peter Dutton appears 541 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -7662,7 +7662,7 @@
           "explanation": "Gambling appears in 3,335, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         }
@@ -7707,7 +7707,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -7725,7 +7725,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -7750,7 +7750,7 @@
           "explanation": "Peter Dutton appears 541 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -7808,7 +7808,7 @@
           "explanation": "Media Ownership appears in 19,456, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -7836,7 +7836,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -7889,7 +7889,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -7907,7 +7907,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Media Ownership report",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -7948,7 +7948,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -8025,7 +8025,7 @@
           "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -8056,7 +8056,7 @@
           "explanation": "Climate & Energy appears in 53,156, making Housing the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         }
@@ -8086,7 +8086,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -8138,7 +8138,7 @@
           "explanation": "Jenny Macklin appears 189 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -8181,7 +8181,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -8235,7 +8235,7 @@
           "explanation": "First Nations appears in 16,923, making Immigration the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -8253,7 +8253,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         }
@@ -8286,7 +8286,7 @@
           "explanation": "Gambling appears in 3,335, making First Nations the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -8311,7 +8311,7 @@
           "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -8329,7 +8329,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -8397,7 +8397,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -8425,7 +8425,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -8477,7 +8477,7 @@
           "explanation": "Peter Dutton appears 541 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -8505,7 +8505,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -8548,7 +8548,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -8593,7 +8593,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -8647,7 +8647,7 @@
           "explanation": "Climate & Energy appears in 53,156, making First Nations the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         }
@@ -8700,7 +8700,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -8731,7 +8731,7 @@
           "explanation": "Climate & Energy appears in 53,156, making First Nations the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -8781,7 +8781,7 @@
           "explanation": "Julia Gillard appears 491 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -8826,7 +8826,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -8844,7 +8844,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         }
@@ -8877,7 +8877,7 @@
           "explanation": "Housing appears in 19,369, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -8895,7 +8895,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -8947,7 +8947,7 @@
           "explanation": "Peter Dutton appears 541 times in the same topic report.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -9013,7 +9013,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -9041,7 +9041,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         }
@@ -9074,7 +9074,7 @@
           "explanation": "Gambling appears in 3,335, making Media Ownership the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -9129,7 +9129,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -9147,7 +9147,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -9190,7 +9190,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -9215,7 +9215,7 @@
           "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -9308,7 +9308,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -9351,7 +9351,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Housing report",
           "link": {
-            "href": "/reports/housing",
+            "href": "/subject/topic/housing",
             "label": "Read the Housing report"
           }
         },
@@ -9382,7 +9382,7 @@
           "explanation": "First Nations appears in 16,923, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -9407,7 +9407,7 @@
           "explanation": "Jenny Macklin appears 189 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -9435,7 +9435,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Gambling report",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         }
@@ -9517,7 +9517,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -9535,7 +9535,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/media",
+            "href": "/subject/topic/media-communications",
             "label": "Read the Media Ownership report"
           }
         },
@@ -9560,7 +9560,7 @@
           "explanation": "Jenny Macklin appears 189 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -9614,7 +9614,7 @@
           "explanation": "Housing appears in 19,369, making Gambling the lower figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/gambling",
+            "href": "/subject/topic/gambling",
             "label": "Read the Gambling report"
           }
         },
@@ -9632,7 +9632,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         }
@@ -9652,7 +9652,7 @@
           "explanation": "No other complete year in the report records as many speeches on the topic.",
           "source": "Parliamentary record via OPAX's Climate & Energy report",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -9683,7 +9683,7 @@
           "explanation": "Gambling appears in 3,335, making Climate & Energy the higher figure.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/climate",
+            "href": "/subject/topic/climate-environment",
             "label": "Read the Climate & Energy report"
           }
         },
@@ -9786,7 +9786,7 @@
           "explanation": "The report counts speeches touching on the topic in each calendar year.",
           "source": "Parliamentary record via OPAX's Immigration report",
           "link": {
-            "href": "/reports/immigration",
+            "href": "/subject/topic/immigration",
             "label": "Read the Immigration report"
           }
         },
@@ -9811,7 +9811,7 @@
           "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
           "source": "Parliamentary record via OPAX's First Nations report",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         },
@@ -9829,7 +9829,7 @@
           "explanation": "The range runs from the smallest to the largest real topic-report count.",
           "source": "Parliamentary record via OPAX's topic reports",
           "link": {
-            "href": "/reports/indigenous",
+            "href": "/subject/topic/indigenous-affairs",
             "label": "Read the First Nations report"
           }
         }

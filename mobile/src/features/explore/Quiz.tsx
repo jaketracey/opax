@@ -161,7 +161,7 @@ export default function Quiz() {
             />
             <SourceLine
               asOf={snapshot.generated}
-              citation="OPAX static quiz exports"
+              citation="OPAX quiz questions"
               testID="quiz-as-at"
             />
           </Section>

@@ -11,7 +11,7 @@ export const sorts = [
   { value: 'oldest', label: 'Oldest first' },
   { value: 'title_asc', label: 'Title A–Z' },
   { value: 'title_desc', label: 'Title Z–A' },
-  { value: 'type', label: 'Record type' },
+  { value: 'type', label: 'Type' },
 ] as const;
 export const jurisdictions = [
   { value: 'federal', label: 'Federal' },
@@ -24,13 +24,7 @@ export const jurisdictions = [
   { value: 'nt', label: 'NT' },
   { value: 'act', label: 'ACT' },
 ] as const;
-export const moreCatalogKinds = [
-  'party',
-  'agency',
-  'grant',
-  'report',
-  'bill',
-] as const;
+export const moreCatalogKinds = ['party', 'agency', 'grant', 'bill'] as const;
 export type MoreCatalogKind = (typeof moreCatalogKinds)[number];
 export const excludedKinds: Readonly<Record<string, string>> = {
   donor: 'Donor rows have no organisation discriminator.',
@@ -168,7 +162,7 @@ export function filterChips(f: SearchFilters) {
       value: `${f.from || '1993'} to ${f.to || '2026'}`,
     });
   if (f.kind !== 'all')
-    chips.push({ id: 'kind', filter: 'record type', value: typeLabel(f.kind) });
+    chips.push({ id: 'kind', filter: 'type', value: typeLabel(f.kind) });
   if (f.mode !== 'hybrid')
     chips.push({
       id: 'mode',

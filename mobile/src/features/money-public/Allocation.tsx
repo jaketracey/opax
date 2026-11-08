@@ -122,7 +122,7 @@ export default function Allocation() {
     <>
       <MoneyHeader
         title="Where community funding goes"
-        path="/reports/grants-allocation"
+        path="/money/grants?jur=federal&program=GO7867"
       />
       <MoneyList
         loaded={!!status.record}

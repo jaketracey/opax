@@ -50,7 +50,7 @@ function PhotoCreditsList() {
   return (
     <ReadState
       read={read}
-      citation="OPAX year photograph manifest"
+      citation="OPAX year photographs"
       testID="explore-photo-credits-manifest"
     >
       {(manifest) => {

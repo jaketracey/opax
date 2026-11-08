@@ -272,7 +272,6 @@ describe('fragment routes', () => {
     '/#/subject/donor/Example%20Pty%20Ltd',
     '/#/subject/topic/search-and-rescue',
     '/#/subject/party',
-    '/#/reports/gambling',
     '/#/doc/x',
     '/#/explore?game=grants&jur=federal',
   ])('keeps %s', (address) => {
