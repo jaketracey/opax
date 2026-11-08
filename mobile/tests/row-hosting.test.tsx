@@ -243,6 +243,59 @@ describe('rows keep one line in every host (iOS, through Link.Trigger)', () => {
       });
   });
 
+  test("the edition's subject rows, composed as EditionStory hosts them", () => {
+    // features/edition/EditionStory.tsx: one subject row in an InsetGroup,
+    // with an href and an empty menu (bill, politician, money or topic day).
+    const tree = render(
+      <View>
+        <InsetGroup>
+          <BillRow
+            billKey="r7529"
+            title="Interactive Gambling Amendment Bill 2026"
+            href="/bill/r7529"
+            status=""
+            showStatus={false}
+            menu={[]}
+            testID="subject-bill"
+          />
+        </InsetGroup>
+        <InsetGroup>
+          <PersonRow
+            name="Alex Hawke"
+            party="Liberal"
+            place="Mitchell, NSW"
+            href="/subject/person/alex-hawke"
+            menu={[]}
+            testID="subject-person"
+          />
+        </InsetGroup>
+        <InsetGroup>
+          <LinkRow
+            title="Critical Metals CRC"
+            symbol="dollarsign.circle"
+            href="/money/grant"
+            value="$4,000,000"
+            valueEmphasis
+            testID="subject-money"
+          />
+        </InsetGroup>
+      </View>,
+    );
+    expectOneLine(tree.root, 'subject-bill', {
+      text: host(tree.root, 'subject-bill-title'),
+    });
+    expectOneLine(tree.root, 'subject-person', {
+      text: textOf(host(tree.root, 'subject-person'), 'Mitchell, NSW'),
+    });
+    expectOneLine(tree.root, 'subject-money', {
+      leading: symbolNamed(
+        host(tree.root, 'subject-money'),
+        'dollarsign.circle',
+      ),
+      text: textOf(tree.root, '$4,000,000'),
+    });
+  });
+
   test('a row Pressable handed to RowLink keeps its own style function', () => {
     const style = jest.fn(({ pressed }: { pressed: boolean }) => [
       { flexDirection: 'row' as const, alignItems: 'center' as const },

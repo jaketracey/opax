@@ -154,6 +154,16 @@ const press = async (root: ReactTestInstance, id: string) => {
     .find((node) => typeof node.props.onPress === 'function')!;
   await act(async () => target.props.onPress());
 };
+// The subject row (BillRow, PersonRow or LinkRow) opens its page by href,
+// through RowLink's native preview: the destination is the row's href.
+const subjectHref = (root: ReactTestInstance) =>
+  root
+    .findAll(
+      (node) =>
+        [BillRow, PersonRow, LinkRow].includes(node.type as never) &&
+        node.props.testID === 'edition-subject',
+    )
+    .map((node) => node.props.href as unknown)[0];
 const host = (root: ReactTestInstance, id: string) =>
   root.findAll(
     (node) => typeof node.type === 'string' && node.props.testID === id,
@@ -648,8 +658,7 @@ describe('the native edition reader', () => {
       ),
     );
     expect(root.findByType(StageTimeline).props.stages).toHaveLength(5);
-    await press(root, 'edition-subject');
-    expect(router.push).toHaveBeenLastCalledWith(billRoute('au-federal-r7529'));
+    expect(subjectHref(root)).toEqual(billRoute('au-federal-r7529'));
     expect(
       root
         .findAllByType(SourceLine)
@@ -711,14 +720,13 @@ describe('the native edition reader', () => {
     expect(root.findAllByType(Stack.Toolbar)).toHaveLength(0);
     expect(host(root, 'edition-ask')).toHaveLength(1);
   });
-  test('the bill subject is a BillRow that pushes the bill, not a RowLink href', async () => {
+  test('the bill subject is a BillRow with the bill as its href, so it keeps its preview', async () => {
     const { root } = await render(<EditionStory />);
     const row = root
       .findAllByType(BillRow)
       .find((node) => node.props.testID === 'edition-subject')!;
-    expect(row.props.href).toBeUndefined();
-    act(() => row.props.onPress());
-    expect(router.push).toHaveBeenLastCalledWith(billRoute('au-federal-r7529'));
+    expect(row.props.href).toEqual(billRoute('au-federal-r7529'));
+    expect(row.props.onPress).toBeUndefined();
   });
   test('the plate shows no detail line that repeats the paragraphs below it', async () => {
     const { root } = await render(<EditionStory />);
@@ -774,13 +782,11 @@ describe('the native edition reader', () => {
         .mocked(catalogs.todayEdition)
         .mockResolvedValue({ ...ready, data: { ...edition, kind, path } });
       const { root } = await render(<EditionStory />);
-      expect(
-        root
-          .findAllByType(LinkRow)
-          .find((row) => row.props.testID === 'edition-subject')!.props.href,
-      ).toBeUndefined();
-      await press(root, 'edition-subject');
-      expect(router.push).toHaveBeenLastCalledWith(href);
+      const row = root
+        .findAllByType(LinkRow)
+        .find((node) => node.props.testID === 'edition-subject')!;
+      expect(row.props.href).toEqual(href);
+      expect(row.props.onPress).toBeUndefined();
       expect(openOnWeb).not.toHaveBeenCalled();
     },
   );
@@ -790,8 +796,7 @@ describe('the native edition reader', () => {
       data: { ...edition, kind: 'topic', path: '/reports/housing' },
     });
     const { root } = await render(<EditionStory />);
-    await press(root, 'edition-subject');
-    expect(router.push).toHaveBeenLastCalledWith(
+    expect(subjectHref(root)).toEqual(
       expect.objectContaining({
         pathname: '/topic/[slug]',
         params: expect.objectContaining({ slug: 'housing' }),
