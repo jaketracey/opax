@@ -29,6 +29,7 @@ import {
   publicTie,
 } from '../src/privacy/donorEntity';
 import quiz from '../src/features/explore/quiz-rounds.json';
+import quizFrontPage from '../src/features/explore/quiz-front-page.json';
 import snapshot from '../scripts/fixture-snapshot.json';
 import { catalogs, people, pinned, roster, slugs } from './pinned';
 
@@ -447,7 +448,7 @@ test('leads name no withheld donor and drop a "companies in both" lead about one
 test('the bundled quiz names no withheld donor', () => {
   expect(
     leaks(
-      [JSON.stringify(quiz.rounds)],
+      [JSON.stringify(quiz.rounds), JSON.stringify(quizFrontPage)],
       withheldPhrases(withheldDonors.federal.flatMap(namesOf)),
     ),
   ).toBe(0);

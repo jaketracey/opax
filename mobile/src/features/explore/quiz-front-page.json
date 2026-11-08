@@ -1,0 +1,1760 @@
+[
+  {
+    "id": "q1021bd29",
+    "template": "words-topic-figure",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "How many speeches does the Housing report find?",
+    "answer": 19369,
+    "min": 3335,
+    "max": 53156,
+    "scale": "log",
+    "format": "count",
+    "fact": "Housing: 19,369 speeches",
+    "explanation": "The range runs from the smallest to the largest real topic-report count.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/housing",
+      "label": "Read the Housing report"
+    }
+  },
+  {
+    "id": "q103d5eee",
+    "template": "words-year-order",
+    "deck": "words",
+    "kind": "order",
+    "prompt": "Order these years by how much parliament talked about first nations, busiest first.",
+    "options": [
+      {
+        "label": "2007",
+        "value": 329
+      },
+      {
+        "label": "2003",
+        "value": 139
+      },
+      {
+        "label": "2019",
+        "value": 689
+      }
+    ],
+    "answer": ["2019", "2007", "2003"],
+    "fact": "2019 689; 2007 329; 2003 139",
+    "explanation": "The report counts speeches touching on the topic in each calendar year.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "q155defa3",
+    "template": "words-record-true-false",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The searchable record includes state parliaments as well as federal Hansard.",
+    "options": [
+      {
+        "label": "True",
+        "correct": true
+      },
+      {
+        "label": "False",
+        "correct": false
+      }
+    ],
+    "fact": "True",
+    "explanation": "Several state parliaments appear alongside federal chambers in the corpus manifest.",
+    "source": "OPAX corpus manifest",
+    "link": {
+      "href": "/methods",
+      "label": "Read how the record is built"
+    }
+  },
+  {
+    "id": "q25eb3b0a",
+    "template": "words-topic-higher-lower",
+    "deck": "words",
+    "kind": "higher-lower",
+    "prompt": "Does media ownership appear in more or fewer speeches?",
+    "comparison": {
+      "shownLabel": "Gambling",
+      "shownValue": 3335,
+      "shownDisplay": "3,335 speeches",
+      "hiddenLabel": "Media Ownership",
+      "hiddenValue": 19456,
+      "hiddenDisplay": "19,456 speeches"
+    },
+    "options": [
+      {
+        "label": "Higher",
+        "correct": true
+      },
+      {
+        "label": "Lower",
+        "correct": false
+      }
+    ],
+    "fact": "Media Ownership: 19,456 speeches",
+    "explanation": "Gambling appears in 3,335, making Media Ownership the higher figure.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/media-communications",
+      "label": "Read the Media Ownership report"
+    }
+  },
+  {
+    "id": "q2e2388d0",
+    "template": "money-true-false",
+    "deck": "money",
+    "kind": "tf",
+    "prompt": "True or false: Taxpayer money the AEC pays parties after each election (public electoral funding) is counted in these donation totals.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False",
+    "explanation": "The methodology leaves public electoral funding out (103 rows excluded).",
+    "source": "OPAX money data methodology",
+    "link": {
+      "href": "/methods",
+      "label": "Read how the record is built"
+    }
+  },
+  {
+    "id": "q34aaed2b",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did Katter's Australian Party receive its largest disclosed total?",
+    "answer": 2011,
+    "min": 2011,
+    "max": 2024,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2011: $3.9 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/Katter's%20Australian%20Party",
+      "label": "Open Katter's Australian Party in the record"
+    }
+  },
+  {
+    "id": "q38ba4936",
+    "template": "money-party-from-industry",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which party has received the most disclosed money from hospitality donors?",
+    "options": [
+      {
+        "label": "Liberal",
+        "correct": true
+      },
+      {
+        "label": "Labor",
+        "correct": false
+      },
+      {
+        "label": "Country Liberal Party",
+        "correct": false
+      }
+    ],
+    "fact": "Liberal: $18.7 million",
+    "explanation": "That is the largest disclosed total from hospitality donors; Labor follows on $11.7 million.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/money?industry=hospitality",
+      "label": "Open this industry on the money map"
+    }
+  },
+  {
+    "id": "q3a6c5ec2",
+    "template": "words-record-true-false",
+    "deck": "words",
+    "kind": "tf",
+    "prompt": "True or false: The searchable record contains fewer than 100,000 speeches and documents.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False — 691,104 are collected",
+    "explanation": "The corpus manifest puts the collection comfortably above that mark.",
+    "source": "OPAX corpus manifest",
+    "link": {
+      "href": "/methods",
+      "label": "Read how the record is built"
+    }
+  },
+  {
+    "id": "q40bf506b",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about climate & energy, Greg Combet or Julia Gillard?",
+    "options": [
+      {
+        "label": "Greg Combet",
+        "correct": false,
+        "photo": "/photos/10139.webp"
+      },
+      {
+        "label": "Julia Gillard",
+        "correct": true,
+        "photo": "/photos/10257.webp"
+      }
+    ],
+    "fact": "Julia Gillard: 832 speeches",
+    "explanation": "Greg Combet appears 476 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Climate & Energy report",
+    "link": {
+      "href": "/subject/topic/climate-environment",
+      "label": "Read the Climate & Energy report"
+    }
+  },
+  {
+    "id": "q491fbf30",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about climate & energy, Julia Gillard or Tony Abbott?",
+    "options": [
+      {
+        "label": "Julia Gillard",
+        "correct": true,
+        "photo": "/photos/10257.webp"
+      },
+      {
+        "label": "Tony Abbott",
+        "correct": false,
+        "photo": "/photos/10001.webp"
+      }
+    ],
+    "fact": "Julia Gillard: 832 speeches",
+    "explanation": "Tony Abbott appears 562 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Climate & Energy report",
+    "link": {
+      "href": "/subject/topic/climate-environment",
+      "label": "Read the Climate & Energy report"
+    }
+  },
+  {
+    "id": "q4956c289",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about first nations, Warren Snowdon or Jenny Macklin?",
+    "options": [
+      {
+        "label": "Warren Snowdon",
+        "correct": true,
+        "photo": "/photos/10599.webp"
+      },
+      {
+        "label": "Jenny Macklin",
+        "correct": false,
+        "photo": "/photos/10409.webp"
+      }
+    ],
+    "fact": "Warren Snowdon: 508 speeches",
+    "explanation": "Jenny Macklin appears 189 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "q4df2ad96",
+    "template": "words-topic-figure",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "How many speeches does the Immigration report find?",
+    "answer": 24028,
+    "min": 3335,
+    "max": 53156,
+    "scale": "log",
+    "format": "count",
+    "fact": "Immigration: 24,028 speeches",
+    "explanation": "The range runs from the smallest to the largest real topic-report count.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "q5865904e",
+    "template": "words-topic-figure",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "How many speeches does the First Nations report find?",
+    "answer": 16923,
+    "min": 3335,
+    "max": 53156,
+    "scale": "log",
+    "format": "count",
+    "fact": "First Nations: 16,923 speeches",
+    "explanation": "The range runs from the smallest to the largest real topic-report count.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "q59d8cd12",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2021?",
+    "options": [
+      {
+        "label": "Peter Craig Dutton",
+        "correct": true,
+        "photo": "/photos/10188.webp"
+      },
+      {
+        "label": "Michael McCormack",
+        "correct": false,
+        "photo": "/photos/10743.webp"
+      }
+    ],
+    "fact": "Peter Craig Dutton: 6 sampled speeches",
+    "explanation": "Michael McCormack appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2021 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Peter+Craig+Dutton&from=2021&to=2021",
+      "label": "Search Peter Craig Dutton in the 2021 record"
+    }
+  },
+  {
+    "id": "q5c525592",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about climate & energy, Anthony Albanese or Julia Gillard?",
+    "options": [
+      {
+        "label": "Anthony Albanese",
+        "correct": false,
+        "photo": "/photos/10007.webp"
+      },
+      {
+        "label": "Julia Gillard",
+        "correct": true,
+        "photo": "/photos/10257.webp"
+      }
+    ],
+    "fact": "Julia Gillard: 832 speeches",
+    "explanation": "Anthony Albanese appears 596 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Climate & Energy report",
+    "link": {
+      "href": "/subject/topic/climate-environment",
+      "label": "Read the Climate & Energy report"
+    }
+  },
+  {
+    "id": "q5cfef3c7",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about immigration, Peter Dutton or Scott Morrison?",
+    "options": [
+      {
+        "label": "Peter Dutton",
+        "correct": false,
+        "photo": "/photos/10188.webp"
+      },
+      {
+        "label": "Scott Morrison",
+        "correct": true,
+        "photo": "/photos/10468.webp"
+      }
+    ],
+    "fact": "Scott Morrison: 728 speeches",
+    "explanation": "Peter Dutton appears 541 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "q5fa16f7d",
+    "template": "words-year-order",
+    "deck": "words",
+    "kind": "order",
+    "prompt": "Order these years by how much parliament talked about climate & energy, busiest first.",
+    "options": [
+      {
+        "label": "2008",
+        "value": 1070
+      },
+      {
+        "label": "2002",
+        "value": 641
+      },
+      {
+        "label": "2009",
+        "value": 1635
+      }
+    ],
+    "answer": ["2009", "2008", "2002"],
+    "fact": "2009 1,635; 2008 1,070; 2002 641",
+    "explanation": "The report counts speeches touching on the topic in each calendar year.",
+    "source": "Parliamentary record via OPAX's Climate & Energy report",
+    "link": {
+      "href": "/subject/topic/climate-environment",
+      "label": "Read the Climate & Energy report"
+    }
+  },
+  {
+    "id": "q601116d9",
+    "template": "words-year-order",
+    "deck": "words",
+    "kind": "order",
+    "prompt": "Order these years by how much parliament talked about gambling, busiest first.",
+    "options": [
+      {
+        "label": "2015",
+        "value": 90
+      },
+      {
+        "label": "2018",
+        "value": 249
+      },
+      {
+        "label": "2023",
+        "value": 136
+      }
+    ],
+    "answer": ["2018", "2023", "2015"],
+    "fact": "2018 249; 2023 136; 2015 90",
+    "explanation": "The report counts speeches touching on the topic in each calendar year.",
+    "source": "Parliamentary record via OPAX's Gambling report",
+    "link": {
+      "href": "/subject/topic/gambling",
+      "label": "Read the Gambling report"
+    }
+  },
+  {
+    "id": "q6305d043",
+    "template": "words-year-order",
+    "deck": "words",
+    "kind": "order",
+    "prompt": "Order these years by how much parliament talked about housing, busiest first.",
+    "options": [
+      {
+        "label": "2004",
+        "value": 68
+      },
+      {
+        "label": "2014",
+        "value": 306
+      },
+      {
+        "label": "2007",
+        "value": 230
+      }
+    ],
+    "answer": ["2014", "2007", "2004"],
+    "fact": "2014 306; 2007 230; 2004 68",
+    "explanation": "The report counts speeches touching on the topic in each calendar year.",
+    "source": "Parliamentary record via OPAX's Housing report",
+    "link": {
+      "href": "/subject/topic/housing",
+      "label": "Read the Housing report"
+    }
+  },
+  {
+    "id": "q69ee9842",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about first nations, Warren Snowdon or Kerrynne Liddle?",
+    "options": [
+      {
+        "label": "Warren Snowdon",
+        "correct": true,
+        "photo": "/photos/10599.webp"
+      },
+      {
+        "label": "Kerrynne Liddle",
+        "correct": false,
+        "photo": "/photos/11005.webp"
+      }
+    ],
+    "fact": "Warren Snowdon: 508 speeches",
+    "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "q6c3d70ce",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2018?",
+    "options": [
+      {
+        "label": "Matt Keogh",
+        "correct": false,
+        "photo": "/photos/10861.webp"
+      },
+      {
+        "label": "Scott Morrison",
+        "correct": true,
+        "photo": "/photos/10468.webp"
+      }
+    ],
+    "fact": "Scott Morrison: 10 sampled speeches",
+    "explanation": "Matt Keogh appears 5 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2018 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Scott+Morrison&from=2018&to=2018",
+      "label": "Search Scott Morrison in the 2018 record"
+    }
+  },
+  {
+    "id": "q6c442c93",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2015?",
+    "options": [
+      {
+        "label": "Tony Abbott",
+        "correct": true,
+        "photo": "/photos/10001.webp"
+      },
+      {
+        "label": "Peter Dutton",
+        "correct": false,
+        "photo": "/photos/10188.webp"
+      }
+    ],
+    "fact": "Tony Abbott: 9 sampled speeches",
+    "explanation": "Peter Dutton appears 4 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2015 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Tony+Abbott&from=2015&to=2015",
+      "label": "Search Tony Abbott in the 2015 record"
+    }
+  },
+  {
+    "id": "q6d443ea3",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did Nationals receive its largest disclosed total?",
+    "answer": 2004,
+    "min": 1998,
+    "max": 2024,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2004: $6.2 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/Nationals",
+      "label": "Open Nationals in the record"
+    }
+  },
+  {
+    "id": "q6ec0b6a1",
+    "template": "words-topic-figure",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "How many speeches does the Gambling report find?",
+    "answer": 3335,
+    "min": 3335,
+    "max": 53156,
+    "scale": "log",
+    "format": "count",
+    "fact": "Gambling: 3,335 speeches",
+    "explanation": "The range runs from the smallest to the largest real topic-report count.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/gambling",
+      "label": "Read the Gambling report"
+    }
+  },
+  {
+    "id": "q72ac21d2",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about first nations, Kerrynne Liddle or Warren Snowdon?",
+    "options": [
+      {
+        "label": "Kerrynne Liddle",
+        "correct": false,
+        "photo": "/photos/11005.webp"
+      },
+      {
+        "label": "Warren Snowdon",
+        "correct": true,
+        "photo": "/photos/10599.webp"
+      }
+    ],
+    "fact": "Warren Snowdon: 508 speeches",
+    "explanation": "Kerrynne Liddle appears 286 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "q79881dc9",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about first nations, Jenny Macklin or Warren Snowdon?",
+    "options": [
+      {
+        "label": "Jenny Macklin",
+        "correct": false,
+        "photo": "/photos/10409.webp"
+      },
+      {
+        "label": "Warren Snowdon",
+        "correct": true,
+        "photo": "/photos/10599.webp"
+      }
+    ],
+    "fact": "Warren Snowdon: 508 speeches",
+    "explanation": "Jenny Macklin appears 189 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "q7b5ea2ea",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about first nations, Kerrynne Liddle or Jenny Macklin?",
+    "options": [
+      {
+        "label": "Kerrynne Liddle",
+        "correct": true,
+        "photo": "/photos/11005.webp"
+      },
+      {
+        "label": "Jenny Macklin",
+        "correct": false,
+        "photo": "/photos/10409.webp"
+      }
+    ],
+    "fact": "Kerrynne Liddle: 286 speeches",
+    "explanation": "Jenny Macklin appears 189 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "q7b5eb47b",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about immigration, Peter Dutton or Philip Ruddock?",
+    "options": [
+      {
+        "label": "Peter Dutton",
+        "correct": false,
+        "photo": "/photos/10188.webp"
+      },
+      {
+        "label": "Philip Ruddock",
+        "correct": true,
+        "photo": "/photos/10553.webp"
+      }
+    ],
+    "fact": "Philip Ruddock: 1,214 speeches",
+    "explanation": "Peter Dutton appears 541 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "q7fc133f6",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2003?",
+    "options": [
+      {
+        "label": "Simon Crean",
+        "correct": false,
+        "photo": "/photos/10158.webp"
+      },
+      {
+        "label": "Jenny Macklin",
+        "correct": true,
+        "photo": "/photos/10409.webp"
+      }
+    ],
+    "fact": "Jenny Macklin: 11 sampled speeches",
+    "explanation": "Simon Crean appears 7 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2003 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Jenny+Macklin&from=2003&to=2003",
+      "label": "Search Jenny Macklin in the 2003 record"
+    }
+  },
+  {
+    "id": "q8030456f",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about immigration, Scott Morrison or Peter Dutton?",
+    "options": [
+      {
+        "label": "Scott Morrison",
+        "correct": true,
+        "photo": "/photos/10468.webp"
+      },
+      {
+        "label": "Peter Dutton",
+        "correct": false,
+        "photo": "/photos/10188.webp"
+      }
+    ],
+    "fact": "Scott Morrison: 728 speeches",
+    "explanation": "Peter Dutton appears 541 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "q83c39631",
+    "template": "money-true-false",
+    "deck": "money",
+    "kind": "tf",
+    "prompt": "True or false: The OPAX money map shows every donor who has ever disclosed a donation.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False",
+    "explanation": "Donor->party flows from rows with a canonical party recipient; amounts aggregated per (canonical donor entity, party) using ext_donor_aliases, so every spelling of a donor counts once. Top 250 donors by lifetime total shown, plus donors under that cut-off holding $50,000,000+ in Commonwealth contracts and grants.",
+    "source": "OPAX money data methodology",
+    "link": {
+      "href": "/methods",
+      "label": "Read how the record is built"
+    }
+  },
+  {
+    "id": "q8a399f2d",
+    "template": "words-biggest-source",
+    "deck": "words",
+    "kind": "mc",
+    "prompt": "OPAX gathers the record from many places. Which of these sources contributes the most documents?",
+    "options": [
+      {
+        "label": "Prime Minister transcripts and releases",
+        "correct": false
+      },
+      {
+        "label": "Victorian Premier releases",
+        "correct": false
+      },
+      {
+        "label": "Senate committee hearings",
+        "correct": true
+      }
+    ],
+    "fact": "Senate committee hearings: 116,489 documents",
+    "explanation": "Its 2025–2026 collection is larger than 658 from Prime Minister transcripts and releases and 125 from Victorian Premier releases.",
+    "source": "OPAX corpus",
+    "link": {
+      "href": "/methods",
+      "label": "Read how the record is built"
+    }
+  },
+  {
+    "id": "q8a62cc15",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did Liberal receive its largest disclosed total?",
+    "answer": 2013,
+    "min": 1998,
+    "max": 2024,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2013: $87.3 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/Liberal",
+      "label": "Open Liberal in the record"
+    }
+  },
+  {
+    "id": "q8c47602a",
+    "template": "words-peak-year",
+    "deck": "words",
+    "kind": "year",
+    "prompt": "Which year was parliament's peak for gambling?",
+    "answer": 2025,
+    "min": 1998,
+    "max": 2025,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2025: 448 speeches",
+    "explanation": "No other complete year in the report records as many speeches on the topic.",
+    "source": "Parliamentary record via OPAX's Gambling report",
+    "link": {
+      "href": "/subject/topic/gambling",
+      "label": "Read the Gambling report"
+    }
+  },
+  {
+    "id": "q8e4ce46c",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did LNP receive its largest disclosed total?",
+    "answer": 2024,
+    "min": 2008,
+    "max": 2024,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2024: $28.6 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/LNP",
+      "label": "Open LNP in the record"
+    }
+  },
+  {
+    "id": "q940af910",
+    "template": "words-peak-year",
+    "deck": "words",
+    "kind": "year",
+    "prompt": "Which year was parliament's peak for media ownership?",
+    "answer": 2025,
+    "min": 1998,
+    "max": 2025,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2025: 2,346 speeches",
+    "explanation": "No other complete year in the report records as many speeches on the topic.",
+    "source": "Parliamentary record via OPAX's Media Ownership report",
+    "link": {
+      "href": "/subject/topic/media-communications",
+      "label": "Read the Media Ownership report"
+    }
+  },
+  {
+    "id": "q9a6a33e7",
+    "template": "money-party-from-industry",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which party has received the most disclosed money from union-linked donors?",
+    "options": [
+      {
+        "label": "Labor",
+        "correct": true
+      },
+      {
+        "label": "Nationals",
+        "correct": false
+      },
+      {
+        "label": "Greens",
+        "correct": false
+      }
+    ],
+    "fact": "Labor: $247 million",
+    "explanation": "That is the largest disclosed total from union-linked donors; Greens follows on $5.9 million.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/money?industry=unions",
+      "label": "Open this industry on the money map"
+    }
+  },
+  {
+    "id": "q9cc91f29",
+    "template": "words-topic-higher-lower",
+    "deck": "words",
+    "kind": "higher-lower",
+    "prompt": "Does immigration appear in more or fewer speeches?",
+    "comparison": {
+      "shownLabel": "Gambling",
+      "shownValue": 3335,
+      "shownDisplay": "3,335 speeches",
+      "hiddenLabel": "Immigration",
+      "hiddenValue": 24028,
+      "hiddenDisplay": "24,028 speeches"
+    },
+    "options": [
+      {
+        "label": "Higher",
+        "correct": true
+      },
+      {
+        "label": "Lower",
+        "correct": false
+      }
+    ],
+    "fact": "Immigration: 24,028 speeches",
+    "explanation": "Gambling appears in 3,335, making Immigration the higher figure.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "q9deed4f8",
+    "template": "words-topic-higher-lower",
+    "deck": "words",
+    "kind": "higher-lower",
+    "prompt": "Does housing appear in more or fewer speeches?",
+    "comparison": {
+      "shownLabel": "Climate & Energy",
+      "shownValue": 53156,
+      "shownDisplay": "53,156 speeches",
+      "hiddenLabel": "Housing",
+      "hiddenValue": 19369,
+      "hiddenDisplay": "19,369 speeches"
+    },
+    "options": [
+      {
+        "label": "Higher",
+        "correct": false
+      },
+      {
+        "label": "Lower",
+        "correct": true
+      }
+    ],
+    "fact": "Housing: 19,369 speeches",
+    "explanation": "Climate & Energy appears in 53,156, making Housing the lower figure.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/housing",
+      "label": "Read the Housing report"
+    }
+  },
+  {
+    "id": "qa98b4be9",
+    "template": "words-peak-year",
+    "deck": "words",
+    "kind": "year",
+    "prompt": "Which year was parliament's peak for immigration?",
+    "answer": 2025,
+    "min": 1998,
+    "max": 2025,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2025: 2,493 speeches",
+    "explanation": "No other complete year in the report records as many speeches on the topic.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "qaa93f5da",
+    "template": "words-topic-higher-lower",
+    "deck": "words",
+    "kind": "higher-lower",
+    "prompt": "Does climate & energy appear in more or fewer speeches?",
+    "comparison": {
+      "shownLabel": "Media Ownership",
+      "shownValue": 19456,
+      "shownDisplay": "19,456 speeches",
+      "hiddenLabel": "Climate & Energy",
+      "hiddenValue": 53156,
+      "hiddenDisplay": "53,156 speeches"
+    },
+    "options": [
+      {
+        "label": "Higher",
+        "correct": true
+      },
+      {
+        "label": "Lower",
+        "correct": false
+      }
+    ],
+    "fact": "Climate & Energy: 53,156 speeches",
+    "explanation": "Media Ownership appears in 19,456, making Climate & Energy the higher figure.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/climate-environment",
+      "label": "Read the Climate & Energy report"
+    }
+  },
+  {
+    "id": "qab89eeb2",
+    "template": "words-topic-higher-lower",
+    "deck": "words",
+    "kind": "higher-lower",
+    "prompt": "Does gambling appear in more or fewer speeches?",
+    "comparison": {
+      "shownLabel": "Climate & Energy",
+      "shownValue": 53156,
+      "shownDisplay": "53,156 speeches",
+      "hiddenLabel": "Gambling",
+      "hiddenValue": 3335,
+      "hiddenDisplay": "3,335 speeches"
+    },
+    "options": [
+      {
+        "label": "Higher",
+        "correct": false
+      },
+      {
+        "label": "Lower",
+        "correct": true
+      }
+    ],
+    "fact": "Gambling: 3,335 speeches",
+    "explanation": "Climate & Energy appears in 53,156, making Gambling the lower figure.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/gambling",
+      "label": "Read the Gambling report"
+    }
+  },
+  {
+    "id": "qae4512b7",
+    "template": "money-true-false",
+    "deck": "money",
+    "kind": "tf",
+    "prompt": "True or false: Every political donation in Australia appears in this data, no matter how small.",
+    "options": [
+      {
+        "label": "True",
+        "correct": false
+      },
+      {
+        "label": "False",
+        "correct": true
+      }
+    ],
+    "fact": "False",
+    "explanation": "Donations below the AEC threshold are not reported, so every visible total remains a floor.",
+    "source": "AEC disclosure rules; OPAX's money data",
+    "link": {
+      "href": "/methods",
+      "label": "Read how the record is built"
+    }
+  },
+  {
+    "id": "qb062958b",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about immigration, Scott Morrison or Philip Ruddock?",
+    "options": [
+      {
+        "label": "Scott Morrison",
+        "correct": false,
+        "photo": "/photos/10468.webp"
+      },
+      {
+        "label": "Philip Ruddock",
+        "correct": true,
+        "photo": "/photos/10553.webp"
+      }
+    ],
+    "fact": "Philip Ruddock: 1,214 speeches",
+    "explanation": "Scott Morrison appears 728 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "qb2b86553",
+    "template": "words-topic-figure",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "How many speeches does the Media Ownership report find?",
+    "answer": 19456,
+    "min": 3335,
+    "max": 53156,
+    "scale": "log",
+    "format": "count",
+    "fact": "Media Ownership: 19,456 speeches",
+    "explanation": "The range runs from the smallest to the largest real topic-report count.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/media-communications",
+      "label": "Read the Media Ownership report"
+    }
+  },
+  {
+    "id": "qb4ab2af4",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about first nations, Jenny Macklin or Kerrynne Liddle?",
+    "options": [
+      {
+        "label": "Jenny Macklin",
+        "correct": false,
+        "photo": "/photos/10409.webp"
+      },
+      {
+        "label": "Kerrynne Liddle",
+        "correct": true,
+        "photo": "/photos/11005.webp"
+      }
+    ],
+    "fact": "Kerrynne Liddle: 286 speeches",
+    "explanation": "Jenny Macklin appears 189 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "qbda7fbbb",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about immigration, Scott Morrison or Julia Gillard?",
+    "options": [
+      {
+        "label": "Scott Morrison",
+        "correct": true,
+        "photo": "/photos/10468.webp"
+      },
+      {
+        "label": "Julia Gillard",
+        "correct": false,
+        "photo": "/photos/10257.webp"
+      }
+    ],
+    "fact": "Scott Morrison: 728 speeches",
+    "explanation": "Julia Gillard appears 491 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "qc39873d2",
+    "template": "words-peak-year",
+    "deck": "words",
+    "kind": "year",
+    "prompt": "Which year was parliament's peak for climate & energy?",
+    "answer": 2025,
+    "min": 1998,
+    "max": 2025,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2025: 7,090 speeches",
+    "explanation": "No other complete year in the report records as many speeches on the topic.",
+    "source": "Parliamentary record via OPAX's Climate & Energy report",
+    "link": {
+      "href": "/subject/topic/climate-environment",
+      "label": "Read the Climate & Energy report"
+    }
+  },
+  {
+    "id": "qcaa1353c",
+    "template": "money-party-from-industry",
+    "deck": "money",
+    "kind": "mc",
+    "prompt": "Which party has received the most disclosed money from mining donors?",
+    "options": [
+      {
+        "label": "Liberal",
+        "correct": false
+      },
+      {
+        "label": "United Australia Party",
+        "correct": true
+      },
+      {
+        "label": "Nationals",
+        "correct": false
+      }
+    ],
+    "fact": "United Australia Party: $155 million",
+    "explanation": "That is the largest disclosed total from mining donors; Liberal follows on $17.3 million.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/money?industry=mining",
+      "label": "Open this industry on the money map"
+    }
+  },
+  {
+    "id": "qcac1dc92",
+    "template": "words-peak-year",
+    "deck": "words",
+    "kind": "year",
+    "prompt": "Which year was parliament's peak for housing?",
+    "answer": 2025,
+    "min": 1998,
+    "max": 2025,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2025: 2,843 speeches",
+    "explanation": "No other complete year in the report records as many speeches on the topic.",
+    "source": "Parliamentary record via OPAX's Housing report",
+    "link": {
+      "href": "/subject/topic/housing",
+      "label": "Read the Housing report"
+    }
+  },
+  {
+    "id": "qccb91931",
+    "template": "words-peak-year",
+    "deck": "words",
+    "kind": "year",
+    "prompt": "Which year was parliament's peak for first nations?",
+    "answer": 2025,
+    "min": 1998,
+    "max": 2025,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2025: 2,486 speeches",
+    "explanation": "No other complete year in the report records as many speeches on the topic.",
+    "source": "Parliamentary record via OPAX's First Nations report",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "qccf0aa89",
+    "template": "words-topic-figure",
+    "deck": "words",
+    "kind": "slider",
+    "prompt": "How many speeches does the Climate & Energy report find?",
+    "answer": 53156,
+    "min": 3335,
+    "max": 53156,
+    "scale": "log",
+    "format": "count",
+    "fact": "Climate & Energy: 53,156 speeches",
+    "explanation": "The range runs from the smallest to the largest real topic-report count.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/climate-environment",
+      "label": "Read the Climate & Energy report"
+    }
+  },
+  {
+    "id": "qcd78c3eb",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did One Nation receive its largest disclosed total?",
+    "answer": 1998,
+    "min": 1998,
+    "max": 2024,
+    "scale": "linear",
+    "format": "year",
+    "fact": "1998: $4.1 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/One%20Nation",
+      "label": "Open One Nation in the record"
+    }
+  },
+  {
+    "id": "qd54b721a",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did Greens receive its largest disclosed total?",
+    "answer": 2013,
+    "min": 1998,
+    "max": 2024,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2013: $17.6 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/Greens",
+      "label": "Open Greens in the record"
+    }
+  },
+  {
+    "id": "qd961edcf",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 1999?",
+    "options": [
+      {
+        "label": "Peter Slipper",
+        "correct": false,
+        "photo": "/photos/10590.webp"
+      },
+      {
+        "label": "Bronwyn Bishop",
+        "correct": true,
+        "photo": "/photos/10046.webp"
+      }
+    ],
+    "fact": "Bronwyn Bishop: 15 sampled speeches",
+    "explanation": "Peter Slipper appears 6 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 1999 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Bronwyn+Bishop&from=1999&to=1999",
+      "label": "Search Bronwyn Bishop in the 1999 record"
+    }
+  },
+  {
+    "id": "qd9d147cd",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2022?",
+    "options": [
+      {
+        "label": "James Stevens",
+        "correct": false,
+        "photo": "/photos/10940.webp"
+      },
+      {
+        "label": "Anthony Albanese",
+        "correct": true,
+        "photo": "/photos/10007.webp"
+      }
+    ],
+    "fact": "Anthony Albanese: 4 sampled speeches",
+    "explanation": "James Stevens appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2022 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Anthony+Albanese&from=2022&to=2022",
+      "label": "Search Anthony Albanese in the 2022 record"
+    }
+  },
+  {
+    "id": "qd9d38664",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2023?",
+    "options": [
+      {
+        "label": "Louise Pratt",
+        "correct": false,
+        "photo": "/photos/10714.webp"
+      },
+      {
+        "label": "Karen Grogan",
+        "correct": true,
+        "photo": "/photos/10965.webp"
+      }
+    ],
+    "fact": "Karen Grogan: 4 sampled speeches",
+    "explanation": "Louise Pratt appears 2 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2023 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Karen+Grogan&from=2023&to=2023",
+      "label": "Search Karen Grogan in the 2023 record"
+    }
+  },
+  {
+    "id": "qd9e290ee",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2025?",
+    "options": [
+      {
+        "label": "Glenn Sterle",
+        "correct": true,
+        "photo": "/photos/10610.webp"
+      },
+      {
+        "label": "Andrew Bragg",
+        "correct": false,
+        "photo": "/photos/10945.webp"
+      }
+    ],
+    "fact": "Glenn Sterle: 3 sampled speeches",
+    "explanation": "Andrew Bragg appears 2 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2025 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Glenn+Sterle&from=2025&to=2025",
+      "label": "Search Glenn Sterle in the 2025 record"
+    }
+  },
+  {
+    "id": "qdd2cfd7b",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about immigration, Philip Ruddock or Scott Morrison?",
+    "options": [
+      {
+        "label": "Philip Ruddock",
+        "correct": true,
+        "photo": "/photos/10553.webp"
+      },
+      {
+        "label": "Scott Morrison",
+        "correct": false,
+        "photo": "/photos/10468.webp"
+      }
+    ],
+    "fact": "Philip Ruddock: 1,214 speeches",
+    "explanation": "Scott Morrison appears 728 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "qe2761eca",
+    "template": "words-year-order",
+    "deck": "words",
+    "kind": "order",
+    "prompt": "Order these years by how much parliament talked about immigration, busiest first.",
+    "options": [
+      {
+        "label": "2004",
+        "value": 402
+      },
+      {
+        "label": "2006",
+        "value": 717
+      },
+      {
+        "label": "2012",
+        "value": 1079
+      }
+    ],
+    "answer": ["2012", "2006", "2004"],
+    "fact": "2012 1,079; 2006 717; 2004 402",
+    "explanation": "The report counts speeches touching on the topic in each calendar year.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "qea761b20",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did Family First receive its largest disclosed total?",
+    "answer": 2013,
+    "min": 2003,
+    "max": 2024,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2013: $7 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/Family%20First",
+      "label": "Open Family First in the record"
+    }
+  },
+  {
+    "id": "qeb099109",
+    "template": "words-topic-higher-lower",
+    "deck": "words",
+    "kind": "higher-lower",
+    "prompt": "Does first nations appear in more or fewer speeches?",
+    "comparison": {
+      "shownLabel": "Climate & Energy",
+      "shownValue": 53156,
+      "shownDisplay": "53,156 speeches",
+      "hiddenLabel": "First Nations",
+      "hiddenValue": 16923,
+      "hiddenDisplay": "16,923 speeches"
+    },
+    "options": [
+      {
+        "label": "Higher",
+        "correct": false
+      },
+      {
+        "label": "Lower",
+        "correct": true
+      }
+    ],
+    "fact": "First Nations: 16,923 speeches",
+    "explanation": "Climate & Energy appears in 53,156, making First Nations the lower figure.",
+    "source": "Parliamentary record via OPAX's topic reports",
+    "link": {
+      "href": "/subject/topic/indigenous-affairs",
+      "label": "Read the First Nations report"
+    }
+  },
+  {
+    "id": "qebfda9e9",
+    "template": "words-year-order",
+    "deck": "words",
+    "kind": "order",
+    "prompt": "Order these years by how much parliament talked about media ownership, busiest first.",
+    "options": [
+      {
+        "label": "2001",
+        "value": 438
+      },
+      {
+        "label": "2006",
+        "value": 609
+      },
+      {
+        "label": "2022",
+        "value": 252
+      }
+    ],
+    "answer": ["2006", "2001", "2022"],
+    "fact": "2006 609; 2001 438; 2022 252",
+    "explanation": "The report counts speeches touching on the topic in each calendar year.",
+    "source": "Parliamentary record via OPAX's Media Ownership report",
+    "link": {
+      "href": "/subject/topic/media-communications",
+      "label": "Read the Media Ownership report"
+    }
+  },
+  {
+    "id": "qec3a68b7",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2019?",
+    "options": [
+      {
+        "label": "Scott Morrison",
+        "correct": true,
+        "photo": "/photos/10468.webp"
+      },
+      {
+        "label": "Andrew Wilkie",
+        "correct": false,
+        "photo": "/photos/10727.webp"
+      }
+    ],
+    "fact": "Scott Morrison: 7 sampled speeches",
+    "explanation": "Andrew Wilkie appears 3 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2019 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Scott+Morrison&from=2019&to=2019",
+      "label": "Search Scott Morrison in the 2019 record"
+    }
+  },
+  {
+    "id": "qec497341",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2013?",
+    "options": [
+      {
+        "label": "Mitch Fifield",
+        "correct": true,
+        "photo": "/photos/10224.webp"
+      },
+      {
+        "label": "Anthony Albanese",
+        "correct": false,
+        "photo": "/photos/10007.webp"
+      }
+    ],
+    "fact": "Mitch Fifield: 8 sampled speeches",
+    "explanation": "Anthony Albanese appears 4 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2013 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Mitch+Fifield&from=2013&to=2013",
+      "label": "Search Mitch Fifield in the 2013 record"
+    }
+  },
+  {
+    "id": "qec4bb1d8",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2012?",
+    "options": [
+      {
+        "label": "Jenny Macklin",
+        "correct": false,
+        "photo": "/photos/10409.webp"
+      },
+      {
+        "label": "Mitch Fifield",
+        "correct": true,
+        "photo": "/photos/10224.webp"
+      }
+    ],
+    "fact": "Mitch Fifield: 8 sampled speeches",
+    "explanation": "Jenny Macklin appears 4 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2012 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Mitch+Fifield&from=2012&to=2012",
+      "label": "Search Mitch Fifield in the 2012 record"
+    }
+  },
+  {
+    "id": "qf421146f",
+    "template": "money-party-peak-year",
+    "deck": "money",
+    "kind": "year",
+    "prompt": "In which year did Country Liberal Party receive its largest disclosed total?",
+    "answer": 2012,
+    "min": 1998,
+    "max": 2017,
+    "scale": "linear",
+    "format": "year",
+    "fact": "2012: $1.2 million",
+    "explanation": "That is the party's highest annual figure in the complete years shown on the federal money map.",
+    "source": "AEC disclosures via OPAX's money data",
+    "link": {
+      "href": "/subject/party/Country%20Liberal%20Party",
+      "label": "Open Country Liberal Party in the record"
+    }
+  },
+  {
+    "id": "qf5a5c1c3",
+    "template": "words-portrait-topic",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who has given more speeches about immigration, Philip Ruddock or Peter Dutton?",
+    "options": [
+      {
+        "label": "Philip Ruddock",
+        "correct": true,
+        "photo": "/photos/10553.webp"
+      },
+      {
+        "label": "Peter Dutton",
+        "correct": false,
+        "photo": "/photos/10188.webp"
+      }
+    ],
+    "fact": "Philip Ruddock: 1,214 speeches",
+    "explanation": "Peter Dutton appears 541 times in the same topic report.",
+    "source": "Parliamentary record via OPAX's Immigration report",
+    "link": {
+      "href": "/subject/topic/immigration",
+      "label": "Read the Immigration report"
+    }
+  },
+  {
+    "id": "qffb7701a",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2007?",
+    "options": [
+      {
+        "label": "Rachel Siewert",
+        "correct": false,
+        "photo": "/photos/10584.webp"
+      },
+      {
+        "label": "Stephen Conroy",
+        "correct": true,
+        "photo": "/photos/10142.webp"
+      }
+    ],
+    "fact": "Stephen Conroy: 10 sampled speeches",
+    "explanation": "Rachel Siewert appears 4 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2007 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Stephen+Conroy&from=2007&to=2007",
+      "label": "Search Stephen Conroy in the 2007 record"
+    }
+  },
+  {
+    "id": "qffb9aeb1",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2000?",
+    "options": [
+      {
+        "label": "Philip Ruddock",
+        "correct": false,
+        "photo": "/photos/10553.webp"
+      },
+      {
+        "label": "Peter Costello",
+        "correct": true,
+        "photo": "/photos/10149.webp"
+      }
+    ],
+    "fact": "Peter Costello: 20 sampled speeches",
+    "explanation": "Philip Ruddock appears 5 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2000 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Peter+Costello&from=2000&to=2000",
+      "label": "Search Peter Costello in the 2000 record"
+    }
+  },
+  {
+    "id": "qffbe2bdf",
+    "template": "words-year-voice",
+    "deck": "words",
+    "kind": "portrait",
+    "prompt": "Who appeared more often in OPAX's sample of the defining debates of 2002?",
+    "options": [
+      {
+        "label": "Philip Ruddock",
+        "correct": true,
+        "photo": "/photos/10553.webp"
+      },
+      {
+        "label": "Julia Gillard",
+        "correct": false,
+        "photo": "/photos/10257.webp"
+      }
+    ],
+    "fact": "Philip Ruddock: 21 sampled speeches",
+    "explanation": "Julia Gillard appears 8 times in the same retrieval sample; this is a sample, not a full-year tally.",
+    "source": "OPAX's cited 2002 year brief and voices sample",
+    "link": {
+      "href": "/search?speaker=Philip+Ruddock&from=2002&to=2002",
+      "label": "Search Philip Ruddock in the 2002 record"
+    }
+  }
+]
