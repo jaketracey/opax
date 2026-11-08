@@ -31,6 +31,7 @@ import {
   type Guess,
   type Question,
 } from '../quiz-model';
+import { marks } from './marks';
 
 const doneBar = 'quiz-number-accessory';
 /** SwiftUI's slider track is inset by about half its thumb on each side. */
@@ -151,7 +152,7 @@ export function GuessSlider({
             {shown}
           </Text>
           {revealed ? null : (
-            <Icon name="keyboard" size={20} tone="navy" maxScale={1.5} />
+            <Icon name={marks.typeGuess} size={20} tone="navy" maxScale={1.5} />
           )}
         </Pressable>
       )}

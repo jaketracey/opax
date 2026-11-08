@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     width: circle,
     height: circle,
     borderRadius: circle / 2,
+    borderCurve: 'continuous',
     alignItems: 'center',
     justifyContent: 'center',
   },

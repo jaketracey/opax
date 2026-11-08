@@ -9,6 +9,7 @@ import {
   type Question,
   type QuizResponse,
 } from '../quiz-model';
+import { marks } from './marks';
 import { QuizSourceLine } from './Reveal';
 
 /**
@@ -36,7 +37,7 @@ export function AnswerReview({
             <Disclosure
               key={`${i}-${q.prompt}`}
               label={q.prompt}
-              icon={response.correct ? 'checkmark' : 'xmark.circle'}
+              icon={response.correct ? marks.correct : marks.wrong}
               accessibilityLabel={`${response.correct ? 'Correct' : 'Not correct'}. ${q.prompt}`}
               testID={`quiz-review-${i}`}
             >

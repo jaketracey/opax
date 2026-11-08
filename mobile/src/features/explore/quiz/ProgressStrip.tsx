@@ -53,6 +53,6 @@ export function ProgressStrip({
 const styles = StyleSheet.create({
   block: { gap: rhythm.tight },
   segments: { flexDirection: 'row', gap: 4 },
-  segment: { flex: 1, height: 4, borderRadius: 2 },
+  segment: { flex: 1, height: 4, borderRadius: 2, borderCurve: 'continuous' },
   line: { alignSelf: 'flex-end' },
 });

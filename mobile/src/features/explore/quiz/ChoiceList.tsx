@@ -12,6 +12,7 @@ import { Text } from '../../../design/text';
 import { minimumTarget, rhythm } from '../../../design/tokens';
 import { CachedPortrait } from '../../CachedPortrait';
 import type { Question } from '../quiz-model';
+import { marks } from './marks';
 
 /**
  * Full-width single-choice rows. The chosen row shows a trailing checkmark.
@@ -115,12 +116,12 @@ function ChoiceRow({
       </View>
       {revealed ? (
         correct ? (
-          <Icon name="checkmark" size={17} tone="navy" />
+          <Icon name={marks.correct} size={17} tone="navy" />
         ) : chosen ? (
-          <Icon name="xmark.circle" size={17} tone="inkSoft" />
+          <Icon name={marks.wrong} size={17} tone="inkSoft" />
         ) : null
       ) : chosen ? (
-        <Icon name="checkmark" size={17} tone="navy" />
+        <Icon name={marks.correct} size={17} tone="navy" />
       ) : null}
     </Pressable>
   );
