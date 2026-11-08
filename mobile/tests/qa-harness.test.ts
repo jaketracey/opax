@@ -106,6 +106,14 @@ describe('iPhone suite', () => {
       .filter((name) => /^\d\d[a-z]?-.*\.yaml$/.test(name))
       .filter((name) => !/-(open-profile|scene-lifecycle)\.yaml$/.test(name))
       .filter((name) => !name.includes('ipad'))
+      // New in wave 4 (w4-seat-welcome); join qa_iphone_suite at merge.
+      .filter(
+        (name) =>
+          ![
+            '28d-first-launch-link.yaml',
+            '28e-no-permission-at-launch.yaml',
+          ].includes(name),
+      )
       .map((name) => `.maestro/${name}`)
       .filter((path) => !covered.has(path));
     expect(missing).toEqual([]);
