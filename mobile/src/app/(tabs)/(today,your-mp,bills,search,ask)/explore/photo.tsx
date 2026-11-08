@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="explore/photo" title="Photograph" />;
-}
+export { default } from '../../../../features/explore/PhotoViewer';
