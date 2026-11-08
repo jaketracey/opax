@@ -1,0 +1,60 @@
+appId: au.com.opax.app
+name: 59 Methods opened by link, the correction row, then Coverage pushed beneath it
+---
+# records.md 6 and 7: opax://methods opens Methods as the Account sheet's
+# root, with Done. Coverage pushes from it, and Back returns.
+- launchApp
+- openLink: opax://methods
+- extendedWaitUntil:
+    visible:
+      id: methods-screen
+    timeout: 30000
+- assertVisible:
+    id: methods-title
+- assertVisible: Done
+- takeScreenshot: ${EVIDENCE}/59-methods
+- scrollUntilVisible:
+    element:
+      id: methods-section-money
+    direction: DOWN
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible: '.*Totals are a minimum: donations under the disclosure threshold aren’t published\..*'
+- takeScreenshot: ${EVIDENCE}/59-money
+- scrollUntilVisible:
+    element:
+      id: methods-correction
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- assertVisible: corrections@opax.com.au
+- assertVisible: We aim to respond within 2 business days.
+- takeScreenshot: ${EVIDENCE}/59-correction
+- scrollUntilVisible:
+    element:
+      id: methods-coverage
+    direction: UP
+    centerElement: true
+    timeout: 90000
+- waitForAnimationToEnd
+- tapOn:
+    id: methods-coverage
+- extendedWaitUntil:
+    visible:
+      id: coverage-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: coverage-sources
+    visibilityPercentage: 10
+    timeout: 90000
+- assertVisible: By source
+- takeScreenshot: ${EVIDENCE}/59-coverage
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: methods-screen
+    timeout: 15000
+- tapOn: Done
+- assertNotVisible:
+    id: methods-screen
