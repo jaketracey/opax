@@ -145,11 +145,25 @@ function SeatHeader({
 /** The card's skeleton in its final shape: member, three Latest rows, faces, line. */
 export function YourMPSkeleton() {
   return (
-    <View style={styles.block} testID="today-your-mp-loading">
-      <Skeleton shape="people" count={1} label="Loading your MP" />
-      <Skeleton shape="rows" count={CARD_LATEST} label="Loading your MP" />
-      <Skeleton shape="rows" count={1} label="Loading your MP" />
-      <Skeleton shape="text" count={1} label="Loading your MP" />
+    // One element for VoiceOver, read once (today.md 5.4); the shapes inside
+    // keep the card's layout.
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Loading your MP"
+      accessibilityState={{ busy: true }}
+      testID="today-your-mp-loading"
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.block}
+      >
+        <Skeleton shape="people" count={1} label="Loading your MP" />
+        <Skeleton shape="rows" count={CARD_LATEST} label="Loading your MP" />
+        <Skeleton shape="rows" count={1} label="Loading your MP" />
+        <Skeleton shape="text" count={1} label="Loading your MP" />
+      </View>
     </View>
   );
 }
