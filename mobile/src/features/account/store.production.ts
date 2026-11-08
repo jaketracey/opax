@@ -26,3 +26,4 @@ const state: AccountState = {
 
 export const accountSnapshot = (): AccountState => state;
 export const useAccount = (): AccountState => state;
+export const useAccountSignedIn = (): boolean => false;
