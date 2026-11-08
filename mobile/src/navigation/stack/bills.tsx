@@ -1,4 +1,4 @@
-import { screen, sheetOptions, tabRootScreen } from './screen';
+import { screen, tabRootScreen } from './screen';
 
 export function billsScreens(segment = '', signedIn = false) {
   return [
@@ -6,8 +6,5 @@ export function billsScreens(segment = '', signedIn = false) {
     screen('bill/[key]', 'Bill'),
     screen('bill-list', 'Bills'),
     screen('division-history', 'Votes in parliament'),
-    ...(segment === '(bills)'
-      ? [screen('bill-filters', 'Filters', sheetOptions)]
-      : []),
   ];
 }

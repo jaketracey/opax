@@ -221,7 +221,7 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'])(
     expect(actual).toContain('ask');
     for (const screen of ['directory', 'stats', 'methods'])
       expect(actual).toContain(screen);
-    expect(actual.includes('bill-filters')).toBe(segment === '(bills)');
+    expect(actual).not.toContain('bill-filters');
   },
 );
 test.each([

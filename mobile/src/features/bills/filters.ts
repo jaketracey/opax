@@ -1,26 +1,68 @@
-import { useSyncExternalStore } from 'react';
-import { billSentenceCase, billName } from '../../api/bill-transforms';
-import type { billFacetsFor, billsFor } from '../../api/catalogs';
-import { formatCount, formatDate } from '../../design/format';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { billFoldText, billName } from '../../api/bill-transforms';
+import type { billsFor } from '../../api/catalogs';
+import { formatCount } from '../../design/format';
 import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
+import {
+  filterStore,
+  registerFilterModel,
+  type FilterChoice,
+  type FilterModel,
+  type FilterRow,
+  type FilterValues,
+} from '../sheets/filter-model';
+import { billsFilterModel } from '../sheets/filter-models';
 import { partyFromCode } from './party-codes';
+import { rowDate, statusEventText } from './status-event';
 
 export type BillListRow = NonNullable<
   ReturnType<typeof billsFor>['data']
 >[number];
-export type BillFacets = NonNullable<ReturnType<typeof billFacetsFor>['data']>;
 
-/** The bill list's filters. The search text stays with the list screen. */
+/** What the list shows before any filter: never a filter itself. */
+export type BillScope = 'before' | 'passed' | 'all';
+export const scopes: readonly { value: BillScope; label: string }[] = [
+  { value: 'before', label: 'Before parliament' },
+  { value: 'passed', label: 'Passed' },
+  { value: 'all', label: 'All' },
+];
+export const isScope = (value: unknown): value is BillScope =>
+  value === 'before' || value === 'passed' || value === 'all';
+
+export type BillSort = 'newest' | 'oldest' | 'title' | 'divisions';
+const isSort = (value: unknown): value is BillSort =>
+  value === 'newest' ||
+  value === 'oldest' ||
+  value === 'title' ||
+  value === 'divisions';
+export const sortLabels: Record<BillSort, string> = {
+  newest: 'Newest first',
+  oldest: 'Oldest first',
+  title: 'Name',
+  divisions: 'Most recorded votes',
+};
+
+/**
+ * The list's filters as the bills `FilterModel` holds them. Scope and sort
+ * are not filters: they never count in "Filters, 2 on".
+ */
 export interface BillFilters {
+  parliament?: number;
   status?: string;
   /** The originating house's chamber ID. */
   chamber?: string;
-  year?: number;
-  parliament?: number;
+  portfolio?: string;
   divided?: boolean;
-  sort?: 'newest' | 'oldest' | 'title' | 'divisions';
+  sort?: BillSort;
 }
-export type BillFilterKey = keyof BillFilters;
+export const FILTER_KEYS = [
+  'parliament',
+  'status',
+  'chamber',
+  'portfolio',
+  'divided',
+] as const;
+
 export const parliamentLabel = (value: number) => {
   const lastTwo = value % 100;
   const suffix =
@@ -33,161 +75,357 @@ export const parliamentLabel = (value: number) => {
           : value % 10 === 3
             ? 'rd'
             : 'th';
-  return `${value}${suffix} parliament`;
+  return `${value}${suffix} Parliament`;
 };
-
-// One store shared by the list and its filter sheet, so routes carry no
-// filter state. The list publishes the facets once its index loads.
-interface State {
-  filters: BillFilters;
-  facets: BillFacets | null;
-}
-let state: State = { filters: {}, facets: null };
-const listeners = new Set<() => void>();
-const emit = () => listeners.forEach((listener) => listener());
-export const billFilterStore = {
-  get: () => state,
-  subscribe(listener: () => void) {
-    listeners.add(listener);
-    return () => {
-      listeners.delete(listener);
-    };
-  },
-  setFilters(filters: BillFilters) {
-    state = { ...state, filters: cleaned(filters) };
-    emit();
-  },
-  setFacets(facets: BillFacets | null) {
-    if (facets === state.facets) return;
-    state = { ...state, facets };
-    emit();
-  },
-  /** For tests: back to no filters and no facets. */
-  reset() {
-    state = { filters: {}, facets: null };
-    emit();
-  },
-};
-export function useBillFilterState(): State {
-  return useSyncExternalStore(
-    billFilterStore.subscribe,
-    billFilterStore.get,
-    billFilterStore.get,
-  );
-}
-function cleaned(filters: BillFilters): BillFilters {
-  const out: BillFilters = {};
-  if (filters.status) out.status = filters.status;
-  if (filters.chamber) out.chamber = filters.chamber;
-  if (filters.year !== undefined) out.year = filters.year;
-  if (filters.parliament !== undefined) out.parliament = filters.parliament;
-  if (filters.divided) out.divided = true;
-  if (filters.sort) out.sort = filters.sort;
-  return out;
-}
 
 /** "House of Representatives"; never a raw chamber ID. */
 export const chamberLabel = (chamber: string) =>
   chamberName(chamber, 'federal') ?? CHAMBER_NOT_RECORDED;
 
-/** Applied filters as chips: the filter's name in a sentence and its value. */
-export function appliedFilters(filters: BillFilters) {
-  const chips: { key: BillFilterKey; filter: string; value: string }[] = [];
-  if (filters.status)
-    chips.push({
-      key: 'status',
-      filter: 'status',
-      value: billSentenceCase(filters.status),
-    });
-  if (filters.chamber)
-    chips.push({
-      key: 'chamber',
-      filter: 'chamber',
-      value: chamberLabel(filters.chamber),
-    });
-  if (filters.year !== undefined)
-    chips.push({ key: 'year', filter: 'year', value: String(filters.year) });
-  if (filters.parliament !== undefined)
-    chips.push({
-      key: 'parliament',
-      filter: 'parliament',
-      value: parliamentLabel(filters.parliament),
-    });
-  if (filters.divided)
-    chips.push({ key: 'divided', filter: 'divided on', value: 'Yes' });
-  return chips;
+/** The filters a state holds, from the model's loose values. */
+export function billFilters(state: FilterValues): BillFilters {
+  const out: BillFilters = {};
+  if (typeof state.parliament === 'number') out.parliament = state.parliament;
+  if (typeof state.status === 'string' && state.status)
+    out.status = state.status;
+  if (typeof state.chamber === 'string' && state.chamber)
+    out.chamber = state.chamber;
+  if (typeof state.portfolio === 'string' && state.portfolio)
+    out.portfolio = state.portfolio;
+  if (state.divided === true) out.divided = true;
+  if (isSort(state.sort)) out.sort = state.sort;
+  return out;
 }
-export function withoutFilter(
-  filters: BillFilters,
-  key: BillFilterKey,
-): BillFilters {
-  const next = { ...filters };
-  delete next[key];
-  return next;
+/** How many filters are on: scope and sort never count. */
+export function activeFilterCount(filters: BillFilters, scope: BillScope) {
+  return FILTER_KEYS.filter(
+    (key) =>
+      filters[key] !== undefined &&
+      filters[key] !== false &&
+      (key !== 'status' || scope === 'all'),
+  ).length;
 }
 
-const bills = (n: number) => `${formatCount(n)} ${n === 1 ? 'bill' : 'bills'}`;
-/** "2,989 bills", or "119 of 2,989 bills" once anything narrows the list. */
-export function countLine(shown: number, total: number) {
-  return shown === total
-    ? bills(total)
-    : `${formatCount(shown)} of ${bills(total)}`;
+const inScope = (row: BillListRow, scope: BillScope) =>
+  scope === 'all'
+    ? true
+    : scope === 'before'
+      ? row.status === 'before_parliament'
+      : row.status === 'passed';
+type Dimension = (typeof FILTER_KEYS)[number];
+function matches(
+  row: BillListRow,
+  filters: BillFilters,
+  scope: BillScope,
+  skip?: Dimension,
+) {
+  return (
+    inScope(row, scope) &&
+    (skip === 'parliament' ||
+      filters.parliament === undefined ||
+      row.parliament === filters.parliament) &&
+    (skip === 'status' ||
+      scope !== 'all' ||
+      !filters.status ||
+      row.status === filters.status) &&
+    (skip === 'chamber' ||
+      !filters.chamber ||
+      row.originating_house === filters.chamber) &&
+    (skip === 'portfolio' ||
+      !filters.portfolio ||
+      row.portfolio === filters.portfolio) &&
+    (skip === 'divided' || !filters.divided || row.divisions > 0)
+  );
+}
+
+const activity = (row: BillListRow) => row.status_as_of ?? row.introduced ?? '';
+/**
+ * The scope's rows, filtered and sorted. "Newest first" is the introduced
+ * date for Before parliament and All, and the status date for Passed.
+ */
+export function billRows(
+  rows: readonly BillListRow[],
+  filters: BillFilters,
+  scope: BillScope,
+): BillListRow[] {
+  const sort = filters.sort ?? 'newest';
+  const date =
+    scope === 'passed' ? activity : (r: BillListRow) => r.introduced ?? '';
+  const name = (r: BillListRow) => billFoldText(billName(r));
+  return rows
+    .filter((row) => matches(row, filters, scope))
+    .sort((a, b) =>
+      sort === 'title'
+        ? name(a).localeCompare(name(b))
+        : sort === 'divisions'
+          ? b.divisions - a.divisions || name(a).localeCompare(name(b))
+          : sort === 'oldest'
+            ? date(a).localeCompare(date(b)) || name(a).localeCompare(name(b))
+            : date(b).localeCompare(date(a)) || name(a).localeCompare(name(b)),
+    );
+}
+/** Rows in scope before any filter or search: the "of 1,793" total. */
+export const scopeTotal = (rows: readonly BillListRow[], scope: BillScope) =>
+  rows.filter((row) => inScope(row, scope)).length;
+
+/**
+ * Each choice's count with every other active filter applied, so a choice
+ * that would empty the list says "0" before it is chosen.
+ */
+export function facetCounts(
+  rows: readonly BillListRow[],
+  filters: BillFilters,
+  scope: BillScope,
+  dimension: Dimension,
+): Map<string, number> {
+  const counts = new Map<string, number>();
+  let total = 0;
+  for (const row of rows) {
+    if (!matches(row, filters, scope, dimension)) continue;
+    total++;
+    const value =
+      dimension === 'parliament'
+        ? row.parliament
+        : dimension === 'status'
+          ? row.status
+          : dimension === 'chamber'
+            ? row.originating_house
+            : dimension === 'portfolio'
+              ? row.portfolio
+              : row.divisions > 0
+                ? 'true'
+                : '';
+    if (value !== null && value !== undefined && value !== '')
+      counts.set(String(value), (counts.get(String(value)) ?? 0) + 1);
+  }
+  counts.set('', total);
+  return counts;
+}
+
+const STATUS_ORDER = [
+  'before_parliament',
+  'exposure_draft',
+  'passed',
+  'lapsed',
+];
+const statusLabels: Record<string, string> = {
+  before_parliament: 'Before parliament',
+  exposure_draft: 'Exposure draft',
+  passed: 'Passed',
+  lapsed: 'Lapsed',
+};
+/**
+ * "48th Parliament (2025 to now)": the years run from the first bill
+ * introduced in it to the first introduced in the next.
+ */
+function parliamentChoices(rows: readonly BillListRow[]): FilterChoice[] {
+  const starts = new Map<number, number>();
+  for (const row of rows) {
+    const year = Number(row.introduced?.slice(0, 4));
+    if (row.parliament == null || !year) continue;
+    const start = starts.get(row.parliament);
+    if (start === undefined || year < start) starts.set(row.parliament, year);
+  }
+  const numbers = [...new Set(rows.map((r) => r.parliament))]
+    .filter((n): n is number => typeof n === 'number')
+    .sort((a, b) => b - a);
+  return numbers.map((n) => {
+    const start = starts.get(n);
+    const end = starts.get(n + 1);
+    return {
+      value: String(n),
+      label: start
+        ? `${parliamentLabel(n)} (${start} to ${n === numbers[0] ? 'now' : (end ?? start)})`
+        : parliamentLabel(n),
+    };
+  });
 }
 
 /**
- * What a bill row says, as the selectors render it: name, dated status,
- * introduced (or released) date, who brought it (the sponsor, with their
- * recorded party, or else the portfolio) and the chamber. `label` is the
- * one VoiceOver element for the row.
+ * The bills `FilterModel` (wave 3) bound to one list's rows and scope: the
+ * choices the index holds, each counted with the other filters applied, and
+ * the live result line.
  */
-export function billRowText(bill: BillListRow) {
-  const name = billName(bill);
-  const status = billSentenceCase(bill.status) || 'Status not recorded';
-  const chamber = bill.originating_house
-    ? chamberLabel(bill.originating_house)
-    : null;
-  // On screen a date never breaks across lines ("25 Jun / 2026"); VoiceOver
-  // reads the long form with ordinary spaces.
-  const date = (value: string, style: 'short' | 'long') =>
-    style === 'short'
-      ? formatDate(value, style).replace(/ /g, '\u00A0')
-      : formatDate(value, style);
-  const introduced = (style: 'short' | 'long') =>
-    bill.introduced
-      ? `${bill.introducedLabel} ${date(bill.introduced, style)}`
-      : null;
-  const asAt = (style: 'short' | 'long') =>
-    bill.status_as_of ? `as at ${date(bill.status_as_of, style)}` : null;
+export function boundBillsModel(
+  rows: readonly BillListRow[],
+  scope: BillScope,
+): FilterModel<FilterValues> {
+  const statuses = [...new Set(rows.map((r) => r.status))]
+    .sort(
+      (a, b) =>
+        (STATUS_ORDER.includes(a) ? STATUS_ORDER.indexOf(a) : 99) -
+          (STATUS_ORDER.includes(b) ? STATUS_ORDER.indexOf(b) : 99) ||
+        a.localeCompare(b),
+    )
+    .map((value) => ({
+      value,
+      label:
+        statusLabels[value] ??
+        value[0]!.toUpperCase() + value.slice(1).replace(/_/g, ' '),
+    }));
+  const chambers = ['representatives', 'senate']
+    .filter((c) => rows.some((r) => r.originating_house === c))
+    .map((value) => ({ value, label: chamberLabel(value) }));
+  const portfolios = [
+    ...new Set(rows.map((r) => r.portfolio).filter((p): p is string => !!p)),
+  ].map((value) => ({ value, label: value }));
+  const base = billsFilterModel({
+    scope,
+    parliaments: parliamentChoices(rows),
+    statuses,
+    chambers,
+    portfolios,
+    resultCount: (state) => billRows(rows, billFilters(state), scope).length,
+  });
+  const counted = (row: FilterRow<FilterValues>): FilterRow<FilterValues> =>
+    row.key === 'sort'
+      ? row
+      : {
+          ...row,
+          choices: (state) => {
+            const counts = facetCounts(
+              rows,
+              billFilters(state),
+              scope,
+              row.key as Dimension,
+            );
+            return row.choices(state).map((choice) => ({
+              ...choice,
+              count: counts.get(choice.value) ?? 0,
+            }));
+          },
+        };
+  return { ...base, rows: base.rows.map(counted) };
+}
+
+// The Bills tab keeps its scope while the app runs, as its filters do; a
+// pushed list owns its own copy, dropped when it pops.
+const tabScope = { value: 'before' as BillScope };
+const scopeListeners = new Set<() => void>();
+export const billListScope = {
+  get: () => tabScope.value,
+  set(scope: BillScope) {
+    tabScope.value = scope;
+    scopeListeners.forEach((listener) => listener());
+  },
+  subscribe(listener: () => void) {
+    scopeListeners.add(listener);
+    return () => {
+      scopeListeners.delete(listener);
+    };
+  },
+};
+
+/**
+ * One list's state: scope, filters and sort. `owner` 'tab' is the Bills
+ * tab's state, kept while the app runs; any other owner (a pushed list's
+ * route key) is created from its route params and edits only itself.
+ */
+export function useBillListState(
+  owner: string,
+  initial: { scope?: BillScope; sort?: BillSort } = {},
+) {
+  const tab = owner === 'tab';
+  const tabValue = useSyncExternalStore(
+    billListScope.subscribe,
+    billListScope.get,
+    billListScope.get,
+  );
+  const [ownScope, setOwnScope] = useState<BillScope>(
+    initial.scope ?? 'before',
+  );
+  const scope = tab ? tabValue : ownScope;
+  const setScope = tab ? billListScope.set : setOwnScope;
+  const [store] = useState(
+    () =>
+      filterStore('bills', owner) ??
+      registerFilterModel(billsFilterModel({ scope }), {
+        owner,
+        ...(initial.sort ? { value: { sort: initial.sort } } : {}),
+      }),
+  );
+  const state = useSyncExternalStore(store.subscribe, store.get, store.get);
   return {
-    name,
-    status,
-    asAt: asAt('short'),
-    date: introduced('short'),
-    chamber,
-    // The register names a sponsor or a portfolio, never both.
-    by: bill.sponsor || bill.portfolio || null,
-    // The party as recorded, drawn as a PartyLabel (a dot and its name).
-    // The list does not date it, so it is never said as current or former.
-    party: bill.sponsor_party
-      ? { party: partyFromCode(bill.sponsor_party), status: 'unknown' as const }
-      : null,
-    label: [
-      name,
-      [status, asAt('long')].filter(Boolean).join(', '),
-      chamber,
-      introduced('long'),
-      bill.sponsor,
-      partyFromCode(bill.sponsor_party),
-      bill.portfolio,
-    ]
-      .filter(Boolean)
-      .join(', '),
+    scope,
+    setScope,
+    filters: billFilters(state),
+    state,
+    store,
   };
 }
 
-export const billSorts = [
-  { value: 'newest', label: 'Newest first' },
-  { value: 'oldest', label: 'Oldest first' },
-  { value: 'title', label: 'By name' },
-  { value: 'divisions', label: 'Most division records' },
-] as const;
+/** Binds the model to the loaded rows once they arrive (and per scope). */
+export function useBoundBillsModel(
+  owner: string,
+  rows: readonly BillListRow[] | null,
+  scope: BillScope,
+) {
+  useEffect(() => {
+    if (!rows) return;
+    registerFilterModel(boundBillsModel(rows, scope), { owner });
+  }, [owner, rows, scope]);
+}
+
+const bills = (n: number) => `${formatCount(n)} ${n === 1 ? 'bill' : 'bills'}`;
+/** "119 bills", or "27 of 1,793 bills" once a filter narrows the scope. */
+export function countLine(
+  shown: number,
+  total: number,
+  filtered = shown !== total,
+) {
+  return filtered ? `${formatCount(shown)} of ${bills(total)}` : bills(shown);
+}
+
+/**
+ * What a bill row says: name, status (spoken even when the capsule is
+ * hidden), the dated event, and the sponsor with their recorded party or
+ * else the portfolio. Never the chamber.
+ */
+export function billRowText(
+  bill: BillListRow & { status_stage?: string | null },
+) {
+  const name = billName(bill);
+  const status =
+    statusLabels[bill.status] ??
+    (bill.status
+      ? bill.status[0]!.toUpperCase() + bill.status.slice(1).replace(/_/g, ' ')
+      : 'Status not recorded');
+  const event = rowDate(bill);
+  const sponsor = bill.sponsor || null;
+  const party = sponsor ? partyFromCode(bill.sponsor_party) : null;
+  const meta:
+    | { sponsor: string; party: string | null }
+    | { portfolio: string }
+    | undefined = sponsor
+    ? { sponsor, party: party ?? null }
+    : bill.portfolio
+      ? { portfolio: `${bill.portfolio} portfolio` }
+      : undefined;
+  return {
+    name,
+    status,
+    date: event ? statusEventText(event) : null,
+    meta,
+    label: `${[
+      name,
+      [status, event ? statusEventText(event, 'long') : null]
+        .filter(Boolean)
+        .join(', '),
+      sponsor
+        ? [sponsor, party].filter(Boolean).join(', ')
+        : bill.portfolio
+          ? `${bill.portfolio} portfolio`
+          : null,
+    ]
+      .filter(Boolean)
+      .join('. ')}.`,
+  };
+}
+
+/** Sort words for the Filters button's value: "sorted by name". */
+export function sortValue(sort: BillSort | undefined, scope: BillScope) {
+  void scope;
+  return sort && sort !== 'newest'
+    ? `sorted by ${sortLabels[sort].toLocaleLowerCase('en-AU')}`
+    : null;
+}

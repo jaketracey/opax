@@ -28,7 +28,20 @@ jest.mock('expo-router', () => ({
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: (...args: unknown[]) => mockPush(...args) },
-  Stack: { Screen: () => null },
+  // The bill page's bottom toolbar, and rows that link through Link.
+  Stack: {
+    Screen: () => null,
+    Toolbar: Object.assign(() => null, {
+      Button: () => null,
+      Spacer: () => null,
+    }),
+  },
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
 }));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { billFor: jest.fn(), directory: jest.fn() },
@@ -209,7 +222,7 @@ const native = (root: ReactTestInstance, testID: string) =>
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
 
-test('a linked sponsor is the standard people row with one spoken label, opening the profile', async () => {
+test('a linked sponsor is the standard people row with one spoken label, linking to the profile', async () => {
   const r = await render('au-federal-r6850');
   const sponsor = block(r.root);
   const [row] = sponsor.findAllByType(PersonRow);
@@ -222,19 +235,18 @@ test('a linked sponsor is the standard people row with one spoken label, opening
   });
   expect(row!.findByType(CachedPortrait).props.slug).toBe('andrew-wilkie');
   const button = native(r.root, 'bill-sponsor-andrew-wilkie');
-  expect(button.props.accessibilityRole).toBe('button');
+  expect(button.props.accessibilityRole).toBe('link');
   expect(button.props.accessibilityLabel).toBe(
-    'Andrew Wilkie, Member for Clark · Tasmania, Independent, profile',
+    'Andrew Wilkie, Independent, Member for Clark · Tasmania, Sponsor',
   );
   expect(
     sponsor.findAll((node) => node.props.name === 'chevron.right').length,
   ).toBeGreaterThan(0);
   // The party travels on the row; no separate dot line.
   expect(sponsor.findAllByType(RecordedParty)).toHaveLength(0);
-  await act(async () => {
-    row!.props.onPress();
-  });
-  expect(mockPush).toHaveBeenCalledWith(personRoute('andrew-wilkie'));
+  expect(row!.props.href).toEqual(
+    personRoute('andrew-wilkie', 'Andrew Wilkie'),
+  );
   act(() => r.unmount());
 });
 
@@ -249,7 +261,7 @@ test('an unlinked sponsor gets the same row with a blank portrait and no chevron
   const r = await render('au-federal-s1479');
   const sponsor = block(r.root);
   const [row] = sponsor.findAllByType(PersonRow);
-  expect(row!.props.onPress).toBeUndefined();
+  expect(row!.props.href).toBeUndefined();
   expect(row!.props.party).toBe('Greens');
   expect(row!.findAllByType(CachedPortrait)).toHaveLength(0);
   expect(row!.findByType(Portrait).props.loading).toBe(false);
@@ -259,7 +271,9 @@ test('an unlinked sponsor gets the same row with a blank portrait and no chevron
   const plain = native(r.root, 'bill-sponsor-unlinked-0');
   expect(plain.props.accessible).toBe(true);
   expect(plain.props.accessibilityRole).toBeUndefined();
-  expect(plain.props.accessibilityLabel).toBe('Mehreen Faruqi, Greens');
+  expect(plain.props.accessibilityLabel).toBe(
+    'Mehreen Faruqi, Greens, Sponsor',
+  );
   act(() => r.unmount());
 });
 
@@ -269,7 +283,7 @@ test('an unreadable directory leaves every sponsor plain, never a guessed link',
   const [row] = block(r.root).findAllByType(PersonRow);
   expect(row!.props).toMatchObject({
     name: 'Andrew Wilkie',
-    onPress: undefined,
+    href: undefined,
     party: 'Independent',
     partyStatus: 'unknown',
   });
@@ -345,7 +359,7 @@ test('a former sponsor reads "Formerly" on the seat line, never the party label'
   expect(
     native(r.root, 'bill-sponsor-sussan-ley').props.accessibilityLabel,
   ).toBe(
-    'Sussan Ley, Formerly member for Farrer · New South Wales, Liberal, profile',
+    'Sussan Ley, Liberal, Formerly member for Farrer · New South Wales, Sponsor',
   );
   act(() => r.unmount());
 });

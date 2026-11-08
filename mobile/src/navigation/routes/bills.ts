@@ -12,7 +12,13 @@ export const billRoute = (
   },
 });
 export const billListRoute = (
-  filters: { scope?: string; sort?: string; q?: string } = {},
+  filters: {
+    scope?: string;
+    sort?: string;
+    q?: string;
+    /** '1' puts the cursor in the search field. */
+    focus?: string;
+  } = {},
   name?: string,
 ) => ({
   pathname: '/bill-list' as const,

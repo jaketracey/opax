@@ -1,95 +1,156 @@
-import { SavedCopyNotice } from '../CatalogNotice';
-import { useRefreshCommand } from '../../design/keyboard';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
   Keyboard,
+  Platform,
   RefreshControl,
   StyleSheet,
   View,
+  type TextLayoutEvent,
   type ViewToken,
 } from 'react-native';
 import {
   Stack,
   router,
-  type NativeStackNavigationProp,
-  useIsFocused,
   useLocalSearchParams,
-  useNavigation,
+  type NativeStackHeaderItem,
 } from 'expo-router';
 import { ApiError } from '../../api/errors';
-import { billFacetsFor, billsFor } from '../../api/catalogs';
+import { billName } from '../../api/bill-transforms';
+import { billsFor } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
+import { useRefreshCommand } from '../../design/keyboard';
 import {
   Button,
+  ContentUnavailable,
   Divider,
-  EmptyState,
-  ErrorState,
-  Field,
-  FilterChip,
-  Group,
   IconButton,
+  InlineError,
   LayoutRegion,
-  SidebarSafe,
   LinkRow,
-  LoadingState,
-  OfflineBanner,
+  OfflineLine,
+  PopUpButton,
+  SegmentedPicker,
+  Skeleton,
+  SidebarSafe,
   SourceLine,
   SplitLayout,
+  EmptyState,
   Text,
-  errorMessage,
   isPad,
   useAccessibilitySize,
   useLayout,
 } from '../../design/primitives';
-import { shareRecord } from '../../navigation/share';
-import BillTextReader from '../records/BillTextReader';
-import BillDetail from './BillDetail';
-import type { BillEntry } from './navigation';
+import { copy } from '../../design/copy';
+import { formatDate } from '../../design/format';
 import { chrome, colors, layout, rhythm } from '../../design/tokens';
-import { billRoute } from '../../navigation/routes';
 import {
-  appliedFilters,
-  billSorts,
-  billFilterStore,
+  filtersItem,
+  headerItems,
+  rootHeaderItems,
+} from '../../navigation/chrome';
+import { filtersRoute } from '../../navigation/routes/filters';
+import { billRoute } from '../../navigation/routes';
+import { resultsRoute } from '../../navigation/routes/search';
+import { useListSearchBar } from '../../design/search-bar';
+import { shareRecord } from '../../navigation/share';
+import { useAccount } from '../account/store';
+import { useOpenAsk } from '../ask/open';
+import BillTextReader from '../records/BillTextReader';
+import BillDetail, { PaneMenu } from './BillDetail';
+import type { BillEntry } from './navigation';
+import {
+  activeFilterCount,
+  billRows,
   countLine,
-  useBillFilterState,
-  withoutFilter,
+  isScope,
+  scopeTotal,
+  scopes,
+  sortLabels,
+  useBillListState,
+  useBoundBillsModel,
+  type BillScope,
+  type BillSort,
 } from './filters';
 import { BillIndexRow } from './parts';
 import { useCatalogRecord } from './useCatalogRecord';
 
-// The web's bill-list fine print, in its words (portal/public/app.js
-// BILLS_FINEPRINT), without the sentences about division counts the app's
-// list does not show.
-const FINEPRINT =
-  'Bills, their dates and their divisions come from the parliamentary record; each bill page links the official source it was read from. Summaries are written by a model from the explanatory memorandum or the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from this list is not evidence it does not exist: the register is still being built.';
+const PLACEHOLDER = 'Bills, sponsors and portfolios';
+const LIST_NOTE = 'This list may not include every bill yet.';
 
 /**
- * The Bills tab: every federal bill in the index, filtered and searched on
- * the device. On iPad regular width it is the reference split view: this
- * list on the left, the selected bill (and its text) in the detail pane.
+ * Bills: the tab root, or the same list pushed in another tab
+ * (`/bill-list`). On iPad regular width it is a split: this list on the
+ * left, the selected bill (and its text) in the detail pane.
  */
-export default function BillsList() {
-  // The region a split measures; iPhone keeps the bare list (no wrapper).
-  if (!isPad) return <BillsScreen />;
+export default function BillsList({ pushed = false }: { pushed?: boolean }) {
+  if (!isPad) return <BillsScreen pushed={pushed} />;
   return (
     <SidebarSafe style={styles.screen}>
       <LayoutRegion style={styles.screen}>
-        <BillsScreen />
+        <BillsScreen pushed={pushed} />
       </LayoutRegion>
     </SidebarSafe>
   );
 }
+/** `/bill-list`: its own scope, filters and sort, from its route params. */
+export function PushedBillsList() {
+  return <BillsList pushed />;
+}
 
-function BillsScreen() {
+let pushedLists = 0;
+/** Old links: `?status=passed` is the scope; `?year=2024` is search text. */
+export function listParams(params: {
+  scope?: string;
+  status?: string;
+  sort?: string;
+  q?: string;
+  year?: string;
+}): { scope?: BillScope; sort?: BillSort; q: string } {
+  const status = params.status;
+  const scope: BillScope | undefined = isScope(params.scope)
+    ? params.scope
+    : params.year
+      ? 'all'
+      : status === 'passed'
+        ? 'passed'
+        : status === 'before_parliament' || status === 'before'
+          ? 'before'
+          : status
+            ? 'all'
+            : undefined;
+  const sort =
+    params.sort === 'newest' ||
+    params.sort === 'oldest' ||
+    params.sort === 'title' ||
+    params.sort === 'divisions'
+      ? params.sort
+      : undefined;
+  const q = (
+    params.q ?? (params.year && /^\d{4}$/.test(params.year) ? params.year : '')
+  ).trim();
+  return { scope, sort, q };
+}
+
+function BillsScreen({ pushed }: { pushed: boolean }) {
+  const params = useLocalSearchParams<{
+    bill?: string;
+    scope?: string;
+    status?: string;
+    sort?: string;
+    q?: string;
+    year?: string;
+    focus?: string;
+  }>();
+  const [initial] = useState(() => listParams(params));
+  const [owner] = useState(() => (pushed ? `list-${++pushedLists}` : 'tab'));
+  const list = useBillListState(owner, initial);
+  const { scope, setScope, filters } = list;
   const load = useCallback((refresh: boolean) => catalogs.bills(refresh), []);
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   useRefreshCommand(refresh, refreshing);
-  const [text, setText] = useState('');
-  const [query, setQuery] = useState('');
-  const { filters } = useBillFilterState();
-
+  const [text, setText] = useState(initial.q);
+  const [query, setQuery] = useState(initial.q);
   // Filter as the reader types, a beat behind the keyboard.
   useEffect(() => {
     const timer = setTimeout(() => setQuery(text.trim()), 150);
@@ -97,28 +158,30 @@ function BillsScreen() {
   }, [text]);
 
   const index = record?.data;
-  const facets = useMemo(() => (index ? billFacetsFor(index) : null), [index]);
-  useEffect(() => {
-    billFilterStore.setFacets(facets?.data ?? null);
-  }, [facets]);
-  const list = useMemo(
-    () =>
-      index
-        ? billsFor(index, { ...filters, query, sort: filters.sort ?? 'newest' })
-        : null,
-    [index, filters, query],
+  // Every bill as a display row, in index order; searched rows separately.
+  const all = useMemo(() => (index ? billsFor(index).data! : null), [index]);
+  const searched = useMemo(
+    () => (index && query ? billsFor(index, { query }).data! : all),
+    [index, query, all],
   );
-  const rows = useMemo(() => list?.data ?? [], [list]);
-  const chips = appliedFilters(filters);
+  useBoundBillsModel(owner, all, scope);
+  const rows = useMemo(
+    () => (searched ? billRows(searched, filters, scope) : []),
+    [searched, filters, scope],
+  );
+  const on = activeFilterCount(filters, scope);
+  const total = all ? scopeTotal(all, scope) : 0;
+  const searching = !!query;
 
-  // iPad regular width: the selection lives in the route (`/bills?bill=…`),
-  // so it survives tab switches and a deep link can open a bill in the pane.
-  const layout = useLayout();
-  const split = layout.regular;
-  const params = useLocalSearchParams<{ bill?: string }>();
+  // iPad regular width: the selection lives in the route (`?bill=…`).
+  const regular = useLayout();
+  const split = regular.regular;
   const selectedKey = params.bill || null;
   const titleFor = useCallback(
-    (key: string) => index?.bills.find((bill) => bill.key === key)?.title,
+    (key: string) => {
+      const bill = index?.bills.find((b) => b.key === key);
+      return bill ? billName(bill) : undefined;
+    },
     [index],
   );
   const selected = useMemo<BillEntry | null>(
@@ -130,7 +193,6 @@ function BillsScreen() {
   );
   const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
   const visible = useRef(new Set<string>());
-  // FlatList needs one stable callback for its whole life.
   const [onViewable] = useState(
     () =>
       ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -141,10 +203,8 @@ function BillsScreen() {
   );
   const select = useCallback(
     (entry: BillEntry | null) => {
-      // Choosing a result puts the search keyboard away, as Mail does.
       Keyboard.dismiss();
       router.setParams({ bill: entry?.key ?? '' });
-      // A keyboard step past the visible rows brings the row into view.
       const at = entry ? rows.findIndex((bill) => bill.key === entry.key) : -1;
       if (at >= 0 && !visible.current.has(entry!.key))
         listRef.current?.scrollToIndex({
@@ -155,166 +215,185 @@ function BillsScreen() {
     },
     [rows],
   );
-  // iPad landscape: the pane opens on the first bill rather than standing
-  // empty. A selection through the route, as a tap makes it, so VoiceOver
-  // stays on the list; once per visit, so closing the pane (Escape) keeps
-  // it closed. Portrait and the iPhone are unchanged.
-  // The native tabs draw every tab at launch, so this list loads behind
-  // Today: it waits until Bills is the tab in view, and writes to its own
-  // route. (`router.setParams` writes to whichever route is focused, so at
-  // launch it put the bill on Today's route and the pane stayed empty.)
-  const navigation =
-    useNavigation<NativeStackNavigationProp<{ bills: { bill?: string } }>>();
-  const focused = useIsFocused();
-  const opened = useRef(false);
-  const first = rows[0]?.key;
-  useEffect(() => {
-    if (selectedKey) opened.current = true;
-    if (
-      opened.current ||
-      !focused ||
-      !isPad ||
-      !split ||
-      !layout.landscape ||
-      !first
-    )
-      return;
-    // A tick later: a navigate to /bills (Today's link, ⌘3) applies its own
-    // params after this screen's effects run, and would undo a write made
-    // now. A tab press passes none.
-    const timer = setTimeout(() => {
-      opened.current = true;
-      navigation.setParams({ bill: first });
-    });
-    return () => clearTimeout(timer);
-  }, [navigation, focused, split, layout.landscape, selectedKey, first]);
   const offline = error instanceof ApiError && error.code === 'offline';
-  const stacked = useAccessibilitySize();
+  const account = useAccount();
+  const signedIn = !!account.status?.signedIn;
+  const searchBar = useSearchBarOptions(setText, params.focus === '1');
 
+  const sort = filters.sort ?? 'newest';
+  const filtersButton: NativeStackHeaderItem = {
+    ...(filtersItem({
+      active: on > 0,
+      href: filtersRoute('bills', owner),
+    }) as Extract<NativeStackHeaderItem, { type: 'button' }>),
+    accessibilityLabel: [
+      'Filters',
+      on ? `${on} on` : null,
+      sort !== 'newest' ? `sorted by ${sortLabels[sort].toLowerCase()}` : null,
+    ]
+      .filter(Boolean)
+      .join(', '),
+    disabled: !all,
+  };
+  const options = {
+    headerSearchBarOptions: searchBar,
+    ...(pushed ? { title: 'Bills', headerLargeTitleEnabled: false } : {}),
+    ...(isPad && !pushed ? { headerLargeTitleEnabled: !split } : {}),
+    ...headerItems(() =>
+      pushed
+        ? [filtersButton]
+        : rootHeaderItems({
+            segment: '(bills)',
+            signedIn,
+            extra: [filtersButton],
+          }),
+    ),
+  };
+
+  const clear = () => list.store.set(list.store.model.reset(list.state));
+  const stacked = useAccessibilitySize();
+  const filteredEmpty = !!all && !searching && on > 0 && rows.length === 0;
   const header = (
-    <Group>
-      <Field
-        label="Search bills"
-        testID="bills-search"
-        value={text}
-        onChangeText={setText}
-        onSubmitEditing={() => {
-          setQuery(text.trim());
-          Keyboard.dismiss();
-        }}
-        returnKeyType="search"
-        autoCorrect={false}
-        autoCapitalize="none"
-        clearButtonMode="while-editing"
-      />
+    <View style={styles.headerStack}>
+      {searching ? null : (
+        <LinkRow
+          title="Votes in parliament"
+          symbol="hand.raised"
+          onPress={() => router.push('/division-history')}
+          testID="bills-votes"
+        />
+      )}
+      <ScopeControl value={scope} onChange={setScope} />
       {record?.stale ? (
-        <>
-          <SavedCopyNotice
-            reason={record.staleReason}
-            testID={record.staleReason ? 'bills-saved-copy' : 'bills-offline'}
+        record.staleReason ? (
+          <InlineError
+            subject="the latest bills"
+            message={`The latest bills couldn't be loaded. Showing the copy saved on ${formatDate(record.savedAt, 'short').replace(/ \d{4}$/, '')}.`}
+            onRetry={refresh}
+            testID="bills-stale"
           />
-          <Button
-            label="Try again"
-            onPress={refresh}
-            loading={refreshing}
-            testID="bills-refresh"
-          />
-        </>
+        ) : (
+          <OfflineLine savedAt={record.savedAt} testID="bills-offline" />
+        )
       ) : null}
-      {/* The count line carries Filters; the list's source line is at its
-          foot, so the first row comes sooner. */}
-      <View style={[styles.count, stacked ? styles.countStacked : null]}>
-        {list && index ? (
+      {all ? (
+        <View style={[styles.count, stacked ? styles.countStacked : null]}>
           <Text
-            variant="metadata"
+            variant="secondary"
             wordSafe
             testID="bills-count"
             style={stacked ? null : styles.grow}
           >
-            {countLine(rows.length, index.bills.length)} ·{' '}
-            {billSorts
-              .find((s) => s.value === (filters.sort ?? 'newest'))
-              ?.label.toLowerCase()}
+            {searching
+              ? countLine(rows.length, rows.length, false)
+              : countLine(rows.length, total, on > 0)}
           </Text>
-        ) : stacked ? null : (
-          // Filters keeps its place at the line's end while the list loads.
-          <View style={styles.grow} />
-        )}
-        <Button
-          label={chips.length ? `Filters (${chips.length})` : 'Filters'}
-          icon="line.3.horizontal.decrease.circle"
-          size="compact"
-          disabled={!facets}
-          onPress={() => {
-            Keyboard.dismiss();
-            router.push('/bill-filters');
-          }}
-          testID="bills-filters"
-        />
-      </View>
-      {chips.length ? (
-        <View style={styles.filters}>
-          {chips.map((chip) => (
-            <FilterChip
-              key={chip.key}
-              filter={chip.filter}
-              value={chip.value}
-              onRemove={() =>
-                billFilterStore.setFilters(withoutFilter(filters, chip.key))
-              }
-              testID={`bills-chip-${chip.key}`}
+          {on > 0 && !filteredEmpty && !searching ? (
+            <Button
+              label="Clear filters"
+              variant="plain"
+              onPress={clear}
+              testID="bills-clear"
             />
-          ))}
+          ) : null}
         </View>
+      ) : !record && !error ? (
+        <Skeleton shape="text" count={1} label="Loading bills" />
       ) : null}
-      <LinkRow
-        title="Division history"
-        testID="bills-division-history"
-        onPress={() => router.push('/division-history')}
-      />
-      {offline && !record ? (
-        <>
-          <OfflineBanner cached={false} testID="bills-offline-uncached" />
-          <Button
-            label="Try again"
-            onPress={retry}
-            testID="bills-error-retry"
-          />
-        </>
-      ) : error && !record ? (
-        <ErrorState
-          message={errorMessage(error)}
-          onRetry={retry}
-          testID="bills-error"
-        />
-      ) : !record ? (
-        <LoadingState
-          shape="rows"
-          count={6}
-          label="Loading bills"
-          testID="bills-loading"
-        />
-      ) : null}
-    </Group>
+    </View>
   );
 
-  // The list's one source line, at its foot: its date, the register and,
-  // in its sheet, the fine print. Rows carry no date of their own.
-  const footer =
-    list && index ? (
-      <SourceLine
-        title="About the bill list"
-        asOf={list.asAt}
-        citation={list.sources.map((source) => source.label)}
-        savedAt={record?.stale ? record.savedAt : null}
-        state={record?.partial ? 'partial' : null}
-        notes={[
-          record?.partial ? 'Some records could not be read.' : null,
-          FINEPRINT,
-        ]}
-        testID="bills-as-at"
+  const body = !record ? (
+    offline ? (
+      <ContentUnavailable
+        symbol="wifi.slash"
+        title={copy.notSaved}
+        body={copy.notSavedBody}
+        testID="bills-offline-uncached"
       />
-    ) : null;
+    ) : error ? (
+      <ContentUnavailable
+        symbol="exclamationmark.triangle"
+        title="Bills couldn't be loaded"
+        action={{
+          label: copy.tryAgain,
+          onPress: retry,
+          testID: 'bills-error-retry',
+        }}
+        testID="bills-error"
+      />
+    ) : (
+      <Skeleton
+        shape="rows"
+        count={6}
+        label="Loading bills"
+        testID="bills-loading"
+      />
+    )
+  ) : searching && !rows.length ? (
+    <View>
+      <ContentUnavailable
+        symbol="magnifyingglass"
+        title={`No results for "${query}"`}
+        body="Check the spelling or try a new search."
+        testID="bills-search-empty"
+      />
+      {scope !== 'all' ? (
+        <Button
+          label="Search all bills"
+          variant="secondary"
+          onPress={() => setScope('all')}
+          testID="bills-search-all"
+        />
+      ) : null}
+      <Button
+        label={`Search OPAX for "${query}"`}
+        variant="plain"
+        onPress={() => router.push(resultsRoute('all', { q: query }))}
+        testID="bills-search-opax"
+      />
+    </View>
+  ) : filteredEmpty ? (
+    <ContentUnavailable
+      symbol="line.3.horizontal.decrease.circle"
+      title="No bills match these filters"
+      action={{ label: 'Clear filters', onPress: clear, testID: 'bills-clear' }}
+      testID="bills-empty"
+    />
+  ) : !rows.length && scope === 'before' ? (
+    <ContentUnavailable
+      symbol="doc.text"
+      title="No bills before parliament"
+      action={{
+        label: 'Show all bills',
+        onPress: () => setScope('all'),
+        testID: 'bills-show-all',
+      }}
+      testID="bills-empty"
+    />
+  ) : null;
+
+  // The list's one source line, at its foot.
+  const footer = all ? (
+    <SourceLine
+      asOf={index?.generated_at}
+      citation={['ParlInfo']}
+      originals={[
+        {
+          label: 'ParlInfo',
+          url: 'https://parlinfo.aph.gov.au/',
+          record: 'bills register',
+        },
+      ]}
+      savedAt={record?.stale ? record.savedAt : null}
+      state={record?.partial ? 'partial' : null}
+      notes={[
+        LIST_NOTE,
+        record?.partial ? "Some records couldn't be read." : null,
+      ]}
+      testID="bills-as-at"
+    />
+  ) : null;
 
   const listView = (
     <FlatList
@@ -333,25 +412,24 @@ function BillsScreen() {
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       automaticallyAdjustKeyboardInsets
-      data={list ? rows : []}
+      data={record ? rows : []}
       keyExtractor={(bill) => bill.key}
-      renderItem={({ item }) =>
-        split ? (
-          <BillIndexRow
-            bill={item}
-            selected={item.key === selectedKey}
-            onPress={() =>
-              select({ kind: 'bill', key: item.key, title: item.title })
-            }
-          />
-        ) : (
-          <BillIndexRow
-            bill={item}
-            onPress={() => router.push(billRoute(item.key))}
-          />
-        )
-      }
-      extraData={split ? selectedKey : undefined}
+      renderItem={({ item }) => (
+        <BillIndexRow
+          bill={item}
+          showStatus={scope === 'all'}
+          selected={
+            split ? item.key === (selected ?? firstEntry())?.key : undefined
+          }
+          onPress={
+            split
+              ? () =>
+                  select({ kind: 'bill', key: item.key, title: billName(item) })
+              : () => router.push(billRoute(item.key, billName(item)))
+          }
+        />
+      )}
+      extraData={split ? selectedKey : scope}
       onViewableItemsChanged={split ? onViewable : undefined}
       onScrollToIndexFailed={({ index: at, averageItemLength }) =>
         listRef.current?.scrollToOffset({
@@ -362,39 +440,35 @@ function BillsScreen() {
       ItemSeparatorComponent={() => <Divider variant="subtle" />}
       ListHeaderComponent={header}
       ListHeaderComponentStyle={styles.header}
-      ListFooterComponent={footer}
+      ListFooterComponent={rows.length ? footer : null}
       ListFooterComponentStyle={styles.footer}
-      ListEmptyComponent={
-        list ? (
-          <Group>
-            <EmptyState
-              message="Nothing in the bill list matches that."
-              testID="bills-empty"
-            />
-            {chips.length ? (
-              <Button
-                label="Clear filters"
-                onPress={() => billFilterStore.setFilters({})}
-                testID="bills-clear"
-              />
-            ) : null}
-          </Group>
-        ) : null
-      }
+      ListEmptyComponent={body}
       initialNumToRender={12}
     />
   );
-  if (!isPad) return listView;
+  function firstEntry(): BillEntry | null {
+    const first = rows[0];
+    return first
+      ? { kind: 'bill', key: first.key, title: billName(first) }
+      : null;
+  }
+  if (!isPad)
+    return (
+      <>
+        <Stack.Screen options={options} />
+        {listView}
+      </>
+    );
   return (
     <>
-      {/* The list column keeps an inline title; large titles over two
-          panes would collapse with whichever scrolls first. */}
-      <Stack.Screen options={{ headerLargeTitleEnabled: !split }} />
+      <Stack.Screen options={options} />
       <SplitLayout<BillEntry>
         id="bills"
         testID="bills-split"
         list={listView}
         selected={selected}
+        // The pane never opens empty while the scope has rows.
+        initialSelection={firstEntry}
         onSelect={select}
         entryKey={(entry) => `${entry.kind}:${entry.key}`}
         entryTitle={(entry) => (entry.kind === 'bill' ? 'Bill' : 'Bill text')}
@@ -406,16 +480,9 @@ function BillsScreen() {
           )
         }
         detailActions={(entry) => (
-          <IconButton
-            symbol="square.and.arrow.up"
-            accessibilityLabel="Share"
-            testID="bill-pane-share"
-            onPress={() =>
-              void shareRecord({
-                path: `/bill/${entry.key}`,
-                title: entry.title ?? titleFor(entry.key) ?? 'Bill',
-              })
-            }
+          <PaneActions
+            billKey={entry.key}
+            title={entry.title ?? titleFor(entry.key) ?? 'Bill'}
           />
         )}
         keys={rows.map((bill) => bill.key)}
@@ -432,27 +499,141 @@ function BillsScreen() {
   );
 }
 
+function useSearchBarOptions(
+  setText: (text: string) => void,
+  autoFocus: boolean,
+) {
+  const options = useListSearchBar({
+    placeholder: PLACEHOLDER,
+    onChangeText: setText,
+    onSearchButtonPress: (value) => {
+      setText(value);
+      Keyboard.dismiss();
+    },
+    onCancelButtonPress: () => setText(''),
+    autoFocus,
+  });
+  return { ...options, hideWhenScrolling: true };
+}
+
+/**
+ * Before parliament | Passed | All, as segments only when every label fits
+ * its third of the width (measured, not tied to a text size); otherwise a
+ * "Showing" row with the choice as a menu.
+ */
+function ScopeControl({
+  value,
+  onChange,
+}: {
+  value: BillScope;
+  onChange: (scope: BillScope) => void;
+}) {
+  const [width, setWidth] = useState(0);
+  const [widest, setWidest] = useState<Record<string, number>>({});
+  const measure = (key: string) => (event: TextLayoutEvent) => {
+    const w = Math.max(0, ...event.nativeEvent.lines.map((l) => l.width));
+    setWidest((old) => (old[key] === w ? old : { ...old, [key]: w }));
+  };
+  const measured = scopes.every((s) => widest[s.value] !== undefined);
+  const fits =
+    Platform.OS !== 'ios' ||
+    !measured ||
+    !width ||
+    Math.max(...scopes.map((s) => widest[s.value]!)) + 24 <= width / 3;
+  const options = scopes.map((s) => ({
+    ...s,
+    testID: `bills-scope-${s.value}`,
+  }));
+  return (
+    <View onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+      <View
+        pointerEvents="none"
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.probe}
+      >
+        {scopes.map((s) => (
+          <Text
+            key={s.value}
+            variant="footnote"
+            style={styles.probeText}
+            onTextLayout={measure(s.value)}
+          >
+            {s.label}
+          </Text>
+        ))}
+      </View>
+      {fits ? (
+        <SegmentedPicker
+          options={options}
+          value={value}
+          onChange={onChange}
+          accessibilityLabel="Showing"
+          testID="bills-scope"
+        />
+      ) : (
+        <View style={styles.menuRow}>
+          <Text variant="body">Showing</Text>
+          <PopUpButton
+            label="Showing"
+            value={value}
+            options={options}
+            onChange={onChange}
+            testID="bills-scope"
+          />
+        </View>
+      )}
+    </View>
+  );
+}
+
+/** The iPad detail pane's bar: Ask about this bill, Share and ⋯. */
+function PaneActions({ billKey, title }: { billKey: string; title: string }) {
+  const openAsk = useOpenAsk();
+  return (
+    <View style={styles.paneActions}>
+      <IconButton
+        symbol="text.bubble"
+        accessibilityLabel="Ask about this bill"
+        testID="bill-pane-ask"
+        onPress={() =>
+          openAsk({ question: `What did parliament say about the ${title}?` })
+        }
+      />
+      <IconButton
+        symbol="square.and.arrow.up"
+        accessibilityLabel="Share"
+        testID="bill-pane-share"
+        onPress={() => void shareRecord({ path: `/bill/${billKey}`, title })}
+      />
+      <PaneMenu billKey={billKey} title={title} testID="bill-pane-more" />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.section + rhythm.block,
+    paddingTop: rhythm.tight,
   },
-  header: { paddingBottom: rhythm.block },
-  footer: { paddingTop: rhythm.block },
-  filters: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  // "2,989 bills · newest first" with Filters at its end.
+  header: { paddingBottom: rhythm.tight },
+  headerStack: { gap: rhythm.block },
+  footer: { paddingTop: rhythm.group },
   count: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.tight,
   },
-  countStacked: { flexDirection: 'column', alignItems: 'stretch' },
+  countStacked: { flexDirection: 'column', alignItems: 'flex-start' },
   grow: { flexGrow: 1, flexShrink: 1 },
+  probe: { position: 'absolute', opacity: 0, left: 0, top: 0 },
+  probeText: { fontWeight: '600' },
+  menuRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: rhythm.tight,
+  },
+  paneActions: { flexDirection: 'row', alignItems: 'center' },
 });

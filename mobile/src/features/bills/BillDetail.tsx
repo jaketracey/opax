@@ -1,9 +1,25 @@
 import { scopedQuestion } from '../ask/AskAbout';
 import { useOpenAsk } from '../ask/open';
-import { headerItems } from '../../navigation/chrome';
-import { SavedCopyNotice } from '../CatalogNotice';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { RefreshControl, StyleSheet, View, findNodeHandle } from 'react-native';
+import { headerItems, pageMenu } from '../../navigation/chrome';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react';
+import {
+  AccessibilityInfo,
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+  findNodeHandle,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   billName,
@@ -14,83 +30,113 @@ import {
   type BillTimelineEntry,
   type BillTimelineStage,
 } from '../../api/bill-transforms';
-import { billKey, catalogSources } from '../../api/catalogs';
+import { billKey } from '../../api/catalogs';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { formatCount, formatDate } from '../../design/format';
 import { showMenu } from '../../design/menu';
-import { jurisdictionName } from '../../design/parliament';
-import { formerMember, partyText } from '../../design/party';
+import { haptic } from '../../design/haptics';
+import { copy as words } from '../../design/copy';
+import { useReduceMotion } from '../../design/accessibility';
+import { animateLayout } from '../../design/disclosure';
+import { TitleAnchor } from '../../design/layout';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import {
   Button,
-  EmptyState,
-  ErrorState,
-  Group,
+  ContentUnavailable,
+  Disclosure,
+  FollowButton,
   Heading,
+  Icon,
   IconButton,
-  LoadingState,
+  InlineError,
   LinkRow,
-  OfflineBanner,
+  OfflineLine,
   PersonRow,
   Portrait,
-  RowList,
+  RecordRow,
   Screen,
   Section,
+  Skeleton,
   SourceLine,
-  StatusLabel,
+  StageTimeline,
+  StatusCapsule,
   SubSection,
   Text,
-  errorMessage,
+  VoteSplit,
   useAccessibilitySize,
   type SourceOriginal,
 } from '../../design/primitives';
-import { chrome, colors, rhythm } from '../../design/tokens';
-import { openOnWeb, openSource } from '../../navigation/external';
-import { billRoute, personRoute } from '../../navigation/routes';
+import { chrome, colors, minimumTarget, rhythm } from '../../design/tokens';
+import { canonicalUrl, openSource } from '../../navigation/external';
+import { canShare, shareRecord } from '../../navigation/share';
+import { resultsRoute } from '../../navigation/routes/search';
+import {
+  billListRoute,
+  docRoute,
+  partyRoute,
+  personRoute,
+} from '../../navigation/routes';
+import { copyText } from '../records/actions';
+import { Button as SwiftButton, Host, Menu } from '@expo/ui/swift-ui';
+import { symbols } from '../../design/symbols';
+import { useRowFollow } from '../../design/row-link';
+import { MachinePill } from '../../design/labels';
 import { CachedPortrait } from '../CachedPortrait';
-import { shareHeaderItem } from '../../navigation/share';
-import { divisionQuestion, divisionTitle } from './divisions';
+import { AddedSinceGroup } from '../follows/AddedSinceGroup';
+import { NewDot } from '../follows/NewDot';
+import type { Change } from '../follows/changes';
+import { followKey } from '../follows/store';
+import { useFollowStates } from '../follows/useFollowStates';
+import { useIsMyMember } from '../your-mp/useIsMyMember';
+import {
+  countWords,
+  divisionQuestion,
+  divisionTitle,
+  orderDivisions,
+  outcomeWord,
+} from './divisions';
 import { chamberLabel } from './filters';
 import {
   Bullet,
-  Disclosure,
   DivisionQuestion,
-  DivisionSplits,
-  MachineBrief,
   MachineSummary,
-  RecordedParty,
+  PartyVotes,
+  ShowMoreButton,
+  billMenuItems,
   dateSpan,
   divisionParties,
 } from './parts';
 import { sponsorRows, type SponsorDirectory } from './sponsors';
-import { FollowToggle } from '../follows/FollowToggle';
+import { statusEvent, statusEventText } from './status-event';
 import { useCatalogRecord } from './useCatalogRecord';
 import { useBillNavigation } from './navigation';
+import { memberPosition, useMyMemberVotes } from './your-mp-vote';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
 type Identity = NonNullable<BillView['identity']['data']>;
 type Division = NonNullable<BillView['divisions']['data']>['rows'][number];
 
-// The web's bill-page fine print, in its words (portal/public/app.js
-// billDivisionsHTML, billSpeechesHTML, billSummaryHTML). Each now sits in
-// its block's source sheet; only the one-sentence empty states draw inline.
-const copy = {
-  noSummary:
-    "No summary yet: the dates, divisions and speeches below are the record's own.",
-  noDivisions:
-    'No divisions recorded. Most questions are decided on the voices, so this does not mean the bill was unopposed.',
-  divisions:
-    "Ayes and noes are the division's own totals. Party is each member's recorded affiliation, not a reconstruction of who they sat with on the day, and a member the record does not name is counted but not attributed. Only formal divisions leave a per-member record.",
-  splits:
-    'Each party reads ayes–noes. Its bar shows the ayes in bronze, then the noes, against the largest party in that division; the three largest parties are drawn, and the rest are listed with the question.',
-  speeches: 'Speeches the record attaches to this bill.',
-  briefs:
-    'A brief under a name was written from that speech by a model, not by a person.',
-  fineprint:
-    'Bills, their dates and their divisions come from the parliamentary record; each bill page links the official source it was read from. Summaries are written by a model from the explanatory memorandum or the Bills Digest, are marked as such wherever they appear, and are not the record.',
+/** Notes said once, in each block's source sheet (specs/bills.md 4.9). */
+const notes = {
+  status: 'The status date is the date the record was last updated.',
+  summary:
+    'Written by a machine from the explanatory memorandum. Check the original before relying on it.',
+  voices: 'Most questions are decided on the voices, without a recorded vote.',
+  chosen:
+    'Third reading votes come first, then second reading votes and amendments, then other votes, each newest first. Procedural votes (limitation of debate, closure, suspension of standing orders and adjournment) are grouped last under their own heading.',
+  stages:
+    'Second reading: agreeing to the bill in principle. Consideration in detail: changes debated clause by clause. Third reading: the final vote to pass it in this chamber.',
+  speeches:
+    'The short summaries under each speech are machine-written. The speeches themselves are the Hansard record.',
+  related: 'Relations between bills are as ParlInfo records them.',
 };
-const DIVISIONS_SHOWN = 6;
+/** A vote row's disclosure chevron (not yet in the shared vocabulary). */
+const chevrons = { open: 'chevron.up', closed: 'chevron.down' } as const;
+/** Votes and speeches shown before "Show more". */
+const VOTES_SHOWN = 5;
+const SPEECHES_SHOWN = 3;
 
 const isBillKey = (key: string) => {
   try {
@@ -100,30 +146,51 @@ const isBillKey = (key: string) => {
     return false;
   }
 };
+const unique = <T,>(items: readonly T[]) => [...new Set(items)];
+const short = (date: string) => formatDate(date, 'short');
+const dayMonth = (at: number) => formatDate(at, 'short').replace(/ \d{4}$/, '');
+
+/** "Second reading · House of Representatives · over 3 sitting days". */
 const stageText = (s: BillTimelineStage) =>
   [
     s.stage,
     s.house ? chamberLabel(s.house) : null,
-    s.days > 1 ? `on ${s.days} recorded days` : null,
+    s.days > 1 ? `over ${s.days} sitting days` : null,
   ]
     .filter(Boolean)
     .join(' · ');
-const unique = <T,>(items: readonly T[]) => [...new Set(items)];
 
-/** One bill: what it would change, how it moved, and how each house divided. */
+/**
+ * A chart's provenance footnote. The charts name the prop `source`, which
+ * the transport policy keeps for images, so it is passed as a spread.
+ */
+const chartSource = (start: string, end: string, citation: string) => ({
+  dateRange: { start, end },
+  source: citation,
+});
+
+/** Where the page scrolls to, and what it reveals first. */
+interface Targets {
+  scrollTo: (ref: RefObject<View | null>, focus?: boolean) => void;
+}
+
+/** One bill: what it would change, how it moved, and how parliament voted. */
 export default function BillDetail({
   recordKey,
   embedded = false,
 }: { recordKey?: string; embedded?: boolean } = {}) {
-  const params = useLocalSearchParams<{ key: string; section?: string }>();
-  const key = recordKey ?? params.key;
-  const focusedDivisions = params.section === 'divisions';
+  const params = useLocalSearchParams<{
+    key: string;
+    name?: string;
+    division?: string;
+    section?: string;
+  }>();
+  const key = String(recordKey ?? params.key);
   const load = useCallback(
-    (refresh: boolean) => catalogs.billFor(String(key), refresh),
+    (refresh: boolean) => catalogs.billFor(key, refresh),
     [key],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
-  // undefined while the directory loads; null when it could not be read.
   const [directory, setDirectory] = useState<SponsorDirectory | null>();
   const view = record?.data;
   const identity = view?.identity.data ?? null;
@@ -160,34 +227,91 @@ export default function BillDetail({
   // that arrives but cannot be read is an error, not a missing bill.
   const notFound =
     !record &&
-    (!isBillKey(String(key)) ||
+    (!isBillKey(key) ||
       (error instanceof ApiError && error.code === 'not-found'));
+  const offline = error instanceof ApiError && error.code === 'offline';
   // A saved copy says so in every block's source line ("Saved 3 Oct 2026").
   const savedAt = record?.stale ? record.savedAt : null;
+  const home = view?.identity.sources.find(
+    (s) => s.label === billSourceLabel('billhome'),
+  );
+
+  // Scrolling to a block: under the bar, VoiceOver on it.
+  const scroll = useRef<ScrollView>(null);
+  const offset = useRef(0);
+  const headerBottom = useHeaderBottom();
+  const reduceMotion = useReduceMotion();
+  const targets = useMemo<Targets>(
+    () => ({
+      scrollTo(ref, focus = false) {
+        // Wait a frame for revealed rows to lay out.
+        setTimeout(() => {
+          ref.current?.measureInWindow((_x, y) => {
+            scroll.current?.scrollTo({
+              y: Math.max(0, offset.current + y - headerBottom),
+              animated: !reduceMotion,
+            });
+            const node =
+              focus && ref.current ? findNodeHandle(ref.current) : null;
+            if (node) AccessibilityInfo.setAccessibilityFocus(node);
+          });
+        }, 50);
+      },
+    }),
+    [headerBottom, reduceMotion],
+  );
+
+  // Followed bills: what was added since the reader last looked.
+  const follow = useBillChanges(identity?.key ?? null);
+
+  const openAsk = useOpenAsk();
+  const ask = () => openAsk(scopedQuestion('bill', name));
+  const share = () =>
+    void shareRecord({ path: `/bill/${key}`, title: name || 'Bill' });
+  const menu = identity
+    ? [
+        ...(Platform.OS === 'ios'
+          ? []
+          : [
+              {
+                title: 'Ask about this bill',
+                symbol: 'text.bubble' as const,
+                onPress: ask,
+              },
+              ...(canShare
+                ? [
+                    {
+                      title: 'Share',
+                      symbol: 'square.and.arrow.up' as const,
+                      onPress: share,
+                    },
+                  ]
+                : []),
+            ]),
+        ...billMenuItems({ billKey: identity.key, title: name, home }),
+      ]
+    : [];
   return (
     <>
       {embedded ? null : (
         <Stack.Screen
           options={{
-            // The title is the page's level 1 heading; `title` still names the
-            // screen for the back stack.
-            title: name,
-            headerTitle: '',
+            // The back label for the next screen; the bar title appears by
+            // scroll once the H1 passes under the bar.
+            title: name || params.name || 'Bill',
             ...headerItems(
-              identity
-                ? () => [
-                    shareHeaderItem({
-                      path: `/bill/${identity.key}`,
-                      title: name,
-                    }),
-                  ]
-                : undefined,
+              identity ? () => [pageMenu({ name, items: menu })] : undefined,
             ),
           }}
         />
       )}
       <Screen
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
+        barTitle={embedded ? undefined : name || undefined}
+        scrollRef={scroll}
+        onScroll={(y) => {
+          offset.current = y;
+        }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -197,32 +321,38 @@ export default function BillDetail({
         }
       >
         {notFound ? (
-          <Group>
-            <Heading level={1} testID="bill-not-found">
-              No bill with this identifier
-            </Heading>
-            <Text>
-              The register does not name this bill. It may not be published yet,
-              or the link may be old.
-            </Text>
-          </Group>
-        ) : error instanceof ApiError && error.code === 'offline' && !record ? (
-          <Group>
-            <OfflineBanner cached={false} testID="bill-offline-uncached" />
-            <Button
-              label="Try again"
-              onPress={retry}
-              testID="bill-error-retry"
-            />
-          </Group>
+          <ContentUnavailable
+            symbol="doc.text.magnifyingglass"
+            title="Bill not found"
+            body="This link may be old."
+            action={{
+              label: 'Search bills',
+              onPress: () =>
+                router.push(billListRoute({ scope: 'all', focus: '1' })),
+              testID: 'bill-not-found-search',
+            }}
+            testID="bill-not-found"
+          />
+        ) : offline && !record ? (
+          <ContentUnavailable
+            symbol="wifi.slash"
+            title={words.notSaved}
+            body={words.notSavedBody}
+            testID="bill-offline-uncached"
+          />
         ) : error && !record ? (
-          <ErrorState
-            message={errorMessage(error)}
-            onRetry={retry}
+          <ContentUnavailable
+            symbol="exclamationmark.triangle"
+            title="This bill couldn't be loaded"
+            action={{
+              label: words.tryAgain,
+              onPress: retry,
+              testID: 'bill-error-retry',
+            }}
             testID="bill-error"
           />
         ) : !view ? (
-          <LoadingState
+          <Skeleton
             shape="text"
             count={5}
             label="Loading the bill"
@@ -230,69 +360,409 @@ export default function BillDetail({
           />
         ) : null}
         {view && identity && record ? (
-          <>
-            {record.stale ? (
-              <Group gap={rhythm.tight}>
-                <SavedCopyNotice
-                  reason={record.staleReason}
-                  testID={
-                    record.staleReason ? 'bill-saved-copy' : 'bill-offline'
+          <BillPage
+            view={view}
+            identity={identity}
+            name={name}
+            directory={directory}
+            savedAt={savedAt}
+            stale={
+              record.stale
+                ? record.staleReason
+                  ? { kind: 'failed', at: record.savedAt, retry: refresh }
+                  : { kind: 'offline', at: record.savedAt }
+                : null
+            }
+            follow={follow}
+            targets={targets}
+            arrival={
+              embedded
+                ? {}
+                : {
+                    division: params.division,
+                    section: params.section,
                   }
-                />
-                <Button
-                  label="Try again"
-                  onPress={refresh}
-                  loading={refreshing}
-                  testID="bill-refresh"
-                />
-              </Group>
-            ) : null}
-            {focusedDivisions ? (
-              <Divisions view={view} savedAt={savedAt} focused />
-            ) : (
-              <>
-                <BillHead
-                  view={view}
-                  name={name}
-                  directory={directory}
-                  savedAt={savedAt}
-                />
-                <Summary view={view} savedAt={savedAt} />
-                <KeyDates view={view} savedAt={savedAt} />
-                <Divisions view={view} savedAt={savedAt} />
-                <Speeches view={view} savedAt={savedAt} />
-                <Acts view={view} savedAt={savedAt} />
-              </>
-            )}
-          </>
+            }
+          />
         ) : null}
       </Screen>
+      {embedded || notFound || !identity ? null : (
+        <BillToolbar onAsk={ask} onShare={share} />
+      )}
     </>
   );
 }
 
 /**
- * The bill's identity, said once: its status as a label with the date, the
- * title, one meta line, the bill text as a row (a navigation, not a button),
- * then Follow and ⋯ for everything else. The sponsor is the standard people
- * row. The block's source line holds the originals, the register's note and
- * "Sponsor not recorded".
+ * The menu sheet, where no native menu can be drawn: a vote row's long
+ * press, and the pane's ⋯ off iOS.
+ */
+function openMenu(items: readonly { title: string; onPress: () => void }[]) {
+  showMenu('', [...items]);
+}
+
+/** The iPad pane's ⋯: a native menu on iOS, the menu sheet elsewhere. */
+export function PaneMenu({
+  billKey,
+  title,
+  testID,
+}: {
+  billKey: string;
+  title: string;
+  testID?: string;
+}) {
+  const items = billMenuItems({ billKey, title });
+  if (Platform.OS !== 'ios')
+    return (
+      <IconButton
+        symbol={symbols.more}
+        accessibilityLabel="More"
+        testID={testID}
+        onPress={() => openMenu(items)}
+      />
+    );
+  return (
+    <View testID={testID} accessibilityLabel="More" style={styles.paneMenu}>
+      <Host matchContents>
+        <Menu label="" systemImage={symbols.more}>
+          {items.map((item) => (
+            <SwiftButton
+              key={item.title}
+              label={item.title}
+              systemImage={item.symbol}
+              onPress={item.onPress}
+            />
+          ))}
+        </Menu>
+      </Host>
+    </View>
+  );
+}
+
+/** The bottom toolbar: Ask about this bill and Share, never more. */
+function BillToolbar({
+  onAsk,
+  onShare,
+}: {
+  onAsk: () => void;
+  onShare: () => void;
+}) {
+  if (Platform.OS !== 'ios')
+    return (
+      <SafeAreaView edges={['bottom']} style={styles.toolbar}>
+        <Button label="Ask about this bill" onPress={onAsk} testID="bill-ask" />
+        {canShare ? (
+          <Button label="Share" onPress={onShare} testID="bill-share" />
+        ) : null}
+      </SafeAreaView>
+    );
+  return (
+    <Stack.Toolbar placement="bottom">
+      <Stack.Toolbar.Button
+        icon="text.bubble"
+        accessibilityLabel="Ask about this bill"
+        onPress={onAsk}
+      >
+        Ask about this bill
+      </Stack.Toolbar.Button>
+      <Stack.Toolbar.Spacer />
+      {canShare ? (
+        <Stack.Toolbar.Button
+          icon="square.and.arrow.up"
+          accessibilityLabel="Share"
+          onPress={onShare}
+        >
+          Share
+        </Stack.Toolbar.Button>
+      ) : null}
+    </Stack.Toolbar>
+  );
+}
+
+interface BillFollow {
+  follow: Parameters<typeof AddedSinceGroup>[0]['follow'];
+  changes: readonly Change[];
+  stale: boolean;
+}
+/** A followed bill's changes, and every key that is new for this visit. */
+function useBillChanges(key: string | null) {
+  const { follows, states } = useFollowStates();
+  const follow = key
+    ? follows?.find((f) => f.kind === 'bill' && f.id === key)
+    : undefined;
+  const state = follow ? states.get(followKey(follow)) : undefined;
+  const changes = state?.status === 'ready' ? state.changes : [];
+  // New for the whole visit, even after the group marks them seen.
+  const keys = changes
+    .flatMap((c) => [c.record?.divisionKey, c.record?.key, c.key])
+    .filter((k): k is string => !!k);
+  const signature = keys.join('|');
+  const [seen, setSeen] = useState<{
+    signature: string;
+    keys: ReadonlySet<string>;
+  }>({ signature: '', keys: new Set() });
+  if (signature && signature !== seen.signature)
+    setSeen({ signature, keys: new Set([...seen.keys, ...keys]) });
+  const fresh = seen.keys;
+  return {
+    group:
+      follow && changes.length
+        ? ({
+            follow,
+            changes,
+            stale: !!state && 'stale' in state && !!state.stale,
+          } as BillFollow)
+        : null,
+    fresh,
+  };
+}
+type FollowInfo = ReturnType<typeof useBillChanges>;
+
+interface Arrival {
+  division?: string;
+  section?: string;
+}
+type Stale =
+  | { kind: 'offline'; at: number }
+  | { kind: 'failed'; at: number; retry: () => void }
+  | null;
+
+/** The page below the bar, in the spec's order; empty blocks are hidden. */
+function BillPage({
+  view,
+  identity,
+  name,
+  directory,
+  savedAt,
+  stale,
+  follow,
+  targets,
+  arrival,
+}: {
+  view: BillView;
+  identity: Identity;
+  name: string;
+  directory: SponsorDirectory | null | undefined;
+  savedAt: number | null;
+  stale: Stale;
+  follow: FollowInfo;
+  targets: Targets;
+  arrival: Arrival;
+}) {
+  const bills = useBillNavigation();
+  const changesRef = useRef<View>(null);
+  const datesRef = useRef<View>(null);
+  const speechesRef = useRef<View>(null);
+  const votes = useVotes(view, follow.fresh, arrival);
+  const [allStages, setAllStages] = useState(false);
+  // "?section=changes" scrolls once the followed bill's changes are in.
+  const arrived = useRef(false);
+  const hasChanges = !!follow.group;
+  useEffect(() => {
+    if (arrived.current || arrival.section !== 'changes' || !hasChanges) return;
+    arrived.current = true;
+    targets.scrollTo(changesRef, true);
+  }, [arrival.section, hasChanges, targets]);
+  const onChange = (change: Change) => {
+    const record = change.record;
+    if (!record) return;
+    if (record.kind === 'division' || record.kind === 'vote') {
+      if (!votes.reveal(record.divisionKey ?? record.key)) votes.showSection();
+    } else if (record.kind === 'stage') {
+      setAllStages(true);
+      targets.scrollTo(datesRef);
+    } else if (record.kind === 'speech') targets.scrollTo(speechesRef);
+  };
+  return (
+    <>
+      <View style={styles.head}>
+        {stale?.kind === 'offline' ? (
+          <OfflineLine savedAt={stale.at} testID="bill-offline" />
+        ) : stale?.kind === 'failed' ? (
+          <InlineError
+            subject="the latest version of this bill"
+            message={`The latest version of this bill couldn't be loaded. Showing the copy saved on ${dayMonth(stale.at)}.`}
+            onRetry={stale.retry}
+            testID="bill-stale"
+          />
+        ) : null}
+        <BillHead
+          view={view}
+          identity={identity}
+          name={name}
+          directory={directory}
+          savedAt={savedAt}
+        />
+        {follow.group ? (
+          <View ref={changesRef} collapsable={false} style={styles.added}>
+            <AddedSinceGroup
+              follow={follow.group.follow}
+              changes={follow.group.changes}
+              stale={follow.group.stale}
+              testID="bill-added-since"
+              onRowPress={onChange}
+            />
+          </View>
+        ) : null}
+      </View>
+      <Consultation view={view} />
+      <Summary view={view} savedAt={savedAt} />
+      <View style={styles.textRow}>
+        <LinkRow
+          title="Bill text"
+          symbol="doc.text"
+          accessibilityHint="Opens the bill text"
+          onPress={() => bills.openText(identity.key, name)}
+          testID="bill-read-text"
+        />
+      </View>
+      <KeyDates
+        view={view}
+        savedAt={savedAt}
+        anchor={datesRef}
+        open={allStages}
+        onToggle={setAllStages}
+        fresh={follow.fresh}
+      />
+      <Votes view={view} votes={votes} savedAt={savedAt} targets={targets} />
+      <Speeches
+        view={view}
+        name={name}
+        savedAt={savedAt}
+        anchor={speechesRef}
+        fresh={follow.fresh}
+      />
+      <Acts view={view} savedAt={savedAt} />
+      <Related view={view} savedAt={savedAt} />
+    </>
+  );
+}
+
+/**
+ * The bill's identity, said once: status and its dated event, the title,
+ * the meta line, who brought it, Follow, and the header's source line.
  */
 function BillHead({
   view,
+  identity,
   name,
   directory,
   savedAt,
 }: {
   view: BillView;
+  identity: Identity;
   name: string;
   directory: SponsorDirectory | null | undefined;
   savedAt: number | null;
 }) {
-  const identity = view.identity.data!;
-  const bills = useBillNavigation();
   const draft = identity.status === 'exposure_draft';
-  const consultation = view.consultation.data;
+  const event = statusEvent({
+    status: identity.status,
+    status_as_of: identity.statusAsOf,
+    originating_house: identity.house,
+    key_dates: view.keyDates.data ?? [],
+  });
+  const meta = identity.introduced
+    ? [
+        `${identity.introducedLabel} ${short(identity.introduced)}`,
+        identity.house ? chamberLabel(identity.house) : null,
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : draft
+      ? 'Exposure draft, not yet introduced'
+      : null;
+  const sources = view.identity.sources;
+  const originals: SourceOriginal[] = sources.map((s) =>
+    s.label === billSourceLabel('billhome')
+      ? { label: 'Parliament of Australia', url: s.url, record: 'bill home' }
+      : { label: s.label, url: s.url },
+  );
+  const unsponsored = !identity.sponsorMembers.length && !identity.sponsorParty;
+  return (
+    <View style={styles.headBlock}>
+      <View style={styles.titleBlock}>
+        <StatusLine identity={identity} event={event} />
+        <TitleAnchor>
+          <Heading level={1} testID="bill-title">
+            {identity.title}
+          </Heading>
+        </TitleAnchor>
+        {identity.shortTitle && identity.shortTitle !== identity.title ? (
+          <Text variant="secondary" wordSafe>
+            Known as the {identity.shortTitle}
+          </Text>
+        ) : null}
+        {meta ? (
+          <Text variant="secondary" wordSafe testID="bill-introduced">
+            {meta}
+          </Text>
+        ) : null}
+      </View>
+      <Sponsors identity={identity} directory={directory} />
+      <View style={styles.follow}>
+        <FollowButton
+          kind="bill"
+          id={identity.key}
+          title={name}
+          testID="bill-follow"
+        />
+      </View>
+      <View style={styles.source}>
+        <SourceLine
+          asOf={view.identity.asAt}
+          citation={draft ? unique(sources.map((s) => s.label)) : 'ParlInfo'}
+          savedAt={savedAt}
+          originals={originals}
+          licence={
+            unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') ||
+            null
+          }
+          notes={[
+            unsponsored && !draft ? 'Sponsor not recorded.' : null,
+            event && !event.resolved ? notes.status : null,
+          ]}
+          testID="bill-source"
+        />
+      </View>
+    </View>
+  );
+}
+
+/** "[Passed] Royal Assent 26 Aug 2026": the status and the event that dates it. */
+function StatusLine({
+  identity,
+  event,
+}: {
+  identity: Identity;
+  event: ReturnType<typeof statusEvent>;
+}) {
+  const stacked = useAccessibilitySize();
+  return (
+    <View
+      accessible
+      accessibilityLabel={`Status: ${identity.statusLabel}${event ? `. ${event.label}, ${formatDate(event.date)}` : ''}`}
+      testID="bill-status"
+      style={[styles.status, stacked ? styles.stacked : null]}
+    >
+      <StatusCapsule status={identity.statusLabel} hidden />
+      {event ? (
+        <Text variant="secondary" tabular wordSafe>
+          {statusEventText(event)}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+/** Who brought it: people rows with "Sponsor", a party, or a portfolio line. */
+function Sponsors({
+  identity,
+  directory,
+}: {
+  identity: Identity;
+  directory: SponsorDirectory | null | undefined;
+}) {
   const sponsors = useMemo(
     () =>
       sponsorRows(
@@ -303,269 +773,118 @@ function BillHead({
       ),
     [identity, directory],
   );
-  // One meta line: "Introduced 17 Aug 2026 · House of Representatives ·
-  // Home Affairs portfolio".
-  const meta = [
-    identity.introduced
-      ? `${identity.introducedLabel} ${formatDate(identity.introduced, 'short')}`
-      : null,
-    identity.house ? chamberLabel(identity.house) : null,
-    identity.portfolio ? `${identity.portfolio} portfolio` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ');
-  const sources = view.identity.sources;
-  // The register's own name for an introduced bill; a draft's release and
-  // consultation pages otherwise.
-  const citation = draft
-    ? unique(sources.map((s) => s.label))
-    : catalogSources.bills.label;
-  const unsponsored = !identity.sponsorMembers.length && !draft;
-  return (
-    <Group gap={rhythm.heading}>
-      <StatusLine identity={identity} />
-      <Heading level={1} testID="bill-title">
-        {identity.title}
-      </Heading>
-      {identity.shortTitle && identity.shortTitle !== identity.title ? (
-        <Text variant="metadata" wordSafe>
-          Known as the {identity.shortTitle}
-        </Text>
-      ) : null}
-      {meta ? (
-        <Text variant="metadata" wordSafe testID="bill-introduced">
-          {meta}
-        </Text>
-      ) : null}
-      {draft && !identity.sponsorMembers.length ? (
-        <Text variant="metadata" wordSafe>
-          Government exposure draft, not yet introduced
-        </Text>
-      ) : null}
-      {/* The record names no text version without a read of the text's
-          own index, so the row says "Bill text" and the reader names it. */}
-      <LinkRow
-        title="Bill text"
-        accessibilityHint="Opens the reader"
-        onPress={() => bills.openText(identity.key, name)}
-        testID="bill-read-text"
-      />
-      <BillActions
-        identity={identity}
-        name={name}
-        home={sources.find((s) => s.label === billSourceLabel('billhome'))}
-      />
-      {identity.sponsorMembers.length ? (
-        <View testID="bill-sponsor" style={styles.sponsor}>
-          <Text variant="label">
-            {identity.sponsorMembers.length === 1 ? 'Sponsor' : 'Sponsors'}
-          </Text>
-          <RowList>
-            {sponsors.map((sponsor, index) => {
-              const spoken = [
-                sponsor.name,
-                sponsor.place,
-                sponsor.place?.startsWith('Formerly ')
-                  ? null
-                  : formerMember(sponsor.party?.status),
-                sponsor.party ? partyText(sponsor.party).spoken : null,
-                sponsor.slug ? 'profile' : null,
-              ]
-                .filter(Boolean)
-                .join(', ');
-              const slug = sponsor.slug;
-              return (
-                <PersonRow
-                  key={`${index}-${sponsor.name}`}
-                  name={sponsor.name}
-                  portrait={
-                    slug ? (
-                      <CachedPortrait name={sponsor.name} slug={slug} />
-                    ) : (
-                      <Portrait loading={directory === undefined} />
-                    )
-                  }
-                  {...(sponsor.party
-                    ? {
-                        party: sponsor.party.party,
-                        partyStatus: sponsor.party.status,
-                        formerly: sponsor.party.formerly,
-                      }
-                    : { party: undefined })}
-                  place={sponsor.place}
-                  // "Formerly Member for Kooyong" already says it.
-                  statusShown={!!sponsor.place?.startsWith('Formerly ')}
-                  accessibilityLabel={spoken}
-                  onPress={
-                    slug ? () => router.push(personRoute(slug)) : undefined
-                  }
-                  testID={
-                    slug
-                      ? `bill-sponsor-${slug}`
-                      : `bill-sponsor-unlinked-${index}`
-                  }
-                />
-              );
-            })}
-          </RowList>
-        </View>
-      ) : identity.sponsorParty ? (
-        // No member named, but the register records a party.
-        <View testID="bill-sponsor" style={styles.sponsor}>
-          <Text variant="label">Sponsor</Text>
-          <RecordedParty party={identity.sponsorParty} />
-        </View>
-      ) : null}
-      {view.related.map((related) => (
-        <LinkRow
-          key={related.key}
-          title={related.title}
-          detail={[
-            related.relation === 'predecessor'
-              ? 'Builds on'
-              : billSentenceCase(related.relation),
-            related.note || null,
-          ]
-            .filter(Boolean)
-            .join(' · ')}
-          onPress={() => bills.openBill(related.key, related.title)}
-          testID={`bill-related-${related.key}`}
-        />
-      ))}
-      {view.became ? (
-        <LinkRow
-          title="Introduced to Parliament as a bill"
-          onPress={() => bills.openBill(view.became!)}
-          testID="bill-became"
-        />
-      ) : null}
-      {draft && consultation ? (
-        <Group gap={rhythm.tight} testID="bill-consultation">
-          <Text variant="body">
-            {consultation.closes
-              ? `Consultation opened ${formatDate(consultation.opens)} and closes ${formatDate(consultation.closes)}`
-              : `Open for consultation from ${formatDate(consultation.opens)}`}
-          </Text>
-          {consultation.note ? (
-            <Text variant="fine">{consultation.note}</Text>
-          ) : null}
-          <SourceLine
-            label="Consultation page"
-            accessibilityLabel="View original, Consultation page"
-            onPress={() =>
-              void openSource(consultation.url, 'Consultation page')
+  if (identity.sponsorMembers.length)
+    return (
+      <View testID="bill-sponsor">
+        {sponsors.map((sponsor, index) => (
+          <SponsorRow
+            key={`${index}-${sponsor.name}`}
+            sponsor={sponsor}
+            index={index}
+            detail={
+              index === 0
+                ? sponsors.length === 1
+                  ? 'Sponsor'
+                  : 'Sponsors'
+                : undefined
             }
-            testID="bill-consultation-source"
+            loading={directory === undefined}
           />
-        </Group>
-      ) : null}
-      <SourceLine
-        title="About this bill"
-        asOf={view.identity.asAt}
-        citation={citation}
-        savedAt={savedAt}
-        originals={sources.map((s) => ({ label: s.label, url: s.url }))}
-        licence={
-          unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') ||
-          null
-        }
-        notes={[
-          unsponsored
-            ? identity.sponsorParty
-              ? 'The register names no sponsoring member, only the party.'
-              : 'Sponsor not recorded.'
-            : null,
-          copy.fineprint,
-        ]}
-        testID="bill-source"
-      />
-    </Group>
-  );
-}
-
-/** "[Passed] 26 Aug 2026": the status word on its tone, then its date. */
-function StatusLine({ identity }: { identity: Identity }) {
-  return (
-    <View
-      accessible
-      // Journeys and VoiceOver read the full sentence.
-      accessibilityLabel={`${identity.statusLabel}${identity.statusAsOf ? `, as at ${formatDate(identity.statusAsOf)}` : ''}`}
-      testID="bill-status"
-      style={styles.status}
-    >
-      <StatusLabel label={identity.statusLabel} hidden />
-      {identity.statusAsOf ? (
-        <Text variant="metadata" tabular>
-          {formatDate(identity.statusAsOf, 'short')}
-        </Text>
-      ) : null}
-    </View>
-  );
-}
-
-/**
- * Follow and ⋯ on one line; everything else (Ask about this, the bill's page
- * on the Parliament website, the page on opax.com.au) under ⋯. Share stays
- * in the navigation bar, or the pane's bar on iPad. Stacked at accessibility
- * sizes.
- */
-function BillActions({
-  identity,
-  name,
-  home,
-}: {
-  identity: Identity;
-  name: string;
-  /** The bill's home page in the register, when the record links one. */
-  home?: { label: string; url: string };
-}) {
-  const openAsk = useOpenAsk();
-  const stacked = useAccessibilitySize();
-  const anchor = useRef<View>(null);
-  return (
-    <View
-      style={[styles.actions, stacked ? styles.actionsStacked : null]}
-      testID="bill-actions"
-    >
-      <FollowToggle
-        kind="bill"
-        id={identity.key}
-        title={name}
-        testID="bill-follow"
-      />
-      <View ref={anchor} collapsable={false}>
-        <IconButton
-          symbol="ellipsis"
-          variant="default"
-          accessibilityLabel="More for this bill"
-          testID="bill-more"
-          onPress={() =>
-            showMenu(
-              name,
-              [
-                {
-                  title: 'Ask about this',
-                  onPress: () => openAsk(scopedQuestion('bill', name)),
-                },
-                ...(home
-                  ? [
-                      {
-                        title: 'Open on the Parliament website',
-                        onPress: () => void openSource(home.url, home.label),
-                      },
-                    ]
-                  : []),
-                {
-                  title: 'Open on opax.com.au',
-                  onPress: () => void openOnWeb(`/bill/${identity.key}`, name),
-                },
-              ],
-              findNodeHandle(anchor.current) ?? undefined,
-            )
-          }
+        ))}
+      </View>
+    );
+  if (identity.sponsorParty)
+    return (
+      <View testID="bill-sponsor">
+        <LinkRow
+          title={identity.sponsorParty}
+          detail="Sponsor"
+          accessibilityHint="Opens the party"
+          onPress={() => router.push(partyRoute(identity.sponsorParty!))}
+          testID="bill-sponsor-party"
         />
       </View>
-    </View>
+    );
+  if (identity.portfolio)
+    return (
+      <Text variant="secondary" wordSafe testID="bill-portfolio">
+        {`${identity.portfolio} portfolio`}
+      </Text>
+    );
+  return null;
+}
+
+function SponsorRow({
+  sponsor,
+  index,
+  detail,
+  loading,
+}: {
+  sponsor: ReturnType<typeof sponsorRows>[number];
+  index: number;
+  detail?: string;
+  loading: boolean;
+}) {
+  const slug = sponsor.slug;
+  const yourMP = useIsMyMember(slug ?? '');
+  return (
+    <PersonRow
+      name={sponsor.name}
+      portrait={
+        slug ? (
+          <CachedPortrait name={sponsor.name} slug={slug} />
+        ) : (
+          <Portrait loading={loading} />
+        )
+      }
+      {...(sponsor.party
+        ? {
+            party: sponsor.party.party,
+            partyStatus: sponsor.party.status,
+            formerly: sponsor.party.formerly,
+          }
+        : { party: undefined })}
+      place={sponsor.place}
+      detail={detail}
+      yourMP={!!slug && yourMP}
+      statusShown={!!sponsor.place?.startsWith('Formerly ')}
+      href={slug ? personRoute(slug, sponsor.name) : undefined}
+      testID={slug ? `bill-sponsor-${slug}` : `bill-sponsor-unlinked-${index}`}
+    />
+  );
+}
+
+/** An exposure draft's consultation, with one source line. */
+function Consultation({ view }: { view: BillView }) {
+  const consultation = view.consultation.data;
+  if (view.identity.data?.status !== 'exposure_draft' || !consultation)
+    return null;
+  const closed =
+    !!consultation.closes &&
+    consultation.closes < new Date().toISOString().slice(0, 10);
+  return (
+    <Section title="Consultation" testID="bill-consultation">
+      <Text variant="body">
+        {consultation.closes
+          ? `Consultation opened ${short(consultation.opens)} and ${closed ? 'closed' : 'closes'} ${short(consultation.closes)}.`
+          : `Consultation opened ${short(consultation.opens)}.`}
+      </Text>
+      {consultation.note ? (
+        <Text variant="secondary">{consultation.note}</Text>
+      ) : null}
+      <LinkRow
+        title="Consultation page"
+        external
+        onPress={() => void openSource(consultation.url, 'Consultation page')}
+        testID="bill-consultation-page"
+      />
+      <SourceLine
+        asOf={consultation.opens}
+        citation="Consultation page"
+        originals={[{ label: 'Consultation page', url: consultation.url }]}
+        testID="bill-consultation-source"
+      />
+    </Section>
   );
 }
 
@@ -577,19 +896,14 @@ function Summary({
   savedAt: number | null;
 }) {
   const summary = view.summary.data;
-  if (!summary)
-    return (
-      <Section title="In short" accent="bills" testID="bill-summary">
-        <EmptyState message={copy.noSummary} testID="bill-summary-none" />
-      </Section>
-    );
+  if (!summary) return null;
   const sentences = summary.sentences.filter(Boolean);
   const changes = summary.changes.filter(Boolean);
-  const shown = changes.length > 3 ? changes.slice(0, 2) : changes;
+  const shown = changes.length > 3 ? changes.slice(0, 3) : changes;
   const more = changes.slice(shown.length);
   const sources = view.summary.sources;
   return (
-    <Section title="In short" accent="bills" testID="bill-summary">
+    <Section title="In short" testID="bill-summary">
       <MachineSummary
         attribution={summary.attribution}
         sentences={sentences}
@@ -618,24 +932,15 @@ function Summary({
         </SubSection>
       ) : null}
       <SourceLine
-        title="About this summary"
-        asOf={summary.as_of}
-        // Undated material: the summary is dated by when it was written.
-        dateLabel={
-          summary.as_of
-            ? undefined
-            : `Written ${formatDate(summary.generated_at, 'short')}`
-        }
+        asOf={summary.as_of ?? summary.generated_at}
         citation={unique(sources.map((s) => s.label))}
         savedAt={savedAt}
         originals={sources.map((s) => ({ label: s.label, url: s.url }))}
         notes={[
+          notes.summary,
           summary.describes_version
             ? `Describes the bill ${summary.describes_version}.`
             : null,
-          summary.as_of
-            ? `Written by a model from material dated ${formatDate(summary.as_of)}; not the record.`
-            : 'Written by a model; not the record.',
         ]}
         licence={
           unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') ||
@@ -653,9 +958,9 @@ const TERMINAL_STATUS =
   /^(?:lapsed|withdrawn|negatived|defeated|discharged|failed|not passed|not proceeded with|removed from the notice paper)\b/i;
 
 /**
- * The ruler's marks: where the bill began, where it crossed, where it ended.
- * A last stop the register calls "Other" on a bill whose status ended it
- * takes the status word ("Lapsed"): that is what the day was.
+ * The timeline's labelled points: where the bill began, where it crossed
+ * to the other house ("Senate" or "House"), and where it ended ("Royal
+ * Assent", or the terminal status for a bill that ended on "Other").
  */
 export function rulerPoints(
   entries: readonly BillTimelineEntry[],
@@ -691,90 +996,23 @@ export function rulerPoints(
     label:
       /^other$/i.test(ended.trim()) && TERMINAL_STATUS.test(terminal)
         ? terminal
-        : ended,
+        : /^royal assent$/i.test(ended.trim())
+          ? 'Royal Assent'
+          : ended,
     date: last.to ?? last.from,
   });
   return points;
 }
 
-/**
- * How the bill moved, at a glance: a dot for each dated entry on one rule,
- * named where it began, where it reached the other house and where it
- * ended. At accessibility sizes the marks are a short list instead.
- */
-function StageRuler({
+function DateRows({
   entries,
-  status,
+  fresh,
 }: {
   entries: readonly BillTimelineEntry[];
-  /** The bill's recorded status, which names an "Other" last stop. */
-  status?: string | null;
+  fresh?: ReadonlySet<string>;
 }) {
-  const stacked = useAccessibilitySize();
-  const points = rulerPoints(entries, status);
-  const spoken = points
-    .map((p) => `${p.label}, ${formatDate(p.date)}`)
-    .join('; ');
-  if (stacked)
-    return (
-      <View
-        accessible
-        accessibilityLabel={spoken}
-        testID="bill-dates-ruler"
-        style={styles.rulerList}
-      >
-        {points.map((p) => (
-          <View key={p.at} style={styles.date}>
-            <View style={styles.dot} />
-            <Text variant="metadata" wordSafe style={styles.grow}>
-              {`${p.label} · ${formatDate(p.date, 'short')}`}
-            </Text>
-          </View>
-        ))}
-      </View>
-    );
   return (
-    <View
-      accessible
-      accessibilityLabel={spoken}
-      testID="bill-dates-ruler"
-      style={styles.ruler}
-    >
-      <View style={styles.track}>
-        <View style={styles.rule} />
-        {entries.map((entry, i) => (
-          <View key={`${entry.from}-${i}`} style={styles.rulerDot} />
-        ))}
-      </View>
-      <View style={styles.rulerLabels}>
-        {points.map((p, i) => (
-          <View
-            key={p.at}
-            style={[
-              styles.rulerLabel,
-              i === 0
-                ? styles.labelStart
-                : i === points.length - 1
-                  ? styles.labelEnd
-                  : styles.labelMiddle,
-            ]}
-          >
-            <Text variant="label" tone="ink" wordSafe>
-              {p.label}
-            </Text>
-            <Text variant="fine" tabular>
-              {formatDate(p.date, 'short')}
-            </Text>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-function DateRows({ entries }: { entries: readonly BillTimelineEntry[] }) {
-  return (
-    <RowList>
+    <View style={styles.dates}>
       {entries.map((entry, index) => (
         <View
           key={`${entry.from}-${entry.to}-${index}`}
@@ -785,253 +1023,479 @@ function DateRows({ entries }: { entries: readonly BillTimelineEntry[] }) {
         >
           <View style={styles.dot} />
           <View style={styles.dateText}>
-            <Text variant="strong">{dateSpan(entry.from, entry.to)}</Text>
+            <Text variant="strong" tabular>
+              {dateSpan(entry.from, entry.to)}
+            </Text>
             {entry.stages.map((stage, i) => (
-              <Text key={i} variant="metadata" wordSafe>
+              <Text key={i} variant="secondary" wordSafe>
                 {stageText(stage)}
               </Text>
             ))}
           </View>
+          {fresh && [...fresh].some((k) => k.includes(entry.from)) ? (
+            <NewDot testID={`bill-date-${index}-new`} />
+          ) : null}
         </View>
       ))}
-    </RowList>
+    </View>
   );
 }
 
 function KeyDates({
   view,
   savedAt,
+  anchor,
+  open,
+  onToggle,
+  fresh,
 }: {
   view: BillView;
   savedAt: number | null;
+  anchor: RefObject<View | null>;
+  open: boolean;
+  onToggle: (open: boolean) => void;
+  fresh: ReadonlySet<string>;
 }) {
   const timeline = billTimeline(view.keyDates.data ?? []);
   const entries = timeline.entries;
-  const parlinfo = (view.keyDates.data ?? []).some((d) =>
-    d.url?.startsWith('https://parlinfo.aph.gov.au/'),
-  );
-  const known = new Map(view.identity.sources.map((s) => [s.url, s.label]));
+  if (!entries.length) return null;
+  const points =
+    entries.length > 1 ? rulerPoints(entries, view.identity.data?.status) : [];
   const originals: SourceOriginal[] = unique(
     view.keyDates.sources.map((s) => s.url),
-  ).map((url) => ({
-    label: known.get(url) ?? catalogSources.bills.label,
-    url,
-  }));
+  ).map((url) => ({ label: 'ParlInfo', url, record: 'bill record' }));
   return (
-    <Section title="How it moved" accent="bills" testID="bill-key-dates">
-      {entries.length > 1 ? (
-        <>
-          <StageRuler entries={entries} status={view.identity.data?.status} />
+    <View ref={anchor} collapsable={false}>
+      <Section title="How it moved" testID="bill-key-dates">
+        {points.length ? (
+          <View
+            testID="bill-dates-ruler"
+            accessibilityLabel={points
+              .map((p) => `${p.label}, ${formatDate(p.date)}`)
+              .join('; ')}
+          >
+            <StageTimeline
+              stages={points.map((p) => ({
+                label: p.label,
+                date: short(p.date),
+              }))}
+              latestIndex={points.length - 1}
+              {...chartSource(
+                entries[0]!.from,
+                points.at(-1)!.date,
+                'ParlInfo',
+              )}
+            />
+          </View>
+        ) : null}
+        {entries.length === 1 ? (
+          <DateRows entries={entries} fresh={fresh} />
+        ) : entries.length > points.length ? (
           <Disclosure
             label={`All ${formatCount(timeline.runs)} stages`}
+            open={open}
+            onToggle={onToggle}
             testID="bill-dates-all"
           >
-            <DateRows entries={entries} />
+            <DateRows entries={entries} fresh={fresh} />
           </Disclosure>
-        </>
-      ) : entries.length ? (
-        <DateRows entries={entries} />
-      ) : (
-        <EmptyState message="No dates recorded." testID="bill-dates-none" />
-      )}
-      <SourceLine
-        title="About these dates"
-        asOf={view.keyDates.asAt}
-        // Parliament's register for introduced bills; a draft's own release
-        // and consultation pages otherwise.
-        citation={
-          parlinfo
-            ? catalogSources.bills.label
-            : unique(view.identity.sources.map((s) => s.label))
-        }
-        savedAt={savedAt}
-        originals={originals}
-        notes={[
-          timeline.folded
-            ? `The register records a stage on each day it was before the house. These ${timeline.runs} stages carry ${timeline.dates} such dates: a stage that ran across sitting days is one stage with its span, not one a day.`
-            : null,
-        ]}
-        testID="bill-dates-source"
-      />
-    </Section>
+        ) : null}
+        <SourceLine
+          asOf={view.keyDates.asAt}
+          citation="ParlInfo"
+          savedAt={savedAt}
+          originals={originals}
+          notes={[notes.voices]}
+          testID="bill-dates-source"
+        />
+      </Section>
+    </View>
   );
 }
 
-function Divisions({
+/** The votes section's state: order, what is revealed, and where each row is. */
+/** A link's key, or the shown row a collapsed duplicate folded into. */
+function findDivision(view: BillView, key: string | undefined) {
+  if (!key) return undefined;
+  const rows = view.divisions.data?.rows ?? [];
+  const direct = rows.find((d) => d.key === key);
+  if (direct) return direct;
+  const dup = (view.divisions.data?.rawRows ?? []).find((d) => d.key === key);
+  return dup
+    ? rows.find(
+        (d) =>
+          d.date === dup.date &&
+          d.house === dup.house &&
+          d.ayes === dup.ayes &&
+          d.noes === dup.noes &&
+          (d.stage ?? '') === (dup.stage ?? ''),
+      )
+    : undefined;
+}
+
+/**
+ * The votes section's state: order, what is revealed and expanded, and the
+ * vote (or the section) to scroll to next. A `?division=` arrival starts
+ * revealed and expanded, so the row lays out where the scroll expects it.
+ */
+function useVotes(
+  view: BillView,
+  fresh: ReadonlySet<string>,
+  arrival: Arrival,
+) {
+  const rows = useMemo(() => view.divisions.data?.rows ?? [], [view]);
+  const order = useMemo(() => orderDivisions(rows), [rows]);
+  const [start] = useState(() => {
+    const target = findDivision(view, arrival.division);
+    const main = target ? order.main.indexOf(target) : -1;
+    return { target, main };
+  });
+  const [showAll, setShowAll] = useState(start.main >= VOTES_SHOWN);
+  const [proceduralOpen, setProceduralOpen] = useState(
+    (!!start.target && start.main < 0) ||
+      (order.main.length === 0 && order.procedural.length > 0),
+  );
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(
+    () => new Set(start.target ? [start.target.key] : []),
+  );
+  const [focus, setFocus] = useState<{ key: string; n: number } | null>(
+    start.target ? { key: start.target.key, n: 1 } : null,
+  );
+  const [sectionFocus, setSectionFocus] = useState(
+    !start.target && arrival.section === 'divisions' && rows.length ? 1 : 0,
+  );
+  return {
+    has: rows.length > 0,
+    order,
+    showAll,
+    setShowAll,
+    proceduralOpen,
+    setProceduralOpen,
+    expanded,
+    fresh,
+    focus,
+    sectionFocus,
+    toggle(key: string) {
+      setExpanded((old) => {
+        const next = new Set(old);
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
+        return next;
+      });
+    },
+    showSection: () => setSectionFocus((n) => n + 1),
+    /** Reveal, expand and scroll to a vote; false when no vote matches. */
+    reveal(key: string) {
+      const division = findDivision(view, key);
+      if (!division) return false;
+      const main = order.main.indexOf(division);
+      if (main >= VOTES_SHOWN) setShowAll(true);
+      if (main < 0) setProceduralOpen(true);
+      setExpanded((old) => new Set([...old, division.key]));
+      setFocus((old) => ({ key: division.key, n: (old?.n ?? 0) + 1 }));
+      return true;
+    },
+  };
+}
+type VotesState = ReturnType<typeof useVotes>;
+
+function Votes({
   view,
+  votes,
   savedAt,
-  focused = false,
+  targets,
 }: {
   view: BillView;
+  votes: VotesState;
   savedAt: number | null;
-  focused?: boolean;
+  targets: Targets;
 }) {
-  const [all, setAll] = useState(false);
-  const data = view.divisions.data!;
   const identity = view.identity.data!;
-  const rows = data.rows;
-  const shown = all ? rows : rows.slice(0, DIVISIONS_SHOWN);
-  const rest = rows.length - shown.length;
-  const name = billName({
-    title: identity.title,
-    short_title: identity.shortTitle,
-  });
+  const reduceMotion = useReduceMotion();
+  const headerBottom = useHeaderBottom();
+  const member = useMyMemberVotes(votes.has);
+  const headerRef = useRef<View>(null);
+  useEffect(() => {
+    if (votes.sectionFocus) targets.scrollTo(headerRef, true);
+  }, [votes.sectionFocus, targets]);
+  if (!votes.has) return null;
+  const { main, procedural } = votes.order;
+  const shown = votes.showAll ? main : main.slice(0, VOTES_SHOWN);
+  const hidden = main.length - VOTES_SHOWN;
+  const ordered = [...main, ...procedural];
+  const all = view.divisions.data!.rows;
+  const row = (division: Division) => (
+    <BillVoteRow
+      key={division.key}
+      division={division}
+      index={ordered.indexOf(division)}
+      bill={identity}
+      expanded={votes.expanded.has(division.key)}
+      onToggle={() => {
+        animateLayout(reduceMotion);
+        votes.toggle(division.key);
+      }}
+      focus={votes.focus?.key === division.key ? votes.focus.n : 0}
+      targets={targets}
+      isNew={votes.fresh.has(division.key)}
+      memberVote={
+        member
+          ? (() => {
+              const position = memberPosition(
+                member,
+                { title: identity.title, shortTitle: identity.shortTitle },
+                division,
+                all,
+              );
+              return position
+                ? { name: member.name, slug: member.slug, position }
+                : null;
+            })()
+          : null
+      }
+    />
+  );
+  // Collapsing keeps the reader in the section: a header already above the
+  // bar lands just under it.
+  const collapse = () => {
+    animateLayout(reduceMotion);
+    votes.setShowAll(false);
+    headerRef.current?.measureInWindow((_x, y) => {
+      if (y < headerBottom) targets.scrollTo(headerRef);
+    });
+  };
   return (
-    <Section
-      title={focused ? undefined : 'Divisions'}
-      accent="votes"
-      testID="bill-divisions"
-    >
-      {focused ? (
-        <Group gap={rhythm.tight}>
-          <Heading level={1} testID="bill-divisions-title">
-            Bill divisions
-          </Heading>
-          <LinkRow
-            title={name}
-            accessibilityLabel={`${name}, the bill`}
-            onPress={() => router.push(billRoute(identity.key))}
-            testID="bill-divisions-details"
-            titleTestID="bill-divisions-bill-name"
+    <View ref={headerRef} collapsable={false}>
+      <Section
+        title="How parliament voted"
+        testID="bill-divisions"
+        headingTestID="bill-divisions-title"
+      >
+        {shown.length ? <View>{shown.map(row)}</View> : null}
+        {hidden > 0 ? (
+          <ShowMoreButton
+            hidden={hidden}
+            noun={hidden === 1 ? 'vote' : 'votes'}
+            open={votes.showAll}
+            onToggle={() => {
+              if (votes.showAll) collapse();
+              else {
+                animateLayout(reduceMotion);
+                votes.setShowAll(true);
+              }
+            }}
+            testID="bill-divisions-more"
           />
-        </Group>
-      ) : null}
-      {rows.length ? (
-        <RowList>
-          {shown.map((division, index) => (
-            <DivisionItem
-              key={division.key}
-              division={division}
-              index={index}
-              bill={{ title: identity.title, short_title: identity.shortTitle }}
-            />
-          ))}
-        </RowList>
-      ) : (
-        <EmptyState message={copy.noDivisions} testID="bill-divisions-none" />
-      )}
-      {rest > 0 ? (
-        <Button
-          label={`Show more (${formatCount(rest)} more)`}
-          variant="quiet"
-          icon="chevron.down"
-          onPress={() => setAll(true)}
-          testID="bill-divisions-more"
-        />
-      ) : null}
-      {rows.length ? (
+        ) : null}
+        {procedural.length ? (
+          <Disclosure
+            label={`Procedural votes (${formatCount(procedural.length)})`}
+            open={votes.proceduralOpen}
+            onToggle={votes.setProceduralOpen}
+            testID="bill-divisions-procedural"
+          >
+            <View>{procedural.map(row)}</View>
+          </Disclosure>
+        ) : null}
         <SourceLine
-          title="About these divisions"
           asOf={view.divisions.asAt}
           citation="They Vote For You"
           licence="ODbL"
           savedAt={savedAt}
-          originals={rows.map((d) => ({
+          rule={notes.chosen}
+          originals={ordered.map((d) => ({
             label: 'They Vote For You',
             url: d.url,
-            record: `${divisionTitle(d)}, ${chamberLabel(d.house)}, ${formatDate(d.date, 'short')}`,
+            record: `division, ${short(d.date)}`,
           }))}
-          notes={[
-            copy.divisions,
-            copy.splits,
-            data.partyBasisNote,
-            data.collapsed
-              ? `The source records some divisions more than once; ${data.collapsed} ${data.collapsed === 1 ? 'row' : 'rows'} identical in day, stage and counts ${data.collapsed === 1 ? 'is' : 'are'} shown here once.`
-              : null,
-          ]}
+          notes={[view.divisions.data!.partyBasisNote || null, notes.stages]}
           testID="bill-divisions-source"
         />
-      ) : null}
-    </Section>
+      </Section>
+    </View>
   );
 }
 
 /**
- * One division: the outcome and counts, its title (the recorded stage, D5),
- * chamber and date, then the three largest parties as bars. The question in
- * the record's words and the other parties wait behind one disclosure.
+ * One vote on the bill page: the recorded stage, chamber and date, the
+ * outcome, the split in words. It expands in place to the party votes and
+ * the question; its long press holds the vote's original.
  */
-function DivisionItem({
+function BillVoteRow({
   division,
   index,
   bill,
+  expanded,
+  onToggle,
+  focus,
+  targets,
+  isNew,
+  memberVote,
 }: {
   division: Division;
   index: number;
-  bill: { title: string; short_title: string | null };
+  bill: Identity;
+  expanded: boolean;
+  onToggle: () => void;
+  /** Changes each time this vote is the scroll target. */
+  focus: number;
+  targets: Targets;
+  isNew: boolean;
+  memberVote: {
+    name: string;
+    slug: string;
+    position: 'for' | 'against';
+  } | null;
 }) {
   const id = `bill-division-${index}`;
-  const outcome = division.outcomeLabel || 'Outcome not recorded';
-  const counts = `${formatCount(division.ayes)} ayes, ${formatCount(division.noes)} noes`;
+  const stacked = useAccessibilitySize();
+  const anchor = useRef<View>(null);
+  useEffect(() => {
+    if (focus) targets.scrollTo(anchor, true);
+  }, [focus, targets]);
+  const title = divisionTitle(division);
+  const meta = [chamberLabel(division.house), short(division.date)].join(' · ');
+  const outcome = outcomeWord(division.outcome, division);
   const parties = divisionParties(division.splits);
-  const question = divisionQuestion(division.question, division.stage, bill);
-  const words = question ? question.split(/\s+/).filter(Boolean).length : 0;
-  const more = parties.rest.length;
-  const moreParties = more
-    ? `${formatCount(more)} more ${more === 1 ? 'party' : 'parties'}`
-    : null;
+  const question = divisionQuestion(division.question, division.stage, {
+    title: bill.title,
+    short_title: bill.shortTitle,
+  });
+  const link = canonicalUrl(
+    `/bill/${bill.key}?division=${encodeURIComponent(division.key)}`,
+  );
+  const name = billName({ title: bill.title, short_title: bill.shortTitle });
+  const follow = useRowFollow('bill', bill.key, name);
+  const actions = [
+    {
+      title: 'Open on They Vote For You',
+      onPress: () => void openSource(division.url, 'They Vote For You'),
+    },
+    {
+      title: follow.following ? 'Unfollow bill' : 'Follow bill',
+      onPress: () => {
+        follow.onFollow();
+        if (!follow.following) haptic('success');
+      },
+    },
+    {
+      title: 'Copy link',
+      onPress: () => {
+        void copyText(link).then((copied) => {
+          if (copied) haptic('success');
+        });
+      },
+    },
+    ...(canShare
+      ? [
+          {
+            title: 'Share',
+            onPress: () =>
+              void shareRecord({
+                path: `/bill/${bill.key}?division=${encodeURIComponent(division.key)}`,
+                title: `${title}, ${name}`,
+              }),
+          },
+        ]
+      : []),
+  ];
   return (
-    <View style={styles.division} testID={id}>
-      <View
+    <View ref={anchor} collapsable={false} testID={id} style={styles.vote}>
+      <Pressable
         accessible
-        accessibilityLabel={`${outcome}, ${counts}`}
-        testID={`${id}-outcome`}
-        style={styles.outcome}
+        accessibilityRole="button"
+        accessibilityLabel={[
+          title,
+          meta,
+          outcome,
+          countWords(division.ayes, division.noes, { spoken: true }),
+          isNew ? 'New' : null,
+        ]
+          .filter(Boolean)
+          .join(', ')}
+        accessibilityHint="Shows the party votes and the question"
+        accessibilityState={{ expanded }}
+        accessibilityActions={actions.map((a) => ({
+          name: a.title,
+          label: a.title,
+        }))}
+        onAccessibilityAction={(event) =>
+          actions
+            .find((a) => a.title === event.nativeEvent.actionName)
+            ?.onPress()
+        }
+        onPress={onToggle}
+        onLongPress={() => openMenu(actions)}
+        testID={`${id}-more`}
+        style={({ pressed }) => [
+          styles.voteRow,
+          pressed ? styles.pressed : null,
+        ]}
       >
-        <StatusLabel label={outcome} hidden />
-        <Text variant="strong" tabular>
-          {counts}
-        </Text>
-      </View>
-      <View style={styles.divisionHead}>
-        <Heading level={3} testID={`${id}-title`}>
-          {divisionTitle(division)}
-        </Heading>
-        <Text variant="metadata" wordSafe>
-          {[chamberLabel(division.house), formatDate(division.date, 'short')]
-            .filter(Boolean)
-            .join(' · ')}
-        </Text>
-      </View>
-      {parties.recorded ? (
-        <DivisionSplits
-          splits={parties.shown}
-          max={parties.max}
-          testID={`${id}-splits`}
+        <View style={styles.voteMain}>
+          <View style={styles.voteTitle}>
+            {isNew ? <NewDot testID={`${id}-new`} /> : null}
+            <Text
+              variant="rowRecord"
+              wordSafe
+              testID={`${id}-title`}
+              style={styles.grow}
+            >
+              {title}
+            </Text>
+          </View>
+          <Text variant="secondary" wordSafe>
+            {meta}
+          </Text>
+          <View style={[styles.outcome, stacked ? styles.stacked : null]}>
+            <StatusCapsule status={outcome} testID={`${id}-outcome`} hidden />
+            <View style={stacked ? null : styles.grow}>
+              <VoteSplit
+                ayes={division.ayes}
+                noes={division.noes}
+                countsStyle="ayesNoes"
+                {...chartSource(
+                  division.date,
+                  division.date,
+                  'They Vote For You',
+                )}
+              />
+            </View>
+          </View>
+        </View>
+        <Icon
+          name={expanded ? chevrons.open : chevrons.closed}
+          size={13}
+          maxScale={1.5}
+          tone="inkFaint"
         />
-      ) : (
-        <Text variant="fine" testID={`${id}-splits-none`}>
-          Party split not recorded for this division.
-        </Text>
-      )}
-      {parties.notes.length ? (
-        <Text variant="fine">{parties.notes.join(' · ')}</Text>
+      </Pressable>
+      {memberVote ? (
+        <LinkRow
+          title={`${memberVote.name}, your MP, voted ${memberVote.position}`}
+          leading={
+            <CachedPortrait name={memberVote.name} slug={memberVote.slug} />
+          }
+          onPress={() =>
+            router.push(personRoute(memberVote.slug, memberVote.name))
+          }
+          testID={`${id}-your-mp`}
+        />
       ) : null}
-      {question || more ? (
-        <Disclosure
-          label={[question ? 'The question' : null, moreParties]
-            .filter(Boolean)
-            .join(' · ')}
-          accessibilityLabel={[
-            question ? `The question, ${words} words` : null,
-            moreParties,
-          ]
-            .filter(Boolean)
-            .join(', ')}
-          testID={`${id}-more`}
-        >
+      {expanded ? (
+        <View style={styles.voteBody} testID={`${id}-body`}>
+          <PartyVotes
+            splits={[...division.splits.drawn, ...division.splits.folded]}
+            paired={division.paired}
+            recorded={parties.recorded}
+            testID={`${id}-parties`}
+          />
           {question ? (
-            <DivisionQuestion text={question} testID={`${id}-question`} />
+            <SubSection title="The question">
+              <DivisionQuestion text={question} testID={`${id}-question`} />
+            </SubSection>
           ) : null}
-          {more ? (
-            <DivisionSplits
-              splits={parties.rest}
-              max={parties.max}
-              testID={`${id}-splits-more`}
-              rowTestID={`${id}-splits`}
-            />
-          ) : null}
-        </Disclosure>
+        </View>
       ) : null}
     </View>
   );
@@ -1039,192 +1503,252 @@ function DivisionItem({
 
 function Speeches({
   view,
+  name,
   savedAt,
+  anchor,
+  fresh,
 }: {
   view: BillView;
+  name: string;
   savedAt: number | null;
+  anchor: RefObject<View | null>;
+  fresh: ReadonlySet<string>;
 }) {
-  const speeches = (view.speeches.data ?? []).filter((s) => s.slug);
-  const briefs = speeches.some((s) => s.brief);
+  const [all, setAll] = useState(false);
+  const speeches = useMemo(
+    () =>
+      (view.speeches.data ?? [])
+        .filter((s) => s.slug)
+        .sort((a, b) => b.date.localeCompare(a.date)),
+    [view],
+  );
+  if (!speeches.length) return null;
+  const shown = all ? speeches : speeches.slice(0, SPEECHES_SHOWN);
+  const hidden = speeches.length - SPEECHES_SHOWN;
   return (
-    <Section title="Speeches" accent="bills" testID="bill-speeches">
-      {speeches.length ? (
-        <RowList>
-          {speeches.map((speech, index) => {
-            const place =
-              speech.state && speech.state !== 'federal'
-                ? (jurisdictionName(speech.state) ?? null)
-                : null;
-            const meta = [
-              place,
-              speech.stage_hint ? billStage(speech.stage_hint) : null,
-              speech.speaker ? formatDate(speech.date, 'short') : null,
-            ]
-              .filter(Boolean)
-              .join(' · ');
-            return (
-              <View
-                key={speech.slug}
-                style={styles.speech}
-                testID={`bill-speech-${index}`}
-              >
-                <Text wordSafe variant="strong">
-                  {speech.speaker ||
-                    `Speech on ${formatDate(speech.date, 'short')}`}
-                </Text>
-                <View style={styles.speechMeta}>
-                  {speech.party ? <RecordedParty party={speech.party} /> : null}
-                  {meta ? <Text variant="metadata">{meta}</Text> : null}
-                </View>
-                {speech.brief && speech.briefLabel ? (
-                  <MachineBrief
-                    label={speech.briefLabel}
-                    brief={speech.brief}
-                    testID={`bill-speech-${index}-brief`}
-                  />
-                ) : null}
-                <LinkRow
-                  title="Read the speech"
-                  accessibilityHint="Opens the reader"
-                  onPress={() => void openOnWeb(speech.url, 'Read the speech')}
-                  testID={`bill-speech-${index}-web`}
+    <View ref={anchor} collapsable={false}>
+      <Section title="Speeches" testID="bill-speeches">
+        <MachinePillFor />
+        <View>
+          {shown.map((speech, index) => (
+            <View key={speech.slug} style={styles.speech}>
+              {fresh.has(speech.slug) ? (
+                <NewDot testID={`bill-speech-${index}-new`} />
+              ) : null}
+              <View style={styles.grow}>
+                <RecordRow
+                  meta={`${speech.stage_hint ? billStage(speech.stage_hint) : 'Speech'} · ${short(speech.date)}`}
+                  showTitle={false}
+                  compact
+                  speaker={{ name: speech.speaker, party: speech.party }}
+                  excerpt={speech.brief ? { text: speech.brief } : null}
+                  href={docRoute(speech.slug, speech.speaker)}
+                  testID={`bill-speech-${index}`}
                 />
               </View>
-            );
-          })}
-        </RowList>
-      ) : (
-        <EmptyState
-          message="No speeches linked to this bill yet."
-          testID="bill-speeches-none"
+            </View>
+          ))}
+        </View>
+        {hidden > 0 ? (
+          <ShowMoreButton
+            hidden={hidden}
+            noun={hidden === 1 ? 'speech' : 'speeches'}
+            open={all}
+            onToggle={() => setAll(!all)}
+            testID="bill-speeches-more"
+          />
+        ) : null}
+        {/* Every speech that names the bill, not only the linked ones. */}
+        <LinkRow
+          title={`Search speeches for "${name}"`}
+          symbol="magnifyingglass"
+          onPress={() =>
+            router.push(resultsRoute('all', { scope: 'speeches', q: name }))
+          }
+          testID="bill-speeches-search"
         />
-      )}
-      {speeches.length ? (
         <SourceLine
-          title="About these speeches"
           asOf={view.speeches.asAt}
-          citation="OPAX parliamentary record"
+          citation="Hansard"
           savedAt={savedAt}
-          notes={[copy.speeches, briefs ? copy.briefs : null]}
+          originals={[
+            {
+              label: 'Hansard',
+              url: 'https://www.aph.gov.au/Parliamentary_Business/Hansard',
+              record: 'Parliament of Australia',
+            },
+          ]}
+          notes={[notes.speeches]}
           testID="bill-speeches-source"
         />
-      ) : null}
-    </Section>
+      </Section>
+    </View>
+  );
+}
+/** One pill for every speech brief in the block. */
+function MachinePillFor() {
+  return (
+    <View style={styles.pill}>
+      <MachineNotePill />
+    </View>
+  );
+}
+function MachineNotePill() {
+  return (
+    <MachinePill
+      note={{ title: 'Machine-written', body: [notes.speeches] }}
+      testID="bill-speeches-label"
+    />
   );
 }
 
 function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
   const acts = (view.acts.data ?? []).filter((a) => a.title);
-  const passed = /passed|assent/i.test(view.identity.data?.status ?? '');
-  if (!acts.length && !passed) return null;
+  if (!acts.length) return null;
   return (
-    <Section title="What became law" accent="bills" testID="bill-acts">
-      {acts.length ? (
-        <RowList>
-          {acts.map((act) => (
-            <Group key={act.frl_uri} gap={rhythm.line}>
-              <Text wordSafe variant="strong">
-                {act.title}
-              </Text>
-              <Text variant="metadata">
-                {act.assent_date
-                  ? `Assented ${formatDate(act.assent_date, 'short')}`
-                  : 'Assent date not recorded'}
-              </Text>
-            </Group>
-          ))}
-        </RowList>
-      ) : (
-        <EmptyState message="No Act matched to this bill yet." />
-      )}
-      {acts.length ? (
-        <SourceLine
-          title="About these Acts"
-          asOf={view.acts.asAt}
-          citation="Federal Register of Legislation"
-          savedAt={savedAt}
-          originals={acts.map((act) => ({
-            label: 'Act text',
-            url: act.frl_uri,
-            record: act.title,
-          }))}
-          testID="bill-acts-source"
-        />
-      ) : null}
+    <Section title="What became law" testID="bill-acts">
+      <View>
+        {acts.map((act, index) => (
+          <LinkRow
+            key={act.frl_uri}
+            title={act.title}
+            detail={
+              act.assent_date ? `Assented ${short(act.assent_date)}` : undefined
+            }
+            external
+            onPress={() => void openSource(act.frl_uri, act.title)}
+            testID={`bill-acts-${index}`}
+          />
+        ))}
+      </View>
+      <SourceLine
+        asOf={view.acts.asAt}
+        citation="Federal Register of Legislation"
+        savedAt={savedAt}
+        originals={acts.map((act) => ({
+          label: 'Federal Register of Legislation',
+          url: act.frl_uri,
+          record: act.title,
+        }))}
+        testID="bill-acts-source"
+      />
+    </Section>
+  );
+}
+
+function Related({
+  view,
+  savedAt,
+}: {
+  view: BillView;
+  savedAt: number | null;
+}) {
+  const bills = useBillNavigation();
+  if (!view.related.length && !view.became) return null;
+  return (
+    <Section title="Related bills" testID="bill-related">
+      <View>
+        {view.related.map((related) => (
+          <LinkRow
+            key={related.key}
+            title={related.title}
+            detail={
+              related.relation === 'predecessor'
+                ? 'Builds on this bill'
+                : billSentenceCase(related.relation)
+            }
+            onPress={() => bills.openBill(related.key, related.title)}
+            testID={`bill-related-${related.key}`}
+          />
+        ))}
+        {view.became ? (
+          <LinkRow
+            title="Introduced to Parliament"
+            onPress={() => bills.openBill(view.became!)}
+            testID="bill-became"
+          />
+        ) : null}
+      </View>
+      <SourceLine
+        asOf={view.identity.asAt}
+        citation="ParlInfo"
+        savedAt={savedAt}
+        notes={[notes.related]}
+        testID="bill-related-source"
+      />
     </Section>
   );
 }
 
 const styles = StyleSheet.create({
+  head: { gap: rhythm.block },
+  headBlock: { gap: rhythm.block },
+  titleBlock: { gap: rhythm.line },
   status: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: rhythm.tight,
+    marginBottom: rhythm.line,
   },
-  actions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
-  actionsStacked: {
+  stacked: {
     flexDirection: 'column',
     flexWrap: 'nowrap',
-    alignItems: 'stretch',
+    alignItems: 'flex-start',
   },
-  sponsor: { gap: rhythm.line },
-  ruler: { gap: rhythm.tight, paddingTop: rhythm.line },
-  rulerList: { gap: rhythm.tight },
-  // Dots spread along one hairline, first and last at its ends.
-  track: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 10,
+  follow: { alignItems: 'flex-start' },
+  source: { marginTop: rhythm.tight },
+  added: { marginTop: rhythm.tight },
+  textRow: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.dividerSubtle,
   },
-  rule: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 4,
-    height: 2,
-    backgroundColor: colors.billsInk,
-  },
-  rulerDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: colors.billsInk,
-  },
-  rulerLabels: { flexDirection: 'row', gap: rhythm.tight },
-  rulerLabel: { flex: 1, gap: 2 },
-  labelStart: { alignItems: 'flex-start' },
-  labelMiddle: { alignItems: 'center' },
-  labelEnd: { alignItems: 'flex-end' },
+  dates: { gap: rhythm.tight },
   date: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
   dateText: { flex: 1, gap: 2 },
-  grow: { flex: 1 },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     marginTop: 8,
-    backgroundColor: colors.billsInk,
+    backgroundColor: colors.ink,
   },
+  grow: { flexGrow: 1, flexShrink: 1 },
+  vote: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.dividerSubtle,
+  },
+  voteRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.row,
+  },
+  voteMain: { flex: 1, gap: rhythm.line },
+  voteTitle: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   outcome: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: rhythm.tight,
   },
-  division: { gap: rhythm.tight },
-  divisionHead: { gap: 2 },
-  speech: { gap: rhythm.tight },
-  speechMeta: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  voteBody: { gap: rhythm.block, paddingBottom: rhythm.block },
+  pressed: { backgroundColor: colors.sunken },
+  speech: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  pill: { alignItems: 'flex-start' },
+  paneMenu: {
+    minWidth: minimumTarget,
+    minHeight: minimumTarget,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: rhythm.tight,
+  },
+  toolbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: rhythm.screen,
+    paddingTop: rhythm.tight,
+    backgroundColor: colors.paper,
   },
 });

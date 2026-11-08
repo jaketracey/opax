@@ -32,7 +32,20 @@ jest.mock('expo-router', () => ({
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn(), navigate: jest.fn() },
-  Stack: { Screen: () => null },
+  // The bill page's bottom toolbar, and rows that link through Link.
+  Stack: {
+    Screen: () => null,
+    Toolbar: Object.assign(() => null, {
+      Button: () => null,
+      Spacer: () => null,
+    }),
+  },
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
 }));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { billFor: jest.fn(), directory: jest.fn() },
@@ -243,7 +256,7 @@ describe('the bill page draws the exported title', () => {
       typeof child === 'string' ? [child] : texts(child),
     );
 
-  test('each division leads with its outcome, then its title, chamber and date, then three parties', async () => {
+  test('a vote leads with its title, then chamber and date, the outcome and counts, and expands to parties and the question', async () => {
     let r!: TestRenderer.ReactTestRenderer;
     await act(async () => {
       r = TestRenderer.create(<BillDetail />);
@@ -251,36 +264,37 @@ describe('the bill page draws the exported title', () => {
     const view = (await fixture.billFor(mockParams.key)).data;
     const row = view.divisions.data!.rows[0]!;
     expect(row.title).toBe('Limitation of debate');
-    const item = byID(r.root, 'bill-division-0')[0]!;
-    expect(texts(byID(item, 'bill-division-0-title')[0]!)).toEqual([
-      'Limitation of debate',
-    ]);
-    expect(texts(item)).toContain('Senate · 19 Aug 2026');
-    expect(
-      byID(item, 'bill-division-0-outcome')[0]!.props.accessibilityLabel,
-    ).toBe('Negatived, 11 ayes, 24 noes');
-    // Three parties drawn; the rest and the question wait behind one row.
-    const splits = byID(item, 'bill-division-0-splits')[0]!;
-    expect(
-      splits.findAll(
+    const press = (testID: string) =>
+      act(() =>
+        r.root
+          .find(
+            (node) =>
+              node.props.testID === testID &&
+              typeof node.props.onPress === 'function',
+          )
+          .props.onPress(),
+      );
+    // Limitation of debate is procedural: it waits in its own group.
+    press('bill-divisions-procedural');
+    const id = r.root
+      .findAll(
         (node) =>
           typeof node.type === 'string' &&
-          typeof node.props.accessibilityLabel === 'string',
-      ),
-    ).toHaveLength(3);
-    const more = byID(item, 'bill-division-0-more')[0]!;
+          /^bill-division-\d+-title$/.test(node.props.testID ?? '') &&
+          texts(node).join('') === 'Limitation of debate',
+      )[0]!
+      .props.testID.replace(/-title$/, '');
+    const item = byID(r.root, id)[0]!;
+    expect(texts(item)).toContain('Senate · 19 Aug 2026');
+    const more = byID(item, `${id}-more`)[0]!;
     expect(more.props.accessibilityState).toEqual({ expanded: false });
     expect(more.props.accessibilityLabel).toMatch(
-      /^The question, \d+ words, \d+ more parties$/,
+      /^Limitation of debate, Senate · 19 Aug 2026, Not agreed to, 11 ayes, 24 noes/,
     );
-    expect(byID(item, 'bill-division-0-question')).toHaveLength(0);
-    const toggle = item.find(
-      (node) =>
-        node.props.testID === 'bill-division-0-more' &&
-        typeof node.props.onPress === 'function',
-    );
-    act(() => toggle.props.onPress());
-    const question = byID(r.root, 'bill-division-0-question')[0]!;
+    expect(byID(item, `${id}-question`)).toHaveLength(0);
+    press(`${id}-more`);
+    expect(byID(r.root, `${id}-parties`)).toHaveLength(1);
+    const question = byID(r.root, `${id}-question`)[0]!;
     expect(texts(question).join('')).toMatch(
       /^Sue Lines Pursuant to the order/,
     );

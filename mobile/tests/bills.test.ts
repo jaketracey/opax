@@ -6,11 +6,10 @@ import {
   billTimeline,
 } from '../src/api/bill-transforms';
 import {
-  appliedFilters,
-  billFilterStore,
+  activeFilterCount,
+  billFilters,
   billRowText,
   countLine,
-  withoutFilter,
 } from '../src/features/bills/filters';
 import { sponsorSlug } from '../src/features/bills/sponsors';
 import { bills, pinned, roster, slugs } from './pinned';
@@ -159,63 +158,45 @@ describe('bill list filters and sort', () => {
     ).not.toContain(wilkie);
   });
 
-  test('the store keeps filters apart from routes and drops empty values', () => {
-    billFilterStore.reset();
-    billFilterStore.setFilters({ status: 'passed', chamber: '', year: 2026 });
-    expect(billFilterStore.get().filters).toEqual({
-      status: 'passed',
-      year: 2026,
-    });
-    expect(appliedFilters(billFilterStore.get().filters)).toEqual([
-      { key: 'status', filter: 'status', value: 'Passed' },
-      { key: 'year', filter: 'year', value: '2026' },
-    ]);
+  test('filter state keeps only set values, and counts what is on', () => {
     expect(
-      appliedFilters({
-        chamber: 'representatives',
-        status: 'before_parliament',
-      }),
-    ).toEqual([
-      { key: 'status', filter: 'status', value: 'Before parliament' },
-      { key: 'chamber', filter: 'chamber', value: 'House of Representatives' },
-    ]);
-    expect(withoutFilter({ status: 'passed', year: 2026 }, 'status')).toEqual({
-      year: 2026,
-    });
-    billFilterStore.reset();
+      billFilters({ status: 'passed', chamber: '', parliament: 48 }),
+    ).toEqual({ status: 'passed', parliament: 48 });
+    expect(billFilters({ status: '', chamber: '', portfolio: '' })).toEqual({});
+    // Sort is not a filter; status counts only on All.
+    expect(activeFilterCount({ sort: 'title' }, 'all')).toBe(0);
+    expect(activeFilterCount({ chamber: 'senate', divided: true }, 'all')).toBe(
+      2,
+    );
     expect(countLine(2989, 2989)).toBe('2,989 bills');
     expect(countLine(119, 2989)).toBe('119 of 2,989 bills');
     expect(countLine(1, 2989)).toBe('1 of 2,989 bills');
     expect(countLine(1, 1)).toBe('1 bill');
   });
 
-  test('rows say status with its date, chamber, introduced or released, sponsor and portfolio', () => {
+  test('rows say status with its dated event, then sponsor and party or the portfolio', () => {
     const row = (key: string) =>
       billRowText(d.billsFor(bills).data!.find((b) => b.key === key)!);
-    expect(row('au-federal-r6850')).toMatchObject({
+    const wilkie = row('au-federal-r6850');
+    expect(wilkie).toMatchObject({
       name: 'Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022',
       status: 'Lapsed',
-      date: 'Introduced 14\u00A0Feb\u00A02022',
-      chamber: 'House of Representatives',
-      by: 'Andrew Wilkie',
-      party: { party: 'Independent', status: 'unknown' },
+      meta: { sponsor: 'Andrew Wilkie', party: 'Independent' },
     });
+    // Index rows carry no key dates, so the event stays neutral (spec 2.1).
+    expect(wilkie.date).toBe(
+      'Status as at 11 Apr 2022'.replace(/ /g, '\u00A0'),
+    );
     const draft = row('au-federal-ed-online-safety-digital-duty-of-care-2026');
     expect(draft.status).toBe('Exposure draft');
-    expect(draft.date).toBe('Released 8\u00A0Sep\u00A02026');
-    expect(draft.chamber).toBeNull();
-    expect(draft.by).toBe('Communications');
-    expect(draft.party).toBeNull();
-    expect(draft.label).toContain('Released 8 September 2026');
+    expect(draft.meta).toEqual({ portfolio: 'Communications portfolio' });
     const before = row('au-federal-r7549');
-    expect(before.asAt).toBe('as at 17\u00A0Sep\u00A02026');
-    expect(before.label).toContain(
-      'Before parliament, as at 17 September 2026',
-    );
-    // No raw register tokens reach the reader.
+    expect(before.date).toMatch(/^Introduced\u00A0/);
+    expect(before.label).toContain('Before parliament, Introduced');
+    // No raw register tokens reach the reader, and never the chamber.
     for (const b of d.billsFor(bills).data!) {
       const text = billRowText(b);
-      expect(`${text.status} ${text.chamber} ${text.date}`).not.toMatch(
+      expect(`${text.status} ${text.date}`).not.toMatch(
         /_|\brepresentatives\b|\bsenate\b/,
       );
     }
