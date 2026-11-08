@@ -16,6 +16,7 @@ import {
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { largestFor, programRecipients, type Jurisdiction } from './data';
+import { stateName } from './Grants';
 import { CONTRACTS_CAVEAT } from './HubCards';
 import { privateNote, unnamedRecipient, unnamedSupplier } from './privacy';
 import { money } from './runtime';
@@ -80,6 +81,11 @@ const gone = () =>
 const short = (d: string) => (d ? formatDate(d, 'short') : '');
 const facts = (rows: (Fact | false | null | undefined)[]) =>
   rows.filter((r): r is Fact => !!r && !!r.value);
+/** "Queensland" for "qld"; empty (so the fact is left out) when unknown. */
+const fullState = (code: string) => {
+  const name = stateName(code);
+  return name === code.toUpperCase() ? '' : name;
+};
 const GRANTCONNECT = 'https://www.grants.gov.au/';
 const SEAT_NOTE =
   'The electorate is the one GrantConnect gives by delivery or recipient postcode, so it is approximate. It says nothing about who arranged the grant.';
@@ -468,7 +474,7 @@ export async function loadMoneyItem(
           facts: facts([
             { label: 'Program', value: 'Community funding' },
             { label: 'Recipient', value: p.recipient },
-            { label: 'State', value: p.state.toUpperCase() },
+            { label: 'State', value: fullState(p.state) },
             { label: 'Area', value: p.area },
             { label: 'Published', value: short(p.date) },
             {
@@ -511,7 +517,7 @@ export async function loadMoneyItem(
           register: 'GrantConnect',
           facts: facts([
             { label: 'Program', value: r.program },
-            { label: 'State', value: r.state.toUpperCase() },
+            { label: 'State', value: fullState(r.state) },
             { label: 'Published', value: short(r.date) },
             { label: 'Register ID', value: r.id },
           ]),

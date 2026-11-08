@@ -16,7 +16,9 @@ import Largest from '../src/features/money-public/Largest';
 import Agencies, { Agency } from '../src/features/money-public/Agencies';
 import Allocation from '../src/features/money-public/Allocation';
 import Connections from '../src/features/money-public/Connections';
-import MoneyItem from '../src/features/money-public/MoneyItem';
+import MoneyItem, {
+  loadMoneyItem,
+} from '../src/features/money-public/MoneyItem';
 
 // journeys/money.md 4.10 and DIRECTION 4.10: every money row opens a native
 // page (chevron) or its original (external glyph). No row is inert, no list
@@ -242,4 +244,29 @@ test('no screen opens the website or Safari except the ⋯ item', () => {
     if (file !== 'parts.tsx')
       expect([file, /\bopenOnWeb\(/.test(source)]).toEqual([file, false]);
   }
+});
+
+test('a money item names its state in full, and leaves an unknown one out', async () => {
+  const awards = raw('/research/mlci.json').awards as {
+    ga_id: string;
+    delivery_state: string | null;
+  }[];
+  const vic = awards.find((a) => a.delivery_state === 'VIC')!;
+  const none = awards.find((a) => !a.delivery_state)!;
+  const state = async (id: string) =>
+    (await loadMoneyItem({ kind: 'award', id }, false)).data.facts.find(
+      (f) => f.label === 'State',
+    )?.value;
+  expect(await state(vic.ga_id)).toBe('Victoria');
+  expect(await state(none.ga_id)).toBeUndefined();
+  const project = raw('/research/mlci.json').projects[0] as {
+    id: string;
+    state: string;
+  };
+  expect(project.state).toBe('ACT');
+  expect(
+    (
+      await loadMoneyItem({ kind: 'project', id: project.id }, false)
+    ).data.facts.find((f) => f.label === 'State')?.value,
+  ).toBe('Australian Capital Territory');
 });
