@@ -1,6 +1,5 @@
-import { useContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Stack, type NativeStackNavigationOptions } from 'expo-router';
-import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { Platform, ScrollView, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -58,7 +57,6 @@ export function SheetFrame({
   useKeyCommand('list-escape', () => {
     if (done.type === 'button') done.onPress?.();
   });
-  const header = useContext(HeaderHeightContext);
   const fitted = short && !accessible;
   const contentStyle = [
     styles.content,
@@ -80,14 +78,7 @@ export function SheetFrame({
       />
       <SurfaceContext.Provider value="sunken">
         {fitted ? (
-          <View
-            testID={testID}
-            style={[
-              styles.screen,
-              contentStyle,
-              { top: fittedHeaderOffset(header) },
-            ]}
-          >
+          <View testID={testID} style={[styles.screen, contentStyle]}>
             {children}
           </View>
         ) : (
@@ -107,27 +98,19 @@ export function SheetFrame({
   );
 }
 /**
- * A `fitToContents` sheet on iOS is sized to its content plus the bar
- * (react-native-screens adds the navigation bar's height to the measured
- * content), but the content is laid out from the sheet's top edge, under
- * the bar, and no scroll view is there to take the automatic inset. Move
- * the content down by the bar with a relative `top`, which leaves its
- * measured height (and so the sheet's height) unchanged. Android draws its
- * own header above the content, so it needs no offset.
- */
-export function fittedHeaderOffset(header: number | undefined): number {
-  if (Platform.OS !== 'ios') return 0;
-  return header && header > 0 ? header : defaultSheetBar;
-}
-/**
+ * A `fitToContents` sheet on iOS is sized to its content plus the bar, and
+ * with the opaque sheet bar (`headerTransparent: false`) its content is
+ * laid out below the bar. The content needs no offset of its own: a
+ * relative `top` by the bar's height (an earlier fix) left a bar-high empty
+ * band above the note and pushed its end out of the sheet
+ * (w4-edition-machine-note).
+ *
  * The iOS sheet already adds room for the home indicator under fitted
  * content, so the content keeps only a group gap of its own there.
  */
 export function fittedBottom(bottomInset: number): number {
   return Platform.OS === 'ios' ? rhythm.group : rhythm.section + bottomInset;
 }
-/** UIKit's sheet navigation bar, as react-navigation's modal default. */
-const defaultSheetBar = 56;
 export function MissingPayload() {
   return (
     <ContentUnavailable
