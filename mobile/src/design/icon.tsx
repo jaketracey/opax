@@ -53,7 +53,7 @@ export function Icon({
   return (
     <SymbolView
       name={android ? { android: androidSymbol(name) } : name}
-      size={android ? scaled / Math.max(fontScale, 1) : scaled}
+      size={android ? scaled / Math.max(fontScale, Number.EPSILON) : scaled}
       tintColor={colors[colour]}
       {...(!android
         ? {
