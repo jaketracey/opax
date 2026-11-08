@@ -38,6 +38,7 @@ export type SheetPayload =
     };
 type Entry = SheetPayload & { overModal: boolean };
 const payloads = new Map<string, Entry>();
+const registryId = Math.random().toString(36).slice(2);
 let serial = 0;
 let overModal = false;
 
@@ -62,7 +63,7 @@ export function sheetPayload<K extends SheetPayload['kind']>(
     : null;
 }
 export function presentSheet(payload: SheetPayload): void {
-  const key = `sheet-${++serial}`;
+  const key = `sheet-${registryId}-${++serial}`;
   payloads.set(key, { ...payload, overModal });
   if (payloads.size > 8) payloads.delete(payloads.keys().next().value!);
   const route = {

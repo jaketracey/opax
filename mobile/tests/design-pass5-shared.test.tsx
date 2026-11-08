@@ -19,9 +19,11 @@ import {
   Text,
 } from '../src/design/primitives';
 import { partyDotSize } from '../src/design/people';
-import { SourceSheet as LegacySourceSheet } from '../src/design/source';
+import {
+  SourceSheet as LegacySourceSheet,
+  licenceText,
+} from '../src/design/source';
 import { sheetPayload } from '../src/navigation/sheets';
-import { licenceText } from '../src/design/source';
 import { textContent, titleSizeCap } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
 import { closeSheetItem } from '../src/navigation/chrome';
