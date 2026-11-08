@@ -3,15 +3,15 @@ import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import {
   BigFigure,
-  ChoiceChips,
   Disclosure,
-  MachineLabel,
+  RecordRow,
   SegmentedControl,
-  SourceLine,
   ViewOriginal,
 } from '../src/design/primitives';
-import { Results } from '../src/features/search/Results';
-import { ResultRow } from '../src/features/search/ResultRow';
+import { SpeechResults } from '../src/features/search/SpeechResults';
+import { ResultsHeader } from '../src/features/search/ResultsHeader';
+import { speechSource, type SpeechList } from '../src/features/search/speeches';
+import { defaultSpeechFilters } from '../src/features/search/filters';
 import {
   countLabel,
   resultMeta,
@@ -21,7 +21,20 @@ import {
 import { decodeRecords } from '../src/features/search/decoders';
 import records from '../scripts/fixtures/search/records.json';
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('../src/api/runtime', () => ({
+  recordSearch: { search: jest.fn(), summary: jest.fn() },
+  catalogs: { search: jest.fn() },
+}));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn() },
+  useSegments: () => [],
+  Link: Object.assign(({ children }: { children: unknown }) => children, {
+    Trigger: ({ children }: { children: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
+}));
 
 // Design pass 3D (concept board 4): each result is one row titled by the
 // record's own title, a kind · date line, who spoke, and its passage; the
@@ -32,7 +45,8 @@ test('a result is titled by its own title, never "Name — Kind — ISO date"', 
   expect(resultTitle(farrell)).toBe('Bills');
   expect(
     resultTitle({
-      title: 'Wendy Lovell — Consumer and Planning Legislation Amendment (Housing Statement Reform) Bill 2024 - Second reading — 2025-02-20',
+      title:
+        'Wendy Lovell — Consumer and Planning Legislation Amendment (Housing Statement Reform) Bill 2024 - Second reading — 2025-02-20',
       speaker: 'Wendy Lovell',
       date: '2025-02-20',
       kind: 'speech',
@@ -89,57 +103,66 @@ test('a saved copy is a source line state, with its reason in the sheet', () => 
   expect(savedCopy(true, 'unavailable').note).toMatch(/could not be loaded/);
 });
 
-function page() {
+function page(rows = [farrell]) {
   const data = decodeRecords({
     query: 'Don Farrell',
-    kind: 'all',
+    kind: 'speech',
     sort: 'relevance',
     page: 1,
     per_page: 20,
     page_count: 1,
-    total: 1,
-    count: 1,
+    total: rows.length,
+    count: rows.length,
     truncated: false,
-    results: [
-      {
-        ...farrell,
-        url: 'https://www.aph.gov.au/Parliamentary_Business/Hansard',
-        source: 'Senate Hansard',
-      },
-    ],
-    years: { '2023': 1 },
+    results: rows.map((row) => ({
+      ...row,
+      kind: 'speech',
+      href: '/doc/' + row.slug,
+      url: 'https://www.aph.gov.au/Parliamentary_Business/Hansard',
+      source: 'Senate Hansard',
+    })),
+    years: { '2023': rows.length },
   });
   return { data, stale: false, savedAt: 0, asOf: '2026-10-09' };
 }
 
-function draw(readMode: 'passages' | 'briefs' = 'passages', briefs = {}) {
-  const onOpen = jest.fn();
+function draw(rows = [farrell]) {
+  const result = page(rows);
+  const list: SpeechList = {
+    first: { status: 'ready', result } as never,
+    rows: result.data.results,
+    total: result.data.total,
+    more: false,
+    next: null,
+    pages: 1,
+    source: speechSource(result as never, result.data.results, 'rule'),
+    count: countLabel(result.data.total, ['speech', 'speeches']),
+    load: jest.fn(),
+    loadMore: jest.fn(),
+    retry: jest.fn(),
+  };
+  const recover = {
+    onAsk: jest.fn(),
+    onAll: jest.fn(),
+    onClearFilters: jest.fn(),
+    onUnquote: jest.fn(),
+    onSpeeches: jest.fn(),
+  };
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
-      <Results
-        result={page()}
-        busy={false}
-        filtered={false}
-        sort="relevance"
-        onSort={jest.fn()}
-        onPage={jest.fn()}
-        onOpen={onOpen}
-        onShare={jest.fn()}
-        readMode={readMode}
-        onRead={jest.fn()}
-        briefs={briefs}
-        briefBusy={false}
-        briefError={null}
-        onBriefRetry={jest.fn()}
-        summary={null}
-        summaryBusy={false}
-        summaryError={null}
-        onSummary={jest.fn()}
-        summaryAllowed
-        onRecover={jest.fn()}
-        onExample={jest.fn()}
-      />,
+      <>
+        <ResultsHeader count={list.count} details={list.source} />
+        <SpeechResults
+          list={list}
+          q="Don Farrell"
+          filters={defaultSpeechFilters}
+          sort="relevance"
+          roster={null}
+          variant="list"
+          recover={recover}
+        />
+      </>,
     );
   });
   const text = renderer.root
@@ -148,64 +171,66 @@ function draw(readMode: 'passages' | 'briefs' = 'passages', briefs = {}) {
     .flat(Infinity)
     .filter((c) => typeof c === 'string')
     .join('\n');
-  return { renderer, text, onOpen };
+  return { renderer, text, list };
 }
 
-test('the results block: one count line, one row per record, one source line', () => {
-  const { renderer, text, onOpen } = draw();
-  // Count, sort and share on one line, read correctly.
-  expect(text).toContain('1 record');
-  expect(text).not.toMatch(/\bmatches\b/);
+test('the results: one count and source line above, one row per record', () => {
+  const { renderer, text, list } = draw();
+  expect(text).toContain('1 speech');
   expect(renderer.root.findAllByType(BigFigure)).toHaveLength(0);
-  // Passages and Briefs are the pill segmented control.
-  expect(renderer.root.findAllByType(SegmentedControl)).toHaveLength(1);
-  expect(renderer.root.findAllByType(ChoiceChips)).toHaveLength(0);
-  // Summarise is a row that carries the machine label.
-  expect(text).toContain('Summarise these records');
-  expect(renderer.root.findAllByType(MachineLabel)).toHaveLength(1);
+  // Passages | Summaries is retired: every row shows its passage.
+  expect(renderer.root.findAllByType(SegmentedControl)).toHaveLength(0);
   // The row: its own title, the kind and formatted date, who spoke.
-  const row = renderer.root.findByType(ResultRow);
+  const row = renderer.root.findByType(RecordRow);
   expect(row.props).toMatchObject({
     title: 'Bills',
     meta: 'Speech · 6 Mar 2023 · Federal',
-    speaker: 'Don Farrell',
+    speaker: { name: 'Don Farrell' },
+    compact: true,
   });
   expect(text).not.toContain('Don Farrell — Bills — 2023-03-06');
   expect(text).not.toContain('2023-03-06');
-  // No disclosure, "Read matching record" or per-row original under it.
   expect(renderer.root.findAllByType(Disclosure)).toHaveLength(0);
   expect(text).not.toMatch(/Read matching record|View original/);
   expect(renderer.root.findAllByType(ViewOriginal)).toHaveLength(0);
-  // The record's original is in the block's one source line.
-  const lines = renderer.root.findAllByType(SourceLine);
-  expect(lines).toHaveLength(1);
-  expect(lines[0]!.props.originals).toEqual([
+  // The record's original is in the results' one source line (the header).
+  expect(list.source?.originals).toEqual([
     expect.objectContaining({ label: 'Senate Hansard' }),
   ]);
-  // The whole row opens the record.
-  act(() =>
-    renderer.root
-      .find(
-        (n) =>
-          n.props.testID === 'records-result-speech-828012' &&
-          typeof n.props.onPress === 'function',
-      )
-      .props.onPress(),
-  );
-  expect(onOpen).toHaveBeenCalledWith(
-    '/doc/speech-828012',
-    farrell.title,
-  );
-  // A one-page result says nothing about pages.
-  expect(text).not.toMatch(/Page 1 of 1/);
+  expect(
+    renderer.root.findAll((n) => n.props?.testID === 'search-count'),
+  ).not.toHaveLength(0);
+  // The whole row opens the reader, with the query for its find bar.
+  expect(row.props.href).toMatchObject({
+    params: { slug: 'speech-828012', q: 'Don Farrell' },
+  });
+  // A one-page result offers no paging row.
+  expect(text).not.toMatch(/Show 20 more|Page 1 of 1/);
 });
 
-test('briefs carry one machine label for the list, not one per row', () => {
-  const { renderer, text } = draw('briefs', {
-    [farrell.resource]: 'A machine brief of the speech.',
-  });
-  const labels = renderer.root.findAllByType(MachineLabel);
-  // Pass 5, P2-11: the list's one pill; Summarise carries none in Briefs.
-  expect(labels.map((l) => l.props.testID)).toEqual(['records-brief-label']);
-  expect(text).toContain('A machine brief of the speech.');
+test('Summarise sits after the third result and nowhere else', () => {
+  const few = draw();
+  expect(
+    few.renderer.root.findAll((n) => n.props?.testID === 'results-summarise'),
+  ).toHaveLength(0);
+  const others = records
+    .filter((r) => r.kind === 'speech' && r.slug !== farrell.slug)
+    .slice(0, 4);
+  const many = draw([farrell, ...others]);
+  const order = many.renderer.root
+    .findAll(
+      (n) =>
+        typeof n.props?.testID === 'string' &&
+        /^(records-result-\d+|results-summarise)$/.test(n.props.testID) &&
+        typeof n.type !== 'string',
+    )
+    .map((n) => n.props.testID)
+    .filter((id, i, all) => all.indexOf(id) === i);
+  expect(order.slice(0, 4)).toEqual([
+    'records-result-0',
+    'records-result-1',
+    'records-result-2',
+    'results-summarise',
+  ]);
+  expect(many.text).toContain('Summarise these speeches');
 });

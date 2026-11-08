@@ -27,7 +27,8 @@ import {
   eligibleSummary,
   isGrantProgram,
 } from '../src/features/search/eligibility';
-import { richerSuggestions } from '../src/features/search/suggestions';
+import { allTopics, matchAll } from '../src/features/search/ranking';
+import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { fromWebPath } from '../src/navigation/routes';
 import { canonicalUrl, sourceUrl } from '../src/navigation/external';
 import { searchFixture } from '../scripts/search-fixture';
@@ -35,7 +36,12 @@ import manifest from '../scripts/fixtures/search/search-catalog-manifest.json';
 import grants from '../scripts/fixtures/search/grants.json';
 import bills from '../scripts/fixtures/search/bills.json';
 import provenance from '../scripts/fixtures/search/provenance.json';
-import { roster } from './pinned';
+import {
+  roster,
+  manifest as pinnedManifest,
+  people as pinnedPeople,
+  slugs as pinnedSlugs,
+} from './pinned';
 
 test('web option lists and fixture source hashes remain pinned to the authoritative handlers and static exports', () => {
   for (const [path, hash] of Object.entries(provenance.sourceHashes))
@@ -263,19 +269,24 @@ test('unified bill search accepts bill text beside catalog bills, but refuses un
     decodeRecords({ ...page, results: [bill, { ...text, kind: 'contract' }] }),
   ).toThrow();
 });
-test('richer suggestions use only static catalogs and the roster, with canonical destinations', () => {
-  const sources = [roster, decodeManifest(manifest)] as const;
-  expect(richerSuggestions('Labor', ...sources).parties).toContain('Labor');
-  expect(richerSuggestions('Housing', ...sources).topics).toEqual([
-    { slug: 'housing', title: 'Housing' },
-  ]);
-  expect(
-    richerSuggestions('Private Fixture Individual', ...sources).parties,
-  ).toEqual([]);
-  expect(richerSuggestions('h', ...sources)).toEqual({
-    parties: [],
-    topics: [],
+test('party and topic matches use only the roster and the bundled topics', () => {
+  const sources = {
+    roster: memberSuggestionRoster(roster, {
+      roster,
+      manifest: pinnedManifest,
+      slugs: pinnedSlugs,
+      people: pinnedPeople,
+    }),
+    topics: allTopics,
+  };
+  const names = (q: string) => ({
+    parties: matchAll(q, sources).parties.map((m) => m.key),
+    topics: matchAll(q, sources).topics.map((m) => m.key),
   });
+  expect(names('Labor').parties).toContain('Labor');
+  expect(names('Housing').topics).toEqual(['housing']);
+  expect(names('Private Fixture Individual').parties).toEqual([]);
+  expect(names('h')).toEqual({ parties: [], topics: [] });
 });
 test('year normalisation, removable chips and sharing preserve filter state without submitting on mount', () => {
   const f = normaliseFilters({
@@ -289,16 +300,16 @@ test('year normalisation, removable chips and sharing preserve filter state with
   expect(f.to).toBe('2026');
   expect(filterChips(f).map((c) => c.id)).toEqual(['party', 'years', 'kind']);
   const path = searchWebPath('housing', f, 2, 'newest');
-  expect(fromWebPath(path)).toMatchObject({
-    pathname: '/search',
+  // A shared search opens submitted results in the current tab (4.5).
+  expect(fromWebPath(path)).toEqual({
+    pathname: '/results/[kind]',
     params: {
+      kind: 'speeches',
       q: 'housing',
-      kind: 'speech',
       from: '2025',
       to: '2026',
       party: 'Labor',
-      page: '2',
-      sort: 'newest',
+      link: '1',
     },
   });
   expect(canonicalUrl(path)).toContain('/ask?view=search&q=housing');

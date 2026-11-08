@@ -1,6 +1,9 @@
 appId: au.com.opax.app
-name: 29 Surname search stays blank while the full-name entry keeps its face
+name: 29 One row per person in Search, drawn with that person's face
 ---
+# The surname stub "Walsh" and "Jess Walsh" share one person ID (10956), so
+# Search draws one row for her, not two: the full-name entry with its
+# portrait, in the suggestions and in the results.
 - launchApp:
     clearState: true
     permissions: {}
@@ -11,45 +14,16 @@ name: 29 Surname search stays blank while the full-name entry keeps its face
     env:
       QUERY: Walsh
       PREFIX: 29
-- hideKeyboard
-- scrollUntilVisible:
-    element:
-      id: search-suggestion-person-10956
-      text: ^Walsh.*
-    direction: DOWN
-    centerElement: true
-    timeout: 90000
-- assertVisible:
-    id: search-suggestion-person-10956
-    text: ^Walsh.*
-- takeScreenshot: ${EVIDENCE}/15-walsh-surname-suggestion
-- scrollUntilVisible:
-    element:
+- extendedWaitUntil:
+    visible:
       id: search-suggestion-person-10956
       text: Jess Walsh.*
-    direction: DOWN
-    centerElement: true
-    timeout: 90000
-- assertVisible:
+    timeout: 30000
+- assertNotVisible:
     id: search-suggestion-person-10956
-    text: Jess Walsh.*
+    text: ^Walsh.*
 - takeScreenshot: ${EVIDENCE}/15-jess-fullname-suggestion
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    direction: UP
-    timeout: 90000
-- tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: search-result-walsh
-    direction: DOWN
-    centerElement: true
-    timeout: 90000
-- assertVisible:
-    id: search-result-walsh
-- takeScreenshot: ${EVIDENCE}/15-walsh-blank
+- pressKey: Enter
 - scrollUntilVisible:
     element:
       id: search-result-jess-walsh
@@ -60,4 +34,6 @@ name: 29 Surname search stays blank while the full-name entry keeps its face
 - assertVisible:
     id: search-result-jess-walsh
     text: Jess Walsh.*
+- assertNotVisible:
+    id: search-result-walsh
 - takeScreenshot: ${EVIDENCE}/15-jess-walsh-portrait

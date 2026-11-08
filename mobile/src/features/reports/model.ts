@@ -16,6 +16,7 @@ import {
 } from '../../api/validation';
 import topicsCopy from './topics-copy.json';
 import { partyFromCode } from '../bills/party-codes';
+import { parties as searchParties } from '../search/web-options';
 import {
   isOrganisationDonor,
   withholdIndividualDonors,
@@ -40,10 +41,13 @@ export const reportSlugs = [
   'indigenous',
   'media',
 ] as const;
-export const topicPhrase = (slug: string) =>
-  slug === 'indigenous-affairs'
-    ? 'Indigenous affairs'
-    : (topicNames[slug] ?? slug).toLowerCase().replace(/ & /g, ' and ');
+/** "speeches about {phrase}": lower case except proper nouns. */
+export const topicPhrase = (slug: string): string =>
+  (topicsCopy.phrases as Record<string, string>)[slug] ??
+  (topicNames[slug] ?? slug).toLowerCase().replace(/ & /g, ' and ');
+/** The donations section title for the eight topics with an industry. */
+export const topicMoneyTitles: Readonly<Record<string, string>> =
+  topicsCopy.money;
 export const topicReport: Readonly<Record<string, string>> = {
   gambling: 'gambling',
   housing: 'housing',
@@ -309,6 +313,96 @@ export function decadeWindow(
     ? { from, to }
     : null;
 }
+/** A decade bar of `/api/tide`: its label and inclusive years. */
+export interface DecadeBucket {
+  slug: string;
+  label: string;
+  from: number;
+  to: number;
+}
+/** The tide's buckets, for arrivals read before the tide has loaded. */
+export const defaultDecades: readonly DecadeBucket[] = [
+  { slug: '1990s', label: '1993–99', from: 1993, to: 1999 },
+  { slug: '2000s', label: '2000s', from: 2000, to: 2009 },
+  { slug: '2010s', label: '2010s', from: 2010, to: 2019 },
+  { slug: '2020s', label: '2020–26', from: 2020, to: 2026 },
+];
+const FIRST_YEAR = 1993;
+const LAST_YEAR = 2026;
+const yearOf = (value: string | undefined) => {
+  const year = /^(\d{4})(?:-\d{2}-\d{2})?$/.exec(value?.trim() ?? '')?.[1];
+  return year ? Number(year) : null;
+};
+/**
+ * A topic page's filters as page state (specs/search.md 5.2.1): years from
+ * a link become plain years; years outside the record, or `from` after
+ * `to`, are both dropped; an unknown parliament is dropped. A `from` and
+ * `to` that match a tide bucket choose that decade.
+ */
+export function normaliseTopicFilters(
+  params: Record<string, string | string[] | undefined>,
+): SpeechFilters {
+  const one = (key: string) => {
+    const value = params[key];
+    return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+  };
+  const out: SpeechFilters = {};
+  const party = one('party');
+  if (party && isKnownParty(party)) out.party = party;
+  const state = one('state');
+  if (state && parliamentNames[state]) out.state = state;
+  const debate = one('debate');
+  if (debate && debate.length <= 200) out.debate = debate;
+  const from = yearOf(one('from'));
+  const to = yearOf(one('to'));
+  const inRange = (y: number | null) =>
+    y === null || (y >= FIRST_YEAR && y <= LAST_YEAR);
+  if (
+    (from !== null || to !== null) &&
+    inRange(from) &&
+    inRange(to) &&
+    !(from !== null && to !== null && from > to)
+  ) {
+    if (from !== null) out.from = String(from);
+    if (to !== null) out.to = String(to);
+  }
+  return out;
+}
+/** The decade bucket the filters' years match exactly, if any. */
+export function chosenDecade(
+  filters: SpeechFilters,
+  decades: readonly DecadeBucket[] = defaultDecades,
+): DecadeBucket | null {
+  return (
+    decades.find(
+      (d) => String(d.from) === filters.from && String(d.to) === filters.to,
+    ) ?? null
+  );
+}
+/** "Labor · Federal Parliament · 2010s", in the sheet's order. */
+export function topicFiltersLine(
+  filters: SpeechFilters,
+  decades: readonly DecadeBucket[] = defaultDecades,
+): string {
+  const decade = chosenDecade(filters, decades);
+  const years = decade
+    ? decade.label
+    : filters.from && filters.to
+      ? `From ${filters.from} to ${filters.to}`
+      : filters.from
+        ? `From ${filters.from}`
+        : filters.to
+          ? `To ${filters.to}`
+          : null;
+  return [
+    filters.party ? partyName(filters.party) : null,
+    filters.state ? parliamentNames[filters.state] : null,
+    years,
+    filters.debate ? `“${filters.debate}”` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
 export function arcPath(slug: string, filters: SpeechFilters = {}) {
   if (!topicNames[slug]) throw new Error('Unknown topic');
   const params = new URLSearchParams({
@@ -337,6 +431,17 @@ export function arcPath(slug: string, filters: SpeechFilters = {}) {
  * "IND" Independent. Names and unknown codes are kept exactly as recorded.
  */
 export const partyName = (party: string): string => partyFromCode(party);
+
+// A party code as the reads and the Who rows carry it ("ALP", "SFF").
+const PARTY_CODE = /^[A-Z][A-Z0-9]{1,5}$/;
+const partyNames = new Set<string>(searchParties);
+/**
+ * A party a topic arrival may filter by (specs/search.md 5.2.1): any party
+ * code by its shape, or a full name the web sends (the search party list).
+ * Anything else is link text, dropped before the filter line prints it.
+ */
+export const isKnownParty = (party: string) =>
+  PARTY_CODE.test(party) || partyNames.has(party);
 /**
  * A report section's heading and its opening sentence. The heading is the
  * section's short name where the export gives one (an era's "1993–2009");

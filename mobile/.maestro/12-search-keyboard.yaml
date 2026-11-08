@@ -1,8 +1,10 @@
 appId: au.com.opax.app
-name: 12 Search keyboard keeps the submit target and delivers a single tap
+name: 12 Search keyboard submits once with the Search key and keeps the native insets
 ---
 # The settled 3 pt check discriminates at standard size; the AX5 baseline was 2 pt.
 # Transients are checked separately from the fixture probe (250 ms samples).
+# There is no submit button: the keyboard's Search key is the one way to
+# search (journeys/search.md 3.4), so each submit here is one Enter.
 - launchApp:
     clearState: true
 - extendedWaitUntil:
@@ -24,7 +26,7 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
     optional: true
 - extendedWaitUntil:
     visible:
-      id: search-input
+      id: search-screen
     timeout: 20000
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/12-keyboard-cold-search
@@ -34,12 +36,11 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
 - assertTrue:
     condition: ${Math.abs(output.cold.offset.y + output.cold.adjustedInset.top) <= 3}
     label: Search cold launch starts at its native top inset
-- tapOn:
-    id: search-input
-- inputText: Albanese
-- assertVisible:
-    id: search-input
-    text: ^Albanese$
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: 12-keyboard
 - extendedWaitUntil:
     visible: '.*"keyboardHeight":[1-9][0-9]{2}.*'
     timeout: 10000
@@ -49,44 +50,29 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
     id: search-geometry
 - evalScript: ${output.typed = JSON.parse(maestro.copiedText); console.log('TYPED ' + maestro.copiedText)}
 - assertTrue:
-    condition: ${output.typed.editing && output.typed.keyboardHeight > 100 && !output.typed.results}
+    condition: ${output.typed.keyboardHeight > 100 && !output.typed.results}
     label: A real software keyboard is open before the first submit
 - takeScreenshot: ${EVIDENCE}/12-keyboard-before-first-tap
-# A single physical tap; Maestro must never retry a swallowed tap.
-- tapOn:
-    id: search-submit
-    retryTapIfNoChange: false
-- extendedWaitUntil:
-    visible: '.*"results":true.*'
-    timeout: 10000
-- waitForAnimationToEnd
+# A single key press; nothing retries a swallowed submit.
+- pressKey: Enter
+- runFlow: search-submit-reveal.yaml
 - copyTextFrom:
     id: search-geometry
 - evalScript: ${output.first = JSON.parse(maestro.copiedText); console.log('FIRST_SUBMIT ' + maestro.copiedText)}
+# Pass 5 (P1-1): an answered search stops asking, so no submit control is
+# drawn once the results are up.
 - assertTrue:
-    condition: ${output.first.results && !output.first.editing && output.first.keyboardHeight == 0}
-    label: One tap submits and dismisses the keyboard
-# Pass 5 (P1-1): an answered search collapses the form, so the submit pill
-# goes; the field it was submitted from must not move.
-- assertTrue:
-    condition: ${output.first.button.y === undefined && Math.abs(output.first.field.y - output.typed.field.y) <= 3}
-    label: First submission collapses the form and keeps the field within 3 pt
+    condition: ${output.first.results && output.first.keyboardHeight == 0 && output.first.button.y === undefined}
+    label: One Search key press submits, dismisses the keyboard and draws no submit control
 - takeScreenshot: ${EVIDENCE}/12-keyboard-after-first-tap
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    timeout: 30000
-# Put the caret after a short query that fits even at AX5. Re-entering it
-# clears the old results state without relying on the iOS selection menu.
-- tapOn:
-    id: search-input
-    point: 95%,50%
-- eraseText: 50
-- inputText: Albanese
-- assertVisible:
-    id: search-input
-    text: ^Albanese$
+# The same query again: empty the field, type it, submit. The session cache
+# answers it, and the keyboard must behave the same way.
+- runFlow: support/search-clear.yaml
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: 12-keyboard-repeat
 - extendedWaitUntil:
     visible: '.*"keyboardHeight":[1-9][0-9]{2}.*'
     timeout: 10000
@@ -96,35 +82,24 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
     id: search-geometry
 - evalScript: ${output.repeat = JSON.parse(maestro.copiedText); console.log('REPEAT_TYPED ' + maestro.copiedText)}
 - assertTrue:
-    condition: ${output.repeat.editing && output.repeat.keyboardHeight > 100 && !output.repeat.results}
+    condition: ${output.repeat.keyboardHeight > 100 && !output.repeat.results}
     label: Same-query repeat has the keyboard open and no results yet
-- tapOn:
-    id: search-submit
-    retryTapIfNoChange: false
-- extendedWaitUntil:
-    visible: '.*"results":true.*'
-    timeout: 10000
-- waitForAnimationToEnd
+- pressKey: Enter
+- runFlow: search-submit-reveal.yaml
 - copyTextFrom:
     id: search-geometry
 - evalScript: ${output.second = JSON.parse(maestro.copiedText); console.log('SECOND_SUBMIT ' + maestro.copiedText)}
 - assertTrue:
-    condition: ${output.second.results && !output.second.editing && output.second.button.y === undefined && Math.abs(output.second.field.y - output.repeat.field.y) <= 3}
-    label: Same-query second submission collapses the form and keeps the field within 3 pt
+    condition: ${output.second.results && output.second.keyboardHeight == 0 && output.second.button.y === undefined}
+    label: Same-query second submission submits once and dismisses the keyboard
 - takeScreenshot: ${EVIDENCE}/12-keyboard-after-second-tap
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    timeout: 30000
-- tapOn:
-    id: search-input
-    point: 95%,50%
-- eraseText: 50
-- inputText: Albanese
-- assertVisible:
-    id: search-input
-    text: ^Albanese$
+# Dismissing the keyboard without the Search key never searches.
+- runFlow: support/search-clear.yaml
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: 12-keyboard-dismiss
 - extendedWaitUntil:
     visible: '.*"keyboardHeight":[1-9][0-9]{2}.*'
     timeout: 10000
@@ -134,20 +109,16 @@ name: 12 Search keyboard keeps the submit target and delivers a single tap
     id: search-geometry
 - evalScript: ${output.focus = JSON.parse(maestro.copiedText); console.log('BEFORE_DISMISS ' + maestro.copiedText)}
 - assertTrue:
-    condition: ${output.focus.editing && output.focus.keyboardHeight > 100 && !output.focus.results}
+    condition: ${output.focus.keyboardHeight > 100 && !output.focus.results}
     label: The query is unsubmitted before dismissing without a search
-# The left paper gutter contains no control. With handled this single tap
-# dismisses the keyboard without submitting or injecting a scroll gesture.
-- tapOn:
-    point: 1%,50%
-    retryTapIfNoChange: false
+- hideKeyboard
 - waitForAnimationToEnd
 - copyTextFrom:
     id: search-geometry
 - evalScript: ${output.dismiss = JSON.parse(maestro.copiedText); console.log('AFTER_DISMISS ' + maestro.copiedText)}
 - assertTrue:
-    condition: ${!output.dismiss.editing && output.dismiss.keyboardHeight == 0 && !output.dismiss.results && Math.abs(output.dismiss.button.y - output.focus.button.y) <= 3}
-    label: Tapping paper dismisses without searching and keeps the button within 3 pt
+    condition: ${output.dismiss.keyboardHeight == 0 && !output.dismiss.results}
+    label: Dismissing the keyboard does not search
 - takeScreenshot: ${EVIDENCE}/12-keyboard-dismissed
 # The same scroll view must still drive the native large title.
 - swipe:

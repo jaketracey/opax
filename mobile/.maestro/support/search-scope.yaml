@@ -1,0 +1,31 @@
+appId: au.com.opax.app
+name: Choose a Search scope by its label
+---
+# SCOPE is the label: All, People, Bills or Speeches. The segments are a
+# SwiftUI picker on iOS (reached by label inside `search-scope`); from AX3
+# they become the `search-scope-menu` pop-up button.
+- scrollUntilVisible:
+    element:
+      id: search-scope.*
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: search-scope-menu
+    commands:
+      - tapOn:
+          id: search-scope-menu
+      - tapOn: ^${SCOPE}$
+- runFlow:
+    when:
+      notVisible:
+        id: search-scope-menu
+    commands:
+      - tapOn:
+          text: ^${SCOPE}$
+          childOf:
+            id: search-scope
+- waitForAnimationToEnd

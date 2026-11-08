@@ -1,23 +1,35 @@
 appId: au.com.opax.app
 name: Focus Search and verify real keyboard input
 ---
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 90000
-- extendedWaitUntil:
-    notVisible:
-      id: search-suggestions-loading
-    timeout: 90000
-# On iOS a completed short tap can leave this field without keyboard focus.
-# A sustained press activates editing; assert the actual value before submit.
-- longPressOn:
-    id: search-input
+# The field is the native bar search on iOS: it takes no testID, so it is
+# reached by its placeholder. Android draws its own field, `search-input`.
+# Callers submit with `pressKey: Enter` (the keyboard's Search key).
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible: People, bills, topics and more
+          timeout: 90000
+      - tapOn: People, bills, topics and more
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: search-input
+          direction: UP
+          centerElement: true
+          speed: 20
+          timeout: 90000
+      - tapOn:
+          id: search-input
 - inputText: ${QUERY}
-- assertVisible:
-    id: search-input
-    text: ^${QUERY}$
+# Suggestions are on the device: "Search speeches for …" is always drawn
+# while the field has text, so it proves the query arrived.
+- extendedWaitUntil:
+    visible:
+      id: search-speeches-row
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/${PREFIX}-typed-query

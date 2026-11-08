@@ -4,25 +4,18 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import Search from '../src/features/Search';
-import { catalogs, recordSearch } from '../src/api/runtime';
+import { catalogs } from '../src/api/runtime';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
-import { Field, LoadingState, PersonRow } from '../src/design/primitives';
+import { Skeleton } from '../src/design/primitives';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
-  recordSearch: { suggestions: jest.fn() },
+  recordSearch: { search: jest.fn(), summary: jest.fn() },
   catalogs: {
     suggestionSources: jest.fn(),
     suggestionSourcesOnFocus: jest.fn(),
     search: jest.fn(),
   },
-}));
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn() },
-  useFocusEffect: (effect: () => void | (() => void)) =>
-    jest
-      .requireActual<typeof import('react')>('react')
-      .useEffect(effect, [effect]),
 }));
 
 test('building the suggestion roster folds each name a bounded number of times', () => {
@@ -46,26 +39,43 @@ test('building the suggestion roster folds each name a bounded number of times',
   normalize.mockRestore();
 });
 
-beforeEach(() => {
-  jest.mocked(recordSearch.suggestions).mockResolvedValue({
-    manifest: {
-      data: {
-        version: '1',
-        count: 0,
-        counts: {},
-        coverage: '',
-        recordShardSize: 0,
+const mockBar: { options?: Record<string, any> } = {};
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  return {
+    Link: Object.assign(({ children }: { children: unknown }) => children, {
+      Trigger: ({ children }: { children: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    }),
+    router: { push: jest.fn(), navigate: jest.fn() },
+    useSegments: () => [],
+    useLocalSearchParams: () => ({}),
+    useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
+    Stack: {
+      Screen: ({ options }: { options?: Record<string, any> }) => {
+        if (options?.headerSearchBarOptions) mockBar.options = options;
+        return null;
       },
-      stale: false,
-      savedAt: 1,
-      asOf: null,
     },
-  });
+  };
 });
-
-test('idle Browse never shows a placeholder for suggestions it does not draw', async () => {
-  const source = { stale: false, savedAt: null, asAt: null, sources: [] };
-  const sources = {
+const type = (text: string) =>
+  act(async () =>
+    mockBar.options!.headerSearchBarOptions.onChangeText({
+      nativeEvent: { text },
+    }),
+  );
+const ids = (r: TestRenderer.ReactTestRenderer) =>
+  r.root
+    .findAll((n) => typeof n.props?.testID === 'string')
+    .map((n) => n.props.testID as string);
+const sourceFor = (
+  over: Partial<Record<'roster' | 'electorates' | 'bills', unknown>> = {},
+) => {
+  const source = { stale: false, savedAt: 1, asAt: null, sources: [] };
+  return {
     roster: memberSuggestionRoster(roster, { roster, manifest, slugs, people }),
     people,
     manifest,
@@ -73,8 +83,12 @@ test('idle Browse never shows a placeholder for suggestions it does not draw', a
     electorates: index,
     bills,
     provenance: { people: source, electorates: source, bills: source },
+    ...over,
   } as unknown as Awaited<ReturnType<typeof catalogs.suggestionSources>>;
-  let resolve!: (value: typeof sources) => void;
+};
+
+test('idle Browse never shows a placeholder for suggestions it does not draw', async () => {
+  let resolve!: (value: ReturnType<typeof sourceFor>) => void;
   jest.mocked(catalogs.suggestionSourcesOnFocus).mockImplementation(
     () =>
       new Promise((done) => {
@@ -86,68 +100,37 @@ test('idle Browse never shows a placeholder for suggestions it does not draw', a
     renderer = TestRenderer.create(<Search />);
   });
   // Idle, still loading: the Browse links and no placeholder rows.
-  expect(renderer.root.findAllByType(LoadingState)).toHaveLength(0);
-  expect(
-    renderer.root.findAllByProps({ testID: 'search-browse-person' }).length,
-  ).toBeGreaterThan(0);
-  // A typed query waits on them visibly, then resolves to suggestions.
-  await act(async () =>
-    renderer.root.findByType(Field).props.onChangeText('Albanese'),
-  );
-  expect(renderer.root.findAllByType(LoadingState)).toHaveLength(1);
-  await act(async () => resolve(sources));
-  expect(renderer.root.findAllByType(LoadingState)).toHaveLength(0);
-  expect(renderer.root.findAllByType(PersonRow).length).toBeGreaterThan(0);
+  expect(renderer.root.findAllByType(Skeleton)).toHaveLength(0);
+  expect(ids(renderer)).toContain('search-browse-person');
+  expect(ids(renderer)).toContain('search-browse-topics');
+  // First launch: a typed query keeps its two fixed rows while the
+  // catalogues arrive, then the Top suggestion leads.
+  await type('Albanese');
+  expect(ids(renderer)).toContain('search-speeches-row');
+  expect(ids(renderer)).toContain('search-ask-row');
+  expect(renderer.root.findAllByType(Skeleton)).toHaveLength(1);
+  await act(async () => resolve(sourceFor()));
+  expect(renderer.root.findAllByType(Skeleton)).toHaveLength(0);
+  expect(ids(renderer)).toContain('search-top-suggestion');
   await act(async () => renderer.unmount());
 });
 
-test('an empty roster does not show no suggestions before the topic catalog responds', async () => {
-  const source = { stale: false, savedAt: null, asAt: null, sources: [] };
-  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue({
-    roster: { ...roster, people: [] },
-    people,
-    manifest,
-    slugs,
-    electorates: { ...index, electorates: [] },
-    bills: { ...bills, bills: [] },
-    provenance: { people: source, electorates: source, bills: source },
-  } as unknown as Awaited<ReturnType<typeof catalogs.suggestionSources>>);
-  let finish!: (
-    value: Awaited<ReturnType<typeof recordSearch.suggestions>>,
-  ) => void;
-  jest.mocked(recordSearch.suggestions).mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        finish = resolve;
-      }),
+test('an empty roster never says "No suggestions": the two fixed rows remain', async () => {
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue(
+    sourceFor({
+      roster: { ...roster, people: [] },
+      electorates: { ...index, electorates: [] },
+      bills: { ...bills, bills: [] },
+    }),
   );
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<Search initialQuery="zzzzzz" />);
+    r = TestRenderer.create(<Search />);
   });
-  expect(r.root.findAllByType(LoadingState)).toHaveLength(1);
-  expect(
-    r.root.findAllByProps({ testID: 'search-suggestions-empty' }),
-  ).toHaveLength(0);
-  await act(async () =>
-    finish({
-      manifest: {
-        data: {
-          version: '1',
-          count: 0,
-          counts: {},
-          coverage: '',
-          recordShardSize: 0,
-        },
-        stale: false,
-        savedAt: 1,
-        asOf: null,
-      },
-    }),
-  );
-  expect(r.root.findAllByType(LoadingState)).toHaveLength(0);
-  expect(
-    r.root.findAllByProps({ testID: 'search-suggestions-empty' }).length,
-  ).toBeGreaterThan(0);
+  await type('zzzzzz');
+  expect(ids(r)).not.toContain('search-suggestions-empty');
+  expect(ids(r)).toContain('search-speeches-row');
+  expect(ids(r)).toContain('search-ask-row');
+  expect(ids(r)).not.toContain('search-top-suggestion');
   await act(async () => r.unmount());
 });

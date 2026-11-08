@@ -1,9 +1,53 @@
 import { assertAllowedPath } from '../../api/policy';
 import { isMoreKind } from '../../features/search/contracts';
-/** A shared search opens a draft. Mounting this route never submits it. */
+import { capQuery, targetForWebKind } from '../../features/search/scopes';
+
+/** Speech filters a pushed results list carries (request keys unchanged). */
+export type ResultsParams = {
+  group?: string;
+  scope?: string;
+  q?: string;
+  speaker?: string;
+  party?: string;
+  state?: string;
+  topic?: string;
+  from?: string;
+  to?: string;
+  /** `all` widens Speeches to every parliamentary record type. */
+  type?: string;
+  /** The query arrived by link: it never enters Recent. */
+  link?: string;
+};
+
+/**
+ * `/results/[kind]`: one pushed route in every stack (journeys/search.md
+ * 4.3). `kind` is a scope (`all`, `people`, `bills`, `speeches`) or a list
+ * (`interests`, `grants`, …); singular names (`speech`) are accepted.
+ */
+export const resultsRoute = (
+  kind: string,
+  filters: ResultsParams = {},
+  name?: string,
+) => ({
+  pathname: '/results/[kind]' as const,
+  params: {
+    kind,
+    ...Object.fromEntries(
+      Object.entries(filters).filter(([, v]) => v !== undefined && v !== ''),
+    ),
+    ...(name ? { name } : {}),
+  },
+});
+
+/**
+ * A shared opax.com.au search link, submitted (journeys/search.md 4.5): in
+ * the app it pushes `/results` in the current tab and the read runs, the tap
+ * on the link being the explicit action. The query is capped at 100
+ * characters on a word boundary, and the web `kind` maps to a scope or list.
+ */
 export function searchRouteFromWebPath(
   path: string,
-): { pathname: '/search'; params: Record<string, string> } | null {
+): ReturnType<typeof resultsRoute> | null {
   const [pathname, query] = path.split('?');
   if (
     pathname !== '/ask' ||
@@ -24,24 +68,39 @@ export function searchRouteFromWebPath(
   } catch {
     return null;
   }
-  return { pathname: '/search', params: Object.fromEntries(p) };
+  const kind = p.get('kind');
+  const target = targetForWebKind(
+    kind === 'all' && !query.includes('kind=') ? null : kind,
+    p.get('speaker'),
+  );
+  const filters: ResultsParams = { q: capQuery(p.get('q') ?? ''), link: '1' };
+  for (const key of [
+    'speaker',
+    'party',
+    'state',
+    'topic',
+    'from',
+    'to',
+  ] as const)
+    if (p.get(key)) filters[key] = p.get(key)!;
+  if (target.scope === 'speeches' && kind && !['speech', 'all'].includes(kind))
+    filters.type = 'all';
+  return target.group
+    ? resultsRoute(target.group, { ...filters, group: target.group })
+    : resultsRoute(target.scope, filters);
 }
-export const resultsRoute = (
-  kind: string,
-  filters: {
-    group?: string;
-    scope?: string;
-    q?: string;
-    speaker?: string;
-  } = {},
-  name?: string,
-) => ({
-  pathname: '/results/[kind]' as const,
-  params: { kind, ...filters, ...(name ? { name } : {}) },
-});
+
+/** Filters a topic page reads (specs/search.md 5.2.1, the arrivals table). */
+export type TopicFilters = {
+  from?: string;
+  to?: string;
+  state?: string;
+  party?: string;
+  debate?: string;
+};
 export const topicRoute = (
   slug: string,
-  filters: Record<string, string> = {},
+  filters: TopicFilters | Record<string, string> = {},
   name?: string,
 ) => ({
   pathname: '/topic/[slug]' as const,

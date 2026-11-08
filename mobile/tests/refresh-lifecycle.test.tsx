@@ -6,12 +6,7 @@ import { decodeCorpus } from '../src/api/catalog-decoders';
 import { Catalogs } from '../src/api/catalogs';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { dataAsOf } from '../src/api/client';
-import {
-  Field,
-  PersonRow,
-  Screen,
-  KeyboardStableScreen,
-} from '../src/design/primitives';
+import { Screen, SuggestionRow } from '../src/design/primitives';
 import { Skeleton } from '../src/design/states';
 import About from '../src/features/About';
 import Electorate from '../src/features/Electorate';
@@ -39,6 +34,8 @@ jest.mock('../src/features/your-mp/useSeat', () => ({
   savedSeatDirectory: () => null,
 }));
 const mockParams: { slug?: string; id?: string } = {};
+// Search's field is the native bar search: its options are captured here.
+const mockOptions: { current?: Record<string, any> } = {};
 const mockFocus: {
   effect?: () => void | (() => void);
   cleanup?: void | (() => void);
@@ -63,7 +60,12 @@ jest.mock('expo-router', () => ({
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+  Stack: {
+    Screen: ({ options }: { options?: Record<string, any> }) => {
+      if (options?.headerSearchBarOptions) mockOptions.current = options;
+      return null;
+    },
+  },
   useFocusEffect: (effect: () => void | (() => void)) => {
     jest.requireActual<typeof import('react')>('react').useEffect(() => {
       mockFocus.effect = effect;
@@ -164,9 +166,7 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
       renderer = TestRenderer.create(element);
     });
     const control = () =>
-      renderer.root.findByType(
-        name === 'Search' ? KeyboardStableScreen : Screen,
-      ).props.refreshControl as ReactElement<{
+      renderer.root.findByType(Screen).props.refreshControl as ReactElement<{
         refreshing: boolean;
         onRefresh: () => void;
       }>;
@@ -209,23 +209,27 @@ test('a later Search focus restores identity context without native refreshing',
     renderer = TestRenderer.create(<Search />);
   });
   await act(async () =>
-    renderer.root.findByType(Field).props.onChangeText('Anthony Albanese'),
+    mockOptions.current!.headerSearchBarOptions.onChangeText({
+      nativeEvent: { text: 'Anthony Albanese' },
+    }),
   );
-  expect(renderer.root.findByType(PersonRow).props.party).toBeUndefined();
-  const control = () =>
-    renderer.root.findByType(KeyboardStableScreen).props.refreshControl;
+  const albanese = () =>
+    renderer.root
+      .findAllByType(SuggestionRow)
+      .find((row) => row.props.name === 'Anthony Albanese')!.props;
+  expect(albanese().secondary ?? '').not.toContain('Labor');
+  const control = () => renderer.root.findByType(Screen).props.refreshControl;
   await act(async () => {
     mockFocus.cleanup?.();
     mockFocus.cleanup = mockFocus.effect!();
   });
   expect(mock.suggestionSourcesOnFocus).toHaveBeenCalledTimes(2);
   expect(control().props.refreshing).toBe(false);
-  expect(renderer.root.findByType(PersonRow).props.party).toBeUndefined();
+  expect(albanese().secondary ?? '').not.toContain('Labor');
   await act(async () => recovered.resolve(ready));
-  expect(renderer.root.findByType(PersonRow).props).toMatchObject({
-    party: 'Labor',
-    place: 'Grayndler · House of Representatives · New South Wales',
-  });
+  expect(albanese().secondary).toBe(
+    'Labor · Member for Grayndler, New South Wales',
+  );
   expect(control().props.refreshing).toBe(false);
   expect(mock.suggestionSources).not.toHaveBeenCalled();
   await act(async () => renderer.unmount());

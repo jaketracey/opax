@@ -1,13 +1,11 @@
 appId: au.com.opax.app
 ---
-# Accessibility visibility can include controls obscured by the keyboard.
-# Check the native window frame before any journey gesture can mask a failed app reveal.
+# There is no submit button any more: the keyboard's Search key submits.
+# Check the native frame instead: a real software keyboard is up and no
+# results have been drawn yet (typing never searches).
 - copyTextFrom:
     id: search-geometry
 - evalScript: ${output.geometry = JSON.parse(maestro.copiedText)}
 - assertTrue:
-    condition: ${output.geometry.button.y + output.geometry.button.height <= output.geometry.windowHeight - output.geometry.keyboardHeight - 8}
-    label: The app already revealed the submit button above the keyboard
-- assertTrue:
-    condition: ${output.geometry.button.y >= output.geometry.nav.y + output.geometry.nav.height && output.geometry.button.y + output.geometry.button.height <= output.geometry.windowHeight - output.geometry.keyboardHeight - 8}
-    label: The entire submit button is between the navigation bar and software keyboard
+    condition: ${output.geometry.keyboardHeight > 100 && !output.geometry.results}
+    label: A real keyboard is open and nothing has been searched while typing

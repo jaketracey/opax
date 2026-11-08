@@ -1,51 +1,45 @@
 appId: au.com.opax.app
-name: 35 Grants programs and local party, topic and report suggestions, also at AX5
+name: 35 Grants programs from All's Money rows and local party and topic suggestions, also at AX5
 ---
+# Money is a list under All, not a kind: the Grants row runs one read when
+# tapped and pushes its list (journeys/search.md 3.4). Party and topic
+# suggestions are drawn on the device and open their native pages.
 - launchApp:
     clearState: true
     permissions: {}
 - tapOn:
     id: tab-search
-- tapOn:
-    id: search-input
-    point: 95%,50%
-- inputText: Community
-- assertVisible:
-    id: search-input
-    text: ^Community$
-- tapOn:
-    point: 1%,50%
-    retryTapIfNoChange: false
-- waitForAnimationToEnd
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Community
+      PREFIX: 35
+- pressKey: Enter
 - scrollUntilVisible:
     element:
-      id: search-kind-menu
-    direction: UP
+      id: search-in-money
+    direction: DOWN
     centerElement: true
+    speed: 20
     timeout: 90000
-- tapOn:
-    id: search-kind-menu
 - scrollUntilVisible:
     element:
-      text: ^Grants$
-    timeout: 90000
-- tapOn: Grants
-- scrollUntilVisible:
-    element:
-      id: search-submit
+      id: search-in-grants
+    direction: DOWN
     centerElement: true
+    speed: 20
     timeout: 90000
+- takeScreenshot: ${EVIDENCE}/35-money-rows
 - tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: records-count
-    centerElement: true
+    id: search-in-grants
+- extendedWaitUntil:
+    visible:
+      id: results-grants
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/35-grants-count
 - scrollUntilVisible:
     element:
-      id: records-result-grant-program-.*
+      id: results-grants-0
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
@@ -53,8 +47,7 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 # Grant programs open the native program page (public-money lane, 8 Oct),
 # not the in-app browser. Its title heads the page.
 - tapOn:
-    id: records-result-grant-program-.*
-    index: 0
+    id: results-grants-0
 - extendedWaitUntil:
     visible:
       id: program-title
@@ -69,30 +62,20 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
     timeout: 10000
 - waitForAnimationToEnd:
     timeout: 5000
-- assertNotVisible:
-    id: search-filters-sheet
 - takeScreenshot: ${EVIDENCE}/35-after-grant-close
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    centerElement: true
-    timeout: 90000
+# Back again to Search, where the answered query is kept.
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: search-count
+    timeout: 10000
 - takeScreenshot: ${EVIDENCE}/35-returned-form
-- tapOn:
-    id: search-input
-    point: 95%,50%
-- takeScreenshot: ${EVIDENCE}/35-before-party-edit
-- eraseText
-- inputText: Labor
-- assertVisible:
-    id: search-input
-    text: ^Labor$
-- takeScreenshot: ${EVIDENCE}/35-party-query-typed
-- tapOn:
-    point: 1%,50%
-    retryTapIfNoChange: false
-- waitForAnimationToEnd
+- runFlow: support/search-clear.yaml
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Labor
+      PREFIX: 35-party
 - scrollUntilVisible:
     element:
       id: search-suggestion-party-Labor
@@ -101,27 +84,21 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 - takeScreenshot: ${EVIDENCE}/35-party-suggestion
 - tapOn:
     id: search-suggestion-party-Labor
-- assertVisible:
-    id: party-screen
-- tapOn: Search
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-input
-    point: 95%,50%
-- eraseText
-- inputText: Housing
-- assertVisible:
-    id: search-input
-    text: ^Housing$
-- tapOn:
-    point: 1%,50%
-    retryTapIfNoChange: false
-- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: party-screen
+    timeout: 20000
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    notVisible:
+      id: party-screen
+    timeout: 10000
+- runFlow: support/search-clear.yaml
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Housing
+      PREFIX: 35-topic
 - scrollUntilVisible:
     element:
       id: search-suggestion-topic-housing
@@ -144,10 +121,4 @@ name: 35 Grants programs and local party, topic and report suggestions, also at 
 - waitForAnimationToEnd:
     timeout: 5000
 - assertNotVisible:
-    id: search-filters-sheet
-- scrollUntilVisible:
-    element:
-      id: search-suggestion-report-housing
-    centerElement: true
-    timeout: 90000
-- takeScreenshot: ${EVIDENCE}/35-report-suggestion
+    id: filters-screen

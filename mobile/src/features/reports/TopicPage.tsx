@@ -1,436 +1,395 @@
-import { headerItems } from '../../navigation/chrome';
-import { useCallback, useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+} from 'react';
+import {
+  Platform,
+  RefreshControl,
+  View,
+  useWindowDimensions,
+  type ScrollView,
+} from 'react-native';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { reports } from '../../api/runtime';
+import { copy } from '../../design/copy';
+import { formatCount } from '../../design/format';
+import { Screen } from '../../design/layout';
+import { FigureBlock } from '../../design/record';
+import { ContentUnavailable, Skeleton } from '../../design/states';
+import { Heading, Text } from '../../design/text';
+import { symbols } from '../../design/symbols';
+import { rhythm } from '../../design/tokens';
+import { useReduceMotion } from '../../design/accessibility';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import type { RowMenuAction } from '../../design/row-link';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { openOnWeb } from '../../navigation/external';
+import { copyRecordLink, shareRecord } from '../../navigation/share';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useOpenAsk } from '../ask/open';
+import { topicLabel } from '../search/ranking';
+import { isOffline } from '../CatalogState';
 import {
-  Button,
-  PadGrid,
-  BigFigure,
-  LinkRow,
-  RowList,
-  EmptyState,
-  Group,
-  KeyValueList,
-  Screen,
-  Section,
-  SegmentedControl,
-  SourceLine,
-  Text,
-  PartyLabel,
-} from '../../design/primitives';
-import { formatMoney } from '../../design/format';
-import { shareHeaderItem } from '../../navigation/share';
-import { RecordRow } from '../RecordRow';
-import { moneyRows, parliamentNames, partyName, topicNames } from './model';
-import {
-  AEC_NOTE,
-  ReadState,
-  ShareBars,
-  SourceRows,
-  announce,
-  useRead,
-} from './parts';
-import { openRecord, openTopicWindow } from './open';
+  chosenDecade,
+  defaultDecades,
+  normaliseTopicFilters,
+  topicDescriptions,
+  topicNames,
+  topicPhrase,
+  type DecadeBucket,
+  type SpeechFilters,
+} from './model';
+import { useRead, type ReadMeta } from './parts';
+import { LABEL_NOTE, TOPIC_CITATION } from './topic-copy';
+import { TopicMoney, hasTopicMoney } from './TopicMoney';
+import { SPEECH_PAGE, TopicSpeeches } from './TopicSpeeches';
+import { TopicTide } from './TopicTide';
+import { TopicWho } from './TopicWho';
 
-const LABELLED = 'OPAX labelled speeches';
-const industries: Readonly<Record<string, string[]>> = {
-  gambling: ['gambling'],
-  'financial-services': ['finance'],
-  'mining-energy': ['mining'],
-  'property-construction': ['property'],
-  'media-communications': ['media'],
-  'hospitality-alcohol': ['alcohol'],
-  agriculture: ['agriculture'],
-  'unions-workplace': ['unions'],
+type Params = {
+  slug?: string;
+  party?: string;
+  state?: string;
+  from?: string;
+  to?: string;
+  debate?: string;
 };
-function TopicMoney({ slug }: { slug: string }) {
-  const read = useRead(reports.money);
-  return (
-    <ReadState
-      read={read}
-      citation="AEC annual returns"
-      foot={false}
-      testID="topic-money"
-    >
-      {(money, meta) => {
-        const data = moneyRows(money, industries[slug] ?? []);
-        if (!data.donors.length) return null;
-        const label = industries[slug]!.map((i) => i.replace(/_/g, ' ')).join(
-          ' and ',
-        );
-        return (
-          <Section
-            title="The money beside the words"
-            testID="topic-money-section"
-          >
-            <Text>{`While parliament debated this, ${label} interests disclosed ${formatMoney(data.donors.reduce((n, d) => n + d.total, 0))} in donations to political parties.`}</Text>
-            <KeyValueList
-              items={data.rows
-                .slice(0, 6)
-                .map((d) => ({ label: d.party, value: formatMoney(d.money) }))}
-            />
-            <RecordRow
-              path={'/money'}
-              title="Explore on the money map"
-              onPress={() => openRecord('/money', 'Money map')}
-            />
-            <SourceLine
-              {...meta}
-              citation="AEC annual returns"
-              coverage="OPAX money graph"
-              title="About the disclosed money"
-              notes={[AEC_NOTE, money.meta.coverage]}
-              testID="topic-money-as-at"
-            />
-          </Section>
-        );
-      }}
-    </ReadState>
-  );
+const filterKeys = ['party', 'state', 'from', 'to', 'debate'] as const;
+
+/** The question the ⋯ menu drafts in Ask; it is never submitted on arrival. */
+export const topicQuestion = (slug: string) =>
+  `What has parliament said about ${topicPhrase(slug)} this year?`;
+
+/** The public page, with the filters a shared link keeps. */
+export function topicWebPath(slug: string, filters: SpeechFilters = {}) {
+  const params = new URLSearchParams();
+  for (const key of filterKeys) if (filters[key]) params.set(key, filters[key]);
+  return `/subject/topic/${slug}${params.size ? `?${params}` : ''}`;
 }
+
+/**
+ * `/topic/[slug]` (specs/search.md 5): the count, the decades, who speaks,
+ * donations beside the debate where an industry pairs with it, and the
+ * speeches. Keyed on the slug only: filters are page state, kept in the
+ * route's params with setParams so a filter never pushes a screen.
+ */
 export default function TopicPage() {
-  const { slug = '', ...filters } = useLocalSearchParams<{
-    slug: string;
-    party?: string;
-    state?: string;
-    from?: string;
-    to?: string;
-    debate?: string;
-  }>();
+  const params = useLocalSearchParams<Params>();
+  const slug = typeof params.slug === 'string' ? params.slug : '';
+  if (!topicNames[slug]) return <UnknownTopic />;
+  return <TopicContent key={slug} slug={slug} params={params} />;
+}
+
+function UnknownTopic() {
   return (
-    <TopicContent
-      key={slug + JSON.stringify(filters)}
-      slug={slug}
-      filters={filters}
-    />
+    <>
+      <Stack.Screen options={{ title: 'Topic' }} />
+      <Screen testID="topic-screen">
+        <ContentUnavailable
+          symbol={symbols.topic}
+          title="Topic not found"
+          body="This topic isn't in OPAX."
+          testID="topic-unknown"
+        />
+      </Screen>
+    </>
   );
 }
-function TopicContent({
-  slug,
-  filters,
-}: {
-  slug: string;
-  filters: {
-    party?: string;
-    state?: string;
-    from?: string;
-    to?: string;
-    debate?: string;
+
+const metaOf = (record: {
+  asOf: string | null;
+  stale: boolean;
+  savedAt: number | null;
+}): ReadMeta => ({
+  asOf: record.asOf,
+  savedAt: record.stale ? record.savedAt : null,
+});
+
+/**
+ * The topic's count: a figure, dated and sourced (specs/search.md 5.2
+ * item 2). Labelling is incomplete, so the count is a floor and says so.
+ */
+function countFigure(
+  slug: string,
+  data: { count: number; labelled: number },
+  record: { asOf: string | null; stale: boolean; savedAt: number | null },
+): ComponentProps<typeof FigureBlock> {
+  return {
+    value: formatCount(data.count),
+    label: `speeches about ${topicPhrase(slug)}`,
+    caveat: 'Not every speech is labelled yet, so this is a floor.',
+    source: {
+      asOf: record.asOf,
+      savedAt: metaOf(record).savedAt,
+      citation: TOPIC_CITATION,
+      notes: [
+        `${formatCount(data.count)} of the ${formatCount(data.labelled)} labelled speeches are about ${topicPhrase(slug)}.`,
+        LABEL_NOTE,
+      ],
+      testID: 'topic-count-source',
+    },
+    testID: 'topic-count',
   };
-}) {
-  const load = useCallback(() => reports.topic(slug), [slug]);
-  const { party, state, from, to, debate } = filters;
-  const arcLoad = useCallback(
-    () => reports.speeches(slug, { party, state, from, to, debate }),
-    [slug, party, state, from, to, debate],
+}
+
+/** About two drawn speech rows: the next 30 append this far from the end. */
+const NEAR_END = 2 * 96;
+
+function TopicContent({ slug, params }: { slug: string; params: Params }) {
+  const title = topicLabel(topicNames[slug]!);
+  const phrase = topicPhrase(slug);
+  const [filters, setFilters] = useState<SpeechFilters>(() =>
+    normaliseTopicFilters(params),
   );
-  const read = useRead(load),
-    tide = useRead(reports.tide),
-    arc = useRead(arcLoad),
-    corpus = useRead(reports.corpus);
-  const [order, setOrder] = useState<'newest' | 'oldest'>('newest'),
-    [visible, setVisible] = useState(30);
-  const title = topicNames[slug] ?? 'Topic';
-  const shareFilters = new URLSearchParams();
-  for (const [key, value] of Object.entries(filters))
-    if (value) shareFilters.set(key, value);
+  const scrollRef = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
+  const reduceMotion = useReduceMotion();
+  const viewport = useWindowDimensions().height;
+  // Where Speeches starts in the page, and where its drawn rows end.
+  const speechesY = useRef<number | null>(null);
+  const rowsEnd = useRef<number | null>(null);
+  const [drawn, setDrawn] = useState(SPEECH_PAGE);
+  const appendedAt = useRef<number | null>(null);
+  // A filtered arrival (a Tide decade, a party, a parliament or a debate)
+  // opens scrolled to Speeches (specs/search.md 5.2.1); an unfiltered one
+  // stays at the top.
+  const arrival = useRef(Object.keys(filters).length > 0);
+  const showSpeeches = () => {
+    const y = speechesY.current;
+    if (y === null) return false;
+    // The scroll view runs under the native header on iOS.
+    const top = Platform.OS === 'ios' ? headerBottom : 0;
+    scrollRef.current?.scrollTo({
+      y: Math.max(0, y - top - rhythm.heading),
+      animated: !reduceMotion,
+    });
+    return true;
+  };
+  const [fresh, setFresh] = useState(0);
+  const topic = useRead(
+    useCallback(() => reports.topic(slug, fresh > 0), [slug, fresh]),
+  );
+  const tide = useRead(useCallback(() => reports.tide(fresh > 0), [fresh]));
+  const { party, state, from, to, debate } = filters;
+  const speeches = useRead(
+    useCallback(
+      () =>
+        reports.speeches(slug, { party, state, from, to, debate }, fresh > 0),
+      [slug, party, state, from, to, debate, fresh],
+    ),
+  );
+  const money = useRead(
+    useCallback(
+      () =>
+        hasTopicMoney(slug)
+          ? reports.money()
+          : Promise.reject(new Error('No paired industry')),
+      [slug],
+    ),
+  );
+  const decades: readonly DecadeBucket[] =
+    tide.record?.data.decades ?? defaultDecades;
+
+  const apply = (next: SpeechFilters) => {
+    const clean = Object.fromEntries(
+      Object.entries(next).filter(([, v]) => v !== undefined && v !== ''),
+    ) as SpeechFilters;
+    setFilters(clean);
+    setDrawn(SPEECH_PAGE);
+    router.setParams(
+      Object.fromEntries(filterKeys.map((key) => [key, clean[key]])),
+    );
+  };
+  const change = (patch: Partial<SpeechFilters>) =>
+    apply({ ...filters, ...patch });
+  // A Who row, a decade bar or a table row filters Speeches and shows it:
+  // the change happens below, so the page goes there.
+  const filterAndShow = (patch: Partial<SpeechFilters>) => {
+    change(patch);
+    if (Object.values(patch).some(Boolean)) showSpeeches();
+  };
+  // The sections above Speeches settle at different times and push it
+  // down; the arrival scroll follows each move until they have all settled.
+  const settled = [topic, tide, money, speeches].every(
+    (read) => read.record || read.error,
+  );
+  useEffect(() => {
+    if (!settled || !arrival.current) return;
+    const frame = requestAnimationFrame(() => {
+      if (arrival.current && showSpeeches()) arrival.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settled]);
+  const onSpeechesLayout = (y: number) => {
+    speechesY.current = y;
+    if (!arrival.current) return;
+    showSpeeches();
+    if (settled) arrival.current = false;
+  };
+
+  const openAsk = useOpenAsk();
+  const menu: RowMenuAction[] = [
+    {
+      title: `Ask about ${phrase}`,
+      symbol: 'text.bubble',
+      onPress: () => openAsk({ question: topicQuestion(slug), topic: slug }),
+    },
+    {
+      title: 'Copy link',
+      symbol: 'link',
+      onPress: () => void copyRecordLink(topicWebPath(slug, filters)),
+    },
+    {
+      title: 'Open on opax.com.au',
+      symbol: 'arrow.up.right',
+      onPress: () => void openOnWeb(topicWebPath(slug, filters), title),
+    },
+  ];
+
+  const titleRef = useRef<View>(null);
+  const bar = useTitleOnScroll(titleRef, title);
+  const onScroll = (y: number) => {
+    bar.onScroll(y);
+    const start = speechesY.current;
+    const end = rowsEnd.current;
+    if (start === null || end === null) return;
+    const bottom = start + end;
+    // One append per new end of the rows: once the last 30 are drawn the
+    // end stops moving and nothing more is asked.
+    if (y + viewport >= bottom - NEAR_END && appendedAt.current !== bottom) {
+      appendedAt.current = bottom;
+      const loaded = speeches.record?.data.results.length ?? 0;
+      setDrawn((n) => Math.min(n + SPEECH_PAGE, Math.max(loaded, n)));
+    }
+  };
+  const count = topic.record?.data;
   return (
     <>
       <Stack.Screen
         options={{
           title,
-          ...headerItems(() => [
-            shareHeaderItem({
-              path: `/subject/topic/${slug}${shareFilters.size ? '?' + shareFilters.toString() : ''}`,
-              title,
+          ...headerItems(
+            pageItems({
+              name: title,
+              share: () =>
+                void shareRecord({ path: topicWebPath(slug, filters), title }),
+              menu,
             }),
-          ]),
+          ),
         }}
       />
-      <Screen column="wide" testID="topic-screen">
-        {Object.keys(filters).length ? (
-          <Section title="The debate's speeches">
-            <Text variant="fine">
-              Within the retrieved window of up to 200 speeches:{' '}
-              {Object.entries(filters)
-                .map(([key, value]) =>
-                  key === 'party' && value ? partyName(value) : value,
-                )
-                .join(' · ')}
-              .
-            </Text>
-            <ReadState
-              read={arc}
-              citation="OPAX labelled speech search"
-              testID="topic-filtered"
-            >
-              {(data) => {
-                const rows = data.results.filter(
-                  (s) =>
-                    (!filters.party || s.party === filters.party) &&
-                    (!filters.state || s.state === filters.state) &&
-                    (!filters.from || (s.date ?? '') >= filters.from) &&
-                    (!filters.to || (s.date ?? '') <= filters.to) &&
-                    (!filters.debate ||
-                      s.title
-                        .toLowerCase()
-                        .includes(
-                          filters.debate
-                            .toLowerCase()
-                            .replace(/\s*[-–—].*$/, ''),
-                        )),
-                );
-                return rows.length ? (
-                  <SourceRows
-                    sources={rows.slice(0, visible).map((s) => ({
-                      ...s,
-                      passage: s.snippet,
-                      source_title: undefined,
-                      cited: undefined,
-                      answer_ranges: undefined,
-                    }))}
-                    testID="topic-filtered-speech"
-                  />
-                ) : (
-                  <EmptyState message="No speeches matching this selection are in the retrieved window." />
-                );
-              }}
-            </ReadState>
-            <RecordRow
-              path={`/subject/topic/${slug}`}
-              title="Read the full topic"
-              onPress={() => openRecord(`/subject/topic/${slug}`, title)}
-            />
-          </Section>
-        ) : null}
-        <ReadState read={read} citation={LABELLED} foot={false} testID="topic">
-          {(data, meta) => (
-            <Group>
-              <Group>
-                <BigFigure
-                  value={data.count.toLocaleString()}
-                  label="speeches carry this label so far"
-                  detail={`of ${data.labelled.toLocaleString()} labelled to date`}
-                  accent="votes"
-                  testID="topic-count"
-                />
-                <SourceLine
-                  {...meta}
-                  citation={LABELLED}
-                  title="About the topic count"
-                  notes={[
-                    `${data.count.toLocaleString()} speeches carry this label so far, of ${data.labelled.toLocaleString()} labelled to date. Not every speech is labelled yet.`,
-                  ]}
-                  testID="topic-as-at"
-                />
-              </Group>
-              <PadGrid>
-                <Section
-                  title="Who speaks on it, by party"
-                  testID="topic-parties"
-                >
-                  <RowList>
-                    {data.parties.slice(0, 8).map(([party, n]) => (
-                      // The facet's code ("ALP") opens the speeches; the
-                      // label says the party's name ("Labor").
-                      <LinkRow
-                        key={party}
-                        title={`${n.toLocaleString()} speeches`}
-                        leading={
-                          <PartyLabel
-                            status="unknown"
-                            party={partyName(party)}
-                            nested
-                            testID={`topic-party-${party}`}
-                          />
-                        }
-                        accessibilityLabel={`${partyName(party)}, ${n.toLocaleString()} speeches`}
-                        onPress={() => openTopicWindow(slug, { party }, title)}
-                        testID={`topic-party-row-${party}`}
-                      />
-                    ))}
-                  </RowList>
-                  <SourceLine
-                    {...meta}
-                    citation={LABELLED}
-                    title="About party counts"
-                    notes={[
-                      'Labelled so far. A party name opens its speeches on this topic. Some speeches carry no party label, so the bars can sum below the total.',
-                    ]}
-                    testID="topic-parties-as-at"
-                  />
-                </Section>
-                <Section
-                  title="Which parliament argues it"
-                  testID="topic-parliaments"
-                >
-                  <RowList>
-                    {data.states
-                      .filter(([state]) => parliamentNames[state])
-                      .map(([state, n, share]) => (
-                        <RecordRow
-                          key={state}
-                          title={parliamentNames[state]!}
-                          detail={`${(share * 100).toFixed(2)}% · ${n.toLocaleString()}`}
-                          onPress={() =>
-                            openTopicWindow(slug, { state }, title)
-                          }
-                        />
-                      ))}
-                  </RowList>
-                  <SourceLine
-                    {...meta}
-                    citation={LABELLED}
-                    title="About parliament counts"
-                    notes={[
-                      'Share of that parliament’s labelled record, then the count.',
-                      corpus.record
-                        ? `Years held: ${corpus.record.data.sources
-                            .filter((s) =>
-                              /Federal Hansard:|NSW Parliament|Victorian Parliament|SA Parliament|QLD Parliament|ACT Legislative Assembly/.test(
-                                s.name,
-                              ),
-                            )
-                            .map((s) => `${s.name} ${s.coverage}`)
-                            .join(' · ')}.`
-                        : null,
-                    ]}
-                    testID="topic-parliaments-as-at"
-                  />
-                </Section>
-              </PadGrid>
-            </Group>
-          )}
-        </ReadState>
-        {industries[slug] ? <TopicMoney slug={slug} /> : null}
-        <ReadState
-          read={tide}
-          citation={LABELLED}
-          foot={false}
-          testID="topic-tide"
+      <Screen
+        testID="topic-screen"
+        scrollRef={scrollRef}
+        onScroll={onScroll}
+        offline={
+          topic.record?.stale && topic.error && isOffline(topic.error)
+            ? { savedAt: topic.record.savedAt }
+            : null
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => setFresh((n) => n + 1)}
+          />
+        }
+      >
+        <View
+          ref={titleRef}
+          onLayout={bar.onTitleLayout}
+          style={{ gap: rhythm.line }}
         >
-          {(data, meta) => {
-            const points = data.topics[slug] ?? [];
-            return points.length ? (
-              <Section title="The share over time" testID="topic-decades">
-                <ShareBars
-                  label="Share of federal speeches by decade"
-                  onSelect={(i) => {
-                    const decade = data.decades.find(
-                      (d) => d.slug === points[i]!.decade,
-                    );
-                    if (decade)
-                      openTopicWindow(
-                        slug,
-                        {
-                          state: 'federal',
-                          from: `${decade.from}-01-01`,
-                          to: `${decade.to}-12-31`,
-                        },
-                        title,
-                      );
-                  }}
-                  points={points.map((p) => ({
-                    ...p,
-                    label:
-                      data.decades.find((d) => d.slug === p.decade)?.label ??
-                      p.decade,
-                  }))}
-                />
-                <SourceLine
-                  {...meta}
-                  citation={LABELLED}
-                  coverage="Federal speeches"
-                  title="About the decade bars"
-                  notes={[
-                    'Each bar is this topic’s share of federal speeches carrying any topic label in that decade; the small figure is the count. Federal is the longest comparable run. Labels are applied so far, and each decade opens the speeches behind it.',
-                  ]}
-                  extra={
-                    <KeyValueList
-                      items={data.decades.map((d) => ({
-                        label: d.label,
-                        value: `${(d.coverage * 100).toFixed(1)}% · ${d.labelled.toLocaleString()} of ${d.total.toLocaleString()}`,
-                      }))}
-                    />
-                  }
-                  testID="topic-tide-as-at"
-                />
-              </Section>
-            ) : null;
-          }}
-        </ReadState>
-        <Section title="The arc of this debate" testID="topic-arc">
-          <ReadState
-            read={arc}
-            citation="OPAX labelled speech search"
-            sheet={{
-              title: 'About this speech window',
-              coverage: 'Up to 200 speeches',
-              notes: [
-                'The chronological view covers the retrieved window of up to 200 speeches. Passages are from the record.',
-              ],
-            }}
-            testID="topic-arc-data"
-          >
-            {(data) => {
-              const rows = [...data.results].sort((a, b) => {
-                if (!a.date) return b.date ? 1 : 0;
-                if (!b.date) return -1;
-                const cmp = a.date.localeCompare(b.date);
-                return order === 'oldest' ? cmp : -cmp;
-              });
-              return rows.length ? (
-                <Group>
-                  <SegmentedControl
-                    value={order}
-                    segments={[
-                      { value: 'newest', label: 'Newest first' },
-                      { value: 'oldest', label: 'Oldest first' },
-                    ]}
-                    onChange={(v) => {
-                      setOrder(v);
-                      announce(`Speeches ordered ${v} first`);
-                    }}
-                  />
-                  <SourceRows
-                    sources={rows.slice(0, visible).map((s) => ({
-                      ...s,
-                      passage: s.snippet,
-                      source_title: undefined,
-                      cited: undefined,
-                      answer_ranges: undefined,
-                    }))}
-                    testID="topic-speech"
-                  />
-                  {visible < rows.length ? (
-                    <Button
-                      label="Show 30 more"
-                      onPress={() => setVisible((v) => v + 30)}
-                    />
-                  ) : null}
-                </Group>
-              ) : (
-                <EmptyState message="No dated, labelled speeches are in the search window yet." />
-              );
-            }}
-          </ReadState>
-        </Section>
-        <Section testID="topic-more">
-          <RowList>
-            <RecordRow
-              path={'/subject/topic'}
-              title="Topics A–Z"
-              onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
-              testID="topic-all"
+          <Heading level={1} kind="page">
+            {title}
+          </Heading>
+          {topicDescriptions[slug] ? (
+            <Text wordSafe variant="secondary">
+              {topicDescriptions[slug]}
+            </Text>
+          ) : null}
+        </View>
+        {count && topic.record ? (
+          <FigureBlock {...countFigure(slug, count, topic.record)} />
+        ) : topic.error ? (
+          isOffline(topic.error) ? (
+            <ContentUnavailable
+              symbol="wifi.slash"
+              title={copy.notSaved}
+              body={copy.notSavedBody}
+              testID="topic-offline"
             />
-            <RecordRow
-              path={'/stats'}
-              title="Coverage by source"
-              onPress={() => openRecord('/stats', 'Coverage by source')}
-              testID="topic-stats"
+          ) : (
+            <ContentUnavailable
+              symbol="exclamationmark.triangle"
+              title="This topic couldn't be loaded"
+              body="OPAX didn't respond."
+              action={{
+                label: 'Try again',
+                onPress: topic.retry,
+                testID: 'topic-retry',
+              }}
+              testID="topic-error"
             />
-          </RowList>
-        </Section>
+          )
+        ) : (
+          <Skeleton
+            count={2}
+            label="Loading the topic"
+            testID="topic-loading"
+          />
+        )}
+        {tide.record ? (
+          <TopicTide
+            tide={tide.record.data}
+            meta={metaOf(tide.record)}
+            slug={slug}
+            chosen={chosenDecade(filters, decades)}
+            onChoose={(decade) =>
+              filterAndShow({
+                from: decade ? String(decade.from) : undefined,
+                to: decade ? String(decade.to) : undefined,
+              })
+            }
+          />
+        ) : null}
+        {count && topic.record ? (
+          <TopicWho
+            topic={count}
+            meta={metaOf(topic.record)}
+            filters={filters}
+            onFilter={filterAndShow}
+          />
+        ) : null}
+        {money.record ? (
+          <TopicMoney
+            slug={slug}
+            money={money.record.data}
+            meta={metaOf(money.record)}
+          />
+        ) : null}
+        <View
+          onLayout={(e) => onSpeechesLayout(e.nativeEvent.layout.y)}
+          testID="topic-speeches-anchor"
+        >
+          <TopicSpeeches
+            slug={slug}
+            title={title}
+            phrase={phrase}
+            read={speeches}
+            filters={filters}
+            decades={decades}
+            onClear={() => apply({})}
+            visible={drawn}
+            onVisible={setDrawn}
+            onRowsEnd={(end) => {
+              rowsEnd.current = end;
+            }}
+          />
+        </View>
       </Screen>
     </>
   );

@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 12 Local suggestions and the four catalog search kinds
+name: 12 Local suggestions, the four scopes and the register lists
 ---
 # scrollUntilVisible always swipes from the centre of the screen. Tap
 # targets are centred with speed-20 swipes (about half a screen each), so
@@ -8,37 +8,27 @@ name: 12 Local suggestions and the four catalog search kinds
     clearState: true
 - tapOn:
     id: tab-search
-- tapOn:
-    id: search-input
-- inputText: Anthony Albanese
-# Swipe on the content: iOS visibility checks can see rows behind the keyboard.
-- swipe:
-    start: 90%, 40%
-    end: 90%, 20%
-- scrollUntilVisible:
-    element:
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Anthony Albanese
+      PREFIX: 12
+# The keyboard stays up: the Search key below submits. iOS visibility checks
+# can see rows behind the keyboard, which is enough to prove they are drawn.
+- extendedWaitUntil:
+    visible:
       id: search-suggestion-person-.*
-    direction: DOWN
-    timeout: 90000
-    centerElement: true
-- takeScreenshot: ${EVIDENCE}/12-suggestions
+    timeout: 30000
 - assertVisible:
-    id: search-suggestion-person-.*
-# Retain this journey's keyboard-dismissal step. Keyboard-up single taps
-# are checked independently by 12-search-keyboard.yaml.
-- hideKeyboard
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    timeout: 90000
-    direction: UP
-    centerElement: true
-    speed: 20
-- waitForAnimationToEnd
-# Native frames exclude targets obscured by navigation or tab bars.
+    id: search-top-suggestion
+- takeScreenshot: ${EVIDENCE}/12-suggestions
+# Typing never searches: the suggestions are drawn on the device.
+- assertNotVisible:
+    id: search-count
+# The keyboard's Search key submits in All; the geometry probe checks the
+# keyboard went with it (journeys/search.md 3.4).
+- pressKey: Enter
 - runFlow: search-submit-reveal.yaml
-- tapOn:
-    id: search-submit
 # The results state replaces the suggestions; at AX5 it starts below the fold.
 - scrollUntilVisible:
     element:
@@ -55,127 +45,112 @@ name: 12 Local suggestions and the four catalog search kinds
     visibilityPercentage: 80
     centerElement: true
     speed: 20
+- takeScreenshot: ${EVIDENCE}/12-all
+# People, Bills and Speeches are scopes over the same query; switching is
+# answered from the session cache.
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: People
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    direction: DOWN
+    timeout: 90000
+    visibilityPercentage: 80
+    centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/12-people
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: Bills
 - scrollUntilVisible:
     element:
-      id: search-kind-menu
-    timeout: 90000
-    direction: UP
-    centerElement: true
-- tapOn:
-    id: search-kind-menu
-- takeScreenshot: ${EVIDENCE}/12-kind-menu
-- tapOn: Declared interests
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    direction: DOWN
-    timeout: 90000
-- waitForAnimationToEnd
-# Native frames exclude targets obscured by navigation or tab bars.
-- runFlow: search-submit-reveal.yaml
-- tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: search-count
+      id: search-results-bills
     direction: DOWN
     visibilityPercentage: 1
     speed: 20
     timeout: 30000
+- takeScreenshot: ${EVIDENCE}/12-bills
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: Speeches
 - scrollUntilVisible:
     element:
-      id: search-result-anthony-albanese
+      id: records-result-0
     direction: DOWN
     timeout: 90000
-    visibilityPercentage: 80
+    visibilityPercentage: 10
     centerElement: true
     speed: 20
-- takeScreenshot: ${EVIDENCE}/12-interests
-- scrollUntilVisible:
-    element:
-      id: search-kind-menu
-    timeout: 90000
-    direction: UP
-    centerElement: true
-- tapOn:
-    id: search-kind-menu
-- tapOn: Pay
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    direction: DOWN
-    timeout: 90000
-- waitForAnimationToEnd
-# Native frames exclude targets obscured by navigation or tab bars.
-- runFlow: search-submit-reveal.yaml
-- tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: search-count
-    direction: DOWN
-    visibilityPercentage: 1
-    speed: 20
-    timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: search-result-anthony-albanese
-    direction: DOWN
-    timeout: 90000
-    visibilityPercentage: 80
-    centerElement: true
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/12-pay
+- takeScreenshot: ${EVIDENCE}/12-speeches
 # Design pass 3D: a result's passage is drawn under its row, cut on a word;
 # there is no "Read matching record" disclosure under each result.
 - assertNotVisible: Read matching record
+# The registers are lists, not scopes: "Search in" rows under All push one
+# list each, one read per tap.
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: All
 - scrollUntilVisible:
     element:
-      id: search-as-at
+      id: search-in-interests
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- tapOn:
+    id: search-in-interests
+- extendedWaitUntil:
+    visible:
+      id: results-interests-0
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/12-interests
+- tapOn: { id: BackButton }
+- scrollUntilVisible:
+    element:
+      id: search-in-pay
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- tapOn:
+    id: search-in-pay
+- extendedWaitUntil:
+    visible:
+      id: results-pay-0
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/12-pay
+- scrollUntilVisible:
+    element:
+      id: search-pay-caveat
     direction: DOWN
     timeout: 90000
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/12-pay-source-line
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
     element:
-      id: search-kind-menu
+      id: search-in-expenses
+    direction: DOWN
     timeout: 90000
-    direction: UP
     centerElement: true
-- tapOn:
-    id: search-kind-menu
-- tapOn: Expenses
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    direction: DOWN
-    timeout: 90000
-- waitForAnimationToEnd
-# Native frames exclude targets obscured by navigation or tab bars.
-- runFlow: search-submit-reveal.yaml
-- tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: search-count
-    direction: DOWN
-    visibilityPercentage: 1
     speed: 20
+- tapOn:
+    id: search-in-expenses
+- extendedWaitUntil:
+    visible:
+      id: results-expenses-0
     timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: search-result-anthony-albanese-name
-    direction: DOWN
-    timeout: 90000
-    centerElement: true
-    speed: 20
-# Target the name so the tap stays visible at both default size and AX5.
 - takeScreenshot: ${EVIDENCE}/12-expenses
 - waitForAnimationToEnd
+# An expenses row for a member opens that member's page.
 - tapOn:
-    id: search-result-anthony-albanese-name
+    id: results-expenses-0
 - extendedWaitUntil:
     visible:
       id: person-screen-title

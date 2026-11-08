@@ -7,8 +7,9 @@ import {
   type RefObject,
 } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
-import { InteractionManager } from 'react-native';
+import { InteractionManager, Platform } from 'react-native';
 import { OpaxIPad, type KeyCommandSpec } from '../../modules/opax-ipad';
+import { designFlags } from './flags';
 
 export type { KeyCommandSpec };
 
@@ -35,6 +36,32 @@ export type KeyCommandId =
   | 'list-open'
   | 'list-escape';
 
+/**
+ * Search takes the tab bar's search role on iOS 26 (the trailing glass
+ * circle), so it draws last; elsewhere the 1.0 order keeps it fourth.
+ */
+export const searchTabRole =
+  // Read at module load; a test that mocks the flags module late sees none.
+  !!designFlags?.searchTab &&
+  Platform.OS === 'ios' &&
+  parseInt(String(Platform.Version), 10) >= 26;
+
+/** The sections in the order the tab bar draws them, for Cmd-1 to Cmd-5. */
+export const sections: readonly { route: string; title: string }[] = [
+  { route: '/', title: 'Today' },
+  { route: '/your-mp', title: 'Your MP' },
+  { route: '/bills', title: 'Bills' },
+  ...(searchTabRole
+    ? [
+        { route: '/ask', title: 'Ask' },
+        { route: '/search', title: 'Search' },
+      ]
+    : [
+        { route: '/search', title: 'Search' },
+        { route: '/ask', title: 'Ask' },
+      ]),
+];
+
 export const keyCommandSpecs: readonly (KeyCommandSpec & {
   id: KeyCommandId;
 })[] = [
@@ -45,11 +72,12 @@ export const keyCommandSpecs: readonly (KeyCommandSpec & {
     modifiers: ['command'],
     title: 'New question',
   },
-  { id: 'section-1', input: '1', modifiers: ['command'], title: 'Today' },
-  { id: 'section-2', input: '2', modifiers: ['command'], title: 'Your MP' },
-  { id: 'section-3', input: '3', modifiers: ['command'], title: 'Bills' },
-  { id: 'section-4', input: '4', modifiers: ['command'], title: 'Search' },
-  { id: 'section-5', input: '5', modifiers: ['command'], title: 'Ask' },
+  ...sections.map((section, i) => ({
+    id: `section-${i + 1}` as KeyCommandId,
+    input: String(i + 1),
+    modifiers: ['command'] as KeyCommandSpec['modifiers'],
+    title: section.title,
+  })),
   { id: 'back', input: '[', modifiers: ['command'], title: 'Back' },
   { id: 'refresh', input: 'r', modifiers: ['command'], title: 'Refresh' },
   {

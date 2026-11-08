@@ -1,4 +1,12 @@
-import { bills, catalogs, index, roster, slugs } from './pinned';
+import {
+  bills,
+  catalogs,
+  index,
+  manifest,
+  people,
+  roster,
+  slugs,
+} from './pinned';
 import { nameKey } from '../src/api/ids';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
 import {
@@ -6,11 +14,8 @@ import {
   rosterIdentityFor,
   searchPersonFor,
 } from '../src/api/catalogs';
-import {
-  groupSuggestions,
-  searchKinds,
-  personRowContext,
-} from '../src/features/search/model';
+import { personRowContext } from '../src/features/search/model';
+import { suggestionList, allTopics } from '../src/features/search/ranking';
 import { joinPerson } from '../src/api/person-identity';
 import { partyText } from '../src/design/party';
 
@@ -22,39 +27,34 @@ test('suggestion matching folds case and whitespace and preserves source names',
   expect(expected.people.some((p) => p.name === 'Anthony Albanese')).toBe(true);
   expect(expected.electorates.some((s) => s.name === 'Grayndler')).toBe(true);
 });
+const sources = {
+  roster: memberSuggestionRoster(roster, { roster, manifest, slugs, people }),
+  electorates: index,
+  bills,
+  topics: allTopics,
+};
 test.each(['', ' ', 'x'])(
   'under two characters does not suggest: %s',
   (query) => {
-    expect(
-      groupSuggestions(suggestionsFor(query, roster, index, bills)).every(
-        (g) => g.rows.length === 0,
-      ),
-    ).toBe(true);
+    const list = suggestionList(query, sources);
+    expect(list.top).toBeNull();
+    expect(list.groups).toEqual([]);
   },
 );
-test('grouping preserves catalog kind, source order and identity', () => {
-  const suggestions = suggestionsFor('support', roster, index, bills);
-  const groups = groupSuggestions(suggestions);
-  expect(groups.map((g) => g.kind)).toEqual(['people', 'electorates', 'bills']);
-  expect(groups[2]?.rows).toBe(suggestions.bills);
-  expect(suggestions.bills.length).toBeGreaterThan(0);
-  expect(
-    suggestions.bills.every((b) => b.title.toLowerCase().includes('support')),
-  ).toBe(true);
+test('bill suggestions match whole words in their titles', () => {
+  const list = suggestionList('support', sources);
+  const group = list.groups.find((g) => g.kind === 'bills');
+  expect(group?.rows.length).toBeGreaterThan(0);
+  for (const row of group!.rows)
+    expect(
+      row.kind === 'bills' &&
+        (row.item.short_title || row.item.title).toLowerCase(),
+    ).toMatch(/support/);
 });
-test('no-match query returns three empty groups and no fabricated record', () => {
-  const groups = groupSuggestions(
-    suggestionsFor('zzzznevermatchingcatalog', roster, index, bills),
-  );
-  expect(groups.map((g) => g.rows)).toEqual([[], [], []]);
-});
-test('the kind control exposes exactly the permitted catalog submissions', () => {
-  expect(searchKinds.map((k) => k.value)).toEqual([
-    'person',
-    'interest',
-    'pay',
-    'expense',
-  ]);
+test('a query that matches nothing suggests no record', () => {
+  const list = suggestionList('zzzznevermatchingcatalog', sources);
+  expect(list.top).toBeNull();
+  expect(list.groups).toEqual([]);
 });
 
 // All 13 twins in the pinned roster: case variants as well as apostrophes.

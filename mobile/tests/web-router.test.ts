@@ -490,7 +490,7 @@ test('cold root links select an existing tab route rather than a missing Today c
       path: 'https://opax.com.au/ask?view=search&q=housing',
       initial: true,
     }),
-  ).toBe('/(tabs)/(search)/search?q=housing&kind=all');
+  ).toBe('/(tabs)/(today)/results/all?q=housing&link=1');
 });
 
 test('incoming map filters retain canonical party focus and jurisdiction', () => {

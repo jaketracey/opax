@@ -9,6 +9,12 @@ export function openRecord(path: string, title: string) {
     if (url) void openSource(url, title);
   }
 }
+/**
+ * @deprecated Filters are page state on the one Topic page: push
+ * `topicRoute(slug, filters)` (navigation/routes/search.ts) instead. Kept
+ * for Explore's Tide, Matrix and Words per dollar until w4-explore-tools
+ * moves them.
+ */
 export function openTopicWindow(
   slug: string,
   filters: Record<string, string>,

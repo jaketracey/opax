@@ -8,19 +8,17 @@ import {
 import {
   installKeyCommands,
   requestFocus,
+  sections,
   useKeyCommand,
 } from '../design/keyboard';
 import { askSession } from '../features/ask/session';
 import { askRoute } from './routes';
 
-/** The five sections, in sidebar order, for Cmd-1 to Cmd-5. */
-export const sectionRoutes = [
-  '/',
-  '/your-mp',
-  '/bills',
-  '/search',
-  '/ask',
-] as const;
+/**
+ * The five sections in the order the tab bar draws them, for Cmd-1 to
+ * Cmd-5: under Search's iOS 26 tab role Search is fifth and Ask fourth.
+ */
+export const sectionRoutes = sections.map((s) => s.route);
 
 /**
  * The app-wide iPad keyboard shortcuts (iPad with a hardware keyboard; on

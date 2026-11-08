@@ -11,19 +11,30 @@ name: 02 Search the public people catalog
     env:
       QUERY: Anthony Albanese
       PREFIX: 02
-# Return submits and dismisses the keyboard; a swipe can land on the
-# keyboard itself at AX5.
+# The keyboard's Search key submits (in All) and dismisses the keyboard; a
+# swipe can land on the keyboard itself at AX5. There is no submit button
+# and no kind to choose.
 - pressKey: Enter
-# Pass 5 (P1-1): the answered form collapses, so the submit pill goes and
-# the kind becomes the query's scope.
+# Pass 5 (P1-1): an answered search stops asking; the scope control and the
+# count line head the results.
 - scrollUntilVisible:
     element:
       id: search-count
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 20
+    timeout: 30000
+- assertVisible:
+    id: search-scope.*
 - assertNotVisible:
     id: search-submit
 - scrollUntilVisible:
     element:
       id: search-result-anthony-albanese
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 90000
 - takeScreenshot: ${EVIDENCE}/02-search
 - tapOn:
     id: search-result-anthony-albanese
