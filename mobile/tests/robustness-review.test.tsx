@@ -26,6 +26,7 @@ import {
 import { RecordBlock } from '../src/features/your-mp/Evidence';
 import { RecordStatus } from '../src/features/RecordStatus';
 import { CatalogState } from '../src/features/CatalogState';
+import { SourceAffordance } from '../src/design/source';
 import { catalogs, index, manifest, pinned, replaceAt, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
@@ -361,6 +362,9 @@ test('decode fallback and partial screens state the problem without claiming off
     act(() => {
       renderer = TestRenderer.create(element);
     });
+    if (element.type === CatalogState) {
+      act(() => renderer.root.findByType(SourceAffordance).props.onPress());
+    }
     const words = renderer.root
       .findAllByType(NativeText)
       .map((n) => [n.props.children].flat(3).join(''))
