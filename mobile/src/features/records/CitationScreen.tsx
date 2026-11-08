@@ -11,7 +11,7 @@ import {
   useAccessibilitySize,
 } from '../../design/primitives';
 import { haptic } from '../../design/haptics';
-import { colors, rhythm } from '../../design/tokens';
+import { colors, radii, rhythm } from '../../design/tokens';
 import { records } from './runtime';
 import { citationsFor } from './citations';
 import {
@@ -218,11 +218,12 @@ const sheet = StyleSheet.create({
   header: { gap: rhythm.line },
   body: { gap: rhythm.block },
   cell: { paddingVertical: rhythm.row, gap: rhythm.tight },
+  // InsetGroup's shape: its container radius and 16 pt text inset.
   group: {
     backgroundColor: colors.raised,
-    borderRadius: 10,
+    borderRadius: radii.container,
     borderCurve: 'continuous',
-    paddingHorizontal: 16,
+    paddingHorizontal: rhythm.block,
   },
   actions: { flexDirection: 'row', gap: rhythm.tight, flexWrap: 'wrap' },
   stacked: { flexDirection: 'column' },
