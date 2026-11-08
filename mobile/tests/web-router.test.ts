@@ -405,3 +405,11 @@ test('cold root links select an existing tab route rather than a missing Today c
     }),
   ).toBe('/(tabs)/(search)/search?q=housing&kind=all');
 });
+
+test('incoming map filters retain canonical party focus and jurisdiction', () => {
+  const { fromWebPath } = jest.requireActual('../src/navigation/external');
+  expect(fromWebPath('/money?party=Labor&jur=qld')).toMatchObject({
+    pathname: '/money',
+    params: { focus: 'party:Labor', jurisdiction: 'qld' },
+  });
+});
