@@ -1,10 +1,24 @@
+import { Text } from '../design/text';
+import { OfflineBanner } from '../design/states';
 import type { RecordResult } from '../api/client';
-import { OfflineBanner, Text } from '../design/primitives';
 
+/** Saved and partial explanations now belong to the source sheet's Notes. */
+export function catalogStateNote(
+  reason?: RecordResult<unknown>['staleReason'],
+) {
+  return reason === 'unreadable'
+    ? 'The latest records could not be read. Showing the saved copy.'
+    : reason === 'unavailable'
+      ? 'The latest records could not be loaded. Showing the saved copy.'
+      : null;
+}
+export const partialNote = 'Some records could not be read.';
+
+/** Compatibility wording until callers move their notes into SourceLine. */
 export function PartialNotice({ testID }: { testID?: string }) {
   return (
-    <Text wordSafe variant="fine" testID={testID}>
-      Some records could not be read.
+    <Text wordSafe variant="footnote" testID={testID}>
+      {partialNote}
     </Text>
   );
 }
@@ -15,12 +29,12 @@ export function SavedCopyNotice({
   reason?: RecordResult<unknown>['staleReason'];
   testID?: string;
 }) {
-  if (!reason) return <OfflineBanner testID={testID} />;
-  return (
-    <Text wordSafe variant="fine" testID={testID}>
-      {reason === 'unreadable'
-        ? 'The latest records could not be read. Showing the saved copy.'
-        : 'The latest records could not be loaded. Showing the saved copy.'}
+  const note = catalogStateNote(reason);
+  return note ? (
+    <Text wordSafe variant="footnote" testID={testID}>
+      {note}
     </Text>
+  ) : (
+    <OfflineBanner testID={testID} />
   );
 }

@@ -1,13 +1,13 @@
-import { PartialNotice, SavedCopyNotice } from './CatalogNotice';
+import { catalogStateNote, partialNote } from './CatalogNotice';
 import type { ReactNode } from 'react';
 import type { Block } from '../api/catalogs';
 import { ApiError } from '../api/errors';
 import {
   EmptyState,
-  ErrorState,
+  InlineError,
   Group,
   LoadingState,
-  OfflineBanner,
+  OfflineLine,
   SourceLine,
   errorMessage,
 } from '../design/primitives';
@@ -41,23 +41,18 @@ export function CatalogState<T>({
     );
   if (block.status === 'error')
     return (
-      <Group>
-        {block.error?.code === 'offline' || block.error?.code === 'timeout' ? (
-          <OfflineBanner cached={false} />
-        ) : null}
-        <ErrorState
-          message={errorMessage(block.error)}
-          onRetry={onRetry}
-          testID={`${testID}-error`}
-        />
-      </Group>
+      <InlineError
+        subject="The public record"
+        message={errorMessage(block.error)}
+        onRetry={onRetry}
+        testID={`${testID}-error`}
+      />
     );
   return (
     <Group>
-      {/* Why the copy is saved stays drawn; its date is the source line's
-          saved state (pass 5). */}
-      {block.stale ? <SavedCopyNotice reason={block.staleReason} /> : null}
-      {block.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
+      {block.stale && !block.staleReason ? (
+        <OfflineLine savedAt={block.savedAt} testID={`${testID}-offline`} />
+      ) : null}
       {block.data === null ||
       (Array.isArray(block.data) && block.data.length === 0) ? (
         <EmptyState message={empty} testID={`${testID}-empty`} />
@@ -71,7 +66,8 @@ export function CatalogState<T>({
         state={block.partial && !block.stale ? 'partial' : null}
         notes={[
           refreshing ? 'Checking for a newer copy.' : null,
-          block.partial ? 'Some records could not be read.' : null,
+          catalogStateNote(block.staleReason),
+          block.partial ? partialNote : null,
         ]}
         testID={`${testID}-as-at`}
       />

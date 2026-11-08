@@ -192,7 +192,7 @@ export class ApiClient {
     let lastError = new ApiError(
       'offline',
       phoneCopy(
-        'This record is not saved on this iPhone yet. It will load when you are back online.',
+        "Not saved on this iPhone yet. It will load when you're back online.",
       ),
     );
     for (let attempt = 0; attempt <= retries; attempt++) {
