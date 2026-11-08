@@ -52,13 +52,22 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
     visible:
       id: talk-sign-in
     timeout: 15000
-- assertVisible: Voice needs a free OPAX account.
-- assertVisible: Accounts and voice are for people aged 16 and over.
+- assertVisible:
+    id: talk-intro
+- assertVisible: 'A free OPAX account includes \d+ minutes of voice\.|Talk needs a free OPAX account\.'
+# The age line is on the email step only (specs/account.md 5.6).
+- assertNotVisible: '.*16 and over.*'
 - takeScreenshot: ${EVIDENCE}/21-signed-out
+# Sign in pushes the email step inside the Talk sheet.
 - tapOn:
     id: talk-sign-in
+- extendedWaitUntil:
+    visible:
+      id: account-email
+    timeout: 15000
 - assertVisible:
-    id: account-sheet-message
+    id: account-age-limit
+- takeScreenshot: ${EVIDENCE}/21-sign-in-in-talk
 - runFlow:
     file: support/talk-fixture-account.yaml
     env:
@@ -73,21 +82,16 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
 - takeScreenshot: ${EVIDENCE}/21-ready
 - tapOn:
     id: talk-start
-- scrollUntilVisible:
-    timeout: 60000
-    element:
-      id: talk-agree
-    centerElement: true
-# At AX5 UIKit can report the button visible while its centre is beneath the
-# sheet header. Reveal it physically before the one consent tap.
-- runFlow:
-    when:
-      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
-    commands:
-      - swipe:
-          start: 90%, 30%
-          end: 90%, 55%
-          duration: 600
+# Consent is its own sheet; its two buttons are pinned under the text, so
+# they are in view at every size without scrolling.
+- extendedWaitUntil:
+    visible:
+      id: talk-consent-sheet
+    timeout: 15000
+- assertVisible:
+    id: talk-agree
+- assertVisible:
+    id: talk-not-now
 - takeScreenshot: ${EVIDENCE}/21-consent
 - tapOn:
     id: talk-agree
@@ -100,15 +104,9 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
     visible: Listening|OPAX is speaking
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/21-live
-# Captions are off by default; the transcript is kept for the CC switch.
-- assertNotVisible:
-    id: talk-turn-agent
-- scrollUntilVisible:
-    timeout: 60000
-    element:
-      id: talk-captions
-- tapOn:
-    id: talk-captions
+# Captions are on by default: the transcript shows without a toggle.
+- assertVisible:
+    id: talk-captions-list
 - scrollUntilVisible:
     timeout: 60000
     element:
@@ -144,9 +142,21 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
     text: '^https://opax\.invalid/support\?record=/money/receipts$'
 - takeScreenshot: ${EVIDENCE}/21-report-support-path
 - tapOn: Done
-# The e2e browser preview is a separate native-stack route. Leaving Talk ends
-# its call and discards evidence, so explicitly start a fresh fixture call.
-# Stored consent must let this call start without another consent prompt.
+# The e2e browser preview is a separate native-stack route. The call belongs
+# to Talk's mount, so it may still be open underneath: end it, then start a
+# fresh fixture call. Stored consent must let it start without another
+# consent prompt.
+- runFlow:
+    when:
+      visible:
+        id: talk-end
+    commands:
+      - tapOn:
+          id: talk-end
+      - extendedWaitUntil:
+          visible:
+            id: talk-start
+          timeout: 15000
 - scrollUntilVisible:
     timeout: 60000
     element:
@@ -174,5 +184,6 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
       id: talk-status
     direction: UP
 - extendedWaitUntil:
-    visible: Call ended. Microphone off.
+    visible: Call ended\.
     timeout: 15000
+- assertVisible: Start again

@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 22 Account sign-in by emailed code, sign-out and deletion
+name: 22 Account sign-in by emailed code, consent, sign-out and deletion
 ---
 # Tap targets are reached by scrolling down from above, never centred (see
 # support/account-sign-in.yaml), and each tap waits for the screen to settle.
@@ -10,81 +10,127 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     permissions: {}
 - tapOn: Account
 - extendedWaitUntil:
-    visible: 'Not signed in\. Sign in to talk to OPAX\. Public records stay open without an account\.'
+    visible:
+      id: account-sign-in-start
     timeout: 15000
+- assertVisible: 'Sign in.*Talk to OPAX, and keep your Ask conversations on all your devices\.'
 - takeScreenshot: ${EVIDENCE}/22-signed-out
+# The version foot can be copied by VoiceOver's action as well as a long press.
+- scrollUntilVisible:
+    element:
+      id: account-version
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: account-sign-in-start
+    direction: UP
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
     id: account-sign-in-start
-- scrollUntilVisible:
-    element:
-      text: '.*same account as the OPAX community on opax\.com\.au.*'
-    timeout: 30000
+# Sign in, step 1: the address, its footer with the age line, Send code.
+- extendedWaitUntil:
+    visible:
+      id: account-email
+    timeout: 15000
 - scrollUntilVisible:
     element:
       id: account-age-limit
     timeout: 30000
-- assertVisible: 'Accounts and voice are for people aged 16 and over\.'
+- assertVisible: 'For people aged 16 and over\.'
 - takeScreenshot: ${EVIDENCE}/22-email
 - scrollUntilVisible:
     element:
       id: account-email
+    direction: UP
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
     id: account-email
 - inputText: happy@example.invalid
 - pressKey: Enter
-# A wrong code gets the one answer every refused code gets. The code step
-# can open mid-page, so start from its heading; a full code submits itself.
+# Step 2 is its own screen. A wrong code gets the one answer every refused
+# code gets; a full code submits itself.
+- extendedWaitUntil:
+    visible: Check your email
+    timeout: 15000
+- assertVisible: 'Sent to happy@example\.invalid\. It expires in 15 minutes\..*'
+- assertVisible:
+    id: account-resend
+    enabled: false
+- takeScreenshot: ${EVIDENCE}/22-code
 - scrollUntilVisible:
     element:
-      text: Enter the code
-    direction: UP
-    timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: account-code
+      id: account-sign-in-code
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
-    id: account-code
+    id: account-sign-in-code
 - inputText: '76543210'
 - scrollUntilVisible:
     element:
-      text: 'That code did not work\. Check it, or send a new code\.'
+      text: 'That code didn’t work\. Check it, or send a new code\.'
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/22-wrong-code
 - scrollUntilVisible:
     element:
-      text: 'We sent a code to happy@example\.invalid\. It expires in 15 minutes\.'
+      id: account-sign-in-code
     direction: UP
-    timeout: 30000
-- takeScreenshot: ${EVIDENCE}/22-code
-- scrollUntilVisible:
-    element:
-      id: account-code
     timeout: 30000
 # The field selects its code on focus, so typing replaces it.
 - waitForAnimationToEnd
 - tapOn:
-    id: account-code
+    id: account-sign-in-code
 - eraseText: 12
 - inputText: '01234567'
+# Signed in: the screens close back to Account, where the identity is one
+# line, then Talk to OPAX with its voice time and Voice consent.
+- extendedWaitUntil:
+    visible:
+      id: account-identity
+    timeout: 15000
+- assertVisible: happy@example.invalid
 - scrollUntilVisible:
     element:
-      text: 'Signed in as happy@example\.invalid'
-    direction: UP
+      id: account-talk
     timeout: 30000
-- scrollUntilVisible:
-    element:
-      text: 'Voice time: \d+:\d\d remaining'
-    timeout: 30000
+- assertVisible: '.*(\d+ min left|\d+ sec left|No minutes left|Unlimited).*'
 - takeScreenshot: ${EVIDENCE}/22-signed-in
+# Voice consent: the page offers withdrawal only while consent is given.
+- scrollUntilVisible:
+    element:
+      id: account-consent
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-consent
+- extendedWaitUntil:
+    visible:
+      id: account-consent-privacy
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22-consent
+- runFlow:
+    when:
+      visible:
+        id: account-withdraw-consent
+    commands:
+      - tapOn:
+          id: account-withdraw-consent
+      - extendedWaitUntil:
+          visible: Withdraw
+          timeout: 15000
+      - takeScreenshot: ${EVIDENCE}/22-consent-withdraw
+      - tapOn: Withdraw
+      - extendedWaitUntil:
+          visible:
+            id: account-consent-status
+          timeout: 15000
+- tapOn: { id: BackButton }
+- scrollUntilVisible:
+    element:
+      text: '.*Not given.*'
+    timeout: 30000
+# Sign out: the identity goes and the notice says where.
 - scrollUntilVisible:
     element:
       id: account-sign-out
@@ -94,23 +140,22 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
     id: account-sign-out
 - scrollUntilVisible:
     element:
-      text: 'Signed out of this iPhone\.'
+      id: account-notice
     direction: UP
     timeout: 30000
-- scrollUntilVisible:
-    element:
-      text: 'Not signed in\..*'
-    timeout: 30000
+- assertVisible: 'Signed out of this iPhone\.'
+- assertVisible:
+    id: account-sign-in-start
 - takeScreenshot: ${EVIDENCE}/22-signed-out-again
 - runFlow:
     file: support/account-sign-in.yaml
     env:
       ACCOUNT_EMAIL: happy@example.invalid
-- scrollUntilVisible:
-    element:
-      text: 'Signed in as happy@example\.invalid'
-    direction: UP
-    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: account-identity
+    timeout: 15000
+# Delete account, step 1: what is deleted and kept, then a deletion code.
 - scrollUntilVisible:
     element:
       id: account-delete
@@ -118,50 +163,38 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - waitForAnimationToEnd
 - tapOn:
     id: account-delete
-- scrollUntilVisible:
-    element:
-      text: What is deleted
-    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: account-delete-confirm-step
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/22-delete-confirm
 - scrollUntilVisible:
     element:
-      text: What is not deleted
+      text: Kept
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/22-delete-kept
 - scrollUntilVisible:
     element:
-      text: 'Voice time is not refunded\..*'
-    timeout: 30000
-# At AX5 this paragraph is taller than the screen (1,060pt), so it can
-# never be fully visible.
-- scrollUntilVisible:
-    element:
-      text: 'Recovery history\..*up to 30 days, then is gone\.'
-    visibilityPercentage: 20
-    timeout: 30000
-- takeScreenshot: ${EVIDENCE}/22-delete-recovery
-# A presence check near the page end: at AX5 the swipe overshoots full view.
-- scrollUntilVisible:
-    element:
       id: account-deletion-policy
-    visibilityPercentage: 90
     timeout: 30000
 - scrollUntilVisible:
     element:
       id: account-delete-confirm
     timeout: 30000
+- assertVisible: Email me a deletion code
 - waitForAnimationToEnd
 - tapOn:
     id: account-delete-confirm
-- scrollUntilVisible:
-    element:
-      text: Enter the deletion code
-    direction: UP
-    timeout: 30000
-- scrollUntilVisible:
-    element:
+# Step 2 is its own screen, titled "Deletion code"; the field's label is the
+# title, so no group header repeats it.
+- extendedWaitUntil:
+    visible:
       id: account-deletion-code
-    timeout: 30000
+    timeout: 15000
+- assertVisible: Deletion code
+- assertVisible:
+    id: account-deletion-resend
+    enabled: false
 - waitForAnimationToEnd
 - tapOn:
     id: account-deletion-code
@@ -175,20 +208,20 @@ name: 22 Account sign-in by emailed code, sign-out and deletion
 - waitForAnimationToEnd
 - tapOn:
     id: account-delete-final
+# The confirmation sheet: its destructive action deletes.
 - extendedWaitUntil:
-    visible: Account deleted
+    visible: 'Delete your OPAX account\?.*'
     timeout: 15000
-- takeScreenshot: ${EVIDENCE}/22-deleted
-- scrollUntilVisible:
-    element:
-      id: account-delete-done
-    timeout: 30000
-- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/22-delete-sheet
 - tapOn:
-    id: account-delete-done
-- scrollUntilVisible:
-    element:
-      text: 'Not signed in\..*'
-    direction: UP
-    timeout: 30000
+    text: Delete account
+    index: 1
+# Back on Account, signed out, with the deletion notice.
+- extendedWaitUntil:
+    visible:
+      id: account-notice
+    timeout: 15000
+- assertVisible: 'Your OPAX account was deleted\..*'
+- assertVisible:
+    id: account-sign-in-start
 - takeScreenshot: ${EVIDENCE}/22-signed-out-after-deletion

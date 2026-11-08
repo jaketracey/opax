@@ -6,7 +6,8 @@ name: 22 Account refusals, an invalid address and a disabled account
 - launchApp
 - tapOn: Account
 - extendedWaitUntil:
-    visible: 'Not signed in\..*'
+    visible:
+      id: account-sign-in-start
     timeout: 15000
 - scrollUntilVisible:
     element:
@@ -28,6 +29,8 @@ name: 22 Account refusals, an invalid address and a disabled account
     element:
       text: 'Enter a valid email address\.'
     timeout: 30000
+- assertVisible:
+    id: account-email-error
 - takeScreenshot: ${EVIDENCE}/22-invalid-email
 # Relaunch rather than edit: at AX5 eraseText can land mid-text.
 - launchApp
@@ -38,17 +41,20 @@ name: 22 Account refusals, an invalid address and a disabled account
       ACCOUNT_EMAIL: disabled@example.invalid
 # The code is accepted, but voice refuses a disabled member; the account is
 # still held, so sign-out and deletion stay offered.
+- extendedWaitUntil:
+    visible:
+      id: account-identity
+    timeout: 15000
 - scrollUntilVisible:
     element:
-      text: 'Voice is not available for this account\..*'
-    direction: UP
+      text: 'Voice isn’t available for this account\.'
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/22-disabled
 # Reopening reads status afresh: the controls come from the native status.
 - tapOn: Done
 - tapOn: Account
 - extendedWaitUntil:
-    visible: 'Voice is not available for this account\..*'
+    visible: 'Voice isn’t available for this account\.'
     timeout: 15000
 - scrollUntilVisible:
     element:
@@ -63,6 +69,7 @@ name: 22 Account refusals, an invalid address and a disabled account
     id: account-sign-out
 - scrollUntilVisible:
     element:
-      text: 'Not signed in\..*'
+      id: account-sign-in-start
     direction: UP
     timeout: 30000
+- assertVisible: 'Signed out of this iPhone\.'

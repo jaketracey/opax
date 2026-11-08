@@ -13,21 +13,17 @@ name: 21c Talk a call that runs out of free minutes, then an exhausted allowance
     element:
       id: talk-start
     centerElement: true
+# The allowance is the one voice-time formatter (specs/account.md 7.6).
+- assertVisible:
+    id: talk-allowance
+    text: '\d+ (min|sec) left|Unlimited'
 - tapOn:
     id: talk-start
-- scrollUntilVisible:
-    timeout: 60000
-    element:
+# The consent sheet's buttons are pinned, in view at every size.
+- extendedWaitUntil:
+    visible:
       id: talk-agree
-    centerElement: true
-- runFlow:
-    when:
-      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
-    commands:
-      - swipe:
-          start: 90%, 30%
-          end: 90%, 55%
-          duration: 600
+    timeout: 15000
 - tapOn:
     id: talk-agree
 - scrollUntilVisible:
@@ -37,16 +33,16 @@ name: 21c Talk a call that runs out of free minutes, then an exhausted allowance
     direction: UP
     visibilityPercentage: 10
 - extendedWaitUntil:
-    visible: Your free minutes are used up. Microphone off.
+    visible: You’ve used your voice minutes\.
     timeout: 20000
+# With no minutes left, the action is Ask instead, not Start again.
 - scrollUntilVisible:
     timeout: 60000
     element:
-      id: talk-allowance
+      id: talk-ask
     visibilityPercentage: 10
-- assertVisible:
-    id: talk-allowance
-    text: 0 minutes 0 seconds remaining
+- assertNotVisible:
+    id: talk-start
 - takeScreenshot: ${EVIDENCE}/21-deadline
 - runFlow:
     file: support/talk-fixture-account.yaml
@@ -57,7 +53,9 @@ name: 21c Talk a call that runs out of free minutes, then an exhausted allowance
     element:
       id: talk-status
     visibilityPercentage: 10
-- assertVisible: You have used your free voice minutes.
+- assertVisible: You’ve used your voice minutes\.
+- assertVisible:
+    id: talk-ask
 - takeScreenshot: ${EVIDENCE}/21-exhausted
 - assertNotVisible:
     id: talk-start
