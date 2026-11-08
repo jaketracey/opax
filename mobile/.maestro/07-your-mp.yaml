@@ -5,9 +5,22 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     clearState: true
 - tapOn:
     id: tab-your-mp
+# No seat: the invitation, never the chooser in place.
+- extendedWaitUntil:
+    visible:
+      id: your-invitation
+    timeout: 30000
 - assertVisible:
-    id: seat-search
-- takeScreenshot: ${EVIDENCE}/07-chooser-empty
+    id: your-invitation-find
+- assertVisible:
+    id: your-invitation-location
+- takeScreenshot: ${EVIDENCE}/07-invitation
+- tapOn:
+    id: your-invitation-find
+- extendedWaitUntil:
+    visible:
+      id: seat-search
+    timeout: 15000
 - tapOn:
     id: seat-search
 - inputText: Albanese
@@ -24,7 +37,9 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     visible:
       id: your-seat-name
     timeout: 15000
-- assertVisible: Grayndler
+- assertVisible:
+    id: your-seat-name
+    text: Grayndler, New South Wales
 - takeScreenshot: ${EVIDENCE}/07-seat
 - scrollUntilVisible:
     element:
@@ -37,16 +52,34 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - assertVisible:
     id: your-member-anthony-albanese-name-drawn-complete-[1-9][0-9]*
     text: Anthony Albanese
+- assertVisible:
+    id: your-profile-votes
+- assertVisible:
+    id: your-profile-interests
+- assertVisible:
+    id: your-profile-pay
+- assertVisible:
+    id: your-senators
 - takeScreenshot: ${EVIDENCE}/07-member
 - runFlow:
     file: support/open-your-register.yaml
     env:
       REGISTER_PREFIX: '07'
-- extendedWaitUntil:
-    visible:
-      id: your-register-source
-    timeout: 15000
-- takeScreenshot: ${EVIDENCE}/07-register-open
+- takeScreenshot: ${EVIDENCE}/07-lately
+- runFlow:
+    when:
+      visible: Voted against an amendment
+    commands:
+      - takeScreenshot: ${EVIDENCE}/07-lately-amendment
+- scrollUntilVisible:
+    element:
+      id: your-electorate-source
+    centerElement: true
+    timeout: 300000
+- assertVisible:
+    id: your-electorate
+- assertVisible: Census 2021
+- takeScreenshot: ${EVIDENCE}/07-electorate-card
 - scrollUntilVisible:
     element:
       id: your-member-anthony-albanese
@@ -59,35 +92,27 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     env:
       END: your-mp-end
       PREFIX: 07-home
-- scrollUntilVisible:
-    element:
-      id: your-senators-end
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- assertVisible:
-    id: your-senators-end
-- takeScreenshot: ${EVIDENCE}/07-senators
 - launchApp
 - tapOn:
     id: tab-your-mp
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 15000
 - assertVisible:
     id: your-seat-name
-- assertVisible: Grayndler
+    text: Grayndler, New South Wales
 - takeScreenshot: ${EVIDENCE}/07-restored
-- scrollUntilVisible:
-    element:
-      id: change-seat
-    timeout: 300000
-    centerElement: true
-- tapOn:
-    id: change-seat
-- scrollUntilVisible:
-    element:
+# Change and no match, through the bar menu and the chooser sheet.
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: Grayndler
+- tapOn: Change electorate
+- extendedWaitUntil:
+    visible:
       id: seat-search
-    direction: UP
-    centerElement: true
-    timeout: 300000
+    timeout: 15000
 - tapOn:
     id: seat-search
 - inputText: No matching electorate
@@ -97,8 +122,20 @@ name: 07 Choose an electorate by member name and restore it after relaunch
       id: seat-no-results
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/07-no-match
-- scrollUntilVisible:
-    element: Cancel
-    centerElement: true
-    timeout: 300000
 - tapOn: Cancel
+- assertVisible:
+    id: your-seat-name
+# Forget: the tab returns to the invitation, with no stale member.
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: Grayndler
+- tapOn: Forget my electorate
+- tapOn: Forget
+- extendedWaitUntil:
+    visible:
+      id: your-invitation
+    timeout: 15000
+- assertNotVisible:
+    id: your-member-anthony-albanese
+- takeScreenshot: ${EVIDENCE}/07-forgotten

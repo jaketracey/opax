@@ -1,34 +1,14 @@
 appId: au.com.opax.app
+# Lately replaced the register disclosure: scroll until its rows and their
+# source line are drawn. The name is kept for the flows that call it.
 ---
 - scrollUntilVisible:
     element:
-      id: your-register-toggle
+      id: your-latest-source
     centerElement: true
     speed: 20
     timeout: 300000
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-settled
-- tapOn:
-    id: your-register-toggle
-# A floating iOS header can intercept the first tap. Retry only while neither
-# the register block nor its loading placeholder is drawn, so a register that
-# is opening is never closed.
-- runFlow:
-    when:
-      notVisible:
-        id: your-register-source
-    commands:
-      - runFlow:
-          when:
-            notVisible: Loading the member’s register
-          commands:
-            # JsConsole records only executed markers; the harness counts these.
-            - evalScript: ${console.log('OPAX_REGISTER_RETRY ' + JSON.stringify({registerPrefix:REGISTER_PREFIX}))}
-            - swipe:
-                start: 90%,35%
-                end: 90%,55%
-                duration: 600
-            - waitForAnimationToEnd
-            - takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-repositioned
-            - tapOn:
-                id: your-register-toggle
+- assertVisible:
+    id: your-latest-0

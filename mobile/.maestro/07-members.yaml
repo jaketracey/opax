@@ -1,0 +1,59 @@
+appId: au.com.opax.app
+name: 07 Members of a seat, one route from Your MP and from Today
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-your-mp
+- extendedWaitUntil:
+    visible:
+      id: your-invitation-find
+    timeout: 30000
+- tapOn:
+    id: your-invitation-find
+- runFlow:
+    file: support/location-manual-seat.yaml
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: your-senators
+    centerElement: true
+    timeout: 300000
+- assertVisible: 12 senators for New South Wales
+- tapOn:
+    id: your-senators
+- extendedWaitUntil:
+    visible:
+      id: members-screen
+    timeout: 15000
+- assertVisible:
+    id: members-title
+    text: Senators for New South Wales
+# Family name, A to Z: the list's stated order, so no party leads.
+- scrollUntilVisible:
+    element:
+      id: members-source
+    timeout: 300000
+- assertVisible:
+    id: members-source
+- takeScreenshot: ${EVIDENCE}/07-members-your-mp
+- tapOn:
+    id: tab-today
+- runFlow:
+    when:
+      visible:
+        id: today-senators
+    commands:
+      - tapOn:
+          id: today-senators
+      - extendedWaitUntil:
+          visible:
+            id: members-screen
+          timeout: 15000
+      - assertVisible:
+          id: members-title
+          text: Senators for New South Wales
+      - takeScreenshot: ${EVIDENCE}/07-members-today

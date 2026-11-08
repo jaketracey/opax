@@ -385,6 +385,7 @@ export default function YourMP() {
             eligible={house(federal)}
           />
           {victorian ? <PageFoot variant="authorised" /> : null}
+          <PageEnd />
         </>
       ) : directory ? (
         <NoSeat
@@ -525,12 +526,19 @@ function NoSeat({
         />
       </InsetGroup>
       {stateSeatIds.length ? <PageFoot variant="authorised" /> : null}
+      <PageEnd />
     </>
   );
 }
 
+/** The page's end, for journeys that scroll to it; nothing drawn. */
+function PageEnd() {
+  return <View testID="your-mp-end" collapsable={false} style={styles.end} />;
+}
+
 const styles = StyleSheet.create({
   section: { gap: rhythm.heading },
+  end: { height: 1 },
   group: { gap: rhythm.tight },
   invitation: { gap: rhythm.tight },
   buttons: {
