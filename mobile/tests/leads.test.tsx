@@ -1321,6 +1321,12 @@ describe('a lead’s page', () => {
     expect(byTestID(root, 'lead-chart-row-5').props.accessibilityLabel).toBe(
       'Other 23 contributors, 1.7 million dollars, 1.1 percent',
     );
+    // The amount reads in plain ink; only the bar fill is money ink.
+    const [amount] = row0.findAll(
+      (n) => n.type === DesignText && n.props.tabular,
+    );
+    expect(amount!.props.children).toBe('$124.7m');
+    expect(amount!.props.tone).toBeUndefined();
     // A picture of the rows, not links: nothing to press, no web.
     for (let i = 0; i < 6; i++) {
       const bar = byTestID(root, `lead-chart-row-${i}`);

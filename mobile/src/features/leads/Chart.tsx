@@ -15,7 +15,6 @@ import {
   radii,
   rhythm,
 } from '../../design/tokens';
-import type { TextTone } from '../../design/text';
 import { chartRowLabel, type ChartRow, type LeadComparison } from './model';
 
 type Concentration = Extract<LeadComparison, { type: 'concentration' }>;
@@ -93,7 +92,7 @@ function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
         >
           {row.name}
         </Text>
-        <Text variant="strong" tabular tone={accents.money.ink as TextTone}>
+        <Text variant="strong" tabular>
           {formatMoneyCompact(row.value)}
         </Text>
         <Text variant="footnote" tabular>
