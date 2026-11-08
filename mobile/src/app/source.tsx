@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="source" title="Sources" />;
-}
+export { default } from '../features/sheets/SourceSheet';

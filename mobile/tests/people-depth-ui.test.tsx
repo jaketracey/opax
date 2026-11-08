@@ -1,3 +1,4 @@
+import { sheetPayload } from '../src/navigation/sheets';
 import { act } from 'react';
 import { router } from 'expo-router';
 import TestRenderer from 'react-test-renderer';
@@ -298,14 +299,14 @@ test('glossary draws definitions, notes and group descriptions, with the origina
     ),
   );
   expect(urls.size).toBeGreaterThan(0);
-  expect(
-    r.root.findAll(
-      (n) =>
-        typeof n.type === 'string' &&
-        typeof n.props?.accessibilityLabel === 'string' &&
-        n.props.accessibilityLabel.startsWith('View original, '),
-    ),
-  ).toHaveLength(urls.size);
+  const { params: sourceParams } = jest
+    .mocked(router.push)
+    .mock.calls.at(-1)![0] as { params: { key: string } };
+  const originals =
+    sheetPayload(sourceParams.key, 'source')?.details.originals ?? [];
+  expect(new Set(originals.map((original) => original.url)).size).toBe(
+    urls.size,
+  );
   await act(async () => r.unmount());
 });
 

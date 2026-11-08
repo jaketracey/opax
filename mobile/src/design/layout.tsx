@@ -72,6 +72,9 @@ import { usePaneBar } from './split';
 import { useStableKeyboard } from './useStableKeyboard';
 import { useRefreshCommand } from './keyboard';
 
+// The compatibility button's notes-only adapter now presents /rule.
+export { InfoButton } from './info';
+
 /**
  * The column a screen's content sits in. On compact width (every iPhone,
  * and a narrow iPad window) content uses the 16 or 20 pt screen margin. On regular width it is centred at `readable` (700pt,

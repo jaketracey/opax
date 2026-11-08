@@ -109,7 +109,7 @@ const shared = [
   'bill-text-contents/[key]',
   'results/[kind]',
   'consent',
-  'filters/ask',
+  'filters',
   'conversations',
   'ask-report',
   'money',
@@ -125,16 +125,6 @@ const shared = [
   'explore/photo',
   'explore/tide-table',
   'explore/years',
-  ...[
-    'bills',
-    'divisions',
-    'directory',
-    'declarations',
-    'connections',
-    'search',
-    'money',
-    'allocation',
-  ].map((list) => `filters/${list}`),
 ];
 const inventory: [keyof typeof layouts, string, string][] = [
   ...shared.map(
@@ -402,9 +392,7 @@ const builders = [
       'money',
       'allocation',
     ] as const
-  ).map(
-    (list) => ['shared', `filters/${list}`, routes.filtersRoute(list)] as const,
-  ),
+  ).map((list) => ['shared', 'filters', routes.filtersRoute(list)] as const),
   ['root', 'source', routes.sourceRoute()],
   ['root', 'machine-note', routes.machineNoteRoute()],
   ['root', 'citation', routes.citationRoute()],
@@ -420,7 +408,11 @@ test.each(builders)(
       name === 'index'
         ? prefix || '/'
         : `${prefix}/${name.replace(/\/index$/, '')}`;
-    expect(built.pathname).toBe(path);
+    expect(built.pathname).toBe(name === 'filters' ? '/filters/[list]' : path);
+    if (name === 'filters')
+      expect(
+        existsSync(resolve(app, `${sharedFolder}/filters/[list].tsx`)),
+      ).toBe(true);
   },
 );
 

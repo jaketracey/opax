@@ -1,3 +1,4 @@
+/** @deprecated Import MachinePill from design/primitives. */
 import type { ReactNode } from 'react';
 import { MachineLabel } from './labels';
 

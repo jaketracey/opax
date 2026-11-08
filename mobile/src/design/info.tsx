@@ -63,6 +63,7 @@ export function InfoButton({
  * The notes sheet: the source sheet with notes alone (methodology, caveats,
  * a machine-written attribution). A native page sheet with a Done button.
  */
+/** @deprecated Use the /rule route. */
 export function InfoSheet({
   visible,
   onClose,

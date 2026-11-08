@@ -140,8 +140,7 @@ name: 27 Leads and the declared-interests feed
 # address locally. The sheet holds every caveat (design pass 5, P2-13), so
 # it is closed and reopened at its top rather than swiped back up, which
 # would dismiss it.
-- tapOn:
-    id: lead-0-source-sheet-done
+- tapOn: Done
 - waitForAnimationToEnd
 - tapOn:
     id: lead-0-source
@@ -374,8 +373,7 @@ name: 27 Leads and the declared-interests feed
 - takeScreenshot: ${EVIDENCE}/27-declarations-filters
 - tapOn:
     id: declarations-chamber-house
-- tapOn:
-    id: declarations-filters-sheet-done
+- tapOn: Done
 - extendedWaitUntil:
     notVisible:
       id: declarations-filters-sheet

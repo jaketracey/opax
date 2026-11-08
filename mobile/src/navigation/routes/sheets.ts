@@ -1,3 +1,4 @@
+/** Route params identify in-memory payloads; use presentSheet for content. */
 export const sourceRoute = (params: Record<string, string> = {}) => ({
   pathname: '/source' as const,
   params,

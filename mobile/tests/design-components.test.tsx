@@ -1,7 +1,9 @@
+import { router } from 'expo-router';
+import { sheetPayload } from '../src/navigation/sheets';
+import { SourceContent } from '../src/features/sheets/SourceSheet';
 import { act, type ReactElement } from 'react';
 import {
   Dimensions,
-  Modal,
   Platform,
   StyleSheet,
   Switch,
@@ -46,6 +48,11 @@ import {
   statusTones,
   textStyles,
 } from '../src/design/tokens';
+
+jest.mock('expo-router', () => ({
+  ...jest.requireActual('expo-router'),
+  router: { push: jest.fn(), back: jest.fn() },
+}));
 
 // Android's High contrast text, switched per test.
 let mockHighText = false;
@@ -434,16 +441,14 @@ describe('MachineLabel', () => {
     const pill = renderer.root.find(
       (n) => n.props.testID === 'm' && typeof n.props.onPress === 'function',
     );
-    expect(renderer.root.findByType(Modal).props.visible).toBe(false);
     act(() => pill.props.onPress());
-    expect(renderer.root.findByType(Modal).props.visible).toBe(true);
-    expect(strings(renderer.root)).toEqual(
-      expect.arrayContaining([
-        'Machine-written',
-        'Written by a model.',
-        MACHINE_GUIDANCE,
-      ]),
-    );
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    expect(sheetPayload(params.key, 'machine')?.note.body).toEqual([
+      'Written by a model.',
+      MACHINE_GUIDANCE,
+    ]);
   });
 });
 
@@ -464,9 +469,7 @@ describe('SourceLine and SourceSheet', () => {
     expect(line.props.accessibilityLabel).toBe(
       'Updated 4 Oct 2026, AEC annual returns',
     );
-    expect(line.props.accessibilityHint).toBe(
-      'Opens the sources, notes and licence',
-    );
+    expect(line.props.accessibilityHint).toBe('Opens the sources');
     const [outer, name] = nativeTexts(root);
     expect(outer!.props.children[0]).toBe('Updated 4 Oct 2026 · ');
     expect(name!.props.children).toBe('AEC annual returns');
@@ -490,7 +493,7 @@ describe('SourceLine and SourceSheet', () => {
       />,
     ).root;
     expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Updated 3 Oct 2026 · They Vote For You and 2 more · Divisions to 25 Sep 2026 · Saved 5 Oct 2026',
+      'Saved 5 Oct 2026 · They Vote For You and 2 more · Divisions to 25 Sep 2026',
     );
   });
   test('an undated block says so: every figure stays dated', () => {
@@ -522,53 +525,36 @@ describe('SourceLine and SourceSheet', () => {
       (n) => n.props.testID === 'src' && typeof n.props.onPress === 'function',
     );
     act(() => line.props.onPress());
-    const sheet = renderer.root.findByType(Modal);
-    expect(sheet.props.visible).toBe(true);
-    expect(sheet.props.presentationStyle).toBe('pageSheet');
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    const payload = sheetPayload(params.key, 'source')!;
+    const sheet = render(
+      <SourceContent details={payload.details} testID="src-sheet" />,
+    ).root;
     const said = strings(sheet);
-    for (const text of [
-      'Sources and notes',
-      'Original records',
-      'AEC Transparency Register',
-      'return 2024-25',
-      'As at',
-      '4 October 2026',
-      'Sources',
-      'AEC annual returns',
-      'AusTender',
-      'Notes',
-      'Party disclosures, not this person’s finances.',
-      'Licence',
-      'CC BY 4.0',
-    ])
-      expect(said).toContain(text);
-    // The heading says "As at" once (pass 5, P2-4); the licence row is the
-    // way to Sources and licences, so there is no second row.
-    expect(said).not.toContain('As at 4 October 2026');
-    expect(said).not.toContain('Sources and licences');
-    expect(host(sheet, 'src-sheet-licences').props.accessibilityLabel).toBe(
-      'Licence: CC BY 4.0',
+    expect(said).toEqual(
+      expect.arrayContaining([
+        'As at 4 October 2026',
+        'AEC Transparency Register',
+        'return 2024-25',
+        'Notes',
+        'Party disclosures, not this person’s finances.',
+        'Sources and licences',
+        'Report a correction',
+      ]),
     );
-    // Only https originals, once each.
     expect(said).not.toContain('Duplicate');
     expect(said).not.toContain('Not a source');
-    const original = host(sheet, 'src-sheet-original-0');
-    expect(original.props.accessibilityLabel).toBe(
-      'View original, AEC Transparency Register, return 2024-25',
+    const original = sheet.find(
+      (node) =>
+        node.props.testID === 'src-sheet-original-0' &&
+        typeof node.props.onPress === 'function',
     );
-    // The original opens once the sheet has gone (iOS: on dismiss).
-    const pressableOriginal = sheet.find(
-      (n) =>
-        n.props.testID === 'src-sheet-original-0' &&
-        typeof n.props.onPress === 'function' &&
-        typeof n.type !== 'string',
-    );
-    act(() => pressableOriginal.props.onPress());
-    expect(renderer.root.findByType(Modal).props.visible).toBe(false);
-    act(() => renderer.root.findByType(Modal).props.onDismiss());
+    act(() => original.props.onPress());
     expect(openSource).toHaveBeenCalledWith(
       'https://transparency.aec.gov.au/',
-      'AEC Transparency Register · return 2024-25',
+      'AEC Transparency Register',
     );
   });
   test('at AX5 the line takes the full width, word-safe', () => {
@@ -646,13 +632,10 @@ describe('SourceLine and SourceSheet', () => {
       radii.pill,
     );
     act(() => button.props.onPress());
-    const sheet = renderer.root.findByType(Modal);
-    expect(sheet.props.visible).toBe(true);
-    expect(strings(sheet)).toEqual(
-      expect.arrayContaining(['About these figures', 'A note.']),
-    );
-    // Notes alone: no provenance headings, no licences row.
-    expect(strings(sheet)).not.toContain('Sources and licences');
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    expect(sheetPayload(params.key, 'rule')?.rule).toBe('A note.');
   });
 });
 

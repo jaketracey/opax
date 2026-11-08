@@ -419,7 +419,7 @@ describe('the edition card', () => {
       originals: [expect.objectContaining({ url: edition.path })],
     });
     expect(labelOf(root, 'today-edition-as-at')).toBe(
-      'Updated 4 Oct 2026, OPAX daily edition, Saved 4 Oct 2026',
+      'Saved 4 Oct 2026, OPAX daily edition',
     );
     expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
   });

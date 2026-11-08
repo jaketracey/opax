@@ -165,7 +165,7 @@ name: Android tab and key-screen captures at the requested font scale
     id: today-sources
 - extendedWaitUntil:
     visible:
-      id: today-sources-sheet-done
+      text: Done
     timeout: 30000
 - waitForAnimationToEnd:
     timeout: 5000
@@ -173,7 +173,7 @@ name: Android tab and key-screen captures at the requested font scale
 - pressKey: Back
 - extendedWaitUntil:
     notVisible:
-      id: today-sources-sheet-done
+      text: Done
     timeout: 30000
 - openLink: opax://person/anthony-albanese
 - extendedWaitUntil:
@@ -225,7 +225,7 @@ name: Android tab and key-screen captures at the requested font scale
     id: bill-source
 - extendedWaitUntil:
     visible:
-      id: bill-source-sheet-done
+      text: Done
     timeout: 30000
 - waitForAnimationToEnd:
     timeout: 5000
@@ -233,7 +233,7 @@ name: Android tab and key-screen captures at the requested font scale
 - pressKey: Back
 - extendedWaitUntil:
     notVisible:
-      id: bill-source-sheet-done
+      text: Done
     timeout: 30000
 - scrollUntilVisible:
     element:

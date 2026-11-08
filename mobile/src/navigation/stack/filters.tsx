@@ -1,31 +1,18 @@
 import { screen, sheetOptions } from './screen';
+import { PixelRatio } from 'react-native';
+import { isAccessibilityCategory } from '../../design/tokens';
 export function filtersScreens() {
   return [
-    screen('filters/bills', 'Filters', { ...sheetOptions, headerShown: false }),
-    screen('filters/divisions', 'Filters', {
+    screen('filters', 'Filters', {
       ...sheetOptions,
       headerShown: false,
-    }),
-    screen('filters/directory', 'Filters', {
-      ...sheetOptions,
-      headerShown: false,
-    }),
-    screen('filters/declarations', 'Filters', {
-      ...sheetOptions,
-      headerShown: false,
-    }),
-    screen('filters/connections', 'Filters', {
-      ...sheetOptions,
-      headerShown: false,
-    }),
-    screen('filters/search', 'Filters', {
-      ...sheetOptions,
-      headerShown: false,
-    }),
-    screen('filters/money', 'Filters', { ...sheetOptions, headerShown: false }),
-    screen('filters/allocation', 'Filters', {
-      ...sheetOptions,
-      headerShown: false,
+      sheetLargestUndimmedDetentIndex: 0,
+      sheetExpandsWhenScrolledToEdge: true,
+      sheetInitialDetentIndex: isAccessibilityCategory(
+        PixelRatio.getFontScale(),
+      )
+        ? 1
+        : 0,
     }),
   ];
 }

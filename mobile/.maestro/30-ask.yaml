@@ -82,7 +82,7 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     id: ask-answer-sources
 - extendedWaitUntil:
     visible:
-      id: ask-answer-sources-sheet-done
+      text: Done
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/30-answer-sources
 # The notes close the sheet, below a long bill title's records.
@@ -91,11 +91,11 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
       text: About this answer
     timeout: 30000
 - tapOn:
-    id: ask-answer-sources-sheet-done
+    text: Done
     retryTapIfNoChange: false
 - extendedWaitUntil:
     notVisible:
-      id: ask-answer-sources-sheet-done
+      text: Done
     timeout: 10000
 - scrollUntilVisible:
     element:
