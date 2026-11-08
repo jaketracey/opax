@@ -17,7 +17,6 @@ const permission = async () => {
       response.android?.accuracy === 'coarse',
   };
 };
-const permitted = async () => (await permission()).granted;
 const currentFix = () =>
   Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
 // Called only from the chooser's button. The fix never crosses this function's
@@ -61,7 +60,8 @@ export async function suggestStateFromLocation(
   signal: AbortSignal,
 ): Promise<StateSuggestion> {
   try {
-    if (!(await permitted())) return { kind: 'denied' };
+    const { granted, reduced } = await permission();
+    if (!granted) return { kind: 'denied' };
     if (signal.aborted) return { kind: 'unavailable' };
     const fix = await currentFix();
     if (signal.aborted) return { kind: 'unavailable' };
@@ -69,6 +69,8 @@ export async function suggestStateFromLocation(
       seats,
       [fix.coords.longitude, fix.coords.latitude],
       fix.coords.accuracy,
+      undefined,
+      reduced,
     );
   } catch {
     return { kind: 'unavailable' };

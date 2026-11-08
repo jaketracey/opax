@@ -26,9 +26,14 @@ import {
   abolishedLine,
   browseStates,
   isHouseSeat,
+  matchIn,
   matchLeads,
   matchSeats,
+  regionOf,
   seatCopy,
+  vicCopy,
+  vicDistricts,
+  vicRegions,
   type StateCode,
 } from './seat-model';
 import { PersonLeadRow, SeatRow } from './SeatRow';
@@ -88,15 +93,24 @@ export function forgetSeat(): Promise<void> {
  * then the host closes. A failed write keeps the chooser open with a line
  * and Try again.
  */
-export function useChoose(onChosen: (seat: Electorate) => void) {
+export function useChoose(
+  onChosen: (seat: Electorate) => void,
+  /** The write; the federal seat (`useSeat().choose`) by default. */
+  write?: (
+    target: Electorate,
+    seat: ReturnType<typeof useSeat>,
+  ) => Promise<void>,
+) {
   const seat = useSeat();
   const [savingId, setSavingId] = useState<string | null>(null);
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [failed, setFailed] = useState<Electorate | null>(null);
   const live = useRef(true);
+  const closing = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {
       live.current = false;
+      if (closing.current) clearTimeout(closing.current);
     },
     [],
   );
@@ -105,7 +119,7 @@ export function useChoose(onChosen: (seat: Electorate) => void) {
     setFailed(null);
     setSavingId(target.electorate_id);
     try {
-      await seat.choose(target);
+      await (write ? write(target, seat) : seat.choose(target));
     } catch {
       if (live.current) {
         setSavingId(null);
@@ -116,9 +130,28 @@ export function useChoose(onChosen: (seat: Electorate) => void) {
     if (!live.current) return;
     setSavingId(null);
     setChosenId(target.electorate_id);
-    setTimeout(() => onChosen(target), CHOSEN_MARK_MS);
+    closing.current = setTimeout(() => onChosen(target), CHOSEN_MARK_MS);
   };
   return { seat, choose, savingId, chosenId, failed };
+}
+
+/**
+ * The Victorian write: a district also sets its Council region (one trip,
+ * specs/your-mp.md 4.5), read from the district's own record. If that
+ * record can't be read, the district is set alone and Your MP offers the
+ * region as usual. A region sets the region only.
+ */
+async function chooseVictorian(
+  target: Electorate,
+  seat: ReturnType<typeof useSeat>,
+  electorates: readonly Electorate[],
+): Promise<void> {
+  if (target.chamber !== 'vic_la') return seat.chooseState(target);
+  const region = await catalogs.electorate(target.detail_url).then(
+    (result) => regionOf(result.data, electorates),
+    () => null,
+  );
+  return seat.chooseState(target, region ?? undefined);
 }
 
 /** The row accessory for a seat while a choice is being written. */
@@ -151,17 +184,25 @@ export function accessoryFor(
  */
 export function SeatChooser({
   presentation,
+  scope = 'federal',
   locate = false,
   onChosen,
 }: {
   presentation: SeatPresentation;
+  /** `vic`: Victorian districts and regions (the sheet only). */
+  scope?: 'federal' | 'vic';
   locate?: boolean;
   onChosen?: (seat: Electorate) => void;
 }) {
   const navigation = useNavigation();
   const { fontScale } = useWindowDimensions();
   const welcome = presentation === 'welcome';
+  const vic = scope === 'vic' && !welcome;
   const { state, retry } = useSeatDirectory();
+  const electorates =
+    state.status === 'ready'
+      ? state.directory.electorates.data.electorates
+      : [];
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(false);
   const [stopKey, setStopKey] = useState(0);
@@ -174,10 +215,15 @@ export function SeatChooser({
     },
     [welcome, navigation],
   );
-  const { seat, choose, savingId, chosenId, failed } = useChoose((chosen) => {
-    onChosen?.(chosen);
-    close(false);
-  });
+  const { seat, choose, savingId, chosenId, failed } = useChoose(
+    (chosen) => {
+      onChosen?.(chosen);
+      close(false);
+    },
+    vic
+      ? (target, actions) => chooseVictorian(target, actions, electorates)
+      : undefined,
+  );
   const saved =
     seat.status === 'chosen' && state.status === 'ready'
       ? (state.directory.electorates.data.electorates.find(
@@ -190,7 +236,7 @@ export function SeatChooser({
     if (text.trim()) setStopKey((n) => n + 1);
   };
   const search = useListSearchBar({
-    placeholder: seatCopy.placeholder,
+    placeholder: vic ? vicCopy.placeholder : seatCopy.placeholder,
     onChangeText: typed,
     onSearchButtonPress: typed,
     onCancelButtonPress: () => {
@@ -233,25 +279,47 @@ export function SeatChooser({
       },
     ]);
 
-  const electorates =
-    state.status === 'ready'
-      ? state.directory.electorates.data.electorates
-      : [];
   const typing = query.trim().length > 0;
-  const seats = typing ? matchSeats(electorates, query) : [];
-  const leads = typing ? matchLeads(electorates, query) : [];
+  const seats = typing && !vic ? matchSeats(electorates, query) : [];
+  const leads = typing && !vic ? matchLeads(electorates, query) : [];
+  const districts = vic ? vicDistricts(electorates) : [];
+  const regions = vic ? vicRegions(electorates) : [];
+  const savedState = new Set(
+    seat.status === 'chosen' ? seat.choice.stateSeatIds : [],
+  );
   const busy = savingId !== null || chosenId !== null;
-  const row = (s: Electorate) => (
-    <SeatRow
-      key={s.electorate_id}
-      seat={s}
-      onPress={() => void choose(s)}
-      disabled={
-        busy && savingId !== s.electorate_id && chosenId !== s.electorate_id
-      }
-      accessory={accessoryFor(s.electorate_id, savingId, chosenId)}
-      testID={`seat-row-${s.slug}`}
-    />
+  const row = (s: Electorate) => {
+    const accessory = accessoryFor(s.electorate_id, savingId, chosenId);
+    return (
+      <SeatRow
+        key={s.electorate_id}
+        seat={s}
+        onPress={() => void choose(s)}
+        disabled={
+          busy && savingId !== s.electorate_id && chosenId !== s.electorate_id
+        }
+        accessory={
+          accessory === 'chevron' && !busy && savedState.has(s.electorate_id)
+            ? 'checkmark'
+            : accessory
+        }
+        testID={`seat-row-${s.slug}`}
+      />
+    );
+  };
+  const vicGroups = (d: Electorate[], r: Electorate[]) => (
+    <>
+      {d.length ? (
+        <InsetGroup header={vicCopy.districts} testID="seat-vic-districts">
+          {d.map(row)}
+        </InsetGroup>
+      ) : null}
+      {r.length ? (
+        <InsetGroup header={vicCopy.regions} testID="seat-vic-regions">
+          {r.map(row)}
+        </InsetGroup>
+      ) : null}
+    </>
   );
   const browseGroup =
     state.status === 'ready' ? (
@@ -300,7 +368,7 @@ export function SeatChooser({
     <>
       <Stack.Screen
         options={{
-          title: seatCopy.title,
+          title: vic ? vicCopy.title : seatCopy.title,
           headerSearchBarOptions: {
             ...search,
             hideNavigationBar: false,
@@ -351,6 +419,23 @@ export function SeatChooser({
             <InsetGroup>
               <Skeleton shape="people" count={3} label="Loading electorates" />
             </InsetGroup>
+          ) : vic ? (
+            (() => {
+              const d = matchIn(districts, query);
+              const r = matchIn(regions, query);
+              return d.length || r.length ? (
+                vicGroups(d, r)
+              ) : (
+                <Text
+                  wordSafe
+                  variant="body"
+                  tone="inkSoft"
+                  testID="seat-no-results"
+                >
+                  {seatCopy.noMatch}
+                </Text>
+              );
+            })()
           ) : seats.length || leads.length ? (
             <>
               {state.directory.electorates.partial ? (
@@ -390,7 +475,7 @@ export function SeatChooser({
           )
         ) : (
           <>
-            {saved ? (
+            {saved && !vic ? (
               <InsetGroup testID="seat-saved">
                 <SeatRow
                   seat={saved}
@@ -425,9 +510,26 @@ export function SeatChooser({
               disabled={busy}
               autoStart={locate}
               stopKey={stopKey}
+              scope={vic ? 'vic' : 'federal'}
             />
-            {browseGroup}
-            {aec}
+            {vic ? (
+              state.status === 'ready' ? (
+                vicGroups(districts, regions)
+              ) : (
+                <InsetGroup header={vicCopy.districts}>
+                  <Skeleton
+                    shape="rows"
+                    count={3}
+                    label="Loading electorates"
+                  />
+                </InsetGroup>
+              )
+            ) : (
+              <>
+                {browseGroup}
+                {aec}
+              </>
+            )}
           </>
         )}
       </Screen>

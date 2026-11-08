@@ -32,10 +32,10 @@ export type Suggestion =
   | { kind: 'no-match' | 'unavailable' | 'denied' };
 /** A fix wider than this is not used to find one seat. */
 export const APPROXIMATE_ACCURACY = 1000;
-const BORDER_SEATS = 3;
-const APPROXIMATE_SEATS = 5;
+export const BORDER_SEATS = 3;
+export const APPROXIMATE_SEATS = 5;
 /** The nearest `limit` outlines within `within` metres, then A to Z. */
-function nearby(
+export function nearby(
   outlines: Outline[],
   point: Position,
   within: number,

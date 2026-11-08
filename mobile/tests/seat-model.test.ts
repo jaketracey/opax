@@ -13,10 +13,14 @@ import {
   locationAnswer,
   matchLeads,
   matchSeats,
+  regionOf,
   seatCopy,
   seatLabel,
   seatsInState,
   STATE_ORDER,
+  vicCopy,
+  vicDistricts,
+  vicRegions,
 } from '../src/features/seat/seat-model';
 import { pinned } from './pinned';
 
@@ -67,6 +71,53 @@ describe('browse by state', () => {
     expect(isStateCode('vic')).toBe(true);
     expect(isStateCode('VIC')).toBe(true);
     expect(isStateCode('vic_la')).toBe(false);
+  });
+});
+
+describe('Victorian scope', () => {
+  test('88 Assembly districts and 8 Council regions, each A to Z', () => {
+    const districts = vicDistricts(electorates);
+    const regions = vicRegions(electorates);
+    expect(districts).toHaveLength(88);
+    expect(regions).toHaveLength(8);
+    expect(names(districts)).toEqual(az(names(districts)));
+    expect(names(regions)).toEqual(az(names(regions)));
+    expect(vicCopy.title).toBe('Victorian electorate');
+  });
+  test("a district's region comes from its within_upper_house relation", () => {
+    const region = vicRegions(electorates).find(
+      (s) => s.name === 'Western Victoria',
+    )!;
+    const relation = (kind: string, id: string) => ({
+      kind,
+      related_id: id as Electorate['electorate_id'],
+      related: {} as never,
+      sources: [],
+      vintage: '2022',
+    });
+    expect(
+      regionOf(
+        {
+          relations: [
+            relation('overlaps', 'el_000000000000000000000001'),
+            relation('within_upper_house', region.electorate_id),
+          ],
+        },
+        electorates,
+      ),
+    ).toBe(region);
+    expect(regionOf({ relations: [] }, electorates)).toBeNull();
+    // A relation to something that is not a current region is ignored.
+    expect(
+      regionOf(
+        {
+          relations: [
+            relation('within_upper_house', seat('Grayndler').electorate_id),
+          ],
+        },
+        electorates,
+      ),
+    ).toBeNull();
   });
 });
 

@@ -1,8 +1,9 @@
-import type { Electorate } from '../../api/catalogs';
+import type { Electorate, ElectorateDetail } from '../../api/catalogs';
 import { nameKey } from '../../api/catalogs';
 import { jurisdictionName } from '../../design/parliament';
 import { thisDevice } from '../../design/device';
 import type { Suggestion } from '../electorate-map/suggestion';
+import type { StateSuggestion } from '../electorate-map/state-suggestion';
 
 /**
  * The seat chooser's rules, as plain functions (specs/your-mp.md 4,
@@ -118,12 +119,18 @@ export function matchSeats(
   seats: readonly Electorate[],
   query: string,
 ): Electorate[] {
+  return matchIn(seats.filter(isHouseSeat), query);
+}
+/** The same order over any list (the Victorian scope's two groups). */
+export function matchIn(
+  seats: readonly Electorate[],
+  query: string,
+): Electorate[] {
   const q = nameKey(query.trim());
   if (!q) return [];
   const prefix: Electorate[] = [];
   const other: Electorate[] = [];
   for (const seat of seats) {
-    if (!isHouseSeat(seat)) continue;
     const name = nameKey(seat.name);
     if (name.startsWith(q)) prefix.push(seat);
     else if (
@@ -135,6 +142,42 @@ export function matchSeats(
       other.push(seat);
   }
   return [...prefix.sort(byName), ...other.sort(byName)];
+}
+
+/**
+ * The Victorian scope (`/seat?scope=vic`, specs/your-mp.md 4.5, my-mp 3.3
+ * item 5): Assembly districts and Council regions, each A to Z. Choosing a
+ * district also sets its region, from the district's `within_upper_house`
+ * relation, so one choice gives both.
+ */
+export const vicCopy = {
+  title: 'Victorian electorate',
+  placeholder: 'District, region or member’s name',
+  districts: 'Legislative Assembly districts',
+  regions: 'Legislative Council regions',
+} as const;
+const victorian = (chamber: string) => (electorates: readonly Electorate[]) =>
+  electorates
+    .filter(
+      (s) =>
+        s.jurisdiction === 'vic' &&
+        s.chamber === chamber &&
+        s.status !== 'historical',
+    )
+    .sort(byName);
+export const vicDistricts = victorian('vic_la');
+export const vicRegions = victorian('vic_lc');
+/** The Council region a district sits within, if the release records one. */
+export function regionOf(
+  detail: Pick<ElectorateDetail, 'relations'>,
+  electorates: readonly Electorate[],
+): Electorate | null {
+  const id = detail.relations.find(
+    (r) => r.kind === 'within_upper_house',
+  )?.related_id;
+  return (
+    (id && vicRegions(electorates).find((s) => s.electorate_id === id)) || null
+  );
 }
 
 /**
@@ -240,7 +283,7 @@ export type LocationAnswer =
  * be found".
  */
 export function locationAnswer(
-  result: Suggestion,
+  result: Suggestion | StateSuggestion,
   cancelled: boolean,
 ): LocationAnswer {
   if (cancelled) return { kind: 'idle' };

@@ -20,7 +20,10 @@ import { Text } from '../../design/text';
 import { Icon } from '../../design/icon';
 import { symbols } from '../../design/symbols';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
-import { suggestFromLocation } from '../electorate-map/location';
+import {
+  suggestFromLocation,
+  suggestStateFromLocation,
+} from '../electorate-map/location';
 import {
   boundariesLine,
   locationAnswer,
@@ -50,6 +53,7 @@ export function LocationRow({
   disabled = false,
   autoStart = false,
   stopKey = 0,
+  scope = 'federal',
 }: {
   seats: () => Promise<Electorate[]>;
   onChoose: (seat: Electorate) => void;
@@ -58,7 +62,10 @@ export function LocationRow({
   disabled?: boolean;
   autoStart?: boolean;
   stopKey?: number;
+  /** `vic`: districts from the bundled state outlines; ids gain `state-`. */
+  scope?: 'federal' | 'vic';
 }) {
+  const id = (name: string) => (scope === 'vic' ? `state-${name}` : name);
   const [answer, setAnswer] = useState<LocationAnswer>({ kind: 'idle' });
   const pending = useRef<AbortController | null>(null);
   const started = useRef(false);
@@ -91,11 +98,14 @@ export function LocationRow({
     }, SLOW_LOCATE_MS);
     let result: Parameters<typeof locationAnswer>[0];
     try {
-      result = await suggestFromLocation(
-        await seats(),
-        () => {},
-        controller.signal,
-      );
+      result =
+        scope === 'vic'
+          ? await suggestStateFromLocation(await seats(), controller.signal)
+          : await suggestFromLocation(
+              await seats(),
+              () => {},
+              controller.signal,
+            );
     } catch {
       result = { kind: 'unavailable' };
     }
@@ -121,7 +131,7 @@ export function LocationRow({
       title={seatCopy.openSettings}
       external
       onPress={() => void Linking.openSettings()}
-      testID="seat-location-settings"
+      testID={id('seat-location-settings')}
     />
   );
   const useRow = (
@@ -130,7 +140,7 @@ export function LocationRow({
       title={seatCopy.useLocation}
       onPress={() => void locate()}
       disabled={disabled}
-      testID="use-my-location"
+      testID={id('use-my-location')}
     />
   );
   const rows = (list: Electorate[], meta: string, single: boolean) =>
@@ -142,12 +152,14 @@ export function LocationRow({
         onPress={() => onChoose(seat)}
         disabled={disabled && accessory(seat.electorate_id) === 'chevron'}
         accessory={accessory(seat.electorate_id)}
-        testID={single ? 'seat-location-row' : `seat-location-row-${seat.slug}`}
+        testID={id(
+          single ? 'seat-location-row' : `seat-location-row-${seat.slug}`,
+        )}
       />
     ));
   let content: ReactNode[];
   let footer: ReactNode = footnote;
-  let testID = 'seat-location';
+  let testID = id('seat-location');
   switch (answer.kind) {
     case 'finding':
       content = [
@@ -156,12 +168,12 @@ export function LocationRow({
           title={answer.slow ? seatCopy.stillFinding : seatCopy.finding}
           busy
           onPress={() => stop()}
-          testID="seat-location-finding"
+          testID={id('seat-location-finding')}
         />,
       ];
       break;
     case 'found':
-      testID = answer.near ? 'location-border' : 'location-suggestion';
+      testID = id(answer.near ? 'location-border' : 'location-suggestion');
       content = rows(
         answer.seats,
         answer.near ? seatCopy.nearLocation : seatCopy.fromLocation,
@@ -170,14 +182,18 @@ export function LocationRow({
       footer = (
         <Footer
           lines={[boundariesLine(answer.vintage), footnote]}
-          testID="location-boundaries"
+          testID={id('location-boundaries')}
         />
       );
       break;
     case 'approximate':
-      testID = 'location-approximate';
+      testID = id('location-approximate');
       content = [
-        <StatusRow key="approximate" text={seatCopy.approximate} />,
+        <StatusRow
+          key="approximate"
+          text={seatCopy.approximate}
+          settingsID={id('seat-location-settings')}
+        />,
         ...rows(answer.seats, seatCopy.nearLocation, false),
       ];
       break;
@@ -186,13 +202,13 @@ export function LocationRow({
       footer = (
         <Footer
           lines={[answer.text, footnote]}
-          testID={
+          testID={id(
             answer.settings
               ? 'location-denied'
               : answer.text === seatCopy.outside
                 ? 'location-no-match'
-                : 'location-unavailable'
-          }
+                : 'location-unavailable',
+          )}
         />
       );
       break;
@@ -287,7 +303,7 @@ function ActionRow({
 }
 
 /** Precise Location off: one line and the way to turn it on. */
-function StatusRow({ text }: { text: string }) {
+function StatusRow({ text, settingsID }: { text: string; settingsID: string }) {
   const cellStyle = useRowCellStyle();
   return (
     <View style={[styles.status, cellStyle]}>
@@ -299,7 +315,7 @@ function StatusRow({ text }: { text: string }) {
         variant="plain"
         size="compact"
         onPress={() => void Linking.openSettings()}
-        testID="seat-location-settings"
+        testID={settingsID}
       />
     </View>
   );

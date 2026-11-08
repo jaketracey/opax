@@ -29,7 +29,7 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
-  catalogs: { directory: jest.fn() },
+  catalogs: { directory: jest.fn(), electorate: jest.fn() },
 }));
 jest.mock('../src/features/CachedPortrait', () => ({
   CachedPortrait: () => null,
@@ -72,12 +72,17 @@ const sydney = index.electorates.find(
 )!;
 const batman = index.electorates.find((s) => s.name === 'Batman')!;
 const choose = jest.fn(async () => undefined);
+const chooseState = jest.fn(async () => undefined);
+const wendouree = index.electorates.find((s) => s.name === 'Wendouree')!;
+const westernVictoria = index.electorates.find(
+  (s) => s.name === 'Western Victoria' && s.chamber === 'vic_lc',
+)!;
 
 beforeEach(() => {
   jest.clearAllMocks();
   jest.useRealTimers();
   (runtime.directory as jest.Mock).mockResolvedValue(directory);
-  mockSeat.current = { status: 'none', choose };
+  mockSeat.current = { status: 'none', choose, chooseState };
   mockScreen.options = {};
   setFontScale(1);
 });
@@ -396,6 +401,83 @@ describe('Browse by state', () => {
     await act(async () => jest.advanceTimersByTime(CHOSEN_MARK_MS));
     expect(closeWelcome).toHaveBeenCalledTimes(1);
     expect(markWelcomeSeen).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  });
+});
+
+describe('the Victorian scope', () => {
+  test('"Victorian electorate": districts and regions under two headers, no Browse by state', async () => {
+    const r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+    expect(mockScreen.options.title).toBe('Victorian electorate');
+    expect(mockScreen.options.headerSearchBarOptions.placeholder).toBe(
+      'District, region or member’s name',
+    );
+    expect(one(r, 'seat-vic-districts').props.header).toBe(
+      'Legislative Assembly districts',
+    );
+    expect(one(r, 'seat-vic-regions').props.header).toBe(
+      'Legislative Council regions',
+    );
+    expect(byID(r, 'state-use-my-location')).not.toHaveLength(0);
+    expect(byID(r, 'use-my-location')).toHaveLength(0);
+    expect(byID(r, 'seat-browse-vic')).toHaveLength(0);
+    await type('Wendouree');
+    expect(byID(r, `seat-row-${wendouree.slug}`)).not.toHaveLength(0);
+    expect(byID(r, 'seat-vic-regions')).toHaveLength(0);
+    await act(async () => r.unmount());
+  });
+  test('choosing a district sets its region too, in one write', async () => {
+    jest.useFakeTimers();
+    (runtime.electorate as jest.Mock).mockResolvedValue({
+      data: {
+        relations: [
+          {
+            kind: 'within_upper_house',
+            related_id: westernVictoria.electorate_id,
+          },
+        ],
+      },
+    });
+    const r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+    await act(async () => one(r, `seat-row-${wendouree.slug}`).props.onPress());
+    expect(runtime.electorate).toHaveBeenCalledWith(wendouree.detail_url);
+    expect(chooseState).toHaveBeenCalledWith(wendouree, westernVictoria);
+    expect(choose).not.toHaveBeenCalled();
+    await act(async () => jest.advanceTimersByTime(CHOSEN_MARK_MS));
+    expect(closeWelcome).toHaveBeenCalledTimes(1);
+    await act(async () => r.unmount());
+  });
+  test("a district whose record can't be read is set alone; a region sets the region", async () => {
+    (runtime.electorate as jest.Mock).mockRejectedValue(new Error('offline'));
+    const r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+    await act(async () => one(r, `seat-row-${wendouree.slug}`).props.onPress());
+    expect(chooseState).toHaveBeenCalledWith(wendouree, undefined);
+    await act(async () => r.unmount());
+    const again = await render(
+      <SeatChooser presentation="sheet" scope="vic" />,
+    );
+    await act(async () =>
+      one(again, `seat-row-${westernVictoria.slug}`).props.onPress(),
+    );
+    expect(chooseState).toHaveBeenLastCalledWith(westernVictoria);
+    await act(async () => again.unmount());
+  });
+  test('saved state seats carry a checkmark', async () => {
+    mockSeat.current = {
+      status: 'chosen',
+      choice: {
+        version: 1,
+        seatId: grayndler.electorate_id,
+        stateSeatIds: [wendouree.electorate_id],
+      },
+      choose,
+      chooseState,
+    };
+    const r = await render(<SeatChooser presentation="sheet" scope="vic" />);
+    expect(one(r, `seat-row-${wendouree.slug}`).props.accessory).toBe(
+      'checkmark',
+    );
+    expect(byID(r, 'seat-saved')).toHaveLength(0);
     await act(async () => r.unmount());
   });
 });
