@@ -178,3 +178,39 @@ test('Sort is one request per new order; returning to an order costs nothing', a
   expect(recordSearch.summary).not.toHaveBeenCalled();
   await act(async () => r.unmount());
 });
+
+test('in All the Speeches group carries the filter line; its Clear clears', async () => {
+  const r = await speeches();
+  const store = searchFilterStore('search-root')!;
+  await act(async () => store.set({ ...store.get(), party: 'Labor' }));
+  await act(async () => r.root.findByType(ScopeBar).props.onChange('all'));
+  // All's read by relevance is the Speeches read just made: no new request.
+  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  const groupLine = () =>
+    r.root
+      .findAllByType(FiltersLine)
+      .filter((l) => l.props.testID === 'search-group-speeches-filters');
+  expect(groupLine()).toHaveLength(1);
+  expect(groupLine()[0]!.props.text).toBe('Labor');
+  // The header carries no second line in All: the group's line is the one.
+  expect(r.root.findAllByType(FiltersLine)).toHaveLength(1);
+  groupLine()[0]!.props.onPress();
+  expect(router.push).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      params: { list: 'search', owner: 'search-root' },
+    }),
+  );
+  await act(async () => groupLine()[0]!.props.onClear());
+  expect(groupLine()).toHaveLength(0);
+  expect(store.get().party).toBe('');
+  await act(async () => r.unmount());
+});
+
+test('People shows no filter line: its rows ignore the speech filters', async () => {
+  const r = await speeches();
+  const store = searchFilterStore('search-root')!;
+  await act(async () => store.set({ ...store.get(), party: 'Labor' }));
+  await act(async () => r.root.findByType(ScopeBar).props.onChange('people'));
+  expect(r.root.findAllByType(FiltersLine)).toHaveLength(0);
+  await act(async () => r.unmount());
+});

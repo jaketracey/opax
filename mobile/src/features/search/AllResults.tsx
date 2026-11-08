@@ -27,7 +27,8 @@ import {
   type RecoveryHandlers,
 } from './EmptyResults';
 import { moneyGroups, registerGroups, type Scope } from './scopes';
-import type { SpeechFilters } from './filters';
+import { filtersLine, hasFilters, type SpeechFilters } from './filters';
+import { FiltersLine } from './FiltersLine';
 import type { SpeechList } from './speeches';
 import { formatCount } from '../../design/format';
 
@@ -77,6 +78,7 @@ export function AllResults({
   speeches,
   onScope,
   recover,
+  onOpenFilters,
   onRetrySources,
 }: {
   q: string;
@@ -86,6 +88,8 @@ export function AllResults({
   speeches: SpeechList;
   onScope: (scope: Scope) => void;
   recover: RecoveryHandlers;
+  /** Tapping the Speeches group's filter line opens Filters. */
+  onOpenFilters?: () => void;
   onRetrySources?: () => void;
 }) {
   const local = allLocal(q, sources);
@@ -166,6 +170,18 @@ export function AllResults({
             title={filters.kind === 'all' ? 'Records' : 'Speeches'}
             level={3}
           />
+          {hasFilters(filters) ? (
+            // The group's rows are the filtered rows: say so above them
+            // (specs/search.md 2.6.3 item 3). People and Bills ignore the
+            // filters, so only this group carries the line.
+            <FiltersLine
+              text={filtersLine(filters)}
+              onClear={recover.onClearFilters}
+              onPress={onOpenFilters}
+              testID="search-group-speeches-filters"
+              clearTestID="search-group-speeches-filters-clear"
+            />
+          ) : null}
           <View style={styles.rows}>
             <SpeechResults
               list={speeches}

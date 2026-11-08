@@ -151,6 +151,7 @@ export function ResultsView({
           speeches={allList}
           onScope={onScope}
           recover={recover}
+          onOpenFilters={onOpenFilters}
           onRetrySources={onRetrySources}
         />
       ) : scope === 'speeches' ? (

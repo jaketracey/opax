@@ -88,6 +88,26 @@ name: 34 Speeches, filters, sort, cited summary and the results' sources
     centerElement: true
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/34-applied-filters
+# All's Speeches group shows the same filtered rows, so it carries the same
+# line (specs/search.md 2.6.3 item 3, 2.16). Back to Speeches for Sort.
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: All
+- scrollUntilVisible:
+    element:
+      id: search-group-speeches-filters
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- assertVisible:
+    id: search-group-speeches-filters
+    text: .*Labor.*
+- takeScreenshot: ${EVIDENCE}/34-all-speeches-filters
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: Speeches
 # Sort lives in the bar's More menu on Speeches.
 - tapOn: More
 - tapOn: Sort
