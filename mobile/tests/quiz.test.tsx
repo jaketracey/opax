@@ -115,7 +115,13 @@ const options = () =>
   root()
     .findAllByType('StackScreen' as never)
     .at(-1)!.props.options;
-const toolbar = () => root().findAllByType('ToolbarView' as never);
+/** The pinned footer above the tab bar (iOS below AX1). */
+const footer = () =>
+  root().findAll(
+    (node) =>
+      typeof node.type === 'string' && node.props.testID === 'quiz-footer',
+  );
+const toolbars = () => root().findAllByType('Toolbar' as never);
 
 /** Answers a question correctly, through its own control. */
 async function answer(q: Question) {
@@ -195,11 +201,20 @@ test('a full round: typed guesses exact, every answer then its source, and the r
       new RegExp(`^Question ${i + 1} of 8\\. `),
     );
     expect(byID('quiz-confirm').props.disabled).toBe(true);
-    // The footer is a bottom toolbar below AX1.
-    expect(toolbar()).toHaveLength(1);
+    // Below AX1 the footer is pinned above the tab bar, never a bottom
+    // toolbar the floating tab bar would cover (explore-04).
+    expect(toolbars()).toHaveLength(0);
+    expect(footer()).toHaveLength(1);
+    expect(
+      footer()[0]!.findAll(
+        (node) =>
+          node.props.testID === 'quiz-confirm' &&
+          typeof node.props.onPress === 'function',
+      ).length,
+    ).toBeGreaterThan(0);
     if (q.kind === 'slider' || q.kind === 'year') {
       await press('quiz-guess-value');
-      expect(toolbar()[0]!.props.hidden).toBe(true);
+      expect(footer()).toHaveLength(0);
       const field = root().find(
         (node) =>
           node.props.testID === 'quiz-number' &&
@@ -210,7 +225,7 @@ test('a full round: typed guesses exact, every answer then its source, and the r
       expect(allText()).toMatch(/Enter a (figure|year|number) from/);
       await act(async () => field.props.onChangeText(String(q.answer)));
       await press('quiz-number-done');
-      expect(toolbar()[0]!.props.hidden).toBe(false);
+      expect(footer()).toHaveLength(1);
       expect(byID('quiz-guess-value').props.accessibilityLabel).toBe(
         `Your guess, ${formatGuess(q, Number(q.answer))}`,
       );
@@ -388,7 +403,8 @@ test('at accessibility sizes the footer flows after the content and the typed gu
   (useAccessibilitySize as jest.Mock).mockReturnValue(true);
   await mount(<Quiz />);
   await press('quiz-start');
-  expect(toolbar()).toHaveLength(0);
+  expect(footer()).toHaveLength(0);
+  expect(toolbars()).toHaveLength(0);
   expect(has('quiz-confirm')).toBe(true);
   expect(has('quiz-guess-value')).toBe(true);
   await answer(quizRounds.mixed[0]![0]!);
