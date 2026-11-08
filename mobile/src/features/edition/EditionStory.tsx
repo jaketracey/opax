@@ -1,11 +1,9 @@
 import { Fragment, useRef } from 'react';
-import { Stack } from 'expo-router';
-import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { router, Stack } from 'expo-router';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
 import { BarSeries, StageTimeline, VoteSplit } from '../../design/charts';
-import { Button } from '../../design/controls';
 import { MachinePill } from '../../design/labels';
 import { InsetGroup, Screen } from '../../design/layout';
 import { BillRow, LinkRow, ValueRow } from '../../design/rows';
@@ -20,7 +18,6 @@ import { colors, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
 import { designFlags } from '../../design/flags';
 import { headerItems, pageItems } from '../../navigation/chrome';
-import { canShare } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useOpenAsk } from '../ask/open';
 import { CachedPortrait } from '../CachedPortrait';
@@ -30,10 +27,12 @@ import { useEdition, useEditionSubject } from './data';
 import {
   editionInk,
   editionQuestion,
+  editionSourceRows,
   editionSources,
   editionSubject,
   editionTopic,
   editionPerson,
+  timelineProvenance,
 } from './model';
 import { editionMenu, shareEdition } from './actions';
 
@@ -67,6 +66,18 @@ export function EditionStory() {
       }
     : null;
   const destination = edition ? editionSubject(edition, subject.slug) : null;
+  // Rows push the subject themselves: a row handed an href goes through
+  // RowLink's Link asChild, whose Slot drops a pressed-state style function,
+  // so the row lost its layout and its chevron fell under the title.
+  const openSubject = destination ? () => router.push(destination) : undefined;
+  const sourceRows = edition
+    ? editionSourceRows(edition, subject.originals)
+    : [];
+  // A figure card carries the edition's SourceLine; the foot repeats it
+  // only when no figure has.
+  const figureLines =
+    !!edition?.facts.figures.length &&
+    (edition.facts.order?.some((fact) => fact.type === 'figure') ?? true);
   const offline =
     block?.error?.code === 'offline' || block?.error?.code === 'timeout';
   return (
@@ -81,9 +92,16 @@ export function EditionStory() {
       ]}
     >
       <Stack.Screen
+        // Share sits in the bar beside ⋯ (today 6.2): a bottom toolbar is
+        // drawn under the floating tab bar on iOS 26, which stays visible
+        // on pushes from Today.
         options={headerItems(
           edition
-            ? pageItems({ name: 'Daily edition', menu: editionMenu(edition) })
+            ? pageItems({
+                name: 'Daily edition',
+                share: onShare,
+                menu: editionMenu(edition),
+              })
             : undefined,
         )}
       />
@@ -122,6 +140,7 @@ export function EditionStory() {
               <Plate
                 edition={edition}
                 story
+                shownBelow={edition.paragraphs}
                 testID="edition-plate"
                 titleRef={titleRef}
                 onTitleLayout={title.onTitleLayout}
@@ -158,7 +177,7 @@ export function EditionStory() {
                   <BillRow
                     billKey={/^\/bill\/([^/?]+)/.exec(edition.path)![1]!}
                     title={edition.shortTitle ?? edition.title}
-                    href={destination}
+                    onPress={openSubject}
                     status=""
                     showStatus={false}
                     menu={[]}
@@ -168,7 +187,7 @@ export function EditionStory() {
                   <PersonRow
                     name={edition.title}
                     {...editionPerson(edition)}
-                    href={destination}
+                    onPress={openSubject}
                     portrait={
                       <CachedPortrait
                         name={edition.title}
@@ -190,7 +209,7 @@ export function EditionStory() {
                     symbol={
                       edition.kind === 'topic' ? symbols.topic : symbols.money
                     }
-                    href={destination}
+                    onPress={openSubject}
                     value={
                       edition.kind === 'grant'
                         ? edition.facts.figures[0]?.value
@@ -202,79 +221,48 @@ export function EditionStory() {
                 )}
               </InsetGroup>
             ) : null}
-            {edition.sourceRows.length ? (
+            <InsetGroup testID="edition-ask-group">
+              <LinkRow
+                title="Ask about this"
+                symbol={symbols.ask}
+                onPress={onAsk}
+                accessibilityHint="Opens Ask with a question drafted"
+                testID="edition-ask"
+              />
+            </InsetGroup>
+            {sourceRows.length ? (
               <InsetGroup header="Sources" testID="edition-source-rows">
-                {edition.sourceRows.map((row, i) => {
-                  const original = subject.originals?.find((item) =>
-                    row
-                      .toLocaleLowerCase('en-AU')
-                      .startsWith(item.label.toLocaleLowerCase('en-AU')),
-                  );
-                  return original ? (
+                {sourceRows.map((row, i) =>
+                  row.original ? (
                     <LinkRow
                       key={i}
-                      title={row}
+                      title={row.title}
                       detail={
-                        original.asOf
-                          ? formatDate(original.asOf, 'short')
-                          : undefined
+                        row.date ? formatDate(row.date, 'short') : undefined
                       }
-                      external={{ url: original.url, label: original.label }}
+                      external={{
+                        url: row.original.url,
+                        label: row.original.label,
+                      }}
                       testID={`edition-source-${i}`}
                     />
                   ) : (
                     <ValueRow
                       key={i}
-                      label={row}
-                      value=""
+                      label={row.title}
+                      value={row.date ? formatDate(row.date, 'short') : ''}
                       testID={`edition-source-${i}`}
                     />
-                  );
-                })}
+                  ),
+                )}
               </InsetGroup>
             ) : null}
-            <SourceLine {...source} testID="edition-sources" />
+            {figureLines ? null : (
+              <SourceLine {...source} testID="edition-sources" />
+            )}
           </>
         )}
       </Screen>
-      {edition && block?.status === 'ready' ? (
-        Platform.OS === 'ios' ? (
-          <Stack.Toolbar placement="bottom">
-            <Stack.Toolbar.Button
-              icon={symbols.ask}
-              accessibilityLabel="Ask about this"
-              onPress={onAsk}
-            >
-              Ask about this
-            </Stack.Toolbar.Button>
-            <Stack.Toolbar.Spacer />
-            {canShare ? (
-              <Stack.Toolbar.Button
-                icon="square.and.arrow.up"
-                accessibilityLabel="Share"
-                onPress={onShare}
-              >
-                Share
-              </Stack.Toolbar.Button>
-            ) : null}
-          </Stack.Toolbar>
-        ) : (
-          <SafeAreaView
-            edges={['bottom']}
-            style={styles.toolbar}
-            testID="edition-toolbar"
-          >
-            <Button
-              label="Ask about this"
-              onPress={onAsk}
-              testID="edition-ask"
-            />
-            {canShare ? (
-              <Button label="Share" onPress={onShare} testID="edition-share" />
-            ) : null}
-          </SafeAreaView>
-        )
-      ) : null}
     </View>
   );
 }
@@ -352,12 +340,11 @@ function EditionFacts({
                   date: event.date,
                 }))}
                 latestIndex={events.length - 1}
-                {...provenance}
+                {...timelineProvenance(edition)}
               />
             ) : division ? (
               <VoteSplit {...division} countsStyle="votes" {...provenance} />
             ) : null}
-            <SourceLine {...source} testID={`${id}-sources`} />
           </View>
         );
       })}
@@ -370,15 +357,6 @@ const styles = StyleSheet.create({
   reading: { gap: 16 },
   prose: { gap: 12 },
   fact: { gap: rhythm.heading },
-  toolbar: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 12,
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    backgroundColor: colors.raised,
-  },
 });
 
 export default EditionStory;
