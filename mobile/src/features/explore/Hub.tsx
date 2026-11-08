@@ -1,61 +1,95 @@
-import { router } from 'expo-router';
-import {
-  Screen,
-  Section,
-  RowList,
-  LinkRow,
-  Text,
-} from '../../design/primitives';
-import { ExploreHeader } from './parts';
-export const tools = [
+import { Tile, TileGrid } from '../../design/card';
+import type { SFSymbol } from '../../design/icon';
+import { Screen } from '../../design/layout';
+import { symbols } from '../../design/symbols';
+import { Heading } from '../../design/text';
+import type { Accent } from '../../design/tokens';
+import { exploreToolRoute } from '../../navigation/routes/explore';
+import { ExploreChrome, hubName } from './parts';
+import { resumeLabel } from './quiz-model';
+import { useQuizInProgress } from './quiz-session';
+
+export { toolName } from './parts';
+
+export interface ExploreTool {
+  game: 'quiz' | 'tm' | 'tide' | 'matrix' | 'wd';
+  title: string;
+  line: string;
+  symbol: SFSymbol;
+  ink: Accent;
+}
+/**
+ * Fixed order, not personalised: the quiz leads (it needs no interest in a
+ * subject), then the two widest tools, then the two narrowest.
+ */
+export const tools: readonly ExploreTool[] = [
   {
     game: 'quiz',
     title: 'The record quiz',
-    detail: 'Money and words in one sitting',
+    line: 'Eight questions on donations and debates',
+    symbol: symbols.explore,
+    ink: 'votes',
   },
-  { game: 'tm', title: 'Time machine', detail: '1998 to 2026' },
+  {
+    game: 'tm',
+    title: 'Time machine',
+    line: 'Photographs, bills and debates from 1998 to 2026',
+    symbol: symbols.archive,
+    ink: 'bills',
+  },
   {
     game: 'tide',
     title: 'The tide',
-    detail: 'How parliament’s labelled debates move across four decades',
+    line: 'Which subjects parliament talks about more, or less, since 1993',
+    // chart.line.uptrend.xyaxis is not in the symbol vocabulary yet.
+    symbol: 'chart.bar.doc.horizontal',
+    ink: 'votes',
   },
   {
     game: 'matrix',
     title: 'Who owns which debate',
-    detail: 'Each party’s share of a debate’s labelled speeches',
+    line: 'Which parties speak on each subject',
+    symbol: symbols.party,
+    ink: 'votes',
   },
   {
     game: 'wd',
     title: 'Words per dollar',
-    detail: 'Disclosed donations beside the labelled debate',
+    line: 'Industry donations beside what parties say on the subject',
+    symbol: symbols.money,
+    ink: 'money',
   },
-] as const;
+];
+
+/** Quizzes and tools: five tiles, the quiz across the full width. */
 export default function ExploreHub() {
+  const inProgress = useQuizInProgress();
   return (
     <>
-      <ExploreHeader title="Explore" />
-      <Screen column="wide" testID="explore-screen">
-        <Text variant="body" wordSafe>
-          Play with the parliamentary record
-        </Text>
-        <Section>
-          <RowList grid>
-            {tools.map((tool) => (
-              <LinkRow
+      <ExploreChrome name={hubName} />
+      <Screen grouped column="wide" barTitle={hubName} testID="explore-screen">
+        <Heading level={1} kind="page">
+          {hubName}
+        </Heading>
+        <TileGrid lead testID="explore-tools">
+          {tools.map((tool) => {
+            const resume = tool.game === 'quiz' && inProgress;
+            return (
+              <Tile
                 key={tool.game}
                 title={tool.title}
-                detail={tool.detail}
+                line={resume ? resumeLabel(inProgress.index) : tool.line}
+                symbol={tool.symbol}
+                ink={tool.ink}
+                href={exploreToolRoute(
+                  tool.game,
+                  resume ? { resume: '1' } : {},
+                )}
                 testID={`explore-${tool.game}`}
-                onPress={() =>
-                  router.push({
-                    pathname: '/explore/[tool]',
-                    params: { tool: tool.game },
-                  })
-                }
               />
-            ))}
-          </RowList>
-        </Section>
+            );
+          })}
+        </TileGrid>
       </Screen>
     </>
   );
