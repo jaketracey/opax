@@ -113,7 +113,10 @@ export async function loadMoneyItem(
                 href: grantProgramRoute(program.id, program.jur, program.name),
               },
             ];
-      const register = program.jur === 'qld' ? 'QLD' : 'GrantConnect';
+      const register =
+        program.jur === 'qld'
+          ? 'Queensland Government Investment Portal'
+          : 'GrantConnect';
       if (params.kind === 'grant') {
         const g = program.grants.find((x) => x.id === params.id);
         if (!g) throw gone();
