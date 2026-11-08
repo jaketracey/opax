@@ -22,7 +22,7 @@ import {
   isAccessibilityCategory,
   rhythm,
 } from '../../design/tokens';
-import { isPad, useLayout } from '../../design/adaptive';
+import { isPad, useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
 import { welcomeSeatRoute } from '../../navigation/routes';
@@ -71,8 +71,10 @@ export function WelcomePage({
   const accessible = isAccessibilityCategory(fontScale);
   const pinned = continuePinned(fontScale);
   const wide = isPad && layout.regular;
-  const ground =
-    designFlags.groupedSurfaces && !short ? colors.sunken : colors.paper;
+  // The short welcome is the same page with Continue only (first-launch
+  // 4.5 D2): the same ground.
+  const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
+  const margin = useScreenMargin();
 
   const leave = (declined: boolean) => {
     if (leaving.current) return;
@@ -158,29 +160,20 @@ export function WelcomePage({
         contentContainerStyle={[
           styles.scroll,
           {
+            paddingHorizontal: margin,
             paddingTop: insets.top + (wide ? rhythm.section : 56),
             paddingBottom: pinned ? rhythm.block : insets.bottom + rhythm.block,
           },
         ]}
       >
         <View style={[styles.column, { maxWidth: WELCOME_COLUMN }]}>
-          <View
+          <Image
+            source={require('../../../assets/splash/mark.png')}
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
-            style={{
-              width: markSize,
-              height: markSize,
-              borderRadius: markSize / 6,
-              borderCurve: 'continuous',
-              overflow: 'hidden',
-              alignSelf: 'center',
-            }}
-          >
-            <Image
-              source={require('../../../assets/icon/icon.png')}
-              style={{ width: markSize, height: markSize }}
-            />
-          </View>
+            testID="welcome-mark"
+            style={{ width: markSize, height: markSize, alignSelf: 'center' }}
+          />
           <Text
             wordSafe
             variant="largeTitle"
@@ -254,6 +247,7 @@ export function WelcomePage({
           style={[
             styles.foot,
             {
+              paddingHorizontal: margin,
               backgroundColor: ground,
               paddingBottom: Math.max(insets.bottom, rhythm.block),
             },
@@ -282,7 +276,7 @@ export default function Welcome({ launch = false }: { launch?: boolean }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  scroll: { flexGrow: 1, alignItems: 'center', paddingHorizontal: 20 },
+  scroll: { flexGrow: 1, alignItems: 'center' },
   column: { width: '100%', alignSelf: 'center' },
   title: { textAlign: 'center', marginTop: rhythm.block },
   rows: { marginTop: rhythm.section, gap: rhythm.group },
@@ -294,5 +288,5 @@ const styles = StyleSheet.create({
   fine: { marginTop: rhythm.section, gap: rhythm.tight },
   centred: { textAlign: 'center' },
   unpinned: { marginTop: rhythm.group },
-  foot: { paddingTop: rhythm.block, paddingHorizontal: 20 },
+  foot: { paddingTop: rhythm.block },
 });

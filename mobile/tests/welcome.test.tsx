@@ -38,10 +38,30 @@ jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: () => mockSeat.current,
 }));
 
-function setFontScale(fontScale: number) {
-  const window = { width: 390, height: 844, scale: 3, fontScale };
+function setFontScale(fontScale: number, width = 390) {
+  const window = { width, height: 844, scale: 3, fontScale };
   Dimensions.set({ window, screen: window });
 }
+const flat = (style: unknown): Record<string, unknown>[] =>
+  [style]
+    .flat(5)
+    .filter((s): s is Record<string, unknown> => !!s && typeof s === 'object');
+/** The side margins of the scroll content and of the pinned foot (the one
+ * view that paints the ground behind Continue). */
+const margins = (r: TestRenderer.ReactTestRenderer) => {
+  const hosts = r.root.findAll((n) => typeof n.type === 'string');
+  const content = hosts.flatMap((n) => flat(n.props.contentContainerStyle));
+  const foot = hosts
+    .map((n) => Object.assign({}, ...flat(n.props.style)))
+    .filter((s) => s.backgroundColor && s.paddingBottom !== undefined);
+  return [...content, ...foot]
+    .map((s) => s.paddingHorizontal)
+    .filter((v) => v !== undefined);
+};
+const grounds = (r: TestRenderer.ReactTestRenderer, id: string) =>
+  flat(host(r, id).props.style)
+    .map((s) => s.backgroundColor)
+    .filter(Boolean);
 beforeEach(() => {
   jest.clearAllMocks();
   mockSeat.current = { status: 'none' };
@@ -157,6 +177,42 @@ describe('the full welcome', () => {
     expect(text.indexOf(copy.deceasedNotice)).toBeGreaterThan(-1);
     expect(has(r, 'welcome-continue')).toBe(true);
     await act(async () => r.unmount());
+  });
+});
+
+describe('the page', () => {
+  test("the app's own star mark, unclipped and hidden from VoiceOver", async () => {
+    const r = await render(<Welcome />);
+    const mark = host(r, 'welcome-mark');
+    expect(mark.props.source).toBe(
+      require('../assets/splash/mark.png') as unknown,
+    );
+    expect(mark.props.accessibilityElementsHidden).toBe(true);
+    expect(mark.props.importantForAccessibility).toBe('no-hide-descendants');
+    for (const style of flat(mark.props.style)) {
+      expect(style.borderRadius).toBeUndefined();
+      expect(style.overflow).toBeUndefined();
+    }
+    await act(async () => r.unmount());
+  });
+  test('the side margin follows the screen margin rule', async () => {
+    const narrow = await render(<Welcome />);
+    // The scroll content and the pinned foot.
+    expect(margins(narrow)).toEqual([16, 16]);
+    await act(async () => narrow.unmount());
+    setFontScale(1, 430);
+    const wide = await render(<Welcome />);
+    expect(margins(wide)).toEqual([20, 20]);
+    await act(async () => wide.unmount());
+  });
+  test('the short welcome takes the same ground as the full one', async () => {
+    const full = await render(<Welcome />);
+    const ground = grounds(full, 'welcome-screen');
+    await act(async () => full.unmount());
+    const short = await render(<ShortWelcome />);
+    expect(grounds(short, 'welcome-short')).toEqual(ground);
+    expect(ground).toHaveLength(1);
+    await act(async () => short.unmount());
   });
 });
 
