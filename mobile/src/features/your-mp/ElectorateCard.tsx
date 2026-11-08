@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.raised,
     borderBottomLeftRadius: radii.container,
     borderBottomRightRadius: radii.container,
-    borderCurve: 'continuous',
     borderTopWidth: hairline,
     borderTopColor: colors.line,
     marginTop: -1,
