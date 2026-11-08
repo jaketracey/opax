@@ -82,15 +82,12 @@ export function RepresentativesGroup({
   directory: Directory;
   electorate: ElectorateView | null;
 }) {
-  const member =
-    view.members.data?.length === 1 ? view.members.data[0]! : null;
+  const member = view.members.data?.length === 1 ? view.members.data[0]! : null;
   const profile = member
     ? representativeProfile(member.person_id, directory)
     : null;
   const person = member
-    ? directory.people.data.people.find(
-        (p) => p.person_id === member.person_id,
-      )
+    ? directory.people.data.people.find((p) => p.person_id === member.person_id)
     : null;
   const year = member ? tenureYear(member.person_id, electorate?.terms) : null;
   const senate = senateSeatFor(seat, directory);
@@ -123,7 +120,11 @@ export function RepresentativesGroup({
             testID={`your-member-${profile.slug}`}
           />
         ) : (
-          <Text wordSafe testID="your-member-none" style={{ padding: 16 }}>
+          <Text
+            wordSafe
+            testID="your-member-none"
+            style={{ padding: rhythm.block }}
+          >
             No member is recorded for this seat yet.
           </Text>
         )}
@@ -168,7 +169,9 @@ export function RepresentativesGroup({
       ) : null}
       <SourceLine
         asOf={asOf}
-        citation={originals.length ? originals.map((s) => s.label) : 'OpenAustralia'}
+        citation={
+          originals.length ? originals.map((s) => s.label) : 'OpenAustralia'
+        }
         originals={originals.map((s) => ({ label: s.label, url: s.url }))}
         savedAt={view.members.stale ? view.members.savedAt : null}
         state={view.members.partial ? 'partial' : null}

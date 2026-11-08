@@ -77,11 +77,7 @@ export function MemberHeroRow({
   const [face] = useFaceURIs([{ name, slug }], 1);
   const href = personRoute(slug);
   const context = party ? { party, status: partyStatus } : null;
-  const label = [
-    name,
-    context ? partyText(context).spoken : null,
-    tenure,
-  ]
+  const label = [name, context ? partyText(context).spoken : null, tenure]
     .filter(Boolean)
     .join(', ');
   const menu = rowMenus.person({ slug, name, ...follow });
@@ -129,16 +125,15 @@ export function MemberHeroRow({
             nameBeside
           />
           <View style={styles.words}>
+            {/* Spec 2.1: SF Semibold on title2; tileFigure is the role with those metrics. */}
             <Text
               wordSafe
-              variant={size === 'hero' ? 'subsectionTitle' : 'name'}
+              variant={size === 'hero' ? 'tileFigure' : 'name'}
               testID={testID && `${testID}-name`}
             >
               {name}
             </Text>
-            {context ? (
-              <PartyLabel {...context} linked={false} nested />
-            ) : null}
+            {context ? <PartyLabel {...context} linked={false} nested /> : null}
             {tenure ? <Text variant="secondary">{tenure}</Text> : null}
           </View>
         </View>
