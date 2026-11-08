@@ -432,6 +432,7 @@ test('viewing a division acknowledges its hidden stage when the latest division 
     jest.advanceTimersByTime(1000);
   });
   const acknowledged = (await loadFollows())[0]!;
+  expect(acknowledged.seen?.moved).toEqual(current.moved);
   expect(acknowledged.seenKeys).toEqual([
     division.key,
     stage.key,

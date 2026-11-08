@@ -1,6 +1,10 @@
 import { act, createElement } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { currentKeys } from '../src/features/follows/changes';
+import {
+  changesFor,
+  currentKeys,
+  type FollowRecord,
+} from '../src/features/follows/changes';
 import {
   followState,
   type FollowSources,
@@ -347,3 +351,65 @@ test.each(['introduced', 'divisions', 'declarations'])(
     }
   },
 );
+
+test('partial acknowledgements retain seen current records ahead of retired history', async () => {
+  const person = {
+    kind: 'person' as const,
+    id: 'person_2b850aa643795ce8902f754b',
+    title: 'Anthony Albanese',
+  };
+  await follow(person);
+  const records = (
+    kind: FollowRecord['kind'],
+    count: number,
+    date: string,
+  ): FollowRecord[] =>
+    Array.from({ length: count }, (_, i) => ({
+      key: `${kind}:${i}`,
+      kind,
+      title: `${kind} ${i}`,
+      date,
+      stage: 'Second reading',
+      position: 'for',
+    }));
+  const current = {
+    introduced: {
+      value: 10,
+      asAt: null,
+      records: records('bill', 10, '2026-01-01'),
+    },
+    divisions: {
+      value: 12,
+      asAt: null,
+      records: records('vote', 12, '2026-02-01'),
+    },
+    declarations: {
+      value: 20,
+      asAt: null,
+      records: records('register', 20, '2026-03-01'),
+    },
+  };
+  await markSeen(followKey(person), current, currentKeys(current));
+  for (let i = 20; i < 40; i++) {
+    const record: FollowRecord = {
+      key: `register:${i}`,
+      kind: 'register',
+      title: `Gift ${i}`,
+      date: '2026-09-02',
+      category: 'gifts',
+    };
+    current.declarations.records = [
+      record,
+      ...current.declarations.records,
+    ].slice(0, 20);
+    await markSeen(followKey(person), { declarations: current.declarations }, [
+      record.key,
+    ]);
+  }
+  const saved = (await loadFollows())[0]!;
+  expect(saved.seenKeys).toHaveLength(50);
+  expect(
+    currentKeys(current).every((key) => saved.seenKeys!.includes(key)),
+  ).toBe(true);
+  expect(changesFor(saved, current)).toEqual([]);
+});

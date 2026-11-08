@@ -63,9 +63,12 @@ export function AddedSinceGroup({
   useSeenOnView(ref, seenKeysForChanges(shown), (keys) => {
     if (!shown.length) return;
     const markers = new Set(shown.map((c) => c.marker));
+    const shownKeys = new Set(keys);
     const reading = Object.fromEntries(
-      Object.entries(displayed.reading).filter(([marker]) =>
-        markers.has(marker),
+      Object.entries(displayed.reading).filter(
+        ([marker, reading]) =>
+          markers.has(marker) ||
+          reading.records?.some((record) => shownKeys.has(record.key)),
       ),
     );
     void markSeen(followKey(follow), reading, keys).catch(() => undefined);

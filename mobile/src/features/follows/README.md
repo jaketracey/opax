@@ -66,7 +66,11 @@ leaves untouched topic bytes alone. The frozen 1.0 decoder and save path in
 `tests/fixtures/follows-1.0/` prove downgrade preservation.
 
 `markSeen` merges readable status markers and the exact keys shown, newest
-first, retaining earlier keys up to 50 per follow. Missing keys do not mean
+first, retaining earlier keys up to 50 per follow. Already-seen keys still in
+the current readings take priority over retired history, so repeated partial
+acknowledgements cannot evict a still-current bill or vote. Supplying a record
+marker reading does not mark every record in it: only the supplied keys become
+seen. Missing keys do not mean
 removed records. An identity that leaves a latest list and returns stays seen
 while retained in that window. A missing `seenKeys` baselines the first ready
 check silently, including legacy and downgraded files. A ready marker absent

@@ -3,7 +3,7 @@ import { readCopies, writeCopy, TwoSlotStore } from '../../storage/two-slot';
 import type { FollowState } from './markers';
 import { partySlug } from '../../design/party';
 import { billKey, electorateId, personId } from '../../api/ids';
-import type { FollowRecord } from './changes';
+import { currentKeys, type FollowRecord } from './changes';
 
 /**
  * Local follows: what this iPhone follows and the change markers it last
@@ -313,12 +313,19 @@ export function markSeen(
           ].map((record) => record.key)
         : [],
     );
+    const activeKeys = new Set(
+      currentKeys({ ...(was.seen ?? {}), ...current }),
+    );
+    const candidates = [
+      ...new Set([...(keys ?? []), ...(was.seenKeys ?? [])]),
+    ].filter((key) => !memberKeys.has(key));
     const seenKeys =
       keys === undefined
         ? was.seenKeys
-        : [...new Set([...keys, ...(was.seenKeys ?? [])])]
-            .filter((key) => !memberKeys.has(key))
-            .slice(0, 50);
+        : [
+            ...candidates.filter((key) => activeKeys.has(key)),
+            ...candidates.filter((key) => !activeKeys.has(key)),
+          ].slice(0, 50);
     const unchanged =
       was.seen !== null &&
       Object.entries(current).every(([k, r]) => sameReading(was.seen![k], r)) &&
