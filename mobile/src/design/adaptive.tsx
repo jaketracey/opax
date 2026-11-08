@@ -79,10 +79,18 @@ export type SizeClass = 'compact' | 'regular';
 /** An iPad (or an iPad app on a Mac): the only place regular layouts draw. */
 export const isPad = Platform.OS === 'ios' && Platform.isPad;
 
+// Shell 0.4 S8: UIKit's screen inset grows from 16 pt to 20 pt at 414 pt.
+const screenMarginBreakpoint = 414;
+const narrowScreenMargin = 16;
+
 /** Regular-width spacing is shared with Screen's column padding. */
 export function useScreenMargin() {
   const layout = useLayout();
-  return layout.regular ? rhythmRegular.screen : layout.width >= 414 ? 20 : 16;
+  return layout.regular
+    ? rhythmRegular.screen
+    : layout.width >= screenMarginBreakpoint
+      ? rhythm.screen
+      : narrowScreenMargin;
 }
 
 export interface Layout {
