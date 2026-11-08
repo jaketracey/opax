@@ -49,9 +49,7 @@ export function latelyFor(
     bills ?? undefined,
     options.limit ?? LATELY_LIMIT,
   );
-  return records.length
-    ? { status: 'ready', records }
-    : { status: 'empty' };
+  return records.length ? { status: 'ready', records } : { status: 'empty' };
 }
 
 /** The sources Lately read, each with its own date, for the line and sheet. */
@@ -82,16 +80,16 @@ export function latelySource(
       if (!originals.some((o) => o.url === s.url))
         originals.push({ label: s.label, url: s.url, asOf: block.asAt });
   };
-  add(
-    votes as unknown as Parameters<typeof add>[0],
-    'They Vote For You',
-  );
+  add(votes as unknown as Parameters<typeof add>[0], 'They Vote For You');
   add(
     interests as unknown as Parameters<typeof add>[0],
     'Register of interests',
   );
   if (bills)
-    citation.push({ label: 'Parliament of Australia', asOf: bills.asOf ?? null });
+    citation.push({
+      label: 'Parliament of Australia',
+      asOf: bills.asOf ?? null,
+    });
   const dates = citation
     .map((c) => c.asOf ?? null)
     .filter((d): d is string => typeof d === 'string' && !!d)

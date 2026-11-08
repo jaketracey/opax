@@ -25,7 +25,9 @@ const ready = <T>(data: T, asAt = '2026-09-04') => ({
   status: 'ready' as const,
   data,
   asAt,
-  sources: [{ label: 'They Vote For You', url: 'https://theyvoteforyou.org.au/' }],
+  sources: [
+    { label: 'They Vote For You', url: 'https://theyvoteforyou.org.au/' },
+  ],
   stale: false,
   savedAt: null,
 });
@@ -230,7 +232,11 @@ describe('Lately', () => {
 });
 
 describe('tenure', () => {
-  const term = (start: string | null, precision: string, end: string | null = null) => ({
+  const term = (
+    start: string | null,
+    precision: string,
+    end: string | null = null,
+  ) => ({
     person_id: 'person_a',
     start,
     end,

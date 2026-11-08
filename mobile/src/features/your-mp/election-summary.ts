@@ -92,10 +92,7 @@ function count(candidate: Candidate, kind: RegExp) {
   return candidate.votes.find((v) => kind.test(v.kind)) ?? null;
 }
 function formalFor(candidates: readonly Candidate[], kind: RegExp) {
-  return candidates.reduce(
-    (sum, c) => sum + (count(c, kind)?.votes ?? 0),
-    0,
-  );
+  return candidates.reduce((sum, c) => sum + (count(c, kind)?.votes ?? 0), 0);
 }
 
 export interface CandidateRow {
