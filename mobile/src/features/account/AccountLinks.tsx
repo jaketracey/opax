@@ -191,7 +191,9 @@ export function SettingsRow({
  * (2.7): UIKit drops a sheet presented while another is dismissing.
  */
 export function closeSheetThen(action: () => void) {
-  router.back();
+  // Guarded like the shared Done (1.1): a cold open has nothing beneath.
+  if (router.canGoBack()) router.back();
+  else router.replace('/');
   setTimeout(action, 500);
 }
 

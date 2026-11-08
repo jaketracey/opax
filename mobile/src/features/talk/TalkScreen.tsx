@@ -67,6 +67,7 @@ import {
   VoiceDisclosure,
 } from './Consent';
 import { takeStartAfterConsent } from './consent-store';
+import { leaveTalk } from './leave';
 import { publishTalk, resetTalk, takeChosenSource } from './live';
 
 type Action =
@@ -262,10 +263,10 @@ export default function TalkScreen({
         {
           text: talkCopy.endConfirm.end,
           style: 'destructive',
-          onPress: () => void call.end().then(() => router.back()),
+          onPress: () => void call.end().then(leaveTalk),
         },
       ]);
-    else router.back();
+    else leaveTalk();
   };
   function openRecord(source: VoiceSource) {
     if (!webPageUrl(source.path)) return;
@@ -307,7 +308,7 @@ export default function TalkScreen({
   };
   const askInstead = () => {
     // Under D5 the reader came from Ask: closing returns there.
-    router.back();
+    leaveTalk();
     if (!designFlags.talkInAsk)
       setTimeout(() => router.navigate('/(tabs)/(ask)/ask' as Href), 500);
   };
