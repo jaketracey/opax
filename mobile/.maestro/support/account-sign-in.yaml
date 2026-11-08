@@ -22,18 +22,16 @@ appId: au.com.opax.app
 - inputText: ${ACCOUNT_EMAIL}
 # Return sends: at AX5 a keyboard swipe would land on the keys.
 - pressKey: Enter
-# The code step can open mid-page; start from its heading.
+# The code step is its own pushed screen, titled "Check your email".
+- extendedWaitUntil:
+    visible: Check your email
+    timeout: 15000
 - scrollUntilVisible:
     element:
-      text: Enter the code
-    direction: UP
-    timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: account-code
+      id: account-sign-in-code
     timeout: 30000
 - waitForAnimationToEnd
 - tapOn:
-    id: account-code
-# A full code submits by itself.
+    id: account-sign-in-code
+# A full code submits by itself, and the screens close back to Account.
 - inputText: '01234567'

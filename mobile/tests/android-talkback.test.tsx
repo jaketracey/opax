@@ -21,16 +21,40 @@ jest.mock('../src/design/useHeaderBottom', () => ({
   useHeaderBottom: () => 0,
 }));
 let mockOptions: Record<string, unknown> = {};
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
-  Stack: {
-    Screen: ({ options }: { options: Record<string, unknown> }) => {
-      mockOptions = options;
-      return null;
+jest.mock('expo-router', () => {
+  const { createElement } = jest.requireActual('react');
+  // A host element: Link rows render their trigger, with no hooks of their own.
+  const Link = ({ children, ...props }: { children: ReactNode }) =>
+    createElement('Link', props, children);
+  Link.Trigger = function Trigger({ children }: { children: ReactNode }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return {
+    router: {
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+      dismissTo: jest.fn(),
     },
-  },
-  useFocusEffect: jest.fn(),
-}));
+    Link,
+    Stack: {
+      Screen: ({ options }: { options: Record<string, unknown> }) => {
+        mockOptions = options;
+        return null;
+      },
+    },
+    useFocusEffect: jest.fn(),
+  };
+});
 jest.mock('../src/design/menu', () => ({
   showMenu: jest.fn(),
   AndroidMenuHost: () => null,
@@ -249,9 +273,7 @@ describe('Talk with TalkBack', () => {
       expectTargets(renderer);
       const state = byID(renderer, 'talk-status');
       expect(state.props.accessibilityLiveRegion).toBe('polite');
-      expect(state.props.accessibilityLabel).toBe(
-        'Ready to talk. Microphone off.',
-      );
+      expect(state.props.accessibilityLabel).toBe('Ready to talk');
       // TalkBack hears the live region; no second, deprecated announcement.
       expect(spies.announce).not.toHaveBeenCalled();
       // The drawn line repeats it, so TalkBack skips the line.
@@ -267,27 +289,27 @@ describe('Talk with TalkBack', () => {
         [{ state: 'connecting' }, {}, 'Connecting'],
         [{ state: 'live', mode: 'listening' }, {}, 'Listening'],
         [{ state: 'live', mode: 'speaking' }, {}, 'OPAX is speaking'],
-        [{ state: 'live', mode: 'muted' }, {}, 'Microphone muted'],
+        [{ state: 'live', mode: 'muted' }, {}, 'Muted'],
         [{ state: 'ending' }, {}, 'Ending the call'],
         [
           { state: 'ended', reason: 'user', status: status() },
           { terminal: 'user' },
-          'Call ended. Microphone off.',
+          'Call ended.',
         ],
         [
           { state: 'ended', reason: 'allowanceExhausted', status: status() },
           { terminal: 'allowanceExhausted' },
-          'Your free minutes are used up. Microphone off.',
+          'You’ve used your voice minutes.',
         ],
         [
           { state: 'ended', reason: 'callLimit', status: status() },
           { terminal: 'callLimit' },
-          'This call reached its limit. Microphone off.',
+          'The call reached its time limit.',
         ],
         [
           { state: 'ended', reason: 'deadline', status: status() },
           { terminal: 'deadline' },
-          'The call reached its time limit. Microphone off.',
+          'The call reached its time limit.',
         ],
       ];
       mockCall = talk({ state: 'ready', status: status() });
@@ -323,12 +345,7 @@ describe('Talk with TalkBack', () => {
       const controls = expectTargets(renderer);
       const labels = controls.map((node) => node.props.accessibilityLabel);
       expect(labels).toEqual(
-        expect.arrayContaining([
-          'Captions',
-          'Unmute',
-          'End call',
-          'Sources, 2',
-        ]),
+        expect.arrayContaining(['Mute', 'Type', 'Sources, 2', 'End call']),
       );
       const mute = byID(renderer, 'talk-mute');
       expect(mute.props.accessibilityState).toMatchObject({ selected: true });
@@ -361,7 +378,7 @@ describe('Talk with TalkBack', () => {
       // setAccessibilityFocus does nothing on Android.
       expect(spies.legacyFocus).not.toHaveBeenCalled();
       expect(state.props.accessibilityLabel).toBe(
-        'Your free minutes are used up. Microphone off.',
+        'You’ve used your voice minutes.',
       );
     }));
 
@@ -387,12 +404,12 @@ describe('Talk with TalkBack', () => {
       const [title, actions] = app.showMenu.mock.calls[0]!;
       expect(title).toBe('Over 5 min left in this call');
       expect(actions.map((action: { title: string }) => action.title)).toEqual([
-        'Type a message',
+        'Show captions',
         'Withdraw voice consent',
       ]);
       app.React.act(() => pressable(bar, 'header-done').props.onPress());
       expect(spies.alert).toHaveBeenCalledWith(
-        'End the conversation?',
+        'End the call?',
         undefined,
         expect.any(Array),
       );
@@ -417,11 +434,12 @@ describe('Talk with TalkBack', () => {
         onPress: () => void;
       }[];
       expect(actions.map((action) => action.title)).toEqual([
+        'Show captions',
         'Report this answer',
         'Voice privacy',
         'Withdraw voice consent',
       ]);
-      actions[0]!.onPress();
+      actions[1]!.onPress();
       expect(app.showMenu).toHaveBeenLastCalledWith(
         'Report this answer',
         expect.any(Array),
@@ -447,7 +465,7 @@ describe('Talk with TalkBack', () => {
       });
       expect(handled).toBe(true);
       expect(live.spies.alert).toHaveBeenCalledWith(
-        'End the conversation?',
+        'End the call?',
         undefined,
         expect.any(Array),
       );
@@ -503,20 +521,27 @@ describe('the microphone rationale with TalkBack', () => {
       expect(mockCall.declineMicrophone).toHaveBeenCalledTimes(1);
     }));
 
-  test('the consent panel also takes focus at its heading', () =>
+  test('Start before consent opens the consent sheet, whose controls are labelled', () =>
     android(async (show) => {
       mockCall = talk({ state: 'ready', status: status() }, { consent: false });
-      const { app, renderer, spies } = await show(talkScreen);
-      app.React.act(() => pressable(renderer, 'talk-start').props.onPress());
-      const heading = renderer.root.find(
-        (node) =>
-          typeof node.type === 'string' &&
-          node.props.accessibilityRole === 'header' &&
-          node.props.accessibilityLabel === 'Before you talk',
+      const { app, renderer } = await show(talkScreen);
+      const { router } = jest.requireMock<{ router: { push: jest.Mock } }>(
+        'expo-router',
       );
-      expect(heading).toBeDefined();
-      expect(spies.focus).toHaveBeenCalledWith(expect.anything(), 'focus');
-      expectTargets(renderer);
+      app.React.act(() => pressable(renderer, 'talk-start').props.onPress());
+      expect(router.push).toHaveBeenCalledWith({ pathname: '/talk/consent' });
+      const sheet = await show((loaded) => {
+        const { ConsentSheet } = loaded.load<
+          typeof import('../src/features/talk/Consent')
+        >('../src/features/talk/Consent');
+        return <ConsentSheet />;
+      });
+      const labels = expectTargets(sheet.renderer).map(
+        (node) => node.props.accessibilityLabel,
+      );
+      expect(labels).toEqual(
+        expect.arrayContaining(['Agree and start', 'Not now']),
+      );
     }));
 
   test('denied: one line and Start, which asks again', () =>
@@ -549,15 +574,17 @@ describe('the microphone rationale with TalkBack', () => {
       expect(spies.settings).toHaveBeenCalledTimes(1);
     }));
 
-  test('signed out: Sign in, with the 16+ line as on iPhone', () =>
+  test('signed out: Sign in, with the free minutes and no age line', () =>
     android(async (show) => {
       mockCall = talk({ state: 'ready', status: status({ signedIn: false }) });
       const { renderer } = await show(talkScreen);
       expectTargets(renderer);
       expect(pressable(renderer, 'talk-sign-in')).toBeDefined();
-      expect(JSON.stringify(renderer.toJSON())).toContain(
-        'Accounts and voice are for people aged 16 and over.',
+      const text = JSON.stringify(renderer.toJSON());
+      expect(text).toContain(
+        'A free OPAX account includes 10 minutes of voice.',
       );
+      expect(text).not.toContain('16 and over');
     }));
 });
 
@@ -566,11 +593,12 @@ describe('accounts with TalkBack', () => {
 
   test('sign-in: labelled fields and actions, the age line, and a refusal TalkBack is moved to', () =>
     android(async (show) => {
+      const onSent = jest.fn();
       const { app, renderer, spies } = await show((loaded) => {
-        const { SignInFlow } = loaded.load<
+        const { EmailStep } = loaded.load<
           typeof import('../src/features/account/SignInFlow')
         >('../src/features/account/SignInFlow');
-        return <SignInFlow onSignedIn={jest.fn()} />;
+        return <EmailStep onSent={onSent} />;
       });
       const email = renderer.root.find(
         (node) =>
@@ -580,7 +608,7 @@ describe('accounts with TalkBack', () => {
       expect(email.props.accessibilityLabel).toBe('Email');
       expectTargets(renderer);
       expect(JSON.stringify(renderer.toJSON())).toContain(
-        'Accounts and voice are for people aged 16 and over.',
+        'For people aged 16 and over.',
       );
       // A bad address: the refusal is an alert TalkBack lands on.
       await app.React.act(async () =>
@@ -595,7 +623,7 @@ describe('accounts with TalkBack', () => {
         'Enter a valid email address.',
       );
       expect(spies.focus).toHaveBeenCalledWith(expect.anything(), 'focus');
-      // The code step, from a synthetic challenge: a labelled code field.
+      // A sent code hands the address and challenge to the code step.
       app.voice.requestCode!.mockResolvedValue(
         ok({ sent: true, challengeId: 'c'.repeat(43) }),
       );
@@ -605,22 +633,39 @@ describe('accounts with TalkBack', () => {
       await app.React.act(async () =>
         pressable(renderer, 'account-send-code').props.onPress(),
       );
-      const code = renderer.root.find(
+      expect(onSent).toHaveBeenCalledWith(
+        'reader@example.invalid',
+        'c'.repeat(43),
+      );
+      const step = await show((loaded) => {
+        const { CodeStep } = loaded.load<
+          typeof import('../src/features/account/SignInFlow')
+        >('../src/features/account/SignInFlow');
+        return (
+          <CodeStep
+            email="reader@example.invalid"
+            challenge={'c'.repeat(43)}
+            onSignedIn={jest.fn()}
+          />
+        );
+      });
+      const code = step.renderer.root.find(
         (node) =>
-          typeof node.type === 'string' && node.props.testID === 'account-code',
+          typeof node.type === 'string' &&
+          node.props.testID === 'account-sign-in-code',
       );
       expect(code.props.accessibilityLabel).toBe('8-digit code');
-      expectTargets(renderer);
+      expectTargets(step.renderer);
     }));
 
   test('signed in: the account reads “this phone”, with sign-out and deletion at 48dp', () =>
     android(async (show) => {
       const { app, renderer } = await show((loaded) => {
         loaded.voice.status!.mockResolvedValue(ok(status()));
-        const { AccountSection } = loaded.load<
-          typeof import('../src/features/account/AccountSection')
-        >('../src/features/account/AccountSection');
-        return <AccountSection />;
+        const { AccountGroups } = loaded.load<
+          typeof import('../src/features/account/AccountGroups')
+        >('../src/features/account/AccountGroups');
+        return <AccountGroups />;
       });
       await app.React.act(async () => {});
       const text = JSON.stringify(renderer.toJSON());
@@ -629,33 +674,27 @@ describe('accounts with TalkBack', () => {
       const labels = expectTargets(renderer).map(
         (node) => node.props.accessibilityLabel,
       );
-      expect(labels).toEqual(['Sign out of this phone', 'Delete account']);
+      expect(labels).toEqual(
+        expect.arrayContaining(['Sign out', 'Delete account']),
+      );
     }));
 
   test('deletion: each step is labelled and 48dp, and says “this phone” when done', () =>
     android(async (show) => {
       const { app, renderer } = await show((loaded) => {
-        const { DeleteAccountFlow } = loaded.load<
+        const { DeleteIntro } = loaded.load<
           typeof import('../src/features/account/DeleteAccountFlow')
         >('../src/features/account/DeleteAccountFlow');
-        return (
-          <DeleteAccountFlow
-            onCancel={jest.fn()}
-            onDone={jest.fn()}
-            onSignIn={jest.fn()}
-          />
-        );
+        return <DeleteIntro />;
       });
       expectTargets(renderer);
       const confirm = JSON.stringify(renderer.toJSON());
-      expect(confirm).toContain('What is deleted');
-      expect(confirm).toContain('What is not deleted');
+      expect(confirm).toContain('Deleted');
+      expect(confirm).toContain('Kept');
       const { accountCopy } = app.load<
         typeof import('../src/features/account/copy')
       >('../src/features/account/copy');
-      expect(accountCopy.accountDeletedDetail).toContain(
-        'This phone is signed out.',
-      );
-      expect(accountCopy.accountDeletedDetail).not.toContain('iPhone');
+      expect(accountCopy.deletedNotice).toContain('This phone is signed out.');
+      expect(accountCopy.deletedNotice).not.toContain('iPhone');
     }));
 });

@@ -1,6 +1,2 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return (
-    <RoutePlaceholder route="account/sign-in/code" title="Check your email" />
-  );
-}
+// Voice-off production resolves features/account/entry.production.ts.
+export { SignInCodeScreen as default } from '../../../features/account/entry';

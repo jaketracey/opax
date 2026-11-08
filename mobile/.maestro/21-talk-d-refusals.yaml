@@ -15,7 +15,11 @@ name: 21d Talk refusal states, voice disabled, the monthly budget closed and a d
     element:
       id: talk-status
     visibilityPercentage: 10
-- assertVisible: Voice is taking a break.
+- assertVisible: Voice is taking a break\.
+# Voice off offers the typed version of the same thing.
+- assertVisible:
+    id: talk-ask
+- assertVisible: Ask instead
 - takeScreenshot: ${EVIDENCE}/21-disabled
 - assertNotVisible:
     id: talk-start
@@ -28,7 +32,9 @@ name: 21d Talk refusal states, voice disabled, the monthly budget closed and a d
     element:
       id: talk-status
     visibilityPercentage: 10
-- assertVisible: Voice is closed for the rest of this month.
+- assertVisible: Voice is closed for the rest of this month\.
+- assertVisible:
+    id: talk-ask
 - takeScreenshot: ${EVIDENCE}/21-budget
 - assertNotVisible:
     id: talk-start
@@ -45,19 +51,11 @@ name: 21d Talk refusal states, voice disabled, the monthly budget closed and a d
 # sheet covers Start; tap Agree, then wait for the dropped connection.
 - tapOn:
     id: talk-start
-- scrollUntilVisible:
-    timeout: 60000
-    element:
+# The consent sheet's buttons are pinned, in view at every size.
+- extendedWaitUntil:
+    visible:
       id: talk-agree
-    centerElement: true
-- runFlow:
-    when:
-      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
-    commands:
-      - swipe:
-          start: 90%, 30%
-          end: 90%, 55%
-          duration: 600
+    timeout: 15000
 - tapOn:
     id: talk-agree
 - scrollUntilVisible:
@@ -67,7 +65,7 @@ name: 21d Talk refusal states, voice disabled, the monthly budget closed and a d
     direction: UP
     visibilityPercentage: 10
 - extendedWaitUntil:
-    visible: (The connection dropped|Can.t reach OPAX)[.].*
+    visible: (The call dropped|Couldn.t connect)[.].*
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/21-drop
 - tapOn: Done

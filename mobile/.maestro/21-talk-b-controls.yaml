@@ -19,21 +19,11 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
     centerElement: true
 - tapOn:
     id: talk-start
-- scrollUntilVisible:
-    timeout: 60000
-    element:
+# The consent sheet's buttons are pinned, in view at every size.
+- extendedWaitUntil:
+    visible:
       id: talk-agree
-    centerElement: true
-# At AX5 UIKit can report the button visible while its centre is beneath the
-# sheet header. Reveal it physically before the one consent tap.
-- runFlow:
-    when:
-      true: ${CONTENT_SIZE === 'accessibility-extra-extra-extra-large'}
-    commands:
-      - swipe:
-          start: 90%, 30%
-          end: 90%, 55%
-          duration: 600
+    timeout: 15000
 - tapOn:
     id: talk-agree
 - scrollUntilVisible:
@@ -64,13 +54,47 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
       id: bill-title
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/21-source-record
+# The record is pushed inside Talk: its bar shows the call's status and End,
+# and the native back button returns to the call.
+- assertVisible:
+    id: talk-record-status
+- assertVisible:
+    id: talk-record-end
+- tapOn: { id: BackButton }
+# Type is a call control: it opens the composer, and a second tap closes it.
 - scrollUntilVisible:
     timeout: 60000
     element:
-      id: talk-record-back
-    direction: UP
+      id: talk-type
+    direction: DOWN
 - tapOn:
-    id: talk-record-back
+    id: talk-type
+- extendedWaitUntil:
+    visible:
+      id: talk-text
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/21-type
+- tapOn:
+    id: talk-type
+- assertNotVisible:
+    id: talk-text
+# Captions hide and show from the More menu.
+- tapOn: More options
+- extendedWaitUntil:
+    visible: Hide captions
+    timeout: 15000
+- tapOn: Hide captions
+- assertNotVisible:
+    id: talk-captions-list
+- tapOn: More options
+- extendedWaitUntil:
+    visible: Show captions
+    timeout: 15000
+- tapOn: Show captions
+- extendedWaitUntil:
+    visible:
+      id: talk-captions-list
+    timeout: 15000
 - scrollUntilVisible:
     timeout: 60000
     element:
@@ -83,7 +107,7 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
     element:
       id: talk-status
     direction: UP
-- assertVisible: Microphone muted
+- assertVisible: Muted
 - takeScreenshot: ${EVIDENCE}/21-muted
 - scrollUntilVisible:
     timeout: 60000
@@ -97,8 +121,9 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
       id: talk-status
     direction: UP
 - extendedWaitUntil:
-    visible: Call ended. Microphone off.
+    visible: Call ended\.
     timeout: 15000
+- assertVisible: Start again
 - takeScreenshot: ${EVIDENCE}/21-ended
 - tapOn: More options
 - extendedWaitUntil:
@@ -107,7 +132,7 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
 - takeScreenshot: ${EVIDENCE}/21-menu
 - tapOn: Withdraw voice consent
 - extendedWaitUntil:
-    visible: Consent withdrawn. Microphone off.
+    visible: Voice consent withdrawn\.
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/21-withdrawn
 - scrollUntilVisible:
@@ -118,11 +143,14 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
     centerElement: true
 - tapOn:
     id: talk-start
-- scrollUntilVisible:
-    timeout: 60000
-    element:
+- extendedWaitUntil:
+    visible:
       id: talk-not-now
-    centerElement: true
+    timeout: 15000
 - tapOn:
     id: talk-not-now
+- extendedWaitUntil:
+    visible:
+      id: talk-start
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/21-consent-declined

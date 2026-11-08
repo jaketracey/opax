@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { TwoSlotStore } from '../../storage/two-slot';
 
 /**
- * The captions switch is off by default and remembered on this device, so a
- * reader who relies on captions turns them on once. Only the switch is
- * stored: never a caption or a transcript.
+ * Captions are on by default (specs/account.md 7.4, F-2), so answers can be
+ * read and checked; a choice to hide them is remembered on this device.
+ * Only the switch is stored: never a caption or a transcript.
  */
 const store = new TwoSlotStore<{ on: boolean }>(
   ['opax-talk-captions-v1.json', 'opax-talk-captions-v1.b.json'],
@@ -16,7 +16,7 @@ const store = new TwoSlotStore<{ on: boolean }>(
 );
 
 export function useCaptionsPreference(): [boolean, (on: boolean) => void] {
-  const [on, setOn] = useState(false);
+  const [on, setOn] = useState(true);
   const chosen = useRef(false);
   useEffect(() => {
     let current = true;

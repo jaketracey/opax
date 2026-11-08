@@ -1,10 +1,16 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as voice from '../src/voice';
 import type { VoiceEvent, VoiceStatus } from '../src/voice';
-import { Button, ErrorState, Field, Section } from '../src/design/primitives';
+import {
+  Button,
+  ErrorState,
+  Field,
+  InlineError,
+} from '../src/design/primitives';
+import { confirmAction } from '../src/design/menu';
 import {
   codeDigits,
   codeGate,
@@ -19,16 +25,35 @@ import {
   requestRefusal,
 } from '../src/features/account/copy';
 import {
+  accountDeleted,
+  accountSignedIn,
   accountView,
   codeAccepted,
   resetAccountStore,
   signOut,
 } from '../src/features/account/store';
-import { SignInFlow } from '../src/features/account/SignInFlow';
-import { DeleteAccountFlow } from '../src/features/account/DeleteAccountFlow';
-import { AccountSection } from '../src/features/account/AccountSection';
+import { CodeStep, EmailStep } from '../src/features/account/SignInFlow';
+import {
+  DeleteCode,
+  DeleteIntro,
+} from '../src/features/account/DeleteAccountFlow';
+import { AccountGroups } from '../src/features/account/AccountGroups';
 import { AccountScreen } from '../src/features/account/AccountScreen';
+import { ConsentScreen } from '../src/features/account/ConsentScreen';
+import {
+  SignInCodeScreen,
+  SignInScreen,
+} from '../src/features/account/SignInScreen';
+import { DeleteCodeScreen } from '../src/features/account/DeleteAccountScreen';
+import { finishSignIn } from '../src/features/account/navigation';
+import {
+  issueChallenge,
+  resetChallenges,
+} from '../src/features/account/useCodeChallenge';
 import AccountEntry from '../src/features/account/entry';
+import { clearAskConversations } from '../src/features/ask/store';
+import { readConsent, setConsent } from '../src/features/talk/bridge';
+import { takeConsentAfterSignIn } from '../src/features/talk/consent-store';
 import { openOnWeb } from '../src/navigation/external';
 
 jest.mock('../src/voice', () => ({
@@ -40,14 +65,82 @@ jest.mock('../src/voice', () => ({
   deleteAccount: jest.fn(),
   subscribe: jest.fn(() => () => {}),
 }));
-jest.mock('expo-router', () => ({
-  router: {
-    push: jest.fn(),
-    back: jest.fn(),
-    replace: jest.fn(),
-    canGoBack: jest.fn(() => true),
+let mockParams: Record<string, string> = {};
+jest.mock('expo-router', () => {
+  const { createElement } = jest.requireActual('react');
+  // Host elements: a Link row's href and a Redirect's target stay readable.
+  const Link = ({ children, ...props }: { children: unknown }) =>
+    createElement('Link', props, children);
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return {
+    router: {
+      push: jest.fn(),
+      back: jest.fn(),
+      replace: jest.fn(),
+      dismissTo: jest.fn(),
+      dismissAll: jest.fn(),
+      canGoBack: jest.fn(() => true),
+    },
+    Link,
+    Redirect: (props: object) => createElement('Redirect', props),
+    Stack: { Screen: () => null },
+    useLocalSearchParams: () => mockParams,
+    useFocusEffect: jest.fn(),
+  };
+});
+// The text size, when a test sets one; otherwise the test default.
+let mockFontScale: number | null = null;
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => {
+  const actual = jest.requireActual(
+    'react-native/Libraries/Utilities/useWindowDimensions',
+  );
+  return {
+    __esModule: true,
+    default: () =>
+      mockFontScale === null
+        ? actual.default()
+        : { width: 402, height: 874, scale: 3, fontScale: mockFontScale },
+  };
+});
+jest.mock('../src/design/menu', () => ({
+  ...jest.requireActual('../src/design/menu'),
+  confirmAction: jest.fn(),
+}));
+jest.mock('../src/features/talk/bridge', () => ({
+  readConsent: jest.fn(async () => false),
+  setConsent: jest.fn(async () => true),
+}));
+jest.mock('../src/features/ask/store', () => ({
+  ...jest.requireActual('../src/features/ask/store'),
+  clearAskConversations: jest.fn(async () => undefined),
+}));
+// The remembered address (2.6), in memory: the slot survives a store reset,
+// as the file survives a relaunch.
+let mockSlots: Record<string, unknown> = {};
+jest.mock('../src/storage/two-slot', () => ({
+  TwoSlotStore: class {
+    key: string;
+    constructor(slots: string[]) {
+      this.key = slots[0]!;
+    }
+    async read() {
+      return mockSlots[this.key] ?? null;
+    }
+    async save(value: unknown) {
+      mockSlots[this.key] = value;
+    }
   },
-  Stack: { Screen: () => null },
 }));
 jest.mock('../src/navigation/external', () => ({
   ...jest.requireActual('../src/navigation/external'),
@@ -85,6 +178,22 @@ function texts(renderer: Renderer): string[] {
 }
 const shows = (renderer: Renderer, text: string) =>
   texts(renderer).join('\n').includes(text);
+const remembered = () =>
+  (mockSlots['opax-account-v1.json'] as { email: string | null } | undefined)
+    ?.email;
+const has = (renderer: Renderer, testID: string) =>
+  renderer.root.findAll((node) => node.props.testID === testID).length > 0;
+const linkTo = (renderer: Renderer, testID: string) =>
+  renderer.root.find(
+    (node) =>
+      node.type === 'Link' &&
+      node.findAll((child) => child.props.testID === testID).length > 0,
+  ).props.href;
+/** The action (not Cancel) of the last confirmation shown. */
+async function confirmLast() {
+  const [action] = jest.mocked(confirmAction).mock.lastCall![1];
+  await act(async () => action!.onPress());
+}
 // Buttons and link rows: the pressable that carries the test ID.
 const button = (renderer: Renderer, testID: string) =>
   renderer.root.findAll(
@@ -97,6 +206,8 @@ const field = (renderer: Renderer, testID: string) =>
     .find((node) => node.props.testID === testID)!;
 const refusal = (renderer: Renderer) =>
   renderer.root.findAllByType(ErrorState)[0]?.props.message;
+const failure = (renderer: Renderer) =>
+  renderer.root.findAllByType(InlineError)[0]?.props.message;
 async function press(renderer: Renderer, testID: string) {
   await act(async () => {
     button(renderer, testID).props.onPress();
@@ -126,6 +237,10 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.useRealTimers();
   resetAccountStore();
+  resetChallenges();
+  mockSlots = {};
+  mockParams = {};
+  mockFontScale = null;
   mocked.status.mockResolvedValue({ ok: true, value: signedOut });
   mocked.requestCode.mockResolvedValue({
     ok: true,
@@ -204,87 +319,146 @@ describe('refusals', () => {
 });
 
 describe('account store', () => {
+  const state = {
+    status: null,
+    error: null,
+    checking: false,
+    email: null,
+    cleared: false,
+    notice: null,
+  };
   test('status decides the view; a held account voice refuses is unavailable', () => {
     expect(
       accountView({
+        ...state,
         status: status(),
-        error: null,
-        checking: false,
         email: 'happy@example.invalid',
-        cleared: false,
-        notice: null,
       }),
     ).toEqual({
       kind: 'signedIn',
       status: status(),
       email: 'happy@example.invalid',
     });
-    expect(
-      accountView({
-        status: disabled,
-        error: null,
-        checking: false,
-        email: null,
-        cleared: false,
-        notice: null,
-      }).kind,
-    ).toBe('unavailable');
-    expect(
-      accountView({
-        status: null,
-        error: null,
-        checking: false,
-        email: null,
-        cleared: true,
-        notice: null,
-      }).kind,
-    ).toBe('failed');
+    expect(accountView({ ...state, status: disabled }).kind).toBe(
+      'unavailable',
+    );
+    expect(accountView({ ...state, cleared: true })).toEqual({
+      kind: 'failed',
+      email: null,
+      offline: false,
+    });
+    expect(accountView({ ...state, error: 'network' })).toMatchObject({
+      kind: 'failed',
+      offline: true,
+    });
+    // Before status arrives, a remembered address still names the account.
+    expect(accountView({ ...state, email: 'happy@example.invalid' })).toEqual({
+      kind: 'checking',
+      email: 'happy@example.invalid',
+    });
   });
-  test('sign-out removes the token even when the server cannot be told', async () => {
+  test('the bar symbol is filled while an account is held or remembered', () => {
+    expect(accountSignedIn({ ...state, status: status() })).toBe(true);
+    expect(accountSignedIn({ ...state, status: disabled })).toBe(true);
+    expect(accountSignedIn({ ...state, status: signedOut })).toBe(false);
+    expect(accountSignedIn({ ...state, email: 'a@example.invalid' })).toBe(
+      true,
+    );
+    expect(accountSignedIn(state)).toBe(false);
+  });
+  test('sign-out says the same thing even when the server cannot be told', async () => {
     mocked.logout.mockResolvedValueOnce({ ok: false, error: 'network' });
-    const renderer = await render(<AccountSection />);
+    const renderer = await render(<AccountGroups />);
     await act(async () => {
       codeAccepted('happy@example.invalid', status());
     });
     await act(() => signOut());
-    expect(shows(renderer, accountCopy.signedOutLocally)).toBe(true);
-    expect(shows(renderer, accountCopy.signedOut)).toBe(true);
+    expect(shows(renderer, accountCopy.signedOutNotice)).toBe(true);
+    expect(accountCopy.signedOutNotice).not.toMatch(/server|couldn/i);
+    expect(has(renderer, 'account-sign-in-start')).toBe(true);
+  });
+  test('the address is remembered while signed in, and forgotten on sign-out', async () => {
+    codeAccepted(' Happy@Example.invalid ', status());
+    await act(async () => undefined);
+    expect(remembered()).toBe('happy@example.invalid');
+    // A relaunch: a fresh store, with the status read still out.
+    resetAccountStore();
+    mocked.status.mockReturnValue(new Promise(() => undefined));
+    const renderer = await render(<AccountGroups />);
+    expect(
+      renderer.root.findByProps({ testID: 'account-identity' }).props
+        .accessibilityLabel,
+    ).toBe('happy@example.invalid');
+    // Sign-out and deletion never wait for the status read (2.5).
+    expect(has(renderer, 'account-sign-out')).toBe(true);
+    expect(has(renderer, 'account-delete')).toBe(true);
+    mocked.status.mockResolvedValue({ ok: true, value: signedOut });
+    await act(() => signOut());
+    expect(remembered()).toBeNull();
+  });
+  test('a status that holds no account forgets the address', async () => {
+    mockSlots['opax-account-v1.json'] = { email: 'happy@example.invalid' };
+    const renderer = await render(<AccountGroups />);
+    expect(has(renderer, 'account-sign-in-start')).toBe(true);
+    expect(shows(renderer, 'happy@example.invalid')).toBe(false);
+    expect(remembered()).toBeNull();
   });
 });
 
-describe('Account section', () => {
-  test('signed out: one line and Sign in for voice', async () => {
-    const renderer = await render(<AccountSection />);
+describe('Account groups', () => {
+  test('signed out: the one Sign in row, which pushes the email step', async () => {
+    const renderer = await render(<AccountGroups />);
     expect(mocked.status).toHaveBeenCalledTimes(1);
-    expect(shows(renderer, accountCopy.signedOut)).toBe(true);
-    await press(renderer, 'account-sign-in-start');
-    expect(router.push).toHaveBeenCalledWith('/account/sign-in');
+    const row = renderer.root.findByProps({
+      testID: 'account-sign-in-start',
+    });
+    expect(row.props.accessibilityLabel).toBe(
+      'Sign in, Talk to OPAX, and keep your Ask conversations on all your devices.',
+    );
+    // The row is a link: the Link pushes it (and previews it), not a press.
+    expect(linkTo(renderer, 'account-sign-in-start')).toBe('/account/sign-in');
+    expect(has(renderer, 'account-sign-out')).toBe(false);
+    expect(has(renderer, 'account-delete')).toBe(false);
   });
-  test('signed in: address, voice time, sign-out and deletion', async () => {
+  test('signed in: address, voice time and consent, then sign-out, then deletion', async () => {
     mocked.status.mockResolvedValue({ ok: true, value: status() });
-    const renderer = await render(<AccountSection />);
+    jest.mocked(readConsent).mockResolvedValue(true);
+    const renderer = await render(<AccountGroups />);
     expect(shows(renderer, accountCopy.signedInHere)).toBe(true);
-    expect(shows(renderer, 'Voice time: 8:00 remaining')).toBe(true);
+    expect(shows(renderer, '8 min left')).toBe(true);
+    expect(
+      renderer.root.find(
+        (node) =>
+          typeof node.type === 'string' && node.props.testID === 'account-talk',
+      ).props.accessibilityLabel,
+    ).toBe('Talk to OPAX, 8 minutes left');
+    expect(linkTo(renderer, 'account-consent')).toBe('/account/consent');
     await act(async () => {
       codeAccepted('happy@example.invalid', status());
     });
-    expect(shows(renderer, 'Signed in as happy@example.invalid')).toBe(true);
+    expect(shows(renderer, 'happy@example.invalid')).toBe(true);
+    // Delete account is last, in its own group, after Sign out.
+    const ids = renderer.root
+      .findAll((node) => typeof node.props.testID === 'string')
+      .map((node) => node.props.testID as string);
+    expect(ids.lastIndexOf('account-sign-out')).toBeLessThan(
+      ids.indexOf('account-delete'),
+    );
     await press(renderer, 'account-delete');
     expect(router.push).toHaveBeenCalledWith('/account/delete');
     mocked.status.mockResolvedValue({ ok: true, value: signedOut });
     await press(renderer, 'account-sign-out');
     expect(mocked.logout).toHaveBeenCalledTimes(1);
     expect(shows(renderer, accountCopy.signedOutNotice)).toBe(true);
-    expect(shows(renderer, accountCopy.signedOut)).toBe(true);
+    expect(has(renderer, 'account-sign-in-start')).toBe(true);
   });
   test('a held account keeps sign-out and deletion after a relaunch, though voice refuses it', async () => {
-    // A fresh store, as after a relaunch: only the native status knows.
     mocked.status.mockResolvedValue({ ok: true, value: disabled });
-    const renderer = await render(<AccountSection />);
-    expect(shows(renderer, accountCopy.unavailableAccount)).toBe(true);
+    const renderer = await render(<AccountGroups />);
+    expect(shows(renderer, accountCopy.unavailableFooter)).toBe(true);
     expect(button(renderer, 'account-sign-out')).toBeTruthy();
     expect(button(renderer, 'account-delete')).toBeTruthy();
-    expect(button(renderer, 'account-sign-in-start')).toBeUndefined();
+    expect(has(renderer, 'account-sign-in-start')).toBe(false);
   });
   test('moderation after sign-in keeps sign-out and deletion', async () => {
     let listener!: (event: VoiceEvent) => void;
@@ -293,128 +467,202 @@ describe('Account section', () => {
       return () => {};
     });
     mocked.status.mockResolvedValue({ ok: true, value: status() });
-    const renderer = await render(<AccountSection />);
+    const renderer = await render(<AccountGroups />);
     await act(async () => {
       codeAccepted('happy@example.invalid', status());
     });
     await act(async () => listener({ type: 'status', status: disabled }));
-    expect(shows(renderer, accountCopy.unavailableAccount)).toBe(true);
+    expect(shows(renderer, accountCopy.unavailableFooter)).toBe(true);
     expect(button(renderer, 'account-delete')).toBeTruthy();
-    // Once no account is held, the controls and the label go.
+    // Once no account is held, the controls and the address go.
     await act(async () => listener({ type: 'status', status: signedOut }));
     expect(button(renderer, 'account-delete')).toBeUndefined();
-    expect(shows(renderer, accountCopy.signedOut)).toBe(true);
+    expect(has(renderer, 'account-sign-in-start')).toBe(true);
   });
-  test('unlimited and switched-off voice', async () => {
+  test('unlimited voice, and voice switched off', async () => {
     mocked.status.mockResolvedValue({
       ok: true,
-      value: status({ unlimited: true, enabled: false }),
+      value: status({ unlimited: true }),
     });
-    const renderer = await render(<AccountSection />);
-    expect(shows(renderer, accountCopy.unlimited)).toBe(true);
-    expect(shows(renderer, accountCopy.voiceOff)).toBe(true);
+    const unlimited = await render(<AccountGroups />);
+    expect(shows(unlimited, 'Unlimited')).toBe(true);
+    expect(shows(unlimited, accountCopy.unlimitedFooter)).toBe(true);
+    resetAccountStore();
+    mocked.status.mockResolvedValue({
+      ok: true,
+      value: status({ enabled: false }),
+    });
+    const off = await render(<AccountGroups />);
+    expect(shows(off, accountCopy.paused)).toBe(true);
+    expect(shows(off, accountCopy.voiceOffFooter)).toBe(true);
   });
-  test('a failed status read says so, with Try again', async () => {
-    mocked.status.mockResolvedValueOnce({ ok: false, error: 'network' });
-    const renderer = await render(<AccountSection />);
-    const error = renderer.root.findByType(ErrorState);
-    expect(error.props.message).toBe(accountCopy.statusFailed);
-    await act(async () => error.props.onRetry());
-    expect(shows(renderer, accountCopy.signedOut)).toBe(true);
-  });
+  test.each([
+    ['unavailable', accountCopy.statusFailed],
+    ['network', accountCopy.statusOffline],
+  ] as const)(
+    'a failed status read (%s) says so in one sentence, with Try again',
+    async (error, message) => {
+      mocked.status.mockResolvedValueOnce({ ok: false, error });
+      const renderer = await render(<AccountGroups />);
+      expect(failure(renderer)).toBe(message);
+      expect(message).not.toMatch(/Try again/);
+      await act(async () =>
+        renderer.root.findAllByType(InlineError)[0]!.props.onRetry(),
+      );
+      expect(has(renderer, 'account-sign-in-start')).toBe(true);
+    },
+  );
   test('a cleared native status never starts another read by itself', async () => {
     let listener!: (event: VoiceEvent) => void;
     mocked.subscribe.mockImplementation((value) => {
       listener = value;
       return () => {};
     });
-    const renderer = await render(<AccountSection />);
+    const renderer = await render(<AccountGroups />);
     await act(async () => listener({ type: 'status', status: null }));
     expect(mocked.status).toHaveBeenCalledTimes(1);
-    expect(renderer.root.findByType(ErrorState).props.message).toBe(
-      accountCopy.statusFailed,
-    );
+    expect(failure(renderer)).toBe(accountCopy.statusFailed);
     await act(async () => listener({ type: 'status', status: status() }));
-    expect(shows(renderer, 'Voice time: 8:00 remaining')).toBe(true);
+    expect(shows(renderer, '8 min left')).toBe(true);
   });
-  test('the development sheet keeps About, the tour replay and the workbench', async () => {
+  test('after deletion: signed out with the notice, or the chats error with its retry', async () => {
+    const renderer = await render(<AccountGroups />);
+    await act(async () => accountDeleted(true));
+    expect(shows(renderer, accountCopy.deletedNotice)).toBe(true);
+    await act(async () => accountDeleted(false));
+    expect(failure(renderer)).toBe(accountCopy.localChatsError);
+    await act(async () =>
+      renderer.root
+        .findByProps({ testID: 'account-local-chats-error' })
+        .props.onRetry(),
+    );
+    expect(clearAskConversations).toHaveBeenCalled();
+    expect(shows(renderer, accountCopy.deletedNotice)).toBe(true);
+  });
+});
+
+describe('Identity rows at accessibility sizes', () => {
+  const flat = (renderer: Renderer, testID: string) =>
+    StyleSheet.flatten(
+      renderer.root.find(
+        (node) => typeof node.type === 'string' && node.props.testID === testID,
+      ).props.style,
+    );
+  test.each([
+    [1, 'row'],
+    [3.571, 'column'],
+  ] as const)(
+    'at font scale %s the symbol and text sit in a %s',
+    async (scale, direction) => {
+      mockFontScale = scale;
+      const signedOutRow = await render(<AccountGroups />);
+      expect(
+        flat(signedOutRow, 'account-sign-in-lead').flexDirection ?? 'column',
+      ).toBe(direction);
+      // The chevron stays beside the stacked text.
+      expect(flat(signedOutRow, 'account-sign-in-start').flexDirection).toBe(
+        'row',
+      );
+      resetAccountStore();
+      mocked.status.mockResolvedValue({ ok: true, value: status() });
+      const signedIn = await render(<AccountGroups />);
+      expect(flat(signedIn, 'account-identity').flexDirection).toBe(direction);
+    },
+  );
+});
+
+describe('Account sheet', () => {
+  test('the development sheet: the rows in order, with the workbench last', async () => {
     const renderer = await render(<AccountEntry />);
     expect(renderer.root.findByType(AccountScreen)).toBeTruthy();
-    expect(button(renderer, 'account-about')).toBeTruthy();
-    expect(button(renderer, 'account-workbench')).toBeTruthy();
-    expect(button(renderer, 'account-replay-tour')).toBeTruthy();
-  });
-  test('the sheet: the account, then one list of rows, with one primary action', async () => {
-    const renderer = await render(<AccountEntry />);
-    // Signed out, Sign in is the sheet's one primary (navy) action.
-    const primaries = renderer.root
-      .findAllByType(Button)
-      .filter((node) => node.props.variant === 'primary');
-    expect(primaries.map((node) => node.props.testID)).toEqual([
-      'account-sign-in-start',
-    ]);
-    // No block repeats the sheet's title: no section headings at all, and
-    // no "About OPAX" section whose first row is About OPAX.
-    expect(
-      renderer.root.findAllByType(Section).filter((node) => node.props.title),
-    ).toEqual([]);
-    for (const id of [
-      'account-community',
+    const ids = renderer.root
+      .findAll((node) => typeof node.props.testID === 'string')
+      .map((node) => node.props.testID as string)
+      .filter((id, index, all) => all.indexOf(id) === index);
+    const rows = [
+      'account-section',
+      'account-ask',
       'account-about',
       'account-sources',
+      'account-methods',
+      'account-coverage',
+      'account-privacy',
+      'account-support',
+      'account-correction',
       'account-replay-tour',
-    ])
-      expect(button(renderer, id)).toBeTruthy();
-    // The independence statement is on About and in the tour (D4).
-    expect(shows(renderer, 'independent and non-partisan')).toBe(false);
+      'account-workbench',
+      'account-version',
+    ];
+    expect(ids.filter((id) => rows.includes(id))).toEqual(rows);
+    expect(linkTo(renderer, 'account-ask')).toBe('/account/ask');
   });
-  test('signed in, sign-out and deletion sit together with no primary action', async () => {
-    mocked.status.mockResolvedValue({ ok: true, value: status() });
+  test('no primary capsule and no repeated title: signing in is a row', async () => {
     const renderer = await render(<AccountEntry />);
     expect(
       renderer.root
         .findAllByType(Button)
         .filter((node) => node.props.variant === 'primary'),
     ).toEqual([]);
-    expect(
-      renderer.root
-        .findAllByType(Button)
-        .find((node) => node.props.testID === 'account-delete')!.props.variant,
-    ).toBe('danger');
+    expect(shows(renderer, 'independent and non-partisan')).toBe(false);
+  });
+});
+
+describe('Voice consent page', () => {
+  test('given: withdrawing asks first, then says so', async () => {
+    const { useFocusEffect } = jest.requireMock('expo-router');
+    jest
+      .mocked(useFocusEffect)
+      .mockImplementationOnce((effect: () => void) => effect());
+    jest.mocked(readConsent).mockResolvedValueOnce(true);
+    const renderer = await render(<ConsentScreen />);
+    await press(renderer, 'account-withdraw-consent');
+    expect(confirmAction).toHaveBeenCalledWith(
+      'Withdraw voice consent? Talk will ask again before your next call.',
+      [expect.objectContaining({ title: 'Withdraw' })],
+    );
+    await confirmLast();
+    expect(setConsent).toHaveBeenCalledWith(false);
+    expect(has(renderer, 'account-withdraw-consent')).toBe(false);
+    expect(shows(renderer, accountCopy.consentNotGivenFooter)).toBe(true);
   });
 });
 
 describe('Sign in by code', () => {
-  async function toCode(onSignedIn = jest.fn()) {
-    const renderer = await render(<SignInFlow onSignedIn={onSignedIn} />);
-    await type(renderer, 'account-email', ' happy@example.invalid ');
-    await press(renderer, 'account-send-code');
+  const email = 'happy@example.invalid';
+  async function codeStep(onSignedIn = jest.fn()) {
+    const challenge = issueChallenge(challengeId);
+    const renderer = await render(
+      <CodeStep email={email} challenge={challenge} onSignedIn={onSignedIn} />,
+    );
     return renderer;
   }
-  test('the address step says what the account is and is for', async () => {
-    const renderer = await render(<SignInFlow onSignedIn={jest.fn()} />);
-    expect(shows(renderer, accountCopy.signInIntro)).toBe(true);
-    expect(shows(renderer, accountCopy.sameAccount)).toBe(true);
-    expect(
-      shows(renderer, 'Accounts and voice are for people aged 16 and over.'),
-    ).toBe(true);
-    // The privacy policy is one row on opax.com.au (Safari's symbol).
-    const privacy = renderer.root.findByProps({ testID: 'account-privacy' });
-    expect(privacy.props.external).toBe(true);
-    act(() => privacy.props.onPress());
-    expect(openOnWeb).toHaveBeenLastCalledWith('/privacy', 'Privacy policy');
-    const email = field(renderer, 'account-email').props;
-    expect(email).toMatchObject({
+  test('step 1: one labelled field, the age line, Send code, then the privacy row', async () => {
+    const onSent = jest.fn();
+    const renderer = await render(<EmailStep onSent={onSent} />);
+    expect(field(renderer, 'account-email').props).toMatchObject({
+      grouped: true,
       label: 'Email',
       textContentType: 'emailAddress',
       autoComplete: 'email',
       keyboardType: 'email-address',
       autoCapitalize: 'none',
     });
+    expect(shows(renderer, accountCopy.emailFooter)).toBe(true);
+    expect(
+      renderer.root.findByProps({ testID: 'account-age-limit' }).props.children,
+    ).toBe('For people aged 16 and over.');
+    const privacy = renderer.root.findByProps({ testID: 'account-privacy' });
+    expect(privacy.props.external).toBe(true);
+    act(() => privacy.props.onPress());
+    expect(openOnWeb).toHaveBeenLastCalledWith('/privacy', 'Privacy policy');
     await type(renderer, 'account-email', 'not an address');
     await press(renderer, 'account-send-code');
     expect(mocked.requestCode).not.toHaveBeenCalled();
     expect(refusal(renderer)).toBe(refusalCopy.invalidEmail);
+    await type(renderer, 'account-email', ` ${email} `);
+    await press(renderer, 'account-send-code');
+    expect(mocked.requestCode).toHaveBeenCalledWith(email);
+    expect(onSent).toHaveBeenCalledWith(email, challengeId);
   });
   test.each([
     ['rateLimited', 'Too many codes requested. Try again later.'],
@@ -424,60 +672,94 @@ describe('Sign in by code', () => {
     'a refused request (%s) stays on the address',
     async (error, message) => {
       mocked.requestCode.mockResolvedValueOnce({ ok: false, error });
-      const renderer = await toCode();
+      const onSent = jest.fn();
+      const renderer = await render(<EmailStep onSent={onSent} />);
+      await type(renderer, 'account-email', email);
+      await press(renderer, 'account-send-code');
       expect(refusal(renderer)).toBe(message);
+      expect(onSent).not.toHaveBeenCalled();
     },
   );
-  test('the code field is one-time-code and paste friendly, and a full code signs in', async () => {
-    const onSignedIn = jest.fn();
-    const renderer = await toCode(onSignedIn);
-    expect(mocked.requestCode).toHaveBeenCalledWith('happy@example.invalid');
-    expect(shows(renderer, accountCopy.codeSent('happy@example.invalid'))).toBe(
-      true,
+  test('the email screen pushes the code step with the address and challenge', async () => {
+    mockParams = { return: 'talk' };
+    const renderer = await render(<SignInScreen />);
+    await type(renderer, 'account-email', email);
+    await press(renderer, 'account-send-code');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/account/sign-in/code',
+      params: { email, challenge: challengeId, return: 'talk' },
+    });
+  });
+  test('the code screen opened cold starts at the address', async () => {
+    const renderer = await render(<SignInCodeScreen />);
+    expect(renderer.root.findByType('Redirect' as never).props.href).toBe(
+      '/account/sign-in',
     );
-    expect(field(renderer, 'account-code').props).toMatchObject({
+  });
+  test.each([
+    [
+      'account',
+      () => expect(router.dismissTo).toHaveBeenCalledWith('/account'),
+    ],
+    ['talk', () => expect(router.dismissTo).toHaveBeenCalledWith('/talk')],
+    [
+      'dismiss',
+      () => {
+        expect(router.dismissAll).toHaveBeenCalled();
+        expect(router.back).toHaveBeenCalled();
+      },
+    ],
+  ] as const)('a finished sign-in returns to %s', (to, check) => {
+    finishSignIn(to);
+    check();
+  });
+  test('only a sign-in from Talk asks Talk for its consent sheet', () => {
+    takeConsentAfterSignIn(); // Left by an earlier sign-in in this file.
+    finishSignIn('account');
+    expect(takeConsentAfterSignIn()).toBe(false);
+    finishSignIn('dismiss');
+    expect(takeConsentAfterSignIn()).toBe(false);
+    finishSignIn('talk');
+    expect(takeConsentAfterSignIn()).toBe(true);
+    // Reading clears it.
+    expect(takeConsentAfterSignIn()).toBe(false);
+  });
+  test('step 2: the code field is one-time-code and paste friendly, and a full code signs in', async () => {
+    const onSignedIn = jest.fn();
+    const renderer = await codeStep(onSignedIn);
+    expect(shows(renderer, accountCopy.codeSent(email))).toBe(true);
+    expect(field(renderer, 'account-sign-in-code').props).toMatchObject({
+      grouped: true,
       label: '8-digit code',
       textContentType: 'oneTimeCode',
       autoComplete: 'one-time-code',
       keyboardType: 'number-pad',
     });
-    await type(renderer, 'account-code', 'Your code: 0123 4567');
+    await type(renderer, 'account-sign-in-code', 'Your code: 0123 4567');
     expect(mocked.consumeCode).toHaveBeenCalledWith(challengeId, '01234567');
     expect(onSignedIn).toHaveBeenCalledWith('signedIn');
+    expect(remembered()).toBe(email);
   });
   // Android, 12 October: a change on the sign-in screen committed with its
   // pop crashed Fabric ("child already has a parent"). On success the screen
   // closes with nothing on it changed.
   test('a signed-in code closes the screen without changing it', async () => {
     const onSignedIn = jest.fn();
-    const renderer = await toCode(onSignedIn);
+    const renderer = await codeStep(onSignedIn);
     const signIn = () =>
-      renderer.root.findByProps({ testID: 'account-sign-in-code' });
+      renderer.root
+        .findAllByType(Button)
+        .find((node) => node.props.testID === 'account-sign-in')!;
     let release!: (value: { ok: true; value: VoiceStatus }) => void;
     mocked.consumeCode.mockReturnValueOnce(
       new Promise((resolve) => (release = resolve)),
     );
-    await type(renderer, 'account-code', '01234567');
+    await type(renderer, 'account-sign-in-code', '01234567');
     expect(signIn().props.loading).toBe(true);
     const before = JSON.stringify(renderer.toJSON());
     await act(async () => release({ ok: true, value: status() }));
     expect(onSignedIn).toHaveBeenCalledWith('signedIn');
     expect(JSON.stringify(renderer.toJSON())).toBe(before);
-    expect(signIn().props.loading).toBe(true);
-  });
-  // Review P3-3: opened cold from opax://account/sign-in, nothing is behind
-  // the screen, so a sign-in lands on Account and about.
-  test('a cold sign-in link lands on Account and about', async () => {
-    const { SignInScreen } = jest.requireActual<
-      typeof import('../src/features/account/SignInScreen')
-    >('../src/features/account/SignInScreen');
-    jest.mocked(router.canGoBack).mockReturnValueOnce(false);
-    const renderer = await render(<SignInScreen />);
-    await type(renderer, 'account-email', 'happy@example.invalid');
-    await press(renderer, 'account-send-code');
-    await type(renderer, 'account-code', '01234567');
-    expect(router.replace).toHaveBeenCalledWith('/account');
-    expect(router.back).not.toHaveBeenCalled();
   });
   test('a wrong code gets the one answer and keeps the code to check', async () => {
     mocked.consumeCode.mockResolvedValueOnce({
@@ -485,24 +767,26 @@ describe('Sign in by code', () => {
       error: 'invalidResponse',
     });
     const onSignedIn = jest.fn();
-    const renderer = await toCode(onSignedIn);
-    await type(renderer, 'account-code', '76543210');
+    const renderer = await codeStep(onSignedIn);
+    await type(renderer, 'account-sign-in-code', '76543210');
     expect(refusal(renderer)).toBe(
-      'That code did not work. Check it, or send a new code.',
+      'That code didn’t work. Check it, or send a new code.',
     );
-    expect(field(renderer, 'account-code').props.value).toBe('76543210');
+    expect(field(renderer, 'account-sign-in-code').props.value).toBe(
+      '76543210',
+    );
     expect(onSignedIn).not.toHaveBeenCalled();
   });
   test('a disabled member is told the account is unavailable', async () => {
     mocked.consumeCode.mockResolvedValueOnce({ ok: true, value: disabled });
     mocked.status.mockResolvedValue({ ok: true, value: disabled });
     const onSignedIn = jest.fn();
-    const renderer = await toCode(onSignedIn);
-    await type(renderer, 'account-code', '01234567');
+    const renderer = await codeStep(onSignedIn);
+    await type(renderer, 'account-sign-in-code', '01234567');
     expect(onSignedIn).toHaveBeenCalledWith('unavailable');
-    const section = await render(<AccountSection />);
-    expect(shows(section, accountCopy.unavailableAccount)).toBe(true);
-    expect(button(section, 'account-delete')).toBeTruthy();
+    const groups = await render(<AccountGroups />);
+    expect(shows(groups, accountCopy.unavailableFooter)).toBe(true);
+    expect(button(groups, 'account-delete')).toBeTruthy();
   });
   test('a refused code never signs in, nor relabels the account already held', async () => {
     // Account A is signed in; a code for B is refused while a general status
@@ -516,24 +800,28 @@ describe('Sign in by code', () => {
     ] as const) {
       mocked.consumeCode.mockResolvedValueOnce({ ok: false, error });
       const onSignedIn = jest.fn();
-      const renderer = await render(<SignInFlow onSignedIn={onSignedIn} />);
-      await type(renderer, 'account-email', 'b@example.invalid');
-      await press(renderer, 'account-send-code');
-      await type(renderer, 'account-code', '01234567');
+      const renderer = await render(
+        <CodeStep
+          email="b@example.invalid"
+          challenge={issueChallenge(`${error}-${challengeId}`)}
+          onSignedIn={onSignedIn}
+        />,
+      );
+      await type(renderer, 'account-sign-in-code', '01234567');
       expect(onSignedIn).not.toHaveBeenCalled();
       expect(refusal(renderer)).toBe(consumeRefusal(error));
     }
     // The flow never read a general status in place of the exchange.
     expect(mocked.status).not.toHaveBeenCalled();
-    const section = await render(<AccountSection />);
-    expect(shows(section, 'Signed in as a@example.invalid')).toBe(true);
-    expect(shows(section, 'b@example.invalid')).toBe(false);
+    const groups = await render(<AccountGroups />);
+    expect(shows(groups, 'a@example.invalid')).toBe(true);
+    expect(shows(groups, 'b@example.invalid')).toBe(false);
   });
   test('an exchange that holds no account is not a sign-in', async () => {
     mocked.consumeCode.mockResolvedValueOnce({ ok: true, value: signedOut });
     const onSignedIn = jest.fn();
-    const renderer = await toCode(onSignedIn);
-    await type(renderer, 'account-code', '01234567');
+    const renderer = await codeStep(onSignedIn);
+    await type(renderer, 'account-sign-in-code', '01234567');
     expect(onSignedIn).not.toHaveBeenCalled();
     expect(refusal(renderer)).toBe(refusalCopy.generic);
   });
@@ -541,10 +829,10 @@ describe('Sign in by code', () => {
     mocked.consumeCode
       .mockResolvedValueOnce({ ok: false, error: 'network' })
       .mockResolvedValueOnce({ ok: false, error: 'rateLimited' });
-    const renderer = await toCode();
-    await type(renderer, 'account-code', '01234567');
+    const renderer = await codeStep();
+    await type(renderer, 'account-sign-in-code', '01234567');
     expect(refusal(renderer)).toBe(refusalCopy.network);
-    await press(renderer, 'account-sign-in-code');
+    await press(renderer, 'account-sign-in');
     expect(refusal(renderer)).toBe(refusalCopy.tooManyAttempts);
   });
   test('after five codes the challenge is not tried again', async () => {
@@ -552,157 +840,76 @@ describe('Sign in by code', () => {
       ok: false,
       error: 'invalidResponse',
     });
-    const renderer = await toCode();
-    await type(renderer, 'account-code', '76543210');
-    for (let i = 0; i < 5; i++) await press(renderer, 'account-sign-in-code');
+    const renderer = await codeStep();
+    await type(renderer, 'account-sign-in-code', '76543210');
+    for (let i = 0; i < 5; i++) await press(renderer, 'account-sign-in');
     expect(mocked.consumeCode).toHaveBeenCalledTimes(5);
     expect(refusal(renderer)).toBe(refusalCopy.codeFailed);
   });
-  test('an incomplete code is not sent', async () => {
-    const renderer = await toCode();
-    await type(renderer, 'account-code', '0123');
-    await press(renderer, 'account-sign-in-code');
+  test('Sign in waits for all 8 digits', async () => {
+    const renderer = await codeStep();
+    await type(renderer, 'account-sign-in-code', '0123');
+    const signIn = renderer.root
+      .findAllByType(Button)
+      .find((node) => node.props.testID === 'account-sign-in')!;
+    expect(signIn.props.disabled).toBe(true);
     expect(mocked.consumeCode).not.toHaveBeenCalled();
-    expect(refusal(renderer)).toBe(refusalCopy.codeIncomplete);
   });
-  test('resend after its cooldown, and expiry after 15 minutes', async () => {
+  test('resend counts down in its own label, then expiry after 15 minutes', async () => {
     jest.useFakeTimers({ now: 1_000_000 });
-    const renderer = await toCode();
-    expect(button(renderer, 'account-resend').props.disabled).toBe(true);
-    expect(shows(renderer, 'You can send a new code in 60 seconds.')).toBe(
-      true,
-    );
+    const renderer = await codeStep();
+    const resend = () =>
+      renderer.root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'account-resend',
+      );
+    expect(resend().props.accessibilityState.disabled).toBe(true);
+    expect(shows(renderer, 'Send a new code in 1:00')).toBe(true);
     for (let second = 0; second < 59; second++)
       await act(async () => {
         jest.advanceTimersByTime(1_000);
       });
-    expect(shows(renderer, 'You can send a new code in 1 second.')).toBe(true);
+    expect(shows(renderer, 'Send a new code in 0:01')).toBe(true);
     await act(async () => {
       jest.advanceTimersByTime(1_000);
     });
-    expect(button(renderer, 'account-resend').props.disabled).toBe(false);
+    expect(resend().props.accessibilityState.disabled).toBe(false);
+    expect(shows(renderer, 'Send a new code')).toBe(true);
     await press(renderer, 'account-resend');
-    expect(mocked.requestCode).toHaveBeenCalledTimes(2);
-    expect(
-      shows(renderer, 'We sent a new code to happy@example.invalid.'),
-    ).toBe(true);
+    expect(mocked.requestCode).toHaveBeenCalledTimes(1);
+    expect(shows(renderer, accountCopy.newCodeSent(email))).toBe(true);
     await act(async () => {
       jest.setSystemTime(1_000_000 + 60_000 + 15 * 60_000);
     });
-    await type(renderer, 'account-code', '01234567');
+    await type(renderer, 'account-sign-in-code', '01234567');
     expect(mocked.consumeCode).not.toHaveBeenCalled();
     expect(refusal(renderer)).toBe(refusalCopy.codeFailed);
-  });
-  test('Use a different email returns to the address and drops the challenge', async () => {
-    const renderer = await toCode();
-    await press(renderer, 'account-different-email');
-    expect(field(renderer, 'account-email').props.value).toBe(
-      ' happy@example.invalid ',
-    );
-    expect(
-      renderer.root
-        .findAllByType(Field)
-        .some((node) => node.props.testID === 'account-code'),
-    ).toBe(false);
   });
 });
 
 describe('Delete account', () => {
-  async function toCode() {
-    const onDone = jest.fn();
-    const onCancel = jest.fn();
-    const onSignIn = jest.fn();
+  async function codeStep() {
     const renderer = await render(
-      <DeleteAccountFlow
-        onDone={onDone}
-        onCancel={onCancel}
-        onSignIn={onSignIn}
-      />,
+      <DeleteCode challenge={issueChallenge(challengeId)} />,
     );
-    return { renderer, onDone, onCancel, onSignIn };
+    return renderer;
   }
-  // Review P3-2: a credential-store fault signs this device out without the
-  // Worker deleting anything. The page says so and offers sign-in again.
-  test('a fault that signed this device out says the account was not deleted', async () => {
-    mocked.status.mockResolvedValue({ ok: true, value: status() });
-    mocked.deleteAccount.mockResolvedValueOnce({
-      ok: false,
-      error: 'unavailable',
-    });
-    const { renderer, onSignIn } = await toCode();
-    await press(renderer, 'account-delete-confirm');
-    await type(renderer, 'account-deletion-code', '01234567');
-    mocked.status.mockResolvedValue({ ok: true, value: signedOut });
+  async function deleteWith(renderer: Renderer, code: string) {
+    await type(renderer, 'account-deletion-code', code);
     await press(renderer, 'account-delete-final');
-    expect(refusal(renderer)).toBe(refusalCopy.deletionSignedOutHere);
-    expect(refusalCopy.deletionSignedOutHere).toBe(
-      'This iPhone is signed out, but your account was not deleted. Sign in again to finish deleting it.',
-    );
-    expect(shows(renderer, accountCopy.accountDeleted)).toBe(false);
-    expect(
-      renderer.root.findAll((n) => n.props.testID === 'account-delete-final'),
-    ).toHaveLength(0);
-    await press(renderer, 'account-deletion-sign-in');
-    expect(onSignIn).toHaveBeenCalled();
-  });
-  test('a Worker outage keeps the session and the usual answer', async () => {
-    mocked.status.mockResolvedValue({ ok: true, value: status() });
-    mocked.deleteAccount.mockResolvedValueOnce({
-      ok: false,
-      error: 'unavailable',
-    });
-    const { renderer } = await toCode();
-    await press(renderer, 'account-delete-confirm');
-    await type(renderer, 'account-deletion-code', '01234567');
-    await press(renderer, 'account-delete-final');
-    expect(refusal(renderer)).toBe(refusalCopy.deletionUnavailable);
-    expect(button(renderer, 'account-delete-final')).toBeTruthy();
-  });
-  test('the confirmation says what is deleted and what is not', async () => {
-    const { renderer, onCancel } = await toCode();
+    await confirmLast();
+  }
+  test('step 1 says what is deleted and kept, then emails a code', async () => {
+    const renderer = await render(<DeleteIntro />);
     for (const line of [
-      ...accountCopy.deleted,
-      ...accountCopy.kept,
-      accountCopy.deleteIntro,
+      accountCopy.deleteLede,
+      accountCopy.deletedHeader,
+      ...accountCopy.deletedRows,
+      accountCopy.keptHeader,
+      ...accountCopy.keptRows,
     ])
       expect(shows(renderer, line)).toBe(true);
-    expect(button(renderer, 'account-delete-confirm').props).toMatchObject({
-      variant: 'danger',
-      label: 'Delete account',
-    });
-    await press(renderer, 'account-delete-cancel');
-    expect(onCancel).toHaveBeenCalled();
-    expect(mocked.requestDeletionCode).not.toHaveBeenCalled();
-  });
-  test('the confirmation states decision 5', async () => {
-    const { renderer } = await toCode();
-    const page = texts(renderer).join('\n');
-    // Personal data and the member's own discussions and replies go.
-    expect(page).toMatch(/personal data, including your email address/);
-    expect(page).toMatch(/Your own discussions and replies on opax\.com\.au/);
-    // Other members' replies stay under a stub with no personal data.
-    expect(page).toMatch(
-      /Other members’ replies under a discussion you started\. The discussion stays as a stub with no personal data\./,
-    );
-    // Voice usage is kept without a link, and nothing is refunded.
-    expect(page).toMatch(/Your voice usage, kept without a link to you/);
-    expect(page).toMatch(/Voice time is not refunded\./);
-    expect(page.indexOf('What is deleted')).toBeLessThan(
-      page.indexOf('Your own discussions'),
-    );
-    expect(page.indexOf('What is not deleted')).toBeLessThan(
-      page.indexOf('Voice time is not refunded'),
-    );
-  });
-  test('the confirmation discloses recovery history and links the policy', async () => {
-    const { renderer } = await toCode();
-    const page = texts(renderer).join('\n');
-    expect(page).toMatch(
-      /Deleting removes these from OPAX’s live database straight away\. It cannot be undone\./,
-    );
-    expect(page).toMatch(
-      /Recovery history\..*Your deleted data stays in it for up to 30 days, then is gone\./,
-    );
     const policy = renderer.root.findByProps({
       testID: 'account-deletion-policy',
     });
@@ -712,79 +919,154 @@ describe('Delete account', () => {
       '/privacy#privacy-deletion',
       accountCopy.deletionPolicy,
     );
+    await press(renderer, 'account-delete-confirm');
+    expect(mocked.requestDeletionCode).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/account/delete/code',
+      params: { challenge: challengeId },
+    });
+  });
+  test('a refused deletion-code request stays on step 1', async () => {
+    mocked.requestDeletionCode.mockResolvedValueOnce({
+      ok: false,
+      error: 'rateLimited',
+    });
+    const renderer = await render(<DeleteIntro />);
+    await press(renderer, 'account-delete-confirm');
+    expect(refusal(renderer)).toBe(refusalCopy.tooManyCodes);
+    expect(router.push).not.toHaveBeenCalled();
+    expect(button(renderer, 'account-delete-confirm')).toBeTruthy();
+  });
+  test('an ended session on step 1 offers sign-in again', async () => {
+    mocked.requestDeletionCode.mockResolvedValueOnce({
+      ok: false,
+      error: 'signedOut',
+    });
+    const renderer = await render(<DeleteIntro />);
+    await press(renderer, 'account-delete-confirm');
+    expect(refusal(renderer)).toBe(refusalCopy.signedOut);
+    await press(renderer, 'account-deletion-sign-in');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/account/sign-in',
+      params: { return: 'account' },
+    });
+  });
+  test('the code step opened cold returns to step 1', async () => {
+    const renderer = await render(<DeleteCodeScreen />);
+    expect(renderer.root.findByType('Redirect' as never).props.href).toBe(
+      '/account/delete',
+    );
+  });
+  test('step 2: a hidden-label code field, then a deliberate, confirmed Delete', async () => {
+    const renderer = await codeStep();
+    expect(field(renderer, 'account-deletion-code').props).toMatchObject({
+      grouped: true,
+      labelHidden: true,
+      label: 'Deletion code',
+      textContentType: 'oneTimeCode',
+      keyboardType: 'number-pad',
+    });
+    expect(
+      renderer.root.findByProps({ testID: 'account-delete-final' }).props
+        .disabled,
+    ).toBe(true);
+    await type(renderer, 'account-deletion-code', '0123 4567');
+    expect(mocked.deleteAccount).not.toHaveBeenCalled();
+    await press(renderer, 'account-delete-final');
+    expect(confirmAction).toHaveBeenCalledWith(
+      'Delete your OPAX account? This can’t be undone.',
+      [
+        expect.objectContaining({
+          title: 'Delete account',
+          destructive: true,
+        }),
+      ],
+    );
+    expect(mocked.deleteAccount).not.toHaveBeenCalled();
+    await confirmLast();
+    expect(mocked.deleteAccount).toHaveBeenCalledWith(challengeId, '01234567');
+    // 6.5: Ask's local conversations go, and Account shows the notice.
+    expect(clearAskConversations).toHaveBeenCalled();
+    expect(router.dismissTo).toHaveBeenCalledWith('/account');
+    const groups = await render(<AccountGroups />);
+    expect(shows(groups, accountCopy.deletedNotice)).toBe(true);
+  });
+  test('conversations that could not be cleared say so on Account', async () => {
+    jest
+      .mocked(clearAskConversations)
+      .mockRejectedValueOnce(new Error('fixture'));
+    const renderer = await codeStep();
+    await deleteWith(renderer, '01234567');
+    const groups = await render(<AccountGroups />);
+    expect(failure(groups)).toBe(accountCopy.localChatsError);
+  });
+  // Review P3-2: a credential-store fault signs this device out without the
+  // Worker deleting anything. The page says so and offers sign-in again.
+  test('a fault that signed this device out says the account was not deleted', async () => {
+    mocked.deleteAccount.mockResolvedValueOnce({
+      ok: false,
+      error: 'unavailable',
+    });
+    mocked.status.mockResolvedValue({ ok: true, value: signedOut });
+    const renderer = await codeStep();
+    await deleteWith(renderer, '01234567');
+    expect(refusal(renderer)).toBe(refusalCopy.deletionSignedOutHere);
+    expect(has(renderer, 'account-delete-final')).toBe(false);
+    await press(renderer, 'account-deletion-sign-in');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/account/sign-in',
+      params: { return: 'account' },
+    });
+  });
+  test('a Worker outage keeps the session and the usual answer', async () => {
+    mocked.status.mockResolvedValue({ ok: true, value: status() });
+    mocked.deleteAccount.mockResolvedValueOnce({
+      ok: false,
+      error: 'unavailable',
+    });
+    const renderer = await codeStep();
+    await deleteWith(renderer, '01234567');
+    expect(refusal(renderer)).toBe(refusalCopy.deletionUnavailable);
+    expect(has(renderer, 'account-delete-final')).toBe(true);
   });
   test('after five deletion codes the challenge is not tried again', async () => {
     mocked.deleteAccount.mockResolvedValue({
       ok: false,
       error: 'deletionVerificationFailed',
     });
-    const { renderer } = await toCode();
-    await press(renderer, 'account-delete-confirm');
+    const renderer = await codeStep();
     await type(renderer, 'account-deletion-code', '76543210');
-    for (let i = 0; i < 6; i++) await press(renderer, 'account-delete-final');
+    for (let i = 0; i < 6; i++) {
+      await press(renderer, 'account-delete-final');
+      await confirmLast();
+    }
     expect(mocked.deleteAccount).toHaveBeenCalledTimes(5);
     expect(refusal(renderer)).toBe(refusalCopy.deletionCodeFailed);
-  });
-  test('a fresh code, a deliberate tap, then the result', async () => {
-    mocked.status.mockResolvedValue({ ok: true, value: signedOut });
-    const { renderer, onDone } = await toCode();
-    await press(renderer, 'account-delete-confirm');
-    expect(mocked.requestDeletionCode).toHaveBeenCalledTimes(1);
-    expect(field(renderer, 'account-deletion-code').props).toMatchObject({
-      textContentType: 'oneTimeCode',
-      keyboardType: 'number-pad',
-    });
-    await type(renderer, 'account-deletion-code', '0123 4567');
-    expect(mocked.deleteAccount).not.toHaveBeenCalled();
-    await press(renderer, 'account-delete-final');
-    expect(mocked.deleteAccount).toHaveBeenCalledWith(challengeId, '01234567');
-    expect(shows(renderer, accountCopy.accountDeleted)).toBe(true);
-    expect(shows(renderer, accountCopy.accountDeletedDetail)).toBe(true);
-    expect(accountCopy.accountDeletedDetail).toMatch(
-      /removed from OPAX’s live database\. Its recovery history keeps them for up to 30 days/,
-    );
-    expect(mocked.status).toHaveBeenCalled();
-    await press(renderer, 'account-delete-done');
-    expect(onDone).toHaveBeenCalled();
-  });
-  test('each step opens in a new scroll view, so at the top', async () => {
-    const { renderer } = await toCode();
-    const view = () => renderer.root.findByType(ScrollView).instance;
-    const confirm = view();
-    await press(renderer, 'account-delete-confirm');
-    const code = view();
-    await type(renderer, 'account-deletion-code', '01234567');
-    await press(renderer, 'account-delete-final');
-    expect(shows(renderer, accountCopy.accountDeleted)).toBe(true);
-    expect(confirm).toBeTruthy();
-    expect(code).not.toBe(confirm);
-    expect(view()).not.toBe(code);
   });
   test('a wrong deletion code, then an ended session', async () => {
     mocked.deleteAccount
       .mockResolvedValueOnce({ ok: false, error: 'deletionVerificationFailed' })
       .mockResolvedValueOnce({ ok: false, error: 'signedOut' });
-    const { renderer } = await toCode();
-    await press(renderer, 'account-delete-confirm');
-    await type(renderer, 'account-deletion-code', '76543210');
-    await press(renderer, 'account-delete-final');
+    const renderer = await codeStep();
+    await deleteWith(renderer, '76543210');
     expect(refusal(renderer)).toBe(
-      'That code did not work. Check it, or send a new deletion code.',
+      'That code didn’t work. Check it, or send a new deletion code.',
     );
     await press(renderer, 'account-delete-final');
+    await confirmLast();
     expect(refusal(renderer)).toBe(refusalCopy.signedOut);
-    expect(mocked.status).toHaveBeenCalled();
+    expect(has(renderer, 'account-deletion-sign-in')).toBe(true);
   });
-  test('a refused deletion-code request stays on the confirmation', async () => {
-    mocked.requestDeletionCode.mockResolvedValueOnce({
-      ok: false,
-      error: 'rateLimited',
+  test('resend waits, then sends a new deletion code', async () => {
+    jest.useFakeTimers({ now: 2_000_000 });
+    const renderer = await codeStep();
+    expect(shows(renderer, 'Send a new deletion code in 1:00')).toBe(true);
+    await act(async () => {
+      jest.setSystemTime(2_000_000 + 60_000);
+      jest.advanceTimersByTime(1_000);
     });
-    const { renderer } = await toCode();
-    await press(renderer, 'account-delete-confirm');
-    expect(renderer.root.findByType(ErrorState).props.message).toBe(
-      refusalCopy.tooManyCodes,
-    );
-    expect(button(renderer, 'account-delete-confirm')).toBeTruthy();
+    await press(renderer, 'account-deletion-resend');
+    expect(mocked.requestDeletionCode).toHaveBeenCalledTimes(1);
+    expect(shows(renderer, accountCopy.newDeletionCodeSent)).toBe(true);
   });
 });

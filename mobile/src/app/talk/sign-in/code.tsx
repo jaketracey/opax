@@ -1,6 +1,2 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return (
-    <RoutePlaceholder route="talk/sign-in/code" title="Check your email" />
-  );
-}
+// Voice-off production resolves features/account/entry.production.ts.
+export { TalkSignInCodeScreen as default } from '../../../features/account/entry';

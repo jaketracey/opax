@@ -4,8 +4,7 @@ import path from 'node:path';
 import ProductionTalk from '../src/features/talk/entry.production';
 import RealTalk from '../src/features/talk/entry';
 import TalkScreen from '../src/features/talk/TalkScreen';
-import { TalkComingSoon } from '../src/features/ComingSoon';
-import { Text } from '../src/design/primitives';
+import { ContentUnavailable } from '../src/design/primitives';
 import * as voice from '../src/voice';
 import * as uiBridge from '../src/features/talk/bridge';
 
@@ -60,19 +59,17 @@ test.each(['0', '1'])(
   },
 );
 
-test('switch-off Talk keeps the placeholder copy', () => {
-  expect(ProductionTalk).toBe(TalkComingSoon);
+test('switch-off Talk says it is not in this version, with no action (9)', () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(<ProductionTalk />);
   });
-  const copy = renderer.root
-    .findAllByType(Text)
-    .map((node) => node.props.children);
-  expect(copy).toEqual([
-    'Talk to OPAX is not in this version of the app yet.',
-    'It will let you ask about Australian politics, spending and the public record by voice, with links to the records behind each answer. Talking will need a free OPAX account. Everything else in the app works without one.',
-  ]);
+  const unavailable = renderer.root.findByType(ContentUnavailable);
+  expect(unavailable.props).toMatchObject({
+    symbol: 'waveform',
+    title: 'Talk isn’t available in this version',
+  });
+  expect(unavailable.props.action).toBeUndefined();
   act(() => renderer.unmount());
 });
 

@@ -3,13 +3,31 @@ import { resolve } from 'node:path';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import ProductionAccount from '../src/features/account/entry.production';
-import { AccountComingSoon } from '../src/features/ComingSoon';
+import { AccountRowsScreen } from '../src/features/account/AccountRows';
 import { AccountScreen } from '../src/features/account/AccountScreen';
 
-// Production builds keep Account and about exactly as it was before voice:
-// Metro resolves entry.production.ts, and metro.config.js keeps the sign-in
-// routes and every other account file out of the bundle.
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+// Production builds with the voice switch off draw the Account sheet without
+// its account groups (specs/account.md 9): Metro resolves entry.production.ts,
+// and metro.config.js keeps the sign-in routes and every other account file
+// out of the bundle.
+jest.mock('expo-router', () => {
+  const { createElement } = jest.requireActual('react');
+  const Link = ({ children, ...props }: { children: unknown }) =>
+    createElement('Link', props, children);
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return { router: { push: jest.fn() }, Link, useFocusEffect: jest.fn() };
+});
 jest.mock('../src/voice', () => ({
   status: jest.fn(async () => ({ ok: false, error: 'unavailable' })),
   subscribe: jest.fn(() => () => {}),
@@ -44,16 +62,14 @@ const blockList = (variant: string, voiceMode = '0') =>
 const blocked = (list: RegExp[], path: string) =>
   list.some((pattern) => pattern.test(resolve(root, path)));
 
-test('the production entry is the unchanged placeholder', async () => {
-  expect(ProductionAccount).toBe(AccountComingSoon);
+test('the production entry is the sheet without its account groups', async () => {
+  expect(ProductionAccount).toBe(AccountRowsScreen);
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(<ProductionAccount />);
   });
   const text = JSON.stringify(renderer.toJSON());
-  expect(text).toContain(
-    'Signing in is not in this version of the app yet. An account will only be needed to talk to OPAX.',
-  );
+  expect(text).not.toContain('Signing in is not in this version');
   expect(text).toContain('About OPAX');
   expect(text).toContain('Sources and licences');
   for (const absent of [
@@ -74,7 +90,13 @@ test('production never draws the Development section, placeholder or not', async
     await act(async () => {
       renderer = TestRenderer.create(<Sheet />);
     });
-    const text = JSON.stringify(renderer.toJSON());
+    // Host text and test IDs: the full sheet's pull-to-refresh is an element
+    // prop, which JSON cannot hold.
+    const text = renderer.root
+      .findAll((node) => typeof node.type === 'string')
+      .flatMap((node) => [node.props.testID, [node.props.children]].flat(2))
+      .filter((value) => typeof value === 'string')
+      .join('\n');
     expect(text).toContain('About OPAX');
     expect(text).not.toContain('Development');
     expect(text).not.toContain('Design workbench');
@@ -123,7 +145,7 @@ test('production bundles cannot see the sign-in or deletion screens', () => {
     'src/features/account/DeleteAccountFlow.tsx',
     'src/features/account/copy.ts',
     'src/features/account/store.ts',
-    'src/features/account/AccountSection.tsx',
+    'src/features/account/AccountGroups.tsx',
     'src/features/account/code.ts',
   ])
     expect([path, blocked(list, path)]).toEqual([path, true]);
@@ -171,7 +193,11 @@ test.each([
 test('the voice-off store holds no account, so Ask never syncs or offers sign-in', async () => {
   const stub = jest.requireActual('../src/features/account/store.production');
   const real = jest.requireActual('../src/features/account/store');
-  expect(Object.keys(stub).sort()).toEqual(['accountSnapshot', 'useAccount']);
+  expect(Object.keys(stub).sort()).toEqual([
+    'accountSnapshot',
+    'useAccount',
+    'useAccountSignedIn',
+  ]);
   for (const name of Object.keys(stub))
     expect(typeof real[name]).toBe('function');
   const state = stub.accountSnapshot();
@@ -223,11 +249,7 @@ test('voice-off Android shows the one list of rows, not the placeholder', () => 
       renderer = Renderer.create(React.createElement(Entry));
     });
     const text = JSON.stringify(renderer.toJSON());
-    for (const row of [
-      'About OPAX',
-      'Sources and licences',
-      'Replay welcome tour',
-    ])
+    for (const row of ['About OPAX', 'Sources and licences', 'Replay welcome'])
       expect(text).toContain(row);
     for (const absent of [
       'Signing in is not in this version',

@@ -194,7 +194,7 @@ test('End cancels a pending Start, with no blind retry', async () => {
   });
   expect(mockVoice.start).toHaveBeenCalledTimes(1);
 });
-test('refocusing a retained sheet clears pending controls and rejects its old subscription', async () => {
+test('a push inside Talk keeps the call: blur neither ends nor unsubscribes, and refocus rereads consent', async () => {
   mockBridge.readConsent.mockResolvedValue(true);
   await mount();
   const pending = deferred<voice.VoiceResult<void>>();
@@ -204,27 +204,40 @@ test('refocusing a retained sheet clears pending controls and rejects its old su
     starting = call.start();
   });
   expect(call.busy).toBe(true);
-  const oldListener = listener;
+  // The Sources sheet or a record is pushed, then popped.
   act(() => mockFocus.cleanup?.());
+  expect(unsubscribe).not.toHaveBeenCalled();
+  expect(mockVoice.end).not.toHaveBeenCalled();
   await act(async () => {
     mockFocus.cleanup = mockFocus.effect?.();
   });
-  expect(call.busy).toBe(false);
   expect(call.consentLoaded).toBe(true);
   act(() =>
-    oldListener({
+    listener({
       type: 'transcript',
-      turns: [{ role: 'user', id: 99, text: 'Old sheet words' }],
+      turns: [{ role: 'user', id: 7, text: 'Still talking' }],
     }),
   );
-  expect(call.snapshot.transcript).toEqual([]);
+  expect(call.snapshot.transcript).toEqual([
+    { role: 'user', id: 7, text: 'Still talking' },
+  ]);
   await act(async () => {
     pending.resolve(ok);
     await starting;
   });
   expect(call.busy).toBe(false);
   expect(mockVoice.start).toHaveBeenCalledTimes(1);
-  expect(mockVoice.end).toHaveBeenCalledTimes(1);
+  expect(mockVoice.end).not.toHaveBeenCalled();
+});
+test('consent stored by the sheet starts the call without asking again', async () => {
+  await mount();
+  expect(call.consent).toBe(false);
+  await act(async () => {
+    await call.startConsented();
+  });
+  expect(call.consent).toBe(true);
+  expect(mockVoice.start).toHaveBeenCalledTimes(1);
+  expect(mockBridge.setConsent).not.toHaveBeenCalled();
 });
 test('inactive does not end; background delegates a specific reason; foreground refreshes and recovers', async () => {
   let lifecycle!: (state: AppStateStatus) => void;
@@ -302,25 +315,43 @@ test('captions are replaced, not appended, and source navigation is guarded agai
     recoverSnapshot(ready, { ...ready, remaining: 50 }, new Set(['status'])),
   ).toEqual({ ...ready, remaining: 50 });
 });
-// The call screen shows one short sentence and one action for each state.
-const short = (copy: string) => {
-  expect(copy).toMatch(/^[A-Z].{9,}[.]$/);
-  expect(copy.length).toBeLessThanOrEqual(64);
+// The call screen shows one plain sentence and one action for each state
+// (specs/account.md 7.6): technical failures share a sentence, and none says
+// "Microphone off": the system indicator already shows it.
+const plain = (copy: string) => {
+  expect(copy).toMatch(/^[A-Z].{9,}[.…]$/);
+  expect(copy.length).toBeLessThanOrEqual(72);
+  expect(copy).not.toMatch(/Microphone off/);
 };
-test.each(failures)('one specific short sentence for refusal %s', (reason) => {
-  short(failureCopy[reason]);
-  expect(
-    Object.values(failureCopy).filter((copy) => copy === failureCopy[reason]),
-  ).toHaveLength(1);
+test.each(failures)('one plain sentence for refusal %s', (reason) => {
+  plain(failureCopy[reason]);
+});
+test('connection failures, and other voice faults, each share one sentence', () => {
+  for (const reason of [
+    'network',
+    'timeout',
+    'policy',
+    'invalidResponse',
+    'cancelled',
+  ] as const)
+    expect(failureCopy[reason]).toBe(
+      'Couldn’t connect. Check your connection and try again.',
+    );
+  for (const reason of [
+    'forbidden',
+    'unavailable',
+    'unsupportedFormat',
+    'queueOverflow',
+    'deletionVerificationFailed',
+  ] as const)
+    expect(failureCopy[reason]).toBe(
+      'Something went wrong with voice. Try again.',
+    );
 });
 test.each(endReasons)(
-  'one specific short sentence for terminal reason %s, saying the microphone is off',
+  'one plain sentence for terminal reason %s, never saying the microphone is off',
   (reason) => {
-    short(endCopy[reason]);
-    expect(endCopy[reason]).toMatch(/ Microphone off[.]$/);
-    expect(
-      Object.values(endCopy).filter((copy) => copy === endCopy[reason]),
-    ).toHaveLength(1);
+    plain(endCopy[reason]);
   },
 );
 test('allowance and unknown budget are taken from status, never inferred from a close', () => {

@@ -6,6 +6,9 @@ import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { accountScreens } from '../../navigation/stack/account';
 import { referenceScreens } from '../../navigation/stack/reference';
 import { askAccountScreens } from '../../navigation/stack/ask';
+// Genuine account links open with Account beneath them and a working back
+// button (specs/account.md 1.1).
+export const unstable_settings = { initialRouteName: 'index' };
 export default function AccountStack() {
   return (
     <Stack

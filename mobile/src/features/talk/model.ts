@@ -6,30 +6,33 @@ import type {
   VoiceStatus,
 } from '../../voice/types';
 
-// One short sentence each: the call screen shows it with one action.
+// Voice failures in plain sentences (specs/account.md 7.6, F-4 and F-5).
+// "Microphone off." is never said: the system indicator already shows it.
+const couldntConnect = 'Couldn’t connect. Check your connection and try again.';
+const wentWrong = 'Something went wrong with voice. Try again.';
 export const failureCopy: Record<VoiceFailure, string> = {
-  signedOut: 'Voice needs a free OPAX account.',
+  signedOut: 'Talk needs a free OPAX account.',
   disabled: 'Voice is taking a break.',
-  allowanceExhausted: 'You have used your free voice minutes.',
+  allowanceExhausted: 'You’ve used your voice minutes.',
   budgetClosed: 'Voice is closed for the rest of this month.',
   capacity: 'Voice is busy right now. Try again soon.',
-  rateLimited: 'Too many tries. Wait a little, then try again.',
-  callOpen: 'A call is still open on your account.',
-  forbidden: 'OPAX could not authorise voice. Microphone off.',
-  unavailable: 'Voice is unavailable right now. Microphone off.',
-  network: 'Can’t reach OPAX. Check your connection.',
-  policy: 'The voice connection was refused. Microphone off.',
-  unsupportedFormat: 'OPAX could not play the voice audio. Microphone off.',
-  audio: 'OPAX could not use the microphone or speaker.',
-  queueOverflow: 'The connection fell behind. Microphone off.',
-  microphoneDenied: 'Turn on microphone access to talk.',
+  rateLimited: 'Too many tries. Wait a minute, then try again.',
+  callOpen:
+    'A call is still open on your account. End it there, then try again.',
+  network: couldntConnect,
+  timeout: couldntConnect,
+  policy: couldntConnect,
+  invalidResponse: couldntConnect,
+  cancelled: couldntConnect,
+  forbidden: wentWrong,
+  unavailable: wentWrong,
+  unsupportedFormat: wentWrong,
+  queueOverflow: wentWrong,
+  deletionVerificationFailed: wentWrong,
+  audio: 'OPAX couldn’t use the microphone or speaker.',
+  microphoneDenied: 'Turn on microphone access in Settings to talk.',
   consentRequired: 'Agree to voice processing to start.',
-  timeout: 'Could not connect in time. Microphone off.',
-  invalidResponse: 'OPAX got an unexpected voice reply. Microphone off.',
-  cancelled: 'Voice request cancelled. Microphone off.',
-  statusChecking: 'Still checking voice. One moment.',
-  deletionVerificationFailed:
-    'OPAX could not verify the deletion code. Check it in Account.',
+  statusChecking: 'Checking voice…',
 };
 /**
  * Android's microphone step: the rationale before the system dialog (the
@@ -46,19 +49,121 @@ export const microphoneCopy = {
   blocked: 'Turn on microphone access in Settings to talk.',
 } as const;
 export const endCopy: Record<EndReason, string> = {
-  user: 'Call ended. Microphone off.',
-  interruption: 'Another app took the audio. Microphone off.',
-  background: 'The call ended when you left OPAX. Microphone off.',
-  mediaReset: 'The audio system reset. Microphone off.',
-  provider: 'The voice provider ended the call. Microphone off.',
-  deadline: 'The call reached its time limit. Microphone off.',
-  network: 'The connection dropped. Microphone off.',
-  consentWithdrawn: 'Consent withdrawn. Microphone off.',
-  allowanceExhausted: 'Your free minutes are used up. Microphone off.',
-  budgetClosed: 'Voice is closed for this month. Microphone off.',
-  callLimit: 'This call reached its limit. Microphone off.',
-  failed: 'Voice ran into a problem. Microphone off.',
+  user: 'Call ended.',
+  interruption: 'The call ended because another app needed the audio.',
+  background: 'The call ended when you left OPAX.',
+  network: 'The call dropped.',
+  mediaReset: 'The call dropped.',
+  provider: 'The call dropped.',
+  deadline: 'The call reached its time limit.',
+  callLimit: 'The call reached its time limit.',
+  allowanceExhausted: 'You’ve used your voice minutes.',
+  budgetClosed: 'Voice is closed for the rest of this month.',
+  consentWithdrawn: 'Voice consent withdrawn.',
+  failed: 'Something went wrong with voice.',
 };
+
+/** Talk's own words (specs/account.md 7.6 and 7.7). */
+export const talkCopy = {
+  title: 'Talk to OPAX',
+  intro:
+    'Ask a question out loud. OPAX answers from the public record and lists the records it used.',
+  example: (question: string) => `Try “${question}”`,
+  freeMinutes: (minutes: number) =>
+    `A free OPAX account includes ${minutes} minutes of voice.`,
+  start: 'Start',
+  startAgain: 'Start again',
+  signIn: 'Sign in',
+  askInstead: 'Ask instead',
+  tryAgain: 'Try again',
+  openSettings: 'Open Settings',
+  disclosure: 'AI voice by ElevenLabs. It can be wrong, so check the sources.',
+  checkFailed: 'Voice couldn’t be checked.',
+  offline: 'You’re offline. Talk needs a connection.',
+  status: {
+    checking: 'Checking voice',
+    ready: 'Ready to talk',
+    connecting: 'Connecting',
+    listening: 'Listening',
+    thinking: 'Thinking',
+    speaking: 'OPAX is speaking',
+    muted: 'Muted',
+    ending: 'Ending the call',
+  },
+  controls: { mute: 'Mute', type: 'Type', sources: 'Sources', end: 'End' },
+  sourcesSpoken: (count: number) => `Sources, ${count}`,
+  composer: 'Type to OPAX',
+  send: 'Send',
+  menu: {
+    more: 'More',
+    hideCaptions: 'Hide captions',
+    showCaptions: 'Show captions',
+    report: 'Report this answer',
+    voicePrivacy: 'Voice privacy',
+    withdraw: 'Withdraw voice consent',
+  },
+  endConfirm: {
+    title: 'End the call?',
+    end: 'End call',
+    keep: 'Keep talking',
+  },
+  webRecord: {
+    title: 'Open after the call?',
+    message: (title: string) =>
+      `${title} opens on opax.com.au, which would end the call.`,
+    later: 'Open after the call',
+    now: 'End call and open',
+    keep: 'Keep talking',
+  },
+  open: (title: string) => `Open ${title}`,
+  playbackCut: 'Playback was cut short.',
+  youSaid: (text: string) => `You said ${text}`,
+  opaxSaid: (text: string) => `OPAX said ${text}`,
+  sources: 'Sources',
+  sourcesEmpty: 'No records yet.',
+  record: 'Record',
+  endRecord: 'End',
+  consent: {
+    title: 'Before you talk',
+    sends:
+      'Your voice and the conversation go to ElevenLabs, OPAX’s voice provider, so it can answer you.',
+    keeps:
+      'OPAX keeps when each call happened, never the audio or a transcript. ElevenLabs keeps no audio and deletes transcripts after a day (checked 9 September 2026).',
+    withdraw: 'You can withdraw this in Account.',
+    voicePrivacy: 'Voice privacy',
+    agree: 'Agree and start',
+    notNow: 'Not now',
+  },
+  unavailable: 'Talk isn’t available in this version',
+  headphones: (reader: string) =>
+    `Headphones keep ${reader} speech out of the microphone.`,
+} as const;
+
+/**
+ * Voice time, one formatter everywhere (7.6, F-7): whole minutes, never
+ * rounded up; seconds under a minute.
+ */
+export function voiceTime(
+  status: Pick<VoiceStatus, 'unlimited' | 'remainingSeconds'>,
+): string {
+  if (status.unlimited) return 'Unlimited';
+  const seconds = Math.max(0, Math.floor(status.remainingSeconds));
+  if (seconds >= 60) return `${Math.floor(seconds / 60)} min left`;
+  return seconds > 0 ? `${seconds} sec left` : 'No minutes left';
+}
+/** The same value for VoiceOver, with "min" and "sec" said in full. */
+export function voiceTimeSpoken(
+  status: Pick<VoiceStatus, 'unlimited' | 'remainingSeconds'>,
+): string {
+  if (status.unlimited) return 'Unlimited';
+  const seconds = Math.max(0, Math.floor(status.remainingSeconds));
+  const minutes = Math.floor(seconds / 60);
+  if (minutes > 0)
+    return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} left`;
+  return seconds > 0
+    ? `${seconds} ${seconds === 1 ? 'second' : 'seconds'} left`
+    : 'No minutes left';
+}
 export function refusal(status: VoiceStatus | null): VoiceFailure | null {
   if (!status) return null;
   if (!status.enabled) return 'disabled';
@@ -71,13 +176,6 @@ export function refusal(status: VoiceStatus | null): VoiceFailure | null {
 }
 export const isCallActive = (state: VoiceSnapshot['state']) =>
   ['checking', 'reserving', 'connecting', 'live', 'ending'].includes(state);
-export const clock = (seconds: number) =>
-  `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
-export const timeLabel = (seconds: number) => {
-  const minutes = Math.floor(seconds / 60),
-    rest = seconds % 60;
-  return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ${rest} ${rest === 1 ? 'second' : 'seconds'} remaining`;
-};
 export const emptySnapshot: VoiceSnapshot = {
   state: 'idle',
   reason: null,

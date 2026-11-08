@@ -1,4 +1,2 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="account/delete/code" title="Deletion code" />;
-}
+// Voice-off production resolves features/account/entry.production.ts.
+export { DeleteCodeScreen as default } from '../../../features/account/entry';

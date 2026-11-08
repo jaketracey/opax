@@ -1,4 +1,2 @@
-import { RoutePlaceholder } from '../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="talk/consent" title="Voice consent" />;
-}
+// Voice-off production resolves features/talk/entry.production.ts.
+export { ConsentSheet as default } from '../../features/talk/entry';

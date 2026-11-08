@@ -1,72 +1,73 @@
-import { Modal } from 'react-native';
-import { LinkRow, RowList, useReduceMotion } from '../../design/primitives';
-import { SheetBody } from '../../design/source';
+import { router } from 'expo-router';
+import { StyleSheet } from 'react-native';
+import {
+  EmptyState,
+  InsetGroup,
+  LinkRow,
+  Screen,
+  Text,
+} from '../../design/primitives';
 import { webPageUrl } from '../../navigation/external';
 import type { VoiceSource } from '../../voice';
-import { recordDestination } from './sources';
-import { useKeyCommand } from '../../design/keyboard';
+import { chooseSource, useTalkLive } from './live';
+import { talkCopy } from './model';
+import { recordDestination, sourceMeta } from './sources';
 
 /** Sources a call can open: validated OPAX record paths only. */
 export const openableSources = (sources: readonly VoiceSource[]) =>
   sources.filter((source) => webPageUrl(source.path));
 
 /**
- * The records behind the call's answers, in a native sheet over the call
- * (the source sheet's bar and rows). A sheet, not a route: leaving Talk's
- * route would end the call. A record the app draws opens in the call (a
- * chevron); one on opax.com.au waits for the call to end (Safari).
+ * `/talk/sources`, a form sheet over the call (specs/account.md 7.8) titled
+ * "Sources" with Done. Each row says its kind and date, or that the date is
+ * not published. A record the app draws opens inside Talk (a chevron); one on
+ * opax.com.au waits for the call to end (↗). The sheet closes first, and the
+ * Talk screen opens the choice, so an alert never appears under the sheet.
  */
-export function SourcesSheet({
-  visible,
-  sources,
-  active,
-  onOpen,
-  onClose,
-  onDismiss,
-}: {
-  visible: boolean;
-  sources: readonly VoiceSource[];
-  active: boolean;
-  onOpen: (source: VoiceSource) => void;
-  onClose: () => void;
-  onDismiss: () => void;
-}) {
-  const reduced = useReduceMotion();
-  useKeyCommand('list-escape', onClose, visible);
+export function TalkSourcesScreen() {
+  const talk = useTalkLive();
+  const sources = openableSources(talk.sources);
   return (
-    <Modal
-      visible={visible}
-      animationType={reduced ? 'none' : 'slide'}
-      presentationStyle="pageSheet"
-      onRequestClose={onClose}
-      onDismiss={onDismiss}
-    >
-      <SheetBody title="Sources" onClose={onClose} testID="talk-sources-sheet">
-        <RowList>
-          {openableSources(sources).map((source, index) => {
+    <Screen testID="talk-sources-sheet">
+      {sources.length ? (
+        <InsetGroup>
+          {sources.map((source, index) => {
             const native = recordDestination(source.path) !== null;
+            const meta = sourceMeta(source);
             return (
               <LinkRow
                 key={source.path}
                 title={source.title}
+                leading={
+                  <Text wordSafe variant="secondary" style={styles.meta}>
+                    {meta}
+                  </Text>
+                }
                 external={!native}
                 testID={`talk-source-${index}`}
-                accessibilityLabel={source.title}
+                accessibilityLabel={`${meta}, ${source.title}`}
                 accessibilityHint={
                   native
-                    ? active
-                      ? 'Opens the record within the conversation'
+                    ? talk.active
+                      ? 'Opens the record within the call'
                       : 'Opens the record'
-                    : active
-                      ? 'Opens on opax.com.au after the conversation'
+                    : talk.active
+                      ? 'Opens on opax.com.au after the call'
                       : 'Opens on opax.com.au'
                 }
-                onPress={() => onOpen(source)}
+                onPress={() => {
+                  chooseSource(source);
+                  router.back();
+                }}
               />
             );
           })}
-        </RowList>
-      </SheetBody>
-    </Modal>
+        </InsetGroup>
+      ) : (
+        <EmptyState message={talkCopy.sourcesEmpty} />
+      )}
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({ meta: { marginBottom: 2 } });
