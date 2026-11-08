@@ -7,6 +7,7 @@ import {
   Modal,
   StyleSheet,
   ScrollView,
+  View,
   Text as NativeText,
 } from 'react-native';
 import { router, Stack } from 'expo-router';
@@ -39,6 +40,7 @@ import {
 import SourceSheet, {
   openOriginal,
   SourceContent,
+  Paragraphs,
   sourceHeader,
 } from '../src/features/sheets/SourceSheet';
 import MachineNoteSheet from '../src/features/sheets/MachineNoteSheet';
@@ -302,6 +304,19 @@ test('S3 detents, grabber, scroll expansion and accessible short sheets', () => 
   expect(
     routeSheetOptions({ citation: true }).sheetLargestUndimmedDetentIndex,
   ).toBe(0);
+});
+test('rule paragraphs carry the grouped cell padding and minimum height', () => {
+  presentSheet({ kind: 'rule', rule: 'Newest records first.' });
+  mockParams = { key: lastKey() };
+  const root = render(<RuleSheet />);
+  const paragraphs = root.findByType(Paragraphs);
+  expect(
+    StyleSheet.flatten(paragraphs.findByType(View).props.style),
+  ).toMatchObject({
+    paddingVertical: rhythm.row,
+    minHeight: minimumTarget,
+  });
+  expect(text(paragraphs)).toContain('Newest records first.');
 });
 test('short machine notes do not scroll, while tables do', () => {
   presentSheet({

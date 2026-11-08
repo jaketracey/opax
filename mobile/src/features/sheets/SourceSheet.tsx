@@ -196,7 +196,13 @@ export function Paragraphs({
   paragraphs: readonly (string | false | null | undefined)[];
 }) {
   return (
-    <View style={{ gap: rhythm.block }}>
+    <View
+      style={{
+        gap: rhythm.block,
+        paddingVertical: rhythm.row,
+        minHeight: minimumTarget,
+      }}
+    >
       {paragraphs
         .filter((p): p is string => !!p)
         .map((p, index) => (
