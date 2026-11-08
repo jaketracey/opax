@@ -2,6 +2,9 @@ import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Animated, Platform } from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
+import { Stack, router } from 'expo-router';
+import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
+import { askScreens } from '../src/navigation/stack/ask';
 import {
   pageItems,
   pageMenu,
@@ -22,9 +25,22 @@ import { designFlags } from '../src/design/flags';
 import { colors } from '../src/design/tokens';
 
 jest.mock('expo-router', () => ({
+  Stack: { Screen: () => null },
+  useSegments: () => ['(tabs)', '(ask)'],
   router: { push: jest.fn(), back: jest.fn() },
 }));
-jest.mock('../src/voice/linked', () => ({ voiceLinked: true }));
+jest.mock('../src/features/ask/AskScreen', () => () => null);
+jest.mock('../src/features/account/store', () => ({
+  useAccount: () => ({ status: { signedIn: mockSignedIn } }),
+  accountSnapshot: () => ({ status: { signedIn: mockSignedIn } }),
+}));
+let mockSignedIn = false;
+let mockVoiceLinked = true;
+jest.mock('../src/voice/linked', () => ({
+  get voiceLinked() {
+    return mockVoiceLinked;
+  },
+}));
 jest.mock('../src/design/useHeaderBottom', () => ({
   useHeaderBottom: () => 100,
 }));
@@ -55,9 +71,11 @@ function tree(element: React.ReactElement) {
 afterEach(() => {
   mockBuild.isProduction = false;
   mockReducedMotion = false;
+  mockSignedIn = false;
+  mockVoiceLinked = true;
   jest.restoreAllMocks();
 });
-test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'] as const)(
+test.each(['(today)', '(your-mp)', '(bills)', '(search)'] as const)(
   '%s has Account and no more than one feature item',
   (segment) => {
     for (const signedIn of [false, true]) {
@@ -78,23 +96,66 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'] as const)(
         },
       });
     }
-    expect(
-      rootHeaderItems({ segment, signedIn: false }).map(
-        (item) => item.type === 'button' && item.label,
-      ),
-    ).not.toContain('Talk');
+    expect(rootHeaderItems({ segment, signedIn: false })).toEqual([
+      expect.objectContaining({ label: 'Account' }),
+    ]);
+  },
+);
+test.each([false, true])(
+  'Ask registration, wrapper and AskScreen agree on the interim bar when signed in: %s',
+  (signedIn) => {
+    mockSignedIn = signedIn;
+    const view = tree(<AskRoute />);
+    const wrapper = () => view.root.findByType(Stack.Screen).props.options;
+    const registration = askScreens('(ask)', signedIn)
+      .find((screen) => screen.props.name === 'ask')!
+      .props.options({ route: { params: {} } });
+    const expected = rootHeaderItems();
+    expect(expected).toMatchObject([
+      { accessibilityLabel: 'Account' },
+      { accessibilityLabel: 'Talk to OPAX', icon: { name: 'waveform' } },
+    ]);
+    for (const options of [wrapper(), registration]) {
+      expect(options.unstable_headerRightItems()).toEqual(expected);
+      expect(options).not.toHaveProperty('unstable_headerLeftItems');
+    }
+    act(() => view.update(<AskRoute />));
+    expect(wrapper().unstable_headerRightItems()).toEqual(rootHeaderItems());
+    const talk = expected[1];
+    if (talk.type === 'button') talk.onPress?.();
+    expect(router.push).toHaveBeenLastCalledWith('/talk');
+    mockVoiceLinked = false;
+    expect(rootHeaderItems()).toHaveLength(1);
+    expect(wrapper().unstable_headerRightItems()).toEqual(rootHeaderItems());
+    expect(registration.unstable_headerRightItems()).toEqual(rootHeaderItems());
+    act(() => view.unmount());
   },
 );
 test('Ask has history leading and New question plus Account trailing', () => {
+  const onNew = jest.fn();
+  const onHistory = jest.fn();
   const options = askHeaderItems({
     canStartNew: true,
     historyEnabled: true,
     signedIn: false,
-    onNew: jest.fn(),
-    onHistory: jest.fn(),
+    onNew,
+    onHistory,
   });
-  expect(options.unstable_headerLeftItems()).toHaveLength(1);
-  expect(options.unstable_headerRightItems?.()).toHaveLength(2);
+  expect(options.unstable_headerLeftItems()).toEqual([
+    expect.objectContaining({
+      label: 'Your conversations',
+      disabled: false,
+      onPress: onHistory,
+    }),
+  ]);
+  expect(options.unstable_headerRightItems?.()).toEqual([
+    expect.objectContaining({ label: 'Account' }),
+    expect.objectContaining({
+      label: 'New question',
+      disabled: false,
+      onPress: onNew,
+    }),
+  ]);
   expect(designFlags.talkInAsk).toBe(true);
 });
 test('a pushed page has More outermost and one direct action, with no menu title', () => {

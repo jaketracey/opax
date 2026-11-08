@@ -94,6 +94,9 @@ export type TabSegment =
   | '(search)'
   | '(ask)';
 
+const openAccount = () => router.push('/account');
+const openTalk = () => router.push('/talk');
+
 /** Account is outermost. A root has room for just one feature action. */
 export function rootHeaderItems(props?: {
   segment: TabSegment;
@@ -101,13 +104,16 @@ export function rootHeaderItems(props?: {
   signedIn: boolean;
 }): NativeStackHeaderItem[] {
   const signedIn = props?.signedIn ?? !!accountSnapshot().status?.signedIn;
+  // AskScreen calls without props. Keep Talk reachable until w4-ask puts
+  // it in the composer and removes that screen's own header options.
+  const inAsk = !props || props.segment === '(ask)';
   const talk: NativeStackHeaderItem = {
     type: 'button',
     label: 'Talk',
     accessibilityLabel: 'Talk to OPAX',
     tintColor: colors.navy,
     icon: { type: 'sfSymbol', name: 'waveform' },
-    onPress: () => router.push('/talk'),
+    onPress: openTalk,
   };
   return [
     {
@@ -119,10 +125,10 @@ export function rootHeaderItems(props?: {
         type: 'sfSymbol',
         name: signedIn ? 'person.crop.circle.fill' : 'person.crop.circle',
       },
-      onPress: () => router.push('/account'),
+      onPress: openAccount,
     },
     ...(props?.extra?.slice(0, 1) ??
-      (!designFlags.talkInAsk && voiceLinked ? [talk] : [])),
+      ((inAsk || !designFlags.talkInAsk) && voiceLinked ? [talk] : [])),
   ];
 }
 
@@ -155,7 +161,7 @@ export function askHeaderItems(props: {
       rootHeaderItems({
         segment: '(ask)',
         signedIn: props.signedIn,
-        ...(designFlags.talkInAsk ? { extra: [compose] } : {}),
+        extra: [compose],
       }),
     ),
     ...(Platform.OS === 'android'
