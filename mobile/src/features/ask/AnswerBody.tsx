@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode, type RefObject } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { CitationMark } from '../../design/citation-mark';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -63,6 +63,11 @@ export function AnswerBody({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  // A final answer stays selectable (the system Copy menu, journeys/ask.md
+  // 4.5). iOS only: on iOS a tap on a nested mark or link still reaches
+  // React Native's touch handler (RCTParagraphComponentView's long press
+  // only claims a hold); Android's setTextIsSelectable takes the touches.
+  const selectable = !streaming && Platform.OS === 'ios';
   const isLit = (span: Inline, block: string) =>
     !streaming &&
     claim?.block === block &&
@@ -140,13 +145,17 @@ export function AnswerBody({
           case 'paragraph':
             return (
               <View key={key} ref={keep(key)} collapsable={false}>
-                <Text variant="body">{spans(block.spans, key)}</Text>
+                <Text variant="body" selectable={selectable}>
+                  {spans(block.spans, key)}
+                </Text>
               </View>
             );
           case 'heading':
             return (
               <View key={key} ref={keep(key)} collapsable={false}>
-                <Text variant="strong">{spans(block.spans, key)}</Text>
+                <Text variant="strong" selectable={selectable}>
+                  {spans(block.spans, key)}
+                </Text>
               </View>
             );
           case 'quote':
@@ -157,7 +166,9 @@ export function AnswerBody({
                 collapsable={false}
                 style={styles.quote}
               >
-                <Text variant="recordText">{spans(block.spans, key)}</Text>
+                <Text variant="recordText" selectable={selectable}>
+                  {spans(block.spans, key)}
+                </Text>
               </View>
             );
           case 'bullets':
@@ -176,7 +187,11 @@ export function AnswerBody({
                       <Text variant="body" style={styles.marker}>
                         {block.kind === 'bullets' ? '•' : `${block.start + i}.`}
                       </Text>
-                      <Text variant="body" style={styles.itemText}>
+                      <Text
+                        variant="body"
+                        selectable={selectable}
+                        style={styles.itemText}
+                      >
                         {spans(item, itemKey)}
                       </Text>
                     </View>

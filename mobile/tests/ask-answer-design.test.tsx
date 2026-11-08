@@ -3,6 +3,8 @@ import { dispatchKeyCommand } from '../src/design/keyboard';
 import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
 import { CitationMark } from '../src/design/citation-mark';
+import { AnswerBody } from '../src/features/ask/AnswerBody';
+import { parseAnswer } from '../src/features/ask/answer-markdown';
 import { FigureBlock } from '../src/design/record';
 import { haptic } from '../src/design/haptics';
 import { presentSheet, presentSource } from '../src/navigation/sheets';
@@ -274,6 +276,27 @@ test('adjacent citations merge into one mark that opens the first source beside 
   expect(citationSelection()?.n).toBe(2);
 });
 
+test('the answer text stays selectable and its marks still open on a tap; streamed text does not select', () => {
+  const { renderer, press } = draw();
+  const mark = renderer.root.findAllByType(CitationMark)[0]!;
+  // The block's own Text, the nearest ancestor drawing the sentence.
+  let block = mark.parent;
+  while (block && block.props.selectable === undefined) block = block.parent;
+  expect(block?.props.selectable).toBe(true);
+  act(() => press('ask-citation-mark-1'));
+  expect(presentSheet).toHaveBeenCalledTimes(1);
+  let streamed!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    streamed = TestRenderer.create(
+      <AnswerBody
+        blocks={parseAnswer('Partly written [1]', { streaming: true })}
+        streaming
+      />,
+    );
+  });
+  expect(streamed.root.findAll((n) => n.props.selectable === true)).toEqual([]);
+  act(() => streamed.unmount());
+});
 test('People in this answer are full person rows, the reader’s own member marked', () => {
   const { ids, words } = draw();
   expect(ids('ask-people').length).toBeGreaterThan(0);
