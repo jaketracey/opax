@@ -20,6 +20,15 @@ import Connections from '../src/features/money-public/Connections';
 import Connection from '../src/features/money-public/Connection';
 import MoneyItem from '../src/features/money-public/MoneyItem';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
+import {
+  decodeGrantIndex,
+  decodeProgram,
+} from '../src/features/money-public/data';
+import {
+  formatCount,
+  formatMoney,
+  formatMoneyCompact,
+} from '../src/design/format';
 
 const mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => {
@@ -212,4 +221,79 @@ test('private recipient names are absent from visible and accessibility props', 
     /1 grant to individual recipients, \$[\d,]+, not named\./,
   );
   await act(async () => rendered.unmount());
+});
+
+// A seat view draws only the seat (journeys/money.md 7): nothing national
+// on screen until the per-seat slice ships. The national total may stay in
+// the source sheet's notes, which are not drawn until the sheet opens.
+describe('a seat view draws nothing national', () => {
+  const drawnText = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAll((n) => typeof n.type === 'string')
+      .flatMap((n) => [
+        n.props.accessibilityLabel,
+        ...(Array.isArray(n.props.children)
+          ? n.props.children
+          : [n.props.children]),
+      ])
+      .filter((v) => typeof v === 'string' || typeof v === 'number')
+      .map(String)
+      .join('\n');
+  const byID = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root.findAll(
+      (n) => n.props.testID === testID && typeof n.type !== 'string',
+    );
+
+  test('Grants for a seat: the seat figure only', async () => {
+    const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
+    const seat = [...index.seats].sort((a, b) => b.total - a.total)[0]!;
+    Object.assign(mockParams, {
+      jur: 'federal',
+      seat: seat.name,
+      state: seat.state,
+    });
+    const r = await mount(Grants);
+    const testIDs = [...ids(r)];
+    expect(testIDs.filter((id) => id.startsWith('grants-row-'))).toEqual([]);
+    for (const id of ['grants-view', 'grants-caption', 'grants-largest'])
+      expect([id, testIDs.includes(id)]).toEqual([id, false]);
+    expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
+      formatMoneyCompact(seat.total),
+    );
+    const text = drawnText(r);
+    expect(text).toContain(formatMoneyCompact(seat.total));
+    expect(text).not.toContain(formatMoneyCompact(index.counts.dollars));
+    expect(text).not.toContain(formatMoney(index.counts.dollars));
+    expect(text).not.toContain(formatCount(index.counts.grants));
+    await act(async () => r.unmount());
+  });
+
+  test('a program for a seat: the seat’s electorates total, not the program’s', async () => {
+    const row = (
+      [...program.electorates] as { n: string; st: string; t: number }[]
+    ).sort((a, b) => b.t - a.t)[0]!;
+    Object.assign(mockParams, {
+      jur: 'federal',
+      id: 'GO3141',
+      seat: row.n,
+      state: row.st,
+    });
+    const r = await mount(Program);
+    expect(byID(r, 'program-total')[0]!.props.value).toBe(
+      formatMoneyCompact(row.t),
+    );
+    const decoded = decodeProgram(program);
+    const text = drawnText(r);
+    expect(text).toContain(formatMoneyCompact(row.t));
+    expect(text).not.toContain(formatMoneyCompact(decoded.total));
+    expect(text).not.toContain(formatMoney(decoded.total));
+    // The way to the whole program is a row, not a figure.
+    expect(byID(r, 'program-national')[0]!.props.href).toMatchObject({
+      params: { id: decoded.id, jur: 'federal' },
+    });
+    expect(
+      byID(r, 'program-national')[0]!.props.href.params,
+    ).not.toHaveProperty('seat');
+    await act(async () => r.unmount());
+  });
 });
