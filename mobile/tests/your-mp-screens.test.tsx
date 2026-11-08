@@ -983,7 +983,10 @@ test.each(['federal', 'state'])(
         justifyContent: 'center',
       });
       const label = correction.findByType(Text);
-      expect(label.props).toMatchObject({ variant: 'fine', tone: 'inkSoft' });
+      expect(label.props).toMatchObject({
+        variant: 'footnote',
+        tone: 'inkSoft',
+      });
       expect(label.props.children).toBe(
         'Report a correction: corrections@opax.com.au',
       );

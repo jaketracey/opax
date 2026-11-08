@@ -401,7 +401,7 @@ export function ElectorateScreen({
                 style={styles.authorisation}
                 testID="electorate-authorisation"
               >
-                <Text variant="fine" tone="inkSoft">
+                <Text variant="footnote" tone="inkSoft">
                   {AUTHORISATION_LINE}
                 </Text>
                 <Pressable
@@ -411,11 +411,11 @@ export function ElectorateScreen({
                   style={styles.correctionTarget}
                   testID="electorate-correction"
                 >
-                  <Text variant="fine" tone="inkSoft">
+                  <Text variant="footnote" tone="inkSoft">
                     Report a correction: corrections@opax.com.au
                   </Text>
                 </Pressable>
-                <Text variant="fine" tone="inkSoft">
+                <Text variant="footnote" tone="inkSoft">
                   We aim to respond within 2 business days.
                 </Text>
               </View>
