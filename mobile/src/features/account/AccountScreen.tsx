@@ -1,33 +1,42 @@
-import { router } from 'expo-router';
+import { useState } from 'react';
+import { RefreshControl } from 'react-native';
 import { Screen } from '../../design/primitives';
-import { AccountSection } from './AccountSection';
-import { AccountLinks } from './AccountLinks';
+import { colors } from '../../design/tokens';
+import { AccountGroups } from './AccountGroups';
+import { AccountLinks, VersionFoot } from './AccountLinks';
 import { AccountRowsScreen } from './AccountRows';
+import { refreshAccount } from './store';
 import { communityHome } from '../community/entry';
 import { voiceLinked } from '../../voice/linked';
 
 /**
- * Account and about (IOS-UX 4.9) in development and e2e builds. Production
- * selects entry.production.ts only when the production voice switch is off.
- * An Android build without its OpaxVoice module has no account block: the
- * sheet is the one list of rows.
- *
- * Two blocks under the sheet's title: the account (signed out, one sentence
- * and Sign in; signed in, the address, voice time, sign-out and deletion),
- * then one list of rows: Community (where the build ships it; not
- * production 1.0), About OPAX, Sources and licences, the tour. The
- * independence statement lives on About and in the tour (D4).
+ * The Account sheet (specs/account.md 2): the account groups, then about,
+ * privacy and support, the welcome, and the version foot. A build without
+ * voice (Android without its OpaxVoice module) draws the same sheet without
+ * the account groups. Groups 4 to 6 are static, so the sheet never opens
+ * empty. Pull to refresh re-reads the account status.
  */
 export function AccountScreen() {
-  const home = communityHome;
+  const [pulling, setPulling] = useState(false);
   if (!voiceLinked) return <AccountRowsScreen />;
   return (
-    <Screen column="wide" testID="account-sheet">
-      <AccountSection />
-      <AccountLinks
-        community={home ? () => router.push(home) : undefined}
-        testID="account-links"
-      />
+    <Screen
+      grouped
+      testID="account-sheet"
+      refreshControl={
+        <RefreshControl
+          refreshing={pulling}
+          tintColor={colors.inkSoft}
+          onRefresh={() => {
+            setPulling(true);
+            void refreshAccount().finally(() => setPulling(false));
+          }}
+        />
+      }
+    >
+      <AccountGroups />
+      <AccountLinks community={communityHome} testID="account-links" />
+      <VersionFoot />
     </Screen>
   );
 }

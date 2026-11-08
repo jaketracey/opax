@@ -1,22 +1,17 @@
-import { router } from 'expo-router';
 import { Screen } from '../../design/primitives';
-import { AccountLinks } from './AccountLinks';
+import { AccountLinks, VersionFoot } from './AccountLinks';
 import { communityHome } from '../community/entry';
 
 /**
- * Account and about with no account block: the one list of rows. Android
- * shows it without voice, whether its OpaxVoice module is missing or the
- * voice-off release left it out (entry.production.ts).
+ * The Account sheet with no account groups (specs/account.md 9): groups 4
+ * to 6 and the version foot. A build without voice (the voice-off release,
+ * or Android without its OpaxVoice module) draws this, on both platforms.
  */
 export function AccountRowsScreen() {
-  const home = communityHome;
   return (
-    <Screen column="wide" testID="account-sheet">
-      <AccountLinks
-        first
-        community={home ? () => router.push(home) : undefined}
-        testID="account-links"
-      />
+    <Screen grouped testID="account-sheet">
+      <AccountLinks community={communityHome} testID="account-links" />
+      <VersionFoot />
     </Screen>
   );
 }
