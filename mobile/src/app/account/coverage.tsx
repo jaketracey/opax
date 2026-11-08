@@ -1,1 +1,1 @@
-export { default } from '../../features/reports/Stats';
+export { default } from '../../features/methods/Coverage';

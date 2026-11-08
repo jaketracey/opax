@@ -1,1 +1,1 @@
-export { default } from '../../features/reports/Methods';
+export { default } from '../../features/methods/Methods';

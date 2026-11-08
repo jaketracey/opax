@@ -1,8 +1,19 @@
 import { Stack } from 'expo-router';
-import { useStackChrome } from '../../navigation/chrome';
+import { useStackChrome, opaqueBar } from '../../navigation/chrome';
+import { colors } from '../../design/tokens';
 import { licenceScreens } from '../../navigation/stack/reference';
-export default function Layout() {
+
+/** Its own stack, grouped like Account; the dataset is the root. */
+export default function LicenceStack() {
   return (
-    <Stack screenOptions={useStackChrome()}>{[...licenceScreens()]}</Stack>
+    <Stack
+      screenOptions={{
+        ...useStackChrome(),
+        ...opaqueBar(colors.sunken),
+        contentStyle: { backgroundColor: colors.sunken },
+      }}
+    >
+      {[...licenceScreens()]}
+    </Stack>
   );
 }
