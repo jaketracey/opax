@@ -133,12 +133,23 @@ export const todayChanges = (changes: readonly Change[]): Change[] =>
   sortChanges(changes.filter((c) => c.today !== false));
 export const currentKeys = (current: Fingerprint): string[] => [
   ...new Set(
-    Object.values(current)
-      .flatMap((r) => r.records ?? [])
+    Object.entries(current)
+      .filter(([marker]) => marker !== 'members')
+      .flatMap(([, r]) => r.records ?? [])
       .sort((a, b) => (b.added ?? b.date).localeCompare(a.added ?? a.date))
       .map((r) => r.key),
   ),
 ];
+/** Identities actually shown by rows; membership is acknowledged by its set. */
+export function seenKeysForChanges(changes: readonly Change[]): string[] {
+  return [
+    ...new Set(
+      changes.flatMap((change) =>
+        change.marker === 'members' ? [] : change.key ? [change.key] : [],
+      ),
+    ),
+  ];
+}
 
 function recordText(record: FollowRecord): string | null {
   switch (record.kind) {
@@ -211,6 +222,8 @@ export function changesFor(
   if (!before || follow.seenKeys === undefined) return out;
   const seen = new Set(follow.seenKeys);
   for (const [marker, reading] of Object.entries(current)) {
+    const was = before[marker];
+    if (!was) continue;
     const citation =
       follow.kind === 'bill'
         ? 'ParlInfo bill records'
@@ -224,7 +237,47 @@ export function changesFor(
                 ? 'ParlInfo bill records'
                 : (reading.words ?? 'Published records');
     if (reading.records) {
-      if (follow.seenKeys === undefined) continue;
+      if (follow.kind === 'party' && marker === 'members') {
+        const previous = new Set(
+          String(was.value ?? '')
+            .split(',')
+            .filter(Boolean),
+        );
+        const now = new Set(
+          String(reading.value ?? '')
+            .split(',')
+            .filter(Boolean),
+        );
+        for (const record of reading.records)
+          if (!previous.has(record.key))
+            out.push(
+              makeChange(
+                marker,
+                `Now includes ${record.name ?? record.title}`,
+                reading,
+                citation,
+                record,
+              ),
+            );
+        for (const record of was.records ?? [])
+          if (!now.has(record.key))
+            out.push(
+              makeChange(
+                marker,
+                `No longer includes ${record.name ?? record.title}`,
+                reading,
+                citation,
+                { ...record, date: reading.asAt ?? '' },
+              ),
+            );
+        continue;
+      }
+      if (
+        marker === 'returns' &&
+        typeof was.value === 'string' &&
+        String(reading.value ?? '') <= was.value
+      )
+        continue;
       for (const record of reading.records) {
         if (seen.has(record.key)) continue;
         const text = recordText(record);
@@ -241,28 +294,9 @@ export function changesFor(
           continue;
         out.push(makeChange(marker, text, reading, citation, record));
       }
-      if (
-        follow.kind === 'party' &&
-        marker === 'members' &&
-        before.members?.records
-      ) {
-        const now = new Set(reading.records.map((r) => r.key));
-        for (const record of before.members.records)
-          if (!now.has(record.key))
-            out.push(
-              makeChange(
-                marker,
-                `No longer includes ${record.name ?? record.title}`,
-                reading,
-                citation,
-                { ...record, date: reading.asAt ?? '' },
-              ),
-            );
-      }
       continue;
     }
-    const was = before[marker];
-    if (!was || was.value === reading.value) continue;
+    if (was.value === reading.value) continue;
     let text: string | undefined;
     if (follow.kind === 'person') {
       if (marker === 'party') text = `Now ${reading.words}; was ${was.words}`;

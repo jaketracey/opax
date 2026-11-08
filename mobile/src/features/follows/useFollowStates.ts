@@ -207,10 +207,20 @@ export function useFollowStates(refresh = 0) {
   useEffect(() => {
     for (const f of follows ?? []) {
       const state = states.get(followKey(f));
-      if ((!f.seen || f.seenKeys === undefined) && state?.status === 'ready')
+      if (state?.status !== 'ready') continue;
+      if (!f.seen || f.seenKeys === undefined)
         void markSeen(followKey(f), state.current, state.keys).catch(
           () => undefined,
         );
+      else {
+        const missing = Object.fromEntries(
+          Object.entries(state.current).filter(([marker]) => !f.seen![marker]),
+        );
+        if (Object.keys(missing).length)
+          void markSeen(followKey(f), missing, currentKeys(missing)).catch(
+            () => undefined,
+          );
+      }
     }
   }, [follows, states]);
   return {

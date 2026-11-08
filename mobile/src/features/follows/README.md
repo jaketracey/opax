@@ -69,7 +69,9 @@ leaves untouched topic bytes alone. The frozen 1.0 decoder and save path in
 first, retaining earlier keys up to 50 per follow. Missing keys do not mean
 removed records. An identity that leaves a latest list and returns stays seen
 while retained in that window. A missing `seenKeys` baselines the first ready
-check silently, including legacy and downgraded files. Omitted `keys` preserves
+check silently, including legacy and downgraded files. A ready marker absent
+from `seen` also baselines silently: the loader saves only that reading and its
+keys, preserving existing unseen changes when a catalog recovers. Omitted `keys` preserves
 the stored keys. A card passes only the records it showed, plus the party and
 seat markers, rather than the profile's whole reading. `seenAt` is only the
 last-look date for the group heading. `markAllSeen` checks the existing shared
@@ -152,6 +154,7 @@ function changesFor(
   current: Fingerprint,
 ): Change[];
 function currentKeys(current: Fingerprint): string[];
+function seenKeysForChanges(changes: readonly Change[]): string[];
 function questionType(vote: {
   name?: string;
   title?: string;
@@ -186,6 +189,18 @@ newest first, statuses first on equal dates, then text, and uses `todayChanges`
 to exclude expenses. There is no pay change. `moreChangesText` has no noun.
 A stage and division with the same stage, chamber and date yield one division
 row and one change line. Party totals changing never create a change.
+
+Identity lists stay within the 50-key budget: the newest 10 introduced bills,
+20 register entries, the existing vote list (at most 12), one record for each
+DATA-11 latest field, and only the newest financial year for returns. Older
+years and revised totals do not create return changes. Party membership uses
+`partyMembers(...).current`, matching the party page, and compares complete
+person-ID sets in `members.value` with names in `members.records`. It emits a
+named line for each added or removed member. Member keys never enter
+`currentKeys` or `seenKeys`; marking seen stores the complete new set.
+`seenKeysForChanges` returns the exact non-membership identities for visible
+rows. Use it for Today, `/follows` and page acknowledgements; the page group
+already does this.
 
 | Marker                    | Available data and fallback                                                                                                                            |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |

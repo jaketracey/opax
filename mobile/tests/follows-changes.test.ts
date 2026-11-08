@@ -4,6 +4,7 @@ import {
   changesFor,
   changeText,
   currentKeys,
+  seenKeysForChanges,
   declarationAction,
   moreChangesText,
   questionType,
@@ -15,9 +16,46 @@ import {
   followState,
   type FollowSources,
 } from '../src/features/follows/markers';
-import type { Fingerprint, Follow } from '../src/features/follows/store';
+import {
+  follow,
+  followKey,
+  loadFollows,
+  markSeen,
+  resetFollowsForTests,
+  type Fingerprint,
+  type Follow,
+} from '../src/features/follows/store';
+import { decodeMoney } from '../src/api/catalogs';
+import { partyMembers } from '../src/api/party-page';
 import { catalogs, index } from './pinned';
 
+const mockDisk = new Map<string, string>();
+jest.mock('expo-file-system', () => ({
+  Paths: { document: 'documents' },
+  File: class {
+    name: string;
+    constructor(_directory: unknown, name: string) {
+      this.name = name;
+    }
+    get exists() {
+      return mockDisk.has(this.name);
+    }
+    async text() {
+      return mockDisk.get(this.name)!;
+    }
+    write(body: string) {
+      mockDisk.set(this.name, body);
+    }
+  },
+}));
+beforeEach(() => {
+  mockDisk.clear();
+  resetFollowsForTests();
+});
+const ready = (state: ReturnType<typeof followState>) => {
+  if (state.status !== 'ready') throw new Error(`Unexpected ${state.status}`);
+  return state;
+};
 const sources = (over: Partial<FollowSources> = {}): FollowSources => ({
   manifest: catalogs.manifest,
   roster: catalogs.roster,
@@ -48,7 +86,7 @@ const vote: FollowRecord = {
 };
 const baseline = (
   kind: Follow['kind'] = 'person',
-  seen: Fingerprint = {},
+  seen: Fingerprint = { divisions: { value: 0, asAt: null, records: [] } },
 ): Pick<Follow, 'kind' | 'seen' | 'seenKeys'> => ({ kind, seen, seenKeys: [] });
 const reading = (
   value: string | number | null,
@@ -113,6 +151,8 @@ test('person markers use the neutral words, exclude pay and keep expenses off To
     seat: reading('old', 'Grayndler'),
     pay: reading('old'),
     expenses: reading('2026Q01|1'),
+    declarations: { ...reading(0), records: [] },
+    introduced: { ...reading(0), records: [] },
   };
   const current = {
     party: reading('Independent', 'Independent'),
@@ -196,7 +236,7 @@ test('party revisions are quiet; new financial years and members are named', () 
         },
       ],
     },
-    members: { ...reading('jane'), records: [member] },
+    members: { ...reading('person:jane'), records: [member] },
   };
   expect(
     changesFor(baseline('party', before), after).map((c) =>
@@ -217,6 +257,8 @@ test('bill stage fallback, status wording, rich divisions, speeches and duplicat
   const seen = {
     status: reading('before', 'before parliament'),
     moved: reading('old'),
+    divisions: { ...reading(0), records: [] },
+    speeches: { ...reading(0), records: [] },
   };
   const current = {
     status: reading('before', 'before parliament'),
@@ -314,7 +356,7 @@ test('real shared catalogs supply vote identities; counts alone never invent rec
     {
       kind: 'person',
       id: 'person_2b850aa643795ce8902f754b',
-      seen: {},
+      seen: { divisions: { ...reading(0), records: [] } },
       seenKeys: [],
     },
     sources(),
@@ -369,7 +411,16 @@ test('richer fields are detected on existing catalogs without another data read'
     },
   });
   const state = followState(
-    { kind: 'bill', id: bill.key, seen: {}, seenKeys: [] },
+    {
+      kind: 'bill',
+      id: bill.key,
+      seen: {
+        moved: { ...reading('old'), records: [] },
+        divisions: { ...reading(0), records: [] },
+        speeches: { ...reading(0), records: [] },
+      },
+      seenKeys: [],
+    },
     sources({ bills }),
   );
   expect(state.status).toBe('ready');
@@ -382,3 +433,244 @@ test('richer fields are detected on existing catalogs without another data read'
     expect.arrayContaining(['division:rich', 'speech:rich']),
   );
 });
+
+test('60 introduced bills, 30 register entries and existing votes fit the seen-key budget', async () => {
+  const bills = structuredClone(catalogs.bills!);
+  bills.bills = Array.from({ length: 60 }, (_, i) => ({
+    ...bills.bills[0]!,
+    key: `au-federal-r${9000 + i}` as (typeof bills.bills)[number]['key'],
+    sponsor: 'Anthony Albanese',
+    introduced: new Date(Date.UTC(2026, 0, i + 1)).toISOString().slice(0, 10),
+  }));
+  bills.count = bills.bills.length;
+  const interestIndex = structuredClone(catalogs.interestIndex!);
+  const register = Object.values(interestIndex.people).find(
+    (r) => r.name === 'Anthony Albanese',
+  )!;
+  Object.assign(register, {
+    latest: Array.from({ length: 30 }, (_, i) => ({
+      key: `register:${i}`,
+      category: 'gifts',
+      description: `Gift ${i}`,
+      date: new Date(Date.UTC(2026, 0, i + 1)).toISOString().slice(0, 10),
+    })),
+  });
+  const data = sources({ bills, interestIndex });
+  await follow({
+    kind: 'person',
+    id: 'person_2b850aa643795ce8902f754b',
+    title: 'Anthony Albanese',
+  });
+  const person = (await loadFollows())[0]!;
+  const initial = ready(followState(person, data));
+  expect(initial.current.introduced!.records).toHaveLength(10);
+  expect(initial.current.introduced!.records!.map((r) => r.key)).toEqual(
+    bills.bills
+      .slice(-10)
+      .reverse()
+      .map((b) => b.key),
+  );
+  expect(initial.current.declarations!.records).toHaveLength(20);
+  expect(initial.current.declarations!.records![0]!.key).toBe('register:29');
+  expect(initial.keys.length).toBeLessThanOrEqual(50);
+  await markSeen(followKey(person), initial.current, initial.keys);
+  expect(ready(followState((await loadFollows())[0]!, data)).changes).toEqual(
+    [],
+  );
+  resetFollowsForTests();
+  expect(ready(followState((await loadFollows())[0]!, data)).changes).toEqual(
+    [],
+  );
+});
+
+function partySources(memberNumbers: number[]): FollowSources {
+  const person = catalogs.people.people.find(
+    (p) => p.person_id === 'person_2b850aa643795ce8902f754b',
+  )!;
+  const roster = catalogs.roster.people.find(
+    (p) => p.name === 'Anthony Albanese',
+  )!;
+  const members = memberNumbers.map((n) => ({
+    name: `Member ${String(n).padStart(3, '0')}`,
+    slug: `member-${n}`,
+    id: `person_${n.toString(16).padStart(24, '0')}` as typeof person.person_id,
+    seat: `el_${n.toString(16).padStart(24, '0')}` as (typeof person.electorates)[number]['electorate_id'],
+    pid: String(20000 + n) as NonNullable<typeof roster.pid>,
+  }));
+  return sources({
+    people: {
+      ...catalogs.people,
+      people: members.map((m) => ({
+        ...person,
+        person_id: m.id,
+        legacy_person_id: m.pid,
+        name: m.name,
+        aliases: [],
+        electorates: [
+          {
+            ...person.electorates.find((s) => s.current)!,
+            electorate_id: m.seat,
+            name: `Seat ${m.slug}`,
+            party: 'Labor',
+            current: true,
+            periods: undefined,
+          },
+        ],
+      })),
+    },
+    roster: {
+      ...catalogs.roster,
+      people: members.map((m) => ({
+        ...roster,
+        pid: m.pid,
+        name: m.name,
+        party: 'Labor',
+        party_now: 'Labor',
+        current: true,
+        representation: [
+          {
+            jurisdiction: 'federal',
+            chamber: 'representatives',
+            electorate: `Seat ${m.slug}`,
+          },
+        ],
+      })),
+    },
+    slugs: {
+      ...catalogs.slugs,
+      slugs: Object.fromEntries(members.map((m) => [m.slug, m.name])),
+    },
+    money: decodeMoney({
+      meta: {
+        generated: '2026-09-02',
+        source: 'AEC',
+        coverage: 'Annual returns',
+        methodology: 'Published returns',
+        exclusions: [],
+        party_totals_note: 'Annual returns',
+      },
+      nodes: [
+        {
+          id: 'party:labor',
+          label: 'Labor',
+          kind: 'party',
+          total: 0,
+          count: 0,
+          byYear: Object.fromEntries(
+            Array.from({ length: 30 }, (_, i) => [String(1997 + i), [0, 0]]),
+          ),
+        },
+      ],
+      edges: [],
+    }),
+  });
+}
+
+test('120 current party members baseline as a set without consuming seen keys', async () => {
+  const data = partySources(Array.from({ length: 120 }, (_, i) => i + 1));
+  await follow({ kind: 'party', id: 'labor', title: 'Labor' });
+  const party = (await loadFollows())[0]!;
+  const initial = ready(followState(party, data));
+  expect(initial.current.members!.records).toHaveLength(120);
+  expect(initial.current.members!.records!.map((m) => m.slug).sort()).toEqual(
+    [
+      ...new Set(
+        partyMembers(
+          'Labor',
+          data.roster!,
+          data.people!,
+          data.slugs!,
+          data.manifest!,
+        ).current.map((m) => m.slug),
+      ),
+    ].sort(),
+  );
+  expect(initial.current.returns!.records).toHaveLength(1);
+  expect(initial.keys).toEqual(['return:2026']);
+  expect(
+    seenKeysForChanges([
+      {
+        marker: 'members',
+        key: 'member:1',
+        text: 'Now includes Jane Doe',
+        asAt: null,
+        citation: 'Roster',
+      },
+    ]),
+  ).toEqual([]);
+  await markSeen(followKey(party), initial.current, initial.keys);
+  const saved = (await loadFollows())[0]!;
+  expect(ready(followState(saved, data)).changes).toEqual([]);
+  expect(saved.seenKeys!.length).toBeLessThanOrEqual(50);
+  await markSeen(
+    followKey(party),
+    initial.current,
+    initial.current.members!.records!.map((m) => m.key),
+  );
+  expect((await loadFollows())[0]!.seenKeys).toEqual(['return:2026']);
+  const changed = ready(
+    followState(
+      saved,
+      partySources(Array.from({ length: 120 }, (_, i) => i + 2)),
+    ),
+  );
+  expect(changed.changes.map((c) => c.text).sort()).toEqual([
+    'No longer includes Member 001',
+    'Now includes Member 121',
+  ]);
+  await markSeen(followKey(party), changed.current, changed.keys);
+  expect(
+    ready(
+      followState(
+        (await loadFollows())[0]!,
+        partySources(Array.from({ length: 120 }, (_, i) => i + 2)),
+      ),
+    ).changes,
+  ).toEqual([]);
+});
+
+test('return revisions and older years never become changes', () => {
+  const data = partySources([]);
+  const initial = ready(
+    followState({ kind: 'party', id: 'labor', seen: null }, data),
+  );
+  const party = {
+    kind: 'party' as const,
+    id: 'labor',
+    seen: initial.current,
+    seenKeys: initial.keys,
+  };
+  const money = structuredClone(data.money!);
+  money.nodes[0]!.byYear['1900'] = [100, 1];
+  money.nodes[0]!.total = 100;
+  expect(ready(followState(party, { ...data, money })).changes).toEqual([]);
+  money.nodes[0]!.byYear['2027'] = [0, 0];
+  expect(
+    ready(followState(party, { ...data, money })).changes.map((c) => c.text),
+  ).toEqual(['2026–27 donations return published']);
+});
+
+test.each(['introduced', 'divisions', 'declarations'])(
+  'an absent %s record marker stays quiet until its first baseline is saved',
+  (marker) => {
+    const record = {
+      ...vote,
+      kind:
+        marker === 'introduced'
+          ? ('bill' as const)
+          : marker === 'declarations'
+            ? ('register' as const)
+            : ('vote' as const),
+    };
+    const current = { [marker]: { ...reading(1), records: [record] } };
+    expect(changesFor(baseline('person', {}), current)).toEqual([]);
+    const seen = { ...baseline('person', current), seenKeys: [record.key] };
+    const next = {
+      [marker]: {
+        ...reading(2),
+        records: [record, { ...record, key: 'new-record' }],
+      },
+    };
+    expect(changesFor(seen, next).map((c) => c.key)).toEqual(['new-record']);
+  },
+);

@@ -12,6 +12,7 @@ import {
   changeDate,
   changeText,
   changeAccessibilityLabel,
+  seenKeysForChanges,
   type Change,
 } from './changes';
 import { followKey, markSeen, type Follow, type Fingerprint } from './store';
@@ -59,20 +60,16 @@ export function AddedSinceGroup({
   const displayed = replace ? nextReading : visit;
   if (replace) setVisit(nextReading);
   const shown = unavailable ? [] : displayed.changes;
-  useSeenOnView(
-    ref,
-    shown.flatMap((c) => (c.key ? [c.key] : [])),
-    (keys) => {
-      if (!shown.length) return;
-      const markers = new Set(shown.map((c) => c.marker));
-      const reading = Object.fromEntries(
-        Object.entries(displayed.reading).filter(([marker]) =>
-          markers.has(marker),
-        ),
-      );
-      void markSeen(followKey(follow), reading, keys).catch(() => undefined);
-    },
-  );
+  useSeenOnView(ref, seenKeysForChanges(shown), (keys) => {
+    if (!shown.length) return;
+    const markers = new Set(shown.map((c) => c.marker));
+    const reading = Object.fromEntries(
+      Object.entries(displayed.reading).filter(([marker]) =>
+        markers.has(marker),
+      ),
+    );
+    void markSeen(followKey(follow), reading, keys).catch(() => undefined);
+  });
   if (!shown.length) return null;
   return (
     <View ref={ref} collapsable={false} testID={testID}>

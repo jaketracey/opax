@@ -1,3 +1,11 @@
+import { act, createElement } from 'react';
+import TestRenderer from 'react-test-renderer';
+import { currentKeys } from '../src/features/follows/changes';
+import {
+  followState,
+  type FollowSources,
+} from '../src/features/follows/markers';
+import { useFollowStates } from '../src/features/follows/useFollowStates';
 import * as legacy from './fixtures/follows-1.0/store';
 import {
   followResultKey,
@@ -237,3 +245,105 @@ test('stored Today result restores its shape, and a repeated set keeps the same 
   ).rejects.toThrow();
   expect(await loadFollowResult()).toEqual(result);
 });
+
+function FollowStatesProbe({ refresh }: { refresh: number }) {
+  useFollowStates(refresh);
+  return null;
+}
+test.each(['introduced', 'divisions', 'declarations'])(
+  'the loader silently saves only a newly readable %s marker',
+  async (marker) => {
+    const bills = structuredClone(catalogs.bills!);
+    Object.assign(bills.bills[0]!, {
+      sponsor: 'Anthony Albanese',
+      introduced: '2026-08-12',
+    });
+    const interestIndex = structuredClone(catalogs.interestIndex!);
+    Object.assign(
+      Object.values(interestIndex.people).find(
+        (r) => r.name === 'Anthony Albanese',
+      )!,
+      {
+        latest: [
+          {
+            key: 'gift:recovered',
+            description: 'A gift',
+            category: 'gifts',
+            date: '2026-08-31',
+          },
+        ],
+      },
+    );
+    const recovered: FollowSources = {
+      manifest: catalogs.manifest,
+      people: catalogs.people,
+      roster: catalogs.roster,
+      slugs: catalogs.slugs,
+      electorates: index,
+      bills,
+      votes: catalogs.votes!,
+      interestIndex,
+      pay: catalogs.pay!,
+      expenses: catalogs.expenses!,
+      money: null,
+      stale: false,
+      savedAt: 1,
+      error: null,
+    };
+    const initial = {
+      ...recovered,
+      ...(marker === 'introduced'
+        ? { bills: null }
+        : marker === 'divisions'
+          ? { votes: null }
+          : { interestIndex: null }),
+    };
+    jest.mocked(runtime.followSources).mockResolvedValue(initial);
+    const person = {
+      kind: 'person' as const,
+      id: 'person_2b850aa643795ce8902f754b',
+      title: 'Anthony Albanese',
+    };
+    await follow(person);
+    if (marker !== 'introduced') await follow(bill);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      await act(async () => {
+        renderer = TestRenderer.create(
+          createElement(FollowStatesProbe, { refresh: 0 }),
+        );
+      });
+      const saved = (await loadFollows()).find((f) => f.id === person.id)!;
+      expect(saved.seen?.[marker]).toBeUndefined();
+      await act(async () => {
+        await markSeen(followKey(person), {
+          party: { value: 'earlier', words: 'Earlier party', asAt: null },
+        });
+      });
+      const before = (await loadFollows()).find((f) => f.id === person.id)!;
+      jest.mocked(runtime.followSources).mockResolvedValue(recovered);
+      await act(async () => {
+        if (marker === 'introduced') await follow(bill);
+        else renderer.update(createElement(FollowStatesProbe, { refresh: 1 }));
+      });
+      const after = (await loadFollows()).find((f) => f.id === person.id)!;
+      const state = followState(after, recovered);
+      if (state.status !== 'ready')
+        throw new Error('Missing recovered reading');
+      expect(after.seen).toMatchObject(before.seen!);
+      expect(after.seen?.[marker]).toEqual(state.current[marker]);
+      expect(after.seenKeys).toEqual(
+        [
+          ...new Set([
+            ...currentKeys({ [marker]: state.current[marker]! }),
+            ...before.seenKeys!,
+          ]),
+        ].slice(0, 50),
+      );
+      expect(state.changes.some((c) => c.marker === marker)).toBe(false);
+      expect(state.changes.some((c) => c.marker === 'party')).toBe(true);
+    } finally {
+      if (renderer) await act(async () => renderer.unmount());
+    }
+  },
+);

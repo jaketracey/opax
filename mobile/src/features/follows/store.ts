@@ -305,10 +305,20 @@ export function markSeen(
     const index = follows.findIndex((f) => followKey(f) === key);
     const was = follows[index];
     if (!was) return [follows, undefined];
+    const memberKeys = new Set(
+      was.kind === 'party'
+        ? [
+            ...(was.seen?.members?.records ?? []),
+            ...(current.members?.records ?? []),
+          ].map((record) => record.key)
+        : [],
+    );
     const seenKeys =
       keys === undefined
         ? was.seenKeys
-        : [...new Set([...keys, ...(was.seenKeys ?? [])])].slice(0, 50);
+        : [...new Set([...keys, ...(was.seenKeys ?? [])])]
+            .filter((key) => !memberKeys.has(key))
+            .slice(0, 50);
     const unchanged =
       was.seen !== null &&
       Object.entries(current).every(([k, r]) => sameReading(was.seen![k], r)) &&

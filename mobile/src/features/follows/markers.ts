@@ -2,6 +2,8 @@ import { isPartialCatalog } from '../../api/validation';
 import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
 import { billName, billSentenceCase } from '../../api/bill-transforms';
+import { partyMembers } from '../../api/party-page';
+import { nameKey } from '../../api/ids';
 import { formatMoney } from '../../design/format';
 import { formerMember, partySlug, partyText } from '../../design/party';
 import {
@@ -230,36 +232,44 @@ function personFingerprint(id: string, sources: FollowSources) {
     };
     const records = recordsFrom(rich.latest ?? rich.items, 'register');
     if (records)
-      markers.declarations.records = records.map((r) => ({
-        ...r,
-        slug: profile.slug ?? id,
-      }));
+      markers.declarations.records = records
+        .sort((a, b) => (b.added ?? b.date).localeCompare(a.added ?? a.date))
+        .slice(0, 20)
+        .map((r) => ({
+          ...r,
+          slug: profile.slug ?? id,
+        }));
   }
   // Bills are used only if the shared follow sources already include them.
   if (sources.bills) {
-    const records = sources.bills.bills.flatMap((bill) => {
-      const raw = bill as typeof bill & { sponsor_person_id?: string };
-      if (
-        !bill.introduced ||
-        !(
-          (!!raw.sponsor_person_id &&
-            (raw.sponsor_person_id === id ||
-              raw.sponsor_person_id === identity.legacyPersonId)) ||
-          bill.sponsor === identity.name
+    const records = sources.bills.bills
+      .flatMap((bill) => {
+        const raw = bill as typeof bill & { sponsor_person_id?: string };
+        if (
+          !bill.introduced ||
+          !(
+            (!!raw.sponsor_person_id &&
+              (raw.sponsor_person_id === id ||
+                raw.sponsor_person_id === identity.legacyPersonId)) ||
+            bill.sponsor === identity.name
+          )
         )
+          return [];
+        return [
+          {
+            key: bill.key,
+            kind: 'bill' as const,
+            date: bill.introduced,
+            title: billName(bill),
+            billKey: bill.key,
+            chamber: bill.originating_house ?? undefined,
+          },
+        ];
+      })
+      .sort(
+        (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
       )
-        return [];
-      return [
-        {
-          key: bill.key,
-          kind: 'bill' as const,
-          date: bill.introduced,
-          title: billName(bill),
-          billKey: bill.key,
-          chamber: bill.originating_house ?? undefined,
-        },
-      ];
-    });
+      .slice(0, 10);
     markers.introduced = {
       value: records.length,
       asAt: null,
@@ -310,7 +320,10 @@ function billFingerprint(key: string, sources: FollowSources) {
   ] as const) {
     const records = recordsFrom(value, kind);
     if (records)
-      markers[marker]!.records = records.map((r) => ({ ...r, billKey: key }));
+      markers[marker]!.records = records
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 1)
+        .map((r) => ({ ...r, billKey: key }));
   }
   return { title: billName(row), markers };
 }
@@ -353,7 +366,7 @@ function partyFingerprint(id: string, sources: FollowSources) {
       value: years[0] ?? null,
       asAt: sources.money.meta.generated,
       words: 'AEC disclosure returns, CC BY 4.0',
-      records: years.map((year) => ({
+      records: years.slice(0, 1).map((year) => ({
         key: `return:${year}`,
         kind: 'return',
         title: financialYear(year),
@@ -362,34 +375,45 @@ function partyFingerprint(id: string, sources: FollowSources) {
     },
   };
   if (sources.people && sources.roster && sources.slugs && sources.manifest) {
-    const members: FollowRecord[] = [];
-    for (const person of sources.people.people) {
-      try {
-        const profile = profileFor(person.person_id, {
-          manifest: sources.manifest,
-          roster: sources.roster,
-          people: sources.people,
-          slugs: sources.slugs,
-        });
-        const identity = profile.blocks.identity.data;
-        if (
-          identity?.partyStatus !== 'current' ||
-          !identity.party ||
-          partySlug(identity.party) !== id
-        )
-          continue;
-        members.push({
-          key: person.person_id,
-          kind: 'member',
-          name: identity.name,
-          title: identity.name,
-          slug: profile.slug ?? person.person_id,
-          date: identity.asOf ?? sources.roster.meta.generated,
-        });
-      } catch {
-        /* An unresolved identity cannot supply a member change. */
-      }
-    }
+    const personIds = new Map(
+      sources.people.people.flatMap((person) =>
+        [person.name, ...person.aliases].map(
+          (name) => [nameKey(name), person.person_id] as const,
+        ),
+      ),
+    );
+    const rosterIds = new Map(
+      sources.roster.people
+        .filter((person) => person.pid)
+        .map((person) => [nameKey(person.name), `roster:${person.pid}`]),
+    );
+    const members = [
+      ...new Map(
+        partyMembers(
+          node.label,
+          sources.roster,
+          sources.people,
+          sources.slugs,
+          sources.manifest,
+        ).current.map((member): [string, FollowRecord] => {
+          const key =
+            personIds.get(nameKey(member.name)) ??
+            rosterIds.get(nameKey(member.name)) ??
+            member.slug;
+          return [
+            key,
+            {
+              key,
+              kind: 'member',
+              name: member.name,
+              title: member.name,
+              slug: member.slug,
+              date: member.asAt ?? sources.roster!.meta.generated,
+            },
+          ];
+        }),
+      ).values(),
+    ];
     markers.members = {
       value: members
         .map((m) => m.key)
