@@ -408,3 +408,29 @@ export function staleText(savedAt: DateInput): string {
     ? `Saved ${saved}. It may be out of date.`
     : 'This is a saved copy. It may be out of date.';
 }
+
+/** A stored parliamentary stage belongs in a row's dated kind line. */
+export function recordTitleStage(title: string): string | null {
+  return (
+    title.match(
+      /\s+(?:-|\u2013|\u2014)\s+(First reading|Second reading|Third reading|Consideration in detail|Committee stage)\s*$/i,
+    )?.[1] ?? null
+  );
+}
+/** Clean stored record headings without changing the words of the record. */
+export function cleanRecordTitle(title: string): string {
+  return title
+    .replace(
+      /\s+(?:-|\u2013|\u2014)\s+(First reading|Second reading|Third reading|Consideration in detail|Committee stage)\s*$/i,
+      '',
+    )
+    .replace(
+      /\b\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?\b/g,
+      '',
+    )
+    .replace(/\u2014/g, ' · ')
+    .replace(/\s*([·|])(?:\s*[·|])+/g, ' $1 ')
+    .replace(/\s+/g, ' ')
+    .replace(/^[\s·|\-:]+|[\s·|\-:]+$/g, '')
+    .trim();
+}

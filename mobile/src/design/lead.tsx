@@ -11,7 +11,7 @@ import {
 import { EXTERNAL_GLYPH, Icon } from './icon';
 import { AsAtLine } from './record';
 import { Text } from './text';
-import { colors, minimumTarget, spacing } from './tokens';
+import { colors, minimumTarget, rhythm } from './tokens';
 import type { AsAt } from './format';
 
 // The shape of one signal in /discovery.json.
@@ -84,6 +84,7 @@ function evidenceSpoken(item: LeadEvidence) {
  * "$4,537,500 / Contract value · starts 6 Feb 2017 / AusTender register ·
  * record CN3407266".
  */
+/** @deprecated Use a RecordRow with its source. */
 export function LeadEvidenceLink({
   item,
   testID,
@@ -108,16 +109,16 @@ export function LeadEvidenceLink({
           </Text>
         ) : null}
         {item.detail ? (
-          <Text wordSafe variant="metadata">
+          <Text wordSafe variant="secondary">
             {item.detail}
           </Text>
         ) : null}
-        <Text wordSafe variant="fine" tone={item.url ? 'bronzeInk' : 'inkSoft'}>
+        <Text wordSafe variant="footnote" tone={item.url ? 'navy' : 'inkSoft'}>
           {citation}
         </Text>
       </View>
       {item.url ? (
-        <Icon name={EXTERNAL_GLYPH} size={15} tone="bronzeInk" />
+        <Icon name={EXTERNAL_GLYPH} size={15} tone="inkSoft" />
       ) : null}
     </>
   );
@@ -160,6 +161,7 @@ export function LeadEvidenceLink({
  * With a `testID`, its parts carry `<testID>-title`, `-metric-N`,
  * `-caveat-N`, `-evidence-N` and `-as-at`.
  */
+/** @deprecated Compose a sourced FigureBlock and evidence rows. */
 export function LeadCard({
   lead,
   category,
@@ -183,10 +185,10 @@ export function LeadCard({
         testID={part('title')}
         style={styles.head}
       >
-        <Text variant="label" tone="bronzeInk">
+        <Text variant="capsule" tone="inkSoft">
           Lead · {category}
         </Text>
-        <Text wordSafe variant="subheading">
+        <Text wordSafe variant="rowRecord">
           {lead.title}
         </Text>
       </View>
@@ -211,12 +213,12 @@ export function LeadCard({
                   wordSafe
                   variant="strong"
                   tabular
-                  tone="bronzeInk"
+                  tone="inkSoft"
                   style={stacked ? null : styles.metricValue}
                 >
                   {text}
                 </Text>
-                <Text wordSafe variant="metadata" style={styles.grow}>
+                <Text wordSafe variant="secondary" style={styles.grow}>
                   {metric.label}
                 </Text>
               </View>
@@ -230,7 +232,7 @@ export function LeadCard({
             <Icon name="exclamationmark.triangle" size={13} tone="inkSoft" />
             <Text
               wordSafe
-              variant="fine"
+              variant="footnote"
               tone="ink"
               testID={part(`caveat-${index}`)}
               style={styles.grow}
@@ -242,7 +244,7 @@ export function LeadCard({
       </View>
       {lead.evidence.length ? (
         <View>
-          <Text variant="label" tone="bronzeInk">
+          <Text variant="capsule" tone="inkSoft">
             Example records ({formatCount(lead.evidence.length)})
           </Text>
           {lead.evidence.map((item, index) => (
@@ -262,26 +264,26 @@ export function LeadCard({
 }
 
 const styles = StyleSheet.create({
-  card: { gap: spacing.s4 },
-  head: { gap: spacing.s1 },
-  caveat: { flexDirection: 'row', gap: spacing.s3, alignItems: 'flex-start' },
+  card: { gap: rhythm.block },
+  head: { gap: rhythm.line },
+  caveat: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
   metric: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: spacing.s4,
-    paddingVertical: spacing.s2,
+    gap: rhythm.block,
+    paddingVertical: rhythm.tight,
   },
-  metricStacked: { flexDirection: 'column', gap: spacing.s1 },
+  metricStacked: { flexDirection: 'column', gap: rhythm.line },
   metricValue: { minWidth: 140 },
   grow: { flex: 1 },
-  caveats: { gap: spacing.s2 },
+  caveats: { gap: rhythm.tight },
   evidence: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
     minHeight: minimumTarget,
-    paddingVertical: spacing.s3,
+    paddingVertical: rhythm.tight,
   },
-  evidenceText: { flex: 1, gap: spacing.s1 },
+  evidenceText: { flex: 1, gap: rhythm.line },
   pressed: { backgroundColor: colors.sunken },
 });

@@ -1,19 +1,29 @@
-import { router } from 'expo-router';
-import { ownsRowPadding } from './row-padding';
+import { router, type Href } from 'expo-router';
+import {
+  ownsRowPadding,
+  useRowHighlight,
+  useRowInset,
+  useRowCellStyle,
+} from './row-padding';
+import {
+  RowLink,
+  rowMenus,
+  useRowFollow,
+  type RowMenuAction,
+} from './row-link';
 import { partyRoute } from '../navigation/routes';
-import { isValidElement, useEffect, useState } from 'react';
+import { isValidElement, useState } from 'react';
 import { localImageURI } from '../api/image-policy';
 import type { ReactNode } from 'react';
 import {
-  Animated,
-  Easing,
   Image,
   Pressable,
   StyleSheet,
   View,
   useWindowDimensions,
+  useColorScheme,
 } from 'react-native';
-import { useAccessibilitySize, useReduceMotion } from './accessibility';
+import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import type { PartyStatus } from '../api/party-transforms';
 import {
@@ -28,103 +38,41 @@ import { Hoverable, useHover } from './adaptive';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
-import { colors, hairline, light, minimumTarget, rhythm } from './tokens';
+import { colors, hairline, minimumTarget, rhythm } from './tokens';
 
 const portraitSizes = { row: 44, profile: 96 } as const;
-
-// One beat for every waiting portrait, so a list of them breathes together.
-// Colour only: the veil steps between two opaque roles.
-const beat = new Animated.Value(0);
-let waiting = 0;
-let beating: Animated.CompositeAnimation | null = null;
-function useBeat(active: boolean) {
-  useEffect(() => {
-    if (!active) return;
-    if (waiting++ === 0) {
-      beat.setValue(0);
-      beating = Animated.loop(
-        Animated.sequence(
-          [1, 0].map((toValue) =>
-            Animated.timing(beat, {
-              toValue,
-              duration: 800,
-              easing: Easing.inOut(Easing.quad),
-              useNativeDriver: false,
-            }),
-          ),
-        ),
-      );
-      beating.start();
-    }
-    return () => {
-      if (--waiting === 0) {
-        beating?.stop();
-        beating = null;
-      }
-    };
-  }, [active]);
-}
-const veilBeat = beat.interpolate({
-  inputRange: [0, 1],
-  outputRange: [light.sunken, light.dividerSubtle],
-});
-
-/**
- * An unchanged local portrait, or the existing blank circle. Never initials.
- * While `loading` (the lookup is still running) or the image is still being
- * decoded, a veil over the blank circle breathes softly between sunken and
- * the hairline colour; once the photo is drawn the veil clears, so the photo
- * fades in. Under Reduce Motion the veil is still and clears at once.
- * Nothing changes size, so nothing around it moves.
- */
+/** A circular portrait; an absent or failed image stays a blank circle. */
 export function Portrait({
   size = 'row',
   testID,
   localURI,
+  uri,
   name,
   official = false,
   nameBeside = true,
   onDisplay,
-  loading = false,
+  loading: _loading = false,
 }: {
-  size?: keyof typeof portraitSizes;
+  size?: keyof typeof portraitSizes | 28 | 44 | 56 | 72 | 80 | 96;
   testID?: string;
   localURI?: string;
+  uri?: string | null;
   name?: string;
   official?: boolean;
   nameBeside?: boolean;
   onDisplay?: (visible: boolean) => void;
-  /** The portrait lookup has not answered yet. */
   loading?: boolean;
 }) {
-  const [failedURI, setFailedURI] = useState<string | null>(null);
-  const [shownURI, setShownURI] = useState<string | null>(null);
-  const [clearedURI, setClearedURI] = useState<string | null>(null);
-  const [reveal] = useState(() => new Animated.Value(0));
-  const reduced = useReduceMotion();
-  const dimension = portraitSizes[size];
-  let uri: string | undefined;
+  const [failed, setFailed] = useState<string | null>(null);
+  const dimension = typeof size === 'number' ? size : portraitSizes[size];
+  const input = localURI ?? uri;
+  let source: string | undefined;
   try {
-    if (localURI && localURI !== failedURI) uri = localImageURI(localURI);
+    if (input && input !== failed) source = localImageURI(input);
   } catch {
-    /* Blank fallback for anything outside the cache. */
+    /* Retain the blank circle for a rejected URI. */
   }
-  const decorative = nameBeside || !name || !uri;
-  const shown = !!uri && shownURI === uri;
-  const pending = !shown && (loading || !!uri);
-  useBeat(pending && !reduced);
-  const veil = shown
-    ? clearedURI === uri
-      ? null
-      : reveal.interpolate({
-          inputRange: [0, 1],
-          outputRange: [light.sunken, `${light.sunken}00`],
-        })
-    : pending
-      ? reduced
-        ? light.sunken
-        : veilBeat
-      : null;
+  const decorative = nameBeside || !name || !source;
   return (
     <View
       testID={testID}
@@ -137,13 +85,14 @@ export function Portrait({
           width: dimension,
           height: dimension,
           borderRadius: dimension / 2,
+          borderCurve: 'continuous',
           overflow: 'hidden',
         },
       ]}
     >
-      {uri ? (
+      {source ? (
         <Image
-          source={{ uri: localImageURI(uri) }}
+          source={{ uri: localImageURI(source) }}
           style={{ width: dimension, height: dimension }}
           resizeMode="contain"
           accessible={!decorative}
@@ -157,33 +106,55 @@ export function Portrait({
             decorative ? 'no-hide-descendants' : 'auto'
           }
           accessibilityIgnoresInvertColors
-          onLoad={() => {
-            const drawn = uri!;
-            setShownURI(drawn);
-            if (reduced) setClearedURI(drawn);
-            else {
-              reveal.setValue(0);
-              Animated.timing(reveal, {
-                toValue: 1,
-                duration: 220,
-                easing: Easing.out(Easing.quad),
-                useNativeDriver: false,
-              }).start(() => setClearedURI(drawn));
-            }
-            onDisplay?.(true);
-          }}
+          onLoad={() => onDisplay?.(true)}
           onError={() => {
-            setFailedURI(uri!);
+            setFailed(input!);
             onDisplay?.(false);
           }}
         />
       ) : null}
-      {veil ? (
-        <Animated.View
-          pointerEvents="none"
-          style={[StyleSheet.absoluteFill, { backgroundColor: veil }]}
-        />
-      ) : null}
+    </View>
+  );
+}
+
+/** Decorative group of faces; the containing row supplies the count in words. */
+export function FaceStack({
+  portraits,
+  max = 6,
+}: {
+  portraits: (string | null)[];
+  max?: number;
+}) {
+  return (
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ flexDirection: 'row' }}
+    >
+      {portraits.slice(0, Math.max(0, Math.min(6, max))).map((uri, index) => (
+        <View
+          key={index}
+          style={{
+            marginLeft: index ? -8 : 0,
+            borderRadius: 999,
+            borderCurve: 'continuous',
+          }}
+        >
+          <Portrait size={28} uri={uri} />
+          <View
+            pointerEvents="none"
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                borderWidth: 2,
+                borderColor: colors.raised,
+                borderRadius: 999,
+                borderCurve: 'continuous',
+              },
+            ]}
+          />
+        </View>
+      ))}
     </View>
   );
 }
@@ -209,14 +180,15 @@ export function partyDotSize(fontScale: number): number {
  */
 export function PartyLabel({
   party,
-  status,
+  status = 'unknown',
   formerly,
   dense = false,
   testID,
   linked = true,
   nested = false,
   onDeep = false,
-}: PartyContext & {
+}: Omit<PartyContext, 'status'> & {
+  status?: PartyStatus;
   dense?: boolean;
   testID?: string;
   linked?: boolean;
@@ -234,7 +206,8 @@ export function PartyLabel({
   onDeep?: boolean;
 }) {
   const identity = partyIdentity(party);
-  const dot = partyDot(party);
+  const scheme = useColorScheme();
+  const dot = partyDot(party, scheme === 'dark' ? 'dark' : 'light');
   const text = partyText({ party, status, formerly }, dense);
   const partyLinked = linked && !nested && isPartyLabel(party);
   const previousLinked =
@@ -289,11 +262,12 @@ export function PartyLabel({
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={[
-            onDeep ? styles.dotRinged : null,
+            styles.dotRinged,
             {
               width: dotSize,
               height: dotSize,
               borderRadius: dotSize / 2,
+              borderCurve: 'continuous',
               backgroundColor: dot,
             },
           ]}
@@ -301,14 +275,14 @@ export function PartyLabel({
       ) : null}
       <Text
         wordSafe={fixed}
-        variant="label"
+        variant="secondary"
         tone={onDeep ? 'onNavySoft' : undefined}
         style={styles.partyText}
       >
         {text.visible}
         {text.previous ? (
           <Text
-            variant="label"
+            variant="secondary"
             tone={onDeep ? 'onNavySoft' : undefined}
             onPress={
               previousLinked && formerly
@@ -357,54 +331,58 @@ export function PartyChip({
   );
 }
 
-// A party always travels with its status, so no row shows a historical
-// affiliation as if it were current, or an undated one as if it were former.
-type PersonRowParty =
-  | { party?: undefined; partyStatus?: undefined; formerly?: undefined }
-  | {
-      party: string | null | undefined;
-      partyStatus: PartyStatus;
-      formerly?: string | null;
-    };
-export type PersonRowProps = PersonRowParty & {
+export interface PersonRowProps {
   name: string;
-  /** Reviewed portrait content; callers retain its credit and licence links. */
   portrait?: ReactNode;
-  /** "Member for Grayndler · NSW" or "Senator for Queensland". */
-  place?: string;
-  /** A date or extra line: "Sponsored travel, added 2 Sep 2026". */
-  detail?: string;
-  /** Present only for roster parliamentarians with a native page. */
+  party?: string | null;
+  partyStatus?: PartyStatus;
+  formerly?: string | null;
+  place?: string | null;
+  detail?: string | null;
+  size?: 44 | 56;
+  href?: Href;
+  partyHref?: Href;
+  menu?: RowMenuAction[] | 'person';
+  zoomSource?: boolean;
+  yourMP?: boolean;
   onPress?: () => void;
-  /** Replaces the spoken "name, party, place, detail" where a screen needs another order. */
+  select?: () => void;
   accessibilityLabel?: string;
   testID?: string;
-  /** Opt in only for journeys that inspect native drawn-line bounds. */
   testDrawnName?: boolean;
-  /** Canonical public profile path for iPad dragging. */
   dragPath?: string;
-  /**
-   * In an iPad split list: true for the person in the detail pane, false for
-   * the others (no chevron). Undefined is an ordinary row (every iPhone row).
-   */
   selected?: boolean;
-  /** The keyboard's place in a split list. */
   highlighted?: boolean;
-  /**
-   * The row's own lines already say whether they sit (a directory row's years
-   * under a Sitting or Former heading, a sponsor's "Formerly Member for …"):
-   * no "Former member" line.
-   */
   statusShown?: boolean;
-};
-/**
- * A row for a roster parliamentarian: portrait (blank circle without one)
- * aligned to the top of its text, then the name, the party chip on its own
- * line, the place ("Member for Grayndler · NSW") and any detail below, and a
- * chevron. Not for donors, witnesses, suppliers or other
- * private individuals: they get plain text and never a profile link
- * (decision 3).
- */
+}
+function PersonLink({
+  slug,
+  name,
+  href,
+  zoom,
+  children,
+  select,
+}: {
+  slug: string;
+  name: string;
+  href: Href;
+  zoom?: boolean;
+  children: React.ReactElement;
+  select?: () => void;
+}) {
+  const follow = useRowFollow('person', slug, name);
+  return (
+    <RowLink
+      href={href}
+      select={select}
+      zoom={zoom}
+      menu={rowMenus.person({ slug, name, ...follow })}
+    >
+      {children}
+    </RowLink>
+  );
+}
+/** One anatomy for every roster member. Callers decide whether this is Your MP. */
 export function PersonRow({
   name,
   portrait,
@@ -413,34 +391,51 @@ export function PersonRow({
   formerly,
   place,
   detail,
+  size = 44,
+  href,
+  partyHref,
+  menu = 'person',
+  zoomSource,
+  yourMP = false,
   onPress,
+  select,
   accessibilityLabel,
   testID,
   testDrawnName = false,
   dragPath,
   selected,
-  highlighted = false,
+  highlighted,
   statusShown = false,
 }: PersonRowProps) {
-  const slug = isValidElement<{ slug?: string }>(portrait)
+  const portraitSlug = isValidElement<{ slug?: string }>(portrait)
     ? portrait.props.slug
     : undefined;
+  const slug =
+    typeof href === 'object' && 'params' in href
+      ? String(href.params?.slug ?? '')
+      : typeof href === 'string'
+        ? href.split('/').pop()
+        : portraitSlug;
   const path = dragPath ?? (slug ? `/subject/person/${slug}` : undefined);
   const stacked = useAccessibilitySize();
-  const inSplit = selected !== undefined;
+  const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
+  const split = selected !== undefined;
   const [hovered, onHover] = useHover();
-  const partyContext =
+  const onActivate =
+    select ?? onPress ?? (href ? () => router.push(href) : undefined);
+  useRowInset(stacked ? 16 : 16 + size + rhythm.tight);
+  const context =
     party === undefined
       ? null
-      : { party, status: partyStatus ?? 'unknown', formerly };
-  // The party label never says whether they sit; a known former member
-  // gets one quiet line instead (TestFlight build 32).
-  const former = statusShown ? null : formerMember(partyContext?.status);
+      : { party, status: partyStatus ?? ('unknown' as const), formerly };
+  const former = statusShown ? null : formerMember(context?.status);
   const label =
     accessibilityLabel ??
     [
       name,
-      partyContext ? partyText(partyContext).spoken : null,
+      yourMP ? 'Your MP' : null,
+      context ? partyText(context).spoken : null,
       former,
       place,
       detail,
@@ -450,131 +445,170 @@ export function PersonRow({
   const body = (
     <>
       <View style={[styles.personMain, stacked ? styles.personStacked : null]}>
-        {portrait ?? <Portrait />}
+        {typeof portrait === 'string' ||
+        portrait === null ||
+        portrait === undefined ? (
+          <Portrait
+            size={size}
+            uri={typeof portrait === 'string' ? portrait : undefined}
+          />
+        ) : (
+          portrait
+        )}
         <View
           style={[styles.personText, stacked ? null : styles.personTextInline]}
         >
           <Text
             wordSafe
-            variant="strong"
+            variant="name"
             {...(testDrawnName ? nameProbeProps : {})}
-            testID={testID ? `${testID}-name` : undefined}
+            testID={testID && `${testID}-name`}
             style={styles.personName}
           >
             {name}
           </Text>
-          {partyContext ? (
+          {yourMP ? (
+            <Text wordSafe variant="secondary">
+              Your MP
+            </Text>
+          ) : null}
+          {context ? (
             <View style={styles.personParty}>
-              <PartyLabel {...partyContext} linked={false} nested />
+              <PartyLabel {...context} linked={false} nested />
             </View>
           ) : null}
           {former ? (
             <Text
               wordSafe
-              variant="metadata"
+              variant="secondary"
               testID={testID && `${testID}-former`}
             >
               {former}
             </Text>
           ) : null}
           {place ? (
-            <Text wordSafe variant="metadata">
+            <Text wordSafe variant="secondary">
               {place}
             </Text>
           ) : null}
           {detail ? (
-            <Text wordSafe variant="fine">
+            <Text wordSafe variant="secondary">
               {detail}
             </Text>
           ) : null}
         </View>
       </View>
-      {onPress && !inSplit ? (
-        <Icon name="chevron.right" size={14} tone="inkSoft" />
+      {!split && (href || onPress || select) ? (
+        <Icon name={personChevron} size={13} maxScale={1.5} tone="inkSoft" />
       ) : null}
     </>
   );
-  if (!onPress)
+  if (!href && !onPress && !select)
     return (
       <View
         accessible
         accessibilityLabel={label}
         testID={testID}
-        style={styles.person}
+        style={[styles.person, cellStyle]}
       >
         {body}
       </View>
     );
+  const partyActions = [
+    ...(partyHref || (context && isPartyLabel(context.party))
+      ? [
+          {
+            name: 'openParty',
+            label: partyHref
+              ? 'Open party'
+              : `Open ${partyIdentity(context?.party).name} party page`,
+          },
+        ]
+      : []),
+    ...(context?.formerly &&
+    isPartyLabel(context.formerly) &&
+    context.formerly !== context.party
+      ? [
+          {
+            name: 'openPreviousParty',
+            label: `Open ${context.formerly} party page`,
+          },
+        ]
+      : []),
+  ];
   const row = (
     <Pressable
-      accessibilityRole="button"
+      accessible
+      accessibilityRole={href ? 'link' : 'button'}
       accessibilityLabel={label}
-      accessibilityState={inSplit ? { selected } : undefined}
-      accessibilityActions={
-        partyContext
-          ? [
-              ...(isPartyLabel(partyContext.party)
-                ? [
-                    {
-                      name: 'openParty',
-                      label: `Open ${partyIdentity(partyContext.party).name} party page`,
-                    },
-                  ]
-                : []),
-              ...(isPartyLabel(partyContext.formerly) &&
-              partyContext.formerly !== partyContext.party
-                ? [
-                    {
-                      name: 'openPreviousParty',
-                      label: `Open ${partyContext.formerly} party page`,
-                    },
-                  ]
-                : []),
-            ]
-          : undefined
-      }
+      accessibilityState={selected !== undefined ? { selected } : undefined}
+      accessibilityActions={partyActions}
       onAccessibilityAction={(event) => {
-        if (
-          event.nativeEvent.actionName === 'openParty' &&
-          partyContext?.party &&
-          isPartyLabel(partyContext.party)
-        )
-          router.push(partyRoute(partyContext.party));
+        if (event.nativeEvent.actionName === 'openParty') {
+          if (partyHref) router.push(partyHref);
+          else if (context?.party && isPartyLabel(context.party))
+            router.push(partyRoute(context.party));
+        }
         if (
           event.nativeEvent.actionName === 'openPreviousParty' &&
-          partyContext?.formerly &&
-          isPartyLabel(partyContext.formerly)
+          context?.formerly &&
+          isPartyLabel(context.formerly)
         )
-          router.push(partyRoute(partyContext.formerly));
+          router.push(partyRoute(context.formerly));
       }}
       testID={testID}
-      onPress={onPress}
+      onPress={select ?? onPress}
       style={({ pressed }) => [
         styles.person,
-        inSplit ? splitRowStyles.bleed : null,
+        split ? splitRowStyles.bleed : null,
+        cellStyle,
         selected
-          ? selectedWash('people')
-          : // Raised, not sunken: every party dot keeps 3:1 against the highlight.
-            pressed || (inSplit && (hovered || highlighted))
-            ? { backgroundColor: colors.raised }
+          ? selectedWash()
+          : pressed || highlighted || hovered
+            ? { backgroundColor: highlight }
             : null,
       ]}
     >
-      {selected ? <SelectedMark accent="people" /> : null}
+      {selected ? <SelectedMark /> : null}
       {body}
     </Pressable>
   );
+  const link = href ? (
+    menu === 'person' && slug ? (
+      <PersonLink
+        slug={slug}
+        name={name}
+        href={href}
+        zoom={zoomSource}
+        select={select ?? (selected !== undefined ? onPress : undefined)}
+      >
+        {row}
+      </PersonLink>
+    ) : (
+      <RowLink
+        href={href}
+        zoom={zoomSource}
+        menu={Array.isArray(menu) ? menu : undefined}
+        select={select ?? (selected !== undefined ? onPress : undefined)}
+      >
+        {row}
+      </RowLink>
+    )
+  ) : (
+    row
+  );
   return (
     <Hoverable
-      effect={inSplit ? 'none' : 'hover'}
-      onHover={inSplit ? onHover : undefined}
-      onActivate={onPress}
+      effect="none"
+      onActivate={onActivate}
+      onHover={onHover}
       drag={path ? { path, title: name } : undefined}
     >
-      {row}
+      {link}
     </Hoverable>
   );
 }
+const personChevron = 'chevron.right';
 
 const styles = StyleSheet.create({
   portrait: {
@@ -591,7 +625,7 @@ const styles = StyleSheet.create({
   partyHug: { alignSelf: 'flex-start' },
   partyFixed: { alignSelf: 'stretch', width: '100%' },
   partyLinked: { minHeight: minimumTarget, minWidth: minimumTarget },
-  partyText: { flexShrink: 1 },
+  partyText: { flexShrink: 1, fontWeight: '600' },
   dotRinged: {
     borderWidth: 1.5,
     borderColor: colors.raised,
@@ -602,7 +636,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: 6,
+    paddingVertical: rhythm.row,
   },
   // The portrait sits at the top of the text block, level with the name.
   personMain: {

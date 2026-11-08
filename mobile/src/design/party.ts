@@ -1,5 +1,10 @@
 import type { PartyStatus } from '../api/party-transforms';
-import { partyColors, partyWashes, type PartyKey } from './palette';
+import {
+  partyColors,
+  partyColorsDark,
+  partyWashes,
+  type PartyKey,
+} from './palette';
 
 // The web's party map (portal/public/app.js PARTY_MAP): the colour class and
 // the short label used only in dense rows. Names stay as the data gives them.
@@ -81,10 +86,15 @@ export function partyIdentity(party: string | null | undefined): PartyIdentity {
  * web's party-ind chip). Independent is a label, never a link; other
  * affiliations and presiding roles get no dot.
  */
-export function partyDot(party: string | null | undefined): string | null {
+export function partyDot(
+  party: string | null | undefined,
+  appearance: 'light' | 'dark' | null = 'light',
+): string | null {
   const identity = partyIdentity(party);
   return isPartyLabel(party) || knownParty(identity.name)?.key === 'independent'
-    ? identity.color
+    ? appearance === 'dark'
+      ? partyColorsDark[knownParty(identity.name)?.key ?? 'other']
+      : identity.color
     : null;
 }
 
@@ -182,3 +192,6 @@ export function resolveParty(input: string, labels: string[]): string | null {
  */
 export const formerMember = (status: PartyStatus | undefined) =>
   status === 'former' ? 'Former member' : null;
+
+/** The shared neutral order for OPAX's own party lists. */
+export { partyOrder as neutralPartyOrder } from './party-groups';

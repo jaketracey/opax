@@ -1,12 +1,12 @@
-import { useRef } from 'react';
-import { Platform, View, findNodeHandle } from 'react-native';
+import { Platform } from 'react-native';
 import { router } from 'expo-router';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { IconButton } from '../../design/primitives';
 import { chrome } from '../../design/tokens';
-import { showMenu, type MenuAction } from '../../design/menu';
+import { showMenu } from '../../design/menu';
+import { haptic } from '../../design/haptics';
+import type { RowMenuAction, RowMenuLeaf } from '../../design/row-link';
 import { isRecordSlug } from '../../api/record-policy';
-import { canonicalUrl } from '../../navigation/external';
+import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { citeRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { copyText } from './actions';
@@ -22,13 +22,17 @@ export interface RecordTarget {
  * 5, P1-2): Cite, Copy link and Share. They live under ⋯, never as a row of
  * drawn buttons. Opening a menu calls no API until Cite opens the record.
  */
-export function recordActions({ slug, title }: RecordTarget): MenuAction[] {
+export function recordActions({ slug, title }: RecordTarget): RowMenuLeaf[] {
   if (!isRecordSlug(slug)) return [];
   return [
     { title: 'Cite', onPress: () => router.push(citeRoute(slug)) },
     {
       title: 'Copy link',
-      onPress: () => void copyText(canonicalUrl(`/doc/${slug}`)),
+      onPress: () => {
+        void copyText(canonicalUrl(`/doc/${slug}`)).then((copied) => {
+          if (copied) haptic('success');
+        });
+      },
     },
     {
       title: 'Share',
@@ -55,10 +59,9 @@ export function recordMenuItem(target: RecordTarget): NativeStackHeaderItem {
     type: 'menu',
     label: 'More',
     accessibilityLabel: 'More for this record',
-    icon: { type: 'sfSymbol', name: 'ellipsis' },
+    icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
     tintColor: chrome.tint,
     menu: {
-      title: target.title,
       items: actions.map((action) => ({
         type: 'action' as const,
         label: action.title,
@@ -68,28 +71,21 @@ export function recordMenuItem(target: RecordTarget): NativeStackHeaderItem {
   };
 }
 
-/** The same ⋯ drawn inline, where the record has no navigation bar (an iPad pane). */
-export function RecordActions({
-  testID = 'doc-actions',
-  ...target
-}: RecordTarget & { testID?: string }) {
-  const anchor = useRef<View>(null);
-  const actions = recordActions(target);
-  if (!actions.length) return null;
-  return (
-    <View ref={anchor} collapsable={false}>
-      <IconButton
-        symbol="ellipsis"
-        accessibilityLabel="More for this record"
-        testID={testID}
-        onPress={() =>
-          showMenu(
-            target.title,
-            actions,
-            findNodeHandle(anchor.current) ?? undefined,
-          )
-        }
-      />
-    </View>
-  );
+/** Menu payload for pageItems. No in-content More button. */
+export function recordPageActions(target: RecordTarget): RowMenuAction[] {
+  const [cite, copy] = recordActions(target);
+  if (!cite || !copy) return [];
+  return [
+    { title: '', inline: true, items: [cite] },
+    copy,
+    {
+      title: 'Open on opax.com.au',
+      symbol: 'arrow.up.right.square',
+      onPress: () => void openOnWeb(`/doc/${target.slug}`, target.title),
+    },
+  ];
+}
+/** @deprecated Screens install recordPageActions in their navigation bar. */
+export function RecordActions(_props: RecordTarget & { testID?: string }) {
+  return null;
 }

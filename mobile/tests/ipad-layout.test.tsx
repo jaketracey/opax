@@ -277,7 +277,7 @@ describe('two panes and the reading measure (design pass 4E)', () => {
     // Jest's own window is at an accessibility size.
     expect(listWidth(3.571)).toBe(493);
   });
-  test('the list pane draws no category accent: the detail carries it', () => {
+  test('sections draw no category accent in either pane', () => {
     mockLayout.regular = true;
     mockLayout.width = 1096;
     const section = (
@@ -310,9 +310,8 @@ describe('two panes and the reading measure (design pass 4E)', () => {
       );
     });
     mounted.push(alone, split);
-    expect(marks(alone)).toBe(1);
-    // Only the detail pane's section keeps its mark.
-    expect(marks(split)).toBe(1);
+    expect(marks(alone)).toBe(0);
+    expect(marks(split)).toBe(0);
   });
   test('a route can choose the readable column over the screen’s own', () => {
     const seen: string[] = [];
