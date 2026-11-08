@@ -30,6 +30,102 @@
       "advisory": "GHSA-w5hq-g745-h8pq",
       "exposure": "tooling",
       "reason": "Prebuild xcode tooling; not executed by the app."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-4642-5mcj-2rqw",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-6wvx-3r32-xmcg",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-525v-9gp9-w22h",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-7wch-p9px-956x",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-h6cr-wjv9-3cpp",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-4487-j8r4-4g2f",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-5cwg-6vw7-rj6p",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-jc66-7q78-782g",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-8hrf-8g6f-7xwp",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-hqq3-7jhf-c5jx",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-5x38-2vff-x55p",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "zod",
+      "advisory": "GHSA-mrhx-c7xc-m3w5",
+      "exposure": "tooling",
+      "reason": "zod 3.25.76 via eslint-config-expo > eslint-plugin-react-hooks and expo > @expo/cli: lint and CLI tooling on the developer machine, not imported by src or bundled by Metro. Reviewed 9 Nov 2026."
+    },
+    {
+      "package": "glob",
+      "advisory": "GHSA-3g3m-2fjr-6pw4",
+      "exposure": "tooling",
+      "reason": "glob 13 via @expo/config-plugins, @expo/cli, @expo/fingerprint and Jest: prebuild and test tooling over the project's own files, not bundled by Metro. Reviewed 9 Nov 2026."
+    },
+    {
+      "package": "minimatch",
+      "advisory": "GHSA-g3hv-75wg-m249",
+      "exposure": "tooling",
+      "reason": "minimatch via ESLint plugins, @typescript-eslint, Expo config tooling and Jest: lint, prebuild and test tooling with project-authored patterns, not bundled by Metro. Reviewed 9 Nov 2026."
+    },
+    {
+      "package": "deepmerge",
+      "advisory": "GHSA-gcqx-w48m-w2h4",
+      "exposure": "tooling",
+      "reason": "deepmerge 4.3.1 via expo > @expo/config and jest-config: config resolution at prebuild and test time over the project's own config, not bundled by Metro. Reviewed 9 Nov 2026."
+    },
+    {
+      "package": "decode-uri-component",
+      "advisory": "GHSA-qr28-fpjm-wq7f",
+      "exposure": "runtime",
+      "reason": "Same path and risk class as GHSA-vcc3-ghjq-m6fr: Expo Router deep-link parsing uses query-string 7, which pins decode-uri-component ^0.2.2. The 0.5.1 fix is a different module line that query-string 7 does not accept. Accepted denial-of-service risk from a crafted deep link, confined to the user's own app session; review on SDK patch updates. Reviewed 9 Nov 2026."
     }
   ]
 }
