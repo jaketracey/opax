@@ -66,8 +66,9 @@ export function useMoneyRecord(jurisdiction: MoneyJurisdiction) {
 }
 
 /**
- * VoiceOver, primed when the money module first loads, so the map's first
- * paint already knows which view to draw and never flips (map 3.11).
+ * VoiceOver, asked once when the first money screen subscribes and shared
+ * by every screen after it, so a later map's first paint already knows
+ * which view to draw (map 3.11).
  */
 const reader = (() => {
   let known: boolean | null = null;
@@ -78,11 +79,15 @@ const reader = (() => {
     listeners.forEach((listener) => listener());
   };
   let primed = false;
+  let subscription: { remove: () => void } | null = null;
   const prime = () => {
     if (primed) return;
     primed = true;
     try {
-      AccessibilityInfo.addEventListener('screenReaderChanged', set);
+      subscription = AccessibilityInfo.addEventListener(
+        'screenReaderChanged',
+        set,
+      );
       void AccessibilityInfo.isScreenReaderEnabled().then(
         (value) => {
           if (known === null) set(value);
@@ -95,6 +100,12 @@ const reader = (() => {
   };
   return {
     prime,
+    forget: () => {
+      subscription?.remove();
+      subscription = null;
+      primed = false;
+      known = null;
+    },
     get: () => known,
     subscribe: (listener: () => void) => {
       prime();
@@ -105,15 +116,20 @@ const reader = (() => {
     },
   };
 })();
-reader.prime();
 
+/** Tests start each case with VoiceOver not yet known. */
+export function forgetScreenReader() {
+  reader.forget();
+}
 /** VoiceOver's state; null until known. */
 export function useMoneyScreenReader() {
   return useSyncExternalStore(reader.subscribe, reader.get, reader.get);
 }
-/** The value at first render, kept: the view never flips after first paint. */
+/** The first known value, kept: the view never flips once it is known. */
 export function useFirstScreenReader() {
   const value = useMoneyScreenReader();
-  const [first] = useState(value);
-  return first;
+  const [first, setFirst] = useState(value);
+  // Unknown at first paint: take the first known value, then hold it.
+  if (first === null && value !== null) setFirst(value);
+  return first === null ? value : first;
 }

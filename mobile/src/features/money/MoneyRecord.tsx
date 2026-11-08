@@ -381,12 +381,15 @@ function useLeadsAbout(name: string | null) {
   useEffect(() => {
     if (!name) return;
     let active = true;
-    catalogs.discovery().then(
-      (record) => {
-        if (active) setLeads(leadsAbout(record.data, name));
-      },
-      () => undefined,
-    );
+    // Optional: absent or failing, the rows are simply not drawn.
+    Promise.resolve()
+      .then(() => catalogs.discovery())
+      .then(
+        (record) => {
+          if (active) setLeads(leadsAbout(record.data, name));
+        },
+        () => undefined,
+      );
     return () => {
       active = false;
     };

@@ -34,19 +34,13 @@ import {
   moneyLabelGroups,
   moneyLabelParties,
 } from './MoneyMapLabels';
+import { moneyMapLabel, moneySceneHeight } from './scene-size';
 
 export interface NativeMoneyMapHandle {
   focus: (id: string) => void;
 }
 /** One element for VoiceOver; the scene's own parts are hidden. */
-export const moneyMapLabel = 'Money map. The List view has the same data.';
-/**
- * The scene's height: as tall as the window is wide, to 440 pt, on iPhone;
- * 560 pt in the wide column on iPad.
- */
-export function moneySceneHeight(windowWidth: number, regular: boolean) {
-  return regular ? 560 : Math.min(Math.round(windowWidth), 440);
-}
+export { moneyMapLabel, moneySceneHeight };
 export function NativeMoneyMap({
   graph,
   view,

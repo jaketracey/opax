@@ -20,6 +20,7 @@ import {
 } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
+  Button,
   ContentUnavailable,
   FigureBlock,
   Group,
@@ -59,11 +60,7 @@ import { partyNodeFor } from './lookup';
 import { moneyPageMenu } from './menu';
 import { useMoneyFilters } from './MoneyFilters';
 import { MoneyTestHooks } from './money-probe';
-import {
-  NativeMoneyMap,
-  moneySceneHeight,
-  type NativeMoneyMapHandle,
-} from './NativeMoneyMap';
+import { NativeMoneyMap, type NativeMoneyMapHandle } from './NativeMoneyMap';
 import { moneyPartyGroups, PartyMoneyRow } from './parts';
 import {
   donationsCaveat,
@@ -93,6 +90,7 @@ import {
   rankedDonors,
   type MoneyFilters,
 } from './view';
+import { moneySceneHeight } from './scene-size';
 
 const TOP_DONORS = 20;
 type Mode = 'list' | '3d';
@@ -191,11 +189,14 @@ export default function MoneyScreen() {
     [graph, params],
   );
   const reader = useFirstScreenReader();
-  const [mode, setMode] = useState<Mode>(() =>
-    param(params.view) === 'list' || (param(params.view) !== 'map' && reader)
-      ? 'list'
-      : '3d',
-  );
+  // The reader's choice, else the link's view, else List while VoiceOver
+  // is on or not yet known (the map draws once it is known to be off).
+  const [chosen, setMode] = useState<Mode | null>(null);
+  const linked = param(params.view);
+  const mode: Mode =
+    chosen ??
+    (linked === 'list' ? 'list' : linked === 'map' ? '3d' : null) ??
+    (reader === false ? '3d' : 'list');
   const [glFailed, setGLFailed] = useState(false);
   const map = useRef<NativeMoneyMapHandle | null>(null);
   const [plate] = useState(createPlate);
@@ -255,10 +256,21 @@ export default function MoneyScreen() {
         testID="money-view-toggle"
       />
       {glFailed ? (
-        <Text wordSafe variant="footnote" testID="money-gl-note">
-          The map can’t be drawn on this device. The List view has the same
-          data.
-        </Text>
+        <Group gap={rhythm.tight}>
+          <Text wordSafe variant="footnote" testID="money-gl-note">
+            The map can’t be drawn on this device. The List view has the same
+            data.
+          </Text>
+          <Button
+            label={copy.tryAgain}
+            size="compact"
+            onPress={() => {
+              setGLFailed(false);
+              setMode('3d');
+            }}
+            testID="money-gl-retry"
+          />
+        </Group>
       ) : null}
     </View>
   );
