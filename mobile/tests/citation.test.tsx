@@ -11,6 +11,7 @@ import {
 } from '../src/features/ask/citation-state';
 import { answerBlocks } from '../src/features/ask/answer-markdown';
 import { answerTurn } from '../src/features/ask/session';
+import { bindShortLastWord } from '../src/design/record-title';
 import { presentSheet } from '../src/navigation/sheets';
 import type { Answer, Source, Turn } from '../src/features/ask/model';
 
@@ -169,7 +170,8 @@ test('the selected source: numeral and title, meta, the whole passage, Open reco
   // No bar title: the numeral and title lead the content.
   expect(mockFrame.title).toBe('');
   expect(host('citation-title').length).toBeGreaterThan(0);
-  expect(words()).toContain('Synthetic Fixture Bill 1');
+  // The title binds its short last word (design/record-title.ts).
+  expect(words()).toContain(bindShortLastWord('Synthetic Fixture Bill 1'));
   expect(host('citation-meta').length).toBeGreaterThan(0);
   expect(words()).toContain('Sam Placeholder');
   // The whole passage, no sentence picked inside it.
