@@ -290,6 +290,31 @@ test('40 scroll events past the title anchor set options only once, then once on
   expect(setOptions.mock.calls[1]![0]).not.toHaveProperty('title');
   act(() => view.unmount());
 });
+test('the bar title shows once half the heading is under the bar (money-19)', () => {
+  const setOptions = jest.fn();
+  let hook!: ReturnType<typeof useTitleOnScroll>;
+  function Harness() {
+    hook = useTitleOnScroll(null, 'Digital Transformation Agency');
+    return null;
+  }
+  const view = tree(
+    <NavigationContext.Provider value={{ setOptions } as never}>
+      <Harness />
+    </NavigationContext.Provider>,
+  );
+  // A two-line heading from 120 to 200 under a bar ending at 100.
+  act(() =>
+    hook.onTitleLayout({
+      nativeEvent: { layout: { x: 0, y: 120, width: 300, height: 80 } },
+    } as never),
+  );
+  setOptions.mockClear();
+  act(() => hook.onScroll(59));
+  expect(setOptions).not.toHaveBeenCalled();
+  act(() => hook.onScroll(61));
+  expect(setOptions).toHaveBeenCalledTimes(1);
+  act(() => view.unmount());
+});
 test('hidden bar titles stay out of accessibility and fade over 150 ms', () => {
   const animation = jest.spyOn(Animated, 'timing');
   const view = tree(<BarTitle title="Member" shown={false} />);

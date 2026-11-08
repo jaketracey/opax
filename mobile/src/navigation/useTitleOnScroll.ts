@@ -179,15 +179,19 @@ export function useTitleOnScroll(
     },
     [anchor, title, navigation, headerHeight, trailing],
   );
+  // The title shows once half the heading is under the bar, as UIKit's
+  // large title hands over. Waiting for its last line kept a short page's
+  // two-line heading (an agency's name) out of the bar for good: the page
+  // could not scroll that far (wave 4 money-19).
   const onTitleLayout = useCallback(
     (event: LayoutChangeEvent) => {
       if (ref?.current) {
         ref.current.measure((_x, _y, _width, height, _pageX, pageY) =>
-          setAnchorBottom(pageY + offset.current + height),
+          setAnchorBottom(pageY + offset.current + height / 2),
         );
       } else {
         const { y, height } = event.nativeEvent.layout;
-        setAnchorBottom(y + height);
+        setAnchorBottom(y + height / 2);
       }
     },
     [ref, setAnchorBottom],
