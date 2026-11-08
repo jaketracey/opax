@@ -192,3 +192,42 @@ export function serverPassage(
 ) {
   return cap(layout(String(text ?? ''), paragraphs), max);
 }
+
+/** Does this text carry Markdown headings (a line starting `#`)? */
+export const hasMarkdownHeadings = (text: string | null | undefined) =>
+  /(^|\n)#{1,6}\s/.test(String(text ?? ''));
+
+/**
+ * Markdown out of a record's text (records.md 2.2): a line starting `#`
+ * becomes a part title, leading `>` and `**` markers go, and the text
+ * between titles stays word for word. Text before the first title is a
+ * part with no title.
+ */
+export function markdownParts(
+  text: string | null | undefined,
+): { title?: string; text: string }[] {
+  const parts: { title?: string; lines: string[] }[] = [{ lines: [] }];
+  for (const line of String(text ?? '')
+    .replace(/\r\n?/g, '\n')
+    .split('\n')) {
+    const heading = /^\s*#{1,6}\s+(.*?)\s*#*\s*$/.exec(line);
+    if (heading) {
+      parts.push({ title: unmark(heading[1]!), lines: [] });
+      continue;
+    }
+    parts.at(-1)!.lines.push(unmark(line.replace(/^\s*(>\s?)+/, '')));
+  }
+  return parts
+    .map((part) => ({
+      ...(part.title ? { title: part.title } : {}),
+      text: layout(part.lines.join('\n'), true),
+    }))
+    .filter((part) => part.title || part.text);
+}
+
+/** `**bold**` and `__bold__` markers out; the words stay. */
+const unmark = (line: string) =>
+  line
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/__(.+?)__/g, '$1')
+    .replace(/^\*\*|\*\*$/g, '');

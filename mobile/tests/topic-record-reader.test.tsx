@@ -11,7 +11,7 @@ import {
 } from '../src/features/reports/model';
 import { docRoute, fromWebPath } from '../src/navigation/routes';
 import { catalogs } from '../src/api/runtime';
-import { SourceLine } from '../src/design/primitives';
+import { MachinePill, SourceLine } from '../src/design/primitives';
 import { openSource } from '../src/navigation/external';
 import { index, manifest, people, pinned, roster, slugs } from './pinned';
 
@@ -59,12 +59,30 @@ jest.mock('../src/navigation/external', () => ({
   openSource: jest.fn(async () => {}),
 }));
 let mockSlug = 'speech-18098';
-jest.mock('expo-router', () => ({
-  useSegments: () => [],
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
-  useLocalSearchParams: () => ({ slug: mockSlug }),
-}));
+jest.mock('expo-router', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  const part = (name: string) => (props: { children?: React.ReactNode }) =>
+    createElement(name, props, props.children);
+  return {
+    useSegments: () => [],
+    router: { push: jest.fn(), setParams: jest.fn() },
+    Link: Object.assign(part('Link'), {
+      Trigger: part('LinkTrigger'),
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    }),
+    Stack: {
+      Screen: () => null,
+      Toolbar: Object.assign(part('Toolbar'), {
+        Button: part('ToolbarButton'),
+        Spacer: () => null,
+        View: part('ToolbarView'),
+      }),
+    },
+    useLocalSearchParams: () => ({ slug: mockSlug }),
+  };
+});
 const record = <T,>(data: T) => ({
   data,
   stale: false,
@@ -151,14 +169,23 @@ test('a speech brief is labelled by the pill, not a sentence', async () => {
     }),
   );
   const view = await mount(<DocumentReader />);
-  const section = view.root.findByProps({ testID: 'doc-brief' });
-  const label = section.find(
+  // In short is closed until opened (records.md 2.2).
+  expect(view.root.findAllByProps({ testID: 'doc-brief-label' })).toHaveLength(
+    0,
+  );
+  const toggle = view.root.find(
+    (n) => n.props.testID === 'doc-brief' && !!n.props.onPress,
+  );
+  await act(async () => toggle.props.onPress());
+  const label = view.root.find(
     (n) => n.props.testID === 'doc-brief-label' && n.props.accessibilityLabel,
   );
-  expect(label.props.accessibilityLabel).toBe(
-    'Machine-written. Written from this speech by a model, not by a person, and not part of the record.',
-  );
-  const shown = textOf(section);
+  // The pill says "Machine-written"; how it was written is in its sheet.
+  expect(label.props.accessibilityLabel).toBe('Machine-written');
+  expect(view.root.findByType(MachinePill).props.note.body).toEqual([
+    'Written by a model from this speech. It is not part of the record.',
+  ]);
+  const shown = textOf(view.root);
   expect(shown).toContain('Machine-written');
   expect(shown).toContain(brief);
   expect(shown).not.toMatch(/by a model|part of the record/);

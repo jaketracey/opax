@@ -1,6 +1,21 @@
-export const docRoute = (slug: string, name?: string) => ({
+/**
+ * The record reader. `q` and `match` come only from an in-app search result
+ * (the find bar's query and current match); `cite` opens Citation formats
+ * over the record once it has loaded (the `opax://doc-cite/<slug>` link).
+ */
+export const docRoute = (
+  slug: string,
+  name?: string,
+  open: { q?: string; match?: number; cite?: boolean } = {},
+) => ({
   pathname: '/doc/[slug]' as const,
-  params: { slug, ...(name ? { name } : {}) },
+  params: {
+    slug,
+    ...(name ? { name } : {}),
+    ...(open.q ? { q: open.q } : {}),
+    ...(open.q && open.match != null ? { match: String(open.match) } : {}),
+    ...(open.cite ? { cite: '1' } : {}),
+  },
 });
 export const citeRoute = (slug: string, name?: string) => ({
   pathname: '/doc-cite/[slug]' as const,
