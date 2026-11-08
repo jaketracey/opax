@@ -18,7 +18,7 @@ import {
 import { SourceLine, type SourceDetails } from '../../design/source';
 import { InlineError } from '../../design/states';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
 
 /**
  * One read for a Today block. `null` until the first answer; a pull to
@@ -133,7 +133,9 @@ export function TodayBlock<T>({
       <InlineError
         subject={title ?? 'This block'}
         message={error}
-        onRetry={onRetry}
+        // Offline, the page's one offline line says why (today.md 5.14):
+        // the sentence stands alone, with no Try again.
+        onRetry={report?.offline ? undefined : onRetry}
         testID={`${testID}-error`}
       />
     ) : state.kind === 'empty' ? (
@@ -180,7 +182,7 @@ const styles = StyleSheet.create({
   block: { gap: rhythm.heading },
   body: { gap: rhythm.group },
   empty: { paddingVertical: rhythm.row },
-  sourceSkeleton: { height: 44 },
+  sourceSkeleton: { height: minimumTarget },
 });
 
 /** What one block tells the page: its saved copy's time, and whether it

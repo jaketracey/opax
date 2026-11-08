@@ -36,7 +36,11 @@ export function VotesBlock({
   // Absent until the file answers: nothing is drawn while it loads either,
   // so a block that may never ship takes no space.
   if (!read || read.status === 'missing') return null;
-  const state = blockState(block, { emptyCollapses: true });
+  // Optional: offline with nothing saved, it collapses (today.md 5.14).
+  const state = blockState(block, {
+    emptyCollapses: true,
+    errorCollapses: reportOf(read)?.offline,
+  });
   return (
     <TodayBlock
       title="How parliament voted"
