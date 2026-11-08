@@ -21,6 +21,39 @@ export const untitled: NativeStackNavigationOptions = {
   headerTitle: Platform.OS === 'ios' ? emptyBarTitle : '',
 };
 
+/** The tab roots' titles, by route name (navigation/stack/index.tsx). */
+const rootTitles: Record<string, string> = {
+  index: 'Today',
+  'your-mp': 'Your MP',
+  bills: 'Bills',
+  search: 'Search',
+  ask: 'Ask',
+};
+/**
+ * The back label for a screen pushed straight onto a tab root. UIKit reads
+ * the root's title off its navigation item, which a link opened just after
+ * launch can reach before the root has set it: the back button was then a
+ * bare chevron (wave 4 money-07, 16, 18, records-01). Root titles never
+ * change, so they are named outright; UIKit still shortens a label that
+ * has no room. Deeper screens keep UIKit's own reading of the previous
+ * title, which may be a loaded subject's name.
+ */
+export function rootBackTitle(
+  navigation:
+    | {
+        getState?: () =>
+          | { routes?: readonly { key?: string; name?: string }[] }
+          | undefined;
+      }
+    | undefined,
+  key: string | undefined,
+): string | undefined {
+  const routes = navigation?.getState?.()?.routes ?? [];
+  const at = routes.findIndex((route) => route.key === key);
+  const previous = at > 0 ? routes[at - 1] : undefined;
+  return previous?.name ? rootTitles[previous.name] : undefined;
+}
+
 /** Non-empty route titles also supply the next screen's named Back button. */
 export function screen(
   name: string,
@@ -41,6 +74,9 @@ export function screen(
             ? (route.params as { name: string }).name
             : title,
         headerLargeTitleEnabled: false,
+        ...(Platform.OS === 'ios' && rootBackTitle(navigation, route.key)
+          ? { headerBackTitle: rootBackTitle(navigation, route.key) }
+          : {}),
         ...(doneWhenRoot && navigation?.getState().index === 0
           ? headerItems(() => [closeSheetItem()])
           : {}),

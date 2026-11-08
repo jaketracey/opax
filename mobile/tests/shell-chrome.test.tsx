@@ -6,7 +6,12 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { askScreens } from '../src/navigation/stack/ask';
-import { tabRootScreen, untitled } from '../src/navigation/stack/screen';
+import {
+  rootBackTitle,
+  screen,
+  tabRootScreen,
+  untitled,
+} from '../src/navigation/stack/screen';
 import {
   pageItems,
   pageMenu,
@@ -474,6 +479,38 @@ describe('bar titles leave room for a named back button (wave 4 bills-06, money-
       },
     );
     act(() => empty.unmount());
+  });
+});
+describe('a screen pushed onto a tab root names its back button', () => {
+  const stack = (...names: string[]) => ({
+    getState: () => ({
+      index: names.length - 1,
+      routes: names.map((name, i) => ({ key: `k${i}`, name })),
+    }),
+  });
+  test('the root title is named outright, whatever its navigation item holds', () => {
+    expect(rootBackTitle(stack('index', 'grants'), 'k1')).toBe('Today');
+    expect(rootBackTitle(stack('bills', 'bill/[key]'), 'k1')).toBe('Bills');
+    expect(rootBackTitle(stack('your-mp', 'members'), 'k1')).toBe('Your MP');
+  });
+  test("deeper screens keep UIKit's reading of the previous title", () => {
+    expect(
+      rootBackTitle(stack('index', 'bill/[key]', 'bill-text/[key]'), 'k2'),
+    ).toBeUndefined();
+    expect(rootBackTitle(stack('index'), 'k0')).toBeUndefined();
+  });
+  test('the screen helper passes it as headerBackTitle on iOS', () => {
+    const options = (
+      screen('agencies', 'Government agencies').props as {
+        options: (p: object) => { headerBackTitle?: string };
+      }
+    ).options;
+    expect(
+      options({
+        route: { key: 'k1', params: {} },
+        navigation: stack('index', 'agencies'),
+      }).headerBackTitle,
+    ).toBe(Platform.OS === 'ios' ? 'Today' : undefined);
   });
 });
 test('Reduce Motion cuts the bar title instead of animating it', () => {

@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
-import { screen, sheetOptions } from './screen';
+import { Platform } from 'react-native';
+import { rootBackTitle, screen, sheetOptions } from './screen';
 import { closeSheetItem, headerItems } from '../chrome';
 import { frontPageQuestion } from '../../features/explore/quiz/data';
 
@@ -29,13 +30,18 @@ export function exploreScreens() {
     <Stack.Screen
       key="explore/[tool]"
       name="explore/[tool]"
-      options={({ route }) => {
+      options={({ route, navigation }) => {
         const params = route.params as
           | { tool?: string; q?: string; name?: string }
           | undefined;
+        const back =
+          Platform.OS === 'ios'
+            ? rootBackTitle(navigation, route.key)
+            : undefined;
         return {
           title: exploreToolTitle(params),
           headerLargeTitleEnabled: false,
+          ...(back ? { headerBackTitle: back } : {}),
         };
       }}
     />,
