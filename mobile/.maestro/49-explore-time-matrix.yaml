@@ -75,8 +75,17 @@ name: 49 Explore from Today, words per dollar, the Time machine and who owns whi
     id: explore-machine-pill-sheet
 - takeScreenshot: ${EVIDENCE}/49-machine-note
 - tapOn: Done
-# The bottom pager's chevrons carry no visible year; the neighbour is in the label.
-- tapOn: 'Previous year, 2024'
+# The year pager is a step pair at the page's foot (no bottom toolbar: the
+# floating tab bar covered it); the neighbour is in its label.
+- scrollUntilVisible:
+    element:
+      id: tm-previous
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- tapOn:
+    id: tm-previous
 - extendedWaitUntil:
     visible:
       id: tm-year-menu

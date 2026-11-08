@@ -100,7 +100,6 @@ export default function TimeMachine() {
         onYear={setYear}
         scrollRef={scroll}
       />
-      <YearPager year={shown} onYear={setYear} />
     </>
   );
 }
@@ -232,6 +231,7 @@ function YearPage({
           <YearBills year={year} read={bills} />
         </>
       )}
+      <YearPager year={year} onYear={onYear} />
     </Screen>
   );
 }

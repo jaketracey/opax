@@ -1,6 +1,5 @@
-import { Platform, StyleSheet, View } from 'react-native';
-import { Stack } from 'expo-router';
-import { IconButton, Text } from '../../design/primitives';
+import { StyleSheet, View } from 'react-native';
+import { StepButtons, Text } from '../../design/primitives';
 import { formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { FIRST_YEAR, LAST_YEAR, YearMenu } from './YearMenu';
@@ -48,9 +47,11 @@ export function YearHeader({
 }
 
 /**
- * The bottom pager, with MonthPager's anatomy (chevrons only, the year as
- * the toolbar's title, the neighbours named for VoiceOver). A missing side
- * stays in place, disabled.
+ * The pager at the page's foot: the neighbouring years as a step pair, each
+ * named for VoiceOver ("Previous year, 2024"). A missing side stays in
+ * place, disabled. Not a bottom `Stack.Toolbar`: iOS 26's floating tab bar
+ * stays up on pushes, so the toolbar's year sat in an empty glass circle
+ * mid-bar and its controls covered the page's last heading (explore-08).
  */
 export function YearPager({
   year,
@@ -61,59 +62,26 @@ export function YearPager({
 }) {
   const previous = year > FIRST_YEAR ? year - 1 : null,
     next = year < LAST_YEAR ? year + 1 : null;
-  const previousLabel = `Previous year${previous ? `, ${previous}` : ''}`,
-    nextLabel = `Next year${next ? `, ${next}` : ''}`;
-  if (Platform.OS !== 'ios')
-    return (
-      <View style={styles.steps}>
-        <IconButton
-          symbol="chevron.left"
-          accessibilityLabel={previousLabel}
-          disabled={!previous}
-          onPress={() => previous && onYear(previous)}
-          testID="tm-previous"
-        />
-        <Text variant="subsectionTitle" style={styles.shrink}>
-          {String(year)}
-        </Text>
-        <IconButton
-          symbol="chevron.right"
-          accessibilityLabel={nextLabel}
-          disabled={!next}
-          onPress={() => next && onYear(next)}
-          testID="tm-next"
-        />
-      </View>
-    );
   return (
-    <Stack.Toolbar placement="bottom">
-      <Stack.Toolbar.Button
-        icon="chevron.left"
-        disabled={!previous}
-        accessibilityLabel={previousLabel}
-        onPress={() => previous && onYear(previous)}
-      />
-      <Stack.Toolbar.Spacer />
-      <Stack.Toolbar.View>
-        <Text variant="subsectionTitle">{String(year)}</Text>
-      </Stack.Toolbar.View>
-      <Stack.Toolbar.Spacer />
-      <Stack.Toolbar.Button
-        icon="chevron.right"
-        disabled={!next}
-        accessibilityLabel={nextLabel}
-        onPress={() => next && onYear(next)}
-      />
-    </Stack.Toolbar>
+    <StepButtons
+      testID="tm-pager"
+      previous={{
+        label: previous ? String(previous) : 'Previous year',
+        accessibilityLabel: `Previous year${previous ? `, ${previous}` : ''}`,
+        disabled: !previous,
+        onPress: () => previous && onYear(previous),
+        testID: 'tm-previous',
+      }}
+      next={{
+        label: next ? String(next) : 'Next year',
+        accessibilityLabel: `Next year${next ? `, ${next}` : ''}`,
+        disabled: !next,
+        onPress: () => next && onYear(next),
+        testID: 'tm-next',
+      }}
+    />
   );
 }
 const styles = StyleSheet.create({
   header: { gap: rhythm.line },
-  steps: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: rhythm.tight,
-  },
-  shrink: { flexShrink: 1, textAlign: 'center' },
 });
