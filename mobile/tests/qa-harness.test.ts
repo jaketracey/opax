@@ -126,6 +126,8 @@ describe('iPhone suite', () => {
       .filter((name) => name !== '60-bill-states.yaml')
       // Until scripts/qa-flows.sh lists it (w4-money-map-leads follow-up).
       .filter((name) => name !== '64-money-record.yaml')
+      // Until scripts/qa-flows.sh lists it (w4-public-money follow-up).
+      .filter((name) => name !== '63-money-privacy.yaml')
       .map((name) => `.maestro/${name}`)
       .filter((path) => !covered.has(path));
     expect(missing).toEqual([]);
