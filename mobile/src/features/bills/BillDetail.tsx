@@ -711,14 +711,12 @@ function BillHead({
         ) : null}
       </View>
       <Sponsors identity={identity} directory={directory} />
-      <View style={styles.follow}>
-        <FollowButton
-          kind="bill"
-          id={identity.key}
-          title={name}
-          testID="bill-follow"
-        />
-      </View>
+      <FollowButton
+        kind="bill"
+        id={identity.key}
+        title={name}
+        testID="bill-follow"
+      />
       <View style={styles.source}>
         <SourceLine
           asOf={view.identity.asAt}
@@ -1715,7 +1713,6 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     alignItems: 'flex-start',
   },
-  follow: { alignItems: 'flex-start' },
   source: { marginTop: rhythm.tight },
   added: { marginTop: rhythm.tight },
   textRow: {

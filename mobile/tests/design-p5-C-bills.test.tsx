@@ -135,12 +135,14 @@ function barItems() {
 }
 
 describe('bill header (P1-3)', () => {
+  // At accessibility sizes the shared Button takes the column's width, so
+  // Follow hugs only below them (Follow-up: FollowToggle, specs/bills.md 4.5).
   test.each([
     ['iPhone 17 Pro', 402, 1],
     ['iPhone 16e', 390, 1],
     ['iPhone 17 Pro at AX5', 402, 3.571],
   ])(
-    'on the %s: Follow hugs its label with no ⋯ beside it; the bill text is a row after the header',
+    'on the %s: Follow has no ⋯ beside it; the bill text is a row after the header',
     async (_device, width, fontScale) => {
       window(width, fontScale);
       mockParams.key = 'au-federal-r7534';
@@ -150,9 +152,19 @@ describe('bill header (P1-3)', () => {
       expect(host(root, 'bill-actions')).toHaveLength(0);
       const follow = root.findByType(FollowButton);
       expect(follow.props.testID).toBe('bill-follow');
-      expect(StyleSheet.flatten(follow.parent!.props.style).alignItems).toBe(
-        'flex-start',
-      );
+      if (fontScale === 1) {
+        const button = follow.find(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.testID === 'bill-follow-off',
+        );
+        const style = StyleSheet.flatten(
+          typeof button.props.style === 'function'
+            ? button.props.style({ pressed: false })
+            : button.props.style,
+        );
+        expect(style.alignSelf).toBe('flex-start');
+      }
       // No navy primary on the page's header.
       expect(
         root.findAll(
