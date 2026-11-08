@@ -6,7 +6,13 @@ import {
 import * as format from '../src/design/format';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image, Linking, RefreshControl, StyleSheet } from 'react-native';
+import {
+  ActionSheetIOS,
+  Image,
+  Linking,
+  RefreshControl,
+  StyleSheet,
+} from 'react-native';
 import { minimumTarget } from '../src/design/tokens';
 import { router } from 'expo-router';
 import * as c from '../src/api/catalogs';
@@ -33,7 +39,13 @@ import {
   LinkRow,
   OpaxWebLink,
 } from '../src/design/primitives';
-import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
+import {
+  loadChoice,
+  saveChoice,
+  subscribeChoice,
+} from '../src/features/your-mp/choice-store';
+import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
+import { canShare } from '../src/navigation/share';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn() },
@@ -55,6 +67,11 @@ jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 const mockParams: { slug?: string; id?: string } = {};
+const mockOptions: Record<string, unknown>[] = [];
+const mockOpenAsk = jest.fn();
+jest.mock('../src/features/ask/open', () => ({
+  useOpenAsk: () => mockOpenAsk,
+}));
 jest.mock('expo-router', () => ({
   Link: Object.assign(
     ({ children, ...props }: { children: unknown }) =>
@@ -75,7 +92,12 @@ jest.mock('expo-router', () => ({
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
-  Stack: { Screen: () => null },
+  Stack: {
+    Screen: ({ options }: { options: Record<string, unknown> }) => {
+      mockOptions.push(options);
+      return null;
+    },
+  },
 }));
 const result = <T,>(data: T) => ({
   data,
@@ -895,6 +917,14 @@ describe('Your MP tab', () => {
     resetSeatForTests();
     choose(seat.electorate_id, [district.electorate_id, region.electorate_id]);
     r = await render(<YourMP />);
+    // The region row carries the same state menu, Remove last.
+    const regionRow = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'your-state-region')!;
+    expect(menuItems(regionRow.props.menu).map((i) => i.title)).toEqual([
+      'Change state electorate',
+      'Remove state electorate',
+    ]);
     const row = ids(r, 'your-state-member-')[0]!;
     const items = menuItems(row.props.menu);
     // Remove is the last item, in its own section.
@@ -905,6 +935,75 @@ describe('Your MP tab', () => {
       seatId: seat.electorate_id,
       stateSeatIds: [],
     });
+    await act(async () => r.unmount());
+  });
+
+  test('the bar menu: change, location, Ask, official page, Share, then Forget alone and last', async () => {
+    const seat = seatNamed('Grayndler');
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    // The store publishes what is saved, as choice-store does.
+    (saveChoice as jest.Mock).mockImplementation(async (choice) =>
+      (subscribeChoice as jest.Mock).mock.calls.at(-1)?.[0](choice),
+    );
+    const sheet = jest
+      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+      .mockImplementation((_options, done) => done(0));
+    mockOptions.length = 0;
+    const r = await render(<YourMP />);
+    type Row = {
+      type: string;
+      label: string;
+      inline?: boolean;
+      destructive?: boolean;
+      items?: Row[];
+      onPress?: () => void;
+    };
+    const header = mockOptions
+      .filter((o) => o.unstable_headerRightItems)
+      .at(-1)!.unstable_headerRightItems as () => {
+      type: string;
+      menu?: { items: Row[] };
+    }[];
+    const rows = header().find((i) => i.type === 'menu')!.menu!.items;
+    const name = 'Anthony Albanese';
+    const person = people.people.find(
+      (p) => p.person_id === seat.representatives[0]!.person_id,
+    );
+    const official = officialPageFor(person?.source_url, 'federal');
+    expect(rows.map((row) => row.label)).toEqual([
+      'Change electorate',
+      'Use my location',
+      `Ask about ${name}`,
+      ...(official ? ['Parliament of Australia page'] : []),
+      ...(canShare ? ['Share'] : []),
+      '',
+    ]);
+    const last = rows.at(-1)!;
+    expect(last).toMatchObject({ type: 'submenu', inline: true });
+    expect(last.items!.map((i) => [i.label, i.destructive])).toEqual([
+      ['Forget my electorate', true],
+    ]);
+    await act(async () =>
+      rows.find((row) => row.label === `Ask about ${name}`)!.onPress!(),
+    );
+    expect(mockOpenAsk).toHaveBeenCalledTimes(1);
+    expect(mockOpenAsk).toHaveBeenCalledWith({
+      question: `What has ${name} said in parliament this year?`,
+      speaker: name,
+      kind: 'speech',
+    });
+    expect(has(r, 'your-member-anthony-albanese')).toBe(true);
+    await act(async () => last.items![0]!.onPress!());
+    expect(sheet).toHaveBeenCalledTimes(1);
+    expect(has(r, 'your-invitation')).toBe(true);
+    expect(ids(r, 'your-member-')).toHaveLength(0);
+    sheet.mockRestore();
     await act(async () => r.unmount());
   });
 
