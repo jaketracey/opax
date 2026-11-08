@@ -254,10 +254,10 @@ export function DeclarationsBlock({
   const joined = useTodayRead<DeclarationsBlockData | null>(
     'declarations-joined',
     async (refresh) => {
-      const feed = await catalogs.declarations(refresh).catch(() => null);
-      return feed?.status === 'ready' && feed.data
-        ? { ...feed, data: feed.data.slice(0, 3) }
-        : null;
+      const feed = await catalogs
+        .todayDeclarationsProfiled(3, refresh)
+        .catch(() => null);
+      return feed?.status === 'ready' && feed.data ? feed : null;
     },
     attempt,
   );

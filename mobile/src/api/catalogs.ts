@@ -720,6 +720,16 @@ export class Catalogs {
     );
   }
   /**
+   * Just declared on Today, second pass: the newest entries with the roster
+   * joined and each member's profile slug, so the member's row opens their
+   * profile. The same reads as the feed (all cached for Today's other
+   * blocks but the interest index), cut to `limit` rows.
+   */
+  async todayDeclarationsProfiled(limit = 3, refresh = false) {
+    const feed = await this.declarations(refresh);
+    return { ...feed, data: feed.data ? feed.data.slice(0, limit) : null };
+  }
+  /**
    * How parliament voted: `/divisions/recent.json` (data lane D1). A file
    * that is not there yet (404), or was never saved on an offline device,
    * is `missing`: the block is absent, never empty. Any other failure is an
