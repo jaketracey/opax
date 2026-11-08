@@ -1,5 +1,6 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
+import { divisionsFixture, divisionsPath } from './divisions-fixture';
 import { reportsFixture } from './reports-fixture';
 import { exploreFixture } from './explore-fixture';
 import { askFixture } from './ask-fixture';
@@ -90,6 +91,12 @@ for (const path of Object.keys(snapshot.files)) {
   else assertAllowedPath(path);
   files.set(path, pinnedBytes(path));
 }
+// Today's How parliament voted reads the D1 recent-divisions index, which the
+// portal does not publish yet: the fixture projects it from the pinned bills'
+// own divisions (scripts/divisions-fixture.ts), as the slug API is projected
+// from the pinned roster. Without it every run logged OUTSIDE_ALLOW_LIST.
+assertAllowedPath(divisionsPath);
+files.set(divisionsPath, divisionsFixture(pinnedBytes, [...files.keys()]));
 // Robustness-only opt-in: change one optional field, preserving every
 // source fact and all other pinned bytes in the normal fixture mode.
 if (rosterMode === 'null-optional') {

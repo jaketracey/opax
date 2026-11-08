@@ -585,6 +585,14 @@ The profile sweep compares portrait, votes, interests, pay and expenses statuses
 against both round-1 commits on those same bytes. State profiles require a matching
 numeric ID for federal pay; ID-less federal pay records still join by name.
 
+Today's How parliament voted reads `/divisions/recent.json` (data lane D1),
+which the portal does not publish yet. The fixture projects it from the pinned
+bills' own divisions (`scripts/divisions-fixture.ts`: every pinned division's
+key, date, house, stage, outcome and counts under its bill's key and titles,
+`generated_at` from the pinned bill index), as the slug API is projected from
+the pinned roster; `tests/divisions-fixture.test.ts` checks every row against
+its source and that the block's reading-vote rule finds three rows.
+
 One API response is pinned beside the catalogs: `responses` in
 `fixture-snapshot.json` records the W13 edition fetched once from production
 (`scripts/fixtures/edition-latest.json`, its SHA-256, size, fetch time and the

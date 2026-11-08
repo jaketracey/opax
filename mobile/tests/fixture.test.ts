@@ -10,6 +10,10 @@ import {
   decodeRoster,
 } from '../src/api/catalogs';
 import { editionPath } from '../src/api/policy';
+import {
+  decodeRecentDivisions,
+  recentReadingVotes,
+} from '../src/features/today/votes';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { get, request as httpRequest } from 'node:http';
 import { resolve } from 'node:path';
@@ -610,4 +614,27 @@ test('search results open matching native excerpt resources and preserve related
   expect(decodeSimilar(JSON.parse(related.body)).length).toBeGreaterThan(0);
   const unknown = await request('/api/resource/speech-999999997');
   expect(unknown.status).toBe(404);
+});
+
+// Today's How parliament voted: the D1 index, projected from the pinned
+// bills, answers as a static catalog (strong validator, 304 on a match) and
+// gives the block its three reading votes.
+test('serves the recent divisions index projected from the pinned bills', async () => {
+  const result = await request('/divisions/recent.json');
+  expect(result.status).toBe(200);
+  expect(result.headers['content-type']).toBe('application/json');
+  expect(String(result.headers.etag)).toMatch(/^"[a-f0-9]{64}"$/);
+  const file = decodeRecentDivisions(JSON.parse(result.body));
+  expect(file.divisions.length).toBeGreaterThan(100);
+  const rows = recentReadingVotes(file, 3);
+  expect(rows).toHaveLength(3);
+  for (const row of rows) {
+    expect(row.stageWords).toMatch(/^(Second|Third) reading$/);
+    expect(servedFiles).toContain(`/bills/${row.bill_key}.json`);
+  }
+  const conditional = await request('/divisions/recent.json', {
+    'If-None-Match': String(result.headers.etag),
+  });
+  expect(conditional.status).toBe(304);
+  expect(output).not.toContain('OUTSIDE_ALLOW_LIST GET /divisions/recent.json');
 });
