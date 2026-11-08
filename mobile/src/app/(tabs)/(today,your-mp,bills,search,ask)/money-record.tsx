@@ -1,1 +1,1 @@
-export { default } from '../../../features/money/MoneyNodeScreen';
+export { default } from '../../../features/money/MoneyRecord';

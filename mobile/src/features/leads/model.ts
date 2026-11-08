@@ -7,6 +7,8 @@ import {
 } from '../../design/format';
 import type { LeadEvidence } from '../../design/lead';
 import { sourceUrl } from '../../navigation/external';
+import { samePartyLabel } from '../../design/party';
+import { normaliseOrganisation } from '../money/lookup';
 
 // The leads on the web's /discover page (portal/public/app.js, "discovery"):
 // the same signals, categories, comparisons, caveats and links, in the web's
@@ -464,4 +466,31 @@ export const discoveryAsOf = (discovery: Discovery) =>
 /** A chart row read aloud: "SECURE JOURNEYS PTY LTD, 2.3 billion dollars, 38.7 percent". */
 export function chartRowLabel(row: ChartRow) {
   return `${row.name}, ${moneyAccessibilityLabel(row.value, true)}, ${formatPercent(row.share).slice(0, -1)} percent`;
+}
+
+/**
+ * The leads whose subject is one organisation or party, for the "More"
+ * rows on its money record: matched on the lead's entity or its chart's
+ * group, never on words in the sentence.
+ */
+export function leadsAbout(
+  discovery: Discovery,
+  name: string,
+): { id: string; title: string }[] {
+  const wanted = normaliseOrganisation(name);
+  if (!wanted) return [];
+  return leadsFor(discovery)
+    .filter((lead) => {
+      const signal = discovery.signals.find((s) => s.id === lead.id);
+      const subjects = [lead.entity, signal?.chart?.group_label].filter(
+        (value): value is string => !!value,
+      );
+      return subjects.some(
+        (subject) =>
+          normaliseOrganisation(subject) === wanted ||
+          (lead.category === 'recipient_concentration' &&
+            samePartyLabel(subject, name)),
+      );
+    })
+    .map((lead) => ({ id: lead.id, title: lead.title }));
 }
