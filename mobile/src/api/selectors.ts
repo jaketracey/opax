@@ -885,7 +885,13 @@ export interface EditionView {
   date: string;
   kind: EditionKind;
   kindLabel: string;
+  /** Short, reader-facing kind used on the plate. */
+  kindShort: string;
   title: string;
+  /** The bill index's short title, when this edition resolves to a bill. */
+  shortTitle: string | null;
+  /** A card-sized title; the reading page always keeps title in full. */
+  cardTitle: string;
   /** The post's own paragraphs, verbatim, without its link line. */
   paragraphs: string[];
   /** The page on the public site (path and query; any fragment dropped). */
@@ -898,6 +904,8 @@ export interface EditionView {
   facts: EditionFacts;
 }
 export interface EditionFacts {
+  /** Facts in the published slide order. Older cached projections may omit it. */
+  order?: { type: 'figure' | 'bars' | 'events' | 'division'; index: number }[];
   /** The cover's kicker and line: "Parliamentarian · Mitchell, NSW". */
   kicker: string | null;
   line: string | null;
@@ -924,7 +932,17 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
     (s) =>
       s.type === 'division' && s.ayes !== undefined && s.noes !== undefined,
   );
+  let figureIndex = 0;
+  const order = all.flatMap<NonNullable<EditionFacts['order']>[number]>((s) => {
+    if (s.type === 'number' && s.value?.trim() && s.label?.trim())
+      return [{ type: 'figure' as const, index: figureIndex++ }];
+    if (s === bars) return [{ type: 'bars' as const, index: 0 }];
+    if (s === timeline) return [{ type: 'events' as const, index: 0 }];
+    if (s === division) return [{ type: 'division' as const, index: 0 }];
+    return [];
+  });
   return {
+    order,
     kicker: cover?.kicker.trim() || null,
     line: (cover?.type === 'cover' && cover.line?.trim()) || null,
     figures: all.flatMap((s) =>
@@ -963,7 +981,29 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
  * paragraphs are the post's own text, less two repeats of what the card shows
  * in full (the trailing link, and the title clipped with "…" to fit a post).
  */
-export function editionFor({ edition }: AppEdition) {
+export function editionTitles(
+  edition: Pick<EditionView, 'title' | 'path' | 'kind'>,
+  bills?: BillIndex,
+) {
+  const bill = /^\/bill\/([^/?]+)\/?(?:\?|$)/.exec(edition.path);
+  const shortTitle =
+    edition.kind === 'bill' && bill
+      ? bills?.bills.find((row) => row.key === bill[1])?.short_title?.trim() ||
+        null
+      : null;
+  const title = shortTitle ?? edition.title;
+  const clause = title.indexOf(' (');
+  const boundary = title.lastIndexOf(' ', 80);
+  return {
+    shortTitle,
+    cardTitle:
+      title.length <= 80
+        ? title
+        : `${title.slice(0, clause > 0 && clause <= 80 ? clause : boundary > 0 ? boundary : 80).trimEnd()}…`,
+  };
+}
+
+export function editionFor({ edition }: AppEdition, bills?: BillIndex) {
   const link = new URL(edition.url);
   const paragraphs = edition.text
     .split(/\n{2,}/)
@@ -984,7 +1024,13 @@ export function editionFor({ edition }: AppEdition) {
     date: edition.date,
     kind: edition.kind,
     kindLabel: editionKindLabels[edition.kind],
+    kindShort:
+      edition.kind === 'grant' ? 'Grant' : editionKindLabels[edition.kind],
     title: edition.title,
+    ...editionTitles(
+      { ...edition, path: `${link.pathname}${link.search}` },
+      bills,
+    ),
     paragraphs,
     path: `${link.pathname}${link.search}`,
     machineWritten: attribution ? { attribution } : null,
