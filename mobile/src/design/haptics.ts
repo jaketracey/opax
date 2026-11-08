@@ -2,7 +2,9 @@ import { OpaxShare } from '../../modules/opax-share';
 
 export type HapticKind = 'success' | 'selection' | 'light';
 /**
- * A light tap of confirmation: Follow ("success"), Share ("light"). Silent,
+ * Follow on, Copy and seat chosen use success; custom choices use selection.
+ * Native pickers supply their own selection feedback. No navigation, refresh
+ * or sheet feedback. Silent,
  * and a no-op where the native module is not linked (unit tests).
  */
 export function haptic(kind: HapticKind = 'light') {

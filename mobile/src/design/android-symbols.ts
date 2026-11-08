@@ -1,7 +1,13 @@
 import type { AndroidSymbol } from 'expo-symbols';
+import type { SFSymbol } from './symbols';
 
 // Same meaning as the iOS symbol; Material Symbols are bundled by expo-symbols.
-const symbols: Record<string, AndroidSymbol> = {
+export const androidSymbols: Record<SFSymbol, AndroidSymbol> = {
+  heart: 'favorite',
+  'heart.fill': 'favorite',
+  bookmark: 'bookmark',
+  'bookmark.fill': 'bookmark',
+  'sidebar.left': 'side_navigation',
   'bubble.left.and.bubble.right': 'forum',
   'line.3.horizontal.decrease': 'filter_list',
   'quote.bubble': 'format_quote',
@@ -91,8 +97,28 @@ const symbols: Record<string, AndroidSymbol> = {
   'wifi.slash': 'wifi_off',
   xmark: 'close',
   'xmark.circle': 'cancel',
+  'newspaper.fill': 'newspaper',
+  'building.columns.fill': 'account_balance',
+  'doc.text.fill': 'description',
+  'text.bubble.fill': 'chat_bubble',
+  'location.fill': 'my_location',
+  number: 'tag',
+  'puzzlepiece.extension': 'extension',
+  'clock.arrow.circlepath': 'history',
+  'tray.and.arrow.down': 'move_to_inbox',
+  'doc.text.magnifyingglass': 'find_in_page',
+  bell: 'notifications',
+  'line.3.horizontal.decrease.circle.fill': 'filter_list',
+  'ellipsis.circle': 'more_vert',
+  'person.crop.circle.fill': 'account_circle',
+  waveform: 'graphic_eq',
+  'square.and.pencil': 'edit_square',
+  clock: 'schedule',
+  'arrow.up.circle.fill': 'arrow_circle_up',
+  'stop.circle.fill': 'stop_circle',
+  'chevron.up.chevron.down': 'unfold_more',
 };
 
-export function androidSymbol(name: string): AndroidSymbol {
-  return symbols[name] ?? 'article';
+export function androidSymbol(name: SFSymbol): AndroidSymbol {
+  return androidSymbols[name];
 }
