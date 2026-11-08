@@ -1,62 +1,65 @@
-import { useRef } from 'react';
-import { findNodeHandle, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { haptic } from '../../design/haptics';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { formatDate } from '../../design/format';
-import { chamberName } from '../../design/parliament';
-import { PersonRow, Text, useAccessibilitySize } from '../../design/primitives';
+import {
+  Icon,
+  PersonRow,
+  RowLink,
+  Text,
+  useAccessibilitySize,
+  type RowMenuAction,
+} from '../../design/primitives';
+import { useRowHighlight } from '../../design/row-padding';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
+import { declarationsRoute, personRoute } from '../../navigation/routes';
+import { presentSource } from '../../navigation/sheets';
+import { shareRecord } from '../../navigation/share';
+import { copyText } from '../records/actions';
 import { registerChangeLabel } from '../your-mp/model';
 import { declarantRow, originalLabel } from '../today/DeclarationRow';
-import { shortDay } from '../today/parts';
-import { showRecordMenu } from '../today/RecordMenu';
 
+// The feed's rows also carry the member's profile slug, when there is one.
 type Declaration = NonNullable<
   ReturnType<typeof recentDeclarationsFor>['data']
->[number];
+>[number] & { profileSlug?: string | null };
 type Tie = NonNullable<Declaration['ties']>[number];
 
-// The web's register labels for a name match (app.js declaredTieHTML).
-export function tieText(tie: Tie) {
+/** "Same name as an AEC donor: Adani Mining Pty Ltd". */
+export function tieLine(tie: Tie): string {
   const kinds = tie.kinds.length ? tie.kinds : [tie.kind];
-  const labels: string[] = [];
-  if (kinds.includes('donor'))
-    labels.push(
-      `AEC donor${tie.industry ? ` · ${tie.industry.replace(/_/g, ' ')}` : ''}`,
-    );
-  if (kinds.includes('lobbyist')) labels.push('registered lobbying firm');
-  if (kinds.includes('fits')) labels.push('FITS registrant');
-  return labels.length
-    ? `${tie.organisation}, ${labels.join(' · ')}`
-    : tie.organisation;
+  const register = kinds.includes('donor')
+    ? 'an AEC donor'
+    : kinds.includes('lobbyist')
+      ? 'a registered lobbying firm'
+      : kinds.includes('fits')
+        ? 'a FITS registrant'
+        : kinds.some((k) => k === 'supplier' || k === 'contract')
+          ? 'a government supplier'
+          : 'an organisation in another public register';
+  return `Same name as ${register}: ${tie.organisation}`;
 }
 
-/**
- * "Gift · added 31 Aug · Senate": the category, what changed and when, and
- * the chamber, on the row's one date line (Today's anatomy, with the chamber
- * the feed filters by).
- */
-export function feedDateLine(
-  item: Pick<
-    Declaration,
-    'category' | 'kind' | 'date' | 'chamber' | 'jurisdiction'
-  >,
+/** "Added 2 Sep 2026": what the register did to the entry, and when. */
+export function changeLine(
+  item: Pick<Declaration, 'kind' | 'date'>,
+  style: 'long' | 'short' = 'short',
 ) {
+  const change = registerChangeLabel(item.kind);
+  const date = formatDate(item.date, style);
   return [
-    item.category,
-    `${registerChangeLabel(item.kind)} ${shortDay(item.date)}`,
-    chamberName(item.chamber, item.jurisdiction),
+    `${change.charAt(0).toLocaleUpperCase('en-AU')}${change.slice(1)}`,
+    date,
   ]
     .filter(Boolean)
-    .join(' · ');
+    .join(' ');
 }
 
 /**
- * Consecutive entries by one member in the declared-interests feed, under
- * one PersonRow (portrait, name, party as a dot and a name), which opens the
- * member's native profile when there is one. Each entry follows in the
- * member's own words and in full, with one date line ("Gift · added 31 Aug
- * · Senate") and any name match the export found, with its caveat.
+ * Consecutive entries by one member in Just declared, under one PersonRow
+ * (portrait, name, party), which opens the member's profile when there is
+ * one. Each entry follows in the member's own words, in full.
  */
 export function FeedGroup({
   entries,
@@ -105,11 +108,40 @@ export function FeedRow({
   return <FeedGroup entries={[{ item, index }]} onOpenPerson={onOpenPerson} />;
 }
 
+/** The entry's own source sheet: the register page, dated, and its notes. */
+function openEntrySource(item: Declaration, index: number) {
+  presentSource(
+    {
+      asOf: item.date,
+      dateRole: 'recorded',
+      citation: [{ label: 'Register of interests', title: item.sourceLabel }],
+      originals: [
+        {
+          label: item.sourceLabel,
+          url: item.url,
+          record: `${item.name}, ${formatDate(item.date, 'short')}${
+            item.page !== null ? `, page ${item.page}` : ''
+          }`,
+          asOf: item.date,
+        },
+      ],
+      notes: [
+        item.category,
+        ...(item.ties ?? []).map(
+          (tie) =>
+            `${tieLine(tie)}. Matches use exact names, ignoring case and spacing; a shared name is not evidence of wrongdoing.`,
+        ),
+      ],
+    },
+    { testID: `declaration-source-${index}` },
+  );
+}
+
 /**
- * One entry, its own VoiceOver element, named so it reads on its own.
- * "View original" (the register page) is a touch-and-hold action and a
- * VoiceOver action, as on Today; the registers are in the feed's source
- * line and on Sources and licences.
+ * One entry, one button: the member's words, the category, any name match
+ * and "Added 2 Sep 2026 · Register of interests". It opens the entry's
+ * source sheet (no chevron: it does not push). Touch and hold, or the
+ * VoiceOver actions, open the profile or the register, copy or share.
  */
 function FeedEntry({
   item,
@@ -120,67 +152,113 @@ function FeedEntry({
   index: number;
   onOpenPerson?: () => void;
 }) {
-  const ties = item.ties?.length
-    ? `Name match: ${item.ties.map(tieText).join('; ')}. Exact names only; this identifies a shared name across public registers, not wrongdoing.`
-    : null;
-  const original = () => void openSource(item.url, originalLabel(item));
+  const highlight = useRowHighlight();
+  const ties = (item.ties ?? []).map(tieLine);
+  const change = changeLine(item);
+  const slug = item.profileSlug;
+  const menu: RowMenuAction[] = [
+    ...(onOpenPerson
+      ? [
+          {
+            title: 'Open profile',
+            symbol: 'person.crop.circle' as const,
+            onPress: onOpenPerson,
+          },
+        ]
+      : []),
+    {
+      title: 'Open the register',
+      symbol: 'arrow.up.right.square',
+      onPress: () => void openSource(item.url, originalLabel(item)),
+    },
+    ...(item.description
+      ? [
+          {
+            title: 'Copy text',
+            symbol: 'doc.on.doc' as const,
+            onPress: () => {
+              void copyText(item.description!).then((copied) => {
+                if (copied) haptic('success');
+              });
+            },
+          },
+        ]
+      : []),
+    {
+      title: 'Share',
+      symbol: 'square.and.arrow.up',
+      onPress: () =>
+        void shareRecord({
+          title: `${item.name}: ${item.category}`,
+          path: slug ? `/subject/person/${slug}/interests` : '/declared',
+        }),
+    },
+  ];
   const label = [
-    item.name,
-    `${item.category}, ${registerChangeLabel(item.kind)} ${formatDate(item.date)}`,
-    chamberName(item.chamber, item.jurisdiction),
-    item.description,
+    item.description?.trim().replace(/[.\s]+$/, ''),
+    item.category,
+    ...ties,
+    `${changeLine(item, 'long')}, Register of interests`,
   ]
     .filter(Boolean)
-    .join(', ');
-  const menuAnchor = useRef<View>(null);
-  const menu = () =>
-    showRecordMenu(
-      item.name,
-      [
-        ...(onOpenPerson
-          ? [{ title: 'Open profile', onPress: onOpenPerson }]
-          : []),
-        { title: 'View original', onPress: original },
-      ],
-      findNodeHandle(menuAnchor.current) ?? undefined,
-    );
+    .join('. ');
   return (
-    <View style={styles.entry}>
+    <RowLink
+      href={slug ? personRoute(slug) : declarationsRoute}
+      preview={false}
+      menu={menu}
+      select={() => openEntrySource(item, index)}
+    >
       <Pressable
-        ref={menuAnchor}
-        accessibilityRole="text"
+        accessibilityRole="button"
         accessibilityLabel={label}
-        accessibilityActions={[
-          { name: 'viewOriginal', label: 'View original' },
-        ]}
-        onAccessibilityAction={(event) => {
-          if (event.nativeEvent.actionName === 'viewOriginal') original();
-        }}
-        onLongPress={menu}
+        accessibilityHint="Opens sources"
         testID={`declaration-entry-${index}`}
-        style={styles.main}
+        onPress={() => openEntrySource(item, index)}
+        style={({ pressed }) => [
+          styles.entry,
+          pressed ? { backgroundColor: highlight } : null,
+        ]}
       >
         {item.description ? (
-          <Text testID={`declaration-text-${index}`}>{item.description}</Text>
+          <Text variant="recordText" testID={`declaration-text-${index}`}>
+            {item.description}
+          </Text>
         ) : null}
-        <Text wordSafe variant="fine" testID={`declaration-change-${index}`}>
-          {feedDateLine(item)}
-        </Text>
-      </Pressable>
-      {ties ? (
         <Text
           wordSafe
-          variant="fine"
-          tone="ink"
-          testID={`declaration-ties-${index}`}
+          variant="secondary"
+          testID={`declaration-change-${index}`}
         >
-          {ties}
+          {item.category}
         </Text>
-      ) : null}
-    </View>
+        {ties.length ? (
+          <Text
+            wordSafe
+            variant="footnote"
+            testID={`declaration-ties-${index}`}
+          >
+            {ties.join('\n')}
+          </Text>
+        ) : null}
+        <View style={styles.register}>
+          <Icon
+            name="doc.text.magnifyingglass"
+            size={13}
+            maxScale={1.5}
+            tone="navy"
+          />
+          <Text wordSafe variant="footnote" tone="inkSoft" style={styles.grow}>
+            {`${change} · `}
+            <Text variant="footnote" tone="navy">
+              Register of interests
+            </Text>
+          </Text>
+        </View>
+      </Pressable>
+    </RowLink>
   );
 }
-
 // The portrait column: the row portrait's 44pt and the row's 12pt gap.
 const PORTRAIT_COLUMN = 44 + rhythm.heading;
 
@@ -188,6 +266,12 @@ const styles = StyleSheet.create({
   frame: { gap: rhythm.line, paddingVertical: rhythm.row },
   entries: { gap: rhythm.block },
   indent: { marginLeft: PORTRAIT_COLUMN },
-  entry: { gap: rhythm.tight },
-  main: { minHeight: minimumTarget, gap: rhythm.line + 2 },
+  entry: { minHeight: minimumTarget, gap: rhythm.line + 2 },
+  register: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+  },
+  grow: { flexShrink: 1 },
 });
