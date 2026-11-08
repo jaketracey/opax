@@ -29,6 +29,12 @@ export function EditionSkeleton({ story = false }: { story?: boolean }) {
     >
       <View style={[styles.plateSkeleton, { height: story ? 220 : 196 }]} />
       <Skeleton shape="text" count={3} label="Loading the daily edition" />
+      {!story ? (
+        <View
+          testID="today-edition-loading-source"
+          style={styles.sourceSkeleton}
+        />
+      ) : null}
       {story ? <Skeleton shape="card" count={1} /> : null}
     </View>
   );
@@ -180,4 +186,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.raised,
   },
   plateSkeleton: { backgroundColor: colors.sunken },
+  sourceSkeleton: {
+    height: 14,
+    width: '60%',
+    backgroundColor: colors.sunken,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+  },
 });

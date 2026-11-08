@@ -8,7 +8,7 @@ import { BarSeries, StageTimeline, VoteSplit } from '../../design/charts';
 import { Button } from '../../design/controls';
 import { MachinePill } from '../../design/labels';
 import { InsetGroup, Screen } from '../../design/layout';
-import { BillRow, LinkRow } from '../../design/rows';
+import { BillRow, LinkRow, ValueRow } from '../../design/rows';
 import { PersonRow } from '../../design/people';
 import { FigureBlock } from '../../design/record';
 import { SourceLine } from '../../design/source';
@@ -18,6 +18,7 @@ import { formatDate } from '../../design/format';
 import { copy } from '../../design/copy';
 import { colors, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
+import { designFlags } from '../../design/flags';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canShare } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -51,16 +52,14 @@ export function EditionStory() {
   const onShare = () => {
     if (edition) void shareEdition(edition);
   };
-  const source = edition
+  const details = edition ? editionSources(edition, subject.originals) : null;
+  const source = details
     ? {
-        ...editionSources(edition, subject.originals),
+        ...details,
         notes:
           block?.stale && block.savedAt != null
-            ? [
-                copy.savedCopyNote(block.savedAt),
-                ...(editionSources(edition).notes ?? []),
-              ]
-            : editionSources(edition).notes,
+            ? [copy.savedCopyNote(block.savedAt), ...(details.notes ?? [])]
+            : details.notes,
         dateLabel:
           block?.stale && block.savedAt != null
             ? `Saved ${formatDate(block.savedAt, 'short')}`
@@ -71,7 +70,16 @@ export function EditionStory() {
   const offline =
     block?.error?.code === 'offline' || block?.error?.code === 'timeout';
   return (
-    <View style={styles.page}>
+    <View
+      style={[
+        styles.page,
+        {
+          backgroundColor: designFlags.groupedSurfaces
+            ? colors.sunken
+            : colors.paper,
+        },
+      ]}
+    >
       <Stack.Screen
         options={headerItems(
           edition
@@ -103,7 +111,9 @@ export function EditionStory() {
               offline ? copy.notSaved : "The daily edition couldn't be loaded."
             }
             body={offline ? copy.notSavedBody : undefined}
-            action={{ label: 'Try again', onPress: refresh }}
+            action={
+              offline ? undefined : { label: 'Try again', onPress: refresh }
+            }
             testID="edition-error"
           />
         ) : (
@@ -213,14 +223,12 @@ export function EditionStory() {
                       testID={`edition-source-${i}`}
                     />
                   ) : (
-                    <Text
+                    <ValueRow
                       key={i}
-                      wordSafe
-                      variant="body"
+                      label={row}
+                      value=""
                       testID={`edition-source-${i}`}
-                    >
-                      {row}
-                    </Text>
+                    />
                   );
                 })}
               </InsetGroup>
@@ -233,7 +241,7 @@ export function EditionStory() {
         Platform.OS === 'ios' ? (
           <Stack.Toolbar placement="bottom">
             <Stack.Toolbar.Button
-              icon="text.bubble"
+              icon={symbols.ask}
               accessibilityLabel="Ask about this"
               onPress={onAsk}
             >
@@ -358,7 +366,7 @@ function EditionFacts({
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: colors.sunken },
+  page: { flex: 1 },
   reading: { gap: 16 },
   prose: { gap: 12 },
   fact: { gap: rhythm.heading },

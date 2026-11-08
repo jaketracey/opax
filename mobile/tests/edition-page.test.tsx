@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, type ReactElement } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Dimensions, Image, Platform, StyleSheet } from 'react-native';
+import { Dimensions, Image, Platform, StyleSheet, View } from 'react-native';
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
@@ -27,9 +27,12 @@ import { Card } from '../src/design/card';
 import { Button } from '../src/design/controls';
 import { MachinePill } from '../src/design/labels';
 import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
-import { LinkRow } from '../src/design/rows';
+import { LinkRow, ValueRow } from '../src/design/rows';
+import { ContentUnavailable, Skeleton } from '../src/design/states';
+import { Text } from '../src/design/text';
 import { PersonRow } from '../src/design/people';
 import { colors } from '../src/design/tokens';
+import { symbols } from '../src/design/symbols';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { EditionStory } from '../src/features/edition/EditionStory';
 import { Plate, ArchivePhotograph } from '../src/features/edition/Plate';
@@ -62,6 +65,14 @@ jest.mock('../src/api/runtime', () => ({
   },
   portraits: { get: jest.fn(async () => null) },
   yearPictures: { get: jest.fn(async () => 'file:///cache/archive.webp') },
+}));
+let mockGroupedSurfaces = true;
+jest.mock('../src/design/flags', () => ({
+  designFlags: Object.defineProperty(
+    { ...jest.requireActual('../src/design/flags').designFlags },
+    'groupedSurfaces',
+    { get: () => mockGroupedSurfaces },
+  ),
 }));
 jest.mock('expo-router', () => {
   const React = require('react');
@@ -141,6 +152,25 @@ const host = (root: ReactTestInstance, id: string) =>
   root.findAll(
     (node) => typeof node.type === 'string' && node.props.testID === id,
   );
+function openedSourceDetails(root: ReactTestInstance, id: string) {
+  const route = jest.mocked(router.push).mock.calls.at(-1)?.[0] as
+    | { pathname: string; params?: { key?: string } }
+    | undefined;
+  if (route) {
+    // The sheets lane replaces the in-place sheet with a registry entry.
+    expect(route.pathname).toBe('/source');
+    expect(route.params?.key).toEqual(expect.any(String));
+    const { sheetPayload } = jest.requireActual('../src/navigation/sheets');
+    const payload = sheetPayload(route.params?.key, 'source');
+    expect(payload?.kind).toBe('source');
+    return payload.details;
+  }
+  const sheet = root
+    .findAllByType(SourceSheet)
+    .find((node) => node.props.testID === `${id}-sheet`)!;
+  expect(sheet.props.visible).toBe(true);
+  return sheet.props;
+}
 async function render(element: ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
@@ -162,6 +192,7 @@ async function render(element: ReactElement) {
 beforeEach(() => {
   jest.clearAllMocks();
   mockCanShare = true;
+  mockGroupedSurfaces = true;
   Platform.OS = 'android';
   Dimensions.set({
     window: { width: 390, height: 844, scale: 3, fontScale: 1 },
@@ -264,6 +295,52 @@ describe('edition source payloads', () => {
   });
 });
 
+describe('money edition Ask drafts', () => {
+  test('Largest grants asks about government grants, without the editorial title', () => {
+    expect(
+      editionQuestion({
+        ...edition,
+        kind: 'largest',
+        title: 'Largest grants in October',
+      }),
+    ).toBe('What has parliament said about government grants this year?');
+  });
+  test.each([
+    ['Program: Community support', null],
+    ['Grant program · Community support', null],
+    ['Grant award · Mitchell, NSW', 'Program: Community support'],
+    [
+      null,
+      'Award value · Program · Community support · Agreement starts 4 Oct 2026',
+    ],
+  ])(
+    'an award drafts about its explicitly recorded program (%s, %s)',
+    (kicker, line) => {
+      expect(
+        editionQuestion({
+          ...edition,
+          kind: 'grant',
+          facts: { ...edition.facts, kicker, line },
+        }),
+      ).toBe('What has parliament said about Community support?');
+    },
+  );
+  test('an award without a named program keeps its title and does not mistake the seat for a program', () => {
+    expect(
+      editionQuestion({
+        ...edition,
+        kind: 'grant',
+        title: 'GA12345: Recipient',
+        facts: {
+          ...edition.facts,
+          kicker: 'Grant award · Mitchell, NSW',
+          line: 'Support for community services',
+        },
+      }),
+    ).toBe('What has parliament said about GA12345: Recipient?');
+  });
+});
+
 describe('the replacement edition card', () => {
   test('one zoom link into the reader, first paragraph only, with a separate source target', async () => {
     const { root } = await render(
@@ -284,20 +361,18 @@ describe('the replacement edition card', () => {
     jest.mocked(router.push).mockClear();
     expect(root.findByType(SourceLine).props.onPress).toBeUndefined();
     await press(root, 'today-edition-sources');
-    const sheet = root.findByType(SourceSheet);
-    expect(sheet.props.visible).toBe(true);
-    expect(sheet.props.originals).toContainEqual({
+    const details = openedSourceDetails(root, 'today-edition-sources');
+    expect(details.originals).toContainEqual({
       label: 'OPAX daily edition',
       url: edition.path,
       asOf: edition.date,
     });
-    expect(sheet.props.originals).toContainEqual(
+    expect(details.originals).toContainEqual(
       expect.objectContaining({
         label: 'Explanatory memorandum',
         url: expect.stringContaining('parlinfo.aph.gov.au/parlInfo/'),
       }),
     );
-    expect(router.push).not.toHaveBeenCalled();
     expect(openOnWeb).not.toHaveBeenCalled();
   });
   test.each([true, false])(
@@ -367,6 +442,20 @@ describe('the replacement edition card', () => {
   test('loading keeps the plate geometry', async () => {
     const { root } = await render(<EditionCard edition={null} />);
     expect(host(root, 'today-edition-loading')).toHaveLength(1);
+    expect(root.findByType(Skeleton).props).toMatchObject({
+      shape: 'text',
+      count: 3,
+    });
+    expect(
+      root
+        .findAllByType(View)
+        .some((view) => StyleSheet.flatten(view.props.style)?.height === 196),
+    ).toBe(true);
+    expect(
+      StyleSheet.flatten(
+        host(root, 'today-edition-loading-source')[0]!.props.style,
+      ).height,
+    ).toBe(14);
   });
   test('an accessibility-sized record title stays at 34 pt and wraps without a line limit', async () => {
     Dimensions.set({
@@ -384,6 +473,35 @@ describe('the replacement edition card', () => {
 });
 
 describe('the native edition reader', () => {
+  test.each([true, false])(
+    'page ground follows groupedSurfaces=%s',
+    async (grouped) => {
+      mockGroupedSurfaces = grouped;
+      const { root } = await render(<EditionStory />);
+      expect(
+        StyleSheet.flatten(root.findAllByType(View)[0]!.props.style)
+          .backgroundColor,
+      ).toEqual(grouped ? colors.sunken : colors.paper);
+    },
+  );
+  test('source notes retain standard row metrics and verbatim labels', async () => {
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: person });
+    const { root } = await render(<EditionStory />);
+    expect(host(root, 'edition-source-rows')).toHaveLength(1);
+    person.sourceRows.forEach((label, i) => {
+      const row = root
+        .findAllByType(ValueRow)
+        .find((node) => node.props.testID === `edition-source-${i}`)!;
+      expect(row.props).toMatchObject({ label, value: '' });
+      const style = StyleSheet.flatten(
+        host(root, `edition-source-${i}`)[0]!.props.style,
+      );
+      expect(style.minHeight).toBeGreaterThanOrEqual(44);
+      expect(style.paddingVertical).toBeGreaterThan(0);
+    });
+  });
   test.each(['edition-sources', 'edition-fact-0-sources'])(
     '%s opens its own originals',
     async (id) => {
@@ -393,15 +511,12 @@ describe('the native edition reader', () => {
         .find((node) => node.props.testID === id)!;
       expect(line.props.onPress).toBeUndefined();
       await press(root, id);
-      const sheet = root
-        .findAllByType(SourceSheet)
-        .find((node) => node.props.testID === `${id}-sheet`)!;
-      expect(sheet.props).toMatchObject({
-        visible: true,
+      const details = openedSourceDetails(root, id);
+      expect(details).toMatchObject({
         asOf: edition.date,
         originals: line.props.originals,
       });
-      expect(sheet.props.originals).toEqual(
+      expect(details.originals).toEqual(
         expect.arrayContaining([
           {
             label: 'OPAX daily edition',
@@ -414,8 +529,7 @@ describe('the native edition reader', () => {
           }),
         ]),
       );
-      expect(sheet.props.notes).toContain(EDITION_RULE);
-      expect(router.push).not.toHaveBeenCalled();
+      expect(details.notes).toContain(EDITION_RULE);
     },
   );
   test('keeps the full title, all paragraphs, dated timeline and native bill subject', async () => {
@@ -496,6 +610,9 @@ describe('the native edition reader', () => {
         .findAllByType(Stack.Toolbar.Button)
         .map((button) => button.props.accessibilityLabel),
     ).toEqual(['Ask about this', 'Share']);
+    expect(root.findAllByType(Stack.Toolbar.Button)[0]!.props.icon).toBe(
+      symbols.ask,
+    );
   });
   test('a person resolves through the small indices, with no directory load or web fallback', async () => {
     jest
@@ -664,6 +781,11 @@ describe('the native edition reader', () => {
         host(root, state === 'missing' ? 'edition-missing' : 'edition-error'),
       ).toHaveLength(1);
       expect(host(root, 'edition-toolbar')).toHaveLength(0);
+      expect(root.findByType(ContentUnavailable).props.action).toEqual(
+        state === 'server'
+          ? { label: 'Try again', onPress: expect.any(Function) }
+          : undefined,
+      );
     },
   );
   test('loading does not show an empty page', async () => {
@@ -690,7 +812,19 @@ test('archive pixels come from the local cache and credit survives a failed imag
   expect(root.findByType(Image).props.source.uri).toMatch(/^file:\/\//);
   act(() => root.findByType(Image).props.onError());
   expect(root.findAllByType(Image)).toHaveLength(0);
-  expect(JSON.stringify(renderer.toJSON())).toContain(photograph.credit);
+  const credit = root.findByType(Text);
+  expect(credit.props.children.join('')).toBe(`Photo: ${photograph.credit}`);
+});
+
+test('plate art starts 16 pt after the detail line', async () => {
+  const { root } = await render(<Plate edition={edition} />);
+  const gap = StyleSheet.flatten(
+    host(root, 'today-edition-plate')[0]!.props.style,
+  ).gap;
+  const margin = StyleSheet.flatten(
+    host(root, 'today-edition-art')[0]!.props.style,
+  ).marginTop;
+  expect(Number(gap) + Number(margin)).toBe(16);
 });
 
 test('money and people keep category bands and incoming edition links stay native', async () => {

@@ -134,6 +134,17 @@ export function editionQuestion(edition: EditionView): string {
     return `What has ${title} said in parliament this year?`;
   if (edition.kind === 'topic')
     return `What has parliament said about ${editionTopic(edition)?.name ?? title} this year?`;
+  if (edition.kind === 'largest')
+    return 'What has parliament said about government grants this year?';
+  if (edition.kind === 'grant') {
+    // A program must be labelled explicitly; the award kicker can also name a seat.
+    for (const line of [edition.facts.kicker, edition.facts.line]) {
+      const program = /(?:^| · )(?:grant )?program(?:\s*:\s*| · )([^·\n]+)/i
+        .exec(line ?? '')?.[1]
+        ?.trim();
+      if (program) return `What has parliament said about ${program}?`;
+    }
+  }
   return `What has parliament said about ${title}?`;
 }
 

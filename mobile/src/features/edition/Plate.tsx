@@ -337,14 +337,14 @@ export function ArchivePhotograph({
         variant="footnote"
         tone={onBand ? 'onBandSoft' : 'inkSoft'}
       >
-        Photo: {photograph.credit} · {photograph.licence}
+        Photo: {photograph.credit}
       </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  plate: { padding: 20, gap: 4 },
+  plate: { padding: 20, gap: rhythm.line },
   rounded: { borderRadius: radii.container, borderCurve: 'continuous' },
   kicker: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
   kickerText: { flex: 1, fontWeight: '600' },
@@ -359,7 +359,8 @@ const styles = StyleSheet.create({
     lineHeight: 44,
     color: colors.onBand,
   },
-  art: { marginTop: rhythm.heading },
+  // The plate already contributes its 4 pt sibling gap to the 16 pt art spacing.
+  art: { marginTop: rhythm.block - rhythm.line },
   stageArt: { paddingTop: 4 },
   rail: {
     position: 'absolute',
