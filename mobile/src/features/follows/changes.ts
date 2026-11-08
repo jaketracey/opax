@@ -118,9 +118,13 @@ export function changeText(change: Change, year?: number): string {
   return `${change.text}${date ? ` · ${date}` : ''}`;
 }
 export function changeAccessibilityLabel(change: Change): string {
-  return change.asAt
-    ? `${change.text}, ${new Date(/^\d{4}-\d{2}-\d{2}$/.test(change.asAt) ? `${change.asAt}T12:00:00` : change.asAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}`
-    : `${change.text}, date not published`;
+  if (!change.asAt) return `${change.text}, date not published`;
+  const date = new Date(
+    /^\d{4}-\d{2}-\d{2}$/.test(change.asAt)
+      ? `${change.asAt}T12:00:00`
+      : change.asAt,
+  );
+  return `${change.text}, ${date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', ...(date.getFullYear() !== new Date().getFullYear() ? { year: 'numeric' as const } : {}) })}`;
 }
 export const moreChangesText = (n: number): string => `and ${n} more`;
 export function sortChanges(changes: readonly Change[]): Change[] {

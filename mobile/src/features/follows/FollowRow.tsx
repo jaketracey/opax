@@ -136,7 +136,7 @@ export function FollowRow({
         changes[0] && !ownMP
           ? `Changed: ${changeAccessibilityLabel(changes[0])}.`
           : line,
-        more,
+        more ? `And ${changes.length - 1} more.` : undefined,
       ]
         .filter(Boolean)
         .join(' ')}

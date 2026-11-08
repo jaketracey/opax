@@ -185,7 +185,10 @@ function todayChanges(changes: readonly Change[]): Change[];
 `Change` is also re-exported from `markers.ts`. Lists compare identities,
 statuses compare values, and there is no date cut-off. Every displayed line
 uses the record's own date. Statuses without a published date have
-`dateNotPublished` and the spoken suffix "date not published". Today orders
+`dateNotPublished` and the spoken suffix "date not published". Spoken follow
+change dates use a long month and include the year only outside the current
+year, matching the visible line. The spoken remainder is its own sentence,
+"And 3 more.", while the visible remainder stays "and 3 more". Today orders
 newest first, statuses first on equal dates, then text, and uses `todayChanges`
 to exclude expenses. There is no pay change. `moreChangesText` has no noun.
 A stage and division with the same stage, chamber and date yield one division
@@ -400,7 +403,9 @@ three lines; other titles are unlimited `rowRecord`. Vote questions follow
 `questionType`; matched votes open the exact division or fall back to the
 bill's divisions section. Unmatched votes open an original in the in-app
 browser and carry "View source", Share and Copy link actions. Dates in record
-rows always include the year. The composition lives in this owned module;
+rows always include the year, including their accessibility labels. Both row
+glyphs stop at 1.5 times the text scale; row gaps use `rhythm.tight` and
+`rhythm.line`. The composition lives in this owned module;
 the later Your MP lane may move its internals to `latest.ts`, retaining these
 exports.
 

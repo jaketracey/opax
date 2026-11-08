@@ -1,6 +1,8 @@
 import { act, createRef, useRef } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { View } from 'react-native';
+import { Icon } from '../src/design/icon';
+import { rhythm } from '../src/design/tokens';
+import { View, StyleSheet } from 'react-native';
 import {
   useSeenOnView,
   type SeenView,
@@ -451,4 +453,74 @@ test('viewing a division acknowledges its hidden stage when the latest division 
     },
   };
   expect(changesFor(acknowledged, next)).toEqual([]);
+});
+
+test('follow row speech uses the visible date rule and a separate remainder sentence', () => {
+  jest.setSystemTime(new Date('2026-11-09T12:00:00'));
+  const person = {
+    ...f,
+    kind: 'person' as const,
+    id: 'person_2b850aa643795ce8902f754b',
+    title: 'Anthony Albanese',
+  };
+  const changes = [
+    change,
+    ...Array.from({ length: 3 }, (_, i) => ({
+      ...change,
+      key: `older-${i}`,
+      asAt: '2026-08-18',
+    })),
+  ];
+  mount(
+    <FollowRow
+      follow={person}
+      state={{
+        status: 'ready',
+        title: person.title,
+        current: {},
+        keys: [],
+        changes,
+      }}
+    />,
+  );
+  expect(
+    renderer!.root
+      .findByType(FollowRow)
+      .findAll(
+        (node) =>
+          node.props?.accessibilityLabel ===
+          'Anthony Albanese, person. Changed: Voted for a bill, 19 August. And 3 more.',
+      ).length,
+  ).toBeGreaterThan(0);
+  expect(changeAccessibilityLabel({ ...change, asAt: '2025-08-19' })).toBe(
+    'Voted for a bill, 19 August 2025',
+  );
+  expect(
+    renderer!.root.findAll((node) => node.props?.detail?.endsWith('and 3 more'))
+      .length,
+  ).toBeGreaterThan(0);
+});
+
+test('LatestRow keeps its year and caps both glyphs with the standard row gaps', () => {
+  jest.setSystemTime(new Date('2026-11-09T12:00:00'));
+  mount(<LatestRows records={[latestRecord(record)!]} />);
+  const icons = renderer!.root.findAllByType(Icon);
+  expect(icons).toHaveLength(2);
+  expect(icons.map((icon) => icon.props.maxScale)).toEqual([1.5, 1.5]);
+  const label = 'Voted for. Housing Bill. Second reading, 19 August 2026.';
+  const row = renderer!.root.findAll(
+    (node) =>
+      node.props?.accessibilityLabel === label &&
+      node.props?.accessibilityRole === 'link',
+  )[0]!;
+  const style = StyleSheet.flatten(
+    typeof row.props.style === 'function'
+      ? row.props.style({ pressed: false })
+      : row.props.style,
+  );
+  expect(style.gap).toBe(rhythm.tight);
+  const words = renderer!.root
+    .findAllByType(View)
+    .find((node) => StyleSheet.flatten(node.props.style)?.flex === 1)!;
+  expect(StyleSheet.flatten(words.props.style)?.gap).toBe(rhythm.line);
 });

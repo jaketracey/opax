@@ -375,7 +375,7 @@ test('real shared catalogs supply vote identities; counts alone never invent rec
 });
 test('neutrality lint covers the entire follows feature', () => {
   const never =
-    /\b(bought|corrupt|rort|scandal|secret|exposed|influence|linked to|disclosed|negatived)\b/i;
+    /\b(bought|corrupt|rort|scandal|secret|exposed|influence|linked to|disclosed|negatived|defected|switched sides|bumper)\b/i;
   const folder = path.join(__dirname, '../src/features/follows');
   for (const file of fs
     .readdirSync(folder)

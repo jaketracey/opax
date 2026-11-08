@@ -201,6 +201,7 @@ export function LatestRow({
       <Icon
         name={recordSymbols[record.kind]}
         size={20}
+        maxScale={1.5}
         tone="inkSoft"
         type="hierarchical"
       />
@@ -218,6 +219,7 @@ export function LatestRow({
       <Icon
         name={record.href ? symbols.chevron : symbols.external}
         size={13}
+        maxScale={1.5}
         tone="inkSoft"
       />
     </Pressable>
@@ -307,9 +309,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: rhythm.heading,
+    gap: rhythm.tight,
     paddingVertical: rhythm.row,
     minHeight: minimumTarget,
   },
-  words: { flex: 1, gap: 4 },
+  words: { flex: 1, gap: rhythm.line },
 });
