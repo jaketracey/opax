@@ -20,6 +20,7 @@ import {
   stateName,
 } from './seat-model';
 import { SeatRow } from './SeatRow';
+import { FieldClearance } from './FieldClearance';
 
 /**
  * Browse by state (`/seat/state/[code]`, `/welcome/seat/state/[code]`): the
@@ -69,46 +70,53 @@ export function SeatStateList({
           },
         }}
       />
-      <Screen grouped testID={`seat-state-${code.toLowerCase()}`}>
-        {!valid ? (
-          <ContentUnavailable
-            symbol="map"
-            title="Nothing to show"
-            testID="seat-state-unknown"
-          />
-        ) : state.status === 'error' ? (
-          <ContentUnavailable
-            symbol="exclamationmark.triangle"
-            title={seatCopy.loadFailed}
-            action={{ label: copy.tryAgain, onPress: retry }}
-          />
-        ) : state.status === 'loading' ? (
-          <InsetGroup>
-            <Skeleton shape="people" count={6} label="Loading electorates" />
-          </InsetGroup>
-        ) : seats.length ? (
-          <InsetGroup testID="seat-state-list">
-            {seats.map((s) => (
-              <SeatRow
-                key={s.electorate_id}
-                seat={s}
-                onPress={() => void choose(s)}
-                disabled={
-                  busy &&
-                  accessoryFor(s.electorate_id, savingId, chosenId) ===
-                    'chevron'
-                }
-                accessory={accessoryFor(s.electorate_id, savingId, chosenId)}
-                testID={`seat-row-${s.slug}`}
-              />
-            ))}
-          </InsetGroup>
-        ) : (
-          <Text wordSafe variant="body" tone="inkSoft" testID="seat-no-results">
-            {seatCopy.noMatch}
-          </Text>
-        )}
-      </Screen>
+      <FieldClearance>
+        <Screen grouped testID={`seat-state-${code.toLowerCase()}`}>
+          {!valid ? (
+            <ContentUnavailable
+              symbol="map"
+              title="Nothing to show"
+              testID="seat-state-unknown"
+            />
+          ) : state.status === 'error' ? (
+            <ContentUnavailable
+              symbol="exclamationmark.triangle"
+              title={seatCopy.loadFailed}
+              action={{ label: copy.tryAgain, onPress: retry }}
+            />
+          ) : state.status === 'loading' ? (
+            <InsetGroup>
+              <Skeleton shape="people" count={6} label="Loading electorates" />
+            </InsetGroup>
+          ) : seats.length ? (
+            <InsetGroup testID="seat-state-list">
+              {seats.map((s) => (
+                <SeatRow
+                  key={s.electorate_id}
+                  seat={s}
+                  onPress={() => void choose(s)}
+                  disabled={
+                    busy &&
+                    accessoryFor(s.electorate_id, savingId, chosenId) ===
+                      'chevron'
+                  }
+                  accessory={accessoryFor(s.electorate_id, savingId, chosenId)}
+                  testID={`seat-row-${s.slug}`}
+                />
+              ))}
+            </InsetGroup>
+          ) : (
+            <Text
+              wordSafe
+              variant="body"
+              tone="inkSoft"
+              testID="seat-no-results"
+            >
+              {seatCopy.noMatch}
+            </Text>
+          )}
+        </Screen>
+      </FieldClearance>
     </>
   );
 }
