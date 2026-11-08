@@ -1,7 +1,13 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
-import { LoadingState, EmptyState, ErrorState } from '../src/design/primitives';
+import {
+  ContentUnavailable,
+  EmptyState,
+  InlineError,
+  LoadingState,
+  Skeleton,
+} from '../src/design/primitives';
 import { RecordBlock } from '../src/features/your-mp/Evidence';
 import { ProfileBlock } from '../src/features/people/Block';
 import { Skeleton } from '../src/design/states';
@@ -144,14 +150,14 @@ test('division history shows a skeleton during both the index and progressive fi
   };
   jest.mocked(useCatalogRecord).mockReturnValue(state);
   const r = await render(<DivisionHistory />);
-  expect(r.root.findAllByType(LoadingState)).toHaveLength(1);
+  expect(r.root.findAllByType(Skeleton)).toHaveLength(1);
   expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
   jest.mocked(useCatalogRecord).mockReturnValue({
     ...state,
     record: { rows: [], total: 2, loaded: 0, failed: 0, stale: false },
   });
   await act(async () => r.update(<DivisionHistory />));
-  expect(r.root.findAllByType(LoadingState)).toHaveLength(1);
+  expect(r.root.findAllByType(Skeleton)).toHaveLength(1);
   expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
   jest.mocked(useCatalogRecord).mockReturnValue({
     ...state,
@@ -159,7 +165,7 @@ test('division history shows a skeleton during both the index and progressive fi
     error: new Error('Unavailable'),
   });
   await act(async () => r.update(<DivisionHistory />));
-  expect(r.root.findAllByType(ErrorState)).toHaveLength(1);
+  expect(r.root.findAllByType(ContentUnavailable)).toHaveLength(1);
   expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
   await unmount(r);
 });
@@ -177,17 +183,15 @@ test.each([null, new Error('Unavailable')])(
       retry,
     });
     const r = await render(<DivisionHistory />);
-    const failure = r.root.findByType(ErrorState);
-    expect(failure.props.message).toBe(
-      'Division history could not be loaded. Try again.',
-    );
-    expect(r.root.findAllByType(LoadingState)).toHaveLength(0);
+    const failure = r.root.findByType(ContentUnavailable);
+    expect(failure.props.title).toBe("Votes couldn't be loaded");
+    expect(r.root.findAllByType(Skeleton)).toHaveLength(0);
     expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
     expect(words(r)).not.toContain('No division records match that search.');
     expect(
       r.root.findAllByProps({ testID: 'division-history-retry' }),
     ).toHaveLength(0);
-    await act(async () => failure.props.onRetry());
+    await act(async () => failure.props.action.onPress());
     expect(refresh).toHaveBeenCalledTimes(1);
     expect(retry).not.toHaveBeenCalled();
     await unmount(r);
@@ -204,13 +208,15 @@ test('a partial division failure keeps the coverage line and refresh button', as
     retry: jest.fn(),
   });
   const r = await render(<DivisionHistory />);
-  expect(words(r)).toContain('Divisions from 1 of 2 bills; 1 unavailable');
-  expect(r.root.findAllByType(LoadingState)).toHaveLength(0);
-  expect(r.root.findAllByType(ErrorState)).toHaveLength(0);
-  const button = r.root
-    .findAllByProps({ testID: 'division-history-retry' })
-    .find((node) => typeof node.props.onPress === 'function')!;
-  await act(async () => button.props.onPress());
+  expect(words(r)).toContain("Votes from 1 of 2 bills. 1 couldn't be loaded.");
+  expect(r.root.findAllByType(Skeleton)).toHaveLength(0);
+  expect(
+    r.root.findAllByProps({ testID: 'division-history-error' }),
+  ).toHaveLength(0);
+  const partial = r.root
+    .findAllByType(InlineError)
+    .find((node) => node.props.testID === 'division-history-partial')!;
+  await act(async () => partial.props.onRetry());
   expect(refresh).toHaveBeenCalledTimes(1);
   await unmount(r);
 });

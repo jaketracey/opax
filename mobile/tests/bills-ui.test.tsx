@@ -8,7 +8,6 @@ import {
   DivisionQuestion,
   DivisionSplits,
   MachineBrief,
-  OptionRow,
   divisionParties,
   openableUrl,
   splitLabel,
@@ -127,42 +126,28 @@ test('every bar measures against the largest party in the division', () => {
   expect(none.shown).toEqual([]);
 });
 
-test('a bill row is one element naming the bill, its dated status and where it began', () => {
+test('a bill row is one element naming the bill, its dated status and its sponsor', () => {
   const row = d
     .billsFor(bills)
     .data!.find((b) => b.key === 'au-federal-r6850')!;
-  const root = render(<BillIndexRow bill={row} onPress={() => undefined} />);
+  const root = render(
+    <BillIndexRow
+      bill={row}
+      showStatus
+      selected={false}
+      onPress={() => undefined}
+    />,
+  );
   const element = root.find(
     (node) =>
       typeof node.type === 'string' &&
       node.props.testID === 'bill-row-au-federal-r6850',
   );
-  expect(element.props.accessibilityRole).toBe('button');
   expect(element.props.accessibilityLabel).toBe(
-    'Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022, Lapsed, as at 11 April 2022, House of Representatives, Introduced 14 February 2022, Andrew Wilkie, Independent',
+    'Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022. Lapsed, Status as at 11 April 2022. Andrew Wilkie, Independent.',
   );
-  // On screen the status is its label alone: the list's source line dates
-  // the list, so no row repeats "as at".
-  const drawn = texts(root);
-  expect(drawn).toContain('Lapsed');
-  expect(drawn.join(' ')).not.toMatch(/as at/);
-});
-
-test('a filter option reads its count and says when it is chosen', () => {
-  const root = render(
-    <OptionRow
-      label="Before parliament"
-      count={119}
-      selected
-      onPress={() => undefined}
-      testID="option"
-    />,
-  );
-  const option = root.find(
-    (node) => typeof node.type === 'string' && node.props.testID === 'option',
-  );
-  expect(option.props.accessibilityLabel).toBe('Before parliament, 119 bills');
-  expect(option.props.accessibilityState).toEqual({ selected: true });
+  // The row never names the chamber.
+  expect(texts(root).join(' ')).not.toMatch(/House of Representatives/);
 });
 
 const byID = (root: ReactTestInstance, testID: string) =>

@@ -51,6 +51,7 @@ jest.mock('../src/api/runtime', () => ({
     today: jest.fn(),
     todayEdition: jest.fn(),
     billFor: jest.fn(),
+    billIndexRow: () => null,
     roster: jest.fn(),
     slugs: jest.fn(),
     directory: jest.fn(),
@@ -67,7 +68,19 @@ jest.mock('../src/features/follows/FollowingSection', () => ({
 jest.mock('expo-router', () => ({
   useSegments: () => [],
   router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+  Stack: {
+    Screen: () => null,
+    Toolbar: Object.assign(() => null, {
+      Button: () => null,
+      Spacer: () => null,
+    }),
+  },
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   useLocalSearchParams: () => ({
     slug: 'speech-1205524',
     key: 'au-federal-r7534',
@@ -146,7 +159,9 @@ beforeEach(() => {
 test('launch/Today and Bill mount have no paid reads; result actions mount without loading a record', async () => {
   const today = await mount(<Today />),
     bill = await mount(<BillDetail recordKey="au-federal-r7534" />),
-    actions = await mount(<RecordActions slug="speech-1205524" title="A speech" />);
+    actions = await mount(
+      <RecordActions slug="speech-1205524" title="A speech" />,
+    );
   for (const method of Object.values(records))
     if (typeof method === 'function') expect(method).not.toHaveBeenCalled();
   expect(today.root.findByProps({ testID: 'today-records-open' })).toBeTruthy();
@@ -237,12 +252,18 @@ test('bill text switches chosen bytes and never presents the old version as the 
 test('bill text leads with the bill page summary, labelled as machine-written', async () => {
   const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));
   const view = await mount(<BillTextReader />);
-  // Only the pill shows; VoiceOver hears the stored attribution on it.
+  // Only the pill shows; its note holds the stored attribution.
   const label = view.root
     .findAllByProps({ testID: 'bill-text-summary-label' })
     .find((node) => node.props.accessibilityLabel)?.props.accessibilityLabel;
-  expect(label).toMatch(/^Machine-written\. /);
-  expect(label).toContain(bill.summary!.attribution.replace(/\.$/, ''));
+  expect(label).toBe('Machine-written');
+  // The stored attribution is in the pill's note.
+  const note = view.root
+    .findAllByProps({ testID: 'bill-text-summary-label' })
+    .find((node) => node.props.note)!.props.note as { body: string[] };
+  expect(note.body.join(' ')).toContain(
+    bill.summary!.attribution.replace(/\.$/, ''),
+  );
   expect(
     view.root
       .findByProps({ testID: 'bill-text-summary-text' })

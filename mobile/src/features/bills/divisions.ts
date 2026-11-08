@@ -303,3 +303,83 @@ export function questionPlain(text: string): string {
     );
   return flat(questionBlocks(text)).join(' ').replace(/\s+/g, ' ').trim();
 }
+
+// One table for what counts as a procedural vote (specs/bills.md 4.2.5),
+// shared by the bill page, Votes in parliament and Today. Read from the
+// recorded stage only; a vote with no recorded stage is never procedural.
+const PROCEDURAL = [
+  /limitation of debate/i,
+  /\bclosure\b/i,
+  /suspension of standing orders/i,
+  /suspend standing orders/i,
+  /\badjournment\b/i,
+];
+const THIRD_READING = /third reading/i;
+
+/** True when the recorded stage is a procedural motion. */
+export function isProcedural(stage: string | null | undefined): boolean {
+  const s = String(stage ?? '').replace(/_/g, ' ');
+  return !!s.trim() && PROCEDURAL.some((rule) => rule.test(s));
+}
+/** 1 third reading; 3 procedural; 2 everything else, unknown stages included. */
+export function voteTier(stage: string | null | undefined): 1 | 2 | 3 {
+  const s = String(stage ?? '').replace(/_/g, ' ');
+  if (THIRD_READING.test(s)) return 1;
+  return isProcedural(s) ? 3 : 2;
+}
+/**
+ * The page's order: third readings, then the other substantive votes, each
+ * newest first; procedural votes apart, newest first.
+ */
+export function orderDivisions<
+  D extends {
+    stage?: string | null;
+    title?: string | null;
+    date: string;
+    key: string;
+  },
+>(divisions: readonly D[]): { main: D[]; procedural: D[] } {
+  const stageOf = (d: D) => d.stage ?? d.title ?? null;
+  const newest = (a: D, b: D) =>
+    b.date.localeCompare(a.date) || a.key.localeCompare(b.key);
+  const main = divisions
+    .filter((d) => voteTier(stageOf(d)) !== 3)
+    .sort(
+      (a, b) => voteTier(stageOf(a)) - voteTier(stageOf(b)) || newest(a, b),
+    );
+  const procedural = divisions
+    .filter((d) => voteTier(stageOf(d)) === 3)
+    .sort(newest);
+  return { main, procedural };
+}
+
+/**
+ * "Agreed to" or "Not agreed to", never "Negatived". An outcome the record
+ * does not name reads from its own counts, as the chamber decides it.
+ */
+export function outcomeWord(
+  outcome: string | null | undefined,
+  counts?: { ayes: number; noes: number },
+): 'Agreed to' | 'Not agreed to' {
+  const o = String(outcome ?? '').toLocaleLowerCase('en-AU');
+  if (/^(affirmative|agreed|carried|passed|aye)/.test(o)) return 'Agreed to';
+  if (/^(negative|negatived|not|defeated|lost|rejected|no)/.test(o))
+    return 'Not agreed to';
+  return counts && counts.ayes > counts.noes ? 'Agreed to' : 'Not agreed to';
+}
+
+const plural = (n: number, one: string, many: string) =>
+  `${n.toLocaleString('en-AU')} ${n === 1 ? one : many}`;
+/**
+ * A vote's counts in words. On screen a zero side is left out ("25 noes");
+ * spoken, it is said ("no ayes, 25 noes").
+ */
+export function countWords(
+  ayes: number,
+  noes: number,
+  { spoken = false }: { spoken?: boolean } = {},
+): string {
+  const aye = ayes ? plural(ayes, 'aye', 'ayes') : spoken ? 'no ayes' : null;
+  const no = noes ? plural(noes, 'no', 'noes') : spoken ? 'no noes' : null;
+  return [aye, no].filter(Boolean).join(', ') || 'No votes';
+}

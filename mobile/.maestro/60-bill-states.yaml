@@ -1,0 +1,112 @@
+appId: au.com.opax.app
+name: 60 Bill states and arrivals
+---
+# specs/bills.md 4.10 (was 58-bill-states). A bill link that names nothing,
+# then the `?division=` and `?section=` arrivals: a vote past the first five,
+# a procedural vote, an unknown vote, and the votes of a bill with none.
+# The offline saved copy (`bill-offline`) needs the fixture stopped, so it is
+# checked with journey 04's stopped-fixture run, not here.
+- launchApp:
+    permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 90000
+# 1. A key the register never published.
+- openLink: opax://bill/au-federal-r0000000
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-not-found
+    timeout: 60000
+- assertVisible: Bill not found
+- assertVisible: This link may be old.
+- takeScreenshot: ${EVIDENCE}/60-not-found
+- tapOn:
+    id: bill-not-found-search
+- extendedWaitUntil:
+    visible:
+      id: bills-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/60-not-found-search
+# The same from the Ask stack: Search bills pushes the list there too.
+- tapOn:
+    id: tab-ask
+- openLink: opax://bill/au-federal-r0000000
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-not-found
+    timeout: 60000
+- tapOn:
+    id: bill-not-found-search
+- extendedWaitUntil:
+    visible:
+      id: bills-screen
+    timeout: 30000
+# 3. The seventh substantive vote: the rest are revealed ("Show fewer") and
+# the vote is expanded where the page lands.
+- openLink: opax://bill/au-federal-r7520?division=federal-representatives-10607
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-division-6-body
+    timeout: 60000
+- assertVisible:
+    id: bill-division-6-more
+- scrollUntilVisible:
+    element:
+      id: bill-divisions-more
+    direction: DOWN
+    speed: 20
+    timeout: 60000
+- assertVisible: Show fewer
+- takeScreenshot: ${EVIDENCE}/60-seventh-vote
+# 4. A procedural vote: its group opens first.
+- openLink: opax://bill/au-federal-r7520?division=federal-senate-10701
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: bill-division-10-body
+    timeout: 60000
+- assertVisible:
+    id: bill-divisions-procedural
+- takeScreenshot: ${EVIDENCE}/60-procedural-vote
+# 5. An unknown vote: the page opens at its top, with no error.
+- openLink: opax://bill/au-federal-r7520?division=federal-senate-0
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: bill-title
+    direction: UP
+    timeout: 60000
+- assertNotVisible:
+    id: bill-error
+- assertNotVisible:
+    id: bill-division-.*-body
+- takeScreenshot: ${EVIDENCE}/60-unknown-vote
+# 6. Votes asked for on a bill with none: the top of the page, no section.
+- openLink: opax://bill/au-federal-r7549?section=divisions
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: bill-title
+    direction: UP
+    timeout: 60000
+- assertNotVisible:
+    id: bill-divisions
+- assertNotVisible:
+    id: bill-error
+- takeScreenshot: ${EVIDENCE}/60-no-votes

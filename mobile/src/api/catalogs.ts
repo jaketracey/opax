@@ -113,6 +113,13 @@ export interface PartyPageRecord {
   } | null;
   stale: boolean;
 }
+/** A bill read before any index: no party note yet. */
+const noBillIndex: decode.BillIndex = {
+  generated_at: '',
+  count: 0,
+  meta: { party_basis_note: '', party_basis: '', party_coverage: {} },
+  bills: [],
+};
 const loadingPartyBlock = <T>(): Block<T> => ({
   status: 'loading',
   data: null,
@@ -131,6 +138,8 @@ const failedPartyBlock = (error: unknown): Block<never> => ({
 });
 export class Catalogs {
   private suggestionData?: Promise<SuggestionSources>;
+  /** The last bills index read this session, for the bill page's party note. */
+  private billIndex?: RecordResult<decode.BillIndex>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
   constructor(private client: Pick<ApiClient, 'get'>) {}
   async partyPage(
@@ -440,11 +449,20 @@ export class Catalogs {
     return this.client.get(path, decode.decodeElectorate);
   }
   bills(refresh = false) {
-    return this.client.get(
-      '/bills/index.json',
-      decode.decodeBillIndex,
-      refresh,
-    );
+    return this.client
+      .get('/bills/index.json', decode.decodeBillIndex, refresh)
+      .then((index) => {
+        this.billIndex = index;
+        return index;
+      });
+  }
+  /**
+   * The bill's row from the index already in memory, or null: never a
+   * network read. The bill page draws its header from it while the bill's
+   * own file loads (specs/bills.md 4.3).
+   */
+  billIndexRow(key: string): decode.Bill | null {
+    return this.billIndex?.data.bills.find((row) => row.key === key) ?? null;
   }
   bill(key: string, refresh = false) {
     return this.client.get(
@@ -582,11 +600,13 @@ export class Catalogs {
     return { ...result, data: cached(coverageFor(result.data), [result]) };
   }
   async billFor(key: string, refresh = false) {
-    const [bill, index] = await Promise.all([
-      this.bill(key, refresh),
-      this.bills(refresh),
-    ]);
-    const view = billFor(bill.data, index.data);
+    // The page needs only the bill's own file. The index adds the party
+    // note under the votes: use the copy already in memory, and start
+    // reading it for next time without waiting.
+    const bill = await this.bill(key, refresh);
+    const index = this.billIndex;
+    if (!index || refresh) void this.bills(refresh).catch(() => undefined);
+    const view = billFor(bill.data, index?.data ?? noBillIndex);
     for (const block of [
       view.identity,
       view.summary,
@@ -600,14 +620,8 @@ export class Catalogs {
       block.savedAt = bill.savedAt;
       Object.assign(block, recordFlags([bill]));
     }
-    view.divisions = cached(view.divisions, [bill, index]);
-    return {
-      ...bill,
-      ...recordFlags([bill, index]),
-      stale: bill.stale || index.stale,
-      savedAt: Math.min(bill.savedAt, index.savedAt),
-      data: view,
-    };
+    view.divisions = cached(view.divisions, index ? [bill, index] : [bill]);
+    return { ...bill, ...recordFlags([bill]), data: view };
   }
   async billsFor(filter: Parameters<typeof billsFor>[1] = {}) {
     const result = await this.bills();
@@ -649,10 +663,7 @@ export class Catalogs {
       this.client.get(path, decoder, refresh).catch(() => null);
     const metadata = optional('/parliamentarians.json', decode.decodeRoster);
     const [bills, declarations] = await Promise.all([
-      load(
-        this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
-        (data) => recentBillsFor(data, limit),
-      ),
+      load(this.bills(refresh), (data) => recentBillsFor(data, limit)),
       (async () => {
         const pending = this.client.get(
           '/interests/recent.json',
@@ -896,7 +907,7 @@ export class Catalogs {
           this.client
             .get('/parliamentarians.json', decode.decodeRoster, refresh)
             .catch(() => null),
-          this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
+          this.bills(refresh),
           this.client
             .get('/api/person-slugs', decode.decodeSlugs, refresh)
             .catch(() => null),

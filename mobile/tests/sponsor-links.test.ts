@@ -233,13 +233,16 @@ describe('journey 55’s two bills, on the fixtures the journey runs on', () => 
       : pinned(path);
     return d.billFor(d.decodeBill(raw), bills).identity.data!;
   };
+  // The people row's own label: name, party, seat, then the detail line.
   const spoken = (row: ReturnType<typeof sponsorRows>[number]) =>
     [
       row.name,
-      row.place,
-      formerMember(row.party?.status),
       row.party ? partyText(row.party).spoken : null,
-      row.slug ? 'profile' : null,
+      row.place?.startsWith('Formerly ')
+        ? null
+        : formerMember(row.party?.status),
+      row.place,
+      'Sponsor',
     ]
       .filter(Boolean)
       .join(', ');

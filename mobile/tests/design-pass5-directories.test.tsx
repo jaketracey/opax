@@ -10,9 +10,8 @@ import TestRenderer from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
 import { router } from 'expo-router';
 import {
-  SOURCE_AFTER,
   divisionLabel,
-  historyItems,
+  historySections,
 } from '../src/features/directories/DivisionHistory';
 import DirectoryScreen from '../src/features/directories/DirectoryScreen';
 import {
@@ -115,55 +114,21 @@ test('consecutive divisions of one bill sit under one line for the bill', () => 
     division('b', 1),
     division('a', 3),
   ];
-  const items = historyItems(rows);
-  expect(items.map((i) => i.type)).toEqual([
-    'bill',
-    'division',
-    'division',
-    'bill',
-    'division',
-    'bill',
-    'division',
-    'source',
+  const sections = historySections(rows);
+  expect(sections.map((s) => [s.billKey, s.data.length])).toEqual([
+    ['a', 2],
+    ['b', 1],
+    ['a', 1],
   ]);
-  expect(items[0]).toMatchObject({ billKey: 'a', count: 2 });
-  expect(items[3]).toMatchObject({ billKey: 'b', count: 1 });
   // Keys stay unique when a bill comes back later in the list.
-  expect(new Set(items.map((i) => i.key)).size).toBe(items.length);
+  expect(new Set(sections.map((s) => s.key)).size).toBe(sections.length);
 });
 
-test('the source line follows the first page of divisions, once', () => {
-  const many = Array.from({ length: 25 }, (_, i) => division('a', i));
-  const items = historyItems(many);
-  const at = items.findIndex((i) => i.type === 'source');
-  expect(items.slice(0, at).filter((i) => i.type === 'division')).toHaveLength(
-    SOURCE_AFTER,
-  );
-  expect(items.filter((i) => i.type === 'source')).toHaveLength(1);
-  const exact = historyItems(many.slice(0, SOURCE_AFTER));
-  expect(exact.at(-1)!.type).toBe('source');
-  expect(exact.filter((i) => i.type === 'source')).toHaveLength(1);
-  expect(historyItems([]).map((i) => i.type)).toEqual(['source']);
-});
-
-test('a run split by the source line starts again under its bill', () => {
-  const rows = Array.from({ length: SOURCE_AFTER + 2 }, (_, i) =>
-    division('a', i),
-  );
-  const items = historyItems(rows);
-  const at = items.findIndex((i) => i.type === 'source');
-  expect(items[at + 1]).toMatchObject({ type: 'bill', billKey: 'a', count: 2 });
-  expect(items[0]).toMatchObject({ type: 'bill', count: SOURCE_AFTER });
-  expect(new Set(items.map((i) => i.key)).size).toBe(items.length);
-});
-
-test('a division is spoken by its stage, outcome and count, then where and its bill', () => {
+test('a division is spoken by its stage, where, outcome and count, then its bill', () => {
   expect(divisionLabel(division('a', 1))).toBe(
-    'Limitation of debate, Negatived, 11 ayes, 24 noes, Senate · 19 Aug 2026, Bill a',
+    'Limitation of debate, Senate · 19 Aug 2026, Not agreed to, 11 ayes, 24 noes, Bill a',
   );
-  expect(divisionLabel(division('a', 1, { stage: null }))).toMatch(
-    /^Division, /,
-  );
+  expect(divisionLabel(division('a', 1, { stage: null }))).toMatch(/^Vote, /);
 });
 
 const record: DirectoryRecord = {

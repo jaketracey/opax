@@ -30,8 +30,9 @@ name: 55 A bill's sponsor is the standard people row
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
-# One spoken label for the row: name, seat, party, then "profile".
-- assertVisible: 'Andrew Wilkie, Member for Clark · Tasmania, Independent, profile'
+# The standard people row, spoken as one: name, party, seat, then its
+# detail line, "Sponsor".
+- assertVisible: 'Andrew Wilkie, Independent, Member for Clark · Tasmania, Sponsor'
 - takeScreenshot: ${EVIDENCE}/55-sponsor-linked
 - openLink: opax://bill/au-federal-s1085
 - tapOn:
@@ -53,5 +54,5 @@ name: 55 A bill's sponsor is the standard people row
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
-- assertVisible: 'David Leyonhjelm, Liberal Democrats'
+- assertVisible: 'David Leyonhjelm, Liberal Democrats, Sponsor'
 - takeScreenshot: ${EVIDENCE}/55-sponsor-unlinked

@@ -22,12 +22,26 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   useNavigation: () => ({ setParams: jest.fn() }),
   useIsFocused: () => true,
-  Stack: { Screen: () => null },
+  // The bill page's bottom toolbar, and rows that link through Link.
+  Stack: {
+    Screen: () => null,
+    Toolbar: Object.assign(() => null, {
+      Button: () => null,
+      Spacer: () => null,
+    }),
+  },
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
 }));
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     bills: jest.fn(),
     billFor: jest.fn(),
+    billIndexRow: () => null,
     roster: jest.fn(),
     slugs: jest.fn(),
   },

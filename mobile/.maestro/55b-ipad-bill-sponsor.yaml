@@ -44,8 +44,9 @@ name: 55b iPad, a bill's sponsor in the Bills split pane
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
-# One spoken label for the row: name, seat, party, then "profile".
-- assertVisible: 'Andrew Wilkie, Member for Clark · Tasmania, Independent, profile'
+# The standard people row, spoken as one: name, party, seat, then its
+# detail line, "Sponsor".
+- assertVisible: 'Andrew Wilkie, Independent, Member for Clark · Tasmania, Sponsor'
 - takeScreenshot: ${EVIDENCE}/55b-ipad-sponsor-linked
 - openLink: opax://bills?bill=au-federal-s1085
 - tapOn:
@@ -67,5 +68,5 @@ name: 55b iPad, a bill's sponsor in the Bills split pane
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
-- assertVisible: 'David Leyonhjelm, Liberal Democrats'
+- assertVisible: 'David Leyonhjelm, Liberal Democrats, Sponsor'
 - takeScreenshot: ${EVIDENCE}/55b-ipad-sponsor-unlinked

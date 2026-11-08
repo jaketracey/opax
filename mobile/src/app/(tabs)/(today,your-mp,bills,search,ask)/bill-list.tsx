@@ -1,1 +1,1 @@
-export { default } from '../../../features/bills/BillsList';
+export { PushedBillsList as default } from '../../../features/bills/BillsList';

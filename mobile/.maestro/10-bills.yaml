@@ -15,46 +15,53 @@ name: 10 Filter and search the bill list, then open a bill
     visible:
       id: bills-count
     timeout: 20000
-# Every count comes from the pinned index (generated 29 September 2026).
-- assertVisible: 2,989 bills · newest first
+# Every count comes from the pinned index (generated 29 September 2026). The
+# list opens on Before parliament; the scope is a segmented control, or a
+# "Showing" menu row at accessibility sizes.
+- assertVisible:
+    id: bills-count
+    text: 119 bills
+- assertVisible:
+    id: bills-scope
 - takeScreenshot: ${EVIDENCE}/10-list
-- tapOn:
-    id: bills-filters
-# Centre the option before tapping it, so the tap lands on the option.
-- scrollUntilVisible:
-    element:
-      id: bill-filter-status-before_parliament
-    direction: DOWN
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- assertVisible: Before parliament, 119 bills
+# Filters is the bar's own button. The shared sheet applies each change as
+# it is made; Done only closes it.
+- tapOn: Filters.*
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
+    timeout: 10000
 - takeScreenshot: ${EVIDENCE}/10-filters
-- waitForAnimationToEnd
 - tapOn:
-    id: bill-filter-status-before_parliament
+    id: filters-row-chamber
+- extendedWaitUntil:
+    visible:
+      id: filters-facet-screen
+    timeout: 10000
+- tapOn:
+    id: filters-choice-representatives
+- extendedWaitUntil:
+    visible:
+      id: filters-result
+    timeout: 10000
 - tapOn: Done
 - extendedWaitUntil:
     visible:
-      id: bills-chip-status
+      id: bills-clear
     timeout: 10000
-- assertVisible: Remove the status filter, Before parliament
-- scrollUntilVisible:
-    element:
-      id: bills-count
-    direction: DOWN
-    speed: 20
-    timeout: 180000
-- assertVisible: 119 of 2,989 bills · newest first
+- assertVisible:
+    id: bills-count
+    text: '\d+ of 119 bills'
 - takeScreenshot: ${EVIDENCE}/10-filtered
-- scrollUntilVisible:
-    element:
-      id: bills-search
-    direction: UP
-    speed: 70
-    timeout: 180000
 - tapOn:
-    id: bills-search
+    id: bills-clear
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+      text: 119 bills
+    timeout: 10000
+# Search is the native field in the bar, named by its placeholder.
+- tapOn: Bills, sponsors and portfolios
 - inputText: child support social services
 # Return submits and dismisses the keyboard; a swipe can land on the
 # keyboard itself at AX5.
@@ -82,20 +89,27 @@ name: 10 Filter and search the bill list, then open a bill
       id: bill-screen
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/10-bill
+# The status names its event, never the status word beside a bare date.
 - scrollUntilVisible:
     element:
       id: bill-status
     direction: DOWN
     speed: 20
     timeout: 180000
-- assertVisible: Before parliament, as at 17 September 2026
-# One meta line: introduced date, chamber and portfolio.
+- assertVisible:
+    id: bill-status
+    text: 'Status: Before parliament\. Introduced, 17 September 2026'
+# One meta line: introduced date and chamber; the portfolio has its own line.
 - scrollUntilVisible:
     element:
-      text: Introduced 17 Sep 2026 · House of Representatives · Social Services portfolio
+      id: bill-introduced
+      text: Introduced 17 Sep 2026 · House of Representatives
     direction: DOWN
     speed: 20
     timeout: 180000
+- assertVisible:
+    id: bill-portfolio
+    text: Social Services portfolio
 # Introduced and second reading on one day: one date, both stages under it.
 - scrollUntilVisible:
     element:
@@ -109,8 +123,9 @@ name: 10 Filter and search the bill list, then open a bill
 - assertNotVisible:
     id: bill-date-1
 - takeScreenshot: ${EVIDENCE}/10-one-day
-# Share uses the canonical web path; e2e carries a non-resolving origin.
-- tapOn: Share Child Support and Family Assistance Legislation Amendment .*
+# Share is in the bottom toolbar and uses the canonical web path; e2e
+# carries a non-resolving origin.
+- tapOn: Share
 # At AX5 the alert's title pushes the link below its fold: scroll to it.
 - scrollUntilVisible:
     element:

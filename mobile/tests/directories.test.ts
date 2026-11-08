@@ -35,11 +35,7 @@ import {
 } from '../src/features/directories/model';
 import { canonicalUrl } from '../src/navigation/external';
 import { fromWebPath } from '../src/navigation/routes';
-import {
-  billFilterStore,
-  appliedFilters,
-  withoutFilter,
-} from '../src/features/bills/filters';
+import { activeFilterCount, billFilters } from '../src/features/bills/filters';
 import { readDivisionHistory } from '../src/features/directories/division-data';
 import { billFoldText, billName } from '../src/api/bill-transforms';
 import { partyMembers } from '../src/api/party-page';
@@ -704,25 +700,16 @@ describe('bills and division history use static files only', () => {
       ).toBe(bills.bills.filter((b) => b.parliament === 48).length);
     },
   );
-  test('the filter store and removal retain parliament, toggle and sort', () => {
-    billFilterStore.setFilters({
+  test('the filter state retains parliament, toggle and sort', () => {
+    const filters = billFilters({
       parliament: 48,
       divided: true,
       sort: 'title',
+      chamber: '',
     });
-    expect(billFilterStore.get().filters).toEqual({
-      parliament: 48,
-      divided: true,
-      sort: 'title',
-    });
-    expect(
-      appliedFilters(billFilterStore.get().filters).map((c) => c.key),
-    ).toEqual(['parliament', 'divided']);
-    expect(withoutFilter(billFilterStore.get().filters, 'parliament')).toEqual({
-      divided: true,
-      sort: 'title',
-    });
-    billFilterStore.reset();
+    expect(filters).toEqual({ parliament: 48, divided: true, sort: 'title' });
+    // Sort is not a filter.
+    expect(activeFilterCount(filters, 'all')).toBe(2);
   });
   test('static projections are chronological and route directly to native bill divisions', () => {
     const rows = divisionRows([bill]);

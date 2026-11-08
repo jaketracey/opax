@@ -1,9 +1,21 @@
 import { router } from 'expo-router';
-import { partyRoute } from '../../navigation/routes';
+import { billRoute, partyRoute } from '../../navigation/routes';
 import { Fragment, useMemo, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { haptic } from '../../design/haptics';
+import { copyText } from '../records/actions';
+import {
+  canonicalUrl,
+  openOnWeb,
+  openSource,
+  sourceUrl,
+} from '../../navigation/external';
+import { MACHINE_LABEL, MachinePill } from '../../design/labels';
+import { PartyLabel } from '../../design/people';
+import { Button } from '../../design/controls';
+import { blocNames, blocOrder, partyBloc, type PartyBloc } from './party-codes';
+import { countWords } from './divisions';
 import type { BillSplit, billSplits } from '../../api/bill-transforms';
-import { openSource, sourceUrl } from '../../navigation/external';
 import { formatCount, formatDate } from '../../design/format';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import {
@@ -29,6 +41,7 @@ import {
   type QuestionRun,
 } from './divisions';
 import { billRowText, type BillListRow } from './filters';
+import { billName } from '../../api/bill-transforms';
 
 /**
  * @deprecated Use `StatusLabel`. Kept only for the iPad welcome tour's
@@ -57,88 +70,43 @@ export function BillStatus({
 }
 
 /**
- * One bill in the Bills list: the shared `BillRow` (Today draws the same),
- * one VoiceOver element that opens the bill. Its status is a StatusLabel;
- * the list's one source line dates it.
+ * One bill in the Bills list: the shared `BillRow` (Today draws the same).
+ * The status capsule shows only where the scope does not already say it;
+ * VoiceOver reads the status either way.
  */
 export function BillIndexRow({
   bill,
   onPress,
   selected,
+  showStatus = true,
 }: {
   bill: BillListRow;
-  onPress: () => void;
+  onPress?: () => void;
   /**
    * In the iPad split list: true for the bill in the detail pane, false for
    * the others (no chevron; the pane is the destination). Undefined pushes.
    */
   selected?: boolean;
+  showStatus?: boolean;
 }) {
   const text = billRowText(bill);
   return (
     <BillRow
+      billKey={bill.key}
       title={text.name}
       status={text.status}
       date={text.date}
-      by={text.by}
-      party={text.party}
-      detail={text.chamber}
-      onPress={onPress}
+      showStatus={showStatus}
+      meta={text.meta}
+      href={
+        selected === undefined ? billRoute(bill.key, billName(bill)) : undefined
+      }
+      onPress={selected === undefined ? undefined : onPress}
       accessibilityLabel={text.label}
       testID={`bill-row-${bill.key}`}
       dragPath={`/bill/${bill.key}`}
       selected={selected}
     />
-  );
-}
-
-/**
- * A choice in the filter sheet: label, how many bills carry it, and a
- * checkmark when chosen. Selection is said in words (VoiceOver "selected").
- */
-export function OptionRow({
-  label,
-  count,
-  selected,
-  onPress,
-  testID,
-}: {
-  label: string;
-  count: number;
-  selected: boolean;
-  onPress: () => void;
-  testID?: string;
-}) {
-  const stacked = useAccessibilitySize();
-  const counted = `${formatCount(count)} ${count === 1 ? 'bill' : 'bills'}`;
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${label}, ${counted}`}
-      accessibilityState={{ selected }}
-      testID={testID}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.option,
-        pressed ? { backgroundColor: colors.sunken } : null,
-      ]}
-    >
-      <View style={[styles.optionText, stacked ? styles.stacked : null]}>
-        <Text
-          variant={selected ? 'strong' : 'body'}
-          wordSafe
-          style={styles.grow}
-        >
-          {label}
-        </Text>
-        <Text variant="strong" tabular tone="inkSoft">
-          {formatCount(count)}
-        </Text>
-      </View>
-      <View style={styles.check}>
-        {selected ? <Icon name="checkmark" size={18} tone="navy" /> : null}
-      </View>
-    </Pressable>
   );
 }
 
@@ -452,9 +420,8 @@ export function DivisionQuestion({
 export const BRIEF_EXPLANATION = MACHINE_BRIEF_EXPLANATION;
 
 /**
- * A bill's stored machine summary. Its pill comes first, so no reader meets
- * the summary as the record; the record's own attribution opens from it and
- * VoiceOver hears it there. `testID` prefixes the label and text.
+ * A bill's stored machine summary: one `MachinePill` (it opens how this was
+ * written) before the sentences. `testID` prefixes the pill and the text.
  */
 export function MachineSummary({
   attribution,
@@ -467,7 +434,16 @@ export function MachineSummary({
 }) {
   return (
     <>
-      <MachineLabel explanation={attribution} testID={`${testID}-label`} />
+      <MachinePill
+        note={{
+          title: MACHINE_LABEL,
+          body: [
+            'Written by a machine from the explanatory memorandum. Check the original before relying on it.',
+            attribution,
+          ].filter(Boolean),
+        }}
+        testID={`${testID}-label`}
+      />
       <View style={styles.machineText} testID={`${testID}-text`}>
         {sentences.filter(Boolean).map((sentence, index) => (
           <Text key={index} variant="body">
@@ -582,25 +558,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.tight,
   },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.line,
-  },
-  optionText: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: rhythm.tight,
-  },
   stacked: {
     flexDirection: 'column',
     flexWrap: 'nowrap',
     alignItems: 'flex-start',
   },
-  check: { width: 36, alignItems: 'center' },
   grow: { flexShrink: 1, flexGrow: 1 },
   full: { width: '100%' },
   pressed: { backgroundColor: colors.sunken },
@@ -636,6 +598,29 @@ const styles = StyleSheet.create({
   // The counts keep their line; the party name wraps.
   counts: { flexShrink: 0, minWidth: 44, textAlign: 'right' },
   disclosed: { gap: rhythm.block },
+  showMore: { alignItems: 'flex-start' },
+  partyVotes: { gap: rhythm.block },
+  bloc: { gap: rhythm.line },
+  voteRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+    marginHorizontal: -rhythm.line,
+    paddingHorizontal: rhythm.line,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+  },
+  partyName: { flexShrink: 1, maxWidth: '60%' },
+  voteTrack: {
+    flexDirection: 'row',
+    height: 6,
+    borderRadius: 3,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+    backgroundColor: colors.sunken,
+  },
+  voteCounts: { flexShrink: 0 },
   question: { gap: rhythm.heading },
   recordStrong: { fontFamily: fonts.serifBold },
   emphasis: { fontStyle: 'italic' },
@@ -651,3 +636,220 @@ const styles = StyleSheet.create({
   brief: { gap: rhythm.line },
   machineText: { gap: rhythm.tight },
 });
+
+/** A menu item for a bill's ⋯: the same items on the bar and in the iPad pane. */
+export interface BillMenuItem {
+  title: string;
+  symbol: 'square.and.arrow.up' | 'link' | 'arrow.up.right.square';
+  onPress: () => void;
+}
+/** Copy link, Open on the Parliament website (when recorded), Open on opax.com.au. */
+export function billMenuItems({
+  billKey,
+  title,
+  home,
+}: {
+  billKey: string;
+  title: string;
+  home?: { label: string; url: string } | null;
+}): BillMenuItem[] {
+  const path = `/bill/${billKey}`;
+  return [
+    {
+      title: 'Copy link',
+      symbol: 'link',
+      onPress: () => {
+        void copyText(canonicalUrl(path)).then((copied) => {
+          if (copied) haptic('success');
+        });
+      },
+    },
+    ...(home
+      ? [
+          {
+            title: 'Open on the Parliament website',
+            symbol: 'arrow.up.right.square' as const,
+            onPress: () => void openSource(home.url, home.label),
+          },
+        ]
+      : []),
+    {
+      title: 'Open on opax.com.au',
+      symbol: 'arrow.up.right.square',
+      onPress: () => void openOnWeb(path, title),
+    },
+  ];
+}
+
+/**
+ * One control for votes and speeches: "Show 9 more votes" with a chevron
+ * down, then "Show fewer" with a chevron up.
+ */
+export function ShowMoreButton({
+  hidden,
+  noun,
+  open,
+  onToggle,
+  testID,
+}: {
+  hidden: number;
+  /** Plural noun: "votes", "speeches". */
+  noun: string;
+  open: boolean;
+  onToggle: () => void;
+  testID?: string;
+}) {
+  return (
+    <View style={styles.showMore}>
+      <Button
+        variant="plain"
+        label={open ? 'Show fewer' : `Show ${formatCount(hidden)} more ${noun}`}
+        trailingIcon={open ? 'chevron.up' : 'chevron.down'}
+        onPress={onToggle}
+        testID={testID}
+      />
+    </View>
+  );
+}
+
+const slugOf = (label: string) =>
+  label
+    .replace(/[^A-Za-z]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+/**
+ * A vote's party rows in the fixed groups Labor, the Coalition and the
+ * crossbench: each group's summed counts in words, then each party as a
+ * row with its own bar (one ink for every party) and counts, opening the
+ * party. Zero sides are left out on screen and said by VoiceOver.
+ */
+export function PartyVotes({
+  splits,
+  paired,
+  recorded,
+  testID,
+}: {
+  splits: readonly BillSplit[];
+  paired?: number;
+  recorded: boolean;
+  testID: string;
+}) {
+  if (!recorded || !splits.length)
+    return (
+      <Text variant="footnote" tone="inkSoft" testID={`${testID}-none`}>
+        Party votes not recorded for this vote.
+      </Text>
+    );
+  const groups = new Map<PartyBloc, BillSplit[]>();
+  for (const split of splits) {
+    const bloc = partyBloc(split.party);
+    groups.set(bloc, [...(groups.get(bloc) ?? []), split]);
+  }
+  return (
+    <View style={styles.partyVotes} testID={testID}>
+      {blocOrder
+        .filter((bloc) => groups.get(bloc)?.length)
+        .map((bloc) => {
+          const rows = groups.get(bloc)!;
+          const ayes = rows.reduce((n, r) => n + r.ayes, 0);
+          const noes = rows.reduce((n, r) => n + r.noes, 0);
+          const max = Math.max(...rows.map((r) => r.ayes + r.noes), 1);
+          return (
+            <View key={bloc} style={styles.bloc} testID={`${testID}-${bloc}`}>
+              <Text
+                variant="strong"
+                accessibilityRole="header"
+                accessibilityLabel={`${blocNames[bloc]}, ${countWords(ayes, noes, { spoken: true })}`}
+              >
+                {`${blocNames[bloc]} · ${countWords(ayes, noes)}`}
+              </Text>
+              {rows.map((split) => (
+                <PartyVoteRow
+                  key={split.party}
+                  split={split}
+                  max={max}
+                  testID={`${testID.replace(/-parties$/, '')}-splits-${slugOf(split.label)}`}
+                />
+              ))}
+            </View>
+          );
+        })}
+      {paired ? (
+        <Text variant="footnote" tone="inkSoft">
+          {`${formatCount(paired)} ${paired === 1 ? 'pair' : 'pairs'}`}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+function PartyVoteRow({
+  split,
+  max,
+  testID,
+}: {
+  split: BillSplit;
+  max: number;
+  testID: string;
+}) {
+  const stacked = useAccessibilitySize();
+  const linked = !notParty(split);
+  const bar = (
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={[styles.voteTrack, stacked ? null : styles.trackInline]}
+    >
+      <View
+        style={{
+          width: `${(split.ayes / max) * 100}%`,
+          backgroundColor: colors.ink,
+        }}
+      />
+      <View
+        style={{
+          width: `${(split.noes / max) * 100}%`,
+          backgroundColor: colors.inkFaint,
+        }}
+      />
+    </View>
+  );
+  const body = (
+    <>
+      <View style={stacked ? styles.full : styles.partyName}>
+        <PartyLabel
+          party={split.label}
+          status="unknown"
+          linked={false}
+          nested
+        />
+      </View>
+      {bar}
+      <Text variant="secondary" tabular style={styles.voteCounts}>
+        {countWords(split.ayes, split.noes)}
+      </Text>
+      {linked ? (
+        <Icon name="chevron.right" size={13} maxScale={1.5} tone="inkSoft" />
+      ) : null}
+    </>
+  );
+  const style = [styles.voteRow, stacked ? styles.splitStacked : null];
+  const label = `${split.label}, ${countWords(split.ayes, split.noes, { spoken: true })}`;
+  return linked ? (
+    <Pressable
+      accessible
+      accessibilityRole="link"
+      accessibilityLabel={label}
+      accessibilityHint="Opens the party"
+      testID={testID}
+      onPress={() => router.push(partyRoute(split.label))}
+      style={({ pressed }) => [...style, pressed ? styles.pressed : null]}
+    >
+      {body}
+    </Pressable>
+  ) : (
+    <View accessible accessibilityLabel={label} testID={testID} style={style}>
+      {body}
+    </View>
+  );
+}
