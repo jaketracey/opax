@@ -2,6 +2,7 @@ import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Animated, Platform } from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Stack, router } from 'expo-router';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { askScreens } from '../src/navigation/stack/ask';
@@ -237,13 +238,34 @@ test('hidden bar titles stay out of accessibility and fade over 150 ms', () => {
   act(() => view.unmount());
 });
 test('debug and e2e record the opened destination in a hidden text element; release renders nothing', () => {
-  const view = tree(<ExternalURLProbe />);
+  const insets = { top: 59, left: 20, right: 20, bottom: 34 };
+  const probe = () => (
+    <SafeAreaInsetsContext.Provider value={insets}>
+      <ExternalURLProbe />
+    </SafeAreaInsetsContext.Provider>
+  );
+  const view = tree(probe());
   act(() => recordExternalURL('https://example.org/original'));
-  expect(
-    view.root.findByProps({ testID: 'debug-last-external-url' }).props.children,
-  ).toBe('https://example.org/original');
+  const props = view.root.findByProps({
+    testID: 'debug-last-external-url',
+  }).props;
+  expect(props.children).toBe('https://example.org/original');
+  expect(props.accessibilityLabel).toBe('https://example.org/original');
+  expect(props.accessible).toBe(true);
+  expect(props.pointerEvents).toBe('none');
+  expect(props).not.toHaveProperty('accessibilityElementsHidden');
+  expect(props).not.toHaveProperty('importantForAccessibility');
+  expect(props.style).toMatchObject({
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    overflow: 'hidden',
+  });
+  expect(props.style.opacity).toBeGreaterThanOrEqual(0.02);
+  expect(props.style.top).toBeGreaterThan(insets.top);
+  expect(props.style.left).toBeGreaterThan(insets.left);
   mockBuild.isProduction = true;
-  act(() => view.update(<ExternalURLProbe />));
+  act(() => view.update(probe()));
   expect(view.toJSON()).toBeNull();
   act(() => view.unmount());
 });

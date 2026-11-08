@@ -1,5 +1,6 @@
-import { createElement, useSyncExternalStore } from 'react';
+import { createElement, useContext, useSyncExternalStore } from 'react';
 import { Text } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { isProduction } from '../design/environment';
 // Local destination preview for e2e builds; the caller validates the URL and
 // production continues to use the in-app browser.
@@ -41,6 +42,7 @@ const subscribeExternalURL = (listener: () => void) => {
 };
 /** Hidden destination evidence is available only in debug and e2e builds. */
 export function ExternalURLProbe() {
+  const insets = useContext(SafeAreaInsetsContext);
   const url = useSyncExternalStore(
     subscribeExternalURL,
     lastExternalURLSnapshot,
@@ -52,11 +54,18 @@ export function ExternalURLProbe() {
         Text,
         {
           testID: 'debug-last-external-url',
-          accessible: false,
-          accessibilityElementsHidden: true,
-          importantForAccessibility: 'no-hide-descendants',
+          accessible: true,
+          accessibilityLabel: url,
           pointerEvents: 'none',
-          style: { position: 'absolute', width: 1, height: 1, opacity: 0 },
+          style: {
+            position: 'absolute',
+            top: (insets?.top ?? 0) + 1,
+            left: (insets?.left ?? 0) + 1,
+            width: 1,
+            height: 1,
+            opacity: 0.02,
+            overflow: 'hidden',
+          },
         },
         url,
       );
