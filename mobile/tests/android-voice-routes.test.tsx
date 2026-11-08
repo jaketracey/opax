@@ -222,7 +222,7 @@ describe('Android account routes', () => {
       expect.arrayContaining([
         'index',
         'about',
-        'sources',
+        'sources/index',
         'consent',
         'sign-in',
         'sign-in/code',
