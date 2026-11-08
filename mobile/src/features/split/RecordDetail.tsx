@@ -16,6 +16,7 @@ import {
 import { canShare, shareRecord } from '../../navigation/share';
 import { recordActions, showPaneMenu } from '../records/RecordActions';
 import { useBillTextPane } from '../records/billTextPane';
+import { recordHeadline } from '../records/model';
 import BillDetail from '../bills/BillDetail';
 import { ElectorateScreen } from '../Electorate';
 import { PartyPage } from '../Party';
@@ -144,7 +145,14 @@ export function RecordShare({ entry }: { entry: RecordEntry }) {
 
 /** A record's pane bar: ⋯ (Cite, Copy link, the web page) and Share. */
 function DocPaneBar({ entry }: { entry: RecordEntry }) {
-  const target = { slug: entry.key, title: entry.title ?? 'This record' };
+  // The menu title, Share title and citation target use the cleaned
+  // headline, never a stored title with dashes or ISO dates (records.md 2.2).
+  const target = {
+    slug: entry.key,
+    title: entry.title
+      ? recordHeadline({ slug: entry.key, title: entry.title })
+      : 'This record',
+  };
   return (
     <View style={styles.bar}>
       <IconButton
