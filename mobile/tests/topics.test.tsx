@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
 import { act, type ReactElement } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform, ScrollView } from 'react-native';
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
@@ -16,6 +16,7 @@ import {
 } from '../src/features/reports/model';
 import TopicPage, { topicQuestion } from '../src/features/reports/TopicPage';
 import TopicsIndex from '../src/features/reports/TopicsIndex';
+import { rhythm } from '../src/design/tokens';
 
 let mockParams: Record<string, string> = {};
 const mockScreens: { options?: Record<string, unknown> }[] = [];
@@ -433,6 +434,120 @@ describe('Topic page', () => {
       false,
     );
     expect(words(page)).toContain('From 1998 to 2004');
+  });
+
+  const scrollSpy = (page: TestRenderer.ReactTestRenderer) => {
+    const view = page.root.findAllByType(ScrollView)[0]!.instance as {
+      scrollTo: (options: { y: number; animated?: boolean }) => void;
+    };
+    const spy = jest.fn();
+    view.scrollTo = spy;
+    return spy;
+  };
+  const layout = async (
+    page: TestRenderer.ReactTestRenderer,
+    id: string,
+    y: number,
+    height = 0,
+  ) => {
+    const node = page.root
+      .findAll((n) => n.props.testID === id || n.props.onLayout)
+      .find((n) =>
+        id === 'topic-speeches-anchor'
+          ? n.props.testID === id
+          : n.findAll((c) => c.props.testID === id).length > 0 &&
+            n.props.onLayout &&
+            n.props.testID === undefined,
+      )!;
+    await act(async () =>
+      node.props.onLayout({
+        nativeEvent: { layout: { x: 0, y, width: 390, height } },
+      }),
+    );
+  };
+
+  it('a filtered arrival opens scrolled to Speeches', async () => {
+    mockParams = {
+      slug: 'gambling',
+      from: '2010',
+      to: '2019',
+      state: 'federal',
+    };
+    const page = await render(<TopicPage />);
+    const scrollTo = scrollSpy(page);
+    await layout(page, 'topic-speeches-anchor', 1200);
+    expect(scrollTo).toHaveBeenCalledWith({
+      y: 1200 - rhythm.heading,
+      animated: true,
+    });
+    // Once there, a later layout doesn't pull the reader back.
+    scrollTo.mockClear();
+    await layout(page, 'topic-speeches-anchor', 1250);
+    expect(scrollTo).not.toHaveBeenCalled();
+  });
+
+  it('an unfiltered arrival stays at the top', async () => {
+    const page = await render(<TopicPage />);
+    const scrollTo = scrollSpy(page);
+    await layout(page, 'topic-speeches-anchor', 1200);
+    expect(scrollTo).not.toHaveBeenCalled();
+  });
+
+  it('a Who row or a decade bar filters Speeches and scrolls to it', async () => {
+    const page = await render(<TopicPage />);
+    const scrollTo = scrollSpy(page);
+    await layout(page, 'topic-speeches-anchor', 900);
+    await press(page.root, 'topic-party-row-Labor');
+    expect(scrollTo).toHaveBeenLastCalledWith({
+      y: 900 - rhythm.heading,
+      animated: true,
+    });
+    scrollTo.mockClear();
+    await press(page.root, 'topic-tide-bar-1');
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+  });
+
+  it('draws 30 speeches, then the next 30 as the reader nears the end; no pill', async () => {
+    const many = {
+      results: Array.from({ length: 75 }, (_, i) => ({
+        ...speeches.results[0]!,
+        slug: `speech-${i}`,
+        date: `2024-03-${String((i % 28) + 1).padStart(2, '0')}`,
+      })),
+    };
+    jest.mocked(reports.speeches).mockResolvedValue(result(many) as never);
+    const page = await render(<TopicPage />);
+    const rows = () =>
+      host(page.root, 'topic-speeches-list')[0]!.findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          /^topic-speech-\d+$/.test(n.props.testID ?? ''),
+      ).length;
+    expect(rows()).toBe(30);
+    expect(host(page.root, 'topic-speeches-show-more')).toHaveLength(0);
+    await layout(page, 'topic-speeches-anchor', 1000);
+    await layout(page, 'topic-speeches-list', 100, 3000);
+    const scroll = (y: number) =>
+      act(async () =>
+        page.root.findAllByType(ScrollView)[0]!.props.onScroll({
+          nativeEvent: { contentOffset: { x: 0, y } },
+        }),
+      );
+    // Far from the end: nothing is appended.
+    await scroll(500);
+    expect(rows()).toBe(30);
+    // Within two rows of the end (1000 + 3100 - 844): the next 30.
+    await scroll(4100 - 844 - 100);
+    expect(rows()).toBe(60);
+    // The same end again appends nothing more.
+    await scroll(4100 - 844);
+    expect(rows()).toBe(60);
+    await layout(page, 'topic-speeches-list', 100, 6000);
+    await scroll(7100 - 844);
+    expect(rows()).toBe(75);
+    // All speeches stays at the foot.
+    expect(host(page.root, 'topic-speeches-more')).toHaveLength(1);
+    expect(reports.speeches).toHaveBeenCalledTimes(1);
   });
 });
 

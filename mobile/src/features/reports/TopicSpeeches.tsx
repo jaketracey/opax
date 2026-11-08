@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { RecordResult } from '../../api/client';
 import { passageText, serverPassage } from '../../api/passage-text';
-import { Button, PopUpButton } from '../../design/controls';
+import { PopUpButton } from '../../design/controls';
 import { InsetGroup, Section } from '../../design/layout';
 import { LinkRow, RecordRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
@@ -29,10 +29,13 @@ import { announce } from './parts';
 import { SPEECHES_CITATION } from './topic-copy';
 
 type Speeches = ReturnType<typeof decodeSpeeches>;
+
 type Order = 'newest' | 'oldest';
 /** The arc read's window: the newest 200 speeches. */
 export const SPEECH_WINDOW = 200;
-const PAGE = 30;
+/** Rows drawn at first, and appended each time the reader nears the end. */
+export const SPEECH_PAGE = 30;
+const PAGE = SPEECH_PAGE;
 
 /** Newest or oldest first, undated speeches last. */
 export function orderSpeeches(
@@ -60,11 +63,38 @@ const excerpt = (
   return text ? { text } : null;
 };
 
+/** VoiceOver or TalkBack on: null until known. */
+function useScreenReader() {
+  const [on, setOn] = useState<boolean | null>(null);
+  useEffect(() => {
+    let active = true;
+    const subscription = AccessibilityInfo.addEventListener(
+      'screenReaderChanged',
+      (value) => {
+        if (active) setOn(value);
+      },
+    );
+    void AccessibilityInfo.isScreenReaderEnabled().then(
+      (value) => {
+        if (active) setOn((known) => known ?? value);
+      },
+      () => undefined,
+    );
+    return () => {
+      active = false;
+      subscription.remove();
+    };
+  }, []);
+  return on;
+}
+
 /**
  * "Speeches" (specs/search.md 5.2): the newest 200 labelled speeches the
- * page's filters choose, 30 at a time, then "All speeches on {topic}" in
- * Search results with the same filters. Filters are the page's state; this
- * section never pushes a route for them.
+ * page's filters choose, 30 drawn at first and the next 30 appended as the
+ * reader nears the end (no pill: the rows are loaded), then "All speeches
+ * on {topic}" in Search results with the same filters. With a screen
+ * reader on every row is drawn, so swiping reaches them all. Filters are
+ * the page's state; this section never pushes a route for them.
  */
 export function TopicSpeeches({
   slug,
@@ -74,6 +104,9 @@ export function TopicSpeeches({
   filters,
   decades,
   onClear,
+  visible,
+  onVisible,
+  onRowsEnd,
 }: {
   slug: string;
   /** The topic's name, the results' query. */
@@ -88,14 +121,23 @@ export function TopicSpeeches({
   filters: SpeechFilters;
   decades: readonly DecadeBucket[];
   onClear: () => void;
+  /**
+   * How many rows are drawn: the page appends 30 as the reader nears the
+   * end (the rows are loaded, so there is no pill).
+   */
+  visible: number;
+  onVisible: (count: number) => void;
+  /** Where the drawn rows end, from the top of this section. */
+  onRowsEnd?: (bottom: number) => void;
 }) {
   const [order, setOrder] = useState<Order>('newest');
-  const [visible, setVisible] = useState(PAGE);
   const stacked = useAccessibilitySize();
   const line = topicFiltersLine(filters, decades);
   const results = read.record?.data.results ?? [];
   const rows = orderSpeeches(results, order);
   const full = results.length >= SPEECH_WINDOW;
+  const screenReader = useScreenReader();
+  const drawn = screenReader ? rows.length : Math.min(visible, rows.length);
   return (
     <Section title="Speeches" testID="topic-speeches">
       {read.record ? (
@@ -113,7 +155,7 @@ export function TopicSpeeches({
               ]}
               onChange={(value) => {
                 setOrder(value);
-                setVisible(PAGE);
+                onVisible(PAGE);
                 announce(value === 'newest' ? 'Newest first' : 'Oldest first');
               }}
               testID="topic-speeches-order"
@@ -158,39 +200,37 @@ export function TopicSpeeches({
         )
       ) : rows.length ? (
         <>
-          <InsetGroup testID="topic-speeches-list">
-            {rows.slice(0, visible).map((s, i) => (
-              <RecordRow
-                key={`${s.slug}-${i}`}
-                compact
-                meta={resultMeta({
-                  kind: 'speech',
-                  date: s.date,
-                  state: s.state,
-                })}
-                title={resultTitle({ ...s, kind: 'speech' })}
-                excerpt={excerpt(s.snippet, s.resource)}
-                speaker={
-                  s.speaker
-                    ? {
-                        name: s.speaker,
-                        party: s.party ? partyName(s.party) : null,
-                      }
-                    : null
-                }
-                href={docRoute(s.slug)}
-                testID={`topic-speech-${i}`}
-              />
-            ))}
-          </InsetGroup>
-          {visible < rows.length ? (
-            <Button
-              label="Show more"
-              accessibilityLabel={`Show ${formatCount(Math.min(PAGE, rows.length - visible))} more speeches`}
-              onPress={() => setVisible((v) => v + PAGE)}
-              testID="topic-speeches-show-more"
-            />
-          ) : null}
+          <View
+            onLayout={(e) =>
+              onRowsEnd?.(e.nativeEvent.layout.y + e.nativeEvent.layout.height)
+            }
+          >
+            <InsetGroup testID="topic-speeches-list">
+              {rows.slice(0, drawn).map((s, i) => (
+                <RecordRow
+                  key={`${s.slug}-${i}`}
+                  compact
+                  meta={resultMeta({
+                    kind: 'speech',
+                    date: s.date,
+                    state: s.state,
+                  })}
+                  title={resultTitle({ ...s, kind: 'speech' })}
+                  excerpt={excerpt(s.snippet, s.resource)}
+                  speaker={
+                    s.speaker
+                      ? {
+                          name: s.speaker,
+                          party: s.party ? partyName(s.party) : null,
+                        }
+                      : null
+                  }
+                  href={docRoute(s.slug)}
+                  testID={`topic-speech-${i}`}
+                />
+              ))}
+            </InsetGroup>
+          </View>
           {full ? (
             <Text wordSafe variant="secondary" testID="topic-speeches-window">
               {`Showing the newest ${formatCount(SPEECH_WINDOW)} speeches.`}

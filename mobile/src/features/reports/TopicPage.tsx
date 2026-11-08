@@ -1,5 +1,17 @@
-import { useCallback, useRef, useState, type ComponentProps } from 'react';
-import { RefreshControl, View } from 'react-native';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+} from 'react';
+import {
+  Platform,
+  RefreshControl,
+  View,
+  useWindowDimensions,
+  type ScrollView,
+} from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { reports } from '../../api/runtime';
 import { copy } from '../../design/copy';
@@ -10,6 +22,8 @@ import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { symbols } from '../../design/symbols';
 import { rhythm } from '../../design/tokens';
+import { useReduceMotion } from '../../design/accessibility';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import type { RowMenuAction } from '../../design/row-link';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
@@ -31,7 +45,7 @@ import {
 import { useRead, type ReadMeta } from './parts';
 import { LABEL_NOTE, TOPIC_CITATION } from './topic-copy';
 import { TopicMoney, hasTopicMoney } from './TopicMoney';
-import { TopicSpeeches } from './TopicSpeeches';
+import { SPEECH_PAGE, TopicSpeeches } from './TopicSpeeches';
 import { TopicTide } from './TopicTide';
 import { TopicWho } from './TopicWho';
 
@@ -121,12 +135,39 @@ function countFigure(
   };
 }
 
+/** About two drawn speech rows: the next 30 append this far from the end. */
+const NEAR_END = 2 * 96;
+
 function TopicContent({ slug, params }: { slug: string; params: Params }) {
   const title = topicLabel(topicNames[slug]!);
   const phrase = topicPhrase(slug);
   const [filters, setFilters] = useState<SpeechFilters>(() =>
     normaliseTopicFilters(params),
   );
+  const scrollRef = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
+  const reduceMotion = useReduceMotion();
+  const viewport = useWindowDimensions().height;
+  // Where Speeches starts in the page, and where its drawn rows end.
+  const speechesY = useRef<number | null>(null);
+  const rowsEnd = useRef<number | null>(null);
+  const [drawn, setDrawn] = useState(SPEECH_PAGE);
+  const appendedAt = useRef<number | null>(null);
+  // A filtered arrival (a Tide decade, a party, a parliament or a debate)
+  // opens scrolled to Speeches (specs/search.md 5.2.1); an unfiltered one
+  // stays at the top.
+  const arrival = useRef(Object.keys(filters).length > 0);
+  const showSpeeches = () => {
+    const y = speechesY.current;
+    if (y === null) return false;
+    // The scroll view runs under the native header on iOS.
+    const top = Platform.OS === 'ios' ? headerBottom : 0;
+    scrollRef.current?.scrollTo({
+      y: Math.max(0, y - top - rhythm.heading),
+      animated: !reduceMotion,
+    });
+    return true;
+  };
   const [fresh, setFresh] = useState(0);
   const topic = useRead(
     useCallback(() => reports.topic(slug, fresh > 0), [slug, fresh]),
@@ -157,12 +198,38 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
       Object.entries(next).filter(([, v]) => v !== undefined && v !== ''),
     ) as SpeechFilters;
     setFilters(clean);
+    setDrawn(SPEECH_PAGE);
     router.setParams(
       Object.fromEntries(filterKeys.map((key) => [key, clean[key]])),
     );
   };
   const change = (patch: Partial<SpeechFilters>) =>
     apply({ ...filters, ...patch });
+  // A Who row, a decade bar or a table row filters Speeches and shows it:
+  // the change happens below, so the page goes there.
+  const filterAndShow = (patch: Partial<SpeechFilters>) => {
+    change(patch);
+    if (Object.values(patch).some(Boolean)) showSpeeches();
+  };
+  // The sections above Speeches settle at different times and push it
+  // down; the arrival scroll follows each move until they have all settled.
+  const settled = [topic, tide, money, speeches].every(
+    (read) => read.record || read.error,
+  );
+  useEffect(() => {
+    if (!settled || !arrival.current) return;
+    const frame = requestAnimationFrame(() => {
+      if (arrival.current && showSpeeches()) arrival.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settled]);
+  const onSpeechesLayout = (y: number) => {
+    speechesY.current = y;
+    if (!arrival.current) return;
+    showSpeeches();
+    if (settled) arrival.current = false;
+  };
 
   const openAsk = useOpenAsk();
   const menu: RowMenuAction[] = [
@@ -185,6 +252,20 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
 
   const titleRef = useRef<View>(null);
   const bar = useTitleOnScroll(titleRef, title);
+  const onScroll = (y: number) => {
+    bar.onScroll(y);
+    const start = speechesY.current;
+    const end = rowsEnd.current;
+    if (start === null || end === null) return;
+    const bottom = start + end;
+    // One append per new end of the rows: once the last 30 are drawn the
+    // end stops moving and nothing more is asked.
+    if (y + viewport >= bottom - NEAR_END && appendedAt.current !== bottom) {
+      appendedAt.current = bottom;
+      const loaded = speeches.record?.data.results.length ?? 0;
+      setDrawn((n) => Math.min(n + SPEECH_PAGE, Math.max(loaded, n)));
+    }
+  };
   const count = topic.record?.data;
   return (
     <>
@@ -203,7 +284,8 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
       />
       <Screen
         testID="topic-screen"
-        onScroll={bar.onScroll}
+        scrollRef={scrollRef}
+        onScroll={onScroll}
         offline={
           topic.record?.stale && topic.error && isOffline(topic.error)
             ? { savedAt: topic.record.savedAt }
@@ -267,7 +349,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
             slug={slug}
             chosen={chosenDecade(filters, decades)}
             onChoose={(decade) =>
-              change({
+              filterAndShow({
                 from: decade ? String(decade.from) : undefined,
                 to: decade ? String(decade.to) : undefined,
               })
@@ -279,7 +361,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
             topic={count}
             meta={metaOf(topic.record)}
             filters={filters}
-            onFilter={change}
+            onFilter={filterAndShow}
           />
         ) : null}
         {money.record ? (
@@ -289,15 +371,25 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
             meta={metaOf(money.record)}
           />
         ) : null}
-        <TopicSpeeches
-          slug={slug}
-          title={title}
-          phrase={phrase}
-          read={speeches}
-          filters={filters}
-          decades={decades}
-          onClear={() => apply({})}
-        />
+        <View
+          onLayout={(e) => onSpeechesLayout(e.nativeEvent.layout.y)}
+          testID="topic-speeches-anchor"
+        >
+          <TopicSpeeches
+            slug={slug}
+            title={title}
+            phrase={phrase}
+            read={speeches}
+            filters={filters}
+            decades={decades}
+            onClear={() => apply({})}
+            visible={drawn}
+            onVisible={setDrawn}
+            onRowsEnd={(end) => {
+              rowsEnd.current = end;
+            }}
+          />
+        </View>
       </Screen>
     </>
   );
