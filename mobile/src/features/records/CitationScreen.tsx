@@ -218,7 +218,7 @@ const sheet = StyleSheet.create({
   header: { gap: rhythm.line },
   body: { gap: rhythm.block },
   cell: { paddingVertical: rhythm.row, gap: rhythm.tight },
-  // InsetGroup's shape: its container radius and 16 pt text inset.
+  // InsetGroup's shape: its container corners and 16 pt text inset.
   group: {
     backgroundColor: colors.raised,
     borderRadius: radii.container,
