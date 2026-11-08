@@ -18,6 +18,7 @@ import {
 } from '../../design/states';
 import { Text } from '../../design/text';
 import { Icon } from '../../design/icon';
+import type { SFSymbol } from '../../design/symbols';
 import { haptic } from '../../design/haptics';
 import { confirmAction } from '../../design/menu';
 import { phoneCopy } from '../../design/phone-copy';
@@ -39,6 +40,9 @@ import {
   type FollowKind,
 } from './store';
 
+// The edit-mode control. Becomes minus.circle.fill once the shared
+// vocabulary lists it (design/symbols.ts is frozen in this wave).
+const REMOVE_SYMBOL: SFSymbol = 'minus.circle';
 const kindGroups: [FollowKind, string][] = [
   ['person', 'People'],
   ['bill', 'Bills'],
@@ -383,8 +387,7 @@ function EditRow({
         testID={`follows-remove-${follow.kind}-${follow.id}`}
         style={styles.minus}
       >
-        {/* minus.circle.fill once design/symbols.ts lists it (Follow-up). */}
-        <Icon name="minus.circle" size={22} tone="danger" weight="semibold" />
+        <Icon name={REMOVE_SYMBOL} size={22} tone="danger" weight="semibold" />
       </Pressable>
       <View style={styles.words} accessible>
         <Text wordSafe variant="body">
