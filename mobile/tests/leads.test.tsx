@@ -4,7 +4,7 @@ import { act } from 'react';
 import { Linking, Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
-import { catalogs as runtime } from '../src/api/runtime';
+import { apiClient, catalogs as runtime } from '../src/api/runtime';
 import {
   Catalogs,
   decodeDiscovery,
@@ -98,6 +98,7 @@ import {
 } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
+  apiClient: { get: jest.fn() },
   catalogs: {
     discovery: jest.fn(),
     declarations: jest.fn(),
@@ -1463,11 +1464,43 @@ describe('a lead’s page', () => {
     expect(has(root, 'lead-chart')).toBe(false);
     expect(has(root, 'lead-money-map')).toBe(false);
     act(() => renderer.unmount());
-    // Without the money map loaded there is no donor row to show.
+    // A graph that fails to load draws no donor row, and nothing else moves.
     forgetMoneyGraphs();
+    jest.mocked(apiClient.get).mockRejectedValueOnce(new Error('offline'));
     const again = await render(<LeadDetail />);
     expect(has(again.root, 'lead-subject')).toBe(false);
+    expect(has(again.root, 'lead-takeaway')).toBe(true);
     act(() => again.unmount());
+  });
+  test('companies in both: with no graph cached, the lead loads it and draws the donor row', async () => {
+    forgetMoneyGraphs();
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    mockParams.id = signals[0]!.id;
+    const renderer = await render(<LeadDetail />);
+    expect(apiClient.get).toHaveBeenCalledWith(
+      '/graph/money.json',
+      expect.any(Function),
+    );
+    expect(hrefOf(renderer.root, 'lead-subject')).toMatchObject({
+      pathname: '/money-record',
+      params: {
+        node: expect.stringMatching(/^donor:/),
+        name: 'Westpac Banking Corporation',
+      },
+    });
+    act(() => renderer.unmount());
+    // A concentration lead never loads the money graph.
+    jest.mocked(apiClient.get).mockClear();
+    forgetMoneyGraphs();
+    mockParams.id = signals[1]!.id;
+    const party = await render(<LeadDetail />);
+    expect(apiClient.get).not.toHaveBeenCalled();
+    act(() => party.unmount());
   });
   test('an ID not in the export says so and offers every lead', async () => {
     mockParams.id = 'procurement_concentration:missing';

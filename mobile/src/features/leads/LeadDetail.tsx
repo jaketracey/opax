@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { ApiError } from '../../api/errors';
-import { catalogs } from '../../api/runtime';
+import { apiClient, catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
 import {
   formatCount,
@@ -39,7 +39,13 @@ import {
   moneyRecordRoute,
 } from '../../navigation/routes/public-money';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { donorNodeFor, normaliseOrganisation } from '../money/lookup';
+import { decodeMoneyGraph, moneyCatalogs } from '../money/data';
+import {
+  donorNodeFor,
+  loadedMoneyGraph,
+  normaliseOrganisation,
+  rememberMoneyGraph,
+} from '../money/lookup';
 import { moneyPageMenu } from '../money/menu';
 import { PartyDot } from '../money/parts';
 import { money } from '../money-public/runtime';
@@ -82,6 +88,27 @@ function useSubject(lead: LeadView | null): {
   );
   const subject = lead?.comparison.heading ?? null;
   const contracts = lead?.category === 'procurement_concentration';
+  const overlap = lead?.category === 'donor_contract_overlap';
+  // A company in both is found on the money map. The lead page (unlike the
+  // money record) loads the federal graph itself, after the lead has drawn,
+  // when no screen has loaded it yet; failing, the row is not drawn.
+  const [graph, setGraph] = useState(() => loadedMoneyGraph('federal'));
+  useEffect(() => {
+    if (!overlap || graph) return;
+    let active = true;
+    Promise.resolve()
+      .then(() => apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .then(
+        (record) => {
+          rememberMoneyGraph('federal', record.data);
+          if (active) setGraph(record.data);
+        },
+        () => undefined,
+      );
+    return () => {
+      active = false;
+    };
+  }, [overlap, graph]);
   useEffect(() => {
     if (!contracts || !subject) return;
     let active = true;
@@ -106,7 +133,7 @@ function useSubject(lead: LeadView | null): {
       : null;
   if (lead.category === 'recipient_concentration')
     return { title: subject, href: partyRoute(subject), party: true };
-  const donor = donorNodeFor({ name: lead.entity });
+  const donor = graph ? donorNodeFor({ name: lead.entity }, graph) : null;
   return donor
     ? {
         title: donor.label,
