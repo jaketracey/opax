@@ -8,6 +8,9 @@ import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
 import Person from '../src/features/Person';
 import Party from '../src/features/Party';
+import RecordList from '../src/features/people/RecordList';
+import { PadGrid } from '../src/design/adaptive';
+import { Section } from '../src/design/layout';
 import { Text } from '../src/design/primitives';
 import {
   formatCount,
@@ -55,8 +58,26 @@ jest.mock('../src/api/runtime', () => ({
     funding: jest.fn(),
     mentions: jest.fn(),
     news: jest.fn(),
+    list: jest.fn(),
   },
 }));
+// A live iPad flag: the page reads `isPad` and `useLayout` at render.
+jest.mock('../src/design/adaptive', () => {
+  const actual = jest.requireActual('../src/design/adaptive');
+  const pad = () => !!(globalThis as { __opaxTestPad?: boolean }).__opaxTestPad;
+  const out = {
+    ...actual,
+    useLayout: () => {
+      const layout = actual.useLayout();
+      return pad() ? { ...layout, regular: true } : layout;
+    },
+  };
+  Object.defineProperty(out, 'isPad', { get: pad, enumerable: true });
+  return out;
+});
+const setPad = (on: boolean) => {
+  (globalThis as { __opaxTestPad?: boolean }).__opaxTestPad = on;
+};
 jest.mock('@shopify/react-native-skia', () => ({
   // eslint-disable-next-line @typescript-eslint/no-require-imports -- inert host view
   Canvas: require('react-native').View,
@@ -66,7 +87,13 @@ jest.mock('@shopify/react-native-skia', () => ({
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
-const mockParams: { slug?: string; name?: string; section?: string } = {};
+const mockParams: {
+  slug?: string;
+  name?: string;
+  section?: string;
+  kind?: string;
+  person?: string;
+} = {};
 jest.mock('expo-router', () => ({
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
     Trigger: ({ children }: { children?: unknown }) => children,
@@ -181,6 +208,70 @@ describe('profile', () => {
       profile.blocks.interests.data!.buckets,
     ).reduce((sum, b) => sum + b.count, 0);
     expect(buckets).toBe(interests);
+    await act(async () => r.unmount());
+  });
+
+  test('D6 order with every block held, and the interests tile counts what the section draws', async () => {
+    const { r, profile } = await wong();
+    // The fixture holds each block the order names.
+    for (const block of ['votes', 'interests', 'pay', 'expenses'] as const)
+      expect(profile.blocks[block].data).not.toBeNull();
+    const ORDER = [
+      'person-votes',
+      'person-speeches',
+      'person-interests',
+      'person-pay',
+      'person-expenses',
+      'person-receipts',
+      'person-more',
+    ];
+    const drawnOrder = r.root
+      .findAll(
+        (n) => typeof n.type === 'string' && ORDER.includes(n.props.testID),
+      )
+      .map((n) => n.props.testID as string)
+      .filter((id, i, all) => all.indexOf(id) === i);
+    expect(drawnOrder).toEqual(ORDER);
+    // The headings read in the same order.
+    const headings = r.root
+      .findAllByType(Section)
+      .map((n) => n.props.title as string | undefined)
+      .filter((t): t is string =>
+        [
+          'Voting record',
+          'Declared interests',
+          'Pay',
+          'Expenses',
+          'Party receipts',
+          'More from the record',
+        ].includes(t ?? ''),
+      );
+    expect(headings).toEqual([
+      'Voting record',
+      'Declared interests',
+      'Pay',
+      'Expenses',
+      'Party receipts',
+      'More from the record',
+    ]);
+    // The section's categories add up to the strip's interests figure.
+    const drawnTotal = r.root
+      .findAll(
+        (n) =>
+          typeof n.props.testID === 'string' &&
+          /^interest-bucket-[^-]+$/.test(n.props.testID) &&
+          typeof n.props.value === 'string',
+      )
+      .filter(
+        (n, i, all) =>
+          all.findIndex((m) => m.props.testID === n.props.testID) === i,
+      )
+      .reduce((sum, n) => sum + Number(n.props.value.replace(/,/g, '')), 0);
+    const interests = interestsCount(profile)!;
+    expect(drawnTotal).toBe(interests);
+    expect(
+      host(r, 'person-figure-interests').props.accessibilityLabel,
+    ).toContain(formatCount(drawnTotal));
     await act(async () => r.unmount());
   });
 
@@ -402,8 +493,8 @@ describe('party', () => {
     'party-figure-receipts',
     'party-figures-source',
     'party-members',
-    'party-current-count',
     'party-members-all',
+    'party-current-count',
     'party-receipts',
     'party-receipts-total',
     'party-debts-section',
@@ -587,6 +678,72 @@ describe('party', () => {
     }
   });
 
+  test('on an iPad at regular width, Members pairs with Recent votes and Receipts with Debts', async () => {
+    const sectionsIn = (n: TestRenderer.ReactTestInstance) =>
+      n
+        .findAll(
+          (m) =>
+            typeof m.type === 'string' &&
+            [
+              'party-members',
+              'party-divisions',
+              'party-receipts',
+              'party-debts-section',
+            ].includes(m.props.testID),
+        )
+        .map((m) => m.props.testID as string)
+        .filter((id, i, all) => all.indexOf(id) === i);
+    // iPhone: one column, nothing paired, the phone order kept.
+    const phone = await party('Labor');
+    expect(phone.root.findAllByType(PadGrid)).toHaveLength(0);
+    expect(layout(phone)).toEqual(SECTIONS);
+    await act(async () => phone.unmount());
+    setPad(true);
+    try {
+      const pad = await party('Labor');
+      const grids = pad.root.findAllByType(PadGrid);
+      expect(grids.map(sectionsIn)).toEqual([
+        ['party-members', 'party-divisions'],
+        ['party-receipts', 'party-debts-section'],
+      ]);
+      await act(async () => pad.unmount());
+    } finally {
+      setPad(false);
+    }
+  });
+
+  test('?section=receipts still lands on Receipts when the sections pair', async () => {
+    setPad(true);
+    mockParams.section = 'receipts';
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {});
+    try {
+      const r = await party('Labor');
+      const anchors = r.root.findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          typeof n.props.onLayout === 'function' &&
+          n.findAllByType(PadGrid).length === 1 &&
+          n.findAll((m) => m.props.testID === 'party-receipts').length > 0 &&
+          n.findAll((m) => m.props.testID === 'party-members').length === 0,
+      );
+      expect(anchors.length).toBeGreaterThan(0);
+      await act(async () => {
+        anchors[anchors.length - 1]!.props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 900, width: 1000, height: 400 } },
+        });
+      });
+      expect(scrollTo).toHaveBeenCalled();
+      const y = (scrollTo.mock.calls.at(-1)![0] as { y: number }).y;
+      expect(y).toBeGreaterThan(700);
+      await act(async () => r.unmount());
+    } finally {
+      scrollTo.mockRestore();
+      setPad(false);
+    }
+  });
+
   test('the Recent votes rows draw no em dash', async () => {
     const r = await party('Labor');
     try {
@@ -598,5 +755,54 @@ describe('party', () => {
     } finally {
       await act(async () => r.unmount());
     }
+  });
+});
+
+describe('record list', () => {
+  afterEach(() => {
+    delete mockParams.kind;
+    delete mockParams.person;
+    delete mockParams.name;
+  });
+  async function list(kind: string) {
+    mockParams.kind = kind;
+    mockParams.person = 'penny-wong';
+    mockParams.name = 'Penny Wong';
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<RecordList />);
+    });
+    return r;
+  }
+
+  test('news is not available yet: no read, and no Try again that cannot work', async () => {
+    const r = await list('news');
+    expect(peopleDepth.list).not.toHaveBeenCalled();
+    const state = r.root.find(
+      (n) =>
+        n.props.testID === 'record-list-unavailable' &&
+        n.props.title !== undefined,
+    );
+    expect(state.props.title).toBe('News isn’t available yet');
+    expect(state.props.symbol).toBe('newspaper');
+    expect(state.props.body).toBeUndefined();
+    expect(state.props.action).toBeUndefined();
+    expect(has(r, 'record-list-error')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('a failed speeches read keeps its Try again', async () => {
+    jest
+      .mocked(peopleDepth.list)
+      .mockRejectedValue(new ApiError('server', 'down'));
+    const r = await list('speeches');
+    expect(peopleDepth.list).toHaveBeenCalled();
+    const error = r.root.find(
+      (n) =>
+        n.props.testID === 'record-list-error' && n.props.title !== undefined,
+    );
+    expect(error.props.action?.label).toBe('Try again');
+    expect(has(r, 'record-list-unavailable')).toBe(false);
+    await act(async () => r.unmount());
   });
 });
