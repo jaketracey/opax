@@ -29,7 +29,28 @@ export const citationCopy = {
   next: 'Next source',
   openRecord: 'Open record',
   passage: 'Cited passage',
+  noPassage: 'This record has no passage to show.',
 } as const;
+/** Case, spacing and punctuation folded, so a passage can be compared with a title. */
+function folded(text: string) {
+  return text
+    .toLocaleLowerCase('en-AU')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim();
+}
+/**
+ * The passage to draw, or null when there is none or it only repeats the
+ * title (cleaned or as stored): a wash holding the heading again says nothing.
+ */
+export function citationPassage(source: Source): string | null {
+  const passage = sourcePassage(source.snippet);
+  if (!passage) return null;
+  const text = folded(passage);
+  if (!text) return null;
+  return text === folded(sourceTitle(source)) || text === folded(source.title)
+    ? null
+    : passage;
+}
 /** The original's site, for the record's source line ("ParlInfo"). */
 export function originName(url: string | undefined): string | null {
   if (!url?.startsWith('https://')) return null;
@@ -72,7 +93,7 @@ export function CitationContent({
   const person = source.speaker
     ? (profiles?.get(source.speaker) ?? profiles?.get(speaker ?? ''))
     : undefined;
-  const passage = sourcePassage(source.snippet);
+  const passage = citationPassage(source);
   const origin = originName(source.url);
   const heading = useRef<View>(null);
   useEffect(() => {
@@ -134,7 +155,11 @@ export function CitationContent({
             {passage}
           </Text>
         </View>
-      ) : null}
+      ) : (
+        <Text wordSafe variant="secondary" testID="citation-no-passage">
+          {citationCopy.noPassage}
+        </Text>
+      )}
       {onOpenRecord ? (
         <InsetGroup>
           <LinkRow

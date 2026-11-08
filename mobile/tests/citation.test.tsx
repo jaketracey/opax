@@ -174,10 +174,49 @@ test('the selected source: numeral and title, meta, the whole passage, Open reco
   expect(words()).toContain('Sam Placeholder');
   // The whole passage, no sentence picked inside it.
   expect(host('citation-passage')).toHaveLength(1);
+  expect(host('citation-no-passage')).toHaveLength(0);
   expect(words()).toContain(passage);
   expect(host('citation-open-record').length).toBeGreaterThan(0);
   expect(words()).toContain('ParlInfo');
   expect(words()).not.toMatch(/—|retrieved/);
+});
+
+test('a passage that only repeats the title is not drawn; the sheet says there is no passage', () => {
+  for (const snippet of [
+    // The cleaned title, in another case and with punctuation.
+    'synthetic fixture bill 1.',
+    // The stored title, stage and all.
+    'Synthetic Fixture Bill 1 — Second Reading',
+  ]) {
+    found(
+      fixture([
+        source(1, {
+          title: 'Synthetic Fixture Bill 1 — Second Reading',
+          snippet,
+        }),
+      ]),
+    );
+    act(() => showCitation({ turn: 'fixture-chat:1', n: 1 }));
+    const { words, host } = draw();
+    expect(host('citation-passage')).toHaveLength(0);
+    expect(host('citation-no-passage')).toHaveLength(1);
+    expect(words()).toContain('This record has no passage to show.');
+    // Above Open record.
+    expect(words().indexOf('This record has no passage')).toBeLessThan(
+      words().indexOf('Open record'),
+    );
+  }
+});
+
+test('a record with no passage at all says so above Open record', () => {
+  found(fixture([source(1, { snippet: '' })]));
+  act(() => showCitation({ turn: 'fixture-chat:1', n: 1 }));
+  const { words, host } = draw();
+  expect(host('citation-passage')).toHaveLength(0);
+  expect(host('citation-no-passage')).toHaveLength(1);
+  expect(words().indexOf('This record has no passage')).toBeLessThan(
+    words().indexOf('Open record'),
+  );
 });
 
 test('Previous and Next appear with two or more sources and stop at the ends', () => {
