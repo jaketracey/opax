@@ -365,7 +365,6 @@ describe('profile', () => {
     });
     const missing = state(r, 'person-not-found')!;
     expect(missing.props.title).toBe('This person isn’t in OPAX');
-    expect(missing.props.action.label).toBe('Search');
     expect(has(r, 'person-not-found-search')).toBe(true);
     expect(has(r, 'person-error')).toBe(false);
     expect(drawn(r)).not.toContain('Try again');

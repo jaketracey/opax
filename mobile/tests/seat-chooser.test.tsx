@@ -513,3 +513,20 @@ describe('the Victorian scope', () => {
     await act(async () => r.unmount());
   });
 });
+
+describe('the bottom search field (w4-seat-ax5-01)', () => {
+  test('at accessibility sizes on iPhone the list ends above the field', () => {
+    const { bottomFieldClearance, BOTTOM_FIELD_HEIGHT } = jest.requireActual<
+      typeof import('../src/features/seat/FieldClearance')
+    >('../src/features/seat/FieldClearance');
+    // AX5 on iPhone: the safe area, the field and a gap.
+    expect(bottomFieldClearance(3.12, 34, 'ios', false)).toBe(
+      34 + BOTTOM_FIELD_HEIGHT + 8,
+    );
+    // Large: the list fits above the field or scrolls under its edge.
+    expect(bottomFieldClearance(1, 34, 'ios', false)).toBe(0);
+    // iPad keeps search in the bar; Android has no bottom field.
+    expect(bottomFieldClearance(3.12, 20, 'ios', true)).toBe(0);
+    expect(bottomFieldClearance(3.12, 0, 'android', false)).toBe(0);
+  });
+});

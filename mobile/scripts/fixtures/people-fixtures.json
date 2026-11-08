@@ -44,6 +44,34 @@
       },
       "coverage": "Local empty-catalogue contract fixture. These are not production speech counts."
     },
+    "/api/person-topics?name=Julia+Gillard": {
+      "name": "Julia Gillard",
+      "indexed": 0,
+      "profiles": {
+        "all": {
+          "label": "All years",
+          "from": 1993,
+          "to": 2026,
+          "labelled": 0,
+          "topics": []
+        },
+        "then": {
+          "label": "2010s",
+          "from": 2010,
+          "to": 2019,
+          "labelled": 0,
+          "topics": []
+        },
+        "now": {
+          "label": "2020–26",
+          "from": 2020,
+          "to": 2026,
+          "labelled": 0,
+          "topics": []
+        }
+      },
+      "coverage": "Local empty-catalogue contract fixture. These are not production speech counts."
+    },
     "/api/topics": {
       "labelled": 0,
       "topics": []

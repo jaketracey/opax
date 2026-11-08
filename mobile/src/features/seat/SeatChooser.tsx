@@ -21,6 +21,7 @@ import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import { saveChoice } from '../your-mp/choice-store';
 import type { Directory } from '../your-mp/model';
 import { useSeat } from '../your-mp/useSeat';
+import { FieldClearance } from './FieldClearance';
 import { LocationRow } from './LocationRow';
 import {
   abolishedLine,
@@ -397,35 +398,77 @@ export function SeatChooser({
               }),
         }}
       />
-      <Screen
-        grouped
-        testID={welcome ? 'welcome-seat' : 'seat-sheet'}
-        offline={offlineOf(state)}
-      >
-        {saveError}
-        {state.status === 'error' ? (
-          <ContentUnavailable
-            symbol="exclamationmark.triangle"
-            title={seatCopy.loadFailed}
-            action={{
-              label: copy.tryAgain,
-              onPress: retry,
-              testID: 'seat-retry',
-            }}
-            testID="seat-load-failed"
-          />
-        ) : typing ? (
-          state.status === 'loading' ? (
-            <InsetGroup>
-              <Skeleton shape="people" count={3} label="Loading electorates" />
-            </InsetGroup>
-          ) : vic ? (
-            (() => {
-              const d = matchIn(districts, query);
-              const r = matchIn(regions, query);
-              return d.length || r.length ? (
-                vicGroups(d, r)
-              ) : (
+      <FieldClearance>
+        <Screen
+          grouped
+          testID={welcome ? 'welcome-seat' : 'seat-sheet'}
+          offline={offlineOf(state)}
+        >
+          {saveError}
+          {state.status === 'error' ? (
+            <ContentUnavailable
+              symbol="exclamationmark.triangle"
+              title={seatCopy.loadFailed}
+              action={{
+                label: copy.tryAgain,
+                onPress: retry,
+                testID: 'seat-retry',
+              }}
+              testID="seat-load-failed"
+            />
+          ) : typing ? (
+            state.status === 'loading' ? (
+              <InsetGroup>
+                <Skeleton
+                  shape="people"
+                  count={3}
+                  label="Loading electorates"
+                />
+              </InsetGroup>
+            ) : vic ? (
+              (() => {
+                const d = matchIn(districts, query);
+                const r = matchIn(regions, query);
+                return d.length || r.length ? (
+                  vicGroups(d, r)
+                ) : (
+                  <Text
+                    wordSafe
+                    variant="body"
+                    tone="inkSoft"
+                    testID="seat-no-results"
+                  >
+                    {seatCopy.noMatch}
+                  </Text>
+                );
+              })()
+            ) : seats.length || leads.length ? (
+              <>
+                {state.directory.electorates.partial ? (
+                  <Text wordSafe variant="footnote">
+                    {seatCopy.partial}
+                  </Text>
+                ) : null}
+                {seats.length ? (
+                  <InsetGroup testID="seat-results">
+                    {seats.map(row)}
+                  </InsetGroup>
+                ) : null}
+                {leads.length ? (
+                  <InsetGroup testID="seat-person-leads">
+                    {leads.map((lead) => (
+                      <PersonLeadRow
+                        key={lead.key}
+                        lead={lead}
+                        disabled={busy}
+                        onPress={() => browse(lead.state)}
+                      />
+                    ))}
+                  </InsetGroup>
+                ) : null}
+              </>
+            ) : (
+              <>
                 <Text
                   wordSafe
                   variant="body"
@@ -434,105 +477,71 @@ export function SeatChooser({
                 >
                   {seatCopy.noMatch}
                 </Text>
-              );
-            })()
-          ) : seats.length || leads.length ? (
-            <>
-              {state.directory.electorates.partial ? (
-                <Text wordSafe variant="footnote">
-                  {seatCopy.partial}
-                </Text>
-              ) : null}
-              {seats.length ? (
-                <InsetGroup testID="seat-results">{seats.map(row)}</InsetGroup>
-              ) : null}
-              {leads.length ? (
-                <InsetGroup testID="seat-person-leads">
-                  {leads.map((lead) => (
-                    <PersonLeadRow
-                      key={lead.key}
-                      lead={lead}
-                      disabled={busy}
-                      onPress={() => browse(lead.state)}
-                    />
-                  ))}
-                </InsetGroup>
-              ) : null}
-            </>
-          ) : (
-            <>
-              <Text
-                wordSafe
-                variant="body"
-                tone="inkSoft"
-                testID="seat-no-results"
-              >
-                {seatCopy.noMatch}
-              </Text>
-              {browseGroup}
-              {aec}
-            </>
-          )
-        ) : (
-          <>
-            {saved && !vic ? (
-              <InsetGroup testID="seat-saved">
-                <SeatRow
-                  seat={saved}
-                  detail={
-                    isHouseSeat(saved)
-                      ? seatCopy.saved
-                      : abolishedLine(saved.name)
-                  }
-                  accessory="checkmark"
-                  testID="seat-saved-row"
-                />
-                {welcome ? null : (
-                  <LinkRow
-                    title={seatCopy.remove}
-                    destructive
-                    accessory="none"
-                    onPress={remove}
-                    disabled={busy}
-                    testID="seat-remove"
-                  />
-                )}
-              </InsetGroup>
-            ) : null}
-            <LocationRow
-              seats={async () =>
-                state.status === 'ready'
-                  ? electorates
-                  : (await catalogs.directory()).electorates.data.electorates
-              }
-              onChoose={(s) => void choose(s)}
-              accessory={(id) => accessoryFor(id, savingId, chosenId)}
-              disabled={busy}
-              autoStart={locate}
-              stopKey={stopKey}
-              scope={vic ? 'vic' : 'federal'}
-            />
-            {vic ? (
-              state.status === 'ready' ? (
-                vicGroups(districts, regions)
-              ) : (
-                <InsetGroup header={vicCopy.districts}>
-                  <Skeleton
-                    shape="rows"
-                    count={3}
-                    label="Loading electorates"
-                  />
-                </InsetGroup>
-              )
-            ) : (
-              <>
                 {browseGroup}
                 {aec}
               </>
-            )}
-          </>
-        )}
-      </Screen>
+            )
+          ) : (
+            <>
+              {saved && !vic ? (
+                <InsetGroup testID="seat-saved">
+                  <SeatRow
+                    seat={saved}
+                    detail={
+                      isHouseSeat(saved)
+                        ? seatCopy.saved
+                        : abolishedLine(saved.name)
+                    }
+                    accessory="checkmark"
+                    testID="seat-saved-row"
+                  />
+                  {welcome ? null : (
+                    <LinkRow
+                      title={seatCopy.remove}
+                      destructive
+                      accessory="none"
+                      onPress={remove}
+                      disabled={busy}
+                      testID="seat-remove"
+                    />
+                  )}
+                </InsetGroup>
+              ) : null}
+              <LocationRow
+                seats={async () =>
+                  state.status === 'ready'
+                    ? electorates
+                    : (await catalogs.directory()).electorates.data.electorates
+                }
+                onChoose={(s) => void choose(s)}
+                accessory={(id) => accessoryFor(id, savingId, chosenId)}
+                disabled={busy}
+                autoStart={locate}
+                stopKey={stopKey}
+                scope={vic ? 'vic' : 'federal'}
+              />
+              {vic ? (
+                state.status === 'ready' ? (
+                  vicGroups(districts, regions)
+                ) : (
+                  <InsetGroup header={vicCopy.districts}>
+                    <Skeleton
+                      shape="rows"
+                      count={3}
+                      label="Loading electorates"
+                    />
+                  </InsetGroup>
+                )
+              ) : (
+                <>
+                  {browseGroup}
+                  {aec}
+                </>
+              )}
+            </>
+          )}
+        </Screen>
+      </FieldClearance>
     </>
   );
 }

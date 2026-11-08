@@ -20,6 +20,7 @@ import { catalogs } from '../src/api/runtime';
 import DocumentReader from '../src/features/records/DocumentReader';
 import BillTextReader from '../src/features/records/BillTextReader';
 import RecentRecords from '../src/features/records/RecentRecords';
+import { NavigationContext } from 'expo-router/react-navigation';
 import {
   RecordActions,
   recordActions,
@@ -388,6 +389,31 @@ test('Just added: rows are record rows grouped by the day added, with a source l
   expect(line.props.citation).toBe('OPAX');
   expect(line.props.notes[0]).toMatch(/date.*added to OPAX/);
   expect(text(view)).not.toMatch(/indexed|Just added to the record/i);
+  await act(async () => view.unmount());
+});
+
+test('Just added opened first in its stack titles the bar from the first frame, once', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValue(record(decodeRecent(responses['/api/recent'])));
+  const setOptions = jest.fn();
+  const navigation = {
+    getState: () => ({ index: 0 }),
+    setOptions,
+    addListener: () => () => {},
+    isFocused: () => true,
+  } as unknown as React.ContextType<typeof NavigationContext>;
+  const view = await mount(
+    <NavigationContext.Provider value={navigation}>
+      <RecentRecords />
+    </NavigationContext.Provider>,
+  );
+  // No scroll rule: the stack's own title "Just added" stays in the bar,
+  // never replaced by an empty renderer, and the page has no second title.
+  expect(view.root.findAllByProps({ testID: 'recent-title' })).toHaveLength(0);
+  for (const [options] of setOptions.mock.calls)
+    expect(options).not.toHaveProperty('headerTitle');
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
   await act(async () => view.unmount());
 });
 

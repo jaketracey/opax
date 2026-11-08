@@ -1,5 +1,11 @@
-import { Children, type ReactNode } from 'react';
-import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Children, useState, type ReactNode } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  type TextLayoutEvent,
+} from 'react-native';
 import { Link, type Href } from 'expo-router';
 import { Heading, Text } from '../../design/text';
 import { Icon } from '../../design/icon';
@@ -31,7 +37,14 @@ export interface IdentityRow {
  * The party's dot: 10 pt, growing with the text beside it to 16 pt. The name
  * that follows says the party, so the dot is hidden from VoiceOver.
  */
-export function PartyDot({ party }: { party: string | null | undefined }) {
+export function PartyDot({
+  party,
+  line,
+}: {
+  party: string | null | undefined;
+  /** The first line of the text beside it, to centre the dot on. */
+  line?: { y: number; height: number } | null;
+}) {
   const { fontScale } = useWindowDimensions();
   const colour = partyDot(party);
   const size = partyDotSize(fontScale);
@@ -39,15 +52,33 @@ export function PartyDot({ party }: { party: string | null | undefined }) {
     <View
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        borderCurve: 'continuous',
-        backgroundColor: colour,
-      }}
+      style={[
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderCurve: 'continuous',
+          backgroundColor: colour,
+        },
+        line === undefined
+          ? null
+          : line
+            ? { marginTop: firstLineOffset(line, size) }
+            : { alignSelf: 'center' },
+      ]}
     />
   ) : null;
+}
+
+/**
+ * The top margin that centres a dot of `size` on a text's first line, so a
+ * party name that wraps keeps its dot on the line it starts.
+ */
+export function firstLineOffset(
+  line: { y: number; height: number },
+  size: number,
+): number {
+  return Math.max(0, line.y + (line.height - size) / 2);
 }
 
 /** The portrait's zoom target for a card that opens this page with a zoom. */
@@ -103,6 +134,23 @@ export function ProfileHeader({
   const large = useAccessibilitySize();
   const centred = variant === 'person' && !large;
   const align = centred ? styles.centre : styles.leading;
+  // The party title's first line, measured, so its dot sits on that line
+  // and not at the top of a taller line box. Null until the title lays out:
+  // the dot centres on the title, which is right for one line.
+  const [firstLine, setFirstLine] = useState<{
+    y: number;
+    height: number;
+  } | null>(null);
+  const titleLayout = (event: TextLayoutEvent) => {
+    const line = event.nativeEvent.lines[0];
+    if (variant === 'party' && line)
+      setFirstLine((seen) =>
+        seen && seen.y === line.y && seen.height === line.height
+          ? seen
+          : { y: line.y, height: line.height },
+      );
+    onTitleLayout?.();
+  };
   return (
     <View style={styles.header} testID={`${testID}-header`}>
       <View style={[styles.identity, align]}>
@@ -112,17 +160,25 @@ export function ProfileHeader({
           </ZoomTarget>
         ) : null}
         <View
-          style={[
-            variant === 'party' ? styles.partyTitle : null,
-            centred ? styles.centre : styles.leading,
-          ]}
+          style={
+            variant === 'party'
+              ? styles.partyTitle
+              : centred
+                ? styles.centre
+                : styles.leading
+          }
         >
-          {variant === 'party' ? <PartyDot party={name} /> : null}
+          {variant === 'party' ? (
+            <PartyDot party={name} line={firstLine} />
+          ) : null}
+          {/* The subject's name is OPAX's heading, not the record's words:
+              the system page title role, never the serif (D1). */}
           <Heading
             level={1}
+            kind="page"
             testID={titleTestID}
             style={[centred ? styles.centredText : null, styles.shrink]}
-            onTextLayout={onTitleLayout}
+            onTextLayout={titleLayout}
           >
             {name}
           </Heading>
@@ -201,7 +257,7 @@ const styles = StyleSheet.create({
   shrink: { flexShrink: 1 },
   partyTitle: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: rhythm.tight,
   },
   yourMP: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },

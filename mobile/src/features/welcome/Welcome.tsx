@@ -36,7 +36,8 @@ export const WELCOME_COLUMN = 540;
 /**
  * Accessibility sizes from AX3 up push the fine print below the fold, so
  * Continue unpins and becomes the last item in the scroll, under the notice
- * (first-launch 4.2 A1): the notice is always seen before Continue.
+ * (first-launch 4.2 A1, S1): the cultural notice is always on screen before
+ * Continue can be tapped.
  */
 export function continuePinned(fontScale: number): boolean {
   return !['ax3', 'ax4', 'ax5'].includes(contentSizeCategory(fontScale));
@@ -162,6 +163,8 @@ export function WelcomePage({
           {
             paddingHorizontal: margin,
             paddingTop: insets.top + (wide ? rhythm.section : 56),
+            // Unpinned, the scroll's end leaves the whole button above the
+            // home indicator.
             paddingBottom: pinned ? rhythm.block : insets.bottom + rhythm.block,
           },
         ]}
@@ -193,12 +196,14 @@ export function WelcomePage({
                 style={accessible ? styles.rowStacked : styles.row}
               >
                 <View style={accessible ? null : styles.symbol}>
+                  {/* The tint, at full strength in every layer: hierarchical
+                      navy drew the secondary layers grey, so the glyphs
+                      read as ink (w4-welcome-01). */}
                   <Icon
                     name={feature.symbol}
                     size={36}
                     maxScale={1.5}
-                    type="hierarchical"
-                    ink="navy"
+                    tone="navy"
                     scale="large"
                   />
                 </View>

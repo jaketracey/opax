@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import {
   ContentUnavailable,
@@ -163,10 +164,17 @@ export default function RecentRecords() {
       </View>
     );
   }
+  // Opened as the first page of its stack (a link opened into a sheet, with
+  // no back button), the page has no title to scroll away from: the bar
+  // shows "Just added" from the first frame and the page drops its own
+  // heading, which would say it twice (records-07). Pushed, the heading
+  // leads and the bar takes it by scroll (records.md 5.2).
+  const navigation = useContext(NavigationContext);
+  const opensStack = navigation?.getState()?.index === 0;
   return (
     <Screen
       testID="recent-records"
-      barTitle="Just added"
+      barTitle={opensStack ? undefined : 'Just added'}
       offline={offline ? { savedAt: value?.savedAt ?? null } : null}
       refreshControl={
         value ? (
@@ -174,9 +182,11 @@ export default function RecentRecords() {
         ) : undefined
       }
     >
-      <Heading level={1} kind="page" testID="recent-title">
-        Just added
-      </Heading>
+      {opensStack ? null : (
+        <Heading level={1} kind="page" testID="recent-title">
+          Just added
+        </Heading>
+      )}
       {body}
     </Screen>
   );

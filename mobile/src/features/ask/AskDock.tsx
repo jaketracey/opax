@@ -1,4 +1,4 @@
-import { useSyncExternalStore, type Ref } from 'react';
+import { useState, useSyncExternalStore, type Ref } from 'react';
 import {
   Platform,
   Pressable,
@@ -48,6 +48,39 @@ export function composerLines(fontScale: number) {
       ? 3
       : 5;
 }
+/** The share of the visible height the whole composer may take. */
+export const COMPOSER_HEIGHT_SHARE = 0.4;
+/**
+ * The field's maximum height (ask.md 2.11, "AX3 and above, composer"). The
+ * text keeps the reader's size at every size (DIRECTION: every role scales
+ * to AX5); the field grows to its lines rule (`composerLines`), but never so
+ * far that the whole composer, field and its own chrome (padding, the
+ * options line, the options and send row), passes 40% of the height the
+ * reader can see: the window, less the keyboard while it is up. Past that
+ * the field scrolls inside. It never drops below one 44 pt line.
+ */
+export function composerFieldCap({
+  fontScale,
+  windowHeight,
+  keyboard = 0,
+  chrome,
+}: {
+  fontScale: number;
+  windowHeight: number;
+  /** How far the keyboard overlaps the screen, 0 when it is down. */
+  keyboard?: number;
+  /** The composer's height outside the field. */
+  chrome: number;
+}): number {
+  const byLines =
+    textStyles.body.lineHeight *
+      Math.max(1, fontScale) *
+      composerLines(fontScale) +
+    20;
+  const visible = Math.max(0, windowHeight - keyboard);
+  const byHeight = COMPOSER_HEIGHT_SHARE * visible - chrome;
+  return Math.max(minimumTarget, Math.min(byLines, byHeight));
+}
 /**
  * Ask's composer, docked above the tab bar (DIRECTION 4.24). Leading,
  * Options; the field; trailing, one button: Stop while an answer is
@@ -65,6 +98,7 @@ export function AskDock({
   offline,
   inputError,
   onLayout,
+  keyboard = 0,
 }: {
   inputRef?: Ref<TextInput>;
   onSend: () => void;
@@ -75,25 +109,38 @@ export function AskDock({
   offline: boolean;
   inputError?: string;
   onLayout?: (event: LayoutChangeEvent) => void;
+  /** How far the keyboard overlaps the screen; the height cap follows it. */
+  keyboard?: number;
 }) {
   const s = useSyncExternalStore(
     askSession.subscribe,
     askSession.snapshot,
     askSession.snapshot,
   );
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, height: windowHeight } = useWindowDimensions();
+  // The composer's height outside the field, measured: its body less the
+  // field. Until both are laid out, the padding and the options line.
+  const [bodyHeight, setBodyHeight] = useState<number | null>(null);
+  const [fieldHeight, setFieldHeight] = useState<number | null>(null);
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
-  const lines = composerLines(fontScale);
-  const maxHeight =
-    textStyles.body.lineHeight * Math.max(1, fontScale) * lines + 20;
   const line = [
     s.fresh ? composerCopy.fresh : null,
     ...tags.map((tag) => tag.value),
   ]
     .filter(Boolean)
     .join(' · ');
+  const chrome =
+    bodyHeight !== null && fieldHeight !== null
+      ? Math.max(0, bodyHeight - fieldHeight)
+      : 2 * rhythm.line + (line ? 28 + rhythm.line : 0);
+  const maxHeight = composerFieldCap({
+    fontScale,
+    windowHeight,
+    keyboard,
+    chrome,
+  });
   const spoken = [
     s.fresh ? composerCopy.fresh : null,
     ...tags.map((tag) => `${tag.key}, ${tag.value}`),
@@ -126,7 +173,10 @@ export function AskDock({
     />
   );
   const content = (
-    <View style={styles.body}>
+    <View
+      style={styles.body}
+      onLayout={(e) => setBodyHeight(e.nativeEvent.layout.height)}
+    >
       {line ? (
         <View style={styles.optionsLine}>
           <Pressable
@@ -200,6 +250,7 @@ export function AskDock({
           }}
           allowFontScaling
           style={[styles.input, { maxHeight }]}
+          onLayout={(e) => setFieldHeight(e.nativeEvent.layout.height)}
           testID="ask-question"
         />
         {trailing}

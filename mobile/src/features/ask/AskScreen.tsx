@@ -35,7 +35,13 @@ import { designFlags } from '../../design/flags';
 import { SurfaceContext } from '../../design/row-padding';
 import { useFocusRequest } from '../../design/keyboard';
 import { useScreenColumn } from '../../design/layout';
-import { colors, hairline, layout, rhythm } from '../../design/tokens';
+import {
+  colors,
+  hairline,
+  layout,
+  rhythm,
+  type Role,
+} from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { askHeaderItems } from '../../navigation/chrome';
 import { conversationsRoute } from '../../navigation/routes/ask';
@@ -252,6 +258,7 @@ export default function AskScreen() {
       offline={false}
       inputError={inputError}
       onLayout={(e) => setDockHeight(e.nativeEvent.layout.height)}
+      keyboard={keyboard}
     />
   );
   const content = (
@@ -344,7 +351,9 @@ export default function AskScreen() {
                   ) : (
                     <>
                       {content}
-                      <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
+                      <PhoneDock keyboard={keyboard} ground={ground}>
+                        {dock}
+                      </PhoneDock>
                     </>
                   )}
                 </RegionProvider>
@@ -353,7 +362,9 @@ export default function AskScreen() {
           ) : (
             <>
               {content}
-              <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
+              <PhoneDock keyboard={keyboard} ground={ground}>
+                {dock}
+              </PhoneDock>
             </>
           )}
         </AskRevealContext.Provider>
@@ -366,13 +377,18 @@ export default function AskScreen() {
  * iPhone (and compact iPad): the composer floats over the content on the
  * tab bar's top edge. A native safe-area view reads the bar's inset as the
  * bar minimises and expands (journeys/ask.md 4.4a); with the keyboard up the
- * composer sits on the keyboard instead.
+ * composer sits on the keyboard instead, on a band of the page's ground:
+ * the glass composer would otherwise show the starters scrolling through
+ * it, over its placeholder (w4-ask-01-idle). The content ends at the band's
+ * top edge; its bottom padding lets every line scroll clear of it.
  */
-function PhoneDock({
+export function PhoneDock({
   keyboard,
+  ground,
   children,
 }: {
   keyboard: number;
+  ground: Role;
   children: ReactNode;
 }) {
   return (
@@ -380,7 +396,17 @@ function PhoneDock({
       edges={keyboard ? [] : ['bottom']}
       mode="padding"
       pointerEvents="box-none"
-      style={[styles.phoneDock, keyboard ? { paddingBottom: keyboard } : null]}
+      style={[
+        styles.phoneDock,
+        keyboard
+          ? {
+              paddingBottom: keyboard,
+              paddingTop: rhythm.tight,
+              backgroundColor: colors[ground],
+            }
+          : null,
+      ]}
+      testID="ask-phone-dock"
     >
       <View style={styles.phoneDockInner}>{children}</View>
     </SafeAreaView>

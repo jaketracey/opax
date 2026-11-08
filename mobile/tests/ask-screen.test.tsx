@@ -8,8 +8,13 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import AskScreen from '../src/features/ask/AskScreen';
-import { composerLines } from '../src/features/ask/AskDock';
+import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
+import {
+  AskDock,
+  COMPOSER_HEIGHT_SHARE,
+  composerFieldCap,
+  composerLines,
+} from '../src/features/ask/AskDock';
 import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
 import { arriveInAsk, askSession } from '../src/features/ask/session';
@@ -311,12 +316,15 @@ test('the composer sets its question in body text; the options line is a 44 pt t
   });
   await mount();
   const input = StyleSheet.flatten(one('ask-question').props.style);
+  const { fontScale } = Dimensions.get('window');
+  // The body role at the reader's own size: the system scales it.
+  expect(one('ask-question').props.allowFontScaling).toBe(true);
   expect(input).toMatchObject({
     fontFamily: textStyles.body.fontFamily,
     fontSize: textStyles.body.fontSize,
     lineHeight: textStyles.body.lineHeight,
   });
-  const { fontScale } = Dimensions.get('window');
+  // With room to spare and no keyboard, the lines rule alone sets the cap.
   expect(input.maxHeight).toBe(
     textStyles.body.lineHeight *
       Math.max(1, fontScale) *
@@ -718,4 +726,121 @@ test('an arrival while an answer runs waits in the composer and sends a new conv
     speaker: 'Sam Placeholder',
     kind: 'speech',
   });
+});
+
+describe('the composer at AX5 (ask.md 2.11)', () => {
+  const original = Dimensions.get('window');
+  afterEach(() => act(() => Dimensions.set({ window: original })));
+  const dock = (keyboard?: number) => {
+    let r!: ReactTestRenderer;
+    act(() => {
+      r = create(
+        <AskDock
+          onSend={() => {}}
+          onStop={() => {}}
+          onOptions={() => {}}
+          offline={false}
+          keyboard={keyboard}
+        />,
+      );
+    });
+    const field = r.root.find(
+      (n) => n.props.testID === 'ask-question' && n.props.style !== undefined,
+    );
+    return { r, field, style: StyleSheet.flatten(field.props.style) };
+  };
+
+  test("the question keeps the reader's text size: no font cap", () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 3.12 },
+      }),
+    );
+    const { r, field, style } = dock();
+    expect(field.props.allowFontScaling).toBe(true);
+    expect(style.fontSize).toBe(textStyles.body.fontSize);
+    expect(style.lineHeight).toBe(textStyles.body.lineHeight);
+    act(() => r.unmount());
+  });
+
+  test('with the keyboard up the whole composer stays within 40% of what is visible', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 3.12 },
+      }),
+    );
+    for (const keyboard of [336, 420, 500]) {
+      const { r, style } = dock(keyboard);
+      // The composer's own chrome before measurement: its padding.
+      const chrome = 2 * rhythm.line;
+      expect(Number(style.maxHeight) + chrome).toBeLessThanOrEqual(
+        COMPOSER_HEIGHT_SHARE * (874 - keyboard) + 0.001,
+      );
+      act(() => r.unmount());
+    }
+    // The cap is the smaller rule, and never under one 44 pt line.
+    expect(
+      composerFieldCap({
+        fontScale: 3.12,
+        windowHeight: 874,
+        keyboard: 500,
+        chrome: 40,
+      }),
+    ).toBeCloseTo(0.4 * 374 - 40);
+    expect(
+      composerFieldCap({
+        fontScale: 3.12,
+        windowHeight: 874,
+        keyboard: 800,
+        chrome: 40,
+      }),
+    ).toBe(44);
+  });
+
+  test('at Large nothing changes: five lines, then the field scrolls', () => {
+    expect(
+      composerFieldCap({ fontScale: 1, windowHeight: 874, chrome: 8 }),
+    ).toBe(textStyles.body.lineHeight * 5 + 20);
+    expect(
+      composerFieldCap({
+        fontScale: 1,
+        windowHeight: 874,
+        keyboard: 336,
+        chrome: 8,
+      }),
+    ).toBe(textStyles.body.lineHeight * 5 + 20);
+  });
+});
+
+test('with the keyboard up the composer sits on a band of ground: nothing reads through it', () => {
+  let r!: ReactTestRenderer;
+  const band = () =>
+    StyleSheet.flatten(
+      r.root.find(
+        (n) =>
+          n.props.testID === 'ask-phone-dock' && n.props.style !== undefined,
+      ).props.style,
+    );
+  act(() => {
+    r = create(
+      <PhoneDock keyboard={300} ground="sunken">
+        {null}
+      </PhoneDock>,
+    );
+  });
+  expect(band()).toMatchObject({
+    backgroundColor: colors.sunken,
+    paddingBottom: 300,
+    paddingTop: rhythm.tight,
+  });
+  // On the tab bar it floats, as the glass composer does there.
+  act(() =>
+    r.update(
+      <PhoneDock keyboard={0} ground="sunken">
+        {null}
+      </PhoneDock>,
+    ),
+  );
+  expect(band().backgroundColor).toBeUndefined();
+  act(() => r.unmount());
 });

@@ -49,11 +49,7 @@ import RuleSheet from '../src/features/sheets/RuleSheet';
 import CitationSheet, {
   citationBar,
 } from '../src/features/sheets/CitationSheet';
-import {
-  fittedBottom,
-  fittedHeaderOffset,
-  routeSheetOptions,
-} from '../src/features/sheets/frame';
+import { fittedBottom, routeSheetOptions } from '../src/features/sheets/frame';
 import { openCorrection, openSource } from '../src/navigation/external';
 import { LinkRow } from '../src/design/rows';
 
@@ -375,7 +371,7 @@ test('short machine notes do not scroll, while tables do', () => {
   expect(table.findAllByType(ScrollView)).toHaveLength(1);
   expect(text(table)).toContain('Agreed');
 });
-test('short fitted sheets sit below the bar and leave the home indicator room to the sheet', () => {
+test('short fitted sheets put the note directly under the bar and leave the home indicator room to the sheet', () => {
   jest
     .mocked(useSafeAreaInsets)
     .mockReturnValue({ top: 0, bottom: 34, left: 0, right: 0 });
@@ -391,14 +387,12 @@ test('short fitted sheets sit below the bar and leave the home indicator room to
         node.type === View && node.props.testID === 'machine-note-sheet',
     ).props.style,
   );
-  // iOS sizes the sheet to content plus bar, but lays content out from the
-  // sheet's top edge: a relative top moves it below the bar without
-  // growing the measured height.
-  expect(body.top).toBe(fittedHeaderOffset(undefined));
-  expect(body.top).toBeGreaterThan(0);
+  // iOS lays fitted content out below the opaque sheet bar: no offset of
+  // its own, so the note sits directly under the header and the sheet's
+  // measured height holds all of it.
+  expect(body.top).toBeUndefined();
   expect(body.paddingTop).toBe(rhythm.group);
   expect(body.paddingBottom).toBe(rhythm.group);
-  expect(fittedHeaderOffset(62)).toBe(62);
   expect(fittedBottom(34)).toBe(rhythm.group);
 });
 test('citation bar slots put previous and next leading, then More and Done trailing', () => {
