@@ -1,9 +1,10 @@
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
 import { router } from 'expo-router';
 import { Canvas, Group, Path } from '@shopify/react-native-skia';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { Card } from '../../design/card';
 import { Button } from '../../design/controls';
+import { confirmAction } from '../../design/menu';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
@@ -94,24 +95,35 @@ export function SeatInvitation({
   // Re-read on every seat change: a 1.0 choice can arrive after the mount.
   useSeat();
   const old = migratedSeat();
+  const notNow = () => void hideInvitation(sydneyDay()).catch(() => undefined);
   return (
-    <Card
-      testID={testID}
-      padded
-      accessibilityRole="button"
-      menu={[
-        {
-          title: 'Not now',
-          symbol: 'clock',
-          onPress: () =>
-            void hideInvitation(sydneyDay()).catch(() => undefined),
-        },
-      ]}
-    >
-      <View style={styles.body}>
+    <Card testID={testID} padded>
+      {/* Touch and hold anywhere outside the buttons (they take their own
+          touches): "Not now". Not an element itself, so VoiceOver still
+          reads the headline, the body and the two buttons one by one; it
+          reaches "Not now" as the headline's action. */}
+      <Pressable
+        accessible={false}
+        onLongPress={() =>
+          confirmAction('Who represents you?', [
+            { title: 'Not now', onPress: notNow },
+          ])
+        }
+        testID={`${testID}-press`}
+        style={styles.body}
+      >
         <AustraliaOutline />
         <View style={styles.words}>
-          <Text variant="sectionTitle" accessibilityRole="header" wordSafe>
+          <Text
+            variant="sectionTitle"
+            accessibilityRole="header"
+            accessibilityActions={[{ name: 'notNow', label: 'Not now' }]}
+            onAccessibilityAction={(event) => {
+              if (event.nativeEvent.actionName === 'notNow') notNow();
+            }}
+            wordSafe
+            testID={`${testID}-title`}
+          >
             Who represents you?
           </Text>
           <Text wordSafe testID="today-invitation-body">
@@ -134,7 +146,7 @@ export function SeatInvitation({
             testID="today-invitation-location"
           />
         </View>
-      </View>
+      </Pressable>
     </Card>
   );
 }

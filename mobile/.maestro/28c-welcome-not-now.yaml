@@ -65,9 +65,10 @@ name: 28c Welcome Not now lands on a finished Today, the invitation after Bills
       id: today-invitation
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/28c-day-8
-# The card's own Not now (touch and hold) hides it for 30 days.
+# The card's own Not now (touch and hold, away from its two buttons: on the
+# headline) hides it for 30 days.
 - longPressOn:
-    id: today-invitation
+    id: today-invitation-title
 - tapOn: Not now
 - extendedWaitUntil:
     notVisible:
