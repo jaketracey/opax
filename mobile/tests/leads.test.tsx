@@ -106,6 +106,10 @@ jest.mock('../src/api/runtime', () => ({
     declarations: jest.fn(),
     today: jest.fn(),
     todayEdition: jest.fn(),
+    todayBills: jest.fn(() => new Promise(() => {})),
+    todayDeclarations: jest.fn(() => new Promise(() => {})),
+    todayDeclarationsProfiled: jest.fn(() => new Promise(() => {})),
+    recentDivisions: jest.fn(() => new Promise(() => {})),
   },
 }));
 jest.mock('../src/api/image-policy', () => ({
@@ -1709,10 +1713,11 @@ test('Today opens Leads and the full declarations feed without loading either', 
     savedAt: null,
   });
   const renderer = await render(<Today />);
-  await press(renderer.root, 'today-leads-open');
-  expect(router.push).toHaveBeenLastCalledWith(leadsRoute);
-  await press(renderer.root, 'today-declarations-all');
-  expect(router.push).toHaveBeenLastCalledWith(declarationsRoute);
+  // Both are links now (w5-today): where tapping them goes.
+  expect(hrefOf(renderer.root, 'today-leads-open')).toEqual(leadsRoute);
+  expect(hrefOf(renderer.root, 'today-declarations-all')).toEqual(
+    declarationsRoute,
+  );
   expect(mock.discovery).not.toHaveBeenCalled();
   expect(mock.declarations).not.toHaveBeenCalled();
   act(() => renderer.unmount());

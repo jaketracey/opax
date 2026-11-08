@@ -1,28 +1,39 @@
-import { useRef, useState } from 'react';
-import { findNodeHandle, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
+import type { Block } from '../../api/catalogs';
 import type { recentDeclarationsFor } from '../../api/selectors';
+import { catalogs } from '../../api/runtime';
+import { InsetGroup } from '../../design/layout';
+import { Skeleton } from '../../design/states';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { formatDate } from '../../design/format';
+import { Icon } from '../../design/icon';
 import { chamberName } from '../../design/parliament';
 import { partyText } from '../../design/party';
+import { PersonRow, type PersonRowProps } from '../../design/people';
+import { RowLink, type RowMenuAction } from '../../design/row-link';
 import {
-  Disclosure,
-  PersonRow,
-  Text,
-  useAccessibilitySize,
-  type PersonRowProps,
-} from '../../design/primitives';
+  ownsRowPadding,
+  useRowCellStyle,
+  useRowHighlight,
+  useRowInset,
+} from '../../design/row-padding';
+import { symbols } from '../../design/symbols';
+import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { declarationsRoute } from '../../navigation/routes';
+import { declarationsRoute, personRoute } from '../../navigation/routes';
+import { personRuns } from '../declarations/model';
+import { declarationsSources } from './sources';
+import { blockState, reportOf, TodayBlock, useTodayRead } from './TodayBlock';
+import { shareRecord } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
+import { changeDate } from '../follows/changes';
 import { registerChangeLabel } from '../your-mp/model';
-import { shortDay } from './parts';
-import { showRecordMenu } from './RecordMenu';
 
 type Declaration = NonNullable<
   ReturnType<typeof recentDeclarationsFor>['data']
->[number];
+>[number] & { profileSlug?: string | null };
 export type DeclarationEntries = readonly {
   item: Declaration;
   index: number;
@@ -32,16 +43,13 @@ export type DeclarationEntries = readonly {
 export const originalLabel = (item: Declaration) =>
   `${item.sourceLabel} · ${item.name}${item.page !== null ? `, page ${item.page}` : ''}`;
 
-/**
- * Longer entries than this (about three lines on an iPhone at the default
- * size) sit behind a disclosure on Today; the feed shows every entry in full.
- */
+/** Today's preview of a member's words: 140 characters, cut at a word. */
 export const LONG_ENTRY = 140;
 
 /**
- * A long entry's opening words, before "The entry in full" (P3-10): up to
- * LONG_ENTRY characters, cut at a word and marked with an ellipsis, so the
- * row says what the entry is about. A cut string, not a clamp.
+ * An entry's opening words (P3-10): up to `max` characters, cut at a word
+ * and marked with "…". The words are the member's own, trimmed only of
+ * surrounding space, never reworded. The feed shows the entry in full.
  */
 export function entryPreview(text: string, max = LONG_ENTRY): string {
   const flat = text.replace(/\s+/g, ' ').trim();
@@ -49,7 +57,7 @@ export function entryPreview(text: string, max = LONG_ENTRY): string {
   const head = flat.slice(0, max + 1);
   const space = head.lastIndexOf(' ');
   const cut = space > max / 2 ? head.slice(0, space) : flat.slice(0, max);
-  return `${cut.replace(/[\s,;:.\-–—(]+$/, '')}…`;
+  return `${cut.replace(/[\s,;:.\-\u2013\u2014(]+$/, '')}…`;
 }
 
 /**
@@ -91,14 +99,22 @@ export function declarantRow(
     : common;
 }
 
+/** Just declared, filtered to one member (the feed shows the entry in full). */
+export const declarationsForRoute = (name: string) => ({
+  pathname: '/declarations' as const,
+  params: { person: name },
+});
+
 /**
- * Consecutive declarations by one member, under one PersonRow: their
- * portrait, name and party once, then each entry. On iPhone the entries
- * line up with the name; at accessibility sizes, under the portrait.
+ * Consecutive declarations by one member under one PersonRow, which opens
+ * the profile for a roster member (plain text, no chevron, otherwise). The
+ * entries line up with the name; at accessibility sizes, under the portrait.
+ * The person and each entry are separate links: two tap targets per member.
  */
 export function DeclarationGroup({ entries }: { entries: DeclarationEntries }) {
   const stacked = useAccessibilitySize();
   const first = entries[0]!;
+  const slug = first.item.profileSlug ?? null;
   return (
     <View style={styles.group}>
       <PersonRow
@@ -107,6 +123,8 @@ export function DeclarationGroup({ entries }: { entries: DeclarationEntries }) {
           `today-declaration-person-${first.index}`,
           `today-declaration-portrait-${first.index}`,
         )}
+        href={slug ? personRoute(slug, first.item.name) : undefined}
+        menu={slug ? 'person' : []}
       />
       <View
         testID={`today-declaration-entries-${first.index}`}
@@ -121,12 +139,10 @@ export function DeclarationGroup({ entries }: { entries: DeclarationEntries }) {
 }
 
 /**
- * One register alteration, in the member's own words, then the category,
- * what changed and when, on one line ("Gift · added 31 Aug"). A long entry
- * shows its opening words, and the whole of it behind a disclosure, which
- * takes the opening's place when it opens. "View original" (the register
- * page) is a touch-and-hold action and a VoiceOver action, and the register
- * is listed in the block's source line.
+ * One register entry as one link with a chevron: the member's words in the
+ * record's serif, previewed to 140 characters, then "{Category} · added
+ * {d MMM}". It opens Just declared filtered to the member, where the entry
+ * is in full. No "More" here. Touch and hold: Open the register, Share.
  */
 export function DeclarationEntry({
   item,
@@ -135,95 +151,155 @@ export function DeclarationEntry({
   item: Declaration;
   index: number;
 }) {
-  const long = (item.description?.length ?? 0) > LONG_ENTRY;
-  const preview = long ? entryPreview(item.description!) : null;
-  const [full, setFull] = useState(false);
-  const changed = `${registerChangeLabel(item.kind)} ${formatDate(item.date)}`;
-  const original = () => void openSource(item.url, originalLabel(item));
-  // One element per entry, named, so it reads on its own; a long entry's
-  // opening is said here, and the whole of it when the disclosure opens.
-  const label = [
-    item.name,
-    `${item.category}, ${changed}`,
-    long ? (full ? null : preview) : item.description,
-  ]
-    .filter(Boolean)
-    .join(', ');
-  const menuAnchor = useRef<View>(null);
-  const menu = () =>
-    showRecordMenu(
-      item.name,
-      [
-        { title: 'View original', onPress: original },
-        {
-          title: 'All recent declarations',
-          onPress: () => router.push(declarationsRoute),
-        },
-      ],
-      findNodeHandle(menuAnchor.current) ?? undefined,
-    );
+  const cellStyle = useRowCellStyle();
+  const highlight = useRowHighlight();
+  useRowInset();
+  const preview = item.description ? entryPreview(item.description) : null;
+  const change = `${item.category} · ${registerChangeLabel(item.kind)} ${changeDate(item.date)}`;
+  const spokenChange = `${item.category}, ${registerChangeLabel(item.kind)} ${formatDate(item.date, 'long')}`;
+  const href = declarationsForRoute(item.name);
+  const menu: RowMenuAction[] = [
+    {
+      title: 'Open the register',
+      symbol: symbols.external,
+      onPress: () => void openSource(item.url, originalLabel(item)),
+    },
+    {
+      title: 'Share',
+      symbol: 'square.and.arrow.up',
+      onPress: () =>
+        void shareRecord({
+          title: `${item.name}: ${item.category}`,
+          path: item.profileSlug
+            ? `/subject/person/${item.profileSlug}/interests`
+            : '/declared',
+        }),
+    },
+  ];
   return (
-    <View style={styles.entry}>
+    <RowLink href={href} menu={menu}>
       <Pressable
-        ref={menuAnchor}
-        accessibilityRole="text"
-        accessibilityLabel={label}
-        accessibilityActions={[
-          { name: 'viewOriginal', label: 'View original' },
-          { name: 'allDeclarations', label: 'All recent declarations' },
-        ]}
-        onAccessibilityAction={(event) => {
-          if (event.nativeEvent.actionName === 'viewOriginal') original();
-          if (event.nativeEvent.actionName === 'allDeclarations')
-            router.push(declarationsRoute);
-        }}
-        onLongPress={menu}
+        accessible
+        accessibilityRole="link"
+        accessibilityLabel={[preview, spokenChange].filter(Boolean).join('. ')}
+        accessibilityHint="Opens Just declared for this member"
         testID={`today-declaration-${index}`}
-        style={styles.frame}
+        onPress={() => router.push(href)}
+        style={({ pressed }) => [
+          styles.entry,
+          cellStyle,
+          pressed ? { backgroundColor: highlight } : null,
+        ]}
       >
-        {item.description && !long ? (
-          <Text testID={`today-declaration-text-${index}`}>
-            {item.description}
+        <View style={styles.words}>
+          {preview ? (
+            <Text
+              wordSafe
+              variant="recordText"
+              testID={`today-declaration-text-${index}`}
+            >
+              {preview}
+            </Text>
+          ) : null}
+          <Text
+            wordSafe
+            variant="secondary"
+            testID={`today-declaration-change-${index}`}
+          >
+            {change}
           </Text>
-        ) : null}
-        {preview && !full ? (
-          <Text testID={`today-declaration-preview-${index}`}>{preview}</Text>
-        ) : null}
-        <Text
-          wordSafe
-          variant="fine"
-          testID={`today-declaration-change-${index}`}
-        >
-          {`${item.category} · ${registerChangeLabel(item.kind)} ${shortDay(item.date)}`}
-        </Text>
+        </View>
+        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       </Pressable>
-      {long ? (
-        <Disclosure
-          label="The entry in full"
-          open={full}
-          onToggle={setFull}
-          testID={`today-declaration-more-${index}`}
-        >
-          <Text testID={`today-declaration-text-${index}`}>
-            {item.description}
-          </Text>
-        </Disclosure>
-      ) : null}
-    </View>
+    </RowLink>
   );
 }
+ownsRowPadding(DeclarationEntry);
 
-// The portrait column: the row portrait's 44pt and the row's 12pt gap.
-const PORTRAIT_COLUMN = 44 + rhythm.heading;
+// The portrait column: the row portrait's 44 pt and the row's gap.
+const PORTRAIT_COLUMN = 44 + rhythm.tight;
 
 const styles = StyleSheet.create({
   group: { gap: rhythm.line },
-  entries: { gap: rhythm.heading },
+  entries: { gap: rhythm.row },
   indent: { marginLeft: PORTRAIT_COLUMN },
-  entry: { gap: rhythm.line },
-  frame: {
+  entry: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
     minHeight: minimumTarget,
-    justifyContent: 'center',
-    gap: rhythm.line + 2,
   },
+  words: { flex: 1, gap: rhythm.line },
 });
+
+type DeclarationsBlockData = Block<Declaration[]>;
+/**
+ * Just declared (today.md 5.9): up to three entries, newest first, grouped
+ * by member, with the line after the group. Entries draw from the recent
+ * file at once; parties and profile links join when the roster answers
+ * (the same rows, so nothing moves).
+ */
+export function DeclarationsBlock({
+  attempt,
+  onRetry,
+}: {
+  attempt: number;
+  onRetry: () => void;
+}) {
+  const first = useTodayRead<DeclarationsBlockData>(
+    'declarations',
+    (refresh) => catalogs.todayDeclarations(3, refresh),
+    attempt,
+  );
+  const joined = useTodayRead<DeclarationsBlockData | null>(
+    'declarations-joined',
+    async (refresh) => {
+      const feed = await catalogs
+        .todayDeclarationsProfiled(3, refresh)
+        .catch(() => null);
+      return feed?.status === 'ready' && feed.data ? feed : null;
+    },
+    attempt,
+  );
+  const block = joined ?? first;
+  const state = blockState(block, { emptyCollapses: true });
+  return (
+    <TodayBlock
+      title="Just declared"
+      action={{
+        accessibilityLabel: 'See all declarations',
+        href: declarationsRoute,
+        testID: 'today-declarations-all',
+      }}
+      state={state}
+      skeleton={
+        <Skeleton
+          shape="people"
+          count={3}
+          label="Loading declarations"
+          testID="today-declarations-loading"
+        />
+      }
+      error="Declarations couldn't be loaded."
+      onRetry={onRetry}
+      report={reportOf(block)}
+      line={
+        block && block.status === 'ready'
+          ? {
+              ...declarationsSources(block),
+              testID: 'today-declarations-sources',
+            }
+          : undefined
+      }
+      testID="today-declarations"
+    >
+      {(declarations) => (
+        <InsetGroup testID="today-declarations-group">
+          {personRuns(declarations).map((run) => (
+            <DeclarationGroup key={run.key} entries={run.entries} />
+          ))}
+        </InsetGroup>
+      )}
+    </TodayBlock>
+  );
+}

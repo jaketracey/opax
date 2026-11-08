@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
-import { Text } from '../../design/primitives';
-import { border, colors, hairline, rhythm } from '../../design/tokens';
+import type { DateInput } from '../../design/format';
+import { OfflineLine } from '../../design/states';
+import { Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 
 const weekdays = [
   'Sunday',
@@ -26,13 +28,47 @@ const months = [
   'November',
   'December',
 ];
-/** "Tuesday 7 October", on this iPhone's calendar. */
+/** "Sunday 8 November": the Sydney calendar day of an instant. */
 export function mastheadDate(now: Date): string {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Australia/Sydney',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(now);
+    const n = (type: string) =>
+      Number(parts.find((p) => p.type === type)?.value);
+    const day = new Date(Date.UTC(n('year'), n('month') - 1, n('day')));
+    if (!Number.isNaN(day.getTime()))
+      return `${weekdays[day.getUTCDay()]} ${day.getUTCDate()} ${months[day.getUTCMonth()]}`;
+  } catch {
+    /* Fall through to the device calendar. */
+  }
   return `${weekdays[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]}`;
 }
 
-/** Today's date, kept current when the app returns to the foreground. */
-function useToday() {
+const msToSydneyMidnight = (now: Date) => {
+  const hm = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Australia/Sydney',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  })
+    .format(now)
+    .split(':')
+    .map(Number);
+  const into = ((hm[0] ?? 0) * 3600 + (hm[1] ?? 0) * 60 + (hm[2] ?? 0)) * 1000;
+  return Math.max(1000, 86_400_000 - into + 500);
+};
+
+/**
+ * The current instant, renewed when the app returns to the foreground and at
+ * Sydney midnight while Today is open, so the date line and the day's rules
+ * roll over with the calendar.
+ */
+export function useNow(): Date {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
@@ -40,48 +76,40 @@ function useToday() {
     });
     return () => subscription.remove();
   }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => setNow(new Date()), msToSydneyMidnight(now));
+    return () => clearTimeout(timer);
+  }, [now]);
   return now;
 }
 
 /**
- * The front page's masthead: today's date in sentence case, the first line
- * under the large title. The independence line is at the foot of the page
- * (design review D4). Nothing here animates, so the first line is drawn at
- * once on a cold launch. `today-screen-message` names that first line for
- * the journeys, as it did when the independence line held the place.
- *
- * On iPad regular width the date sits over a bronze double rule (a thick and
- * a thin line), as a broadsheet's masthead is ruled. The rule is decorative.
+ * Slot 0 under the large title: the date line ("Sunday 8 November", plain
+ * text, not a header), then, only when the last revalidation failed for
+ * network reasons, the page's one offline line with the oldest saved date
+ * among the blocks drawn. No rule under it. `today-screen-message` names
+ * the first line for the journeys.
  */
-export function Masthead({ broadsheet = false }: { broadsheet?: boolean }) {
-  const date = mastheadDate(useToday());
+export function Masthead({
+  now,
+  offlineSavedAt,
+}: {
+  now: Date;
+  /** Set when offline: the oldest saved date among the drawn blocks. */
+  offlineSavedAt?: DateInput | null;
+}) {
   return (
-    <View style={broadsheet ? styles.broadsheet : null} testID="today-masthead">
-      <Text
-        wordSafe
-        variant="metadata"
-        accessibilityRole="header"
-        testID="today-screen-message"
-      >
-        {date}
+    <View testID="today-masthead" style={styles.masthead}>
+      <Text wordSafe variant="secondary" testID="today-screen-message">
+        {mastheadDate(now)}
       </Text>
-      {broadsheet ? (
-        <View
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={styles.doubleRule}
-        >
-          <View style={styles.ruleThick} />
-          <View style={styles.ruleThin} />
-        </View>
+      {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
+        <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
       ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  broadsheet: { gap: rhythm.heading },
-  doubleRule: { gap: 2 },
-  ruleThick: { height: border.masthead, backgroundColor: colors.bronze },
-  ruleThin: { height: hairline, backgroundColor: colors.bronze },
+  masthead: { gap: rhythm.tight },
 });

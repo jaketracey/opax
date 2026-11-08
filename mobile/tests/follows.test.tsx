@@ -1,6 +1,5 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ActionSheetIOS } from 'react-native';
@@ -109,9 +108,6 @@ jest.mock('expo-router', () => {
     },
   };
 });
-jest.mock('../src/features/today/RecordMenu', () => ({
-  showRecordMenu: jest.fn(),
-}));
 
 const ALBANESE = 'person_2b850aa643795ce8902f754b';
 const BILL = 'au-federal-r7549';
@@ -553,7 +549,8 @@ describe('Following on Today and the follow switch', () => {
     const r = await render(
       <FollowingSection refresh={0} refreshing={false} onRetry={jest.fn()} />,
     );
-    expect(textOf(r)).toContain('Saved bill title');
+    // While pending, Today's one collapsed Following row (w5-today).
+    expect(textOf(r)).toContain('Following');
     expect(textOf(r)).not.toContain('No changes since');
     expect(textOf(r)).not.toContain(NOTHING_FOLLOWED);
     await act(async () => fail(new Error('Offline')));
@@ -563,7 +560,7 @@ describe('Following on Today and the follow switch', () => {
     expect(textOf(r)).not.toContain('No changes since');
     await act(async () => r.unmount());
   });
-  test('followed items show no changes, then what changed after a refresh; opening one marks it seen', async () => {
+  test('followed items show no changes, then what changed after a refresh', async () => {
     mock.followSources.mockResolvedValue(sources());
     await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });
     await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
@@ -574,17 +571,16 @@ describe('Following on Today and the follow switch', () => {
       { people: true, bills: true, electorates: false, parties: false },
       false,
     );
-    const row = (id: string) =>
-      r.root.find(
+    // w5-today: Today lists changed follows only; with none, one row.
+    const rows = (id: string) =>
+      r.root.findAll(
         (n) =>
-          typeof n.props.onPress === 'function' &&
+          typeof n.props.href === 'object' &&
           String(n.props.testID).startsWith('today-following-') &&
           String(n.props.testID).endsWith(id),
       );
-    expect(row(ALBANESE).props.accessibilityLabel).toMatch(
-      /^Anthony Albanese, Person, No changes since \d+ \w+ 2026$/,
-    );
-    expect(textOf(r)).toContain('No changes since you last looked.');
+    expect(rows(ALBANESE)).toHaveLength(0);
+    expect(textOf(r)).toContain('Following');
     // Rows on the paper (design pass 4C): no card and no icon badge per follow.
     expect(r.root.findAllByType(Card)).toHaveLength(0);
     // A pull to refresh revalidates and finds the fixture's two changes.
@@ -598,21 +594,12 @@ describe('Following on Today and the follow switch', () => {
       { people: true, bills: true, electorates: false, parties: false },
       true,
     );
-    expect(row(ALBANESE).props.accessibilityLabel).toMatch(/No changes since/);
-    expect(row(BILL).props.accessibilityLabel).toContain(
-      'Passed, ParlInfo bill records, as at 1 October 2026',
-    );
-    expect(textOf(r)).toContain('1 of 2 changed since you last looked.');
-    // This legacy screen is replaced by w5-today; its tap wiring stays scoped there.
-    await act(async () => row(BILL).props.onPress());
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: '/bill/[key]',
-      params: { key: BILL },
-    });
-    expect(row(BILL).props.accessibilityLabel).toMatch(/No changes since/);
+    expect(rows(ALBANESE)).toHaveLength(0);
+    expect(rows(BILL)[0]!.props.accessibilityLabel).toContain('Changed:');
+    expect(rows(BILL)[0]!.props.href.pathname).toBe('/bill/[key]');
     await act(async () => r.unmount());
   });
-  test('a saved copy says so once, with one source line in the saved state', async () => {
+  test('a saved copy adds no notice of its own (Today has one offline line)', async () => {
     mock.followSources.mockResolvedValue(
       sources({
         stale: true,
@@ -624,17 +611,10 @@ describe('Following on Today and the follow switch', () => {
     const r = await render(
       <FollowingSection refresh={0} refreshing={false} onRetry={jest.fn()} />,
     );
-    expect(textOf(r)).toContain(
-      'The latest records could not be loaded. Showing the saved copy.',
-    );
-    const line = r.root.find(
-      (n) =>
-        n.props.testID === 'today-following-stale' &&
-        typeof n.props.onPress === 'function',
-    );
-    expect(line.props.accessibilityLabel).toBe(
-      'Published records, Saved 3 Oct 2026',
-    );
+    expect(textOf(r)).not.toContain('Showing the saved copy.');
+    expect(
+      r.root.findAll((n) => n.props.testID === 'today-following-stale'),
+    ).toHaveLength(0);
     await act(async () => r.unmount());
   });
   test('the button says what it follows and whether it is on, and is saved on the device', async () => {

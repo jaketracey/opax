@@ -1,0 +1,35 @@
+appId: au.com.opax.app
+name: 28f Updated from 1.0 with a Senate "seat" saved, Today asks for the current electorate
+---
+# journeys/first-launch.md 4.8 (Path F, F3). 1.0 readers have the welcome
+# flag set (e2e builds treat it as seen), so the first launch goes straight
+# to Today. OPAXSeat legacy-senate-nsw writes the 1.0 choice of the New
+# South Wales Senate "seat" as 1.0 saved it; the read migration sets it aside
+# and Today shows the invitation with the variant line.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: legacy-senate-nsw
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 60000
+- assertNotVisible:
+    id: welcome-screen
+- extendedWaitUntil:
+    visible:
+      id: today-invitation-body
+      text: Choose your current federal electorate\.
+    timeout: 30000
+- assertNotVisible:
+    id: today-your-mp
+- takeScreenshot: ${EVIDENCE}/28f-invitation
+- tapOn:
+    id: today-invitation-find
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 15000
+- assertVisible:
+    id: seat-browse-nsw
+- takeScreenshot: ${EVIDENCE}/28f-seat-sheet

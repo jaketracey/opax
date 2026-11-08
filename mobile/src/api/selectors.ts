@@ -701,13 +701,33 @@ function profileBlocks<Id extends PersonId | null>(
     }
   return profile;
 }
-export function recentBillsFor(bills: BillIndex, limit = 6) {
+/** Today's Bills segments: newest introduced, or newest passed. */
+export type RecentBillsKind = 'new' | 'passed';
+/**
+ * The newest bills for one of Today's segments. `new`: every bill with an
+ * introduced date, newest introduced first (the order of `/bill-list
+ * ?scope=all&sort=newest`). `passed`: passed bills (assented included), by
+ * the date their status last changed, newest first (`?scope=passed`). Ties
+ * keep the index's own order, so the rows never shuffle between reads.
+ */
+export function recentBillsFor(
+  bills: BillIndex,
+  limit = 6,
+  kind: RecentBillsKind = 'new',
+) {
+  const dated =
+    kind === 'passed'
+      ? bills.bills
+          .filter((b) => b.status === 'passed' && (b.status_as_of ?? b.introduced))
+          .map((b) => ({ b, on: (b.status_as_of ?? b.introduced)! }))
+      : bills.bills
+          .filter((b) => b.introduced)
+          .map((b) => ({ b, on: b.introduced! }));
   return block(
-    [...bills.bills]
-      .filter((b) => b.introduced)
-      .sort((a, b) => b.introduced!.localeCompare(a.introduced!))
+    dated
+      .sort((a, b) => b.on.localeCompare(a.on))
       .slice(0, Math.max(0, Math.floor(limit)))
-      .map(billDisplay),
+      .map(({ b }) => billDisplay(b)),
     bills.generated_at,
     [catalogSources.bills],
   );

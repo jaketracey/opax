@@ -1,10 +1,12 @@
-import type { Block, EditionView } from '../../api/catalogs';
+import type { Block, RecentBillsKind } from '../../api/catalogs';
 import type {
   recentBillsFor,
   recentDeclarationsFor,
 } from '../../api/selectors';
-import { calendarDate, formatDate, sourceName } from '../../design/format';
-import type { SourceDetails, SourceOriginal } from '../../design/primitives';
+import { calendarDate } from '../../design/format';
+import type { SourceDetails, SourceOriginal } from '../../design/source';
+import type { RecentDivisions } from './votes';
+import { VOTES_RULE } from './votes';
 
 type Bills = NonNullable<ReturnType<typeof recentBillsFor>['data']>;
 type Declarations = NonNullable<
@@ -19,22 +21,42 @@ export const day = (value: string | null | undefined) => {
     : null;
 };
 
+/** The short publisher names Today's lines show (in tint, never bronze). */
+export const publishers = {
+  bills: 'ParlInfo',
+  declarations: 'Registers of interests',
+  votes: 'They Vote For You',
+  edition: 'OPAX daily edition',
+} as const;
+
+/** Today's rule texts, word for word (today.md 7.2, DIR 5.12). */
+export const rules = {
+  billsNew: 'Newest introduced first.',
+  billsPassed: 'Newest passed or given Royal Assent first.',
+  declarations: 'Newest declarations first, from both registers.',
+  votes: VOTES_RULE,
+  archive: 'A different year each day, from 1998 to 2026, in order.',
+  question: 'A different question each day, in order, from a reviewed set.',
+  ask: 'Two questions a day, in order, from a reviewed list.',
+} as const;
+
 /**
- * What a feed's own source line says: the feed's as-at date, its sources by
- * name (each dated with the feed, so the sheet says whose date it is), a
- * saved copy or a partial export as its state, and the feed's note.
+ * A feed's line and sheet: "Updated {d MMM yyyy} · {publisher}", the
+ * publisher's full title and date in the sheet, the originals, the rule,
+ * and the state ("Saved {d MMM yyyy}" or " · partial") in the line itself.
  */
 function feedSources<T>(
   block: Block<T>,
+  label: string,
   originals: readonly SourceOriginal[],
-  note: string,
+  rule: string,
 ): SourceDetails {
+  const title = block.sources[0]?.label;
   return {
     asOf: block.asAt,
-    citation: [...new Set(block.sources.map((source) => source.label))].map(
-      (label) => ({ ...sourceName(label), asOf: block.asAt }),
-    ),
+    citation: [{ label, title: title ?? label, asOf: block.asAt }],
     originals,
+    rule,
     savedAt: block.stale ? block.savedAt : null,
     state:
       block.stale && block.savedAt !== null
@@ -42,51 +64,61 @@ function feedSources<T>(
         : block.partial
           ? 'partial'
           : null,
-    notes: [note],
   };
 }
 
-/** New in parliament's line: the bills index and its date. */
-export function billsSources(block: Block<Bills>): SourceDetails {
+/** Bills: "Updated {d MMM yyyy} · ParlInfo", with the segment's rule. */
+export function billsSources(
+  block: Block<Bills>,
+  kind: RecentBillsKind = 'new',
+): SourceDetails {
   return feedSources(
     block,
-    block.sources,
-    `The most recently introduced bills, from ${block.sources.map((s) => s.label).join(' and ') || 'the bills index'}.`,
+    publishers.bills,
+    block.sources.map((s) => ({ ...s, asOf: block.asAt })),
+    kind === 'passed' ? rules.billsPassed : rules.billsNew,
   );
 }
 
-/** Just declared's line: the registers, each declaration's register page. */
+/** Just declared: each chamber's register page, once, with the file's date. */
 export function declarationsSources(block: Block<Declarations>): SourceDetails {
-  return feedSources(
-    block,
-    (block.data ?? []).map((item) => ({
+  const seen = new Set<string>();
+  const originals: SourceOriginal[] = [];
+  for (const item of block.data ?? []) {
+    if (seen.has(item.sourceLabel)) continue;
+    seen.add(item.sourceLabel);
+    originals.push({
       label: item.sourceLabel,
       url: item.url,
-      record: `${item.name}${item.page !== null ? `, page ${item.page}` : ''}`,
-    })),
-    'The newest alterations to the registers of interests. Each entry is in the member’s own words, as declared, not verified by OPAX.',
+      asOf: block.asAt,
+    });
+  }
+  return feedSources(
+    block,
+    publishers.declarations,
+    originals,
+    rules.declarations,
   );
 }
 
-/**
- * What the foot's source line says: the daily edition's own source and
- * date, its page and the edition's own source notes. The feeds carry their
- * own lines, so no page-wide date stands for blocks of different ages.
- */
-export function editionSources(edition: EditionView): SourceDetails {
-  return {
-    asOf: day(edition.date),
-    citation: [{ label: 'OPAX daily edition', asOf: day(edition.date) }],
-    originals: [
-      {
-        label: 'OPAX daily edition',
-        url: edition.path,
-        record: `${edition.kindLabel}, ${formatDate(edition.date)}`,
-      },
-    ],
-    notes: [
-      `OPAX’s post for ${formatDate(edition.date)}, shown as it was posted.`,
-      ...edition.sourceRows,
-    ],
-  };
+/** How parliament voted: "Updated {d MMM yyyy} · They Vote For You". */
+export function votesSources(block: Block<RecentDivisions>): SourceDetails {
+  return feedSources(
+    block,
+    publishers.votes,
+    block.sources.map((s) => ({ ...s, asOf: block.asAt })),
+    rules.votes,
+  );
+}
+
+/** The oldest of several dates, so a combined line never overstates freshness. */
+export function oldestDate(
+  dates: readonly (string | null | undefined)[],
+): string | null {
+  return (
+    dates
+      .map((d) => (d ? day(d) : null))
+      .filter((d): d is string => !!d)
+      .sort()[0] ?? null
+  );
 }

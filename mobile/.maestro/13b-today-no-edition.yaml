@@ -29,5 +29,19 @@ name: 13b Today with no daily edition published
 - assertNotVisible:
     id: today-edition-error
 - assertNotVisible: Daily edition
-- assertVisible: New in parliament
+# No seat saved: the invitation leads, and the daily pair follows it on the
+# first screen (the slot the edition would have taken collapses).
+- assertVisible:
+    id: today-invitation
+- assertVisible:
+    id: today-bills
 - takeScreenshot: ${EVIDENCE}/13b-no-edition
+- scrollUntilVisible:
+    element:
+      id: today-pair
+    direction: DOWN
+    timeout: 30000
+    visibilityPercentage: 10
+- assertVisible:
+    id: today-invitation
+- takeScreenshot: ${EVIDENCE}/13b-daily-pair

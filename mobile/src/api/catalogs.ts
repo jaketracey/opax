@@ -2,6 +2,10 @@ import type { ApiClient, RecordResult } from './client';
 import { decodePartyFile } from '../features/directories/party-file';
 import { publicDiscovery } from '../features/money-public/discovery';
 import {
+  decodeRecentDivisions,
+  type RecentDivisions,
+} from '../features/today/votes';
+import {
   partyLabels,
   resolveParty,
   partyMembers,
@@ -34,6 +38,7 @@ import {
   rosterProfileFor,
   recentBillsFor,
   recentDeclarationsFor,
+  type RecentBillsKind,
   suggestionProvenanceFor,
   yourMPFor,
   electorateFor,
@@ -627,70 +632,160 @@ export class Catalogs {
     const result = await this.bills();
     return { ...result, data: cached(billsFor(result.data, filter), [result]) };
   }
+  /** One Today feed in a Block, never rejecting: a failed read is an error. */
+  private async todayBlock<T, V>(
+    pending: Promise<RecordResult<T>>,
+    select: (data: T) => Block<V>,
+  ): Promise<Block<V>> {
+    try {
+      const record = await pending;
+      const selected = select(record.data);
+      return {
+        ...selected,
+        ...recordFlags([selected, record]),
+        stale: record.stale || selected.stale,
+        savedAt:
+          selected.savedAt === null
+            ? record.savedAt
+            : Math.min(record.savedAt, selected.savedAt),
+      };
+    } catch (e) {
+      return {
+        data: null,
+        status: 'error',
+        error:
+          e instanceof ApiError
+            ? e
+            : new ApiError('invalid-data', 'This catalog could not be read.'),
+        sources: [],
+        asAt: null,
+        stale: false,
+        savedAt: null,
+      };
+    }
+  }
+  /**
+   * Today's Bills block: the newest introduced (`new`) or passed (`passed`)
+   * bills from the bills index alone, so the block never waits for the
+   * declarations or the roster.
+   */
+  todayBills(limit = 3, kind: RecentBillsKind = 'new', refresh = false) {
+    return this.todayBlock(this.bills(refresh), (data) =>
+      recentBillsFor(data, limit, kind),
+    );
+  }
+  /**
+   * Today's Just declared block from the recent-declarations file alone:
+   * names, words and dates draw at once. Parties and places join in a second
+   * pass (`todayDeclarationsJoined`), when the roster answers.
+   */
+  todayDeclarations(limit = 3, refresh = false) {
+    return this.todayBlock(
+      this.client.get(
+        '/interests/recent.json',
+        decode.decodeRecentInterests,
+        refresh,
+      ),
+      (interests) => recentDeclarationsFor(interests, limit),
+    );
+  }
+  /**
+   * The same entries with the roster joined (party and chamber), for the
+   * second pass. A failed roster read leaves the entries as the first pass
+   * drew them.
+   */
+  async todayDeclarationsJoined(
+    limit = 3,
+    refresh = false,
+    metadata = this.client
+      .get('/parliamentarians.json', decode.decodeRoster, refresh)
+      .catch(() => null),
+  ) {
+    const pending = this.client.get(
+      '/interests/recent.json',
+      decode.decodeRecentInterests,
+      refresh,
+    );
+    // Attach the load handler immediately, including when the roster is slow.
+    return this.todayBlock(
+      pending.then(async (record) => {
+        const roster = await metadata;
+        return { ...record, data: { interests: record.data, roster } };
+      }),
+      ({ interests, roster }) =>
+        cached(
+          recentDeclarationsFor(interests, limit, { roster: roster?.data }),
+          roster ? [roster] : [],
+        ),
+    );
+  }
+  /**
+   * Just declared on Today, second pass: the newest entries with the roster
+   * joined and each member's profile slug, so the member's row opens their
+   * profile. The same reads as the feed (all cached for Today's other
+   * blocks but the interest index), cut to `limit` rows.
+   */
+  async todayDeclarationsProfiled(limit = 3, refresh = false) {
+    const feed = await this.declarations(refresh);
+    return { ...feed, data: feed.data ? feed.data.slice(0, limit) : null };
+  }
+  /**
+   * How parliament voted: `/divisions/recent.json` (data lane D1). A file
+   * that is not there yet (404), or was never saved on an offline device,
+   * is `missing`: the block is absent, never empty. Any other failure is an
+   * error the block states.
+   */
+  async recentDivisions(
+    refresh = false,
+  ): Promise<Block<RecentDivisions> | { status: 'missing' }> {
+    try {
+      const record = await this.client.get(
+        '/divisions/recent.json',
+        decodeRecentDivisions,
+        refresh,
+      );
+      return {
+        data: record.data,
+        status: 'ready',
+        sources: [
+          {
+            label: 'They Vote For You',
+            url: 'https://theyvoteforyou.org.au/divisions',
+          },
+        ],
+        asAt: record.data.generated_at,
+        ...recordFlags([record]),
+        stale: record.stale,
+        savedAt: record.savedAt,
+      };
+    } catch (e) {
+      if (
+        e instanceof ApiError &&
+        (e.code === 'not-found' || e.code === 'offline')
+      )
+        return { status: 'missing' };
+      return {
+        data: null,
+        status: 'error',
+        error:
+          e instanceof ApiError
+            ? e
+            : new ApiError('invalid-data', 'This catalog could not be read.'),
+        sources: [],
+        asAt: null,
+        stale: false,
+        savedAt: null,
+      };
+    }
+  }
+  /** @deprecated Today reads `todayBills` and `todayDeclarations` apart. */
   async today(limit = 6, refresh = false) {
-    const load = async <T, V>(
-      pending: Promise<RecordResult<T>>,
-      select: (data: T) => Block<V>,
-    ): Promise<Block<V>> => {
-      try {
-        const record = await pending;
-        const selected = select(record.data);
-        return {
-          ...selected,
-          ...recordFlags([selected, record]),
-          stale: record.stale || selected.stale,
-          savedAt:
-            selected.savedAt === null
-              ? record.savedAt
-              : Math.min(record.savedAt, selected.savedAt),
-        };
-      } catch (e) {
-        return {
-          data: null,
-          status: 'error',
-          error:
-            e instanceof ApiError
-              ? e
-              : new ApiError('invalid-data', 'This catalog could not be read.'),
-          sources: [],
-          asAt: null,
-          stale: false,
-          savedAt: null,
-        };
-      }
-    };
-    const optional = async <T>(path: string, decoder: Decoder<T>) =>
-      this.client.get(path, decoder, refresh).catch(() => null);
-    const metadata = optional('/parliamentarians.json', decode.decodeRoster);
+    const metadata = this.client
+      .get('/parliamentarians.json', decode.decodeRoster, refresh)
+      .catch(() => null);
     const [bills, declarations] = await Promise.all([
-      load(this.bills(refresh), (data) => recentBillsFor(data, limit)),
-      (async () => {
-        const pending = this.client.get(
-          '/interests/recent.json',
-          decode.decodeRecentInterests,
-          refresh,
-        );
-        // Attach the load handler immediately, including when optional metadata is slow.
-        return load(
-          pending.then(async (record) => {
-            const roster = await metadata;
-            return {
-              ...record,
-              data: {
-                interests: record.data,
-                roster,
-              },
-            };
-          }),
-          ({ interests, roster }) =>
-            cached(
-              recentDeclarationsFor(interests, limit, {
-                roster: roster?.data,
-              }),
-              roster ? [roster] : [],
-            ),
-        );
-      })(),
+      this.todayBills(limit, 'new', refresh),
+      this.todayDeclarationsJoined(limit, refresh, metadata),
     ]);
     return { bills, declarations };
   }

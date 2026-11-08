@@ -6,17 +6,20 @@ name: 13c A withdrawn daily edition stays gone after a relaunch
 # The fixture serves the pinned edition until the app revalidates it, then
 # answers 404 as the Worker does when no posted edition remains. clearState,
 # so the first read is the edition itself.
+# The edition's age is pinned fresh, so it draws at the top (case C).
 - launchApp:
     clearState: true
+    arguments:
+      OPAXEditionAge: fresh
 # Wait at the top for the posted card before scrolling: the first response
 # can arrive after launch while scrollUntilVisible already swipes past it.
 - extendedWaitUntil:
     visible:
-      id: today-edition-head
+      id: today-edition
     timeout: 30000
 - scrollUntilVisible:
     element:
-      id: today-edition-head
+      id: today-edition
     timeout: 90000
     visibilityPercentage: 10
 - takeScreenshot: ${EVIDENCE}/13c-edition-posted
@@ -36,7 +39,9 @@ name: 13c A withdrawn daily edition stays gone after a relaunch
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/13c-edition-withdrawn
 # Relaunch while the saved edition would still be fresh: it must not return.
-- launchApp
+- launchApp:
+    arguments:
+      OPAXEditionAge: fresh
 - assertVisible:
     id: today-screen-message
 - scrollUntilVisible:
@@ -53,5 +58,6 @@ name: 13c A withdrawn daily edition stays gone after a relaunch
 - assertNotVisible:
     id: today-edition
 - assertNotVisible: Daily edition
-- assertVisible: New in parliament
+- assertVisible:
+    id: today-bills
 - takeScreenshot: ${EVIDENCE}/13c-after-relaunch

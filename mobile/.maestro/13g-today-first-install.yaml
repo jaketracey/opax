@@ -1,0 +1,54 @@
+appId: au.com.opax.app
+name: 13g First install, nothing saved, skeleton and loaded positions match
+---
+# Case C (today.md 5.2): nothing saved. The invitation leads, then the
+# edition's slot, then the daily pair. Run with the network throttled; the
+# harness overlay-diffs the two captures (5.20: block positions above the
+# edition slot within 4 pt).
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXEditionCache: none
+      OPAXEditionAge: fresh
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/13g-fresh-skeleton
+- extendedWaitUntil:
+    visible:
+      id: today-edition
+    timeout: 120000
+- assertVisible:
+    id: today-invitation
+- assertVisible:
+    id: today-invitation
+    above:
+      id: today-edition
+- takeScreenshot: ${EVIDENCE}/13g-fresh-loaded
+
+# An old edition: the edition's slot collapses once the read answers, and
+# the invitation above it does not move.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXEditionCache: none
+      OPAXEditionAge: old
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/13g-old-skeleton
+- extendedWaitUntil:
+    notVisible:
+      id: today-edition-loading
+    timeout: 120000
+- assertVisible:
+    id: today-invitation
+- assertNotVisible:
+    id: today-edition
+- assertVisible:
+    id: today-pair
+- takeScreenshot: ${EVIDENCE}/13g-old-loaded

@@ -5,7 +5,7 @@ import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as shipped from '../src/features/community/entry';
-import { ExploreGrid } from '../src/features/today/ExploreGrid';
+import { MoreToExplore } from '../src/features/today/MoreToExplore';
 import { AccountScreen } from '../src/features/account/AccountScreen';
 import { redirectSystemPath } from '../src/app/+native-intent';
 import { fromWebPath } from '../src/navigation/routes';
@@ -68,7 +68,7 @@ const entryFor = (env: Record<string, string>) =>
       const path = require('node:path');
       const config = require('./metro.config.js');
       const context = {
-        originModulePath: path.resolve('src/features/today/ExploreGrid.tsx'),
+        originModulePath: path.resolve('src/features/today/MoreToExplore.tsx'),
         resolveRequest: (_context, name) => ({
           type: 'sourceFile', filePath: path.resolve('src/features/today', name + '.ts'),
         }),
@@ -106,7 +106,7 @@ test('production and a community-hidden e2e build resolve the stub and block eve
       expect([env, path, blocked(list, path)]).toEqual([env, path, true]);
     for (const path of [
       'src/features/community/entry.production.ts',
-      'src/features/today/ExploreGrid.tsx',
+      'src/features/today/MoreToExplore.tsx',
       'src/features/ask/sync.ts',
     ])
       expect([env, path, blocked(list, path)]).toEqual([env, path, false]);
@@ -167,14 +167,14 @@ const ids = (renderer: TestRenderer.ReactTestRenderer) =>
 test('Today has no Community tile; every other way in stays', () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
-    renderer = TestRenderer.create(<ExploreGrid />);
+    renderer = TestRenderer.create(<MoreToExplore />);
   });
   expect(ids(renderer)).not.toContain('today-community');
   expect(ids(renderer)).not.toContain('today-reports');
   expect(words(renderer)).not.toContain('Community');
   for (const id of [
     'today-leads-open',
-    'today-money-map',
+    'today-largest-grants',
     'today-public-money',
     'today-explore-open',
     'today-records-open',

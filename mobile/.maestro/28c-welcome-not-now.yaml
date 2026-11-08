@@ -1,0 +1,91 @@
+appId: au.com.opax.app
+name: 28c Welcome Not now lands on a finished Today, the invitation after Bills
+---
+# specs/today.md 4.4 and journeys/first-launch.md 4.4 (Path C). The launch
+# argument -OPAXWelcomeTour on asks for the production welcome (quote "on":
+# unquoted it is a YAML boolean). Bar buttons have no test ids: "Not now" is
+# reached by its label.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: welcome-notice
+    visibilityPercentage: 50
+    timeout: 30000
+- tapOn:
+    id: welcome-continue
+- extendedWaitUntil:
+    visible:
+      id: welcome-seat
+    timeout: 10000
+- tapOn: Not now
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+# The first screen opens on content: no invitation until after Bills.
+- assertNotVisible:
+    id: today-invitation
+- takeScreenshot: ${EVIDENCE}/28c-today-first-screen
+- scrollUntilVisible:
+    element:
+      id: today-bills
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertNotVisible:
+    id: today-invitation
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/28c-invitation-after-bills
+# The rest of 13e's "after Not now": day 8 puts it back in its own slot.
+- launchApp:
+    arguments:
+      OPAXWelcomeDeclined: 8d
+- extendedWaitUntil:
+    visible:
+      id: today-invitation
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/28c-day-8
+# The card's own Not now (touch and hold, away from its two buttons: on the
+# headline) hides it for 30 days.
+- longPressOn:
+    id: today-invitation-title
+- tapOn: Not now
+- extendedWaitUntil:
+    notVisible:
+      id: today-invitation
+    timeout: 10000
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: today-bills
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertNotVisible:
+    id: today-invitation
+- takeScreenshot: ${EVIDENCE}/28c-hidden

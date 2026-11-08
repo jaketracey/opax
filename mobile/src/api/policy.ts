@@ -50,6 +50,8 @@ const staticPaths = new Set([
   '/research/grants-history.json',
   '/research/grant-locations.json',
   '/evidence/index.json',
+  // How parliament voted on Today (data lane D1). Absent until it ships.
+  '/divisions/recent.json',
 
   '/access.json',
   '/search-catalog/manifest.json',

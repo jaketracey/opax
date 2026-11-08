@@ -1,0 +1,108 @@
+appId: au.com.opax.app
+name: 13d Today with a seat saved, the Your MP card first, each row its own push
+---
+# OPAXSeat federal saves Grayndler before the first paint (e2e builds only).
+# The card is a container (today.md 5.4): the seat header, the member row,
+# the Latest rows and the senators row are separate elements, and the card's
+# own dated line closes it. Every push from Today keeps the tab bar and its
+# back button reads "Today".
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: federal
+      OPAXEditionAge: fresh
+      OPAXEditionCache: present
+- extendedWaitUntil:
+    visible:
+      id: today-your-mp
+    timeout: 60000
+- assertVisible:
+    id: today-your-mp-seat
+- assertNotVisible:
+    id: today-invitation
+- scrollUntilVisible:
+    element:
+      id: today-your-mp-member
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-your-mp-latest-0
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-senators
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-your-mp-sources
+      text: Updated \d{1,2} \w{3} \d{4}.*
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/13d-your-mp
+# Case A with a seat: the edition follows the card.
+- scrollUntilVisible:
+    element:
+      id: today-edition
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/13d-edition-after-card
+# The seat header opens the electorate.
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+- waitForAnimationToEnd
+- tapOn:
+    id: today-your-mp-seat
+- extendedWaitUntil:
+    visible:
+      id: electorate-screen
+    timeout: 30000
+- assertVisible:
+    id: BackButton
+    text: Today
+- assertVisible:
+    id: tab-today
+- takeScreenshot: ${EVIDENCE}/13d-electorate
+- tapOn:
+    id: BackButton
+- assertVisible:
+    id: today-screen
+# The senators row opens the state's senators.
+- scrollUntilVisible:
+    element:
+      id: today-senators
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: today-senators
+- extendedWaitUntil:
+    visible:
+      id: members-screen
+    timeout: 30000
+- assertVisible:
+    id: BackButton
+    text: Today
+- assertVisible:
+    id: tab-today
+- takeScreenshot: ${EVIDENCE}/13d-senators
+- tapOn:
+    id: BackButton
+- assertVisible:
+    id: today-screen

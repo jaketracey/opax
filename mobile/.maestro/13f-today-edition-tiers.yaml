@@ -1,0 +1,82 @@
+appId: au.com.opax.app
+name: 13f The daily edition placed by its age, fresh, recent and old
+---
+# OPAXEditionAge pins Today's date 1, 7 or 30 days after the fixture
+# edition's date (today.md 5.5): fresh 0 to 3 days, recent 4 to 14, old
+# beyond. OPAXEditionCache present decides the launch case as if the edition
+# had been saved.
+#
+# Fresh, no seat (case A): the edition leads, above the invitation.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXEditionAge: fresh
+      OPAXEditionCache: present
+- extendedWaitUntil:
+    visible:
+      id: today-edition
+    timeout: 60000
+- assertVisible:
+    id: today-edition
+    above:
+      id: today-invitation
+- takeScreenshot: ${EVIDENCE}/13f-fresh
+
+# Recent (case B): the edition sits late, below Just declared.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXEditionAge: recent
+      OPAXEditionCache: present
+- extendedWaitUntil:
+    visible:
+      id: today-invitation
+    timeout: 60000
+- assertNotVisible:
+    id: today-edition
+- scrollUntilVisible:
+    element:
+      id: today-declarations
+    timeout: 120000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-edition
+    timeout: 120000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/13f-recent
+
+# Old: no edition anywhere on Today.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXEditionAge: old
+      OPAXEditionCache: present
+- extendedWaitUntil:
+    visible:
+      id: today-invitation
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: today-screen-footer
+    timeout: 300000
+    visibilityPercentage: 1
+    speed: 40
+- assertNotVisible:
+    id: today-edition
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 300000
+    speed: 40
+- assertNotVisible:
+    id: today-edition
+- takeScreenshot: ${EVIDENCE}/13f-old

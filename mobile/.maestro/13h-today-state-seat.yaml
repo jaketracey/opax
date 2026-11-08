@@ -1,0 +1,40 @@
+appId: au.com.opax.app
+name: 13h Today with a federal and a Victorian state seat saved
+---
+# OPAXSeat federal+state saves Melbourne and a Victorian district. The state
+# seat card (today.md 5.4, StateSeatCard) is withheld from 3 November 2026,
+# when the Victorian Legislative Assembly dissolved for the 28 November
+# election, until a timetable record says who holds each seat. At this
+# capture date Today draws the federal card only, with no authorisation line.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: federal+state
+- extendedWaitUntil:
+    visible:
+      id: today-your-mp
+    timeout: 60000
+- assertVisible:
+    id: today-your-mp-seat
+- scrollUntilVisible:
+    element:
+      id: today-your-mp-sources
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/13h-federal-card
+- assertNotVisible:
+    id: today-state-seat
+- assertNotVisible:
+    id: today-state-sources
+- assertNotVisible: Authorised by.*
+- scrollUntilVisible:
+    element:
+      id: today-bills
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertNotVisible:
+    id: today-state-seat
+- takeScreenshot: ${EVIDENCE}/13h-no-state-card
