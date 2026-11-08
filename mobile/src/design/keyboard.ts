@@ -41,7 +41,8 @@ export type KeyCommandId =
  * circle), so it draws last; elsewhere the 1.0 order keeps it fourth.
  */
 export const searchTabRole =
-  designFlags.searchTab &&
+  // Read at module load; a test that mocks the flags module late sees none.
+  !!designFlags?.searchTab &&
   Platform.OS === 'ios' &&
   parseInt(String(Platform.Version), 10) >= 26;
 

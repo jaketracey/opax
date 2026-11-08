@@ -229,7 +229,12 @@ function PersonMatch({
                 party={party}
                 partyStatus={person.current === false ? 'former' : 'current'}
                 place={place}
-                portrait={<CachedPortrait name={person.name} />}
+                portrait={
+                  <CachedPortrait
+                    name={person.name}
+                    testID={`${rowID}-portrait`}
+                  />
+                }
                 href={href}
                 {...split}
                 onPress={href ? undefined : open}
