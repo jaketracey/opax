@@ -10,6 +10,8 @@ wheels/
 .venv
 worktrees/
 results/
+# Expo Router route folders named results are app code, not run output
+!/mobile/src/app/**/results/
 queue/
 
 # Agent prompt files (generated per-session by launchers)
