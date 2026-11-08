@@ -57,3 +57,19 @@ export async function clearAskConversations() {
   await disk.save(emptyChats());
   await disk.save(emptyChats());
 }
+/** "New question" sticks across launches: nothing reopens as active. */
+export function forgetActiveChat() {
+  if (!state.active) return;
+  publish({ ...state, active: null });
+  void disk.save(boundedStore(state)).catch(() => undefined);
+}
+/** Removes conversations from this device. The account copy is the caller's. */
+export async function deleteChats(ids: readonly string[]) {
+  revision++;
+  const gone = new Set(ids);
+  await saveChats({
+    ...state,
+    active: state.active && gone.has(state.active) ? null : state.active,
+    chats: state.chats.filter((c) => !gone.has(c.id)),
+  });
+}

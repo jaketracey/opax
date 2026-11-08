@@ -1,13 +1,15 @@
+/** The status line's words, exactly as drawn (journeys/ask.md 9). */
 export type AskStage =
   | 'Reading your question'
   | 'Searching the record'
   | 'Writing the answer'
-  | 'Reading the record again.';
+  | 'Searching again';
 export type StreamHandlers = {
   stage: (stage: AskStage) => void;
   delta: (text: string) => void;
   retry: () => void;
-  reading?: (titles: string[]) => void;
+  /** How many records were found: a count, never their titles. */
+  reading?: (count: number) => void;
 };
 export class AskFailure extends Error {
   constructor(
@@ -72,17 +74,13 @@ export class AskStream {
       this.on.delta(v.text);
     else if (event === 'retry') {
       this.on.retry();
-      this.on.stage('Reading the record again.');
+      this.on.stage('Searching again');
     } else if (event === 'status') {
       if (v.phase === 'searching') this.on.stage('Searching the record');
       else if (['retrieved', 'writing', 'reading'].includes(String(v.phase)))
         this.on.stage('Writing the answer');
       if (v.phase === 'retrieved' && Array.isArray(v.sources))
-        this.on.reading?.(
-          v.sources
-            .flatMap((s) => (s && typeof s.title === 'string' ? [s.title] : []))
-            .slice(0, 3),
-        );
+        this.on.reading?.(v.sources.length);
     }
   }
   result() {

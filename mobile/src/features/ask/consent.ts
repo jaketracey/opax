@@ -44,3 +44,14 @@ export function giveAskConsent(): Promise<void> {
 export function resetAskConsentForTests() {
   agreed = null;
 }
+
+/**
+ * "Show the notice before asking" (Account › Ask): the next question shows
+ * the notice again. The file is overwritten in both slots with version 0,
+ * which no build reads as agreement.
+ */
+export async function resetAskConsent(): Promise<void> {
+  agreed = false;
+  await store.save({ version: 0 });
+  await store.save({ version: 0 });
+}
