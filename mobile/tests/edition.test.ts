@@ -153,9 +153,15 @@ describe('the edition decoder', () => {
     'https://opax.com.au/money/grants/federal/recipient/abn:83140439239?award=GA12345',
     'https://opax.com.au/money/grants?jur=federal&program=abc',
     'https://opax.com.au/money/grants?jur=federal&largest=2026-08',
-    'https://opax.com.au/reports/housing',
   ])("accepts the publisher's link form %s", (url) => {
     expect(decodeEdition(at(['edition', 'url'], url)).edition.url).toBe(url);
+  });
+  test('refuses a link to a retired report', () => {
+    expect(() =>
+      decodeEdition(
+        at(['edition', 'url'], 'https://opax.com.au/reports/housing'),
+      ),
+    ).toThrow();
   });
 });
 
@@ -410,7 +416,7 @@ describe('the edition selector', () => {
           replaceAt(
             replaceAt(raw(), ['edition', 'kind'], 'topic'),
             ['edition', 'url'],
-            'https://opax.com.au/reports/early-childhood',
+            'https://opax.com.au/money/grants?jur=federal&program=abc',
           ),
           ['edition', 'slides', 1, 'note'],
           null,
@@ -427,7 +433,7 @@ describe('the edition selector', () => {
         replaceAt(
           replaceAt(without('caption'), ['edition', 'kind'], 'topic'),
           ['edition', 'url'],
-          'https://opax.com.au/reports/early-childhood',
+          'https://opax.com.au/money/grants?jur=federal&program=abc',
         ),
         ['edition', 'slides', 1, 'note'],
         'Bars are relative to the most frequent speaker in the collection.',
@@ -436,7 +442,7 @@ describe('the edition selector', () => {
     const view = editionFor(topic).data!;
     expect(view.machineWritten).toBeNull();
     expect(view.kindLabel).toBe('Topic');
-    expect(view.path).toBe('/reports/early-childhood');
+    expect(view.path).toBe('/money/grants?jur=federal&program=abc');
   });
   test('server text stays plain text: markup and other links are kept as written', () => {
     const marked = decodeEdition(
