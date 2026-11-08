@@ -60,6 +60,8 @@ export interface LinkRowProps extends Navigation {
   title: string;
   detail?: string;
   value?: string;
+  /** Money amounts use the stronger trailing figure treatment. */
+  valueEmphasis?: boolean;
   symbol?: SFSymbol;
   symbolInk?: Accent;
   /** @deprecated Use symbol. */ icon?: SFSymbol;
@@ -82,6 +84,7 @@ export function LinkRow({
   title,
   detail,
   value,
+  valueEmphasis = false,
   symbol,
   symbolInk,
   icon,
@@ -178,7 +181,12 @@ export function LinkRow({
           ) : null}
         </View>
         {value ? (
-          <Text wordSafe variant="body" tabular tone="inkSoft">
+          <Text
+            wordSafe
+            variant={valueEmphasis ? 'strong' : 'body'}
+            tabular
+            tone={valueEmphasis ? 'ink' : 'inkSoft'}
+          >
             {value}
           </Text>
         ) : null}
@@ -541,6 +549,9 @@ export function RecordRow({
 }: RecordRowProps) {
   const stacked = useAccessibilitySize();
   const [expanded, setExpanded] = useState(false);
+  const [excerptLines, setExcerptLines] = useState({ text: '', count: 0 });
+  const truncated =
+    excerptLines.text === excerpt?.text && excerptLines.count > 3;
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset();
@@ -573,7 +584,7 @@ export function RecordRow({
       style={({ pressed }) => [
         styles.row,
         cellStyle,
-        pressed ? { backgroundColor: highlight } : null,
+        pressed && (href || external) ? { backgroundColor: highlight } : null,
       ]}
     >
       <View style={styles.main}>
@@ -586,12 +597,37 @@ export function RecordRow({
           </Text>
         ) : null}
         {excerpt ? (
-          <Text
-            variant="recordText"
-            numberOfLines={expanded ? undefined : compact && stacked ? 2 : 3}
-          >
-            <Highlight text={excerpt.text} words={excerpt.highlight} />
-          </Text>
+          <View>
+            {!expanded || compact ? (
+              <Text
+                variant="recordText"
+                numberOfLines={compact && stacked ? 2 : 3}
+              >
+                <Highlight text={excerpt.text} words={excerpt.highlight} />
+              </Text>
+            ) : null}
+            {!compact ? (
+              <Text
+                variant="recordText"
+                accessible={false}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                pointerEvents="none"
+                style={{ position: 'absolute', left: 0, right: 0, opacity: 0 }}
+                onTextLayout={({ nativeEvent }) => {
+                  const count = nativeEvent.lines.length;
+                  setExcerptLines((current) =>
+                    current.text === excerpt.text && current.count === count
+                      ? current
+                      : { text: excerpt.text, count },
+                  );
+                  if (nativeEvent.lines.length <= 3) setExpanded(false);
+                }}
+              >
+                <Highlight text={excerpt.text} words={excerpt.highlight} />
+              </Text>
+            ) : null}
+          </View>
         ) : null}
         {speaker ? (
           <View style={[styles.line, stacked ? styles.stacked : null]}>
@@ -642,9 +678,11 @@ export function RecordRow({
   return (
     <>
       {linked}
-      {excerpt && !compact ? (
+      {excerpt && !compact && truncated ? (
         <Disclosure label="More" open={expanded} onToggle={setExpanded}>
-          <View />
+          <Text variant="recordText">
+            <Highlight text={excerpt.text} words={excerpt.highlight} />
+          </Text>
         </Disclosure>
       ) : null}
     </>
@@ -684,10 +722,26 @@ export function DivisionRow({
   const cellStyle = useRowCellStyle();
   useRowInset();
   const votes = split ?? { ayes, noes };
+  const countWord = (count: number, singular: string, plural: string) =>
+    `${formatCount(count)} ${count === 1 ? singular : plural}`;
   const counts =
     countsStyle === 'votes'
-      ? `${formatCount(votes.ayes)} votes to ${formatCount(votes.noes)}`
-      : `${formatCount(votes.ayes)} ayes, ${formatCount(votes.noes)} noes`;
+      ? votes.ayes && votes.noes
+        ? `${countWord(votes.ayes, 'vote', 'votes')} to ${formatCount(votes.noes)}`
+        : countWord(votes.ayes || votes.noes, 'vote', 'votes')
+      : [
+          votes.ayes ? countWord(votes.ayes, 'aye', 'ayes') : null,
+          votes.noes ? countWord(votes.noes, 'no', 'noes') : null,
+        ]
+          .filter(Boolean)
+          .join(', ') || 'No votes';
+  const spokenCounts =
+    countsStyle === 'ayesNoes'
+      ? [
+          votes.ayes ? countWord(votes.ayes, 'aye', 'ayes') : 'no ayes',
+          votes.noes ? countWord(votes.noes, 'no', 'noes') : 'no noes',
+        ].join(', ')
+      : counts;
   const party = split?.partyVote
     ? `Party voted ${split.partyVote === 'aye' ? 'for' : 'against'}`
     : null;
@@ -695,7 +749,7 @@ export function DivisionRow({
     <Pressable
       accessible
       accessibilityRole={expandable ? 'button' : href ? 'link' : undefined}
-      accessibilityLabel={[title, meta, outcome, counts, party]
+      accessibilityLabel={[title, meta, outcome, spokenCounts, party]
         .filter(Boolean)
         .join(', ')}
       accessibilityState={expandable ? { expanded } : undefined}
@@ -712,7 +766,7 @@ export function DivisionRow({
       style={({ pressed }) => [
         styles.row,
         cellStyle,
-        pressed ? { backgroundColor: highlight } : null,
+        pressed && (href || expandable) ? { backgroundColor: highlight } : null,
       ]}
     >
       <View style={styles.main}>
@@ -802,6 +856,7 @@ export function MoneyRow({
       title={name}
       detail={detail}
       value={formatMoney(amount)}
+      valueEmphasis
       href={href}
       external={external}
       accessory={href || external ? 'chevron' : 'none'}

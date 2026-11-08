@@ -543,7 +543,7 @@ export function PageFoot({ variant }: { variant: 'today' | 'authorised' }) {
   return (
     <View style={{ gap: rhythm.tight }}>
       {variant === 'today' ? (
-        <Text wordSafe variant="footnote">
+        <Text wordSafe variant="footnote" tone="inkSoft">
           {copy.independence}
         </Text>
       ) : (
@@ -551,17 +551,18 @@ export function PageFoot({ variant }: { variant: 'today' | 'authorised' }) {
           <View
             style={{ height: hairline, backgroundColor: colors.dividerSubtle }}
           />
-          <Text wordSafe variant="footnote">
+          <Text wordSafe variant="footnote" tone="inkSoft">
             {AUTHORISATION_LINE}
-          </Text>
-          <Text wordSafe variant="footnote">
-            We aim to respond within 2 business days.
           </Text>
         </>
       )}
       <Pressable
         accessibilityRole="link"
-        accessibilityLabel={copy.reportCorrection}
+        accessibilityLabel={
+          variant === 'authorised'
+            ? `Report a correction by email to ${copy.correctionsEmail}`
+            : copy.reportCorrection
+        }
         onPress={() => void openCorrection()}
         style={({ pressed }) => [
           { minHeight: minimumTarget, justifyContent: 'center' },
@@ -574,6 +575,11 @@ export function PageFoot({ variant }: { variant: 'today' | 'authorised' }) {
             : `Report a correction: ${copy.correctionsEmail}`}
         </Text>
       </Pressable>
+      {variant === 'authorised' ? (
+        <Text wordSafe variant="footnote" tone="inkSoft">
+          We aim to respond within 2 business days.
+        </Text>
+      ) : null}
     </View>
   );
 }

@@ -40,7 +40,12 @@ import { StatusCapsule, MachinePill, ChoiceChip } from '../src/design/labels';
 import { SourceLine } from '../src/design/source';
 import { Hoverable } from '../src/design/adaptive';
 import * as adaptive from '../src/design/adaptive';
-import { SelectedMark, selectedWash, splitRowStyles } from '../src/design/selection';
+import {
+  SelectedMark,
+  selectedWash,
+  splitRowStyles,
+} from '../src/design/selection';
+import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import { colors, radii } from '../src/design/tokens';
 
 jest.mock('../src/features/follows/store', () => ({
@@ -447,7 +452,7 @@ test('compact excerpts clamp at 3 lines, then 2 at AX1+, with no nested More', (
       excerpt={{ text: 'Full passage' }}
     />,
   );
-  expect(strings(full.root)).toContain('More');
+  expect(strings(full.root)).not.toContain('More');
 });
 test('DivisionRow expands party content in place and leaves the navigation variant unchanged', () => {
   const renderer = render(
@@ -501,14 +506,30 @@ test('DivisionRow split can describe the member against their party, or remain t
     expect(strings(root).includes('Party voted against')).toBe(!!split);
   }
 });
-test('money rows use full dollars in ink, and private entities have no navigation accessory', () => {
-  const root = render(
-    <MoneyRow name="Private recipient" amount={1250000} testID="row" />,
-  ).root;
-  expect(strings(root)).toContain('$1,250,000');
-  expect(glyphs(root)).toEqual([]);
-  expect(row(root).props.accessibilityLabel).toContain('1,250,000 dollars');
-});
+test.each([1, 1.786])(
+  'money amounts use strong tabular ink, stacking at AX1+, scale=%s',
+  (scale) => {
+    size(scale);
+    const root = render(
+      <MoneyRow name="Private recipient" amount={1250000} testID="row" />,
+    ).root;
+    expect(strings(root)).toContain('$1,250,000');
+    const amount = root
+      .findAllByType(Text)
+      .find((node) => node.props.children === '$1,250,000')!;
+    expect(amount.props).toMatchObject({
+      variant: 'strong',
+      tone: 'ink',
+      tabular: true,
+    });
+    expect(flat(amount.parent!.props.style).flexDirection).toBe(
+      scale === 1 ? 'row' : 'column',
+    );
+    expect(glyphs(root)).toEqual([]);
+    expect(rowStyle(row(root), true).backgroundColor).toBeUndefined();
+    expect(row(root).props.accessibilityLabel).toContain('1,250,000 dollars');
+  },
+);
 
 test('every builder gives iOS the exact native menu leaves as accessibility actions', () => {
   const follow = { following: true, onFollow: jest.fn() };
@@ -756,13 +777,29 @@ test('MachinePill is a named button on a navy wash and iOS choices draw checkmar
       .minHeight,
   ).toBeGreaterThanOrEqual(44);
 });
-test('PageFoot keeps independence and authorisation wording', () => {
+test('PageFoot orders authorisation, the correction link and response time', () => {
   expect(strings(render(<PageFoot variant="today" />).root)).toContain(
     'OPAX is independent and non-partisan. It is not a government app.',
   );
+  const root = render(<PageFoot variant="authorised" />).root;
+  expect(strings(root)).toEqual([
+    AUTHORISATION_LINE,
+    'Report a correction: corrections@opax.com.au',
+    'We aim to respond within 2 business days.',
+  ]);
   expect(
-    strings(render(<PageFoot variant="authorised" />).root).join(' '),
-  ).toContain('Authorised by Jake Tracey');
+    root
+      .findAllByType(Text)
+      .map((node) => [node.props.variant, node.props.tone]),
+  ).toEqual([
+    ['footnote', 'inkSoft'],
+    ['footnote', 'navy'],
+    ['footnote', 'inkSoft'],
+  ]);
+  expect(
+    root.find((node) => node.props.accessibilityRole === 'link').props
+      .accessibilityLabel,
+  ).toBe('Report a correction by email to corrections@opax.com.au');
 });
 
 test('standard bill and person menus stay available when split rows select', () => {
@@ -870,6 +907,97 @@ test('Screen places its one offline line after the marked date', () => {
   ]);
 });
 
+test.each([1, 3, 4, 8])(
+  'RecordRow shows More only for a measured excerpt over three lines: %s',
+  (count) => {
+    const renderer = render(
+      <RecordRow
+        meta="Speech"
+        excerpt={{ text: 'Full passage' }}
+        testID="row"
+      />,
+    );
+    const measure = renderer.root
+      .findAllByType(Text)
+      .find(
+        (node) =>
+          node.props.variant === 'recordText' && node.props.onTextLayout,
+      )!;
+    expect(measure.props.numberOfLines).toBeUndefined();
+    act(() =>
+      measure.props.onTextLayout({
+        nativeEvent: {
+          lines: Array.from({ length: count }, () => ({ text: 'line' })),
+        },
+      }),
+    );
+    expect(strings(renderer.root).includes('More')).toBe(count > 3);
+    if (count > 3) {
+      act(() =>
+        renderer.root
+          .find(
+            (node) =>
+              node.props.accessibilityLabel === 'More' &&
+              typeof node.props.onPress === 'function',
+          )
+          .props.onPress(),
+      );
+      expect(
+        renderer.root
+          .findAllByType(Text)
+          .filter(
+            (node) =>
+              node.props.variant === 'recordText' &&
+              !node.props.accessibilityElementsHidden,
+          ),
+      ).toHaveLength(1);
+    }
+  },
+);
+test.each([
+  [1, 1, 'ayesNoes', '1 aye, 1 no', '1 aye, 1 no'],
+  [0, 25, 'ayesNoes', '25 noes', 'no ayes, 25 noes'],
+  [1, 0, 'ayesNoes', '1 aye', '1 aye, no noes'],
+  [1, 0, 'votes', '1 vote', '1 vote'],
+  [0, 25, 'votes', '25 votes', '25 votes'],
+  [1, 25, 'votes', '1 vote to 25', '1 vote to 25'],
+] as const)(
+  'division count wording %s:%s %s',
+  (ayes, noes, countsStyle, visible, spoken) => {
+    const root = render(
+      <DivisionRow
+        title="Bill"
+        meta="Third reading"
+        outcome="Agreed to"
+        ayes={ayes}
+        noes={noes}
+        countsStyle={countsStyle}
+        testID="row"
+      />,
+    ).root;
+    expect(strings(root)).toContain(visible);
+    expect(row(root).props.accessibilityLabel).toContain(spoken);
+  },
+);
+test('passive record and division rows never draw a pressed highlight', () => {
+  for (const element of [
+    <RecordRow key="r" meta="Speech" testID="row" />,
+    <DivisionRow
+      key="d"
+      title="Bill"
+      meta="Third reading"
+      outcome="Agreed to"
+      ayes={1}
+      noes={0}
+      countsStyle="votes"
+      testID="row"
+    />,
+  ]) {
+    const control = row(render(element).root);
+    expect(rowStyle(control, true).backgroundColor).toBeUndefined();
+    expect(control.props.onPress).toBeUndefined();
+  }
+});
 test('grouped cell highlights reach both edges while text and separators stay inset', () => {
   const root = render(
     <Screen grouped>
