@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { ApiError } from '../../api/errors';
@@ -187,6 +188,13 @@ export default function LeadDetail() {
     lead?.category === 'recipient_concentration' && comparison
       ? moneyRoute(comparison.heading)
       : null;
+  // The bar title fades in by scroll with no width at rest, so the back
+  // button keeps its label (money-03), and truncates inside the bar items.
+  const barTitleRef = useRef<View>(null);
+  const barTitle = useTitleOnScroll(
+    barTitleRef,
+    comparison?.heading || undefined,
+  );
   return (
     <>
       <Stack.Screen
@@ -203,7 +211,7 @@ export default function LeadDetail() {
         )}
       />
       <Screen
-        barTitle={comparison?.heading}
+        onScroll={barTitle.onScroll}
         testID={lead ? 'lead-screen' : 'lead-pending-screen'}
         refreshControl={
           <RefreshControl
@@ -257,9 +265,15 @@ export default function LeadDetail() {
               <Text wordSafe variant="secondary" testID="lead-meta">
                 Lead · {lead.categoryLabel}
               </Text>
-              <Heading level={1} kind="page" testID="lead-heading">
-                {comparison.heading}
-              </Heading>
+              <View
+                ref={barTitleRef}
+                collapsable={false}
+                onLayout={barTitle.onTitleLayout}
+              >
+                <Heading level={1} kind="page" testID="lead-heading">
+                  {comparison.heading}
+                </Heading>
+              </View>
               <Text wordSafe variant="body" testID="lead-takeaway">
                 {comparison.takeaway}
               </Text>

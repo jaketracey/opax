@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { passageText } from '../../api/passage-text';
@@ -97,6 +98,10 @@ export default function Connection() {
   const refreshing = index.refreshing || excerpts.refreshing;
   const title = name || 'Programs and places';
   const path = `/connections?entity=${encodeURIComponent(id)}`;
+  // The bar title fades in by scroll with no width at rest, so the back
+  // button keeps its label (money-03), and truncates inside the bar items.
+  const barTitleRef = useRef<View>(null);
+  const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <>
       <Stack.Screen
@@ -106,7 +111,7 @@ export default function Connection() {
         }}
       />
       <Screen
-        barTitle={title}
+        onScroll={barTitle.onScroll}
         testID="connection-screen"
         refreshControl={
           <RefreshControl
@@ -148,9 +153,15 @@ export default function Connection() {
                   )}
                 </Text>
               ) : null}
-              <Heading level={1} kind="page" testID="connection-title">
-                {name}
-              </Heading>
+              <View
+                ref={barTitleRef}
+                collapsable={false}
+                onLayout={barTitle.onTitleLayout}
+              >
+                <Heading level={1} kind="page" testID="connection-title">
+                  {name}
+                </Heading>
+              </View>
             </View>
             {destinations.length ? (
               <View>

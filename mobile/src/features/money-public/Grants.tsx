@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { RefreshControl, View as NativeView } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
@@ -374,11 +375,15 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
         e.name.toLocaleLowerCase('en-AU') === seat.toLocaleLowerCase('en-AU') &&
         (!state || e.state_code.toLowerCase() === state.toLowerCase()),
     );
+  // The bar title fades in by scroll with no width at rest, so the back
+  // button keeps its label (money-03), and truncates inside the bar items.
+  const barTitleRef = useRef<NativeView>(null);
+  const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <>
       <Stack.Screen options={{ title, ...moneyBar({ name: title }) }} />
       <Screen
-        barTitle={title}
+        onScroll={barTitle.onScroll}
         testID="grants-seat"
         refreshControl={
           <RefreshControl
@@ -387,9 +392,15 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
           />
         }
       >
-        <Heading level={1} kind="page" testID="grants-title">
-          {title}
-        </Heading>
+        <NativeView
+          ref={barTitleRef}
+          collapsable={false}
+          onLayout={barTitle.onTitleLayout}
+        >
+          <Heading level={1} kind="page" testID="grants-title">
+            {title}
+          </Heading>
+        </NativeView>
         {state ? (
           <Text wordSafe variant="secondary" testID="grants-seat-state">
             {stateName(state)}

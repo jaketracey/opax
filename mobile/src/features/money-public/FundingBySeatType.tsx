@@ -1,4 +1,5 @@
-import { useCallback } from 'react';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useCallback, useRef } from 'react';
 import { RefreshControl, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { ApiError } from '../../api/errors';
@@ -56,6 +57,10 @@ export default function FundingBySeatType() {
     status.error instanceof ApiError &&
     ['offline', 'timeout'].includes(status.error.code);
   const report = data?.sources.cpi;
+  // The bar title fades in by scroll with no width at rest, so the back
+  // button keeps its label (money-03), and truncates inside the bar items.
+  const barTitleRef = useRef<View>(null);
+  const barTitle = useTitleOnScroll(barTitleRef, name || undefined);
   return (
     <>
       <Stack.Screen
@@ -69,7 +74,7 @@ export default function FundingBySeatType() {
         }}
       />
       <Screen
-        barTitle={name}
+        onScroll={barTitle.onScroll}
         grouped
         testID="funding-by-seat-type"
         refreshControl={
@@ -79,9 +84,15 @@ export default function FundingBySeatType() {
           />
         }
       >
-        <Heading level={1} kind="page" testID="seat-type-title">
-          {name}
-        </Heading>
+        <View
+          ref={barTitleRef}
+          collapsable={false}
+          onLayout={barTitle.onTitleLayout}
+        >
+          <Heading level={1} kind="page" testID="seat-type-title">
+            {name}
+          </Heading>
+        </View>
         <Text wordSafe variant="body">
           The Centre for Public Integrity’s Table 3, as published: what each
           type of seat received, and what it would have received if funding were
