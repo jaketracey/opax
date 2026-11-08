@@ -9,7 +9,7 @@ import { Group, RowList, Screen } from '../../design/layout';
 import { PersonRow } from '../../design/people';
 import { PageFoot } from '../../design/record';
 import { SourceLine } from '../../design/source';
-import { ContentUnavailable, OfflineLine, Skeleton } from '../../design/states';
+import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
@@ -27,7 +27,9 @@ type Loaded = {
 };
 
 /** "Senators for New South Wales" or "Members for Western Victoria Region". */
-export function membersTitle(seat: Pick<Electorate, 'chamber' | 'name' | 'state_code'>) {
+export function membersTitle(
+  seat: Pick<Electorate, 'chamber' | 'name' | 'state_code'>,
+) {
   return seat.chamber === 'senate'
     ? {
         bar: 'Senators',
@@ -135,9 +137,7 @@ export default function Members() {
         </View>
         {region ? (
           <Text variant="secondary">
-            {victoria
-              ? 'Legislative Council, Victoria'
-              : 'Legislative Council'}
+            {victoria ? 'Legislative Council, Victoria' : 'Legislative Council'}
           </Text>
         ) : null}
       </Group>
@@ -172,14 +172,13 @@ export default function Members() {
           title={`No confirmed members for ${seat.chamber === 'senate' ? stateInRunningCopy(seat.state_code) : seat.name} yet.`}
         />
       )}
-      {directory.electorates.stale ? (
-        <OfflineLine savedAt={directory.electorates.savedAt} />
-      ) : null}
       <SourceLine
         asOf={seat.representation_as_of}
         citation={victoria ? 'Parliament of Victoria' : 'OpenAustralia'}
         originals={[{ label: seat.name, url: seat.url }]}
-        savedAt={directory.electorates.stale ? directory.electorates.savedAt : null}
+        savedAt={
+          directory.electorates.stale ? directory.electorates.savedAt : null
+        }
         testID="members-source"
       />
       {victoria ? <PageFoot variant="authorised" /> : null}
