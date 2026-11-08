@@ -8,8 +8,12 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import AskScreen from '../src/features/ask/AskScreen';
-import { composerLines } from '../src/features/ask/AskDock';
+import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
+import {
+  COMPOSER_MAX_SCALE,
+  composerLines,
+  composerScale,
+} from '../src/features/ask/AskDock';
 import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
 import { arriveInAsk, askSession } from '../src/features/ask/session';
@@ -311,16 +315,17 @@ test('the composer sets its question in body text; the options line is a 44 pt t
   });
   await mount();
   const input = StyleSheet.flatten(one('ask-question').props.style);
+  const { fontScale } = Dimensions.get('window');
+  // Body text, scaled by the composer itself and capped at AX1.
+  const scale = composerScale(fontScale);
+  expect(one('ask-question').props.allowFontScaling).toBe(false);
   expect(input).toMatchObject({
     fontFamily: textStyles.body.fontFamily,
-    fontSize: textStyles.body.fontSize,
-    lineHeight: textStyles.body.lineHeight,
+    fontSize: textStyles.body.fontSize * scale,
+    lineHeight: textStyles.body.lineHeight * scale,
   });
-  const { fontScale } = Dimensions.get('window');
   expect(input.maxHeight).toBe(
-    textStyles.body.lineHeight *
-      Math.max(1, fontScale) *
-      composerLines(fontScale) +
+    textStyles.body.lineHeight * Math.max(1, scale) * composerLines(fontScale) +
       20,
   );
   const hit = (id: string) =>
@@ -718,4 +723,48 @@ test('an arrival while an answer runs waits in the composer and sends a new conv
     speaker: 'Sam Placeholder',
     kind: 'speech',
   });
+});
+
+test('at AX5 the composer stops growing at AX1, two lines tall', () => {
+  expect(composerScale(1)).toBe(1);
+  expect(composerScale(0.82)).toBe(0.82);
+  expect(composerScale(3.12)).toBe(COMPOSER_MAX_SCALE);
+  // Two lines of AX1 body text and the field's padding: well under a third
+  // of a 874 pt screen, so the intro stays in view above it.
+  const tallest =
+    textStyles.body.lineHeight * composerScale(3.12) * composerLines(3.12) + 20;
+  expect(tallest).toBeLessThan(110);
+});
+
+test('with the keyboard up the composer sits on a band of ground: nothing reads through it', () => {
+  let r!: ReactTestRenderer;
+  const band = () =>
+    StyleSheet.flatten(
+      r.root.find(
+        (n) =>
+          n.props.testID === 'ask-phone-dock' && n.props.style !== undefined,
+      ).props.style,
+    );
+  act(() => {
+    r = create(
+      <PhoneDock keyboard={300} ground="sunken">
+        {null}
+      </PhoneDock>,
+    );
+  });
+  expect(band()).toMatchObject({
+    backgroundColor: colors.sunken,
+    paddingBottom: 300,
+    paddingTop: rhythm.tight,
+  });
+  // On the tab bar it floats, as the glass composer does there.
+  act(() =>
+    r.update(
+      <PhoneDock keyboard={0} ground="sunken">
+        {null}
+      </PhoneDock>,
+    ),
+  );
+  expect(band().backgroundColor).toBeUndefined();
+  act(() => r.unmount());
 });

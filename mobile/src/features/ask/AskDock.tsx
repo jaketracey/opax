@@ -49,6 +49,17 @@ export function composerLines(fontScale: number) {
       : 5;
 }
 /**
+ * The most the composer's text grows: AX1's body size. Past it the field
+ * became a tall card over the conversation at AX5 (w4-ask-ax5-01-idle); the
+ * question is still readable there, and the answer above keeps the reader's
+ * full size.
+ */
+export const COMPOSER_MAX_SCALE = 1.786;
+/** The composer text's scale at a font scale: the reader's, up to AX1. */
+export function composerScale(fontScale: number): number {
+  return Math.min(fontScale, COMPOSER_MAX_SCALE);
+}
+/**
  * Ask's composer, docked above the tab bar (DIRECTION 4.24). Leading,
  * Options; the field; trailing, one button: Stop while an answer is
  * written, Talk while the field is empty (signed-in readers, D5 on), else
@@ -86,8 +97,9 @@ export function AskDock({
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
   const lines = composerLines(fontScale);
+  const scale = composerScale(fontScale);
   const maxHeight =
-    textStyles.body.lineHeight * Math.max(1, fontScale) * lines + 20;
+    textStyles.body.lineHeight * Math.max(1, scale) * lines + 20;
   const line = [
     s.fresh ? composerCopy.fresh : null,
     ...tags.map((tag) => tag.value),
@@ -198,8 +210,16 @@ export function AskDock({
           onSubmitEditing={() => {
             if (!s.busy && !empty && !offline) onSend();
           }}
-          allowFontScaling
-          style={[styles.input, { maxHeight }]}
+          // Scaled here, capped at AX1 (composerScale), not by the system.
+          allowFontScaling={false}
+          style={[
+            styles.input,
+            {
+              fontSize: textStyles.body.fontSize * scale,
+              lineHeight: textStyles.body.lineHeight * scale,
+              maxHeight,
+            },
+          ]}
           testID="ask-question"
         />
         {trailing}
