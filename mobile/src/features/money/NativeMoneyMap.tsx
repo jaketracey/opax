@@ -41,6 +41,9 @@ export interface NativeMoneyMapHandle {
 }
 /** One element for VoiceOver; the scene's own parts are hidden. */
 export { moneyMapLabel, moneySceneHeight };
+// "Fit map" until the vocabulary gains the spec's
+// arrow.up.left.and.arrow.down.right (Follow-up: src/design/symbols.ts).
+const fitSymbol = 'square.3.layers.3d' as const;
 export function NativeMoneyMap({
   graph,
   view,
@@ -354,7 +357,7 @@ export function NativeMoneyMap({
           pressed ? { backgroundColor: colors.sunken } : null,
         ]}
       >
-        <Icon name="square.3.layers.3d" size={17} tone="ink" />
+        <Icon name={fitSymbol} size={17} tone="ink" />
       </Pressable>
     </View>
   );

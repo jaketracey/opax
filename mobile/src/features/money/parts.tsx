@@ -27,6 +27,7 @@ export function PartyDot({ party }: { party: string }) {
           width: size,
           height: size,
           borderRadius: size / 2,
+          borderCurve: 'continuous',
           backgroundColor: colour,
         },
       ]}

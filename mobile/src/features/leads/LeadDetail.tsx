@@ -371,6 +371,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
+    borderCurve: 'continuous',
     marginTop: 10,
     backgroundColor: colors.inkSoft,
   },
