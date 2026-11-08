@@ -1,279 +1,199 @@
-import { phoneCopy } from '../design/phone-copy';
-import { useEffect, useState } from 'react';
-import { RefreshControl } from 'react-native';
-import { router } from 'expo-router';
-import { catalogs } from '../api/runtime';
+import { useRef, type ReactNode } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import {
-  Disclosure,
-  Group,
-  KeyValueList,
+  Heading,
+  InlineError,
+  InsetGroup,
   LinkRow,
-  RowList,
+  MachinePill,
   Screen,
-  Section,
-  StatRow,
+  ScreenHeader,
+  Skeleton,
+  SourceLine,
   Text,
-  errorMessage,
-  ErrorState,
-  OfflineBanner,
 } from '../design/primitives';
-import { formatCount, formatDate } from '../design/format';
-import { rhythm } from '../design/tokens';
-import { openOnWeb } from '../navigation/external';
-import { CatalogState, isOffline } from './CatalogState';
-
-import { openRecord } from './reports/open';
+import { copy } from '../design/copy';
+import { formatCount } from '../design/format';
+import { chrome, rhythm } from '../design/tokens';
+import { coverageRoute } from '../navigation/routes/reference';
+import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { deceasedPersonsNotice } from '../onboarding/pages';
 import { voiceLinked } from '../voice/linked';
+import { AboutHeader } from './about/AboutHeader';
+import { aboutCopy as text } from './about/copy';
+import { isOffline, useRead } from './methods/read';
+import { reference } from './methods/repository';
 
 /**
- * About OPAX (IOS-UX 4.9): prose under the sheet's one title, so no heading
- * repeats it and no section carries an accent mark. Each section has one
- * heading level; coverage ends on its one source line, the details behind
- * disclosures. Datasets, licences, credits and fonts are on Sources and
- * licences, one row away. Pull to refresh reads coverage again.
+ * About OPAX (account.md 3): the reading page. Who OPAX is, how it handles
+ * your data, how to read its machine text and what it holds. Every row the
+ * Account sheet carries (corrections, support, privacy policy, sources,
+ * methods) has its one home there; the only row here is Coverage, under the
+ * figure it details. Pull to refresh reads the coverage again.
  */
 export default function About() {
-  const [record, setRecord] = useState<Awaited<
-    ReturnType<typeof catalogs.about>
-  > | null>(null);
-  const [error, setError] = useState<unknown>(null);
-  const [retry, setRetry] = useState(0);
-  const [refreshing, setRefreshing] = useState(false);
-  useEffect(() => {
-    let active = true;
-    void catalogs
-      .about(retry > 0)
-      .then((data) => {
-        if (active) {
-          setRecord(data);
-          setError(null);
-        }
-      })
-      .catch((e) => {
-        if (active) setError(e);
-      })
-      .finally(() => {
-        if (active) setRefreshing(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [retry]);
-  const refresh = () => {
-    setRefreshing(true);
-    setRetry((value) => value + 1);
-  };
+  const summary = useRead(reference.summary);
+  const titleRef = useRef<View>(null);
+  const bar = useTitleOnScroll(titleRef, text.barTitle);
+  const record = summary.record;
+  const offline = record?.stale
+    ? { savedAt: record.savedAt }
+    : !record && summary.error && isOffline(summary.error)
+      ? { savedAt: null }
+      : null;
   return (
     <Screen
-      column="wide"
+      grouped
       testID="about-screen"
+      onScroll={bar.onScroll}
+      offline={offline}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        <RefreshControl
+          refreshing={summary.refreshing}
+          onRefresh={summary.refresh}
+          tintColor={chrome.tint}
+        />
       }
     >
-      <Group gap={rhythm.heading}>
+      <ScreenHeader>
+        <AboutHeader titleRef={titleRef} onTitleLayout={bar.onTitleLayout} />
+      </ScreenHeader>
+      <View style={styles.paragraphs}>
         <Text wordSafe variant="body" testID="about-name">
-          The Open Parliamentary Accountability Exchange brings together
-          Australian parliamentary speeches, votes, political funding and public
-          disclosures, with links to the records behind them.
+          {text.intro}
         </Text>
-        <Text wordSafe variant="metadata" testID="about-independence">
-          OPAX is independent and non-partisan. It is not a government app and
-          is not affiliated with any parliament, government or political party.
+        <Text wordSafe variant="body" testID="about-independence">
+          {text.independence}
         </Text>
-      </Group>
-      <Section title="Cultural notice">
-        <Text wordSafe testID="about-deceased-notice">
+      </View>
+      <Block title={text.culturalNotice}>
+        <Text wordSafe variant="body" testID="about-deceased-notice">
           {deceasedPersonsNotice}
         </Text>
-      </Section>
-      <Section title="Coverage" testID="about-coverage">
-        {error ? (
-          <Group>
-            {isOffline(error) && !record ? (
-              <OfflineBanner cached={false} />
-            ) : null}
-            <ErrorState message={errorMessage(error)} onRetry={refresh} />
-          </Group>
-        ) : null}
-        {record || !error ? (
-          <CatalogState
-            block={record?.data ?? null}
-            empty="Coverage is not available in this snapshot."
-            onRetry={refresh}
-            refreshing={refreshing}
-            testID="about-coverage"
-          >
-            {(coverage) => (
-              <Group>
-                <StatRow
-                  stats={[
-                    {
-                      label: 'Collected speeches',
-                      value: formatCount(coverage.collectedSpeeches),
-                      testID: 'about-speeches',
-                    },
-                    {
-                      label: 'Expected resources',
-                      value: formatCount(coverage.expectedResources),
-                      testID: 'about-resources',
-                    },
-                  ]}
-                />
-                {/* The one caveat drawn: these numbers are not search totals. */}
-                <Text wordSafe variant="fine" testID="about-snapshot">
-                  {[
-                    formatDate(coverage.version)
-                      ? `Snapshot of ${formatDate(coverage.version)}.`
-                      : null,
-                    'Counts describe collected records, not live search totals.',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                </Text>
-                <RowList>
-                  <Disclosure
-                    label="Record counts"
-                    testID="about-coverage-details"
-                  >
-                    {() => (
-                      <KeyValueList
-                        items={Object.entries(coverage.resources).map(
-                          ([name, count]) => ({
-                            label: name.replaceAll('_', ' '),
-                            value: formatCount(count),
-                          }),
-                        )}
-                      />
-                    )}
-                  </Disclosure>
-                  <Disclosure
-                    label="Structured sources"
-                    testID="about-coverage-structured"
-                  >
-                    {() => (
-                      <KeyValueList
-                        items={Object.entries(coverage.structuredSources).map(
-                          ([name, count]) => ({
-                            label: name.replaceAll('_', ' '),
-                            value: formatCount(count),
-                          }),
-                        )}
-                      />
-                    )}
-                  </Disclosure>
-                  <Disclosure
-                    label="Inclusion and limitations"
-                    testID="about-coverage-limits"
-                  >
-                    {() => (
-                      <Group gap={rhythm.tight}>
-                        <Text wordSafe>{coverage.inclusion}</Text>
-                        {coverage.limitations.map((item) => (
-                          <Text wordSafe key={item}>
-                            {item}
-                          </Text>
-                        ))}
-                      </Group>
-                    )}
-                  </Disclosure>
-                  {/* The record's coverage source by source, folded in
-                      here: one destination, under the block it details. */}
-                  <LinkRow
-                    title="Coverage by source"
-                    onPress={() => openRecord('/stats', 'Coverage by source')}
-                    testID="about-stats"
-                  />
-                </RowList>
-              </Group>
-            )}
-          </CatalogState>
-        ) : null}
-      </Section>
-      <Section title="Read the record">
-        <RowList>
-          <LinkRow
-            title="Topics A–Z"
-            onPress={() => openRecord('/subject/topic', 'Topics A–Z')}
-            testID="about-topics"
-          />
-        </RowList>
-      </Section>
-      <Section title="Sources and methods" testID="about-sources">
-        <RowList>
-          <LinkRow
-            title="Sources and licences"
-            detail="Datasets, portrait credits and fonts"
-            onPress={() => router.push('/account/sources')}
-            testID="about-sources-open"
-          />
-        </RowList>
-        <WebRow title="Methods" path="/methods" testID="about-methods" />
-      </Section>
-      <Section title="Machine-written text">
-        <Text wordSafe>
-          Stored machine briefs are labelled “Machine-written”. Bill summaries
-          carry their attribution: “Written by a model from the explanatory
-          memorandum; not the record”. Check the linked original record.
-          Patterns are leads, not findings.
+      </Block>
+      <Block title={text.privacy} testID="about-privacy-section">
+        <Text wordSafe variant="body">
+          {text.privacyReading()}
         </Text>
-      </Section>
-      <Section title="Corrections and contact" testID="about-contact">
-        <Text wordSafe>
-          Report a correction or contact OPAX through the support page.
+        <Text wordSafe variant="body" testID="about-privacy-device">
+          {`${text.privacySearch()} ${text.privacyFollows()}`}
         </Text>
-        <WebRow title="OPAX support" path="/support" testID="about-support" />
-      </Section>
-      <Section title="Privacy">
-        <Text wordSafe>
-          {phoneCopy(
-            'Public reading needs no account and sends no account or device identifier. Requests reach OPAX’s servers with this iPhone’s IP address, used for rate limits and security. Request URLs, including submitted searches, may be kept in server logs for 7 days. Cloudflare traffic and security analytics may keep IP addresses, paths and queries for up to 31 days.',
-          )}
-        </Text>
-        <Text wordSafe>
-          Search queries and results stay in memory during this app session and
-          are not saved on this phone. Other public catalogs are saved on this
-          phone for offline reading.
+        <Text wordSafe variant="body">
+          {text.privacyAsk}
         </Text>
         {voiceLinked ? (
-          <Text wordSafe>
-            Voice sends your audio and the conversation’s words to ElevenLabs
-            and the language model it runs. OPAX keeps your email address and
-            member ID until account deletion, and call times, seconds used and
-            the provider’s conversation reference. OPAX keeps no audio or
-            transcript. The reference is removed a day after the call is
-            recorded as closed; account deletion keeps usage without a link to
-            you. ElevenLabs was set to keep no audio and delete transcripts
-            after a day when checked on 9 September 2026. Deleted account data
-            stays in database recovery history for up to 30 days.
+          <Text wordSafe variant="body">
+            {text.privacyTalk}
           </Text>
         ) : null}
-        <WebRow title="Privacy policy" path="/privacy" testID="about-privacy" />
-      </Section>
+      </Block>
+      <Block title={text.machine}>
+        {/* The label itself, as a specimen: it does not open its note. */}
+        <View
+          accessible
+          accessibilityRole="image"
+          accessibilityLabel={text.machineExample}
+          pointerEvents="none"
+          style={styles.specimen}
+          testID="about-machine-label"
+        >
+          <MachinePill note={{ title: copy.machineWritten, body: [] }} />
+        </View>
+        <Text wordSafe variant="body">
+          {text.machineText}
+        </Text>
+      </Block>
+      <Block title={text.coverage} testID="about-coverage-section">
+        <View style={styles.coverage}>
+          {record ? (
+            record.data.collected_speeches > 0 ? (
+              <>
+                <View
+                  accessible
+                  accessibilityLabel={`${formatCount(record.data.collected_speeches)}, ${text.speeches}`}
+                  testID="about-speeches"
+                >
+                  <Text wordSafe variant="figure">
+                    {formatCount(record.data.collected_speeches)}
+                  </Text>
+                  <Text wordSafe variant="secondary">
+                    {text.speeches}
+                  </Text>
+                </View>
+                <SourceLine
+                  asOf={record.data.version}
+                  citation={text.sourceCitation}
+                  savedAt={record.stale ? record.savedAt : null}
+                  state={record.partial && !record.stale ? 'partial' : null}
+                  originals={[
+                    {
+                      label: text.sourceOriginal,
+                      url: '/corpus.json',
+                      asOf: record.data.refresh.checked_at,
+                    },
+                  ]}
+                  notes={[
+                    record.data.inclusion,
+                    ...record.data.known_defects,
+                    text.sourceNote,
+                    record.partial ? copy.partialNote : null,
+                  ]}
+                  testID="about-coverage-as-at"
+                />
+              </>
+            ) : null
+          ) : summary.error ? (
+            <InlineError
+              subject={text.coverage}
+              message={text.coverageError}
+              onRetry={summary.retry}
+              testID="about-coverage-error"
+            />
+          ) : (
+            <Skeleton
+              shape="figure"
+              count={1}
+              onSunken
+              label={text.loadingCoverage}
+              testID="about-coverage-loading"
+            />
+          )}
+          <InsetGroup>
+            <View testID="about-stats">
+              <LinkRow
+                title={text.coverageRow}
+                href={coverageRoute}
+                testID="about-coverage"
+              />
+            </View>
+          </InsetGroup>
+        </View>
+      </Block>
     </Screen>
   );
 }
 
-/** A page on opax.com.au, as one row in Safari's symbol. */
-function WebRow({
+/** A top-level section: its title, then its paragraphs 16 pt apart. */
+function Block({
   title,
-  path,
+  children,
   testID,
 }: {
   title: string;
-  path: string;
-  testID: string;
+  children: ReactNode;
+  testID?: string;
 }) {
   return (
-    <RowList>
-      <LinkRow
-        title={title}
-        external
-        accessibilityHint="Opens on opax.com.au"
-        testID={testID}
-        onPress={() => void openOnWeb(path, title)}
-      />
-    </RowList>
+    <View testID={testID} style={styles.block}>
+      <Heading level={2}>{title}</Heading>
+      <View style={styles.paragraphs}>{children}</View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  block: { gap: rhythm.heading },
+  paragraphs: { gap: rhythm.block },
+  coverage: { gap: rhythm.group },
+  specimen: { alignSelf: 'flex-start' },
+});

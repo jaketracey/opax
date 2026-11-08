@@ -1,14 +1,27 @@
 import type { WebPathResolver } from './types';
-import { coverageRoute, methodsRoute } from '../routes/reference';
+import {
+  aboutRoute,
+  coverageRoute,
+  licenceRoute,
+  methodsRoute,
+} from '../routes/reference';
 
 import { ActionSheetIOS, Linking, Platform } from 'react-native';
 import { OpaxShare } from '../../../modules/opax-share';
 import { haptic } from '../../design/haptics';
 import * as AndroidMenu from '../../design/menu';
+/** The 1.0 licence link: Sources and licences opened at one dataset. */
+const datasetLink = /^\/account\/sources\/?\?(?:[^#]*&)?dataset=([^&#]+)/;
 export const referencePaths = [
   (path) => {
-    if (path === '/stats') return coverageRoute;
-    if (path === '/methods') return methodsRoute;
+    const [base] = path.split(/[?#]/);
+    if (base === '/stats' || base === '/stats/') return coverageRoute;
+    if (base === '/methods' || base === '/methods/') return methodsRoute;
+    if (base === '/about' || base === '/about/') return aboutRoute;
+    // Cached 1.0 source sheets and web links open the Licence sheet, never
+    // the Account sheet (account.md 4.4 "Old links").
+    const dataset = datasetLink.exec(path)?.[1];
+    if (dataset) return licenceRoute(decodeURIComponent(dataset));
     return null;
   },
 ] satisfies WebPathResolver[];

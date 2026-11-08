@@ -1,15 +1,28 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { SectionList, StyleSheet, View } from 'react-native';
+import { Stack } from 'expo-router';
 import {
-  Section,
-  Field,
-  Text,
-  RowList,
-  Group,
-  Disclosure,
+  Divider,
+  InlineError,
+  RegionProvider,
+  SidebarSafe,
+  Skeleton,
   SourceLine,
+  Text,
+  useScreenColumn,
   type SourceOriginal,
 } from '../../design/primitives';
-import { useRead, ReadState } from '../reports/parts';
+import { formatCount } from '../../design/format';
+import { colors, rhythm } from '../../design/tokens';
+import { useRead } from '../methods/read';
+import {
+  CreditRow,
+  matches,
+  NoResults,
+  paperBar,
+  sourcesCopy as text,
+  useBarSearch,
+} from '../sources/parts';
 import { explore } from './runtime';
 import type { YearPicture } from './pictures';
 
@@ -35,74 +48,134 @@ export function photoOriginals(p: YearPicture): SourceOriginal[] {
       : []),
   ];
 }
-export function ExplorePhotoCredits() {
-  return (
-    <Section title="Time machine photographs">
-      <Disclosure label="Photo credits" testID="explore-photo-credits">
-        {() => <PhotoCreditsList />}
-      </Disclosure>
-    </Section>
+
+const loadPictures = () => explore.pictures();
+
+/**
+ * Time machine photographs (account.md 4.6, explore.md 9): the reference
+ * list behind the credits beside every photograph. By year, newest first;
+ * each photograph's caption, "Photo: {author} · {licence}" and its original
+ * on Wikimedia Commons. The bar search finds a year, caption or name.
+ */
+export function PhotoCreditsList() {
+  const column = useScreenColumn();
+  const search = useBarSearch(text.searchPhotos);
+  const read = useRead(loadPictures);
+  const record = read.record;
+  const sections = useMemo(
+    () =>
+      Object.entries(record?.data ?? {})
+        .sort(([a], [b]) => b.localeCompare(a))
+        .map(([year, pictures]) => ({
+          year,
+          data: pictures.filter((p) =>
+            matches(search.query, [year, p.caption, p.author, p.date ?? '']),
+          ),
+        }))
+        .filter((section) => section.data.length > 0),
+    [record, search.query],
   );
-}
-function PhotoCreditsList() {
-  const [query, setQuery] = useState('');
-  const read = useRead(explore.pictures);
+  const footer = record ? (
+    <View style={styles.footer}>
+      <SourceLine
+        asOf={record.asOf}
+        citation="OPAX year photographs"
+        savedAt={record.stale ? record.savedAt : null}
+        notes={[
+          'Each photograph keeps its own licence on Wikimedia Commons. OPAX shows it with its credit beside it.',
+        ]}
+        testID="explore-photo-credits-manifest"
+      />
+    </View>
+  ) : null;
   return (
-    <ReadState
-      read={read}
-      citation="OPAX year photographs"
-      testID="explore-photo-credits-manifest"
-    >
-      {(manifest) => {
-        const matches = Object.values(manifest)
-          .flat()
-          .filter((p) =>
-            `${p.caption} ${p.author} ${p.date ?? ''}`
-              .toLowerCase()
-              .includes(query.toLowerCase()),
-          );
-        return (
-          <Group>
-            <Field
-              label="Find a photograph"
-              value={query}
-              onChangeText={setQuery}
-            />
-            <Text wordSafe variant="metadata">
-              {matches.length} photographs
+    <SidebarSafe style={styles.screen}>
+      <Stack.Screen
+        options={{
+          title: text.photos,
+          headerSearchBarOptions: search.options,
+          ...paperBar,
+        }}
+      />
+      <SectionList
+        testID="explore-photo-credits"
+        style={styles.screen}
+        contentContainerStyle={[styles.content, column.content]}
+        onLayout={column.onLayout}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        stickySectionHeadersEnabled={false}
+        sections={sections}
+        keyExtractor={(p) => p.file}
+        ListHeaderComponent={
+          <RegionProvider value={column.inner}>
+            {column.bar}
+            {!record ? (
+              read.error ? (
+                <InlineError
+                  subject={text.photos}
+                  message={text.photosError}
+                  onRetry={read.retry}
+                  testID="explore-photo-credits-error"
+                />
+              ) : (
+                <Skeleton count={8} label={text.loadingPhotos} />
+              )
+            ) : null}
+          </RegionProvider>
+        }
+        renderSectionHeader={({ section }) => (
+          <View
+            accessibilityRole="header"
+            accessible
+            accessibilityLabel={`${section.year}, ${formatCount(section.data.length)} photographs`}
+            style={styles.year}
+          >
+            <Text wordSafe variant="groupHeader" style={styles.grow}>
+              {section.year}
             </Text>
-            <RowList>
-              {matches.map((p) => (
-                <Group key={p.file}>
-                  <Text wordSafe variant="strong">
-                    {p.caption}
-                  </Text>
-                  <Text wordSafe>
-                    {p.author} · {p.licence}
-                  </Text>
-                  <Text wordSafe variant="metadata">
-                    {p.credit}
-                  </Text>
-                  {/* As a portrait credit reads on the same screen: one
-                      line naming the photo source and licence, both
-                      opening from its sheet. */}
-                  <SourceLine
-                    label={
-                      p.licence_url
-                        ? 'Photo source and licence'
-                        : 'Photo source'
-                    }
-                    title="About this photograph"
-                    citation="Wikimedia Commons"
-                    originals={photoOriginals(p)}
-                    testID={`explore-photo-source-${p.file}`}
-                  />
-                </Group>
-              ))}
-            </RowList>
-          </Group>
-        );
-      }}
-    </ReadState>
+            <Text wordSafe variant="groupHeader" tabular>
+              {formatCount(section.data.length)}
+            </Text>
+          </View>
+        )}
+        ItemSeparatorComponent={() => <Divider variant="subtle" />}
+        renderItem={({ item: p }) => (
+          <CreditRow
+            title={p.caption}
+            detail={`Photo: ${p.author} · ${p.licence}`}
+            url={p.source_url}
+            label="Wikimedia Commons"
+            testID={`explore-photo-source-${p.file}`}
+          />
+        )}
+        ListEmptyComponent={
+          record && search.query ? (
+            <NoResults
+              query={search.query}
+              body={text.tryName}
+              testID="explore-photo-credits-empty"
+            />
+          ) : null
+        }
+        ListFooterComponent={footer}
+        initialNumToRender={12}
+      />
+    </SidebarSafe>
   );
 }
+export default PhotoCreditsList;
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.paper },
+  content: { paddingTop: rhythm.block, paddingBottom: rhythm.section },
+  year: {
+    flexDirection: 'row',
+    gap: rhythm.tight,
+    paddingTop: rhythm.group,
+    paddingBottom: rhythm.groupHeader,
+  },
+  grow: { flex: 1 },
+  footer: { paddingTop: rhythm.group },
+});

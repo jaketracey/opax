@@ -1,0 +1,170 @@
+appId: au.com.opax.app
+name: 22b Sources and licences, the Licence sheet from a source sheet, and a dataset not found
+---
+# account.md 4 and 10.1. The hub and its lists push in the Account sheet;
+# a source sheet's licence row opens the Licence sheet over it, a dataset
+# at the root with Done and no Back.
+- launchApp
+- tapOn: Account
+- scrollUntilVisible:
+    element:
+      id: account-sources
+    centerElement: true
+    timeout: 90000
+- waitForAnimationToEnd
+- tapOn:
+    id: account-sources
+- extendedWaitUntil:
+    visible:
+      id: sources-screen
+    timeout: 30000
+- assertVisible:
+    id: sources-statement
+- assertVisible:
+    id: sources-datasets
+- assertVisible:
+    id: sources-portraits
+- assertVisible:
+    id: sources-photos
+- assertVisible:
+    id: sources-fonts
+- takeScreenshot: ${EVIDENCE}/22b-hub
+# Datasets: every row dated; the bar search narrows the list.
+- tapOn:
+    id: sources-datasets
+- extendedWaitUntil:
+    visible:
+      id: sources-datasets-screen
+    timeout: 30000
+- assertVisible: '.*· (Updated .*|Date not published)'
+# The bar search hides as the list scrolls; pulling down shows it.
+- scrollUntilVisible:
+    element:
+      text: Datasets and publishers
+    direction: UP
+    timeout: 15000
+- tapOn: Datasets and publishers
+- inputText: Queensland
+- extendedWaitUntil:
+    visible:
+      id: sources-dataset-money-qld
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/22b-datasets-search
+- tapOn: Cancel
+- tapOn: { id: BackButton }
+# Portraits: a search with no match says so.
+- extendedWaitUntil:
+    visible:
+      id: sources-portraits
+    timeout: 15000
+- tapOn:
+    id: sources-portraits
+- extendedWaitUntil:
+    visible:
+      id: sources-portraits-screen
+    timeout: 30000
+# The bar search hides as the list scrolls; pulling down shows it.
+- scrollUntilVisible:
+    element:
+      text: Name or photographer
+    direction: UP
+    timeout: 15000
+- tapOn: Name or photographer
+- inputText: Zzyzx
+- extendedWaitUntil:
+    visible:
+      id: sources-portraits-empty
+    timeout: 15000
+- assertVisible: 'No results for “Zzyzx”'
+- takeScreenshot: ${EVIDENCE}/22b-portraits-no-match
+- tapOn: Cancel
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: sources-screen
+    timeout: 15000
+- tapOn: Done
+# A record's source sheet: the licence row opens the Licence sheet.
+- openLink: opax://doc/speech-1205524
+- extendedWaitUntil:
+    visible:
+      id: doc-title
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: doc-source
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- waitForAnimationToEnd
+- tapOn:
+    id: doc-source
+- extendedWaitUntil:
+    visible:
+      id: doc-source-sheet-licence
+    timeout: 15000
+- tapOn:
+    id: doc-source-sheet-licence
+- extendedWaitUntil:
+    visible:
+      id: source-dataset-title
+    timeout: 30000
+- assertVisible: Hansard and parliamentary records
+- assertVisible: Done
+- assertNotVisible: { id: BackButton }
+- assertNotVisible: Account
+- takeScreenshot: ${EVIDENCE}/22b-licence-sheet
+# Sources and licences pushes inside the same sheet.
+- scrollUntilVisible:
+    element:
+      id: licence-sources
+    centerElement: true
+    timeout: 90000
+- waitForAnimationToEnd
+- tapOn:
+    id: licence-sources
+- extendedWaitUntil:
+    visible:
+      id: sources-screen
+    timeout: 30000
+- assertVisible: { id: BackButton }
+- takeScreenshot: ${EVIDENCE}/22b-licence-hub
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: source-dataset-title
+    timeout: 15000
+# Done closes the Licence sheet and leaves the source sheet beneath.
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: doc-source-sheet-licence
+    timeout: 15000
+- tapOn: Done
+# A dataset that isn't listed, by the Licence sheet link and the 1.0 link.
+- openLink: opax://licence/not-a-dataset
+- extendedWaitUntil:
+    visible:
+      id: sources-dataset-missing
+    timeout: 30000
+- assertVisible: This dataset isn’t listed
+- takeScreenshot: ${EVIDENCE}/22b-missing
+- tapOn: Done
+- openLink: opax://account/sources?dataset=not-a-dataset
+- extendedWaitUntil:
+    visible:
+      id: sources-dataset-missing
+    timeout: 30000
+- tapOn:
+    id: sources-dataset-all
+- extendedWaitUntil:
+    visible:
+      id: sources-datasets-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/22b-all-datasets
+# The empty page was replaced: nothing to go back to.
+- assertNotVisible: { id: BackButton }
+- assertNotVisible:
+    id: sources-dataset-missing
+- tapOn: Done

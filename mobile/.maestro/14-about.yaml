@@ -1,6 +1,8 @@
 appId: au.com.opax.app
-name: 14 About, coverage, privacy, then Sources and licences with source terms and font notices
+name: 14 About as a reading page, its coverage line, then Coverage pushed in the Account sheet
 ---
+# account.md 3: About reads top to bottom with one row, Coverage. Support,
+# privacy, sources and methods are Account rows now, not About's.
 - launchApp
 - tapOn: Account
 - scrollUntilVisible:
@@ -17,73 +19,55 @@ name: 14 About, coverage, privacy, then Sources and licences with source terms a
 - takeScreenshot: ${EVIDENCE}/14-name
 - scrollUntilVisible:
     element:
-      id: about-resources
+      id: about-independence
     timeout: 90000
-- takeScreenshot: ${EVIDENCE}/14-coverage
-# The snapshot date and the one caveat line; the details sit behind
-# disclosures and the source line.
+    visibilityPercentage: 1
+- assertVisible: 'OPAX is independent and non-partisan\..*'
 - scrollUntilVisible:
     element:
-      id: about-snapshot
+      id: about-privacy-device
     timeout: 90000
-- assertVisible: .*Counts describe collected records, not live search totals\.
-- takeScreenshot: ${EVIDENCE}/14-snapshot
+    visibilityPercentage: 1
+- assertVisible: '.*Your electorate and follows are saved on this iPhone only\..*'
+- takeScreenshot: ${EVIDENCE}/14-privacy
+- scrollUntilVisible:
+    element:
+      id: about-speeches
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/14-coverage
+# The coverage figure's one source line: the date, then OPAX.
 - scrollUntilVisible:
     element:
       id: about-coverage-as-at
     timeout: 90000
-# The coverage block's one source line (pass 5): date, then the source.
-- assertVisible: Updated .*OPAX collection.*
+- assertVisible: 'Updated .*OPAX.*'
 - takeScreenshot: ${EVIDENCE}/14-coverage-as-at
-- scrollUntilVisible:
-    element:
-      id: about-privacy
-    timeout: 90000
-- tapOn:
+- assertNotVisible:
+    id: about-support
+- assertNotVisible:
     id: about-privacy
-- assertVisible: https://opax.invalid/privacy
-- takeScreenshot: ${EVIDENCE}/14-privacy-alert
-- tapOn: OK
-# Licences, credits and source terms are on one screen, from About.
+- assertNotVisible:
+    id: about-sources-open
+- assertNotVisible:
+    id: about-methods
+- assertNotVisible: We aim to respond within 2 business days.
+# Coverage pushes inside the same sheet, with About OPAX as its Back.
 - scrollUntilVisible:
     element:
-      id: about-sources-open
-    direction: UP
+      id: about-coverage
     centerElement: true
     timeout: 90000
+- waitForAnimationToEnd
 - tapOn:
-    id: about-sources-open
+    id: about-coverage
 - extendedWaitUntil:
     visible:
-      id: sources-screen
+      id: coverage-screen
     timeout: 30000
-- takeScreenshot: ${EVIDENCE}/14-sources
-- scrollUntilVisible:
-    element:
-      id: sources-dataset-hansard
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: sources-dataset-hansard
-- assertVisible: .*Hansard is reproduced under CC BY-NC-ND terms.*
-- scrollUntilVisible:
-    element:
-      text: 'View original: Copyright and disclaimer'
-    centerElement: true
-    timeout: 90000
-- tapOn: 'View original: Copyright and disclaimer'
-- assertVisible: https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright
-- takeScreenshot: ${EVIDENCE}/14-source-alert
-- tapOn: OK
-- scrollUntilVisible:
-    element:
-      id: sources-font-Merriweather
-    timeout: 90000
-- tapOn:
-    id: sources-font-Merriweather
-- scrollUntilVisible:
-    element:
-      id: sources-notice-Merriweather
-    timeout: 90000
-    visibilityPercentage: 1
-- takeScreenshot: ${EVIDENCE}/14-font-notice
+- assertVisible: About OPAX
+- takeScreenshot: ${EVIDENCE}/14-coverage-pushed
+- tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible:
+      id: about-screen
+    timeout: 15000

@@ -1,6 +1,7 @@
-import { RoutePlaceholder } from '../../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return (
-    <RoutePlaceholder route="account/sources/dataset/[id]" title="Dataset" />
-  );
+import { useLocalSearchParams } from 'expo-router';
+import { DatasetPage } from '../../../../features/sources/DatasetPage';
+
+export default function AccountDataset() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <DatasetPage id={String(id ?? '')} />;
 }

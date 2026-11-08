@@ -1,13 +1,13 @@
 import { act, type ReactElement } from 'react';
 import { RefreshControl } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { catalogs as runtime } from '../src/api/runtime';
+import { apiClient, catalogs as runtime } from '../src/api/runtime';
+import { decodeCorpus } from '../src/api/catalog-decoders';
 import { Catalogs } from '../src/api/catalogs';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { dataAsOf } from '../src/api/client';
 import {
   Field,
-  LoadingState,
   PersonRow,
   Screen,
   KeyboardStableScreen,
@@ -20,6 +20,7 @@ import Search from '../src/features/Search';
 import { pinned, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
+  apiClient: { get: jest.fn() },
   catalogs: {
     suggestionSources: jest.fn(),
     suggestionSourcesOnFocus: jest.fn(),
@@ -63,6 +64,18 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
+  Link: Object.assign(
+    function Link({ children }: { children: unknown }) {
+      return children;
+    },
+    {
+      Trigger: function Trigger({ children }: { children: unknown }) {
+        return children;
+      },
+      Preview: () => null,
+      Menu: () => null,
+    },
+  ),
   useFocusEffect: (effect: () => void | (() => void)) => {
     jest.requireActual<typeof import('react')>('react').useEffect(() => {
       mockFocus.effect = effect;
@@ -117,11 +130,12 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
       finishInitial = () => initial.resolve(ready);
       finishRefresh = () => refreshed.resolve(ready);
     } else if (name === 'About') {
-      const ready = await fixture.about();
+      const ready = await client.get('/corpus.json', decodeCorpus);
       const initial = deferred<typeof ready>();
       const refreshed = deferred<typeof ready>();
-      mock.about
-        .mockReturnValueOnce(initial.promise)
+      jest
+        .mocked(apiClient.get)
+        .mockReturnValueOnce(initial.promise as never)
         .mockReturnValueOnce(refreshed.promise);
       element = <About />;
       finishInitial = () => initial.resolve(ready);
@@ -172,11 +186,9 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
     expect(control().props.refreshing).toBe(false);
     // Idle Search draws no suggestions, so no placeholder stands in for them
     // while they load (TestFlight build 32); the other screens show one.
-    // The Electorate page loads behind its skeleton.
-    const loading = () =>
-      renderer.root.findAllByType(
-        name === 'Electorate' ? Skeleton : LoadingState,
-      ).length;
+    // LoadingState draws a Skeleton, and the Electorate and About pages load
+    // behind their own skeletons.
+    const loading = () => renderer.root.findAllByType(Skeleton).length;
     expect(loading() > 0).toBe(name !== 'Search');
     await act(async () => finishInitial());
     expect(control().props.refreshing).toBe(false);
@@ -186,7 +198,11 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
     if (name === 'Search')
       expect(mock.suggestionSources).toHaveBeenLastCalledWith(true);
     else if (name === 'About')
-      expect(mock.about).toHaveBeenLastCalledWith(true);
+      expect(apiClient.get).toHaveBeenLastCalledWith(
+        '/corpus.json',
+        decodeCorpus,
+        true,
+      );
     else if (name === 'Person') expect(mock.person).toHaveBeenCalledTimes(2);
     else expect(mock.directory).toHaveBeenCalledTimes(2);
     await act(async () => finishRefresh());

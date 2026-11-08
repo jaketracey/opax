@@ -1,7 +1,8 @@
 // Every dataset the app draws on, with the publisher, licence and attribution
-// the screens used to print inline. The wording is unchanged from where it
-// was shown (About, Person, Party, Bill, Leads); it now lives in one place.
-// Coverage files do not publish licence fields: never infer an open licence.
+// the screens used to print inline, in plain words (account.md 4.4, records.md
+// 8.7): who publishes the data, never how OPAX stores it. Typographic marks
+// only; tests/sources-copy.test.ts guards the wording. Coverage files do not
+// publish licence fields: never infer an open licence.
 import { canonicalUrl } from '../../navigation/external';
 import { publicMoneyDatasets } from '../money-public/attribution';
 
@@ -13,27 +14,30 @@ export interface Dataset {
   id: string;
   name: string;
   publisher: string;
-  /** The licence as the record states it; omitted where none is verified. */
+  /** The licence's short name; omitted where none is verified. */
   licence?: string;
+  /**
+   * The date of the data OPAX holds from this publisher, filled in when the
+   * screen reads it (`asOfFor`); a dataset without one says so.
+   */
+  asOf?: string | null;
   /** Attribution and reuse terms, in full. */
   terms: string[];
   links: DatasetLink[];
 }
 
-export const statement = [
-  'Every figure in OPAX comes from a public record. Source data keeps its own copyright and licence; check the licence on the original record before reuse.',
-  'Sources without public reuse rights are excluded from the public site. This app does not grant a new licence over source data.',
-];
+export const statement =
+  'Every figure in OPAX comes from a public record and keeps its publisher’s copyright and licence. Check the licence on the original before reuse. OPAX leaves out sources without public reuse rights and grants no new licence over source data.';
 
 export const datasets: Dataset[] = [
   {
     id: 'parliamentary-directory',
     name: 'Parliamentarian and party directories',
-    publisher: 'OPAX parliamentary roster; parliamentary member registers',
+    publisher: 'Parliament of Australia; OPAX',
     terms: [
-      'The native directories use the dated static parliamentary roster for speech totals and roster membership. The website’s party speech totals use its live index and can differ.',
+      'Speech totals and membership in the app come from a dated parliamentary roster. The website’s totals are live and can differ.',
       'Names and recorded affiliations come from Hansard and the parliamentary member registers. The records retain their publishers’ copyright and licence; the directory does not grant a new licence over them.',
-      'Portrait attribution and licences are listed under Portrait credits on this screen. Division records retain the terms listed under Divisions and voting records.',
+      'Portrait credits and their licences are listed under Portraits in Sources and licences. Division records keep the terms listed under Divisions and voting records.',
     ],
     links: [
       { label: 'OPAX parliamentarians', url: canonicalUrl('/subject/person') },
@@ -45,8 +49,7 @@ export const datasets: Dataset[] = [
     publisher: 'OPAX',
     terms: [
       'Topic counts and decade shares describe the labelled record, and not every speech is labelled yet. Original records retain their own copyright and licence.',
-      'Homepage previews are copied from OPAX’s homepage. No snapshot date is given.',
-      'AGPL-3.0. Source and issue tracker: github.com/jaketracey/opax. Data errors are corrections we want, so please report them.',
+      'Homepage previews are copied from OPAX’s homepage, which gives no date.',
     ],
     links: [
       { label: 'Methods and how to cite', url: canonicalUrl('/methods') },
@@ -56,11 +59,11 @@ export const datasets: Dataset[] = [
     id: 'money-qld',
     name: 'ECQ gifts register',
     publisher: 'Electoral Commission of Queensland',
-    licence:
-      "CC BY 4.0 (data.qld.gov.au dataset 'Electronic Disclosure System - State and Local Election Funding and Donations')",
+    licence: 'CC BY 4.0',
     terms: [
-      'Source: Electoral Commission of Queensland, financial years 2012-13 to 2026-27.',
-      'Electoral Commission of Queensland, Electronic Disclosure System (gifts to registered political parties) via parli.db `ext_donations` (source qld_ecq)',
+      'Source: Electoral Commission of Queensland, financial years 2012–13 to 2026–27.',
+      'Electoral Commission of Queensland, Electronic Disclosure System (gifts to registered political parties).',
+      'Published on data.qld.gov.au as the Electronic Disclosure System: State and Local Election Funding and Donations dataset, under CC BY 4.0.',
     ],
     links: [
       {
@@ -73,11 +76,11 @@ export const datasets: Dataset[] = [
     id: 'money-vic',
     name: 'VEC disclosures',
     publisher: 'Victorian Electoral Commission',
-    licence:
-      'Crown copyright (State of Victoria); published under Electoral Act 2002 s 217; no explicit open licence is stated on the portal',
+    licence: 'No open licence stated',
     terms: [
-      'Source: Victorian Electoral Commission, financial years 2020-21 to 2026-27.',
-      'Victorian Electoral Commission, VEC Disclosures public portal (donations to registered political parties) via parli.db `ext_donations` (source vic_vec)',
+      'Source: Victorian Electoral Commission, financial years 2020–21 to 2026–27.',
+      'Victorian Electoral Commission, VEC Disclosures public portal (donations to registered political parties).',
+      'Crown copyright (State of Victoria), published under the Electoral Act 2002 s 217. The portal states no open licence.',
     ],
     links: [
       {
@@ -90,11 +93,11 @@ export const datasets: Dataset[] = [
     id: 'money-tas',
     name: 'TEC disclosures',
     publisher: 'Tasmanian Electoral Commission',
-    licence:
-      "CC BY 4.0 (TEC copyright statement, tec.tas.gov.au/info/Copyright.html); attribute '© Tasmanian Electoral Commission'",
+    licence: 'CC BY 4.0',
     terms: [
-      'Source: Tasmanian Electoral Commission, financial years 2025-26 to 2026-27.',
-      'Tasmanian Electoral Commission: the monthly and seven-day reportable political donation reports on tec.tas.gov.au (1 July 2025 to 2 July 2026 and continuing) together with the TEC Disclosures portal (disclosures lodged from 3 July 2026), via parli.db `ext_donations` (source tas_tec)',
+      'Source: Tasmanian Electoral Commission, financial years 2025–26 to 2026–27.',
+      'Tasmanian Electoral Commission: the monthly and seven-day reportable political donation reports on tec.tas.gov.au (1 July 2025 to 2 July 2026 and continuing) together with the TEC Disclosures portal (disclosures lodged from 3 July 2026).',
+      'CC BY 4.0, under the TEC copyright statement (tec.tas.gov.au/info/Copyright.html). Attribute “© Tasmanian Electoral Commission”.',
     ],
     links: [
       {
@@ -110,7 +113,7 @@ export const datasets: Dataset[] = [
     licence: 'CC BY 3.0 AU',
     terms: [
       'GrantConnect grant awards (Department of Finance), CC BY 3.0 AU',
-      "AusTender contract notices (Department of Finance), CC BY 3.0 AU; a varied contract counts once, at its latest notice's value",
+      'AusTender contract notices (Department of Finance), CC BY 3.0 AU. A varied contract counts once, at its latest notice’s value.',
     ],
     links: [
       {
@@ -130,7 +133,7 @@ export const datasets: Dataset[] = [
     licence: 'CC BY 4.0',
     terms: [
       'Queensland Government Investment Portal expenditure (data.qld.gov.au), CC BY 4.0',
-      "Queensland agencies' contract disclosure reports, contracts of $10,000 and over (data.qld.gov.au), CC BY 4.0; a varied contract counts once, at its varied total",
+      'Queensland agencies’ contract disclosure reports, contracts of $10,000 and over (data.qld.gov.au), CC BY 4.0. A varied contract counts once, at its varied total.',
     ],
     links: [
       {
@@ -149,8 +152,7 @@ export const datasets: Dataset[] = [
     publisher: 'Parliament of Australia',
     licence: 'CC BY-NC-ND',
     terms: [
-      'Hansard: Commonwealth copyright, reproduced under CC BY-NC-ND.',
-      'Parliamentary copyright. Hansard is reproduced under CC BY-NC-ND terms; check the original source before reuse.',
+      'Hansard is parliamentary copyright, reproduced under CC BY-NC-ND terms. Check the original before reuse.',
       'Every speech in the record is cited back to Hansard.',
     ],
     links: [
@@ -191,8 +193,7 @@ export const datasets: Dataset[] = [
     publisher: 'They Vote For You (OpenAustralia Foundation)',
     licence: 'ODbL',
     terms: [
-      'Compiled division data: Open Data Commons Open Database Licence. The underlying Hansard retains parliamentary copyright.',
-      'Hansard: parliamentary copyright, CC BY-NC-ND terms. They Vote For You compiled division data: Open Database Licence.',
+      'They Vote For You’s compiled division data is under the Open Data Commons Open Database Licence. The Hansard behind it keeps parliamentary copyright, under CC BY-NC-ND terms.',
     ],
     links: [
       { label: 'They Vote For You', url: 'https://theyvoteforyou.org.au/' },
@@ -204,10 +205,7 @@ export const datasets: Dataset[] = [
     publisher: 'Australian Electoral Commission',
     licence: 'CC BY 4.0',
     terms: [
-      'AEC disclosure returns, CC BY 4.0.',
-      'AEC disclosure returns as aggregated in the money map · CC BY 4.0',
-      'Source: Australian Electoral Commission annual and election returns, financial years 1998-99 to 2025-26.',
-      'AEC returns and GrantConnect awards carry Creative Commons Attribution terms. Versions vary by source.',
+      'Australian Electoral Commission annual and election returns, financial years 1998–99 to 2025–26, under CC BY 4.0. The money map adds them up by party and industry.',
     ],
     links: [
       {
@@ -289,8 +287,7 @@ export const datasets: Dataset[] = [
     publisher: 'Department of Finance, GrantConnect',
     licence: 'CC BY 3.0 AU',
     terms: [
-      'GrantConnect (Department of Finance), Grant Award records, via parli.db ext_grants / ext_grant_details',
-      'CC BY 3.0 AU (GrantConnect, Department of Finance)',
+      'GrantConnect (Department of Finance), grant award records, under CC BY 3.0 AU.',
     ],
     links: [
       { label: 'GrantConnect', url: 'https://www.grants.gov.au/Ga/List' },
@@ -302,8 +299,7 @@ export const datasets: Dataset[] = [
     publisher: 'Queensland Government, data.qld.gov.au',
     licence: 'CC BY 4.0',
     terms: [
-      'Queensland Government Investment Portal consolidated expenditure data (data.qld.gov.au), via parli.db government_grants',
-      'CC BY 4.0 (Queensland Government, data.qld.gov.au)',
+      'Queensland Government Investment Portal consolidated expenditure data (data.qld.gov.au), under CC BY 4.0.',
     ],
     links: [
       {
@@ -318,18 +314,18 @@ export const datasets: Dataset[] = [
     publisher: 'Department of Finance, AusTender',
     licence: 'CC BY 3.0 AU',
     terms: [
-      'AusTender, Department of Finance. Latest contract notice per amendment lineage. CC BY 3.0 AU.',
+      'AusTender, Department of Finance, under CC BY 3.0 AU. The latest notice for each contract, including amendments.',
       'Agency search results are derived from published AusTender contract records. Refer to the original record for its reuse terms.',
     ],
     links: [{ label: 'AusTender', url: 'https://www.tenders.gov.au/' }],
   },
   {
     id: 'search-catalog',
-    name: 'Search catalog and topic taxonomy',
+    name: 'Search and topic labels',
     publisher: 'OPAX',
     terms: [
-      'OPAX indexes public source records and publishes its topic taxonomy. Source records retain their original copyright and licence.',
-      'Machine briefs are automated summaries; passages are extracts from the record.',
+      'OPAX searches public source records and publishes its topic labels. Source records keep their original copyright and licence.',
+      'Machine-written summaries are written by a model; passages are extracts from the record.',
     ],
     links: [{ label: 'OPAX topics', url: canonicalUrl('/subject/topic') }],
   },
@@ -428,20 +424,7 @@ export const portraitTerms = {
 };
 
 export const code = {
-  terms: 'OPAX code: AGPL-3.0.',
+  title: 'OPAX source code',
+  licence: 'AGPL-3.0',
   url: 'https://github.com/jaketracey/opax',
 };
-
-/** Source terms for a collected corpus source (portal "Licences and reuse"). */
-export function collectedSourceTerms(name: string) {
-  if (/recorded divisions/i.test(name))
-    return 'Hansard: parliamentary copyright, CC BY-NC-ND terms. They Vote For You compiled division data: Open Database Licence.';
-  if (
-    /Hansard|Parliament|committee hearings|Legislative Assembly/i.test(name) &&
-    !/representation/i.test(name)
-  )
-    return 'Parliamentary copyright. Hansard is reproduced under CC BY-NC-ND terms; check the original source before reuse.';
-  if (/AEC donations|GrantConnect award/i.test(name))
-    return 'Creative Commons Attribution. The version and reuse conditions are those on the original record.';
-  return 'See the original source terms. This coverage snapshot does not publish a verified licence for this source.';
-}

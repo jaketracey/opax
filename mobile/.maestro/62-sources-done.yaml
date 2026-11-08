@@ -1,0 +1,42 @@
+appId: au.com.opax.app
+name: 62 Reference pages opened from content have Done at the root and no Back
+---
+# records.md 8.6 and account.md 4.4: a Licence sheet dataset, Methods and
+# Coverage opened by link are each their sheet's root, with Done and no
+# Back. Done closes the sheet.
+- launchApp
+- openLink: opax://licence/hansard
+- extendedWaitUntil:
+    visible:
+      id: source-dataset-title
+    timeout: 30000
+- assertVisible: Hansard and parliamentary records
+- assertVisible: Done
+- assertNotVisible: { id: BackButton }
+- takeScreenshot: ${EVIDENCE}/62-licence-root
+- tapOn: Done
+- assertNotVisible:
+    id: source-dataset-title
+- openLink: opax://methods
+- extendedWaitUntil:
+    visible:
+      id: methods-screen
+    timeout: 30000
+- assertVisible: Done
+- assertNotVisible: { id: BackButton }
+- takeScreenshot: ${EVIDENCE}/62-methods-root
+- tapOn: Done
+- assertNotVisible:
+    id: methods-screen
+# The 1.0 link to the statistics page lands on Coverage.
+- openLink: opax://stats
+- extendedWaitUntil:
+    visible:
+      id: coverage-screen
+    timeout: 30000
+- assertVisible: Done
+- assertNotVisible: { id: BackButton }
+- takeScreenshot: ${EVIDENCE}/62-coverage-root
+- tapOn: Done
+- assertNotVisible:
+    id: coverage-screen

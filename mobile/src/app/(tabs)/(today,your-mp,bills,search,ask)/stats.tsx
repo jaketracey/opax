@@ -1,4 +1,6 @@
 import { Redirect } from 'expo-router';
-export default function LegacyReference() {
-  return <Redirect href="/account/coverage" />;
+import { coverageRoute } from '../../../navigation/routes/reference';
+/** Coverage lives in the Account stack; `/stats` links open it there. */
+export default function LegacyStats() {
+  return <Redirect href={coverageRoute} />;
 }
