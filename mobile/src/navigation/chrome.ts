@@ -36,9 +36,12 @@ import type { SFSymbol } from '../design/icon';
 // react-native-screens#3100), so there the system's glass bar is left alone.
 // Earlier versions keep an opaque paper bar, so content never shows through.
 // Android's bar is flat paper like the redesign's: no elevation shadow.
+/** iOS 26 and later: the system glass bar and scroll edge effects. */
+export const glassBar = () =>
+  Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
+
 export const opaqueBar = (ground: ColorValue = colors.paper) =>
-  Platform.OS === 'android' ||
-  (Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) < 26)
+  Platform.OS === 'android' || (Platform.OS === 'ios' && !glassBar())
     ? {
         headerStyle: { backgroundColor: ground },
         headerLargeStyle: { backgroundColor: ground },

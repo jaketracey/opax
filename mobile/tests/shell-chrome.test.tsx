@@ -6,12 +6,14 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Stack, router } from 'expo-router';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { askScreens } from '../src/navigation/stack/ask';
+import { tabRootScreen } from '../src/navigation/stack/screen';
 import {
   pageItems,
   pageMenu,
   rootHeaderItems,
   askHeaderItems,
   opaqueBar,
+  glassBar,
   useStackChrome,
   shortSheet,
   androidHeaderBar,
@@ -229,6 +231,39 @@ test('iOS 26 leaves material to the system and older bars accept the screen grou
     headerStyle: { backgroundColor: colors.sunken },
   });
   if (version) Object.defineProperty(Platform, 'Version', version);
+});
+test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  const rootOptions = () =>
+    [
+      tabRootScreen('(today)', '(today)', 'index', 'Today', false)[0]!,
+      askScreens('(ask)', false).find((screen) => screen.props.name === 'ask')!,
+    ].map((screen) =>
+      screen.props.options({
+        route: { params: {} },
+        navigation: { getState: () => ({ index: 0 }) },
+      }),
+    );
+  try {
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: '26.0',
+    });
+    expect(glassBar()).toBe(true);
+    for (const options of rootOptions()) {
+      expect(options.headerLargeTitleEnabled).toBe(true);
+      expect(options.headerTransparent).toBe(true);
+    }
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: '18.4',
+    });
+    expect(glassBar()).toBe(false);
+    for (const options of rootOptions())
+      expect(options.headerTransparent ?? false).toBe(false);
+  } finally {
+    if (version) Object.defineProperty(Platform, 'Version', version);
+  }
 });
 test('40 scroll events past the title anchor set options only once, then once on return', () => {
   const setOptions = jest.fn();

@@ -1,12 +1,11 @@
-import { rootHeaderItems, headerItems } from '../chrome';
-import { Platform } from 'react-native';
+import { rootHeaderItems, headerItems, glassBar } from '../chrome';
 import { screen, sheetOptions } from './screen';
 
 export function askScreens(segment = '', signedIn = false) {
   return [
     screen('ask', 'Ask', {
       headerLargeTitleEnabled: segment === '(ask)',
-      headerTransparent: segment === '(ask)' && Platform.OS === 'ios',
+      headerTransparent: segment === '(ask)' && glassBar(),
       ...headerItems(() => rootHeaderItems({ segment: '(ask)', signedIn })),
     }),
     screen('consent', 'Before you ask', {
