@@ -478,7 +478,7 @@ function MenuPicker<T extends string>({
                   clipShape('capsule'),
                   frame({ minHeight: minimumTarget }),
                 ]),
-            nativeLabel(`${spoken}${disabled ? ', dimmed' : ''}`),
+            nativeLabel(spoken),
             ...(testID ? [accessibilityIdentifier(testID)] : []),
           ]}
         >

@@ -462,7 +462,7 @@ test.each([false, true])(
     expect(picker.props.modifiers).toContainEqual(
       expect.objectContaining({
         $type: 'accessibilityLabel',
-        label: `Month, All jurisdictions, pop-up button${disabled ? ', dimmed' : ''}`,
+        label: 'Month, All jurisdictions, pop-up button',
       }),
     );
     act(() => picker.props.onSelectionChange('vic'));
