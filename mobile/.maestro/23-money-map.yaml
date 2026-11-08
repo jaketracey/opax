@@ -3,21 +3,49 @@ name: 23 Native money map, held figures, original source and ranked list
 ---
 - launchApp:
     clearState: true
-# Wait for the loaded Edition hero before locating the Money map card.
-# Its quiet update caption is now present only for a saved stale copy.
 - extendedWaitUntil:
     visible:
-      id: today-edition-head
+      id: today-screen-message
     timeout: 120000
+# From Today the money map is one card into Public money (w5-today): the
+# Public money tile, then its Parties card. Back reads "Public money", then
+# "Today".
 - scrollUntilVisible:
     element:
-      id: today-money-map
+      id: today-public-money
     centerElement: true
     timeout: 120000
 - takeScreenshot: ${EVIDENCE}/23-today-entry
 - tapOn:
-    id: today-money-map
+    id: today-public-money
     waitToSettleTimeoutMs: 1000
+- scrollUntilVisible:
+    element:
+      id: money-card-parties
+    centerElement: true
+    timeout: 120000
+- tapOn:
+    id: money-card-parties
+    waitToSettleTimeoutMs: 1000
+- extendedWaitUntil:
+    visible:
+      id: BackButton
+      text: Public money
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/23-parties-entry
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: BackButton
+      text: Today
+    timeout: 30000
+- tapOn:
+    id: BackButton
+- assertVisible:
+    id: today-screen
+# The map itself, by its link: pushed in the Today stack.
+- openLink: opax://money
 - scrollUntilVisible:
     element:
       id: money-map-(canvas|drawn-frames-.*-pixels-.*)
@@ -292,9 +320,9 @@ name: 23 Native money map, held figures, original source and ranked list
     visible:
       id: money-view-summary
     timeout: 30000
-# Back to the Today root, which kept its place at the Money map entry.
+# Back to the Today root, which kept its place at the Public money entry.
 - runFlow:
     file: support/restore-tab-bar.yaml
     env:
-      TOP_ID: today-money-map
+      TOP_ID: today-public-money
       TAB_ID: tab-today

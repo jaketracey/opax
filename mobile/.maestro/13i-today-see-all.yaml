@@ -1,0 +1,138 @@
+appId: au.com.opax.app
+name: 13i Today's Bills See all opens its own list, whose scope never leaks into the Bills tab
+---
+# specs/bills.md 2.8 (named 13b-today-see-all there). Today's "See all"
+# pushes /bill-list inside Today with its own scope: New opens All, newest
+# first; Passed opens Passed. The Bills tab keeps its own scope (Before
+# parliament by default, "119 bills" in the pinned index) either way.
+#
+# The scope is a segmented control, or a "Showing" menu row at
+# accessibility sizes: each change tries the segment, then the menu.
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: today-screen-message
+- scrollUntilVisible:
+    element:
+      id: today-bills-segment
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: today-bills-passed
+- extendedWaitUntil:
+    visible:
+      id: today-bill-0
+    timeout: 30000
+- tapOn:
+    id: today-bills-all
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 30000
+- assertVisible:
+    id: BackButton
+    text: Today
+- assertVisible:
+    id: tab-today
+- takeScreenshot: ${EVIDENCE}/13i-see-all-passed
+# Change the pushed list's scope to All.
+- runFlow:
+    when:
+      visible:
+        id: bills-scope-all
+    commands:
+      - tapOn:
+          id: bills-scope-all
+- runFlow:
+    when:
+      notVisible:
+        id: bills-scope-all
+    commands:
+      - tapOn:
+          id: bills-scope
+      - tapOn: All
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/13i-pushed-all
+- tapOn:
+    id: BackButton
+- assertVisible:
+    id: today-screen
+# The Bills tab is still on Before parliament.
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 30000
+- assertVisible:
+    id: bills-count
+    text: 119 bills
+- takeScreenshot: ${EVIDENCE}/13i-tab-unchanged
+
+# The reverse: the Bills tab on Passed, then Today's New "See all" opens All.
+- runFlow:
+    when:
+      visible:
+        id: bills-scope-passed
+    commands:
+      - tapOn:
+          id: bills-scope-passed
+- runFlow:
+    when:
+      notVisible:
+        id: bills-scope-passed
+    commands:
+      - tapOn:
+          id: bills-scope
+      - tapOn: Passed
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: bills-count
+    text: 119 bills
+- tapOn:
+    id: tab-today
+- assertVisible:
+    id: today-screen
+- scrollUntilVisible:
+    element:
+      id: today-bills-segment
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- tapOn:
+    id: today-bills-new
+- extendedWaitUntil:
+    visible:
+      id: today-bill-0
+    timeout: 30000
+- tapOn:
+    id: today-bills-all
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 30000
+- assertVisible:
+    id: BackButton
+    text: Today
+- assertNotVisible:
+    id: bills-count
+    text: 119 bills
+- takeScreenshot: ${EVIDENCE}/13i-see-all-new
+- tapOn:
+    id: BackButton
+# Back on the Bills tab, Passed is kept.
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 30000
+- assertNotVisible:
+    id: bills-count
+    text: 119 bills
+- takeScreenshot: ${EVIDENCE}/13i-tab-passed-kept

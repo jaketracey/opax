@@ -10,54 +10,16 @@ name: 13 Today front page, its native records and dated original sources
     permissions: {}
 - assertVisible:
     id: today-screen-message
-# The daily edition: the fixture's pinned production response, as posted.
-# At AX5 the title alone can outgrow the screen, so match a tenth of it.
+# Android has no launch arguments, so the fixture's edition (4 October 2026)
+# keeps its own date and is old on Today: old editions never draw there
+# (today.md 5.2). No seat is saved, so the invitation to choose one leads.
 - extendedWaitUntil:
     visible:
-      id: today-edition-head
+      id: today-invitation
     timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: today-edition-head
-      text: 'Daily edition, Bill, 4 October 2026: Wage Justice for Early Childhood.*'
-    timeout: 300000
-    visibilityPercentage: 10
-    centerElement: true
-- takeScreenshot: ${EVIDENCE}/13-edition
-# A bill edition's text is a model's summary: its label comes first.
-- scrollUntilVisible:
-    element:
-      id: today-edition-machine
-      text: 'Machine-written\. Written by a model from the explanatory memorandum; not the record\.'
-    timeout: 300000
-    visibilityPercentage: 10
-    centerElement: true
-- takeScreenshot: ${EVIDENCE}/13-edition-machine
-# One action opens the record on its native screen: a bill by its key.
-- scrollUntilVisible:
-    element:
-      id: today-edition-open
-      text: Open the bill
-    timeout: 300000
-    visibilityPercentage: 10
-    centerElement: true
-- waitForAnimationToEnd
-- tapOn:
-    id: today-edition-open
-- extendedWaitUntil:
-    visible:
-      id: bill-screen
-    timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: bill-title
-      text: Wage Justice for Early Childhood.*
-    timeout: 300000
-    visibilityPercentage: 10
-- takeScreenshot: ${EVIDENCE}/13-edition-open-bill
-- pressKey: Back
-- assertVisible:
-    id: today-screen
+- assertNotVisible:
+    id: today-edition
+- takeScreenshot: ${EVIDENCE}/13-invitation
 - scrollUntilVisible:
     element:
       id: today-bill-0
@@ -99,16 +61,21 @@ name: 13 Today front page, its native records and dated original sources
     id: bill-screen
 - tapOn:
     id: bill-source
-# The bill's one source line opens its originals; each opens the record.
+# The bill's one source line opens its originals; in e2e builds an
+# original opens the local preview of its address ("Original", Done).
 - extendedWaitUntil:
     visible:
       id: bill-source-sheet-original-0
     timeout: 15000
 - tapOn:
     id: bill-source-sheet-original-0
-- assertVisible: https://parlinfo.aph.gov.au/.*
-- takeScreenshot: ${EVIDENCE}/13-bill-source-alert
-- tapOn: OK
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+      text: https://parlinfo\.aph\.gov\.au/.*
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/13-bill-source-original
+- tapOn: Done
 - pressKey: Back
 - assertVisible:
     id: today-screen
@@ -123,47 +90,44 @@ name: 13 Today front page, its native records and dated original sources
 - takeScreenshot: ${EVIDENCE}/13-declaration
 - assertVisible:
     id: today-screen
-# The register page is "View original" on touch and hold (an action sheet).
+# The register page is "Open the register" on touch and hold.
 - longPressOn:
     id: today-declaration-0
-- tapOn: View original
-- assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
-- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
+- tapOn: Open the register
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+      text: https://www\.aph\.gov\.au/.*
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-original
 # The local destination view scrolls a long URL at AX5. Capture its end too.
 - repeat:
-    times: 8
+    times: 4
     commands:
       - swipe:
-          start: 50%, 65%
-          end: 50%, 35%
-          duration: 1000
-- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert-end
-- tapOn: OK
+          from:
+            id: source-destination-scroll
+          direction: UP
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-original-end
+- tapOn: Done
 - assertVisible:
     id: today-screen
-# The foot's source line is the daily edition's: its own date and source;
-# it opens the sheet of its original page and notes. Each feed closes with
-# its own line (pass 5, P2-3).
+# Every records block ends in its own dated line: Just declared's opens the
+# sheet of its original page and notes.
 - scrollUntilVisible:
     element:
-      id: today-screen-footer
-    direction: DOWN
-    timeout: 300000
-    visibilityPercentage: 1
-- scrollUntilVisible:
-    element:
-      id: today-sources
+      id: today-declarations-sources
     direction: DOWN
     timeout: 300000
     centerElement: true
     speed: 40
 - waitForAnimationToEnd
 - assertVisible:
-    id: today-sources
+    id: today-declarations-sources
     text: Updated \d{1,2} \w{3} \d{4}.*
 - takeScreenshot: ${EVIDENCE}/13-sources
 - tapOn:
-    id: today-sources
+    id: today-declarations-sources
 - extendedWaitUntil:
     visible: Sources
     timeout: 30000
@@ -171,7 +135,13 @@ name: 13 Today front page, its native records and dated original sources
 - tapOn: Done
 - assertVisible:
     id: today-screen
-# The independence line closes the page (design review D4).
+# The foot: the independence line and Report a correction (design review D4).
+- scrollUntilVisible:
+    element:
+      id: today-screen-footer
+    direction: DOWN
+    timeout: 300000
+    visibilityPercentage: 1
 - scrollUntilVisible:
     element:
       id: today-independence

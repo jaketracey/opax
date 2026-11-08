@@ -1,0 +1,125 @@
+appId: au.com.opax.app
+name: 13e Today's invitation to choose a seat, by name, by location, and after Not now
+---
+# No seat saved (today.md 5.4): the invitation leads. "Find my electorate"
+# opens the seat sheet; choosing turns the card into the Your MP card in
+# place, with Today still selected.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXWelcomeDeclined: none
+- extendedWaitUntil:
+    visible:
+      id: today-invitation
+    timeout: 60000
+- assertVisible:
+    id: today-invitation-body
+    text: Add your electorate to see your MP, how they vote and the grants in your area\.
+- takeScreenshot: ${EVIDENCE}/13e-invitation
+- tapOn:
+    id: today-invitation-find
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 15000
+# The sheet's native search field has no test id: it is reached by its
+# placeholder.
+- tapOn: Electorate or member.s name
+- inputText: Grayndler
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-nsw-grayndler
+    timeout: 30000
+- tapOn:
+    id: seat-row-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: today-your-mp
+    timeout: 30000
+- assertNotVisible:
+    id: today-invitation
+- assertVisible:
+    id: tab-today
+    selected: true
+- takeScreenshot: ${EVIDENCE}/13e-card-in-place
+
+# "Use my location" opens the sheet already locating. Today draws no
+# permission alert of its own; the system's, if any, belongs to the sheet.
+- launchApp:
+    clearState: true
+    permissions:
+      location: allow
+    arguments:
+      OPAXSeat: none
+      OPAXWelcomeDeclined: none
+- extendedWaitUntil:
+    visible:
+      id: today-invitation
+    timeout: 60000
+- tapOn:
+    id: today-invitation-location
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 15000
+- assertVisible:
+    id: use-my-location
+- takeScreenshot: ${EVIDENCE}/13e-locating
+- tapOn: Cancel
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 15000
+
+# After the welcome's Not now: for that day and the next seven the
+# invitation sits after Bills. With an old edition (case B) the daily pair
+# opens the page.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXWelcomeDeclined: today
+      OPAXEditionAge: old
+- extendedWaitUntil:
+    visible:
+      id: today-pair
+    timeout: 60000
+- assertNotVisible:
+    id: today-invitation
+- assertVisible:
+    id: today-archive
+- takeScreenshot: ${EVIDENCE}/13e-not-now-first-screen
+- scrollUntilVisible:
+    element:
+      id: today-bills
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertNotVisible:
+    id: today-invitation
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/13e-not-now-after-bills
+# Day 8: back in its own slot at the top.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: none
+      OPAXWelcomeDeclined: 8d
+      OPAXEditionAge: old
+- extendedWaitUntil:
+    visible:
+      id: today-invitation
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/13e-day-8

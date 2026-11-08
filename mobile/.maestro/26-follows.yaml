@@ -127,7 +127,7 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/26-electorate-following
 
-# Today lists all three, unchanged.
+# Nothing has changed yet: Today folds Following into one row with the count.
 - tapOn:
     id: tab-today
 - assertVisible:
@@ -141,36 +141,16 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     timeout: 90000
 - scrollUntilVisible:
     element:
-      id: today-following-summary
-      text: No changes since you last looked\.
+      id: today-following-collapsed
+      text: Following, 3
     timeout: 90000
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/26-today-following
-- scrollUntilVisible:
-    element:
-      id: today-following-bill-au-federal-r7549
-      text: 'Child Support and Family Assistance .*, Bill, No changes since \d+ \w+ 20\d\d'
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: today-following-person-person_2b850aa643795ce8902f754b
-      text: Anthony Albanese, Parliamentarian, No changes since \d+ \w+ 20\d\d
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
-      text: Grayndler, Electorate, No changes since \d+ \w+ 20\d\d
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
+- assertNotVisible:
+    id: today-following-bill-au-federal-r7549
+- assertNotVisible:
+    id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
 - takeScreenshot: ${EVIDENCE}/26-today-no-changes
 
 # Pull to refresh: the catalogs revalidate and the fixture's changes arrive.
@@ -184,17 +164,16 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     end: 50%, 85%
     duration: 800
 - waitForAnimationToEnd
+# Two of the three changed: a Following header with See all, then only the
+# changed follows as rows. The electorate has no change and no row.
 - scrollUntilVisible:
     element:
-      id: today-following-summary
+      id: today-following-all
     timeout: 90000
     centerElement: true
     speed: 20
-- extendedWaitUntil:
-    visible:
-      id: today-following-summary
-      text: 2 of 3 changed since you last looked\.
-    timeout: 30000
+- assertNotVisible:
+    id: today-following-collapsed
 - takeScreenshot: ${EVIDENCE}/26-today-changed
 - scrollUntilVisible:
     element:
@@ -215,8 +194,11 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/26-today-member-changed
+- assertNotVisible:
+    id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
 
-# Opening the bill marks it seen; the member still shows its change.
+# Opening the bill marks it seen and its row goes; the member still shows
+# its change.
 # At AX5 the row (about 1,370pt) outgrows the screen, and Maestro taps its
 # centre. A row already a tenth visible is never centred, so come at it from
 # the top: the half-screen scroll then stops with its centre on screen.
@@ -257,32 +239,27 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     timeout: 90000
 - scrollUntilVisible:
     element:
-      id: today-following-summary
-      text: 1 of 3 changed since you last looked\.
-    timeout: 90000
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: today-following-bill-au-federal-r7549
-      text: '.*, Bill, No changes since \d+ \w+ 20\d\d'
+      id: today-following-person-person_2b850aa643795ce8902f754b
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
+- assertNotVisible:
+    id: today-following-bill-au-federal-r7549
 - takeScreenshot: ${EVIDENCE}/26-today-bill-seen
 
-# /follows from Today (Your MP no longer has a Following section). The
-# member's new declared entry puts them in Changed, the first group.
+# /follows from Today by the header's See all (Your MP no longer has a
+# Following section). The member's new declared entry puts them in Changed,
+# the first group.
 - scrollUntilVisible:
     element:
-      id: today-following-manage
+      id: today-following-all
     direction: UP
     timeout: 90000
     centerElement: true
     speed: 20
 - tapOn:
-    id: today-following-manage
+    id: today-following-all
 - extendedWaitUntil:
     visible:
       id: follows-screen
@@ -324,17 +301,8 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     id: today-screen-message
 - scrollUntilVisible:
     element:
-      id: today-following-summary
-      text: 1 of 2 changed since you last looked\.
+      id: today-following-all
     timeout: 90000
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: today-following-bill-au-federal-r7549
-      text: '.*, Bill, No changes since \d+ \w+ 20\d\d'
-    timeout: 90000
-    visibilityPercentage: 10
     centerElement: true
     speed: 20
 - scrollUntilVisible:
@@ -346,19 +314,21 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     centerElement: true
     speed: 20
 - assertNotVisible:
+    id: today-following-bill-au-federal-r7549
+- assertNotVisible:
     id: today-following-electorate-el_5d600e7f6dca5b72ae04d686
 - takeScreenshot: ${EVIDENCE}/26-after-relaunch
 
 # Unfollow all: Edit, the foot row, then the action sheet's button.
 - scrollUntilVisible:
     element:
-      id: today-following-manage
+      id: today-following-all
     direction: UP
     timeout: 90000
     centerElement: true
     speed: 20
 - tapOn:
-    id: today-following-manage
+    id: today-following-all
 - extendedWaitUntil:
     visible:
       id: follows-screen
