@@ -287,3 +287,11 @@ test('Just added: the indexed-date note is in a source line, not an ⓘ', async 
   expect(view.root.findAllByProps({ testID: 'recent-info' })).toHaveLength(0);
   await act(async () => view.unmount());
 });
+
+test('Just added hides its empty section after a successful empty response', async () => {
+  jest.mocked(records.recent).mockResolvedValue(record([]));
+  const view = await mount(<RecentRecords />);
+  expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(0);
+  expect(view.root.findAllByProps({ testID: 'recent-source' })).toHaveLength(0);
+  await act(async () => view.unmount());
+});

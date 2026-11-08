@@ -5,7 +5,7 @@ import {
 import * as format from '../src/design/format';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image, RefreshControl, ScrollView } from 'react-native';
+import { Image, Linking, RefreshControl, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -192,7 +192,7 @@ test('chooser saves identifiers only after an explicit seat selection', async ()
     seatId: seat.electorate_id,
     stateSeatIds: [],
   });
-  expect(text(r)).toContain('verified roster of');
+  expect(text(r)).toContain('No confirmed member list for');
   expect(
     r.root
       .findAllByType(PersonRow)
@@ -473,7 +473,7 @@ test('Windsor has a profile even without a representation row', async () => {
   // Windsor), but no sitting federal member is a Windsor: former, 9 Oct.
   expect(r.root.findByType(PartyLabel).props.status).toBe('former');
   expect(text(r)).toContain('Former member');
-  expect(text(r)).toContain('does not link');
+  expect(text(r)).toContain('does not show');
   expect(
     r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
   ).toBe(false);
@@ -925,3 +925,58 @@ test('Register changes is one section with one heading, open or closed', async (
   expect(words()).toBe(1);
   await act(async () => r.unmount());
 });
+
+test('Your MP shows its skeleton while the directory loads and no chooser empty state after failure', async () => {
+  let fail!: (e: Error) => void;
+  mock.directory.mockImplementationOnce(
+    () =>
+      new Promise((_, reject) => {
+        fail = reject;
+      }),
+  );
+  const r = await render(<YourMP />);
+  expect(
+    r.root.findAllByProps({ label: 'Loading your representatives' }).length,
+  ).toBeGreaterThan(0);
+  expect(r.root.findAllByProps({ testID: 'seat-no-results' })).toHaveLength(0);
+  await act(async () => fail(new Error('Offline')));
+  expect(
+    r.root.findAllByProps({ testID: 'your-mp-error' }).length,
+  ).toBeGreaterThan(0);
+  expect(r.root.findAllByProps({ testID: 'seat-no-results' })).toHaveLength(0);
+  await act(async () => r.unmount());
+});
+
+test.each(['federal', 'state'])(
+  '%s electorate fine print uses the unchanged authorisation and corrections link',
+  async (kind) => {
+    const seat = index.electorates.find((s) =>
+      kind === 'federal'
+        ? s.jurisdiction === 'federal'
+        : s.jurisdiction !== 'federal' && !!files[s.detail_url],
+    )!;
+    mockParams.id = seat.electorate_id;
+    mock.electorateFor.mockResolvedValue(
+      result(c.electorateFor(c.decodeElectorate(pinned(seat.detail_url)))),
+    );
+    const r = await render(<Electorate />);
+    if (kind === 'state') {
+      const { AUTHORISATION_LINE, CORRECTION_CONTACT } = jest.requireActual(
+        '../src/design/authorisation',
+      );
+      expect(text(r)).toContain(AUTHORISATION_LINE);
+      expect(text(r)).toContain('We aim to respond within 2 business days.');
+      const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
+      await act(async () =>
+        pressable(r, 'electorate-correction').props.onPress(),
+      );
+      expect(open).toHaveBeenCalledWith(CORRECTION_CONTACT);
+      open.mockRestore();
+    } else {
+      expect(
+        r.root.findAllByProps({ testID: 'electorate-authorisation' }),
+      ).toHaveLength(0);
+    }
+    await act(async () => r.unmount());
+  },
+);

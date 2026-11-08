@@ -507,6 +507,28 @@ describe('Following on Today and the follow switch', () => {
     expect(mock.followSources).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
+  test('pending followed records keep saved titles and a total failure never claims no changes', async () => {
+    let fail!: (e: Error) => void;
+    mock.followSources.mockImplementationOnce(
+      () =>
+        new Promise((_, reject) => {
+          fail = reject;
+        }),
+    );
+    await follow({ kind: 'bill', id: BILL, title: 'Saved bill title' });
+    const r = await render(
+      <FollowingSection refresh={0} refreshing={false} onRetry={jest.fn()} />,
+    );
+    expect(textOf(r)).toContain('Saved bill title');
+    expect(textOf(r)).not.toContain('No changes since');
+    expect(textOf(r)).not.toContain(NOTHING_FOLLOWED);
+    await act(async () => fail(new Error('Offline')));
+    expect(
+      r.root.findAllByProps({ testID: 'today-following-error' }).length,
+    ).toBeGreaterThan(0);
+    expect(textOf(r)).not.toContain('No changes since');
+    await act(async () => r.unmount());
+  });
   test('followed items show no changes, then what changed after a refresh; opening one marks it seen', async () => {
     mock.followSources.mockResolvedValue(sources());
     await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });

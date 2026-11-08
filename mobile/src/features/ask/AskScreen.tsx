@@ -116,6 +116,9 @@ export default function AskScreen() {
     [namesError, setNamesError] = useState(''),
     [inputError, setInputError] = useState(''),
     [syncBusy, setSyncBusy] = useState(false),
+    [chatsLoading, setChatsLoading] = useState(true),
+    [chatsError, setChatsError] = useState(false),
+    [syncError, setSyncError] = useState(false),
     [syncNotice, setSyncNotice] = useState(''),
     [accountSynced, setAccountSynced] = useState(false),
     [retryQuestion, setRetryQuestion] = useState(''),
@@ -185,7 +188,11 @@ export default function AskScreen() {
         if (!entry.current && active && !askSession.snapshot().thread.length)
           askSession.open(active);
       })
-      .catch(() => setSyncNotice('Saved conversations could not be read.'));
+      .catch(() => {
+        setChatsError(true);
+        setSyncNotice('Saved conversations could not be read.');
+      })
+      .finally(() => setChatsLoading(false));
   }, []);
   useEffect(() => {
     if (!params.entry || params.entry === entry.current) return;
@@ -308,6 +315,7 @@ export default function AskScreen() {
     if (syncBusy) return;
     const mine = ++syncVersion.current;
     setSyncBusy(true);
+    setSyncError(false);
     setSyncNotice('');
     try {
       const next = await reconcileChats(
@@ -327,6 +335,7 @@ export default function AskScreen() {
           return;
         }
       }
+      setSyncError(true);
       setSyncNotice(
         e instanceof Error ? e.message : 'Account sync could not complete.',
       );
@@ -759,7 +768,12 @@ export default function AskScreen() {
                     'Saved on this iPhone. Sign in to keep them across devices.',
                   )}
           </Text>
-          {!saved.chats.length ? (
+          {!saved.chats.length && (syncBusy || chatsLoading) ? (
+            <LoadingState
+              label="Loading conversations"
+              testID="ask-history-loading"
+            />
+          ) : !saved.chats.length && !chatsError && !syncError ? (
             <EmptyState message="No saved conversations." />
           ) : null}
           {saved.chats.map((c, i) => {

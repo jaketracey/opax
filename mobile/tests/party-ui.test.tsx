@@ -597,3 +597,25 @@ test('the party money-map seam opens the native canonical party focus', async ()
   });
   await act(async () => r.unmount());
 });
+
+test('a total division scan failure is unavailable rather than no party votes', async () => {
+  const failed = structuredClone(view);
+  failed.data!.divisions = {
+    ...failed.data!.divisions,
+    status: 'ready',
+    data: { rows: [], scanned: 0, failed: 3, basisNote: null },
+  };
+  jest.mocked(runtime.partyPage).mockResolvedValueOnce(failed);
+  const r = await render();
+  expect(
+    r.root.findAllByProps({ testID: 'party-divisions-error' }).length,
+  ).toBeGreaterThan(0);
+  expect(
+    r.root.findAll(
+      (node) =>
+        typeof node.props.message === 'string' &&
+        node.props.message.startsWith('No division in the 0'),
+    ),
+  ).toHaveLength(0);
+  await act(async () => r.unmount());
+});

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
+import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import {
   followState,
@@ -56,7 +57,32 @@ export function useFollowStates(refresh: number) {
       .then((next) => {
         if (active) setSources(next);
       })
-      .catch(() => undefined);
+      .catch((error: unknown) => {
+        if (active)
+          setSources((saved) => ({
+            manifest: null,
+            roster: null,
+            slugs: null,
+            people: null,
+            electorates: null,
+            bills: null,
+            votes: null,
+            interestIndex: null,
+            pay: null,
+            expenses: null,
+            money: null,
+            stale: false,
+            savedAt: null,
+            ...saved,
+            error:
+              error instanceof ApiError
+                ? error
+                : new ApiError(
+                    'http',
+                    'Followed records could not be loaded. Try again.',
+                  ),
+          }));
+      });
     return () => {
       active = false;
     };
