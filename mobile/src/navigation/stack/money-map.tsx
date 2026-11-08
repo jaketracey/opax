@@ -27,7 +27,9 @@ export function moneyMapScreens() {
               title: 'Open on opax.com.au',
               symbol: 'safari',
               onPress: () => {
-                void openOnWeb(target.path, target.title);
+                void openOnWeb(target.path, target.title, {
+                  preferNative: false,
+                });
               },
             },
           ],
