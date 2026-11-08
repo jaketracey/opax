@@ -1,8 +1,10 @@
+import { useSegments } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { Platform } from 'react-native';
 import { useEffect } from 'react';
 import { OpaxIPad } from '../../../modules/opax-ipad';
 import { AndroidTabs } from '../../navigation/AndroidTabs';
+import { setSelectedTab } from '../../navigation/link-tab';
 import { designFlags } from '../../design/flags';
 import { colors } from '../../design/tokens';
 // Search takes the system role on iOS 26; older iOS and Android keep five tabs.
@@ -15,6 +17,9 @@ export default function TabsLayout() {
   useEffect(() => {
     void OpaxIPad?.configureWordSafeSidebarLabels();
   }, []);
+  // Warm Money map links open in the selected tab (navigation/link-tab.ts).
+  const tab = (useSegments() as string[])[1];
+  useEffect(() => setSelectedTab(tab), [tab]);
   if (Platform.OS === 'android') return <AndroidTabs />;
   const searchRole =
     designFlags.searchTab &&

@@ -58,13 +58,13 @@ test.each([
     );
   },
 );
-test('cold bill links open in Today and other links retain the router handling', () => {
+test('cold bill links open in Bills and app links name their tab', () => {
   expect(
     redirectSystemPath({ path: 'opax://bill/au-federal-r7534', initial: true }),
-  ).toBe('/(tabs)/(today)/bill/au-federal-r7534');
+  ).toBe('/(tabs)/(bills)/bill/au-federal-r7534');
   expect(
     redirectSystemPath({ path: 'opax://search?q=gambling', initial: true }),
-  ).toBe('/search?q=gambling');
+  ).toBe('/(tabs)/(search)/search?q=gambling');
   for (const path of ['/(tabs)/(today)/directory?kind=person'])
     expect(redirectSystemPath({ path, initial: true })).toBe(path);
 });
