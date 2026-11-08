@@ -259,11 +259,20 @@ describe('topic arrivals (specs/search.md 5.2.1)', () => {
       { party: 'IND' },
       'Independent',
     ],
-    ['an unknown party code is dropped', { party: 'XYZ' }, {}, ''],
+    ['a crossbench code is kept', { party: 'SFF' }, { party: 'SFF' }, 'SFF'],
+    ['ALP is kept as its code', { party: 'ALP' }, { party: 'ALP' }, 'Labor'],
+    ['free text is dropped', { party: 'labor party; drop table' }, {}, ''],
+    ['a long string is dropped', { party: 'A'.repeat(200) }, {}, ''],
   ])('%s', (_name, params, filters, line) => {
     const out = normaliseTopicFilters(params);
     expect(out).toEqual(filters);
     expect(topicFiltersLine(out)).toBe(line);
+  });
+  it("keeps a Who row's party code unchanged", () => {
+    for (const [code] of topic.parties)
+      expect(normaliseTopicFilters({ party: code as string })).toEqual({
+        party: code,
+      });
   });
   it('matches a decade only on its exact years', () => {
     expect(chosenDecade({ from: '2010', to: '2019' })?.slug).toBe('2010s');

@@ -16,6 +16,7 @@ import {
 } from '../../api/validation';
 import topicsCopy from './topics-copy.json';
 import { partyFromCode } from '../bills/party-codes';
+import { parties as searchParties } from '../search/web-options';
 import {
   isOrganisationDonor,
   withholdIndividualDonors,
@@ -431,35 +432,16 @@ export function arcPath(slug: string, filters: SpeechFilters = {}) {
  */
 export const partyName = (party: string): string => partyFromCode(party);
 
-// The codes partyFromCode resolves (features/bills/party-codes.ts, which
-// does not export its table), so a link's party can be checked by code or
-// by the full name the web sends.
-const PARTY_CODES = [
-  'ALP',
-  'LIB',
-  'LP',
-  'NAT',
-  'NATS',
-  'LNP',
-  'CLP',
-  'GRN',
-  'AG',
-  'ONP',
-  'PHON',
-  'IND',
-  'CA',
-  'KAP',
-  'UAP',
-  'AD',
-  'FF',
-  'JLN',
-] as const;
-const knownParties = new Set(
-  PARTY_CODES.flatMap((code) => [code, partyFromCode(code).toUpperCase()]),
-);
-/** A party a topic arrival may filter by: a known code or its full name. */
+// A party code as the reads and the Who rows carry it ("ALP", "SFF").
+const PARTY_CODE = /^[A-Z][A-Z0-9]{1,5}$/;
+const partyNames = new Set<string>(searchParties);
+/**
+ * A party a topic arrival may filter by (specs/search.md 5.2.1): any party
+ * code by its shape, or a full name the web sends (the search party list).
+ * Anything else is link text, dropped before the filter line prints it.
+ */
 export const isKnownParty = (party: string) =>
-  knownParties.has(party.trim().toUpperCase());
+  PARTY_CODE.test(party) || partyNames.has(party);
 /**
  * A report section's heading and its opening sentence. The heading is the
  * section's short name where the export gives one (an era's "1993–2009");
