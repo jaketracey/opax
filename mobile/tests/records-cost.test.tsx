@@ -46,10 +46,22 @@ jest.mock('../src/features/records/runtime', () => ({
     billVersion: jest.fn(),
   },
 }));
+const mockMissing = {
+  status: 'missing',
+  data: null,
+  asAt: null,
+  sources: [],
+  stale: false,
+  savedAt: null,
+};
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     today: jest.fn(),
     todayEdition: jest.fn(),
+    todayBills: jest.fn(async () => mockMissing),
+    todayDeclarations: jest.fn(async () => mockMissing),
+    todayDeclarationsProfiled: jest.fn(async () => mockMissing),
+    recentDivisions: jest.fn(async () => ({ status: 'missing' })),
     billFor: jest.fn(),
     billIndexRow: () => null,
     roster: jest.fn(),

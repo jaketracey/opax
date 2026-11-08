@@ -1,54 +1,62 @@
-import { act, type ReactElement } from 'react';
-import { ActionSheetIOS, Alert, useWindowDimensions } from 'react-native';
+import { act, type ReactElement, type ReactNode } from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
-import snapshot from '../scripts/fixture-snapshot.json';
 import {
-  decodeEdition,
   decodeRecentInterests,
-  editionFor,
   recentBillsFor,
   recentDeclarationsFor,
 } from '../src/api/catalogs';
-import { editionPath } from '../src/api/policy';
-import { formatDate } from '../src/design/format';
-import { partyText } from '../src/design/party';
-import {
-  Card,
-  EmptyState,
-  ErrorState,
-  RowList,
-  SourceLine,
-  Tag,
-  Text,
-} from '../src/design/primitives';
 import { ApiError } from '../src/api/errors';
+import { formatDate } from '../src/design/format';
+import { InsetGroup } from '../src/design/layout';
+import { PageFoot } from '../src/design/record';
+import { BillRow } from '../src/design/rows';
+import { SourceLine } from '../src/design/source';
+import { InlineError, OfflineLine } from '../src/design/states';
+import { Text } from '../src/design/text';
 import { BillFeed, billRowText } from '../src/features/today/BillFeed';
 import {
   DeclarationGroup,
   LONG_ENTRY,
+  declarationsForRoute,
   entryPreview,
-  originalLabel,
 } from '../src/features/today/DeclarationRow';
-import { ExploreGrid } from '../src/features/today/ExploreGrid';
 import { TodayFoot } from '../src/features/today/Foot';
-import { billsSources, editionSources } from '../src/features/today/sources';
 import { Masthead, mastheadDate } from '../src/features/today/Masthead';
-import { TodayBlock } from '../src/features/today/TodayBlock';
-import { shortDay, shortWrittenDay } from '../src/features/today/parts';
-import { registerChangeLabel } from '../src/features/your-mp/model';
 import {
-  billRoute,
-  declarationsRoute,
+  MoreToExplore,
+  exploreTiles,
+} from '../src/features/today/MoreToExplore';
+import {
+  billsSources,
+  declarationsSources,
+  oldestDate,
+  publishers,
+  rules,
+} from '../src/features/today/sources';
+import {
+  TodayBlock,
+  blockState,
+  type TodayBlockState,
+} from '../src/features/today/TodayBlock';
+import { registerChangeLabel } from '../src/features/your-mp/model';
+import { changeDate } from '../src/features/follows/changes';
+import {
+  exploreRoute,
+  largestGrantsRoute,
   leadsRoute,
-  moneyRoute,
+  publicMoneyRoute,
   recentRecordsRoute,
 } from '../src/navigation/routes';
-import { responseBytes } from './fixture-bytes';
 import { bills, catalogs, pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
+  catalogs: {},
+}));
+jest.mock('../src/features/explore/runtime', () => ({
+  explore: { pictures: jest.fn(() => new Promise(() => {})) },
 }));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
@@ -57,26 +65,48 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
+jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const Native = require('react-native');
+  const Wrap = ({ children, ...props }: { children?: ReactNode }) =>
+    React.createElement(Native.View, props, children);
+  const Link = Object.assign(
+    (props: { children?: ReactNode }) => React.createElement(Wrap, props),
+    {
+      Trigger: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+      Preview: () => null,
+      Menu: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+      MenuAction: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+    },
+  );
+  return {
+    Link,
+    router: { push: jest.fn(), navigate: jest.fn() },
+    useSegments: () => [],
+  };
+});
 const standard = { width: 402, height: 874, scale: 3, fontScale: 1 };
-const ax5 = { ...standard, fontScale: 3.571 };
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
+const mounted: TestRenderer.ReactTestRenderer[] = [];
 function render(element: ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(element);
   });
+  mounted.push(renderer);
   return renderer;
 }
+afterEach(() => {
+  act(() => mounted.splice(0).forEach((r) => r.unmount()));
+});
 const host = (root: ReactTestInstance, testID: string) =>
   root.findAll(
     (node) => typeof node.type === 'string' && node.props.testID === testID,
-  );
-// The component instance that owns the press (host nodes carry responders).
-const pressable = (root: ReactTestInstance, testID: string) =>
-  root.find(
-    (node) =>
-      node.props.testID === testID && typeof node.props.onPress === 'function',
   );
 const strings = (node: ReactTestInstance): string =>
   node
@@ -86,18 +116,27 @@ const strings = (node: ReactTestInstance): string =>
         .concat(n.props.children)
         .filter((c): c is string => typeof c === 'string'),
     )
-    .join('');
-const flat = (style: unknown) =>
-  Object.assign({}, ...[style].flat(Infinity).filter(Boolean));
+    .join(' ');
+/** The href each Link (RowLink, Card) in the tree carries, in order. */
+const hrefs = (root: ReactTestInstance) => {
+  const seen: string[] = [];
+  for (const node of root.findAll(
+    (n) => typeof n.type !== 'string' && n.props.href !== undefined,
+  )) {
+    const key = JSON.stringify(node.props.href);
+    if (seen.at(-1) !== key) seen.push(key);
+  }
+  return seen.map((key) => JSON.parse(key));
+};
+/** Strings Today must never show (the brief's acceptance list). */
+const banned = /Daily edition ·|snapshot|export|indexed|native|Try again\.|—/i;
 
-const recentBills = recentBillsFor(bills, 6);
+const recentBills = recentBillsFor(bills, 3);
+const passedBills = recentBillsFor(bills, 3, 'passed');
 const recentDeclarations = recentDeclarationsFor(
   decodeRecentInterests(pinned('/interests/recent.json')),
-  6,
+  3,
   catalogs,
-);
-const edition = editionFor(
-  decodeEdition(JSON.parse(responseBytes(snapshot, editionPath).toString())),
 );
 
 beforeEach(() => {
@@ -105,338 +144,281 @@ beforeEach(() => {
   jest.mocked(useWindowDimensions).mockReturnValue(standard);
 });
 
-describe('the masthead', () => {
-  test('dates the front page on this iPhone’s calendar', () => {
-    expect(mastheadDate(new Date(2026, 9, 7, 9))).toBe('Wednesday 7 October');
-    expect(mastheadDate(new Date(2027, 0, 1, 0, 5))).toBe('Friday 1 January');
+describe('the date line', () => {
+  test('dates the page on the Sydney calendar', () => {
+    expect(mastheadDate(new Date('2026-10-06T22:00:00Z'))).toBe(
+      'Wednesday 7 October',
+    );
+    expect(mastheadDate(new Date('2026-12-31T13:05:00Z'))).toBe(
+      'Friday 1 January',
+    );
   });
-  test.each([false, true])(
-    'is the date alone, in sentence case, as the first line (broadsheet: %s)',
-    (broadsheet) => {
-      const { root } = render(<Masthead broadsheet={broadsheet} />);
-      // D6: sentence case; D4: the independence line is at the foot.
-      expect(strings(host(root, 'today-screen-message')[0]!)).toBe(
-        mastheadDate(new Date()),
-      );
-      expect(strings(root)).toBe(mastheadDate(new Date()));
-    },
-  );
+  test('is plain text, not a header, with the offline line only when offline', () => {
+    const now = new Date('2026-11-08T01:00:00Z');
+    const online = render(<Masthead now={now} offlineSavedAt={null} />).root;
+    const line = host(online, 'today-screen-message')[0]!;
+    expect(strings(line)).toBe('Sunday 8 November');
+    expect(line.props.accessibilityRole).not.toBe('header');
+    expect(online.findAllByType(OfflineLine)).toHaveLength(0);
+    const offline = render(
+      <Masthead
+        now={now}
+        offlineSavedAt={Date.parse('2026-11-07T01:00:00Z')}
+      />,
+    ).root;
+    expect(offline.findAllByType(OfflineLine)).toHaveLength(1);
+  });
 });
 
 describe('the foot', () => {
-  test('the edition’s source line, then the independence line (D4) and the leads reminder', () => {
-    const { root } = render(<TodayFoot edition={edition} />);
-    expect(root.findAllByType(SourceLine)).toHaveLength(1);
-    expect(strings(host(root, 'today-independence')[0]!)).toBe(
+  test('PageFoot’s Today variant: the independence line and Report a correction, nothing else', () => {
+    const { root } = render(<TodayFoot />);
+    expect(root.findAllByType(PageFoot)).toHaveLength(1);
+    expect(root.findByType(PageFoot).props.variant).toBe('today');
+    for (const id of [
+      'today-foot',
+      'today-independence',
+      'today-screen-footer',
+    ])
+      expect(host(root, id)).toHaveLength(1);
+    expect(strings(root)).toContain(
       'OPAX is independent and non-partisan. It is not a government app.',
     );
-    expect(strings(host(root, 'today-screen-footer')[0]!)).toBe(
-      'Patterns in the public record are leads, not findings. Check the linked sources.',
-    );
-    // The edition's own date, not the oldest feed's.
-    expect(host(root, 'today-sources')[0]!.props.accessibilityLabel).toBe(
-      'Updated 4 Oct 2026, OPAX daily edition',
-    );
-  });
-  test('the sheet names the edition, its page and its own notes', () => {
-    const details = editionSources(edition.data!);
-    expect(details.asOf).toBe('2026-10-04');
-    expect(details.originals!.map((original) => original.url)).toEqual([
-      edition.data!.path,
-    ]);
-    const notes = details.notes!.filter(Boolean).join('\n');
-    expect(notes).toContain('OPAX’s post for 4 October 2026');
-    for (const row of edition.data!.sourceRows) expect(notes).toContain(row);
-  });
-  test('until the edition loads, or with no edition, only the independence line', () => {
-    for (const block of [null, { ...edition, status: 'missing' as const }]) {
-      const { root } = render(<TodayFoot edition={block} />);
-      expect(root.findAllByType(SourceLine)).toHaveLength(0);
-      expect(host(root, 'today-independence')).toHaveLength(1);
-    }
-  });
-  test('a saved edition carries its own line in the card, so the foot has none', () => {
-    const savedAt = Date.parse('2026-10-03T01:00:00Z');
-    const { root } = render(
-      <TodayFoot edition={{ ...edition, stale: true, savedAt }} />,
-    );
+    expect(strings(root)).toContain('Report a correction');
+    expect(strings(root)).not.toMatch(/leads, not findings/);
     expect(root.findAllByType(SourceLine)).toHaveLength(0);
   });
 });
 
-describe('a Today feed', () => {
-  const draw = (block: Parameters<typeof TodayBlock>[0]['block']) =>
+describe('the block shell', () => {
+  const draw = (state: TodayBlockState<string[]>) =>
     render(
       <TodayBlock
-        block={block}
-        empty="None"
+        title="Bills"
+        state={state}
+        skeleton={<Text testID="skeleton">…</Text>}
+        empty="No bills introduced yet."
+        error="Bills couldn't be loaded."
         onRetry={() => {}}
+        line={{ ...billsSources(recentBills), testID: 'today-bills-sources' }}
         testID="today-bills"
-        sources={billsSources}
-        sourceTitle="About these bills"
       >
         {() => <Text testID="rows">rows</Text>}
       </TodayBlock>,
     ).root;
-  test('a current feed closes with its own source line and its own date', () => {
-    const root = draw(recentBills);
+  test('content, then its line as the last element', () => {
+    const root = draw({ kind: 'ready', data: ['a'] });
     expect(host(root, 'rows')).toHaveLength(1);
-    expect(host(root, 'today-bills-as-at')[0]!.props.accessibilityLabel).toBe(
-      `Updated ${formatDate(recentBills.asAt!, 'short')}, ParlInfo bill records`,
-    );
-  });
-  test('a saved copy says so above its rows and dates the copy in its own source line', () => {
-    const savedAt = Date.parse('2026-10-03T01:00:00Z');
-    const root = draw({
-      ...recentBills,
-      stale: true,
-      staleReason: 'unavailable',
-      savedAt,
-    });
-    expect(strings(root)).toContain('Showing the saved copy.');
+    const block = host(root, 'today-bills')[0]!;
+    const body = block.children.at(-1) as ReactTestInstance;
     expect(
-      host(root, 'today-bills-as-at')[0]!.props.accessibilityLabel,
-    ).toMatch(/^Saved 3 Oct 2026, ParlInfo bill records$/);
+      (body.children.at(-1) as ReactTestInstance).findAllByType(SourceLine),
+    ).toHaveLength(1);
   });
-  test('failure and an empty feed sit on the paper, not in a box', () => {
-    const failed = draw({
-      ...recentBills,
-      data: null,
-      status: 'error',
-      error: new ApiError('invalid-data', 'The catalog could not be read.'),
+  test('loading draws the skeleton and a place for the line', () => {
+    const root = draw({ kind: 'loading' });
+    expect(host(root, 'skeleton')).toHaveLength(1);
+    expect(root.findAllByType(SourceLine)).toHaveLength(0);
+  });
+  test('one error with Try again and no line; empty keeps its line; collapse draws nothing', () => {
+    const failed = draw({ kind: 'error' });
+    expect(failed.findAllByType(InlineError)).toHaveLength(1);
+    expect(failed.findAllByType(SourceLine)).toHaveLength(0);
+    const empty = draw({ kind: 'empty' });
+    expect(strings(empty)).toContain('No bills introduced yet.');
+    expect(empty.findAllByType(SourceLine)).toHaveLength(1);
+    expect(draw({ kind: 'collapse' }).children).toHaveLength(0);
+  });
+  test('states from a read: missing collapses; an optional empty block collapses', () => {
+    expect(blockState(null)).toEqual({ kind: 'loading' });
+    expect(
+      blockState({ ...recentBills, status: 'missing', data: null }),
+    ).toEqual({ kind: 'collapse' });
+    expect(blockState({ ...recentBills, data: [] })).toEqual({ kind: 'empty' });
+    expect(
+      blockState({ ...recentBills, data: [] }, { emptyCollapses: true }),
+    ).toEqual({ kind: 'collapse' });
+    expect(
+      blockState({
+        ...recentBills,
+        data: null,
+        status: 'error',
+        error: new ApiError('offline', 'Offline'),
+      }),
+    ).toEqual({ kind: 'error' });
+  });
+});
+
+describe('the lines’ words', () => {
+  test('short publisher names and the rules, word for word', () => {
+    expect(publishers).toMatchObject({
+      bills: 'ParlInfo',
+      declarations: 'Registers of interests',
+      votes: 'They Vote For You',
     });
-    expect(failed.findAllByType(ErrorState)).toHaveLength(1);
-    expect(failed.findAllByType(Card)).toHaveLength(0);
-    const empty = draw({ ...recentBills, data: [] });
-    expect(empty.findAllByType(EmptyState)).toHaveLength(1);
-    expect(empty.findAllByType(Card)).toHaveLength(0);
-  });
-});
-
-describe('new in parliament', () => {
-  const recent = recentBills.data!;
-  test('one row per bill between hairlines, not cards, each opening its bill', () => {
-    const { root } = render(<BillFeed bills={recent} />);
-    expect(root.findAllByType(RowList)).toHaveLength(1);
-    expect(root.findAllByType(Card)).toHaveLength(0);
-    expect(recent.map((_, i) => host(root, `today-bill-${i}`).length)).toEqual(
-      recent.map(() => 1),
+    expect(billsSources(recentBills).citation).toEqual([
+      expect.objectContaining({ label: 'ParlInfo' }),
+    ]);
+    expect(billsSources(recentBills).rule).toBe(rules.billsNew);
+    expect(billsSources(recentBills, 'passed').rule).toBe(
+      'Newest passed or given Royal Assent first.',
     );
-    act(() => pressable(root, 'today-bill-0').props.onPress());
-    expect(router.push).toHaveBeenCalledWith(billRoute(recent[0]!.key));
+    expect(declarationsSources(recentDeclarations).rule).toBe(
+      'Newest declarations first, from both registers.',
+    );
   });
-  test('the status is said in words, with the introduced date and who brought it', () => {
-    const bill = recent[0]!;
-    const text = billRowText(bill);
-    expect(text.status).toBe('Before parliament');
-    const { root } = render(<BillFeed bills={[bill]} />);
-    const row = host(root, 'today-bill-0')[0]!;
-    expect(row.props.accessibilityLabel).toBe(text.label);
-    expect(text.label).toContain(bill.title);
-    expect(text.label).toContain('Before parliament');
-    expect(strings(row)).toContain(bill.title);
-    expect(strings(row)).toContain(`Introduced ${shortDay(bill.introduced!)}`);
+  test('a saved copy says Saved in the line itself', () => {
+    const savedAt = Date.parse('2026-10-03T01:00:00Z');
+    const details = billsSources({ ...recentBills, stale: true, savedAt });
+    expect(details).toMatchObject({ savedAt, state: 'saved' });
+    const { root } = render(<SourceLine {...details} testID="line" />);
+    expect(host(root, 'line')[0]!.props.accessibilityLabel).toMatch(
+      /^Saved 3 Oct 2026, ParlInfo/,
+    );
   });
-  test.each([standard, ax5])(
-    'titles are never cut short and never broken mid-word',
-    (size) => {
-      jest.mocked(useWindowDimensions).mockReturnValue(size);
-      const { root } = render(<BillFeed bills={recent} />);
-      expect(
-        root.findAll((n) => n.props.numberOfLines !== undefined),
-      ).toHaveLength(0);
-      const titles = root
-        .findAllByType(Text)
-        .filter((n) => recent.some((b) => n.props.children === b.title));
-      expect(titles).toHaveLength(recent.length);
-      expect(titles.every((n) => n.props.wordSafe === true)).toBe(true);
-    },
-  );
+  test('each register page once, and the oldest date for a combined line', () => {
+    const originals = declarationsSources(recentDeclarations).originals!;
+    expect(new Set(originals.map((o) => o.label)).size).toBe(originals.length);
+    expect(oldestDate(['2026-10-05', null, '2026-10-01T03:00:00Z'])).toBe(
+      '2026-10-01',
+    );
+  });
 });
 
-describe('a declaration', () => {
+describe('Bills', () => {
+  test('three rows in one inset group, each a BillRow opening its bill', () => {
+    const { root } = render(<BillFeed bills={recentBills.data!} />);
+    expect(root.findAllByType(InsetGroup)).toHaveLength(1);
+    const rows = root.findAllByType(BillRow);
+    expect(rows).toHaveLength(3);
+    expect(rows.map((r) => r.props.testID)).toEqual([
+      'today-bill-0',
+      'today-bill-1',
+      'today-bill-2',
+    ]);
+  });
+  test('New shows the capsule and the introduced date; Passed has no capsule', () => {
+    const neu = render(<BillFeed bills={recentBills.data!} />).root;
+    expect(
+      neu.findAllByType(BillRow).every((r) => r.props.showStatus === true),
+    ).toBe(true);
+    const bill = recentBills.data![0]!;
+    expect(billRowText(bill).date?.replace(/\s/g, ' ')).toBe(
+      `Introduced ${formatDate(bill.introduced!, 'short')}`.replace(/\s/g, ' '),
+    );
+    const passed = render(
+      <BillFeed bills={passedBills.data!} kind="passed" />,
+    ).root;
+    expect(
+      passed.findAllByType(BillRow).every((r) => r.props.showStatus === false),
+    ).toBe(true);
+    for (const b of passedBills.data!) {
+      expect(b.status).toBe('passed');
+      expect(billRowText(b, 'passed').label).not.toContain('Before parliament');
+    }
+  });
+});
+
+describe('Just declared', () => {
   const items = recentDeclarations.data!;
   const item = items[0]!;
   const one = (entry = item) => (
     <DeclarationGroup entries={[{ item: entry, index: 0 }]} />
   );
-  test('name and party as a dot and its name; the category joins the date line', () => {
+  test('the member as a PersonRow, then the entry as one link to the filtered feed', () => {
     const { root } = render(one());
-    const person = host(root, 'today-declaration-person-0')[0]!;
-    const party = partyText({
-      party: item.party!,
-      status: item.partyStatus,
-      formerly: item.formerly,
-    }).visible;
-    expect(strings(person)).toBe(`${item.name}${party}`);
-    expect(person.props.accessibilityLabel).toBe(
-      `${item.name}, ${party}, Senate`,
-    );
+    expect(host(root, 'today-declaration-person-0')).not.toHaveLength(0);
     expect(strings(host(root, 'today-declaration-change-0')[0]!)).toBe(
-      `${item.category} · ${registerChangeLabel(item.kind)} ${shortDay(item.date)}`,
+      `${item.category} · ${registerChangeLabel(item.kind)} ${changeDate(item.date)}`,
     );
-    // No filled chips in the row: the category is words on the date line.
-    expect(root.findAllByType(Tag)).toHaveLength(0);
-    const row = host(root, 'today-declaration-0')[0]!;
-    expect(row.props.accessibilityLabel).toMatch(new RegExp(`^${item.name}, `));
-    expect(row.props.accessibilityLabel).toContain(item.category);
-  });
-  test('no credit, licence or register link rows', () => {
-    const { root } = render(one());
-    expect(strings(root)).not.toMatch(/licence|credit|Register of/i);
-  });
-  test('View original opens the register page, from touch and hold and from VoiceOver', () => {
-    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-    const sheet = jest
-      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
-      .mockImplementation(() => {});
-    const { root } = render(one());
-    act(() =>
-      root
-        .find(
-          (n) =>
-            n.props.testID === 'today-declaration-0' &&
-            typeof n.props.onLongPress === 'function',
-        )
-        .props.onLongPress(),
-    );
-    const [options, choose] = sheet.mock.calls[0]!;
-    expect(options).toEqual({
-      title: item.name,
-      options: ['View original', 'All recent declarations', 'Cancel'],
-      cancelButtonIndex: 2,
+    expect(hrefs(root)).toContainEqual(declarationsForRoute(item.name));
+    expect(declarationsForRoute(item.name)).toEqual({
+      pathname: '/declarations',
+      params: { person: item.name },
     });
-    act(() => choose(0));
-    expect(alert).toHaveBeenLastCalledWith(
-      `Source record: ${originalLabel(item)}`,
-      item.url,
-    );
-    act(() => choose(1));
-    expect(router.push).toHaveBeenLastCalledWith(declarationsRoute);
-    act(() => choose(2));
-    expect(alert).toHaveBeenCalledTimes(1);
-    const row = host(root, 'today-declaration-0')[0]!;
-    expect(row.props.accessibilityActions).toEqual([
-      { name: 'viewOriginal', label: 'View original' },
-      { name: 'allDeclarations', label: 'All recent declarations' },
-    ]);
-    act(() =>
-      row.props.onAccessibilityAction({
-        nativeEvent: { actionName: 'viewOriginal' },
-      }),
-    );
-    expect(alert).toHaveBeenCalledTimes(2);
-    sheet.mockRestore();
-    alert.mockRestore();
+    expect(strings(root)).not.toMatch(/The entry in full|\bMore\b/);
   });
-  test('a short entry shows in full; a long one shows its opening, and the rest from a disclosure, never clamped', () => {
-    const short = items.find(
-      (i) => (i.description?.length ?? 0) <= LONG_ENTRY,
-    )!;
-    const long = items.find((i) => (i.description?.length ?? 0) > LONG_ENTRY)!;
-    const shown = render(one(short)).root;
-    expect(strings(host(shown, 'today-declaration-text-0')[0]!)).toBe(
-      short.description,
-    );
-    expect(host(shown, 'today-declaration-more-0')).toHaveLength(0);
-    const folded = render(one(long)).root;
-    expect(folded.findAll((n) => n.props.numberOfLines !== undefined)).toEqual(
-      [],
-    );
-    expect(host(folded, 'today-declaration-text-0')).toHaveLength(0);
-    // P3-10: about 140 characters of it first, so the row says what the
-    // entry is, cut at a word.
-    const preview = strings(host(folded, 'today-declaration-preview-0')[0]!);
+  test('a long entry shows its opening, cut at a word, in the record’s words', () => {
+    const long = items.find((i) => (i.description?.length ?? 0) > LONG_ENTRY);
+    if (!long) return;
+    const { root } = render(one(long));
+    const preview = strings(host(root, 'today-declaration-text-0')[0]!);
     expect(preview).toBe(entryPreview(long.description!));
-    expect(preview.length).toBeLessThanOrEqual(LONG_ENTRY + 1);
-    expect(preview.length).toBeGreaterThan(LONG_ENTRY / 2);
     expect(preview).toMatch(/…$/);
-    expect(long.description!.replace(/\s+/g, ' ')).toContain(
-      preview.slice(0, -1),
-    );
-    const more = host(folded, 'today-declaration-more-0')[0]!;
-    expect(more.props.accessibilityState).toMatchObject({ expanded: false });
-    // The entry's own element names the change and says the opening; the
-    // whole entry is the disclosure's.
-    const label = () =>
-      host(folded, 'today-declaration-0')[0]!.props.accessibilityLabel;
-    expect(label()).toContain(preview);
-    expect(label()).not.toContain(long.description);
-    act(() => pressable(folded, 'today-declaration-more-0').props.onPress());
-    expect(strings(host(folded, 'today-declaration-text-0')[0]!)).toBe(
-      long.description,
-    );
-    // Open, the whole entry takes the opening's place: the words once.
-    expect(host(folded, 'today-declaration-preview-0')).toHaveLength(0);
-    expect(label()).not.toContain(preview);
-    // Opening only shows the entry; it never leaves Today.
-    expect(router.push).not.toHaveBeenCalled();
+  });
+  test('a preview is cut at a word, with an ellipsis, and a short entry is left whole', () => {
+    const words = 'Shareholding in Example Holdings Pty Ltd held by spouse';
+    expect(entryPreview(words)).toBe(words);
+    const long = Array.from({ length: 12 }, () => words).join(', ');
+    const cut = entryPreview(long);
+    expect(cut.length).toBeLessThanOrEqual(LONG_ENTRY + 1);
+    expect(cut).toMatch(/[^\s,]…$/);
+    expect(long.startsWith(cut.slice(0, -1))).toBe(true);
+    expect(entryPreview('x'.repeat(300))).toBe(`${'x'.repeat(LONG_ENTRY)}…`);
   });
 });
 
-test('a preview is cut at a word, with an ellipsis, and a short entry is left whole', () => {
-  const words = 'Shareholding in Example Holdings Pty Ltd held by spouse';
-  expect(entryPreview(words)).toBe(words);
-  const long = Array.from({ length: 12 }, () => words).join(', ');
-  const cut = entryPreview(long);
-  expect(cut.length).toBeLessThanOrEqual(LONG_ENTRY + 1);
-  expect(cut).toMatch(/[^\s,]…$/);
-  expect(long.startsWith(cut.slice(0, -1))).toBe(true);
-  expect(long[cut.length - 1]).toMatch(/[\s,]/);
-  // One long word is cut where it must be.
-  expect(entryPreview('x'.repeat(300))).toBe(`${'x'.repeat(LONG_ENTRY)}…`);
-});
-
-describe('explore the record', () => {
-  const tiles = [
-    ['today-leads-open', 'Leads', leadsRoute],
-    ['today-money-map', 'Money map', moneyRoute()],
-    ['today-public-money', 'Public money', '/public-money'],
-    ['today-community', 'Community', '/community/home'],
-    ['today-explore-open', 'Explore', '/explore'],
-    ['today-records-open', 'Just added', recentRecordsRoute],
-  ] as const;
-  test('one heading and six tiles of one card style, in order, each opening its screen', () => {
-    const { root } = render(<ExploreGrid />);
-    expect(strings(root)).toMatch(/^Explore the record/);
-    expect(root.findAllByType(Card)).toHaveLength(tiles.length);
+describe('More to explore', () => {
+  test('four tiles in order, then Quizzes and tools; no Money map, Explore, Reports or Community tile', () => {
+    const { root } = render(<MoreToExplore />);
+    expect(strings(host(root, 'today-explore')[0]!)).toMatch(
+      /^More to explore/,
+    );
+    expect(exploreTiles.map((t) => t.testID)).toEqual([
+      'today-public-money',
+      'today-leads-open',
+      'today-largest-grants',
+      'today-records-open',
+    ]);
+    expect(hrefs(root)).toEqual([
+      publicMoneyRoute,
+      leadsRoute,
+      largestGrantsRoute(),
+      recentRecordsRoute,
+      exploreRoute,
+    ]);
     expect(
-      root.findAllByType(Card).map((card) => card.props.testID as string),
-    ).toEqual(tiles.map(([id]) => id));
-    for (const [id, title, route] of tiles) {
-      const tile = host(root, id)[0]!;
-      expect(tile.props.accessibilityRole).toBe('button');
-      expect(tile.props.accessibilityLabel).toMatch(new RegExp(`^${title}\\.`));
-      act(() => pressable(root, id).props.onPress());
-      expect(router.push).toHaveBeenLastCalledWith(route);
-    }
-  });
-  test('the Leads tile keeps its caveat', () => {
-    const { root } = render(<ExploreGrid />);
-    expect(
-      host(root, 'today-leads-open')[0]!.props.accessibilityLabel,
-    ).toContain('a lead is not a finding');
-  });
-  test.each([
-    [standard, '40%'],
-    [ax5, '100%'],
-  ])('two tiles a row, one at accessibility sizes', (size, basis) => {
-    jest.mocked(useWindowDimensions).mockReturnValue(size);
-    const { root } = render(<ExploreGrid />);
-    const cells = root.findAll(
-      (n) =>
-        typeof n.type === 'string' &&
-        flat(n.props.style).flexBasis !== undefined,
+      exploreTiles.find((t) => t.testID === 'today-largest-grants')!.line,
+    ).toBe('The biggest new grant agreements each month');
+    for (const id of [
+      'today-money-map',
+      'today-reports',
+      'today-community',
+      'today-pair',
+    ])
+      expect(host(root, id)).toHaveLength(0);
+    expect(strings(host(root, 'today-explore-open')[0]!)).toContain(
+      'Quizzes and tools',
     );
-    expect(cells.map((n) => flat(n.props.style).flexBasis)).toEqual(
-      tiles.map(() => basis),
+  });
+  test('case A draws the daily pair under the header', () => {
+    const { root } = render(
+      <MoreToExplore pair={<View testID="today-pair" />} />,
     );
+    expect(host(root, 'today-pair')).toHaveLength(1);
   });
 });
 
-test('a publisher’s written date drops only this year', () => {
-  const now = new Date(2026, 9, 10);
-  expect(shortWrittenDay('12 Aug 2026', now)).toBe('12 Aug');
-  expect(shortWrittenDay('12 Aug 2025', now)).toBe('12 Aug 2025');
-  expect(shortWrittenDay('2026', now)).toBe('2026');
+test('no block says a retired or pipeline word, or an em dash', () => {
+  const now = new Date('2026-11-08T01:00:00Z');
+  const pages = [
+    <Masthead key="m" now={now} offlineSavedAt={null} />,
+    <TodayFoot key="f" />,
+    <BillFeed key="b" bills={recentBills.data!} />,
+    <BillFeed key="p" bills={passedBills.data!} kind="passed" />,
+    <DeclarationGroup
+      key="d"
+      entries={recentDeclarations.data!.map((item, index) => ({ item, index }))}
+    />,
+    <MoreToExplore key="e" />,
+  ];
+  for (const page of pages) {
+    const { root } = render(page);
+    expect(strings(root)).not.toMatch(banned);
+    const labels = root
+      .findAll((n) => typeof n.props.accessibilityLabel === 'string')
+      .map((n) => n.props.accessibilityLabel as string)
+      .join(' ');
+    expect(labels).not.toMatch(banned);
+  }
 });

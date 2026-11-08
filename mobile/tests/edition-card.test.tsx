@@ -1,7 +1,4 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { act, type ReactElement } from 'react';
-import { Alert } from 'react-native';
+import { act, type ReactElement, type ReactNode } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import {
@@ -10,552 +7,158 @@ import {
   type Block,
   type EditionView,
 } from '../src/api/catalogs';
-import { ApiError } from '../src/api/errors';
 import { editionPath } from '../src/api/policy';
-import { catalogs } from '../src/api/runtime';
-import { webOrigin } from '../src/design/environment';
-import {
-  Button,
-  Card,
-  ErrorState,
-  LoadingState,
-  OfflineBanner,
-  SourceLine,
-  StaleNotice,
-} from '../src/design/primitives';
-import { router } from 'expo-router';
-import { accentTint, colors } from '../src/design/tokens';
-import { CachedPortrait } from '../src/features/CachedPortrait';
-import { EditionCard, EditionSection } from '../src/features/EditionCard';
-import {
-  editionAccent,
-  editionFigures,
-  personFacts,
-} from '../src/features/today/EditionHero';
-import { webPageUrl } from '../src/navigation/external';
-import { billRoute, personRoute } from '../src/navigation/routes';
-import Today from '../src/features/Today';
+import { Button } from '../src/design/controls';
+import { Card } from '../src/design/card';
+import { SourceLine } from '../src/design/source';
+import { EditionCard } from '../src/features/edition/EditionCard';
+import { editionInSlot } from '../src/features/today/order';
+import { addDays, editionTier } from '../src/features/today/rules';
+import { editionRoute } from '../src/navigation/routes';
 import { responseBytes } from './fixture-bytes';
-import { replaceAt, roster, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { today: jest.fn(), todayEdition: jest.fn(), directory: jest.fn() },
+  catalogs: {
+    bills: jest.fn(() => new Promise(() => {})),
+    bill: jest.fn(() => new Promise(() => {})),
+    roster: jest.fn(() => new Promise(() => {})),
+    slugs: jest.fn(() => new Promise(() => {})),
+    directory: jest.fn(() => new Promise(() => {})),
+  },
+  portraits: { get: jest.fn(async () => null) },
+  yearPictures: { get: jest.fn(async () => null) },
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('../src/api/image-policy', () => ({
+  localImageURI: (uri: string) => uri,
+}));
+jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const Native = require('react-native');
+  const Wrap = ({ children, ...props }: { children?: ReactNode }) =>
+    React.createElement(Native.View, props, children);
+  const Link = Object.assign(
+    (props: { children?: ReactNode }) => React.createElement(Wrap, props),
+    {
+      Trigger: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+      Preview: () => null,
+      Menu: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+      MenuAction: (props: { children?: ReactNode }) =>
+        React.createElement(Wrap, props),
+    },
+  );
+  return {
+    Link,
+    router: { push: jest.fn(), navigate: jest.fn() },
+    useSegments: () => [],
+  };
+});
 
-const pinned = JSON.parse(responseBytes(snapshot, editionPath).toString());
-const ready = editionFor(decodeEdition(pinned));
-const edition = ready.data!;
-const failed = (
-  code: ApiError['code'],
-  message: string,
-): Block<EditionView> => ({
+const ready = editionFor(
+  decodeEdition(JSON.parse(responseBytes(snapshot, editionPath).toString())),
+);
+const date = ready.data!.date.slice(0, 10);
+const missing: Block<EditionView> = {
+  status: 'missing',
   data: null,
-  status: 'error',
-  error: new ApiError(code, message),
   asAt: null,
   sources: [],
   stale: false,
   savedAt: null,
-});
+};
 
+const mounted: TestRenderer.ReactTestRenderer[] = [];
 function render(element: ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(element);
   });
-  return renderer;
+  mounted.push(renderer);
+  return renderer.root;
 }
+afterEach(() => {
+  act(() => mounted.splice(0).forEach((r) => r.unmount()));
+});
 const host = (root: ReactTestInstance, testID: string) =>
   root.findAll(
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
-const textOf = (root: ReactTestInstance, testID: string) =>
-  host(root, testID)
-    .flatMap((node) => node.findAll((n) => n.type === 'Text'))
-    .flatMap((node) =>
+const strings = (node: ReactTestInstance): string =>
+  node
+    .findAll((n) => n.type === 'Text')
+    .flatMap((n) =>
       ([] as unknown[])
-        .concat(node.props.children)
-        .filter((child): child is string => typeof child === 'string'),
+        .concat(n.props.children)
+        .filter((c): c is string => typeof c === 'string'),
     )
-    .join('');
-const labelOf = (root: ReactTestInstance, testID: string) =>
-  host(root, testID)[0]?.props.accessibilityLabel as string | undefined;
-const renderToJSON = (root: ReactTestInstance) =>
-  root
-    .findAll((node) => typeof node.type === 'string')
-    .map((node) =>
-      ([] as unknown[])
-        .concat(node.props.children)
-        .filter((child) => typeof child === 'string'),
-    );
+    .join(' ');
 
-const politicianJSON = JSON.parse(
-  readFileSync(
-    join(__dirname, '../scripts/fixtures/edition-politician.json'),
-    'utf8',
-  ),
-);
-const politician = editionFor(decodeEdition(politicianJSON)).data!;
-const ids = (root: ReactTestInstance, pattern: RegExp) =>
-  root
-    .findAll(
-      (node) =>
-        typeof node.type === 'string' && pattern.test(node.props.testID ?? ''),
-    )
-    .map((node) => node.props.testID as string);
-const press = async (root: ReactTestInstance, testID: string) =>
-  act(async () =>
-    root
-      .find(
-        (node) =>
-          node.props.testID === testID &&
-          typeof node.props.onPress === 'function',
-      )
-      .props.onPress(),
-  );
-
-describe('the edition card', () => {
-  test('a bill edition: kicker, title, the model label before its text, the timeline and one native action; no sources', () => {
-    const { root } = render(<EditionCard edition={edition} />);
-    expect(textOf(root, 'today-edition-kicker')).toMatch(
-      /^Daily edition · Bill · 4 Oct( 2026)?$/,
+describe('the edition on Today', () => {
+  test('fresh: one whole-card link to the daily edition, no button, its line inside the card', () => {
+    const root = render(
+      <EditionCard edition={ready} tier="fresh" today={addDays(date, 1)} />,
     );
-    expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
-    expect(textOf(root, 'today-edition-detail')).toBe('Education portfolio');
-    // Only the pill shows; its attribution opens from it (and is spoken).
-    expect(textOf(root, 'today-edition-machine')).toBe('Machine-written');
-    expect(textOf(root, 'today-edition-text')).toBe(
-      'This bill would keep funding grants that support pay for early childhood education and care workers.Passed 18 Sep 2026.',
-    );
-    // One stage line in place of the five-stop timeline: the first date
-    // and the latest stage, with every stop counted for VoiceOver.
-    expect(labelOf(root, 'today-edition-events')).toBe(
-      '5 stages: Introduced in the House of Representatives, 12 Aug 2026, to Royal Assent, 18 Sep 2026',
-    );
-    expect(textOf(root, 'today-edition-events-first')).toMatch(
-      /^12 Aug( 2026)?$/,
-    );
-    expect(textOf(root, 'today-edition-events-latest')).toMatch(
-      /^Royal Assent 18 Sep( 2026)?$/,
-    );
-    expect(textOf(root, 'today-edition-events')).not.toContain('Third reading');
-    // Sources and licences live on their own screen.
-    expect(host(root, 'today-edition-sources')).toHaveLength(0);
-    expect(JSON.stringify(renderToJSON(root))).not.toMatch(/CC BY|ParlInfo/);
-    expect(host(root, 'today-edition-link')).toHaveLength(0);
-    // The model's label comes before the model's text.
+    const card = root
+      .findAllByType(Card)
+      .find((c) => c.props.testID === 'today-edition')!;
+    expect(card.props.href).toEqual(editionRoute());
+    expect(card.props.accessibilityLabel).toMatch(/^Daily edition\. /);
     expect(
-      ids(root, /^today-edition-(?:head|machine|text|events|open)$/),
-    ).toEqual([
-      'today-edition-head',
-      'today-edition-machine',
-      'today-edition-text',
-      'today-edition-events',
-      'today-edition-open',
+      card.props.accessibilityActions.map((a: { name: string }) => a.name),
+    ).toContain('Sources');
+    expect(root.findAllByType(Button)).toHaveLength(0);
+    const frame = host(root, 'today-edition-card')[0]!;
+    expect(frame.findAllByType(SourceLine).map((s) => s.props.testID)).toEqual([
+      'today-edition-sources',
     ]);
-    expect(host(root, 'today-edition-stale')).toHaveLength(0);
-    expect(host(root, 'today-edition-as-at')).toHaveLength(0);
+    expect(strings(root)).not.toMatch(/Daily edition ·|Open the bill/);
   });
-  test('the colour is the header band; the body stays raised, so the machine pill keeps its edge', () => {
-    const { root } = render(<EditionCard edition={edition} />);
-    const head = host(root, 'today-edition-head')[0]!;
-    expect([head.props.style].flat()).toContainEqual({
-      backgroundColor: accentTint('bills').deep,
-    });
-    // No accent wash under the body: the pill is drawn on the bills wash.
-    expect(root.findByType(Card).props.ground).toBeUndefined();
-    expect(colors.raised).not.toBe(colors.billsWash);
-    // The action is a secondary pill; Today has no navy primary.
-    expect(root.findByType(Button).props.variant).toBeUndefined();
-  });
-  test('VoiceOver labels are set by props, with the title as a header', () => {
-    const { root } = render(<EditionCard edition={edition} />);
-    expect(host(root, 'today-edition-head')[0]!.props.accessibilityRole).toBe(
-      'header',
-    );
-    expect(labelOf(root, 'today-edition-head')).toBe(
-      `Daily edition, Bill, 4 October 2026: ${pinned.edition.title}, Education portfolio`,
-    );
-    expect(labelOf(root, 'today-edition-machine')).toBe(
-      'Machine-written. Written by a model from the explanatory memorandum; not the record.',
-    );
-    expect(labelOf(root, 'today-edition-text')).toBe(
-      edition.paragraphs.join('\n'),
-    );
-    const open = host(root, 'today-edition-open')[0]!;
-    expect(open.props.accessibilityRole).toBe('button');
-    expect(open.props.accessibilityLabel).toBe('Open the bill');
-    expect(open.props.accessibilityHint).toBe('Opens the record in the app');
-  });
-  test('a parliamentarian: party colour, portrait, the figures and topic labels in place of the text', () => {
-    const { root } = render(<EditionCard edition={politician} />);
-    expect(textOf(root, 'today-edition-kicker')).toMatch(
-      /^Daily edition · Parliamentarian · 6 Oct( 2026)?$/,
-    );
-    expect(textOf(root, 'today-edition-title')).toBe('Alex Hawke');
-    expect(textOf(root, 'today-edition-party')).toBe('Liberal');
-    expect(textOf(root, 'today-edition-detail')).toBe('Mitchell, NSW');
-    expect(labelOf(root, 'today-edition-head')).toBe(
-      'Daily edition, Parliamentarian, 6 October 2026: Alex Hawke, Liberal, Mitchell, NSW',
-    );
-    expect(root.findByType(CachedPortrait).props).toMatchObject({
-      name: 'Alex Hawke',
-      size: 'profile',
-    });
-    // The people accent from the tokens (navy): a party is a dot beside its
-    // name, never the ground.
-    const head = host(root, 'today-edition-head')[0]!;
-    expect([head.props.style].flat()).toContainEqual({
-      backgroundColor: editionAccent(politician).deep,
-    });
-    expect(editionAccent(politician)).toEqual(accentTint('people'));
-    expect(labelOf(root, 'today-edition-head')).toContain('Liberal');
-    expect(labelOf(root, 'today-edition-figure-0')).toBe(
-      '768, speeches in the Opax record',
-    );
-    expect(labelOf(root, 'today-edition-figure-1')).toBe(
-      '2008–2026, Years in the record',
-    );
-    expect(labelOf(root, 'today-edition-topics')).toBe(
-      'Most common topic labels: Tax & budget, 19 percent; Climate & environment, 12 percent. Shares of labelled speeches; a speech can carry several labels.',
-    );
-    expect(textOf(root, 'today-edition-topics')).toContain('Tax & budget 19%');
-    // The post says the same in words; the figures replace it.
-    expect(host(root, 'today-edition-text')).toHaveLength(0);
-    expect(host(root, 'today-edition-machine')).toHaveLength(0);
-    expect(textOf(root, 'today-edition-open')).toBe("Open Alex Hawke's record");
-  });
-  test('an edition without slides keeps its own words, and a cover line that names no party colours nothing', () => {
-    const bare = {
-      ...politician,
-      facts: {
-        ...politician.facts,
-        figures: [],
-        bars: null,
-        line: 'House of Representatives · records 2008 to 2026',
-      },
-    };
-    expect(personFacts(bare).party).toBeNull();
-    expect(editionAccent(bare)).toEqual(accentTint('people'));
-    const none = {
-      ...politician,
-      facts: {
-        kicker: null,
-        line: null,
-        figures: [],
-        bars: null,
-        events: [],
-        division: null,
-      },
-    };
-    const { root } = render(<EditionCard edition={none} />);
-    expect(textOf(root, 'today-edition-text')).toBe(
-      'Alex Hawke: 768 speeches in the Opax record.Top topic labels: Tax & budget 19%; Climate & environment 12%.Shares of labelled speeches; labels overlap.Records: 2008–2026.',
-    );
-    expect(host(root, 'today-edition-figures')).toHaveLength(0);
-    expect(host(root, 'today-edition-party')).toHaveLength(0);
-  });
-  test('a division gives the hero its ayes and noes', () => {
-    const counted = {
-      ...edition,
-      facts: { ...edition.facts, division: { ayes: 85, noes: 50 } },
-    };
-    expect(editionFigures(counted)).toEqual([
-      { value: '85', label: 'Ayes' },
-      { value: '50', label: 'Noes' },
-    ]);
-  });
-  test('nothing in the card limits lines or fixes the height of content, so it reads to AX5', () => {
-    for (const shown of [edition, politician]) {
-      const { root } = render(
-        <EditionCard edition={shown} stale savedAt={1} />,
-      );
-      expect(
-        root.findAll((node) => node.props.numberOfLines !== undefined),
-      ).toHaveLength(0);
-      // Fixed sizes only on empty decorative marks (dots, rails); SF Symbols
-      // are sized by the design system's Icon, which scales them.
-      expect(
-        root.findAll(
-          (node) =>
-            typeof node.type === 'string' &&
-            !node.type.includes('Symbol') &&
-            node.children.length > 0 &&
-            [node.props.style]
-              .flat(Infinity)
-              .some(
-                (style) => style && ('height' in style || 'maxHeight' in style),
-              ),
-        ),
-      ).toHaveLength(0);
-      expect(
-        root.findAll((node) => node.props.adjustsFontSizeToFit === true),
-      ).toHaveLength(0);
-    }
-  });
-  test('server text is plain text: markup is shown as written, never parsed', () => {
-    const marked = editionFor(
-      decodeEdition(
-        replaceAt(
-          pinned,
-          ['edition', 'text'],
-          '<b>Bold</b> <script>x</script>',
-        ),
-      ),
-    ).data!;
-    const { root } = render(<EditionCard edition={marked} />);
-    expect(textOf(root, 'today-edition-text')).toBe(
-      '<b>Bold</b> <script>x</script>',
-    );
-    expect(root.findAll((node) => node.type === 'b')).toHaveLength(0);
-  });
-  test('a bill opens on its native screen', async () => {
-    const { root } = render(<EditionCard edition={edition} />);
-    await press(root, 'today-edition-open');
-    expect(router.push).toHaveBeenLastCalledWith(billRoute('au-federal-r7529'));
-  });
-  test('a parliamentarian opens natively when the name settles on one roster person and slug', async () => {
-    jest.mocked(catalogs.directory).mockResolvedValue({
-      roster: { data: roster },
-      slugs: { data: slugs },
-    } as unknown as Awaited<ReturnType<typeof catalogs.directory>>);
-    const { root } = render(<EditionCard edition={politician} />);
-    await press(root, 'today-edition-open');
-    expect(router.push).toHaveBeenLastCalledWith(personRoute('alex-hawke'));
-  });
-  test('a parliamentarian the directory cannot settle opens on the web through the link guard', async () => {
-    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-    jest.mocked(router.push).mockClear();
-    jest.mocked(catalogs.directory).mockRejectedValue(new Error('offline'));
-    const { root } = render(<EditionCard edition={politician} />);
-    await press(root, 'today-edition-open');
-    expect(router.push).not.toHaveBeenCalled();
-    expect(alert).toHaveBeenCalledWith(
-      "Opens on opax.com.au: Read the parliamentarian's record",
-      `${webOrigin}/subject/person/Alex%20Hawke`,
-    );
-    alert.mockRestore();
-  });
-  test('a retired community-funding report does not create a removed native destination', () => {
-    jest.mocked(router.push).mockClear();
-    const report = {
-      ...edition,
-      kind: 'topic' as const,
-      kindLabel: 'Topic',
-      machineWritten: null,
-      path: '/reports/grants-allocation',
-    };
-    const { root } = render(<EditionCard edition={report} />);
+  test('an old edition is never drawn; loading is the skeleton; a 404 draws nothing', () => {
     expect(
-      root.findAll((node) => node.props.testID === 'today-edition-open'),
+      render(<EditionCard edition={ready} tier="old" />).findAllByType(Card),
     ).toHaveLength(0);
-    expect(router.push).not.toHaveBeenCalled();
+    expect(
+      host(render(<EditionCard edition={null} />), 'today-edition-loading'),
+    ).toHaveLength(1);
+    expect(
+      render(<EditionCard edition={missing} />).findAllByType(Card),
+    ).toHaveLength(0);
   });
-  test('a retired report opens on the web instead of a deleted native screen', async () => {
-    const alert = jest
-      .spyOn(Alert, 'alert')
-      .mockImplementation(() => undefined);
-    jest.mocked(router.push).mockClear();
-    const { root } = render(
+  test('a saved copy says Saved in the card’s own line', () => {
+    const savedAt = Date.parse('2026-10-05T01:00:00Z');
+    const root = render(
       <EditionCard
-        edition={{
-          ...edition,
-          kind: 'topic',
-          kindLabel: 'Topic',
-          machineWritten: null,
-          path: '/reports/housing',
-        }}
+        edition={{ ...ready, stale: true, savedAt }}
+        tier="fresh"
+        today={addDays(date, 1)}
       />,
     );
-    await press(root, 'today-edition-link');
-    expect(router.push).not.toHaveBeenCalled();
-    expect(alert).toHaveBeenCalledWith(
-      expect.any(String),
-      `${webOrigin}/reports/housing`,
-    );
-    alert.mockRestore();
-  });
-  test.each([
-    '/subject/person/Tony%20Abbott',
-    '/bill/au-federal-r7529',
-    '/money/grants/federal/recipient/abn:83140439239?award=GA12345',
-    '/money/grants?jur=federal&program=abc',
-    '/money/grants?jur=federal&largest=2026-08',
-    '/reports/housing',
-  ])(
-    "the guard passes the publisher's page %s on the build's origin",
-    (path) => {
-      expect(webPageUrl(path)).toBe(`${webOrigin}${path}`);
-    },
-  );
-  test('a link the guard refuses is not drawn', () => {
-    const { root } = render(
-      <EditionCard
-        edition={{
-          ...edition,
-          kind: 'topic',
-          path: '/reports/housing?token=abc',
-        }}
-      />,
-    );
-    expect(host(root, 'today-edition-link')).toHaveLength(0);
-    expect(host(root, 'today-edition-open')).toHaveLength(0);
-    expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
-  });
-  test('a stale copy says it is saved, in the edition’s own source line', () => {
-    const savedAt = Date.parse('2026-10-04T01:00:00Z');
-    const { root } = render(
-      <EditionSection
-        block={{ ...ready, stale: true, savedAt }}
-        onRetry={() => {}}
-      />,
-    );
-    expect(root.findAllByType(OfflineBanner)).toHaveLength(1);
-    expect(root.findAllByType(StaleNotice)).toHaveLength(0);
-    expect(root.findByType(SourceLine).props).toMatchObject({
-      asOf: edition.date,
-      savedAt,
-      originals: [expect.objectContaining({ url: edition.path })],
-    });
-    expect(labelOf(root, 'today-edition-as-at')).toBe(
-      'Saved 4 Oct 2026, OPAX daily edition',
-    );
-    expect(textOf(root, 'today-edition-title')).toBe(pinned.edition.title);
+    const line = root
+      .findAllByType(SourceLine)
+      .find((s) => s.props.testID === 'today-edition-sources')!;
+    expect(line.props.dateLabel).toBe('Saved 5 Oct 2026');
   });
 });
 
-describe('the edition section states', () => {
-  test('loading shows a placeholder VoiceOver can name', () => {
-    const { root } = render(<EditionSection block={null} onRetry={() => {}} />);
-    expect(root.findByType(LoadingState).props.label).toBe(
-      'Loading the daily edition',
-    );
-    expect(host(root, 'today-edition')).toHaveLength(1);
+describe('tiers place the edition', () => {
+  test('fresh 0 to 3 days, recent 4 to 14, old after', () => {
+    expect(editionTier(date, addDays(date, 3))).toBe('fresh');
+    expect(editionTier(date, addDays(date, 4))).toBe('recent');
+    expect(editionTier(date, addDays(date, 14))).toBe('recent');
+    expect(editionTier(date, addDays(date, 15))).toBe('old');
   });
-  test('no edition published (404) draws nothing at all', () => {
-    const renderer = render(
-      <EditionSection
-        block={{
-          data: null,
-          status: 'missing',
-          asAt: null,
-          sources: [],
-          stale: false,
-          savedAt: null,
-        }}
-        onRetry={() => {}}
-      />,
-    );
-    expect(renderer.toJSON()).toBeNull();
-  });
-  test('offline with nothing saved says so and offers Try again', () => {
-    const onRetry = jest.fn();
-    const { root } = render(
-      <EditionSection
-        block={failed(
-          'offline',
-          'This record is not saved on this iPhone yet. It will load when you are back online.',
-        )}
-        onRetry={onRetry}
-      />,
-    );
-    expect(root.findByType(OfflineBanner).props.cached).toBe(false);
-    act(() => root.findByType(ErrorState).props.onRetry());
-    expect(onRetry).toHaveBeenCalledTimes(1);
-    expect(host(root, 'today-edition-card')).toHaveLength(0);
-  });
-  test('an unreadable edition is an error without an offline banner', () => {
-    const { root } = render(
-      <EditionSection
-        block={failed(
-          'invalid-data',
-          'The catalog response could not be read.',
-        )}
-        onRetry={() => {}}
-      />,
-    );
-    expect(root.findAllByType(OfflineBanner)).toHaveLength(0);
-    expect(root.findByType(ErrorState).props.message).toBe(
-      'The catalog response could not be read.',
-    );
-  });
-});
-
-describe('Today', () => {
-  const feeds = {
-    bills: {
-      data: [],
-      status: 'ready' as const,
-      asAt: null,
-      sources: [],
-      stale: false,
-      savedAt: null,
-    },
-    declarations: {
-      data: [],
-      status: 'ready' as const,
-      asAt: null,
-      sources: [],
-      stale: false,
-      savedAt: null,
-    },
-  };
-  beforeEach(() => {
-    jest.clearAllMocks();
-    jest
-      .mocked(catalogs.today)
-      .mockResolvedValue(
-        feeds as unknown as Awaited<ReturnType<typeof catalogs.today>>,
-      );
-  });
-  async function renderToday() {
-    let renderer!: TestRenderer.ReactTestRenderer;
-    await act(async () => {
-      renderer = TestRenderer.create(<Today />);
-    });
-    return renderer.root;
-  }
-  test('shows the edition above the feeds, and pull to refresh asks again', async () => {
-    jest.mocked(catalogs.todayEdition).mockResolvedValue(ready);
-    const root = await renderToday();
-    expect(catalogs.todayEdition).toHaveBeenCalledWith(false);
-    const sections = root
-      .findAll(
-        (node) =>
-          typeof node.type === 'string' &&
-          ['today-edition', 'today-bills', 'today-declarations'].includes(
-            node.props.testID,
-          ),
-      )
-      .map((node) => node.props.testID);
-    expect(sections).toEqual([
-      'today-edition',
-      'today-bills',
-      'today-declarations',
-    ]);
-    const scroll = root.find(
-      (node) =>
-        typeof node.type === 'string' &&
-        node.props.testID === 'today-screen' &&
-        node.props.refreshControl,
-    );
-    await act(async () => scroll.props.refreshControl.props.onRefresh());
-    expect(catalogs.todayEdition).toHaveBeenLastCalledWith(true);
-    expect(catalogs.today).toHaveBeenLastCalledWith(6, true);
-  });
-  test('with no edition published the section is absent and the feeds remain', async () => {
-    jest.mocked(catalogs.todayEdition).mockResolvedValue({
-      data: null,
-      status: 'missing',
-      asAt: null,
-      sources: [],
-      stale: false,
-      savedAt: null,
-    });
-    const root = await renderToday();
-    expect(host(root, 'today-edition')).toHaveLength(0);
-    expect(host(root, 'today-bills')).toHaveLength(1);
-    expect(host(root, 'today-declarations')).toHaveLength(1);
+  test('the top slot in case A; a recent edition at the late slot in B and C; old nowhere', () => {
+    expect(editionInSlot('edition', 'A', 'fresh')).toBe(true);
+    expect(editionInSlot('edition-late', 'A', 'fresh')).toBe(false);
+    expect(editionInSlot('edition', 'B', 'recent')).toBe(false);
+    expect(editionInSlot('edition-late', 'B', 'recent')).toBe(true);
+    expect(editionInSlot('edition-late', 'B', 'fresh')).toBe(true);
+    expect(editionInSlot('edition', 'C', 'fresh')).toBe(true);
+    expect(editionInSlot('edition-late', 'C', 'recent')).toBe(true);
+    expect(editionInSlot('edition', 'C', 'old')).toBe(false);
+    expect(editionInSlot('edition-late', 'C', 'old')).toBe(false);
   });
 });

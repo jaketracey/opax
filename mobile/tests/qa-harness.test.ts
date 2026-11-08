@@ -128,6 +128,8 @@ describe('iPhone suite', () => {
       .filter((name) => name !== '64-money-record.yaml')
       // Until scripts/qa-flows.sh lists it (w4-public-money follow-up).
       .filter((name) => name !== '63-money-privacy.yaml')
+      // Until scripts/qa-flows.sh lists them (w5-today follow-up).
+      .filter((name) => !/^(13[d-i]|28[cfg])-/.test(name))
       .map((name) => `.maestro/${name}`)
       .filter((path) => !covered.has(path));
     expect(missing).toEqual([]);

@@ -4,19 +4,15 @@
 import { act, type ReactElement } from 'react';
 import { SectionList, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import snapshot from '../scripts/fixture-snapshot.json';
 import { catalogs as runtime } from '../src/api/runtime';
 import {
   Catalogs,
-  decodeEdition,
   decodeRecentInterests,
-  editionFor,
   recentBillsFor,
   recentDeclarationsFor,
 } from '../src/api/catalogs';
 import { dataAsOf, type ApiClient, type RecordResult } from '../src/api/client';
 import { billDisplay } from '../src/api/bill-transforms';
-import { editionPath } from '../src/api/policy';
 import {
   BillRow,
   Button,
@@ -24,28 +20,28 @@ import {
   PersonRow,
   Text,
 } from '../src/design/primitives';
-import Today from '../src/features/Today';
 import Declarations from '../src/features/declarations/Declarations';
 import { FeedGroup } from '../src/features/declarations/FeedRow';
 import { personRuns } from '../src/features/declarations/model';
 import {
   BillFeed,
+  BillsBlock,
   billRowText,
   sponsorPartyName,
 } from '../src/features/today/BillFeed';
-import { DeclarationGroup } from '../src/features/today/DeclarationRow';
 import {
-  declarationsSources,
-  editionSources,
-} from '../src/features/today/sources';
-import { responseBytes } from './fixture-bytes';
+  DeclarationGroup,
+  DeclarationsBlock,
+} from '../src/features/today/DeclarationRow';
+import { declarationsSources } from '../src/features/today/sources';
 import { bills, catalogs as pinnedCatalogs, pinned, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     declarations: jest.fn(),
-    today: jest.fn(),
-    todayEdition: jest.fn(),
+    todayDeclarationsProfiled: jest.fn(),
+    todayBills: jest.fn(),
+    todayDeclarations: jest.fn(),
   },
   portraits: { get: jest.fn(async () => null) },
 }));
@@ -73,6 +69,7 @@ jest.mock('expo-router', () => {
   };
   return {
     useLocalSearchParams: () => ({}),
+    useSegments: () => [],
     router: { push: jest.fn(), navigate: jest.fn() },
     Stack: { Screen: () => null },
     Link,
@@ -85,13 +82,10 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 const standard = { width: 402, height: 874, scale: 3, fontScale: 1 };
 const ax5 = { ...standard, fontScale: 3.571 };
 
-const recentBills = recentBillsFor(bills, 6);
+const recentBills = recentBillsFor(bills, 3);
 const recent = decodeRecentInterests(pinned('/interests/recent.json'));
-const recentDeclarations = recentDeclarationsFor(recent, 6, pinnedCatalogs);
+const recentDeclarations = recentDeclarationsFor(recent, 3, pinnedCatalogs);
 const all = recentDeclarationsFor(recent, 300, pinnedCatalogs).data!;
-const edition = editionFor(
-  decodeEdition(JSON.parse(responseBytes(snapshot, editionPath).toString())),
-);
 
 // A catalog client over the pinned files.
 function fixture() {
@@ -191,8 +185,7 @@ describe('Today’s bill rows (P2-8, P2-17)', () => {
       const bill = sponsored(code);
       expect(sponsorPartyName(bill.sponsor_party)).toBe(name);
       const text = billRowText(bill);
-      expect(text.by).toBe('Jacqui Lambie');
-      expect(text.party).toEqual({ party: name, status: 'unknown' });
+      expect(text.meta).toEqual({ sponsor: 'Jacqui Lambie', party: name });
       const { root } = render(<BillFeed bills={[bill]} />);
       const label = root.findByType(PartyLabel);
       expect(label.props).toMatchObject({ party: name, nested: true });
@@ -216,27 +209,30 @@ describe('Today’s feeds each carry their own source line (P2-3)', () => {
     bills: { ...recentBills, asAt: '2026-09-17T08:00:00Z' },
     declarations: { ...recentDeclarations, asAt: '2026-09-04' },
   };
-  test('each feed is dated with its own date; the foot carries the edition', async () => {
-    mock.today.mockResolvedValue(dated);
-    mock.todayEdition.mockResolvedValue(edition);
-    const renderer = await renderAsync(<Today />);
+  test('each feed is dated with its own date, in a line after its rows', async () => {
+    mock.todayBills.mockResolvedValue(dated.bills);
+    mock.todayDeclarations.mockResolvedValue(dated.declarations);
+    mock.todayDeclarationsProfiled.mockResolvedValue(dated.declarations);
+    const renderer = await renderAsync(
+      <>
+        <BillsBlock attempt={0} onRetry={() => {}} />
+        <DeclarationsBlock attempt={0} onRetry={() => {}} />
+      </>,
+    );
     const root = renderer.root;
-    expect(host(root, 'today-bills-as-at')[0]!.props.accessibilityLabel).toBe(
-      'Updated 17 Sep 2026, ParlInfo bill records',
+    expect(host(root, 'today-bills-sources')[0]!.props.accessibilityLabel).toBe(
+      'Updated 17 Sep 2026, ParlInfo',
     );
     expect(
-      host(root, 'today-declarations-as-at')[0]!.props.accessibilityLabel,
-    ).toMatch(/^Updated 4 Sep 2026, /);
-    expect(host(root, 'today-sources')[0]!.props.accessibilityLabel).toBe(
-      'Updated 4 Oct 2026, OPAX daily edition',
-    );
+      host(root, 'today-declarations-sources')[0]!.props.accessibilityLabel,
+    ).toMatch(/^Updated 4 Sep 2026, Registers of interests/);
     // Each line closes its block: rows first, then the line.
     const ids = order(root);
-    expect(ids.indexOf('today-bills-as-at')).toBeGreaterThan(
-      ids.indexOf('today-bill-5'),
+    expect(ids.indexOf('today-bills-sources')).toBeGreaterThan(
+      ids.indexOf('today-bill-2'),
     );
-    expect(ids.indexOf('today-declarations-as-at')).toBeGreaterThan(
-      ids.indexOf('today-declaration-5'),
+    expect(ids.indexOf('today-declarations-sources')).toBeGreaterThan(
+      ids.indexOf('today-declaration-2'),
     );
     act(() => renderer.unmount());
   });
@@ -246,11 +242,13 @@ describe('Today’s feeds each carry their own source line (P2-3)', () => {
     expect(details.citation).toEqual([
       expect.objectContaining({ asOf: '2026-09-04' }),
     ]);
-    expect(details.originals!.map((o) => o.url)).toEqual(
-      recentDeclarations.data!.map((item) => item.url),
-    );
-    expect(editionSources(edition.data!).citation).toEqual([
-      { label: 'OPAX daily edition', asOf: '2026-10-04' },
+    // Each register once, at the first entry's page.
+    const registers = new Map<string, string>();
+    for (const item of recentDeclarations.data!)
+      if (!registers.has(item.sourceLabel))
+        registers.set(item.sourceLabel, item.url);
+    expect(details.originals!.map((o) => o.url)).toEqual([
+      ...registers.values(),
     ]);
   });
   test('a saved feed says so in its own line', () => {
@@ -290,9 +288,7 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
       ).toHaveLength(0);
       for (const { item, index } of run.entries) {
         const entry = host(root, `today-declaration-${index}`)[0]!;
-        expect(entry.props.accessibilityLabel).toMatch(
-          new RegExp(`^${item.name}, ${item.category}, `),
-        );
+        expect(entry.props.accessibilityLabel).toContain(item.category);
       }
     },
   );
@@ -322,12 +318,11 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
   });
   test('Today’s Just declared groups its rows the same way', async () => {
     const runs = personRuns(recentDeclarations.data!);
-    mock.today.mockResolvedValue({
-      bills: recentBills,
-      declarations: recentDeclarations,
-    });
-    mock.todayEdition.mockResolvedValue(edition);
-    const renderer = await renderAsync(<Today />);
+    mock.todayDeclarations.mockResolvedValue(recentDeclarations);
+    mock.todayDeclarationsProfiled.mockResolvedValue(recentDeclarations);
+    const renderer = await renderAsync(
+      <DeclarationsBlock attempt={0} onRetry={() => {}} />,
+    );
     const section = host(renderer.root, 'today-declarations')[0]!;
     expect(section.findAllByType(PersonRow)).toHaveLength(runs.length);
     expect(
