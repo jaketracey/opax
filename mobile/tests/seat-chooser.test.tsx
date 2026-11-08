@@ -87,8 +87,8 @@ beforeEach(() => {
   setFontScale(1);
 });
 // React Native's Jest window has fontScale 2, an accessibility size.
-function setFontScale(fontScale: number) {
-  const window = { width: 390, height: 844, scale: 3, fontScale };
+function setFontScale(fontScale: number, width = 390) {
+  const window = { width, height: 844, scale: 3, fontScale };
   Dimensions.set({ window, screen: window });
 }
 
@@ -316,6 +316,37 @@ describe('location', () => {
     expect(byID(r, 'seat-location-finding')).toHaveLength(0);
     expect(byID(r, 'use-my-location')).not.toHaveLength(0);
     expect(words(r)).not.toContain('couldn’t be found');
+    await act(async () => r.unmount());
+  });
+  test('at AX5 on a 375 pt iPhone the location line shrinks and wraps, never clips', async () => {
+    setFontScale(3.12, 375);
+    (suggestFromLocation as jest.Mock).mockResolvedValue({
+      kind: 'border',
+      seats: [grayndler, sydney],
+      vintage: '2025 election',
+    });
+    const r = await render(<SeatChooser presentation="sheet" />);
+    await act(async () => one(r, 'use-my-location').props.onPress());
+    const lines = r.root.findAll(
+      (n) => n.type === NativeText && n.props.children === 'Near your location',
+    );
+    expect(lines).toHaveLength(2);
+    const style = (n: TestRenderer.ReactTestInstance) =>
+      Object.assign(
+        {},
+        ...[n.props.style]
+          .flat(5)
+          .filter((s): s is object => !!s && typeof s === 'object'),
+      ) as Record<string, unknown>;
+    for (const line of lines) {
+      expect(style(line).flexShrink).toBe(1);
+      // The glyph and the words stack at accessibility sizes.
+      const row = line.parent!.parent!;
+      const container = [row, row.parent!].find(
+        (n) => typeof n.type === 'string' && style(n).flexDirection,
+      )!;
+      expect(style(container).flexDirection).toBe('column');
+    }
     await act(async () => r.unmount());
   });
   test('locate=1 starts the location row at once and leaves the field unfocused', async () => {

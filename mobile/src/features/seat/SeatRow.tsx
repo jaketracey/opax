@@ -48,6 +48,7 @@ export function SeatRow({
   testID?: string;
 }) {
   const member = seatMember(seat);
+  const stacked = useAccessibilitySize();
   const label = [seatLabel(seat, meta), detail ? `${detail}.` : '']
     .filter(Boolean)
     .join(' ');
@@ -98,9 +99,11 @@ export function SeatRow({
         </Text>
       )}
       {meta ? (
-        <View style={styles.meta}>
+        // At accessibility sizes the glyph sits above the words, so the line
+        // never runs past the column; otherwise the words shrink and wrap.
+        <View style={[styles.meta, stacked ? styles.metaStacked : null]}>
           <Icon name={symbols.location} size={13} tone="navy" />
-          <Text wordSafe variant="secondary">
+          <Text wordSafe variant="secondary" style={styles.metaText}>
             {meta}
           </Text>
         </View>
@@ -228,5 +231,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     columnGap: rhythm.tight,
   },
-  meta: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
+  meta: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.line,
+  },
+  metaStacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  metaText: { flexShrink: 1 },
 });
