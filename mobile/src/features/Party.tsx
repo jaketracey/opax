@@ -10,6 +10,7 @@ import { Stack, router, useLocalSearchParams, type Href } from 'expo-router';
 import { catalogs, portraits } from '../api/runtime';
 import type { PartyPageRecord } from '../api/catalogs';
 import type { PartyMember } from '../api/party-page';
+import { nameKey } from '../api/ids';
 import { CachedPortrait } from './CachedPortrait';
 import { Disclosure } from '../design/disclosure';
 import { Group, Screen, Section } from '../design/layout';
@@ -218,33 +219,87 @@ export function PartyPage({
   );
 }
 
-/** Up to six sitting members' portraits for the Members row. */
+/**
+ * The members to try for the Members row's faces, in order. The list can
+ * open on members with no portrait (a new member, a state member), so the
+ * people with one in the portrait index come first, federal members ahead
+ * of state ones, each in the list's own order. Each person once.
+ */
+export function faceCandidates(
+  members: readonly PartyMember[],
+  hasPortrait: (member: PartyMember) => boolean,
+): PartyMember[] {
+  const seen = new Set<string>();
+  const people = members.filter((m) => {
+    if (seen.has(m.slug)) return false;
+    seen.add(m.slug);
+    return true;
+  });
+  const rank = (m: PartyMember) =>
+    (hasPortrait(m) ? 0 : 2) + (m.jurisdiction === 'federal' ? 0 : 1);
+  // Array.prototype.sort is stable: ties keep the list's order.
+  return people.sort((a, b) => rank(a) - rank(b));
+}
+
+const FACES = 6;
+/** At most this many portraits are read to find the six faces. */
+const FACE_READS = 18;
+
+/**
+ * Up to six sitting members' portraits for the Members row, as other face
+ * stacks show them: only faces that load. A portrait that fails is skipped
+ * for the next member, never drawn as a blank circle. Six blank circles
+ * hold the row's shape while the portraits load.
+ */
+export async function loadFaces(
+  candidates: readonly PartyMember[],
+  read: (member: PartyMember) => Promise<string | null>,
+): Promise<string[]> {
+  const found: string[] = [];
+  const tries = candidates.slice(0, FACE_READS);
+  for (let at = 0; at < tries.length && found.length < FACES; ) {
+    const batch = tries.slice(at, at + FACES - found.length);
+    at += batch.length;
+    const uris = await Promise.all(batch.map((m) => read(m).catch(() => null)));
+    for (const uri of uris) if (uri) found.push(uri);
+  }
+  return found;
+}
+
 function useFaces(members: readonly PartyMember[]) {
-  const first = useMemo(() => members.slice(0, 6), [members]);
-  const key = first.map((m) => m.slug).join('|');
-  const [faces, setFaces] = useState<{
-    key: string;
-    uris: (string | null)[];
-  }>();
+  const key = members.map((m) => `${m.jurisdiction}|${m.slug}`).join(',');
+  const [faces, setFaces] = useState<{ key: string; uris: string[] }>();
   useEffect(() => {
     let active = true;
-    Promise.all(
-      first.map((m) =>
-        Promise.resolve()
-          .then(() => portraits?.get({ name: m.name, slug: m.slug }))
-          .then((p) => p?.localURI ?? null)
-          .catch(() => null),
-      ),
-    ).then((uris) => {
-      if (active) setFaces({ key, uris });
-    });
+    Promise.resolve()
+      .then(() => portraits?.list())
+      .catch(() => undefined)
+      .then((listed) => {
+        const slugs = new Set(listed?.map((p) => p.slug));
+        const names = new Set(listed?.map((p) => nameKey(p.name)));
+        return loadFaces(
+          faceCandidates(
+            members,
+            (m) => slugs.has(m.slug) || names.has(nameKey(m.name)),
+          ),
+          async (m) =>
+            (await portraits?.get({ name: m.name, slug: m.slug }))?.localURI ??
+            null,
+        );
+      })
+      .catch(() => [])
+      .then((uris) => {
+        if (active) setFaces({ key, uris });
+      });
     return () => {
       active = false;
     };
-    // `key` names the members; `first` is the same list.
+    // `key` names the members; `members` is the same list.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
-  return faces?.key === key ? faces.uris : first.map(() => null);
+  return faces?.key === key
+    ? faces.uris
+    : Array.from({ length: Math.min(FACES, members.length) }, () => null);
 }
 
 function PartyContent({

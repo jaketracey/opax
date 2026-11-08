@@ -9,7 +9,9 @@ import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Catalogs } from '../src/api/catalogs';
 import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
-import { PartyPage } from '../src/features/Party';
+import { PartyPage, faceCandidates, loadFaces } from '../src/features/Party';
+import { firstLineOffset } from '../src/features/people/ProfileHeader';
+import { textStyles } from '../src/design/tokens';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { openOnWeb } from '../src/navigation/external';
 import {
@@ -655,4 +657,104 @@ test('a total division scan failure is unavailable rather than no party votes', 
   expect(drawn(r)).toMatch(/Votes couldn.t be loaded\./);
   expect(drawn(r)).not.toMatch(/No division in the 0/);
   await act(async () => r.unmount());
+});
+
+describe('the party header and Members faces (w5 polish)', () => {
+  test('the party name is the system page title, not the record serif (D1)', async () => {
+    const r = await render();
+    const title = r.root.find(
+      (n) => n.props.testID === 'party-title' && n.type === NativeText,
+    );
+    const family = (
+      [title.props.style].flat(Infinity) as ({ fontFamily?: string } | null)[]
+    )
+      .map((s) => s?.fontFamily)
+      .filter(Boolean)
+      .at(-1);
+    expect(family).toBe(textStyles.pageTitle.fontFamily);
+    expect(family ?? '').not.toMatch(/Merriweather/);
+  });
+
+  test('the dot centres on the title\'s first line once it is laid out', async () => {
+    const r = await render();
+    const title = r.root.find(
+      (n) =>
+        n.props.testID === 'party-title' &&
+        n.type === NativeText &&
+        typeof n.props.onTextLayout === 'function',
+    );
+    const dot = () =>
+      r.root.find(
+        (n) =>
+          typeof n.type === 'string' &&
+          n.props.accessibilityElementsHidden === true &&
+          [n.props.style].flat(Infinity).some(
+            (s: { backgroundColor?: unknown } | null) =>
+              s?.backgroundColor === partyColors.labor,
+          ),
+      );
+    const style = () =>
+      Object.assign({}, ...[dot().props.style].flat(Infinity).filter(Boolean));
+    // Before layout the dot centres on the title (one line).
+    expect(style().alignSelf).toBe('center');
+    await act(async () =>
+      title.props.onTextLayout({
+        nativeEvent: {
+          lines: [
+            { text: 'Labor', x: 0, y: 0, width: 80, height: 34 },
+            { text: 'more', x: 0, y: 34, width: 60, height: 34 },
+          ],
+        },
+      }),
+    );
+    expect(style().alignSelf).toBeUndefined();
+    expect(style().marginTop).toBe(firstLineOffset({ y: 0, height: 34 }, 10));
+    expect(firstLineOffset({ y: 0, height: 34 }, 10)).toBe(12);
+  });
+
+  test('faces come from members with a portrait, federal first, each once', () => {
+    const members = view.data.members.data!.current;
+    const portraitless = new Set(['alice-jordan-baird']);
+    const order = faceCandidates(
+      members,
+      (m) => m.jurisdiction === 'federal' && !portraitless.has(m.slug),
+    );
+    expect(order.slice(0, 6).map((m) => m.slug)).not.toContain(
+      'alice-jordan-baird',
+    );
+    expect(order.slice(0, 6).every((m) => m.jurisdiction === 'federal')).toBe(
+      true,
+    );
+    expect(new Set(order.map((m) => m.slug)).size).toBe(order.length);
+  });
+
+  test('a portrait that fails is skipped, never a blank circle', async () => {
+    const people = Array.from({ length: 10 }, (_, i) => ({
+      name: `Member ${i}`,
+      slug: `member-${i}`,
+      jurisdiction: 'federal',
+      chamber: 'representatives',
+      place: '',
+      asAt: null,
+    })) as unknown as Parameters<typeof loadFaces>[0];
+    const read = jest.fn(async (m: { slug: string }) => {
+      const i = Number(m.slug.split('-')[1]);
+      if (i === 1) throw new Error('404');
+      return i % 3 === 0 ? null : `file:///${m.slug}.webp`;
+    });
+    const faces = await loadFaces(people, read);
+    expect(faces).toEqual([
+      'file:///member-2.webp',
+      'file:///member-4.webp',
+      'file:///member-5.webp',
+      'file:///member-7.webp',
+      'file:///member-8.webp',
+    ]);
+    // Bounded reads, and none after six are found.
+    const all = await loadFaces(
+      people,
+      jest.fn(async (m: { slug: string }) => `file:///${m.slug}.webp`),
+    );
+    expect(all).toHaveLength(6);
+  });
 });
