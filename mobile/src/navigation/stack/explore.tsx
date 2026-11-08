@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { screen, sheetOptions } from './screen';
 import { closeSheetItem, headerItems } from '../chrome';
+import { frontPageQuestion } from '../../features/explore/quiz/data';
 
 const names: Record<string, string> = {
   quiz: 'The record quiz',
@@ -9,6 +10,19 @@ const names: Record<string, string> = {
   matrix: 'Who owns which debate',
   wd: 'Words per dollar',
 };
+/**
+ * A tool's stack title, which is also the next screen's back label. "Today's
+ * question" only when `q` names a question in the front-page deck; an unknown
+ * `q` opens the quiz intro, so it reads "The record quiz".
+ */
+export function exploreToolTitle(
+  params: { tool?: string; q?: string; name?: string } | undefined,
+): string {
+  if (params?.name) return params.name;
+  if (params?.tool === 'quiz' && frontPageQuestion(params.q))
+    return "Today's question";
+  return names[params?.tool ?? ''] ?? 'Tool';
+}
 export function exploreScreens() {
   return [
     screen('explore/index', 'Quizzes and tools'),
@@ -20,11 +34,7 @@ export function exploreScreens() {
           | { tool?: string; q?: string; name?: string }
           | undefined;
         return {
-          title:
-            params?.name ||
-            (params?.tool === 'quiz' && params.q
-              ? "Today's question"
-              : (names[params?.tool ?? ''] ?? 'Tool')),
+          title: exploreToolTitle(params),
           headerLargeTitleEnabled: false,
         };
       }}

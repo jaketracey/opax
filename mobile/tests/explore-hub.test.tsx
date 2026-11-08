@@ -12,7 +12,8 @@ import {
   ExploreHeader,
 } from '../src/features/explore/parts';
 import { quizSession } from '../src/features/explore/quiz-session';
-import { quizRounds } from '../src/features/explore/quiz/data';
+import { frontPageDeck, quizRounds } from '../src/features/explore/quiz/data';
+import { exploreToolTitle } from '../src/navigation/stack/explore';
 import { apiClient } from '../src/api/runtime';
 import { hubInStack, exploreWebPath } from '../src/navigation/routes/explore';
 import { copyRecordLink, shareRecord } from '../src/navigation/share';
@@ -209,6 +210,17 @@ test('the deprecated ExploreHeader is the same chrome with a fixed title', () =>
       .map((item: { label: string }) => item.label),
   ).toEqual(['Share', 'More']);
   act(() => renderer.unmount());
+});
+
+test('the quiz stack title says "Today\'s question" only for a question in the front-page deck', () => {
+  const id = frontPageDeck[0]!.id;
+  expect(exploreToolTitle({ tool: 'quiz', q: id })).toBe("Today's question");
+  expect(exploreToolTitle({ tool: 'quiz', q: 'qnot-a-question' })).toBe(
+    'The record quiz',
+  );
+  expect(exploreToolTitle({ tool: 'quiz', q: '' })).toBe('The record quiz');
+  expect(exploreToolTitle({ tool: 'quiz' })).toBe('The record quiz');
+  expect(exploreToolTitle({ tool: 'tide', q: id })).toBe('The tide');
 });
 
 describe('unknown tools land on the hub', () => {
