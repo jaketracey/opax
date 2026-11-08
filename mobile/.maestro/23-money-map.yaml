@@ -28,12 +28,12 @@ name: 23 Native money map, held figures, original source and ranked list
     visible:
       id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
     timeout: 90000
-- runFlow:
-    file: support/restore-tab-bar.yaml
-    env:
-      TOP_ID: money-mode-3d
-      TAB_ID: tab-today
-- assertVisible: Today
+# The map is pushed in the Today stack, so its back button names Today. The
+# bar can stay minimised on a pushed page at its top; the flow's end returns
+# to the Today root and asserts the full bar there.
+- assertVisible:
+    id: BackButton
+    text: Today
 - takeScreenshot: ${EVIDENCE}/23-orbit-0
 - swipe:
     start: 30%, 42%
@@ -188,3 +188,9 @@ name: 23 Native money map, held figures, original source and ranked list
 - assertVisible: .*held by donors on this map across.*contracts.*
 - takeScreenshot: ${EVIDENCE}/23-list-public-money
 - tapOn: Money map
+# Back to the Today root, which kept its place at the Money map entry.
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-money-map
+      TAB_ID: tab-today
