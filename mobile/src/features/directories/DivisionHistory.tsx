@@ -1,8 +1,11 @@
 import {
+  createContext,
   memo,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from 'react';
@@ -19,7 +22,6 @@ import {
   Button,
   ContentUnavailable,
   DivisionRow,
-  Icon,
   InlineError,
   LinkRow,
   OfflineLine,
@@ -30,7 +32,7 @@ import {
   useScreenColumn,
 } from '../../design/primitives';
 import { copy } from '../../design/copy';
-import { colors, layout, rhythm } from '../../design/tokens';
+import { chrome, colors, layout, rhythm } from '../../design/tokens';
 import { formatCount, formatDate } from '../../design/format';
 import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import { rowMenus, useRowFollow } from '../../design/row-link';
@@ -169,8 +171,9 @@ const Vote = memo(function Vote({
 }) {
   const division = item.key.split(':').slice(1).join(':');
   const follow = useRowFollow('bill', item.billKey, item.title);
+  const inset = useContext(VoteInset);
   return (
-    <View style={styles.inset}>
+    <View style={{ paddingLeft: inset }}>
       <DivisionRow
         title={item.stage ?? 'Vote'}
         meta={divisionWhere(item)}
@@ -189,18 +192,53 @@ const Vote = memo(function Vote({
     </View>
   );
 });
+/**
+ * How far the votes sit in: the bill header's text column, measured, and
+ * never more than a third of the column's width. Separators use the same.
+ */
+export const voteInset = (textColumn: number, width: number) =>
+  Math.max(0, Math.min(textColumn, width / 3));
+const VoteInset = createContext(0);
+const ReportInset = createContext<((inset: number) => void) | null>(null);
+
 /** The bill a run of votes belongs to. */
 const BillHeader = memo(function BillHeader({
   section,
 }: {
   section: HistorySection;
 }) {
+  const report = useContext(ReportInset);
+  const header = useRef<View>(null);
+  const probe = useRef<View>(null);
+  const [width, setWidth] = useState(0);
+  // The probe sits at the top left of the row's text column, after the
+  // symbol's leading column, so its offset is where the title starts.
+  const measure = () => {
+    const at = probe.current;
+    const from = header.current;
+    if (!at || !from || !width || !report) return;
+    at.measureLayout(from, (x) => report(voteInset(x, width)));
+  };
   return (
-    <View style={styles.billHeader}>
+    <View
+      ref={header}
+      style={styles.billHeader}
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+    >
       <LinkRow
         title={section.title}
         detail={votes(section.data.length)}
-        leading={<Icon name={symbols.bills} size={20} tone="inkSoft" />}
+        symbol={symbols.bills}
+        leading={
+          // Remounted when the width arrives, so it measures again.
+          <View
+            ref={probe}
+            key={width}
+            onLayout={measure}
+            pointerEvents="none"
+            style={styles.probe}
+          />
+        }
         accessibilityLabel={`${section.title}, ${votes(section.data.length)}. Bill.`}
         accessibilityHint="Opens the bill"
         href={billRoute(section.billKey, section.title)}
@@ -221,6 +259,7 @@ export default function DivisionHistory() {
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   const column = useScreenColumn();
+  const [inset, setInset] = useState(0);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
   useEffect(() => {
@@ -430,45 +469,56 @@ export default function DivisionHistory() {
       {/* The iPad sidebar floats over a bare list; this keeps rows clear of
           it, and on regular width the rows keep the readable column. */}
       <SidebarSafe style={styles.screen}>
-        <SectionList
-          testID="division-history-screen"
-          style={styles.screen}
-          contentContainerStyle={[styles.content, column.content]}
-          onLayout={column.onLayout}
-          contentInsetAdjustmentBehavior="automatic"
-          keyboardDismissMode="on-drag"
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-          }
-          sections={loaded ? sections : []}
-          stickySectionHeadersEnabled={false}
-          keyExtractor={(item) => item.key}
-          renderSectionHeader={({ section }) => (
-            <BillHeader section={section as HistorySection} />
-          )}
-          renderItem={({ item, index }) => <Vote item={item} index={index} />}
-          ItemSeparatorComponent={Separator}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={7}
-          removeClippedSubviews={false}
-          ListHeaderComponent={header}
-          ListEmptyComponent={empty}
-          ListFooterComponent={
-            <View style={styles.footer}>
-              {loaded && !complete ? (
-                <Skeleton shape="rows" count={2} label="Loading votes" />
-              ) : null}
-              {loaded ? source : null}
-            </View>
-          }
-        />
+        <ReportInset.Provider value={setInset}>
+          <VoteInset.Provider value={inset}>
+            <SectionList
+              testID="division-history-screen"
+              style={styles.screen}
+              contentContainerStyle={[styles.content, column.content]}
+              onLayout={column.onLayout}
+              contentInsetAdjustmentBehavior="automatic"
+              keyboardDismissMode="on-drag"
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={refresh}
+                  tintColor={chrome.tint}
+                />
+              }
+              sections={loaded ? sections : []}
+              stickySectionHeadersEnabled={false}
+              keyExtractor={(item) => item.key}
+              renderSectionHeader={({ section }) => (
+                <BillHeader section={section as HistorySection} />
+              )}
+              renderItem={({ item, index }) => (
+                <Vote item={item} index={index} />
+              )}
+              ItemSeparatorComponent={Separator}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={7}
+              removeClippedSubviews={false}
+              ListHeaderComponent={header}
+              ListEmptyComponent={empty}
+              ListFooterComponent={
+                <View style={styles.footer}>
+                  {loaded && !complete ? (
+                    <Skeleton shape="rows" count={2} label="Loading votes" />
+                  ) : null}
+                  {loaded ? source : null}
+                </View>
+              }
+            />
+          </VoteInset.Provider>
+        </ReportInset.Provider>
       </SidebarSafe>
     </>
   );
 }
 function Separator() {
-  return <View style={styles.separator} />;
+  const inset = useContext(VoteInset);
+  return <View style={[styles.separator, { marginLeft: inset }]} />;
 }
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
@@ -486,10 +536,8 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   billHeader: { marginTop: rhythm.section, marginBottom: rhythm.tight },
-  // Votes start at the bill title's text column, after the doc.text symbol.
-  inset: { paddingLeft: 32 },
+  probe: { position: 'absolute', left: 0, top: 0, width: 0, height: 0 },
   separator: {
-    marginLeft: 32,
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.dividerSubtle,
   },

@@ -3,7 +3,7 @@
 // arrivals (`?division=`, 4.4) and Added since (4.2.1), the saved-seat line
 // under a vote, and the bill read that no longer waits for the index (4.10).
 import { act } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billTimeline } from '../src/api/bill-transforms';
 import * as d from '../src/api/catalogs';
@@ -32,10 +32,11 @@ import {
   statusEventText,
 } from '../src/features/bills/status-event';
 import { memberPosition } from '../src/features/bills/your-mp-vote';
-import {
+import DivisionHistory, {
   divisionFilters,
   filterDivisions,
 } from '../src/features/directories/DivisionHistory';
+import * as divisionData from '../src/features/directories/division-data';
 import type { DivisionRow } from '../src/features/directories/model';
 import { useFollowStates } from '../src/features/follows/useFollowStates';
 import { bills, pinned, slugs } from './pinned';
@@ -225,6 +226,88 @@ describe('Votes in parliament filters (6.2)', () => {
       filterDivisions(all, divisionFilters({ outcome: 'not-agreed' })),
     ).toHaveLength(1);
     expect(filterDivisions(all, {}, 'limitation')).toHaveLength(1);
+  });
+});
+
+describe('Votes in parliament: the votes sit under the bill title (6.1)', () => {
+  const row = (n: number): DivisionRow => ({
+    key: `au-federal-r7534:d${n}`,
+    billKey: 'au-federal-r7534',
+    title: 'Interactive Gambling Amendment Bill 2026',
+    stage: 'Third reading',
+    date: '2026-08-19',
+    house: 'senate',
+    question: 'That the bill be now read a third time.',
+    ayes: 30,
+    noes: 11,
+    outcome: 'agreed',
+  });
+  test.each([
+    ['the measured text column', 28, 28],
+    ['a third of the column at most', 150, 100],
+  ])('the inset is %s', async (_case, textColumn, inset) => {
+    const load = jest.spyOn(divisionData, 'loadDivisionHistory');
+    load.mockResolvedValue({
+      rows: [row(1), row(2)],
+      total: 1,
+      loaded: 1,
+      failed: 0,
+      stale: false,
+    } as Awaited<ReturnType<typeof divisionData.loadDivisionHistory>>);
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<DivisionHistory />);
+    });
+    mounted.push(r);
+    const root = r.root;
+    // The probe marks the top left of the bill header's text column.
+    const probeAt = () =>
+      root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.pointerEvents === 'none' &&
+          typeof node.props.onLayout === 'function' &&
+          StyleSheet.flatten(node.props.style)?.position === 'absolute',
+      )[0]!;
+    let header = probeAt().parent!;
+    while (
+      !(
+        typeof header.type === 'string' &&
+        typeof header.props.onLayout === 'function'
+      )
+    )
+      header = header.parent!;
+    await act(async () =>
+      header.props.onLayout({ nativeEvent: { layout: { width: 300 } } }),
+    );
+    // The view's measurement, as the native view would answer it.
+    let view = probeAt();
+    while (typeof view.instance?.measureLayout !== 'function')
+      view = view.parent!;
+    view.instance.measureLayout = (
+      _from: unknown,
+      done: (x: number, y: number, w: number, h: number) => void,
+    ) => done(textColumn, 0, 0, 0);
+    await act(async () => probeAt().props.onLayout({ nativeEvent: {} }));
+    const vote = host(root, 'division-history-au-federal-r7534-0')[0]!;
+    let wrapper = vote.parent!;
+    while (
+      StyleSheet.flatten(wrapper.props.style)?.paddingLeft === undefined &&
+      wrapper.parent
+    )
+      wrapper = wrapper.parent;
+    expect(StyleSheet.flatten(wrapper.props.style).paddingLeft).toBe(inset);
+    const separators = root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        StyleSheet.flatten(node.props.style)?.height ===
+          StyleSheet.hairlineWidth &&
+        StyleSheet.flatten(node.props.style)?.marginLeft !== undefined,
+    );
+    expect(separators.length).toBeGreaterThan(0);
+    for (const separator of separators)
+      expect(StyleSheet.flatten(separator.props.style).marginLeft).toBe(inset);
+    load.mockRestore();
   });
 });
 
