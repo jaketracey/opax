@@ -16,6 +16,7 @@ import {
   ChoiceChips,
   PopUpButton,
   SegmentedPicker,
+  segmentsFit,
 } from '../src/design/controls';
 import { openSource } from '../src/navigation/external';
 import {
@@ -453,6 +454,106 @@ describe('compact iOS choices', () => {
       expect(changed).toHaveBeenCalledWith('1');
     },
   );
+  // Captures on a 402 pt iPhone: a 370 pt column inside 16 pt margins.
+  test.each([
+    // money-23: two of four segments truncated.
+    [
+      [
+        'All leads',
+        'Contracts by agency',
+        'Party funding',
+        'Companies in both',
+      ],
+      370,
+      1,
+      false,
+    ],
+    // money-16: "Contract va..." truncated.
+    [['Contract value', 'Contracts', 'Suppliers', 'Name'], 370, 1, false],
+    // money-14 and money-18 drew in full.
+    [['Published awards', 'Invitations', 'Earlier grants'], 370, 1, true],
+    [['Value over time', 'Suppliers', 'Contracts'], 370, 1, true],
+    [['All', 'Then', 'Now'], 343, 1, true],
+    [['All records', 'Speeches only'], 343, 1, true],
+    // The chamber filter sheet: the House needs more than a third.
+    [['All chambers', 'House of Representatives', 'Senate'], 370, 1, false],
+    // Larger text needs more room; smaller text counts as the default.
+    [['Published awards', 'Invitations', 'Earlier grants'], 370, 1.235, false],
+    [['Contract value', 'Contracts', 'Suppliers', 'Name'], 370, 0.8, false],
+    // A wider column (iPad) fits what a phone cannot.
+    [['Contract value', 'Contracts', 'Suppliers', 'Name'], 640, 1, true],
+    // Only two to four peers are ever segments.
+    [['All'], 370, 1, false],
+    [['A', 'B', 'C', 'D', 'E'], 370, 1, false],
+    [['A', 'B'], 0, 1, false],
+  ])('segmentsFit(%j, %s, %s) is %s', (labels, width, scale, fits) => {
+    expect(
+      segmentsFit(labels as string[], width as number, scale as number),
+    ).toBe(fits);
+  });
+  test('labels that would truncate fall back to the pop-up, and the measured width decides', () => {
+    atSize(1, () => {
+      const changed = jest.fn();
+      const root = render(
+        <ChoiceChips
+          segments={[
+            { value: 'total', label: 'Contract value', testID: 'sort-total' },
+            { value: 'count', label: 'Contracts', testID: 'sort-count' },
+            { value: 'suppliers', label: 'Suppliers' },
+            { value: 'name', label: 'Name' },
+          ]}
+          value="total"
+          onChange={changed}
+        />,
+      ).root;
+      expect(root.findAllByType(SegmentedPicker)).toHaveLength(0);
+      const popUp = root.findByType(PopUpButton);
+      // Unnamed choices draw the button alone; its id is the current option's.
+      expect(popUp.props.row).toBe(false);
+      expect(popUp.props.testID).toBe('sort-total');
+      act(() => root.findByType(Picker).props.onSelectionChange('name'));
+      expect(changed).toHaveBeenCalledWith('name');
+      // An iPad column has room for every segment.
+      act(() =>
+        root
+          .find((node) => typeof node.props.onLayout === 'function')
+          .props.onLayout({ nativeEvent: { layout: { width: 640 } } }),
+      );
+      expect(root.findAllByType(SegmentedPicker)).toHaveLength(1);
+      expect(root.findAllByType(PopUpButton)).toHaveLength(0);
+      // Segment labels keep UIKit's own segmented size: no font override.
+      for (const node of [
+        root.findByType(Picker),
+        ...root.findAllByType(SwiftText),
+      ])
+        expect(node.props.modifiers ?? []).not.toContainEqual(
+          expect.objectContaining({ $type: 'font' }),
+        );
+    });
+  });
+  test('a named choice that cannot fit becomes a titled pop-up row', () => {
+    atSize(1, () => {
+      const root = render(
+        <ChoiceChips
+          segments={[
+            { value: 'all', label: 'All chambers' },
+            { value: 'house', label: 'House of Representatives' },
+            { value: 'senate', label: 'Senate' },
+          ]}
+          value="all"
+          onChange={noop}
+          accessibilityLabel="Chamber"
+          testID="chamber"
+        />,
+      ).root;
+      const popUp = root.findByType(PopUpButton);
+      expect(popUp.props).toMatchObject({
+        row: true,
+        label: 'Chamber',
+        testID: 'chamber',
+      });
+    });
+  });
   test('accessibility sizes replace segments with a single menu row', () => {
     atSize(AX5, () => {
       const root = render(
