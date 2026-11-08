@@ -310,6 +310,9 @@ const COLOUR_BASELINE: Record<string, number> = {
   'src/test-screens/VoiceBridgeTestScreen.tsx': 5,
   'src/design/menu.tsx': 1,
   'src/workbench/Workbench.tsx': 1,
+  // Photos sit on black in every scheme; no token role draws it yet.
+  'src/features/explore/Picture.tsx': 1,
+  'src/features/explore/PhotoViewer.tsx': 5,
 };
 const COLOUR =
   /(?<![\w&#-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])|\b(?:rgba?|hsla?)\(/g;

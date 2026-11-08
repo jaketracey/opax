@@ -8,6 +8,9 @@ import { Button, Icon, Text } from '../../design/primitives';
 import { colors, radii, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
 
+/** A photo's black ground in every scheme: no token role draws it (yet). */
+export const PHOTO_BLACK = '#000';
+
 /**
  * One year photograph in its frame. Native Image reads only a device cache
  * file, fetched when the frame mounts. The frame keeps its shape from
@@ -92,7 +95,7 @@ export function Picture({
       style={{
         width: '100%',
         aspectRatio: ratio,
-        backgroundColor: ground === 'black' ? '#000' : colors.sunken,
+        backgroundColor: ground === 'black' ? PHOTO_BLACK : colors.sunken,
         borderRadius: rounded ? radii.thumb : 0,
         borderCurve: 'continuous',
         overflow: 'hidden',

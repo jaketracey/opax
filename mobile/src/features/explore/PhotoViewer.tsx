@@ -24,7 +24,7 @@ import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { useRead } from '../reports/parts';
 import { explore } from './runtime';
-import { Picture } from './Picture';
+import { PHOTO_BLACK, Picture } from './Picture';
 import { openPhotoSource, photoIndex, pictureKey } from './YearGallery';
 import type { YearPicture } from './pictures';
 
@@ -337,7 +337,7 @@ export default function PhotoViewer() {
 }
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  black: { backgroundColor: '#000' },
+  black: { backgroundColor: PHOTO_BLACK },
   zoomContent: { flexGrow: 1, justifyContent: 'center' },
   panel: {
     position: 'absolute',
