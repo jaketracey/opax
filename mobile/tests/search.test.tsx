@@ -39,6 +39,7 @@ import { isLead, moneyDestination } from '../src/features/search/GroupResults';
 import { searchPhase } from '../src/features/search/SearchScreen';
 import { MatchRow } from '../src/features/search/rows';
 import { allLocal } from '../src/features/search/AllResults';
+import { EmptyResults } from '../src/features/search/EmptyResults';
 import { ApiError } from '../src/api/errors';
 import { bills, index, manifest, people, roster, slugs } from './pinned';
 
@@ -261,6 +262,48 @@ describe('every empty and error state has a way on (3.9)', () => {
       ]),
     );
     expect(withoutQuotes('"fair go"')).toBe('fair go');
+  });
+  test('All emptied by speech filters offers Clear filters before Ask', () => {
+    const recover = {
+      onAsk: jest.fn(),
+      onAll: jest.fn(),
+      onClearFilters: jest.fn(),
+      onUnquote: jest.fn(),
+      onSpeeches: jest.fn(),
+    };
+    const filters = { ...defaultSpeechFilters, party: 'Labor' };
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <EmptyResults
+          where="all"
+          q={'"fair go"'}
+          filters={filters}
+          recover={recover}
+        />,
+      );
+    });
+    const actions = r.root
+      .findAll(
+        (n) =>
+          typeof n.props.testID === 'string' &&
+          n.props.testID.startsWith('search-empty-') &&
+          typeof n.props.onPress === 'function',
+      )
+      .map((n) => n.props.testID as string);
+    expect([...new Set(actions)]).toEqual([
+      'search-empty-unquote',
+      'search-empty-clear',
+      'search-empty-ask',
+    ]);
+    const clear = r.root.find(
+      (n) =>
+        n.props.testID === 'search-empty-clear' &&
+        typeof n.props.onPress === 'function',
+    );
+    act(() => clear.props.onPress());
+    expect(recover.onClearFilters).toHaveBeenCalledTimes(1);
+    act(() => r.unmount());
   });
   test.each([
     [new ApiError('rate-limited', 'x'), 'Search is busy right now.'],

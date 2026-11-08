@@ -56,7 +56,12 @@ export function EmptyResults({
     emptyRecovery({
       where,
       q,
-      filtersOn: !!filters && hasFilters(filters) && where === 'speeches',
+      // All's one read is the filtered speeches read: its filters can
+      // empty it too, so both offer Clear filters.
+      filtersOn:
+        !!filters &&
+        hasFilters(filters) &&
+        (where === 'speeches' || where === 'all'),
       records: filters?.kind === 'all',
     });
   const [first, ...rest] = state.actions;
