@@ -96,6 +96,7 @@ const focusOn = (view: View | null) => {
 const ORB_MAX = 240;
 const ORB_AX = 120;
 const ORB_CALL = 72;
+const STATUS_LINE = 40;
 /** One question a day from the reviewed Ask starter list (7.3 item 3). */
 function exampleQuestion(): string | null {
   // The list is not shipped yet (DIR 9.D item D5): no hand-written fallback.
@@ -208,7 +209,9 @@ export default function TalkScreen({
               : 'start';
   const sources = openableSources(s.sources);
   const showTranscript = captions && s.transcript.length > 0;
-  const compact = active || showTranscript;
+  // The call row and transcript only while captions show (7.4); hidden, the
+  // large orb stays on the stage with the status under it.
+  const compact = captions && (active || s.transcript.length > 0);
   const levels = useVoiceLevels(live);
   const startable = action === 'start' || action === 'startAgain';
   const rationale = !active && call.microphone === 'rationale';
@@ -412,7 +415,11 @@ export default function TalkScreen({
     );
   };
   const cap = large ? ORB_AX : ORB_MAX;
-  const orbSize = stage ? Math.min(stage.width, stage.height, cap) : 0;
+  // Room for the status line under the stage orb when captions are hidden.
+  const below = !compact && statusText ? STATUS_LINE : 0;
+  const orbSize = stage
+    ? Math.max(0, Math.min(stage.width, stage.height - below, cap))
+    : 0;
   const statusProps = {
     ref: statusNode,
     accessible: true,
@@ -529,6 +536,19 @@ export default function TalkScreen({
                   ) : null}
                 </View>
               )}
+              {!compact && statusText ? (
+                // Captions hidden in a call: the status sits under the orb.
+                <Text
+                  wordSafe
+                  variant="secondary"
+                  style={styles.centre}
+                  testID="talk-state"
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  {statusText}
+                </Text>
+              ) : null}
             </View>
           </View>
         )}
@@ -812,6 +832,7 @@ const styles = StyleSheet.create({
     left: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: rhythm.tight,
   },
   callRow: {
     flexDirection: 'row',

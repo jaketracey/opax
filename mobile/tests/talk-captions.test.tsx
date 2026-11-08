@@ -72,3 +72,143 @@ test('a choice made while the file is read wins over the stored one', async () =
   expect(current[0]).toBe(true);
   act(() => renderer.unmount());
 });
+
+// Captions hidden in a call (specs/account.md 7.4): the large orb stays on
+// the stage with the status under it, and no transcript is drawn.
+jest.mock('../src/features/talk/VoiceOrb', () => {
+  const { createElement } = jest.requireActual('react');
+  return {
+    VoiceOrb: (props: { size: number }) => createElement('VoiceOrb', props),
+  };
+});
+jest.mock('../src/features/talk/useVoiceLevels', () => ({
+  useVoiceLevels: () => ({}),
+}));
+jest.mock('../src/design/useHeaderBottom', () => ({
+  useHeaderBottom: () => 0,
+}));
+let mockOptions: Record<string, unknown> = {};
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+  Stack: {
+    Screen: ({ options }: { options: Record<string, unknown> }) => {
+      mockOptions = options;
+      return null;
+    },
+  },
+  useFocusEffect: jest.fn(),
+}));
+jest.mock('../src/features/Person', () => ({ ProfileScreen: () => null }));
+jest.mock('../src/features/Electorate', () => ({
+  ElectorateScreen: () => null,
+}));
+jest.mock('../src/features/bills/BillDetail', () => () => null);
+jest.mock('../src/features/records/DocumentReader', () => () => null);
+jest.mock('../src/features/records/BillTextReader', () => () => null);
+jest.mock('../src/features/talk/useTalk', () => ({
+  useTalk: () => ({
+    snapshot: {
+      ...jest.requireActual('../src/features/talk/model').emptySnapshot,
+      state: 'live',
+      mode: 'listening',
+      transcript: [{ role: 'agent', id: 1, text: 'Fixture answer.' }],
+      status: {
+        enabled: true,
+        signedIn: true,
+        unlimited: false,
+        totalSeconds: 600,
+        remainingSeconds: 480,
+        activeSession: null,
+        budgetOpen: null,
+      },
+    },
+    consent: true,
+    consentLoaded: true,
+    error: null,
+    terminal: null,
+    busy: false,
+    microphone: null,
+    settled: 0,
+    active: true,
+    start: jest.fn(),
+    refresh: jest.fn(),
+    changeConsent: jest.fn(),
+    end: jest.fn(async () => ({ ok: true, value: undefined })),
+    mute: jest.fn(),
+    send: jest.fn(),
+  }),
+}));
+
+test('in a call with captions hidden from ⋯, the large orb is on the stage and no transcript shows', async () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const { SafeAreaProvider } = require('react-native-safe-area-context');
+  const { StyleSheet } = require('react-native');
+  const TalkScreen = require('../src/features/talk/TalkScreen').default;
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <SafeAreaProvider
+        initialMetrics={{
+          frame: { x: 0, y: 0, width: 402, height: 874 },
+          insets: { top: 0, left: 0, right: 0, bottom: 34 },
+        }}
+      >
+        <TalkScreen />
+      </SafeAreaProvider>,
+    );
+  });
+  const has = (testID: string) =>
+    renderer.root.findAll((node) => node.props.testID === testID).length > 0;
+  const orbs = () =>
+    renderer.root
+      .findAll((node) => node.type === ('VoiceOrb' as never))
+      .map((node) => node.props.size as number);
+  // Captions on (the default): the 72 pt call row and the transcript.
+  expect(has('talk-captions-list')).toBe(true);
+  expect(orbs()).toEqual([72]);
+  // Hide captions through the ⋯ menu.
+  const items = (
+    mockOptions.unstable_headerRightItems as () => {
+      type: string;
+      menu?: { items: { label: string; onPress: () => void }[] };
+    }[]
+  )();
+  const hide = items[0]!.menu!.items.find(
+    (item) => item.label === 'Hide captions',
+  )!;
+  await act(async () => hide.onPress());
+  expect(has('talk-captions-list')).toBe(false);
+  // The stage measures itself, then holds the large orb and the status.
+  const stage = renderer.root.find(
+    (node) =>
+      typeof node.type === 'string' &&
+      typeof node.props.onLayout === 'function' &&
+      StyleSheet.flatten(node.props.style)?.minHeight === 120,
+  );
+  await act(async () =>
+    stage.props.onLayout({
+      nativeEvent: { layout: { width: 370, height: 500 } },
+    }),
+  );
+  // 240 pt, or 120 pt at accessibility sizes: the stage orb, not the 72.
+  const [size] = orbs();
+  expect(orbs()).toHaveLength(1);
+  expect([120, 240]).toContain(size);
+  const status = renderer.root.find(
+    (node) =>
+      typeof node.type === 'string' && node.props.testID === 'talk-status',
+  );
+  expect(StyleSheet.flatten(status.props.style)).toMatchObject({
+    width: size,
+    height: size,
+  });
+  expect(
+    renderer.root.find(
+      (node) =>
+        typeof node.type === 'string' && node.props.testID === 'talk-state',
+    ).props.children,
+  ).toBe('Listening');
+  expect(has('talk-mute')).toBe(true);
+  act(() => renderer.unmount());
+});
