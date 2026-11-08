@@ -1108,8 +1108,18 @@ describe('the Leads screen', () => {
       'Updated 21 Sep 2026, AEC and AusTender',
     );
     // Nothing matching says so, with the query in the web's quotes.
+    // under the caption, in one plain line.
     await search('zzzz');
-    expect(unavailable(root, 'leads-empty')).toBe('No leads match “zzzz”.');
+    expect(byTestID(root, 'leads-search-caption').props.children).toBe(
+      '0 leads match',
+    );
+    const none = root.find(
+      (n) => n.type === DesignText && n.props.testID === 'leads-empty',
+    );
+    expect(none.props).toMatchObject({ variant: 'body', tone: 'inkSoft' });
+    expect(none.props.children).toBe('No leads match “zzzz”.');
+    expect(unavailable(root, 'leads-empty')).toBeUndefined();
+    expect(has(root, 'leads-source')).toBe(false);
     // Clearing the field restores the sections.
     await cancelSearch();
     expect(has(root, 'leads-search-results')).toBe(false);
@@ -1162,6 +1172,16 @@ describe('the Leads screen', () => {
       `${matched.length} of 28 leads`,
     );
     expect(cardIDs(root)).toHaveLength(matched.length);
+    // No match keeps the picker and the caption, with one plain line.
+    await search('zzzz');
+    expect(has(root, 'leads-sort')).toBe(true);
+    expect(byTestID(root, 'leads-caption').props.children).toBe(
+      '0 of 28 leads',
+    );
+    expect(byTestID(root, 'leads-empty').props.children).toBe(
+      'No leads match “zzzz”.',
+    );
+    expect(cardIDs(root)).toHaveLength(0);
     act(() => renderer.unmount());
   });
   test('companies in both have one order: no picker', async () => {

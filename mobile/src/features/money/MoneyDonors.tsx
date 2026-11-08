@@ -176,11 +176,15 @@ export default function MoneyDonors() {
                   ))}
                 </View>
               ) : (
-                <ContentUnavailable
-                  symbol="magnifyingglass"
-                  title={`No donors match “${query.trim()}”`}
+                <Text
+                  wordSafe
+                  variant="body"
+                  tone="inkSoft"
+                  accessibilityLiveRegion="polite"
                   testID="money-donors-none"
-                />
+                >
+                  {`No donors match “${query.trim()}”.`}
+                </Text>
               )}
             </View>
             <SourceLine

@@ -165,6 +165,18 @@ export default function Leads() {
   const offline =
     error instanceof ApiError &&
     (error.code === 'offline' || error.code === 'timeout');
+  // A search with no matches is one plain line under its caption.
+  const none = (
+    <Text
+      wordSafe
+      variant="body"
+      tone="inkSoft"
+      accessibilityLiveRegion="polite"
+      testID="leads-empty"
+    >
+      {`No leads match “${query.trim()}”.`}
+    </Text>
+  );
   const cards = (leads: readonly LeadView[], kindMeta: boolean, start = 0) =>
     leads.map((lead, index) => (
       <LeadFeedCard
@@ -213,14 +225,6 @@ export default function Leads() {
         testID="leads-empty"
       />
     );
-  else if (searching && !results.length)
-    body = (
-      <ContentUnavailable
-        symbol="magnifyingglass"
-        title={`No leads match “${query.trim()}”.`}
-        testID="leads-empty"
-      />
-    );
   else if (category)
     body = (
       <Group testID="leads">
@@ -242,15 +246,24 @@ export default function Leads() {
             searching,
           )}
         </Text>
-        <View
-          style={styles.cards}
-          testID={searching ? 'leads-search-results' : undefined}
-        >
-          {cards(results, false)}
-        </View>
-        <SourceLine
-          {...sourceFor(categorySource(category), `leads-source-${category}`)!}
-        />
+        {results.length || !searching ? (
+          <>
+            <View
+              style={styles.cards}
+              testID={searching ? 'leads-search-results' : undefined}
+            >
+              {cards(results, false)}
+            </View>
+            <SourceLine
+              {...sourceFor(
+                categorySource(category),
+                `leads-source-${category}`,
+              )!}
+            />
+          </>
+        ) : (
+          none
+        )}
       </Group>
     );
   else if (searching)
@@ -264,8 +277,16 @@ export default function Leads() {
         >
           {`${formatCount(results.length)} ${results.length === 1 ? 'lead matches' : 'leads match'}`}
         </Text>
-        <View style={styles.cards}>{cards(results, true)}</View>
-        <SourceLine {...sourceFor(leadsCitation(results), 'leads-source')!} />
+        {results.length ? (
+          <>
+            <View style={styles.cards}>{cards(results, true)}</View>
+            <SourceLine
+              {...sourceFor(leadsCitation(results), 'leads-source')!}
+            />
+          </>
+        ) : (
+          none
+        )}
       </Group>
     );
   else {

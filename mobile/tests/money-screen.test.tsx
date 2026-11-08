@@ -6,6 +6,7 @@ import MoneyScreen, {
   individualDonorsLine,
   moneySummary,
 } from '../src/features/money/MoneyScreen';
+import MoneyDonors from '../src/features/money/MoneyDonors';
 import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { defaultMoneyFilters } from '../src/features/money/view';
@@ -296,5 +297,27 @@ test('every push from the map carries via=map', async () => {
     (x) => x.props.action?.testID === 'money-donors-all',
   )[0]!;
   expect(all.props.action.href.params.via).toBe('map');
+  await act(async () => r.unmount());
+});
+
+test('a donors search with no match keeps its caption over one plain line', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<MoneyDonors />);
+  });
+  const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  await act(async () =>
+    (
+      mockOptions.headerSearchBarOptions as {
+        onChangeText: (event: { nativeEvent: { text: string } }) => void;
+      }
+    ).onChangeText({ nativeEvent: { text: 'zzzz' } }),
+  );
+  expect(byTestID(r, Text, 'money-donors-caption')!.props.children).toBe(
+    `0 of ${named.length} donors`,
+  );
+  const none = byTestID(r, Text, 'money-donors-none')!;
+  expect(none.props).toMatchObject({ variant: 'body', tone: 'inkSoft' });
+  expect(none.props.children).toBe('No donors match “zzzz”.');
   await act(async () => r.unmount());
 });
