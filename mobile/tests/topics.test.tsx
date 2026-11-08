@@ -246,6 +246,19 @@ describe('topic arrivals (specs/search.md 5.2.1)', () => {
     ],
     ['from after to drops both', { from: '2010', to: '2005' }, {}, ''],
     ['an unknown parliament is dropped', { state: 'mars' }, {}, ''],
+    [
+      'a party by full name is kept',
+      { party: 'Labor' },
+      { party: 'Labor' },
+      'Labor',
+    ],
+    [
+      'a known party code is kept',
+      { party: 'IND' },
+      { party: 'IND' },
+      'Independent',
+    ],
+    ['an unknown party code is dropped', { party: 'XYZ' }, {}, ''],
   ])('%s', (_name, params, filters, line) => {
     const out = normaliseTopicFilters(params);
     expect(out).toEqual(filters);

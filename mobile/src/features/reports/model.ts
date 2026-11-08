@@ -347,7 +347,7 @@ export function normaliseTopicFilters(
   };
   const out: SpeechFilters = {};
   const party = one('party');
-  if (party && party.length <= 200) out.party = party;
+  if (party && isKnownParty(party)) out.party = party;
   const state = one('state');
   if (state && parliamentNames[state]) out.state = state;
   const debate = one('debate');
@@ -430,6 +430,36 @@ export function arcPath(slug: string, filters: SpeechFilters = {}) {
  * "IND" Independent. Names and unknown codes are kept exactly as recorded.
  */
 export const partyName = (party: string): string => partyFromCode(party);
+
+// The codes partyFromCode resolves (features/bills/party-codes.ts, which
+// does not export its table), so a link's party can be checked by code or
+// by the full name the web sends.
+const PARTY_CODES = [
+  'ALP',
+  'LIB',
+  'LP',
+  'NAT',
+  'NATS',
+  'LNP',
+  'CLP',
+  'GRN',
+  'AG',
+  'ONP',
+  'PHON',
+  'IND',
+  'CA',
+  'KAP',
+  'UAP',
+  'AD',
+  'FF',
+  'JLN',
+] as const;
+const knownParties = new Set(
+  PARTY_CODES.flatMap((code) => [code, partyFromCode(code).toUpperCase()]),
+);
+/** A party a topic arrival may filter by: a known code or its full name. */
+export const isKnownParty = (party: string) =>
+  knownParties.has(party.trim().toUpperCase());
 /**
  * A report section's heading and its opening sentence. The heading is the
  * section's short name where the export gives one (an era's "1993–2009");
