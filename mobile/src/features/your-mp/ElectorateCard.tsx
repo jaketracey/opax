@@ -46,10 +46,7 @@ export function electorateCardSource(
           ]
         : []),
     ],
-    originals: [
-      ...(election?.sources ?? []),
-      ...(census?.sources ?? []),
-    ]
+    originals: [...(election?.sources ?? []), ...(census?.sources ?? [])]
       .filter((s, i, all) => all.findIndex((o) => o.url === s.url) === i)
       .map((s) => ({ label: s.label, url: s.url })),
     notes: census
@@ -61,9 +58,7 @@ export function electorateCardSource(
 }
 
 export function ElectorateCardSkeleton() {
-  return (
-    <Skeleton shape="card" count={1} label="Loading your electorate" />
-  );
+  return <Skeleton shape="card" count={1} label="Loading your electorate" />;
 }
 
 /**
@@ -148,7 +143,9 @@ export function ElectorateCard({
                     />
                   </>
                 ) : null}
-                <Text variant="secondary">{formatDate(election.date, 'short')}</Text>
+                <Text variant="secondary">
+                  {formatDate(election.date, 'short')}
+                </Text>
               </View>
               <Icon
                 name={symbols.chevron}
@@ -179,7 +176,11 @@ export function ElectorateCard({
 
 const styles = StyleSheet.create({
   wrap: { gap: 0 },
-  top: { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
+  top: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderCurve: 'continuous',
+  },
   body: { padding: rhythm.block, gap: rhythm.tight },
   block: { gap: rhythm.line },
   election: {
@@ -194,6 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.raised,
     borderBottomLeftRadius: radii.container,
     borderBottomRightRadius: radii.container,
+    borderCurve: 'continuous',
     borderTopWidth: hairline,
     borderTopColor: colors.line,
     marginTop: -1,
