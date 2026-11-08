@@ -58,6 +58,7 @@ import {
 import { MemberVoteRow } from './people/MemberVoteRow';
 import { officialPageItem, usePageActions } from './people/PageActions';
 import { ProfileHeader, type IdentityRow } from './people/ProfileHeader';
+import { PersonNotFound } from './people/NotFound';
 import { MoreFromRecord, PersonDiary } from './people/Sections';
 import {
   annualPay,
@@ -289,29 +290,22 @@ export function ProfileScreen({
       {load.status !== 'ready' ? (
         <Screen
           testID="person-pending-screen"
-          barTitle={load.status === 'not-found' ? 'Profile' : undefined}
+          barTitle={load.status === 'not-found' ? 'No profile' : undefined}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={refresh} />
           }
         >
           {load.status === 'not-found' ? (
-            <ContentUnavailable
-              symbol="person.crop.circle"
-              title="This person isn’t in OPAX"
-              body="Profiles cover people who have served in an Australian parliament."
-              action={{
-                label: 'Search',
-                onPress: () =>
-                  router.navigate({
-                    pathname: '/search',
-                    params: {
-                      q: routeName ?? slug.replace(/-/g, ' '),
-                      kind: 'all',
-                    },
-                  }),
-                testID: 'person-not-found-search',
-              }}
-              testID="person-not-found"
+            <PersonNotFound
+              onSearch={() =>
+                router.navigate({
+                  pathname: '/search',
+                  params: {
+                    q: routeName ?? slug.replace(/-/g, ' '),
+                    kind: 'all',
+                  },
+                })
+              }
             />
           ) : load.status === 'error' ? (
             load.offline ? (
