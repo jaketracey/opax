@@ -1,23 +1,15 @@
-import { useRef, useState } from 'react';
-import { View } from 'react-native';
+import { router } from 'expo-router';
+import { catalogs } from '../../api/runtime';
+import { askFilterModel } from '../sheets/filter-models';
 import {
-  Button,
-  ErrorState,
-  Field,
-  Group,
-  ChoiceChips,
-  Section,
-  Text,
-} from '../../design/primitives';
-import { AskSheet } from './AskSheet';
-import {
-  defaultOptions,
-  normaliseOptions,
-  parties,
-  parliaments,
-  type AskOptions,
-} from './model';
-import { Choice } from './choices';
+  registerFilterModel,
+  type FilterChoice,
+  type FilterValues,
+} from '../sheets/filter-model';
+import { filtersRoute } from '../../navigation/routes/filters';
+import { defaultOptions, normaliseOptions, type AskOptions } from './model';
+import { askSession } from './session';
+
 export const topics: Record<string, string> = {
   gambling: 'Gambling',
   'financial-services': 'Financial services',
@@ -41,137 +33,63 @@ export const topics: Record<string, string> = {
   'justice-law': 'Justice & law',
   'foreign-affairs': 'Foreign affairs',
 };
-export function Options({
-  value,
-  people,
-  onDone,
-  onCancel,
-}: {
-  value: AskOptions;
-  people: string[];
-  onDone: (o: AskOptions) => void;
-  onCancel: () => void;
-}) {
-  const [o, setO] = useState(value),
-    [error, setError] = useState('');
-  const yearsTarget = useRef<View>(null);
-  const update = (key: keyof AskOptions, v: string) => setO({ ...o, [key]: v });
-  function done() {
-    if (
-      [o.from, o.to].some(
-        (v) => v && (!/^\d{4}$/.test(v) || +v < 1993 || +v > 2026),
-      )
-    )
-      return setError('Choose years from 1993 to 2026.');
-    onDone(normaliseOptions(o));
+/** The filter sheet's owner key for Ask's options. */
+export const ASK_OPTIONS_OWNER = 'ask';
+const keys = ['speaker', 'party', 'state', 'topic', 'from', 'to'] as const;
+export function toFilterValues(o: AskOptions): FilterValues {
+  return { ...Object.fromEntries(keys.map((k) => [k, o[k]])), kind: o.kind };
+}
+export function fromFilterValues(v: FilterValues): AskOptions {
+  const o = { ...defaultOptions };
+  for (const k of keys) o[k] = typeof v[k] === 'string' ? (v[k] as string) : '';
+  o.kind = v.kind === 'speech' ? 'speech' : 'all';
+  return normaliseOptions(o);
+}
+/**
+ * Ask's options use Search's one filter config (A2, `journeys/ask.md` 4.3
+ * and 14): "Person" names the member row (senators are on it; "Speaker"
+ * reads as the Speaker of the House) and the request key stays `speaker`.
+ */
+export function askOptionsModel(members?: FilterChoice[]) {
+  const base = askFilterModel({
+    members,
+    topics: Object.entries(topics).map(([value, label]) => ({ value, label })),
+  });
+  return {
+    ...base,
+    rows: base.rows.map((row) =>
+      row.key === 'speaker' ? { ...row, title: 'Person' } : row,
+    ),
+    footer: 'All records include political funding, contracts and grants.',
+  };
+}
+let members: FilterChoice[] | undefined;
+async function loadMembers() {
+  if (members) return members;
+  try {
+    const roster = await catalogs.roster();
+    const people = roster.data.people.filter((p) => !p.roster_only);
+    members = [
+      ...people.filter((p) => p.current),
+      ...people.filter((p) => !p.current),
+    ].map((p) => ({ value: p.name, label: p.name }));
+  } catch {
+    /* The sheet still opens; the Person list is empty until the roster loads. */
   }
-  const any = { value: '', label: 'any' };
-  return (
-    <AskSheet
-      title="Ask options"
-      onDone={done}
-      onClose={onCancel}
-      testID="ask-options-screen"
-      doneID="ask-options-done"
-      keyboardTarget={yearsTarget}
-    >
-      <Section title="Years" rule={false}>
-        <Field
-          label="From year"
-          value={o.from}
-          onChangeText={(v) => update('from', v)}
-          keyboardType="number-pad"
-          returnKeyType="done"
-          submitBehavior="blurAndSubmit"
-          placeholder="1993"
-          maxLength={4}
-          testID="ask-from"
-        />
-        <View ref={yearsTarget} collapsable={false}>
-          <Field
-            label="To year"
-            value={o.to}
-            onChangeText={(v) => update('to', v)}
-            keyboardType="number-pad"
-            returnKeyType="done"
-            submitBehavior="blurAndSubmit"
-            placeholder="2026"
-            maxLength={4}
-            testID="ask-to"
-          />
-        </View>
-      </Section>
-      <Section title="Narrow the record" accent="people">
-        <Choice
-          label="Speaker"
-          value={o.speaker}
-          values={[
-            any,
-            ...people.map((name) => ({ value: name, label: name })),
-          ]}
-          onChange={(v) => update('speaker', v)}
-          testID="ask-speaker"
-        />
-        <Choice
-          label="Party"
-          value={o.party}
-          values={[any, ...parties.map((v) => ({ value: v, label: v }))]}
-          onChange={(v) => update('party', v)}
-          testID="ask-party"
-        />
-        <Choice
-          label="Parliament"
-          value={o.state}
-          values={[
-            any,
-            ...Object.entries(parliaments).map(([value, label]) => ({
-              value,
-              label,
-            })),
-          ]}
-          onChange={(v) => update('state', v)}
-          testID="ask-state"
-        />
-        <Choice
-          label="Topic"
-          value={o.topic}
-          values={[
-            any,
-            ...Object.entries(topics).map(([value, label]) => ({
-              value,
-              label,
-            })),
-          ]}
-          onChange={(v) => update('topic', v)}
-          testID="ask-topic"
-        />
-      </Section>
-      <Section title="Include" accent="bills">
-        <ChoiceChips
-          value={o.kind}
-          segments={[
-            { value: 'all', label: 'All records', testID: 'ask-include-money' },
-            { value: 'speech', label: 'Speeches only' },
-          ]}
-          onChange={(v) => update('kind', v)}
-          testID="ask-kind"
-        />
-        {/* Said once under its choice, not behind an ⓘ (pass 5). */}
-        <Text variant="fine" wordSafe testID="ask-kind-note">
-          All records includes political funding, contracts and grants.
-        </Text>
-      </Section>
-      <Group>
-        {error ? <ErrorState message={error} /> : null}
-        <Button
-          label="Apply options"
-          variant="primary"
-          onPress={done}
-          testID="ask-options-apply"
-        />
-        <Button label="Clear all" onPress={() => setO({ ...defaultOptions })} />
-        <Button label="Cancel" variant="quiet" onPress={onCancel} />
-      </Group>
-    </AskSheet>
-  );
+  return members;
+}
+/** Registers the options model with the composer's options, then opens the sheet. */
+export function bindAskOptions(choices?: FilterChoice[]) {
+  return registerFilterModel(askOptionsModel(choices), {
+    owner: ASK_OPTIONS_OWNER,
+    value: toFilterValues(askSession.composerOptions()),
+    // Done and every change land on the fresh draft or the open conversation.
+    onChange: (next) => askSession.options(fromFilterValues(next)),
+  });
+}
+export async function openAskOptions() {
+  bindAskOptions(members);
+  router.push(filtersRoute('ask', ASK_OPTIONS_OWNER));
+  const loaded = await loadMembers();
+  if (loaded) bindAskOptions(loaded);
 }
