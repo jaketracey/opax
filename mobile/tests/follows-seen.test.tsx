@@ -23,6 +23,8 @@ import {
 } from '../src/features/follows/store';
 import {
   changeAccessibilityLabel,
+  changesFor,
+  seenKeysForChanges,
   type Change,
   type FollowRecord,
 } from '../src/features/follows/changes';
@@ -380,4 +382,73 @@ test('the own-member card acknowledges only its displayed identities, plus party
   expect(saved.seenKeys).toEqual(['shown-vote']);
   expect(saved.seenKeys).not.toContain('profile-only-vote');
   expect(Object.keys(saved.seen!)).toEqual(['party', 'seat']);
+});
+
+test('viewing a division acknowledges its hidden stage when the latest division later moves on', async () => {
+  const stage: FollowRecord = {
+    key: 'stage:second-reading',
+    kind: 'stage',
+    date: '2026-08-19',
+    title: 'Second reading',
+    stage: 'Second reading',
+    chamber: 'Senate',
+    billKey: f.id,
+  };
+  const division: FollowRecord = {
+    ...stage,
+    key: 'division:second-reading',
+    kind: 'division',
+    divisionKey: 'second-reading',
+    outcome: 'agreed to',
+  };
+  const before = {
+    moved: { value: 'old', asAt: null, records: [] },
+    divisions: { value: 0, asAt: null, records: [] },
+  };
+  const current = {
+    moved: { value: stage.date, asAt: stage.date, records: [stage] },
+    divisions: { value: 1, asAt: division.date, records: [division] },
+  };
+  await follow(f);
+  await markSeen(followKey(f), before, ['division:later']);
+  const saved = (await loadFollows())[0]!;
+  const changes = changesFor(saved, current);
+  expect(changes).toHaveLength(1);
+  expect(changes[0]!.coveredKeys).toEqual([stage.key]);
+  expect(seenKeysForChanges(changes)).toEqual([division.key, stage.key]);
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <AddedSinceGroup
+        follow={saved}
+        changes={changes}
+        testID="bill-added-since"
+        current={current}
+      />,
+    );
+  });
+  await act(async () => {
+    jest.advanceTimersByTime(1000);
+  });
+  const acknowledged = (await loadFollows())[0]!;
+  expect(acknowledged.seenKeys).toEqual([
+    division.key,
+    stage.key,
+    'division:later',
+  ]);
+  const next = {
+    ...current,
+    divisions: {
+      value: 2,
+      asAt: '2026-08-20',
+      records: [
+        {
+          ...division,
+          key: 'division:later',
+          date: '2026-08-20',
+          stage: 'Third reading',
+        },
+      ],
+    },
+  };
+  expect(changesFor(acknowledged, next)).toEqual([]);
 });

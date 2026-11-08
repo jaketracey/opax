@@ -116,6 +116,7 @@ interface Change {
   citation: string;
   asAt: string | null;
   key?: string;
+  coveredKeys?: string[];
   record?: FollowRecord;
   dateNotPublished?: boolean;
   today?: false;
@@ -199,8 +200,10 @@ person-ID sets in `members.value` with names in `members.records`. It emits a
 named line for each added or removed member. Member keys never enter
 `currentKeys` or `seenKeys`; marking seen stores the complete new set.
 `seenKeysForChanges` returns the exact non-membership identities for visible
-rows. Use it for Today, `/follows` and page acknowledgements; the page group
-already does this.
+rows, including `coveredKeys` for a stage represented by its division. Use it
+for Today, `/follows` and page acknowledgements; the page group already does
+this. This keeps the stage seen after the latest division moves to another
+event. `currentKeys` also includes that stage for Mark all as seen.
 
 | Marker                    | Available data and fallback                                                                                                                            |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |

@@ -42,6 +42,8 @@ export interface Change {
   citation: string;
   asAt: string | null;
   key?: string;
+  /** Other record identities represented by this same visible event. */
+  coveredKeys?: string[];
   record?: FollowRecord;
   dateNotPublished?: boolean;
   /** Expenses appear on the page only. */
@@ -145,7 +147,12 @@ export function seenKeysForChanges(changes: readonly Change[]): string[] {
   return [
     ...new Set(
       changes.flatMap((change) =>
-        change.marker === 'members' ? [] : change.key ? [change.key] : [],
+        change.marker === 'members'
+          ? []
+          : [
+              ...(change.key ? [change.key] : []),
+              ...(change.coveredKeys ?? []),
+            ],
       ),
     ),
   ];
@@ -292,7 +299,19 @@ export function changesFor(
           )
         )
           continue;
-        out.push(makeChange(marker, text, reading, citation, record));
+        const coveredKeys =
+          record.kind === 'division'
+            ? Object.values(current)
+                .flatMap((r) => r.records ?? [])
+                .filter(
+                  (stage) => stage.kind === 'stage' && sameEvent(stage, record),
+                )
+                .map((stage) => stage.key)
+            : [];
+        out.push({
+          ...makeChange(marker, text, reading, citation, record),
+          ...(coveredKeys.length ? { coveredKeys } : {}),
+        });
       }
       continue;
     }
