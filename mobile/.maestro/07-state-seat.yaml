@@ -3,26 +3,32 @@ name: 07 Choose a state district explicitly where a verified roster exists
 ---
 - launchApp:
     clearState: true
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- tapOn: Electorate or member.s name
+- inputText: Ballarat
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-vic-ballarat
+    timeout: 30000
+- tapOn:
+    id: seat-row-federal-representatives-vic-ballarat
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
 - tapOn:
     id: tab-your-mp
-- tapOn:
-    id: seat-search
-- inputText: Ballarat
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-federal-representatives-vic-ballarat
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: seat-choice-federal-representatives-vic-ballarat
 - runFlow:
     file: support/open-your-register.yaml
     env:
       REGISTER_PREFIX: 07-state
 - extendedWaitUntil:
     visible:
-      id: your-register-source
+      id: your-latest-source
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/07-state-register-open
 - scrollUntilVisible:
@@ -33,24 +39,23 @@ name: 07 Choose a state district explicitly where a verified roster exists
 - takeScreenshot: ${EVIDENCE}/07-state-choice-needed
 - tapOn:
     id: choose-state-seat
-- scrollUntilVisible:
-    element:
-      id: seat-search
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: seat-search
+# The Victorian chooser: districts and regions, one title in the bar.
+- extendedWaitUntil:
+    visible: Victorian electorate
+    timeout: 15000
+- tapOn: District, region or member.s name
 - inputText: Wendouree
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-vic-vic-la-vic-wendouree
-    centerElement: true
-    timeout: 300000
+- extendedWaitUntil:
+    visible:
+      id: seat-row-vic-vic-la-vic-wendouree
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/07-state-chooser
 - tapOn:
-    id: seat-choice-vic-vic-la-vic-wendouree
+    id: seat-row-vic-vic-la-vic-wendouree
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
 - scrollUntilVisible:
     element:
       id: your-state-member-juliana-addison
@@ -78,53 +83,31 @@ name: 07 Choose a state district explicitly where a verified roster exists
     env:
       END: your-mp-end
       PREFIX: 07-state-restored-details
-- scrollUntilVisible:
-    element:
-      id: choose-state-seat
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: choose-state-seat
-- scrollUntilVisible:
-    element:
-      id: seat-search
-    direction: UP
-    centerElement: true
-    timeout: 300000
-- tapOn:
-    id: seat-search
+# Changing the district replaces the old one; the saved one carries a
+# checkmark in the chooser.
+- openLink: opax://seat?scope=vic
+- extendedWaitUntil:
+    visible: Victorian electorate
+    timeout: 15000
+- tapOn: District, region or member.s name
 - inputText: Eureka
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-vic-vic-la-vic-eureka
-    centerElement: true
-    timeout: 300000
+- extendedWaitUntil:
+    visible:
+      id: seat-row-vic-vic-la-vic-eureka
+    timeout: 30000
 - tapOn:
-    id: seat-choice-vic-vic-la-vic-eureka
-- scrollUntilVisible:
-    element:
-      id: remove-state-seat-el_6197f5d66f485727812f7ba1
-    centerElement: true
-    timeout: 300000
+    id: seat-row-vic-vic-la-vic-eureka
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
 - assertNotVisible:
-    id: remove-state-seat-el_7415d33a6ae75d549c3fdfc2
+    id: your-state-member-juliana-addison
 - takeScreenshot: ${EVIDENCE}/07-state-replaced
-- tapOn:
-    id: remove-state-seat-el_6197f5d66f485727812f7ba1
-- scrollUntilVisible:
-    element:
-      id: choose-state-seat
-    centerElement: true
-    timeout: 300000
-- assertNotVisible:
-    id: remove-state-seat-el_6197f5d66f485727812f7ba1
-- takeScreenshot: ${EVIDENCE}/07-state-removed
 - scrollUntilVisible:
     element:
       id: your-seat-name
     direction: UP
     centerElement: true
     timeout: 300000
-- assertVisible: Ballarat
+- assertVisible: Ballarat.*

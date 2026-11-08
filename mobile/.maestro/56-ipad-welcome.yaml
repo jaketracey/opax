@@ -1,0 +1,120 @@
+appId: au.com.opax.app
+name: 56 iPad welcome, full screen in a centred column in both orientations, Continue to the seat step, Browse by state, replay
+---
+# iPad only (OPAX QA iPad 13). Full-Screen Apps first: in iPadOS 26's
+# windowed mode Maestro's taps land beside their targets. The journey
+# restores Windowed Apps (the simulator default) at the end.
+# The welcome is full screen on iPad too, never a form sheet: nothing of the
+# app shows behind it, and its content sits in a centred 540 pt column.
+- runFlow: support/ipad-full-screen-apps.yaml
+- setOrientation: LANDSCAPE_LEFT
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-launch-cover
+    timeout: 10000
+- assertNotVisible:
+    id: tab-today
+- assertVisible:
+    id: welcome-title
+    text: Welcome to OPAX
+- assertVisible:
+    id: welcome-row-your-mp
+- assertVisible:
+    id: welcome-notice
+- assertVisible:
+    id: welcome-continue
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-welcome-landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- assertVisible:
+    id: welcome-title
+- assertVisible:
+    id: welcome-continue
+- takeScreenshot: ${EVIDENCE}/56-welcome-portrait
+- tapOn:
+    id: welcome-continue
+- extendedWaitUntil:
+    visible:
+      id: welcome-seat
+    timeout: 10000
+- assertVisible: Your electorate
+- assertVisible: Not now
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/56-seat-step-portrait
+# Browse by state pushes inside the welcome.
+- runFlow:
+    when:
+      visible: Cancel
+    commands:
+      - tapOn: Cancel
+- scrollUntilVisible:
+    element:
+      id: seat-browse-nsw
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: seat-browse-nsw
+- extendedWaitUntil:
+    visible:
+      id: seat-state-nsw
+    timeout: 10000
+- assertVisible: New South Wales
+- takeScreenshot: ${EVIDENCE}/56-browse-nsw
+- scrollUntilVisible:
+    element:
+      id: seat-row-federal-representatives-nsw-grayndler
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: seat-row-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    notVisible:
+      id: seat-state-nsw
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/56-after-choice
+# Replay, then Not now: the saved seat stays.
+- tapOn: Account
+- scrollUntilVisible:
+    element:
+      id: account-replay-tour
+    timeout: 90000
+    visibilityPercentage: 10
+    centerElement: true
+- tapOn:
+    id: account-replay-tour
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 30000
+- tapOn:
+    id: welcome-continue
+- extendedWaitUntil:
+    visible:
+      id: seat-saved-row
+    timeout: 10000
+- tapOn: Done
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-seat
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/56-after-replay
+- runFlow: support/ipad-windowed-apps.yaml

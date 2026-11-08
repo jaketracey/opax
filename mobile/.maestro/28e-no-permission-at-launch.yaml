@@ -1,0 +1,57 @@
+appId: au.com.opax.app
+name: 28e No location request at launch, in the welcome or on Your MP until a tap
+---
+# Location is asked for only at a "Use my location" tap. A first launch, the
+# welcome, its seat step and "Not now" ask for nothing.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- assertNotVisible: Allow Once
+- assertNotVisible: Allow While Using App
+- tapOn:
+    id: welcome-continue
+- extendedWaitUntil:
+    visible:
+      id: welcome-seat
+    timeout: 10000
+- waitForAnimationToEnd
+- assertNotVisible: Allow Once
+- assertVisible:
+    id: use-my-location
+- tapOn: Not now
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+- assertNotVisible: Allow Once
+- tapOn:
+    id: tab-your-mp
+- waitForAnimationToEnd
+- assertNotVisible: Allow Once
+- takeScreenshot: ${EVIDENCE}/28e-no-request
+# The tap is what asks.
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- assertNotVisible: Allow Once
+- scrollUntilVisible:
+    element:
+      id: use-my-location
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: use-my-location
+- extendedWaitUntil:
+    visible: Allow Once
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/28e-asked-at-tap
+- tapOn: Don’t Allow

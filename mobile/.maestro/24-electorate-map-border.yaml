@@ -1,0 +1,59 @@
+appId: au.com.opax.app
+name: 24 Near a boundary, each nearby seat is an ordinary row
+---
+# A fix on the Grayndler and Sydney line (Newtown), set here over the
+# harness's Grayndler fix. Each nearby seat is offered as its own row,
+# "Near your location", with no checkmark and no near-boundary footer.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+- setLocation:
+    latitude: -33.895392
+    longitude: 151.171465
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: use-my-location
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: use-my-location
+- extendedWaitUntil:
+    visible: Allow Once
+    timeout: 15000
+- scrollUntilVisible:
+    element: Allow Once
+    centerElement: false
+    timeout: 300000
+- tapOn: Allow Once
+- scrollUntilVisible:
+    element:
+      id: location-border
+    centerElement: true
+    timeout: 300000
+- assertVisible:
+    id: seat-location-row-federal-representatives-nsw-grayndler
+- assertVisible:
+    id: seat-location-row-federal-representatives-nsw-sydney
+- assertVisible: Near your location
+- assertNotVisible: .*boundary line.*
+- takeScreenshot: ${EVIDENCE}/24-border
+- tapOn:
+    id: seat-location-row-federal-representatives-nsw-sydney
+- extendedWaitUntil:
+    notVisible:
+      id: seat-sheet
+    timeout: 10000
+- tapOn:
+    id: tab-your-mp
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 30000
+- assertVisible: Sydney.*
+- takeScreenshot: ${EVIDENCE}/24-border-chosen

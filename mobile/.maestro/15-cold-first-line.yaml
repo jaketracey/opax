@@ -15,6 +15,9 @@ name: 15 Cold launch draws Today's first line under the title
 - launchApp:
     clearState: true
     stopApp: true
+# E2E builds treat the welcome as seen: a cold launch lands on Today.
+- assertNotVisible:
+    id: welcome-screen
 - extendedWaitUntil:
     visible:
       id: today-screen-message
