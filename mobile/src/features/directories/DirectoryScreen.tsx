@@ -498,7 +498,12 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
       stickySectionHeadersEnabled
       extraData={split ? selectedKey : undefined}
       onViewableItemsChanged={split ? onViewable : undefined}
-      onScrollToIndexFailed={() => undefined}
+      // A row not yet measured: scroll near it; the next step lands on it.
+      onScrollToIndexFailed={({ index: at, averageItemLength }) =>
+        listRef.current
+          ?.getScrollResponder()
+          ?.scrollTo({ y: averageItemLength * at, animated: true })
+      }
       ItemSeparatorComponent={separator}
       initialNumToRender={10}
       maxToRenderPerBatch={8}

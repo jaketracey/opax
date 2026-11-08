@@ -7,6 +7,7 @@ import {
   PersonRow,
   RowLink,
   Text,
+  symbols,
   useAccessibilitySize,
   type RowMenuAction,
 } from '../../design/primitives';
@@ -242,12 +243,7 @@ function FeedEntry({
           </Text>
         ) : null}
         <View style={styles.register}>
-          <Icon
-            name="doc.text.magnifyingglass"
-            size={13}
-            maxScale={1.5}
-            tone="navy"
-          />
+          <Icon name={symbols.source} size={13} maxScale={1.5} tone="navy" />
           <Text wordSafe variant="footnote" tone="inkSoft" style={styles.grow}>
             {`${change} · `}
             <Text variant="footnote" tone="navy">

@@ -9,6 +9,7 @@ import {
   RowLink,
   Text,
   rowMenus,
+  symbols,
   useRowFollow,
   type RowMenuAction,
 } from '../../design/primitives';
@@ -258,7 +259,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
         </View>
       </View>
       {split ? null : (
-        <Icon name="chevron.right" size={13} maxScale={1.5} tone="inkSoft" />
+        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       )}
     </Pressable>
   );
