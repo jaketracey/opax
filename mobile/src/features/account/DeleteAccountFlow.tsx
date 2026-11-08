@@ -1,93 +1,181 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { useRef, useState } from 'react';
 import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
+import { Stack, router } from 'expo-router';
 import * as voice from '../../voice';
 import type { VoiceFailure } from '../../voice';
 import {
   Button,
   ErrorState,
   Field,
-  Group,
-  Heading,
+  InsetGroup,
   LinkRow,
   Screen,
   Text,
 } from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
+import { useRowCellStyle } from '../../design/row-padding';
+import { minimumTarget, rhythm } from '../../design/tokens';
+import { confirmAction } from '../../design/menu';
 import { openOnWeb } from '../../navigation/external';
+import {
+  deleteCodeRouteFor,
+  signInRoute,
+} from '../../navigation/routes/account';
+import { clearAskConversations } from '../ask/store';
+import { SettingsRow } from './AccountLinks';
 import { CODE_LENGTH, codeDigits } from './code';
 import { accountCopy, deletionRefusal, refusalCopy } from './copy';
+import { ResendButton } from './ResendButton';
 import { accountDeleted, sessionEnded } from './store';
-import { useCodeChallenge } from './useCodeChallenge';
-import { clearAskConversations } from '../ask/store';
+import { issueChallenge, useCodeChallenge } from './useCodeChallenge';
+
+/** Signed out or refused: deleting needs a new sign-in first (6.4). */
+const needsSignIn = (failure: VoiceFailure) =>
+  failure === 'signedOut' || failure === 'forbidden';
+const signInAgain = () => router.push(signInRoute('account'));
 
 /**
- * Account deletion (IOS-UX 4.12, IOS-APP section 6): what is and is not
- * deleted, a fresh emailed code, then the result. Ends signed out. A whole
- * screen: it draws its own scroll view, one per step.
+ * Delete account, step 1 (specs/account.md 6.2): what is deleted and kept,
+ * then "Email me a deletion code". The back button is Cancel.
  */
-export function DeleteAccountFlow({
-  onCancel,
-  onDone,
-  onSignIn,
-}: {
-  onCancel: () => void;
-  onDone: () => void;
-  /** Sign in again, after this device was signed out without a deletion. */
-  onSignIn: () => void;
-}) {
-  const [step, setStep] = useState<'confirm' | 'code' | 'deleted'>('confirm');
-  const [code, setCode] = useState('');
-  const [busy, setBusy] = useState<'request' | 'resend' | 'delete' | null>(
-    null,
-  );
+export function DeleteIntro() {
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-  // Signed out here, account not deleted: deleting needs a new sign-in.
-  const [signedOutHere, setSignedOutHere] = useState(false);
+  const [signedOut, setSignedOut] = useState(false);
   const inFlight = useRef(false);
-  const challenge = useCodeChallenge();
 
-  // ErrorState draws the sentence as an alert and moves VoiceOver to it.
-  const refuse = (message: string) => setError(message);
-  function refused(failure: VoiceFailure) {
-    // The native core has already removed a token the Worker refused.
-    if (failure === 'signedOut' || failure === 'forbidden') sessionEnded();
-    refuse(deletionRefusal(failure));
+  async function request() {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setBusy(true);
+    setError(null);
+    const result = await voice.requestDeletionCode();
+    inFlight.current = false;
+    setBusy(false);
+    if (!result.ok) {
+      // The native core has already removed a token the Worker refused.
+      if (needsSignIn(result.error)) {
+        sessionEnded();
+        setSignedOut(true);
+      }
+      return setError(deletionRefusal(result.error));
+    }
+    router.push(deleteCodeRouteFor(issueChallenge(result.value.challengeId)));
   }
 
-  async function request(resend: boolean) {
+  return (
+    <Screen grouped testID="account-delete-screen">
+      <Text wordSafe variant="body" testID="account-delete-confirm-step">
+        {accountCopy.deleteLede}
+      </Text>
+      <InsetGroup header={accountCopy.deletedHeader}>
+        {accountCopy.deletedRows.map((row) => (
+          <PlainRow key={row} group={accountCopy.deletedHeader} text={row} />
+        ))}
+      </InsetGroup>
+      <InsetGroup header={accountCopy.keptHeader}>
+        {accountCopy.keptRows.map((row) => (
+          <PlainRow key={row} group={accountCopy.keptHeader} text={row} />
+        ))}
+      </InsetGroup>
+      <InsetGroup>
+        <LinkRow
+          title={accountCopy.deletionPolicy}
+          external
+          accessibilityHint={accountCopy.opensOnWeb}
+          testID="account-deletion-policy"
+          onPress={() =>
+            void openOnWeb(
+              '/privacy#privacy-deletion',
+              accountCopy.deletionPolicy,
+            )
+          }
+        />
+      </InsetGroup>
+      <View style={styles.action}>
+        {signedOut ? (
+          <Button
+            variant="primary"
+            size="large"
+            fullWidth
+            label={accountCopy.signInAgain}
+            onPress={signInAgain}
+            testID="account-deletion-sign-in"
+          />
+        ) : (
+          <InsetGroup>
+            <SettingsRow
+              title={accountCopy.emailDeletionCode}
+              tone="danger"
+              busy={busy}
+              onPress={() => void request()}
+              testID="account-delete-confirm"
+            />
+          </InsetGroup>
+        )}
+        {error ? (
+          <ErrorState message={error} testID="account-delete-error" />
+        ) : null}
+      </View>
+    </Screen>
+  );
+}
+
+/**
+ * Delete account, step 2 (6.3): the emailed code, then "Delete account" and
+ * its confirmation. A full code hides the keyboard but never submits:
+ * deleting needs a deliberate tap. On success Account shows signed out with
+ * the deletion notice, and the back button can never return here (6.5).
+ */
+export function DeleteCode({
+  challenge: initial,
+}: {
+  challenge: string | null;
+}) {
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState<'resend' | 'delete' | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [resent, setResent] = useState(false);
+  // Signed out here, account not deleted: deleting needs a new sign-in.
+  const [signedOut, setSignedOut] = useState(false);
+  const inFlight = useRef(false);
+  const challenge = useCodeChallenge(initial);
+
+  function refused(failure: VoiceFailure) {
+    // The native core has already removed a token the Worker refused.
+    if (needsSignIn(failure)) {
+      sessionEnded();
+      setSignedOut(true);
+    }
+    setError(deletionRefusal(failure));
+  }
+
+  async function resend() {
     if (inFlight.current) return;
     Keyboard.dismiss();
     inFlight.current = true;
-    setBusy(resend ? 'resend' : 'request');
+    setBusy('resend');
     setError(null);
-    setNotice(null);
     const result = await voice.requestDeletionCode();
     inFlight.current = false;
     setBusy(null);
     if (!result.ok) return refused(result.error);
     challenge.issued(result.value.challengeId);
     setCode('');
-    setStep('code');
-    if (resend) {
-      setNotice(accountCopy.newDeletionCodeSent);
-      AccessibilityInfo.announceForAccessibility(
-        accountCopy.newDeletionCodeSent,
-      );
-    }
+    setResent(true);
+    AccessibilityInfo.announceForAccessibility(accountCopy.newDeletionCodeSent);
   }
 
   async function remove() {
-    if (inFlight.current || !challenge.challenge) return;
-    if (code.length !== CODE_LENGTH) return refuse(refusalCopy.codeIncomplete);
+    if (inFlight.current) return;
+    if (code.length !== CODE_LENGTH)
+      return setError(refusalCopy.codeIncomplete);
     // Same limits as sign-in, and the same answer as any refused code.
-    if (challenge.gate() !== 'open')
-      return refuse(refusalCopy.deletionCodeFailed);
+    if (!challenge.challenge || challenge.gate() !== 'open')
+      return setError(refusalCopy.deletionCodeFailed);
     Keyboard.dismiss();
     inFlight.current = true;
     setBusy('delete');
     setError(null);
-    setNotice(null);
     challenge.tried();
     const result = await voice.deleteAccount(challenge.challenge.id, code);
     if (!result.ok && result.error === 'unavailable') {
@@ -99,206 +187,143 @@ export function DeleteAccountFlow({
         inFlight.current = false;
         setBusy(null);
         sessionEnded();
-        setSignedOutHere(true);
-        return refuse(refusalCopy.deletionSignedOutHere);
+        setSignedOut(true);
+        return setError(refusalCopy.deletionSignedOutHere);
       }
     }
-    inFlight.current = false;
-    setBusy(null);
-    if (!result.ok) return refused(result.error);
-    await clearAskConversations().catch(() => {
-      setError(
-        'The account was deleted. Local conversations could not be cleared. Try deleting all conversations in Ask.',
-      );
-    });
+    if (!result.ok) {
+      inFlight.current = false;
+      setBusy(null);
+      return refused(result.error);
+    }
+    const cleared = await clearAskConversations().then(
+      () => true,
+      () => false,
+    );
     challenge.clear();
-    setCode('');
-    accountDeleted();
-    setStep('deleted');
-    AccessibilityInfo.announceForAccessibility(accountCopy.accountDeleted);
+    accountDeleted(cleared);
+    router.dismissTo('/account');
   }
 
-  // Each step opens at the top of its own scroll view. In one shared view a
-  // step opened mid-page at large text sizes, below its own heading.
-  const page = (content: ReactNode) => (
-    <Screen key={step} testID="account-delete-screen">
-      {content}
-    </Screen>
-  );
-  if (step === 'deleted')
-    return page(
-      <Group testID="account-deleted-step">
-        <Heading level={2} testID="account-deleted">
-          {accountCopy.accountDeleted}
-        </Heading>
-        <Text wordSafe>{accountCopy.accountDeletedDetail}</Text>
-        {error ? (
-          <ErrorState
-            message={error}
-            onRetry={() => {
-              void clearAskConversations()
-                .then(() => setError(null))
-                .catch(() =>
-                  setError(
-                    'The account was deleted. Local conversations could not be cleared. Try again.',
-                  ),
-                );
-            }}
-            testID="account-local-chats-error"
-          />
-        ) : null}
-        <Button
-          variant="primary"
-          label={accountCopy.done}
-          onPress={onDone}
-          testID="account-delete-done"
-        />
-      </Group>,
+  const confirm = () =>
+    confirmAction(
+      `${accountCopy.confirmDeleteTitle} ${accountCopy.confirmDeleteMessage}`,
+      [
+        {
+          title: accountCopy.deleteAccount,
+          destructive: true,
+          onPress: () => void remove(),
+        },
+      ],
     );
-  if (step === 'code')
-    return page(
-      <Group testID="account-deletion-code-step">
-        <Heading level={2}>{accountCopy.enterDeletionCode}</Heading>
-        <Text wordSafe testID="account-deletion-code-sent">
-          {accountCopy.deletionCodeSent}
-        </Text>
-        <Field
-          label={accountCopy.deletionCode}
-          value={code}
-          onChangeText={(text) => {
-            const digits = codeDigits(text);
-            setCode(digits);
-            // Deleting needs a deliberate tap; a full code only hides the
-            // keyboard so the button is in view.
-            if (digits.length === CODE_LENGTH) Keyboard.dismiss();
-          }}
-          testID="account-deletion-code"
-          textContentType="oneTimeCode"
-          autoComplete="one-time-code"
-          keyboardType="number-pad"
-          autoFocus
-          selectTextOnFocus
-        />
-        {error ? (
-          <ErrorState message={error} testID="account-deletion-code-error" />
-        ) : null}
-        {signedOutHere ? (
+  const deleting = busy === 'delete';
+
+  return (
+    <>
+      <Stack.Screen
+        // No swipe or back while the deletion request runs (1.1, 6.4).
+        options={{ gestureEnabled: !deleting, headerBackVisible: !deleting }}
+      />
+      <Screen grouped testID="account-deletion-code-step">
+        <View style={styles.group}>
+          <Field
+            grouped
+            labelHidden
+            label={accountCopy.deletionCode}
+            value={code}
+            onChangeText={(text) => {
+              const digits = codeDigits(text);
+              setCode(digits);
+              setError(null);
+              // A full code only hides the keyboard so the action is in view.
+              if (digits.length === CODE_LENGTH) Keyboard.dismiss();
+            }}
+            testID="account-deletion-code"
+            textContentType="oneTimeCode"
+            autoComplete="one-time-code"
+            keyboardType="number-pad"
+            autoFocus
+            selectTextOnFocus
+          />
+          <Text
+            wordSafe
+            variant="footnote"
+            tone="inkSoft"
+            testID={
+              resent ? 'account-deletion-notice' : 'account-deletion-code-sent'
+            }
+            style={styles.footer}
+          >
+            {resent
+              ? accountCopy.newDeletionCodeSent
+              : accountCopy.deletionCodeSent}
+          </Text>
+          {error ? (
+            <ErrorState message={error} testID="account-deletion-code-error" />
+          ) : null}
+        </View>
+        {signedOut ? (
           <Button
             variant="primary"
+            size="large"
+            fullWidth
             label={accountCopy.signInAgain}
-            onPress={onSignIn}
+            onPress={signInAgain}
             testID="account-deletion-sign-in"
           />
         ) : (
-          <Button
-            variant="danger"
-            label={accountCopy.deleteAccount}
-            loading={busy === 'delete'}
-            onPress={() => void remove()}
-            testID="account-delete-final"
-          />
+          <View style={styles.final}>
+            <InsetGroup>
+              <SettingsRow
+                title={accountCopy.deleteAccount}
+                tone="danger"
+                busy={deleting}
+                disabled={code.length !== CODE_LENGTH}
+                accessibilityHint={accountCopy.confirmHint}
+                onPress={confirm}
+                testID="account-delete-final"
+              />
+            </InsetGroup>
+            <ResendButton
+              label={accountCopy.sendNewDeletionCode}
+              countdown={accountCopy.sendNewDeletionCodeIn}
+              wait={challenge.wait}
+              busy={busy === 'resend'}
+              onPress={() => void resend()}
+              testID="account-deletion-resend"
+            />
+          </View>
         )}
-        {notice ? (
-          <Text wordSafe testID="account-deletion-notice">
-            {notice}
-          </Text>
-        ) : null}
-        <Button
-          variant="quiet"
-          label={accountCopy.sendNewDeletionCode}
-          disabled={challenge.wait > 0}
-          loading={busy === 'resend'}
-          onPress={() => void request(true)}
-          testID="account-deletion-resend"
-        />
-        {challenge.wait > 0 ? (
-          <Text wordSafe variant="fine" testID="account-deletion-resend-wait">
-            {accountCopy.resendIn(challenge.wait)}
-          </Text>
-        ) : null}
-        <Button
-          variant="quiet"
-          label={accountCopy.cancel}
-          onPress={onCancel}
-          testID="account-deletion-cancel"
-        />
-      </Group>,
-    );
-  return page(
-    <Group testID="account-delete-confirm-step">
-      <Text wordSafe variant="body">
-        {accountCopy.deleteIntro}
-      </Text>
-      <Group gap={rhythm.heading}>
-        <Heading level={2}>{accountCopy.deletedHeading}</Heading>
-        <Text wordSafe>{accountCopy.deletedNote}</Text>
-        <Bullets items={accountCopy.deleted} />
-      </Group>
-      <Group gap={rhythm.heading}>
-        <Heading level={2}>{accountCopy.keptHeading}</Heading>
-        <Bullets items={accountCopy.kept} />
-      </Group>
-      <LinkRow
-        title={accountCopy.deletionPolicy}
-        external
-        accessibilityHint="Opens on opax.com.au"
-        testID="account-deletion-policy"
-        onPress={() =>
-          void openOnWeb(
-            '/privacy#privacy-deletion',
-            accountCopy.deletionPolicy,
-          )
-        }
-      />
-      <Text wordSafe>{accountCopy.deleteConfirmNote}</Text>
-      {error ? (
-        <ErrorState message={error} testID="account-delete-error" />
-      ) : null}
-      <Button
-        variant="danger"
-        label={accountCopy.deleteAccount}
-        loading={busy === 'request'}
-        onPress={() => void request(false)}
-        testID="account-delete-confirm"
-      />
-      <Button
-        variant="quiet"
-        label={accountCopy.cancel}
-        onPress={onCancel}
-        testID="account-delete-cancel"
-      />
-    </Group>,
+      </Screen>
+    </>
   );
 }
 
-/**
- * What deletion removes or keeps, one item to a bullet, each said in full.
- * The bullet is drawn, not spoken.
- */
-function Bullets({ items }: { items: readonly string[] }) {
+/** A row that only says something; VoiceOver hears its group's header too. */
+function PlainRow({ group, text }: { group: string; text: string }) {
+  const cellStyle = useRowCellStyle();
   return (
-    <View style={styles.list}>
-      {items.map((item) => (
-        <View key={item} style={styles.item}>
-          <Text
-            accessible={false}
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-            tone="inkSoft"
-          >
-            •
-          </Text>
-          <Text wordSafe style={styles.itemText}>
-            {item}
-          </Text>
-        </View>
-      ))}
+    <View
+      accessible
+      accessibilityRole="text"
+      accessibilityLabel={`${group}: ${text}`}
+      style={[styles.row, cellStyle]}
+    >
+      <Text wordSafe variant="body">
+        {text}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  list: { gap: rhythm.tight },
-  item: { flexDirection: 'row', gap: rhythm.tight },
-  itemText: { flex: 1 },
+  action: { gap: rhythm.tight },
+  group: { gap: rhythm.tight },
+  final: { gap: rhythm.block },
+  footer: { paddingHorizontal: rhythm.block },
+  row: {
+    minHeight: minimumTarget,
+    justifyContent: 'center',
+    paddingVertical: rhythm.row,
+  },
 });
