@@ -165,6 +165,8 @@ test.each([
   '/api/app/v1/edition/latest?preview=1',
   '/api/app/v1/manifest',
   '/api/daily-post/preview',
+  '/reports/index.json',
+  '/reports/housing.json',
 ])('unknown fixture route %s returns 404 and logs loudly', async (path) => {
   const result = await request(path);
   expect(result.status).toBe(404);

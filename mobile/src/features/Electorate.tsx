@@ -28,11 +28,23 @@ import {
   formatPercent,
 } from '../design/format';
 import { useEffect, useState } from 'react';
-import { Linking, RefreshControl, StyleSheet, View } from 'react-native';
+import {
+  Linking,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import { ApiError } from '../api/errors';
-import { colors, hairline, layout, rhythm } from '../design/tokens';
+import {
+  colors,
+  hairline,
+  layout,
+  minimumTarget,
+  rhythm,
+} from '../design/tokens';
 import {
   AUTHORISATION_LINE,
   CORRECTION_CONTACT,
@@ -392,15 +404,17 @@ export function ElectorateScreen({
                 <Text variant="fine" tone="inkSoft">
                   {AUTHORISATION_LINE}
                 </Text>
-                <Text
-                  variant="fine"
-                  tone="inkSoft"
+                <Pressable
                   accessibilityRole="link"
+                  accessibilityLabel="Report a correction by email to corrections@opax.com.au"
                   onPress={() => void Linking.openURL(CORRECTION_CONTACT)}
+                  style={styles.correctionTarget}
                   testID="electorate-correction"
                 >
-                  Report a correction: corrections@opax.com.au
-                </Text>
+                  <Text variant="fine" tone="inkSoft">
+                    Report a correction: corrections@opax.com.au
+                  </Text>
+                </Pressable>
                 <Text variant="fine" tone="inkSoft">
                   We aim to respond within 2 business days.
                 </Text>
@@ -503,6 +517,7 @@ export function censusCaveat(note: string, vintage: string): string {
 }
 
 const styles = StyleSheet.create({
+  correctionTarget: { minHeight: minimumTarget, justifyContent: 'center' },
   authorisation: {
     borderTopWidth: hairline,
     borderTopColor: colors.line,

@@ -163,6 +163,57 @@ test('division history shows a skeleton during both the index and progressive fi
   await unmount(r);
 });
 
+test.each([null, new Error('Unavailable')])(
+  'a completed total division failure shows one refreshable error with loader error %p',
+  async (error) => {
+    const refresh = jest.fn();
+    const retry = jest.fn();
+    jest.mocked(useCatalogRecord).mockReturnValue({
+      record: { rows: [], total: 2, loaded: 0, failed: 2, stale: false },
+      error,
+      refreshing: false,
+      refresh,
+      retry,
+    });
+    const r = await render(<DivisionHistory />);
+    const failure = r.root.findByType(ErrorState);
+    expect(failure.props.message).toBe(
+      'Division history could not be loaded. Try again.',
+    );
+    expect(r.root.findAllByType(LoadingState)).toHaveLength(0);
+    expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
+    expect(words(r)).not.toContain('No division records match that search.');
+    expect(
+      r.root.findAllByProps({ testID: 'division-history-retry' }),
+    ).toHaveLength(0);
+    await act(async () => failure.props.onRetry());
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(retry).not.toHaveBeenCalled();
+    await unmount(r);
+  },
+);
+
+test('a partial division failure keeps the coverage line and refresh button', async () => {
+  const refresh = jest.fn();
+  jest.mocked(useCatalogRecord).mockReturnValue({
+    record: { rows: [], total: 2, loaded: 1, failed: 1, stale: false },
+    error: null,
+    refreshing: false,
+    refresh,
+    retry: jest.fn(),
+  });
+  const r = await render(<DivisionHistory />);
+  expect(words(r)).toContain('Divisions from 1 of 2 bills; 1 unavailable');
+  expect(r.root.findAllByType(LoadingState)).toHaveLength(0);
+  expect(r.root.findAllByType(ErrorState)).toHaveLength(0);
+  const button = r.root
+    .findAllByProps({ testID: 'division-history-retry' })
+    .find((node) => typeof node.props.onPress === 'function')!;
+  await act(async () => button.props.onPress());
+  expect(refresh).toHaveBeenCalledTimes(1);
+  await unmount(r);
+});
+
 test('a total follow read failure is exposed and never presented as no changes', async () => {
   let fail!: (error: Error) => void;
   jest.mocked(catalogs.followSources).mockImplementation(

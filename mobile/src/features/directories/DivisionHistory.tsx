@@ -177,6 +177,11 @@ export default function DivisionHistory() {
   );
   const items = useMemo(() => historyItems(rows), [rows]);
   const complete = record && record.loaded + record.failed === record.total;
+  const totalFailure =
+    record !== null &&
+    record.total > 0 &&
+    record.loaded === 0 &&
+    record.failed === record.total;
   useEffect(() => {
     if (complete && !error && (record.loaded > 0 || record.total === 0))
       AccessibilityInfo.announceForAccessibility(
@@ -256,7 +261,12 @@ export default function DivisionHistory() {
                 autoCorrect={false}
                 autoCapitalize="none"
               />
-              {record && (record.loaded > 0 || record.total === 0) ? (
+              {totalFailure ? (
+                <ErrorState
+                  message="Division history could not be loaded. Try again."
+                  onRetry={refresh}
+                />
+              ) : record && (record.loaded > 0 || record.total === 0) ? (
                 <Group gap={rhythm.line}>
                   <Text variant="metadata" testID="division-history-count">
                     {formatCount(rows.length)} division records · newest first
@@ -275,7 +285,7 @@ export default function DivisionHistory() {
               ) : !error ? (
                 <LoadingState label="Loading division history" />
               ) : null}
-              {record?.failed ? (
+              {record?.failed && !totalFailure ? (
                 <Button
                   label="Try again"
                   testID="division-history-retry"
@@ -283,7 +293,7 @@ export default function DivisionHistory() {
                 />
               ) : null}
               {record?.stale ? <SavedCopyNotice /> : null}
-              {error ? (
+              {error && !totalFailure ? (
                 <ErrorState message={errorMessage(error)} onRetry={retry} />
               ) : null}
             </Group>

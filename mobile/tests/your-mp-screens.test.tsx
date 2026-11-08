@@ -5,7 +5,14 @@ import {
 import * as format from '../src/design/format';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image, Linking, RefreshControl, ScrollView } from 'react-native';
+import {
+  Image,
+  Linking,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import { minimumTarget } from '../src/design/tokens';
 import { router } from 'expo-router';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -966,6 +973,20 @@ test.each(['federal', 'state'])(
       );
       expect(text(r)).toContain(AUTHORISATION_LINE);
       expect(text(r)).toContain('We aim to respond within 2 business days.');
+      const correction = pressable(r, 'electorate-correction');
+      expect(correction.props.accessibilityRole).toBe('link');
+      expect(correction.props.accessibilityLabel).toBe(
+        'Report a correction by email to corrections@opax.com.au',
+      );
+      expect(StyleSheet.flatten(correction.props.style)).toMatchObject({
+        minHeight: minimumTarget,
+        justifyContent: 'center',
+      });
+      const label = correction.findByType(Text);
+      expect(label.props).toMatchObject({ variant: 'fine', tone: 'inkSoft' });
+      expect(label.props.children).toBe(
+        'Report a correction: corrections@opax.com.au',
+      );
       const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
       await act(async () =>
         pressable(r, 'electorate-correction').props.onPress(),

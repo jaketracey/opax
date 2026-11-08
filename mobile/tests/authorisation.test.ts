@@ -3,7 +3,7 @@ import {
   CORRECTION_CONTACT,
 } from '../src/design/authorisation';
 
-// Fixture copied with the Worker vars from debc76b9e.
+// Fixture copied from origin/main:portal/wrangler.jsonc, lines 77 and 78.
 const fixture = {
   AUTHORISATION_LINE:
     'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.',

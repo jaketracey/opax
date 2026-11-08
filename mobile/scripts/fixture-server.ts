@@ -84,6 +84,8 @@ const directoryBytes = fixtureBytes(directorySnapshot);
 const reportBytes = reportsFixture(pinnedBytes);
 for (const path of Object.keys(snapshot.files)) {
   if (snapshot.testOnlyFiles.includes(path)) continue;
+  if (path.startsWith('/reports/') && path !== '/reports/grants-allocation.json')
+    continue;
   if (path.endsWith('.webp')) assertPortraitPath(path);
   else assertAllowedPath(path);
   files.set(path, pinnedBytes(path));
