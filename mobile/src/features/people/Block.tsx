@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { Section } from '../../design/layout';
+import { Section, type SectionAction } from '../../design/layout';
 import { InlineError, Skeleton } from '../../design/states';
 import type { SourceDetails } from '../../design/source';
 
@@ -32,6 +32,7 @@ export function ProfileBlock<T>({
   licenceDataset,
   originals,
   sourced = true,
+  action,
   children,
 }: {
   title: string;
@@ -50,12 +51,19 @@ export function ProfileBlock<T>({
   originals?: SourceDetails['originals'];
   /** False for a block of navigation rows only (no figure, no source). */
   sourced?: boolean;
+  /** The section header's action ("See all"), drawn in every state. */
+  action?: SectionAction;
   children: (data: T) => ReactNode;
 }) {
   if (block.status === 'unlinked') return null;
   if (block.status === 'loading' && block.data === null)
     return (
-      <Section title={title} testID={id} headingTestID={`${id}-heading`}>
+      <Section
+        title={title}
+        action={action}
+        testID={id}
+        headingTestID={`${id}-heading`}
+      >
         <Skeleton
           shape={skeleton === 'figure' ? 'figure' : skeleton}
           count={skeleton === 'figure' ? 1 : 3}
@@ -66,7 +74,12 @@ export function ProfileBlock<T>({
     );
   if (block.status === 'error')
     return (
-      <Section title={title} testID={id} headingTestID={`${id}-heading`}>
+      <Section
+        title={title}
+        action={action}
+        testID={id}
+        headingTestID={`${id}-heading`}
+      >
         <InlineError
           subject={errorSubject ?? title}
           onRetry={retry}
@@ -80,7 +93,12 @@ export function ProfileBlock<T>({
   if (empty && (!keepWhenEmpty || block.status !== 'ready')) return null;
   const notes = about?.(block.data);
   return (
-    <Section title={title} testID={id} headingTestID={`${id}-heading`}>
+    <Section
+      title={title}
+      action={action}
+      testID={id}
+      headingTestID={`${id}-heading`}
+    >
       <View style={{ gap: rhythm.block }}>
         {block.data === null ? keepWhenEmpty : children(block.data)}
         {sourced ? (

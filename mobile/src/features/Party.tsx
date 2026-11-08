@@ -13,6 +13,7 @@ import type { PartyMember } from '../api/party-page';
 import { CachedPortrait } from './CachedPortrait';
 import { Disclosure } from '../design/disclosure';
 import { Group, Screen, Section } from '../design/layout';
+import { isPad, PadGrid, useLayout } from '../design/adaptive';
 import { FaceStack, PersonRow } from '../design/people';
 import { LinkRow, MoneyRow, DivisionRow } from '../design/rows';
 import { StatStrip, type StatTileProps } from '../design/record';
@@ -48,6 +49,7 @@ import {
 import type { PartySection } from '../navigation/routes/people';
 import { chamberLabel } from './bills/filters';
 import { stageTitle } from './bills/divisions';
+import { profileGrid } from './split/grid';
 import { useCatalogRecord } from './bills/useCatalogRecord';
 import { AddedSinceGroup } from './follows/AddedSinceGroup';
 import type { Change } from './follows/changes';
@@ -265,6 +267,7 @@ function PartyContent({
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const funding = usePartyFunding();
+  const layout = useLayout();
   const members = view.members.data;
   const faces = useFaces(members?.current ?? []);
 
@@ -357,6 +360,354 @@ function PartyContent({
     view.associated.status === 'error' ||
     view.associated.status === 'loading';
 
+  // On an iPad at regular width, related sections pair (people.md 2.2):
+  // Members with Recent votes, Receipts with Debts and associated entities.
+  // The phone keeps one column in its own order.
+  const pairs = isPad && layout.regular;
+  const membersSection = (
+    <ProfileBlock
+      title="Members"
+      id="party-members"
+      block={view.members}
+      retry={retry}
+      action={
+        view.members.data
+          ? {
+              label: 'See all',
+              accessibilityLabel: `See all ${formatCount(view.members.data.currentCount)} ${label} members`,
+              href: partyMembersRoute(label),
+              testID: 'party-members-all',
+            }
+          : undefined
+      }
+      about={() => ({
+        title: 'Members',
+        notes: [
+          'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
+          view.rosterAsAt
+            ? `Roster as at ${formatDate(view.rosterAsAt)}.`
+            : null,
+        ],
+      })}
+    >
+      {(data) => (
+        <View>
+          <LinkRow
+            title={`${formatCount(data.currentCount)} sitting members`}
+            leading={
+              <View style={styles.faces}>
+                {newMembers ? <NewDot testID="party-members-new" /> : null}
+                <FaceStack portraits={faces} />
+              </View>
+            }
+            href={partyMembersRoute(label)}
+            accessibilityLabel={`${formatCount(data.currentCount)} sitting ${label} members`}
+            accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
+            testID="party-current-count"
+          />
+
+          {data.recorded.length ? (
+            <Disclosure
+              label="Recorded affiliation"
+              value={formatCount(data.recorded.length)}
+              testID="party-recorded-toggle"
+            >
+              {() => (
+                <View>
+                  {data.recorded.map((member) => (
+                    <PersonRow
+                      key={member.slug}
+                      name={member.name}
+                      portrait={
+                        <CachedPortrait name={member.name} slug={member.slug} />
+                      }
+                      place={member.place || undefined}
+                      href={personRoute(member.slug, member.name)}
+                      testID={`party-member-${member.slug}`}
+                      testDrawnName
+                    />
+                  ))}
+                  <Text wordSafe variant="footnote">
+                    Their current membership is not confirmed.
+                  </Text>
+                </View>
+              )}
+            </Disclosure>
+          ) : null}
+        </View>
+      )}
+    </ProfileBlock>
+  );
+  const receiptsSection = (
+    <ProfileBlock
+      title="Receipts"
+      id="party-receipts"
+      block={view.receipts}
+      retry={retry}
+      skeleton="figure"
+      citation="AEC disclosure returns"
+      licenceDataset="aec"
+      about={() => ({
+        title: 'Receipts',
+        notes: [
+          'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
+          'Sources are the largest donor-to-party flows in the disclosure returns, largest first; they are not all of the party’s receipts. No sequence or causal link is inferred.',
+          disclosureYearNote,
+          ...(fundingRecord ? fundingNotes(fundingRecord) : []),
+        ],
+      })}
+    >
+      {(data) => (
+        <Group>
+          <View
+            accessible
+            accessibilityLabel={`${moneyAccessibilityLabel(data.node.total)}, disclosed`}
+            testID="party-receipts-total"
+          >
+            <Text wordSafe variant="figure" tone="moneyInk" tabular>
+              {formatMoney(data.node.total)}
+            </Text>
+            <Text wordSafe variant="secondary">
+              {[
+                `disclosed, from ${formatCount(data.node.count)} donations and receipts`,
+                data.node.firstYear !== undefined &&
+                data.node.lastYear !== undefined
+                  ? data.node.firstYear === data.node.lastYear
+                    ? String(data.node.firstYear)
+                    : `${data.node.firstYear} to ${data.node.lastYear}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(', ')}
+            </Text>
+          </View>
+          <Text wordSafe variant="footnote" testID="party-money-caveat">
+            A floor, not a ceiling.
+          </Text>
+          <View>
+            {data.donors.slice(0, 8).map((donor, i) => (
+              <MoneyRow
+                key={donor.id}
+                name={donor.name}
+                amount={donor.amount}
+                href={
+                  donor.id.startsWith('donor:individual')
+                    ? undefined
+                    : moneyRecordRoute({ node: donor.id }, donor.name)
+                }
+                testID={`party-donor-${i}`}
+              />
+            ))}
+            <LinkRow
+              title="Largest sources by year"
+              href={partySourcesRoute(id, label)}
+              testID="party-donor-years-toggle"
+            />
+            <LinkRow
+              title="Money map"
+              href={moneyRecordRoute({ node: `party:${label}` }, label)}
+              testID="party-money-map"
+            />
+          </View>
+          {funding.read.status === 'loading' ? (
+            <FundingLoading />
+          ) : funding.read.status === 'error' ? (
+            <FundingError retry={funding.retry} />
+          ) : fundingRecord ? (
+            <View>
+              {newReturns ? <NewDot testID="party-returns-new" /> : null}
+              <PartyReturns record={fundingRecord} name={label} />
+            </View>
+          ) : null}
+        </Group>
+      )}
+    </ProfileBlock>
+  );
+  const debtsSection = showDebts ? (
+    <Section
+      title="Debts and associated entities"
+      testID="party-debts-section"
+      headingTestID="party-debts-section-heading"
+    >
+      <Group>
+        {funding.read.status === 'loading' ? (
+          <FundingLoading />
+        ) : view.receipts.status === 'error' &&
+          funding.read.status === 'error' ? (
+          // The Receipts section is in error too: say it once here.
+          <FundingError retry={funding.retry} />
+        ) : fundingRecord ? (
+          <PartyDebts record={fundingRecord} name={label} />
+        ) : null}
+        {view.associated.status === 'loading' ? (
+          <Skeleton
+            shape="rows"
+            count={3}
+            label="Loading associated entities"
+            testID="party-associated-loading"
+          />
+        ) : view.associated.status === 'error' ? (
+          <InlineError
+            subject="Associated entities"
+            onRetry={retry}
+            testID="party-associated-error"
+          />
+        ) : associated?.rows.length ? (
+          <View style={styles.block} testID="party-associated">
+            <Text wordSafe variant="subsectionTitle" accessibilityRole="header">
+              Associated entities
+            </Text>
+            <View>
+              {associated.rows.slice(0, 8).map((entity) => (
+                <LinkRow
+                  key={entity.name}
+                  title={entity.name}
+                  detail={[
+                    entity.year,
+                    entity.receipts !== null
+                      ? `receipts ${formatMoney(entity.receipts)}`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
+                  external
+                  onPress={() =>
+                    void openOnWeb(
+                      `/subject/campaigner/${encodeURIComponent(entity.name)}`,
+                      entity.name,
+                    )
+                  }
+                  accessibilityHint="Opens in the in-app browser"
+                />
+              ))}
+            </View>
+            {associated.total > Math.min(8, associated.rows.length) ? (
+              <Text wordSafe variant="footnote">
+                {`${formatCount(Math.min(8, associated.rows.length))} of ${formatCount(associated.total)} shown, largest receipts first.`}
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
+        {fundingRecord || associated ? (
+          <SourceLine
+            title="Debts and associated entities"
+            asOf={
+              [fundingRecord?.asOf, view.associated.asAt]
+                .filter(Boolean)
+                .sort()[0] ?? null
+            }
+            citation={[
+              fundingRecord
+                ? {
+                    label: 'AEC annual returns',
+                    asOf: fundingRecord.asOf,
+                  }
+                : null,
+              associated
+                ? {
+                    label: 'AEC associated entity returns',
+                    asOf: view.associated.asAt,
+                  }
+                : null,
+            ]}
+            state={view.associated.partial ? 'partial' : null}
+            originals={
+              fundingRecord
+                ? [
+                    {
+                      label: 'AEC Transparency Register',
+                      url: fundingRecord.data.meta.register_url,
+                    },
+                  ]
+                : []
+            }
+            notes={[
+              'Debts are the balances owed at 30 June, not new borrowing. Creditors under the disclosure threshold are not itemised.',
+              'Associated entities are the entities’ own annual returns. They are not added to the party’s receipts. Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice.',
+              fundingRecord && !hasFunding(fundingRecord, label)
+                ? 'No annual return or debt is itemised for this party.'
+                : null,
+            ]}
+            licenceDataset="aec"
+            testID="party-debts-source"
+          />
+        ) : null}
+      </Group>
+    </Section>
+  ) : null;
+  const votesSection =
+    view.divisions.status === 'error' ||
+    view.divisions.status === 'loading' ||
+    divisions?.rows.length ||
+    (divisions?.failed && !divisions.scanned) ? (
+      <ProfileBlock
+        title="Recent votes"
+        id="party-divisions"
+        block={view.divisions}
+        retry={retry}
+        errorSubject="Votes"
+        citation="They Vote For You"
+        licenceDataset="tvfy"
+        about={(data) => ({
+          title: 'Recent votes',
+          notes: [
+            data
+              ? `From the ${formatCount(data.scanned)} most recent bills with recorded votes. This party’s own members’ votes, newest first; not its whole voting history.`
+              : null,
+            'A division is a recorded vote: each member’s choice is counted and published.',
+            'Party is each member’s recorded affiliation, not a reconstruction of who they sat with on the day. A division on an amendment is not a vote on the bill itself.',
+            data?.basisNote,
+            data?.failed
+              ? `${formatCount(data.failed)} bills could not be read. This block is partial.`
+              : null,
+          ],
+        })}
+        line={(data) => ({
+          partial: !!data?.failed,
+          coverage: data?.rows.length
+            ? `Divisions to ${formatDate(data.rows[0]!.division.date, 'short')}`
+            : null,
+        })}
+      >
+        {(data) =>
+          data.failed && !data.scanned ? (
+            <InlineError
+              subject="Votes"
+              onRetry={retry}
+              testID="party-divisions-error"
+            />
+          ) : (
+            <View>
+              {data.rows.slice(0, 10).map((row) => (
+                <PartyDivision key={rowKey(row)} row={row} label={label} />
+              ))}
+              {data.rows.length > 10 ? (
+                <Disclosure
+                  label={`Show all ${formatCount(data.rows.length)}`}
+                  testID="party-divisions-all"
+                >
+                  {() =>
+                    data.rows
+                      .slice(10)
+                      .map((row) => (
+                        <PartyDivision
+                          key={rowKey(row)}
+                          row={row}
+                          label={label}
+                        />
+                      ))
+                  }
+                </Disclosure>
+              ) : null}
+              <Text wordSafe variant="footnote">
+                {`From the ${formatCount(data.scanned)} most recent bills with recorded votes.`}
+              </Text>
+            </View>
+          )
+        }
+      </ProfileBlock>
+    ) : null;
+
   return (
     <Screen
       column="wide"
@@ -413,350 +764,33 @@ function PartyContent({
           />
         </View>
       ) : null}
-      <View onLayout={(e) => placed('members')(e.nativeEvent.layout.y)}>
-        <ProfileBlock
-          title="Members"
-          id="party-members"
-          block={view.members}
-          retry={retry}
-          about={() => ({
-            title: 'Members',
-            notes: [
-              'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
-              view.rosterAsAt
-                ? `Roster as at ${formatDate(view.rosterAsAt)}.`
-                : null,
-            ],
-          })}
-        >
-          {(data) => (
-            <View>
-              <LinkRow
-                title={`${formatCount(data.currentCount)} sitting members`}
-                leading={
-                  <View style={styles.faces}>
-                    {newMembers ? <NewDot testID="party-members-new" /> : null}
-                    <FaceStack portraits={faces} />
-                  </View>
-                }
-                href={partyMembersRoute(label)}
-                accessibilityLabel={`${formatCount(data.currentCount)} sitting ${label} members`}
-                accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
-                testID="party-current-count"
-              />
-              <LinkRow
-                title="See all"
-                href={partyMembersRoute(label)}
-                accessibilityLabel={`See all ${formatCount(data.currentCount)} ${label} members`}
-                testID="party-members-all"
-              />
-              {data.recorded.length ? (
-                <Disclosure
-                  label="Recorded affiliation"
-                  value={formatCount(data.recorded.length)}
-                  testID="party-recorded-toggle"
-                >
-                  {() => (
-                    <View>
-                      {data.recorded.map((member) => (
-                        <PersonRow
-                          key={member.slug}
-                          name={member.name}
-                          portrait={
-                            <CachedPortrait
-                              name={member.name}
-                              slug={member.slug}
-                            />
-                          }
-                          place={member.place || undefined}
-                          href={personRoute(member.slug, member.name)}
-                          testID={`party-member-${member.slug}`}
-                          testDrawnName
-                        />
-                      ))}
-                      <Text wordSafe variant="footnote">
-                        Their current membership is not confirmed.
-                      </Text>
-                    </View>
-                  )}
-                </Disclosure>
-              ) : null}
-            </View>
-          )}
-        </ProfileBlock>
-      </View>
-      <View onLayout={(e) => placed('receipts')(e.nativeEvent.layout.y)}>
-        <ProfileBlock
-          title="Receipts"
-          id="party-receipts"
-          block={view.receipts}
-          retry={retry}
-          skeleton="figure"
-          citation="AEC disclosure returns"
-          licenceDataset="aec"
-          about={() => ({
-            title: 'Receipts',
-            notes: [
-              'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
-              'Sources are the largest donor-to-party flows in the disclosure returns, largest first; they are not all of the party’s receipts. No sequence or causal link is inferred.',
-              disclosureYearNote,
-              ...(fundingRecord ? fundingNotes(fundingRecord) : []),
-            ],
-          })}
-        >
-          {(data) => (
-            <Group>
-              <View
-                accessible
-                accessibilityLabel={`${moneyAccessibilityLabel(data.node.total)}, disclosed`}
-                testID="party-receipts-total"
-              >
-                <Text wordSafe variant="figure" tone="moneyInk" tabular>
-                  {formatMoney(data.node.total)}
-                </Text>
-                <Text wordSafe variant="secondary">
-                  {[
-                    `disclosed, from ${formatCount(data.node.count)} donations and receipts`,
-                    data.node.firstYear !== undefined &&
-                    data.node.lastYear !== undefined
-                      ? data.node.firstYear === data.node.lastYear
-                        ? String(data.node.firstYear)
-                        : `${data.node.firstYear} to ${data.node.lastYear}`
-                      : null,
-                  ]
-                    .filter(Boolean)
-                    .join(', ')}
-                </Text>
-              </View>
-              <Text wordSafe variant="footnote" testID="party-money-caveat">
-                A floor, not a ceiling.
-              </Text>
-              <View>
-                {data.donors.slice(0, 8).map((donor, i) => (
-                  <MoneyRow
-                    key={donor.id}
-                    name={donor.name}
-                    amount={donor.amount}
-                    href={
-                      donor.id.startsWith('donor:individual')
-                        ? undefined
-                        : moneyRecordRoute({ node: donor.id }, donor.name)
-                    }
-                    testID={`party-donor-${i}`}
-                  />
-                ))}
-                <LinkRow
-                  title="Largest sources by year"
-                  href={partySourcesRoute(id, label)}
-                  testID="party-donor-years-toggle"
-                />
-                <LinkRow
-                  title="Money map"
-                  href={moneyRecordRoute({ node: `party:${label}` }, label)}
-                  testID="party-money-map"
-                />
-              </View>
-              {funding.read.status === 'loading' ? (
-                <FundingLoading />
-              ) : funding.read.status === 'error' ? (
-                <FundingError retry={funding.retry} />
-              ) : fundingRecord ? (
-                <View>
-                  {newReturns ? <NewDot testID="party-returns-new" /> : null}
-                  <PartyReturns record={fundingRecord} name={label} />
-                </View>
-              ) : null}
-            </Group>
-          )}
-        </ProfileBlock>
-      </View>
-      {showDebts ? (
-        <Section
-          title="Debts and associated entities"
-          testID="party-debts-section"
-          headingTestID="party-debts-section-heading"
-        >
-          <Group>
-            {funding.read.status === 'loading' ? (
-              <FundingLoading />
-            ) : view.receipts.status === 'error' &&
-              funding.read.status === 'error' ? (
-              // The Receipts section is in error too: say it once here.
-              <FundingError retry={funding.retry} />
-            ) : fundingRecord ? (
-              <PartyDebts record={fundingRecord} name={label} />
-            ) : null}
-            {view.associated.status === 'loading' ? (
-              <Skeleton
-                shape="rows"
-                count={3}
-                label="Loading associated entities"
-                testID="party-associated-loading"
-              />
-            ) : view.associated.status === 'error' ? (
-              <InlineError
-                subject="Associated entities"
-                onRetry={retry}
-                testID="party-associated-error"
-              />
-            ) : associated?.rows.length ? (
-              <View style={styles.block} testID="party-associated">
-                <Text
-                  wordSafe
-                  variant="subsectionTitle"
-                  accessibilityRole="header"
-                >
-                  Associated entities
-                </Text>
-                <View>
-                  {associated.rows.slice(0, 8).map((entity) => (
-                    <LinkRow
-                      key={entity.name}
-                      title={entity.name}
-                      detail={[
-                        entity.year,
-                        entity.receipts !== null
-                          ? `receipts ${formatMoney(entity.receipts)}`
-                          : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                      external
-                      onPress={() =>
-                        void openOnWeb(
-                          `/subject/campaigner/${encodeURIComponent(entity.name)}`,
-                          entity.name,
-                        )
-                      }
-                      accessibilityHint="Opens in the in-app browser"
-                    />
-                  ))}
-                </View>
-                {associated.total > Math.min(8, associated.rows.length) ? (
-                  <Text wordSafe variant="footnote">
-                    {`${formatCount(Math.min(8, associated.rows.length))} of ${formatCount(associated.total)} shown, largest receipts first.`}
-                  </Text>
-                ) : null}
-              </View>
-            ) : null}
-            {fundingRecord || associated ? (
-              <SourceLine
-                title="Debts and associated entities"
-                asOf={
-                  [fundingRecord?.asOf, view.associated.asAt]
-                    .filter(Boolean)
-                    .sort()[0] ?? null
-                }
-                citation={[
-                  fundingRecord
-                    ? {
-                        label: 'AEC annual returns',
-                        asOf: fundingRecord.asOf,
-                      }
-                    : null,
-                  associated
-                    ? {
-                        label: 'AEC associated entity returns',
-                        asOf: view.associated.asAt,
-                      }
-                    : null,
-                ]}
-                state={view.associated.partial ? 'partial' : null}
-                originals={
-                  fundingRecord
-                    ? [
-                        {
-                          label: 'AEC Transparency Register',
-                          url: fundingRecord.data.meta.register_url,
-                        },
-                      ]
-                    : []
-                }
-                notes={[
-                  'Debts are the balances owed at 30 June, not new borrowing. Creditors under the disclosure threshold are not itemised.',
-                  'Associated entities are the entities’ own annual returns. They are not added to the party’s receipts. Names are matched on case, punctuation and company suffixes only; the same body under two spellings appears twice.',
-                  fundingRecord && !hasFunding(fundingRecord, label)
-                    ? 'No annual return or debt is itemised for this party.'
-                    : null,
-                ]}
-                licenceDataset="aec"
-                testID="party-debts-source"
-              />
-            ) : null}
-          </Group>
-        </Section>
-      ) : null}
-      {view.divisions.status === 'error' ||
-      view.divisions.status === 'loading' ||
-      divisions?.rows.length ||
-      (divisions?.failed && !divisions.scanned) ? (
-        <ProfileBlock
-          title="Recent votes"
-          id="party-divisions"
-          block={view.divisions}
-          retry={retry}
-          errorSubject="Votes"
-          citation="They Vote For You"
-          licenceDataset="tvfy"
-          about={(data) => ({
-            title: 'Recent votes',
-            notes: [
-              data
-                ? `From the ${formatCount(data.scanned)} most recent bills with recorded votes. This party’s own members’ votes, newest first; not its whole voting history.`
-                : null,
-              'A division is a recorded vote: each member’s choice is counted and published.',
-              'Party is each member’s recorded affiliation, not a reconstruction of who they sat with on the day. A division on an amendment is not a vote on the bill itself.',
-              data?.basisNote,
-              data?.failed
-                ? `${formatCount(data.failed)} bills could not be read. This block is partial.`
-                : null,
-            ],
-          })}
-          line={(data) => ({
-            partial: !!data?.failed,
-            coverage: data?.rows.length
-              ? `Divisions to ${formatDate(data.rows[0]!.division.date, 'short')}`
-              : null,
-          })}
-        >
-          {(data) =>
-            data.failed && !data.scanned ? (
-              <InlineError
-                subject="Votes"
-                onRetry={retry}
-                testID="party-divisions-error"
-              />
-            ) : (
-              <View>
-                {data.rows.slice(0, 10).map((row) => (
-                  <PartyDivision key={rowKey(row)} row={row} label={label} />
-                ))}
-                {data.rows.length > 10 ? (
-                  <Disclosure
-                    label={`Show all ${formatCount(data.rows.length)}`}
-                    testID="party-divisions-all"
-                  >
-                    {() =>
-                      data.rows
-                        .slice(10)
-                        .map((row) => (
-                          <PartyDivision
-                            key={rowKey(row)}
-                            row={row}
-                            label={label}
-                          />
-                        ))
-                    }
-                  </Disclosure>
-                ) : null}
-                <Text wordSafe variant="footnote">
-                  {`From the ${formatCount(data.scanned)} most recent bills with recorded votes.`}
-                </Text>
-              </View>
-            )
-          }
-        </ProfileBlock>
-      ) : null}
+      {pairs ? (
+        <>
+          <View onLayout={(e) => placed('members')(e.nativeEvent.layout.y)}>
+            <PadGrid {...profileGrid}>
+              {membersSection}
+              {votesSection}
+            </PadGrid>
+          </View>
+          <View onLayout={(e) => placed('receipts')(e.nativeEvent.layout.y)}>
+            <PadGrid {...profileGrid}>
+              {receiptsSection}
+              {debtsSection}
+            </PadGrid>
+          </View>
+        </>
+      ) : (
+        <>
+          <View onLayout={(e) => placed('members')(e.nativeEvent.layout.y)}>
+            {membersSection}
+          </View>
+          <View onLayout={(e) => placed('receipts')(e.nativeEvent.layout.y)}>
+            {receiptsSection}
+          </View>
+          {debtsSection}
+          {votesSection}
+        </>
+      )}
       <PartyAccess name={label} />
       <MoreFromRecord
         subject={{ party: id, name: label }}
