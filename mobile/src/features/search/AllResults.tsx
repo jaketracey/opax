@@ -216,13 +216,16 @@ export function AllResults({
 }
 
 /**
- * The result's id on a plain view around its row. A row with an href sits
- * inside expo-router's NativeLinkPreview, a `display: 'contents'` native
- * view, and the Wave 4 Maestro hierarchy listed none of those rows (the
- * people top hit, Just declared's entries) while plain views with ids
- * (search-top-hits, search-in) were there. This view is never flattened,
- * so `search-result-<slug>` reaches the hierarchy whichever host the row
- * uses; the row keeps the same id for its own parts (-portrait, -name).
+ * The result's id on a plain view around its row. A row with an href and
+ * a preview or menu is wrapped by expo-router's NativeLinkPreview, a
+ * `display: 'contents'` native view (57.0.24 build/link/ExpoLink.js:53,
+ * 64-67 and LinkWithPreview.js:101-128). In the 4-fix2 Maestro hierarchy
+ * the whole people top hit was absent (row, -portrait, -name, its text)
+ * and so were Just declared's entries; both take that path. The listed
+ * records-result-0 has no link (its pinned record has no href or url).
+ * This view is never flattened, so `search-result-<slug>` reaches the
+ * hierarchy whichever host the row uses; the row keeps the same id for
+ * its own parts (-portrait, -name).
  */
 function ResultSlot({
   match,
