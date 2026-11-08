@@ -25,14 +25,15 @@ import * as recordReads from '../src/features/records/useRead';
 import {
   RecordActions,
   recordActions,
+  recordPageActions,
   recordMenuItem,
 } from '../src/features/records/RecordActions';
 import { recordSource } from '../src/features/records/source';
-import { showMenu } from '../src/design/menu';
+import { menuLeaves } from '../src/design/row-link';
+import { SectionHeader } from '../src/design/layout';
 import {
   AsAtLine,
   Button,
-  IconButton,
   LinkRow,
   EmptyState,
   ErrorState,
@@ -189,14 +190,11 @@ test('Cite, Copy link and Share are one menu; Ask about this is a plain row', as
       (i) => (i as { label: string }).label,
     ),
   ).toEqual(['Cite', 'Copy link', 'Share']);
-  // In an iPad pane the same menu is an inline ⋯.
+  expect(
+    menuLeaves(recordPageActions(target)).map((action) => action.title),
+  ).toEqual(['Cite', 'Copy link', 'Open on opax.com.au']);
   const inline = await mount(<RecordActions {...target} />);
-  act(() => inline.root.findByType(IconButton).props.onPress());
-  expect(jest.mocked(showMenu).mock.calls[0]![1].map((a) => a.title)).toEqual([
-    'Cite',
-    'Copy link',
-    'Share',
-  ]);
+  expect(inline.toJSON()).toBeNull();
   await act(async () => inline.unmount());
 });
 
@@ -295,7 +293,11 @@ test('Just added: the indexed-date note is in a source line, not an ⓘ', async 
 test('Just added explains a successful empty response and keeps its source line', async () => {
   jest.mocked(records.recent).mockResolvedValue(record([]));
   const view = await mount(<RecentRecords />);
-  expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(1);
+  expect(
+    view.root
+      .findAllByType(SectionHeader)
+      .filter((node) => node.props.title === 'New in OPAX'),
+  ).toHaveLength(1);
   expect(view.root.findByType(EmptyState).props.message).toBe(
     'No new records yet.',
   );
@@ -316,7 +318,11 @@ test('Just added shows its loading state without empty copy before the first res
       }),
   );
   const view = await mount(<RecentRecords />);
-  expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(1);
+  expect(
+    view.root
+      .findAllByType(SectionHeader)
+      .filter((node) => node.props.title === 'New in OPAX'),
+  ).toHaveLength(1);
   expect(view.root.findByType(LoadingState).props.label).toBe(
     'Loading new records',
   );
@@ -340,7 +346,11 @@ test('Just added keeps a refresh error visible when its saved response is empty'
   let view: TestRenderer.ReactTestRenderer | undefined;
   try {
     view = await mount(<RecentRecords />);
-    expect(view.root.findAllByProps({ title: 'New in OPAX' })).toHaveLength(1);
+    expect(
+      view.root
+        .findAllByType(SectionHeader)
+        .filter((node) => node.props.title === 'New in OPAX'),
+    ).toHaveLength(1);
     const failure = view.root.findByType(ErrorState);
     expect(view.root.findAllByType(LoadingState)).toHaveLength(0);
     expect(view.root.findAllByType(EmptyState)).toHaveLength(0);

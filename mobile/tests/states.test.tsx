@@ -78,7 +78,7 @@ const flat = (style: unknown) =>
 interface Drawn {
   background: string;
   texts: string[];
-  icons: string[];
+  icons: { foreground: string; background: string }[];
 }
 /**
  * What the first Pressable in `element` draws in a given pressed state: its
@@ -110,20 +110,30 @@ function drawn(
   const icons = [
     ...content
       .findAll((node) => node.props.tintColor !== undefined)
-      .map((node) => hex(node.props.tintColor)),
+      .map((node) => ({ foreground: hex(node.props.tintColor), background })),
     ...content
       .findAllByType(ActivityIndicator)
-      .map((node) => hex(node.props.color)),
+      .map((node) => ({ foreground: hex(node.props.color), background })),
     ...content
       .findAll(
         (node) =>
           typeof node.type === 'string' &&
           node.props.accessibilityElementsHidden &&
-          flat(node.props.style).borderRadius === 5,
+          flat(node.props.style).borderWidth === 1.5 &&
+          Object.values(partyColors).includes(
+            hex(flat(node.props.style).backgroundColor) as never,
+          ),
       )
-      .map((node) => hex(flat(node.props.style).backgroundColor)),
-  ].filter((c): c is string => !!c);
-  return { background, texts: [...new Set(texts)], icons: [...new Set(icons)] };
+      .map((node) => ({
+        foreground: hex(flat(node.props.style).backgroundColor),
+        // The party dot touches its raised ring, rather than the row fill.
+        background: hex(flat(node.props.style).borderColor)!,
+      })),
+  ].filter(
+    (pair): pair is { foreground: string; background: string } =>
+      !!pair.foreground,
+  );
+  return { background, texts: [...new Set(texts)], icons };
 }
 function expectListed(result: Drawn) {
   for (const text of result.texts) {
@@ -138,9 +148,9 @@ function expectListed(result: Drawn) {
       requiredRatio.text,
     );
   }
-  for (const icon of result.icons) {
-    expect(listedPair(icon, result.background)).toBeTruthy();
-    expect(contrastRatio(icon, result.background)).toBeGreaterThanOrEqual(
+  for (const { foreground, background } of result.icons) {
+    expect(listedPair(foreground, background)).toBeTruthy();
+    expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(
       requiredRatio['non-text'],
     );
   }
@@ -181,7 +191,7 @@ describe('every drawn state is in the contrast table and passes', () => {
       expectListed(drawn(icon(), true));
       expectListed(drawn(icon(true), false));
     });
-  test('Tag: pressed keeps a 4.5:1 label and adds an outline', () => {
+  test('Tag: pressed keeps contrast with a rounded surface highlight', () => {
     const tagFill = (root: ReactTestInstance) =>
       hex(
         flat(
@@ -197,29 +207,27 @@ describe('every drawn state is in the contrast table and passes', () => {
     const pressed = drawn(tag, true, light.paper, tagFill);
     expectListed(rest);
     expectListed(pressed);
-    expect(
-      contrastRatio(light.bronzeInk, pressed.background),
-    ).toBeGreaterThanOrEqual(4.5);
+    expect(rest.background).toBe(light.navyWash);
+    expect(pressed.background).toBe(light.sunken);
     const root = render(
       <View>
         {pressables(render(tag))[0]!.props.children({ pressed: true })}
       </View>,
     );
-    const outline = root.findAll(
+    const face = root.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        flat(node.props.style).borderWidth === 1,
+        flat(node.props.style).minHeight === 28,
     )[0]!;
-    expect(hex(flat(outline.props.style).borderColor)).toBe(light.bronzeInk);
-    expect(listedPair(light.bronzeInk, light.paper)).toBeTruthy();
+    expect(flat(face.props.style).borderRadius).toBeGreaterThan(0);
+    expect(flat(face.props.style).borderWidth).toBeUndefined();
     expect(
       root
         .findAllByType(NativeText)
         .some(
           (node) => flat(node.props.style).textDecorationLine === 'underline',
         ),
-    ).toBe(true);
-    expect(JSON.stringify(flat(outline.props.style))).not.toContain('opacity');
+    ).toBe(false);
   });
   test('FilterChip: rest and pressed', () => {
     const chip = (
@@ -282,7 +290,13 @@ describe('every drawn state is in the contrast table and passes', () => {
       );
       const rest = drawn(row, false);
       const pressed = drawn(row, true);
-      expect(rest.icons.length).toBeGreaterThan(0);
+      expect(
+        rest.icons.some(
+          (pair) =>
+            Object.values(partyColors).includes(pair.foreground as never) &&
+            pair.background === light.raised,
+        ),
+      ).toBe(true);
       expectListed(rest);
       expectListed(pressed);
     }

@@ -159,7 +159,7 @@ describe('Today’s bill rows (P2-8, P2-17)', () => {
     const title = root.find(
       (n) => n.type === Text && n.props.testID === 'today-bill-0-title',
     );
-    expect(title.props.variant).toBe('subheading');
+    expect(title.props.variant).toBe('rowRecord');
   });
   test.each([
     ['JLN', 'Jacqui Lambie Network'],

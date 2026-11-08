@@ -1,7 +1,8 @@
 import { act } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { ChoiceChips } from '../src/design/controls';
+import { Icon } from '../src/design/icon';
 import { Text } from '../src/design/text';
 
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
@@ -39,9 +40,19 @@ const draw = (width: number, fontScale: number, value: string) => {
   return chips.map((chip) => ({
     style: StyleSheet.flatten(chip.props.style({ pressed: false })),
     text: chip.findByType(Text).props,
+    selected: chip.props.accessibilityState.selected,
+    icons: chip.findAllByType(Icon).map((icon) => icon.props.name),
   }));
 };
 
+const originalOS = Platform.OS;
+afterEach(() => {
+  Platform.OS = originalOS;
+});
+// Keep the original chip geometry checks on Android.
+beforeEach(() => {
+  Platform.OS = 'android';
+});
 test.each([
   ['iPhone AX5', 390, 3.571],
   ['iPad AX5', 1024, 3.571],
@@ -52,7 +63,10 @@ test.each([
     for (const chip of [passages!, briefs!]) {
       expect(chip.text.wordSafe).toBe(true);
       expect(chip.text.numberOfLines).toBeUndefined();
-      expect(chip.style).toMatchObject({ alignSelf: 'stretch', minHeight: 36 });
+      expect(chip.style).toMatchObject({
+        alignSelf: 'stretch',
+        minHeight: 36,
+      });
       expect(chip.style.height).toBeUndefined();
     }
     // Choosing a chip changes colours only, never size or text role.
@@ -72,5 +86,32 @@ test.each([
     expect(chip.text.numberOfLines).toBeUndefined();
     expect(chip.style).toMatchObject({ minHeight: 36, maxWidth: '100%' });
     expect(chip.style.alignSelf).toBeUndefined();
+  }
+});
+
+test.each([
+  ['iPhone', 390, 1],
+  ['iPad', 1024, 1],
+  ['iPhone AX5', 390, 3.571],
+  ['iPad AX5', 1024, 3.571],
+  ['iPad AX1', 744, 1.786],
+])('%s: iOS choices use 44 pt checkmark rows', (_, width, fontScale) => {
+  Platform.OS = 'ios';
+  for (const value of ['passages', 'briefs']) {
+    const choices = draw(width, fontScale, value);
+    for (const [index, choice] of choices.entries()) {
+      expect(choice.text.wordSafe).toBe(true);
+      expect(choice.text.variant).toBe('body');
+      expect(choice.text.numberOfLines).toBeUndefined();
+      expect(choice.style).toMatchObject({
+        minHeight: 44,
+        alignSelf: 'stretch',
+      });
+      expect(choice.style.height).toBeUndefined();
+      const selected = (index === 0 ? 'passages' : 'briefs') === value;
+      expect(choice.selected).toBe(selected);
+      expect(choice.icons).toEqual(selected ? ['checkmark'] : []);
+    }
+    expect(choices[0]!.style).toEqual(choices[1]!.style);
   }
 });
