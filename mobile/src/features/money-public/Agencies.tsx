@@ -4,7 +4,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { BarSeries } from '../../design/charts';
 import { PopUpButton, SegmentedPicker } from '../../design/controls';
-import { formatMoneyCompact } from '../../design/format';
+import { formatMoney, formatMoneyCompact } from '../../design/format';
 import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
@@ -226,8 +226,10 @@ export function Agency() {
   const rows = useMemo((): Row[] => {
     if (!profile || view === 'years') return [];
     if (view === 'suppliers')
+      // Individuals are never a row (journeys/money.md 4.7): a footnote
+      // counts them; their contracts stay under Contracts.
       return profile.suppliers
-        .filter((s) => matches(search.query, s.organisation ? s.name : ''))
+        .filter((s) => s.organisation && matches(search.query, s.name))
         .sort((a, b) => b.total - a.total)
         .map((s) => ({ kind: 'supplier' as const, ...s }));
     return profile.contracts
@@ -236,9 +238,16 @@ export function Agency() {
       .map((c) => ({ kind: 'contract' as const, ...c }));
   }, [profile, view, search.query]);
   const searching = !!search.query.trim();
+  const individualSuppliers = (profile?.suppliers ?? []).filter(
+    (s) => !s.organisation,
+  );
+  const individuals = {
+    count: individualSuppliers.length,
+    total: individualSuppliers.reduce((sum, s) => sum + s.total, 0),
+  };
   const all =
     view === 'suppliers'
-      ? (profile?.suppliers.length ?? 0)
+      ? (profile?.suppliers.length ?? 0) - individuals.count
       : (profile?.contracts.length ?? 0);
   const noun = view === 'suppliers' ? 'supplier' : 'contract';
   const caption = searching
@@ -429,14 +438,7 @@ export function Agency() {
               name={r.name}
               detail={counted(r.count, 'contract')}
               amount={r.total}
-              href={
-                r.organisation
-                  ? organisationHref(r.id, r.name)
-                  : moneyItemHref(
-                      { kind: 'supplier', agency: profile!.id, supplier: r.id },
-                      { name: r.name },
-                    )
-              }
+              href={organisationHref(r.id, r.name)}
               testID={`agency-supplier-${i}`}
             />
           ) : (
@@ -451,6 +453,13 @@ export function Agency() {
               testID={`agency-contract-${i}`}
             />
           )
+        }
+        footer={
+          view === 'suppliers' && individuals.count ? (
+            <Text wordSafe variant="footnote" testID="agency-individuals">
+              {`${counted(individuals.count, 'individual supplier')}, ${formatMoney(individuals.total)}, not named.`}
+            </Text>
+          ) : null
         }
       />
     </>

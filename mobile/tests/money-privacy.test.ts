@@ -9,6 +9,8 @@ import { SegmentedPicker } from '../src/design/controls';
 import { MoneyRow } from '../src/design/rows';
 import * as d from '../src/features/money-public/data';
 import Grants from '../src/features/money-public/Grants';
+import Program from '../src/features/money-public/Program';
+import { Agency } from '../src/features/money-public/Agencies';
 import { loadMoneyItem } from '../src/features/money-public/MoneyItem';
 import {
   privateNote,
@@ -43,7 +45,20 @@ jest.mock('expo-router', () => {
   };
 });
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { directory: jest.fn() },
+  catalogs: {
+    directory: jest.fn(async () => {
+      throw new Error('offline');
+    }),
+    discovery: jest.fn(async () => {
+      throw new Error('offline');
+    }),
+  },
+}));
+jest.mock('@shopify/react-native-skia', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Canvas: require('react-native').View,
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Rect: (props: object) => require('react').createElement('Rect', props),
 }));
 jest.mock('../src/features/money-public/runtime', () => ({ money: {} }));
 const raw = (path: string) =>
@@ -98,6 +113,22 @@ beforeEach(() => {
     money[name] = catalog[name].bind(catalog) as never;
 });
 
+async function mount(Screen: () => React.ReactNode) {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(createElement(Screen));
+  });
+  for (let i = 0; i < 3; i++)
+    await act(async () => {
+      await new Promise((done) => setTimeout(done, 0));
+    });
+  return r;
+}
+const note = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+  r.root.findAll(
+    (n) => n.props.testID === testID && typeof n.type !== 'string',
+  )[0]?.props.children as string | undefined;
+
 describe('lists never name an individual', () => {
   test('the grant index marks every person id as an individual', () => {
     const index = d.decodeGrantIndex(raw('/graph/grants.federal.json'));
@@ -136,6 +167,54 @@ describe('lists never name an individual', () => {
         people.reduce((s, p) => s + p.total, 0),
       )}, not named.`,
     );
+    await act(async () => r.unmount());
+  });
+  test('a program lists organisations; grants to individuals are a footnote', async () => {
+    Object.assign(mockParams, { jur: 'federal', id: 'GO3141' });
+    const r = await mount(Program);
+    const names = r.root
+      .findAllByType(MoneyRow)
+      .map((row) => row.props.name as string);
+    expect(names.length).toBeGreaterThan(0);
+    expect(names).not.toContain(unnamedRecipient);
+    expect(names).not.toContain(PRIVATE);
+    expect(note(r, 'program-individuals')).toMatch(
+      /^1 grant to individual recipients, \$[\d,]+, not named\.$/,
+    );
+    // On Grants the individual's grant is a record row, unnamed.
+    await act(async () =>
+      r.root.findByType(SegmentedPicker).props.onChange('grants'),
+    );
+    expect(
+      r.root.findAllByType(MoneyRow).map((row) => row.props.name),
+    ).toContain(unnamedRecipient);
+    expect(
+      r.root.findAll((n) => n.props.testID === 'program-individuals'),
+    ).toHaveLength(0);
+    await act(async () => r.unmount());
+  });
+  test('an agency lists organisation suppliers; individuals are a footnote', async () => {
+    Object.assign(mockParams, {
+      id: 'a-7431f054588d4251c0b4',
+      section: 'suppliers',
+    });
+    const r = await mount(Agency);
+    const names = r.root
+      .findAllByType(MoneyRow)
+      .map((row) => row.props.name as string);
+    expect(names.length).toBeGreaterThan(0);
+    expect(names).not.toContain(unnamedSupplier);
+    expect(names).not.toContain(PRIVATE);
+    expect(note(r, 'agency-individuals')).toMatch(
+      /^[\d,]+ individual suppliers?, \$[\d,]+, not named\.$/,
+    );
+    // Their contracts stay under Contracts, as "Individual supplier".
+    await act(async () =>
+      r.root.findByType(SegmentedPicker).props.onChange('contracts'),
+    );
+    expect(
+      r.root.findAllByType(MoneyRow).map((row) => row.props.name),
+    ).toContain(unnamedSupplier);
     await act(async () => r.unmount());
   });
   test('allocation recipients that are people are not named', () => {
