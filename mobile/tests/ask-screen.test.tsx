@@ -14,6 +14,7 @@ import { colors, rhythm } from '../src/design/tokens';
 import { designFlags } from '../src/design/flags';
 import { conversationsRoute } from '../src/navigation/routes/ask';
 import { useSeat } from '../src/features/your-mp/useSeat';
+import { startersFor } from '../src/features/ask/starters';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
@@ -243,6 +244,21 @@ test('Ask stands on the grouped ground, so its inset groups read as raised', asy
   expect(StyleSheet.flatten(scroll.props.style).backgroundColor).toBe(
     colors.sunken,
   );
+});
+test('starters follow Sydney’s day: 9:30 am on 10 Nov is 10 Nov, not UTC’s 9 Nov', async () => {
+  const now = jest
+    .spyOn(Date, 'now')
+    .mockReturnValue(Date.parse('2026-11-09T22:30:00Z'));
+  try {
+    await mount();
+    const shown = [0, 1, 2, 3].map((i) =>
+      a11y(`ask-starter-${i}`, 'accessibilityLabel'),
+    );
+    expect(shown).toEqual(startersFor(Date.UTC(2026, 10, 10, 2), 4));
+    expect(shown).not.toEqual(startersFor(Date.UTC(2026, 10, 9, 2), 4));
+  } finally {
+    now.mockRestore();
+  }
 });
 test('Conversations hides with none saved; the bar keeps Conversations, New question and Account', async () => {
   await mount();

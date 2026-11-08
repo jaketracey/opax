@@ -16,7 +16,7 @@ import { AskSuggestionRow } from './AskRows';
 import { conversationWhen } from './conversation-dates';
 import { defaultOptions } from './model';
 import { askSession } from './session';
-import { seatStarter, startersFor } from './starters';
+import { seatStarter, startersFor, sydneyDayIndex } from './starters';
 import { chatsSnapshot, subscribeChats } from './store';
 
 export const idleCopy = {
@@ -95,13 +95,12 @@ export function AskIdle({
   // The day's starters are read once as the page mounts.
   const [mounted] = useState(() => Date.now());
   const now = nowProp ?? mounted;
-  const day = Math.floor(now / 86_400_000);
+  // Sydney's day, as Today's rotation counts it (DIRECTION 6.5).
+  const day = sydneyDayIndex(now);
   const starters = useMemo(
-    () =>
-      startersFor(
-        day * 86_400_000 + 43_200_000,
-        member ? starterCount - 1 : starterCount,
-      ),
+    () => startersFor(now, member ? starterCount - 1 : starterCount),
+    // `now` only matters through its Sydney day.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [day, member, starterCount],
   );
   const recent = saved.chats.slice(0, 3);
