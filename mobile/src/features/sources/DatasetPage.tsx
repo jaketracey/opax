@@ -20,7 +20,7 @@ import { licenceHubRoute } from '../../navigation/routes/reference';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import type { Dataset, DatasetLink } from './datasets';
 import { sourcesHrefs, useSourcesBase } from './base';
-import { useSources } from './loader';
+import { loadedAdditions, useSources } from './loader';
 import { sourcesCopy as text } from './parts';
 
 /**
@@ -48,7 +48,8 @@ export function originalsOf(dataset: Dataset): DatasetLink[] {
  * Pushed from Datasets in either sheet, or the Licence sheet's root, where a
  * foot row pushes Sources and licences inside the same sheet. An id that is
  * not listed once the loaded datasets settle says so, and "All datasets"
- * replaces the page so Back never returns to it.
+ * replaces the page so Back never returns to it. A dataset added from a read
+ * that failed is not missing: its page says the details couldn't be loaded.
  */
 export function DatasetPage({
   id,
@@ -63,6 +64,9 @@ export function DatasetPage({
   const dataset = list.find((item) => item.id === id);
   const titleRef = useRef<View>(null);
   const bar = useTitleOnScroll(titleRef, dataset?.name);
+  const unread =
+    (loadedAdditions as readonly string[]).includes(id) &&
+    !!loaded?.partial.has(id);
   if (!dataset)
     return (
       <>
@@ -81,6 +85,13 @@ export function DatasetPage({
               title={copy.notSaved}
               body={copy.notSavedBody}
               testID="sources-dataset-missing"
+            />
+          ) : unread ? (
+            <InlineError
+              subject={text.datasets}
+              message={text.partial}
+              onRetry={refresh}
+              testID="sources-dataset-partial"
             />
           ) : (
             <ContentUnavailable

@@ -3,16 +3,17 @@ import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
 import * as runtime from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
-import { dataAsOf, type RecordResult } from '../src/api/client';
+import { dataAsOf, type ApiClient, type RecordResult } from '../src/api/client';
 import { ApiError } from '../src/api/errors';
-import { decodeCorpus } from '../src/api/catalog-decoders';
 import {
   ContentUnavailable,
+  InlineError,
   LinkRow,
   SourceLine,
   Text,
   ValueRow,
 } from '../src/design/primitives';
+import { copy } from '../src/design/copy';
 import { openSource } from '../src/navigation/external';
 import { SourcesScreen } from '../src/features/sources/SourcesScreen';
 import DatasetsList from '../src/features/sources/DatasetsList';
@@ -92,6 +93,7 @@ jest.mock('expo-constants', () => ({
 }));
 jest.mock('../src/design/menu', () => ({ showMenu: jest.fn() }));
 jest.mock('../src/navigation/external', () => ({
+  ...jest.requireActual('../src/navigation/external'),
   openSource: jest.fn(),
   openOnWeb: jest.fn(),
   canonicalUrl: (path: string) => `https://opax.invalid${path}`,
@@ -107,7 +109,13 @@ const saved = <T,>(data: T, asOf: string | null): RecordResult<T> => ({
   stale: false,
   savedAt: Date.UTC(2026, 9, 3),
 });
-const corpus = pinned('/corpus.json');
+// Every free catalogue file through the caller's own decoder, as the client
+// reads it: the record summary and the files that date the datasets.
+const fixtureGet = <T,>(path: string, decode: (raw: unknown) => T) => {
+  const raw = pinned(path);
+  return Promise.resolve(saved(decode(raw), dataAsOf(raw)));
+};
+const fixture = new c.Catalogs({ get: fixtureGet } as Pick<ApiClient, 'get'>);
 const picture = {
   file: 'Federation.jpg',
   width: 800,
@@ -155,9 +163,16 @@ beforeEach(() => {
   jest
     .mocked(mock.catalogs.pay)
     .mockResolvedValue(saved(pinnedCatalogs.pay!, '2026-07-01') as never);
+  jest.mocked(mock.apiClient.get).mockImplementation(fixtureGet as never);
+  jest.mocked(mock.catalogs.directory).mockImplementation(
+    async () =>
+      ({
+        manifest: await fixture.manifest(),
+      }) as never,
+  );
   jest
-    .mocked(mock.apiClient.get)
-    .mockResolvedValue(saved(decodeCorpus(corpus), dataAsOf(corpus)) as never);
+    .mocked(mock.catalogs.discovery)
+    .mockImplementation(() => fixture.discovery() as never);
   jest.mocked(mock.portraits!.list).mockResolvedValue([
     ...(official
       ? [
@@ -271,6 +286,36 @@ describe('datasets', () => {
     );
   });
 
+  // Only these three have no read the app makes that carries their date:
+  // the homepage previews say they have none, Acts open one at a time in the
+  // record reader, and headlines are dated only by a paid read.
+  const undated = ['topics-preview', 'frl', 'news'];
+  test('with the reads settled, every dataset that has a date shows it', async () => {
+    const list = await render(<DatasetsList />);
+    const rows = list.root
+      .findAllByType(LinkRow)
+      .filter((n) => /^sources-dataset-/.test(n.props.testID))
+      .map((n) => [
+        n.props.testID.replace('sources-dataset-', ''),
+        n.props.detail,
+      ]);
+    const ids = rows.map(([id]) => id);
+    expect(ids).toEqual(
+      expect.arrayContaining([
+        ...datasets.map((d) => d.id),
+        'lead-registers',
+        'release',
+      ]),
+    );
+    for (const [id, detail] of rows)
+      expect([id, detail]).toEqual([
+        id,
+        undated.includes(id)
+          ? expect.stringMatching(/ · Date not published$/)
+          : expect.stringMatching(/ · Updated (\d{1,2} \w+ )?\d{4}$/),
+      ]);
+  });
+
   test('the bar search narrows by publisher, and says when nothing matches', async () => {
     const list = await render(<DatasetsList />);
     await search('electoral commission queensland');
@@ -344,6 +389,41 @@ describe('a dataset', () => {
     await act(async () => missing.props.action.onPress());
     expect(router.replace).toHaveBeenCalledWith(datasetsRoute);
     expect(router.push).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['lead-registers', 'discovery', 'Registers behind the leads'],
+    ['release', 'directory', 'Members and electorates'],
+  ] as const)(
+    '%s, when its read fails, says the details could not be loaded, not that it is gone',
+    async (id, read, name) => {
+      jest
+        .mocked(mock.catalogs[read])
+        .mockRejectedValueOnce(new ApiError('server', 'No.'));
+      const page = await render(<DatasetPage id={id} />);
+      expect(page.root.findAllByType(ContentUnavailable)).toEqual([]);
+      const error = page.root.findByType(InlineError);
+      expect(error.props.testID).toBe('sources-dataset-partial');
+      expect(error.props.message).toBe(
+        'Some details for this dataset couldn’t be loaded.',
+      );
+      await act(async () => error.props.onRetry());
+      expect(
+        page.root.findByProps({ testID: 'source-dataset-title' }).props
+          .children,
+      ).toBe(name);
+    },
+  );
+
+  test('offline, a dataset whose read failed keeps the offline view', async () => {
+    jest
+      .mocked(mock.catalogs.discovery)
+      .mockRejectedValueOnce(new ApiError('offline', 'Offline.'));
+    const page = await render(<DatasetPage id="lead-registers" />);
+    expect(page.root.findByType(ContentUnavailable).props.title).toBe(
+      copy.notSaved,
+    );
+    expect(page.root.findAllByType(InlineError)).toEqual([]);
   });
 
   test('offline, an unlisted id says it is not saved and offers no action', async () => {

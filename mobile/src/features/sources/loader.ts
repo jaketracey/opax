@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { catalogs } from '../../api/runtime';
+import { apiClient, catalogs } from '../../api/runtime';
 import { ApiError } from '../../api/errors';
 import { sourceName } from '../../design/format';
 import { leadRegisters } from '../leads/About';
+import { stateOutlineFile } from '../electorate-map/state-suggestion';
 import { reference } from '../methods/repository';
 import { datasets as base, type Dataset, type DatasetLink } from './datasets';
 
@@ -30,7 +31,56 @@ export interface Loaded {
 const offlineError = (e: unknown) =>
   e instanceof ApiError && ['offline', 'timeout'].includes(e.code);
 // The record summary dates OPAX's own copy of these publishers' records.
-const summarised = ['hansard', 'tvfy', 'bills', 'aec', 'grantconnect'];
+const summarised = [
+  'hansard',
+  'tvfy',
+  'bills',
+  'aec',
+  'grantconnect',
+  'search-catalog',
+];
+
+/** Datasets added from a read: when that read fails, the page says so. */
+export const loadedAdditions = ['lead-registers', 'release'] as const;
+
+/**
+ * A free catalogue file another screen already reads (the money map, grants,
+ * agencies, connections, a person's interests and access), read here for its
+ * date alone. The cache keeps the raw file, so this small decoder never
+ * changes what those screens decode.
+ */
+const dateOf =
+  (...paths: string[][]) =>
+  (raw: unknown): string | null => {
+    for (const path of paths) {
+      let value: unknown = raw;
+      for (const key of path)
+        value =
+          value && typeof value === 'object'
+            ? (value as Record<string, unknown>)[key]
+            : undefined;
+      if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value))
+        return value.slice(0, 10);
+    }
+    return null;
+  };
+const generated = [['meta', 'generated']];
+const dateReads: [ids: string[], path: string, at: string[][]][] = [
+  [['money-qld'], '/graph/money.qld.json', generated],
+  [['money-vic'], '/graph/money.vic.json', generated],
+  [['money-tas'], '/graph/money.tas.json', generated],
+  // AusTender's agency file; GrantConnect's awards are generated with it.
+  [
+    ['money-commonwealth', 'austender-agencies'],
+    '/agencies.json',
+    [['meta', 'generated_at']],
+  ],
+  [['money-qld-public', 'qld-grants'], '/graph/grants.qld.json', generated],
+  [['interests'], '/interests/index.json', [['_meta', 'generated']]],
+  [['ministerial-diaries', 'lobbyist-registers'], '/access.json', generated],
+  [['community-funding'], '/research/mlci.json', [['as_of']]],
+  [['programs-places'], '/evidence/index.json', [['meta', 'generated_at']]],
+];
 
 async function read(refresh: boolean): Promise<Loaded> {
   const settle = <T>(load: () => Promise<T>) =>
@@ -38,7 +88,7 @@ async function read(refresh: boolean): Promise<Loaded> {
       (value) => ({ value, error: null as unknown }),
       (error: unknown) => ({ value: undefined, error }),
     );
-  const [expenses, categories, pay, directory, discovery, summary] =
+  const [expenses, categories, pay, directory, discovery, summary, ...read] =
     await Promise.all([
       settle(() => catalogs.expenses()),
       settle(() => catalogs.expenseCategories()),
@@ -46,16 +96,29 @@ async function read(refresh: boolean): Promise<Loaded> {
       settle(() => catalogs.directory(refresh)),
       settle(() => catalogs.discovery(refresh)),
       settle(() => reference.summary(refresh)),
+      ...dateReads.map(([, path, at]) =>
+        settle(() => apiClient.get(path, dateOf(...at), refresh)),
+      ),
     ]);
   const partial = new Set<string>();
   if (expenses.error || categories.error) partial.add('ipea');
   if (pay.error) partial.add('pay');
+  // A failed read leaves out the dataset it adds: say so, never "not listed".
+  if (discovery.error) partial.add('lead-registers');
+  if (directory.error) partial.add('release');
   const dates: Record<string, string | null> = {};
   const date = (ids: string[], value: string | null | undefined) => {
     if (value) for (const id of ids) dates[id] = value;
   };
   date(summarised, summary.value?.data.version);
-  date(['parliamentary-directory', 'release'], directory.value?.manifest.asOf);
+  date(
+    ['parliamentary-directory', 'release', 'aec-electorates'],
+    directory.value?.manifest.asOf,
+  );
+  // The outlines are held in the app; their edition is their date. The
+  // file is the state suggestion's own, parsed once, never at launch.
+  date(['abs-state-districts'], stateOutlineFile().vintage);
+  dateReads.forEach(([ids], index) => date(ids, read[index]?.value?.data));
   date(['ipea'], expenses.value?.asOf);
   date(['pay'], pay.value?.asOf);
   date(['lead-registers'], discovery.value?.asOf);
