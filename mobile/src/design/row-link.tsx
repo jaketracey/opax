@@ -134,7 +134,20 @@ export function RowLink({
         onLongPress={leaves.length ? () => showMenu('', leaves) : undefined}
       />
     );
-  const trigger = cloneElement(child, { ...accessibility, onPress: undefined });
+  // expo-router 57.0.24: build/link/elements.js:170-183 forwards Trigger props
+  // through Slot; Preview (:132-151) and Menu (:94-102) set no hiding flags.
+  // build/link/LinkWithPreview.js:101-128 wraps the trigger in NativeLinkPreview;
+  // build/link/preview/native.js:30-34 only forwards props. None sets accessible,
+  // accessibilityElementsHidden or importantForAccessibility. Native mounting
+  // (ios/LinkPreview/LinkPreviewNativeView.swift:56-78) also leaves them intact.
+  // Keep the trigger explicitly exposed, including its custom menu actions.
+  const trigger = cloneElement(child, {
+    ...accessibility,
+    accessible: true,
+    accessibilityElementsHidden: false,
+    importantForAccessibility: 'yes',
+    onPress: undefined,
+  });
   return (
     <Link
       href={href}
@@ -191,10 +204,9 @@ const followItem = (
 ): RowMenuLeaf => ({
   title: `${following ? 'Unfollow' : 'Follow'}${bill ? ' bill' : ''}`,
   symbol: following ? 'minus.circle' : 'plus',
-  destructive: !!following,
   onPress: () => {
     onFollow();
-    haptic('success');
+    if (!following) haptic('success');
   },
 });
 const seatItems = ({ setSeat }: SeatAction): RowMenuAction[] =>

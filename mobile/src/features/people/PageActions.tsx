@@ -17,6 +17,7 @@ type PageSubject = {
 };
 /** The screen installs these actions in pageItems; the header owns Follow only. */
 export function pageActions({
+  kind,
   name,
   webPath,
   onAsk,
@@ -24,7 +25,16 @@ export function pageActions({
   onAsk: () => void;
 }): RowMenuAction[] {
   return [
-    { title: `Ask about ${name}`, symbol: 'text.bubble', onPress: onAsk },
+    {
+      title:
+        kind === 'person'
+          ? 'Ask about their speeches'
+          : kind === 'party'
+            ? 'Ask about this party'
+            : `Ask about ${name}`,
+      symbol: 'text.bubble',
+      onPress: onAsk,
+    },
     {
       title: 'Copy link',
       symbol: 'link',

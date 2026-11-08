@@ -140,7 +140,7 @@ test('division menus follow the bill and use its canonical link', () => {
     menuLeaves(builders(false).division).map((item) => item.title),
   ).toEqual(['Follow bill', 'Copy link', 'Share']);
   expect(menuLeaves(builders(true).division).map((item) => item.title)).toEqual(
-    ['Copy link', 'Share', 'Unfollow bill'],
+    ['Unfollow bill', 'Copy link', 'Share'],
   );
 });
 test('Follow and successful Copy link confirm with the success haptic', async () => {
@@ -184,7 +184,7 @@ test('page bar actions keep Ask, Copy link and Open on web without a second Foll
     onAsk: jest.fn(),
   });
   expect(menuLeaves(actions).map((action) => action.title)).toEqual([
-    'Ask about Anne',
+    'Ask about their speeches',
     'Copy link',
     'Open on opax.com.au',
   ]);
@@ -200,4 +200,38 @@ test('record bar actions expose Cite in an inline section and remove the in-cont
   ]);
   expect(RecordActions(target)).toBeNull();
   expect(recordPageActions({ slug: '../bad', title: 'A speech' })).toEqual([]);
+});
+
+for (const following of [false, true]) {
+  test.each(['person', 'bill', 'place', 'division'] as const)(
+    '%s keeps Follow or Unfollow first, following=' + following,
+    (kind) => {
+      const leaves = menuLeaves(builders(following)[kind]);
+      expect(leaves.map((item) => item.title)).toEqual([
+        `${following ? 'Unfollow' : 'Follow'}${kind === 'division' ? ' bill' : ''}`,
+        ...(kind === 'division'
+          ? ['Copy link', 'Share']
+          : ['Share', 'Copy link']),
+        ...(kind === 'bill'
+          ? ['Ask about this bill']
+          : kind === 'division'
+            ? []
+            : ['Open on opax.com.au']),
+      ]);
+      expect(leaves.every((item) => !item.destructive)).toBe(true);
+      leaves[0]!.onPress();
+      expect(onFollow).toHaveBeenCalledTimes(1);
+      if (following) expect(haptic).not.toHaveBeenCalled();
+      else expect(haptic).toHaveBeenCalledWith('success');
+    },
+  );
+}
+test.each([
+  ['person', 'Anne', 'Ask about their speeches'],
+  ['party', 'Labor', 'Ask about this party'],
+  ['electorate', 'Grayndler', 'Ask about Grayndler'],
+] as const)('page Ask title for %s', (kind, name, title) => {
+  expect(
+    pageActions({ kind, name, webPath: '/', onAsk: jest.fn() })[0]!.title,
+  ).toBe(title);
 });
