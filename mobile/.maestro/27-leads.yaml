@@ -167,7 +167,7 @@ name: 27 Leads and the declared-interests feed
       text: https://transparency\.aec\.gov\.au/
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/27-lead-source
-- tapOn: OK
+- tapOn: Done
 - assertVisible:
     id: leads-screen
 # The second lead's comparison: its chart, then the same rows as a table.
@@ -289,6 +289,15 @@ name: 27 Leads and the declared-interests feed
 - assertVisible:
     id: lead-link-money-map
     text: Open the full money map
+- tapOn:
+    id: lead-link-money-map
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+    timeout: 90000
+- assertVisible:
+    id: tab-today
+- tapOn: United Australia Party
 - scrollUntilVisible:
     element:
       id: lead-link-web

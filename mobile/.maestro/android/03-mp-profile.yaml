@@ -69,7 +69,7 @@ name: 03 Read a sourced profile
 - assertVisible:
     id: source-destination-url
 - takeScreenshot: ${EVIDENCE}/03-source-destination-end
-- tapOn: OK
+- tapOn: Done
 # Share uses the canonical web path; e2e carries a non-resolving origin.
 - tapOn: Share Anthony Albanese
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese

@@ -56,15 +56,19 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     centerElement: true
 - assertVisible:
     id: today-screen-message
-# Talk and Account and about are navigation-bar buttons on every root screen.
+# Talk is reached from the Ask composer; Account remains on every root.
+- tapOn:
+    id: tab-ask
 - tapOn: Talk to OPAX
 - assertVisible:
     id: talk-sheet-message
 - takeScreenshot: ${EVIDENCE}/01-talk-sheet
 - tapOn: Done
+- tapOn:
+    id: tab-today
 - assertVisible:
     id: today-screen-message
-- tapOn: Account and about
+- tapOn: Account
 - assertVisible:
     id: account-sheet-message
 - takeScreenshot: ${EVIDENCE}/01-account-sheet

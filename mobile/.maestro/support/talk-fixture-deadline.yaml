@@ -57,10 +57,11 @@ appId: au.com.opax.app
     file: talk-fixture-code.yaml
     env:
       VOICE_EMAIL: deadline@example.invalid
-- openLink: opax://talk
+- openLink: opax://ask
 - tapOn:
     text: Open
     optional: true
+- tapOn: Talk to OPAX
 - extendedWaitUntil:
     visible:
       id: talk-sheet

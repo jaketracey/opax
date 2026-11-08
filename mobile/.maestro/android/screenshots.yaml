@@ -199,14 +199,10 @@ name: Android tab and key-screen captures at the requested font scale
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/bill
-- scrollUntilVisible:
-    element:
-      id: bill-more
-    centerElement: true
-    speed: 40
-    timeout: 90000
-- tapOn:
-    id: bill-more
+- runFlow:
+    file: ../support/open-more.yaml
+    env:
+      NAME: 'Interactive Gambling.*'
 - extendedWaitUntil:
     visible:
       id: android-menu
@@ -292,6 +288,8 @@ name: Android tab and key-screen captures at the requested font scale
     timeout: 90000
 - waitForAnimationToEnd:
     timeout: 5000
+- assertVisible:
+    id: tab-today
 - takeScreenshot: ${EVIDENCE}/money-map
 - scrollUntilVisible:
     element:

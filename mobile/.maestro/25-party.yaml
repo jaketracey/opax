@@ -119,9 +119,11 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
       id: money-focus-name
       text: Labor
     timeout: 90000
+- assertVisible:
+    id: tab-today
 - takeScreenshot: ${EVIDENCE}/25-native-money-focus
 - tapOn: Done
-- tapOn: Back
+- tapOn: Labor
 - scrollUntilVisible:
     element:
       id: party-bill-au-federal-r7501

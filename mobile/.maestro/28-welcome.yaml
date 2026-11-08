@@ -107,7 +107,7 @@ name: 28 Welcome tour on first launch, Skip, finish into the seat chooser, no re
     id: welcome-tour
 - takeScreenshot: ${EVIDENCE}/28-relaunch
 # Replay from Account › About OPAX; Skip closes it.
-- tapOn: Account and about
+- tapOn: Account
 - scrollUntilVisible:
     element:
       id: account-replay-tour

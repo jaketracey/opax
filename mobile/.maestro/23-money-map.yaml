@@ -28,6 +28,9 @@ name: 23 Native money map, held figures, original source and ranked list
     visible:
       id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
     timeout: 90000
+- assertVisible:
+    id: tab-today
+- assertVisible: Today
 - takeScreenshot: ${EVIDENCE}/23-orbit-0
 - swipe:
     start: 30%, 42%
@@ -129,7 +132,7 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 30000
 - assertVisible: 'https://transparency\.aec\.gov\.au/'
 - takeScreenshot: ${EVIDENCE}/23-source
-- tapOn: OK
+- tapOn: Done
 - tapOn: Done
 - runFlow:
     file: support/money-screen-list.yaml
