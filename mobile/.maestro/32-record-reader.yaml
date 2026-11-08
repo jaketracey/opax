@@ -31,6 +31,8 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/32-reader-more
 - tapOn: Cite
+# Citation formats opens at its large detent, with a medium detent retained
+# for manual resizing. Small scrolls keep copy actions clear of the bar.
 - extendedWaitUntil:
     visible:
       id: doc-citations
@@ -39,8 +41,9 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     element:
       id: cite-copy-bibtex
     direction: DOWN
+    visibilityPercentage: 10
     centerElement: true
-    speed: 70
+    speed: 20
     timeout: 180000
 - waitForAnimationToEnd
 - tapOn:
@@ -97,10 +100,17 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/32-full-text
 - waitForAnimationToEnd
-- runFlow:
-    file: support/open-more.yaml
-    env:
-      NAME: '.*'
+# doc-more is the speaker's roster row, not the page's More menu.
+- scrollUntilVisible:
+    element:
+      id: doc-more
+    direction: UP
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: doc-more
 - extendedWaitUntil:
     visible:
       id: person-screen-title
@@ -117,8 +127,9 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     element:
       id: cite-copy-bibtex
     direction: DOWN
+    visibilityPercentage: 10
     centerElement: true
-    speed: 70
+    speed: 20
     timeout: 180000
 - waitForAnimationToEnd
 - tapOn:

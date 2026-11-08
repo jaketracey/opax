@@ -345,6 +345,7 @@ export interface PickerOption<T extends string> {
   value: T;
   label: string;
   shortLabel?: string;
+  testID?: string;
 }
 
 /** Native menu choice, with a compact capsule or an accessibility-size row. */
@@ -483,7 +484,15 @@ function MenuPicker<T extends string>({
           ]}
         >
           {options.map((option) => (
-            <SwiftText key={option.value} modifiers={[tag(option.value)]}>
+            <SwiftText
+              key={option.value}
+              modifiers={[
+                tag(option.value),
+                ...(option.testID
+                  ? [accessibilityIdentifier(option.testID)]
+                  : []),
+              ]}
+            >
               {(large ? option.shortLabel : undefined) ?? option.label}
             </SwiftText>
           ))}
@@ -559,7 +568,15 @@ export function SegmentedPicker<T extends string>({
         ]}
       >
         {options.map((option) => (
-          <SwiftText key={option.value} modifiers={[tag(option.value)]}>
+          <SwiftText
+            key={option.value}
+            modifiers={[
+              tag(option.value),
+              ...(option.testID
+                ? [accessibilityIdentifier(option.testID)]
+                : []),
+            ]}
+          >
             {option.label}
           </SwiftText>
         ))}
@@ -922,22 +939,45 @@ export function SegmentedControl<T extends string>({
 }
 
 /**
- * One choice among several longer labels ("Contracts by agency"), as wrapping
- * capsules instead of a tall stack of segments: navy when chosen, a navy wash
- * otherwise. 36pt drawn, 44pt to touch. Each reads its label, "selected" and
- * "2 of 4", as a segmented control does.
+ * Compatibility for existing single-choice filters. iOS uses native segments
+ * for two to four peers and one pop-up above four; Android retains chips.
  */
 export function ChoiceChips<T extends string>({
   segments,
   value,
   onChange,
   testID,
+  accessibilityLabel = 'Options',
 }: {
   segments: readonly Segment<T>[];
   value: T;
   onChange: (value: T) => void;
   testID?: string;
+  accessibilityLabel?: string;
 }) {
+  if (Platform.OS === 'ios' && segments.length > 0) {
+    if (segments.length >= 2 && segments.length <= 4)
+      return (
+        <SegmentedPicker
+          options={segments}
+          value={value}
+          onChange={onChange}
+          accessibilityLabel={accessibilityLabel}
+          testID={testID}
+        />
+      );
+    return (
+      <PopUpButton
+        label={accessibilityLabel}
+        options={segments}
+        value={value}
+        onChange={onChange}
+        testID={
+          testID ?? segments.find((segment) => segment.value === value)?.testID
+        }
+      />
+    );
+  }
   // At accessibility sizes each chip takes the full width, a fixed column
   // for word-safe text (ChoiceChip); otherwise the short labels wrap.
   return (

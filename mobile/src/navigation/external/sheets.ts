@@ -327,7 +327,7 @@ export async function openSource(
     Alert.alert("Couldn't open the original", 'Check your connection.');
     return;
   }
-  if (openNativeRecord(checked)) return;
+  if (openNativePage(checked)) return;
   recordExternalURL(checked);
   if (isE2E) {
     if (hasSourcePreview) presentSourceDestination({ url: checked, citation });
@@ -362,16 +362,20 @@ export function webPageUrl(path: string): string | null {
 }
 
 /**
- * Opens a web-only OPAX page (community, the money map, Methods) in Safari,
- * outside the app. The control shows the "Opens on opax.com.au" cue.
+ * Resolves in-app record and money paths in the current tab before falling
+ * back to Safari. An explicit "Open on opax.com.au" bar action opts out.
  */
-export async function openOnWeb(path: string, label: string): Promise<void> {
+export async function openOnWeb(
+  path: string,
+  label: string,
+  options: { preferNative?: boolean } = {},
+): Promise<void> {
   const url = webPageUrl(path);
   if (url === null) {
     Alert.alert("Couldn't open the page", 'Check your connection.');
     return;
   }
-  if (openNativeRecord(url)) return;
+  if (options.preferNative !== false && openNativePage(url)) return;
   recordExternalURL(url);
   if (isE2E) {
     Alert.alert(`Opens on opax.com.au: ${label}`, url);
@@ -386,8 +390,8 @@ export async function openOnWeb(path: string, label: string): Promise<void> {
   );
 }
 
-/** Record links from Bill, Talk and other lanes converge on the same reader. */
-function openNativeRecord(address: string): boolean {
+/** Unqualified paths preserve the active tab for record and money links. */
+function openNativePage(address: string): boolean {
   const url = new URL(address);
   const canonicalHost =
     url.hostname === 'opax.com.au' ||
@@ -397,12 +401,17 @@ function openNativeRecord(address: string): boolean {
     ? url.hash
     : `${url.pathname}${url.search}${url.hash}`;
   const route = fromWebPath(path);
-  // Only these record routes change the external fallback in this lane.
+  // Keep other web destinations external. Money map links share the same
+  // resolver as incoming links, including filters and money-record targets.
   if (
     !route ||
-    !['/doc/[slug]', '/bill-text/[key]', '/recent-records'].includes(
-      route.pathname,
-    )
+    ![
+      '/doc/[slug]',
+      '/bill-text/[key]',
+      '/recent-records',
+      '/money',
+      '/money-record',
+    ].includes(route.pathname)
   )
     return false;
   router.push(route);

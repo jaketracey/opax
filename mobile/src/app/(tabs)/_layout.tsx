@@ -26,9 +26,7 @@ export default function TabsLayout() {
       testID="tab-search"
       role={searchRole ? 'search' : undefined}
     >
-      {searchRole ? null : (
-        <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
-      )}
+      <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
       <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
     </NativeTabs.Trigger>
   );

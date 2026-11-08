@@ -36,9 +36,12 @@ import type { SFSymbol } from '../design/icon';
 // react-native-screens#3100), so there the system's glass bar is left alone.
 // Earlier versions keep an opaque paper bar, so content never shows through.
 // Android's bar is flat paper like the redesign's: no elevation shadow.
+/** iOS 26 and later: the system glass bar and scroll edge effects. */
+export const glassBar = () =>
+  Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
+
 export const opaqueBar = (ground: ColorValue = colors.paper) =>
-  Platform.OS === 'android' ||
-  (Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) < 26)
+  Platform.OS === 'android' || (Platform.OS === 'ios' && !glassBar())
     ? {
         headerStyle: { backgroundColor: ground },
         headerLargeStyle: { backgroundColor: ground },
@@ -62,6 +65,9 @@ export function useStackChrome() {
   const sizes = navigationTitleSizes(fontScale);
   return {
     headerTintColor: colors.navy,
+    // Inline and sheet bars must not inherit Expo's transparent form-sheet
+    // default. Large-title roots opt into translucency for native collapse.
+    headerTransparent: false,
     ...opaqueBar(),
     headerTitleStyle: {
       fontFamily: textStyles.inlineTitle.fontFamily,
@@ -79,7 +85,12 @@ export function useStackChrome() {
       ...(headingFace === 'serif' ? { fontSize: sizes.largeTitle } : {}),
       color: colors.ink,
     },
-    scrollEdgeEffects: { top: 'soft' as const, bottom: 'soft' as const },
+    // Deviation from shell.md 2.3 (soft top): the wave 2 captures showed the
+    // soft top edge active but too light, with serif record text legible
+    // through the title and bar buttons. The hard edge is UIKit's own opaque
+    // boundary with a divider. The bottom stays soft at the minimising tab
+    // bar. No custom fill or blur.
+    scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,
@@ -261,14 +272,14 @@ export function pageItems(props: {
   filters?: { active: boolean; href: Href };
   menu: RowMenuAction[];
 }): () => NativeStackHeaderItem[] {
-  // Native items are ordered outside in: index zero is the rightmost item.
+  // iOS 27 renders these in visual order: the last item is rightmost.
   return () => [
-    pageMenu({ name: props.name, items: props.menu }),
     ...(props.filters
       ? [filtersItem(props.filters)]
       : props.share && canShare
         ? [shareItem({ name: props.name, onPress: props.share })]
         : []),
+    pageMenu({ name: props.name, items: props.menu }),
   ];
 }
 
@@ -295,9 +306,7 @@ export function androidHeaderBar(items: NativeStackHeaderItem[]) {
   return createElement(
     View,
     { style: { flexDirection: 'row' } },
-    ...((items[0]?.type === 'button' && items[0].label === 'Account') ||
-    (items[0]?.type === 'menu' &&
-      items[0].accessibilityLabel?.startsWith('More for '))
+    ...(items[0]?.type === 'button' && items[0].label === 'Account'
       ? [...items].reverse()
       : items
     ).map((item, index) =>
@@ -396,4 +405,6 @@ export const shortSheet = {
     Platform.OS === 'android' ? ('modal' as const) : ('formSheet' as const),
   sheetAllowedDetents: [0.5, 1] as number[],
   sheetGrabberVisible: true,
+  sheetExpandsWhenScrolledToEdge: true,
+  headerTransparent: false,
 };

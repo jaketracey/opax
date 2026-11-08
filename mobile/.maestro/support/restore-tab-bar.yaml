@@ -1,0 +1,30 @@
+appId: au.com.opax.app
+name: Return to the page top and reveal the native tab bar
+---
+# TOP_ID is the page's first content anchor. Keep swipes outside the money
+# canvas, whose centre handles orbit gestures instead of page scrolling.
+- repeat:
+    times: 160
+    while:
+      notVisible:
+        id: ${TOP_ID}
+    commands:
+      - swipe:
+          start: 97%, 30%
+          end: 97%, 85%
+          duration: 600
+- assertVisible:
+    id: ${TOP_ID}
+# A pushed page can inherit a minimised bar even with its top visible.
+- runFlow:
+    when:
+      notVisible:
+        id: ${TAB_ID}
+    commands:
+      - swipe:
+          start: 97%, 30%
+          end: 97%, 85%
+          duration: 600
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${TAB_ID}

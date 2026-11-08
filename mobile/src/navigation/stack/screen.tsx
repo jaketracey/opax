@@ -6,6 +6,7 @@ import {
   headerItems,
   shortSheet,
   rootHeaderItems,
+  glassBar,
   type TabSegment,
 } from '../chrome';
 
@@ -58,6 +59,9 @@ export function tabRootScreen(
     ? [
         screen(name, title, {
           headerLargeTitleEnabled: true,
+          // Translucent for the native large-title collapse on iOS 26 and
+          // later only; iOS 18.4 to 25 keeps the opaque bar (shell.md 2.3).
+          headerTransparent: glassBar(),
           ...headerItems(() =>
             rootHeaderItems({ segment: expected, signedIn }),
           ),

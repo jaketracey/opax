@@ -11,16 +11,33 @@ import { publicMoneyScreens } from './public-money';
 import { exploreScreens } from './explore';
 import { filtersScreens } from './filters';
 import { referenceSharedScreens } from './reference';
+import type { TabSegment } from '../chrome';
 
+const tabRoots = {
+  '(today)': 'index',
+  '(your-mp)': 'your-mp',
+  '(bills)': 'bills',
+  '(search)': 'search',
+  '(ask)': 'ask',
+} as const satisfies Record<TabSegment, string>;
+
+export function tabRootName(segment: string) {
+  return tabRoots[segment as TabSegment] ?? 'index';
+}
+
+// Expo Router 57.0.24 reads these per-group initial routes in
+// getRoutesCore.js. Set the navigator's initialRouteName too, so ordinary
+// tab selection and incoming links build the same stack.
 export const tabSettings = {
-  anchor: 'index',
-  'your-mp': { anchor: 'your-mp' },
-  bills: { anchor: 'bills' },
-  search: { anchor: 'search' },
-  ask: { anchor: 'ask' },
+  initialRouteName: tabRoots['(today)'],
+  today: { initialRouteName: tabRoots['(today)'] },
+  'your-mp': { initialRouteName: tabRoots['(your-mp)'] },
+  bills: { initialRouteName: tabRoots['(bills)'] },
+  search: { initialRouteName: tabRoots['(search)'] },
+  ask: { initialRouteName: tabRoots['(ask)'] },
 };
 export function sharedScreens(segment: string, signedIn: boolean) {
-  return [
+  const screens = [
     ...todayScreens(segment, signedIn),
     ...editionScreens(),
     ...yourMpScreens(segment, signedIn),
@@ -34,5 +51,10 @@ export function sharedScreens(segment: string, signedIn: boolean) {
     ...publicMoneyScreens(),
     ...exploreScreens(),
     ...filtersScreens(),
+  ];
+  const root = tabRootName(segment);
+  return [
+    ...screens.filter((screen) => screen.props.name === root),
+    ...screens.filter((screen) => screen.props.name !== root),
   ];
 }

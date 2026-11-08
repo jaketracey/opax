@@ -1,6 +1,7 @@
 import { act } from 'react';
 import { Platform, StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import { ChoiceChips } from '../src/design/controls';
 import { Icon } from '../src/design/icon';
 import { Text } from '../src/design/text';
@@ -95,23 +96,42 @@ test.each([
   ['iPhone AX5', 390, 3.571],
   ['iPad AX5', 1024, 3.571],
   ['iPad AX1', 744, 1.786],
-])('%s: iOS choices use 44 pt checkmark rows', (_, width, fontScale) => {
+])('%s: iOS choices are one native picker', (_, width, fontScale) => {
   Platform.OS = 'ios';
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width, height: 1000, scale: 3, fontScale });
   for (const value of ['passages', 'briefs']) {
-    const choices = draw(width, fontScale, value);
-    for (const [index, choice] of choices.entries()) {
-      expect(choice.text.wordSafe).toBe(true);
-      expect(choice.text.variant).toBe('body');
-      expect(choice.text.numberOfLines).toBeUndefined();
-      expect(choice.style).toMatchObject({
-        minHeight: 44,
-        alignSelf: 'stretch',
-      });
-      expect(choice.style.height).toBeUndefined();
-      const selected = (index === 0 ? 'passages' : 'briefs') === value;
-      expect(choice.selected).toBe(selected);
-      expect(choice.icons).toEqual(selected ? ['checkmark'] : []);
-    }
-    expect(choices[0]!.style).toEqual(choices[1]!.style);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <ChoiceChips
+          segments={[
+            {
+              value: 'passages',
+              label: 'Passages',
+              testID: 'records-passages',
+            },
+            { value: 'briefs', label: 'Briefs', testID: 'records-briefs' },
+          ]}
+          value={value}
+          onChange={jest.fn()}
+        />,
+      );
+    });
+    const picker = renderer.root.findByType(Picker);
+    expect(picker.props.selection).toBe(value);
+    const options = renderer.root
+      .findAllByType(SwiftText)
+      .filter((node) =>
+        node.props.modifiers?.some(
+          (modifier: { $type: string }) => modifier.$type === 'tag',
+        ),
+      );
+    expect(options.map((node) => node.props.children)).toEqual([
+      'Passages',
+      'Briefs',
+    ]);
+    act(() => renderer.unmount());
   }
 });

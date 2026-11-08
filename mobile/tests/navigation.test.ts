@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { Alert } from 'react-native';
+import { router } from 'expo-router';
 import {
   canonicalUrl,
   forbiddenOpaxRoute,
@@ -607,6 +608,57 @@ test('web record navigation retains its query while sharing stays canonical', as
     `${webOrigin}/declared`,
   );
   alert.mockRestore();
+});
+test.each([
+  ['/money', { pathname: '/money' }],
+  [
+    '/money?party=Labor&jur=qld&from=2020&to=2024',
+    {
+      pathname: '/money',
+      params: {
+        focus: 'party:Labor',
+        jurisdiction: 'qld',
+        from: '2020',
+        to: '2024',
+      },
+    },
+  ],
+  [
+    '/money?node=party:Labor&rid=org',
+    {
+      pathname: '/money-record',
+      params: { node: 'party:Labor', rid: 'org' },
+    },
+  ],
+])(
+  'in-app %s pushes its native destination in the current tab',
+  async (path, route) => {
+    const push = jest.spyOn(router, 'push').mockImplementation(() => {});
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    try {
+      await openOnWeb(path as string, 'Open the full money map');
+      expect(push).toHaveBeenCalledWith(route);
+      expect(alert).not.toHaveBeenCalled();
+    } finally {
+      push.mockRestore();
+      alert.mockRestore();
+    }
+  },
+);
+test('the explicit Money map web action still opens the public site', async () => {
+  const push = jest.spyOn(router, 'push').mockImplementation(() => {});
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  try {
+    await openOnWeb('/money', 'Money map', { preferNative: false });
+    expect(push).not.toHaveBeenCalled();
+    expect(alert).toHaveBeenCalledWith(
+      'Opens on opax.com.au: Money map',
+      `${webOrigin}/money`,
+    );
+  } finally {
+    push.mockRestore();
+    alert.mockRestore();
+  }
 });
 test.each([
   '/community?view=privacy&ask=x',

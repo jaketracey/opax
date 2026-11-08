@@ -140,17 +140,36 @@ const byTestID = (root: ReactTestInstance, testID: string) =>
   root.find(
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
+type Modifier = { $type: string; identifier?: string; tag?: string };
+// iOS ChoiceChips options are native picker items: choose one by its tag.
+const choose = (root: ReactTestInstance, testID: string) => {
+  const isOption = (node: ReactTestInstance) =>
+    (node.props.modifiers as Modifier[] | undefined)?.some(
+      (m) => m.$type === 'accessibilityIdentifier' && m.identifier === testID,
+    ) ?? false;
+  const option = root.find(isOption);
+  const tag = (option.props.modifiers as Modifier[]).find(
+    (m) => m.$type === 'tag',
+  )!.tag;
+  root
+    .findAll(
+      (node) =>
+        typeof node.props.onSelectionChange === 'function' &&
+        node.findAll(isOption).length > 0,
+    )[0]!
+    .props.onSelectionChange(tag);
+};
 // Pressable is a memo component: find it by its props, not its type.
 const press = (root: ReactTestInstance, testID: string) =>
-  act(async () =>
-    root
-      .find(
-        (node) =>
-          node.props.testID === testID &&
-          typeof node.props.onPress === 'function',
-      )
-      .props.onPress(),
-  );
+  act(async () => {
+    const [pressable] = root.findAll(
+      (node) =>
+        node.props.testID === testID &&
+        typeof node.props.onPress === 'function',
+    );
+    if (pressable) pressable.props.onPress();
+    else choose(root, testID);
+  });
 
 function lastSource() {
   const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
