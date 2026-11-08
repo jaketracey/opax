@@ -30,6 +30,7 @@ import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
 import { BillRow, LinkRow, ValueRow } from '../src/design/rows';
 import { ContentUnavailable, Skeleton } from '../src/design/states';
 import { Text } from '../src/design/text';
+import { bindShortLastWord } from '../src/design/record-title';
 import { PersonRow } from '../src/design/people';
 import { colors } from '../src/design/tokens';
 import { symbols } from '../src/design/symbols';
@@ -636,7 +637,7 @@ describe('the native edition reader', () => {
   test('keeps the full title, all paragraphs, dated timeline and native bill subject', async () => {
     const { root } = await render(<EditionStory />);
     expect(host(root, 'edition-plate-title')[0]!.props.children).toBe(
-      edition.title,
+      bindShortLastWord(edition.title),
     );
     expect(root.findByType(MachinePill).props.note.body).toEqual([
       edition.machineWritten!.attribution,

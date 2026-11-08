@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useBoldText, useHighTextContrast } from './accessibility';
 import { useTextProbe } from './text-probe';
+import { bindRecordTitle, recordTitleRoles } from './record-title';
 import type { ProbeLine } from './text-probe.types';
 import { lightHighContrast } from './palette';
 import {
@@ -318,8 +319,13 @@ export function Text({
   tabular: tabularProp = false,
   onTextLayout,
   onLayout,
-  ...props
+  ...given
 }: OpaxTextProps) {
+  // A record title never ends on a lone short word (bindRecordTitle).
+  const titleRole = recordTitleRoles.includes(variant);
+  const props = titleRole
+    ? { ...given, children: bindRecordTitle(given.children) }
+    : given;
   const bold = useBoldText();
   const highContrast = useHighTextContrast();
   const role = textStyles[variant];
@@ -518,8 +524,7 @@ export function Text({
       allowFontScaling
       maxFontSizeMultiplier={0}
       dynamicTypeRamp={role.dynamicTypeRamp}
-      {...(Platform.OS === 'ios' &&
-      ['recordTitle', 'recordHeading', 'title', 'padTitle'].includes(variant)
+      {...(Platform.OS === 'ios' && titleRole
         ? { lineBreakStrategyIOS: 'push-out' }
         : {})}
       style={[

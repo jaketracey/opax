@@ -127,9 +127,13 @@ test('the reader opened from a topic record loads the 1999 speech', async () => 
   expect(mockTransport).toHaveBeenCalledTimes(1);
   expect(new URL(mockTransport.mock.calls[0][0]).pathname).toBe(zenodo);
   expect(view.root.findAllByProps({ testID: 'doc-error' })).toHaveLength(0);
-  expect(textOf(view.root.findByProps({ testID: 'doc-title' }))).toBe(
-    'Speech · 9 February 1999',
-  );
+  // The record title binds its short last word (design/record-title.ts).
+  expect(
+    textOf(view.root.findByProps({ testID: 'doc-title' })).replace(
+      /\u00A0/g,
+      ' ',
+    ),
+  ).toBe('Speech · 9 February 1999');
   // No official link: the record's one source line opens no original.
   const line = view.root.findByType(SourceLine);
   expect(line.props.testID).toBe('doc-source');
