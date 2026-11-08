@@ -20,35 +20,39 @@ import {
   boldStep,
   colors,
   contentSizeCategory,
-  largeTitleSizes,
   light,
   textStyles,
   type Role,
   type TextVariant,
 } from './tokens';
 
-export type TextTone = Extract<
-  Role,
-  | 'ink'
-  | 'inkSoft'
-  | 'inkFaint'
-  | 'bronzeInk'
-  | 'danger'
-  | 'navy'
-  | 'onNavy'
-  | 'onNavySoft'
-  | 'moneyInk'
-  | 'votesInk'
-  | 'interestsInk'
-  | 'billsInk'
->;
+export type TextTone =
+  | Extract<
+      Role,
+      | 'ink'
+      | 'inkSoft'
+      | 'inkFaint'
+      | 'danger'
+      | 'navy'
+      | 'onNavy'
+      | 'onNavySoft'
+      | 'onBand'
+      | 'onBandSoft'
+      | 'moneyInk'
+      | 'votesInk'
+      | 'interestsInk'
+      | 'billsInk'
+    >
+  | 'link';
+/** @deprecated Legacy callers render as navy. Use link. */
+type LegacyTextTone = 'bronzeInk';
 export interface OpaxTextProps extends TextProps {
   variant?: TextVariant;
   /**
    * Override the role's colour. `inkFaint` is for paper and raised surfaces
    * only; on sunken surfaces and tags use `inkSoft`.
    */
-  tone?: TextTone;
+  tone?: TextTone | LegacyTextTone;
   /**
    * Never break a word across lines. React Native has no hyphenation on iOS,
    * so at large text sizes this text steps its own scale down, only as far as
@@ -73,7 +77,8 @@ export interface OpaxTextProps extends TextProps {
  * A role's colour. iOS resolves Increase Contrast natively; Android's High
  * contrast text takes the same stronger roles (`lightHighContrast`).
  */
-export function roleColour(role: Role, strong: boolean) {
+export function roleColour(tone: Role | 'link', strong: boolean) {
+  const role = tone === 'link' || tone === 'bronzeInk' ? 'navy' : tone;
   return strong ? (lightHighContrast[role] ?? light[role]) : colors[role];
 }
 
@@ -135,27 +140,34 @@ export function nextWordSafeCap(
   return Math.max(1, Math.round(current * 90) / 100);
 }
 
-/** The title role's largest growth: its Dynamic Type size at AX2 (48pt). */
-const TITLE_MAX_GROWTH = largeTitleSizes.ax2 / largeTitleSizes.large;
-/**
- * What the title role's size is multiplied by so it grows no further than
- * at AX2 (pass 5, P2-18). iOS large titles grow far less than body text, and
- * a six-line bill title filled the first screen at AX5. On iOS the role
- * follows the largeTitle ramp (60pt at AX5), so AX5 draws 48/60 of it; on
- * Android the multiplier is the font scale itself. 1 at AX2 and below, and
- * for every other role: headings and body scale to AX5 uncapped.
- */
+// Apple's title1 ramp. The recordTitle role alone stops at AX2 (43pt).
+const recordTitleSizes = {
+  xSmall: 25,
+  small: 26,
+  medium: 27,
+  large: 28,
+  xLarge: 30,
+  xxLarge: 32,
+  xxxLarge: 34,
+  ax1: 38,
+  ax2: 43,
+  ax3: 48,
+  ax4: 53,
+  ax5: 58,
+} as const;
 export function titleSizeCap(
   variant: TextVariant,
   fontScale: number,
   os: string = Platform.OS,
 ): number {
-  if (variant !== 'title' && variant !== 'padTitle') return 1;
+  if (!['recordTitle', 'title', 'padTitle'].includes(variant)) return 1;
   const growth =
     os === 'android'
       ? fontScale
-      : largeTitleSizes[contentSizeCategory(fontScale)] / largeTitleSizes.large;
-  return growth > TITLE_MAX_GROWTH ? TITLE_MAX_GROWTH / growth : 1;
+      : recordTitleSizes[contentSizeCategory(fontScale)] /
+        recordTitleSizes.large;
+  const ceiling = recordTitleSizes.ax2 / recordTitleSizes.large;
+  return growth > ceiling ? ceiling / growth : 1;
 }
 
 /**
@@ -302,7 +314,7 @@ export function Text({
   variant = 'body',
   tone,
   style,
-  wordSafe = false,
+  wordSafe = !['body', 'recordText', 'record'].includes(variant),
   tabular: tabularProp = false,
   onTextLayout,
   onLayout,
@@ -311,6 +323,18 @@ export function Text({
   const bold = useBoldText();
   const highContrast = useHighTextContrast();
   const role = textStyles[variant];
+  const family =
+    role.fontFamily === undefined
+      ? undefined
+      : bold
+        ? (boldStep[role.fontFamily] ?? role.fontFamily)
+        : role.fontFamily;
+  const weight =
+    family !== role.fontFamily
+      ? family?.endsWith('SemiBold')
+        ? '600'
+        : '700'
+      : role.fontWeight;
   const tabular = tabularProp || ('tabular' in role && role.tabular);
   const { fontScale, width, scale } = useWindowDimensions();
   // A cap belongs to one text size, window width, role, weight and text
@@ -497,7 +521,8 @@ export function Text({
       style={[
         {
           color: roleColour(tone ?? role.color, highContrast),
-          fontFamily: bold ? boldStep[role.fontFamily] : role.fontFamily,
+          ...(family !== undefined ? { fontFamily: family } : {}),
+          fontWeight: weight,
           fontSize: role.fontSize * capScale,
           lineHeight: (role.lineHeight + LINE_HEIGHT_NUDGE) * capScale,
           flexShrink: 1,
@@ -512,21 +537,28 @@ export function Text({
   );
 }
 
-const headingVariant = { 1: 'title', 2: 'heading', 3: 'subheading' } as const;
-/**
- * A header for VoiceOver's rotor: level 1 page title, 2 section, 3
- * subsection. Word-safe, so a long word never splits at AX5.
- */
+/** A word-safe header with the native header trait. */
 export function Heading({
   level = 2,
+  kind = 'record',
+  long = false,
   ...props
-}: Omit<OpaxTextProps, 'variant'> & { level?: 1 | 2 | 3 }) {
+}: Omit<OpaxTextProps, 'variant'> & {
+  level?: 1 | 2 | 3;
+  kind?: 'page' | 'record';
+  long?: boolean;
+}) {
+  const variant =
+    level === 1
+      ? kind === 'page'
+        ? 'pageTitle'
+        : long || textContent(props.children).length > 80
+          ? 'recordHeading'
+          : 'recordTitle'
+      : level === 2
+        ? 'sectionTitle'
+        : 'subsectionTitle';
   return (
-    <Text
-      wordSafe
-      {...props}
-      variant={headingVariant[level]}
-      accessibilityRole="header"
-    />
+    <Text wordSafe {...props} variant={variant} accessibilityRole="header" />
   );
 }

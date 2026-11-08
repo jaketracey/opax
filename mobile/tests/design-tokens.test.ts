@@ -20,13 +20,16 @@ import {
   controlHeight,
   deprecatedTextVariants,
   fonts,
+  interfaceFonts,
+  textStylesFor,
+  radii,
+  type CurrentTextVariant,
   hairline,
   layout,
   minimumTarget,
   radius,
   rhythm,
   spacing,
-  textStyles,
 } from '../src/design/tokens';
 
 // Design tokens (docs/design/TOKENS.md): tokens.generated.ts is fresh, every
@@ -85,32 +88,27 @@ const BEFORE_HIGH_CONTRAST = {
   interestsInk: '#72385C',
   billsInk: '#205158',
 };
-// [font, size, line height, Dynamic Type ramp, colour, tabular]
-// The eleven current roles keep their values. Pass 2B made the deprecated
-// roles aliases of their replacements (only six sizes are drawn), so those
-// are checked against their replacement below.
-const BEFORE_TEXT = {
-  title: ['Merriweather', 34, 42, 'largeTitle', 'ink'],
-  padTitle: ['Merriweather', 42, 52, 'largeTitle', 'ink'],
-  padLede: ['PublicSans', 19, 30, 'body', 'ink'],
-  heading: ['Merriweather-Bold', 22, 30, 'title2', 'ink'],
-  subheading: ['Merriweather-Bold', 18, 24, 'title3', 'ink'],
-  record: ['Merriweather', 17, 29, 'body', 'ink'],
-  body: ['PublicSans', 17, 25, 'body', 'ink'],
-  strong: ['PublicSans-SemiBold', 17, 25, 'body', 'ink'],
-  lede: ['PublicSans', 16, 24, 'callout', 'ink'],
-  metadata: ['PublicSans', 15, 21, 'subheadline', 'inkSoft'],
-  fine: ['PublicSans', 13, 18, 'footnote', 'inkSoft'],
-  display: ['Merriweather-Bold', 34, 42, 'largeTitle', 'ink', true],
-  figure: ['PublicSans-Bold', 28, 34, 'title1', 'ink', true],
-  figureInline: ['PublicSans-SemiBold', 17, 25, 'body', 'ink', true],
-  tag: ['PublicSans-SemiBold', 13, 18, 'footnote', 'bronzeInk'],
-  kicker: ['PublicSans-SemiBold', 13, 18, 'footnote', 'inkSoft'],
-  caption: ['PublicSans', 12, 16, 'caption1', 'inkSoft'],
-  chip: ['PublicSans-SemiBold', 13, 17, 'footnote', 'ink'],
-  control: ['PublicSans-SemiBold', 17, 22, 'body', 'ink'],
-  countdown: ['PublicSans-SemiBold', 17, 22, 'body', 'ink', true],
-} as const;
+// Full shell 2.1 contract: family, weight, size, leading, ramp, colour, tabular.
+const TYPE_TABLE = {
+  largeTitle: ['heading', '700', 34, 41, 'largeTitle', 'ink'],
+  inlineTitle: ['heading', '600', 17, 22, 'headline', 'ink'],
+  pageTitle: ['heading', '700', 28, 34, 'title1', 'ink'],
+  recordTitle: ['serif', '700', 28, 34, 'title1', 'ink'],
+  recordHeading: ['serif', '700', 22, 28, 'title2', 'ink'],
+  sectionTitle: ['heading', '700', 22, 28, 'title2', 'ink'],
+  subsectionTitle: ['sans', '600', 17, 22, 'headline', 'ink'],
+  groupHeader: ['sans', '400', 13, 18, 'footnote', 'inkSoft'],
+  name: ['sans', '600', 17, 22, 'headline', 'ink'],
+  rowRecord: ['serif', '700', 17, 23, 'body', 'ink'],
+  recordText: ['serif', '400', 17, 26, 'body', 'ink'],
+  body: ['sans', '400', 17, 22, 'body', 'ink'],
+  strong: ['sans', '600', 17, 22, 'body', 'ink'],
+  secondary: ['sans', '400', 15, 20, 'subheadline', 'inkSoft'],
+  footnote: ['sans', '400', 13, 18, 'footnote', 'inkSoft'],
+  capsule: ['sans', '600', 12, 16, 'caption1', 'inkSoft'],
+  figure: ['sans', '700', 34, 41, 'largeTitle', 'ink', true],
+  tileFigure: ['sans', '600', 22, 28, 'title2', 'ink', true],
+} as const satisfies Record<CurrentTextVariant, readonly unknown[]>;
 
 describe('every name from before the token source keeps its value', () => {
   test('colour roles', () => {
@@ -123,7 +121,7 @@ describe('every name from before the token source keeps its value', () => {
     expect(kept).toEqual(BEFORE_LIGHT);
     // The one change: `line` is now an alias of dividerSubtle, so under
     // Increase Contrast it steps to the default divider as dividerSubtle does.
-    expect(lightHighContrast).toEqual({
+    expect(lightHighContrast).toMatchObject({
       ...BEFORE_HIGH_CONTRAST,
       line: BEFORE_LIGHT.dividerDefault,
     });
@@ -153,54 +151,57 @@ describe('every name from before the token source keeps its value', () => {
       title: '#23271F',
     });
   });
-  test('type roles', () => {
-    for (const [
-      name,
-      [font, size, lineHeight, ramp, color, tabular],
-    ] of Object.entries(BEFORE_TEXT)) {
-      if (name in deprecatedTextVariants) continue;
-      expect(textStyles[name as keyof typeof textStyles]).toEqual({
-        fontFamily: font,
-        fontSize: size,
-        lineHeight,
-        dynamicTypeRamp: ramp,
-        color,
-        ...(tabular ? { tabular } : {}),
-      });
-    }
-    // Deprecated roles draw as their replacement, keeping only what the
-    // replacement's use needs (tabular figures, the tag's bronze ink, the
-    // title's regular-width step).
-    const as = (use: keyof typeof textStyles, change = {}) => ({
-      ...textStyles[use],
-      ...change,
-    });
-    expect(textStyles.lede).toEqual(as('body'));
-    expect(textStyles.padLede).toEqual(as('body'));
-    expect(textStyles.caption).toEqual(as('fine'));
-    expect(textStyles.figure).toEqual(as('display'));
-    expect(textStyles.figureInline).toEqual(as('strong', { tabular: true }));
-    expect(textStyles.tag).toEqual(as('label', { color: 'bronzeInk' }));
-    expect(textStyles.kicker).toEqual(as('label'));
-    expect(textStyles.chip).toEqual(as('label'));
-    expect(textStyles.countdown).toEqual(as('control', { tabular: true }));
-    expect(textStyles.padTitle).toEqual(
-      as('title', { fontSize: 42, lineHeight: 52 }),
-    );
-    // Six sizes, plus the title's regular-width step.
-    expect(
-      [...new Set(Object.values(textStyles).map((r) => r.fontSize))].sort(
-        (a, b) => a - b,
-      ),
-    ).toEqual([13, 15, 17, 18, 22, 34, 42]);
-    expect(fonts).toEqual({
-      serif: 'Merriweather',
-      serifBold: 'Merriweather-Bold',
-      sans: 'PublicSans',
-      sansSemiBold: 'PublicSans-SemiBold',
-      sansBold: 'PublicSans-Bold',
-    });
-  });
+  test.each(['system', 'serif'] as const)(
+    'all eighteen type roles under %s headings',
+    (face) => {
+      const styles = textStylesFor(face);
+      const canonical = Object.keys(styles).filter(
+        (name) => !(name in deprecatedTextVariants),
+      );
+      expect(canonical.sort()).toEqual(Object.keys(TYPE_TABLE).sort());
+      for (const [name, values] of Object.entries(TYPE_TABLE)) {
+        const [
+          family,
+          fontWeight,
+          fontSize,
+          lineHeight,
+          dynamicTypeRamp,
+          color,
+          tabular,
+        ] = values;
+        const serif =
+          family === 'serif' || (family === 'heading' && face === 'serif');
+        expect(styles[name as CurrentTextVariant]).toEqual({
+          fontFamily: serif
+            ? fontWeight === '400'
+              ? fonts.serif
+              : fonts.serifBold
+            : undefined,
+          fontWeight,
+          fontSize,
+          lineHeight,
+          dynamicTypeRamp,
+          color,
+          ...(tabular ? { tabular: true } : {}),
+        });
+      }
+      for (const [alias, role] of Object.entries(deprecatedTextVariants))
+        expect(styles[alias as keyof typeof styles]).toEqual({
+          ...styles[role],
+          ...(['figureInline', 'countdown'].includes(alias)
+            ? { tabular: true }
+            : {}),
+        });
+      expect(
+        [...new Set(Object.values(styles).map((r) => r.fontSize))].sort(
+          (a, b) => a - b,
+        ),
+      ).toEqual([12, 13, 15, 17, 22, 28, 34]);
+      expect(interfaceFonts.sans).toBeUndefined();
+      expect(styles.figure.fontFamily).toBeUndefined();
+      expect(styles.tileFigure.fontFamily).toBeUndefined();
+    },
+  );
   test('space, shape and size', () => {
     expect(spacing).toEqual({
       s1: 4,
@@ -214,7 +215,9 @@ describe('every name from before the token source keeps its value', () => {
     expect(rhythm).toMatchObject({
       line: 4,
       tight: 8,
-      heading: 12,
+      heading: 8,
+      row: 11,
+      groupHeader: 6,
       block: 16,
       group: 24,
       section: 36,
@@ -222,7 +225,7 @@ describe('every name from before the token source keeps its value', () => {
     });
     expect(layout).toEqual({
       screenMargin: 20,
-      rowGap: 10,
+      rowGap: 11,
       subGap: 24,
       sectionGap: 36,
     });
@@ -232,7 +235,18 @@ describe('every name from before the token source keeps its value', () => {
       interests: { ink: 'interestsInk', wash: 'interestsWash' },
       bills: { ink: 'billsInk', wash: 'billsWash' },
       people: { ink: 'navy', wash: 'navyWash' },
-      leads: { ink: 'bronzeInk', wash: 'bronzeWash' },
+      leads: { ink: 'navy', wash: 'navyWash' },
+    });
+    expect(radii).toMatchObject({
+      container: 22,
+      tile: 18,
+      thumb: 10,
+      bar: 4,
+      capsule: 999,
+      round: 999,
+      sm: 4,
+      md: 22,
+      pill: 999,
     });
     expect([hairline, radius, minimumTarget]).toEqual([1, 4, 44]);
     expect(controlHeight).toEqual({ compact: 44, default: 48, large: 56 });

@@ -147,7 +147,7 @@ export function contrastPairs(source) {
 function typeRole(role, platform) {
   const web = platform === 'web' ? role.web ?? {} : {}
   return {
-    family: role.family,
+    family: platform === 'web' && role.family === 'heading' ? 'sans' : role.family,
     weight: web.weight ?? role.weight,
     size: web.size ?? role.size,
     lineHeight: web.lineHeight ?? role.lineHeight,
@@ -366,6 +366,7 @@ const exportConst = (name, value, { type = '', tail = '', doc = '' } = {}) => {
 const documented = (value, doc) => (doc ? { $doc: doc, value } : value)
 
 export function buildTs(source) {
+  if (!['system', 'serif'].includes(source.headingFace)) throw new Error('headingFace must be system or serif')
   const roles = colourRoles(source).filter((role) => role.app)
   const themes = palettes(source)
   const deprecatedRoles = own(source.deprecated.app.roles)
@@ -387,7 +388,8 @@ export function buildTs(source) {
     return key
   }
   const appType = (role) => ({
-    font: faceKey(role.family, String(role.weight)),
+    font: role.family === 'heading' ? 'heading' : faceKey(role.family, String(role.weight)),
+    fontWeight: String(role.weight),
     fontSize: role.size,
     lineHeight: role.lineHeight,
     dynamicTypeRamp: role.ramp,
@@ -397,12 +399,11 @@ export function buildTs(source) {
   const typeRoles = {}
   for (const [name, role] of own(source.type)) typeRoles[name] = documented(appType(typeRole(role, 'app')), firstSentence(role.$description))
   for (const [name, entry] of own(source.deprecated.app.textStyles)) {
-    const role = entry.alias ? { ...source.type[entry.alias], $description: '' } : entry
+    const role = entry.alias ? { ...source.type[entry.alias], ...entry, $description: '' } : entry
     typeRoles[name] = documented(appType(typeRole(role, 'app')), deprecatedDoc(entry))
   }
   const typeRegular = Object.fromEntries(own(source.type).filter(([, role]) => role.regular).map(([name, role]) => [name, { fontSize: role.regular.size, lineHeight: role.regular.lineHeight }]))
   const space = own(source.space)
-  const shadow = source.elevation.overlay
   const categories = Object.fromEntries(own(source.category).map(([name, pair]) => [name, { ink: pair.ink, wash: pair.wash }]))
   for (const [name, entry] of own(source.deprecated.app.accents)) categories[name] = documented(categories[entry.alias], `@deprecated Use \`${entry.alias}\`.`)
   const pairs = contrastPairs(source)
@@ -433,15 +434,16 @@ export function buildTs(source) {
     exportConst('chartRoles', Object.fromEntries(['mark', 'baseline', 'contrast'].map((key) => [key, documented(source.chart[key].role, firstSentence(source.chart[key].$description))])), { tail: ' as const satisfies Record<string, Role>' }),
     exportConst('chartIndustry', own(source.chart.industry).map(([cluster, { colour, ink }]) => [cluster, { colour, ink }]), { type: 'readonly (readonly [string, ClusterColour])[]', doc: "The money map's industry clusters in legend order: a hue and a text-safe ink. Light only." }),
     exportConst('fonts', Object.fromEntries(faces), { tail: ' as const', doc: 'Registered font names (app/_layout.tsx).' }),
-    exportConst('typeRoles', typeRoles, { tail: ' as const', doc: 'Type roles: eleven in use, then the deprecated ones.' }),
+    exportConst('headingFace', source.headingFace, { type: "'system' | 'serif'", doc: 'D1: one face switch for OPAX headings. Record text is always Merriweather.' }),
+    exportConst('typeRoles', typeRoles, { tail: ' as const', doc: 'Eighteen text roles, followed by deprecated aliases.' }),
     exportConst('typeRolesRegular', typeRegular, { tail: ' as const', doc: 'Type steps at regular width (iPad).' }),
     exportConst('rhythm', Object.fromEntries(space.map(([name, token]) => [name, documented(token.$value, firstSentence(token.$description))])), { tail: ' as const', doc: 'One vertical rhythm, applied everywhere.' }),
     exportConst('rhythmRegular', Object.fromEntries(space.filter(([, token]) => token.regular !== undefined).map(([name, token]) => [name, token.regular])), { tail: ' as const', doc: 'Rhythm steps that grow at regular width (iPad).' }),
     exportConst('spacing', Object.fromEntries(own(source.deprecated.app.spacing).map(([name, entry]) => [name, documented(entry.alias ? spaceStep(entry.alias) : entry.value, deprecatedDoc(entry))])), { tail: ' as const', doc: "@deprecated The web's old phone scale: use `rhythm`." }),
-    exportConst('radii', Object.fromEntries(own(source.radius).filter(([, token]) => !token.app?.omit).map(([name, token]) => [name, documented(token.$value, firstSentence(token.$description))])), { tail: ' as const', doc: 'Shape says what a thing is: press = pill, read = sm, hold = md.' }),
+    exportConst('radii', Object.fromEntries(own(source.radius).filter(([, token]) => !token.app?.omit).map(([name, token]) => [name, documented(token.$value, token.alias ? `@deprecated Use radii.${token.alias}.` : firstSentence(token.$description))])), { tail: ' as const', doc: 'Continuous corners by purpose, with deprecated aliases.' }),
     exportConst('border', Object.fromEntries(own(source.border).map(([name, token]) => [name, token.$value])), { tail: ' as const' }),
-    exportConst('elevation', { overlay: { shadowColor: shadow.color, shadowOpacity: shadow.alpha, shadowRadius: shadow.blur / 2, shadowOffset: { width: shadow.x, height: shadow.y }, elevation: shadow.y } }, { tail: ' as const', doc: 'One shadow, for things that float (native sheets and menus draw their own).' }),
-    exportConst('motion', { duration: Object.fromEntries(own(source.motion.duration).map(([name, token]) => [name, token.$value])), easing: { standard: source.motion.easing.standard.$value }, ambientLoop: source.motion.ambientLoop.$value }, { tail: ' as const', doc: 'Three durations (ms) and one curve (cubic-bezier control points); under Reduce Motion nothing moves.' }),
+    exportConst('elevation', Object.fromEntries(own(source.elevation).map(([name, value]) => [name, { shadowColor: value.color, shadowOpacity: value.alpha, shadowRadius: value.blur / 2, shadowOffset: { width: value.x, height: value.y }, elevation: value.y, ...(name === 'edition' ? { dark: null } : {}) }])), { tail: ' as const', doc: 'Legacy overlay shadow and the light-only edition shadow; native sheets and menus draw their own.' }),
+    exportConst('motion', { duration: Object.fromEntries(own(source.motion.duration).map(([name, token]) => [name, token.$value])), easing: { standard: source.motion.easing.standard.$value }, ambientLoop: source.motion.ambientLoop.$value }, { tail: ' as const', doc: 'Durations in ms and one curve (cubic-bezier control points); under Reduce Motion nothing moves.' }),
     exportConst('size', Object.fromEntries(own(source.size).flatMap(([name, token]) => [[name, token.$value], ...(token.android ? [[`${name}Android`, token.android]] : [])])), { tail: ' as const' }),
     exportConst('breakpoints', { regular: source.layout.regular.$value, wide: source.layout.wide.$value }, { tail: ' as const' }),
     exportConst('splitPane', { width: source.layout.splitPane.$value, min: source.layout.splitPane.min, max: source.layout.splitPane.max }, { tail: ' as const' }),
@@ -463,6 +465,8 @@ export function buildDocsTables(source) {
     const ic = themes.lightHighContrast[role.name] ? `${themes.lightHighContrast[role.name]} / ${themes.darkHighContrast[role.name]}` : ''
     lines.push(`| ${role.group} | ${code(role.web)} | ${role.app ? code(role.name) : 'none'} | ${value} | ${themes.dark[role.name]} | ${ic} | ${firstSentence(role.description)} |`)
   }
+  lines.push('', '### Type roles', '', `Heading face: ${code(source.headingFace)}. iOS interface families are unset; Android uses Public Sans.`, '', '| Role | Face | Weight | Size / leading | Dynamic Type | Colour | Tabular |', '|---|---|---|---|---|---|---|')
+  for (const [name, role] of own(source.type)) lines.push(`| ${code(name)} | ${role.family} | ${role.weight} | ${role.size} / ${role.lineHeight} | ${role.ramp} | ${role.color} | ${role.tabular ? 'yes' : ''} |`)
   const counts = {
     roles: roles.length,
     groups: new Set(roles.map((role) => role.group)).size,
