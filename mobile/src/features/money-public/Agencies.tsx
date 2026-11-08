@@ -119,6 +119,7 @@ export default function Agencies() {
                       : ''
                   }`}
                   caveat={CONTRACTS_CAVEAT}
+                  // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
                     source: {
                       asOf: data.meta.asOf,
@@ -319,6 +320,7 @@ export function Agency() {
                       ? `${formatMoneyCompact(profile.undated)} of this has no start date. ${CONTRACTS_CAVEAT}`
                       : CONTRACTS_CAVEAT
                   }
+                  // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
                     source: {
                       asOf: data.meta.asOf,
@@ -409,6 +411,7 @@ export function Agency() {
                           start: `${chartYears[0]!.year}-01-01`,
                           end: data.meta.asOf,
                         }}
+                        // Spread: opax/transport reads a plain `source` prop as an image.
                         {...{ source: 'AusTender' }}
                       />
                     ) : (

@@ -241,6 +241,7 @@ export default function Allocation() {
                   ink="money"
                   label={line}
                   caveat={stage === 'history' ? LATEST_VALUES : SEPARATE_LISTS}
+                  // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
                     source: {
                       asOf:

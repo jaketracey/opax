@@ -289,6 +289,7 @@ export default function Program() {
                           ? `${program.listed.toLocaleString('en-AU')} of the ${program.available.toLocaleString('en-AU')} grants are listed below.`
                           : undefined
                     }
+                    // Spread: opax/transport reads a plain `source` prop as an image.
                     {...{
                       source: {
                         asOf: program.asOf,

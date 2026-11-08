@@ -108,6 +108,7 @@ export function SeatFigure({
       label={line}
       caveat={SEAT_CAVEAT}
       accessibilityLabel={`${moneyAccessibilityLabel(seat.total, true)}, ${line}`}
+      // Spread: opax/transport reads a plain `source` prop as an image.
       {...{ source }}
       testID={`${testID}-total`}
     />

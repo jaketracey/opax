@@ -218,6 +218,7 @@ function GrantList({
                       ? `recorded annual spending, ${fyRange(data.meta.years[0] ?? '', data.meta.years.at(-1) ?? '')}`
                       : figure.line
                   }
+                  // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
                     source: {
                       asOf: data.meta.asOf,
