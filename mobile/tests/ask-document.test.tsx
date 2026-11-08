@@ -9,11 +9,16 @@ import { topics } from '../src/features/ask/Options';
 import { titleSubject } from '../src/features/records/citations';
 import { decodeDocument } from '../src/features/records/model';
 import fixtures from '../scripts/fixtures/records/contracts.json';
+import { arriveInAsk } from '../src/features/ask/session';
 
 jest.mock('expo-router', () => ({
   router: { dismissTo: jest.fn(), navigate: jest.fn() },
   useSegments: () => ['(tabs)', '(today)', 'doc', '[slug]'],
 }));
+// The arrival itself (a new conversation, nothing sent) is ask.test.ts's.
+jest.mock('../src/features/ask/session', () => ({ arriveInAsk: jest.fn() }));
+// Options loads the roster for its Person list only when opened.
+jest.mock('../src/api/runtime', () => ({}));
 const source = readFileSync(
   resolve(__dirname, '../../portal/public/app.js'),
   'utf8',
@@ -85,5 +90,13 @@ test('mount does nothing; tapping opens a draft without submitting or creating a
     pathname: '/ask',
     params: { question: documentQuestion(speech), entry: expect.any(String) },
   });
+  // The draft lands in the composer once, marked with the route's entry.
+  const [route] = jest.mocked(router.navigate).mock.calls[0]! as [
+    { params: { entry: string } },
+  ];
+  expect(arriveInAsk).toHaveBeenCalledWith(
+    { question: documentQuestion(speech) },
+    route.params.entry,
+  );
   await act(async () => view.unmount());
 });

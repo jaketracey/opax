@@ -356,7 +356,6 @@ const builders = [
   ['shared', 'results/[kind]', routes.resultsRoute('speech')],
   ['shared', 'ask', routes.askRoute({ question: '' })],
   ['shared', 'consent', routes.askConsentRoute],
-  ['shared', 'filters/ask', routes.askFiltersRoute],
   ['shared', 'conversations', routes.conversationsRoute],
   ['shared', 'ask-report', routes.askReportRoute('turn')],
   ['shared', 'money', routes.moneyRoute()],
