@@ -1,5 +1,10 @@
 import { router, type Href } from 'expo-router';
-import { ownsRowPadding, useRowHighlight, useRowInset } from './row-padding';
+import {
+  ownsRowPadding,
+  useRowHighlight,
+  useRowInset,
+  useRowCellStyle,
+} from './row-padding';
 import {
   RowLink,
   rowMenus,
@@ -29,7 +34,8 @@ import {
   formerMember,
   type PartyContext,
 } from './party';
-import { Hoverable } from './adaptive';
+import { Hoverable, useHover } from './adaptive';
+import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
 import { colors, hairline, minimumTarget, rhythm } from './tokens';
@@ -413,6 +419,11 @@ export function PersonRow({
   const path = dragPath ?? (slug ? `/subject/person/${slug}` : undefined);
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
+  const split = selected !== undefined;
+  const [hovered, onHover] = useHover();
+  const onActivate =
+    select ?? onPress ?? (href ? () => router.push(href) : undefined);
   useRowInset(stacked ? 16 : 16 + size + rhythm.tight);
   const context =
     party === undefined
@@ -487,18 +498,18 @@ export function PersonRow({
           ) : null}
         </View>
       </View>
-      {href || onPress ? (
-        <Icon name={personChevron} size={13} maxScale={1.5} tone="inkFaint" />
+      {!split && (href || onPress || select) ? (
+        <Icon name={personChevron} size={13} maxScale={1.5} tone="inkSoft" />
       ) : null}
     </>
   );
-  if (!href && !onPress)
+  if (!href && !onPress && !select)
     return (
       <View
         accessible
         accessibilityLabel={label}
         testID={testID}
-        style={styles.person}
+        style={[styles.person, cellStyle]}
       >
         {body}
       </View>
@@ -546,16 +557,19 @@ export function PersonRow({
           router.push(partyRoute(context.formerly));
       }}
       testID={testID}
-      onPress={onPress}
+      onPress={select ?? onPress}
       style={({ pressed }) => [
         styles.person,
+        split ? splitRowStyles.bleed : null,
+        cellStyle,
         selected
-          ? { backgroundColor: colors.navyWash }
-          : pressed || highlighted
+          ? selectedWash()
+          : pressed || highlighted || hovered
             ? { backgroundColor: highlight }
             : null,
       ]}
     >
+      {selected ? <SelectedMark /> : null}
       {body}
     </Pressable>
   );
@@ -586,7 +600,8 @@ export function PersonRow({
   return (
     <Hoverable
       effect="none"
-      onActivate={onPress}
+      onActivate={onActivate}
+      onHover={onHover}
       drag={path ? { path, title: name } : undefined}
     >
       {link}

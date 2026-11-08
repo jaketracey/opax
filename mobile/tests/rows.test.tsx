@@ -38,6 +38,9 @@ import { Card, Tile, TileGrid } from '../src/design/card';
 import { FigureBlock, StatStrip, PageFoot } from '../src/design/record';
 import { StatusCapsule, MachinePill, ChoiceChip } from '../src/design/labels';
 import { SourceLine } from '../src/design/source';
+import { Hoverable } from '../src/design/adaptive';
+import * as adaptive from '../src/design/adaptive';
+import { SelectedMark, selectedWash, splitRowStyles } from '../src/design/selection';
 import { colors, radii } from '../src/design/tokens';
 
 jest.mock('../src/features/follows/store', () => ({
@@ -297,24 +300,89 @@ test('BillRow showStatus and dateLabel vary independently; spoken status stays',
     ),
   ).toContain('Introduced 17 Sep 2026');
 });
-test('LinkRow supports no accessory, explicit checkmark, selection on and off', () => {
+test('LinkRow checkmark selection is explicit and independent of split selection', () => {
   for (const selected of [false, true]) {
     const root = render(
       <LinkRow
         title="Labor"
-        accessory="none"
+        accessory="checkmark"
         selected={selected}
-        onPress={jest.fn()}
         testID="row"
       />,
     ).root;
     expect(row(root).props.accessibilityState.selected).toBe(selected);
     expect(glyphs(root)).toEqual(selected ? ['checkmark'] : []);
+    expect(root.findAllByType(SelectedMark)).toHaveLength(0);
+    expect(rowStyle(row(root)).backgroundColor).toBeUndefined();
   }
   expect(
-    glyphs(render(<LinkRow title="Labor" accessory="checkmark" />).root),
-  ).toEqual(['checkmark']);
+    glyphs(render(<LinkRow title="Labor" accessory="none" />).root),
+  ).toEqual([]);
 });
+for (const selected of [false, true]) {
+  test.each([
+    <LinkRow
+      key="link"
+      title="Labor"
+      href={href}
+      selected={selected}
+      testID="row"
+    />,
+    <BillRow
+      key="bill"
+      title="Bill"
+      status="Passed"
+      href={href}
+      selected={selected}
+      testID="row"
+    />,
+    <PersonRow
+      key="person"
+      name="Anne"
+      href={href}
+      selected={selected}
+      testID="row"
+    />,
+  ])('split selection anatomy, selected=' + selected, (element) => {
+    const root = render(element).root;
+    expect(row(root).props.accessibilityState.selected).toBe(selected);
+    expect(rowStyle(row(root))).toMatchObject(flat(splitRowStyles.bleed));
+    expect(rowStyle(row(root)).backgroundColor).toEqual(
+      selected ? selectedWash().backgroundColor : undefined,
+    );
+    expect(root.findAllByType(SelectedMark)).toHaveLength(selected ? 1 : 0);
+    expect(glyphs(root)).not.toContain('chevron.right');
+    expect(glyphs(root)).not.toContain('checkmark');
+    expect(root.findByType(Hoverable).props).toHaveProperty('onHover');
+  });
+}
+test.each(['link', 'bill', 'person'])(
+  '%s keyboard activation respects select, onPress and href',
+  (kind) => {
+    for (const mode of ['href', 'onPress', 'select']) {
+      const onPress = mode !== 'href' ? jest.fn() : undefined;
+      const select = mode === 'select' ? jest.fn() : undefined;
+      const props = { href, onPress, select, testID: 'row' };
+      const root = render(
+        kind === 'link' ? (
+          <LinkRow title="Anne" {...props} />
+        ) : kind === 'bill' ? (
+          <BillRow title="Bill" status="Passed" {...props} />
+        ) : (
+          <PersonRow name="Anne" {...props} />
+        ),
+      ).root;
+      jest.mocked(router.push).mockClear();
+      act(() => root.findByType(Hoverable).props.onActivate());
+      if (select) {
+        expect(select).toHaveBeenCalledTimes(1);
+        expect(onPress).not.toHaveBeenCalled();
+      } else if (onPress) expect(onPress).toHaveBeenCalledTimes(1);
+      else expect(router.push).toHaveBeenCalledWith(href);
+      if (onPress || select) expect(router.push).not.toHaveBeenCalled();
+    }
+  },
+);
 test('PersonRow only says Your MP when its caller passes yourMP', () => {
   for (const yourMP of [false, true]) {
     const root = render(
@@ -801,3 +869,107 @@ test('Screen places its one offline line after the marked date', () => {
     'Latest records',
   ]);
 });
+
+test('grouped cell highlights reach both edges while text and separators stay inset', () => {
+  const root = render(
+    <Screen grouped>
+      <InsetGroup>
+        <LinkRow title="One" symbol="number" href={href} testID="one" />
+        <LinkRow title="Two" symbol="number" href={href} testID="two" />
+      </InsetGroup>
+    </Screen>,
+  ).root;
+  expect(rowStyle(row(root, 'one'), true)).toMatchObject({
+    marginHorizontal: -16,
+    paddingHorizontal: 16,
+    backgroundColor: colors.sunken,
+  });
+  expect(
+    root
+      .findAllByType(View)
+      .some((node) => flat(node.props.style)?.marginLeft === 44),
+  ).toBe(true);
+});
+test('native preview triggers explicitly expose the row and its menu to accessibility', () => {
+  const root = render(
+    <RowLink href={href} menu={[{ title: 'Follow', onPress: jest.fn() }]}>
+      <Pressable testID="row" accessibilityLabel="Anne" />
+    </RowLink>,
+  ).root;
+  expect(host(root, 'row').props).toMatchObject({
+    accessible: true,
+    accessibilityElementsHidden: false,
+    importantForAccessibility: 'yes',
+    accessibilityLabel: 'Anne',
+    accessibilityActions: [{ name: 'Follow', label: 'Follow' }],
+  });
+});
+
+test('all three split row types draw hover tint and pass the hover handler', () => {
+  const onHover = jest.fn();
+  const hover = jest
+    .spyOn(adaptive, 'useHover')
+    .mockReturnValue([true, onHover]);
+  try {
+    for (const element of [
+      <LinkRow
+        key="l"
+        title="Anne"
+        href={href}
+        selected={false}
+        testID="row"
+      />,
+      <BillRow
+        key="b"
+        title="Bill"
+        status="Passed"
+        href={href}
+        selected={false}
+        testID="row"
+      />,
+      <PersonRow
+        key="p"
+        name="Anne"
+        href={href}
+        selected={false}
+        testID="row"
+      />,
+    ]) {
+      const root = render(element).root;
+      expect(rowStyle(row(root)).backgroundColor).toEqual(colors.sunken);
+      expect(root.findByType(Hoverable).props.onHover).toBe(onHover);
+    }
+  } finally {
+    hover.mockRestore();
+  }
+});
+test.each([undefined, 'Anne'])(
+  'Screen leaves stack header styles alone, title=%s',
+  (barTitle) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 18,
+    });
+    const setOptions = jest.fn();
+    try {
+      const navigation = {
+        setOptions,
+        isFocused: () => true,
+        addListener: () => () => undefined,
+      };
+      render(
+        <NavigationContext.Provider value={navigation as never}>
+          <Screen grouped barTitle={barTitle}>
+            <Text>Content</Text>
+          </Screen>
+        </NavigationContext.Provider>,
+      );
+      expect(
+        setOptions.mock.calls.every(([options]) => !('headerStyle' in options)),
+      ).toBe(true);
+    } finally {
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);

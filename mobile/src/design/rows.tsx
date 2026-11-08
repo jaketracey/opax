@@ -1,10 +1,10 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View, findNodeHandle } from 'react-native';
-import { type Href } from 'expo-router';
+import { router, type Href } from 'expo-router';
 import { openOnWeb, openSource } from '../navigation/external';
 import { useOpenAsk } from '../features/ask/open';
 import { useAccessibilitySize } from './accessibility';
-import { Hoverable } from './adaptive';
+import { Hoverable, useHover } from './adaptive';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { StatusCapsule } from './labels';
 import type { PartyContext } from './party';
@@ -17,7 +17,13 @@ import {
   useRowFollow,
   type RowMenuAction,
 } from './row-link';
-import { ownsRowPadding, useRowHighlight, useRowInset } from './row-padding';
+import {
+  ownsRowPadding,
+  useRowHighlight,
+  useRowInset,
+  useRowCellStyle,
+} from './row-padding';
+import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { showMenu } from './menu';
 import { SourceAffordance } from './source';
 import {
@@ -100,6 +106,11 @@ export function LinkRow({
 }: LinkRowProps) {
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
+  const split = selected !== undefined && accessory !== 'checkmark';
+  const [hovered, onHover] = useHover();
+  const onActivate =
+    select ?? onPress ?? (href ? () => router.push(href) : undefined);
   const glyph = symbol ?? icon;
   const ink = symbolInk ?? accent;
   useRowInset(glyph ? 44 : 16);
@@ -123,14 +134,21 @@ export function LinkRow({
       }}
       disabled={disabled}
       testID={testID}
-      onPress={press}
+      onPress={select ?? press}
       style={({ pressed }) => [
         styles.row,
-        (pressed || highlighted) && !disabled
-          ? { backgroundColor: highlight }
-          : null,
+        split ? splitRowStyles.bleed : null,
+        cellStyle,
+        !disabled && split && selected
+          ? selectedWash()
+          : (pressed || highlighted || hovered) &&
+              !disabled &&
+              (href || select || press)
+            ? { backgroundColor: highlight }
+            : null,
       ]}
     >
+      {split && selected ? <SelectedMark /> : null}
       {glyph ? (
         <Icon
           name={glyph}
@@ -165,14 +183,14 @@ export function LinkRow({
           </Text>
         ) : null}
       </View>
-      {!destructive && (selected || accessory === 'checkmark') ? (
+      {!destructive && accessory === 'checkmark' && selected ? (
         <Icon name={checkmark} size={13} tone="navy" />
-      ) : !destructive && accessory === 'chevron' ? (
+      ) : !destructive && !split && accessory === 'chevron' ? (
         <Icon
           name={external ? EXTERNAL_GLYPH : chevron}
           size={13}
           maxScale={1.5}
-          tone="inkFaint"
+          tone="inkSoft"
         />
       ) : null}
     </Pressable>
@@ -180,14 +198,15 @@ export function LinkRow({
   return (
     <Hoverable
       effect="none"
-      onActivate={press}
+      onActivate={disabled ? undefined : onActivate}
+      onHover={disabled ? undefined : onHover}
       drag={dragPath ? { path: dragPath, title } : undefined}
     >
       {href && !disabled ? (
         <RowLink
           href={href}
           menu={menu}
-          select={select ?? (selected !== undefined ? onPress : undefined)}
+          select={select ?? (split ? onPress : undefined)}
         >
           {row}
         </RowLink>
@@ -231,6 +250,7 @@ export function ValueRow({
 }) {
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
   useRowInset();
   const body = (
     <>
@@ -243,7 +263,7 @@ export function ValueRow({
         </Text>
       </View>
       {href ? (
-        <Icon name={chevron} size={13} maxScale={1.5} tone="inkFaint" />
+        <Icon name={chevron} size={13} maxScale={1.5} tone="inkSoft" />
       ) : null}
     </>
   );
@@ -259,6 +279,7 @@ export function ValueRow({
         accessibilityRole="link"
         style={({ pressed }) => [
           styles.row,
+          cellStyle,
           pressed ? { backgroundColor: highlight } : null,
         ]}
       >
@@ -266,7 +287,7 @@ export function ValueRow({
       </Pressable>
     </RowLink>
   ) : (
-    <View {...props} style={styles.row}>
+    <View {...props} style={[styles.row, cellStyle]}>
       {body}
     </View>
   );
@@ -351,7 +372,12 @@ export function BillRow({
 }: BillRowProps) {
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
   useRowInset();
+  const split = selected !== undefined;
+  const [hovered, onHover] = useHover();
+  const onActivate =
+    select ?? onPress ?? (href ? () => router.push(href) : undefined);
   const formattedDate =
     date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? formatDate(date, 'short') : date;
   const dated = formattedDate
@@ -377,16 +403,19 @@ export function BillRow({
       accessibilityHint={accessibilityHint}
       accessibilityState={selected !== undefined ? { selected } : undefined}
       testID={testID}
-      onPress={onPress}
+      onPress={select ?? onPress}
       style={({ pressed }) => [
         styles.row,
+        split ? splitRowStyles.bleed : null,
+        cellStyle,
         selected
-          ? { backgroundColor: colors.navyWash }
-          : pressed || highlighted
+          ? selectedWash()
+          : (pressed || highlighted || hovered) && (href || select || onPress)
             ? { backgroundColor: highlight }
             : null,
       ]}
     >
+      {selected ? <SelectedMark /> : null}
       <View style={styles.main}>
         <View style={[styles.line, stacked ? styles.stacked : null]}>
           {showStatus ? <StatusCapsule status={status} /> : null}
@@ -417,7 +446,9 @@ export function BillRow({
           </Text>
         ) : null}
       </View>
-      <Icon name={chevron} size={13} maxScale={1.5} tone="inkFaint" />
+      {!split ? (
+        <Icon name={chevron} size={13} maxScale={1.5} tone="inkSoft" />
+      ) : null}
     </Pressable>
   );
   const link = href ? (
@@ -445,7 +476,8 @@ export function BillRow({
   return (
     <Hoverable
       effect="none"
-      onActivate={onPress}
+      onActivate={onActivate}
+      onHover={onHover}
       drag={dragPath ? { path: dragPath, title } : undefined}
     >
       {link}
@@ -510,6 +542,7 @@ export function RecordRow({
   const stacked = useAccessibilitySize();
   const [expanded, setExpanded] = useState(false);
   const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
   useRowInset();
   const clean = cleanRecordTitle(title);
   const stage = recordTitleStage(title);
@@ -539,6 +572,7 @@ export function RecordRow({
       }
       style={({ pressed }) => [
         styles.row,
+        cellStyle,
         pressed ? { backgroundColor: highlight } : null,
       ]}
     >
@@ -580,7 +614,7 @@ export function RecordRow({
           name={external ? EXTERNAL_GLYPH : chevron}
           size={13}
           maxScale={1.5}
-          tone="inkFaint"
+          tone="inkSoft"
         />
       ) : null}
     </Pressable>
@@ -647,6 +681,7 @@ export function DivisionRow({
 }: DivisionRowProps) {
   const [expanded, setExpanded] = useState(false);
   const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
   useRowInset();
   const votes = split ?? { ayes, noes };
   const counts =
@@ -676,6 +711,7 @@ export function DivisionRow({
       }
       style={({ pressed }) => [
         styles.row,
+        cellStyle,
         pressed ? { backgroundColor: highlight } : null,
       ]}
     >
@@ -719,7 +755,7 @@ export function DivisionRow({
           name={expandable ? 'chevron.down' : chevron}
           size={13}
           maxScale={1.5}
-          tone="inkFaint"
+          tone="inkSoft"
         />
       ) : null}
     </Pressable>
@@ -803,6 +839,7 @@ export function SuggestionRow({
 }) {
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
+  const cellStyle = useRowCellStyle();
   const person = portrait !== undefined || kind === 'person';
   const glyph =
     symbol ??
@@ -825,7 +862,8 @@ export function SuggestionRow({
       onPress={onPress}
       style={({ pressed }) => [
         styles.row,
-        pressed ? { backgroundColor: highlight } : null,
+        cellStyle,
+        pressed && (href || onPress) ? { backgroundColor: highlight } : null,
       ]}
     >
       <View style={[styles.suggestion, stacked ? styles.stacked : null]}>

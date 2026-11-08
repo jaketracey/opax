@@ -29,3 +29,12 @@ export function useRowHighlight() {
     ? colors.raised
     : colors.sunken;
 }
+
+// The group keeps its text inset; rows bleed their interactive surface to the cell edges.
+export const RowCellInsetContext = createContext(0);
+export function useRowCellStyle() {
+  const inset = useContext(RowCellInsetContext);
+  return inset
+    ? { marginHorizontal: -inset, paddingHorizontal: inset }
+    : undefined;
+}

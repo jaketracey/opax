@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { ownsRowPadding } from './row-padding';
+import { ownsRowPadding, useRowCellStyle } from './row-padding';
 import {
   Animated,
   Easing,
@@ -62,6 +62,7 @@ export function Disclosure({
   const open = controlled ?? own;
   const reduceMotion = useReduceMotion();
   const stacked = useAccessibilitySize();
+  const cellStyle = useRowCellStyle();
   // One animated value for the row's lifetime (state, not a ref, so render reads it).
   const [turn] = useState(() => new Animated.Value(open ? 1 : 0));
   useEffect(() => {
@@ -93,6 +94,7 @@ export function Disclosure({
         }}
         style={({ pressed }) => [
           styles.row,
+          cellStyle,
           pressed ? { backgroundColor: colors.sunken } : null,
         ]}
       >

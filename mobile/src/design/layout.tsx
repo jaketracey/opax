@@ -49,7 +49,11 @@ import { RowLink } from './row-link';
 import { light, dark } from './palette';
 import { designFlags } from './flags';
 import { useInCard } from './card';
-import { SurfaceContext, RowInsetContext } from './row-padding';
+import {
+  SurfaceContext,
+  RowInsetContext,
+  RowCellInsetContext,
+} from './row-padding';
 import { Heading, Text, type TextTone } from './text';
 import {
   colors,
@@ -134,11 +138,7 @@ export function Screen({
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
   const suppliedBridge = useContext(ScreenTitleContext);
-  const nativeBridge = useScreenBarTitle(
-    barTitle,
-    ground,
-    anchorBottom !== null,
-  );
+  const nativeBridge = useScreenBarTitle(barTitle, anchorBottom !== null);
   const titleBridge = suppliedBridge ?? nativeBridge;
   useEffect(() => {
     titleScroll.current =
@@ -372,7 +372,9 @@ function InsetRow({
       ) : null}
       <View style={grouped ? { paddingHorizontal: 16 } : undefined}>
         <RowInsetContext.Provider value={setInset}>
-          {children}
+          <RowCellInsetContext.Provider value={grouped ? 16 : 0}>
+            {children}
+          </RowCellInsetContext.Provider>
         </RowInsetContext.Provider>
       </View>
     </View>
@@ -473,26 +475,13 @@ function ScreenBarTitle({ title, shown }: { title: string; shown: boolean }) {
     </Animated.Text>
   );
 }
-function useScreenBarTitle(
-  title: string | undefined,
-  ground: 'paper' | 'sunken',
-  anchored: boolean,
-) {
+function useScreenBarTitle(title: string | undefined, anchored: boolean) {
   const navigation = useContext(NavigationContext);
   const header = useContext(HeaderHeightContext) || 44;
   const shown = useRef(false);
   useEffect(() => {
     if (title) navigation?.setOptions({ title });
   }, [navigation, title]);
-  useEffect(() => {
-    if (
-      Platform.OS === 'ios' &&
-      Number.parseInt(String(Platform.Version), 10) < 26
-    )
-      navigation?.setOptions({
-        headerStyle: { backgroundColor: colors[ground] },
-      });
-  }, [navigation, ground]);
   useEffect(() => {
     if (!title || !anchored) return;
     shown.current = false;
