@@ -6,8 +6,18 @@ import { suggestState, type StateSuggestion } from './state-suggestion';
 // The only two location calls in the app (tests/motion-purpose): the
 // when-in-use prompt, asked at a chooser's "Use my location" tap, and one
 // foreground fix.
-const permitted = async () =>
-  (await Location.requestForegroundPermissionsAsync()).status === 'granted';
+// Precise Location off (iOS 14+ reduced accuracy) or an Android coarse grant:
+// the fix is a wide circle (first-launch 4.3, S8).
+const permission = async () => {
+  const response = await Location.requestForegroundPermissionsAsync();
+  return {
+    granted: response.status === 'granted',
+    reduced:
+      response.ios?.accuracy === 'reduced' ||
+      response.android?.accuracy === 'coarse',
+  };
+};
+const permitted = async () => (await permission()).granted;
 const currentFix = () =>
   Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
 // Called only from the chooser's button. The fix never crosses this function's
@@ -18,7 +28,8 @@ export async function suggestFromLocation(
   signal: AbortSignal,
 ): Promise<Suggestion> {
   try {
-    if (!(await permitted())) return { kind: 'denied' };
+    const { granted, reduced } = await permission();
+    if (!granted) return { kind: 'denied' };
     if (signal.aborted) return { kind: 'unavailable' };
     const outlines = await loadOutlines(
       seats,
@@ -33,6 +44,7 @@ export async function suggestFromLocation(
       outlines,
       [fix.coords.longitude, fix.coords.latitude],
       fix.coords.accuracy,
+      reduced,
     );
   } catch {
     return { kind: 'unavailable' };
