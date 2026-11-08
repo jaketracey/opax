@@ -22,19 +22,21 @@ export const light = {
   onNavy: '#FFFFFF',
   /** Secondary text on navy. */
   onNavySoft: '#B7C6D9',
+  /** Semantic link tone, always the single navy tint. */
+  link: '#142A43',
   /** Structure and the one primary action per view. */
   navy: '#142A43',
   /** Pressed and hover on navy. */
   navyRaised: '#1D3A5C',
   /** Secondary button fill; the people accent's wash. */
   navyWash: '#E4E6E7',
-  /** Rules, chart marks and the masthead rule. */
+  /** Brand artwork only: mark, icon and launch screen. */
   bronze: '#A0761B',
-  /** Record links, tags, the focus ring on paper. */
+  /** Brand artwork only: mark, icon and launch screen. */
   bronzeInk: '#8A5A12',
-  /** Tag fill, search highlight. */
+  /** Brand artwork only: mark, icon and launch screen. */
   bronzeWash: '#ECE4D3',
-  /** Bronze legible on navy: the mark, the focus ring on navy. */
+  /** Brand artwork only: mark, icon and launch screen. */
   bronzeBright: '#D9A84A',
   /** The top rule of a section; major content boundaries. */
   dividerDefault: '#B8B4A8',
@@ -62,6 +64,20 @@ export const light = {
   billsInk: '#1F5F6B',
   /** The bills tile and header wash. */
   billsWash: '#E4EAE8',
+  /** Edition plate ground. */
+  bandBills: '#1F5F6B',
+  /** Edition plate ground. */
+  bandMoney: '#2B6447',
+  /** Edition plate ground. */
+  bandVotes: '#3A4C96',
+  /** Edition plate ground. */
+  bandInterests: '#7B3A63',
+  /** Edition plate ground. */
+  bandPeople: '#142A43',
+  /** Titles and art on edition bands. */
+  onBand: '#FFFFFF',
+  /** Kicker and detail on edition bands. */
+  onBandSoft: '#E6EBEE',
   /** @deprecated Use `dividerSubtle`. */
   line: '#DFDCD2',
   /** @deprecated Use `lineControl`. */
@@ -83,6 +99,7 @@ export const dark: Record<Role, string> = {
   inkFaint: '#8A8F84',
   onNavy: '#0E1A28',
   onNavySoft: '#2A3D53',
+  link: '#9CB9DB',
   navy: '#9CB9DB',
   navyRaised: '#B9CDE6',
   navyWash: '#25303D',
@@ -103,6 +120,13 @@ export const dark: Record<Role, string> = {
   interestsWash: '#33232D',
   billsInk: '#7FC4D0',
   billsWash: '#1B2D30',
+  bandBills: '#1E4A51',
+  bandMoney: '#24472F',
+  bandVotes: '#2F3B70',
+  bandInterests: '#5C2C4A',
+  bandPeople: '#1C3550',
+  onBand: '#F5F3EC',
+  onBandSoft: '#C9CEC4',
   line: '#30342D',
   lineStrong: '#7E8378',
 };
@@ -118,6 +142,13 @@ export const lightHighContrast: Partial<Record<Role, string>> = {
   votesInk: '#374684',
   interestsInk: '#72385C',
   billsInk: '#205158',
+  bandBills: '#1E5E69',
+  bandMoney: '#2A6346',
+  bandVotes: '#3A4C96',
+  bandInterests: '#7B3A63',
+  bandPeople: '#142A43',
+  onBand: '#FFFFFF',
+  onBandSoft: '#E6EBEE',
   line: '#B8B4A8',
 };
 
@@ -131,6 +162,13 @@ export const darkHighContrast: Partial<Record<Role, string>> = {
   votesInk: '#C6CEF8',
   interestsInk: '#EFC3DF',
   billsInk: '#A6DAE3',
+  bandBills: '#1E4A51',
+  bandMoney: '#24472F',
+  bandVotes: '#2F3B70',
+  bandInterests: '#5C2C4A',
+  bandPeople: '#1C3550',
+  onBand: '#F5F3EC',
+  onBandSoft: '#C9CEC4',
   line: '#4C5047',
 };
 
@@ -189,7 +227,7 @@ export const categories = {
   interests: { ink: 'interestsInk', wash: 'interestsWash' },
   bills: { ink: 'billsInk', wash: 'billsWash' },
   people: { ink: 'navy', wash: 'navyWash' },
-  leads: { ink: 'bronzeInk', wash: 'bronzeWash' },
+  leads: { ink: 'navy', wash: 'navyWash' },
   /** @deprecated Use `people`. */
   places: { ink: 'navy', wash: 'navyWash' },
 } as const satisfies Record<string, AccentPair>;
@@ -207,8 +245,8 @@ export const statusTones = {
 } as const satisfies Record<string, AccentPair>;
 
 export const chartRoles = {
-  /** The subject series: bars, lines, the one highlighted value. */
-  mark: 'bronze',
+  /** Neutral fallback. */
+  mark: 'ink',
   /** Tracks, comparison series, gridlines. */
   baseline: 'dividerSubtle',
   /** The second series where a chart compares two (noes against ayes). */
@@ -244,185 +282,328 @@ export const fonts = {
   sansBold: 'PublicSans-Bold',
 } as const;
 
-/** Type roles: eleven in use, then the deprecated ones. */
+/** D1: one face switch for OPAX headings. Record text is always Merriweather. */
+export const headingFace: 'system' | 'serif' = 'system';
+
+/** Eighteen text roles, followed by deprecated aliases. */
 export const typeRoles = {
-  /** The page's one title: a person's name, a bill title, a screen name. */
-  title: {
-    font: 'serif',
+  largeTitle: {
+    font: 'heading',
+    fontWeight: '700',
     fontSize: 34,
-    lineHeight: 42,
+    lineHeight: 41,
     dynamicTypeRamp: 'largeTitle',
     color: 'ink',
   },
-  /** The one number a block is about. */
-  display: {
-    font: 'serifBold',
-    fontSize: 34,
-    lineHeight: 42,
-    dynamicTypeRamp: 'largeTitle',
+  inlineTitle: {
+    font: 'heading',
+    fontWeight: '600',
+    fontSize: 17,
+    lineHeight: 22,
+    dynamicTypeRamp: 'headline',
     color: 'ink',
-    tabular: true,
   },
-  /** Section heading. */
-  heading: {
+  pageTitle: {
+    font: 'heading',
+    fontWeight: '700',
+    fontSize: 28,
+    lineHeight: 34,
+    dynamicTypeRamp: 'title1',
+    color: 'ink',
+  },
+  recordTitle: {
     font: 'serifBold',
+    fontWeight: '700',
+    fontSize: 28,
+    lineHeight: 34,
+    dynamicTypeRamp: 'title1',
+    color: 'ink',
+  },
+  recordHeading: {
+    font: 'serifBold',
+    fontWeight: '700',
     fontSize: 22,
-    lineHeight: 30,
+    lineHeight: 28,
     dynamicTypeRamp: 'title2',
     color: 'ink',
   },
-  /** A row title that leads a block: a bill in a list, a division, a report card. */
-  subheading: {
-    font: 'serifBold',
-    fontSize: 18,
-    lineHeight: 24,
-    dynamicTypeRamp: 'title3',
+  sectionTitle: {
+    font: 'heading',
+    fontWeight: '700',
+    fontSize: 22,
+    lineHeight: 28,
+    dynamicTypeRamp: 'title2',
     color: 'ink',
   },
-  /** The words of the record and long reading: speeches, report essays, In short. */
-  record: {
-    font: 'serif',
+  subsectionTitle: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
     fontSize: 17,
-    lineHeight: 29,
+    lineHeight: 22,
+    dynamicTypeRamp: 'headline',
+    color: 'ink',
+  },
+  groupHeader: {
+    font: 'sans',
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 18,
+    dynamicTypeRamp: 'footnote',
+    color: 'inkSoft',
+  },
+  name: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 17,
+    lineHeight: 22,
+    dynamicTypeRamp: 'headline',
+    color: 'ink',
+  },
+  rowRecord: {
+    font: 'serifBold',
+    fontWeight: '700',
+    fontSize: 17,
+    lineHeight: 23,
     dynamicTypeRamp: 'body',
     color: 'ink',
   },
-  /** Interface and OPAX's own sentences. */
+  recordText: {
+    font: 'serif',
+    fontWeight: '400',
+    fontSize: 17,
+    lineHeight: 26,
+    dynamicTypeRamp: 'body',
+    color: 'ink',
+  },
   body: {
     font: 'sans',
-    fontSize: 17,
-    lineHeight: 25,
-    dynamicTypeRamp: 'body',
-    color: 'ink',
-  },
-  /** Names in rows, values in key-value lists, inline figures (with tabular). */
-  strong: {
-    font: 'sansSemiBold',
-    fontSize: 17,
-    lineHeight: 25,
-    dynamicTypeRamp: 'body',
-    color: 'ink',
-  },
-  /** The one meta line under a title: kind · date · place. */
-  metadata: {
-    font: 'sans',
-    fontSize: 15,
-    lineHeight: 21,
-    dynamicTypeRamp: 'subheadline',
-    color: 'inkSoft',
-  },
-  /** Source lines, saved-copy notices, one short caveat. */
-  fine: {
-    font: 'sans',
-    fontSize: 13,
-    lineHeight: 18,
-    dynamicTypeRamp: 'footnote',
-    color: 'inkSoft',
-  },
-  /** Tags, status labels, party labels, field labels. */
-  label: {
-    font: 'sansSemiBold',
-    fontSize: 13,
-    lineHeight: 18,
-    dynamicTypeRamp: 'footnote',
-    color: 'inkSoft',
-  },
-  /** Button, chip and segment labels. */
-  control: {
-    font: 'sansSemiBold',
+    fontWeight: '400',
     fontSize: 17,
     lineHeight: 22,
     dynamicTypeRamp: 'body',
     color: 'ink',
   },
-  /** @deprecated Use `body` (moving changes 16/24 to 17/25). */
-  lede: {
-    font: 'sans',
-    fontSize: 16,
-    lineHeight: 24,
-    dynamicTypeRamp: 'callout',
+  strong: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 17,
+    lineHeight: 22,
+    dynamicTypeRamp: 'body',
     color: 'ink',
   },
-  /** @deprecated Use `fine` (moving changes 12/16 to 13/18). */
-  caption: {
+  secondary: {
     font: 'sans',
+    fontWeight: '400',
+    fontSize: 15,
+    lineHeight: 20,
+    dynamicTypeRamp: 'subheadline',
+    color: 'inkSoft',
+  },
+  footnote: {
+    font: 'sans',
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 18,
+    dynamicTypeRamp: 'footnote',
+    color: 'inkSoft',
+  },
+  capsule: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
     fontSize: 12,
     lineHeight: 16,
     dynamicTypeRamp: 'caption1',
     color: 'inkSoft',
   },
-  /** @deprecated Use `display` (moving changes Public Sans Bold 28 to Merriweather Bold 34). */
   figure: {
     font: 'sansBold',
+    fontWeight: '700',
+    fontSize: 34,
+    lineHeight: 41,
+    dynamicTypeRamp: 'largeTitle',
+    color: 'ink',
+    tabular: true,
+  },
+  tileFigure: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 22,
+    lineHeight: 28,
+    dynamicTypeRamp: 'title2',
+    color: 'ink',
+    tabular: true,
+  },
+  /** @deprecated Use `recordTitle`. */
+  title: {
+    font: 'serifBold',
+    fontWeight: '700',
     fontSize: 28,
     lineHeight: 34,
     dynamicTypeRamp: 'title1',
     color: 'ink',
-    tabular: true,
   },
-  /** @deprecated Use `strong` with tabular figures. */
-  figureInline: {
-    font: 'sansSemiBold',
-    fontSize: 17,
-    lineHeight: 25,
-    dynamicTypeRamp: 'body',
+  /** @deprecated Use `figure`. */
+  display: {
+    font: 'sansBold',
+    fontWeight: '700',
+    fontSize: 34,
+    lineHeight: 41,
+    dynamicTypeRamp: 'largeTitle',
     color: 'ink',
     tabular: true,
   },
-  /** @deprecated Use `label` in bronzeInk. */
-  tag: {
-    font: 'sansSemiBold',
-    fontSize: 13,
-    lineHeight: 18,
-    dynamicTypeRamp: 'footnote',
-    color: 'bronzeInk',
+  /** @deprecated Use `sectionTitle`. */
+  heading: {
+    font: 'heading',
+    fontWeight: '700',
+    fontSize: 22,
+    lineHeight: 28,
+    dynamicTypeRamp: 'title2',
+    color: 'ink',
   },
-  /** @deprecated Use `label`. */
-  kicker: {
-    font: 'sansSemiBold',
+  /** @deprecated Use `rowRecord`. */
+  subheading: {
+    font: 'serifBold',
+    fontWeight: '700',
+    fontSize: 17,
+    lineHeight: 23,
+    dynamicTypeRamp: 'body',
+    color: 'ink',
+  },
+  /** @deprecated Use `recordText`. */
+  record: {
+    font: 'serif',
+    fontWeight: '400',
+    fontSize: 17,
+    lineHeight: 26,
+    dynamicTypeRamp: 'body',
+    color: 'ink',
+  },
+  /** @deprecated Use `secondary`. */
+  metadata: {
+    font: 'sans',
+    fontWeight: '400',
+    fontSize: 15,
+    lineHeight: 20,
+    dynamicTypeRamp: 'subheadline',
+    color: 'inkSoft',
+  },
+  /** @deprecated Use `footnote`. */
+  fine: {
+    font: 'sans',
+    fontWeight: '400',
     fontSize: 13,
     lineHeight: 18,
     dynamicTypeRamp: 'footnote',
     color: 'inkSoft',
   },
-  /** @deprecated Use `label` (moving changes line height 17 to 18, ink to inkSoft). */
-  chip: {
+  /** @deprecated Use `capsule`. */
+  label: {
     font: 'sansSemiBold',
-    fontSize: 13,
-    lineHeight: 17,
-    dynamicTypeRamp: 'footnote',
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16,
+    dynamicTypeRamp: 'caption1',
+    color: 'inkSoft',
+  },
+  /** @deprecated Use `strong`. */
+  control: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 17,
+    lineHeight: 22,
+    dynamicTypeRamp: 'body',
     color: 'ink',
   },
-  /** @deprecated Use `control` with tabular figures. */
-  countdown: {
+  /** @deprecated Use `recordTitle`. */
+  padTitle: {
+    font: 'serifBold',
+    fontWeight: '700',
+    fontSize: 28,
+    lineHeight: 34,
+    dynamicTypeRamp: 'title1',
+    color: 'ink',
+  },
+  /** @deprecated Use `body`. */
+  padLede: {
+    font: 'sans',
+    fontWeight: '400',
+    fontSize: 17,
+    lineHeight: 22,
+    dynamicTypeRamp: 'body',
+    color: 'ink',
+  },
+  /** @deprecated Use `body`. */
+  lede: {
+    font: 'sans',
+    fontWeight: '400',
+    fontSize: 17,
+    lineHeight: 22,
+    dynamicTypeRamp: 'body',
+    color: 'ink',
+  },
+  /** @deprecated Use `footnote`. */
+  caption: {
+    font: 'sans',
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 18,
+    dynamicTypeRamp: 'footnote',
+    color: 'inkSoft',
+  },
+  /** @deprecated Use `strong`. */
+  figureInline: {
     font: 'sansSemiBold',
+    fontWeight: '600',
     fontSize: 17,
     lineHeight: 22,
     dynamicTypeRamp: 'body',
     color: 'ink',
     tabular: true,
   },
-  /** @deprecated Use `title` at regular width (`typeRolesRegular.title`). */
-  padTitle: {
-    font: 'serif',
-    fontSize: 42,
-    lineHeight: 52,
-    dynamicTypeRamp: 'largeTitle',
-    color: 'ink',
+  /** @deprecated Use `capsule`. */
+  tag: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16,
+    dynamicTypeRamp: 'caption1',
+    color: 'inkSoft',
   },
-  /** @deprecated Use `body` (moving changes 19/30 to 17/25). */
-  padLede: {
-    font: 'sans',
-    fontSize: 19,
-    lineHeight: 30,
+  /** @deprecated Use `capsule`. */
+  kicker: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16,
+    dynamicTypeRamp: 'caption1',
+    color: 'inkSoft',
+  },
+  /** @deprecated Use `capsule`. */
+  chip: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16,
+    dynamicTypeRamp: 'caption1',
+    color: 'inkSoft',
+  },
+  /** @deprecated Use `strong`. */
+  countdown: {
+    font: 'sansSemiBold',
+    fontWeight: '600',
+    fontSize: 17,
+    lineHeight: 22,
     dynamicTypeRamp: 'body',
     color: 'ink',
+    tabular: true,
   },
 } as const;
 
 /** Type steps at regular width (iPad). */
 export const typeRolesRegular = {
-  title: { fontSize: 42, lineHeight: 52 },
+  /** @deprecated Use `recordTitle`. */
+  title: { fontSize: 28, lineHeight: 34 },
 } as const;
 
 /** One vertical rhythm, applied everywhere. */
@@ -431,18 +612,20 @@ export const rhythm = {
   line: 4,
   /** Inside a row or group: a name to its party line. */
   tight: 8,
-  /** Either side of a row hairline (content rows). */
-  row: 10,
+  /** Vertical row padding. */
+  row: 11,
   /** A section heading to its first block. */
-  heading: 12,
+  heading: 8,
   /** Between blocks inside a section. */
   block: 16,
   /** A second list or group inside a section. */
   group: 24,
   /** Between sections; the rule sits at the top of each. */
   section: 36,
-  /** Screen edge to content. */
+  /** 20pt default. */
   screen: 20,
+  /** Group header to its inset group. */
+  groupHeader: 6,
 } as const;
 
 /** Rhythm steps that grow at regular width (iPad). */
@@ -466,13 +649,19 @@ export const spacing = {
   s7: 52,
 } as const;
 
-/** Shape says what a thing is: press = pill, read = sm, hold = md. */
+/** Continuous corners by purpose, with deprecated aliases. */
 export const radii = {
-  /** Things you read: tags, status labels, text fields, focus outlines, icon tiles. */
+  container: 22,
+  tile: 18,
+  thumb: 10,
+  bar: 4,
+  capsule: 999,
+  round: 999,
+  /** @deprecated Use radii.bar. */
   sm: 4,
-  /** Things that hold content: cards, sheets, popovers, the Ask composer, the map frame, the error panel. */
-  md: 12,
-  /** Things you press: buttons, choice and filter chips, the segmented track and thumb, the machine-written label, Follow. */
+  /** @deprecated Use radii.container. */
+  md: 22,
+  /** @deprecated Use radii.capsule. */
   pill: 999,
 } as const;
 
@@ -484,7 +673,7 @@ export const border = {
   masthead: 3,
 } as const;
 
-/** One shadow, for things that float (native sheets and menus draw their own). */
+/** Legacy overlay shadow and the light-only edition shadow; native sheets and menus draw their own. */
 export const elevation = {
   overlay: {
     shadowColor: '#142A43',
@@ -493,11 +682,26 @@ export const elevation = {
     shadowOffset: { width: 0, height: 12 },
     elevation: 12,
   },
+  edition: {
+    shadowColor: '#23271F',
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
+    dark: null,
+  },
 } as const;
 
-/** Three durations (ms) and one curve (cubic-bezier control points); under Reduce Motion nothing moves. */
+/** Durations in ms and one curve (cubic-bezier control points); under Reduce Motion nothing moves. */
 export const motion = {
-  duration: { quick: 120, standard: 200, gentle: 400 },
+  duration: {
+    quick: 120,
+    standard: 200,
+    gentle: 400,
+    crossfade: 150,
+    launch: 240,
+    launchLatest: 400,
+  },
   easing: { standard: [0.22, 0.7, 0.3, 1] },
   ambientLoop: 16000,
 } as const;
@@ -577,6 +781,16 @@ export const contrastRules = {
     { fg: 'billsInk', bg: 'raised' },
     { fg: 'billsInk', bg: 'sunken' },
     { fg: 'billsInk', bg: 'billsWash' },
+    { fg: 'onBand', bg: 'bandBills' },
+    { fg: 'onBand', bg: 'bandMoney' },
+    { fg: 'onBand', bg: 'bandVotes' },
+    { fg: 'onBand', bg: 'bandInterests' },
+    { fg: 'onBand', bg: 'bandPeople' },
+    { fg: 'onBandSoft', bg: 'bandBills' },
+    { fg: 'onBandSoft', bg: 'bandMoney' },
+    { fg: 'onBandSoft', bg: 'bandVotes' },
+    { fg: 'onBandSoft', bg: 'bandInterests' },
+    { fg: 'onBandSoft', bg: 'bandPeople' },
   ],
   nonText: [
     { fg: 'bronze', bg: 'paper' },
@@ -612,6 +826,11 @@ export const contrastRules = {
     { fg: 'billsInk', bg: 'paper' },
     { fg: 'billsInk', bg: 'raised' },
     { fg: 'billsInk', bg: 'sunken' },
+    { fg: 'onBand', bg: 'bandBills' },
+    { fg: 'onBand', bg: 'bandMoney' },
+    { fg: 'onBand', bg: 'bandVotes' },
+    { fg: 'onBand', bg: 'bandInterests' },
+    { fg: 'onBand', bg: 'bandPeople' },
   ],
   forbidden: [
     { fg: 'inkFaint', bg: 'sunken' },

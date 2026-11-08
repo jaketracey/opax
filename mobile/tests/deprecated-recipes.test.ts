@@ -120,8 +120,8 @@ test('the lint rule rejects the retired recipes in new code', () => {
 export const A = () => <Text variant="caption">x</Text>;
 export const B = (on: boolean) => <Text variant={on ? 'kicker' : 'body'}>x</Text>;`),
   ).toEqual([
-    'Type role "caption" is deprecated: use fine.',
-    'Type role "kicker" is deprecated: use label, or no kicker at all.',
+    'Type role "caption" is deprecated: use footnote.',
+    'Type role "kicker" is deprecated: use capsule.',
   ]);
   expect(
     lint(`import { PartyChip, Section } from '../design/primitives';
@@ -142,4 +142,108 @@ export const A = (d: string) => <>{d.toLocaleUpperCase('en-AU')}</>;`),
       'src/design/Example.tsx',
     ),
   ).toEqual([]);
+});
+
+// The AST rules cover every source file, including existing design components.
+// Counts live beside the lint rule so CLI and tests use the same dated census.
+/* eslint-disable @typescript-eslint/no-require-imports */
+const designRule = require('../scripts/deprecated-design-rule');
+const { Linter } = require('eslint') as typeof import('eslint');
+const designParser = require('@typescript-eslint/parser');
+/* eslint-enable @typescript-eslint/no-require-imports */
+const designLinter = new Linter({ configType: 'flat' });
+function designMessages(code: string, file = 'src/features/New.tsx') {
+  return designLinter.verify(
+    code,
+    [
+      {
+        files: ['**/*.{ts,tsx,js,jsx}'],
+        languageOptions: {
+          parser: designParser,
+          parserOptions: { ecmaFeatures: { jsx: true } },
+        },
+        plugins: { opax: { rules: designRule.rules } },
+        rules: Object.fromEntries(
+          Object.keys(designRule.rules).map((key) => [`opax/${key}`, 'warn']),
+        ),
+      },
+    ],
+    { filename: join(MOBILE, file), allowInlineConfig: false },
+  );
+}
+
+test('old roles, the entire spacing scale, static light reads and new design rules never grow', () => {
+  const counts: Record<string, Record<string, number>> = {};
+  const failures: string[] = [];
+  for (const path of [
+    ...files(join(MOBILE, 'src')),
+    ...files(join(MOBILE, 'modules')),
+  ]) {
+    const file = relative(MOBILE, path);
+    if (file === 'src/design/tokens.generated.ts') continue;
+    for (const message of designMessages(readFileSync(path, 'utf8'), file)) {
+      if (!message.ruleId?.startsWith('opax/')) {
+        failures.push(`${file}: ${message.message}`);
+        continue;
+      }
+      const recipe = `${message.ruleId.slice(5)}/${message.messageId}`;
+      const n = ((counts[recipe] ??= {})[file] =
+        (counts[recipe]?.[file] ?? 0) + 1);
+      const allowed = designRule.ratchetBaseline[recipe]?.[file] ?? 0;
+      if (n > allowed) failures.push(`${file}: ${recipe} ${allowed} -> ${n}`);
+    }
+  }
+  expect(failures).toEqual([]);
+});
+
+test('new rules warn for invalid recipes and allow canonical equivalents', () => {
+  const bad = designMessages(`import { showMenu } from '../design/menu';
+const a = <Text variant="body" tone="moneyInk">x</Text>;
+const b = <Icon name="doc.text" tone="moneyInk" />;
+const c = { borderRadius: 22 };
+showMenu([]);
+const gap = spacing.s1;
+const old = <Text variant="heading">x</Text>;`);
+  expect(bad.map((m) => m.ruleId)).toEqual(
+    expect.arrayContaining([
+      'opax/category-ink',
+      'opax/symbol-vocabulary',
+      'opax/continuous-corners',
+      'opax/show-menu',
+      'opax/deprecated-design',
+    ]),
+  );
+  expect(bad.every((m) => m.severity === 1)).toBe(true);
+  expect(
+    designMessages(`const a = <Text variant="figure" tone="moneyInk">42</Text>;
+const b = <Icon name={symbols.money} tone="moneyInk" type="hierarchical" />;
+const c = { borderRadius: 22, borderCurve: 'continuous' }; const gap = rhythm.row;`),
+  ).toEqual([]);
+  expect(designMessages('showMenu([])', 'src/design/Example.tsx')).toEqual([]);
+});
+
+test('every legacy role and spacing step is detected, including conditional roles', () => {
+  for (const role of [
+    'title',
+    'display',
+    'heading',
+    'subheading',
+    'record',
+    'metadata',
+    'fine',
+    'label',
+    'control',
+    'padTitle',
+    'padLede',
+  ])
+    expect(
+      designMessages(`<Text variant={on ? '${role}' : 'body'}>x</Text>`).some(
+        (m) => m.messageId === 'role',
+      ),
+    ).toBe(true);
+  for (const step of ['s1', 's2', 's3', 's4', 's5', 's6', 's7'])
+    expect(
+      designMessages(`const gap = spacing.${step};`).map((m) => m.messageId),
+    ).toEqual(['spacing']);
+  expect(designMessages('<Text variant="figure">42</Text>')).toEqual([]);
 });

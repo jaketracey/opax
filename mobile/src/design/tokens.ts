@@ -1,6 +1,14 @@
-import { DynamicColorIOS, Platform, type ColorValue } from 'react-native';
+import Constants from 'expo-constants';
+import {
+  DynamicColorIOS,
+  Platform,
+  useColorScheme,
+  type ColorValue,
+} from 'react-native';
 import {
   light,
+  dark,
+  darkHighContrast,
   lightHighContrast,
   partyColors,
   partyWashes,
@@ -10,13 +18,13 @@ import {
 import {
   border,
   categories as accentCategories,
-  fonts,
+  fonts as registeredFonts,
+  headingFace as defaultHeadingFace,
   radii,
   rhythm,
   size,
   statusTones,
   typeRoles,
-  typeRolesRegular,
 } from './tokens.generated';
 
 export { light, partyColors, partyWashes };
@@ -30,7 +38,6 @@ export {
   chartIndustry,
   chartRoles,
   elevation,
-  fonts,
   motion,
   radii,
   rhythm,
@@ -42,33 +49,64 @@ export {
   typeRolesRegular,
 } from './tokens.generated';
 
-// Every colour goes through a role. iOS resolves Increase Contrast natively;
-// the app is light-only in v1, so `dark` repeats light until a dark palette
-// is approved (decision 2). The proposed one is `dark` in palette.ts.
+// iOS resolves appearance and Increase Contrast natively. Release builds
+// remain light through app.config.ts; capture builds can follow the system.
 function resolve(role: Role): ColorValue {
   const base = light[role];
   if (Platform.OS !== 'ios') return base;
   return DynamicColorIOS({
     light: base,
-    dark: base,
+    dark: dark[role],
     highContrastLight: lightHighContrast[role] ?? base,
-    highContrastDark: lightHighContrast[role] ?? base,
+    highContrastDark: darkHighContrast[role] ?? dark[role],
   });
 }
 export const colors = Object.fromEntries(
   (Object.keys(light) as Role[]).map((role) => [role, resolve(role)]),
 ) as Record<Role, ColorValue>;
 
-// Native chrome (tab bar, navigation bar, symbols) takes plain hex values.
+// Existing string-only native APIs retain their light fallback until their
+// lane adopts useChromeColours(). Dynamic roles are available as chromeColours.
 export const chrome = {
   tint: light.navy,
   inactive: light.inkSoft,
   title: light.ink,
 };
+export const chromeColours = {
+  tint: colors.navy,
+  inactive: colors.inkSoft,
+  title: colors.ink,
+};
+/** Hex colours for native APIs that reject DynamicColorIOS values. */
+export function useChromeColours() {
+  const scheme = useColorScheme();
+  const palette = scheme === 'dark' ? dark : light;
+  return { tint: palette.navy, inactive: palette.inkSoft, title: palette.ink };
+}
+
+export type HeadingFace = 'system' | 'serif';
+const extra = Constants.expoConfig?.extra;
+export const headingFace: HeadingFace =
+  (extra?.variant === 'development' || extra?.variant === 'e2e') &&
+  (extra?.headingFace === 'system' || extra?.headingFace === 'serif')
+    ? extra.headingFace
+    : defaultHeadingFace;
+
+// Unset family means UIKit's SF Pro. Android keeps its bundled Public Sans.
+// Registered names remain available to the existing useFonts loader.
+/** @deprecated Registered asset names for the existing loader; use interfaceFonts for UI. */
+export const fonts = registeredFonts;
+export const interfaceFonts = {
+  ...registeredFonts,
+  sans: Platform.OS === 'ios' ? undefined : registeredFonts.sans,
+  sansSemiBold:
+    Platform.OS === 'ios' ? undefined : registeredFonts.sansSemiBold,
+  sansBold: Platform.OS === 'ios' ? undefined : registeredFonts.sansBold,
+} as const;
 
 export const layout = {
   screenMargin: rhythm.screen,
-  // 10pt either side of a hairline between rows.
+  // 11pt either side of a hairline between rows.
   rowGap: rhythm.row,
   // A second list within a section.
   subGap: rhythm.group,
@@ -142,8 +180,8 @@ export type StatusTone = keyof typeof statusTones;
 
 // One CSS pixel is one point: rules are 1pt, not the device hairline.
 export const hairline = border.hairline;
-/** @deprecated Use `radii.sm` (read), `radii.md` (hold) or `radii.pill` (press). */
-export const radius = radii.sm;
+/** @deprecated Use purpose names from radii: bar, container, tile, capsule. */
+export const radius = radii.bar;
 export const minimumTarget =
   Platform.OS === 'android' ? size.targetAndroid : size.target;
 // Minimum heights; controls grow with their text rather than clipping.
@@ -154,10 +192,8 @@ export const controlHeight = {
 } as const;
 export type ControlSize = keyof typeof controlHeight;
 
-// Static upstream instances, registered under these names in app/_layout.tsx.
-// Merriweather has no static SemiBold upstream; Bold stands in for the web's 600.
-export type FontFamily = (typeof fonts)[keyof typeof fonts];
-
+// Merriweather has no bundled SemiBold; Bold supplies serif inline titles.
+export type FontFamily = string | undefined;
 export type DynamicTypeRamp =
   | 'caption2'
   | 'caption1'
@@ -172,91 +208,120 @@ export type DynamicTypeRamp =
   | 'largeTitle';
 export interface TextRole {
   fontFamily: FontFamily;
+  fontWeight: '400' | '600' | '700';
   fontSize: number;
   lineHeight: number;
   dynamicTypeRamp: DynamicTypeRamp;
   color: Role;
   tabular?: boolean;
 }
-// Type roles mapped to iOS Dynamic Type ramps (IOS-UX section 5, "Type").
-// Every size scales to AX5 with no cap; nothing sets a line limit. Eleven
-// roles are current; the rest are deprecated aliases (tokens.generated.ts).
-type GeneratedRole = (typeof typeRoles)[keyof typeof typeRoles];
-const textRole = (role: GeneratedRole): TextRole => ({
-  fontFamily: fonts[role.font],
-  fontSize: role.fontSize,
-  lineHeight: role.lineHeight,
-  dynamicTypeRamp: role.dynamicTypeRamp,
-  color: role.color,
-  ...('tabular' in role ? { tabular: role.tabular } : {}),
-});
-/** The eleven roles: six sizes (34, 22, 18, 17, 15, 13). */
 export type CurrentTextVariant =
-  | 'title'
-  | 'display'
-  | 'heading'
-  | 'subheading'
-  | 'record'
+  | 'largeTitle'
+  | 'inlineTitle'
+  | 'pageTitle'
+  | 'recordTitle'
+  | 'recordHeading'
+  | 'sectionTitle'
+  | 'subsectionTitle'
+  | 'groupHeader'
+  | 'name'
+  | 'rowRecord'
+  | 'recordText'
   | 'body'
   | 'strong'
-  | 'metadata'
-  | 'fine'
-  | 'label'
-  | 'control';
-/**
- * The deprecated roles draw as their replacements (pass 2B, aliases first),
- * so only the six sizes are drawn. The lint rule `opax/deprecated-design`
- * blocks new uses; the generated file keeps their old look for the record.
- * `padTitle` is the title's regular-width step (42/52), not a seventh size.
- */
-const deprecatedRoles = {
-  lede: { use: 'body' },
-  caption: { use: 'fine' },
-  figure: { use: 'display' },
-  figureInline: { use: 'strong', tabular: true },
-  tag: { use: 'label', color: 'bronzeInk' },
-  kicker: { use: 'label' },
-  chip: { use: 'label' },
-  countdown: { use: 'control', tabular: true },
-  padTitle: { use: 'title', ...typeRolesRegular.title },
-  padLede: { use: 'body' },
-} as const satisfies Record<
-  Exclude<keyof typeof typeRoles, CurrentTextVariant>,
-  {
-    use: CurrentTextVariant;
-    tabular?: true;
-    color?: Role;
-    fontSize?: number;
-    lineHeight?: number;
-  }
->;
-const current = Object.fromEntries(
-  Object.entries(typeRoles)
-    .filter(([name]) => !(name in deprecatedRoles))
-    .map(([name, role]) => [name, textRole(role)]),
-) as Record<CurrentTextVariant, TextRole>;
-export const textStyles = {
-  ...current,
-  ...(Object.fromEntries(
-    Object.entries(deprecatedRoles).map(([name, { use, ...change }]) => [
-      name,
-      { ...current[use], ...change },
-    ]),
-  ) as Record<keyof typeof deprecatedRoles, TextRole>),
-} as const satisfies Record<keyof typeof typeRoles, TextRole>;
-export type TextVariant = keyof typeof textStyles;
-/** What each deprecated role now draws as (docs: src/design/README.md). */
-export const deprecatedTextVariants = Object.fromEntries(
-  Object.entries(deprecatedRoles).map(([name, { use }]) => [name, use]),
-) as Record<keyof typeof deprecatedRoles, CurrentTextVariant>;
+  | 'secondary'
+  | 'footnote'
+  | 'capsule'
+  | 'figure'
+  | 'tileFigure';
 
-// Bold Text (iOS accessibility setting) steps each family one weight up.
-export const boldStep: Record<FontFamily, FontFamily> = {
-  [fonts.serif]: fonts.serifBold,
-  [fonts.serifBold]: fonts.serifBold,
-  [fonts.sans]: fonts.sansSemiBold,
-  [fonts.sansSemiBold]: fonts.sansBold,
-  [fonts.sansBold]: fonts.sansBold,
+/** @deprecated Migrate each alias to its canonical role. */
+export const deprecatedRoles = {
+  /** @deprecated Use recordTitle. */
+  title: 'recordTitle',
+  /** @deprecated Use figure. */
+  display: 'figure',
+  /** @deprecated Use sectionTitle. */
+  heading: 'sectionTitle',
+  /** @deprecated Use rowRecord. */
+  subheading: 'rowRecord',
+  /** @deprecated Use recordText. */
+  record: 'recordText',
+  /** @deprecated Use secondary. */
+  metadata: 'secondary',
+  /** @deprecated Use footnote. */
+  fine: 'footnote',
+  /** @deprecated Use capsule. */
+  label: 'capsule',
+  /** @deprecated Use strong. */
+  control: 'strong',
+  /** @deprecated Use recordTitle. */
+  padTitle: 'recordTitle',
+  /** @deprecated Use body. */
+  padLede: 'body',
+  /** @deprecated Use body. */
+  lede: 'body',
+  /** @deprecated Use footnote. */
+  caption: 'footnote',
+  /** @deprecated Use strong with tabular. */
+  figureInline: 'strong',
+  /** @deprecated Use capsule. */
+  tag: 'capsule',
+  /** @deprecated Use capsule. */
+  kicker: 'capsule',
+  /** @deprecated Use capsule. */
+  chip: 'capsule',
+  /** @deprecated Use strong with tabular. */
+  countdown: 'strong',
+} as const satisfies Record<string, CurrentTextVariant>;
+export const deprecatedTextVariants = deprecatedRoles;
+
+/** Resolve both D1 faces without changing the record's typeface or figures. */
+export function textStylesFor(face: HeadingFace): Record<
+  CurrentTextVariant,
+  TextRole
+> & {
+  [Name in keyof typeof deprecatedRoles]: TextRole;
+} {
+  return Object.fromEntries(
+    Object.entries(typeRoles).map(([name, role]) => {
+      const font =
+        role.font === 'heading'
+          ? face === 'serif'
+            ? 'serifBold'
+            : role.fontWeight === '700'
+              ? 'sansBold'
+              : 'sansSemiBold'
+          : role.font;
+      return [
+        name,
+        {
+          fontFamily: interfaceFonts[font],
+          fontWeight: role.fontWeight,
+          fontSize: role.fontSize,
+          lineHeight: role.lineHeight,
+          dynamicTypeRamp: role.dynamicTypeRamp,
+          color: role.color,
+          ...('tabular' in role ? { tabular: role.tabular } : {}),
+        },
+      ];
+    }),
+  ) as Record<keyof typeof typeRoles, TextRole>;
+}
+export const textStyles = textStylesFor(headingFace);
+export type TextVariant = keyof typeof textStyles;
+
+// SF handles Bold Text natively. Only bundled families need a manual step.
+export const boldStep: Readonly<Record<string, string>> = {
+  [registeredFonts.serif]: registeredFonts.serifBold,
+  [registeredFonts.serifBold]: registeredFonts.serifBold,
+  ...(Platform.OS === 'ios'
+    ? {}
+    : {
+        [registeredFonts.sans]: registeredFonts.sansSemiBold,
+        [registeredFonts.sansSemiBold]: registeredFonts.sansBold,
+        [registeredFonts.sansBold]: registeredFonts.sansBold,
+      }),
 };
 
 // React Native's iOS font-scale multipliers (RCTAccessibilityManager), by

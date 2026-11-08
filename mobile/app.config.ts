@@ -32,6 +32,37 @@ if (androidBuild && Number(buildNumber) > 2100000000) {
 if (!['development', 'e2e', 'production'].includes(variant)) {
   throw new Error('OPAX_VARIANT must be development, e2e or production');
 }
+// Capture switches never alter a production build's defaults.
+const headingFace = process.env.OPAX_HEADING_FACE ?? 'system';
+if (!['system', 'serif'].includes(headingFace))
+  throw new Error('OPAX_HEADING_FACE must be system or serif');
+const appearance = process.env.OPAX_APPEARANCE ?? 'light';
+if (!['light', 'automatic'].includes(appearance))
+  throw new Error('OPAX_APPEARANCE must be light or automatic');
+const defaultDesignFlags = {
+  categorySymbols: true,
+  searchTab: true,
+  talkInAsk: true,
+  groupedSurfaces: true,
+};
+// Optional JSON becomes extra.designFlags, allowing captures without edits.
+const flagOverrides: unknown =
+  variant !== 'production' && process.env.OPAX_DESIGN_FLAGS
+    ? JSON.parse(process.env.OPAX_DESIGN_FLAGS)
+    : {};
+if (
+  !flagOverrides ||
+  typeof flagOverrides !== 'object' ||
+  Array.isArray(flagOverrides) ||
+  Object.entries(flagOverrides).some(
+    ([name, value]) =>
+      !(name in defaultDesignFlags) || typeof value !== 'boolean',
+  )
+)
+  throw new Error(
+    'OPAX_DESIGN_FLAGS must be a JSON object of known boolean flags',
+  );
+const designFlags = { ...defaultDesignFlags, ...flagOverrides };
 const port = Number(process.env.OPAX_FIXTURE_PORT ?? 8910);
 if (!Number.isInteger(port) || port < 8900 || port > 8999) {
   throw new Error('OPAX_FIXTURE_PORT must be 8900–8999');
@@ -70,7 +101,10 @@ const config: ExpoConfig = {
   version: '1.0.0',
   scheme: 'opax',
   platforms: ['ios', 'android'],
-  userInterfaceStyle: 'light',
+  userInterfaceStyle:
+    variant !== 'production' && appearance === 'automatic'
+      ? 'automatic'
+      : 'light',
   orientation: 'default',
   android: {
     package: 'au.com.opax.app',
@@ -223,6 +257,8 @@ const config: ExpoConfig = {
         }
       : {}),
     variant,
+    headingFace: variant === 'production' ? 'system' : headingFace,
+    designFlags,
     supportPageAvailable: true,
     ...(productionVoice
       ? { productionVoiceEnabled: true, voiceConsentDefault: false }

@@ -603,7 +603,7 @@ describe('word-safe text', () => {
         .findAllByType(NativeText)
         .find((node) => typeof node.props.onTextLayout === 'function')!;
     expect(label().props.children).toBe('Parliamentary Library · Bills Digest');
-    expect(capScale(label(), 'kicker')).toBe(1);
+    expect(capScale(label(), 'footnote')).toBe(1);
     act(() => {
       label().props.onTextLayout({
         nativeEvent: {
@@ -615,9 +615,10 @@ describe('word-safe text', () => {
       });
     });
     // 2.7 of the uncapped 3, through the role's own size and line height.
-    expect(capScale(label(), 'kicker')).toBeCloseTo(0.9, 6);
+    expect(capScale(label(), 'footnote')).toBeCloseTo(0.9, 6);
   });
   test('a heading lowers its own size after a mid-word break, and only then', () => {
+    const lineHeight = textStyles.sectionTitle.lineHeight + LINE_HEIGHT_NUDGE;
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {
       renderer = TestRenderer.create(
@@ -635,13 +636,17 @@ describe('word-safe text', () => {
                   {
                     text: 'Recorded representatio',
                     width: 330,
-                    height: 30 * at,
+                    height: lineHeight * at,
                   },
-                  { text: 'n', width: 20, height: 30 * at },
+                  { text: 'n', width: 20, height: lineHeight * at },
                 ]
               : [
-                  { text: 'Recorded ', width: 200, height: 30 * at },
-                  { text: 'representation', width: 320, height: 30 * at },
+                  { text: 'Recorded ', width: 200, height: lineHeight * at },
+                  {
+                    text: 'representation',
+                    width: 320,
+                    height: lineHeight * at,
+                  },
                 ],
           },
         });

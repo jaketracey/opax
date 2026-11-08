@@ -2,8 +2,8 @@
 // tokens.generated.ts (`npm run tokens`; never edit the generated file).
 // Components never read these directly: they use `colors` from tokens.ts,
 // which resolves each role for the current appearance and Increase Contrast.
-// `dark` and `darkHighContrast` meet the same contrast rules but are not
-// rendered: the app is light-only (decision 2).
+// Release builds remain light. Capture builds can resolve these dark slots
+// through OPAX_APPEARANCE=automatic without changing the release default.
 import type { Role } from './tokens.generated';
 
 export {

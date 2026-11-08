@@ -1,11 +1,20 @@
 import {
   componentPairs,
+  componentPairsFor,
   contrastRatio,
   forbiddenPairs,
   partyWashPairs,
   requiredRatio,
 } from '../src/design/contrast';
-import { light, lightHighContrast, partyColors } from '../src/design/palette';
+import {
+  light,
+  dark,
+  darkHighContrast,
+  lightHighContrast,
+  partyColors,
+  type Palette,
+} from '../src/design/palette';
+import { contrastRules } from '../src/design/tokens.generated';
 
 const ratio = (a: string, b: string) =>
   Math.round(contrastRatio(a, b) * 100) / 100;
@@ -102,3 +111,45 @@ describe('Increase Contrast', () => {
     }
   });
 });
+
+const themes: Record<string, Palette> = {
+  light,
+  dark,
+  lightHighContrast: { ...light, ...lightHighContrast },
+  darkHighContrast: { ...dark, ...darkHighContrast },
+};
+describe.each(Object.entries(themes))(
+  'new foundation pairs in %s',
+  (name, palette) => {
+    test.each(
+      componentPairs
+        .filter(
+          (entry) =>
+            entry.foregroundRole === 'onBand' ||
+            entry.foregroundRole === 'onBandSoft' ||
+            entry.use.startsWith('Link text'),
+        )
+        .map((entry) => [entry.use, entry] as const),
+    )('%s is AA', (_, entry) => {
+      const pair = componentPairsFor(palette).find((p) => p.use === entry.use)!;
+      expect(
+        contrastRatio(pair.foreground, palette[pair.background]),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+    test('all promised text and non-text pairs, including every band', () => {
+      for (const { fg, bg } of contrastRules.text)
+        expect(contrastRatio(palette[fg], palette[bg])).toBeGreaterThanOrEqual(
+          4.5,
+        );
+      for (const { fg, bg } of contrastRules.nonText)
+        expect(contrastRatio(palette[fg], palette[bg])).toBeGreaterThanOrEqual(
+          3,
+        );
+      if (name.endsWith('HighContrast'))
+        for (const { fg, bg } of contrastRules.strong)
+          expect(
+            contrastRatio(palette[fg], palette[bg]),
+          ).toBeGreaterThanOrEqual(7);
+    });
+  },
+);

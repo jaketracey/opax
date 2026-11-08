@@ -1,4 +1,16 @@
-import { LINE_HEIGHT_NUDGE } from '../src/design/text';
+import { createElement, act } from 'react';
+import * as accessibility from '../src/design/accessibility';
+import TestRenderer from 'react-test-renderer';
+import { Text as NativeText, StyleSheet } from 'react-native';
+import {
+  LINE_HEIGHT_NUDGE,
+  nextWordSafeCap,
+  titleSizeCap,
+  wordSafeStart,
+  wordSafeOnLines,
+  Heading,
+  Text,
+} from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
 
 // React Native ceils a text's measured height to the pixel grid and TextKit
@@ -52,4 +64,139 @@ describe('text heights never land exactly on the pixel grid', () => {
   test('the nudge is invisible: under a hundredth of a point per line at AX5', () => {
     expect(LINE_HEIGHT_NUDGE * 3.6).toBeLessThan(0.01);
   });
+});
+
+// Host CoreText measurements, 8 November 2026, SF system weights and the
+// bundled Merriweather Bold. Two sizes measured independently because SF's
+// optical sizing is not linear. These are host regression fixtures, not iOS
+// capture evidence. The orchestrator owns the Large/AX5 D1 capture sweep.
+// Screen, role, longest run, Large width, AX5 width, effective AX5 font size.
+const measuredWords = [
+  ['Today', 'sectionTitle', 'Following', 98.27, 246.76, 56],
+  ['Profile', 'pageTitle', 'Parliamentarian', 205.75, 418.56, 58],
+  ['Bill', 'recordTitle', 'Appropriation', 195.03, 299.52, 43],
+  ['Search results', 'rowRecord', 'Parliamentary', 121.24, 378, 53],
+  ['Your MP', 'name', 'Representatives', 128.76, 383.42, 53],
+  ['Source sheet', 'footnote', 'Parliamentary', 83.1, 255.58, 44],
+  ['Filter sheet', 'groupHeader', 'Parliament', 64.09, 197.23, 44],
+  ['Welcome', 'largeTitle', 'parliament', 169.86, 295.65, 60],
+  ['Account', 'body', 'Conversations', 108.61, 323.36, 53],
+  ['Division', 'strong', 'Representatives', 128.76, 383.42, 53],
+  ['Today serif', 'sectionTitle', 'Following', 107.05, 272.5, 56],
+  ['Profile serif', 'pageTitle', 'Parliamentarian', 226.81, 469.83, 58],
+  ['Welcome serif', 'largeTitle', 'parliament', 186.52, 329.16, 60],
+] as const;
+
+test.each(measuredWords)(
+  '%s: measured word-safe widths with new metrics',
+  (_, variant, word, largeWidth, axWidth, axSize) => {
+    const role = textStyles[variant];
+    expect(largeWidth).toBeLessThan(358); // 390pt screen, 16pt margins.
+    expect(axWidth).toBeGreaterThan(largeWidth);
+    const full = axSize / role.fontSize;
+    // Feed a measured mid-word break at the new role's actual line height.
+    // A column just narrower than the native AX5 run must step down, while
+    // the Large-size rendering keeps its full default size.
+    const base = role.lineHeight + LINE_HEIGHT_NUDGE;
+    let state = wordSafeStart(word);
+    const broken = (at: number) => [
+      { text: word.slice(0, -1), width: axWidth - 2, height: base * at },
+      { text: word.slice(-1), width: 2, height: base * at },
+    ];
+    expect(wordSafeOnLines(state, state, broken(1), word, base, 1)).toBe(state);
+    let at = full;
+    while ((axWidth * at) / full > axWidth - 1 && at > 1) {
+      const next = nextWordSafeCap(base * at, base)!;
+      state = wordSafeOnLines(state, state, broken(at), word, base, 3.571);
+      expect(state.cap).toBe(next);
+      expect(state.cap).toBeGreaterThanOrEqual(1);
+      at = state.cap;
+    }
+    expect((axWidth * at) / full).toBeLessThanOrEqual(axWidth - 1);
+  },
+);
+
+test('record titles cap at the title1 AX2 size; other roles stay uncapped', () => {
+  expect(titleSizeCap('recordTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);
+  expect(titleSizeCap('title', 3.571, 'ios')).toBeCloseTo(43 / 58);
+  expect(titleSizeCap('padTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);
+  expect(titleSizeCap('recordTitle', 2.143, 'ios')).toBe(1);
+  expect(titleSizeCap('recordTitle', 3.571, 'android')).toBeCloseTo(
+    43 / 28 / 3.571,
+  );
+  for (const variant of [
+    'pageTitle',
+    'recordHeading',
+    'sectionTitle',
+    'largeTitle',
+    'body',
+  ] as const)
+    expect(titleSizeCap(variant, 3.571, 'ios')).toBe(1);
+});
+
+test('Heading chooses record, long record, page and section roles with the header trait', () => {
+  for (const [props, variant] of [
+    [{ level: 1 }, 'recordTitle'],
+    [{ level: 1, long: true }, 'recordHeading'],
+    [{ level: 1, kind: 'page' }, 'pageTitle'],
+    [{ level: 2 }, 'sectionTitle'],
+    [{ level: 3 }, 'subsectionTitle'],
+  ] as const) {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        createElement(Heading, props, 'Parliament'),
+      );
+    });
+    const node = renderer.root.findByType(NativeText);
+    expect(node.props.dynamicTypeRamp).toBe(
+      textStyles[variant].dynamicTypeRamp,
+    );
+    expect(node.props.accessibilityRole).toBe('header');
+    expect(StyleSheet.flatten(node.props.style).fontSize).toBe(
+      textStyles[variant].fontSize,
+    );
+    act(() => renderer.unmount());
+  }
+});
+test('new interface text omits fontFamily, uses explicit weight, and links render navy', () => {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      createElement(Text, { variant: 'strong', tone: 'link' }, 'Open'),
+    );
+  });
+  const style = StyleSheet.flatten(
+    renderer.root.findByType(NativeText).props.style,
+  );
+  expect(style).not.toHaveProperty('fontFamily');
+  expect(style.fontWeight).toBe('600');
+  act(() => renderer.unmount());
+});
+
+test('Bold Text leaves SF native and steps only the bundled record face', () => {
+  const bold = jest.spyOn(accessibility, 'useBoldText').mockReturnValue(true);
+  try {
+    for (const variant of ['strong', 'recordText'] as const) {
+      let renderer!: TestRenderer.ReactTestRenderer;
+      act(() => {
+        renderer = TestRenderer.create(
+          createElement(Text, { variant }, 'Parliament'),
+        );
+      });
+      const style = StyleSheet.flatten(
+        renderer.root.findByType(NativeText).props.style,
+      );
+      if (variant === 'strong') {
+        expect(style).not.toHaveProperty('fontFamily');
+        expect(style.fontWeight).toBe('600');
+      } else {
+        expect(style.fontFamily).toBe('Merriweather-Bold');
+        expect(style.fontWeight).toBe('700');
+      }
+      act(() => renderer.unmount());
+    }
+  } finally {
+    bold.mockRestore();
+  }
 });

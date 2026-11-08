@@ -1,4 +1,13 @@
-import { light, partyColors, partyWashes, type Role } from './palette';
+import {
+  light,
+  dark,
+  partyColorsDark,
+  partyColors,
+  partyWashes,
+  type Palette,
+  type Role,
+} from './palette';
+import { contrastRules } from './tokens.generated';
 
 // WCAG 2.x relative luminance and contrast ratio for opaque hex colours.
 function channel(value: number): number {
@@ -36,6 +45,8 @@ export type DrawnState =
   | 'loading';
 export interface ColourPair {
   foreground: string;
+  foregroundRole?: Role;
+  party?: keyof typeof partyColors;
   background: Role;
   kind: PairKind;
   state: DrawnState;
@@ -50,6 +61,7 @@ const pair = (
   kind: PairKind = 'text',
 ): ColourPair => ({
   foreground: light[foreground],
+  foregroundRole: foreground,
   background,
   kind,
   state,
@@ -63,6 +75,13 @@ const pair = (
 // pressed and disabled states of the controls against this table. Add a row
 // whenever a component draws a new pair.
 export const componentPairs: ColourPair[] = [
+  // Every new foreground on each edition band, including the reserved band.
+  ...contrastRules.text
+    .filter(({ fg }) => fg === 'onBand' || fg === 'onBandSoft')
+    .map(({ fg, bg }) => pair(`${fg} on ${bg}`, 'rest', fg, bg)),
+  ...(['paper', 'raised', 'sunken', 'navyWash', 'bronzeWash'] as const).map(
+    (bg) => pair(`Link text on ${bg}`, 'rest', 'navy', bg),
+  ),
   // Text roles on the surfaces screens use.
   ...(['paper', 'raised', 'sunken', 'bronzeWash'] as const).map((bg) =>
     pair('Text (ink): titles, headings, values', 'rest', 'ink', bg),
@@ -354,6 +373,7 @@ export const componentPairs: ColourPair[] = [
   ...Object.entries(partyColors).flatMap(([party, hex]) =>
     (['paper', 'raised'] as const).map((background) => ({
       foreground: hex,
+      party: party as keyof typeof partyColors,
       background,
       kind: 'non-text' as const,
       state: background === 'paper' ? ('rest' as const) : ('pressed' as const),
@@ -396,4 +416,18 @@ export function listedPair(
       // A pair listed as text also covers icons; a non-text row never covers text.
       (as === 'non-text' || entry.kind !== 'non-text'),
   );
+}
+
+/** Resolve the same component promises against any of the four themes. */
+export function componentPairsFor(palette: Palette): ColourPair[] {
+  return componentPairs.map((entry) => ({
+    ...entry,
+    foreground: entry.foregroundRole
+      ? palette[entry.foregroundRole]
+      : entry.party
+        ? (palette.paper === dark.paper ? partyColorsDark : partyColors)[
+            entry.party
+          ]
+        : entry.foreground,
+  }));
 }
