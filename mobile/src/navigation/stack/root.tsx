@@ -20,8 +20,28 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
   };
   return [
     screen('(tabs)', 'Today', { headerShown: false }),
+    // The seat chooser: a page sheet carrying its own stack, so Browse by
+    // state pushes inside it (specs/your-mp.md 4.2).
     screen('seat', 'Your electorate', modal),
-    screen('welcome', 'Welcome', { ...modal, presentation: 'fullScreenModal' }),
+    // The welcome: full screen on every device, so nothing of the app shows
+    // behind it before the cultural notice (first-launch 12.1, today.md 3.3;
+    // overrides shell S7's iPad form sheet). No swipe dismissal: "Not now"
+    // and Continue are its ways out. The first launch presents it with no
+    // animation straight out of the splash; a replay slides up.
+    <Stack.Screen
+      key="welcome"
+      name="welcome"
+      options={({ route }) => ({
+        ...modal,
+        title: 'Welcome',
+        presentation: 'fullScreenModal',
+        gestureEnabled: false,
+        animation:
+          (route.params as { entry?: string } | undefined)?.entry === 'launch'
+            ? 'none'
+            : 'default',
+      })}
+    />,
     screen('talk', 'Talk to OPAX', modal, !voiceLinked),
     screen('account', 'Account', modal),
     screen('licence', 'Licence', { ...sheetOptions, headerShown: false }),

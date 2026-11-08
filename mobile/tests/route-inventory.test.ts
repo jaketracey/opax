@@ -39,22 +39,29 @@ jest.mock('expo-router', () => {
     Stack,
     Redirect: () => null,
     useLocalSearchParams: jest.fn(),
+    useRootNavigationState: () => ({ key: 'root' }),
     router: { push: jest.fn(), back: jest.fn() },
   };
 });
 jest.mock('../src/navigation/KeyboardShortcuts', () => ({
   KeyboardShortcuts: () => null,
 }));
-jest.mock('../src/launch/splash', () => ({}));
+jest.mock('../src/launch/splash', () => ({
+  decideSplashPlain: jest.fn(),
+  holdSplashForWelcome: jest.fn(),
+}));
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('../src/onboarding/state', () => ({
   useTourState: () => 'hidden',
   checkFirstLaunch: jest.fn(),
   hideTour: jest.fn(),
+  isContentLink: () => false,
   leaveTour: jest.fn(),
 }));
-jest.mock('../src/onboarding/WelcomeTour', () => ({ WelcomeTour: () => null }));
-jest.mock('../src/launch/LaunchHandoff', () => ({ LaunchHandoff: () => null }));
+jest.mock('../src/launch/LaunchHandoff', () => ({
+  LaunchHandoff: () => null,
+  RootLaunchHandoff: () => null,
+}));
 jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: null }),
   accountSnapshot: () => ({ status: null }),
