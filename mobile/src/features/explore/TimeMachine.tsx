@@ -58,7 +58,7 @@ const loadRoster = async () => {
 /**
  * One year of the record at once: its photographs, a machine-written brief,
  * the voices in its debates and its bills. The year is chosen from the
- * title's menu or the bottom pager.
+ * title's menu or the pager at the page's foot.
  */
 export default function TimeMachine() {
   const params = useLocalSearchParams<{
