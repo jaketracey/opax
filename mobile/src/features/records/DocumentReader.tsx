@@ -1,49 +1,87 @@
 import { headerItems } from '../../navigation/chrome';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+  type ViewProps,
+} from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
-import { passageText, serverPassage } from '../../api/passage-text';
-import { chamberName, jurisdictionName } from '../../design/parliament';
+import type { BillIndex } from '../../api/catalog-decoders';
 import {
-  EmptyState,
-  ErrorState,
-  Group,
-  Heading,
-  LoadingState,
-  MachineLabel,
-  Section,
+  hasMarkdownHeadings,
+  markdownParts,
+  passageText,
+  serverPassage,
+} from '../../api/passage-text';
+import {
+  BillRow,
   Disclosure,
+  Heading,
+  InlineError,
   LinkRow,
+  MachinePill,
+  PageFoot,
   PersonRow,
+  RecordRow,
+  SectionHeader,
+  Skeleton,
   SourceLine,
   Text,
+  VoteSplit,
 } from '../../design/primitives';
 import { formatDate } from '../../design/format';
-import { rhythm } from '../../design/tokens';
+import { haptic } from '../../design/haptics';
+import { colors, rhythm } from '../../design/tokens';
+import { symbols } from '../../design/symbols';
 import {
   billRoute,
-  billTextRoute,
+  citeRoute,
   docRoute,
+  moneyRecordRoute,
   personRoute,
 } from '../../navigation/routes';
+import { canShare, shareRecord } from '../../navigation/share';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { sponsorRows, type SponsorRow } from '../bills/sponsors';
 import { CachedPortrait } from '../CachedPortrait';
-import { DocumentAsk } from '../ask/DocumentAsk';
-import { Records } from './data';
+import { documentQuestion } from '../ask/DocumentAsk';
+import { useOpenAsk } from '../ask/open';
+import { useIsMyMember } from '../your-mp/useIsMyMember';
+import { isOrganisation } from '../money-public/privacy';
+import type { Records } from './data';
 import { records } from './runtime';
 import {
   isVerbatimText,
+  metaLine,
   metaString,
+  recordDate,
+  recordHeadline,
+  recordKind,
   textChunks,
   type DocumentRecord,
 } from './model';
 import { titleSubject } from './citations';
-import { RecordActions, recordMenuItem } from './RecordActions';
-import { recordSource } from './source';
-import { ReaderList, readerChunkTarget } from './ReaderList';
+import { recordBarItems } from './RecordActions';
+import { recordCaveat, recordOriginal, recordSource } from './source';
+import {
+  ReaderList,
+  findMatches,
+  readerChunkTarget,
+  type ReaderPart,
+} from './ReaderList';
 import { useRead } from './useRead';
 import { RecordLoadError } from './RecordLoadError';
+import { useRecordNavigation } from './navigation';
 
 // The web's taxonomy; unknown topics must not alter the search request.
 const topics = new Set([
@@ -69,88 +107,234 @@ const topics = new Set([
   'justice-law',
   'foreign-affairs',
 ]);
-const kindNames: Record<string, string> = {
-  speech: 'Speech',
-  division: 'Division',
-  press_release: 'Government release',
-  bill_text: 'Bill text',
-  grant_invitation: 'Grant invitation',
-  grant_award: 'Published grant award',
-  research_report: 'Research source note',
-  legal: 'Legal record',
-};
-/** The record's own calendar date (an ISO day), or null. */
-function recordDay(doc: DocumentRecord) {
-  const iso = metaString(doc, 'date').slice(0, 10);
-  return /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : null;
-}
-/**
- * The one line under the title (pass 5, P1-2): what the record is, where and
- * when, "Speech · House of Representatives · 18 Aug 2026". No kicker above
- * the title, and no separate date line. A title that is itself the kind and
- * date ("Speech · 9 February 1999") leaves them off the line.
- */
-export function metaLine(doc: DocumentRecord) {
-  const titled = !!titleSubject(doc);
-  const day = recordDay(doc);
-  const place = jurisdictionName(doc.labels.state);
-  return [
-    titled ? (kindNames[doc.labels.kind ?? ''] ?? 'Source record') : null,
-    chamberName(doc.labels.chamber),
-    place && place !== 'Federal' ? place : null,
-    titled && day ? formatDate(day, 'short') : null,
-  ]
-    .filter(Boolean)
-    .join(' · ');
-}
-/**
- * The subject when the title has one; a title that is only the speaker and
- * the date ("Peter Costello — 1999-02-09") reads "Speech · 9 February 1999",
- * since the speaker row sits directly below.
- */
-function heading(doc: DocumentRecord) {
-  const subject = titleSubject(doc);
-  if (subject) return subject;
-  const iso = metaString(doc, 'date').slice(0, 10);
-  return /^\d{4}-\d{2}-\d{2}$/.test(iso)
-    ? `${kindNames[doc.labels.kind ?? ''] ?? 'Source record'} · ${formatDate(iso)}`
-    : doc.title;
-}
+/** The In short pill's note, in plain words (records.md 2.2). */
+const machineNote = (doc: DocumentRecord) =>
+  doc.labels.kind === 'bill_text'
+    ? 'Written by a model from this bill text. It is not part of the bill.'
+    : doc.labels.kind === 'speech'
+      ? 'Written by a model from this speech. It is not part of the record.'
+      : 'Written by a model. It is not part of the record.';
+/** A text this long (about 4,800 characters) repeats its source line at the end. */
+const LONG_TEXT_PARTS = 4;
+/** First paint waits this long for the speaker's roster match (records.md 2.3). */
+const SPEAKER_WINDOW = 400;
 const titleKey = (value: string) =>
   value.replace(/\s+/g, ' ').trim().toLowerCase();
+/** A query from Search, capped at 100 characters on a whole word. */
+function findQuery(value: unknown): string {
+  const text =
+    typeof value === 'string' ? value.replace(/\s+/g, ' ').trim() : '';
+  return text.length > 100 ? text.slice(0, 100).replace(/\s+\S*$/, '') : text;
+}
+
+type Directory = Awaited<ReturnType<typeof catalogs.directory>>;
+/**
+ * The roster read starts on mount, beside the record. First paint waits for
+ * both, or 400 ms after the record, whichever is sooner; a match that comes
+ * later is ignored for this visit, so nothing above the text moves.
+ */
+function useSpeaker(doc: DocumentRecord | null) {
+  const [directory, setDirectory] = useState<Directory | 'failed' | null>(null);
+  const arrived = useRef(false);
+  const [late, setLate] = useState<string | null>(null);
+  useEffect(() => {
+    let active = true;
+    void catalogs
+      .directory()
+      .then((found) => {
+        arrived.current = true;
+        if (active) setDirectory(found);
+      })
+      .catch(() => {
+        arrived.current = true;
+        if (active) setDirectory('failed');
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  const wanted = !!doc?.speaker && doc.labels.speaker_type !== 'witness';
+  const slug = doc?.slug ?? null;
+  useEffect(() => {
+    if (!slug || !wanted || directory) return;
+    const timer = setTimeout(() => {
+      if (!arrived.current) setLate(slug);
+    }, SPEAKER_WINDOW);
+    return () => clearTimeout(timer);
+  }, [slug, wanted, directory]);
+  const ready = !!doc && (!wanted || !!directory || late === doc.slug);
+  const row = useMemo((): SponsorRow | null => {
+    if (!doc?.speaker || !wanted || !directory || directory === 'failed')
+      return null;
+    if (late === doc.slug) return null;
+    const [match] = sponsorRows(
+      [{ name: doc.speaker, suffix: '' }],
+      doc.labels.party ?? null,
+      null,
+      {
+        roster: directory.roster.data,
+        slugs: directory.slugs.data,
+        people: directory.people.data,
+        manifest: directory.manifest.data,
+        electorates: directory.electorates.data,
+      },
+    );
+    return match?.slug ? match : null;
+  }, [doc, wanted, directory, late]);
+  return { ready, row };
+}
+
+/** The reader's find bar state: the query from Search and its current match. */
+function useFind(parts: ReaderPart[], query: string, first: number) {
+  const matches = useMemo(() => findMatches(parts, query), [parts, query]);
+  const [open, setOpen] = useState(!!query);
+  const [index, setIndex] = useState(first);
+  const [engaged, setEngaged] = useState(false);
+  const [jump, setJump] = useState<{
+    index: number;
+    attempt: number;
+    position: number;
+  } | null>(null);
+  const total = matches.length;
+  const current = total ? Math.min(Math.max(index, 0), total - 1) : 0;
+  const reveal = (at: number) => {
+    const match = matches[at];
+    if (!match) return;
+    setJump((old) => ({
+      index: match.part,
+      attempt: (old?.attempt ?? 0) + 1,
+      position: 0.33,
+    }));
+  };
+  const step = (by: number) => {
+    if (!total) return;
+    if (!engaged) {
+      setEngaged(true);
+      reveal(current);
+      return;
+    }
+    const next = (current + by + total) % total;
+    haptic('selection');
+    setIndex(next);
+    reveal(next);
+  };
+  return {
+    open: open && !!query,
+    query,
+    total,
+    current,
+    jump,
+    marks: open && query ? { query, current: matches[current] ?? null } : null,
+    goTo: () => {
+      setEngaged(true);
+      reveal(current);
+    },
+    next: () => step(1),
+    previous: () => step(-1),
+    done: () => setOpen(false),
+  };
+}
+
 export default function DocumentReader({
   recordSlug,
   embedded = false,
 }: { recordSlug?: string; embedded?: boolean } = {}) {
-  const params = useLocalSearchParams<{ slug: string }>();
+  const params = useLocalSearchParams<{
+    slug: string;
+    cite?: string;
+    q?: string;
+    match?: string;
+  }>();
   const slug = recordSlug ?? params.slug ?? '';
   const load = useCallback(() => records.document(slug), [slug]);
   const { value, error, retry } = useRead(load);
-  const doc = value?.data;
-  const parts = useMemo(
-    () =>
-      textChunks(
-        (doc && isVerbatimText(doc) ? passageText : serverPassage)(doc?.text, {
-          paragraphs: true,
-        }),
-        readerChunkTarget,
-      ).map((text, index) => ({
-        id: String(index),
-        text,
-      })),
-    [doc],
+  const doc = value?.data ?? null;
+  const speaker = useSpeaker(doc);
+  const shown = speaker.ready ? doc : null;
+  const headline = doc ? recordHeadline(doc) : '';
+  const titleRef = useRef<View>(null);
+  const title = useTitleOnScroll(
+    embedded ? null : titleRef,
+    embedded || !shown ? undefined : headline,
   );
+  const openAsk = useOpenAsk();
+  const parts = useMemo(() => {
+    // Divisions and other Markdown texts: headings become part titles.
+    if (
+      doc &&
+      !isVerbatimText(doc) &&
+      (recordKind(doc) === 'division' || hasMarkdownHeadings(doc.text))
+    )
+      return markdownParts(doc.text).flatMap((section, at) =>
+        textChunks(section.text, readerChunkTarget).map((text, index) => ({
+          id: `${at}-${index}`,
+          text,
+          ...(index === 0 && section.title ? { title: section.title } : {}),
+        })),
+      );
+    return textChunks(
+      (doc && isVerbatimText(doc) ? passageText : serverPassage)(doc?.text, {
+        paragraphs: true,
+      }),
+      readerChunkTarget,
+    ).map((text, index) => ({
+      id: String(index),
+      text,
+    }));
+  }, [doc]);
+  const find = useFind(
+    shown ? parts : [],
+    embedded || recordSlug ? '' : findQuery(params.q),
+    Math.max(0, Number(params.match) || 0),
+  );
+  // opax://doc-cite/<slug> arrives as /doc/<slug>?cite=1: the record first,
+  // then Citation formats over it, so Done lands on the record.
+  const cited = useRef(false);
+  useEffect(() => {
+    if (embedded || !shown || params.cite !== '1' || cited.current) return;
+    cited.current = true;
+    router.setParams({ cite: undefined });
+    router.push(citeRoute(shown.slug));
+  }, [embedded, shown, params.cite]);
+  const target = doc
+    ? { slug: doc.slug, title: headline, kind: doc.labels.kind }
+    : null;
+  const ask = () => {
+    if (doc) openAsk({ question: documentQuestion(doc) });
+  };
+  const share = () => {
+    if (doc) void shareRecord({ path: `/doc/${doc.slug}`, title: headline });
+  };
+  const android = Platform.OS === 'android';
+  const askRow = embedded || android;
   return (
     <>
       {embedded ? null : (
         <Stack.Screen
           options={{
-            title: 'Record',
-            headerTitle: '',
-            // Cite, Copy link and Share under one ⋯ (P1-2).
             ...headerItems(
-              doc
-                ? () => [recordMenuItem({ slug: doc.slug, title: doc.title })]
+              shown && target
+                ? recordBarItems(
+                    target,
+                    android
+                      ? [
+                          {
+                            title: 'Ask about this',
+                            symbol: symbols.ask,
+                            onPress: ask,
+                          },
+                          ...(canShare
+                            ? [
+                                {
+                                  title: 'Share',
+                                  symbol: 'square.and.arrow.up' as const,
+                                  onPress: share,
+                                },
+                              ]
+                            : []),
+                        ]
+                      : [],
+                  )
                 : undefined,
             ),
           }}
@@ -158,270 +342,504 @@ export default function DocumentReader({
       )}
       <ReaderList
         testID="doc-reader"
-        parts={parts}
+        parts={shown ? parts : []}
+        jumpTo={find.jump}
+        find={find.marks}
+        onScroll={embedded ? undefined : title.onScroll}
         header={
-          <>
-            {error ? (
-              <RecordLoadError
-                error={error}
-                slug={slug}
-                onRetry={retry}
-                testID="doc-error"
-              />
-            ) : !doc ? (
-              <LoadingState label="Loading the record" />
-            ) : (
-              <>
-                <Group gap={rhythm.tight}>
-                  <Heading level={1} testID="doc-title">
-                    {heading(doc)}
-                  </Heading>
-                  <View style={styles.meta}>
-                    <Text
-                      variant="metadata"
-                      wordSafe
-                      style={styles.grow}
-                      testID="doc-meta"
-                    >
-                      {metaLine(doc) || 'Jurisdiction not recorded'}
-                    </Text>
-                    {/* A pane has no navigation bar: its ⋯ sits here. */}
-                    {embedded ? (
-                      <RecordActions slug={doc.slug} title={doc.title} />
-                    ) : null}
-                  </View>
-                  <Speaker key={`speaker-${doc.slug}`} doc={doc} />
-                  <RecordSourceLine doc={doc} />
-                </Group>
-                <DocumentAsk doc={doc} />
-                {doc.summary ? (
-                  <Section title="In brief" accent="bills" testID="doc-brief">
-                    <MachineLabel
-                      explanation={
-                        doc.labels.kind === 'bill_text'
-                          ? 'Written from this document by a model, not part of the original bill text.'
-                          : doc.labels.kind === 'speech'
-                            ? 'Written from this speech by a model, not by a person, and not part of the record.'
-                            : 'Written by a model; not part of the record.'
-                      }
-                      testID="doc-brief-label"
-                    />
-                    <Text selectable>{doc.summary}</Text>
-                  </Section>
-                ) : null}
-                <LinkedBill key={`bill-${doc.slug}`} doc={doc} />
-                {doc.labels.kind === 'speech' ? (
-                  <Similar key={`similar-${doc.slug}`} doc={doc} />
-                ) : null}
-                {/* The text's notes are in the record's source sheet. */}
-                <Section
-                  title="Full text"
-                  accent={doc.labels.kind === 'division' ? 'votes' : 'bills'}
-                >
-                  {doc.labels.kind === 'bill_text' &&
-                  doc.metadata.complete === false ? (
-                    <Text variant="fine">Incomplete extracted bill text</Text>
-                  ) : null}
-                </Section>
-                {!doc.text ? (
-                  <EmptyState message="No text is held for this record." />
-                ) : null}
-              </>
-            )}
-          </>
+          error ? (
+            <RecordLoadError
+              error={error}
+              slug={slug}
+              onRetry={retry}
+              testID="doc-error"
+            />
+          ) : !shown ? (
+            <ReaderSkeleton />
+          ) : (
+            <ReaderHeader
+              doc={shown}
+              headline={headline}
+              speaker={speaker.row}
+              titleRef={titleRef}
+              onTitleLayout={embedded ? undefined : title.onTitleLayout}
+              askRow={askRow ? ask : null}
+              hasText={parts.length > 0}
+            />
+          )
+        }
+        footer={
+          shown ? (
+            <View>
+              {parts.length >= LONG_TEXT_PARTS ? (
+                <View style={styles.endSource}>
+                  <RecordSourceLine doc={shown} testID="doc-source-end" />
+                </View>
+              ) : null}
+              <LinkedBill key={`bill-${shown.slug}`} doc={shown} />
+              {shown.labels.kind === 'speech' ? (
+                <Similar key={`similar-${shown.slug}`} doc={shown} />
+              ) : null}
+              <View style={styles.after}>
+                <PageFoot variant="today" />
+              </View>
+            </View>
+          ) : null
         }
       />
+      {!embedded && !android && shown ? (
+        find.open ? (
+          <Stack.Toolbar placement="bottom">
+            <Stack.Toolbar.Button
+              accessibilityLabel={`Match ${find.total ? find.current + 1 : 0} of ${find.total} for ${find.query}`}
+              accessibilityHint="Go to match"
+              onPress={find.goTo}
+            >
+              {`${find.query} · ${find.total ? find.current + 1 : 0} of ${find.total}`}
+            </Stack.Toolbar.Button>
+            <Stack.Toolbar.Spacer />
+            <Stack.Toolbar.Button
+              icon="chevron.up"
+              accessibilityLabel="Previous match"
+              disabled={!find.total}
+              onPress={find.previous}
+            />
+            <Stack.Toolbar.Button
+              icon="chevron.down"
+              accessibilityLabel="Next match"
+              disabled={!find.total}
+              onPress={find.next}
+            />
+            <Stack.Toolbar.Button accessibilityLabel="Done" onPress={find.done}>
+              Done
+            </Stack.Toolbar.Button>
+          </Stack.Toolbar>
+        ) : (
+          <Stack.Toolbar placement="bottom">
+            <Stack.Toolbar.Button
+              icon={symbols.ask}
+              accessibilityLabel="Ask about this record"
+              onPress={ask}
+            >
+              Ask about this
+            </Stack.Toolbar.Button>
+            <Stack.Toolbar.Spacer />
+            {canShare ? (
+              <Stack.Toolbar.Button
+                icon="square.and.arrow.up"
+                accessibilityLabel="Share"
+                onPress={share}
+              />
+            ) : null}
+          </Stack.Toolbar>
+        )
+      ) : null}
     </>
   );
 }
 
-/**
- * Who spoke, as a person row (portrait, party as a dot and its name, place),
- * joined to the roster the way a bill's sponsors are. A speaker the roster
- * cannot name stays plain text, never a link.
- */
-function Speaker({ doc }: { doc: DocumentRecord }) {
-  const [row, setRow] = useState<SponsorRow | null>(null);
-  useEffect(() => {
-    if (!doc.speaker || doc.labels.speaker_type === 'witness') return;
-    let active = true;
-    void catalogs
-      .directory()
-      .then((found) => {
-        const [match] = sponsorRows(
-          [{ name: doc.speaker!, suffix: '' }],
-          doc.labels.party ?? null,
-          null,
-          {
-            roster: found.roster.data,
-            slugs: found.slugs.data,
-            people: found.people.data,
-            manifest: found.manifest.data,
-            electorates: found.electorates.data,
-          },
-        );
-        if (active && match?.slug) setRow(match);
-      })
-      .catch(() => {});
-    return () => {
-      active = false;
-    };
-  }, [doc]);
-  if (!doc.speaker) return null;
-  const slug = row?.slug;
-  return row && slug ? (
-    <PersonRow
-      name={row.name}
-      portrait={<CachedPortrait name={row.name} slug={slug} />}
-      {...(row.party
-        ? {
-            party: row.party.party,
-            partyStatus: row.party.status,
-            formerly: row.party.formerly,
-          }
-        : { party: undefined })}
-      place={row.place}
-      statusShown={!!row.place?.startsWith('Formerly ')}
-      dragPath={`/subject/person/${slug}`}
-      onPress={() => router.push(personRoute(slug))}
-      testID="doc-more"
-    />
-  ) : (
-    <Text variant="strong" wordSafe testID="doc-speaker-name">
-      {doc.speaker}
-    </Text>
+/** Bars in the header's final shape, then lines of text (records.md 2.5). */
+function ReaderSkeleton() {
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Loading the record"
+      accessibilityState={{ busy: true }}
+      testID="doc-loading"
+      style={styles.skeleton}
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.skeleton}
+      >
+        <Bar width="40%" height={18} />
+        <View style={styles.skeletonGroup}>
+          <Bar width="100%" height={30} />
+          <Bar width="70%" height={30} />
+        </View>
+        <View style={styles.skeletonSpeaker}>
+          <View style={styles.circle} />
+          <View style={styles.skeletonGroup}>
+            <Bar width="60%" height={18} />
+            <Bar width="40%" height={16} />
+          </View>
+        </View>
+        <Bar width="40%" height={16} />
+        <View style={styles.skeletonGroup}>
+          {Array.from({ length: 8 }, (_, index) => (
+            <Bar key={index} width={index === 7 ? '60%' : '100%'} height={20} />
+          ))}
+        </View>
+      </View>
+    </View>
   );
 }
+function Bar({ width, height }: { width: `${number}%`; height: number }) {
+  return <View style={[styles.bar, { width, height }]} />;
+}
+
+function ReaderHeader({
+  doc,
+  headline,
+  speaker,
+  titleRef,
+  onTitleLayout,
+  askRow,
+  hasText,
+}: {
+  doc: DocumentRecord;
+  headline: string;
+  speaker: SponsorRow | null;
+  titleRef: React.RefObject<View | null>;
+  onTitleLayout?: ViewProps['onLayout'];
+  askRow: (() => void) | null;
+  hasText: boolean;
+}) {
+  const meta = metaLine(doc, { date: false });
+  const caveat = recordCaveat(doc);
+  const organisation = organisationOf(doc);
+  const ayes = Number(doc.metadata.ayes_count);
+  const noes = Number(doc.metadata.noes_count);
+  const day = recordDate(doc);
+  const votes =
+    doc.labels.kind === 'division' &&
+    Number.isFinite(ayes) &&
+    Number.isFinite(noes) &&
+    doc.metadata.ayes_count != null &&
+    doc.metadata.noes_count != null &&
+    // The split's spoken label names its date; an undated division has none.
+    !!day;
+  return (
+    <View>
+      {meta ? (
+        <Text
+          wordSafe
+          variant="secondary"
+          testID="doc-meta"
+          style={styles.meta}
+        >
+          {meta}
+        </Text>
+      ) : null}
+      <View ref={titleRef} onLayout={onTitleLayout}>
+        <Heading level={1} testID="doc-title">
+          {headline}
+        </Heading>
+      </View>
+      <Speaker doc={doc} row={speaker} />
+      <View style={styles.source}>
+        <RecordSourceLine doc={doc} testID="doc-source" />
+      </View>
+      {caveat ? (
+        <Text
+          variant="footnote"
+          tone="inkSoft"
+          testID="doc-caveat"
+          style={styles.caveat}
+        >
+          {caveat}
+        </Text>
+      ) : null}
+      {askRow || organisation ? (
+        <View style={styles.rows}>
+          {askRow ? (
+            <LinkRow title="Ask about this" onPress={askRow} testID="doc-ask" />
+          ) : null}
+          {organisation ? <OrganisationRow {...organisation} /> : null}
+        </View>
+      ) : null}
+      {votes ? (
+        <View style={styles.block} testID="doc-votes">
+          <VoteSplit
+            ayes={ayes}
+            noes={noes}
+            countsStyle="ayesNoes"
+            {...{
+              dateRange: { start: day!, end: day! },
+              source: recordSource(doc).citation.label,
+            }}
+          />
+        </View>
+      ) : null}
+      {doc.summary ? (
+        <View style={styles.block}>
+          <Disclosure label="In short" testID="doc-brief">
+            <View style={styles.brief}>
+              <MachinePill
+                note={{ title: 'Machine-written', body: [machineNote(doc)] }}
+                testID="doc-brief-label"
+              />
+              <Text selectable variant="body">
+                {doc.summary}
+              </Text>
+            </View>
+          </Disclosure>
+        </View>
+      ) : null}
+      {doc.labels.kind === 'bill_text' && doc.metadata.complete === false ? (
+        <Text variant="footnote" testID="doc-incomplete" style={styles.block}>
+          This text is incomplete. The original document has the full bill.
+        </Text>
+      ) : null}
+      {!hasText ? (
+        <Text variant="body" tone="inkSoft" style={styles.block}>
+          The text of this record isn&apos;t held in OPAX. The original is
+          linked from its source line.
+        </Text>
+      ) : null}
+      <View style={styles.beforeText} />
+    </View>
+  );
+}
+
 /**
- * The record's one source line (P1-2): the original opens from its sheet
- * (no separate "View original"), with the text's notes and the licence.
- * The meta line above dates the record, so the line names only its source.
+ * Who spoke, as a person row (portrait, party, place, and "Your MP" for the
+ * reader's own member), joined to the roster as a bill's sponsors are. A
+ * speaker the roster can't name stays plain text, never a link.
  */
-function RecordSourceLine({ doc }: { doc: DocumentRecord }) {
+function Speaker({
+  doc,
+  row,
+}: {
+  doc: DocumentRecord;
+  row: SponsorRow | null;
+}) {
+  const navigation = useRecordNavigation();
+  const slug = row?.slug ?? '';
+  const yourMP = useIsMyMember(slug);
+  if (!doc.speaker) return null;
+  return (
+    <View style={styles.speaker}>
+      {row && slug ? (
+        <PersonRow
+          name={row.name}
+          portrait={<CachedPortrait name={row.name} slug={slug} />}
+          {...(row.party
+            ? {
+                party: row.party.party,
+                partyStatus: row.party.status,
+                formerly: row.party.formerly,
+              }
+            : { party: undefined })}
+          place={row.place}
+          statusShown={!!row.place?.startsWith('Formerly ')}
+          yourMP={yourMP}
+          dragPath={`/subject/person/${slug}`}
+          {...(navigation.inPane
+            ? { onPress: () => navigation.openPerson(slug, row.name) }
+            : { href: personRoute(slug) })}
+          testID="doc-more"
+        />
+      ) : (
+        <Text variant="name" wordSafe testID="doc-speaker-name">
+          {doc.speaker}
+        </Text>
+      )}
+    </View>
+  );
+}
+
+/**
+ * The record's source line (records.md 2.6): its own date, "18 Aug 2026 ·
+ * Hansard", and a sheet headed "Recorded 18 August 2026" with the original,
+ * the notes and the licence.
+ */
+function RecordSourceLine({
+  doc,
+  testID,
+}: {
+  doc: DocumentRecord;
+  testID: string;
+}) {
   const source = recordSource(doc);
+  const original = recordOriginal(doc);
   return (
     <SourceLine
-      title="About this record"
-      dateLabel={null}
-      asOf={recordDay(doc)}
+      dateRole="recorded"
+      asOf={recordDate(doc)}
       citation={[source.citation]}
-      originals={
-        doc.url
-          ? [{ label: source.original, url: doc.url, record: doc.title }]
-          : []
-      }
+      originals={original ? [original] : []}
       notes={[
         ...source.notes,
-        doc.url
+        original
           ? null
-          : 'No official link is published for this record; it is cited by its title and date.',
+          : 'No official link is published for this record. Cite it by its title and date.',
       ]}
       licence={source.licence}
       licenceDataset={source.licenceDataset}
-      testID="doc-source"
+      testID={testID}
+    />
+  );
+}
+
+/**
+ * The grant recipient or contract supplier, when the record names an
+ * organisation with an id. A private individual is never named or linked
+ * (money-public/privacy.ts, App Review 5.1.1).
+ */
+function organisationOf(doc: DocumentRecord) {
+  const kind = doc.labels.kind ?? '';
+  if (!/^(grant_award|grant|contract)$/.test(kind)) return null;
+  const fields =
+    doc.metadata.source_fields && typeof doc.metadata.source_fields === 'object'
+      ? (doc.metadata.source_fields as Record<string, unknown>)
+      : {};
+  const read = (...keys: string[]) => {
+    for (const key of keys)
+      for (const from of [doc.metadata, fields]) {
+        const found = from[key];
+        if (typeof found === 'string' && found.trim()) return found.trim();
+      }
+    return '';
+  };
+  const abr = [doc.metadata.abr, fields.abr].find(
+    (value): value is Record<string, unknown> =>
+      !!value && typeof value === 'object',
+  );
+  const rid = read('recipient_id', 'supplier_id', 'rid');
+  const name = read('recipient_name', 'supplier_name', 'organisation');
+  if (!rid || !name) return null;
+  // The money data's own fields: the entity kind and the ABN entity type.
+  const entity = read('recipient_kind', 'supplier_kind', 'entity_type', 'k');
+  const abnType =
+    read('abn_type') ||
+    (typeof abr?.etype === 'string' ? abr.etype : '') ||
+    read('entity_type');
+  if (!isOrganisation(name, entity || undefined, abnType || undefined, rid))
+    return null;
+  // Money records know federal and Queensland only.
+  const place = read('jur', 'jurisdiction') || doc.labels.state || '';
+  return {
+    rid,
+    name,
+    jur: /^(qld|queensland)$/i.test(place) ? 'qld' : 'federal',
+  };
+}
+function OrganisationRow({
+  rid,
+  jur,
+  name,
+}: {
+  rid: string;
+  jur: string;
+  name: string;
+}) {
+  return (
+    <LinkRow
+      title={`Open ${name}`}
+      href={moneyRecordRoute({ rid, jur }, name)}
+      testID="doc-organisation"
+    />
+  );
+}
+
+type BillEntry = BillIndex['bills'][number];
+/** The bill's own row: status, when it was introduced, and who brought it. */
+function LinkedBillRow({ bill }: { bill: BillEntry }) {
+  const navigation = useRecordNavigation();
+  return (
+    <BillRow
+      billKey={bill.key}
+      title={bill.title}
+      status={bill.status}
+      date={bill.introduced}
+      dateLabel="Introduced"
+      meta={
+        bill.portfolio
+          ? { portfolio: bill.portfolio }
+          : bill.sponsor
+            ? { sponsor: bill.sponsor, party: bill.sponsor_party }
+            : undefined
+      }
+      dragPath={`/bill/${bill.key}`}
+      {...(navigation.inPane
+        ? { onPress: () => navigation.openBill(bill.key, bill.title) }
+        : { href: billRoute(bill.key) })}
+      testID="doc-bill-open"
     />
   );
 }
 function LinkedBill({ doc }: { doc: DocumentRecord }) {
-  const [bill, setBill] = useState<{
-    key: string;
-    title: string;
-    summary: string | null;
-    attribution: string | null;
+  const navigation = useRecordNavigation();
+  const [found, setFound] = useState<{
+    bill: BillEntry;
     asAt: string | null;
   } | null>(null);
+  const key = metaString(doc, 'bill_key');
+  const textBill =
+    doc.labels.kind === 'bill_text' && /^au-federal-[a-z0-9-]+$/.test(key);
   useEffect(() => {
     let active = true;
-    if (doc.labels.kind === 'bill_text') return;
-    const subject =
-      metaString(doc, 'bill_ref') ||
-      metaString(doc, 'topic') ||
-      metaString(doc, 'debate') ||
-      titleSubject(doc);
-    if (!subject) return;
+    const subject = textBill
+      ? ''
+      : metaString(doc, 'bill_ref') ||
+        metaString(doc, 'topic') ||
+        metaString(doc, 'debate') ||
+        titleSubject(doc);
+    if (!textBill && !subject) return;
     void catalogs
       .bills()
-      .then(async (result) => {
+      .then((result) => {
         const matches = result.data.bills.filter((entry) =>
-          [entry.title, ...(entry.aliases ?? [])].some(
-            (title) => titleKey(title) === titleKey(subject),
-          ),
+          textBill
+            ? entry.key === key
+            : [entry.title, ...(entry.aliases ?? [])].some(
+                (title) => titleKey(title) === titleKey(subject),
+              ),
         );
-        if (matches.length !== 1) return;
-        const entry = matches[0]!;
-        const detail = await catalogs.billFor(entry.key);
-        const summary = detail.data.summary.data;
-        if (active)
-          setBill({
-            key: entry.key,
-            title: entry.title,
-            summary: summary?.sentences[0] ?? null,
-            attribution: summary?.attribution ?? null,
-            asAt: detail.data.identity.asAt,
-          });
+        if (matches.length !== 1 || !active) return;
+        const bill = matches[0]!;
+        setFound({
+          bill,
+          asAt: bill.status_as_of ?? result.data.generated_at,
+        });
       })
       .catch(() => {});
     return () => {
       active = false;
     };
-  }, [doc]);
-  const key = metaString(doc, 'bill_key');
-  if (doc.labels.kind === 'bill_text' && /^au-federal-[a-z0-9-]+$/.test(key))
-    return (
-      <Section title="The bill" accent="bills" testID="doc-bill">
+  }, [doc, key, textBill]);
+  if (!found && !textBill) return null;
+  return (
+    <View style={styles.after} testID="doc-bill">
+      <SectionHeader title="The bill" />
+      {found ? (
+        <LinkedBillRow bill={found.bill} />
+      ) : (
         <LinkRow
-          title="Bill page"
-          dragPath={`/bill/${key}`}
-          onPress={() => router.push(billRoute(key))}
+          title={metaString(doc, 'title') || 'Bill page'}
+          onPress={() => navigation.openBill(key)}
           testID="doc-bill-open"
         />
-        <LinkRow
-          title="Text versions"
-          onPress={() =>
-            router.push(
-              billTextRoute(key, metaString(doc, 'version_id') || undefined),
-            )
-          }
-        />
-      </Section>
-    );
-  if (!bill) return null;
-  return (
-    <Section title="The bill" accent="bills" testID="doc-bill">
-      <Text variant="strong" wordSafe>
-        {bill.title}
-      </Text>
-      {bill.summary ? (
-        <>
-          <MachineLabel
-            explanation={
-              bill.attribution ?? 'Written by a model; not the record.'
-            }
-            testID="doc-bill-label"
-          />
-          <Text>{bill.summary}</Text>
-        </>
-      ) : (
-        <Text variant="fine">No summary written for this bill yet.</Text>
       )}
-      <LinkRow
-        title="Bill page"
-        dragPath={`/bill/${bill.key}`}
-        onPress={() => router.push(billRoute(bill.key))}
-        testID="doc-bill-open"
-      />
-      <SourceLine
-        asOf={bill.asAt}
-        citation="ParlInfo bill register"
-        testID="doc-bill-source"
-      />
-    </Section>
+      {textBill ? (
+        <LinkRow
+          title="Other versions of this bill"
+          onPress={() =>
+            navigation.openText(key, metaString(doc, 'version_id') || undefined)
+          }
+          testID="doc-bill-text"
+        />
+      ) : null}
+      {found ? (
+        <View style={styles.source}>
+          <SourceLine
+            asOf={found.asAt}
+            citation={[{ label: 'ParlInfo', title: 'ParlInfo bill register' }]}
+            testID="doc-bill-source"
+          />
+        </View>
+      ) : null}
+    </View>
   );
 }
+
+type SimilarResult = Awaited<ReturnType<Records['similar']>>;
 function Similar({ doc }: { doc: DocumentRecord }) {
-  const [value, setValue] = useState<Awaited<
-    ReturnType<Records['similar']>
-  > | null>(null);
+  const navigation = useRecordNavigation();
+  const [value, setValue] = useState<SimilarResult | null>(null);
   const [error, setError] = useState<unknown>(null),
     [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -436,65 +854,127 @@ function Similar({ doc }: { doc: DocumentRecord }) {
       .catch(setError)
       .finally(() => setLoading(false));
   };
+  const rows: ReactNode[] =
+    value?.data.map((row, index) => {
+      const record = {
+        slug: row.slug,
+        title: row.title,
+        speaker: row.speaker,
+        date: row.date,
+        labels: {
+          kind: 'speech',
+          ...(row.chamber ? { chamber: row.chamber } : {}),
+        },
+      };
+      const drawn = (
+        <RecordRow
+          meta={metaLine(record)}
+          title={recordHeadline(record)}
+          excerpt={{ text: serverPassage(row.snippet) || '' }}
+          speaker={row.speaker ? { name: row.speaker, party: row.party } : null}
+          {...(navigation.inPane ? {} : { href: docRoute(row.slug) })}
+          testID={`doc-similar-${index}`}
+        />
+      );
+      return navigation.inPane ? (
+        <Pressable
+          key={row.slug}
+          accessibilityRole="link"
+          onPress={() => navigation.openDoc(row.slug, recordHeadline(record))}
+        >
+          {drawn}
+        </Pressable>
+      ) : (
+        <View key={row.slug}>{drawn}</View>
+      );
+    }) ?? [];
   return (
-    <Section>
+    <View style={styles.after}>
       <Disclosure
         label="Similar speeches"
         open={open}
         onToggle={(next) => (next ? loadSimilar() : setOpen(false))}
         testID="doc-similar"
       >
-        <>
-          {loading ? <LoadingState label="Finding related speeches…" /> : null}
+        <View style={styles.similar}>
+          {loading ? (
+            <Skeleton count={3} label="Loading similar speeches" />
+          ) : null}
           {error ? (
-            <ErrorState
-              message="Related speeches could not be loaded."
+            <InlineError
+              subject="Similar speeches"
+              message="Similar speeches couldn't be loaded."
               onRetry={loadSimilar}
             />
           ) : null}
           {value ? (
             value.data.length ? (
-              value.data.map((row, index) => (
-                <Group key={row.slug} gap={rhythm.tight}>
-                  <LinkRow
-                    title={titleSubject(row) || row.title}
-                    detail={[
-                      row.speaker,
-                      row.date ? formatDate(row.date, 'short') : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
-                    onPress={() => router.push(docRoute(row.slug))}
-                    testID={`doc-similar-${index}`}
-                    dragPath={`/doc/${row.slug}`}
-                  />
-                  <Text variant="record" selectable>
-                    {serverPassage(row.snippet) || 'No passage available.'}
-                  </Text>
-                </Group>
-              ))
+              <>
+                {rows}
+                <SourceLine
+                  dateRole="found"
+                  asOf={value.savedAt}
+                  citation={[{ label: 'OPAX search' }]}
+                  originals={value.data.flatMap((row) =>
+                    row.url
+                      ? [
+                          {
+                            label: 'Hansard',
+                            url: row.url,
+                            record: row.date
+                              ? `speech, ${formatDate(row.date, 'short')}`
+                              : 'speech',
+                          },
+                        ]
+                      : [],
+                  )}
+                  notes={[
+                    'Speeches on the same subject, found by OPAX search.',
+                  ]}
+                  testID="doc-similar-source"
+                />
+              </>
             ) : (
-              <EmptyState message="No related speeches found for this subject." />
+              <Text variant="body" tone="inkSoft">
+                No similar speeches found.
+              </Text>
             )
           ) : null}
-          {value?.data.length ? (
-            <SourceLine
-              title="About similar speeches"
-              dateLabel={null}
-              citation="Hansard"
-              notes={[
-                'Speeches on the same subject, found by OPAX search. Each passage is from the record; open a speech for its full text and source.',
-              ]}
-              testID="doc-similar-source"
-            />
-          ) : null}
-        </>
+        </View>
       </Disclosure>
-    </Section>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  meta: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  grow: { flex: 1 },
+  meta: { marginBottom: rhythm.line },
+  speaker: { marginTop: rhythm.block },
+  source: { marginTop: rhythm.tight },
+  caveat: { marginTop: rhythm.line },
+  rows: { marginTop: rhythm.tight },
+  block: { marginTop: rhythm.block },
+  brief: { gap: rhythm.tight },
+  beforeText: { height: rhythm.block },
+  endSource: { marginTop: rhythm.group },
+  after: { marginTop: rhythm.section },
+  similar: { gap: rhythm.tight },
+  skeleton: { gap: rhythm.block },
+  skeletonGroup: { gap: rhythm.tight, flex: 1 },
+  skeletonSpeaker: {
+    flexDirection: 'row',
+    gap: rhythm.tight,
+    alignItems: 'flex-start',
+  },
+  circle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
+  bar: {
+    borderRadius: 4,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
 });

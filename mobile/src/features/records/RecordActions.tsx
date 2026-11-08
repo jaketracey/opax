@@ -1,91 +1,193 @@
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
+import { showMenu, type MenuAction } from '../../design/menu';
 import { router } from 'expo-router';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { chrome } from '../../design/tokens';
-import { showMenu } from '../../design/menu';
 import { haptic } from '../../design/haptics';
-import type { RowMenuAction, RowMenuLeaf } from '../../design/row-link';
+import { webOrigin } from '../../design/environment';
+import { copy as words } from '../../design/copy';
+import {
+  menuLeaves,
+  type RowMenuAction,
+  type RowMenuLeaf,
+} from '../../design/row-link';
+import { catalogs } from '../../api/runtime';
 import { isRecordSlug } from '../../api/record-policy';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
+import { pageMenu } from '../../navigation/chrome';
 import { citeRoute } from '../../navigation/routes';
-import { shareRecord } from '../../navigation/share';
 import { copyText } from './actions';
+import { citationsFor } from './citations';
+import {
+  citeStyles,
+  rememberCiteStyle,
+  stylesFor,
+  type CiteStyleId,
+} from './citeStyle';
+import { records } from './runtime';
 
-/** The record a menu acts on: its slug and its title for Share. */
+/** The record a menu acts on: its slug, its cleaned title, and its kind. */
 export interface RecordTarget {
   slug: string;
   title: string;
+  /** The record's kind when known; otherwise read from the slug. */
+  kind?: string;
+}
+
+/** The citation's date of access: today, on the reader's calendar. */
+export function accessedToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 /**
- * A record's secondary actions, in one place (pass 1's "built twice"; pass
- * 5, P1-2): Cite, Copy link and Share. They live under ⋯, never as a row of
- * drawn buttons. Opening a menu calls no API until Cite opens the record.
+ * The corpus version for BibTeX and RIS. A slow or failed read never holds
+ * a copy back for long: after two seconds the citation is made without it.
  */
-export function recordActions({ slug, title }: RecordTarget): RowMenuLeaf[] {
-  if (!isRecordSlug(slug)) return [];
+export function corpusVersion(): Promise<string> {
+  return Promise.race([
+    catalogs
+      .corpus()
+      .then((record) => record.data.version || 'unversioned')
+      .catch(() => 'unversioned'),
+    new Promise<string>((resolve) =>
+      setTimeout(() => resolve('unversioned'), 2000),
+    ),
+  ]);
+}
+
+/**
+ * Builds a citation when its menu item is pressed and copies it. The record
+ * comes from the session (no request when the reader has it); the formats
+ * are the web's (`citations.ts`), unchanged.
+ */
+export async function citeNow(
+  target: RecordTarget,
+  style: CiteStyleId | 'source',
+): Promise<boolean> {
+  try {
+    const [record, version] = await Promise.all([
+      records.document(target.slug),
+      corpusVersion(),
+    ]);
+    const citation = citationsFor(record.data, {
+      origin: webOrigin,
+      corpusVersion: version,
+      accessed: accessedToday(),
+    }).find((entry) => entry.id === style);
+    if (!citation) return false;
+    const label =
+      citeStyles.find((entry) => entry.id === style)?.label ?? 'source';
+    const copied = await copyText(citation.text, `Copied ${label} citation`);
+    if (copied) {
+      haptic('success');
+      if (style !== 'source') rememberCiteStyle(style);
+    }
+    return copied;
+  } catch {
+    Alert.alert('Copy', 'This text could not be copied.');
+    return false;
+  }
+}
+
+/** The Cite items: one Copy per style, then Citation formats… */
+export function citeItems(target: RecordTarget): RowMenuLeaf[] {
+  const record = {
+    slug: target.slug,
+    title: target.title,
+    labels: target.kind ? { kind: target.kind } : undefined,
+  };
+  const styles = stylesFor(record);
   return [
-    { title: 'Cite', onPress: () => router.push(citeRoute(slug)) },
+    ...(styles.length
+      ? styles.map((style) => ({
+          title: `Copy ${style.label}`,
+          symbol: 'doc.on.doc' as const,
+          onPress: () => void citeNow(target, style.id),
+        }))
+      : [
+          {
+            title: 'Copy citation',
+            symbol: 'doc.on.doc' as const,
+            onPress: () => void citeNow(target, 'source'),
+          },
+        ]),
     {
-      title: 'Copy link',
+      title: 'Citation formats…',
+      symbol: 'list.bullet.rectangle' as const,
+      onPress: () => router.push(citeRoute(target.slug)),
+    },
+  ];
+}
+
+/**
+ * A record's secondary actions, in one place (records.md 2.2): Cite as an
+ * inline section (`displayInline`, so a citation is two taps from the
+ * page), Copy link and Open on opax.com.au. Share is the reading
+ * toolbar's, or the pane bar's. Opening the menu calls no API.
+ */
+export function recordActions(
+  target: RecordTarget,
+  _options: { embedded?: boolean } = {},
+): RowMenuAction[] {
+  if (!isRecordSlug(target.slug)) return [];
+  const path = `/doc/${target.slug}`;
+  return [
+    {
+      title: 'Cite',
+      symbol: 'quote.opening',
+      inline: true,
+      items: citeItems(target),
+    },
+    {
+      title: words.copyLink,
+      symbol: 'link',
       onPress: () => {
-        void copyText(canonicalUrl(`/doc/${slug}`)).then((copied) => {
+        void copyText(canonicalUrl(path), 'Copied link').then((copied) => {
           if (copied) haptic('success');
         });
       },
     },
     {
-      title: 'Share',
-      onPress: () => void shareRecord({ path: `/doc/${slug}`, title }),
+      title: words.openOnWeb,
+      symbol: 'arrow.up.right.square',
+      onPress: () =>
+        void openOnWeb(path, target.title, { preferNative: false }),
     },
   ];
 }
 
 /**
- * The reader's ⋯ in the navigation bar: a native pull-down menu on iOS, and
- * on Android (whose header draws buttons only) a button that opens the same
- * actions as a sheet.
+ * The reader's bar: one ⋯ titled by the record, nothing else. Android's
+ * header sheet has no inline sections, so its rows are the menu's leaves,
+ * plus the toolbar's actions (`extra`) at the end (records.md section 1).
  */
-export function recordMenuItem(target: RecordTarget): NativeStackHeaderItem {
-  const actions = recordActions(target);
-  if (Platform.OS === 'android')
-    return {
-      type: 'button',
-      label: 'More',
-      accessibilityLabel: 'More for this record',
-      onPress: () => showMenu(target.title, actions),
-    };
-  return {
-    type: 'menu',
-    label: 'More',
-    accessibilityLabel: 'More for this record',
-    icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
-    tintColor: chrome.tint,
-    menu: {
-      items: actions.map((action) => ({
-        type: 'action' as const,
-        label: action.title,
-        onPress: action.onPress,
-      })),
-    },
+export function recordBarItems(
+  target: RecordTarget,
+  extra: RowMenuLeaf[] = [],
+): () => NativeStackHeaderItem[] {
+  const items = recordActions(target);
+  const rows: RowMenuAction[] =
+    Platform.OS === 'android' ? [...menuLeaves(items), ...extra] : items;
+  return () => {
+    const menu = pageMenu({ name: 'this record', items: rows });
+    return menu.type === 'menu'
+      ? [{ ...menu, menu: { ...menu.menu, title: target.title } }]
+      : [menu];
   };
 }
 
-/** Menu payload for pageItems. No in-content More button. */
-export function recordPageActions(target: RecordTarget): RowMenuAction[] {
-  const [cite, copy] = recordActions(target);
-  if (!cite || !copy) return [];
-  return [
-    { title: '', inline: true, items: [cite] },
-    copy,
-    {
-      title: 'Open on opax.com.au',
-      symbol: 'arrow.up.right.square',
-      onPress: () => void openOnWeb(`/doc/${target.slug}`, target.title),
-    },
-  ];
-}
-/** @deprecated Screens install recordPageActions in their navigation bar. */
+/** @deprecated Use recordActions. */
+export const recordPageActions = (target: RecordTarget) =>
+  recordActions(target);
+/** @deprecated The pane's ⋯ is in its bar (`RecordShare`); nothing in content. */
 export function RecordActions(_props: RecordTarget & { testID?: string }) {
   return null;
+}
+
+/**
+ * A pane bar's menu (iPad split, records.md 2.3 and 4.3): the pane has no
+ * navigation bar to hold a native menu, so its ⋯ and Version open a sheet.
+ */
+export function showPaneMenu(title: string, actions: readonly MenuAction[]) {
+  showMenu(title, actions);
 }

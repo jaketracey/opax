@@ -1,144 +1,236 @@
-import { headerItems } from '../../navigation/chrome';
 import { useCallback, useEffect, useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { rhythm } from '../../design/tokens';
+import { StyleSheet, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { webOrigin } from '../../design/environment';
-import { catalogs } from '../../api/runtime';
 import {
   Button,
-  Group,
-  Heading,
-  LoadingState,
+  InsetGroup,
   Screen,
-  Section,
+  SegmentedPicker,
   Text,
+  useAccessibilitySize,
 } from '../../design/primitives';
-import { shareHeaderItem } from '../../navigation/share';
+import { haptic } from '../../design/haptics';
+import { colors, radii, rhythm } from '../../design/tokens';
 import { records } from './runtime';
 import { citationsFor } from './citations';
+import {
+  citeNotes,
+  rememberCiteStyle,
+  sourceStyle,
+  stylesFor,
+  useCiteStyle,
+  type CiteStyleId,
+} from './citeStyle';
 import { copyText, shareTextFile } from './actions';
+import { accessedToday, corpusVersion } from './RecordActions';
+import { metaLine, recordHeadline } from './model';
 import { useRead } from './useRead';
 import { RecordLoadError } from './RecordLoadError';
-function localISODate() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
+
+/** How long "Copied" stays on the button before it says "Copy" again. */
+const COPIED_FOR = 2000;
+
+/**
+ * Citation formats (records.md 3): a route sheet for reading, comparing or
+ * sharing one record's citation. The sheet's bar says "Citation formats" and
+ * Done; the content is the record's title, one style picker, the citation,
+ * and one Copy and one Share. The formats are the web's (`citations.ts`).
+ */
 export default function Citations() {
   const { slug = '' } = useLocalSearchParams<{ slug: string }>();
   const load = useCallback(() => records.document(slug), [slug]);
   const { value, error, retry } = useRead(load);
   const [version, setVersion] = useState('unversioned');
-  const [accessed] = useState(localISODate);
+  const [accessed] = useState(accessedToday);
   const [copied, setCopied] = useState<string | null>(null);
+  const doc = value?.data ?? null;
+  const style = useCiteStyle(doc);
+  const large = useAccessibilitySize();
   useEffect(() => {
     let active = true;
-    void catalogs
-      .corpus()
-      .then((record) => {
-        if (active) setVersion(record.data.version || 'unversioned');
-      })
-      .catch(() => {});
+    void corpusVersion().then((read) => {
+      if (active) setVersion(read);
+    });
     return () => {
       active = false;
     };
   }, []);
-  const doc = value?.data;
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(null), COPIED_FOR);
+    return () => clearTimeout(timer);
+  }, [copied]);
+  const styles = doc ? stylesFor(doc) : [];
+  const shownId: CiteStyleId | 'source' = styles.length ? style : 'source';
+  const label =
+    styles.find((entry) => entry.id === shownId)?.label ?? sourceStyle.label;
+  const citation = doc
+    ? citationsFor(doc, {
+        origin: webOrigin,
+        corpusVersion: version,
+        accessed,
+      }).find((entry) => entry.id === shownId)
+    : undefined;
+  const note = citeNotes[shownId];
+  const done = copied === shownId;
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: 'Cite',
-          ...headerItems(
-            doc
-              ? () => [
-                  shareHeaderItem({
-                    path: `/doc/${doc.slug}`,
-                    title: doc.title,
-                  }),
-                ]
-              : undefined,
-          ),
-        }}
-      />
-      <Screen testID="doc-citations">
-        {error ? (
-          <RecordLoadError error={error} slug={slug} onRetry={retry} />
-        ) : !doc ? (
-          <LoadingState label="Loading citations" />
-        ) : (
-          <>
-            <Group gap={rhythm.tight}>
-              <Heading level={1}>Cite this record</Heading>
-              <Text variant="metadata" wordSafe>
-                {doc.title}
-              </Text>
-            </Group>
-            {citationsFor(doc, {
-              origin: webOrigin,
-              corpusVersion: version,
-              accessed,
-            }).map((citation) => (
-              <Section
-                key={citation.id}
-                title={citation.label}
-                accent="bills"
-                testID={`cite-${citation.id}`}
-              >
-                <Group gap={rhythm.tight}>
-                  <Text selectable testID={`cite-text-${citation.id}`}>
-                    {citation.text}
-                  </Text>
-                  {/* The style's one caveat, inline, not behind an ⓘ. */}
-                  {citation.note ? (
-                    <Text
-                      variant="fine"
-                      wordSafe
-                      testID={`cite-note-${citation.id}`}
-                    >
-                      {citation.note}
-                    </Text>
-                  ) : null}
-                  <Group
-                    gap={rhythm.tight}
-                    style={{ flexDirection: 'row', flexWrap: 'wrap' }}
+    <Screen grouped testID="doc-citations">
+      {error ? (
+        <RecordLoadError error={error} slug={slug} onRetry={retry} />
+      ) : !doc || !citation ? (
+        <CitationSkeleton />
+      ) : (
+        <>
+          <View style={sheet.header}>
+            <Text
+              wordSafe
+              variant="recordHeading"
+              accessibilityRole="header"
+              testID="cite-title"
+            >
+              {recordHeadline(doc)}
+            </Text>
+            <Text wordSafe variant="secondary" tone="inkSoft">
+              {metaLine(doc)}
+            </Text>
+          </View>
+          <View style={sheet.body}>
+            {styles.length ? (
+              <SegmentedPicker
+                accessibilityLabel="Style"
+                options={styles.map((entry) => ({
+                  value: entry.id,
+                  label: entry.label,
+                  testID: `cite-style-${entry.id}`,
+                }))}
+                value={style}
+                onChange={(next) => {
+                  haptic('selection');
+                  setCopied(null);
+                  rememberCiteStyle(next);
+                }}
+                testID="cite-style"
+              />
+            ) : null}
+            <InsetGroup
+              header={styles.length ? undefined : sourceStyle.label}
+              footer={
+                note ? (
+                  <Text
+                    wordSafe
+                    variant="footnote"
+                    tone="inkSoft"
+                    testID={`cite-note-${shownId}`}
                   >
-                    <Button
-                      variant="quiet"
-                      size="compact"
-                      icon="doc.on.doc"
-                      label={
-                        copied === citation.id
-                          ? `Copied ${citation.label}`
-                          : `Copy ${citation.label}`
-                      }
-                      testID={`cite-copy-${citation.id}`}
-                      onPress={() => {
-                        void copyText(citation.text).then((ok) => {
-                          if (ok) setCopied(citation.id);
-                        });
-                      }}
-                    />
-                    <Button
-                      variant="quiet"
-                      size="compact"
-                      icon="square.and.arrow.up"
-                      label={`Share ${citation.label}`}
-                      accessibilityHint="Shares the citation as a text file"
-                      testID={`cite-share-${citation.id}`}
-                      onPress={() => {
-                        void shareTextFile(
-                          citation.text,
-                          `opax-${doc.slug}-${citation.id}.${citation.extension}`,
-                        );
-                      }}
-                    />
-                  </Group>
-                </Group>
-              </Section>
-            ))}
-          </>
-        )}
-      </Screen>
-    </>
+                    {note}
+                  </Text>
+                ) : undefined
+              }
+              testID={`cite-${shownId}`}
+            >
+              <View style={sheet.cell}>
+                <Text selectable variant="body" testID={`cite-text-${shownId}`}>
+                  {citation.text}
+                </Text>
+              </View>
+            </InsetGroup>
+            <View style={[sheet.actions, large ? sheet.stacked : null]}>
+              <Button
+                variant="primary"
+                icon={done ? 'checkmark' : 'doc.on.doc'}
+                label={done ? 'Copied' : 'Copy'}
+                accessibilityLabel={done ? `Copied ${label}` : `Copy ${label}`}
+                fullWidth={large}
+                onPress={() => {
+                  void copyText(citation.text, `Copied ${label}`).then((ok) => {
+                    if (!ok) return;
+                    haptic('success');
+                    setCopied(shownId);
+                    if (shownId !== 'source') rememberCiteStyle(shownId);
+                  });
+                }}
+                testID={`cite-copy-${shownId}`}
+              />
+              <Button
+                variant="secondary"
+                icon="square.and.arrow.up"
+                label="Share"
+                accessibilityLabel={`Share ${label}`}
+                accessibilityHint="Shares the citation as a file"
+                fullWidth={large}
+                onPress={() => {
+                  void shareTextFile(
+                    citation.text,
+                    `opax-${doc.slug}-${citation.id}.${citation.extension}`,
+                  );
+                }}
+                testID={`cite-share-${shownId}`}
+              />
+            </View>
+          </View>
+        </>
+      )}
+    </Screen>
   );
 }
+
+/** The sheet's final shape while the record loads (records.md 3.3). */
+function CitationSkeleton() {
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Loading citations"
+      accessibilityState={{ busy: true }}
+      testID="cite-loading"
+      style={sheet.body}
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={sheet.body}
+      >
+        <View style={sheet.header}>
+          <View style={[sheet.bar, { width: '100%', height: 24 }]} />
+          <View style={[sheet.bar, { width: '70%', height: 24 }]} />
+          <View style={[sheet.bar, { width: '50%', height: 16 }]} />
+        </View>
+        <View style={[sheet.bar, { width: '100%', height: 32 }]} />
+        <View style={[sheet.cell, sheet.group]}>
+          {[0, 1, 2, 3].map((index) => (
+            <View
+              key={index}
+              style={[
+                sheet.bar,
+                sheet.onRaised,
+                { width: index === 3 ? '60%' : '100%', height: 18 },
+              ]}
+            />
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const sheet = StyleSheet.create({
+  header: { gap: rhythm.line },
+  body: { gap: rhythm.block },
+  cell: { paddingVertical: rhythm.row, gap: rhythm.tight },
+  // InsetGroup's shape: its container corners and 16 pt text inset.
+  group: {
+    backgroundColor: colors.raised,
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+    paddingHorizontal: rhythm.block,
+  },
+  actions: { flexDirection: 'row', gap: rhythm.tight, flexWrap: 'wrap' },
+  stacked: { flexDirection: 'column' },
+  bar: {
+    borderRadius: 4,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
+  onRaised: { backgroundColor: colors.sunken },
+});

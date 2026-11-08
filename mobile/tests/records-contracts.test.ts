@@ -178,7 +178,9 @@ test('virtualized slices retain long sentences, whitespace, Unicode and the fina
   const chunks = textChunks(text, 100);
   expect(chunks.join('')).toBe(text);
   expect(chunks.at(-1)).toContain('Final sentence.');
-  expect(chunks[0]).toContain('ends here.');
+  // A paragraph ends a slice; the long sentence stays whole in the next.
+  expect(chunks[0]).toBe('One sentence.\n\n');
+  expect(chunks[1]).toContain('ends here.');
   expect(textChunks('x'.repeat(10000), 100)).toEqual(['x'.repeat(10000)]);
 });
 test.each([

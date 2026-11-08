@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import {
+  Button,
   EmptyState,
   ErrorState,
   Group,
@@ -9,8 +11,12 @@ import {
   RowList,
   Screen,
   errorMessage,
+  menuLeaves,
 } from '../../design/primitives';
-import { shareRecord } from '../../navigation/share';
+import { canShare, shareRecord } from '../../navigation/share';
+import { recordActions, showPaneMenu } from '../records/RecordActions';
+import { useBillTextPane } from '../records/billTextPane';
+import { recordHeadline } from '../records/model';
 import BillDetail from '../bills/BillDetail';
 import { ElectorateScreen } from '../Electorate';
 import { PartyPage } from '../Party';
@@ -121,6 +127,8 @@ function ResolvedPerson({ entry }: { entry: RecordEntry }) {
 
 /** The pane bar's Share, for records whose page is known from the entry. */
 export function RecordShare({ entry }: { entry: RecordEntry }) {
+  if (entry.kind === 'doc') return <DocPaneBar entry={entry} />;
+  if (entry.kind === 'text') return <BillTextPaneBar billKey={entry.key} />;
   const path = sharePath(entry);
   if (!path) return null;
   return (
@@ -134,3 +142,101 @@ export function RecordShare({ entry }: { entry: RecordEntry }) {
     />
   );
 }
+
+/** A record's pane bar: ⋯ (Cite, Copy link, the web page) and Share. */
+function DocPaneBar({ entry }: { entry: RecordEntry }) {
+  // The menu title, Share title and citation target use the cleaned
+  // headline, never a stored title with dashes or ISO dates (records.md 2.2).
+  const target = {
+    slug: entry.key,
+    title: entry.title
+      ? recordHeadline({ slug: entry.key, title: entry.title })
+      : 'This record',
+  };
+  return (
+    <View style={styles.bar}>
+      <IconButton
+        symbol="ellipsis.circle"
+        accessibilityLabel="More for this record"
+        testID="doc-actions"
+        onPress={() =>
+          showPaneMenu(target.title, menuLeaves(recordActions(target)))
+        }
+      />
+      {canShare ? (
+        <IconButton
+          symbol="square.and.arrow.up"
+          accessibilityLabel="Share"
+          testID="record-pane-share"
+          onPress={() =>
+            void shareRecord({ path: `/doc/${entry.key}`, title: target.title })
+          }
+        />
+      ) : null}
+    </View>
+  );
+}
+
+/**
+ * The bill text's pane bar (records.md 4.3): the iPhone bar's Version menu,
+ * Contents and ⋯, beside Share. The embedded reader publishes the items.
+ * Exported for the Bills split's pane bar.
+ */
+export function BillTextPaneBar({ billKey }: { billKey: string }) {
+  const items = useBillTextPane(billKey);
+  if (!items) return null;
+  return (
+    <View style={styles.bar}>
+      {items.version ? (
+        <Button
+          variant="plain"
+          label={items.version.label}
+          accessibilityLabel={items.version.accessibilityLabel}
+          trailingIcon="chevron.up.chevron.down"
+          testID="bill-text-version"
+          onPress={() =>
+            showPaneMenu(
+              'Version',
+              items.versions.map((version) => ({
+                title: `${version.current ? '✓ ' : ''}${version.label}`,
+                onPress: () => items.choose(version.id),
+              })),
+            )
+          }
+        />
+      ) : null}
+      {items.contents ? (
+        <IconButton
+          symbol="list.bullet"
+          accessibilityLabel="Contents"
+          testID="bill-text-contents"
+          onPress={items.contents}
+        />
+      ) : null}
+      <IconButton
+        symbol="ellipsis.circle"
+        accessibilityLabel="More for this bill text"
+        testID="bill-text-actions"
+        onPress={() => showPaneMenu(items.title, items.menu)}
+      />
+      {canShare ? (
+        <IconButton
+          symbol="square.and.arrow.up"
+          accessibilityLabel="Share"
+          testID="record-pane-share"
+          onPress={() =>
+            void shareRecord({
+              path: items.sharePath,
+              anchor: 'bill-full-text',
+              title: items.title,
+            })
+          }
+        />
+      ) : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  bar: { flexDirection: 'row', alignItems: 'center' },
+});

@@ -8,6 +8,11 @@ export const recordsPaths = [
     const document = /^(?:#)?\/doc\/([a-z0-9-]+)\/?$/.exec(path);
     if (document?.[1] && isRecordSlug(document[1]))
       return docRoute(document[1]);
+    // opax://doc-cite/<slug>: the record, then Citation formats over it, so
+    // Done lands on the record, cold or warm (records.md 3.2).
+    const cite = /^\/doc-cite\/([a-z0-9-]+)\/?$/.exec(path);
+    if (cite?.[1] && isRecordSlug(cite[1]))
+      return docRoute(cite[1], undefined, { cite: true });
     const text =
       /^\/bill\/(au-federal-[a-z0-9-]+)(?:\?text-version=([rs]\d+-[a-z0-9-]+))?#bill-full-text$/.exec(
         path,

@@ -24,24 +24,19 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
       id: doc-title
     timeout: 20000
 - takeScreenshot: ${EVIDENCE}/32-reader-header
-# Cite, Copy link and Share live under the header's More (pass 5, P1-2).
+# The header's More holds the copy actions, Citation formats, Copy link,
+# Open on opax.com.au, Ask about this and Share (records.md 2.3).
 - assertNotVisible:
     id: doc-cite
 - tapOn:
     id: header-more
 - waitForAnimationToEnd
-- tapOn: Cite
+- tapOn: Citation formats…
 - extendedWaitUntil:
     visible:
       id: doc-citations
     timeout: 20000
-- scrollUntilVisible:
-    element:
-      id: cite-copy-bibtex
-    direction: DOWN
-    centerElement: true
-    speed: 70
-    timeout: 180000
+- tapOn: BibTeX
 - waitForAnimationToEnd
 - tapOn:
     id: cite-copy-bibtex
@@ -62,6 +57,17 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 180000
 - waitForAnimationToEnd:
     timeout: 5000
+# In short is closed until opened.
+- scrollUntilVisible:
+    element:
+      id: doc-brief
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: doc-brief
 - scrollUntilVisible:
     element:
       id: doc-brief-label
@@ -101,7 +107,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 - scrollUntilVisible:
     element:
       id: reader-text-0
-    direction: DOWN
+    direction: UP
     visibilityPercentage: 10
     speed: 70
     timeout: 180000
@@ -123,13 +129,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     visible:
       id: doc-citations
     timeout: 20000
-- scrollUntilVisible:
-    element:
-      id: cite-copy-bibtex
-    direction: DOWN
-    centerElement: true
-    speed: 70
-    timeout: 180000
+- tapOn: BibTeX
 - waitForAnimationToEnd
 - tapOn:
     id: cite-copy-bibtex

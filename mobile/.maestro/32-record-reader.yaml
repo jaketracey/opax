@@ -23,38 +23,45 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     visible:
       id: doc-title
     timeout: 20000
+# The text starts on the first screen, under the header (records.md 2.2).
+- assertVisible:
+    id: reader-text-0
 - takeScreenshot: ${EVIDENCE}/32-reader-header
-# Cite, Copy link and Share live under the navigation bar's ⋯ (pass 5, P1-2).
+# The bar holds ⋯ only: Cite, Copy link and Open on opax.com.au. Ask about
+# this and Share are the bottom toolbar.
 - assertNotVisible:
     id: doc-cite
 - tapOn: More for this record
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/32-reader-more
-- tapOn: Cite
-# Citation formats opens at its large detent, with a medium detent retained
-# for manual resizing. Small scrolls keep copy actions clear of the bar.
+- tapOn: Citation formats…
+# Citation formats opens at its large detent; one style shows at a time.
 - extendedWaitUntil:
     visible:
       id: doc-citations
     timeout: 20000
-- scrollUntilVisible:
-    element:
-      id: cite-copy-bibtex
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 180000
+- tapOn: BibTeX
 - waitForAnimationToEnd
 - tapOn:
     id: cite-copy-bibtex
 - assertVisible: Copied BibTeX
 - takeScreenshot: ${EVIDENCE}/32-cite-bibtex
-- openLink: opax://doc/speech-1205524
+- tapOn: Done
 - extendedWaitUntil:
     visible:
       id: doc-title
     timeout: 20000
+# In short is closed until opened.
+- scrollUntilVisible:
+    element:
+      id: doc-brief
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: doc-brief
 - scrollUntilVisible:
     element:
       id: doc-brief-label
@@ -64,6 +71,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     speed: 20
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/32-machine-summary
+# The linked bill and similar speeches follow the text.
 - scrollUntilVisible:
     element:
       id: doc-bill-open
@@ -94,7 +102,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 - scrollUntilVisible:
     element:
       id: reader-text-0
-    direction: DOWN
+    direction: UP
     visibilityPercentage: 10
     speed: 70
     timeout: 180000
@@ -116,22 +124,27 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
       id: person-screen-title
     timeout: 20000
 - takeScreenshot: ${EVIDENCE}/32-linked-person
-# End on the copied citation so the locked native clipboard audit reads it
-# immediately, before unrelated host clipboard changes can replace it.
+# The Citation formats link from a cold start opens the record, then the
+# sheet over it; Done leaves the reader.
+- launchApp:
+    stopApp: true
+    permissions: {}
 - openLink: opax://doc-cite/speech-1205524
 - extendedWaitUntil:
     visible:
       id: doc-citations
     timeout: 20000
-- scrollUntilVisible:
-    element:
-      id: cite-copy-bibtex
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 180000
+- takeScreenshot: ${EVIDENCE}/32-cite-deep-link
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: doc-reader
+    timeout: 20000
+- assertVisible:
+    id: doc-title
+# End on the copied citation so the locked native clipboard audit reads it
+# immediately, before unrelated host clipboard changes can replace it. From
+# the reader it is two taps: ⋯, then Copy BibTeX.
+- tapOn: More for this record
 - waitForAnimationToEnd
-- tapOn:
-    id: cite-copy-bibtex
-- assertVisible: Copied BibTeX
+- tapOn: Copy BibTeX

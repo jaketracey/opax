@@ -1,5 +1,7 @@
 import {
   decodeEntities,
+  hasMarkdownHeadings,
+  markdownParts,
   passageText,
   serverPassage,
 } from '../src/api/passage-text';
@@ -223,4 +225,16 @@ describe('passage text', () => {
     );
     expect(isVerbatimText(doc('press-1', 'bill_text'))).toBe(true);
   });
+});
+
+test('Markdown headings become part titles; quote and bold markers go', () => {
+  const text =
+    'Preamble line.\n\n## Question\n> **That the bill be read a second time.**\n\n### Result\nAyes 11, noes 24.';
+  expect(hasMarkdownHeadings(text)).toBe(true);
+  expect(hasMarkdownHeadings('No #hashtag heading here.')).toBe(false);
+  expect(markdownParts(text)).toEqual([
+    { text: 'Preamble line.' },
+    { title: 'Question', text: 'That the bill be read a second time.' },
+    { title: 'Result', text: 'Ayes 11, noes 24.' },
+  ]);
 });

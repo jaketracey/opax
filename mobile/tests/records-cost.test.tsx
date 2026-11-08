@@ -65,27 +65,37 @@ jest.mock('../src/features/follows/FollowToggle', () => ({
 jest.mock('../src/features/follows/FollowingSection', () => ({
   FollowingSection: () => null,
 }));
-jest.mock('expo-router', () => ({
-  useSegments: () => [],
-  router: { push: jest.fn() },
-  Stack: {
-    Screen: () => null,
-    Toolbar: Object.assign(() => null, {
-      Button: () => null,
-      Spacer: () => null,
+let mockOptions: Record<string, unknown> = {};
+jest.mock('expo-router', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  const part = (name: string) => (props: { children?: React.ReactNode }) =>
+    createElement(name, props, props.children);
+  return {
+    useSegments: () => [],
+    router: { push: jest.fn(), setParams: jest.fn() },
+    Link: Object.assign(part('Link'), {
+      Trigger: part('LinkTrigger'),
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
     }),
-  },
-  Link: Object.assign(({ children }: { children?: unknown }) => children, {
-    Trigger: ({ children }: { children?: unknown }) => children,
-    Preview: () => null,
-    Menu: () => null,
-    MenuAction: () => null,
-  }),
-  useLocalSearchParams: () => ({
-    slug: 'speech-1205524',
-    key: 'au-federal-r7534',
-  }),
-}));
+    Stack: {
+      Screen: ({ options }: { options?: Record<string, unknown> }) => {
+        if (options) mockOptions = options;
+        return null;
+      },
+      Toolbar: Object.assign(part('Toolbar'), {
+        Button: part('ToolbarButton'),
+        Spacer: () => null,
+        View: part('ToolbarView'),
+      }),
+    },
+    useLocalSearchParams: () => ({
+      slug: 'speech-1205524',
+      key: 'au-federal-r7534',
+    }),
+  };
+});
 async function mount(component: React.ReactElement) {
   let view!: TestRenderer.ReactTestRenderer;
   await act(async () => {
@@ -226,59 +236,53 @@ test('opening recent calls recent once and does not fan out a resource read per 
 test('bill text switches chosen bytes and never presents the old version as the new one', async () => {
   const view = await mount(<BillTextReader />);
   expect(records.billManifest).toHaveBeenCalledTimes(1);
-  expect(records.billVersion).not.toHaveBeenCalled();
-  await act(async () =>
-    view.root.findByProps({ testID: 'bill-text-read' }).props.onPress(),
-  );
+  // The default version loads on open (records.md 4.4).
   expect(records.billVersion).toHaveBeenCalledTimes(1);
-  await act(async () =>
-    view.root
-      .findByProps({ testID: 'bill-text-version-picker' })
-      .props.onToggle(true),
-  );
-  await act(async () =>
-    view.root.findByProps({ testID: 'bill-text-version-1' }).props.onPress(),
-  );
+  const version = (
+    mockOptions.unstable_headerRightItems as () => {
+      menu?: { items: { onPress: () => void }[] };
+    }[]
+  )()[0]!;
+  await act(async () => version.menu!.items[1]!.onPress());
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
   );
   expect(records.billVersion).toHaveBeenCalledTimes(2);
   expect(
-    view.root.findByProps({ testID: 'bill-text-version-label' }).props.children,
-  ).toBe('First reading — synthetic fixture');
+    view.root.findByProps({ testID: 'bill-text-stage' }).props.children,
+  ).toBe('First reading: synthetic fixture');
   await act(async () => view.unmount());
 });
 test('bill text leads with the bill page summary, labelled as machine-written', async () => {
   const bill = decodeBill(pinned('/bills/au-federal-r7534.json'));
   const view = await mount(<BillTextReader />);
-  // Only the pill shows; its note holds the stored attribution.
-  const label = view.root
+  // Only the pill shows; its sheet holds the stored attribution.
+  const pill = view.root
     .findAllByProps({ testID: 'bill-text-summary-label' })
-    .find((node) => node.props.accessibilityLabel)?.props.accessibilityLabel;
-  expect(label).toBe('Machine-written');
-  // The stored attribution is in the pill's note.
-  const note = view.root
-    .findAllByProps({ testID: 'bill-text-summary-label' })
-    .find((node) => node.props.note)!.props.note as { body: string[] };
-  expect(note.body.join(' ')).toContain(
-    bill.summary!.attribution.replace(/\.$/, ''),
-  );
+    .find((node) => node.props.note);
+  expect(pill!.props.note.body).toContain(bill.summary!.attribution);
+  // VoiceOver hears the pill as plain "Machine-written".
+  expect(
+    view.root
+      .findAllByProps({ testID: 'bill-text-summary-label' })
+      .find((node) => node.props.accessibilityLabel)?.props.accessibilityLabel,
+  ).toBe('Machine-written');
   expect(
     view.root
       .findByProps({ testID: 'bill-text-summary-text' })
       .findAllByType(Text)
       .map((node) => node.props.children),
-  ).toEqual(bill.summary!.sentences);
+  ).toEqual(bill.summary!.sentences.slice(0, 3));
   // The summary sits above the version and the reading action.
   const order = view.root
     .findAll((node) => typeof node.props.testID === 'string')
     .map((node) => node.props.testID as string);
-  expect(order.indexOf('bill-text-summary')).toBeLessThan(
-    order.indexOf('bill-text-version'),
+  expect(order.indexOf('bill-text-stage')).toBeLessThan(
+    order.indexOf('bill-text-summary'),
   );
-  expect(order.indexOf('bill-text-version')).toBeLessThan(
-    order.indexOf('bill-text-read'),
+  expect(order.indexOf('bill-text-summary')).toBeLessThan(
+    order.indexOf('reader-text-0'),
   );
   await act(async () => view.unmount());
 });
@@ -312,10 +316,10 @@ test.each([
       view.root.findAllByProps({ testID: 'bill-summary-none' }),
     ).toHaveLength(0);
     expect(
-      view.root.findAllByProps({ testID: 'bill-text-read' }).length,
+      view.root.findAllByProps({ testID: 'reader-text-0' }).length,
     ).toBeGreaterThan(0);
     expect(
-      view.root.findAllByProps({ testID: 'bill-text-version-picker' }).length,
+      view.root.findAllByProps({ testID: 'bill-text-stage' }).length,
     ).toBeGreaterThan(0);
     await act(async () => view.unmount());
   },

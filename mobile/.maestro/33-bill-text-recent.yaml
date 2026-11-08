@@ -25,17 +25,22 @@ name: 33 Bill text versions, source navigation, Just added and native records
     visible:
       id: bill-text-reader
     timeout: 20000
+# The default version's text opens at once, under the header.
+- extendedWaitUntil:
+    visible:
+      id: reader-text-0
+    timeout: 20000
 - takeScreenshot: ${EVIDENCE}/33-bill-text
 - scrollUntilVisible:
     element:
-      id: bill-text-read
+      id: bill-text-overview
     direction: DOWN
     centerElement: true
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
 - tapOn:
-    id: bill-text-read
+    id: bill-text-overview
 - scrollUntilVisible:
     element:
       id: bill-text-overview-label
@@ -44,66 +49,35 @@ name: 33 Bill text versions, source navigation, Just added and native records
     speed: 20
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/33-overview
-- scrollUntilVisible:
-    element:
-      id: bill-text-download
-    direction: DOWN
-    centerElement: true
-    speed: 70
-    timeout: 180000
+# Share as text file is in the bar's ⋯.
+- tapOn: More for this bill text
 - waitForAnimationToEnd
-- tapOn:
-    id: bill-text-download
+- tapOn: Share as text file
 - assertVisible: 'Share file: au-federal-r7534-r7534-aspassed.txt'
 - takeScreenshot: ${EVIDENCE}/33-text-file
 - tapOn: OK
-- scrollUntilVisible:
-    element:
-      id: bill-text-version-picker
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 180000
+# The version is a bar menu labelled with the current short stage.
+- tapOn: As passed
 - waitForAnimationToEnd
-- tapOn:
-    id: bill-text-version-picker
-- scrollUntilVisible:
-    element:
-      id: bill-text-version-1
-    direction: DOWN
-    centerElement: true
-    speed: 20
-    timeout: 180000
 - takeScreenshot: ${EVIDENCE}/33-version-picker
-- waitForAnimationToEnd
-- tapOn:
-    id: bill-text-version-1
+- tapOn: 'First reading: synthetic fixture, 1 Oct 2026'
 - scrollUntilVisible:
     element:
-      id: bill-text-version-label
+      id: bill-text-stage
     direction: UP
     speed: 20
     timeout: 180000
-- assertVisible: First reading — synthetic fixture
+- assertVisible:
+    id: bill-text-stage
+    text: 'First reading: synthetic fixture'
 - takeScreenshot: ${EVIDENCE}/33-version-switched
-- scrollUntilVisible:
-    element:
-      id: bill-text-navigation
-    direction: DOWN
-    centerElement: true
-    speed: 70
-    timeout: 180000
-- waitForAnimationToEnd
-- tapOn:
-    id: bill-text-navigation
-- scrollUntilVisible:
-    element:
-      id: bill-text-section-1
-    direction: DOWN
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- waitForAnimationToEnd
+# Contents hands the chosen section back to the reader; the same choice
+# twice still scrolls.
+- tapOn: Contents
+- extendedWaitUntil:
+    visible:
+      id: bill-text-contents-screen
+    timeout: 20000
 - tapOn:
     id: bill-text-section-1
 - extendedWaitUntil:
@@ -111,6 +85,19 @@ name: 33 Bill text versions, source navigation, Just added and native records
       id: reader-part-title-1
     timeout: 20000
 - takeScreenshot: ${EVIDENCE}/33-text-navigation
+- scroll
+- scroll
+- tapOn: Contents
+- extendedWaitUntil:
+    visible:
+      id: bill-text-contents-screen
+    timeout: 20000
+- tapOn:
+    id: bill-text-section-1
+- extendedWaitUntil:
+    visible:
+      id: reader-part-title-1
+    timeout: 20000
 - tapOn:
     id: tab-today
 - scrollUntilVisible:
