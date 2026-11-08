@@ -30,20 +30,18 @@ jest.mock('expo-router', () => ({
       Spacer: () => null,
     }),
   },
-  Link: Object.assign(
-    ({ children }: { children?: unknown }) => children,
-    {
-      Trigger: ({ children }: { children?: unknown }) => children,
-      Preview: () => null,
-      Menu: () => null,
-      MenuAction: () => null,
-    },
-  ),
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
 }));
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     bills: jest.fn(),
     billFor: jest.fn(),
+    billIndexRow: () => null,
     roster: jest.fn(),
     slugs: jest.fn(),
   },

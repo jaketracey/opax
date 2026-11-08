@@ -18,10 +18,12 @@ import {
   StyleSheet,
   View,
   findNodeHandle,
+  type DimensionValue,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
+  billDisplay,
   billName,
   billSentenceCase,
   billSourceLabel,
@@ -67,7 +69,14 @@ import {
   useAccessibilitySize,
   type SourceOriginal,
 } from '../../design/primitives';
-import { chrome, colors, minimumTarget, rhythm } from '../../design/tokens';
+import {
+  chrome,
+  colors,
+  minimumTarget,
+  radii,
+  rhythm,
+  textStyles,
+} from '../../design/tokens';
 import { canonicalUrl, openSource } from '../../navigation/external';
 import { canShare, shareRecord } from '../../navigation/share';
 import { resultsRoute } from '../../navigation/routes/search';
@@ -223,6 +232,10 @@ export default function BillDetail({
   const name = identity
     ? billName({ title: identity.title, short_title: identity.shortTitle })
     : '';
+  // Arrived from a list, Today, Search or Following: the index row is in
+  // memory, and the header draws from it while the bill's file loads.
+  const seed: IndexRow | null = view ? null : catalogs.billIndexRow(key);
+  const title = name || (seed ? billName(seed) : '') || params.name || '';
   // A key the register could never name, or one it does not publish. A file
   // that arrives but cannot be read is an error, not a missing bill.
   const notFound =
@@ -265,7 +278,7 @@ export default function BillDetail({
   const follow = useBillChanges(identity?.key ?? null);
 
   const openAsk = useOpenAsk();
-  const ask = () => openAsk(scopedQuestion('bill', name));
+  const ask = () => openAsk(scopedQuestion('bill', title));
   const share = () =>
     void shareRecord({ path: `/bill/${key}`, title: name || 'Bill' });
   const menu = identity
@@ -298,16 +311,24 @@ export default function BillDetail({
           options={{
             // The back label for the next screen; the bar title appears by
             // scroll once the H1 passes under the bar.
-            title: name || params.name || 'Bill',
+            title: title || 'Bill',
+            // ⋯ is drawn from the start, and works once the bill loads.
             ...headerItems(
-              identity ? () => [pageMenu({ name, items: menu })] : undefined,
+              notFound || (error && !record)
+                ? undefined
+                : () => [
+                    {
+                      ...pageMenu({ name: title || 'Bill', items: menu }),
+                      disabled: !identity,
+                    },
+                  ],
             ),
           }}
         />
       )}
       <Screen
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
-        barTitle={embedded ? undefined : name || undefined}
+        barTitle={embedded ? undefined : title || undefined}
         scrollRef={scroll}
         onScroll={(y) => {
           offset.current = y;
@@ -352,12 +373,22 @@ export default function BillDetail({
             testID="bill-error"
           />
         ) : !view ? (
-          <Skeleton
-            shape="text"
-            count={5}
-            label="Loading the bill"
-            testID="bill-loading"
-          />
+          seed ? (
+            <>
+              <SeededHead row={seed} />
+              <View
+                accessible
+                accessibilityRole="progressbar"
+                accessibilityLabel="Loading the bill"
+                accessibilityState={{ busy: true }}
+                testID="bill-loading"
+              >
+                <BodySkeleton />
+              </View>
+            </>
+          ) : (
+            <ColdSkeleton />
+          )
         ) : null}
         {view && identity && record ? (
           <BillPage
@@ -386,8 +417,13 @@ export default function BillDetail({
           />
         ) : null}
       </Screen>
-      {embedded || notFound || !identity ? null : (
-        <BillToolbar onAsk={ask} onShare={share} />
+      {embedded || notFound || (error && !record) ? null : (
+        <BillToolbar
+          onAsk={ask}
+          onShare={share}
+          canAsk={!!title}
+          canShare={!!identity}
+        />
       )}
     </>
   );
@@ -439,20 +475,37 @@ export function PaneMenu({
   );
 }
 
-/** The bottom toolbar: Ask about this bill and Share, never more. */
+/**
+ * The bottom toolbar: Ask about this bill and Share, never more. Ask works
+ * once the title is known; Share once the bill itself has loaded.
+ */
 function BillToolbar({
   onAsk,
   onShare,
+  canAsk,
+  canShare: shareReady,
 }: {
   onAsk: () => void;
   onShare: () => void;
+  canAsk: boolean;
+  canShare: boolean;
 }) {
   if (Platform.OS !== 'ios')
     return (
       <SafeAreaView edges={['bottom']} style={styles.toolbar}>
-        <Button label="Ask about this bill" onPress={onAsk} testID="bill-ask" />
+        <Button
+          label="Ask about this bill"
+          onPress={onAsk}
+          disabled={!canAsk}
+          testID="bill-ask"
+        />
         {canShare ? (
-          <Button label="Share" onPress={onShare} testID="bill-share" />
+          <Button
+            label="Share"
+            onPress={onShare}
+            disabled={!shareReady}
+            testID="bill-share"
+          />
         ) : null}
       </SafeAreaView>
     );
@@ -461,6 +514,7 @@ function BillToolbar({
       <Stack.Toolbar.Button
         icon="text.bubble"
         accessibilityLabel="Ask about this bill"
+        disabled={!canAsk}
         onPress={onAsk}
       >
         Ask about this bill
@@ -470,6 +524,7 @@ function BillToolbar({
         <Stack.Toolbar.Button
           icon="square.and.arrow.up"
           accessibilityLabel="Share"
+          disabled={!shareReady}
           onPress={onShare}
         >
           Share
@@ -673,16 +728,7 @@ function BillHead({
     originating_house: identity.house,
     key_dates: view.keyDates.data ?? [],
   });
-  const meta = identity.introduced
-    ? [
-        `${identity.introducedLabel} ${short(identity.introduced)}`,
-        identity.house ? chamberLabel(identity.house) : null,
-      ]
-        .filter(Boolean)
-        .join(' · ')
-    : draft
-      ? 'Exposure draft, not yet introduced'
-      : null;
+  const meta = metaLine(identity);
   const sources = view.identity.sources;
   const originals: SourceOriginal[] = sources.map((s) =>
     s.label === billSourceLabel('billhome')
@@ -693,7 +739,7 @@ function BillHead({
   return (
     <View style={styles.headBlock}>
       <View style={styles.titleBlock}>
-        <StatusLine identity={identity} event={event} />
+        <StatusLine status={identity.statusLabel} event={event} />
         <TitleAnchor>
           <Heading level={1} testID="bill-title">
             {identity.title}
@@ -738,28 +784,211 @@ function BillHead({
   );
 }
 
-/** "[Passed] Royal Assent 26 Aug 2026": the status and the event that dates it. */
+/**
+ * "[Passed] Royal Assent 26 Aug 2026": the status and the event that dates
+ * it. While the event is unresolved (`pending`) a date skeleton stands in:
+ * the status word is never drawn beside a bare date.
+ */
 function StatusLine({
-  identity,
+  status,
   event,
+  pending = false,
 }: {
-  identity: Identity;
+  status: string;
   event: ReturnType<typeof statusEvent>;
+  pending?: boolean;
 }) {
   const stacked = useAccessibilitySize();
   return (
     <View
       accessible
-      accessibilityLabel={`Status: ${identity.statusLabel}${event ? `. ${event.label}, ${formatDate(event.date)}` : ''}`}
+      accessibilityLabel={`Status: ${status}${event ? `. ${event.label}, ${formatDate(event.date)}` : ''}`}
       testID="bill-status"
       style={[styles.status, stacked ? styles.stacked : null]}
     >
-      <StatusCapsule status={identity.statusLabel} hidden />
+      <StatusCapsule status={status} hidden />
       {event ? (
         <Text variant="secondary" tabular wordSafe>
           {statusEventText(event)}
         </Text>
+      ) : pending ? (
+        <Bone width={120} height={15} />
       ) : null}
+    </View>
+  );
+}
+
+/** A skeleton bar in the `Skeleton` primitive's look. */
+function Bone({
+  width,
+  height,
+  round = false,
+}: {
+  width: DimensionValue;
+  height: number;
+  round?: boolean;
+}) {
+  return (
+    <View
+      style={[styles.bone, { width, height }, round ? styles.boneRound : null]}
+    />
+  );
+}
+
+type IndexRow = NonNullable<ReturnType<typeof catalogs.billIndexRow>> & {
+  status_stage?: string | null;
+};
+
+/** The meta line: "Introduced 17 Sep 2026 · House of Representatives". */
+function metaLine(bill: {
+  status: string;
+  introduced: string | null;
+  introducedLabel: string;
+  house: string | null;
+}) {
+  if (bill.introduced)
+    return [
+      `${bill.introducedLabel} ${short(bill.introduced)}`,
+      bill.house ? chamberLabel(bill.house) : null,
+    ]
+      .filter(Boolean)
+      .join(' · ');
+  return bill.status === 'exposure_draft'
+    ? 'Exposure draft, not yet introduced'
+    : null;
+}
+
+/**
+ * The header from the bills index row, drawn at once while the bill's own
+ * file loads (specs/bills.md 4.3): the same title in the same place, the
+ * sponsor's name without a portrait, and a live Follow. The status event
+ * waits for the key dates unless the row names its stage.
+ */
+function SeededHead({ row }: { row: IndexRow }) {
+  const display = billDisplay(row);
+  const name = billName(row);
+  const status = billSentenceCase(row.status) || 'Status not recorded';
+  const event = row.status_stage ? statusEvent(row) : null;
+  const meta = metaLine({
+    status: row.status,
+    introduced: row.introduced,
+    introducedLabel: display.introducedLabel,
+    house: row.originating_house,
+  });
+  const members = display.sponsorMembers;
+  return (
+    <View style={styles.headBlock} testID="bill-seed">
+      <View style={styles.titleBlock}>
+        <StatusLine
+          status={status}
+          event={event}
+          pending={!event && !!row.status_as_of}
+        />
+        <TitleAnchor>
+          <Heading level={1} testID="bill-title">
+            {row.title}
+          </Heading>
+        </TitleAnchor>
+        {row.short_title && row.short_title !== row.title ? (
+          <Text variant="secondary" wordSafe>
+            Known as the {row.short_title}
+          </Text>
+        ) : null}
+        {meta ? (
+          <Text variant="secondary" wordSafe testID="bill-introduced">
+            {meta}
+          </Text>
+        ) : null}
+      </View>
+      {members.length || display.sponsor_party ? (
+        <View
+          accessible
+          accessibilityLabel={`${members.map((m) => m.name).join(', ') || display.sponsor_party}, ${members.length > 1 ? 'Sponsors' : 'Sponsor'}`}
+          style={styles.seedSponsor}
+        >
+          <Text wordSafe>
+            {members.map((m) => m.name).join(', ') || display.sponsor_party}
+          </Text>
+          <Text variant="secondary" wordSafe>
+            {members.length > 1 ? 'Sponsors' : 'Sponsor'}
+          </Text>
+        </View>
+      ) : display.portfolio ? (
+        <Text variant="secondary" wordSafe testID="bill-portfolio">
+          {`${display.portfolio} portfolio`}
+        </Text>
+      ) : null}
+      <FollowButton
+        kind="bill"
+        id={row.key}
+        title={name}
+        testID="bill-follow"
+      />
+    </View>
+  );
+}
+
+/** In short and How it moved, in their final shapes, while they load. */
+function BodySkeleton() {
+  return (
+    <View style={styles.seedBody}>
+      <View style={styles.seedBlock}>
+        <Bone width="40%" height={22} />
+        <Bone width={96} height={20} round />
+        <Skeleton shape="text" count={4} label="Loading In short" />
+      </View>
+      <View style={styles.seedBlock}>
+        <Bone width="40%" height={22} />
+        <Bone width="100%" height={2} />
+        <Skeleton shape="rows" count={3} label="Loading How it moved" />
+      </View>
+    </View>
+  );
+}
+
+/**
+ * A cold load (a deep link or an Ask source): the whole page in the
+ * header's final shape, then In short. One element, "Loading the bill".
+ */
+function ColdSkeleton() {
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Loading the bill"
+      accessibilityState={{ busy: true }}
+      testID="bill-loading"
+      style={styles.headBlock}
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.headBlock}
+      >
+        <View style={styles.titleBlock}>
+          <View style={styles.status}>
+            <Bone width={72} height={24} round />
+            <Bone width={120} height={15} />
+          </View>
+          <Bone width="100%" height={textStyles.recordTitle.fontSize} />
+          <Bone width="100%" height={textStyles.recordTitle.fontSize} />
+          <Bone width="55%" height={textStyles.recordTitle.fontSize} />
+          <Bone width="70%" height={15} />
+        </View>
+        <View style={styles.seedPerson}>
+          <Bone width={44} height={44} round />
+          <View style={styles.seedPersonText}>
+            <Bone width="60%" height={17} />
+            <Bone width="35%" height={15} />
+          </View>
+        </View>
+        <Bone width={96} height={32} round />
+        <View style={styles.seedBlock}>
+          <Bone width="40%" height={22} />
+          <Bone width={96} height={20} round />
+          <Skeleton shape="text" count={4} label="Loading In short" />
+        </View>
+      </View>
     </View>
   );
 }
@@ -1715,6 +1944,17 @@ const styles = StyleSheet.create({
   },
   source: { marginTop: rhythm.tight },
   added: { marginTop: rhythm.tight },
+  bone: {
+    backgroundColor: colors.sunken,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+  },
+  boneRound: { borderRadius: radii.round },
+  seedSponsor: { gap: rhythm.tight },
+  seedBody: { gap: rhythm.group, marginTop: rhythm.group },
+  seedBlock: { gap: rhythm.line },
+  seedPerson: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
+  seedPersonText: { flex: 1, gap: rhythm.tight },
   textRow: {
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,

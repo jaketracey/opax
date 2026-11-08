@@ -44,7 +44,11 @@ jest.mock('expo-router', () => ({
   }),
 }));
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { billFor: jest.fn(), directory: jest.fn() },
+  catalogs: {
+    billFor: jest.fn(),
+    billIndexRow: () => null,
+    directory: jest.fn(),
+  },
 }));
 jest.mock('../src/features/follows/FollowToggle', () => ({
   FollowToggle: () => null,

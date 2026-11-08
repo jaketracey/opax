@@ -36,6 +36,7 @@ jest.mock('../src/api/runtime', () => ({
   catalogs: {
     bills: jest.fn(),
     billFor: jest.fn(),
+    billIndexRow: () => null,
     roster: jest.fn(),
     slugs: jest.fn(),
     directory: jest.fn(),

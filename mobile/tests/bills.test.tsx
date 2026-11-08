@@ -9,7 +9,7 @@ import { billTimeline } from '../src/api/bill-transforms';
 import * as d from '../src/api/catalogs';
 import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
-import { router } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { MachinePill } from '../src/design/labels';
 import { resultsRoute } from '../src/navigation/routes/search';
 import { StatusCapsule } from '../src/design/primitives';
@@ -64,7 +64,12 @@ jest.mock('expo-router', () => ({
   }),
 }));
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { billFor: jest.fn(), directory: jest.fn(), votes: jest.fn() },
+  catalogs: {
+    billFor: jest.fn(),
+    billIndexRow: jest.fn(),
+    directory: jest.fn(),
+    votes: jest.fn(),
+  },
 }));
 jest.mock('../src/features/follows/useFollowStates', () => ({
   useFollowStates: jest.fn(),
@@ -280,6 +285,29 @@ describe('reading a bill (4.10)', () => {
     // The index is read for next time, not waited on.
     expect(indexReads).toBe(1);
   });
+
+  test('the index row is read from memory only, never the network', async () => {
+    const paths: string[] = [];
+    const catalogs = new Catalogs({
+      get: async (path, decode) => {
+        paths.push(path);
+        return {
+          data: decode(pinned(path)),
+          stale: false,
+          savedAt: 1,
+          asOf: null,
+        };
+      },
+    });
+    expect(catalogs.billIndexRow('au-federal-r7534')).toBeNull();
+    expect(paths).toEqual([]);
+    await catalogs.bills();
+    expect(catalogs.billIndexRow('au-federal-r7534')?.title).toBe(
+      bills.bills.find((b) => b.key === 'au-federal-r7534')!.title,
+    );
+    expect(catalogs.billIndexRow('au-federal-r0000000')).toBeNull();
+    expect(paths).toEqual(['/bills/index.json']);
+  });
 });
 
 // The page over the pinned files.
@@ -323,6 +351,7 @@ beforeEach(() => {
     .mocked(runtime.billFor)
     .mockImplementation((key, refresh) => fixture.billFor(key, refresh));
   jest.mocked(runtime.directory).mockRejectedValue(new Error('not here'));
+  jest.mocked(runtime.billIndexRow).mockReturnValue(null);
   follows();
 });
 const mounted: TestRenderer.ReactTestRenderer[] = [];
@@ -337,6 +366,10 @@ async function render() {
   mounted.push(r);
   return r.root;
 }
+const texts = (node: ReactTestInstance): string[] =>
+  node.children.flatMap((child) =>
+    typeof child === 'string' ? [child] : texts(child),
+  );
 const host = (root: ReactTestInstance, testID: string) =>
   root.findAll(
     (node) => typeof node.type === 'string' && node.props.testID === testID,
@@ -363,6 +396,92 @@ const openAllStages = (root: ReactTestInstance) =>
       )
       .props.onPress(),
   );
+
+describe('loading a bill (4.3)', () => {
+  // The mocked toolbar draws nothing: read its buttons from its children.
+  const toolbar = (root: ReactTestInstance) =>
+    Object.fromEntries(
+      root
+        .findAll((node) => node.type === Stack.Toolbar)
+        .flatMap((node) =>
+          (
+            [node.props.children].flat(2) as {
+              type?: unknown;
+              props?: { accessibilityLabel?: string; disabled?: boolean };
+            }[]
+          ).filter((child) => child?.type === Stack.Toolbar.Button),
+        )
+        .map((child) => [
+          child.props!.accessibilityLabel!,
+          !!child.props!.disabled,
+        ]),
+    );
+  const statusText = (root: ReactTestInstance) => {
+    const status = host(root, 'bill-status')[0]!;
+    return {
+      label: status.props.accessibilityLabel as string,
+      text: status
+        .findAll((node) => typeof node.type === 'string')
+        .flatMap((node) => node.children)
+        .filter((child): child is string => typeof child === 'string')
+        .join(' '),
+    };
+  };
+
+  test('with the index read, the header draws from its row before the bill file arrives', async () => {
+    mockParams.key = 'au-federal-r7534';
+    const row = bills.bills.find((b) => b.key === mockParams.key)!;
+    jest.mocked(runtime.billIndexRow).mockReturnValue(row);
+    let arrive!: () => void;
+    jest.mocked(runtime.billFor).mockImplementation(
+      (key, refresh) =>
+        new Promise((resolve) => {
+          arrive = () => resolve(fixture.billFor(key, refresh));
+        }),
+    );
+    const root = await render();
+    // The title is the row's, in the page's own heading.
+    const title = host(root, 'bill-title');
+    expect(title).toHaveLength(1);
+    expect(texts(title[0]!).join('')).toBe(row.title);
+    // No event beside the status until the key dates resolve it.
+    expect(statusText(root).label).toBe('Status: Passed');
+    expect(statusText(root).text).not.toMatch(/\d{4}/);
+    expect(host(root, 'bill-follow-off')).toHaveLength(1);
+    expect(host(root, 'bill-loading')).toHaveLength(1);
+    // Ask works on the title alone; Share waits for the bill.
+    expect(toolbar(root)).toEqual({
+      'Ask about this bill': false,
+      Share: true,
+    });
+    await act(async () => arrive());
+    expect(host(root, 'bill-loading')).toHaveLength(0);
+    expect(host(root, 'bill-title')).toHaveLength(1);
+    expect(statusText(root).label).toBe(
+      'Status: Passed. Royal Assent, 26 August 2026',
+    );
+    expect(toolbar(root)).toEqual({
+      'Ask about this bill': false,
+      Share: false,
+    });
+  });
+
+  test('a cold load is one "Loading the bill" skeleton, with Ask and Share waiting', async () => {
+    jest
+      .mocked(runtime.billFor)
+      .mockImplementation(() => new Promise(() => undefined));
+    const root = await render();
+    const loading = host(root, 'bill-loading');
+    expect(loading).toHaveLength(1);
+    expect(loading[0]!.props.accessibilityLabel).toBe('Loading the bill');
+    expect(host(root, 'bill-title')).toHaveLength(0);
+    expect(host(root, 'bill-status')).toHaveLength(0);
+    expect(toolbar(root)).toEqual({
+      'Ask about this bill': true,
+      Share: true,
+    });
+  });
+});
 
 describe('the bill page', () => {
   test('?division= reveals the seventh vote, expanded, and nothing else', async () => {

@@ -456,6 +456,14 @@ export class Catalogs {
         return index;
       });
   }
+  /**
+   * The bill's row from the index already in memory, or null: never a
+   * network read. The bill page draws its header from it while the bill's
+   * own file loads (specs/bills.md 4.3).
+   */
+  billIndexRow(key: string): decode.Bill | null {
+    return this.billIndex?.data.bills.find((row) => row.key === key) ?? null;
+  }
   bill(key: string, refresh = false) {
     return this.client.get(
       `/bills/${billKey(key)}.json`,
@@ -655,10 +663,7 @@ export class Catalogs {
       this.client.get(path, decoder, refresh).catch(() => null);
     const metadata = optional('/parliamentarians.json', decode.decodeRoster);
     const [bills, declarations] = await Promise.all([
-      load(
-        this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
-        (data) => recentBillsFor(data, limit),
-      ),
+      load(this.bills(refresh), (data) => recentBillsFor(data, limit)),
       (async () => {
         const pending = this.client.get(
           '/interests/recent.json',
@@ -902,7 +907,7 @@ export class Catalogs {
           this.client
             .get('/parliamentarians.json', decode.decodeRoster, refresh)
             .catch(() => null),
-          this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
+          this.bills(refresh),
           this.client
             .get('/api/person-slugs', decode.decodeSlugs, refresh)
             .catch(() => null),
