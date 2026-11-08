@@ -37,6 +37,7 @@ import {
 } from '../src/features/explore/repository';
 import { decodeIndustryMoney } from '../src/features/reports/model';
 import { isExplorePaidPath } from '../src/features/explore/policy';
+import { isReportsPaidPath } from '../src/api/reports-policy';
 import { pinnedBytes } from './pinned';
 import { reportsFixture } from '../scripts/reports-fixture';
 
@@ -146,7 +147,10 @@ test('the matrix is one paid read per session, dated from the response', async (
   const [first] = await Promise.all([repository.matrix(), repository.matrix()]);
   expect(transport).toHaveBeenCalledTimes(1);
   expect(first.asOf).toBe('2026-11-02');
-  expect(isExplorePaidPath('/api/matrix')).toBe(true);
+  // A reports paid read: the fixture server answers Explore paid paths
+  // with the tide body, so the matrix must not be one of them.
+  expect(isExplorePaidPath('/api/matrix')).toBe(false);
+  expect(isReportsPaidPath('/api/matrix')).toBe(true);
   expect(() => assertAllowedPath('/api/matrix')).not.toThrow();
 });
 

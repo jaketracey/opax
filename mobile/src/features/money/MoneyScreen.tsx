@@ -1,3 +1,4 @@
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
   useCallback,
   useEffect,
@@ -284,14 +285,20 @@ export default function MoneyScreen() {
       ) : null}
     </View>
   );
+  // The bar title fades in by scroll with no width at rest, so the back
+  // button keeps its label (money-03), and truncates inside the bar items.
+  const barTitleRef = useRef<View>(null);
+  const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <GestureHandlerRootView style={styles.root}>
       <Stack.Screen options={options} />
       <Screen
         column="wide"
-        barTitle={title}
         testID="money-screen"
-        onScroll={(y) => plate.onScroll(y)}
+        onScroll={(y) => {
+          plate.onScroll(y);
+          barTitle.onScroll(y);
+        }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -301,9 +308,15 @@ export default function MoneyScreen() {
         }
       >
         <Group gap={rhythm.tight}>
-          <Heading level={1} kind="page" testID="money-title">
-            {title}
-          </Heading>
+          <View
+            ref={barTitleRef}
+            collapsable={false}
+            onLayout={barTitle.onTitleLayout}
+          >
+            <Heading level={1} kind="page" testID="money-title">
+              {title}
+            </Heading>
+          </View>
           <PopUpButton
             label="Jurisdiction"
             value={jurisdiction}

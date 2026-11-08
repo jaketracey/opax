@@ -21,6 +21,7 @@ import MoneyItem from '../src/features/money-public/MoneyItem';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow } from '../src/design/rows';
+import { Screen as PageScreen } from '../src/design/layout';
 import {
   decodeGrantIndex,
   decodeProgram,
@@ -168,6 +169,35 @@ test.each([
     expect(calls.every((path) => !path.startsWith('/api/'))).toBe(true);
     expect(rendered.toJSON()).not.toBeNull();
     if (loaded) expect(ids(rendered)).toContain(loaded);
+    await act(async () => rendered.unmount());
+  },
+);
+
+test.each([
+  ['Public money', Hub, {}, 'money-hub-title'],
+  ['Funding by seat type', FundingBySeatType, {}, 'seat-type-title'],
+  [
+    'Connection',
+    Connection,
+    () => ({ id: connectionId() }),
+    'connection-title',
+  ],
+] as const)(
+  '%s puts its title in the bar by scroll with the shared bar title, not a full-width one',
+  async (_name, Screen, params, heading) => {
+    Object.assign(mockParams, typeof params === 'function' ? params() : params);
+    const rendered = await mount(Screen as () => React.ReactElement);
+    // The layout's own title view keeps its full width while hidden, which
+    // left the back button a bare chevron (money-03 to 18).
+    const page = rendered.root.findAllByType(PageScreen)[0]!;
+    expect(page.props.barTitle).toBeUndefined();
+    expect(typeof page.props.onScroll).toBe('function');
+    let node = rendered.root.find(
+      (n) => n.props.testID === heading && typeof n.type === 'string',
+    ).parent;
+    while (node && typeof node.props.onLayout !== 'function')
+      node = node.parent;
+    expect(node).not.toBeNull();
     await act(async () => rendered.unmount());
   },
 );

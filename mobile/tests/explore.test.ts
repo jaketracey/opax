@@ -224,7 +224,13 @@ test.each(['/explore?game=ballot', '/explore/?game=ballot'])(
     expect(canonicalUrl(path)).not.toContain('game=ballot');
   },
 );
-test.each(['/reports', '/reports/housing', '/reports/housing/s/1'])(
+test.each(['/reports', '/reports/', '/report/housing'])(
+  'an old reports link opens the Explore hub: %s',
+  (path) => {
+    expect(fromWebPath(path)).toEqual({ pathname: '/explore' });
+  },
+);
+test.each(['/reports/housing', '/reports/housing/s/1'])(
   'a retired report has no native destination: %s',
   (path) => {
     expect(fromWebPath(path)).toBeNull();

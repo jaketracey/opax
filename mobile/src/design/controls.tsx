@@ -19,7 +19,6 @@ import {
   useWindowDimensions,
   type TextInputProps,
 } from 'react-native';
-import { Stack } from 'expo-router';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import {
@@ -629,7 +628,11 @@ export function SegmentedPicker<T extends string>({
   );
 }
 
-/** Bottom toolbar, with disabled ends that retain their place. */
+/**
+ * The month pager: a row in the content, with disabled ends that retain
+ * their place. Not a bottom `Stack.Toolbar`: iOS 26's floating tab bar
+ * stays up on pushed pages and covered it.
+ */
 export function MonthPager({
   month,
   previous,
@@ -639,46 +642,24 @@ export function MonthPager({
   previous: { label: string; onPress: () => void } | null;
   next: { label: string; onPress: () => void } | null;
 }) {
-  if (Platform.OS !== 'ios')
-    return (
-      <View style={styles.steps}>
-        <IconButton
-          symbol={symbols.previous}
-          accessibilityLabel={`Previous month${previous ? `, ${previous.label}` : ''}`}
-          disabled={!previous}
-          onPress={() => previous?.onPress()}
-        />
-        <Text variant="subsectionTitle" style={styles.shrink}>
-          {month}
-        </Text>
-        <IconButton
-          symbol={symbols.chevron}
-          accessibilityLabel={`Next month${next ? `, ${next.label}` : ''}`}
-          disabled={!next}
-          onPress={() => next?.onPress()}
-        />
-      </View>
-    );
   return (
-    <Stack.Toolbar placement="bottom">
-      <Stack.Toolbar.Button
-        icon={symbols.previous}
-        disabled={!previous}
+    <View style={styles.steps}>
+      <IconButton
+        symbol={symbols.previous}
         accessibilityLabel={`Previous month${previous ? `, ${previous.label}` : ''}`}
+        disabled={!previous}
         onPress={() => previous?.onPress()}
       />
-      <Stack.Toolbar.Spacer />
-      <Stack.Toolbar.View>
-        <Text variant="subsectionTitle">{month}</Text>
-      </Stack.Toolbar.View>
-      <Stack.Toolbar.Spacer />
-      <Stack.Toolbar.Button
-        icon={symbols.chevron}
-        disabled={!next}
+      <Text variant="subsectionTitle" style={styles.shrink}>
+        {month}
+      </Text>
+      <IconButton
+        symbol={symbols.chevron}
         accessibilityLabel={`Next month${next ? `, ${next.label}` : ''}`}
+        disabled={!next}
         onPress={() => next?.onPress()}
       />
-    </Stack.Toolbar>
+    </View>
   );
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- jest.mock factories build inert host elements. */
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image, Platform, Text as NativeText } from 'react-native';
+import { Image, Text as NativeText } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '../src/design/primitives';
 import {
@@ -290,14 +290,20 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
     ).length,
   ).toBeGreaterThan(0);
   expect(all).toContain('Glenn Sterle');
-  const buttons = renderer.root.findAll(
-    (n) => (n.type as unknown) === 'ToolbarButton',
+  // The pager is a step pair at the page's foot on every platform: iOS
+  // draws no bottom toolbar, which the floating tab bar would cover
+  // (explore-08).
+  expect(
+    renderer.root.findAll((n) => (n.type as unknown) === 'ToolbarButton'),
+  ).toHaveLength(0);
+  const step = (testID: string) =>
+    renderer.root.find(
+      (n) => n.props.testID === testID && typeof n.props.onPress === 'function',
+    );
+  expect(step('tm-previous').props.accessibilityLabel).toBe(
+    'Previous year, 2024',
   );
-  if (Platform.OS === 'ios')
-    expect(buttons.map((b) => b.props.accessibilityLabel)).toEqual([
-      'Previous year, 2024',
-      'Next year, 2026',
-    ]);
+  expect(step('tm-next').props.accessibilityLabel).toBe('Next year, 2026');
   const lines = renderer.root
     .findAll((n) =>
       ['tm-year-as-at', 'tm-voices-as-at'].includes(n.props.testID),

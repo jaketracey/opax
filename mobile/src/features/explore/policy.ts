@@ -1,10 +1,11 @@
-/** The Explore tools' paid reads: the tide by scope and the party matrix. */
+/**
+ * The Explore tools' own paid reads: the tide by scope. `/api/matrix` is a
+ * reports paid read (allowsReportsPath), not one of these: the fixture
+ * server answers every path here with the tide body, so listing the matrix
+ * here served it the tide and its decoder rejected it.
+ */
 export function isExplorePaidPath(path: string): boolean {
-  return (
-    path === '/api/tide?scope=federal' ||
-    path === '/api/tide?scope=all' ||
-    path === '/api/matrix'
-  );
+  return path === '/api/tide?scope=federal' || path === '/api/tide?scope=all';
 }
 export function isExploreStaticPath(path: string): boolean {
   return (

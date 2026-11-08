@@ -179,9 +179,16 @@ export default function BillTextReader({
     });
   }, [key, id, jump, navigation]);
   const titleRef = useRef<View>(null);
+  // The bar title fits beside Version, Contents and ⋯ (barItems).
   const title = useTitleOnScroll(
     embedded ? null : titleRef,
     embedded || !ready ? undefined : shortTitle,
+    {
+      trailing:
+        1 +
+        ((manifest?.versions.length ?? 0) > 1 && shown ? 1 : 0) +
+        ((current?.sections.length ?? 0) >= 2 ? 1 : 0),
+    },
   );
   const choose = useCallback(
     (next: string) => {
@@ -281,14 +288,21 @@ export default function BillTextReader({
           },
         ]
       : []),
+    // Version and Contents already take the bar, so Share is in ⋯, and
+    // Ask about this bill is a row: iOS draws no bottom toolbar, which the
+    // floating tab bar covered.
     pageMenu({
       name: 'this bill text',
       items: [
         ...menu,
-        ...(android
+        ...(android ? [{ title: 'Ask about this bill', onPress: ask }] : []),
+        ...(canShare
           ? [
-              { title: 'Ask about this bill', onPress: ask },
-              ...(canShare ? [{ title: 'Share', onPress: share }] : []),
+              {
+                title: 'Share',
+                symbol: 'square.and.arrow.up' as const,
+                onPress: share,
+              },
             ]
           : []),
       ],
@@ -331,6 +345,7 @@ export default function BillTextReader({
     versions.length,
   ]);
   const paneRows = embedded || android;
+  const askRow = paneRows || Platform.OS === 'ios';
   return (
     <>
       {embedded ? null : (
@@ -391,10 +406,11 @@ export default function BillTextReader({
                   testID="bill-text-source"
                 />
               </View>
-              {paneRows ? (
+              {askRow ? (
                 <View style={styles.rows}>
                   <LinkRow
                     title="Ask about this bill"
+                    symbol={symbols.ask}
                     onPress={ask}
                     testID="bill-text-ask"
                   />
@@ -516,25 +532,6 @@ export default function BillTextReader({
           ) : null
         }
       />
-      {!embedded && !android && ready ? (
-        <Stack.Toolbar placement="bottom">
-          <Stack.Toolbar.Button
-            icon={symbols.ask}
-            accessibilityLabel="Ask about this bill"
-            onPress={ask}
-          >
-            Ask about this bill
-          </Stack.Toolbar.Button>
-          <Stack.Toolbar.Spacer />
-          {canShare ? (
-            <Stack.Toolbar.Button
-              icon="square.and.arrow.up"
-              accessibilityLabel="Share"
-              onPress={share}
-            />
-          ) : null}
-        </Stack.Toolbar>
-      ) : null}
     </>
   );
 }

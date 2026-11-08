@@ -344,6 +344,10 @@ describe('native incoming links', () => {
   });
   test('retired report paths never create a deleted native destination', () =>
     expect(fromWebPath('/reports/grants-allocation')).toBeNull());
+  test.each(['/reports', '/reports/', '/report/gambling', '/report/gambling/'])(
+    "the retired report screens' own link %s opens Explore",
+    (path) => expect(fromWebPath(path)).toEqual({ pathname: '/explore' }),
+  );
   test('a removed Explore tool returns to the hub and money stays in the tab stack', () => {
     expect(fromWebPath('/explore?game=ballot')).toEqual({
       pathname: '/explore',
@@ -416,6 +420,19 @@ describe('incoming links open in the tab the shell spec gives them', () => {
   // router used to pick for every shared-folder route.
   beforeEach(() => setSelectedTab('(bills)'));
   afterEach(() => setSelectedTab('(today)'));
+  test.each([true, false])(
+    'old report links open Explore in Today, never an unmatched route (cold %s)',
+    (initial) => {
+      for (const path of [
+        'opax:///reports',
+        'opax://reports',
+        'opax://report/gambling',
+      ])
+        expect(redirectSystemPath({ path, initial })).toBe(
+          '/(tabs)/(today)/explore',
+        );
+    },
+  );
   test.each([true, false])('people open in Today (cold %s)', (initial) => {
     for (const path of [
       'opax://person/anthony-albanese',

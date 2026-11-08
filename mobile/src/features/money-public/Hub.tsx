@@ -1,4 +1,6 @@
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { Stack } from 'expo-router';
+import { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useLayout } from '../../design/adaptive';
 import { InsetGroup, Screen } from '../../design/layout';
@@ -41,6 +43,10 @@ function useSavedSeat() {
 export default function Hub() {
   const seat = useSavedSeat();
   const { regular } = useLayout();
+  // The bar title fades in by scroll with no width at rest, so the back
+  // button keeps its label (money-03), and truncates inside the bar items.
+  const barTitleRef = useRef<View>(null);
+  const barTitle = useTitleOnScroll(barTitleRef, 'Public money');
   return (
     <>
       <Stack.Screen
@@ -52,13 +58,19 @@ export default function Hub() {
       />
       <Screen
         grouped
-        barTitle="Public money"
+        onScroll={barTitle.onScroll}
         column={regular ? 'wide' : 'readable'}
         testID="money-hub"
       >
-        <Heading level={1} kind="page" testID="money-hub-title">
-          Public money
-        </Heading>
+        <View
+          ref={barTitleRef}
+          collapsable={false}
+          onLayout={barTitle.onTitleLayout}
+        >
+          <Heading level={1} kind="page" testID="money-hub-title">
+            Public money
+          </Heading>
+        </View>
         <View style={[styles.cards, regular ? styles.across : null]}>
           <View style={regular ? styles.third : null}>
             <GrantsCard />

@@ -1,11 +1,11 @@
-import { screen } from './screen';
+import { screen, untitled } from './screen';
 import { colors } from '../../design/tokens';
 import { designFlags } from '../../design/flags';
 
 export function editionScreens() {
   return [
     screen('edition', 'Daily edition', {
-      headerTitle: '',
+      ...untitled,
       contentStyle: {
         backgroundColor: designFlags.groupedSurfaces
           ? colors.sunken

@@ -1,6 +1,7 @@
 import { scopedQuestion } from '../ask/AskAbout';
 import { useOpenAsk } from '../ask/open';
-import { headerItems, pageMenu } from '../../navigation/chrome';
+import { headerItems, pageMenu, shareItem } from '../../navigation/chrome';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
   useCallback,
   useEffect,
@@ -19,6 +20,7 @@ import {
   View,
   findNodeHandle,
   type DimensionValue,
+  type LayoutChangeEvent,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
@@ -281,6 +283,14 @@ export default function BillDetail({
   const ask = () => openAsk(scopedQuestion('bill', title));
   const share = () =>
     void shareRecord({ path: `/bill/${key}`, title: name || 'Bill' });
+  // The bar title is the short name, and its view truncates inside the bar
+  // items (Share and ⋯), never under them (bills-07).
+  const titleRef = useRef<View>(null);
+  const barTitle = useTitleOnScroll(
+    embedded ? null : titleRef,
+    embedded ? undefined : title || undefined,
+    { trailing: Platform.OS === 'ios' && canShare ? 2 : 1 },
+  );
   const menu = identity
     ? [
         ...(Platform.OS === 'ios'
@@ -304,6 +314,10 @@ export default function BillDetail({
         ...billMenuItems({ billKey: identity.key, title: name, home }),
       ]
     : [];
+  const failed = notFound || (error && !record);
+  // Share sits in the bar beside ⋯ and Ask about this bill is a row: iOS 26's
+  // floating tab bar stays up on pushes, and covered a bottom toolbar.
+  const barShare = Platform.OS === 'ios' && canShare && !failed;
   return (
     <>
       {embedded ? null : (
@@ -314,9 +328,20 @@ export default function BillDetail({
             title: title || 'Bill',
             // ⋯ is drawn from the start, and works once the bill loads.
             ...headerItems(
-              notFound || (error && !record)
+              failed
                 ? undefined
                 : () => [
+                    ...(barShare
+                      ? [
+                          {
+                            ...shareItem({
+                              name: title || 'Bill',
+                              onPress: share,
+                            }),
+                            disabled: !identity,
+                          },
+                        ]
+                      : []),
                     {
                       ...pageMenu({ name: title || 'Bill', items: menu }),
                       disabled: !identity,
@@ -328,10 +353,10 @@ export default function BillDetail({
       )}
       <Screen
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
-        barTitle={embedded ? undefined : title || undefined}
         scrollRef={scroll}
         onScroll={(y) => {
           offset.current = y;
+          barTitle.onScroll(y);
         }}
         refreshControl={
           <RefreshControl
@@ -395,6 +420,9 @@ export default function BillDetail({
             view={view}
             identity={identity}
             name={name}
+            titleRef={embedded ? undefined : titleRef}
+            onTitleLayout={embedded ? undefined : barTitle.onTitleLayout}
+            onAsk={Platform.OS === 'ios' || embedded ? ask : undefined}
             directory={directory}
             savedAt={savedAt}
             stale={
@@ -417,7 +445,7 @@ export default function BillDetail({
           />
         ) : null}
       </Screen>
-      {embedded || notFound || (error && !record) ? null : (
+      {embedded || failed || Platform.OS === 'ios' ? null : (
         <BillToolbar
           onAsk={ask}
           onShare={share}
@@ -476,8 +504,8 @@ export function PaneMenu({
 }
 
 /**
- * The bottom toolbar: Ask about this bill and Share, never more. Ask works
- * once the title is known; Share once the bill itself has loaded.
+ * Android's bottom bar: Ask about this bill and Share. iOS puts Share in the
+ * navigation bar and Ask in a row, where the tab bar cannot cover them.
  */
 function BillToolbar({
   onAsk,
@@ -490,47 +518,23 @@ function BillToolbar({
   canAsk: boolean;
   canShare: boolean;
 }) {
-  if (Platform.OS !== 'ios')
-    return (
-      <SafeAreaView edges={['bottom']} style={styles.toolbar}>
-        <Button
-          label="Ask about this bill"
-          onPress={onAsk}
-          disabled={!canAsk}
-          testID="bill-ask"
-        />
-        {canShare ? (
-          <Button
-            label="Share"
-            onPress={onShare}
-            disabled={!shareReady}
-            testID="bill-share"
-          />
-        ) : null}
-      </SafeAreaView>
-    );
   return (
-    <Stack.Toolbar placement="bottom">
-      <Stack.Toolbar.Button
-        icon="text.bubble"
-        accessibilityLabel="Ask about this bill"
-        disabled={!canAsk}
+    <SafeAreaView edges={['bottom']} style={styles.toolbar}>
+      <Button
+        label="Ask about this bill"
         onPress={onAsk}
-      >
-        Ask about this bill
-      </Stack.Toolbar.Button>
-      <Stack.Toolbar.Spacer />
+        disabled={!canAsk}
+        testID="bill-ask"
+      />
       {canShare ? (
-        <Stack.Toolbar.Button
-          icon="square.and.arrow.up"
-          accessibilityLabel="Share"
-          disabled={!shareReady}
+        <Button
+          label="Share"
           onPress={onShare}
-        >
-          Share
-        </Stack.Toolbar.Button>
+          disabled={!shareReady}
+          testID="bill-share"
+        />
       ) : null}
-    </Stack.Toolbar>
+    </SafeAreaView>
   );
 }
 
@@ -598,6 +602,9 @@ function BillPage({
   view,
   identity,
   name,
+  titleRef,
+  onTitleLayout,
+  onAsk,
   directory,
   savedAt,
   stale,
@@ -608,6 +615,9 @@ function BillPage({
   view: BillView;
   identity: Identity;
   name: string;
+  titleRef?: RefObject<View | null>;
+  onTitleLayout?: (event: LayoutChangeEvent) => void;
+  onAsk?: () => void;
   directory: SponsorDirectory | null | undefined;
   savedAt: number | null;
   stale: Stale;
@@ -656,6 +666,8 @@ function BillPage({
           view={view}
           identity={identity}
           name={name}
+          titleRef={titleRef}
+          onTitleLayout={onTitleLayout}
           directory={directory}
           savedAt={savedAt}
         />
@@ -681,6 +693,15 @@ function BillPage({
           onPress={() => bills.openText(identity.key, name)}
           testID="bill-read-text"
         />
+        {onAsk ? (
+          <LinkRow
+            title="Ask about this bill"
+            symbol={symbols.ask}
+            accessibilityHint="Opens Ask with a question drafted"
+            onPress={onAsk}
+            testID="bill-ask"
+          />
+        ) : null}
       </View>
       <KeyDates
         view={view}
@@ -712,12 +733,16 @@ function BillHead({
   view,
   identity,
   name,
+  titleRef,
+  onTitleLayout,
   directory,
   savedAt,
 }: {
   view: BillView;
   identity: Identity;
   name: string;
+  titleRef?: RefObject<View | null>;
+  onTitleLayout?: (event: LayoutChangeEvent) => void;
   directory: SponsorDirectory | null | undefined;
   savedAt: number | null;
 }) {
@@ -740,11 +765,11 @@ function BillHead({
     <View style={styles.headBlock}>
       <View style={styles.titleBlock}>
         <StatusLine status={identity.statusLabel} event={event} />
-        <TitleAnchor>
+        <View ref={titleRef} collapsable={false} onLayout={onTitleLayout}>
           <Heading level={1} testID="bill-title">
             {identity.title}
           </Heading>
-        </TitleAnchor>
+        </View>
         {identity.shortTitle && identity.shortTitle !== identity.title ? (
           <Text variant="secondary" wordSafe>
             Known as the {identity.shortTitle}
@@ -806,7 +831,11 @@ function StatusLine({
       testID="bill-status"
       style={[styles.status, stacked ? styles.stacked : null]}
     >
-      <StatusCapsule status={status} hidden />
+      {/* At accessibility sizes the capsule fills its parent; this keeps it
+          to its word (w4-bill-ax5-01). */}
+      <View style={styles.capsule}>
+        <StatusCapsule status={status} hidden />
+      </View>
       {event ? (
         <Text variant="secondary" tabular wordSafe>
           {statusEventText(event)}
@@ -1957,6 +1986,7 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     alignItems: 'flex-start',
   },
+  capsule: { alignSelf: 'flex-start', maxWidth: '100%' },
   source: { marginTop: rhythm.tight },
   added: { marginTop: rhythm.tight },
   bone: {

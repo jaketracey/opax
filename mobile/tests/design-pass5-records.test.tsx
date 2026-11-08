@@ -180,18 +180,17 @@ test('the record has one source line, holding the original, notes and licence', 
   await act(async () => view.unmount());
 });
 
-test('the bar holds ⋯ only: Cite inline, Copy link, Open on opax.com.au', async () => {
+test('the bar holds Share and ⋯: Cite inline, Copy link, Open on opax.com.au', async () => {
   const view = await mount(<DocumentReader />);
-  expect(barLabels()).toEqual(['More']);
-  // Ask about this and Share are the bottom toolbar on iPhone.
-  const toolbar = view.root.findAll(
-    (node) => (node.type as unknown) === 'ToolbarButton',
-  );
-  expect(toolbar.map((node) => node.props.accessibilityLabel)).toEqual(
-    expect.arrayContaining(['Ask about this record']),
-  );
-  // No drawn Ask row on iPhone (pane and Android only).
-  expect(view.root.findAllByProps({ testID: 'doc-ask' })).toHaveLength(0);
+  expect(barLabels()).toEqual(['Share', 'More']);
+  // iOS draws no bottom toolbar, which the floating tab bar would cover:
+  // Ask about this is a row, and Share (where it can) sits beside ⋯.
+  expect(
+    view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
+  ).toHaveLength(0);
+  expect(
+    view.root.findAllByProps({ testID: 'doc-ask' }).length,
+  ).toBeGreaterThan(0);
   await act(async () => view.unmount());
   const target = { slug: 'speech-1205524', title: 'A speech' };
   const actions = recordActions(target);
@@ -317,6 +316,21 @@ test('bill text opens on its text with the stage, one source line and the bar it
   });
   expect(source.props.originals).toHaveLength(1);
   expect(barLabels()).toEqual(['As passed', 'Contents', 'More']);
+  // iOS draws no bottom toolbar a tab bar would cover: Ask about this bill
+  // is a row and Share is in ⋯, since Version and Contents fill the bar.
+  expect(
+    view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
+  ).toHaveLength(0);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-ask' }).length,
+  ).toBeGreaterThan(0);
+  const more = (
+    mockOptions.unstable_headerRightItems as () => {
+      label: string;
+      menu?: { items: { label: string }[] };
+    }[]
+  )().at(-1)!;
+  expect(more.menu!.items.map((item) => item.label)).toContain('Share');
   // The overview is a closed disclosure with its machine pill inside.
   const overview = view.root.find(
     (node) =>
