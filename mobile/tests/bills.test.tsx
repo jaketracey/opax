@@ -12,7 +12,8 @@ import { catalogs as runtime } from '../src/api/runtime';
 import { Stack, router } from 'expo-router';
 import { MachinePill } from '../src/design/labels';
 import { resultsRoute } from '../src/navigation/routes/search';
-import { StatusCapsule } from '../src/design/primitives';
+import { SourceLine, StatusCapsule } from '../src/design/primitives';
+import { formatDate } from '../src/design/format';
 import BillDetail from '../src/features/bills/BillDetail';
 import {
   countWords,
@@ -720,6 +721,43 @@ describe('the bill page', () => {
       )
       .map((node) => node.props.testID);
     expect(marked).toEqual([`bill-date-${last}-new`]);
+  });
+
+  const relatedLine = (root: ReactTestInstance) =>
+    root.find(
+      (node) =>
+        node.type === SourceLine && node.props.testID === 'bill-related-source',
+    ).props;
+  test("Related bills' source line names this bill's ParlInfo record", async () => {
+    // r7534 with the draft's related link, as a bill in parliament carries it.
+    const draft = view('au-federal-ed-online-safety-digital-duty-of-care-2026');
+    mockParams.key = 'au-federal-r7534';
+    jest.mocked(runtime.billFor).mockImplementation(async (key, refresh) => {
+      const record = await fixture.billFor(key, refresh);
+      return { ...record, data: { ...record.data, related: draft.related } };
+    });
+    const root = await render();
+    const asAt = view('au-federal-r7534').identity.asAt!;
+    expect(relatedLine(root)).toMatchObject({
+      citation: 'ParlInfo',
+      originals: [
+        {
+          label: 'ParlInfo',
+          url: expect.stringMatching(/^https:/),
+          record: `bill record, ${formatDate(asAt, 'short')}`,
+        },
+      ],
+    });
+  });
+
+  test("an exposure draft's related bills cite the draft's own pages", async () => {
+    mockParams.key = 'au-federal-ed-online-safety-digital-duty-of-care-2026';
+    const root = await render();
+    const line = relatedLine(root);
+    expect(line.citation).toEqual(['Exposure draft', 'Consultation page']);
+    expect((line.originals as { label: string }[]).map((o) => o.label)).toEqual(
+      ['Exposure draft', 'Consultation page'],
+    );
   });
 
   test('an unchanged bill shows neither Added since nor a new dot', async () => {

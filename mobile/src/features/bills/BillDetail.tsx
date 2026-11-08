@@ -1891,6 +1891,18 @@ function Related({
 }) {
   const bills = useBillNavigation();
   if (!view.related.length && !view.became) return null;
+  // The links come from this bill's own record: ParlInfo's for a bill in
+  // parliament, the draft's own pages for an exposure draft.
+  const asAt = view.identity.asAt;
+  const sources = view.identity.sources;
+  const home = sources.filter((s) => s.label === billSourceLabel('billhome'));
+  const originals: SourceOriginal[] = home.length
+    ? home.map((s) => ({
+        label: 'ParlInfo',
+        url: s.url,
+        record: asAt ? `bill record, ${short(asAt)}` : 'bill record',
+      }))
+    : sources.map((s) => ({ label: s.label, url: s.url, asOf: asAt }));
   return (
     <Section title="Related bills" testID="bill-related">
       <View>
@@ -1917,8 +1929,11 @@ function Related({
       </View>
       <SourceLine
         asOf={view.identity.asAt}
-        citation="ParlInfo"
+        citation={
+          home.length ? 'ParlInfo' : unique(sources.map((s) => s.label))
+        }
         savedAt={savedAt}
+        originals={originals}
         notes={[notes.related]}
         testID="bill-related-source"
       />
