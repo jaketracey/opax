@@ -22,6 +22,9 @@ const reviewedExpoSubpaths = new Set([
   'expo-router/unstable-native-tabs',
   // The router's own navigation contexts (header height): no I/O.
   'expo-router/react-navigation',
+  // SwiftUI views and modifiers rendered in a Host: no I/O.
+  '@expo/ui/swift-ui',
+  '@expo/ui/swift-ui/modifiers',
 ]);
 const globals = new Set(['globalThis', 'window', 'global', 'self']);
 const banned = new Set([

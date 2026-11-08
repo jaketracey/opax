@@ -1,46 +1,75 @@
 import { Platform, useWindowDimensions } from 'react-native';
-import { SymbolView, type SFSymbol } from 'expo-symbols';
+import { SymbolView } from 'expo-symbols';
 import { androidSymbol } from './android-symbols';
-import { colors, type Role } from './tokens';
+import { useReduceMotion } from './accessibility';
+import { designFlags } from './flags';
+import { symbols, type SFSymbol } from './symbols';
+import { accents, colors, type Accent, type Role } from './tokens';
 
-export type { SFSymbol };
+export type { SFSymbol } from './symbols';
+export const EXTERNAL_GLYPH = symbols.external;
+const categoryInks = new Set(
+  Object.values(accents).map((accent) => accent.ink),
+);
 
-/**
- * The one glyph for anything that leaves the app (an original record, a
- * page on opax.com.au, the AEC's finder): ↗ in a square, on rows and in
- * source sheets alike. Never the Safari compass.
- */
-export const EXTERNAL_GLYPH = 'arrow.up.right.square' satisfies SFSymbol;
-
-/**
- * An SF Symbol, decorative by default: the control or row around it carries
- * the accessible name. Grows with text size (to twice its base) so icons stay
- * in proportion with their labels.
- */
+/** Decorative unless named. Category ink belongs to the symbol alone. */
 export function Icon({
   name,
   size = 20,
   tone = 'navy',
-  maxScale = 2,
+  ink,
+  weight = 'regular',
+  scale = 'medium',
+  type = 'monochrome',
+  animation = null,
+  maxScale = 1.5,
   accessibilityLabel,
 }: {
   name: SFSymbol;
   size?: number;
   tone?: Role;
-  /** The most the symbol grows with text size (a tile caps it lower). */
+  ink?: Accent | 'navy';
+  weight?: 'regular' | 'semibold' | 'bold';
+  scale?: 'small' | 'medium' | 'large';
+  type?: 'monochrome' | 'hierarchical';
+  animation?: 'bounce' | null;
   maxScale?: number;
-  /** Only for an icon that conveys meaning on its own. */
   accessibilityLabel?: string;
 }) {
   const { fontScale } = useWindowDimensions();
+  const reduced = useReduceMotion();
   const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), maxScale));
+  const requested =
+    type === 'hierarchical' && ink
+      ? ink === 'navy'
+        ? 'navy'
+        : accents[ink].ink
+      : tone;
+  const colour =
+    !designFlags.categorySymbols && categoryInks.has(requested)
+      ? 'navy'
+      : requested;
+  const android = Platform.OS === 'android';
   return (
     <SymbolView
-      name={Platform.OS === 'android' ? { android: androidSymbol(name) } : name}
-      // Android's Material glyph is a Text: its native font scaling supplies
-      // the factor already included in our box. Avoid applying it twice.
-      size={Platform.OS === 'android' ? scaled / fontScale : scaled}
-      tintColor={colors[tone]}
+      name={android ? { android: androidSymbol(name) } : name}
+      size={android ? scaled / Math.max(fontScale, Number.EPSILON) : scaled}
+      tintColor={colors[colour]}
+      {...(!android
+        ? {
+            weight,
+            scale,
+            type,
+            animationSpec:
+              animation && !reduced
+                ? {
+                    effect: { type: animation },
+                    repeating: false,
+                    repeatCount: 1,
+                  }
+                : undefined,
+          }
+        : {})}
       style={{ width: scaled, height: scaled }}
       accessible={!!accessibilityLabel}
       accessibilityLabel={accessibilityLabel}

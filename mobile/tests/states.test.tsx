@@ -3,6 +3,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   ActivityIndicator,
+  AccessibilityInfo,
+  Platform,
   Dimensions,
   StyleSheet,
   Text as NativeText,
@@ -23,6 +25,22 @@ import {
   Tag,
   Text,
 } from '../src/design/primitives';
+import { Host, ContentUnavailableView } from '@expo/ui/swift-ui';
+import {
+  Collapse,
+  ContentUnavailable,
+  InlineError,
+  ErrorState,
+  OfflineLine,
+  Skeleton,
+  StatePageProvider,
+  errorMessage,
+} from '../src/design/states';
+import { RecordStatus, recordSourceState } from '../src/features/RecordStatus';
+import { catalogStateNote } from '../src/features/CatalogNotice';
+import { copy } from '../src/design/copy';
+import { symbols } from '../src/design/symbols';
+import { ApiError } from '../src/api/errors';
 import {
   contrastRatio,
   listedPair,
@@ -543,11 +561,11 @@ describe('word-safe text', () => {
         });
       });
       // 2.7 of the uncapped 3.
-      expect(capScale(label(), 'control')).toBeCloseTo(0.9, 6);
+      expect(capScale(label(), 'secondary')).toBeCloseTo(0.9, 6);
       act(() => {
         renderer.update(<Field label="Name" required={required} />);
       });
-      expect(capScale(label(), 'control')).toBe(1);
+      expect(capScale(label(), 'secondary')).toBe(1);
       // Changing only the required marker is a change of text too.
       act(() => {
         label().props.onTextLayout({
@@ -559,11 +577,11 @@ describe('word-safe text', () => {
           },
         });
       });
-      expect(capScale(label(), 'control')).toBeCloseTo(0.9, 6);
+      expect(capScale(label(), 'secondary')).toBeCloseTo(0.9, 6);
       act(() => {
         renderer.update(<Field label="Name" required={!required} />);
       });
-      expect(capScale(label(), 'control')).toBe(1);
+      expect(capScale(label(), 'secondary')).toBe(1);
     }
   });
   test('reads the text of nested children', () => {
@@ -890,4 +908,391 @@ describe('word-safe text', () => {
       expect(ratio()).toBeCloseTo(1.8 / 2.0, 6);
     });
   });
+});
+
+describe('shared state kit', () => {
+  let mounted: TestRenderer.ReactTestRenderer[];
+  const window = Dimensions.get('window'),
+    screen = Dimensions.get('screen');
+  function mount(element: ReactElement) {
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(element);
+    });
+    mounted.push(r);
+    return r;
+  }
+  beforeEach(() => {
+    mounted = [];
+    jest.clearAllMocks();
+  });
+  afterEach(() => {
+    act(() => {
+      mounted.forEach((r) => r.unmount());
+      Dimensions.set({ window, screen });
+    });
+    jest.restoreAllMocks();
+    jest.useRealTimers();
+  });
+  test.each([
+    'rows',
+    'people',
+    'bills',
+    'divisions',
+    'card',
+    'figure',
+    'text',
+  ] as const)(
+    'Skeleton %s keeps the requested final count and announces only its name',
+    (shape) => {
+      const r = mount(
+        <Skeleton shape={shape} count={3} label="Loading new bills" />,
+      );
+      const progress = r.root.findAll(
+        (node) =>
+          typeof node.type !== 'string' &&
+          node.props.accessibilityRole === 'progressbar',
+      );
+      expect(progress).toHaveLength(1);
+      expect(progress[0]!.props.accessibilityLabel).toBe('Loading new bills');
+      expect(progress[0]!.props.accessibilityState.busy).toBe(true);
+      expect(r.root.findAllByType(ActivityIndicator)).toHaveLength(0);
+    },
+  );
+  test('several failures announce once per page/load without moving focus', () => {
+    jest.useFakeTimers();
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(noop);
+    const focus = jest
+      .spyOn(AccessibilityInfo, 'sendAccessibilityEvent')
+      .mockImplementation(noop);
+    const page = (refreshing = false) => (
+      <StatePageProvider refreshing={refreshing}>
+        <InlineError subject="Bills" onRetry={noop} testID="bills-error" />
+        <InlineError subject="Votes" />
+        <InlineError subject="Declarations" />
+      </StatePageProvider>
+    );
+    const r = mount(page());
+    act(() => jest.runOnlyPendingTimers());
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce).toHaveBeenCalledWith(copy.someSectionsFailed);
+    expect(focus).not.toHaveBeenCalled();
+    const error = r.root.findAllByType(InlineError)[0]!.findByType(View);
+    const style = StyleSheet.flatten(error.props.style);
+    expect(style.backgroundColor).toBeUndefined();
+    expect(style.borderRadius).toBeUndefined();
+    expect(
+      r.root.findAllByType(Text).map((node) => node.props.children),
+    ).toContain("Bills couldn't be loaded.");
+    act(() => r.update(page(true)));
+    act(() => jest.runOnlyPendingTimers());
+    expect(announce).toHaveBeenCalledTimes(1);
+    act(() => r.update(page(false)));
+    act(() => jest.runOnlyPendingTimers());
+    expect(announce).toHaveBeenCalledTimes(2);
+  });
+  test('ErrorState alerts and focuses changed messages; InlineError only announces the page', () => {
+    const focus = jest
+      .spyOn(AccessibilityInfo, 'sendAccessibilityEvent')
+      .mockImplementation(noop);
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(noop);
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <ErrorState
+          message="Enter a valid email address. Try again."
+          onRetry={noop}
+        />,
+        { createNodeMock: () => ({}) },
+      );
+    });
+    mounted.push(r);
+    expect(
+      r.root.findAll((node) => node.props.accessibilityRole === 'alert').length,
+    ).toBeGreaterThan(0);
+    expect(
+      r.root.findAllByType(Text).map((node) => node.props.children),
+    ).toContain('Enter a valid email address.');
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(focus.mock.calls[0]![1]).toBe('focus');
+    act(() => r.update(<ErrorState message="The code has expired." />));
+    expect(focus).toHaveBeenCalledTimes(2);
+    expect(announce).not.toHaveBeenCalled();
+    const inline = mount(
+      <InlineError subject="Bills" required onRetry={noop} />,
+    );
+    expect(
+      inline.root.findAll((node) => node.props.accessibilityRole === 'alert'),
+    ).toHaveLength(0);
+    expect(focus).toHaveBeenCalledTimes(2);
+    expect(announce).toHaveBeenCalledWith(copy.someSectionsFailed);
+    const outer = inline.root.findByType(View);
+    expect(StyleSheet.flatten(outer.props.style)).toMatchObject({
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+    });
+    expect(inline.root.findByType(Button).props.variant).toBe('plain');
+  });
+  test.each([false, true])(
+    'RecordStatus notesInSource=%s keeps exactly one home for saved and partial notes',
+    (notesInSource) => {
+      const r = mount(
+        <RecordStatus
+          record={{
+            stale: true,
+            savedAt: Date.UTC(2026, 9, 3),
+            staleReason: 'unreadable',
+            partial: true,
+          }}
+          error={null}
+          refreshing
+          refresh={noop}
+          retry={noop}
+          label="Loading"
+          testID="record"
+          notesInSource={notesInSource}
+        />,
+      );
+      const notes = r.root.findAllByType(Text);
+      expect(
+        notes.filter((node) => node.props.testID === 'record-saved-copy'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+      expect(
+        notes.filter((node) => node.props.testID === 'record-partial'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+      if (!notesInSource) {
+        expect(notes.every((node) => node.props.variant === 'footnote')).toBe(
+          true,
+        );
+        expect(
+          notes.find((node) => node.props.testID === 'record-saved-copy')!.props
+            .children,
+        ).toContain('Checking for a newer copy.');
+      }
+      expect(r.root.findAllByType(Button)).toHaveLength(0);
+    },
+  );
+  test.each([false, true])(
+    'RecordStatus offline notesInSource=%s retains the offline line',
+    (notesInSource) => {
+      const r = mount(
+        <RecordStatus
+          record={{ stale: true, savedAt: Date.UTC(2026, 9, 3) }}
+          error={null}
+          refreshing={false}
+          refresh={noop}
+          retry={noop}
+          label="Loading"
+          testID="record"
+          notesInSource={notesInSource}
+        />,
+      );
+      expect(r.root.findAllByType(OfflineLine)).toHaveLength(1);
+      expect(
+        r.root
+          .findAllByType(Text)
+          .filter((node) => node.props.testID === 'record-stale'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+    },
+  );
+  test.each([false, true])(
+    'RecordStatus partial notesInSource=%s retains its legacy note by default',
+    (notesInSource) => {
+      const r = mount(
+        <RecordStatus
+          record={{ stale: false, savedAt: null, partial: true }}
+          error={null}
+          refreshing={false}
+          refresh={noop}
+          retry={noop}
+          label="Loading"
+          testID="record"
+          notesInSource={notesInSource}
+        />,
+      );
+      expect(
+        r.root
+          .findAllByType(Text)
+          .filter((node) => node.props.testID === 'record-partial'),
+      ).toHaveLength(notesInSource ? 0 : 1);
+    },
+  );
+  test('separate pages announce independently', () => {
+    jest.useFakeTimers();
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(noop);
+    mount(
+      <>
+        <StatePageProvider>
+          <InlineError subject="Bills" />
+        </StatePageProvider>
+        <StatePageProvider>
+          <InlineError subject="Votes" />
+        </StatePageProvider>
+      </>,
+    );
+    act(() => jest.runOnlyPendingTimers());
+    expect(announce).toHaveBeenCalledTimes(2);
+  });
+  test('one offline sentence per page, with a new owner when the first line leaves', () => {
+    const page = (first: boolean) => (
+      <StatePageProvider>
+        {first ? (
+          <OfflineLine
+            key="first"
+            savedAt="2026-11-07"
+            testID="first-offline"
+          />
+        ) : null}
+        <OfflineLine
+          key="second"
+          savedAt="2026-11-07"
+          testID="second-offline"
+        />
+      </StatePageProvider>
+    );
+    const r = mount(page(true));
+    const sentences = () =>
+      r.root
+        .findAllByType(Text)
+        .filter((node) => node.props.children === copy.offline('2026-11-07'));
+    expect(sentences()).toHaveLength(1);
+    act(() => r.update(page(false)));
+    expect(sentences()).toHaveLength(1);
+    expect(
+      r.root
+        .findAllByType(View)
+        .filter((node) => node.props.testID === 'first-offline'),
+    ).toHaveLength(0);
+  });
+  test('an undated offline line does not invent a saved date', () => {
+    const r = mount(<OfflineLine savedAt={null} />);
+    expect(r.root.findByType(Text).props.children).toBe("You're offline.");
+  });
+  test('ContentUnavailable at AX5 proposes the column width and never fixes its height', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...window, width: 375, fontScale: 3.571 },
+        screen,
+      }),
+    );
+    const retry = jest.fn();
+    const r = mount(
+      <ContentUnavailable
+        symbol={symbols.error}
+        title="This person couldn't be loaded"
+        body="Check your connection."
+        action={{ label: 'Try again', onPress: retry }}
+        testID="missing"
+      />,
+    );
+    const host = r.root.findByType(Host);
+    expect(host.props.matchContents).toEqual({ vertical: true });
+    expect(StyleSheet.flatten(host.props.style)).toMatchObject({ width: 335 });
+    act(() =>
+      r.root
+        .find(
+          (node) =>
+            node.props.testID === 'missing' &&
+            typeof node.props.onLayout === 'function',
+        )
+        .props.onLayout({ nativeEvent: { layout: { width: 310 } } }),
+    );
+    expect(StyleSheet.flatten(host.props.style).width).toBe(310);
+    expect(StyleSheet.flatten(host.props.style).height).toBeUndefined();
+    expect(StyleSheet.flatten(host.props.style).maxHeight).toBeUndefined();
+    expect(r.root.findByType(ContentUnavailableView).props).toMatchObject({
+      title: "This person couldn't be loaded",
+      description: 'Check your connection.',
+    });
+    act(() => r.root.findByType(Button).props.onPress());
+    expect(retry).toHaveBeenCalledTimes(1);
+  });
+  test.each([false, true])(
+    'ContentUnavailable action=%s is optional',
+    (action) => {
+      const r = mount(
+        <ContentUnavailable
+          symbol={symbols.search}
+          title="No results"
+          action={action ? { label: 'Try again', onPress: noop } : undefined}
+        />,
+      );
+      expect(r.root.findAllByType(Button)).toHaveLength(action ? 1 : 0);
+    },
+  );
+  test('Android has a growing RN equivalent and phone wording', () => {
+    const original = Platform.OS;
+    Object.defineProperty(Platform, 'OS', {
+      value: 'android',
+      configurable: true,
+    });
+    try {
+      const r = mount(
+        <ContentUnavailable
+          symbol={symbols.offline}
+          title="Not saved on this iPhone yet"
+          body="It will load when you're back online."
+        />,
+      );
+      expect(r.root.findAllByType(Host)).toHaveLength(0);
+      expect(
+        r.root.findAllByType(Text).map((node) => node.props.children),
+      ).toContain('Not saved on this phone yet');
+    } finally {
+      Object.defineProperty(Platform, 'OS', {
+        value: original,
+        configurable: true,
+      });
+    }
+  });
+  test.each([false, true])(
+    'Collapse when=%s leaves no empty or failure placeholders',
+    (when) => {
+      const r = mount(
+        <Collapse when={when}>
+          <Text>Content</Text>
+        </Collapse>,
+      );
+      expect(r.root.findAllByType(Text)).toHaveLength(when ? 0 : 1);
+    },
+  );
+  test('error sentences leave the retry invitation to the button', () => {
+    expect(errorMessage(new Error())).toBe(
+      "The public record couldn't be loaded.",
+    );
+    expect(
+      errorMessage(
+        new ApiError('server', 'Bills could not be loaded. Try again.'),
+      ),
+    ).toBe('Bills could not be loaded.');
+  });
+});
+
+test('catalogue and record source adapters retain the plain-language notes and saved date', () => {
+  expect(catalogStateNote('unavailable')).toBe(
+    'The latest records could not be loaded. Showing the saved copy.',
+  );
+  expect(catalogStateNote(undefined)).toBeNull();
+  expect(
+    recordSourceState({
+      stale: true,
+      savedAt: 100,
+      partial: true,
+      staleReason: 'unreadable',
+    }),
+  ).toEqual({
+    state: null,
+    savedAt: 100,
+    note: 'The latest records could not be read. Showing the saved copy. Some records could not be read.',
+  });
+  expect(
+    recordSourceState({ stale: false, savedAt: 100, partial: true }),
+  ).toMatchObject({ state: 'partial', savedAt: null });
 });

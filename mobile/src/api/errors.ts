@@ -13,7 +13,7 @@ export class ApiError extends Error {
     message: string,
     public status?: number,
   ) {
-    super(message);
+    super(message.replace(/\s*Try again\.$/, ''));
     this.name = 'ApiError';
   }
 }
@@ -40,7 +40,7 @@ export function httpError(status: number): ApiError {
       ? 'This record is not available.'
       : code === 'rate-limited'
         ? 'Too many requests. Try again shortly.'
-        : 'The public record could not be loaded. Try again.',
+        : "The public record couldn't be loaded.",
     status,
   );
 }

@@ -609,7 +609,7 @@ describe('Following on Today and the follow switch', () => {
     );
     await act(async () => r.unmount());
   });
-  test('the switch says what it follows and whether it is on, and is saved on the device', async () => {
+  test('the button says what it follows and whether it is on, and is saved on the device', async () => {
     mock.followSources.mockResolvedValue(sources());
     const r = await render(
       <FollowToggle
@@ -622,18 +622,18 @@ describe('Following on Today and the follow switch', () => {
     const toggle = () =>
       r.root.find(
         (n) =>
-          n.props.accessibilityRole === 'switch' &&
+          n.props.accessibilityRole === 'button' &&
           typeof n.props.onPress === 'function' &&
           String(n.props.testID).startsWith('electorate-follow-'),
       );
     expect(toggle().props).toMatchObject({
-      accessibilityRole: 'switch',
+      accessibilityRole: 'button',
       accessibilityLabel: 'Follow Grayndler',
-      accessibilityState: { checked: false, disabled: false },
+      accessibilityState: { selected: false, disabled: false },
       testID: 'electorate-follow-off',
     });
     await act(async () => toggle().props.onPress());
-    expect(toggle().props.accessibilityState.checked).toBe(true);
+    expect(toggle().props.accessibilityState.selected).toBe(true);
     expect(toggle().props.testID).toBe('electorate-follow-on');
     expect(textOf(r)).toContain('Following');
     // Following takes the record as published now as what was seen.

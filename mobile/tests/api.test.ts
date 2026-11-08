@@ -1293,3 +1293,38 @@ test('an undecodable download with no good cache still fails and writes nothing'
   ).rejects.toMatchObject({ code: 'invalid-data' });
   expect(store.entries).toEqual([]);
 });
+
+test('reader-facing error sentences leave Try again to the action', () => {
+  expect(httpError(500).message).toBe("The public record couldn't be loaded.");
+  expect(
+    new ApiError(
+      'timeout',
+      'The public record took too long to load. Try again.',
+    ).message,
+  ).toBe('The public record took too long to load.');
+});
+test.each(['ios', 'android'] as const)(
+  'offline client errors use shared %s device copy',
+  async (os) => {
+    const original = Platform.OS;
+    try {
+      Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
+      const { client } = setup(
+        jest.fn().mockRejectedValue(new TypeError('offline')),
+      );
+      await expect(
+        client.get('/parliamentarians.json', decode),
+      ).rejects.toMatchObject({
+        code: 'offline',
+        message: expect.stringContaining(
+          `this ${os === 'ios' ? 'iPhone' : 'phone'}`,
+        ),
+      });
+    } finally {
+      Object.defineProperty(Platform, 'OS', {
+        value: original,
+        configurable: true,
+      });
+    }
+  },
+);

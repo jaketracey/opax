@@ -827,7 +827,7 @@ describe('IconButton', () => {
     const badge = render(node.props.children({ pressed: false }))
       .root.findAllByType(NativeText)
       .find((n) => n.props.children === '3')!;
-    expect(badge.props.allowFontScaling).toBe(false);
+    expect(badge.props.allowFontScaling).toBe(true);
   });
 });
 

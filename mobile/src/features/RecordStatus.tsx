@@ -1,15 +1,16 @@
-import { PartialNotice } from './CatalogNotice';
+import { catalogStateNote, partialNote } from './CatalogNotice';
 import type { RecordResult } from '../api/client';
 import { ApiError } from '../api/errors';
 import {
-  Button,
-  ErrorState,
-  Group,
+  ContentUnavailable,
   LoadingState,
-  OfflineBanner,
-  Text,
+  OfflineLine,
   errorMessage,
-} from '../design/primitives';
+} from '../design/states';
+import { copy } from '../design/copy';
+import { symbols } from '../design/symbols';
+import { Text } from '../design/text';
+import { Group } from '../design/layout';
 import { staleText } from '../design/format';
 
 /**
@@ -38,16 +39,19 @@ export function savedSentence(
 /**
  * The state of one whole-screen catalog read (useCatalogRecord): loading,
  * a first load that failed (offline or not), or a saved copy shown stale.
- * Renders nothing when a fresh record is on screen.
+ * Saved and partial notes stay visible by default. Set notesInSource only
+ * when the screen passes recordSourceState(record) to its SourceLine, so those
+ * sentences have one home. The page offline line remains visible either way.
+ * Renders nothing when a fresh, complete record is on screen.
  */
 export function RecordStatus({
   record,
   error,
   refreshing,
-  refresh,
   retry,
   label,
   testID,
+  notesInSource = false,
 }: {
   record: {
     stale: boolean;
@@ -58,53 +62,84 @@ export function RecordStatus({
   error: unknown;
   refreshing: boolean;
   refresh: () => void;
+  notesInSource?: boolean;
   retry: () => void;
   /** What VoiceOver announces while loading: "Loading the leads". */
   label: string;
   testID: string;
 }) {
-  if (record?.stale)
+  if (record) {
+    const sentence = record.stale
+      ? savedSentence(record.staleReason, record.savedAt, refreshing)
+      : '';
+    if (!record.partial && !record.stale) return null;
+    if (notesInSource && !(record.stale && !record.staleReason)) return null;
     return (
       <Group>
-        {record.staleReason ? null : (
-          <OfflineBanner testID={`${testID}-offline`} />
-        )}
-        {record.staleReason || record.savedAt !== null ? (
+        {record.stale && !record.staleReason ? (
+          <OfflineLine savedAt={record.savedAt} testID={`${testID}-offline`} />
+        ) : null}
+        {!notesInSource && sentence ? (
           <Text
             wordSafe
-            variant="fine"
+            variant="footnote"
             testID={`${testID}-${record.staleReason ? 'saved-copy' : 'stale'}`}
           >
-            {savedSentence(record.staleReason, record.savedAt, refreshing)}
+            {sentence}
           </Text>
         ) : null}
-        {record.partial ? <PartialNotice testID={`${testID}-partial`} /> : null}
-        <Button
-          label="Try again"
-          onPress={refresh}
-          loading={refreshing}
-          testID={`${testID}-refresh`}
-        />
+        {!notesInSource && record.partial ? (
+          <Text wordSafe variant="footnote" testID={`${testID}-partial`}>
+            {partialNote}
+          </Text>
+        ) : null}
       </Group>
     );
-  if (record)
-    return record.partial ? (
-      <PartialNotice testID={`${testID}-partial`} />
-    ) : null;
+  }
   if (error instanceof ApiError && ['offline', 'timeout'].includes(error.code))
     return (
-      <Group>
-        <OfflineBanner cached={false} testID={`${testID}-offline-uncached`} />
-        <Button label="Try again" onPress={retry} testID={`${testID}-retry`} />
-      </Group>
+      <ContentUnavailable
+        symbol={symbols.offline}
+        title={copy.notSaved}
+        body={copy.notSavedBody}
+        action={{
+          label: copy.tryAgain,
+          onPress: retry,
+          testID: `${testID}-retry`,
+        }}
+        testID={`${testID}-offline-uncached`}
+      />
     );
   if (error)
     return (
-      <ErrorState
-        message={errorMessage(error)}
-        onRetry={retry}
+      <ContentUnavailable
+        symbol={symbols.error}
+        title={errorMessage(error)}
+        action={{ label: copy.tryAgain, onPress: retry }}
         testID={`${testID}-error`}
       />
     );
   return <LoadingState label={label} testID={`${testID}-loading`} />;
+}
+
+/** SourceLine adapter for screen lanes; keeps the existing plain-language notes. */
+export function recordSourceState(
+  record: {
+    stale: boolean;
+    savedAt: number | null;
+    partial?: boolean;
+    staleReason?: RecordResult<unknown>['staleReason'];
+  } | null,
+) {
+  return {
+    state: record?.partial && !record.stale ? ('partial' as const) : null,
+    savedAt: record?.stale ? record.savedAt : null,
+    note:
+      [
+        catalogStateNote(record?.staleReason),
+        record?.partial ? partialNote : null,
+      ]
+        .filter(Boolean)
+        .join(' ') || null,
+  };
 }
