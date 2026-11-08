@@ -82,7 +82,7 @@ test('mount does nothing; tapping opens a draft without submitting or creating a
   expect(router.dismissTo).not.toHaveBeenCalled();
   expect(router.navigate).toHaveBeenCalledTimes(1);
   expect(router.navigate).toHaveBeenCalledWith({
-    pathname: '/(tabs)/(ask)/ask',
+    pathname: '/ask',
     params: { question: documentQuestion(speech), entry: expect.any(String) },
   });
   await act(async () => view.unmount());

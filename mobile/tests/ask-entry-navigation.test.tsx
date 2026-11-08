@@ -39,19 +39,13 @@ const prefix = (group: string) =>
       screen,
     ]),
   );
-// The app's shape: the four browsing tabs share one group of record pages and
-// Ask keeps its own copy, so a record can sit in either tab's stack.
+// Every tab shares Ask and all record routes, preserving the active stack.
 const app = inMemoryContext({
   _layout: () => <Stack screenOptions={{ headerShown: false }} />,
   '(tabs)/_layout': () => <Tabs />,
   '(tabs)/(today)/index': () => <Text>Today</Text>,
-  ...prefix('(today,your-mp,bills,search)'),
-  '(tabs)/(ask)/_layout': {
-    default: () => <Stack />,
-    unstable_settings: { anchor: 'ask' },
-  },
-  '(tabs)/(ask)/ask': AskDraft,
-  ...prefix('(ask)'),
+  ...prefix('(today,your-mp,bills,search,ask)'),
+  '(tabs)/(today,your-mp,bills,search,ask)/ask': AskDraft,
 });
 
 const route = () => store.getRouteInfo();
@@ -82,7 +76,7 @@ const entries = [
 ] as const;
 
 test.each(entries)(
-  '%s: Ask about this opens the Ask tab from a browsing tab',
+  '%s: Ask about this opens Ask in the browsing tab',
   async (_kind, path, testID) => {
     const view = await render();
     expect(route().segments).toEqual(['(tabs)', '(today)']);
@@ -90,7 +84,7 @@ test.each(entries)(
     expect(route().segments[1]).toBe('(today)');
     await press(view, testID);
     expect(route().pathname).toBe('/ask');
-    expect(route().segments).toEqual(['(tabs)', '(ask)', 'ask']);
+    expect(route().segments).toEqual(['(tabs)', '(today)', 'ask']);
     expect(route().params.question).toMatch(/\?$/);
   },
 );

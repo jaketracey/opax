@@ -204,7 +204,7 @@ export const askRoute = (scope: {
   to?: string;
   kind?: string;
 }) => ({
-  pathname: '/(tabs)/(ask)/ask' as const,
+  pathname: '/ask' as const,
   params: {
     ...scope,
     entry: `${Date.now()}-${Math.random().toString(36).slice(2)}`,

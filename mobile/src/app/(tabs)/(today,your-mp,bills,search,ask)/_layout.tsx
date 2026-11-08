@@ -15,6 +15,7 @@ export const unstable_settings = {
   'your-mp': { anchor: 'your-mp' },
   bills: { anchor: 'bills' },
   search: { anchor: 'search' },
+  ask: { anchor: 'ask' },
 };
 
 const roots: Record<string, { name: string; title: string }> = {
@@ -22,6 +23,7 @@ const roots: Record<string, { name: string; title: string }> = {
   '(your-mp)': { name: 'your-mp', title: 'Your MP' },
   '(bills)': { name: 'bills', title: 'Bills' },
   '(search)': { name: 'search', title: 'Search' },
+  '(ask)': { name: 'ask', title: 'Ask' },
 };
 
 export default function TabStack({ segment }: { segment: string }) {
@@ -37,6 +39,7 @@ export default function TabStack({ segment }: { segment: string }) {
           ...headerItems(rootHeaderItems),
         }}
       />
+      <Stack.Screen name="money" options={{ title: 'Money map' }} />
       <Stack.Screen name="directory-filters" options={{ presentation: 'modal', headerShown: false }} />
       <Stack.Screen name="party/[slug]" options={{ title: '' }} />
       <Stack.Screen name="person/[slug]" options={{ title: '' }} />

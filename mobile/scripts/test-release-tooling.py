@@ -586,7 +586,7 @@ class BundleAttackTests(unittest.TestCase):
     def test_production_routes_exclude_workbench_and_accept_comma_groups(self):
         with tempfile.TemporaryDirectory() as d:
             routes = Path(d)
-            group = "(tabs)/(today,your-mp,bills,search)"
+            group = "(tabs)/(today,your-mp,bills,search,ask)"
             keys = ["./_layout.tsx", f"./{group}/_layout.tsx",
                     f"./{group}/person/[slug].tsx"]
             for key in keys + ["./workbench.tsx"]:

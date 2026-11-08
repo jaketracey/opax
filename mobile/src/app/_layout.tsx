@@ -85,10 +85,6 @@ export default function Layout() {
         >
           <Stack.Screen name="(tabs)" options={{ title: 'Back' }} />
           <Stack.Screen
-            name="money"
-            options={{ ...chrome, headerShown: true, title: 'Money map' }}
-          />
-          <Stack.Screen
             name="money-node"
             options={{
               ...sheet,
@@ -106,7 +102,7 @@ export default function Layout() {
           <Stack.Protected guard={voiceLinked}>
             <Stack.Screen
               name="talk"
-              options={{ ...sheet, title: 'Talk to OPAX' }}
+              options={{ ...sheet, headerShown: false }}
             />
           </Stack.Protected>
           {communityHome ? (
