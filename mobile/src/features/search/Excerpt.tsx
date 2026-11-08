@@ -110,3 +110,28 @@ const styles = StyleSheet.create({
   // The search highlight: bronze wash behind the record's own ink.
   match: { backgroundColor: colors.bronzeWash },
 });
+
+/**
+ * A result row's passage for `RecordRow` `compact`: the record's own words,
+ * cut as above, and the words that matched (drawn on the navy wash).
+ */
+export function excerptFor(
+  raw: string,
+  resource: string | null | undefined,
+  query: string | undefined,
+): { text: string; highlight: string[] } | null {
+  const text = oneEllipsis(
+    isWorkerSnippet(resource)
+      ? serverPassage(raw, { max: PASSAGE_MAX })
+      : passageText(raw, { max: PASSAGE_MAX }),
+  );
+  if (!text) return null;
+  const highlight = [
+    ...new Set(
+      highlightParts(text, query)
+        .filter((part) => part.match)
+        .map((part) => part.text),
+    ),
+  ];
+  return { text, highlight };
+}

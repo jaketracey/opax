@@ -1,178 +1,180 @@
+// Filters and sort in Speeches (journeys/search.md 3.5): every Search
+// filter opens /filters/search; a change made there is one request; the
+// applied filters show as one line with Clear; Clear and a return to an
+// earlier order are answered from the session cache.
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Button, LinkRow } from '../src/design/primitives';
-import { RecordSearchForm } from '../src/features/search/RecordSearchForm';
-import { ResultFilters, Results } from '../src/features/search/Results';
-import { FiltersSheet } from '../src/features/search/FiltersSheet';
-import { recordSearch } from '../src/api/runtime';
-import { defaultFilters } from '../src/features/search/contracts';
-import { decodeRecords, decodeSummary } from '../src/features/search/decoders';
-import { searchFixture } from '../scripts/search-fixture';
-import { roster } from './pinned';
+import { router } from 'expo-router';
+import { catalogs, recordSearch } from '../src/api/runtime';
+import { SearchScreen } from '../src/features/search/SearchScreen';
+import { ScopeBar } from '../src/features/search/ScopeBar';
+import { FiltersLine } from '../src/features/search/FiltersLine';
+import { resetSearchSession } from '../src/features/search/requests';
+import { searchFilterStore } from '../src/features/search/filters';
+import { decodeRecords } from '../src/features/search/decoders';
+import { memberSuggestionRoster } from '../src/api/catalog-search';
+import { bills, index, manifest, people, roster, slugs } from './pinned';
+
 jest.mock('../src/api/runtime', () => ({
-  recordSearch: { search: jest.fn(), summary: jest.fn(), briefs: jest.fn() },
+  recordSearch: { search: jest.fn(), summary: jest.fn() },
+  catalogs: {
+    suggestionSources: jest.fn(),
+    suggestionSourcesOnFocus: jest.fn(),
+    search: jest.fn(),
+  },
 }));
-jest.mock('../src/features/search/navigation', () => ({
-  openSearchPath: jest.fn(),
-}));
-jest.mock('../src/navigation/share', () => ({ shareRecord: jest.fn() }));
-const parsed = (path: string) =>
-  JSON.parse(
-    searchFixture(
-      new URL(path, 'http://127.0.0.1:8942'),
-      roster,
-    )!.body.toString(),
-  );
-const props = {
-  query: 'housing',
-  scope: 'records',
-  roster,
-  onSubmitted: jest.fn(),
-  onQuery: jest.fn(),
-  submitRef: { current: null },
-  submitAction: { current: null },
-};
+const mockBar: { options?: Record<string, any> } = {};
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  return {
+    Link: Object.assign(({ children }: { children: unknown }) => children, {
+      Trigger: ({ children }: { children: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    }),
+    router: { push: jest.fn(), navigate: jest.fn() },
+    useSegments: () => [],
+    useLocalSearchParams: () => ({}),
+    useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
+    Stack: {
+      Screen: ({ options }: { options?: Record<string, any> }) => {
+        if (options?.headerSearchBarOptions) mockBar.options = options;
+        return null;
+      },
+    },
+  };
+});
+
+const page = () => ({
+  data: decodeRecords({
+    query: 'housing',
+    kind: 'speech',
+    sort: 'relevance',
+    page: 1,
+    per_page: 20,
+    page_count: 1,
+    total: 1,
+    count: 1,
+    truncated: false,
+    years: {},
+    results: [
+      {
+        kind: 'speech',
+        title: 'Housing',
+        slug: 'speech-1',
+        resource: 'speech-1',
+        speaker: 'Anthony Albanese',
+        snippet: 'More homes.',
+        href: '/doc/speech-1',
+      },
+    ],
+  }),
+  stale: false,
+  savedAt: 1,
+  asOf: null,
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.useFakeTimers();
-  jest.mocked(recordSearch.search).mockResolvedValue({
-    data: decodeRecords(parsed('/api/search?q=housing&kind=all')),
-    savedAt: 1000,
-    stale: false,
-    asOf: null,
-  });
-  jest.mocked(recordSearch.briefs).mockResolvedValue(null);
-  jest.mocked(recordSearch.summary).mockResolvedValue({
-    data: decodeSummary({ status: 'empty' }),
-    savedAt: 1000,
-    stale: false,
-    asOf: null,
-  });
+  resetSearchSession();
+  const source = { stale: false, savedAt: 1, asAt: null, sources: [] };
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue({
+    roster: memberSuggestionRoster(roster, { roster, manifest, slugs, people }),
+    people,
+    manifest,
+    slugs,
+    electorates: index,
+    bills,
+    provenance: { people: source, electorates: source, bills: source },
+  } as never);
+  jest
+    .mocked(recordSearch.search)
+    .mockImplementation(async () => page() as never);
 });
-afterEach(() => jest.useRealTimers());
-async function mount() {
+
+const items = () =>
+  (mockBar.options!.unstable_headerRightItems?.() ?? []) as {
+    label: string;
+    accessibilityLabel?: string;
+    onPress?: () => void;
+    menu?: {
+      items: {
+        label: string;
+        items?: { label: string; onPress: () => void }[];
+      }[];
+    };
+  }[];
+
+async function speeches() {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<RecordSearchForm {...props} />);
+    r = TestRenderer.create(<SearchScreen />);
   });
+  await act(async () =>
+    mockBar.options!.headerSearchBarOptions.onSearchButtonPress({
+      nativeEvent: { text: 'housing' },
+    }),
+  );
+  await act(async () => r.root.findByType(ScopeBar).props.onChange('speeches'));
   return r;
 }
-function button(r: TestRenderer.ReactTestRenderer, id: string) {
-  return [
-    ...r.root.findAllByType(Button),
-    ...r.root.findAllByType(LinkRow),
-  ].find((b) => b.props.testID === id)!;
-}
-async function submit(r: TestRenderer.ReactTestRenderer) {
-  await act(async () => button(r, 'search-submit').props.onPress());
-  await act(async () => jest.advanceTimersByTime(400));
-}
-test('launch, mount, typing and filter dismissal call no paid route; submit coalesces and debounces 400 ms', async () => {
-  const r = await mount();
-  expect(recordSearch.search).not.toHaveBeenCalled();
-  await act(async () =>
-    r.update(<RecordSearchForm {...props} query="housing affordability" />),
-  );
-  await act(async () => button(r, 'search-filters').props.onPress());
-  await act(async () => r.root.findByType(FiltersSheet).props.onClose());
-  expect(recordSearch.search).not.toHaveBeenCalled();
-  await act(async () => {
-    button(r, 'search-submit').props.onPress();
-    button(r, 'search-submit').props.onPress();
-    jest.advanceTimersByTime(399);
-  });
-  expect(recordSearch.search).not.toHaveBeenCalled();
-  await act(async () => jest.advanceTimersByTime(1));
+
+test('Filters opens /filters/search; a change there is one request and one filter line', async () => {
+  const r = await speeches();
   expect(recordSearch.search).toHaveBeenCalledTimes(1);
-  expect(recordSearch.briefs).not.toHaveBeenCalled();
-  expect(recordSearch.summary).not.toHaveBeenCalled();
+  const filters = items().find((i) => i.label === 'Filters')!;
+  expect(filters.accessibilityLabel).toBe('Filters');
+  filters.onPress!();
+  expect(router.push).toHaveBeenLastCalledWith({
+    pathname: '/filters/[list]',
+    params: { list: 'search', owner: 'search-root' },
+  });
+  // The sheet writes this owner's filters.
+  const store = searchFilterStore('search-root')!;
+  await act(async () => store.set({ ...store.get(), party: 'Labor' }));
+  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  expect(jest.mocked(recordSearch.search).mock.calls[1]![1]).toMatchObject({
+    party: 'Labor',
+  });
+  const line = r.root.findByType(FiltersLine);
+  expect(line.props.text).toBe('Labor');
+  expect(items().find((i) => i.label === 'Filters')!.accessibilityLabel).toBe(
+    'Filters, on',
+  );
+  // Tapping the line opens the same sheet; Clear goes back to the cache.
+  line.props.onPress();
+  expect(router.push).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      params: { list: 'search', owner: 'search-root' },
+    }),
+  );
+  await act(async () => line.props.onClear());
+  expect(r.root.findAllByType(FiltersLine)).toHaveLength(0);
+  expect(recordSearch.search).toHaveBeenCalledTimes(2);
   await act(async () => r.unmount());
 });
-test('Apply makes one request, reset page one; sort and paging make one each; summaries and briefs are tap-only', async () => {
-  const r = await mount();
-  await submit(r);
-  await act(async () => button(r, 'search-filters').props.onPress());
-  const f = {
-    ...defaultFilters,
-    party: 'Labor',
-    from: '2025',
-    to: '2026',
-    kind: 'speech',
-  };
-  await act(async () => r.root.findByType(FiltersSheet).props.onApply(f));
-  expect(recordSearch.search).toHaveBeenLastCalledWith(
-    'housing',
-    f,
-    1,
-    'relevance',
+
+test('Sort is one request per new order; returning to an order costs nothing', async () => {
+  const r = await speeches();
+  const sort = () =>
+    items()
+      .find((i) => i.label === 'More')!
+      .menu!.items.find((i) => i.label === 'Sort')!.items!;
+  await act(async () =>
+    sort()
+      .find((s) => s.label === 'Newest first')!
+      .onPress(),
   );
   expect(recordSearch.search).toHaveBeenCalledTimes(2);
-  await act(async () => r.root.findByType(Results).props.onSort('newest'));
-  expect(recordSearch.search).toHaveBeenCalledTimes(3);
-  await act(async () => r.root.findByType(Results).props.onPage(2));
-  expect(recordSearch.search).toHaveBeenLastCalledWith(
-    'housing',
-    f,
-    2,
-    'newest',
+  expect(jest.mocked(recordSearch.search).mock.calls[1]![3]).toBe('newest');
+  await act(async () =>
+    sort()
+      .find((s) => s.label === 'Most relevant')!
+      .onPress(),
   );
-  expect(recordSearch.search).toHaveBeenCalledTimes(4);
+  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  // Summaries are tap only.
   expect(recordSearch.summary).not.toHaveBeenCalled();
-  expect(recordSearch.briefs).not.toHaveBeenCalled();
-  await act(async () => r.root.findByType(Results).props.onRead('briefs'));
-  expect(recordSearch.briefs).toHaveBeenCalledTimes(1);
-  await act(async () => r.root.findByType(Results).props.onSummary());
-  expect(recordSearch.summary).toHaveBeenCalledTimes(1);
-  await act(async () => r.unmount());
-});
-test('changing the query before the debounce and unmounting cancel pending submissions', async () => {
-  const r = await mount();
-  await act(async () => button(r, 'search-submit').props.onPress());
-  await act(async () =>
-    r.update(<RecordSearchForm {...props} query="changed" />),
-  );
-  await act(async () => jest.advanceTimersByTime(400));
-  expect(recordSearch.search).not.toHaveBeenCalled();
-  await act(async () => button(r, 'search-submit').props.onPress());
-  await act(async () => r.unmount());
-  await act(async () => jest.advanceTimersByTime(400));
-  expect(recordSearch.search).not.toHaveBeenCalled();
-});
-test('clearing filters and choosing an example preserve the selected grant catalog', async () => {
-  let r!: TestRenderer.ReactTestRenderer;
-  const base = { ...defaultFilters, kind: 'grant', mode: 'keyword' as const };
-  await act(async () => {
-    r = TestRenderer.create(
-      <RecordSearchForm {...props} scope="grant" query="Community" />,
-    );
-  });
-  await submit(r);
-  await act(async () => button(r, 'search-filters').props.onPress());
-  expect(r.root.findByType(FiltersSheet).props.fixedKind).toBe('grant');
-  await act(async () =>
-    r.root
-      .findByType(FiltersSheet)
-      .props.onApply({ ...defaultFilters, party: 'Labor' }),
-  );
-  expect(recordSearch.search).toHaveBeenLastCalledWith(
-    'Community',
-    { ...base, party: 'Labor' },
-    1,
-    'relevance',
-  );
-  await act(async () => r.root.findByType(ResultFilters).props.onRemove('all'));
-  expect(recordSearch.search).toHaveBeenLastCalledWith(
-    'Community',
-    base,
-    1,
-    'relevance',
-  );
-  await act(async () => r.root.findByType(Results).props.onExample('Woodside'));
-  expect(recordSearch.search).toHaveBeenLastCalledWith(
-    'Woodside',
-    base,
-    1,
-    'relevance',
-  );
   await act(async () => r.unmount());
 });
