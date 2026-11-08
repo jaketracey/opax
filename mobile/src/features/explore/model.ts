@@ -12,6 +12,10 @@ import {
   text,
 } from '../../api/validation';
 import type { RecordResult } from '../../api/client';
+import type { NativeStackHeaderItem } from 'expo-router';
+import { headerItems } from '../../navigation/chrome';
+import { openOnWeb } from '../../navigation/external';
+import { copyRecordLink, shareHeaderItem } from '../../navigation/share';
 import {
   decodeIndustryMoney,
   decodeMatrix,
@@ -488,3 +492,64 @@ export const WORDS_NOTE =
   'Shown together for comparison. OPAX does not claim one causes the other. Donations under the disclosure threshold are not reported, so totals are a floor, not a ceiling. AEC data groups party recipients; money to independents is not separated. Not every speech has a topic label yet, so speech counts are floors and shares may shift.';
 export type Result<T> = RecordResult<T>;
 export const identityObject = (raw: unknown) => object(raw);
+
+/**
+ * The bar's items for an Explore tool with a sort: Share, then ⋯ holding
+ * "Sort by" (checkmarked) above Copy link and Open on opax.com.au (explore
+ * spec 1.2). `ExploreChrome` takes this over in wave 6.
+ */
+export function sortHeaderOptions<T extends string>({
+  name,
+  game,
+  sorts,
+  sort,
+  onSort,
+}: {
+  name: string;
+  game: string;
+  sorts: readonly { value: T; label: string }[];
+  sort: T;
+  onSort: (value: T) => void;
+}) {
+  const path = `/explore?game=${game}`;
+  return headerItems((): NativeStackHeaderItem[] => [
+    shareHeaderItem({ title: name, path }),
+    {
+      type: 'menu',
+      label: 'More',
+      accessibilityLabel: `More for ${name}`,
+      icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
+      menu: {
+        items: [
+          {
+            type: 'submenu',
+            label: 'Sort by',
+            items: sorts.map((s) => ({
+              type: 'action' as const,
+              label: s.label,
+              state: s.value === sort ? ('on' as const) : ('off' as const),
+              onPress: () => onSort(s.value),
+            })),
+          },
+          {
+            type: 'submenu',
+            label: '',
+            inline: true,
+            items: [
+              {
+                type: 'action',
+                label: 'Copy link',
+                onPress: () => void copyRecordLink(path),
+              },
+              {
+                type: 'action',
+                label: 'Open on opax.com.au',
+                onPress: () => void openOnWeb(path, name),
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ]);
+}
