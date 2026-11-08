@@ -53,6 +53,7 @@ import {
 import AccountEntry from '../src/features/account/entry';
 import { clearAskConversations } from '../src/features/ask/store';
 import { readConsent, setConsent } from '../src/features/talk/bridge';
+import { takeConsentAfterSignIn } from '../src/features/talk/consent-store';
 import { openOnWeb } from '../src/navigation/external';
 
 jest.mock('../src/voice', () => ({
@@ -711,6 +712,17 @@ describe('Sign in by code', () => {
   ] as const)('a finished sign-in returns to %s', (to, check) => {
     finishSignIn(to);
     check();
+  });
+  test('only a sign-in from Talk asks Talk for its consent sheet', () => {
+    takeConsentAfterSignIn(); // Left by an earlier sign-in in this file.
+    finishSignIn('account');
+    expect(takeConsentAfterSignIn()).toBe(false);
+    finishSignIn('dismiss');
+    expect(takeConsentAfterSignIn()).toBe(false);
+    finishSignIn('talk');
+    expect(takeConsentAfterSignIn()).toBe(true);
+    // Reading clears it.
+    expect(takeConsentAfterSignIn()).toBe(false);
   });
   test('step 2: the code field is one-time-code and paste friendly, and a full code signs in', async () => {
     const onSignedIn = jest.fn();

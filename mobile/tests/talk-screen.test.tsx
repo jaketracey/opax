@@ -187,3 +187,139 @@ test('signed out, the free minutes line sits under its one action', () => {
       .map((node) => node.props.testID),
   ).toEqual(['talk-sign-in']);
 });
+
+// A sign-in that started from Talk (specs/account.md 1.5, 5.8 item 6): once
+// Talk has read the new status and consent, it opens the consent sheet if
+// consent is not given, once, and never starts a call itself.
+describe('back from a Talk sign-in', () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const { router, useFocusEffect } = require('expo-router');
+  const { useEffect } = require('react');
+  const {
+    requestConsentAfterSignIn,
+  } = require('../src/features/talk/consent-store');
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  beforeEach(() => {
+    jest.mocked(router.push).mockClear();
+    // Focus runs on mount (the screen keeps its focus callback stable).
+    jest
+      .mocked(useFocusEffect)
+      .mockImplementation((effect: () => void) =>
+        useEffect(() => effect(), [effect]),
+      );
+  });
+  afterEach(() => {
+    jest.mocked(useFocusEffect).mockReset();
+  });
+  function signedIn(consent: boolean, settled: number) {
+    return {
+      ...call({ state: 'idle', status: status() }),
+      consent,
+      consentLoaded: settled > 0,
+      settled,
+    };
+  }
+  function update(renderer: TestRenderer.ReactTestRenderer) {
+    act(() =>
+      renderer.update(
+        <SafeAreaProvider
+          initialMetrics={{
+            frame: { x: 0, y: 0, width: 402, height: 874 },
+            insets: { top: 0, left: 0, right: 0, bottom: 34 },
+          }}
+        >
+          <TalkScreen />
+        </SafeAreaProvider>,
+      ),
+    );
+  }
+  test('consent not given: the consent sheet opens once, after the reads settle', () => {
+    requestConsentAfterSignIn();
+    mockCall = signedIn(false, 0);
+    const renderer = render();
+    // The status and consent reads have not settled yet.
+    expect(router.push).not.toHaveBeenCalled();
+    mockCall = signedIn(false, 1);
+    update(renderer);
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith({ pathname: '/talk/consent' });
+    // Later reads never open it again, and nothing starts a call.
+    mockCall = signedIn(false, 2);
+    update(renderer);
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(mockCall.start).not.toHaveBeenCalled();
+    expect(mockCall.agreeAndStart).not.toHaveBeenCalled();
+  });
+  test('consent already given: Start shows ready and nothing opens', () => {
+    requestConsentAfterSignIn();
+    mockCall = signedIn(true, 0);
+    const renderer = render();
+    mockCall = signedIn(true, 1);
+    update(renderer);
+    expect(router.push).not.toHaveBeenCalled();
+    expect(mockCall.start).not.toHaveBeenCalled();
+    expect(
+      renderer.root
+        .findAllByType(Button)
+        .filter((node) => node.props.variant === 'primary')
+        .map((node) => node.props.testID),
+    ).toEqual(['talk-start']);
+  });
+  test('without a Talk sign-in, a settled read opens nothing', () => {
+    mockCall = signedIn(false, 0);
+    const renderer = render();
+    mockCall = signedIn(false, 1);
+    update(renderer);
+    expect(router.push).not.toHaveBeenCalled();
+  });
+});
+
+// The consent sheet at AX5 (7.7): the root is capped at the space the sheet
+// can use, the text scrolls, and the two buttons sit outside the scroll view.
+test('the consent sheet keeps its buttons pinned under a capped root', () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const {
+    ConsentSheet,
+    SHEET_HEADER,
+  } = require('../src/features/talk/Consent');
+  const { ScrollView, StyleSheet } = require('react-native');
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <SafeAreaProvider
+        initialMetrics={{
+          frame: { x: 0, y: 0, width: 402, height: 874 },
+          insets: { top: 62, left: 0, right: 0, bottom: 34 },
+        }}
+      >
+        <ConsentSheet />
+      </SafeAreaProvider>,
+    );
+  });
+  rendered.push(renderer);
+  const host = (testID: string) =>
+    renderer.root.find(
+      (node) => typeof node.type === 'string' && node.props.testID === testID,
+    );
+  const sheet = host('talk-consent-sheet');
+  // The jest window is 750 pt tall unless a test sets one.
+  const { height } = jest
+    .requireActual('react-native')
+    .Dimensions.get('window');
+  expect(StyleSheet.flatten(sheet.props.style).maxHeight).toBe(
+    height - 62 - SHEET_HEADER,
+  );
+  const scroll = renderer.root.findByType(ScrollView);
+  const inScroll = (testID: string) =>
+    scroll.findAll((node) => node.props.testID === testID).length > 0;
+  expect(inScroll('talk-consent-privacy')).toBe(true);
+  expect(inScroll('talk-consent-footer')).toBe(false);
+  expect(inScroll('talk-agree')).toBe(false);
+  expect(inScroll('talk-not-now')).toBe(false);
+  const footer = host('talk-consent-footer');
+  for (const id of ['talk-agree', 'talk-not-now'])
+    expect(
+      footer.findAll((node) => node.props.testID === id).length,
+    ).toBeGreaterThan(0);
+});

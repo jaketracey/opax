@@ -66,7 +66,7 @@ import {
   talkMachineNote,
   VoiceDisclosure,
 } from './Consent';
-import { takeStartAfterConsent } from './consent-store';
+import { takeConsentAfterSignIn, takeStartAfterConsent } from './consent-store';
 import { leaveTalk } from './leave';
 import { publishTalk, resetTalk, takeChosenSource } from './live';
 
@@ -332,9 +332,21 @@ export default function TalkScreen({
       startConsented: call.startConsented,
     };
   });
+  // Back from a Talk sign-in (5.8 item 6): once the focus read has settled,
+  // signed in without consent opens the consent sheet, once.
+  const consentAfterSignIn = useRef(false);
+  useEffect(() => {
+    if (!consentAfterSignIn.current || !call.settled) return;
+    consentAfterSignIn.current = false;
+    if (s.status?.signedIn && call.consentLoaded && !call.consent && startable)
+      router.push(talkConsentRoute);
+    // Only a settled focus read decides; the values are from that render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [call.settled]);
   // Back from the consent sheet (Agree) or the Sources sheet (a choice).
   useFocusEffect(
     useCallback(() => {
+      if (takeConsentAfterSignIn()) consentAfterSignIn.current = true;
       if (takeStartAfterConsent())
         void handlers.current.startConsented().then(() => setNotice(null));
       const chosen = takeChosenSource();

@@ -32,6 +32,8 @@ export function useTalk() {
   const [error, setError] = useState<VoiceFailure | null>(null);
   const [terminal, setTerminal] = useState<EndReason | null>(null);
   const [busy, setBusy] = useState(false);
+  // The focus generation whose status and consent reads have both finished.
+  const [settled, setSettled] = useState(0);
   const [microphone, setMicrophone] = useState<MicrophoneStep>(null);
   const dispatching = useRef(false);
   // Android pauses the app behind the permission dialog and resumes it before
@@ -120,6 +122,7 @@ export function useTalk() {
         if (mounted.current && generation === focusGeneration.current) {
           showConsent(granted);
           setConsentLoaded(true);
+          setSettled(generation);
         }
       })();
     }, [recover, refresh]),
@@ -228,6 +231,7 @@ export function useTalk() {
     terminal,
     busy,
     microphone,
+    settled,
     active: isCallActive(snapshot.state),
     start,
     allowMicrophone,

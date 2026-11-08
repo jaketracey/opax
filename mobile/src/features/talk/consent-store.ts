@@ -13,3 +13,19 @@ export function takeStartAfterConsent(): boolean {
   startAfterConsent = false;
   return value;
 }
+
+// Set by a sign-in that started from Talk (specs/account.md 1.5 and 5.8):
+// once Talk has read the new status and consent, it opens the consent sheet
+// if consent is not given yet. It never starts a call itself.
+let consentAfterSignIn = false;
+
+export function requestConsentAfterSignIn() {
+  consentAfterSignIn = true;
+}
+
+/** Whether a Talk sign-in finished since the last read; reading clears it. */
+export function takeConsentAfterSignIn(): boolean {
+  const value = consentAfterSignIn;
+  consentAfterSignIn = false;
+  return value;
+}

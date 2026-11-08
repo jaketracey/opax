@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { requestConsentAfterSignIn } from '../talk/consent-store';
 
 /**
  * Where a finished sign-in returns (specs/account.md 1.5): Account (the
@@ -15,10 +16,14 @@ export function signInReturn(value: unknown, base: 'account' | 'talk') {
 
 /** The code screen and the email screen both leave the stack. */
 export function finishSignIn(to: SignInReturn) {
-  if (to === 'talk') router.dismissTo('/talk');
-  else if (to === 'dismiss') {
+  if (to === 'talk') {
+    // Talk opens its consent sheet once it has read the new status (5.8).
+    requestConsentAfterSignIn();
+    router.dismissTo('/talk');
+  } else if (to === 'dismiss') {
     // Back to Account's root, then the sheet itself closes.
     router.dismissAll();
-    router.back();
+    if (router.canGoBack()) router.back();
+    else router.replace('/');
   } else router.dismissTo('/account');
 }
