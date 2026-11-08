@@ -108,8 +108,8 @@ export function BillFeed({
 }
 
 const segments = [
-  { value: 'new' as const, label: 'New' },
-  { value: 'passed' as const, label: 'Passed' },
+  { value: 'new' as const, label: 'New', testID: 'today-bills-new' },
+  { value: 'passed' as const, label: 'Passed', testID: 'today-bills-passed' },
 ];
 
 /**

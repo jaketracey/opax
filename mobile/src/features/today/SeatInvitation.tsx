@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { StyleSheet, useColorScheme, View } from 'react-native';
 import { router } from 'expo-router';
 import { Canvas, Group, Path } from '@shopify/react-native-skia';
@@ -10,12 +9,16 @@ import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { dark, light } from '../../design/tokens.generated';
 import { seatRoute } from '../../navigation/routes';
-import { migratedSeat } from '../your-mp/useSeat';
+import { migratedSeat, useSeat } from '../your-mp/useSeat';
 import outline from './australia-outline.json';
 import { hideInvitation } from './invitation-store';
 import { sydneyDay } from './rules';
 
-/** The invitation's body: an abolished saved seat says so; else the ask. */
+/**
+ * The invitation's body: an abolished saved seat says so; a 1.0 choice the
+ * migration set aside (a Senate "seat" or a state seat) asks for the current
+ * federal electorate (first-launch.md 4.8 F3); else the ask.
+ */
 export function invitationBody(
   old: {
     name: string;
@@ -31,6 +34,7 @@ export function invitationBody(
     old.chamber === 'representatives'
   )
     return `${old.name} is no longer an electorate.`;
+  if (old) return 'Choose your current federal electorate.';
   return 'Add your electorate to see your MP, how they vote and the grants in your area.';
 }
 
@@ -87,7 +91,9 @@ export function SeatInvitation({
 }: {
   testID?: string;
 }) {
-  const [old] = useState(() => migratedSeat());
+  // Re-read on every seat change: a 1.0 choice can arrive after the mount.
+  useSeat();
+  const old = migratedSeat();
   return (
     <Card
       testID={testID}

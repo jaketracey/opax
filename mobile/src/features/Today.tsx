@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
+import * as Router from 'expo-router';
 import type { Block, Electorate, EditionView } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
 import { useAccessibilitySize } from '../design/accessibility';
@@ -51,6 +52,16 @@ import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { VotesBlock } from './today/VotesBlock';
 import { StateSeatCard, YourMPCard } from './today/YourMPCard';
 import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
+import { saveChoice } from './your-mp/choice-store';
+import { welcomeDeclinedThisLaunch } from '../onboarding/state';
+
+/**
+ * Runs `effect` each time Today's screen gains focus. Unit tests that render
+ * Today outside a navigator mock expo-router without it: then nothing.
+ */
+const useScreenFocus: (effect: () => void) => void = Router.useFocusEffect
+  ? (effect) => Router.useFocusEffect(effect)
+  : () => undefined;
 
 /** The splash waits at most this long for Today's first reads. */
 const SPLASH_WAIT = 400;
@@ -89,7 +100,15 @@ function useLaunch(day: SydneyDate): Launch | null {
               ? 'missing'
               : null;
       } else cached = await readCachedEdition();
-      const today = fixtureToday(fixture, cached) ?? day;
+      // An age pin dates Today from the edition's own date, read now when
+      // nothing is saved.
+      let editionDate = cached && cached !== 'missing' ? cached.date : null;
+      if (fixture.editionAge && !editionDate) {
+        const read = await catalogs.todayEdition();
+        editionDate =
+          read.status === 'ready' && read.data ? read.data.date : null;
+      }
+      const today = fixtureToday(fixture, editionDate) ?? day;
       const declined = fixtureDeclinedAt(fixture, today);
       if (declined !== undefined)
         overrideInvitationDates({ welcomeDeclinedAt: declined });
@@ -118,6 +137,25 @@ function useLaunch(day: SydneyDate): Launch | null {
       ),
     [],
   );
+  // The welcome covers Today while it is up: its "Not now" lands after the
+  // launch read, so read the dates again when Today is shown after it
+  // (first-launch 4.4). Only after a Not now this launch.
+  useScreenFocus(
+    useCallback(() => {
+      if (!welcomeDeclinedThisLaunch()) return;
+      void readInvitationDates()
+        .then((invitation) =>
+          setLaunch((current) =>
+            current &&
+            current.invitation.welcomeDeclinedAt !==
+              invitation.welcomeDeclinedAt
+              ? { ...current, invitation }
+              : current,
+          ),
+        )
+        .catch(() => undefined);
+    }, []),
+  );
   return launch;
 }
 
@@ -139,6 +177,22 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
           s.status !== 'historical',
       );
     void (async () => {
+      if (wanted === 'legacy-senate-nsw') {
+        // Written raw, as 1.0 wrote it: the read migration sets it aside.
+        const senate = seats.find(
+          (s) =>
+            s.jurisdiction === 'federal' &&
+            s.chamber === 'senate' &&
+            s.state_code.toLowerCase() === 'nsw',
+        );
+        if (senate)
+          await saveChoice({
+            version: 1,
+            seatId: senate.electorate_id,
+            stateSeatIds: [],
+          });
+        return;
+      }
       if (wanted === 'federal') {
         const grayndler = named('Grayndler', 'federal');
         if (grayndler) await seat.choose(grayndler);
@@ -313,9 +367,11 @@ export default function Today() {
         return (
           <MoreToExplore
             key={name}
-            withPair={order.pairInMore}
-            today={today}
-            attempt={attempt}
+            pair={
+              order.pairInMore ? (
+                <DailyPair today={today} attempt={attempt} />
+              ) : null
+            }
           />
         );
       case 'ask':
