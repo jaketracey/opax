@@ -241,3 +241,29 @@ test('submitted people rows keep the roster party and place, with no snippet lin
       expect(value).not.toMatch(/\d{4}-\d{2}-\d{2}/);
   await act(async () => r.unmount());
 });
+
+test('the people top hit carries its id on a plain view around the row, outside its link', async () => {
+  jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+  const r = await mount();
+  await submit('Anthony Albanese');
+  const top = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'search-top-hits',
+  );
+  const slot = top.find(
+    (n) =>
+      typeof n.type === 'string' &&
+      n.props.testID === 'search-result-anthony-albanese' &&
+      n.props.collapsable === false,
+  );
+  // Neither accessible nor inside the row's link, so no native wrapper
+  // around the link can keep the id out of the hierarchy.
+  expect(slot.props.accessible).toBeUndefined();
+  expect(slot.findAllByType(PersonRow)).toHaveLength(1);
+  let parent = slot.parent;
+  while (parent) {
+    expect(parent.type).not.toBe(PersonRow);
+    expect((parent.type as { name?: string }).name).not.toBe('RowLink');
+    parent = parent.parent;
+  }
+  await act(async () => r.unmount());
+});

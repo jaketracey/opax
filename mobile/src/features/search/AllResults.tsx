@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { router } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import {
@@ -116,14 +117,15 @@ export function AllResults({
           <View style={styles.rows}>
             <RowList>
               {local.top.map((match) => (
-                <MatchRow
-                  key={`${match.kind}:${match.key}`}
-                  match={match}
-                  q={q}
-                  sources={sources!}
-                  variant="result"
-                  testID={resultID(match)}
-                />
+                <ResultSlot key={`${match.kind}:${match.key}`} match={match}>
+                  <MatchRow
+                    match={match}
+                    q={q}
+                    sources={sources!}
+                    variant="result"
+                    testID={resultID(match)}
+                  />
+                </ResultSlot>
               ))}
             </RowList>
           </View>
@@ -135,14 +137,15 @@ export function AllResults({
           <View style={styles.rows}>
             <RowList>
               {group.rows.slice(0, 3).map((match) => (
-                <MatchRow
-                  key={`${match.kind}:${match.key}`}
-                  match={match}
-                  q={q}
-                  sources={sources!}
-                  variant="result"
-                  testID={resultID(match)}
-                />
+                <ResultSlot key={`${match.kind}:${match.key}`} match={match}>
+                  <MatchRow
+                    match={match}
+                    q={q}
+                    sources={sources!}
+                    variant="result"
+                    testID={resultID(match)}
+                  />
+                </ResultSlot>
               ))}
               {group.rows.length > 3 ? (
                 <LinkRow
@@ -209,6 +212,29 @@ export function AllResults({
         testID="search-in-money"
       />
     </Group>
+  );
+}
+
+/**
+ * The result's id on a plain view around its row. A row with an href sits
+ * inside expo-router's NativeLinkPreview, a `display: 'contents'` native
+ * view, and the Wave 4 Maestro hierarchy listed none of those rows (the
+ * people top hit, Just declared's entries) while plain views with ids
+ * (search-top-hits, search-in) were there. This view is never flattened,
+ * so `search-result-<slug>` reaches the hierarchy whichever host the row
+ * uses; the row keeps the same id for its own parts (-portrait, -name).
+ */
+function ResultSlot({
+  match,
+  children,
+}: {
+  match: Match;
+  children: ReactNode;
+}) {
+  return (
+    <View testID={resultID(match)} collapsable={false}>
+      {children}
+    </View>
   );
 }
 
