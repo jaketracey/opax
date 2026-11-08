@@ -9,6 +9,7 @@ import { money } from '../src/features/money-public/runtime';
 import { SegmentedPicker } from '../src/design/controls';
 import { LinkRow, MoneyRow } from '../src/design/rows';
 import { Card } from '../src/design/card';
+import { Skeleton } from '../src/design/states';
 import Hub from '../src/features/money-public/Hub';
 import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
@@ -269,4 +270,22 @@ test('a money item names its state in full, and leaves an unknown one out', asyn
       await loadMoneyItem({ kind: 'project', id: project.id }, false)
     ).data.facts.find((f) => f.label === 'State')?.value,
   ).toBe('Australian Capital Territory');
+});
+
+test('a hub card loads with the kit skeleton, its question drawn at once', async () => {
+  money.grants = jest.fn(() => new Promise(() => undefined)) as never;
+  const r = await render(Hub);
+  const card = r.root
+    .findAllByType(Card)
+    .find((c) => c.props.testID === 'money-card-grants')!;
+  const skeleton = card.findByType(Skeleton);
+  expect(skeleton.props).toMatchObject({
+    shape: 'figure',
+    label: 'Loading Commonwealth grants',
+    testID: 'money-card-grants-loading',
+  });
+  expect(
+    card.findAll((n) => n.props.children === 'Who gets grants?').length,
+  ).toBeGreaterThan(0);
+  await act(async () => r.unmount());
 });

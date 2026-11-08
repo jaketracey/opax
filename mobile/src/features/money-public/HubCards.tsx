@@ -11,7 +11,7 @@ import {
 } from '../../design/format';
 import { Icon, type SFSymbol } from '../../design/icon';
 import { SourceLine, type SourceDetails } from '../../design/source';
-import { InlineError } from '../../design/states';
+import { InlineError, Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
 import { copy } from '../../design/copy';
@@ -171,16 +171,12 @@ export function QuestionCard({
           <Icon name={symbols.chevron} size={15} tone="inkFaint" />
         </View>
         {state.status === 'loading' ? (
-          <View
-            accessible
-            accessibilityRole="progressbar"
-            accessibilityLabel={`Loading ${kicker}`}
-            style={styles.skeleton}
+          <Skeleton
+            shape="figure"
+            count={1}
+            label={`Loading ${kicker}`}
             testID={`${testID}-loading`}
-          >
-            <View style={[styles.bar, { width: '40%', height: 34 }]} />
-            <View style={[styles.bar, { width: '60%', height: 15 }]} />
-          </View>
+          />
         ) : state.status === 'error' ? (
           state.offline ? (
             <Text wordSafe variant="secondary" testID={`${testID}-unsaved`}>
@@ -220,8 +216,6 @@ export function QuestionCard({
       <View style={styles.source}>
         {figure ? (
           <SourceLine {...figure.source} testID={`${testID}-source`} />
-        ) : state.status === 'loading' ? (
-          <View style={[styles.bar, { width: '55%', height: 14 }]} />
         ) : null}
       </View>
     </View>
@@ -369,10 +363,4 @@ const styles = StyleSheet.create({
   question: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   grow: { flex: 1 },
   source: { paddingHorizontal: 20, paddingBottom: 12 },
-  skeleton: { gap: rhythm.line * 2 },
-  bar: {
-    backgroundColor: colors.sunken,
-    borderRadius: radii.bar,
-    borderCurve: 'continuous',
-  },
 });
