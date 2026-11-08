@@ -1,342 +1,358 @@
-import { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { peopleDepth } from '../../api/runtime';
-import {
-  BigFigure,
-  Disclosure,
-  EmptyState,
-  ErrorState,
-  Group,
-  Heading,
-  KeyValueList,
-  LoadingState,
-  RowList,
-  Section,
-  Text,
-  errorMessage,
-} from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
+import { BarSeries } from '../../design/charts';
+import { Disclosure } from '../../design/disclosure';
+import { Group, Section } from '../../design/layout';
+import { ValueRow } from '../../design/rows';
+import { InlineError, Skeleton } from '../../design/states';
+import { Heading, Text } from '../../design/text';
+import { colors, hairline, rhythm } from '../../design/tokens';
 import {
   formatCount,
   formatDate,
   formatFinancialYear,
   formatMoney,
+  formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
-import { ReadDate } from './Sections';
+import { ReadDate, useRead } from './Sections';
 import { receiptsSeries } from './model';
 
-function useStatic<T>(load: () => Promise<T>) {
-  const [record, setRecord] = useState<T | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    let active = true;
-    load()
-      .then((next) => {
-        if (active) {
-          setRecord(next);
-          setError(null);
-        }
-      })
-      .catch((e) => {
-        if (active) setError(errorMessage(e));
-      });
-    return () => {
-      active = false;
-    };
-  }, [attempt, load]);
-  return { record, error, retry: () => setAttempt((n) => n + 1) };
-}
-const readAccess = () => peopleDepth.access();
-const readFunding = () => peopleDepth.funding();
+export type Funding = Awaited<ReturnType<typeof peopleDepth.funding>>;
+const fy = (year: string) => formatFinancialYear(Number(year.slice(0, 4)));
 
+/** The AEC annual-returns read, shared by Each year's return and Debts. */
+export function usePartyFunding() {
+  return useRead(() => peopleDepth.funding(), 'funding');
+}
+
+/** A money figure and its line, the figure in money ink. */
+function MoneyFigure({
+  amount,
+  line,
+  testID,
+}: {
+  amount: number;
+  line: string;
+  testID?: string;
+}) {
+  return (
+    <View
+      accessible
+      accessibilityLabel={`${moneyAccessibilityLabel(amount)}, ${line}`}
+      testID={testID}
+    >
+      <Text wordSafe variant="figure" tone="moneyInk" tabular>
+        {formatMoney(amount)}
+      </Text>
+      <Text wordSafe variant="secondary">
+        {line}
+      </Text>
+    </View>
+  );
+}
+
+/** The notes the returns and debts carry into their section's source sheet. */
+export function fundingNotes(record: Funding): string[] {
+  const rows = receiptsSeries(Object.values(record.data.parties)[0]?.returns);
+  return [
+    '“Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.',
+    'Debts are the balances the party’s branches listed as owed at 30 June on their own AEC annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new borrowing. Creditors under the disclosure threshold are not itemised.',
+    rows.some((r) => r.clamped)
+      ? 'Some historic rows report itemised components above the headline receipts total; their components are clamped to that total.'
+      : '',
+  ].filter(Boolean);
+}
+
+/**
+ * Each year's return (people.md 2.2, inside Receipts): every financial
+ * year's return total as bars, newest at the right, with the chart's own
+ * table; then the latest year's lines. Collapses with no return.
+ */
+export function PartyReturns({
+  record,
+  name,
+}: {
+  record: Funding;
+  name: string;
+}) {
+  const rows = receiptsSeries(record.data.parties[name]?.returns);
+  const latest = rows[0];
+  if (!latest) return null;
+  const series = [...rows].reverse();
+  const first = Number(series[0]!.year.slice(0, 4));
+  const last = Number(latest.year.slice(0, 4));
+  return (
+    <View style={styles.block} testID="party-annual-returns">
+      <Heading level={3}>Each year’s return</Heading>
+      <Text wordSafe variant="secondary">
+        All branches combined
+      </Text>
+      <View testID="party-returns-chart">
+        <BarSeries
+          data={series.map((r) => ({ label: fy(r.year), value: r.receipts }))}
+          ink="money"
+          format={formatMoneyCompact}
+          tableTitle="Each year’s return"
+          {...{
+            dateRange: { start: `${first}-07-01`, end: `${last + 1}-06-30` },
+            source: 'AEC annual returns',
+          }}
+        />
+      </View>
+      <View testID="party-returns-latest">
+        <Text
+          wordSafe
+          variant="groupHeader"
+          accessibilityRole="header"
+          style={styles.groupHeader}
+        >
+          {`${fy(latest.year)} return`}
+        </Text>
+        <ValueRow label="Total receipts" value={formatMoney(latest.receipts)} />
+        <ValueRow
+          label="Itemised donations"
+          value={formatMoney(latest.donations)}
+        />
+        <ValueRow
+          label="Itemised other receipts"
+          value={formatMoney(latest.other)}
+        />
+        <ValueRow
+          label="Not itemised"
+          value={formatMoney(latest.notItemised)}
+        />
+      </View>
+    </View>
+  );
+}
+
+/**
+ * Debts (people.md 2.2, inside Debts and associated entities): the balance
+ * owed at the latest 30 June, the share owed to lenders, the largest
+ * creditors, and the balance at each 30 June. Collapses with no debt.
+ */
+export function PartyDebts({
+  record,
+  name,
+}: {
+  record: Funding;
+  name: string;
+}) {
+  const d = record.data.parties[name]?.debts;
+  if (!d) return null;
+  return (
+    <View style={styles.block} testID="party-debts">
+      <Heading level={3}>Debts</Heading>
+      <MoneyFigure
+        amount={d.total}
+        line={`owed at 30 June ${Number(d.year.slice(0, 4)) + 1}`}
+        testID="party-debts-total"
+      />
+      <View>
+        <ValueRow
+          label="Owed to banks and lenders"
+          value={formatMoney(d.financial_total)}
+        />
+        <ValueRow label="Creditors listed" value={formatCount(d.lenders)} />
+      </View>
+      {d.top.length ? (
+        <View>
+          <Text
+            wordSafe
+            variant="groupHeader"
+            accessibilityRole="header"
+            style={styles.groupHeader}
+          >
+            {`Largest creditors, ${fy(d.year)}`}
+          </Text>
+          {d.top.map((l, i) => (
+            <ValueRow
+              key={`${l.name}-${i}`}
+              label={l.name}
+              value={formatMoney(l.amount)}
+            />
+          ))}
+        </View>
+      ) : null}
+      <Disclosure
+        label="Owed at each 30 June"
+        value={formatCount(d.by_year.length)}
+        testID="party-debt-years"
+      >
+        {() =>
+          d.by_year.map(([year, total]) => (
+            <ValueRow key={year} label={fy(year)} value={formatMoney(total)} />
+          ))
+        }
+      </Disclosure>
+    </View>
+  );
+}
+
+/** Whether the funding read holds anything for this party. */
+export const hasFunding = (record: Funding, name: string) => {
+  const p = record.data.parties[name];
+  return !!(p?.debts || receiptsSeries(p?.returns).length);
+};
+
+/** The one error for the returns and debts read (people.md 2.2). */
+export function FundingError({ retry }: { retry: () => void }) {
+  return (
+    <InlineError
+      subject="Returns and debts"
+      onRetry={retry}
+      testID="party-funding-error"
+    />
+  );
+}
+
+/** A skeleton in the shape of a figure block. */
+export function FundingLoading() {
+  return (
+    <Skeleton
+      shape="figure"
+      count={1}
+      label="Loading returns and debts"
+      testID="party-funding-loading"
+    />
+  );
+}
+
+/**
+ * Meetings and lobbying (people.md 2.2): who they met and whose registered
+ * lobbying client they are. Each half collapses when empty, and the section
+ * with them.
+ */
 export function PartyAccess({ name }: { name: string }) {
-  const { record, error, retry } = useStatic(readAccess);
-  const d = record?.data.donors[name];
+  const { read, retry } = useRead(() => peopleDepth.access(), 'access');
+  if (read.status === 'loading')
+    return (
+      <Section
+        title="Meetings and lobbying"
+        testID="party-access"
+        headingTestID="party-access-heading"
+      >
+        <Skeleton
+          shape="rows"
+          count={3}
+          label="Loading meetings and lobbying"
+          testID="party-access-loading"
+        />
+      </Section>
+    );
+  if (read.status === 'error')
+    return (
+      <Section
+        title="Meetings and lobbying"
+        testID="party-access"
+        headingTestID="party-access-heading"
+      >
+        <InlineError
+          subject="Meetings"
+          onRetry={retry}
+          testID="party-access-error"
+        />
+      </Section>
+    );
+  const record = read.value;
+  const d = record.data.donors[name];
+  const meetings = d?.meetings ?? [];
+  const lobbyists = d?.lobbyists ?? [];
+  if (!meetings.length && !lobbyists.length) return null;
   return (
     <Section
-      title="Meetings and lobbyists"
-      accent="people"
+      title="Meetings and lobbying"
       testID="party-access"
+      headingTestID="party-access-heading"
     >
-      {error ? (
-        <ErrorState message={error} onRetry={retry} />
-      ) : !record ? (
-        <LoadingState label="Loading meetings and lobbyists" />
-      ) : (
-        <Group>
-          <Heading level={3}>Who they met</Heading>
-          {d?.meetings?.length ? (
-            <RowList>
-              {d.meetings.map((m, i) => (
-                <Group key={i} gap={rhythm.line}>
-                  <Text wordSafe variant="strong">
+      <Group>
+        {meetings.length ? (
+          <View style={styles.block}>
+            <Heading level={3}>Who they met</Heading>
+            <View>
+              {meetings.map((m, i) => (
+                <View
+                  key={i}
+                  accessible
+                  style={[styles.row, i ? styles.inset : null]}
+                >
+                  <Text wordSafe variant="body">
                     {m.minister}
                   </Text>
-                  <Text wordSafe variant="fine">
-                    {jurisdictionName(m.jurisdiction.toLowerCase()) ??
-                      'Jurisdiction not recorded'}
-                    {m.date ? ' · ' + formatDate(m.date) : ''}
+                  <Text wordSafe variant="secondary">
+                    {[
+                      jurisdictionName(m.jurisdiction.toLowerCase()),
+                      m.date ? formatDate(m.date, 'short') : null,
+                      m.purpose,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
                   </Text>
-                  {m.purpose ? <Text wordSafe>{m.purpose}</Text> : null}
-                </Group>
+                </View>
               ))}
-              <Text wordSafe variant="fine">
-                {formatCount(d.meetings_total ?? d.meetings.length)} disclosed
-                meetings
-                {(d.meetings_total ?? 0) > d.meetings.length
-                  ? ', newest ' + d.meetings.length + ' shown'
-                  : ''}
-                .
+            </View>
+            {(d?.meetings_total ?? 0) > meetings.length ? (
+              <Text wordSafe variant="footnote">
+                {`${formatCount(meetings.length)} of ${formatCount(d!.meetings_total!)} shown, newest first.`}
               </Text>
-            </RowList>
-          ) : (
-            <EmptyState message="No disclosed meetings match this party." />
-          )}
-          <Heading level={3}>Registered lobbying client of</Heading>
-          {d?.lobbyists?.length ? (
-            <RowList>
-              {d.lobbyists.map((l, i) => (
-                <Group key={i} gap={rhythm.line}>
-                  <Text wordSafe variant="strong">
+            ) : null}
+          </View>
+        ) : null}
+        {lobbyists.length ? (
+          <View style={styles.block}>
+            <Heading level={3}>Registered lobbying client of</Heading>
+            <View>
+              {lobbyists.map((l, i) => (
+                <View
+                  key={i}
+                  accessible
+                  style={[styles.row, i ? styles.inset : null]}
+                >
+                  <Text wordSafe variant="body">
                     {l.firm}
                   </Text>
-                  <Text wordSafe variant="fine">
-                    {jurisdictionName(l.jurisdiction.toLowerCase()) ??
-                      'Jurisdiction not recorded'}
-                    {l.registered ? ' · from ' + formatDate(l.registered) : ''}
-                    {l.ceased ? ' · ceased' : ''}
+                  <Text wordSafe variant="secondary">
+                    {[
+                      jurisdictionName(l.jurisdiction.toLowerCase()),
+                      l.registered
+                        ? `from ${formatDate(l.registered, 'short')}`
+                        : null,
+                      l.ceased ? 'ceased' : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
                   </Text>
-                </Group>
+                </View>
               ))}
-            </RowList>
-          ) : (
-            <EmptyState message="No registered lobbying client matches this party." />
-          )}
-          {(d?.lobbyists_total ?? 0) > (d?.lobbyists?.length ?? 0) ? (
-            <Text wordSafe variant="fine">
-              {formatCount(d!.lobbyists_total!)} registered firms,{' '}
-              {formatCount(d!.lobbyists!.length)} shown.
-            </Text>
-          ) : null}
-          <ReadDate
-            record={record}
-            citation="NSW and QLD ministerial diary disclosures; six lobbyist registers"
-            about={{
-              title: 'About these disclosures',
-              notes: [
-                'From NSW and QLD ministerial diary disclosures and the six lobbyist registers; name matching is exact after normalisation, so a company using several trading names may be under-counted.',
-              ],
-            }}
-            testID="party-access-source"
-          />
-        </Group>
-      )}
+            </View>
+            {(d?.lobbyists_total ?? 0) > lobbyists.length ? (
+              <Text wordSafe variant="footnote">
+                {`${formatCount(lobbyists.length)} of ${formatCount(d!.lobbyists_total!)} shown.`}
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
+        <ReadDate
+          record={record}
+          citation="NSW and QLD ministerial diary disclosures; six lobbyist registers"
+          about={{
+            title: 'Meetings and lobbying',
+            notes: [
+              'From NSW and QLD ministerial diary disclosures and the six lobbyist registers; name matching is exact after normalisation, so a company using several trading names may be under-counted.',
+            ],
+          }}
+          testID="party-access-source"
+        />
+      </Group>
     </Section>
   );
 }
 
-function ReturnRows({ rows }: { rows: ReturnType<typeof receiptsSeries> }) {
-  return (
-    <RowList>
-      {rows.map((r) => (
-        <Disclosure
-          key={r.year}
-          label={formatFinancialYear(Number(r.year.slice(0, 4)))}
-          value={formatMoney(r.receipts)}
-          testID={'party-return-' + r.year}
-        >
-          {() => (
-            <KeyValueList
-              items={[
-                { label: 'Receipts', value: formatMoney(r.receipts) },
-                {
-                  label: 'Itemised donations',
-                  value: formatMoney(r.donations),
-                },
-                {
-                  label: 'Itemised other receipts',
-                  value: formatMoney(r.other),
-                },
-                { label: 'Not itemised', value: formatMoney(r.notItemised) },
-                { label: 'Branches summed', value: formatCount(r.branches) },
-              ]}
-            />
-          )}
-        </Disclosure>
-      ))}
-    </RowList>
-  );
-}
-
-export function PartyFunding({ name }: { name: string }) {
-  const { record, error, retry } = useStatic(readFunding);
-  const p = record?.data.parties[name];
-  const rows = receiptsSeries(p?.returns),
-    latest = rows[0],
-    d = p?.debts,
-    b = p?.benefits;
-  return (
-    <>
-      <Section
-        title="Receipts on the return"
-        accent="money"
-        testID="party-annual-returns"
-      >
-        {error ? (
-          <ErrorState message={error} onRetry={retry} />
-        ) : !record ? (
-          <LoadingState label="Loading annual returns" />
-        ) : (
-          <Group>
-            {latest ? (
-              <BigFigure
-                value={formatMoney(latest.receipts)}
-                spoken={moneyAccessibilityLabel(latest.receipts)}
-                label={`receipts on the ${formatFinancialYear(Number(latest.year.slice(0, 4)))} return${latest.branches > 1 ? ', ' + formatCount(latest.branches) + ' branches summed' : ''}`}
-              />
-            ) : (
-              <EmptyState message="No annual return receipts are held for this party." />
-            )}
-            <ReturnRows rows={rows.slice(0, 10)} />
-            {rows.length > 10 ? (
-              <RowList>
-                <Disclosure
-                  label={'All ' + rows.length + ' years'}
-                  testID="party-all-years"
-                >
-                  {() => <ReturnRows rows={rows.slice(10)} />}
-                </Disclosure>
-              </RowList>
-            ) : null}
-            <ReadDate
-              record={record}
-              citation={record.data.meta.source}
-              originals={[
-                {
-                  label: 'AEC annual returns',
-                  url: record.data.meta.register_url,
-                },
-              ]}
-              about={{
-                title: 'About receipts on the return',
-                notes: [
-                  '“Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.',
-                  rows.some((r) => r.clamped)
-                    ? `${rows.filter((r) => r.clamped).length} historic rows report itemised components above the headline receipts total; their components are clamped to that total.`
-                    : null,
-                ],
-              }}
-              testID="party-annual-returns-source"
-            />
-          </Group>
-        )}
-      </Section>
-      <Section
-        title="Debts and other funding"
-        accent="money"
-        testID="party-debts"
-      >
-        {record ? (
-          <Group>
-            {d ? (
-              <>
-                <BigFigure
-                  value={formatMoney(d.total)}
-                  spoken={moneyAccessibilityLabel(d.total)}
-                  label={'owed at 30 June ' + (Number(d.year.slice(0, 4)) + 1)}
-                />
-                <KeyValueList
-                  items={[
-                    {
-                      label: 'Of it to banks and other financial institutions',
-                      value: formatMoney(d.financial_total),
-                    },
-                    {
-                      label: 'Creditors listed',
-                      value: formatCount(d.lenders),
-                    },
-                  ]}
-                />
-                <Heading level={3}>
-                  Largest creditors,{' '}
-                  {formatFinancialYear(Number(d.year.slice(0, 4)))}
-                </Heading>
-                <KeyValueList
-                  items={d.top.map((l) => ({
-                    label:
-                      l.name +
-                      (l.type === 'Financial'
-                        ? ' (financial institution)'
-                        : ''),
-                    value: formatMoney(l.amount),
-                  }))}
-                />
-                <RowList>
-                  <Disclosure
-                    label="Owed at each 30 June"
-                    testID="party-debt-years"
-                  >
-                    {() => (
-                      <KeyValueList
-                        items={d.by_year.map(([year, total]) => ({
-                          label: formatFinancialYear(Number(year.slice(0, 4))),
-                          value: formatMoney(total),
-                        }))}
-                      />
-                    )}
-                  </Disclosure>
-                </RowList>
-              </>
-            ) : (
-              <EmptyState message="No itemised debt record is held for this party." />
-            )}
-            {b ? (
-              <Group gap={rhythm.tight}>
-                <Text wordSafe variant="strong" tabular>
-                  {formatMoney(b.total)}
-                </Text>
-                <Text wordSafe>
-                  in discretionary benefits in{' '}
-                  {formatFinancialYear(Number(b.year.slice(0, 4)))}
-                  {b.top.length
-                    ? ': ' +
-                      b.top
-                        .slice(0, 3)
-                        .map((t) => t.name + ' ' + formatMoney(t.amount))
-                        .join(', ')
-                    : ''}
-                  . These are government payments other than public election
-                  funding, as listed on the return.
-                </Text>
-              </Group>
-            ) : null}
-            <ReadDate
-              record={record}
-              citation="AEC Transparency Register"
-              originals={[
-                {
-                  label: 'AEC Transparency Register',
-                  url: record.data.meta.register_url,
-                },
-              ]}
-              about={{
-                title: 'About debts and other funding',
-                notes: [
-                  'Debts are the balances the party’s branches listed as owed at 30 June on their own AEC annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new borrowing. Creditors under the disclosure threshold are not itemised.',
-                  'Year-end balances, not new borrowing; a year with no debt itemised shows nothing.',
-                ],
-              }}
-              testID="party-debts-source"
-            />
-          </Group>
-        ) : error ? (
-          <ErrorState message={error} onRetry={retry} />
-        ) : (
-          <LoadingState label="Loading debts and creditors" />
-        )}
-      </Section>
-    </>
-  );
-}
+const styles = StyleSheet.create({
+  block: { gap: rhythm.heading },
+  groupHeader: { paddingTop: rhythm.tight },
+  row: { paddingVertical: rhythm.tight, gap: rhythm.line },
+  inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+});
