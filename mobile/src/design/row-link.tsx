@@ -1,5 +1,17 @@
-import { cloneElement, useEffect, useState, type ReactElement } from 'react';
-import { Alert, Platform, Pressable, type PressableProps } from 'react-native';
+import {
+  cloneElement,
+  useEffect,
+  useState,
+  type ReactElement,
+  type Ref,
+} from 'react';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  type PressableProps,
+  type View,
+} from 'react-native';
 import { Link, router, type Href } from 'expo-router';
 import { canonicalUrl, openOnWeb } from '../navigation/external';
 import { shareRecord } from '../navigation/share';
@@ -89,6 +101,69 @@ function nativeItems(items: readonly RowMenuAction[]): ReactElement[] {
   );
 }
 
+type RowElement = ReactElement<PressableProps & { ref?: Ref<View> }>;
+interface RowTriggerProps {
+  row: RowElement;
+  style?: PressableProps['style'];
+  ref?: Ref<View>;
+  [slotProp: string]: unknown;
+}
+const isHandler = (prop: string) => /^on[A-Z]/.test(prop);
+function composeRefs<T>(...refs: (Ref<T> | undefined)[]) {
+  return (node: T | null) => {
+    for (const ref of refs) {
+      if (typeof ref === 'function') ref(node);
+      else if (ref) (ref as { current: T | null }).current = node;
+    }
+  };
+}
+/**
+ * The element Link.Trigger slots its props into, so the row never meets the
+ * Slot. expo-router 57.0.24 renders Link asChild and Link.Trigger through
+ * Radix's Slot (build/ui/Slot.js), and @radix-ui/react-slot 1.3.3 mergeProps
+ * (dist/index.js:119-141) merges a child's style as `{ ...slot, ...child }`.
+ * Spreading a Pressable's pressed-state style function gives `{}`, so the
+ * row lost `flexDirection: 'row'` and drew its glyph, title and chevron on
+ * three lines. This element carries no style; it hands the Slot's props on
+ * to the row with the row's own style (function or array) kept whole, and
+ * merges the rest as Radix would: the row's props win, handlers run both.
+ */
+export function RowTrigger({
+  row,
+  style: slotStyle,
+  ref,
+  ...slot
+}: RowTriggerProps) {
+  const own = row.props;
+  const merged: Record<string, unknown> = {};
+  for (const [prop, value] of Object.entries(slot)) {
+    const mine = (own as Record<string, unknown>)[prop];
+    if (isHandler(prop) && typeof mine === 'function' && value) {
+      merged[prop] = (...args: unknown[]) => {
+        const result = (mine as (...a: unknown[]) => unknown)(...args);
+        (value as (...a: unknown[]) => unknown)(...args);
+        return result;
+      };
+    } else if (isHandler(prop) ? !mine : !(prop in own)) merged[prop] = value;
+  }
+  const style = own.style;
+  return cloneElement(row, {
+    ...merged,
+    ...(slotStyle == null
+      ? {}
+      : {
+          style:
+            typeof style === 'function'
+              ? (state: Parameters<typeof style>[0]) => [
+                  style(state),
+                  slotStyle,
+                ]
+              : [style, slotStyle],
+        }),
+    ref: composeRefs(own.ref, ref),
+  } as Partial<PressableProps>);
+}
+
 /** A native preview and menu, with every menu choice also directly accessible. */
 export function RowLink({
   href,
@@ -161,7 +236,9 @@ export function RowLink({
           : undefined
       }
     >
-      <Link.Trigger withAppleZoom={zoom && !select}>{trigger}</Link.Trigger>
+      <Link.Trigger withAppleZoom={zoom && !select}>
+        <RowTrigger row={trigger} />
+      </Link.Trigger>
       {preview && !select ? <Link.Preview /> : null}
       {items.length ? <Link.Menu>{nativeItems(items)}</Link.Menu> : null}
     </Link>

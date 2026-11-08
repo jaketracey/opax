@@ -148,7 +148,18 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 30000
 - assertVisible: 'https://transparency\.aec\.gov\.au/'
 - takeScreenshot: ${EVIDENCE}/23-source
+# Done on the Original page returns to the Sources sheet stacked under it;
+# a second Done (the sheet's bar button, which takes no id) closes it.
 - tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: money-source-sheet
+    timeout: 15000
+- tapOn: Done
+- extendedWaitUntil:
+    notVisible:
+      id: money-source-sheet
+    timeout: 15000
 - tapOn:
     id: BackButton
 - extendedWaitUntil:

@@ -11,6 +11,7 @@ import {
   IconButton,
   MonthPager,
   PopUpButton,
+  popUpLabelInset,
   SegmentedPicker,
 } from '../src/design/controls';
 import { Icon } from '../src/design/icon';
@@ -586,6 +587,31 @@ test.each([
           node.props.testID === 'state' && typeof node.type === 'string',
       ),
     ).toHaveLength(1);
+  },
+);
+
+test.each([false, true])(
+  'a PopUpButton with row=%s starts its value on the text column',
+  (row) => {
+    size(1);
+    const r = render(
+      <PopUpButton
+        row={row}
+        label="State or territory"
+        value="all"
+        options={options}
+        onChange={noop}
+        testID="state"
+      />,
+    );
+    const button = r.root.find(
+      (node) => node.props.testID === 'state' && typeof node.type === 'string',
+    );
+    // Bare, the menu's own label padding is pulled back to the column;
+    // in a row the value is trailing and keeps it.
+    expect(RN.StyleSheet.flatten(button.props.style).marginLeft).toBe(
+      row ? undefined : -popUpLabelInset,
+    );
   },
 );
 

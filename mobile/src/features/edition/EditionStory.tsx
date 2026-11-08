@@ -1,5 +1,5 @@
 import { Fragment, useRef } from 'react';
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
@@ -66,10 +66,6 @@ export function EditionStory() {
       }
     : null;
   const destination = edition ? editionSubject(edition, subject.slug) : null;
-  // Rows push the subject themselves: a row handed an href goes through
-  // RowLink's Link asChild, whose Slot drops a pressed-state style function,
-  // so the row lost its layout and its chevron fell under the title.
-  const openSubject = destination ? () => router.push(destination) : undefined;
   const sourceRows = edition
     ? editionSourceRows(edition, subject.originals)
     : [];
@@ -177,7 +173,7 @@ export function EditionStory() {
                   <BillRow
                     billKey={/^\/bill\/([^/?]+)/.exec(edition.path)![1]!}
                     title={edition.shortTitle ?? edition.title}
-                    onPress={openSubject}
+                    href={destination}
                     status=""
                     showStatus={false}
                     menu={[]}
@@ -187,7 +183,7 @@ export function EditionStory() {
                   <PersonRow
                     name={edition.title}
                     {...editionPerson(edition)}
-                    onPress={openSubject}
+                    href={destination}
                     portrait={
                       <CachedPortrait
                         name={edition.title}
@@ -209,7 +205,7 @@ export function EditionStory() {
                     symbol={
                       edition.kind === 'topic' ? symbols.topic : symbols.money
                     }
-                    onPress={openSubject}
+                    href={destination}
                     value={
                       edition.kind === 'grant'
                         ? edition.facts.figures[0]?.value
