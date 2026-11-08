@@ -399,8 +399,31 @@ test('MonthPager keeps a disabled end and names the previous month', () => {
   expect(
     buttons
       .filter((node) => node.props.accessibilityLabel === 'Next month')
-      .every((node) => node.props.disabled),
+      .every(
+        (node) =>
+          node.props.disabled || node.props.accessibilityState?.disabled,
+      ),
   ).toBe(true);
+});
+test('MonthPager on iOS is a content row, never a bottom toolbar the tab bar would cover', () => {
+  const os = RN.Platform.OS;
+  RN.Platform.OS = 'ios';
+  const r = render(
+    <MonthPager
+      month="November 2026"
+      previous={{ label: 'October', onPress: noop }}
+      next={null}
+    />,
+  );
+  expect(r.root.findAll((node) => node.type === 'ToolbarPart')).toHaveLength(0);
+  expect(
+    r.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.accessibilityLabel === 'Previous month, October',
+    ).length,
+  ).toBeGreaterThan(0);
+  RN.Platform.OS = os;
 });
 test('FollowButton retains its feature logic and presents the exact follow-limit copy', async () => {
   jest.mocked(useFollows).mockReturnValue([]);
