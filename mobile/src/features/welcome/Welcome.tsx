@@ -16,7 +16,12 @@ import { designFlags } from '../../design/flags';
 import { Icon } from '../../design/icon';
 import { useKeyScope } from '../../design/keyboard';
 import { Text } from '../../design/text';
-import { colors, isAccessibilityCategory, rhythm } from '../../design/tokens';
+import {
+  colors,
+  contentSizeCategory,
+  isAccessibilityCategory,
+  rhythm,
+} from '../../design/tokens';
 import { isPad, useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
@@ -27,6 +32,16 @@ import { welcomeCopy } from './copy';
 
 /** The welcome's content column on a wide screen (today.md 3.3). */
 export const WELCOME_COLUMN = 540;
+
+/**
+ * Accessibility sizes from AX3 up push the fine print below the fold, so
+ * Continue unpins and becomes the last item in the scroll, under the notice
+ * (first-launch 4.2 A1, S1): the cultural notice is always on screen before
+ * Continue can be tapped.
+ */
+export function continuePinned(fontScale: number): boolean {
+  return !['ax3', 'ax4', 'ax5'].includes(contentSizeCategory(fontScale));
+}
 
 /**
  * The welcome (`/welcome`, shell.md 4, today.md 3): one full-screen page on
@@ -55,6 +70,7 @@ export function WelcomePage({
   const [covered, setCovered] = useState(launch);
   const leaving = useRef(false);
   const accessible = isAccessibilityCategory(fontScale);
+  const pinned = continuePinned(fontScale);
   const wide = isPad && layout.regular;
   // The short welcome is the same page with Continue only (first-launch
   // 4.5 D2): the same ground.
@@ -147,7 +163,9 @@ export function WelcomePage({
           {
             paddingHorizontal: margin,
             paddingTop: insets.top + (wide ? rhythm.section : 56),
-            paddingBottom: rhythm.block,
+            // Unpinned, the scroll's end leaves the whole button above the
+            // home indicator.
+            paddingBottom: pinned ? rhythm.block : insets.bottom + rhythm.block,
           },
         ]}
       >
@@ -226,25 +244,25 @@ export function WelcomePage({
               {copy.deceasedNotice}
             </Text>
           </View>
+          {pinned ? null : <View style={styles.unpinned}>{button}</View>}
         </View>
       </ScrollView>
-      {/* Continue is pinned at every size, so it is always on screen and
-          never half under the edge at the end of an AX5 scroll
-          (w4-welcome-ax5-03). The notice sits directly above it. */}
-      <View
-        style={[
-          styles.foot,
-          {
-            paddingHorizontal: margin,
-            backgroundColor: ground,
-            paddingBottom: Math.max(insets.bottom, rhythm.block),
-          },
-        ]}
-      >
-        <View style={[styles.column, { maxWidth: WELCOME_COLUMN }]}>
-          {button}
+      {pinned ? (
+        <View
+          style={[
+            styles.foot,
+            {
+              paddingHorizontal: margin,
+              backgroundColor: ground,
+              paddingBottom: Math.max(insets.bottom, rhythm.block),
+            },
+          ]}
+        >
+          <View style={[styles.column, { maxWidth: WELCOME_COLUMN }]}>
+            {button}
+          </View>
         </View>
-      </View>
+      ) : null}
       {covered ? (
         <LaunchHandoff
           ready={laidOut}
@@ -274,5 +292,6 @@ const styles = StyleSheet.create({
   rowTextStacked: { gap: 2 },
   fine: { marginTop: rhythm.section, gap: rhythm.tight },
   centred: { textAlign: 'center' },
+  unpinned: { marginTop: rhythm.group },
   foot: { paddingTop: rhythm.block },
 });

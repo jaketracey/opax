@@ -4,11 +4,15 @@ import { Dimensions, Text as NativeText } from 'react-native';
 import { router } from 'expo-router';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 import { releaseSplash } from '../src/launch/splash';
-import Welcome, { WELCOME_COLUMN } from '../src/features/welcome/Welcome';
+import Welcome, {
+  continuePinned,
+  WELCOME_COLUMN,
+} from '../src/features/welcome/Welcome';
 import ShortWelcome from '../src/features/welcome/ShortWelcome';
 import WelcomeLayout from '../src/app/welcome/_layout';
 import { replayWelcome } from '../src/features/welcome/replay';
 import { copy } from '../src/design/copy';
+import { rhythm } from '../src/design/tokens';
 
 const mockStack: { screenOptions?: unknown } = {};
 jest.mock('expo-router', () => ({
@@ -173,23 +177,47 @@ describe('the full welcome', () => {
     expect(has(replay, 'welcome-launch-cover')).toBe(false);
     await act(async () => replay.unmount());
   });
-  test('Continue is pinned below the scroll at every size, AX5 included', async () => {
-    for (const scale of [1, 2, 3.12]) {
-      setFontScale(scale);
-      const r = await render(<Welcome />);
-      expect(words(r).indexOf(copy.deceasedNotice)).toBeGreaterThan(-1);
-      // Continue is never inside the ScrollView, so it cannot end up half
-      // off-screen at the end of a long AX5 scroll.
-      const scroll = r.root.find(
-        (n) => typeof n.type === 'string' && n.props.contentContainerStyle,
+  test('from AX3 up Continue scrolls in after the notice; below it is pinned', async () => {
+    expect(continuePinned(1)).toBe(true);
+    expect(continuePinned(2)).toBe(true);
+    expect(continuePinned(3.12)).toBe(false);
+    const scrollOf = (r: TestRenderer.ReactTestRenderer) =>
+      r.root.find(
+        (n) => typeof n.type === 'string' && !!n.props.contentContainerStyle,
       );
-      expect(
-        scroll.findAll((n) => n.props.testID === 'welcome-continue'),
-      ).toHaveLength(0);
-      expect(has(r, 'welcome-continue')).toBe(true);
-      await act(async () => r.unmount());
-    }
+    const inScroll = (r: TestRenderer.ReactTestRenderer, id: string) =>
+      scrollOf(r).findAll((n) => n.props.testID === id).length > 0;
+
+    // AX5: the notice, then Continue, both inside the scroll (journey S1).
+    setFontScale(3.12);
+    const ax = await render(<Welcome />);
+    expect(inScroll(ax, 'welcome-notice')).toBe(true);
+    expect(inScroll(ax, 'welcome-continue')).toBe(true);
+    const order = scrollOf(ax)
+      .findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          ['welcome-notice', 'welcome-continue'].includes(n.props.testID),
+      )
+      .map((n) => n.props.testID as string);
+    expect(order.indexOf('welcome-notice')).toBeLessThan(
+      order.indexOf('welcome-continue'),
+    );
+    // At the end of the scroll the whole button clears the home indicator
+    // (the mocked bottom inset is 34).
+    const content = Object.assign(
+      {},
+      ...flat(scrollOf(ax).props.contentContainerStyle),
+    );
+    expect(content.paddingBottom).toBeGreaterThanOrEqual(34 + rhythm.block);
+    await act(async () => ax.unmount());
+
+    // Large: Continue is pinned in the foot, outside the scroll.
     setFontScale(1);
+    const large = await render(<Welcome />);
+    expect(inScroll(large, 'welcome-continue')).toBe(false);
+    expect(has(large, 'welcome-continue')).toBe(true);
+    await act(async () => large.unmount());
   });
   test('the feature glyphs are the tint at full strength, not hierarchical', async () => {
     const r = await render(<Welcome />);
