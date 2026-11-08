@@ -6,6 +6,7 @@ import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { useAccount } from '../account/store';
 import { confirmDeleteAll } from './conversation-actions';
+import { conversationsCopy } from './Conversations';
 import { resetAskConsent } from './consent';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
 
@@ -60,7 +61,7 @@ export default function AskSettings() {
             title={askSettingsCopy.deleteAll}
             destructive
             accessory="none"
-            onPress={() => confirmDeleteAll(status, 'Delete')}
+            onPress={() => confirmDeleteAll(status, conversationsCopy.deleteAll)}
             testID="ask-settings-delete-all"
           />
         ) : null}

@@ -1,26 +1,21 @@
 appId: au.com.opax.app
-name: Open Your conversations, from the idle rows or under an answer's ⋯
+name: Open Conversations from the bar's clock or the idle page's See all conversations
 ---
-# Design pass 3D: with a conversation open, Options, Your conversations and
-# Start a new conversation are under the answer's ⋯; at idle they are rows.
 - runFlow:
     when:
       visible:
-        id: ask-saved
+        id: ask-see-all-conversations
     commands:
       - tapOn:
-          id: ask-saved
+          id: ask-see-all-conversations
 - runFlow:
     when:
       notVisible:
-        id: ask-history-done
+        id: ask-history-screen
     commands:
-      - scrollUntilVisible:
-          element:
-            id: ask-answer-more
-          direction: DOWN
-          centerElement: true
-          timeout: 180000
-      - tapOn:
-          id: ask-answer-more
-      - tapOn: Your conversations
+      # "Your conversations" until chrome.ts takes the journey's name.
+      - tapOn: '(Your c|C)onversations'
+- extendedWaitUntil:
+    visible:
+      id: ask-history-screen
+    timeout: 15000

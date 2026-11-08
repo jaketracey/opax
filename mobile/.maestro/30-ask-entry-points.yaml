@@ -1,25 +1,45 @@
 appId: au.com.opax.app
-name: 30 Scoped Ask drafts from native records; arrival never submits
+name: 30 Ask about drafts from records; each starts a new conversation, sends nothing and never stops a running answer
 ---
 - launchApp:
     permissions:
       all: unset
     clearState: true
+# A conversation first, so each arrival can be seen to start a new one.
+- tapOn:
+    id: tab-ask
+- tapOn:
+    id: ask-starter-0
+- runFlow: support/ask-consent.yaml
+- extendedWaitUntil:
+    visible:
+      id: ask-machine-label
+    timeout: 180000
 - openLink: opax://person/anthony-albanese
 - extendedWaitUntil:
     visible:
       id: person-screen-title
     timeout: 60000
-# Ask is under the header's ⋯, beside Follow.
 - takeScreenshot: ${EVIDENCE}/30-person-entry
 - runFlow:
     file: support/open-more.yaml
     env:
       NAME: 'Anthony Albanese'
 - tapOn: Ask about their speeches
+- extendedWaitUntil:
+    visible:
+      id: ask-question
+      text: What has Anthony Albanese said in parliament this year\?
+    timeout: 15000
+# A fresh idle page: the previous conversation is first under Conversations.
 - assertVisible:
-    id: ask-question
-- assertVisible: What has Anthony Albanese said in parliament\?
+    id: ask-idle-line
+- assertVisible:
+    id: ask-conversation-0
+- assertNotVisible:
+    id: ask-user-question
+- assertVisible:
+    id: ask-options-line
 - takeScreenshot: ${EVIDENCE}/30-speaker-draft
 - openLink: opax://party/labor
 - extendedWaitUntil:
@@ -31,10 +51,12 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     file: support/open-more.yaml
     env:
       NAME: 'Labor'
-- tapOn: Ask about this
-- assertVisible:
-    id: ask-question
-- assertVisible: What has parliament said about Labor\?
+- tapOn: Ask about .*
+- extendedWaitUntil:
+    visible:
+      id: ask-question
+      text: What have Labor members said in parliament this year\?
+    timeout: 15000
 - openLink: opax://electorate/el_5d600e7f6dca5b72ae04d686
 - extendedWaitUntil:
     visible:
@@ -45,24 +67,66 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     file: support/open-more.yaml
     env:
       NAME: '.*'
-- tapOn: Ask about this
-- assertVisible:
+- tapOn: Ask about .*
+- extendedWaitUntil:
+    visible:
+      id: ask-question
+      text: What has parliament said about .*\?
+    timeout: 15000
+- assertNotVisible:
+    id: ask-status
+# A running answer survives an arrival: the draft waits, marked as a new
+# conversation, and the composer's button stays Stop until it completes.
+- tapOn:
+    id: ask-options-clear
+- tapOn:
     id: ask-question
+- eraseText: 200
+- inputText: fixture slow stream
+- tapOn:
+    id: ask-submit
+    enabled: true
+- extendedWaitUntil:
+    visible:
+      id: ask-status
+    timeout: 15000
 - openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
     visible:
       id: bill-title
     timeout: 60000
-# A bill's Ask is under its header's ⋯ (pass 3C), as on the other records.
 - takeScreenshot: ${EVIDENCE}/30-bill-entry
 - runFlow:
     file: support/open-more.yaml
     env:
       NAME: 'Interactive Gambling.*'
-- tapOn: Ask about this
+- tapOn: Ask about this.*
+- extendedWaitUntil:
+    visible:
+      id: ask-draft-new-conversation
+    timeout: 15000
+- assertVisible: Starts a new conversation.*
 - assertVisible:
-    id: ask-question
-- takeScreenshot: ${EVIDENCE}/30-bill-draft
+    id: ask-stop
+- assertVisible:
+    id: ask-status
+- takeScreenshot: ${EVIDENCE}/30-bill-draft-while-running
+- extendedWaitUntil:
+    visible:
+      id: ask-machine-label
+    timeout: 90000
+# Once the answer completes, Send opens a new conversation with the draft.
+- tapOn:
+    id: ask-submit
+    enabled: true
+- extendedWaitUntil:
+    visible:
+      id: ask-user-question
+      text: What did parliament say about the .*
+    timeout: 60000
+- assertNotVisible:
+    id: ask-user-question
+    text: fixture slow stream
 - openLink: opax://doc/speech-1205524
 - extendedWaitUntil:
     visible:
@@ -77,7 +141,9 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
 - takeScreenshot: ${EVIDENCE}/30-doc-entry
 - tapOn:
     id: doc-ask
-- assertVisible:
-    id: ask-question
-- assertVisible: What did .* say about .*\?
+- extendedWaitUntil:
+    visible:
+      id: ask-question
+      text: What did .* say about .*\?
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/30-doc-draft

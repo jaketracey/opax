@@ -1,9 +1,8 @@
 appId: au.com.opax.app
-name: 58 Ask asks for consent once before the first question; Not now keeps the draft; Report this answer opens the support page
+name: 58 Ask asks for consent once before the first question; Not now keeps the draft; Report this answer opens Mail or offers Copy report
 ---
 # App Review 5.1.2(i): nothing goes to the third-party AI before the reader
-# agrees, once. Report this answer is Talk's report path: OPAX's support page
-# in the in-app browser (the e2e build shows its address locally).
+# agrees, once. The consent sheet fits its content and has no Done or close.
 - launchApp:
     permissions:
       all: unset
@@ -15,11 +14,6 @@ name: 58 Ask asks for consent once before the first question; Not now keeps the 
 - tapOn:
     id: ask-question
 - inputText: Who spoke on the interactive gambling levy bill?
-- scrollUntilVisible:
-    element:
-      id: ask-submit
-    centerElement: true
-    timeout: 60000
 - tapOn:
     id: ask-submit
     enabled: true
@@ -29,6 +23,8 @@ name: 58 Ask asks for consent once before the first question; Not now keeps the 
     timeout: 15000
 - assertVisible:
     id: ask-consent-what
+- assertVisible: .*Progress Agentic RAG.*OpenRouter.*
+- assertNotVisible: Done
 - takeScreenshot: ${EVIDENCE}/58-consent
 # At AX5 the words fill the sheet: scroll to the pill and to each button.
 - scrollUntilVisible:
@@ -53,18 +49,13 @@ name: 58 Ask asks for consent once before the first question; Not now keeps the 
     timeout: 15000
 - assertVisible:
     id: ask-question
-- assertVisible: Who spoke on the interactive gambling levy bill\?
+    text: Who spoke on the interactive gambling levy bill\?
 - assertNotVisible:
     id: ask-user-question
 - assertNotVisible:
-    id: ask-stages
+    id: ask-status
 - takeScreenshot: ${EVIDENCE}/58-not-now
 # Again, then Continue: the held question is sent.
-- scrollUntilVisible:
-    element:
-      id: ask-submit
-    centerElement: true
-    timeout: 60000
 - tapOn:
     id: ask-submit
     enabled: true
@@ -77,56 +68,61 @@ name: 58 Ask asks for consent once before the first question; Not now keeps the 
     visibilityPercentage: 10
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/58-answer
-# Report this answer, under the answer's ⋯.
+# Report a problem, under the answer's one ⋯ (an @expo/ui Menu).
 - scrollUntilVisible:
     element:
-      id: ask-answer-more
+      id: ask-answer-menu
     direction: DOWN
     centerElement: true
     timeout: 180000
 - tapOn:
-    id: ask-answer-more
+    id: ask-answer-menu
 - extendedWaitUntil:
-    visible: Report this answer
+    visible: Report a problem
     timeout: 15000
+- assertVisible: Copy answer
+- assertVisible: Share question
 - takeScreenshot: ${EVIDENCE}/58-report-menu
-- tapOn: Report this answer
+- tapOn: Report a problem
 - extendedWaitUntil:
     visible:
-      id: source-destination-url
+      id: ask-report-sheet
     timeout: 15000
-- assertVisible:
-    id: source-destination-url
-    text: '^https://opax\.invalid/support$'
-- takeScreenshot: ${EVIDENCE}/58-report-support
-- tapOn: Done
-- scrollUntilVisible:
-    element:
-      id: ask-report-thanks
-    direction: DOWN
-    centerElement: true
-    visibilityPercentage: 10
-    timeout: 90000
-- assertVisible: Thanks\. We.ll look at this answer\.
-- takeScreenshot: ${EVIDENCE}/58-report-thanks
+- assertVisible: Report this answer
+- tapOn:
+    id: ask-report-reason-0
+- takeScreenshot: ${EVIDENCE}/58-report-sheet
+# Email opens Mail; a simulator without Mail says so and offers Copy report.
+- tapOn: Email
+- runFlow:
+    when:
+      visible:
+        id: ask-report-no-mail
+    commands:
+      - assertVisible: No email app is set up\.
+      - tapOn:
+          id: ask-report-copy
+      - takeScreenshot: ${EVIDENCE}/58-report-no-mail
+      - tapOn: Cancel
+- runFlow:
+    when:
+      notVisible:
+        id: ask-screen
+    commands:
+      - launchApp:
+          permissions:
+            all: unset
+      - tapOn:
+          id: tab-ask
+      - runFlow: support/ask-open-conversations.yaml
+      - tapOn: Who spoke on the interactive gambling levy bill\?.*
 # Consent is asked once: the next question goes straight through.
-- scrollUntilVisible:
-    element:
-      id: ask-followup-field
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - tapOn:
-    id: ask-followup-field
+    id: ask-question
 - inputText: What else was discussed?
-- scrollUntilVisible:
-    element:
-      id: ask-followup-submit
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - tapOn:
-    id: ask-followup-submit
+    id: ask-submit
+    enabled: true
 - scrollUntilVisible:
     element:
       id: ask-user-question

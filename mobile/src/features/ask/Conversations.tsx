@@ -157,7 +157,7 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
               onPress: () => {
                 invalidateSync();
                 setSyncing(false);
-                confirmDeleteAll(status, 'Delete all');
+                confirmDeleteAll(status, conversationsCopy.deleteAll);
               },
             },
           ],

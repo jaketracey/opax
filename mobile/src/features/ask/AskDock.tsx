@@ -104,7 +104,7 @@ export function AskDock({
       variant="primary"
       accessibilityLabel={composerCopy.stop}
       onPress={onStop}
-      testID="ask-submit"
+      testID="ask-stop"
     />
   ) : empty && onTalk ? (
     <IconButton
