@@ -1,9 +1,9 @@
 appId: au.com.opax.app
-name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
+name: 36 Person speeches, mentions, topics, ministerial diary and expense categories
 ---
-# Topics, speeches, mentions and news are rows of one "More from the record"
-# section at the page's foot; a loaded block stays as its own section above
-# it (pass 5, P2-1), so each row is found scrolling down.
+# Speeches is its own row and pushes the paged record list. Mentions and
+# Topics sit in "More from the record" at the page's foot, so each is found
+# scrolling down.
 - launchApp:
     clearState: true
     permissions: {}
@@ -20,88 +20,60 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/36-figures
 - scrollUntilVisible:
-    element: { id: person-topics-toggle }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: person-topics-toggle }
-- scrollUntilVisible:
-    element: { text: Then }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: Then
-- scrollUntilVisible:
-    element: { text: Now }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: Now
-- takeScreenshot: ${EVIDENCE}/36-topics-now
-- scrollUntilVisible:
-    element: { id: person-speeches-toggle }
+    element: { id: person-speeches }
     direction: DOWN
     speed: 30
     centerElement: true
     timeout: 180000
-- tapOn: { id: person-speeches-toggle }
-- scrollUntilVisible:
-    element: { text: 'Machine-written\..*' }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- takeScreenshot: ${EVIDENCE}/36-speech-brief
-- scrollUntilVisible:
-    element: { id: person-speeches-open-0 }
-    direction: UP
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: person-speeches-open-0 }
+- tapOn: { id: person-speeches }
+- extendedWaitUntil:
+    visible: { id: record-list-row-0 }
+    timeout: 30000
+- assertVisible: { id: record-list-screen }
+- takeScreenshot: ${EVIDENCE}/36-speeches
+- tapOn: { id: record-list-row-0 }
 - extendedWaitUntil:
     visible: { id: doc-title }
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/36-speech-destination
 - tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible: { id: record-list-screen }
+    timeout: 15000
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
-    element: { id: person-mentions-toggle }
+    element: { id: person-mentions }
     direction: DOWN
     speed: 30
     centerElement: true
     timeout: 180000
-- tapOn: { id: person-mentions-toggle }
-- scrollUntilVisible:
-    element: { id: person-mentions-open-0 }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
+- tapOn: { id: person-mentions }
+- extendedWaitUntil:
+    visible: { id: record-list-row-0 }
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/36-mentions
-- tapOn: { id: person-mentions-open-0 }
+- tapOn: { id: record-list-row-0 }
 - extendedWaitUntil:
     visible: { id: doc-title }
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/36-mention-destination
 - tapOn: { id: BackButton }
+- extendedWaitUntil:
+    visible: { id: record-list-screen }
+    timeout: 15000
+- tapOn: { id: BackButton }
+# Topics are drawn in place; the era switch appears only when the data gives
+# era bounds ("1998 to 2012", "Since 2013").
 - scrollUntilVisible:
-    element: { id: people-news-toggle }
-    direction: DOWN
-    speed: 30
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: people-news-toggle }
-- scrollUntilVisible:
-    element: { id: people-news-0 }
+    element: { id: person-topics }
     direction: DOWN
     speed: 20
     centerElement: true
     timeout: 180000
-- takeScreenshot: ${EVIDENCE}/36-news
-- tapOn: { id: BackButton }
+- tapOn:
+    text: 'Since [0-9]{4}'
+    optional: true
+- takeScreenshot: ${EVIDENCE}/36-topics-now
 # R1 Search keeps canonical native members only. This public, roster-guarded
 # state profile exercises the diary without widening the Search membership set.
 - openLink: opax://person/chris-minns
@@ -121,17 +93,27 @@ name: 36 Person topics, speeches, mentions, news, ministerial diary and glossary
     env:
       NAME: Anthony Albanese
       SLUG: anthony-albanese
+# Each category under Expenses opens Expense categories at that category,
+# with what this member claimed under it.
 - scrollUntilVisible:
-    element: { id: person-expense-glossary }
+    element: { id: person-expense-categories }
     direction: DOWN
     speed: 40
     centerElement: true
     timeout: 180000
-- tapOn: { id: person-expense-glossary }
+- tapOn: { id: person-expense-categories }
+- scrollUntilVisible:
+    element: { id: person-expense-category-0 }
+    direction: DOWN
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- tapOn: { id: person-expense-category-0 }
 # The sheet's own screen, not a title that the profile row behind it shares.
 - extendedWaitUntil:
     visible: { id: expense-glossary }
     timeout: 15000
+- assertVisible: { id: expense-glossary-own }
 - takeScreenshot: ${EVIDENCE}/36-glossary
 - scrollUntilVisible:
     element: { id: expense-glossary-end }
