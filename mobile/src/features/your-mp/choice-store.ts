@@ -8,6 +8,17 @@ const store = new TwoSlotStore(
 export function loadChoice(): Promise<SeatChoice | null> {
   return store.read();
 }
-export function saveChoice(choice: SeatChoice): Promise<void> {
-  return store.save(choice);
+const listeners = new Set<(choice: SeatChoice) => void>();
+/** Fired after a complete save only. Disk format and reads stay unchanged. */
+export function subscribeChoice(
+  listener: (choice: SeatChoice) => void,
+): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+export async function saveChoice(choice: SeatChoice): Promise<void> {
+  await store.save(choice);
+  listeners.forEach((listener) => listener(choice));
 }
