@@ -14,6 +14,7 @@ import {
   useRowHighlight,
   useRowInset,
 } from '../../design/row-padding';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { symbols } from '../../design/symbols';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { voiceLinked } from '../../voice/linked';
@@ -230,19 +231,27 @@ function Notice({ notice }: { notice: AccountNotice }) {
 
 const SYMBOL = 44;
 
-/** Signed in: the address on one line beside the person symbol; not a link. */
+/** The text's inset: beside the symbol, or under it at AX sizes (2.5). */
+const textInset = (stacked: boolean) =>
+  stacked ? 16 : 16 + SYMBOL + rhythm.tight;
+
+/**
+ * Signed in: the address beside the person symbol, or at AX sizes the
+ * symbol above the address, which wraps (2.5); not a link.
+ */
 function IdentityRow({ email }: { email: string | null }) {
   const cellStyle = useRowCellStyle();
-  useRowInset(16 + SYMBOL + rhythm.tight);
+  const stacked = useAccessibilitySize();
+  useRowInset(textInset(stacked));
   return (
     <View
       accessible
       accessibilityLabel={email ?? accountCopy.signedInHere}
       testID="account-identity"
-      style={[styles.identity, cellStyle]}
+      style={[styles.identity, stacked ? styles.stacked : null, cellStyle]}
     >
       <Icon name={symbols.accountOn} size={SYMBOL} maxScale={1} tone="navy" />
-      <Text wordSafe variant="name" style={styles.grow}>
+      <Text wordSafe variant="name" style={stacked ? null : styles.grow}>
         {email ?? accountCopy.signedInHere}
       </Text>
     </View>
@@ -253,7 +262,8 @@ function IdentityRow({ email }: { email: string | null }) {
 function SignInRow() {
   const cellStyle = useRowCellStyle();
   const highlight = useRowHighlight();
-  useRowInset(16 + SYMBOL + rhythm.tight);
+  const stacked = useAccessibilitySize();
+  useRowInset(textInset(stacked));
   return (
     <RowLink href="/account/sign-in" preview={false}>
       <Pressable
@@ -268,20 +278,26 @@ function SignInRow() {
           pressed ? { backgroundColor: highlight } : null,
         ]}
       >
-        <Icon
-          name={symbols.accountOn}
-          size={SYMBOL}
-          maxScale={1}
-          tone="inkFaint"
-          type="hierarchical"
-        />
-        <View style={styles.titles}>
-          <Text wordSafe variant="name">
-            {accountCopy.signIn}
-          </Text>
-          <Text wordSafe variant="secondary">
-            {accountCopy.signInDetail}
-          </Text>
+        {/* At AX sizes the symbol sits above the text; the chevron stays. */}
+        <View
+          testID="account-sign-in-lead"
+          style={stacked ? styles.lead : styles.leadInline}
+        >
+          <Icon
+            name={symbols.accountOn}
+            size={SYMBOL}
+            maxScale={1}
+            tone="inkFaint"
+            type="hierarchical"
+          />
+          <View style={stacked ? styles.titlesStacked : styles.titles}>
+            <Text wordSafe variant="name">
+              {accountCopy.signIn}
+            </Text>
+            <Text wordSafe variant="secondary">
+              {accountCopy.signInDetail}
+            </Text>
+          </View>
         </View>
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       </Pressable>
@@ -298,7 +314,16 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingVertical: rhythm.row,
   },
+  stacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  lead: { flex: 1, alignItems: 'flex-start', gap: rhythm.tight },
+  leadInline: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
   titles: { flex: 1, gap: rhythm.line },
+  titlesStacked: { gap: rhythm.line },
   grow: { flex: 1 },
   notice: { flexDirection: 'row', alignItems: 'flex-start', gap: rhythm.tight },
 });

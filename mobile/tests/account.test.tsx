@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as voice from '../src/voice';
 import type { VoiceEvent, VoiceStatus } from '../src/voice';
@@ -95,6 +96,20 @@ jest.mock('expo-router', () => {
     Stack: { Screen: () => null },
     useLocalSearchParams: () => mockParams,
     useFocusEffect: jest.fn(),
+  };
+});
+// The text size, when a test sets one; otherwise the test default.
+let mockFontScale: number | null = null;
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => {
+  const actual = jest.requireActual(
+    'react-native/Libraries/Utilities/useWindowDimensions',
+  );
+  return {
+    __esModule: true,
+    default: () =>
+      mockFontScale === null
+        ? actual.default()
+        : { width: 402, height: 874, scale: 3, fontScale: mockFontScale },
   };
 });
 jest.mock('../src/design/menu', () => ({
@@ -224,6 +239,7 @@ beforeEach(() => {
   resetChallenges();
   mockSlots = {};
   mockParams = {};
+  mockFontScale = null;
   mocked.status.mockResolvedValue({ ok: true, value: signedOut });
   mocked.requestCode.mockResolvedValue({
     ok: true,
@@ -522,6 +538,36 @@ describe('Account groups', () => {
     expect(clearAskConversations).toHaveBeenCalled();
     expect(shows(renderer, accountCopy.deletedNotice)).toBe(true);
   });
+});
+
+describe('Identity rows at accessibility sizes', () => {
+  const flat = (renderer: Renderer, testID: string) =>
+    StyleSheet.flatten(
+      renderer.root.find(
+        (node) => typeof node.type === 'string' && node.props.testID === testID,
+      ).props.style,
+    );
+  test.each([
+    [1, 'row'],
+    [3.571, 'column'],
+  ] as const)(
+    'at font scale %s the symbol and text sit in a %s',
+    async (scale, direction) => {
+      mockFontScale = scale;
+      const signedOutRow = await render(<AccountGroups />);
+      expect(
+        flat(signedOutRow, 'account-sign-in-lead').flexDirection ?? 'column',
+      ).toBe(direction);
+      // The chevron stays beside the stacked text.
+      expect(flat(signedOutRow, 'account-sign-in-start').flexDirection).toBe(
+        'row',
+      );
+      resetAccountStore();
+      mocked.status.mockResolvedValue({ ok: true, value: status() });
+      const signedIn = await render(<AccountGroups />);
+      expect(flat(signedIn, 'account-identity').flexDirection).toBe(direction);
+    },
+  );
 });
 
 describe('Account sheet', () => {
