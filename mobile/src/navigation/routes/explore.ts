@@ -35,3 +35,23 @@ export function exploreFromWebPath(path: string) {
   );
   return exploreToolRoute(tool, params);
 }
+/**
+ * The canonical web path for an Explore screen, for Share, Copy link and
+ * Open on opax.com.au: "/explore", "/explore?game=quiz&q=q1a2b3c4d".
+ */
+export function exploreWebPath(
+  tool?: string,
+  params: Record<string, string | undefined> = {},
+) {
+  if (!tool) return '/explore';
+  const query = new URLSearchParams({ game: tool });
+  for (const [key, value] of Object.entries(params))
+    if (value) query.set(key, value);
+  return `/explore?${query}`;
+}
+/** Whether a stack already holds the hub, so an unknown tool returns to it. */
+export function hubInStack(
+  state: { routes?: readonly { name?: string }[] } | undefined,
+) {
+  return !!state?.routes?.some((route) => route.name === 'explore/index');
+}
