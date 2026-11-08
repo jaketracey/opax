@@ -16,7 +16,12 @@ import { Disclosure } from '../design/disclosure';
 import { Group, Screen } from '../design/layout';
 import { LinkRow } from '../design/rows';
 import { StatStrip, type StatTileProps } from '../design/record';
-import { ContentUnavailable, LoadingState, Skeleton } from '../design/states';
+import {
+  ContentUnavailable,
+  InlineError,
+  LoadingState,
+  Skeleton,
+} from '../design/states';
 import { phoneCopy } from '../design/phone-copy';
 import { Text } from '../design/text';
 import { VoteSplit } from '../design/charts';
@@ -890,12 +895,11 @@ function Ties({
   if (block.status === 'unlinked' || block.status === 'loading') return null;
   if (block.status === 'error')
     return (
-      <View testID="person-ties-error">
-        <Text wordSafe variant="secondary">
-          Organisations named couldn’t be loaded.
-        </Text>
-        <LinkRow title="Try again" onPress={retry} accessory="none" />
-      </View>
+      <InlineError
+        subject="Organisations named"
+        onRetry={retry}
+        testID="person-ties-error"
+      />
     );
   const ties = block.data;
   if (!ties?.length) return null;
