@@ -1,294 +1,421 @@
-import { useEffect, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
-import { router, type Href } from 'expo-router';
-import type { Block, EditionView } from '../api/catalogs';
-import { catalogs } from '../api/runtime';
 import {
-  Button,
-  RowList,
-  Screen,
-  Section,
-  useAccessibilitySize,
-  useLayout,
-} from '../design/primitives';
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
+import type { Block, Electorate, EditionView } from '../api/catalogs';
+import { catalogs } from '../api/runtime';
+import { useAccessibilitySize } from '../design/accessibility';
+import { useLayout } from '../design/adaptive';
+import { thisDevice } from '../design/device';
+import { Screen } from '../design/layout';
+import { ContentUnavailable } from '../design/states';
 import { rhythm } from '../design/tokens';
-import { EditionSection } from './EditionCard';
-import { declarationsRoute } from '../navigation/routes';
+import { releaseSplash } from '../launch/splash';
+import { EditionCard, EditionSkeleton } from './edition/EditionCard';
 import { FollowingSection } from './follows/FollowingSection';
-import { useFollows } from './follows/store';
-import { BillFeed } from './today/BillFeed';
-import { personRuns } from './declarations/model';
-import { DeclarationGroup } from './today/DeclarationRow';
-import { ExploreGrid } from './today/ExploreGrid';
+import { AskBlock } from './today/AskBlock';
+import { BillsBlock } from './today/BillFeed';
+import { DailyPair } from './today/DailyPair';
+import { DeclarationsBlock } from './today/DeclarationRow';
+import { readCachedEdition, rememberEdition } from './today/edition-store';
 import { TodayFoot } from './today/Foot';
-import { Masthead } from './today/Masthead';
-import { Entrance } from './today/parts';
-import { billsSources, declarationsSources } from './today/sources';
-import { TodayBlock } from './today/TodayBlock';
+import {
+  overrideInvitationDates,
+  readInvitationDates,
+  subscribeInvitation,
+} from './today/invitation-store';
+import {
+  fixtureDeclinedAt,
+  fixtureToday,
+  todayFixture,
+} from './today/launch-fixture';
+import { Masthead, useNow } from './today/Masthead';
+import { MoreToExplore } from './today/MoreToExplore';
+import {
+  editionInSlot,
+  launchCase,
+  todayColumns,
+  todayOrder,
+  type CachedEdition,
+  type InvitationDates,
+  type LaunchCase,
+  type TodaySlot,
+} from './today/order';
+import { editionTier, sydneyDay, type SydneyDate } from './today/rules';
+import { SeatInvitation } from './today/SeatInvitation';
+import { TodayReports, useTodayReports } from './today/TodayBlock';
+import { VotesBlock } from './today/VotesBlock';
+import { StateSeatCard, YourMPCard } from './today/YourMPCard';
+import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
+
+/** The splash waits at most this long for Today's first reads. */
+const SPLASH_WAIT = 400;
+
+const house = (s: Electorate) =>
+  s.jurisdiction === 'federal' &&
+  s.chamber === 'representatives' &&
+  s.status !== 'historical';
+
+interface Launch {
+  today: SydneyDate;
+  launchCase: LaunchCase;
+  invitation: InvitationDates;
+}
 
 /**
- * Today, the app's front page, in six blocks: the dated masthead; the daily
- * edition, the page's one colour moment; what changed in what you follow
- * (only when you follow something); the newest bills and the newest
- * declarations, as rows on the paper; and one tile grid of every other way
- * into the record. Each feed closes with its own source line; the
- * edition's source and the independence line close the page. Every block loads on its own and keeps its saved copy offline; a
- * pull to refresh revalidates all.
+ * The launch decision (today.md 5.2): read once from what the disk holds
+ * (the invitation's dates and the last edition read) before any block
+ * draws, and again only when the Sydney date rolls over. E2E captures may
+ * pin the edition cache, its age and the welcome's "Not now" day.
  */
-export default function Today() {
-  const [data, setData] = useState<Awaited<
-    ReturnType<typeof catalogs.today>
-  > | null>(null);
-  const [edition, setEdition] = useState<Block<EditionView> | null>(null);
-  // TodayBlock shows the initial fetch. The native control belongs to a
-  // user refresh; starting it on mount moves the large-title scroll offset.
-  const [refreshing, setRefreshing] = useState(false);
-  const [retry, setRetry] = useState(0);
+function useLaunch(day: SydneyDate): Launch | null {
+  const [launch, setLaunch] = useState<Launch | null>(null);
   useEffect(() => {
     let active = true;
-    // Each block shows when it arrives; neither loader rejects.
-    void Promise.all([
-      catalogs.today(6, retry > 0).then((result) => {
-        if (active) setData(result);
-      }),
-      catalogs.todayEdition(retry > 0).then((result) => {
-        if (active) setEdition(result);
-      }),
-    ]).finally(() => {
-      if (active) setRefreshing(false);
+    void (async () => {
+      const fixture = todayFixture();
+      let cached: CachedEdition;
+      if (fixture.editionCache === 'none') cached = null;
+      else if (fixture.editionCache === 'present') {
+        const read = await catalogs.todayEdition();
+        cached =
+          read.status === 'ready' && read.data
+            ? { date: read.data.date.slice(0, 10) }
+            : read.status === 'missing'
+              ? 'missing'
+              : null;
+      } else cached = await readCachedEdition();
+      const today = fixtureToday(fixture, cached) ?? day;
+      const declined = fixtureDeclinedAt(fixture, today);
+      if (declined !== undefined)
+        overrideInvitationDates({ welcomeDeclinedAt: declined });
+      const invitation = await readInvitationDates();
+      if (active)
+        setLaunch({ today, launchCase: launchCase(cached, today), invitation });
+    })().catch(() => {
+      if (active)
+        setLaunch({
+          today: day,
+          launchCase: 'C',
+          invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
+        });
     });
     return () => {
       active = false;
     };
-  }, [retry]);
-  const refresh = () => {
-    setRefreshing(true);
-    setRetry((value) => value + 1);
+  }, [day]);
+  // The card's own "Not now" takes effect at once; the order stays.
+  useEffect(
+    () =>
+      subscribeInvitation((invitation) =>
+        setLaunch((current) =>
+          current ? { ...current, invitation } : current,
+        ),
+      ),
+    [],
+  );
+  return launch;
+}
+
+/** E2E captures only: the seat `OPAXSeat` names, chosen once per launch. */
+function useSeatFixture(seat: ReturnType<typeof useSeat>) {
+  const done = useRef(false);
+  useEffect(() => {
+    const wanted = todayFixture().seat;
+    const directory = savedSeatDirectory();
+    if (done.current || !wanted || wanted === 'none') return;
+    if (seat.status === 'loading' || !directory) return;
+    done.current = true;
+    const seats = directory.electorates.data.electorates;
+    const named = (name: string, jurisdiction: string) =>
+      seats.find(
+        (s) =>
+          s.name === name &&
+          s.jurisdiction === jurisdiction &&
+          s.status !== 'historical',
+      );
+    void (async () => {
+      if (wanted === 'federal') {
+        const grayndler = named('Grayndler', 'federal');
+        if (grayndler) await seat.choose(grayndler);
+        return;
+      }
+      const melbourne = named('Melbourne', 'federal');
+      if (melbourne) await seat.choose(melbourne);
+      const district = seats.find(
+        (s) =>
+          s.jurisdiction === 'vic' &&
+          s.status !== 'historical' &&
+          !/_lc$|council|region/i.test(s.chamber),
+      );
+      if (district) await seat.chooseState(district);
+    })().catch(() => undefined);
+  }, [seat]);
+}
+
+/**
+ * Today, ordered by the reader's situation (today.md 5): Your MP or the
+ * invitation to choose one; the daily edition, Following, Bills, How
+ * parliament voted and Just declared; More to explore with the daily pair,
+ * and Ask; then a quiet foot. The order is decided once per launch from the
+ * disk, so nothing moves above content the reader can see; each block loads
+ * on its own, keeps its saved copy and ends in its own dated line.
+ */
+export default function Today() {
+  const now = useNow();
+  const day = sydneyDay(now);
+  const launch = useLaunch(day);
+  const seat = useSeat();
+  useSeatFixture(seat);
+  const directory = savedSeatDirectory();
+  const [attempt, setAttempt] = useState(0);
+  const [pulled, setPulled] = useState<number | null>(null);
+  const reports = useTodayReports();
+  const edition = useEditionRead(attempt);
+  const [billsAnswered, setBillsAnswered] = useState(false);
+  const retry = useCallback(() => setAttempt((n) => n + 1), []);
+  const refresh = useCallback(() => {
+    setAttempt((n) => {
+      setPulled(n + 1);
+      return n + 1;
+    });
+  }, []);
+  // The spinner belongs to a pull; it ends when the edition's read answers.
+  const refreshing = pulled === attempt && edition.attempt !== attempt;
+
+  const choice = seat.status === 'chosen' ? seat.choice : null;
+  const federal =
+    choice && directory
+      ? (directory.electorates.data.electorates.find(
+          (s) => s.electorate_id === choice.seatId,
+        ) ?? null)
+      : null;
+  const home = federal && house(federal) ? federal : null;
+  const ready = !!launch && seat.status !== 'loading';
+
+  // The cover fades when Today has its order and a first answer, or after
+  // 400 ms, whichever is first.
+  useEffect(() => {
+    const timer = setTimeout(() => releaseSplash('today'), SPLASH_WAIT);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    if (ready && (edition.block !== null || billsAnswered))
+      releaseSplash('today');
+  }, [ready, edition.block, billsAnswered]);
+
+  const order = launch
+    ? todayOrder({
+        seat: !!home,
+        invitation: launch.invitation,
+        launchCase: launch.launchCase,
+        today: launch.today,
+      })
+    : null;
+  const today = launch?.today ?? day;
+  const tier =
+    edition.block?.status === 'ready' && edition.block.data
+      ? editionTier(edition.block.data.date, today)
+      : null;
+  const nothingSaved =
+    reports.nothingSaved && edition.block?.status === 'error';
+
+  const slot = (name: TodaySlot): ReactNode => {
+    if (!order) return null;
+    switch (name) {
+      case 'your-mp':
+        if (!home || !directory) return null;
+        if (nothingSaved) return null;
+        return (
+          <View key={name} style={styles.seats}>
+            <YourMPCard
+              seat={home}
+              directory={directory}
+              stateSeatIds={choice?.stateSeatIds ?? []}
+              attempt={attempt}
+              onRetry={retry}
+            />
+            <StateSeatCard
+              directory={directory}
+              stateSeatIds={choice?.stateSeatIds ?? []}
+              today={today}
+            />
+          </View>
+        );
+      case 'invitation':
+        return <SeatInvitation key={name} />;
+      case 'edition':
+      case 'edition-late': {
+        if (nothingSaved) return null;
+        // Case C keeps the slot's skeleton until the read answers.
+        if (
+          name === 'edition' &&
+          order.launchCase === 'C' &&
+          edition.block === null
+        )
+          return (
+            <View key={name} testID="today-edition-loading">
+              <EditionSkeleton />
+            </View>
+          );
+        if (!edition.block || !editionInSlot(name, order.launchCase, tier))
+          return null;
+        return (
+          <EditionCard
+            key={name}
+            edition={edition.block}
+            tier={tier ?? undefined}
+            today={today}
+          />
+        );
+      }
+      case 'pair':
+        return <DailyPair key={name} today={today} attempt={attempt} />;
+      case 'following':
+        return nothingSaved ? null : (
+          <FollowingSection
+            key={name}
+            refresh={attempt}
+            refreshing={refreshing}
+            onRetry={retry}
+          />
+        );
+      case 'bills':
+        return nothingSaved ? (
+          <ContentUnavailable
+            key={name}
+            symbol="wifi.slash"
+            title={`Not saved on this ${thisDevice()} yet`}
+            body="It will load when you're back online."
+            testID="today-unavailable"
+          />
+        ) : (
+          <BillsBlock
+            key={name}
+            attempt={attempt}
+            onAnswer={() => setBillsAnswered(true)}
+            onRetry={retry}
+          />
+        );
+      case 'votes':
+        return nothingSaved ? null : (
+          <VotesBlock key={name} attempt={attempt} onRetry={retry} />
+        );
+      case 'declarations':
+        return nothingSaved ? null : (
+          <DeclarationsBlock key={name} attempt={attempt} onRetry={retry} />
+        );
+      case 'more':
+        return (
+          <MoreToExplore
+            key={name}
+            withPair={order.pairInMore}
+            today={today}
+            attempt={attempt}
+          />
+        );
+      case 'ask':
+        return <AskBlock key={name} today={today} />;
+      case 'foot':
+        return <TodayFoot key={name} />;
+    }
   };
+
+  const offlineAt = [
+    reports.savedAt,
+    edition.block?.stale ? edition.block.savedAt : null,
+    directory?.electorates.stale ? directory.electorates.savedAt : null,
+  ]
+    .filter((d): d is number => typeof d === 'number')
+    .sort((a, b) => a - b)[0];
+
   return (
     <Screen
       testID="today-screen"
       column="wide"
+      grouped
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <TodayFront
-        data={data}
-        edition={edition}
-        retry={retry}
-        refreshing={refreshing}
-        refresh={refresh}
-      />
+      <Masthead now={now} offlineSavedAt={offlineAt ?? null} />
+      <TodayReports value={reports}>
+        {order && ready ? (
+          <TodayBody order={order} slot={slot} />
+        ) : (
+          <View testID="today-launching" />
+        )}
+      </TodayReports>
     </Screen>
   );
 }
 
-interface FrontProps {
-  data: Awaited<ReturnType<typeof catalogs.today>> | null;
-  edition: Block<EditionView> | null;
-  retry: number;
-  refreshing: boolean;
-  refresh: () => void;
+/** One column on iPhone; on iPad at 900 pt and wider, two columns 3:2. */
+function TodayBody({
+  order,
+  slot,
+}: {
+  order: NonNullable<ReturnType<typeof todayOrder>>;
+  slot: (name: TodaySlot) => ReactNode;
+}) {
+  const layout = useLayout();
+  const large = useAccessibilitySize();
+  if (!layout.regular || large || layout.width < 900)
+    return <View style={styles.column}>{order.slots.map(slot)}</View>;
+  const { leading, trailing } = todayColumns(order);
+  return (
+    <View style={styles.column}>
+      <View style={styles.columns}>
+        <View style={[styles.column, styles.leading]}>{leading.map(slot)}</View>
+        <View style={[styles.column, styles.trailing]}>
+          {trailing.map(slot)}
+        </View>
+      </View>
+      {slot('foot')}
+    </View>
+  );
 }
 
 /**
- * The front page's blocks. On compact width (every iPhone, and Android) they
- * run in one column, in the order above. On iPad regular width the page is
- * a broadsheet: the date over a bronze double rule; the edition beside a
- * rail of Following and the tile grid; then the two feeds side by side.
+ * The edition's read: the cached copy first, revalidated on a pull. What
+ * it answers is kept on the device for the next launch's order.
  */
-function TodayFront(props: FrontProps) {
-  const layout = useLayout();
-  return layout.regular ? (
-    <TodayRegular {...props} wide={layout.wide} />
-  ) : (
-    <TodayCompact {...props} />
-  );
-}
-
-function TodayCompact({
-  data,
-  edition,
-  retry,
-  refreshing,
-  refresh,
-}: FrontProps) {
-  return (
-    <>
-      <View style={styles.front}>
-        <Masthead />
-        <EditionSection block={edition} onRetry={refresh} />
-      </View>
-      <Following retry={retry} refreshing={refreshing} refresh={refresh} />
-      <BillsSection data={data} refresh={refresh} />
-      <DeclarationsSection data={data} refresh={refresh} />
-      <ExploreGrid />
-      <TodayFoot edition={edition} />
-    </>
-  );
-}
-
-function TodayRegular({
-  data,
-  edition,
-  retry,
-  refreshing,
-  refresh,
-  wide,
-}: FrontProps & { wide: boolean }) {
-  // At accessibility sizes the rail and the feed columns would be narrow
-  // columns of single words: everything stacks, each at the full width.
-  const large = useAccessibilitySize();
-  const rail = (
-    <>
-      <Following retry={retry} refreshing={refreshing} refresh={refresh} />
-      <ExploreGrid />
-    </>
-  );
-  return (
-    <>
-      <Masthead broadsheet />
-      {edition?.status === 'missing' ? (
-        // No edition published: the rail's blocks take the page's width.
-        rail
-      ) : (
-        <View style={large ? styles.stack : styles.heroRow}>
-          <View style={large ? null : styles.hero}>
-            <EditionSection block={edition} onRetry={refresh} />
-          </View>
-          <View
-            style={
-              large
-                ? styles.stack
-                : [styles.rail, wide ? styles.railWide : null]
-            }
-          >
-            {rail}
-          </View>
-        </View>
-      )}
-      <View style={large ? styles.stack : styles.columns}>
-        <View style={large ? null : styles.column}>
-          <BillsSection data={data} refresh={refresh} />
-        </View>
-        <View style={large ? null : styles.column}>
-          <DeclarationsSection data={data} refresh={refresh} />
-        </View>
-      </View>
-      <TodayFoot edition={edition} />
-    </>
-  );
-}
-
-/** Following, only when the reader follows something. */
-function Following({
-  retry,
-  refreshing,
-  refresh,
-}: Pick<FrontProps, 'retry' | 'refreshing' | 'refresh'>) {
-  const follows = useFollows();
-  if (!follows?.length) return null;
-  return (
-    <FollowingSection
-      refresh={retry}
-      refreshing={refreshing}
-      onRetry={refresh}
-    />
-  );
-}
-
-function BillsSection({ data, refresh }: Pick<FrontProps, 'data' | 'refresh'>) {
-  return (
-    <Section
-      title="New in parliament"
-      testID="today-bills"
-      action={
-        <Button
-          label="All bills"
-          variant="quiet"
-          size="compact"
-          accessibilityHint="Opens Bills"
-          testID="today-bills-all"
-          onPress={() => router.navigate('/bills' as Href)}
-        />
-      }
-    >
-      <TodayBlock
-        block={data?.bills ?? null}
-        empty="No recently introduced bills are available in this snapshot."
-        onRetry={refresh}
-        testID="today-bills"
-        sources={billsSources}
-        sourceTitle="About these bills"
-      >
-        {(bills) => (
-          <Entrance>
-            <BillFeed bills={bills} />
-          </Entrance>
-        )}
-      </TodayBlock>
-    </Section>
-  );
-}
-
-function DeclarationsSection({
-  data,
-  refresh,
-}: Pick<FrontProps, 'data' | 'refresh'>) {
-  return (
-    <Section
-      title="Just declared"
-      testID="today-declarations"
-      action={
-        <Button
-          label="All declarations"
-          variant="quiet"
-          size="compact"
-          accessibilityHint="Opens all recent declarations"
-          testID="today-declarations-all"
-          onPress={() => router.push(declarationsRoute)}
-        />
-      }
-    >
-      <TodayBlock
-        block={data?.declarations ?? null}
-        empty="No recent declarations are available in this snapshot."
-        onRetry={refresh}
-        testID="today-declarations"
-        sources={declarationsSources}
-        sourceTitle="About these declarations"
-        placeholder="people"
-      >
-        {(declarations) => (
-          <Entrance>
-            <RowList>
-              {personRuns(declarations).map((run) => (
-                <DeclarationGroup key={run.key} entries={run.entries} />
-              ))}
-            </RowList>
-          </Entrance>
-        )}
-      </TodayBlock>
-    </Section>
-  );
+function useEditionRead(attempt: number) {
+  const [state, setState] = useState<{
+    block: Block<EditionView> | null;
+    attempt: number;
+  }>({ block: null, attempt: -1 });
+  useEffect(() => {
+    let active = true;
+    void catalogs.todayEdition(attempt > 0).then((block) => {
+      if (!active) return;
+      setState((shown) => ({
+        // A failed revalidation keeps the edition already drawn.
+        block:
+          block.status === 'error' && shown.block?.status === 'ready'
+            ? shown.block
+            : block,
+        attempt,
+      }));
+      void rememberEdition(block);
+    });
+    return () => {
+      active = false;
+    };
+  }, [attempt]);
+  return state;
 }
 
 const styles = StyleSheet.create({
-  front: { gap: rhythm.heading },
-  heroRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.section,
-  },
-  hero: { flex: 3, minWidth: 0 },
-  rail: { flex: 2, minWidth: 0, gap: rhythm.section },
-  railWide: { flex: 1.6 },
-  stack: { gap: rhythm.section },
-  columns: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.section,
-  },
-  column: { flex: 1, minWidth: 0 },
+  // Top-level blocks: section (36).
+  column: { gap: rhythm.section },
+  // The state seat block sits 16 pt under the federal block's line.
+  seats: { gap: rhythm.block },
+  columns: { flexDirection: 'row', alignItems: 'flex-start', gap: 32 },
+  leading: { flex: 3, minWidth: 0 },
+  trailing: { flex: 2, minWidth: 0 },
 });
