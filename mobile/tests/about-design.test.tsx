@@ -164,6 +164,13 @@ describe('with coverage', () => {
     expect(line.props.notes).toContain(
       'These counts are what OPAX holds, not search totals.',
     );
+    // The refresh job's status lines are pipeline notes, not coverage.
+    const limitations = (
+      corpus as { refresh: { source_limitations: string[] } }
+    ).refresh.source_limitations;
+    expect(limitations.length).toBeGreaterThan(0);
+    for (const status of limitations)
+      expect(line.props.notes).not.toContain(status);
     for (const gone of [
       'Expected resources',
       'Snapshot',

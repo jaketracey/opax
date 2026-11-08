@@ -135,7 +135,6 @@ export default function About() {
                   notes={[
                     record.data.inclusion,
                     ...record.data.known_defects,
-                    ...record.data.refresh.source_limitations,
                     text.sourceNote,
                     record.partial ? copy.partialNote : null,
                   ]}
