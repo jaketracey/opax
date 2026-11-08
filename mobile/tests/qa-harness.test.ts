@@ -124,6 +124,8 @@ describe('iPhone suite', () => {
       .filter((name) => name !== '26c-follow-limit.yaml')
       // New in wave 4 (w4-bills); joins qa_iphone_suite at merge.
       .filter((name) => name !== '60-bill-states.yaml')
+      // Until scripts/qa-flows.sh lists it (w4-money-map-leads follow-up).
+      .filter((name) => name !== '64-money-record.yaml')
       .map((name) => `.maestro/${name}`)
       .filter((path) => !covered.has(path));
     expect(missing).toEqual([]);

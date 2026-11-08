@@ -3,6 +3,8 @@ import { headerItems, pageItems } from '../chrome';
 import { copyRecordLink, shareRecord } from '../share';
 import { openOnWeb } from '../external';
 
+// The map replaces these with Filters and its ⋯ menu once it mounts; they
+// stand until then.
 export function moneyMapScreens() {
   const target = { path: '/money', title: 'Money map' };
   return [

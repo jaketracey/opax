@@ -17,7 +17,6 @@ import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
 import Largest, { shiftMonth } from '../src/features/money-public/Largest';
 import Agencies, { Agency } from '../src/features/money-public/Agencies';
-import Discover from '../src/features/money-public/Discover';
 import Allocation, {
   STATE_CHOICES,
   inState,
@@ -240,7 +239,6 @@ describe('P3-9: a list’s source line sits at the foot of its first page', () =
   });
   test.each([
     ['Programs & places', Connections, 'connections-title', 'connections'],
-    ['Discover', Discover, 'discover-title', 'discover'],
     ['Allocation', Allocation, 'allocation-title', 'allocation'],
     ['Largest', Largest, 'largest-title', 'largest'],
   ] as const)(

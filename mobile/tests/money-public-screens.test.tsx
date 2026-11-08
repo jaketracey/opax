@@ -13,7 +13,6 @@ import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
 import Largest from '../src/features/money-public/Largest';
 import Agencies, { Agency } from '../src/features/money-public/Agencies';
-import Discover from '../src/features/money-public/Discover';
 import Allocation from '../src/features/money-public/Allocation';
 import Connections from '../src/features/money-public/Connections';
 const mockParams: Record<string, string> = {};
@@ -69,7 +68,6 @@ test.each([
   ['Largest', Largest, {}],
   ['Agencies', Agencies, {}],
   ['Agency', Agency, { id: 'a-7431f054588d4251c0b4' }],
-  ['Discover', Discover, {}],
   ['Allocation', Allocation, {}],
   ['Programs & places', Connections, {}],
 ] as const)(

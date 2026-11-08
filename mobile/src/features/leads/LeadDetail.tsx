@@ -1,62 +1,209 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { catalogs } from '../../api/runtime';
-import { formatCount } from '../../design/format';
-import { LeadEvidenceLink } from '../../design/lead';
+import { Stack, useLocalSearchParams, useRouter, type Href } from 'expo-router';
+import { ApiError } from '../../api/errors';
+import { apiClient, catalogs } from '../../api/runtime';
+import { copy } from '../../design/copy';
 import {
-  Divider,
-  EmptyState,
+  formatCount,
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../../design/format';
+import type { LeadEvidence } from '../../design/lead';
+import {
+  ContentUnavailable,
+  FigureBlock,
   Group,
   Heading,
-  Icon,
   LinkRow,
-  RowList,
+  MoneyRow,
+  OfflineLine,
   Screen,
-  Section,
+  SectionHeader,
+  Skeleton,
   SourceLine,
+  StatStrip,
   SubSection,
   Text,
+  type FigureSource,
 } from '../../design/primitives';
-import { chrome, rhythm } from '../../design/tokens';
-import { openOnWeb, webPageUrl } from '../../navigation/external';
+import { symbols } from '../../design/symbols';
+import { chrome, colors, rhythm } from '../../design/tokens';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { moneyRoute } from '../../navigation/routes/money-map';
+import { partyRoute } from '../../navigation/routes/people';
+import {
+  agencyRoute,
+  leadsRoute,
+  moneyItemRoute,
+  moneyRecordRoute,
+} from '../../navigation/routes/public-money';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { RecordStatus } from '../RecordStatus';
-import { leadsSource } from './About';
-import { ConcentrationChart, OverlapFlows } from './Chart';
-import { leadFor } from './model';
+import { decodeMoneyGraph, moneyCatalogs } from '../money/data';
+import {
+  donorNodeFor,
+  loadedMoneyGraph,
+  normaliseOrganisation,
+  rememberMoneyGraph,
+} from '../money/lookup';
+import { moneyPageMenu } from '../money/menu';
+import { PartyDot } from '../money/parts';
+import { money } from '../money-public/runtime';
+import { ConcentrationChart } from './Chart';
+import {
+  aboutLede,
+  categorySource,
+  discoverPath,
+  discoveryAsOf,
+  leadFor,
+  leadsHiddenNotes,
+  plainCaveat,
+  type LeadView,
+} from './model';
+
+/** "Westpac Banking Corporation to Australian Labor Party": no party code. */
+const withoutCode = (name: string) => name.replace(/\s*\([A-Z]{2,6}\)\s*$/, '');
+/** An example record as a money row's parts, or null when its label wasn't read. */
+export function evidenceRow(item: LeadEvidence) {
+  if (!item.from || !item.to || !item.amount) return null;
+  const amount = Number(item.amount.replace(/[$,]/g, ''));
+  if (!Number.isFinite(amount)) return null;
+  const name = `${withoutCode(item.from)} to ${withoutCode(item.to)}`;
+  const detail = (item.detail ?? '')
+    .replace(/^Contract value\b/, 'Contract')
+    .replace(/\bstarts /, 'from ')
+    .replace(/\bFY /, '');
+  return { name, detail, amount };
+}
+
+/** The subject's own page in the app, when it has one. */
+function useSubject(lead: LeadView | null): {
+  title: string;
+  detail?: string;
+  href: Href;
+  party?: boolean;
+} | null {
+  const [agency, setAgency] = useState<{ id: string; name: string } | null>(
+    null,
+  );
+  const subject = lead?.comparison.heading ?? null;
+  const contracts = lead?.category === 'procurement_concentration';
+  const overlap = lead?.category === 'donor_contract_overlap';
+  // A company in both is found on the money map. The lead page (unlike the
+  // money record) loads the federal graph itself, after the lead has drawn,
+  // when no screen has loaded it yet; failing, the row is not drawn.
+  const [graph, setGraph] = useState(() => loadedMoneyGraph('federal'));
+  useEffect(() => {
+    if (!overlap || graph) return;
+    let active = true;
+    Promise.resolve()
+      .then(() => apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .then(
+        (record) => {
+          rememberMoneyGraph('federal', record.data);
+          if (active) setGraph(record.data);
+        },
+        () => undefined,
+      );
+    return () => {
+      active = false;
+    };
+  }, [overlap, graph]);
+  useEffect(() => {
+    if (!contracts || !subject) return;
+    let active = true;
+    const wanted = normaliseOrganisation(subject);
+    money.agencies().then(
+      (record) => {
+        const found = record.data.agencies.find(
+          (a) => normaliseOrganisation(a.name) === wanted,
+        );
+        if (active && found) setAgency({ id: found.id, name: found.name });
+      },
+      () => undefined,
+    );
+    return () => {
+      active = false;
+    };
+  }, [contracts, subject]);
+  if (!lead || !subject) return null;
+  if (contracts)
+    return agency
+      ? { title: agency.name, href: agencyRoute(agency.id, agency.name) }
+      : null;
+  if (lead.category === 'recipient_concentration')
+    return { title: subject, href: partyRoute(subject), party: true };
+  const donor = graph ? donorNodeFor({ name: lead.entity }, graph) : null;
+  return donor
+    ? {
+        title: donor.label,
+        detail: 'Donor on the money map',
+        href: moneyRecordRoute({ node: donor.id }, donor.label),
+      }
+    : null;
+}
 
 /**
- * One lead's comparison, as the web's /discover detail draws it: the
- * heading with "Lead · <category>" as its meta line, the takeaway and the
- * chart (or the two separate money flows). Then "How this lead was found"
- * (design pass 5, P2-13): the comparison's method note, every caveat
- * verbatim and in full, and the example records, without restating the
- * lead's title, sentence or figures the top already gives. Then the web's
- * links and one source line whose sheet holds "About these numbers" and the
- * export's methodology.
+ * One lead (specs/money.md 2.10): its kind, its subject, the sentence the
+ * reader tapped, a way to the subject's own page, then the comparison
+ * (a concentration's share chart, or the two money flows side by side,
+ * never added), how the lead was found and its example records. Every step
+ * stays in the app; the web comparison is in the ⋯ menu.
  */
 export default function LeadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const load = useCallback(
     (refresh: boolean) => catalogs.discovery(refresh),
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
-  const discovery = record?.data;
+  const discovery = record?.data ?? null;
   const lead = useMemo(() => {
     const signal = discovery?.signals.find((s) => s.id === id);
     return signal ? leadFor(signal) : null;
   }, [discovery, id]);
+  const subject = useSubject(lead);
   const comparison = lead?.comparison;
-  // Links the guard refuses are left out rather than shown and refused.
-  const links = lead?.links.filter((link) => webPageUrl(link.path)) ?? [];
+  const offline =
+    error instanceof ApiError &&
+    (error.code === 'offline' || error.code === 'timeout');
+  const source: FigureSource | null =
+    discovery && lead
+      ? {
+          asOf: discoveryAsOf(discovery),
+          citation: categorySource(lead.category),
+          savedAt: record?.stale ? record.savedAt : null,
+          notes: [
+            aboutLede(discovery),
+            ...discovery.methodology,
+            ...leadsHiddenNotes(discovery),
+          ],
+          testID: 'lead-source',
+        }
+      : null;
+  // The party is on the money map: its record opens from the map's focus.
+  const mapRow =
+    lead?.category === 'recipient_concentration' && comparison
+      ? moneyRoute(comparison.heading)
+      : null;
   return (
     <>
       <Stack.Screen
-        options={{ title: comparison?.heading ?? '', headerTitle: '' }}
+        options={headerItems(
+          lead
+            ? pageItems({
+                name: lead.comparison.heading,
+                menu: moneyPageMenu({
+                  path: discoverPath({ id: lead.id, category: lead.category }),
+                  title: lead.title,
+                }),
+              })
+            : undefined,
+        )}
       />
       <Screen
+        barTitle={comparison?.heading}
         testID={lead ? 'lead-screen' : 'lead-pending-screen'}
         refreshControl={
           <RefreshControl
@@ -66,40 +213,113 @@ export default function LeadDetail() {
           />
         }
       >
-        <RecordStatus
-          record={record}
-          error={error}
-          refreshing={refreshing}
-          refresh={refresh}
-          retry={retry}
-          label="Loading the lead"
-          testID="lead"
-        />
-        {discovery && !lead ? (
-          <EmptyState
-            message="This lead is no longer listed."
+        {!discovery ? (
+          error ? (
+            offline ? (
+              <ContentUnavailable
+                symbol="wifi.slash"
+                title={copy.notSaved}
+                body={copy.notSavedBody}
+                testID="lead-error"
+              />
+            ) : (
+              <ContentUnavailable
+                symbol="exclamationmark.triangle"
+                title="This lead couldn’t be loaded"
+                body="Check your connection and try again."
+                action={{ label: copy.tryAgain, onPress: retry }}
+                testID="lead-error"
+              />
+            )
+          ) : (
+            <Group testID="lead-loading">
+              <Skeleton shape="rows" count={2} label="Loading the lead" />
+              <Skeleton shape="figure" count={1} />
+              <Skeleton shape="rows" count={5} />
+            </Group>
+          )
+        ) : !lead || !comparison || !source ? (
+          <ContentUnavailable
+            symbol="magnifyingglass"
+            title="This lead is no longer listed"
+            action={{
+              label: 'See all leads',
+              onPress: () => router.navigate(leadsRoute),
+            }}
             testID="lead-missing"
           />
-        ) : null}
-        {discovery && lead && comparison ? (
+        ) : (
           <>
+            {record?.stale && record.staleReason !== 'unreadable' ? (
+              <OfflineLine savedAt={record.savedAt} />
+            ) : null}
             <Group gap={rhythm.tight}>
-              <Heading level={1} testID="lead-heading">
-                {comparison.heading}
-              </Heading>
-              <Text wordSafe variant="metadata" testID="lead-meta">
+              <Text wordSafe variant="secondary" testID="lead-meta">
                 Lead · {lead.categoryLabel}
               </Text>
+              <Heading level={1} kind="page" testID="lead-heading">
+                {comparison.heading}
+              </Heading>
               <Text wordSafe variant="body" testID="lead-takeaway">
                 {comparison.takeaway}
               </Text>
             </Group>
+            {subject ? (
+              <LinkRow
+                title={subject.title}
+                detail={subject.detail}
+                leading={
+                  subject.party ? <PartyDot party={subject.title} /> : undefined
+                }
+                symbol={
+                  subject.party || subject.detail ? undefined : 'building.2'
+                }
+                href={subject.href}
+                testID="lead-subject"
+              />
+            ) : null}
             {comparison.type === 'concentration' ? (
-              <ConcentrationChart comparison={comparison} testID="lead-chart" />
+              <View testID="lead-comparison" style={styles.section}>
+                <SectionHeader title={comparison.chartTitle} />
+                <FigureBlock
+                  value={formatMoneyCompact(comparison.total)}
+                  ink="money"
+                  label={comparison.figureLabel}
+                  accessibilityLabel={`${moneyAccessibilityLabel(comparison.total, true)}, ${comparison.figureLabel}`}
+                  // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
+                  {...{ source }}
+                  testID="lead-total"
+                />
+                <ConcentrationChart
+                  comparison={comparison}
+                  testID="lead-chart"
+                />
+              </View>
             ) : (
-              <OverlapFlows comparison={comparison} testID="lead-flows" />
+              <View testID="lead-flows" style={styles.section}>
+                <StatStrip
+                  tiles={[
+                    {
+                      value: formatMoneyCompact(comparison.receipts.value),
+                      label: `in ${formatCount(comparison.receipts.records)} party ${comparison.receipts.records === 1 ? 'receipt' : 'receipts'}`,
+                      ink: 'money',
+                      testID: 'lead-flows-receipts',
+                    },
+                    {
+                      value: formatMoneyCompact(comparison.contracts.value),
+                      label: `in ${formatCount(comparison.contracts.records)} government ${comparison.contracts.records === 1 ? 'contract' : 'contracts'}`,
+                      testID: 'lead-flows-contracts',
+                    },
+                  ]}
+                />
+                <Text wordSafe variant="footnote" testID="lead-flows-caveat">
+                  Shown beside each other, never added together.
+                </Text>
+                <SourceLine {...source} />
+              </View>
             )}
-            <Section title="How this lead was found" testID="lead-method">
+            <View testID="lead-method" style={styles.section}>
+              <SectionHeader title="How this lead was found" />
               <Text wordSafe variant="body" testID="lead-note">
                 {comparison.note}
               </Text>
@@ -107,74 +327,81 @@ export default function LeadDetail() {
                 <View style={styles.caveats}>
                   {lead.caveats.map((caveat, index) => (
                     <View key={index} style={styles.caveat}>
-                      <Icon
-                        name="exclamationmark.triangle"
-                        size={13}
-                        tone="inkSoft"
+                      <View
+                        style={styles.dot}
+                        accessibilityElementsHidden
+                        importantForAccessibility="no-hide-descendants"
                       />
                       <Text
                         wordSafe
-                        variant="fine"
-                        tone="ink"
+                        variant="body"
                         testID={`lead-caveat-${index}`}
                         style={styles.grow}
                       >
-                        {caveat}
+                        {plainCaveat(caveat)}
                       </Text>
                     </View>
                   ))}
                 </View>
               ) : null}
               {lead.evidence.length ? (
-                <SubSection
-                  title={`Example records (${formatCount(lead.evidence.length)})`}
-                  testID="lead-evidence"
-                >
+                <SubSection title="Example records" testID="lead-evidence">
                   <View>
-                    {lead.evidence.map((item, index) => (
-                      <View key={index}>
-                        {index > 0 ? <Divider variant="subtle" /> : null}
-                        <LeadEvidenceLink
-                          item={item}
+                    {lead.evidence.map((item, index) => {
+                      const row = evidenceRow(item);
+                      const href = moneyItemRoute(
+                        { kind: 'evidence', lead: lead.id, i: String(index) },
+                        row?.name ?? item.register,
+                      );
+                      return row ? (
+                        <MoneyRow
+                          key={index}
+                          name={row.name}
+                          detail={row.detail || undefined}
+                          amount={row.amount}
+                          href={href}
                           testID={`lead-evidence-${index}`}
                         />
-                      </View>
-                    ))}
+                      ) : (
+                        <LinkRow
+                          key={index}
+                          title={item.register}
+                          detail={item.record ?? undefined}
+                          href={href}
+                          testID={`lead-evidence-${index}`}
+                        />
+                      );
+                    })}
                   </View>
                 </SubSection>
               ) : null}
-            </Section>
-            {links.length ? (
-              <Section title="On opax.com.au">
-                <RowList>
-                  {links.map((link) => (
-                    <LinkRow
-                      key={link.testID}
-                      title={link.label}
-                      external
-                      accessibilityLabel={link.accessibilityLabel}
-                      accessibilityHint="Opens on opax.com.au"
-                      testID={`lead-link-${link.testID}`}
-                      onPress={() => void openOnWeb(link.path, link.label)}
-                    />
-                  ))}
-                </RowList>
-              </Section>
+            </View>
+            {mapRow ? (
+              <LinkRow
+                title="Open in the money map"
+                symbol={symbols.money}
+                href={mapRow}
+                testID="lead-money-map"
+              />
             ) : null}
-            <SourceLine
-              {...leadsSource(discovery, record?.stale ? record.savedAt : null)}
-              citation={lead.citation}
-              testID="lead-source"
-            />
           </>
-        ) : null}
+        )}
       </Screen>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  section: { gap: rhythm.tight },
   caveats: { gap: rhythm.tight },
   caveat: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    borderCurve: 'continuous',
+    marginTop: 10,
+    backgroundColor: colors.inkSoft,
+  },
   grow: { flex: 1 },
 });

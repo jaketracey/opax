@@ -21,3 +21,9 @@ export const moneyNodeRoute = (node: string) => ({
   pathname: '/money-node' as const,
   params: { node },
 });
+
+/** One kind of lead ("Party funding"), and optionally one lead pushed on it. */
+export const leadsKindRoute = (category: string, item?: string | null) => ({
+  pathname: '/leads' as const,
+  params: { category, ...(item ? { item } : {}) },
+});

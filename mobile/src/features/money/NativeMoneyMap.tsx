@@ -8,19 +8,23 @@ import {
   useState,
   type Ref,
 } from 'react';
-import { AppState, PixelRatio, StyleSheet, View } from 'react-native';
+import {
+  AppState,
+  PixelRatio,
+  Pressable,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
-  Button,
+  Icon,
   useLayout,
-  Group,
-  Text,
-  useAccessibilitySize,
   useReduceMotionSetting,
 } from '../../design/primitives';
-import { colors, rhythm, spacing } from '../../design/tokens';
+import { colors, hairline, minimumTarget, rhythm } from '../../design/tokens';
 import type { MoneyGraph } from './data';
 import { NativeMoneyScene, type ProjectedLabel } from './NativeMoneyScene';
 import { isE2E } from '../../design/environment';
@@ -30,16 +34,23 @@ import {
   moneyLabelGroups,
   moneyLabelParties,
 } from './MoneyMapLabels';
+import { moneyMapLabel, moneySceneHeight } from './scene-size';
 
 export interface NativeMoneyMapHandle {
   focus: (id: string) => void;
 }
+/** One element for VoiceOver; the scene's own parts are hidden. */
+export { moneyMapLabel, moneySceneHeight };
+// "Fit map" until the vocabulary gains the spec's
+// arrow.up.left.and.arrow.down.right (Follow-up: src/design/symbols.ts).
+const fitSymbol = 'square.3.layers.3d' as const;
 export function NativeMoneyMap({
   graph,
   view,
   active,
   onSelect,
   onUnavailable,
+  initialFocus,
   ref,
 }: {
   graph: MoneyGraph;
@@ -47,16 +58,17 @@ export function NativeMoneyMap({
   active: boolean;
   onSelect: (id: string) => void;
   onUnavailable?: () => void;
+  /** A node the camera turns to once the scene is drawn (no push). */
+  initialFocus?: string | null;
   ref?: Ref<NativeMoneyMapHandle>;
 }) {
   const labelGroups = useMemo(() => moneyLabelGroups(graph), [graph]);
   const labelParties = useMemo(() => moneyLabelParties(graph), [graph]);
   const adaptive = useLayout();
-  const canvasHeight = adaptive.regular
-    ? Math.max(350, adaptive.window.height - 300)
-    : 350;
-  const [size, setSize] = useState({ width: 0, height: 350 });
-  const [generation, setGeneration] = useState(0);
+  const window = useWindowDimensions();
+  const canvasHeight = moneySceneHeight(window.width, adaptive.regular);
+  const [size, setSize] = useState({ width: 0, height: canvasHeight });
+  const [generation] = useState(0);
   const [labels, setLabels] = useState<ProjectedLabel[]>([]);
   const [error, setError] = useState(false);
   const [probe, setProbe] = useState('money-map-canvas');
@@ -77,7 +89,7 @@ export function NativeMoneyMap({
     selectRef.current = onSelect;
     reducedRef.current = reduced !== false;
   }, [active, view, onSelect, reduced]);
-  const accessibilitySize = useAccessibilitySize();
+  const focusRef = useRef(initialFocus ?? null);
   const lastFrame = useRef(0),
     lastLabels = useRef(0),
     lastErrorCheck = useRef(0);
@@ -225,6 +237,7 @@ export function NativeMoneyMap({
         );
         engine.current.setView(viewRef.current);
         engine.current.setReducedMotion(reducedRef.current);
+        if (focusRef.current) engine.current.focus(focusRef.current);
         pixels.current = 0;
         probed.current = false;
         lastFrame.current = 0;
@@ -242,24 +255,39 @@ export function NativeMoneyMap({
   useImperativeHandle(ref, () => ({ focus }), [focus]);
   const pan = useRef({ x: 0, y: 0 }),
     scale = useRef(1);
+  // A one-finger pan starts only after 10 pt sideways, so a vertical drag
+  // that starts on the scene scrolls the page; two fingers orbit freely.
+  const orbit = useCallback(
+    (event: { translationX: number; translationY: number }) => {
+      engine.current?.orbit(
+        event.translationX - pan.current.x,
+        event.translationY - pan.current.y,
+      );
+      pan.current.x = event.translationX;
+      pan.current.y = event.translationY;
+    },
+    [],
+  );
   const gesture = useMemo(
     () =>
       Gesture.Simultaneous(
         Gesture.Race(
           Gesture.Pan()
             .maxPointers(1)
+            .activeOffsetX([-10, 10])
+            .failOffsetY([-10, 10])
             .runOnJS(true)
             .onBegin(() => {
               pan.current.x = pan.current.y = 0;
             })
-            .onUpdate((event) => {
-              engine.current?.orbit(
-                event.translationX - pan.current.x,
-                event.translationY - pan.current.y,
-              );
-              pan.current.x = event.translationX;
-              pan.current.y = event.translationY;
-            }),
+            .onUpdate(orbit),
+          Gesture.Pan()
+            .minPointers(2)
+            .runOnJS(true)
+            .onBegin(() => {
+              pan.current.x = pan.current.y = 0;
+            })
+            .onUpdate(orbit),
           Gesture.Tap()
             .runOnJS(true)
             .onEnd((event) =>
@@ -276,102 +304,80 @@ export function NativeMoneyMap({
             scale.current = event.scale;
           }),
       ),
-    [focus],
+    [focus, orbit],
   );
-  const fit = (
-    <Button
-      label="Fit map"
-      variant="quiet"
-      size="compact"
-      disabled={error}
-      onPress={() => engine.current?.focus(null)}
-      testID="money-fit"
-    />
-  );
-  // On a regular-width window the scene is wide and "Fit map" under it sat
-  // in the far corner (design pass 5, P3-17): it is anchored to the scene's
-  // top right instead, a sibling over the canvas so its touches never reach
-  // the scene's gestures. On an iPhone it stays under the scene.
-  const anchored = adaptive.regular && !error;
+  // When GL fails the screen switches to the List view and greys the Map
+  // segment; nothing is drawn here.
+  if (error) return null;
   return (
-    <Group gap={spacing.s3}>
-      {error ? (
-        <Group>
-          <Text wordSafe>
-            The 3D view could not be drawn. The saved list and records remain
-            available.
-          </Text>
-          <Button
-            label="Try the 3D view again"
-            onPress={() => {
-              setError(false);
-              setGeneration((n) => n + 1);
-            }}
-            testID="money-gl-retry"
-          />
-        </Group>
-      ) : (
-        <View style={styles.stage}>
-          <GestureDetector gesture={gesture}>
-            <View
-              testID={probe}
-              accessible
-              accessibilityRole="image"
-              accessibilityLabel="Three dimensional money map. Drag with one finger to orbit, pinch to zoom, tap a node for its record. The list gives the same recorded figures."
-              style={[
-                styles.canvas,
-                adaptive.regular ? { height: canvasHeight } : null,
-              ]}
-              onLayout={(event) => {
-                const { width, height } = event.nativeEvent.layout;
-                setSize((previous) =>
-                  previous.width === width && previous.height === height
-                    ? previous
-                    : { width, height },
-                );
-              }}
-            >
-              {size.width > 0 ? (
-                <GLView
-                  key={generation}
-                  style={styles.gl}
-                  msaaSamples={0}
-                  onContextCreate={context}
-                  accessible={false}
-                  accessibilityElementsHidden
-                  importantForAccessibility="no-hide-descendants"
-                />
-              ) : null}
-              {!accessibilitySize ? (
-                <MoneyMapLabels
-                  groups={labelGroups}
-                  parties={labelParties}
-                  labels={labels}
-                  width={size.width}
-                />
-              ) : null}
-            </View>
-          </GestureDetector>
-          {anchored ? (
-            <View style={styles.fitAnchor} testID="money-fit-anchor">
-              {fit}
-            </View>
+    <View style={styles.stage}>
+      <GestureDetector gesture={gesture}>
+        <View
+          testID={probe}
+          accessible
+          accessibilityRole="image"
+          accessibilityLabel={moneyMapLabel}
+          style={[styles.canvas, { height: canvasHeight }]}
+          onLayout={(event) => {
+            const { width, height } = event.nativeEvent.layout;
+            setSize((previous) =>
+              previous.width === width && previous.height === height
+                ? previous
+                : { width, height },
+            );
+          }}
+        >
+          {size.width > 0 ? (
+            <GLView
+              key={generation}
+              style={styles.gl}
+              msaaSamples={0}
+              onContextCreate={context}
+              accessible={false}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+            />
           ) : null}
+          <MoneyMapLabels
+            groups={labelGroups}
+            parties={labelParties}
+            labels={labels}
+            width={size.width}
+          />
         </View>
-      )}
-      {anchored ? null : fit}
-    </Group>
+      </GestureDetector>
+      {/* A sibling over the canvas, so its touches never reach the scene. */}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Fit map"
+        onPress={() => engine.current?.focus(null)}
+        testID="money-fit"
+        style={({ pressed }) => [
+          styles.fit,
+          pressed ? { backgroundColor: colors.sunken } : null,
+        ]}
+      >
+        <Icon name={fitSymbol} size={17} tone="ink" />
+      </Pressable>
+    </View>
   );
 }
 const styles = StyleSheet.create({
-  canvas: { height: 350, backgroundColor: colors.paper, overflow: 'hidden' },
+  canvas: { backgroundColor: colors.paper, overflow: 'hidden' },
   gl: { flex: 1 },
   stage: { position: 'relative' },
-  fitAnchor: {
+  // A 44 pt round button in the scene's bottom-trailing corner.
+  fit: {
     position: 'absolute',
-    top: rhythm.tight,
-    right: rhythm.tight,
-    backgroundColor: colors.paper,
-    borderRadius: rhythm.line,
+    right: rhythm.block,
+    bottom: rhythm.block,
+    width: minimumTarget,
+    height: minimumTarget,
+    borderRadius: minimumTarget / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.raised,
+    borderWidth: hairline,
+    borderColor: colors.line,
   },
 });

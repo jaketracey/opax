@@ -1,10 +1,22 @@
 import { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Text } from '../../design/primitives';
 import { colors } from '../../design/tokens';
 import type { MoneyGraph } from './data';
 import type { ProjectedLabel } from './NativeMoneyScene';
 import { clusterColour } from './ported/palette';
+import { industryLabel } from './records';
+
+/**
+ * Labels grow with Dynamic Type to the AX1 size and are held there, never
+ * hidden (map 3.11): AX1 is about 1.65 times the default text size.
+ */
+export const LABEL_SCALE_CAP = 28 / 17;
+/** The scale a label is drawn at for the window's text size. */
+export const labelScale = (fontScale: number) =>
+  Math.min(fontScale, LABEL_SCALE_CAP);
+/** "Mining and energy", "Public money": the drawn words for a cluster. */
+export const clusterLabel = (group: string) => industryLabel(group);
 
 export function moneyLabelGroups(graph: MoneyGraph): string[] {
   return [
@@ -27,17 +39,23 @@ export function moneyLabelParties(
 const LabelText = memo(function LabelText({
   label,
   ink,
+  shrink = 1,
 }: {
   label: string;
   /** A cluster's ink; a party or the selection takes the ink role. */
   ink?: string;
+  /** Below 1 above AX1, holding the label at the AX1 size. */
+  shrink?: number;
 }) {
   return (
     <Text
-      variant="fine"
+      variant="footnote"
       wordSafe
       accessible={false}
-      style={{ color: ink ?? colors.ink }}
+      style={[
+        { color: ink ?? colors.ink },
+        shrink < 1 ? { fontSize: 13 * shrink, lineHeight: 18 * shrink } : null,
+      ]}
     >
       {label}
     </Text>
@@ -61,6 +79,10 @@ export function MoneyMapLabels({
   labelWidth?: number;
   clamp?: boolean;
 }) {
+  const { fontScale } = useWindowDimensions();
+  // Above AX1 the role's size is scaled back so the drawn size holds.
+  const shrink = fontScale > LABEL_SCALE_CAP ? LABEL_SCALE_CAP / fontScale : 1;
+  const slot = Math.round(labelWidth * Math.max(1, labelScale(fontScale)));
   const projected = new Map(
     labels
       .filter((label) => label.kind !== 'focus')
@@ -75,7 +97,7 @@ export function MoneyMapLabels({
   }[] = [
     ...groups.map((group) => ({
       key: group,
-      label: group,
+      label: clusterLabel(group),
       ink: clusterColour(group).ink,
       point: projected.get(group),
     })),
@@ -98,17 +120,15 @@ export function MoneyMapLabels({
       style={styles.overlay}
     >
       {slots.map(({ key, label, ink, point }) => {
-        const left = (point?.x ?? 0) - labelWidth / 2;
-        const x = clamp
-          ? Math.max(0, Math.min(width - labelWidth, left))
-          : left;
+        const left = (point?.x ?? 0) - slot / 2;
+        const x = clamp ? Math.max(0, Math.min(width - slot, left)) : left;
         return (
           <View
             key={key}
             style={[
               styles.slot,
               {
-                width: labelWidth,
+                width: slot,
                 opacity: point ? 1 : 0,
                 transform: [
                   { translateX: x },
@@ -121,7 +141,7 @@ export function MoneyMapLabels({
               },
             ]}
           >
-            <LabelText label={label} ink={ink} />
+            <LabelText label={label} ink={ink} shrink={shrink} />
           </View>
         );
       })}

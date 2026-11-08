@@ -4,7 +4,6 @@ import { AppState, type AppStateStatus } from 'react-native';
 import { GLView } from 'expo-gl';
 import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
 import { NativeMoneyScene } from '../src/features/money/NativeMoneyScene';
-import { Button } from '../src/design/primitives';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
 import { pinned } from './pinned';
@@ -56,6 +55,9 @@ jest.mock('react-native-gesture-handler', () => {
     const value: Record<string, unknown> = {};
     for (const name of [
       'maxPointers',
+      'minPointers',
+      'activeOffsetX',
+      'failOffsetY',
       'runOnJS',
       'onBegin',
       'onUpdate',
@@ -170,12 +172,20 @@ test('native pixels and completed frames gate the probe; blur, background, offsc
   expect(scene.dispose).toHaveBeenCalledTimes(1);
   expect(unsubscribe).toHaveBeenCalledTimes(1);
 });
-test('a lost context removes the GL view, releases the scene and offers one fresh context', () => {
+test('a lost context removes the GL view, releases the scene and hands over to the list; a remount takes one fresh context', () => {
   let r!: TestRenderer.ReactTestRenderer;
+  const unavailable = jest.fn();
+  const element = () => (
+    <NativeMoneyMap
+      graph={graph}
+      view={graph}
+      active
+      onSelect={jest.fn()}
+      onUnavailable={unavailable}
+    />
+  );
   act(() => {
-    r = TestRenderer.create(
-      <NativeMoneyMap graph={graph} view={graph} active onSelect={jest.fn()} />,
-    );
+    r = TestRenderer.create(element());
   });
   const scene = start(r);
   scene.render.mockImplementationOnce(() => {
@@ -184,15 +194,14 @@ test('a lost context removes the GL view, releases the scene and offers one fres
   frame();
   expect(scene.dispose).toHaveBeenCalledTimes(1);
   expect(pending.size).toBe(0);
-  expect(
-    r.root.findAllByType(GLView).filter((x) => x.props.onContextCreate),
-  ).toHaveLength(0);
-  act(() =>
-    r.root
-      .findAllByType(Button)
-      .find((x) => x.props.testID === 'money-gl-retry')!
-      .props.onPress(),
-  );
+  expect(unavailable).toHaveBeenCalledTimes(1);
+  // Nothing is drawn: the screen shows the List view and its retry.
+  expect(r.toJSON()).toBeNull();
+  act(() => r.unmount());
+  // The screen's "Try again" mounts the map afresh.
+  act(() => {
+    r = TestRenderer.create(element());
+  });
   start(r);
   expect(NativeMoneyScene).toHaveBeenCalledTimes(2);
   act(() => r.unmount());

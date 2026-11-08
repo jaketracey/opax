@@ -6,436 +6,747 @@ import {
   useState,
   type RefObject,
 } from 'react';
-import { FlatList, StyleSheet, View, useWindowDimensions } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import {
+  RefreshControl,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {
+  Stack,
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
-  Disclosure,
-  useScreenColumn,
-  useLayout,
-  SidebarSafe,
-  RegionProvider,
-  Divider,
-  EmptyState,
-  ErrorState,
+  Button,
+  ContentUnavailable,
+  FigureBlock,
   Group,
-  LinkRow,
-  RowList,
-  Section,
-  LoadingState,
-  SegmentedControl,
+  Heading,
+  MoneyRow,
+  OfflineLine,
+  PopUpButton,
+  Screen,
+  SectionHeader,
+  SegmentedPicker,
+  Skeleton,
+  SourceLine,
+  StatStrip,
   Text,
-  errorMessage,
-  useAccessibilitySize,
+  useLayout,
+  useScreenColumn,
 } from '../../design/primitives';
-import { formatCount, formatMoney } from '../../design/format';
-import { samePartyLabel } from '../../design/party';
-import { colors, rhythm } from '../../design/tokens';
-import type { MoneyJurisdiction, MoneyNode } from './data';
-import { useMoneyRecord, useMoneyScreenReader } from './hooks';
-import { MoneyControls } from './MoneyControls';
+import { copy } from '../../design/copy';
 import {
-  MoneyRecordStatus,
-  MoneySourceLine,
-  moneyNotes,
-  moneyOriginals,
-} from './MoneyRecord';
-import { NativeMoneyMap, type NativeMoneyMapHandle } from './NativeMoneyMap';
+  formatCount,
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../../design/format';
+import { colors, chrome, rhythm } from '../../design/tokens';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { moneyDonorsRoute } from '../../navigation/routes/public-money';
+import { ApiError } from '../../api/errors';
+import type { RecordResult } from '../../api/client';
+import {
+  moneyCatalogs,
+  type MoneyGraph,
+  type MoneyJurisdiction,
+  type MoneyNode,
+} from './data';
+import { useFirstScreenReader, useMoneyRecord } from './hooks';
+import { partyNodeFor } from './lookup';
+import { moneyPageMenu } from './menu';
+import { useMoneyFilters } from './MoneyFilters';
 import { MoneyTestHooks } from './money-probe';
+import { NativeMoneyMap, type NativeMoneyMapHandle } from './NativeMoneyMap';
+import { moneyPartyGroups, PartyMoneyRow } from './parts';
 import {
+  donationsCaveat,
+  donorDetails,
   filtersFromParams,
+  industryDonors,
+  isAllYears,
   moneyFocusRoute,
   moneyJurisdiction,
+  moneyWindowParams,
   moneyYears,
-  moneyWindowYears,
-  publicMoneyLabel,
   param,
+  partyDonationsTotal,
+  publicMoneyCaveat,
+  publicMoneySource,
   type MoneyParams,
 } from './records';
 import {
+  moneyNotes,
+  moneyOriginals,
+  moneyShortSource,
+  moneySourceDetails,
+} from './sources';
+import {
   moneyView,
   moneyWindowNodes,
-  donationRanks,
   rankedDonors,
   type MoneyFilters,
 } from './view';
+import { moneySceneHeight } from './scene-size';
 
+const TOP_DONORS = 20;
+type Mode = 'list' | '3d';
+
+/** "Donations to parties, 1998–99 to 2025–26, and public money to donors on the map". */
+export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
+  // All years names the returns' own span: public money runs later, and
+  // the extent it reaches is not a span of donations.
+  const parties = graph.nodes.filter(
+    (n) => n.kind === 'party' && n.firstYear !== null && n.lastYear !== null,
+  );
+  const [from, to] =
+    filters.donations && isAllYears(graph, filters) && parties.length
+      ? [
+          Math.min(...parties.map((n) => n.firstYear!)),
+          Math.max(...parties.map((n) => n.lastYear!)),
+        ]
+      : [filters.from, filters.to];
+  const window =
+    from === to ? ` in ${moneyYears(from, to)}` : `, ${moneyYears(from, to)}`;
+  const industry = filters.industry
+    ? `, ${industryDonors(filters.industry)} only`
+    : '';
+  const publicMoney = filters.grants || filters.contracts;
+  const narrowed = !isAllYears(graph, filters) || !!filters.industry;
+  if (!filters.donations)
+    return `Public money to donors on the map${window}${industry}`;
+  return narrowed || !publicMoney
+    ? `Donations to parties${window}${industry}`
+    : `Donations to parties${window}, and public money to donors on the map`;
+}
+
+/**
+ * The donor list's caption states the cut: the map holds the largest donors
+ * by lifetime total, so a one-year list is a re-sort of those, not that
+ * year's largest donors (journeys/money.md 4.4, D4).
+ */
+export function donorCaption(graph: MoneyGraph, filters: MoneyFilters) {
+  const cut =
+    typeof graph.meta.donor_nodes_by_total === 'number'
+      ? graph.meta.donor_nodes_by_total
+      : null;
+  const since = /(\d{4})-(\d{2})/.exec(graph.meta.coverage);
+  const start = since ? `${since[1]}–${since[2]}` : null;
+  const cohort = cut
+    ? `the ${formatCount(cut)} largest donors${start ? ` since ${start}` : ''}`
+    : 'the donors on the map';
+  if (isAllYears(graph, filters))
+    return `${cohort.charAt(0).toLocaleUpperCase('en-AU')}${cohort.slice(1)}, largest first`;
+  return `Largest in ${moneyYears(filters.from, filters.to)} among ${cohort}`;
+}
+
+/** "Individual donors": one footnote under the donor list, never a row. */
+export function individualDonorsLine(nodes: readonly MoneyNode[]) {
+  const withheld = nodes.filter((n) => n.kind === 'donor' && n.withheld);
+  if (!withheld.length) return null;
+  const count = withheld.reduce((n, d) => n + (d.withheldCount ?? 1), 0);
+  const total = withheld.reduce((n, d) => n + d.total, 0);
+  return `${formatCount(count)} individual ${count === 1 ? 'donor' : 'donors'}, ${formatMoneyCompact(total)}, not named.`;
+}
+
+const jurisdictionOptions = (
+  Object.keys(moneyCatalogs) as MoneyJurisdiction[]
+).map((value) => ({
+  value,
+  label: moneyCatalogs[value].label,
+  testID: `money-jurisdiction-${value}`,
+}));
+
+/** The share path for the map as drawn: its jurisdiction and filters. */
+function sharePath(params: MoneyParams) {
+  const query = new URLSearchParams();
+  const jurisdiction = param(params.jurisdiction);
+  if (jurisdiction && jurisdiction !== 'federal')
+    query.set('jur', jurisdiction);
+  for (const key of ['from', 'to', 'industry', 'layers', 'inflation', 'view'])
+    if (param(params[key])) query.set(key, param(params[key])!);
+  const text = query.toString();
+  return text ? `/money?${text}` : '/money';
+}
+
+/**
+ * The money map (specs/money.md 2.13): pushed in the current tab with a
+ * named back button. Title, the jurisdiction pop-up and one line saying
+ * what the map shows; the List | Map picker; then the scene with two
+ * figure blocks under it (donations, and public money beside it, never
+ * added), or the list (Donors, Parties, Public money). Filters are a bar
+ * button opening `/filters/money`, which writes this screen's params live.
+ */
 export default function MoneyScreen() {
   const params = useLocalSearchParams<MoneyParams>();
-  const [jurisdiction, setJurisdiction] = useState<MoneyJurisdiction>(() =>
-    moneyJurisdiction(params.jurisdiction),
-  );
-  const reader = useMoneyScreenReader();
-  const [choice, setChoice] = useState<{
-    reader: boolean | null;
-    mode: 'list' | '3d';
-  } | null>(null);
-  const mode =
-    choice && choice.reader === reader
-      ? choice.mode
-      : reader === false
-        ? '3d'
-        : 'list';
-  const consumedFocusRef = useRef(false);
-  return (
-    <MoneyCatalogScreen
-      key={jurisdiction}
-      jurisdiction={jurisdiction}
-      onJurisdiction={setJurisdiction}
-      params={params}
-      mode={mode}
-      onMode={(value) => setChoice({ reader, mode: value })}
-      consumedFocusRef={consumedFocusRef}
-    />
-  );
-}
-function MoneyCatalogScreen({
-  jurisdiction,
-  onJurisdiction,
-  params,
-  mode,
-  onMode,
-  consumedFocusRef,
-}: {
-  jurisdiction: MoneyJurisdiction;
-  onJurisdiction: (value: MoneyJurisdiction) => void;
-  params: MoneyParams;
-  mode: 'list' | '3d';
-  onMode: (value: 'list' | '3d') => void;
-  consumedFocusRef: RefObject<boolean>;
-}) {
-  const { record, error, retry } = useMoneyRecord(jurisdiction);
-  const [changedFilters, setFilters] = useState<MoneyFilters | null>(null);
-  const filters = useMemo(
-    () =>
-      changedFilters ??
-      (record ? filtersFromParams(record.data, params) : null),
-    [changedFilters, record, params],
-  );
-  const [controlsOpen, setControlsOpen] = useState(false);
-  const [recordsOpen, setRecordsOpen] = useState(false);
-  const map = useRef<NativeMoneyMapHandle | null>(null);
-  const [plateVisible, setPlateVisible] = useState(true);
-  const plate = useRef({ top: 0, bottom: 700 }),
-    scroll = useRef(0);
-  const { height } = useWindowDimensions();
+  const navigation = useNavigation();
   const router = useRouter();
-  const view = useMemo(
-    () => (record && filters ? moneyView(record.data, filters) : null),
-    [record, filters],
+  const jurisdiction = moneyJurisdiction(params.jurisdiction);
+  const { record, error, refreshing, refresh, retry } =
+    useMoneyRecord(jurisdiction);
+  const graph = record?.data ?? null;
+  const write = useCallback(
+    (next: Record<string, string | undefined>) =>
+      navigation.setParams(next as never),
+    [navigation],
   );
-  const donors = useMemo(() => (view ? rankedDonors(view) : []), [view]);
-  const ranks = useMemo(() => donationRanks(donors), [donors]);
-  const otherRecords = useMemo(
-    () =>
-      record && filters
-        ? moneyWindowNodes(record.data, filters).filter(
-            (n) => n.kind === 'party' || n.kind === 'grantor',
-          )
-        : [],
-    [record, filters],
+  const sheet = useMoneyFilters(graph, params, write);
+  const filters = useMemo(
+    () => (graph ? filtersFromParams(graph, params) : null),
+    [graph, params],
   );
-  const [glFallback, setGLFallback] = useState(false);
+  const reader = useFirstScreenReader();
+  // The reader's choice, else the link's view, else List while VoiceOver
+  // is on or not yet known (the map draws once it is known to be off).
+  const [chosen, setMode] = useState<Mode | null>(null);
+  const linked = param(params.view);
+  const mode: Mode =
+    chosen ??
+    (linked === 'list' ? 'list' : linked === 'map' ? '3d' : null) ??
+    (reader === false ? '3d' : 'list');
+  const [glFailed, setGLFailed] = useState(false);
+  const map = useRef<NativeMoneyMapHandle | null>(null);
+  const [plate] = useState(createPlate);
   const select = useCallback(
-    (id: string) => {
-      if (filters) router.push(moneyFocusRoute(id, jurisdiction, filters));
+    (id: string, name?: string) => {
+      if (filters)
+        router.push(moneyFocusRoute(id, jurisdiction, filters, name, 'map'));
     },
     [router, filters, jurisdiction],
   );
+  // `focus` (party pages, old links, Maestro): push that record once, after load.
+  const consumedFocus = useRef(false);
   useEffect(() => {
-    const rawFocus = param(params.focus);
-    const requested = rawFocus?.startsWith('party:')
-      ? record?.data.nodes.find(
-          (n) =>
-            n.kind === 'party' && samePartyLabel(n.label, rawFocus.slice(6)),
-        )?.id
-      : rawFocus;
-    if (
-      requested &&
-      !consumedFocusRef.current &&
-      view?.nodes.some((n) => n.id === requested)
-    ) {
-      consumedFocusRef.current = true;
-      select(requested);
-    }
-  }, [params.focus, record, view, select, consumedFocusRef]);
-  const parties = useMemo(() => {
-    const result = new Map<string, string[]>();
-    if (record && filters) {
-      const receipts = moneyView(record.data, {
-        ...filters,
-        donations: true,
-        grants: false,
-        contracts: false,
-      });
-      const nodes = new Map(receipts.nodes.map((n) => [n.id, n]));
-      for (const edge of receipts.edges) {
-        const party = nodes.get(edge.target);
-        if (party?.kind === 'party') {
-          const names = result.get(edge.source) ?? [];
-          if (!names.includes(party.label)) names.push(party.label);
-          result.set(edge.source, names);
-        }
-      }
-    }
-    return result;
-  }, [record, filters]);
-  // One row a donor: rank and name, the figure, then what it is, the years
-  // and the parties it went to. The source is on the donor's record.
-  const renderDonor = ({ item, index }: { item: MoneyNode; index: number }) => {
-    const rank = ranks.has(item.id)
-      ? `${formatCount(ranks.get(item.id)!)}. `
-      : '';
-    const detail = [
-      item.via === 'public_money'
-        ? 'Public-money record, disclosed donations'
-        : 'Disclosed donations',
-      moneyWindowYears(item, filters!),
-      parties.get(item.id)?.join(', ') ??
-        'no disclosed party flow in these years',
-    ].join(' · ');
-    return (
-      <View style={styles.donor}>
-        <LinkRow
-          title={`${rank}${item.label}`}
-          testID={`money-donor-${index}`}
-          detailTestID={`money-donor-parties-${index}`}
-          value={formatMoney(item.total)}
-          detail={detail}
-          accessibilityLabel={`${rank}${item.label}, ${formatMoney(item.total)} ${detail.charAt(0).toLowerCase()}${detail.slice(1)}`}
-          onPress={() => select(item.id)}
-        />
-      </View>
-    );
-  };
-  // Regular width: the controls, lines and list keep the readable measure;
-  // the scene reaches past it to the wide column (`breakout`).
-  const column = useScreenColumn('readable');
-  const { regular } = useLayout();
-  const accessibilitySize = useAccessibilitySize();
-  const summaryAfterMap = accessibilitySize && mode === '3d';
-  const summary =
-    view && filters ? (
-      <Text wordSafe variant="metadata" testID="money-view-summary">
-        Donations and public money · {moneyYears(filters.from, filters.to)} ·{' '}
-        {formatCount(view.nodes.length)} nodes ·{' '}
-        {formatCount(view.edges.length)} recorded flows
-        {filters.industry ? ` · ${filters.industry}` : ''}
-      </Text>
-    ) : null;
+    const raw = param(params.focus);
+    if (!raw || !graph || consumedFocus.current) return;
+    const node = raw.startsWith('party:')
+      ? partyNodeFor(graph, raw)
+      : graph.nodes.find((n) => n.id === raw);
+    if (!node) return;
+    consumedFocus.current = true;
+    select(node.id, node.label);
+  }, [params.focus, graph, select]);
+
+  const view = useMemo(
+    () => (graph && filters ? moneyView(graph, filters) : null),
+    [graph, filters],
+  );
+  const path = sharePath(params);
+  const title = 'Money map';
+  const options = headerItems(
+    pageItems({
+      name: title,
+      filters: { active: sheet.active, href: sheet.href },
+      menu: moneyPageMenu({ path, title }),
+    }),
+  );
+  const offline =
+    error instanceof ApiError &&
+    (error.code === 'offline' || error.code === 'timeout');
+  const missingState =
+    error instanceof ApiError &&
+    error.code === 'not-found' &&
+    jurisdiction !== 'federal';
+  const picker = (
+    <View>
+      <SegmentedPicker
+        options={[
+          { value: 'list', label: 'List', testID: 'money-mode-list' },
+          { value: '3d', label: 'Map', testID: 'money-mode-3d' },
+        ]}
+        value={mode}
+        onChange={(next: Mode) => {
+          if (next === '3d') setGLFailed(false);
+          setMode(next);
+        }}
+        accessibilityLabel="View"
+        testID="money-view-toggle"
+      />
+      {glFailed ? (
+        <Group gap={rhythm.tight}>
+          <Text wordSafe variant="footnote" testID="money-gl-note">
+            The map can’t be drawn on this device. The List view has the same
+            data.
+          </Text>
+          <Button
+            label={copy.tryAgain}
+            size="compact"
+            onPress={() => {
+              setGLFailed(false);
+              setMode('3d');
+            }}
+            testID="money-gl-retry"
+          />
+        </Group>
+      ) : null}
+    </View>
+  );
   return (
-    <SidebarSafe style={styles.screen}>
-      <GestureHandlerRootView style={styles.screen}>
-        <FlatList
-          testID="money-screen"
-          data={mode === 'list' ? donors : []}
-          keyExtractor={(item) => item.id}
-          renderItem={renderDonor}
-          initialNumToRender={5}
-          maxToRenderPerBatch={5}
-          windowSize={5}
-          removeClippedSubviews={false}
-          contentInsetAdjustmentBehavior="automatic"
-          contentContainerStyle={[styles.content, column.content]}
-          onLayout={column.onLayout}
-          onScroll={(event) => {
-            scroll.current = event.nativeEvent.contentOffset.y;
-            const shown =
-              scroll.current < plate.current.bottom &&
-              scroll.current + height > plate.current.top;
-            setPlateVisible((previous) =>
-              previous === shown ? previous : shown,
-            );
-          }}
-          scrollEventThrottle={100}
-          ItemSeparatorComponent={Divider}
-          ListHeaderComponent={
-            <RegionProvider value={column.inner}>
-              {column.bar}
-              <Group style={styles.header}>
-                <View style={regular ? styles.toggleCapped : null}>
-                  <SegmentedControl
-                    value={mode}
-                    segments={[
-                      { value: '3d', label: '3D map', testID: 'money-mode-3d' },
-                      {
-                        value: 'list',
-                        label: 'List view',
-                        testID: 'money-mode-list',
-                      },
-                    ]}
-                    onChange={(next) => {
-                      if (next === '3d') setGLFallback(false);
-                      onMode(next);
-                    }}
-                    testID="money-view-toggle"
-                  />
-                </View>
-                {glFallback ? (
-                  <Text wordSafe testID="money-gl-fallback">
-                    The 3D view is unavailable. You can explore the same records
-                    in the list.
-                  </Text>
-                ) : null}
-                {error ? (
-                  <ErrorState
-                    message={errorMessage(error)}
-                    onRetry={retry}
-                    testID="money-error"
-                  />
-                ) : !record || !view || !filters ? (
-                  <LoadingState label="Loading the money map" />
-                ) : (
-                  <>
-                    <MoneyRecordStatus record={record} />
-                    {/* The map block: one meta line, the scene, the one
-                        caveat a total needs, and one source line. At
-                        accessibility sizes the meta line runs to several
-                        lines, so it follows the scene (design pass 5,
-                        P3-15): the map starts on the first screen. */}
-                    <Group gap={rhythm.tight}>
-                      {summaryAfterMap ? null : summary}
-                      {mode === '3d' ? (
-                        <View
-                          style={
-                            column.breakout
-                              ? { marginHorizontal: -column.breakout }
-                              : null
-                          }
-                          onLayout={(event) => {
-                            plate.current = {
-                              top: event.nativeEvent.layout.y,
-                              bottom:
-                                event.nativeEvent.layout.y +
-                                event.nativeEvent.layout.height,
-                            };
-                            setPlateVisible(
-                              scroll.current < plate.current.bottom &&
-                                scroll.current + height > plate.current.top,
-                            );
-                          }}
-                        >
-                          {view.nodes.length ? (
-                            <NativeMoneyMap
-                              ref={map}
-                              graph={record.data}
-                              view={view}
-                              active={plateVisible}
-                              onSelect={select}
-                              onUnavailable={() => {
-                                setGLFallback(true);
-                                onMode('list');
-                              }}
-                            />
-                          ) : (
-                            <EmptyState
-                              message="No recorded flows match these filters."
-                              testID="money-empty"
-                            />
-                          )}
-                        </View>
-                      ) : null}
-                      {summaryAfterMap ? summary : null}
-                      <Text wordSafe variant="fine">
-                        Totals are a floor.
-                      </Text>
-                      <MoneySourceLine
-                        record={record}
-                        title="About the money map"
-                        originals={moneyOriginals(record.data)}
-                        notes={moneyNotes(record.data)}
-                        testID="money-as-at"
-                      />
-                    </Group>
-                    <RowList>
-                      <Disclosure
-                        label="Filters and years"
-                        icon="slider.horizontal.3"
-                        open={controlsOpen}
-                        onToggle={setControlsOpen}
-                        testID="money-filters"
-                      >
-                        <MoneyControls
-                          graph={record.data}
-                          filters={filters}
-                          onChange={setFilters}
-                          jurisdiction={jurisdiction}
-                          onJurisdiction={onJurisdiction}
-                        />
-                      </Disclosure>
-                    </RowList>
-                    <MoneyTestHooks
-                      graph={view}
-                      onYear={(year) =>
-                        setFilters({ ...filters, from: year, to: year })
-                      }
-                      onFocus={(id) => {
-                        if (mode === '3d' && map.current) map.current.focus(id);
-                        else select(id);
-                      }}
-                    />
-                    {mode === 'list' ? (
-                      <>
-                        <RowList>
-                          <Disclosure
-                            label="Parties and public money"
-                            icon="building.columns"
-                            open={recordsOpen}
-                            onToggle={setRecordsOpen}
-                            testID="money-list-records-toggle"
-                          >
-                            <RowList>
-                              {otherRecords.map((node) => (
-                                <LinkRow
-                                  key={node.id}
-                                  title={node.label}
-                                  value={formatMoney(node.total)}
-                                  detail={`${node.kind === 'grantor' ? publicMoneyLabel(node) : 'Disclosed receipts'} · ${moneyWindowYears(node, filters, node.kind === 'grantor')}`}
-                                  testID={`money-list-record-${node.id}`}
-                                  onPress={() => select(node.id)}
-                                />
-                              ))}
-                            </RowList>
-                          </Disclosure>
-                        </RowList>
-                        <Section
-                          title="Donors, largest first"
-                          accent="money"
-                          testID="money-donors"
-                        >
-                          {null}
-                        </Section>
-                        {!donors.length ? (
-                          <EmptyState
-                            message="No donors have a recorded flow in this view."
-                            testID="money-list-empty"
-                          />
-                        ) : null}
-                      </>
-                    ) : null}
-                  </>
-                )}
-              </Group>
-            </RegionProvider>
-          }
-          ListFooterComponent={
-            record ? <View testID="money-end" style={styles.footer} /> : null
-          }
-        />
-      </GestureHandlerRootView>
-    </SidebarSafe>
+    <GestureHandlerRootView style={styles.root}>
+      <Stack.Screen options={options} />
+      <Screen
+        column="wide"
+        barTitle={title}
+        testID="money-screen"
+        onScroll={(y) => plate.onScroll(y)}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            tintColor={chrome.tint}
+          />
+        }
+      >
+        <Group gap={rhythm.tight}>
+          <Heading level={1} kind="page" testID="money-title">
+            {title}
+          </Heading>
+          <PopUpButton
+            label="Jurisdiction"
+            value={jurisdiction}
+            options={jurisdictionOptions}
+            onChange={(next) =>
+              write({
+                jurisdiction: next === 'federal' ? undefined : next,
+                from: undefined,
+                to: undefined,
+                industry: undefined,
+                layers: undefined,
+                inflation: undefined,
+              })
+            }
+            testID="money-jurisdiction"
+          />
+          {graph && filters ? (
+            <Text wordSafe variant="secondary" testID="money-view-summary">
+              {moneySummary(graph, filters)}
+            </Text>
+          ) : null}
+        </Group>
+        {record?.stale && record.staleReason !== 'unreadable' ? (
+          <OfflineLine savedAt={record.savedAt} testID="money-offline" />
+        ) : null}
+        {picker}
+        {error && !record ? (
+          missingState ? (
+            <ContentUnavailable
+              symbol="magnifyingglass"
+              title={`${moneyCatalogs[jurisdiction].label} isn’t available yet`}
+              action={{
+                label: 'Show federal',
+                onPress: () => write({ jurisdiction: undefined }),
+                testID: 'money-show-federal',
+              }}
+              testID="money-missing"
+            />
+          ) : offline ? (
+            <ContentUnavailable
+              symbol="wifi.slash"
+              title={copy.notSaved}
+              body={copy.notSavedBody}
+              testID="money-error"
+            />
+          ) : (
+            <ContentUnavailable
+              symbol="exclamationmark.triangle"
+              title="The money map couldn’t be loaded"
+              body="Check your connection and try again."
+              action={{ label: copy.tryAgain, onPress: retry }}
+              testID="money-error"
+            />
+          )
+        ) : !record || !graph || !filters || !view ? (
+          <MoneySkeleton mode={mode} />
+        ) : !view.nodes.length ? (
+          <ContentUnavailable
+            symbol="line.3.horizontal.decrease.circle"
+            title="Nothing matches these filters"
+            action={{
+              label: copy.resetFilters,
+              onPress: () =>
+                write({
+                  from: undefined,
+                  to: undefined,
+                  industry: undefined,
+                  layers: undefined,
+                  inflation: undefined,
+                }),
+              testID: 'money-empty-reset',
+            }}
+            testID="money-empty"
+          />
+        ) : (
+          <MoneyBody
+            record={record}
+            filters={filters}
+            view={view}
+            mode={mode}
+            jurisdiction={jurisdiction}
+            plate={plate}
+            map={map}
+            select={select}
+            initialFocus={param(params.select) ?? null}
+            onUnavailable={() => {
+              setGLFailed(true);
+              setMode('list');
+            }}
+          />
+        )}
+        {graph && view && filters ? (
+          <MoneyTestHooks
+            graph={view}
+            onYear={(year) => write({ from: String(year), to: String(year) })}
+            onFocus={(id) =>
+              select(id, graph.nodes.find((n) => n.id === id)?.label)
+            }
+          />
+        ) : null}
+      </Screen>
+    </GestureHandlerRootView>
   );
 }
+
+/** Whether the scene is on screen: GL draws only while it is. */
+function createPlate() {
+  let top = 0,
+    bottom = 700,
+    offset = 0,
+    height = 800;
+  const listeners = new Set<(shown: boolean) => void>();
+  const shown = () => offset < bottom && offset + height > top;
+  const notify = () => listeners.forEach((l) => l(shown()));
+  return {
+    onScroll(y: number) {
+      const before = shown();
+      offset = y;
+      if (shown() !== before) notify();
+    },
+    layout(nextTop: number, nextBottom: number, window: number) {
+      top = nextTop;
+      bottom = nextBottom;
+      height = window;
+      notify();
+    },
+    subscribe(listener: (shown: boolean) => void) {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    shown,
+  };
+}
+type Plate = ReturnType<typeof createPlate>;
+
+function usePlateVisible(source: Plate) {
+  const [visible, setVisible] = useState(source.shown());
+  useEffect(() => source.subscribe(setVisible), [source]);
+  return visible;
+}
+
+function MoneySkeleton({ mode }: { mode: Mode }) {
+  const { width } = useWindowDimensions();
+  const { regular } = useLayout();
+  return (
+    <Group>
+      {mode === '3d' ? (
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{
+            height: moneySceneHeight(width, regular),
+            backgroundColor: colors.sunken,
+          }}
+        />
+      ) : null}
+      <Skeleton
+        shape="figure"
+        count={mode === '3d' ? 2 : 1}
+        label="Loading the money map"
+        testID="money-loading"
+      />
+      {mode === 'list' ? <Skeleton shape="rows" count={5} /> : null}
+    </Group>
+  );
+}
+
+function MoneyBody({
+  record,
+  filters,
+  view,
+  mode,
+  jurisdiction,
+  plate: source,
+  map,
+  select,
+  initialFocus,
+  onUnavailable,
+}: {
+  record: RecordResult<MoneyGraph>;
+  filters: MoneyFilters;
+  view: MoneyGraph;
+  mode: Mode;
+  jurisdiction: MoneyJurisdiction;
+  plate: Plate;
+  map: RefObject<NativeMoneyMapHandle | null>;
+  select: (id: string, name?: string) => void;
+  initialFocus: string | null;
+  onUnavailable: () => void;
+}) {
+  const graph = record.data;
+  const visible = usePlateVisible(source);
+  const { height } = useWindowDimensions();
+  const column = useScreenColumn('wide');
+  const donations = useMemo(
+    () => partyDonationsTotal(graph, filters),
+    [graph, filters],
+  );
+  const windowNodes = useMemo(
+    () => moneyWindowNodes(graph, filters),
+    [graph, filters],
+  );
+  const grantor = (flow: 'grants' | 'contracts') =>
+    windowNodes.find(
+      (n) =>
+        n.kind === 'grantor' &&
+        (flow === 'contracts'
+          ? n.flow === 'contracts'
+          : n.flow !== 'contracts'),
+    );
+  const grants = filters.grants ? grantor('grants') : undefined;
+  const contracts = filters.contracts ? grantor('contracts') : undefined;
+  const years = moneyYears(donations.firstYear, donations.lastYear);
+  const inflation = filters.inflation ? ', in 2025–26 dollars' : '';
+  const donationsLine = donations.subset
+    ? `from ${industryDonors(filters.industry!)} on the map, ${years}${inflation}`
+    : `disclosed to parties, ${years}${inflation}`;
+  const shortSource = moneyShortSource(graph);
+  const grantsSource = publicMoneySource(graph, 'grants');
+  const contractsSource = publicMoneySource(graph, 'contracts');
+  const publicCitation = [
+    ...(grants ? [grantsSource.label] : []),
+    ...(contracts ? [contractsSource.label] : []),
+  ];
+  const donationsBlock = filters.donations ? (
+    <FigureBlock
+      value={formatMoneyCompact(donations.total)}
+      ink="money"
+      label={donationsLine}
+      caveat={donationsCaveat}
+      accessibilityLabel={`${moneyAccessibilityLabel(donations.total, true)}, ${donationsLine}`}
+      // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
+      {...{
+        source: moneySourceDetails(record, {
+          citation: shortSource,
+          originals: moneyOriginals(graph).slice(0, 1),
+          notes: moneyNotes(graph),
+          testID: 'money-source',
+        }),
+      }}
+      testID="money-donations"
+    />
+  ) : null;
+  const publicNotes = [
+    typeof graph.meta.donor_nodes_by_total === 'number' &&
+    typeof graph.meta.donors_via_public_money === 'number'
+      ? `The map holds the ${formatCount(graph.meta.donor_nodes_by_total)} largest donors by lifetime donations, plus ${formatCount(graph.meta.donors_via_public_money)} smaller donors that hold at least $50 million in Commonwealth grants and contracts.`
+      : null,
+    grants ? grantsSource.citation : null,
+    contracts ? contractsSource.citation : null,
+    contracts ? 'Contract values as last published, not amounts paid.' : null,
+  ];
+  // --- List view rows ---
+  const named = rankedDonors(view).filter((n) => !n.withheld);
+  const top = named
+    .filter((n) => n.via !== 'public_money')
+    .slice(0, TOP_DONORS);
+  const donorDetail = useMemo(() => donorDetails(view), [view]);
+  const partyNodes = moneyPartyGroups(
+    view.nodes.filter((n) => n.kind === 'party'),
+    (n) => n.label,
+  );
+  const individuals = individualDonorsLine(view.nodes);
+  const record_ = (node: MoneyNode) =>
+    moneyFocusRoute(node.id, jurisdiction, filters, node.label, 'map');
+  const partyRow = (node: MoneyNode, index: number) => (
+    <PartyMoneyRow
+      key={node.id}
+      name={node.label}
+      detail={`${formatCount(node.count)} receipts · ${moneyYears(node.firstYear, node.lastYear)}`}
+      amount={node.total}
+      href={record_(node)}
+      testID={`money-party-${index}`}
+    />
+  );
+  return (
+    <>
+      {mode === '3d' ? (
+        <Group>
+          <View
+            style={{
+              marginHorizontal: column.regular
+                ? 0
+                : -column.content.paddingHorizontal,
+            }}
+            onLayout={(event) => {
+              const { y, height: h } = event.nativeEvent.layout;
+              source.layout(y, y + h, height);
+            }}
+          >
+            <NativeMoneyMap
+              ref={map}
+              graph={graph}
+              view={view}
+              active={visible}
+              onSelect={(id) =>
+                select(id, view.nodes.find((n) => n.id === id)?.label)
+              }
+              onUnavailable={onUnavailable}
+              initialFocus={initialFocus}
+            />
+          </View>
+          {donationsBlock}
+          {grants || contracts ? (
+            <View testID="money-public-money" style={styles.block}>
+              <Heading level={3}>Public money to donors on the map</Heading>
+              <StatStrip
+                tiles={[
+                  ...(grants
+                    ? [
+                        {
+                          value: formatMoneyCompact(grants.total),
+                          label: 'in grants',
+                          testID: 'money-public-grants',
+                        },
+                      ]
+                    : []),
+                  ...(contracts
+                    ? [
+                        {
+                          value: formatMoneyCompact(contracts.total),
+                          label: 'in contracts',
+                          testID: 'money-public-contracts',
+                        },
+                      ]
+                    : []),
+                ]}
+              />
+              <Text wordSafe variant="footnote">
+                {publicMoneyCaveat}
+              </Text>
+              <SourceLine
+                {...moneySourceDetails(record, {
+                  citation: publicCitation,
+                  returns: false,
+                  originals: moneyOriginals(graph).slice(1),
+                  notes: publicNotes,
+                  testID: 'money-public-money-source',
+                })}
+              />
+            </View>
+          ) : null}
+        </Group>
+      ) : (
+        <>
+          {donationsBlock}
+          {filters.donations ? (
+            <View testID="money-donors" style={styles.section}>
+              <SectionHeader
+                title="Donors"
+                action={{
+                  label: copy.seeAll,
+                  accessibilityLabel: `See all ${formatCount(named.length)} donors`,
+                  href: moneyDonorsRoute({
+                    jurisdiction,
+                    ...moneyWindowParams(filters),
+                    via: 'map',
+                  }),
+                  testID: 'money-donors-all',
+                }}
+              />
+              <Text wordSafe variant="footnote" testID="money-donor-caption">
+                {donorCaption(graph, filters)}
+              </Text>
+              <View>
+                {top.map((node, index) => (
+                  <MoneyRow
+                    key={node.id}
+                    name={node.label}
+                    detail={donorDetail(node)}
+                    amount={node.total}
+                    href={record_(node)}
+                    testID={`money-donor-${index}`}
+                  />
+                ))}
+              </View>
+              {individuals ? (
+                <Text
+                  wordSafe
+                  variant="footnote"
+                  testID="money-individual-donors"
+                >
+                  {individuals}
+                </Text>
+              ) : null}
+            </View>
+          ) : null}
+          {partyNodes.main.length || partyNodes.other.length ? (
+            <View testID="money-parties" style={styles.section}>
+              <SectionHeader title="Parties" />
+              <View>{partyNodes.main.map(partyRow)}</View>
+              {partyNodes.other.length ? (
+                <>
+                  <SectionHeader title="Other parties" level={3} />
+                  <View>
+                    {partyNodes.other.map((node, index) =>
+                      partyRow(node, partyNodes.main.length + index),
+                    )}
+                  </View>
+                </>
+              ) : null}
+            </View>
+          ) : null}
+          {grants || contracts ? (
+            <View testID="money-public" style={styles.section}>
+              <SectionHeader title="Public money" />
+              <View>
+                {[grants, contracts].map((node) =>
+                  node ? (
+                    <MoneyRow
+                      key={node.id}
+                      name={`${node.label} to donors on the map`}
+                      detail={moneyYears(node.firstYear, node.lastYear)}
+                      amount={node.total}
+                      href={record_(node)}
+                      testID={`money-public-${node.flow === 'contracts' ? 'contracts' : 'grants'}`}
+                    />
+                  ) : null,
+                )}
+              </View>
+              <Text wordSafe variant="footnote">
+                {publicMoneyCaveat}
+              </Text>
+            </View>
+          ) : null}
+          <SourceLine
+            {...moneySourceDetails(record, {
+              citation: [shortSource, ...publicCitation],
+              originals: moneyOriginals(graph),
+              notes: moneyNotes(graph),
+              testID: 'money-list-source',
+            })}
+          />
+        </>
+      )}
+    </>
+  );
+}
+
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.paper },
-  content: {
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.block,
-    paddingBottom: rhythm.section,
-  },
-  header: { marginBottom: rhythm.block },
-  footer: { marginTop: rhythm.group },
-  donor: { paddingVertical: rhythm.line },
-  // On a wide window the two views stay a control, not a banner.
-  toggleCapped: { maxWidth: 420, width: '100%' },
+  root: { flex: 1, backgroundColor: colors.paper },
+  section: { gap: rhythm.tight },
+  block: { gap: rhythm.tight },
 });

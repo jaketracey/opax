@@ -16,10 +16,10 @@ import WelcomeLayout from '../src/app/welcome/_layout';
 import * as routes from '../src/navigation/routes';
 import LegacyMoneyNode from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-node';
 import MoneyRecord from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-record';
-import MoneyNodeScreen from '../src/features/money/MoneyNodeScreen';
+import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import { publicMoneyScreens } from '../src/navigation/stack/public-money';
 
-jest.mock('../src/features/money/MoneyNodeScreen', () => () => null);
+jest.mock('../src/features/money/MoneyRecord', () => () => null);
 
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 jest.mock('expo-router', () => {
@@ -279,7 +279,7 @@ test('the node redirect preserves every incoming parameter in the current tab', 
   act(() => view.unmount());
 });
 test('money-record keeps the working node screen as a pushed Money record page', () => {
-  expect(MoneyRecord).toBe(MoneyNodeScreen);
+  expect(MoneyRecord).toBe(MoneyRecordScreen);
   const registration = publicMoneyScreens().find(
     (screen) => screen.props.name === 'money-record',
   )!;

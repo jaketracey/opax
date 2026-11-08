@@ -5,8 +5,6 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
 import type { ApiClient, RecordResult } from '../src/api/client';
-import { decodeDiscovery } from '../src/api/catalog-decoders';
-import { catalogs } from '../src/api/runtime';
 import { money } from '../src/features/money-public/runtime';
 import {
   AsAtLine,
@@ -26,7 +24,6 @@ import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
 import Largest from '../src/features/money-public/Largest';
 import Agencies, { Agency } from '../src/features/money-public/Agencies';
-import Discover from '../src/features/money-public/Discover';
 import Allocation from '../src/features/money-public/Allocation';
 import Connections from '../src/features/money-public/Connections';
 
@@ -40,7 +37,6 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
 }));
-jest.mock('../src/api/runtime', () => ({ catalogs: { discovery: jest.fn() } }));
 jest.mock('../src/features/money-public/runtime', () => ({ money: {} }));
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
@@ -71,7 +67,6 @@ const screens = [
   ['Largest', Largest, {}],
   ['Agencies', Agencies, {}],
   ['Agency', Agency, { id: 'a-7431f054588d4251c0b4' }],
-  ['Discover', Discover, {}],
   ['Allocation', Allocation, {}],
   ['Programs & places', Connections, {}],
 ] as const;
@@ -95,9 +90,6 @@ beforeEach(() => {
     'evidence',
   ] as const)
     money[name] = fixture[name].bind(fixture) as never;
-  (catalogs.discovery as jest.Mock).mockImplementation(() =>
-    client.get('/discovery.json', decodeDiscovery),
-  );
 });
 async function render(Screen: () => React.ReactElement | null) {
   let rendered!: TestRenderer.ReactTestRenderer;

@@ -1,42 +1,30 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import {
-  Group,
-  Heading,
-  Icon,
-  RowList,
-  SegmentedControl,
-  StatRow,
-  Text,
-} from '../../design/primitives';
+import { StyleSheet, View } from 'react-native';
+import { LinkRow, Text, ValueRow } from '../../design/primitives';
 import {
   formatCount,
   formatMoney,
   formatMoneyCompact,
   formatPercent,
-  moneyAccessibilityLabel,
 } from '../../design/format';
 import {
+  accents,
   chartRoles,
   colors,
   minimumTarget,
   radii,
   rhythm,
 } from '../../design/tokens';
-import { useAccessibilitySize } from '../../design/accessibility';
-import { openOnWeb, webPageUrl } from '../../navigation/external';
 import { chartRowLabel, type ChartRow, type LeadComparison } from './model';
 
 type Concentration = Extract<LeadComparison, { type: 'concentration' }>;
-type Overlap = Extract<LeadComparison, { type: 'overlap' }>;
 
 /**
- * The web's share chart (app.js discoveryChartHTML): the five largest named
- * participants and the remainder, each as a bar on a common 0 to 100% scale.
- * Each row is one VoiceOver element with its name, amount and share; the
- * bars are decorative. A supplier's row opens its profile on opax.com.au, as
- * the web's chart links it. "Table" shows the same rows to the dollar, with
- * record counts.
+ * A concentration's share chart: the five largest named participants and
+ * the rest, each a bar on a common 0 to 100% scale with its amount and
+ * share in words beside it. The bars are a picture of the rows, not links
+ * (the lead's subject row and its example records are the ways on). "Show
+ * as table" lists the same rows to the dollar, with record counts.
  */
 export function ConcentrationChart({
   comparison,
@@ -45,34 +33,29 @@ export function ConcentrationChart({
   comparison: Concentration;
   testID: string;
 }) {
-  const [view, setView] = useState<'chart' | 'table'>('chart');
-  const stacked = useAccessibilitySize();
+  const [table, setTable] = useState(false);
   return (
-    <Group testID={testID}>
-      <View style={[styles.head, stacked ? styles.headStacked : null]}>
-        <Heading level={2} style={styles.grow}>
-          {comparison.chartTitle}
-        </Heading>
-        <Text
-          wordSafe
-          variant="strong"
-          tabular
-          accessibilityLabel={`${moneyAccessibilityLabel(comparison.total, true)} total`}
-          testID={`${testID}-total`}
-        >
-          {formatMoneyCompact(comparison.total)} total
-        </Text>
-      </View>
-      <SegmentedControl
-        segments={[
-          { value: 'chart', label: 'Chart', testID: `${testID}-show-chart` },
-          { value: 'table', label: 'Table', testID: `${testID}-show-table` },
-        ]}
-        value={view}
-        onChange={setView}
-        testID={`${testID}-view`}
-      />
-      {view === 'chart' ? (
+    <View testID={testID} style={styles.chart}>
+      {table ? (
+        <View testID={`${testID}-table`}>
+          {comparison.rows.map((row, index) => (
+            <ValueRow
+              key={`${row.name}-${index}`}
+              label={row.name}
+              value={[
+                formatMoney(row.value),
+                formatPercent(row.share),
+                row.records === null
+                  ? null
+                  : `${formatCount(row.records)} ${row.records === 1 ? 'record' : 'records'}`,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+              testID={`${testID}-cell-${index}`}
+            />
+          ))}
+        </View>
+      ) : (
         <View testID={`${testID}-bars`}>
           {comparison.rows.map((row, index) => (
             <ChartBar
@@ -82,175 +65,80 @@ export function ConcentrationChart({
             />
           ))}
         </View>
-      ) : (
-        <RowList>
-          {comparison.rows.map((row, index) => {
-            const records =
-              row.records === null
-                ? null
-                : `${formatCount(row.records)} ${row.records === 1 ? 'record' : 'records'}`;
-            return (
-              <View
-                key={`${row.name}-${index}`}
-                accessible
-                accessibilityLabel={[
-                  row.name,
-                  `value ${moneyAccessibilityLabel(row.value)}`,
-                  `share ${formatPercent(row.share).slice(0, -1)} percent`,
-                  records,
-                ]
-                  .filter(Boolean)
-                  .join(', ')}
-                testID={`${testID}-cell-${index}`}
-                style={styles.cell}
-              >
-                <Text wordSafe variant="strong">
-                  {row.name}
-                </Text>
-                <Text wordSafe variant="strong" tabular>
-                  {formatMoney(row.value)}
-                </Text>
-                <Text wordSafe variant="metadata">
-                  {[`${formatPercent(row.share)} of the total`, records]
-                    .filter(Boolean)
-                    .join(' · ')}
-                </Text>
-              </View>
-            );
-          })}
-        </RowList>
       )}
-    </Group>
-  );
-}
-
-function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
-  // Only a supplier profile the link guard accepts becomes a link.
-  const path =
-    row.supplierPath && webPageUrl(row.supplierPath) ? row.supplierPath : null;
-  const body = (
-    <>
-      <View style={styles.barText}>
-        <View style={styles.barLabel}>
-          <Text
-            wordSafe
-            variant={row.other ? 'body' : 'strong'}
-            style={styles.grow}
-          >
-            {row.name}
-          </Text>
-          {path ? <Icon name="safari" size={16} tone="bronzeInk" /> : null}
-        </View>
-        <Text wordSafe variant="strong" tabular>
-          {formatMoneyCompact(row.value)} · {formatPercent(row.share)}
-        </Text>
-        <View
-          style={styles.track}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-        >
-          <View
-            style={[
-              styles.fill,
-              {
-                width: `${Math.max(0, Math.min(100, row.share))}%`,
-                backgroundColor: row.other
-                  ? colors[chartRoles.contrast]
-                  : colors[chartRoles.mark],
-              },
-            ]}
-          />
-        </View>
-        {path ? <Text variant="fine">Opens on opax.com.au</Text> : null}
-      </View>
-    </>
-  );
-  if (!path)
-    return (
-      <View
-        accessible
-        accessibilityLabel={chartRowLabel(row)}
-        testID={testID}
-        style={styles.bar}
-      >
-        {body}
-      </View>
-    );
-  return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={chartRowLabel(row)}
-      accessibilityHint="Opens the supplier profile on opax.com.au"
-      testID={testID}
-      onPress={() => openOnWeb(path, row.name)}
-      style={({ pressed }) => [styles.bar, pressed ? styles.pressed : null]}
-    >
-      {body}
-    </Pressable>
-  );
-}
-
-/**
- * Companies in both: the two recorded money flows side by side, never summed
- * (app.js discoveryDetailHTML, "Separate recorded money flows").
- */
-export function OverlapFlows({
-  comparison,
-  testID,
-}: {
-  comparison: Overlap;
-  testID: string;
-}) {
-  const flows = [
-    { label: 'Party receipts', ...comparison.receipts, id: 'receipts' },
-    { label: 'Government contracts', ...comparison.contracts, id: 'contracts' },
-  ];
-  return (
-    <View testID={testID}>
-      <StatRow
-        stats={flows.map((flow) => {
-          const records = `${formatCount(flow.records)} ${flow.records === 1 ? 'record' : 'records'}`;
-          return {
-            value: formatMoneyCompact(flow.value),
-            valueLabel: moneyAccessibilityLabel(flow.value, true),
-            label: `${flow.label} · ${records}`,
-            testID: `${testID}-${flow.id}`,
-          };
-        })}
+      <LinkRow
+        title={table ? 'Show as chart' : 'Show as table'}
+        accessory="none"
+        onPress={() => setTable((t) => !t)}
+        testID="lead-table-toggle"
       />
     </View>
   );
 }
 
+function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
+  return (
+    <View
+      accessible
+      accessibilityLabel={chartRowLabel(row)}
+      testID={testID}
+      style={styles.bar}
+    >
+      <View style={styles.barLabel}>
+        <Text
+          wordSafe
+          variant={row.other ? 'body' : 'strong'}
+          style={styles.grow}
+        >
+          {row.name}
+        </Text>
+        <Text variant="strong" tabular>
+          {formatMoneyCompact(row.value)}
+        </Text>
+        <Text variant="footnote" tabular>
+          {formatPercent(row.share)}
+        </Text>
+      </View>
+      <View
+        style={styles.track}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <View
+          style={[
+            styles.fill,
+            {
+              width: `${Math.max(0, Math.min(100, row.share))}%`,
+              backgroundColor: row.other
+                ? colors[chartRoles.contrast]
+                : colors[accents.money.ink],
+            },
+          ]}
+        />
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  head: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    gap: rhythm.tight,
-  },
-  headStacked: {
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    alignItems: 'flex-start',
-  },
+  chart: { gap: rhythm.tight },
   grow: { flexGrow: 1, flexShrink: 1 },
   bar: {
     minHeight: minimumTarget,
     paddingVertical: rhythm.tight,
+    gap: rhythm.line,
   },
-  barText: { gap: rhythm.line },
-  barLabel: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  barLabel: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'baseline',
+    gap: rhythm.tight,
+  },
   track: {
     height: 8,
     borderRadius: radii.sm,
     backgroundColor: colors[chartRoles.baseline],
     overflow: 'hidden',
-    marginTop: rhythm.line,
   },
   fill: { height: 8 },
-  // Sunken, as source links press: every drawn pair is in the contrast table.
-  pressed: { backgroundColor: colors.sunken },
-  cell: { gap: rhythm.line },
 });

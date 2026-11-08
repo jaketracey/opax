@@ -1,6 +1,8 @@
 appId: au.com.opax.app
 ---
-# Keep page scrolling outside the native canvas, whose one-finger pan orbits.
+# Swipe at the trailing edge, clear of the scene (a sideways drag orbits it)
+# and of its Fit map button. The page holds no inline controls: the scene,
+# two figure blocks, or the List view's sections.
 - repeat:
     times: 18
     while:

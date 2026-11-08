@@ -1,17 +1,17 @@
 import { sheetPayload } from '../src/navigation/sheets';
 import { sourceHeader } from '../src/features/sheets/SourceSheet';
 import { act } from 'react';
-import { Text as NativeText } from 'react-native';
+import { Linking, Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
-import { catalogs as runtime } from '../src/api/runtime';
+import { apiClient, catalogs as runtime } from '../src/api/runtime';
 import {
   Catalogs,
   decodeDiscovery,
   decodeRecentInterests,
   recentBillsFor,
   recentDeclarationsFor,
-  type DiscoverySignal,
+  type Discovery,
 } from '../src/api/catalogs';
 import { createHash } from 'node:crypto';
 import { ApiClient, dataAsOf, type RecordResult } from '../src/api/client';
@@ -23,24 +23,46 @@ import {
 } from '../src/api/cache';
 import { isPartialCatalog } from '../src/api/validation';
 import { ApiError } from '../src/api/errors';
+import { copy } from '../src/design/copy';
 import {
+  Card,
   ContentUnavailable,
   LeadCard,
   RowLink,
+  StatStrip,
+  Text as DesignText,
 } from '../src/design/primitives';
+import { accents } from '../src/design/tokens';
 import { filterStore } from '../src/features/sheets/filter-model';
 import { chamberName } from '../src/design/parliament';
-import { webPageUrl } from '../src/navigation/external';
+import { openOnWeb, openSource, webPageUrl } from '../src/navigation/external';
 import {
   declarationsRoute,
   leadRoute,
   leadsRoute,
   personRoute,
 } from '../src/navigation/routes';
+import { leadsKindRoute, moneyRoute } from '../src/navigation/routes/money-map';
+import {
+  agencyRoute,
+  moneyItemRoute,
+} from '../src/navigation/routes/public-money';
+import { partyRoute } from '../src/navigation/routes/people';
 import Today from '../src/features/Today';
-import Leads from '../src/features/leads/Leads';
+import Leads, {
+  kindCaption,
+  leadsCitation,
+  leadsLede,
+} from '../src/features/leads/Leads';
 import { publicDiscovery } from '../src/features/money-public/discovery';
-import LeadDetail from '../src/features/leads/LeadDetail';
+import { money } from '../src/features/money-public/runtime';
+import { decodeAgencies } from '../src/features/money-public/data';
+import { decodeMoneyGraph } from '../src/features/money/data';
+import {
+  forgetMoneyGraphs,
+  rememberMoneyGraph,
+} from '../src/features/money/lookup';
+import LeadDetail, { evidenceRow } from '../src/features/leads/LeadDetail';
 import Declarations from '../src/features/declarations/Declarations';
 import {
   feedCountLine,
@@ -50,10 +72,24 @@ import {
 } from '../src/features/declarations/model';
 import {
   aboutLede,
+  categoryLabel,
+  categorySearch,
+  categorySeeAll,
+  categorySource,
+  discoverPath,
   discoveryAsOf,
+  isCategory,
+  leadCardFigure,
+  leadCategories,
   leadEvidenceFor,
   leadFor,
+  leadSections,
+  leadsAbout,
   leadsFor,
+  leadsHiddenNotes,
+  plainCaveat,
+  searchLeads,
+  supplierPath,
 } from '../src/features/leads/model';
 import {
   bills,
@@ -64,6 +100,7 @@ import {
 } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
+  apiClient: { get: jest.fn() },
   catalogs: {
     discovery: jest.fn(),
     declarations: jest.fn(),
@@ -74,36 +111,49 @@ jest.mock('../src/api/runtime', () => ({
 jest.mock('../src/api/image-policy', () => ({
   remoteImageURI: (path: string) => `http://127.0.0.1:8918${path}`,
 }));
-const mockParams: { id?: string } = {};
+// The lead page looks its agency up in the agency directory.
+jest.mock('../src/features/money-public/runtime', () => ({
+  money: { agencies: jest.fn() },
+}));
+// No step on Leads or a lead leaves the app.
+jest.mock('../src/navigation/external', () => ({
+  ...jest.requireActual('../src/navigation/external'),
+  openOnWeb: jest.fn(),
+  openSource: jest.fn(),
+}));
+const mockParams: { id?: string; category?: string; item?: string } = {};
+let mockOptions: Record<string, unknown> = {};
+// The Just declared feed's tests read the last screen options here.
 const mockScreen: { options?: Record<string, unknown> } = {};
+// One router for `router` and useRouter(); a Link is drawn as an
+// "ExpoLink" host element holding its href, as the native link would.
 jest.mock('expo-router', () => {
-  // Just declared entries open a native menu (Link.Menu) on touch and hold.
-  const React = jest.requireActual('react');
-  const Link = function Link({ children }: { children: unknown }) {
-    return React.createElement(React.Fragment, null, children);
-  };
-  Link.Trigger = function Trigger({ children }: { children: unknown }) {
-    return children;
-  };
-  Link.Preview = function Preview() {
-    return null;
-  };
-  Link.Menu = function Menu() {
-    return null;
-  };
-  Link.MenuAction = function MenuAction() {
-    return null;
-  };
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  const router = { push: jest.fn(), navigate: jest.fn(), replace: jest.fn() };
+  const Link = Object.assign(
+    ({ href, children }: { href: unknown; children?: unknown }) =>
+      React.createElement('ExpoLink', { href }, children),
+    {
+      Trigger: ({ children }: { children?: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    },
+  );
   return {
+    router,
+    useRouter: () => router,
+    useSegments: () => [],
     useLocalSearchParams: () => mockParams,
-    router: { push: jest.fn() },
+    Link,
     Stack: {
-      Screen: ({ options }: { options?: Record<string, unknown> }) => {
+      Screen: ({ options }: { options: Record<string, unknown> }) => {
+        mockOptions = options;
         mockScreen.options = options;
         return null;
       },
     },
-    Link,
   };
 });
 
@@ -115,6 +165,7 @@ const companies = shown.signals.filter(
   (s) => s.category === 'donor_contract_overlap',
 ).length;
 const evidence = signals.flatMap((s) => s.evidence);
+const agencies = decodeAgencies(pinned('/agencies.json'));
 
 // A catalog client over the pinned files; `fail` refuses the named paths.
 function fixture(fail: string[] = []) {
@@ -137,15 +188,31 @@ function fixture(fail: string[] = []) {
   return new Catalogs(client);
 }
 const mock = jest.mocked(runtime);
+const linkingOpen = jest.spyOn(Linking, 'openURL');
 beforeEach(() => {
   Object.values(mock).forEach((fn) => fn.mockReset());
   jest.mocked(router.push).mockReset();
+  jest.mocked(router.navigate).mockReset();
+  jest.mocked(openOnWeb).mockReset();
+  jest.mocked(openSource).mockReset();
+  linkingOpen.mockReset();
+  for (const key of Object.keys(mockParams))
+    delete mockParams[key as keyof typeof mockParams];
+  mockOptions = {};
   const catalogs = fixture();
   mock.discovery.mockImplementation((refresh) => catalogs.discovery(refresh));
   mock.declarations.mockImplementation((refresh) =>
     catalogs.declarations(refresh),
   );
+  jest.mocked(money.agencies).mockReset();
+  jest.mocked(money.agencies).mockResolvedValue({
+    data: agencies,
+    asOf: null,
+    stale: false,
+    savedAt: 200,
+  } as Awaited<ReturnType<typeof money.agencies>>);
 });
+afterEach(() => forgetMoneyGraphs());
 
 async function render(element: React.ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
@@ -171,6 +238,33 @@ const byTestID = (root: ReactTestInstance, testID: string) =>
   root.find(
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
+const has = (root: ReactTestInstance, testID: string) =>
+  root.findAll(
+    (node) => typeof node.type === 'string' && node.props.testID === testID,
+  ).length > 0;
+const testIDs = (root: ReactTestInstance) =>
+  root
+    .findAll(
+      (node) =>
+        typeof node.type === 'string' && typeof node.props.testID === 'string',
+    )
+    .map((node) => node.props.testID as string);
+/** The href of the link wrapping an element: where tapping it goes. */
+function hrefOf(root: ReactTestInstance, testID: string) {
+  let node: ReactTestInstance | null = byTestID(root, testID);
+  while (node && node.type !== 'ExpoLink') node = node.parent;
+  return node?.props.href;
+}
+/** The cards' testIDs in reading order. */
+const cardIDs = (root: ReactTestInstance) =>
+  testIDs(root).filter((id) => /^lead-\d+$/.test(id));
+/** A ContentUnavailable's title (a native view on iOS, not a Text). */
+const unavailable = (root: ReactTestInstance, testID: string) =>
+  root.findAll(
+    (n) => n.type === ContentUnavailable && n.props.testID === testID,
+  )[0]?.props.title as string | undefined;
+const cardOf = (root: ReactTestInstance, testID: string) =>
+  root.findAll((n) => n.type === Card && n.props.testID === testID)[0]!;
 type Modifier = { $type: string; identifier?: string; tag?: string };
 // iOS ChoiceChips options are native picker items: choose one by its tag.
 const choose = (root: ReactTestInstance, testID: string) => {
@@ -201,12 +295,31 @@ const press = (root: ReactTestInstance, testID: string) =>
     if (pressable) pressable.props.onPress();
     else choose(root, testID);
   });
+/** Types into the bar search, as the native search field reports it. */
+const search = (text: string) =>
+  act(async () => {
+    const bar = mockOptions.headerSearchBarOptions as {
+      onChangeText: (event: { nativeEvent: { text: string } }) => void;
+    };
+    bar.onChangeText({ nativeEvent: { text } });
+  });
+const cancelSearch = () =>
+  act(async () => {
+    (
+      mockOptions.headerSearchBarOptions as { onCancelButtonPress: () => void }
+    ).onCancelButtonPress();
+  });
 
 function lastSource() {
   const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
     params: { key: string };
   };
   return sheetPayload(params.key, 'source')!.details;
+}
+function expectNoWeb() {
+  expect(openOnWeb).not.toHaveBeenCalled();
+  expect(openSource).not.toHaveBeenCalled();
+  expect(Linking.openURL).not.toHaveBeenCalled();
 }
 
 describe('the discovery export', () => {
@@ -445,22 +558,23 @@ describe('leads', () => {
       signals.find((s) => s.id === l.id)!.chart!.participants[0]!.share;
     for (let i = 1; i < byShare.length; i++)
       expect(share(byShare[i - 1]!)).toBeGreaterThanOrEqual(share(byShare[i]!));
-    // Companies in both have no share: the web orders them by contract value.
+    // Companies in both have no share: they sort by their party receipts,
+    // the figure each card shows, so the list reads largest first.
     const both = leadsFor(discovery, 'donor_contract_overlap', 'share');
-    const contractValue = (l: {
-      metrics: { label: string; value: number }[];
-    }) => l.metrics.find((m) => m.label === 'Recorded contract value')!.value;
+    const receipts = (l: { metrics: { label: string; value: number }[] }) =>
+      l.metrics.find((m) => m.label === 'Recorded party receipts')!.value;
     for (let i = 1; i < both.length; i++)
-      expect(contractValue(both[i - 1]!)).toBeGreaterThanOrEqual(
-        contractValue(both[i]!),
-      );
+      expect(receipts(both[i - 1]!)).toBeGreaterThanOrEqual(receipts(both[i]!));
     expect(leadsFor(discovery, 'recipient_concentration')).toHaveLength(3);
   });
-  test('a concentration without its chart is left out, and the screen says how many', async () => {
+  test('a concentration without its chart is left out, and the source notes say how many', async () => {
     const chartless = { ...signals[1]!, chart: undefined };
     expect(leadFor(chartless)).toBeNull();
     const short = { ...discovery, signals: [signals[0]!, chartless] };
     expect(leadsFor(short).map((l) => l.id)).toEqual([signals[0]!.id]);
+    expect(leadsHiddenNotes({ ...short, unreadable: 1 })).toEqual([
+      '2 leads could not be read and are not shown.',
+    ]);
     mock.discovery.mockResolvedValueOnce({
       data: { ...short, unreadable: 1 },
       asOf: null,
@@ -468,9 +582,16 @@ describe('leads', () => {
       savedAt: 200,
     });
     const renderer = await render(<Leads />);
-    expect(texts(renderer.root)).toContain('1 lead');
-    expect(texts(renderer.root)).toContain(
-      '2 leads in this export could not be read and are not shown.',
+    const root = renderer.root;
+    // Only the kind with a lead is drawn; the count is not on the screen.
+    expect(has(root, 'leads-section-donor_contract_overlap')).toBe(true);
+    expect(has(root, 'leads-section-procurement_concentration')).toBe(false);
+    expect(has(root, 'leads-section-recipient_concentration')).toBe(false);
+    expect(cardIDs(root)).toEqual(['lead-0']);
+    expect(texts(root).join('\n')).not.toMatch(/not shown|could not be read/);
+    await press(root, 'leads-source-donor_contract_overlap');
+    expect(lastSource().notes).toContain(
+      '2 leads could not be read and are not shown.',
     );
     act(() => renderer.unmount());
   });
@@ -480,6 +601,11 @@ describe('leads', () => {
     expect(
       leadsFor({ ...discovery, signals: [unknown, signals[1]!] }),
     ).toHaveLength(1);
+    expect(isCategory('new_family')).toBe(false);
+    expect(isCategory(undefined)).toBe(false);
+    expect(isCategory(['recipient_concentration'])).toBe(false);
+    for (const category of leadCategories)
+      expect(isCategory(category)).toBe(true);
   });
   test('comparisons use the web’s words and the export’s numbers', () => {
     const homeAffairs = leadFor(signals[2]!)!;
@@ -489,6 +615,7 @@ describe('leads', () => {
       takeaway:
         '38.7% of recorded contract value went to SECURE JOURNEYS PTY LTD.',
       chartTitle: 'Who got the contracts?',
+      figureLabel: 'in contracts from this agency, started 2009 to 2026',
       note: '931 contracts · Contract start years 2009–2026. Recorded contract values, not the agency’s whole budget.',
     });
     const rows =
@@ -507,7 +634,8 @@ describe('leads', () => {
     const uap = leadFor(signals[1]!)!;
     expect(uap.comparison).toMatchObject({
       takeaway: '78.4% of recorded receipts came from Mineralogy Pty Ltd.',
-      chartTitle: 'Where did the funding come from?',
+      chartTitle: 'Who gave to the party?',
+      figureLabel: 'in party receipts, 2007–08 to 2024–25',
       note: '973 receipts · FY 2007–08 to 2024–25. Party receipts include more than gifts.',
     });
     expect(
@@ -523,6 +651,19 @@ describe('leads', () => {
       note: 'Different money flows and reporting periods. A shared name doesn’t show that one led to the other.',
     });
   });
+  test('a single period reads once in the figure label', () => {
+    const chart = signals[1]!.chart!;
+    const one = leadFor({
+      ...signals[1]!,
+      chart: {
+        ...chart,
+        period: { ...chart.period!, from: '2024-25', to: '2024-25' },
+      },
+    })!;
+    expect(
+      one.comparison.type === 'concentration' && one.comparison.figureLabel,
+    ).toBe('in party receipts, 2024–25');
+  });
   test('every chart’s rows cover the whole: named participants plus Other make 100%', () => {
     for (const s of signals.filter((x) => x.chart)) {
       const c = leadFor(s)!.comparison;
@@ -531,25 +672,241 @@ describe('leads', () => {
       expect(Math.abs(sum - 100)).toBeLessThan(0.1);
     }
   });
-  test('links follow the web’s actions, never /search, and pass the link guard', () => {
-    const kinds = (s: DiscoverySignal) =>
-      leadFor(s)!.links.map((l) => l.testID);
-    expect(kinds(signals[0]!)).toEqual(['supplier', 'web', 'money-map']);
-    expect(kinds(signals[1]!)).toEqual(['web', 'money-map']);
-    expect(kinds(signals[2]!)).toEqual(['supplier', 'web']);
-    // The money map is the web's own "Open the full money map".
-    expect(leadFor(signals[1]!)!.links[1]).toMatchObject({
-      label: 'Open the full money map',
-      path: '/money',
-    });
-    for (const s of signals)
-      for (const link of leadFor(s)!.links) {
-        expect(link.path).not.toMatch(/^\/search/);
-        expect(webPageUrl(link.path)).not.toBeNull();
-      }
-    expect(leadFor(signals[1]!)!.links[0]!.path).toBe(
+  test('the web comparison and supplier profiles stay addressable for ⋯, never /search', () => {
+    expect(discoverPath(signals[1]!)).toBe(
       '/discover?category=recipient_concentration&item=recipient_concentration%3Aa186427ec7f0b918',
     );
+    for (const s of signals) {
+      const path = discoverPath(s);
+      expect(path).not.toMatch(/^\/search/);
+      expect(webPageUrl(path)).not.toBeNull();
+    }
+    expect(webPageUrl(supplierPath('SECURE JOURNEYS PTY LTD'))).not.toBeNull();
+  });
+  test('the kind words: section titles, See all, search placeholders and sources', () => {
+    expect(leadCategories.map(categoryLabel)).toEqual([
+      'Government contracts',
+      'Party funding',
+      'Companies in both',
+    ]);
+    expect(categorySeeAll('procurement_concentration', 28)).toBe(
+      'See all 28 government contract leads',
+    );
+    expect(categorySeeAll('recipient_concentration', 3)).toBe(
+      'See all 3 party funding leads',
+    );
+    expect(categorySeeAll('donor_contract_overlap', 1200)).toBe(
+      'See all 1,200 company leads',
+    );
+    expect(leadCategories.map(categorySearch)).toEqual([
+      'Agencies',
+      'Parties',
+      'Companies',
+    ]);
+    expect(leadCategories.map(categorySource)).toEqual([
+      'AusTender',
+      'AEC',
+      'AEC and AusTender',
+    ]);
+  });
+  test('a card’s one figure: compact money in plain words', () => {
+    const figure = (signal: (typeof signals)[number]) =>
+      leadCardFigure(leadFor(signal)!);
+    expect(figure(signals[0]!)).toEqual({
+      text: '$77m',
+      spoken: '77 million dollars',
+      label: 'in party receipts',
+    });
+    expect(figure(signals[1]!)).toEqual({
+      text: '$124.7m',
+      spoken: '124.7 million dollars',
+      label: 'from the largest donor',
+    });
+    expect(figure(signals[2]!)).toEqual({
+      text: '$2.3bn',
+      spoken: '2.3 billion dollars',
+      label: 'to the largest supplier',
+    });
+    // Every pinned lead's figure has a plain label, never the export's own.
+    for (const lead of leadsFor(discovery))
+      expect(leadCardFigure(lead)!.label).toMatch(
+        /^(in party receipts|to the largest supplier|from the largest donor)$/,
+      );
+    // A label the app has no words for is lower-cased; a count stays a count.
+    expect(
+      leadCardFigure({
+        metrics: [{ label: 'Contract records', value: 4, format: 'count' }],
+      }),
+    ).toEqual({ text: '4', spoken: '4', label: 'contract records' });
+    expect(leadCardFigure({ metrics: [] })).toBeNull();
+  });
+  test('caveats in plain language: the pipeline caveat replaced, any other pipeline clause dropped', () => {
+    // The pipeline's own caveat, as portal/public/discovery.json writes it.
+    const pipeline =
+      'Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded.';
+    expect(signals[1]!.caveats).toContain(pipeline);
+    expect(plainCaveat(pipeline)).toBe(
+      'Annual party receipts include more than gifts. State, election and referendum disclosures are not included.',
+    );
+    // A caveat in plain words is kept verbatim.
+    const plain =
+      'Matching names are not verified legal identities; unrelated entities can share a name.';
+    expect(plainCaveat(plain)).toBe(plain);
+    // Another pipeline clause: cut from the first ";" or ",", or the whole
+    // sentence when the identifier comes before it.
+    expect(
+      plainCaveat(
+        'Values are as reported, using the contract_value field. Some years are missing.',
+      ),
+    ).toBe('Values are as reported. Some years are missing.');
+    expect(
+      plainCaveat(
+        'The supplier_abn match is exact; spellings differ. Some years are missing.',
+      ),
+    ).toBe('Some years are missing.');
+    expect(
+      plainCaveat('Rows come from ingestion. Some years are missing.'),
+    ).toBe('Some years are missing.');
+    // No pinned caveat reaches the reader in pipeline words.
+    for (const caveat of new Set(signals.flatMap((s) => s.caveats))) {
+      const shownCaveat = plainCaveat(caveat);
+      expect(shownCaveat).toBeTruthy();
+      expect(shownCaveat).not.toMatch(/\w_\w|ingestion|=/i);
+    }
+  });
+  test('the root’s sections: fixed order, largest total first, a kind with none left out', () => {
+    const sections = leadSections(shown);
+    expect(sections.map((s) => s.category)).toEqual([...leadCategories]);
+    for (const { category, leads } of sections)
+      expect(leads.map((l) => l.id)).toEqual(
+        leadsFor(shown, category).map((l) => l.id),
+      );
+    expect(sections.map((s) => s.leads.length)).toEqual([28, 3, companies]);
+    expect(
+      leadSections({
+        ...shown,
+        signals: shown.signals.filter(
+          (s) => s.category !== 'recipient_concentration',
+        ),
+      }).map((s) => s.category),
+    ).toEqual(['procurement_concentration', 'donor_contract_overlap']);
+  });
+  test('search matches every word of the subject, its chart’s group or the title, in kind order', () => {
+    const westpac = searchLeads(shown, '  westpac   BANKING ');
+    expect(westpac.map((l) => l.id)).toContain(signals[0]!.id);
+    for (const lead of westpac)
+      expect(`${lead.entity} ${lead.title}`.toLowerCase()).toMatch(
+        /westpac banking/,
+      );
+    // Words need not be adjacent; every one must match.
+    expect(
+      searchLeads(shown, 'home affairs department').map((l) => l.id),
+    ).toEqual([signals[2]!.id]);
+    expect(searchLeads(shown, 'home affairs zzz')).toEqual([]);
+    // Not the sentence's other words: no lead is found by its summary alone.
+    expect(searchLeads(shown, 'canonical')).toEqual([]);
+    // Across kinds, in the root's order.
+    const all = searchLeads(shown, 'pty');
+    const order = all.map((l) => leadCategories.indexOf(l.category));
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    // An empty search is the whole pool; within a kind, the chosen order.
+    expect(searchLeads(shown, ' ')).toHaveLength(28 + 3 + companies);
+    expect(
+      searchLeads(shown, '', 'procurement_concentration', 'share').map(
+        (l) => l.id,
+      ),
+    ).toEqual(
+      leadsFor(shown, 'procurement_concentration', 'share').map((l) => l.id),
+    );
+  });
+  test('withheld and unreadable counts, for the source sheet’s notes', () => {
+    expect(shown.withheld).toBe(14);
+    expect(leadsHiddenNotes(shown)).toEqual([
+      '14 leads about a donor not named in OPAX are not shown.',
+    ]);
+    expect(leadsHiddenNotes({ ...shown, withheld: 1, unreadable: 1 })).toEqual([
+      '1 lead about a donor not named in OPAX is not shown.',
+      '1 lead could not be read and is not shown.',
+    ]);
+    expect(leadsHiddenNotes(discovery)).toEqual([]);
+  });
+  test('leads about one organisation or party: on its subject, never on its sentence', () => {
+    expect(leadsAbout(shown, 'WESTPAC BANKING CORPORATION')).toEqual([
+      { id: signals[0]!.id, title: signals[0]!.title },
+    ]);
+    expect(
+      leadsAbout(shown, 'Department of Home Affairs').map((l) => l.id),
+    ).toEqual([signals[2]!.id]);
+    expect(
+      leadsAbout(shown, 'United Australia Party').map((l) => l.id),
+    ).toContain(signals[1]!.id);
+    // A concentration's subject is its group: its largest participant
+    // (the export's entity) is not the subject, nor are its other rows.
+    expect(
+      leadsAbout(shown, 'Mineralogy Pty Ltd').map((l) => l.id),
+    ).not.toContain(signals[1]!.id);
+    expect(
+      leadsAbout(shown, 'Queensland Nickel Pty Ltd').map((l) => l.id),
+    ).not.toContain(signals[1]!.id);
+    // Never on the sentence's own words.
+    expect(leadsAbout(shown, 'awarded to one supplier')).toEqual([]);
+    expect(leadsAbout(shown, '')).toEqual([]);
+  });
+  test('the kind list’s caption and the shown cards’ sources', () => {
+    expect(leadsLede).toBe(
+      'Patterns in the public record are leads, not findings.',
+    );
+    expect(
+      kindCaption('procurement_concentration', 'value', 28, 28, false),
+    ).toBe('28 leads, largest totals first');
+    expect(kindCaption('recipient_concentration', 'share', 3, 3, false)).toBe(
+      '3 leads, biggest share first',
+    );
+    expect(kindCaption('donor_contract_overlap', 'share', 15, 15, false)).toBe(
+      '15 leads, largest first',
+    );
+    expect(kindCaption('procurement_concentration', 'value', 3, 28, true)).toBe(
+      '3 of 28 leads',
+    );
+    expect(kindCaption('recipient_concentration', 'value', 1, 1, false)).toBe(
+      '1 lead, largest totals first',
+    );
+    const lead = (category: (typeof leadCategories)[number]) =>
+      leadsFor(shown, category)[0]!;
+    expect(leadsCitation([lead('procurement_concentration')])).toBe(
+      'AusTender',
+    );
+    expect(
+      leadsCitation([
+        lead('donor_contract_overlap'),
+        lead('recipient_concentration'),
+      ]),
+    ).toBe('AEC and AusTender');
+    expect(
+      leadsCitation([
+        lead('procurement_concentration'),
+        lead('recipient_concentration'),
+      ]),
+    ).toBe('AusTender and AEC');
+    expect(leadsCitation([])).toBe('AEC and AusTender');
+  });
+  test('an example record as a money row: "to", no party code, plain detail', () => {
+    const westpac = evidence.find((e) => e.record_id === '643745')!;
+    expect(evidenceRow(leadEvidenceFor(westpac))).toEqual({
+      name: 'Westpac Banking Corporation to Australian Labor Party',
+      detail: 'AEC annual receipt · 2024–25',
+      amount: 1803,
+    });
+    const contract = evidence.find((e) => e.record_id === 'CN3407266')!;
+    expect(evidenceRow(leadEvidenceFor(contract))).toEqual({
+      name: 'Australian Office of Financial Management to Westpac Banking Corporation',
+      detail: 'Contract · from 6 Feb 2017',
+      amount: 4537500,
+    });
+    // A label the app could not read is not a money row.
+    expect(
+      evidenceRow(leadEvidenceFor({ ...westpac, label: 'Donation record 1' })),
+    ).toBeNull();
   });
   test('every card keeps every caveat verbatim, its figures and its as-at line, and no local row ID', async () => {
     for (const lead of leadsFor(discovery)) {
@@ -577,217 +934,614 @@ describe('leads', () => {
 });
 
 describe('the Leads screen', () => {
-  test('opens on the export’s first lead: its title, one figure, its sentence and Evidence (n)', async () => {
+  const sections = leadSections(shown);
+  test('opens on the lede and three named sections, three cards each, with See all', async () => {
     const renderer = await render(<Leads />);
     const root = renderer.root;
-    const first = signals[0]!;
-    expect(texts(root)).toContain(`${shown.signals.length} leads`);
-    expect(texts(root)).toContain(
-      `${shown.withheld} leads about a donor not named in OPAX are not shown.`,
+    expect(mockOptions).toMatchObject({
+      title: 'Leads',
+      headerLargeTitle: true,
+    });
+    expect(
+      (mockOptions.headerSearchBarOptions as { placeholder: string })
+        .placeholder,
+    ).toBe('Agencies, parties and companies');
+    expect(byTestID(root, 'leads-lede').props.children).toBe(
+      'Patterns in the public record are leads, not findings.',
     );
-    // A lead is a reason to look closer, never a finding.
-    expect(texts(root)).toContain(aboutLede(discovery));
-    expect(aboutLede(discovery)).toMatch(/not proof of wrongdoing/);
-    // The card's upper part is one element that opens the comparison: the
-    // category, the export's title, its one figure and its one sentence
-    // (design pass 5, P2-13).
-    const open = root.find(
-      (n) =>
-        n.props.testID === 'lead-0-open' &&
-        typeof n.props.onPress === 'function',
-    );
-    expect(open.props.accessibilityLabel).toBe(
-      `Lead, Companies in both. ${first.title}. Recorded party receipts, 76,984,493 dollars. ${first.summary}`,
-    );
-    expect(open.props.accessibilityHint).toBe('Opens the comparison');
+    // The fixed order, each section's header and its "See all".
+    const order = testIDs(root).filter((id) => id.startsWith('leads-section-'));
+    expect(order).toEqual(leadCategories.map((c) => `leads-section-${c}`));
     expect(texts(root)).toEqual(
-      expect.arrayContaining(['$76,984,493', first.summary]),
-    );
-    expect(texts(root)).not.toContain('$9,102,500');
-    // No caveat line on the card: every caveat is in its Evidence sheet.
-    expect(
-      root.findAll((n) => n.props.testID === 'lead-0-caveat'),
-    ).toHaveLength(0);
-    for (const caveat of first.caveats)
-      expect(texts(root)).not.toContain(caveat);
-    // The export is dated once, at the top; each card's foot is
-    // "Evidence (n) ›", read as its example records.
-    expect(
-      texts(root).filter((t) => t.startsWith('Updated 21 Sep 2026 · ')),
-    ).toHaveLength(1);
-    expect(labels(root)).toContain(
-      'Updated 21 Sep 2026, AEC annual returns and 1 more',
-    );
-    expect(texts(root)).toContain('Evidence (2)');
-    expect(labels(root)).toContain('Evidence, 2 example records');
-    // No as-at line, methodology or "See the comparison" row per card.
-    expect(texts(root).join('\n')).not.toMatch(/As at |See the comparison/);
-    for (const method of discovery.methodology)
-      expect(texts(root)).not.toContain(method);
-    // Ten cards, then Show more.
-    const cards = () =>
-      root.findAll(
-        (n) =>
-          typeof n.type === 'string' &&
-          /^lead-\d+-title$/.test(n.props.testID ?? ''),
-      );
-    expect(cards()).toHaveLength(10);
-    await press(root, 'leads-more');
-    expect(cards()).toHaveLength(20);
-    await press(root, 'lead-1-open');
-    expect(router.push).toHaveBeenCalledWith(leadRoute(signals[1]!.id));
-    act(() => renderer.unmount());
-  });
-  test('the top source line holds the methodology; a card’s holds every caveat and its example records', async () => {
-    const renderer = await render(<Leads />);
-    const root = renderer.root;
-    const first = signals[0]!;
-    await press(root, 'leads-source');
-    for (const method of discovery.methodology)
-      expect(lastSource().notes).toContain(method);
-    expect(sourceHeader(lastSource())).toBe('As at 21 September 2026');
-    await press(root, 'lead-0-source');
-    for (const caveat of first.caveats) expect(texts(root)).toContain(caveat);
-    // Each example record opens from the sheet, named by its register, with
-    // no local row number.
-    expect(labels(root)).toEqual(
       expect.arrayContaining([
-        'View original, AEC Transparency Register, $1,803 from Westpac Banking Corporation to Australian Labor Party (ALP) · AEC annual receipt · FY 2024–25',
-        'View original, AusTender register, $4,537,500 from Australian Office of Financial Management to Westpac Banking Corporation · Contract value · starts 6 Feb 2017 · record CN3407266',
+        'Government contracts',
+        'Party funding',
+        'Companies in both',
       ]),
     );
-    expect(texts(root).join('\n')).not.toMatch(/643745|local record/);
-    act(() => renderer.unmount());
-  });
-  test('a concentration card shows its largest value: the title and sentence already give the share', async () => {
-    const renderer = await render(<Leads />);
-    const root = renderer.root;
-    const lead = leadsFor(discovery)[2]!;
-    expect(lead.category).toBe('procurement_concentration');
-    const open = root.find(
-      (n) =>
-        n.props.testID === 'lead-2-open' &&
-        typeof n.props.onPress === 'function',
-    );
-    expect(open.props.accessibilityLabel).toBe(
-      `Lead, Government contracts. ${lead.title}. Largest supplier value, 2,343,038,544 dollars. ${lead.summary}`,
-    );
+    for (const { category, leads } of sections) {
+      const all = byTestID(root, `leads-all-${category}`);
+      expect(all.props.accessibilityLabel).toBe(
+        categorySeeAll(category, leads.length),
+      );
+      expect(hrefOf(root, `leads-all-${category}`)).toEqual(
+        leadsKindRoute(category),
+      );
+    }
     expect(
-      root.findAll((n) => n.props.testID === 'lead-2-caveat'),
-    ).toHaveLength(0);
+      byTestID(root, 'leads-all-procurement_concentration').props
+        .accessibilityLabel,
+    ).toBe('See all 28 government contract leads');
+    // Cards numbered in reading order across sections, three per kind.
+    expect(cardIDs(root)).toEqual(
+      Array.from({ length: 9 }, (_, i) => `lead-${i}`),
+    );
+    const firstThree = sections.flatMap((s) => s.leads.slice(0, 3));
+    firstThree.forEach((lead, i) => {
+      expect(hrefOf(root, `lead-${i}`)).toEqual(leadRoute(lead.id));
+      expect(
+        byTestID(root, `leads-section-${lead.category}`).findAll(
+          (n) => n.props.testID === `lead-${i}`,
+        ).length,
+      ).toBeGreaterThan(0);
+    });
+    // Under a section header the card does not say its kind again.
+    expect(testIDs(root).filter((id) => id.endsWith('-kind'))).toEqual([]);
+    // No count, withheld line, filter chips or "Show more" on the screen.
+    const ids = testIDs(root);
+    for (const retired of [
+      'leads-count',
+      'leads-withheld',
+      'leads-hidden',
+      'leads-more',
+      'leads-source',
+    ])
+      expect(ids).not.toContain(retired);
+    expect(ids.some((id) => id.startsWith('leads-filter-'))).toBe(false);
+    expect(texts(root).join('\n')).not.toMatch(
+      /not shown|\d+ leads$|Show more|Evidence \(/m,
+    );
+    expectNoWeb();
     act(() => renderer.unmount());
   });
-  test('filters by category, sorts concentrations, and counts in the web’s nouns', async () => {
+  test('a card is one link: title, one money-ink figure and its plain label', async () => {
     const renderer = await render(<Leads />);
     const root = renderer.root;
-    await press(root, 'leads-filter-procurement_concentration');
-    expect(texts(root)).toContain('28 agencies');
-    const first = leadsFor(discovery, 'procurement_concentration')[0]!;
-    const openLabel = () =>
-      root.find(
-        (n) =>
-          n.props.testID === 'lead-0-open' &&
-          typeof n.props.onPress === 'function',
-      ).props.accessibilityLabel as string;
-    expect(openLabel()).toMatch(`Lead, Government contracts. ${first.title}. `);
+    const lead = sections[0]!.leads[0]!;
+    expect(lead.id).toBe(signals[2]!.id);
+    const card = cardOf(root, 'lead-0');
+    expect(card.props.href).toEqual(leadRoute(lead.id));
+    expect(card.props.accessibilityRole).toBe('link');
+    expect(card.props.accessibilityLabel).toBe(
+      'Department of Home Affairs: 39% awarded to one supplier. 2.3 billion dollars, to the largest supplier.',
+    );
+    expect(card.props.accessibilityHint).toBe('Opens the lead.');
+    // Long press: Share and Copy link, never the web.
+    expect(
+      (card.props.menu as { title: string }[]).map((item) => item.title),
+    ).toEqual(['Share', 'Copy link']);
+    expect(byTestID(root, 'lead-0-title').props.children).toBe(lead.title);
+    const figure = byTestID(root, 'lead-0-figure');
+    expect(texts(figure)).toEqual(['$2.3bn', 'to the largest supplier']);
+    const [value] = figure.findAllByType(DesignText);
+    expect(value!.props.variant).toBe('tileFigure');
+    expect(value!.props.tone).toBe(accents.money.ink);
+    // A party's card and a company's card say where their figure sits.
+    expect(cardOf(root, 'lead-3').props.accessibilityLabel).toMatch(
+      /\. [\d.]+ (million|thousand) dollars, from the largest donor\.$/,
+    );
+    expect(cardOf(root, 'lead-6').props.accessibilityLabel).toMatch(
+      /\. [\d.]+ (million|thousand) dollars, in party receipts\.$/,
+    );
+    // One target: no Evidence row, sheet, summary or kicker on any card.
+    const cardsText = texts(root).join('\n');
+    for (const l of sections.flatMap((s) => s.leads.slice(0, 3))) {
+      expect(cardsText).not.toContain(l.summary);
+      for (const caveat of l.caveats) expect(cardsText).not.toContain(caveat);
+    }
+    expect(
+      testIDs(root).some((id) => /^lead-\d+-(source|open|summary)$/.test(id)),
+    ).toBe(false);
+    act(() => renderer.unmount());
+  });
+  test('each section’s source line holds the methodology and the withheld count', async () => {
+    const renderer = await render(<Leads />);
+    const root = renderer.root;
+    expect(labels(root)).toEqual(
+      expect.arrayContaining([
+        'Updated 21 Sep 2026, AusTender',
+        'Updated 21 Sep 2026, AEC',
+        'Updated 21 Sep 2026, AEC and AusTender',
+      ]),
+    );
+    for (const category of leadCategories) {
+      await press(root, `leads-source-${category}`);
+      const details = lastSource();
+      expect(details.citation).toBe(categorySource(category));
+      expect(sourceHeader(details)).toBe('As at 21 September 2026');
+      expect(details.notes).toContain(aboutLede(discovery));
+      for (const method of discovery.methodology)
+        expect(details.notes).toContain(method);
+      // Word for word, in the sheet and not on the screen (specs 2.9).
+      expect(details.notes).toContain(
+        `${shown.withheld} leads about a donor not named in OPAX are not shown.`,
+      );
+    }
+    expect(aboutLede(discovery)).toMatch(/not proof of wrongdoing/);
+    expectNoWeb();
+    act(() => renderer.unmount());
+  });
+  test('searching turns the sections into one flat list with a caption and one source line', async () => {
+    const renderer = await render(<Leads />);
+    const root = renderer.root;
+    await search('department');
+    const results = searchLeads(shown, 'department');
+    expect(results.length).toBeGreaterThan(3);
+    expect(has(root, 'leads-search-results')).toBe(true);
+    expect(testIDs(root).some((id) => id.startsWith('leads-section-'))).toBe(
+      false,
+    );
+    expect(byTestID(root, 'leads-search-caption').props.children).toBe(
+      `${results.length} leads match`,
+    );
+    expect(cardIDs(root)).toHaveLength(results.length);
+    results.forEach((lead, i) =>
+      expect(hrefOf(root, `lead-${i}`)).toEqual(leadRoute(lead.id)),
+    );
+    // Each card says its kind, as no section header does.
+    expect(byTestID(root, 'lead-0-kind').props.children).toBe(
+      'Government contracts',
+    );
+    expect(cardOf(root, 'lead-0').props.accessibilityLabel).toMatch(
+      /^Government contracts\. Department of /,
+    );
+    // One source line, naming the shown cards' sources.
+    expect(byTestID(root, 'leads-source').props.accessibilityLabel).toBe(
+      'Updated 21 Sep 2026, AusTender',
+    );
+    // One match is "1 lead matches", with the kind line.
+    await search('Westpac Banking');
+    const westpac = searchLeads(shown, 'Westpac Banking');
+    expect(westpac).toHaveLength(1);
+    expect(byTestID(root, 'leads-search-caption').props.children).toBe(
+      '1 lead matches',
+    );
+    expect(byTestID(root, 'lead-0-kind').props.children).toBe(
+      'Companies in both',
+    );
+    expect(byTestID(root, 'leads-source').props.accessibilityLabel).toBe(
+      'Updated 21 Sep 2026, AEC and AusTender',
+    );
+    // Nothing matching says so, with the query in the web's quotes.
+    // under the caption, in one plain line.
+    await search('zzzz');
+    expect(byTestID(root, 'leads-search-caption').props.children).toBe(
+      '0 leads match',
+    );
+    const none = root.find(
+      (n) => n.type === DesignText && n.props.testID === 'leads-empty',
+    );
+    expect(none.props).toMatchObject({ variant: 'body', tone: 'inkSoft' });
+    expect(none.props.children).toBe('No leads match “zzzz”.');
+    expect(unavailable(root, 'leads-empty')).toBeUndefined();
+    expect(has(root, 'leads-source')).toBe(false);
+    // Clearing the field restores the sections.
+    await cancelSearch();
+    expect(has(root, 'leads-search-results')).toBe(false);
+    expect(cardIDs(root)).toHaveLength(9);
+    expectNoWeb();
+    act(() => renderer.unmount());
+  });
+  test('a kind list: its picker orders concentrations, its caption counts, no paging', async () => {
+    mockParams.category = 'procurement_concentration';
+    const renderer = await render(<Leads />);
+    const root = renderer.root;
+    expect(mockOptions.title).toBe('Government contracts');
+    expect(
+      (mockOptions.headerSearchBarOptions as { placeholder: string })
+        .placeholder,
+    ).toBe('Agencies');
+    expect(has(root, 'leads-sort')).toBe(true);
+    expect(byTestID(root, 'leads-caption').props.children).toBe(
+      '28 leads, largest totals first',
+    );
+    // Every lead, no "Show more", no kind line; the list's own source line.
+    expect(cardIDs(root)).toHaveLength(28);
+    expect(testIDs(root).some((id) => id.endsWith('-kind'))).toBe(false);
+    expect(has(root, 'leads-more')).toBe(false);
+    expect(
+      byTestID(root, 'leads-source-procurement_concentration').props
+        .accessibilityLabel,
+    ).toBe('Updated 21 Sep 2026, AusTender');
+    const byValue = leadsFor(shown, 'procurement_concentration');
+    expect(hrefOf(root, 'lead-0')).toEqual(leadRoute(byValue[0]!.id));
     await press(root, 'leads-sort-share');
-    expect(openLabel()).toMatch(
-      `Lead, Government contracts. ${leadsFor(discovery, 'procurement_concentration', 'share')[0]!.title}. `,
+    expect(byTestID(root, 'leads-caption').props.children).toBe(
+      '28 leads, biggest share first',
     );
-    await press(root, 'leads-filter-recipient_concentration');
-    expect(texts(root)).toContain('3 parties');
-    await press(root, 'leads-filter-donor_contract_overlap');
-    expect(texts(root)).toContain(`${companies} companies`);
-    // No share to sort companies in both by.
-    expect(root.findAll((n) => n.props.testID === 'leads-sort')).toHaveLength(
-      0,
+    const byShare = leadsFor(shown, 'procurement_concentration', 'share');
+    expect(byShare[0]!.id).not.toBe(byValue[0]!.id);
+    byShare.forEach((lead, i) =>
+      expect(hrefOf(root, `lead-${i}`)).toEqual(leadRoute(lead.id)),
+    );
+    // Searching within the kind: "{m} of {n} leads".
+    await search('health');
+    const matched = searchLeads(
+      shown,
+      'health',
+      'procurement_concentration',
+      'share',
+    );
+    expect(matched.length).toBeGreaterThan(0);
+    expect(byTestID(root, 'leads-caption').props.children).toBe(
+      `${matched.length} of 28 leads`,
+    );
+    expect(cardIDs(root)).toHaveLength(matched.length);
+    // No match keeps the picker and the caption, with one plain line.
+    await search('zzzz');
+    expect(has(root, 'leads-sort')).toBe(true);
+    expect(byTestID(root, 'leads-caption').props.children).toBe(
+      '0 of 28 leads',
+    );
+    expect(byTestID(root, 'leads-empty').props.children).toBe(
+      'No leads match “zzzz”.',
+    );
+    expect(cardIDs(root)).toHaveLength(0);
+    act(() => renderer.unmount());
+  });
+  test('companies in both have one order: no picker', async () => {
+    mockParams.category = 'donor_contract_overlap';
+    const renderer = await render(<Leads />);
+    const root = renderer.root;
+    expect(mockOptions.title).toBe('Companies in both');
+    expect(has(root, 'leads-sort')).toBe(false);
+    expect(byTestID(root, 'leads-caption').props.children).toBe(
+      `${companies} leads, largest first`,
+    );
+    expect(cardIDs(root)).toHaveLength(companies);
+    await press(root, 'leads-source-donor_contract_overlap');
+    expect(lastSource().notes).toContain(
+      `${shown.withheld} leads about a donor not named in OPAX are not shown.`,
     );
     act(() => renderer.unmount());
   });
-  test('a failed first load says so and retries', async () => {
-    mock.discovery.mockRejectedValueOnce(new ApiError('offline', 'Offline'));
+  test('a plain kind name opens its list; an unknown kind opens the root', async () => {
+    mockParams.category = 'party_funding';
+    const plain = await render(<Leads />);
+    expect(mockOptions.title).toBe('Party funding');
+    act(() => plain.unmount());
+    mockParams.category = 'not_a_kind';
     const renderer = await render(<Leads />);
-    expect(
-      renderer.root.findAll((n) => n.props.testID === 'leads-offline-uncached')
-        .length,
-    ).toBeGreaterThan(0);
-    await press(renderer.root, 'leads-retry');
-    expect(texts(renderer.root)).toContain(`${shown.signals.length} leads`);
+    expect(mockOptions.title).toBe('Leads');
+    expect(cardIDs(renderer.root)).toHaveLength(9);
+    act(() => renderer.unmount());
+  });
+  test('a Discover link with a lead pushes the lead once, after the leads load', async () => {
+    mockParams.category = 'recipient_concentration';
+    mockParams.item = signals[1]!.id;
+    let resolve!: (value: RecordResult<Discovery>) => void;
+    mock.discovery.mockReturnValueOnce(
+      new Promise((r) => {
+        resolve = r;
+      }),
+    );
+    const renderer = await render(<Leads />);
+    expect(has(renderer.root, 'leads-loading')).toBe(true);
+    expect(router.push).not.toHaveBeenCalled();
+    await act(async () =>
+      resolve({ data: shown, asOf: null, stale: false, savedAt: 200 }),
+    );
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith(leadRoute(signals[1]!.id));
+    expect(mockOptions.title).toBe('Party funding');
+    // A refresh does not push it again.
+    await act(async () =>
+      renderer.root
+        .findAll((node) => !!node.props.refreshControl)[0]!
+        .props.refreshControl.props.onRefresh(),
+    );
+    expect(router.push).toHaveBeenCalledTimes(1);
+    act(() => renderer.unmount());
+  });
+  test('an export with no leads says so', async () => {
+    mock.discovery.mockResolvedValueOnce({
+      data: { ...shown, signals: [] },
+      asOf: null,
+      stale: false,
+      savedAt: 200,
+    });
+    const renderer = await render(<Leads />);
+    expect(unavailable(renderer.root, 'leads-empty')).toBe('No leads yet');
+    act(() => renderer.unmount());
+  });
+  test('a failed first load says so and retries; offline says nothing is saved', async () => {
+    mock.discovery.mockRejectedValueOnce(
+      new ApiError('invalid-data', 'This catalog could not be read.'),
+    );
+    let renderer = await render(<Leads />);
+    expect(unavailable(renderer.root, 'leads-error')).toBe(
+      'Leads couldn’t be loaded',
+    );
+    await press(renderer.root, 'leads-error-retry');
+    expect(cardIDs(renderer.root)).toHaveLength(9);
+    act(() => renderer.unmount());
+    mock.discovery.mockRejectedValueOnce(new ApiError('offline', 'Offline'));
+    renderer = await render(<Leads />);
+    expect(unavailable(renderer.root, 'leads-error')).toBe(copy.notSaved);
+    expect(has(renderer.root, 'leads-error-retry')).toBe(false);
     act(() => renderer.unmount());
   });
 });
 
-describe('a lead’s comparison', () => {
-  test('draws the chart with one element per row, and the same rows as a table', async () => {
+describe('a lead’s page', () => {
+  test('a party lead: meta, subject, takeaway, the party’s page, its figure and chart', async () => {
     mockParams.id = signals[1]!.id;
     const renderer = await render(<LeadDetail />);
     const root = renderer.root;
-    expect(texts(root)).toContain(
+    expect(byTestID(root, 'lead-meta').props.children).toEqual([
+      'Lead · ',
+      'Party funding',
+    ]);
+    expect(texts(root)).toContain('Lead · Party funding');
+    expect(byTestID(root, 'lead-heading').props.children).toBe(
+      'United Australia Party',
+    );
+    expect(byTestID(root, 'lead-takeaway').props.children).toBe(
       '78.4% of recorded receipts came from Mineralogy Pty Ltd.',
     );
-    expect(byTestID(root, 'lead-chart-row-0').props.accessibilityLabel).toBe(
+    expect(byTestID(root, 'lead-subject').props.accessibilityLabel).toBe(
+      'United Australia Party',
+    );
+    expect(hrefOf(root, 'lead-subject')).toEqual(
+      partyRoute('United Australia Party'),
+    );
+    expect(texts(root)).toContain('Who gave to the party?');
+    expect(
+      labels(root).find((l) => l.startsWith('159 million dollars, ')),
+    ).toBe('159 million dollars, in party receipts, 2007–08 to 2024–25');
+    expect(texts(byTestID(root, 'lead-total'))).toEqual(
+      expect.arrayContaining([
+        '$159m',
+        'in party receipts, 2007–08 to 2024–25',
+      ]),
+    );
+    // The party is on the money map.
+    expect(hrefOf(root, 'lead-money-map')).toEqual(
+      moneyRoute('United Australia Party'),
+    );
+    expect(byTestID(root, 'lead-money-map').props.accessibilityLabel).toBe(
+      'Open in the money map',
+    );
+    expectNoWeb();
+    act(() => renderer.unmount());
+  });
+  test('the chart: plain bars, one per row, and the same rows as a table', async () => {
+    mockParams.id = signals[1]!.id;
+    const renderer = await render(<LeadDetail />);
+    const root = renderer.root;
+    const row0 = byTestID(root, 'lead-chart-row-0');
+    expect(row0.props.accessibilityLabel).toBe(
       'Mineralogy Pty Ltd, 124.7 million dollars, 78.4 percent',
     );
     expect(byTestID(root, 'lead-chart-row-5').props.accessibilityLabel).toBe(
       'Other 23 contributors, 1.7 million dollars, 1.1 percent',
     );
-    await press(root, 'lead-chart-show-table');
+    // The amount reads in plain ink; only the bar fill is money ink.
+    const [amount] = row0.findAll(
+      (n) => n.type === DesignText && n.props.tabular,
+    );
+    expect(amount!.props.children).toBe('$124.7m');
+    expect(amount!.props.tone).toBeUndefined();
+    // A picture of the rows, not links: nothing to press, no web.
+    for (let i = 0; i < 6; i++) {
+      const bar = byTestID(root, `lead-chart-row-${i}`);
+      expect(bar.props.onPress).toBeUndefined();
+      expect(bar.props.accessibilityRole).toBeUndefined();
+      let node: ReactTestInstance | null = bar;
+      while (node && node.type !== 'ExpoLink') node = node.parent;
+      expect(node).toBeNull();
+    }
+    expect(texts(root).join('\n')).not.toMatch(/opax\.com\.au/);
+    expect(byTestID(root, 'lead-table-toggle').props.accessibilityLabel).toBe(
+      'Show as table',
+    );
+    await press(root, 'lead-table-toggle');
+    expect(has(root, 'lead-chart-bars')).toBe(false);
+    expect(has(root, 'lead-chart-table')).toBe(true);
     expect(byTestID(root, 'lead-chart-cell-0').props.accessibilityLabel).toBe(
-      'Mineralogy Pty Ltd, value 124,655,455 dollars, share 78.4 percent, 230 records',
+      'Mineralogy Pty Ltd, $124,655,455 · 78.4% · 230 records',
     );
     expect(byTestID(root, 'lead-chart-cell-5').props.accessibilityLabel).toBe(
-      'Other 23 contributors, value 1,721,102 dollars, share 1.1 percent',
+      'Other 23 contributors, $1,721,102 · 1.1%',
     );
-    for (const caveat of signals[1]!.caveats)
-      expect(texts(root)).toContain(caveat);
-    // "About these numbers" is the page's one source line: the web's lede
-    // and the methodology in full are in its sheet.
-    expect(labels(root)).toContain('Updated 21 Sep 2026, AEC annual returns');
-    expect(texts(root)).not.toContain(aboutLede(discovery));
+    expect(byTestID(root, 'lead-table-toggle').props.accessibilityLabel).toBe(
+      'Show as chart',
+    );
+    await press(root, 'lead-table-toggle');
+    expect(has(root, 'lead-chart-row-0')).toBe(true);
+    expect(has(root, 'lead-chart-table')).toBe(false);
+    expectNoWeb();
+    act(() => renderer.unmount());
+  });
+  test('how the lead was found: the method, plain caveats with a dot, and example records that push the record', async () => {
+    const lead = leadFor(signals[1]!)!;
+    mockParams.id = lead.id;
+    const renderer = await render(<LeadDetail />);
+    const root = renderer.root;
+    expect(texts(byTestID(root, 'lead-method'))).toContain(
+      'How this lead was found',
+    );
+    expect(byTestID(root, 'lead-note').props.children).toBe(
+      lead.comparison.note,
+    );
+    lead.caveats.forEach((caveat, i) =>
+      expect(byTestID(root, `lead-caveat-${i}`).props.children).toBe(
+        plainCaveat(caveat),
+      ),
+    );
+    expect(byTestID(root, 'lead-caveat-2').props.children).toBe(
+      'Annual party receipts include more than gifts. State, election and referendum disclosures are not included.',
+    );
+    expect(texts(root).join('\n')).not.toMatch(/donation_type|ingestion/);
+    // A dot, not a warning triangle.
+    expect(
+      root.findAll(
+        (n) =>
+          n.props.name === 'exclamationmark.triangle' ||
+          n.props.symbol === 'exclamationmark.triangle',
+      ),
+    ).toHaveLength(0);
+    expect(texts(byTestID(root, 'lead-evidence'))).toContain('Example records');
+    expect(texts(root).join('\n')).not.toMatch(/→|Example records \(/);
+    lead.evidence.forEach((item, i) => {
+      const row = evidenceRow(item)!;
+      expect(hrefOf(root, `lead-evidence-${i}`)).toEqual(
+        moneyItemRoute(
+          { kind: 'evidence', lead: lead.id, i: String(i) },
+          row.name,
+        ),
+      );
+    });
+    // No web rows: the comparison and the money map stay in the app.
+    expect(testIDs(root).some((id) => id.startsWith('lead-link-'))).toBe(false);
+    expect(texts(root)).not.toContain('On opax.com.au');
+    expectNoWeb();
+    act(() => renderer.unmount());
+  });
+  test('a contracts lead: its agency’s page, found in the agency directory by name', async () => {
+    mockParams.id = signals[2]!.id;
+    const renderer = await render(<LeadDetail />);
+    const root = renderer.root;
+    expect(texts(root)).toContain('Lead · Government contracts');
+    expect(texts(root)).toContain('Who got the contracts?');
+    const agency = agencies.agencies.find(
+      (a) => a.name === 'Department of Home Affairs',
+    )!;
+    expect(hrefOf(root, 'lead-subject')).toEqual(
+      agencyRoute(agency.id, agency.name),
+    );
+    expect(labels(root)).toContain(
+      '6.1 billion dollars, in contracts from this agency, started 2009 to 2026',
+    );
+    expect(byTestID(root, 'lead-chart-row-0').props.accessibilityLabel).toBe(
+      'SECURE JOURNEYS PTY LTD, 2.3 billion dollars, 38.7 percent',
+    );
+    // A contracts lead has no money-map row.
+    expect(has(root, 'lead-money-map')).toBe(false);
+    act(() => renderer.unmount());
+    // An agency the directory does not hold, or a directory that fails,
+    // draws no subject row.
+    jest.mocked(money.agencies).mockRejectedValueOnce(new Error('offline'));
+    const again = await render(<LeadDetail />);
+    expect(has(again.root, 'lead-subject')).toBe(false);
+    expect(has(again.root, 'lead-chart')).toBe(true);
+    act(() => again.unmount());
+  });
+  test('companies in both: two flows side by side, never added, the donor’s money record', async () => {
+    rememberMoneyGraph(
+      'federal',
+      decodeMoneyGraph(pinned('/graph/money.json')),
+    );
+    mockParams.id = signals[0]!.id;
+    const renderer = await render(<LeadDetail />);
+    const root = renderer.root;
+    expect(texts(root)).toContain('Lead · Companies in both');
+    expect(byTestID(root, 'lead-takeaway').props.children).toBe(
+      'This name appears in both sets of records.',
+    );
+    expect(byTestID(root, 'lead-subject').props.accessibilityLabel).toBe(
+      'Westpac Banking Corporation, Donor on the money map',
+    );
+    expect(hrefOf(root, 'lead-subject')).toMatchObject({
+      pathname: '/money-record',
+      params: { name: 'Westpac Banking Corporation' },
+    });
+    const tiles = root.findByType(StatStrip).props.tiles as {
+      value: string;
+      label: string;
+      ink?: string;
+      testID: string;
+    }[];
+    expect(tiles).toEqual([
+      {
+        value: '$77m',
+        label: 'in 1,041 party receipts',
+        ink: 'money',
+        testID: 'lead-flows-receipts',
+      },
+      {
+        value: '$9.1m',
+        label: 'in 4 government contracts',
+        testID: 'lead-flows-contracts',
+      },
+    ]);
+    expect(byTestID(root, 'lead-flows-caveat').props.children).toBe(
+      'Shown beside each other, never added together.',
+    );
+    // Never one total: $86.1m appears nowhere.
+    expect(texts(root).join('\n')).not.toMatch(/\$86/);
+    expect(byTestID(root, 'lead-source').props.accessibilityLabel).toBe(
+      'Updated 21 Sep 2026, AEC and AusTender',
+    );
     await press(root, 'lead-source');
     expect(lastSource().notes).toContain(aboutLede(discovery));
     for (const method of discovery.methodology)
       expect(lastSource().notes).toContain(method);
-    // The heading says the lead's category once, as its meta line.
-    expect(texts(root)).toContain('Lead · Party funding');
-    expect(
-      root.findAll((n) => n.props.testID === 'lead-link-money-map').length,
-    ).toBeGreaterThan(0);
-    expect(
-      root.findAll((n) => n.props.testID === 'lead-link-supplier'),
-    ).toHaveLength(0);
+    // Example records: the receipt without its party code or local row.
+    expect(byTestID(root, 'lead-evidence-0').props.accessibilityLabel).toBe(
+      'Westpac Banking Corporation to Australian Labor Party, AEC annual receipt · 2024–25, 1,803 dollars',
+    );
+    expect(texts(root).join('\n')).not.toMatch(/643745|local record|\(ALP\)/);
+    expect(has(root, 'lead-chart')).toBe(false);
+    expect(has(root, 'lead-money-map')).toBe(false);
     act(() => renderer.unmount());
+    // A graph that fails to load draws no donor row, and nothing else moves.
+    forgetMoneyGraphs();
+    jest.mocked(apiClient.get).mockRejectedValueOnce(new Error('offline'));
+    const again = await render(<LeadDetail />);
+    expect(has(again.root, 'lead-subject')).toBe(false);
+    expect(has(again.root, 'lead-takeaway')).toBe(true);
+    act(() => again.unmount());
   });
-  test('supplier rows link their profile on the web; companies in both show two separate flows', async () => {
-    mockParams.id = signals[2]!.id;
-    let renderer = await render(<LeadDetail />);
-    const row = renderer.root.find(
-      (n) =>
-        n.props.testID === 'lead-chart-row-0' &&
-        typeof n.props.onPress === 'function',
-    );
-    expect(row.props.accessibilityRole).toBe('link');
-    expect(row.props.accessibilityHint).toBe(
-      'Opens the supplier profile on opax.com.au',
-    );
-    act(() => renderer.unmount());
+  test('companies in both: with no graph cached, the lead loads it and draws the donor row', async () => {
+    forgetMoneyGraphs();
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
     mockParams.id = signals[0]!.id;
-    renderer = await render(<LeadDetail />);
-    expect(labels(renderer.root)).toEqual(
-      expect.arrayContaining([
-        '77 million dollars, Party receipts · 1,041 records',
-        '9.1 million dollars, Government contracts · 4 records',
-      ]),
+    const renderer = await render(<LeadDetail />);
+    expect(apiClient.get).toHaveBeenCalledWith(
+      '/graph/money.json',
+      expect.any(Function),
     );
-    expect(texts(renderer.root)).toContain(
-      'Different money flows and reporting periods. A shared name doesn’t show that one led to the other.',
-    );
+    expect(hrefOf(renderer.root, 'lead-subject')).toMatchObject({
+      pathname: '/money-record',
+      params: {
+        node: expect.stringMatching(/^donor:/),
+        name: 'Westpac Banking Corporation',
+      },
+    });
     act(() => renderer.unmount());
+    // A concentration lead never loads the money graph.
+    jest.mocked(apiClient.get).mockClear();
+    forgetMoneyGraphs();
+    mockParams.id = signals[1]!.id;
+    const party = await render(<LeadDetail />);
+    expect(apiClient.get).not.toHaveBeenCalled();
+    act(() => party.unmount());
   });
-  test('an ID not in the export says so', async () => {
+  test('an ID not in the export says so and offers every lead', async () => {
     mockParams.id = 'procurement_concentration:missing';
     const renderer = await render(<LeadDetail />);
-    expect(texts(renderer.root)).toContain('This lead is no longer listed.');
+    expect(unavailable(renderer.root, 'lead-missing')).toBe(
+      'This lead is no longer listed',
+    );
+    expect(texts(renderer.root)).toContain('See all leads');
+    await press(renderer.root, 'lead-missing-retry');
+    expect(router.navigate).toHaveBeenCalledWith(leadsRoute);
     act(() => renderer.unmount());
   });
 });

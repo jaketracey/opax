@@ -1,94 +1,1311 @@
-import type { RecordResult } from '../../api/client';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import {
-  OfflineBanner,
-  SourceLine,
+  Stack,
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from 'expo-router';
+import type { RecordResult } from '../../api/client';
+import { ApiError } from '../../api/errors';
+import { catalogs } from '../../api/runtime';
+import {
+  BarSeries,
+  ContentUnavailable,
+  FigureBlock,
+  Group,
+  Heading,
+  InsetGroup,
+  LinkRow,
+  MoneyRow,
+  OfflineLine,
+  Screen,
+  SectionHeader,
+  Skeleton,
+  Text,
+  ValueRow,
+  type FigureSource,
   type SourceOriginal,
 } from '../../design/primitives';
-import { moneyDecodeLoss, type MoneyGraph } from './data';
-import { moneyCaveats, moneySource, publicMoneySource } from './records';
-import { disclosureYearNote } from '../../design/format';
+import { copy } from '../../design/copy';
+import {
+  formatCount,
+  formatDate,
+  formatMoney,
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../../design/format';
+import { chrome, rhythm } from '../../design/tokens';
+import { symbols } from '../../design/symbols';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { moneyRoute } from '../../navigation/routes/money-map';
+import { partyRoute } from '../../navigation/routes/people';
+import {
+  agencyRoute,
+  leadRoute,
+  moneyItemRoute,
+  moneyRecordRoute,
+} from '../../navigation/routes/public-money';
+import { resultsRoute } from '../../navigation/routes/search';
+import { donorNotNamed } from '../../privacy/donorEntity';
+import { leadsAbout } from '../leads/model';
+import type {
+  MoneyFigures,
+  MoneyGraph,
+  MoneyNode,
+  PublicMoneyBlock,
+} from './data';
+import { useMoneyRecord } from './hooks';
+import { donorNodeFor, partyNodeFor } from './lookup';
+import { moneyPageMenu } from './menu';
+import {
+  useAgencySupplier,
+  useGrantRecipient,
+  notFound,
+  type AgencySupplier,
+  type GrantRecipient,
+} from './organisation';
+import { moneyPartyGroups, PartyDot, PartyMoneyRow } from './parts';
+import {
+  bothRegistersCaveat,
+  donationsCaveat,
+  filtersFromParams,
+  industryLabel,
+  industryDonors,
+  isAllYears,
+  moneyFocusRoute,
+  moneyJurisdiction,
+  moneyProfile,
+  moneyYears,
+  param,
+  publicMoneySource,
+  type MoneyParams,
+} from './records';
+import { moneyNotes, moneyShortSource, moneySourceDetails } from './sources';
+import { moneyView, moneyWindowNodes, type MoneyFilters } from './view';
+
+/** The register caveats, one per section (journeys/money.md 4.10). */
+export const grantsCaveat = 'An award is not a payment.';
+export const contractsCaveat =
+  'Contract values as last published, not amounts paid.';
+export const individualsNote = 'OPAX doesn’t name private individuals.';
+/**
+ * Passed to `moneyItemRoute` from an organisation's own page: the item page
+ * leaves out "Open {organisation}", because the reader is already on it.
+ */
+export const onOrganisationPage = { org: 'self' } as const;
+
+const AEC_REGISTER = 'https://transparency.aec.gov.au/';
+const GRANTCONNECT = 'https://www.grants.gov.au/Ga/List';
+const AUSTENDER = 'https://www.tenders.gov.au/Cn/Search';
+
+/** A range of graph keys as dates, for a chart's spoken provenance. */
+const fyRange = (first: number, last: number) => ({
+  start: `${first}-07-01`,
+  end: `${last + 1}-06-30`,
+});
+const byYearBars = (figures: MoneyFigures) =>
+  Object.entries(figures.byYear ?? {})
+    .map(([year, [value]]) => ({ year: Number(year), value }))
+    .sort((a, b) => a.year - b.year);
 
 /**
- * A saved copy says so in the block's source line ("Saved 3 Oct 2026"); the
- * banner says only that the app is offline.
+ * One organisation's money (specs/money.md 2.14, journeys/money.md 4.10):
+ * a donor, a party or the public money on the map by `node`; a grant
+ * recipient by `rid` and `jur`; a government supplier by `rid` (with the
+ * `agency` it holds contracts with). The original registers come first,
+ * then one section per register, each dated and sourced, never summed.
  */
-export function MoneyRecordStatus({
-  record,
-}: {
-  record: RecordResult<MoneyGraph>;
-}) {
-  return record.stale ? <OfflineBanner testID="money-stale" /> : null;
+export default function MoneyRecordScreen() {
+  const params = useLocalSearchParams<MoneyParams>();
+  const node = param(params.node);
+  const rid = param(params.rid);
+  if (node) return <NodeRecord params={params} id={node} />;
+  if (rid?.startsWith('s-'))
+    return (
+      <SupplierRecord
+        rid={rid}
+        agency={param(params.agency) ?? null}
+        name={param(params.name)}
+      />
+    );
+  if (rid)
+    return (
+      <RecipientRecord
+        rid={rid}
+        jur={param(params.jur) === 'qld' ? 'qld' : 'federal'}
+        name={param(params.name)}
+      />
+    );
+  return <Missing name={param(params.name)} register="donation" />;
 }
-/** Methodology stays available in full, in the map's source sheet. */
-export function moneyNotes(graph: MoneyGraph): string[] {
-  return [
-    ...moneyCaveats(graph).filter((note) => !note.startsWith('Source:')),
-    disclosureYearNote,
-    'Public grants and contracts go the other way: shown beside the donations in each donor’s record, never summed with them. Contracts are recorded commitments, not verified payments.',
-    'The list ranks donors by disclosed donations, largest first. Donors on the map for the public money they hold, not for the size of their donations, are public-money records and have no donation rank.',
-    'Adjust for inflation shows 2025–26 dollars, using the ABS Consumer Price Index (all groups, Australia, financial-year average). Nominal figures are on the returns.',
-    'Position is the category cluster, colour the category, size the connectedness, and depth fades through fog. Parties sit at the centre, named beside their nodes.',
-    'Drag with one finger to orbit, pinch to zoom, tap a node for its record. The list gives the same recorded figures.',
-    ...(Object.values(moneyDecodeLoss(graph)).some((n) => n > 0)
-      ? [
-          'Some records could not be read and are omitted. Displayed relationships may be incomplete.',
-        ]
-      : []),
-  ];
-}
-/** The registers behind the map: the returns, then any public-money layer. */
-export function moneyOriginals(graph: MoneyGraph): SourceOriginal[] {
-  const returns = moneySource(graph);
-  return [
-    { label: returns.label, url: returns.url },
-    ...(['grants', 'contracts'] as const)
-      .filter((kind) => graph.meta[`${kind}_source`])
-      .map((kind) => {
-        const source = publicMoneySource(graph, kind);
-        return { label: source.label, url: source.url };
-      }),
-  ];
-}
-/**
- * One source line for a block of the money record: dated, the register's
- * name, "Saved …" on a saved copy; the sheet holds the originals, the
- * notes and the licence.
- */
-export function MoneySourceLine({
-  record,
+
+// ---------------------------------------------------------------- layout
+
+function Page({
   title,
-  citation,
-  originals,
-  notes,
-  returns = true,
-  testID,
+  testID = 'money-record-screen',
+  share,
+  refreshing,
+  onRefresh,
+  children,
 }: {
-  record: RecordResult<MoneyGraph>;
-  title: string;
-  /** The register the line names; the disclosure returns by default. */
-  citation?: string;
-  originals: readonly SourceOriginal[];
-  notes: readonly (string | null | undefined | false)[];
-  /** False for a public-money block: no returns note or returns licence. */
-  returns?: boolean;
-  testID: string;
+  title?: string;
+  testID?: string;
+  share?: { path: string; title: string } | null;
+  refreshing?: boolean;
+  onRefresh?: () => void;
+  children: ReactNode;
 }) {
-  const source = moneySource(record.data);
-  // The line names the register; the sheet adds what the map aggregates and
-  // the years it covers.
   return (
-    <SourceLine
-      title={title}
-      asOf={record.asOf}
-      savedAt={record.stale ? record.savedAt : null}
-      citation={citation ?? source.label}
-      originals={originals}
-      notes={[
-        returns ? `${source.citation}, ${record.data.meta.coverage}.` : null,
-        ...notes,
-      ]}
-      licence={returns ? source.licence : null}
-      testID={testID}
+    <>
+      <Stack.Screen
+        options={headerItems(
+          share
+            ? pageItems({ name: share.title, menu: moneyPageMenu(share) })
+            : undefined,
+        )}
+      />
+      <Screen
+        barTitle={title}
+        testID={testID}
+        refreshControl={
+          onRefresh ? (
+            <RefreshControl
+              refreshing={!!refreshing}
+              onRefresh={onRefresh}
+              tintColor={chrome.tint}
+            />
+          ) : undefined
+        }
+      >
+        {children}
+      </Screen>
+    </>
+  );
+}
+
+function Title({
+  meta,
+  name,
+  party,
+}: {
+  meta?: string;
+  name: string;
+  party?: boolean;
+}) {
+  return (
+    <Group gap={rhythm.tight}>
+      {meta ? (
+        <Text wordSafe variant="secondary" testID="money-record-meta">
+          {meta}
+        </Text>
+      ) : null}
+      <View style={styles.title}>
+        {party ? <PartyDot party={name} /> : null}
+        <Heading
+          level={1}
+          kind="page"
+          testID="money-focus-name"
+          style={styles.grow}
+        >
+          {name}
+        </Heading>
+      </View>
+    </Group>
+  );
+}
+
+function Originals({ rows }: { rows: SourceOriginal[] }) {
+  if (!rows.length) return null;
+  return (
+    <InsetGroup header="Originals" testID="money-record-originals">
+      {rows.map((row, index) => (
+        <LinkRow
+          key={row.url + row.label}
+          title={row.label}
+          external={{ url: row.url, label: row.label }}
+          accessibilityHint="Opens the original register"
+          testID={`money-record-original-${index}`}
+        />
+      ))}
+    </InsetGroup>
+  );
+}
+
+/** One register's section: its dated figure, its range, its bars and rows. */
+function RegisterSection({
+  title,
+  testID,
+  figure,
+  allYears,
+  bars,
+  children,
+}: {
+  title: string;
+  testID: string;
+  figure: {
+    value: number;
+    label: string;
+    ink?: 'money';
+    caveat: string;
+    source: FigureSource;
+    testID?: string;
+  };
+  allYears?: {
+    value: number;
+    count: number;
+    noun: string;
+    range: string;
+  } | null;
+  bars?: {
+    data: { label: string; value: number }[];
+    ink: 'money' | 'ink';
+    tableTitle: string;
+    dateRange: { start: string; end: string };
+    source: string;
+  } | null;
+  children?: ReactNode;
+}) {
+  return (
+    <View testID={testID} style={styles.section}>
+      <SectionHeader title={title} />
+      <FigureBlock
+        value={formatMoneyCompact(figure.value)}
+        ink={figure.ink}
+        label={figure.label}
+        caveat={figure.caveat}
+        // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
+        {...{ source: figure.source }}
+        accessibilityLabel={`${moneyAccessibilityLabel(figure.value, true)}, ${figure.label}`}
+        testID={figure.testID}
+      />
+      {allYears ? (
+        <ValueRow
+          label="All years"
+          value={`${formatMoney(allYears.value)} · ${formatCount(allYears.count)} ${allYears.noun} · ${allYears.range}`}
+          testID={`${testID}-all-years`}
+        />
+      ) : null}
+      {bars && bars.data.length > 1 ? (
+        <BarSeries
+          data={bars.data}
+          ink={bars.ink}
+          format={formatMoneyCompact}
+          tableTitle={bars.tableTitle}
+          dateRange={bars.dateRange}
+          // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
+          {...{ source: bars.source }}
+        />
+      ) : null}
+      {children}
+    </View>
+  );
+}
+
+function Missing({
+  name,
+  register,
+  body,
+  action,
+}: {
+  name?: string;
+  register: 'grant' | 'contract' | 'donation';
+  body?: string;
+  action?: { label: string; onPress: () => void };
+}) {
+  const router = useRouter();
+  return (
+    <Page title={name}>
+      <ContentUnavailable
+        symbol="magnifyingglass"
+        title={`Not in the latest ${register} records`}
+        body={body}
+        action={
+          action ??
+          (name
+            ? {
+                label: `Search for ${name}`,
+                onPress: () => router.push(resultsRoute('all', { q: name })),
+              }
+            : undefined)
+        }
+        testID="money-node-missing"
+      />
+    </Page>
+  );
+}
+
+function LoadState({
+  name,
+  error,
+  retry,
+}: {
+  name?: string;
+  error: unknown;
+  retry: () => void;
+}) {
+  const offline =
+    error instanceof ApiError &&
+    (error.code === 'offline' || error.code === 'timeout');
+  return (
+    <Page title={name}>
+      {name ? <Title name={name} /> : null}
+      {error ? (
+        offline ? (
+          <ContentUnavailable
+            symbol="wifi.slash"
+            title={copy.notSaved}
+            body={copy.notSavedBody}
+            testID="money-record-error"
+          />
+        ) : (
+          <ContentUnavailable
+            symbol="exclamationmark.triangle"
+            title="This organisation couldn’t be loaded"
+            body="Check your connection and try again."
+            action={{ label: copy.tryAgain, onPress: retry }}
+            testID="money-record-error"
+          />
+        )
+      ) : (
+        <Group>
+          <Skeleton shape="rows" count={1} label="Loading the money record" />
+          <Skeleton shape="figure" count={1} />
+          <Skeleton shape="rows" count={3} />
+        </Group>
+      )}
+    </Page>
+  );
+}
+
+/** Leads whose subject is this organisation, each named by its sentence. */
+function useLeadsAbout(name: string | null) {
+  const [leads, setLeads] = useState<{ id: string; title: string }[]>([]);
+  useEffect(() => {
+    if (!name) return;
+    let active = true;
+    // Optional: absent or failing, the rows are simply not drawn.
+    Promise.resolve()
+      .then(() => catalogs.discovery())
+      .then(
+        (record) => {
+          if (active) setLeads(leadsAbout(record.data, name));
+        },
+        () => undefined,
+      );
+    return () => {
+      active = false;
+    };
+  }, [name]);
+  return leads;
+}
+
+function LeadRows({ name }: { name: string | null }) {
+  const leads = useLeadsAbout(name);
+  return (
+    <>
+      {leads.slice(0, 3).map((lead, index) => (
+        <LinkRow
+          key={lead.id}
+          title={lead.title}
+          detail="Lead"
+          symbol={symbols.leads}
+          href={leadRoute(lead.id)}
+          testID={`money-record-lead-${index}`}
+        />
+      ))}
+    </>
+  );
+}
+
+// ------------------------------------------------------------ graph nodes
+
+function windowNote(filters: MoneyFilters, graph: MoneyGraph) {
+  const parts = [
+    isAllYears(graph, filters) ? null : moneyYears(filters.from, filters.to),
+    filters.industry ? industryDonors(filters.industry) : null,
+  ].filter(Boolean);
+  return parts.length ? parts.join(' · ') : null;
+}
+
+function roleMeta(node: MoneyNode) {
+  if (node.kind === 'party') return 'Party';
+  if (node.kind === 'grantor') return 'Public money';
+  const roles = [
+    'Donor',
+    node.grants ? 'grant recipient' : null,
+    node.contracts ? 'government supplier' : null,
+  ].filter(Boolean) as string[];
+  const named =
+    roles.length > 1
+      ? `${roles.slice(0, -1).join(', ')} and ${roles.at(-1)}`
+      : roles[0]!;
+  return `${named} · ${industryLabel(node.group)}`;
+}
+
+function NodeRecord({ params, id }: { params: MoneyParams; id: string }) {
+  const jurisdiction = moneyJurisdiction(params.jurisdiction);
+  const { record, error, refreshing, refresh, retry } =
+    useMoneyRecord(jurisdiction);
+  const navigation = useNavigation();
+  const graph = record?.data ?? null;
+  const filters = useMemo(
+    () => (graph ? filtersFromParams(graph, params) : null),
+    [graph, params],
+  );
+  const view = useMemo(
+    () =>
+      graph && filters
+        ? {
+            ...moneyView(graph, filters),
+            nodes: moneyWindowNodes(graph, filters),
+          }
+        : null,
+    [graph, filters],
+  );
+  const name = param(params.name);
+  const node =
+    graph && view
+      ? id.startsWith('party:')
+        ? (() => {
+            const party = partyNodeFor(graph, id);
+            return party
+              ? view.nodes.find((n) => n.id === party.id)
+              : undefined;
+          })()
+        : view.nodes.find((n) => n.id === id)
+      : undefined;
+  if (!record || !graph || !filters || !view)
+    return <LoadState name={name} error={error} retry={retry} />;
+  if (!node) {
+    const narrowed = !isAllYears(graph, filters) || !!filters.industry;
+    const donor = id.startsWith('donor:');
+    return (
+      <Page title={name}>
+        <ContentUnavailable
+          symbol="magnifyingglass"
+          title={
+            name
+              ? `${name} isn’t on the map in this view`
+              : 'This donor isn’t on the map'
+          }
+          body={donor && !name ? donorNotNamed : undefined}
+          action={
+            narrowed
+              ? {
+                  label: 'Show all years',
+                  onPress: () =>
+                    navigation.setParams({
+                      from: undefined,
+                      to: undefined,
+                      industry: undefined,
+                    } as never),
+                }
+              : undefined
+          }
+          testID="money-node-missing"
+        />
+      </Page>
+    );
+  }
+  return (
+    <NodeBody
+      record={record}
+      graph={graph}
+      filters={filters}
+      view={view}
+      node={node}
+      jurisdiction={jurisdiction}
+      fromMap={param(params.via) === 'map'}
+      refreshing={refreshing}
+      refresh={refresh}
     />
   );
 }
+
+function NodeBody({
+  record,
+  graph,
+  filters,
+  view,
+  node,
+  jurisdiction,
+  fromMap,
+  refreshing,
+  refresh,
+}: {
+  record: RecordResult<MoneyGraph>;
+  graph: MoneyGraph;
+  filters: MoneyFilters;
+  view: MoneyGraph;
+  node: MoneyNode;
+  jurisdiction: ReturnType<typeof moneyJurisdiction>;
+  fromMap: boolean;
+  refreshing: boolean;
+  refresh: () => void;
+}) {
+  const full = graph.nodes.find((n) => n.id === node.id) ?? node;
+  const narrowed = !isAllYears(graph, filters) || filters.inflation;
+  const note = windowNote(filters, graph);
+  const shortSource = moneyShortSource(graph);
+  const grantsSource = publicMoneySource(graph, 'grants');
+  const contractsSource = publicMoneySource(graph, 'contracts');
+  const others = new Map(view.nodes.map((n) => [n.id, n]));
+  const flows = view.edges
+    .filter((e) =>
+      node.kind === 'party' ? e.target === node.id : e.source === node.id,
+    )
+    .flatMap((edge) => {
+      const other = others.get(
+        edge.source === node.id ? edge.target : edge.source,
+      );
+      return other ? [{ edge, other }] : [];
+    })
+    .sort((a, b) => b.edge.total - a.edge.total);
+  const pushRecord = (other: MoneyNode) =>
+    moneyFocusRoute(
+      other.id,
+      jurisdiction,
+      filters,
+      other.label,
+      fromMap ? 'map' : null,
+    );
+  const profile = moneyProfile(node);
+  const share = {
+    path:
+      node.kind === 'grantor'
+        ? `/money?node=${encodeURIComponent(node.id)}`
+        : profile.path,
+    title: node.label,
+  };
+  const donorSource = (testID: string) =>
+    moneySourceDetails(record, {
+      citation: shortSource,
+      originals: [
+        {
+          label: 'AEC Transparency Register',
+          url: graph.meta.source_url ?? AEC_REGISTER,
+        },
+      ],
+      notes: [
+        ...moneyNotes(graph),
+        node.undated?.[1]
+          ? 'Undated disclosures stay in every year window.'
+          : null,
+        node.kind === 'party' && filters.industry
+          ? 'The party total covers all industries. The donors listed follow the industry filter.'
+          : null,
+      ],
+      testID,
+    });
+  const publicSource = (kind: 'grants' | 'contracts', testID: string) => {
+    const source = kind === 'grants' ? grantsSource : contractsSource;
+    return moneySourceDetails(record, {
+      citation: source.label,
+      returns: false,
+      originals: [{ label: source.label, url: source.url }],
+      notes: [
+        source.citation,
+        kind === 'contracts' &&
+        typeof graph.meta.contracts_coverage === 'string'
+          ? `${graph.meta.contracts_coverage}.`
+          : null,
+        'Matched to the donor on identity (an ABN where one is recorded). Shown beside donations, never added to them.',
+      ],
+      testID,
+    });
+  };
+  const allYears = (figures: MoneyFigures, noun: string) =>
+    narrowed
+      ? {
+          value: figures.total,
+          count: figures.count,
+          noun,
+          range: moneyYears(figures.firstYear, figures.lastYear),
+        }
+      : null;
+  const bars = (
+    figures: MoneyFigures,
+    ink: 'money' | 'ink',
+    title: string,
+    source: string,
+  ) => {
+    const data = byYearBars(figures);
+    return data.length
+      ? {
+          data: data.map((d) => ({
+            label: moneyYears(d.year, d.year),
+            value: d.value,
+          })),
+          ink,
+          tableTitle: title,
+          dateRange: fyRange(data[0]!.year, data.at(-1)!.year),
+          source,
+        }
+      : null;
+  };
+  const years = moneyYears(node.firstYear, node.lastYear);
+  // ---- party
+  if (node.kind === 'party') {
+    const donors = flows.slice(0, 15);
+    const line = `in ${formatCount(node.count)} receipts, ${years}`;
+    return (
+      <Page
+        title={node.label}
+        share={share}
+        refreshing={refreshing}
+        onRefresh={refresh}
+      >
+        <Title meta={roleMeta(node)} name={node.label} party />
+        {record.stale && record.staleReason !== 'unreadable' ? (
+          <OfflineLine savedAt={record.savedAt} />
+        ) : null}
+        {note ? (
+          <Text wordSafe variant="secondary" testID="money-record-window">
+            {note}
+          </Text>
+        ) : null}
+        <Originals
+          rows={[
+            {
+              label: `AEC Transparency Register · returns for ${node.label}`,
+              url: graph.meta.source_url ?? AEC_REGISTER,
+            },
+          ]}
+        />
+        <RegisterSection
+          title="Donations to parties"
+          testID="money-record-donations"
+          figure={{
+            value: node.total,
+            label: line,
+            ink: 'money',
+            caveat: donationsCaveat,
+            source: donorSource('money-source'),
+            testID: 'money-focus-amount',
+          }}
+          allYears={allYears(full, 'receipts')}
+          bars={bars(node, 'money', 'Receipts by year', shortSource)}
+        >
+          {donors.length ? (
+            <View testID="money-focus-flows">
+              <SectionHeader title="Largest donors" level={3} />
+              {donors.map(({ edge, other }, index) => (
+                <MoneyRow
+                  key={other.id}
+                  name={other.label}
+                  detail={moneyYears(edge.firstYear, edge.lastYear)}
+                  amount={edge.total}
+                  href={pushRecord(other)}
+                  testID={`money-focus-flow-${index}`}
+                />
+              ))}
+            </View>
+          ) : null}
+        </RegisterSection>
+        <More>
+          {profile.native ? (
+            <LinkRow
+              title={node.label}
+              leading={<PartyDot party={node.label} />}
+              href={partyRoute(node.label)}
+              testID="money-native-profile"
+            />
+          ) : null}
+          <LeadRows name={node.label} />
+          {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
+        </More>
+      </Page>
+    );
+  }
+  // ---- public money on the map
+  if (node.kind === 'grantor') {
+    const contracts = node.flow === 'contracts';
+    const kind = contracts ? 'contracts' : 'grants';
+    const line = `in ${kind} to donors on the map, ${years}`;
+    return (
+      <Page
+        title={node.label}
+        share={share}
+        refreshing={refreshing}
+        onRefresh={refresh}
+      >
+        <Title meta={roleMeta(node)} name={node.label} />
+        {note ? (
+          <Text wordSafe variant="secondary" testID="money-record-window">
+            {note}
+          </Text>
+        ) : null}
+        <Originals
+          rows={[
+            {
+              label: contracts ? contractsSource.label : grantsSource.label,
+              url: contracts ? contractsSource.url : grantsSource.url,
+            },
+          ]}
+        />
+        <RegisterSection
+          title={contracts ? 'Government contracts' : 'Grants received'}
+          testID={contracts ? 'money-record-contracts' : 'money-record-grants'}
+          figure={{
+            value: node.total,
+            label: line,
+            caveat: contracts ? contractsCaveat : grantsCaveat,
+            source: publicSource(kind, 'money-source'),
+            testID: 'money-focus-amount',
+          }}
+          allYears={allYears(full, kind)}
+          bars={bars(
+            node,
+            'ink',
+            contracts ? 'Contracts by year' : 'Grants by year',
+            contracts ? contractsSource.label : grantsSource.label,
+          )}
+        >
+          <View testID="money-focus-flows">
+            <SectionHeader
+              title={contracts ? 'Largest suppliers' : 'Largest recipients'}
+              level={3}
+            />
+            {flows.slice(0, 15).map(({ edge, other }, index) => (
+              <MoneyRow
+                key={other.id}
+                name={other.label}
+                detail={moneyYears(edge.firstYear, edge.lastYear)}
+                amount={edge.total}
+                href={pushRecord(other)}
+                testID={`money-focus-flow-${index}`}
+              />
+            ))}
+          </View>
+        </RegisterSection>
+      </Page>
+    );
+  }
+  // ---- a donor (or the "Individual donors" aggregate)
+  const parties = moneyPartyGroups(
+    flows.filter(({ other }) => other.kind === 'party'),
+    ({ other }) => other.label,
+  );
+  const partyCount = parties.main.length + parties.other.length;
+  const grants = filters.grants ? node.grants : undefined;
+  const contracts = filters.contracts ? node.contracts : undefined;
+  const sections = [filters.donations, !!grants, !!contracts].filter(
+    Boolean,
+  ).length;
+  const originals: SourceOriginal[] = node.withheld
+    ? []
+    : [
+        {
+          label: `AEC Transparency Register · returns for ${node.label}`,
+          url: graph.meta.source_url ?? AEC_REGISTER,
+        },
+        ...(grants
+          ? [
+              {
+                label: `GrantConnect · awards to ${node.label}`,
+                url: GRANTCONNECT,
+              },
+            ]
+          : []),
+        ...(contracts
+          ? [
+              {
+                label: `AusTender · contracts with ${node.label}`,
+                url: AUSTENDER,
+              },
+            ]
+          : []),
+      ];
+  const partyRow = ({ edge, other }: (typeof flows)[number], index: number) => (
+    <PartyMoneyRow
+      key={other.id}
+      name={other.label}
+      detail={moneyYears(edge.firstYear, edge.lastYear)}
+      amount={edge.total}
+      href={pushRecord(other)}
+      testID={`money-focus-flow-${index}`}
+    />
+  );
+  const publicSection = (
+    kind: 'grants' | 'contracts',
+    block: PublicMoneyBlock,
+    fullBlock: PublicMoneyBlock | undefined,
+  ) => {
+    const noun = kind;
+    const contractsKind = kind === 'contracts';
+    const source = contractsKind ? contractsSource : grantsSource;
+    return (
+      <RegisterSection
+        title={contractsKind ? 'Government contracts' : 'Grants received'}
+        testID={
+          contractsKind ? 'money-record-contracts' : 'money-record-grants'
+        }
+        figure={{
+          value: block.total,
+          label: `in ${formatCount(block.count)} ${noun}, ${moneyYears(block.firstYear, block.lastYear)}`,
+          caveat: contractsKind ? contractsCaveat : grantsCaveat,
+          source: publicSource(
+            kind,
+            contractsKind
+              ? 'money-record-contracts-source'
+              : 'money-record-grants-source',
+          ),
+          testID: contractsKind
+            ? 'money-focus-contracts'
+            : 'money-focus-grants',
+        }}
+        allYears={fullBlock ? allYears(fullBlock, noun) : null}
+        bars={bars(
+          block,
+          'ink',
+          contractsKind ? 'Contracts by year' : 'Grants by year',
+          source.label,
+        )}
+      >
+        {block.top?.length ? (
+          <View>
+            {block.top.map(([label, amount], index) => (
+              <ValueRow
+                key={`${label}-${index}`}
+                label={label}
+                value={formatMoney(amount)}
+                testID={`money-record-${kind}-top-${index}`}
+              />
+            ))}
+          </View>
+        ) : null}
+      </RegisterSection>
+    );
+  };
+  return (
+    <Page
+      title={node.label}
+      share={node.withheld ? null : share}
+      refreshing={refreshing}
+      onRefresh={refresh}
+    >
+      <Title meta={roleMeta(node)} name={node.label} />
+      {record.stale && record.staleReason !== 'unreadable' ? (
+        <OfflineLine savedAt={record.savedAt} />
+      ) : null}
+      {sections > 1 ? (
+        <Text wordSafe variant="footnote" testID="money-record-both-caveat">
+          {bothRegistersCaveat}
+        </Text>
+      ) : null}
+      {note ? (
+        <Text wordSafe variant="secondary" testID="money-record-window">
+          {note}
+        </Text>
+      ) : null}
+      <Originals rows={originals} />
+      {filters.donations ? (
+        <RegisterSection
+          title="Donations to parties"
+          testID="money-record-donations"
+          figure={{
+            value: node.total,
+            label: `disclosed to ${formatCount(partyCount)} ${partyCount === 1 ? 'party' : 'parties'}, ${years}`,
+            ink: 'money',
+            caveat: donationsCaveat,
+            source: donorSource('money-source'),
+            testID: 'money-focus-amount',
+          }}
+          allYears={allYears(full, 'donations')}
+          bars={bars(node, 'money', 'Donations by year', shortSource)}
+        >
+          {partyCount ? (
+            <View testID="money-focus-flows">
+              <SectionHeader title="Parties" level={3} />
+              {parties.main.map(partyRow)}
+              {parties.other.length ? (
+                <>
+                  <Text wordSafe variant="footnote">
+                    Other parties
+                  </Text>
+                  {parties.other.map((row, i) =>
+                    partyRow(row, parties.main.length + i),
+                  )}
+                </>
+              ) : null}
+            </View>
+          ) : null}
+        </RegisterSection>
+      ) : null}
+      {grants ? publicSection('grants', grants, full.grants) : null}
+      {contracts ? publicSection('contracts', contracts, full.contracts) : null}
+      {node.withheld ? (
+        <Text wordSafe variant="footnote" testID="money-withheld-note">
+          {individualsNote}
+        </Text>
+      ) : (
+        <More>
+          <LeadRows name={node.label} />
+          {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
+        </More>
+      )}
+    </Page>
+  );
+}
+
+function More({ children }: { children: ReactNode }) {
+  return (
+    <View testID="money-record-more">
+      <View>{children}</View>
+    </View>
+  );
+}
+
+function MapRow({
+  node,
+  jurisdiction,
+}: {
+  node: MoneyNode;
+  jurisdiction: string;
+}) {
+  const base = moneyRoute(null, jurisdiction);
+  return (
+    <LinkRow
+      title="Open in the money map"
+      symbol={symbols.money}
+      href={{
+        pathname: base.pathname,
+        params: {
+          ...('params' in base ? base.params : {}),
+          select: node.id,
+          view: 'map',
+        },
+      }}
+      testID="money-record-map"
+    />
+  );
+}
+
+// ------------------------------------------------------- grant recipients
+
+function RecipientRecord({
+  rid,
+  jur,
+  name,
+}: {
+  rid: string;
+  jur: 'federal' | 'qld';
+  name?: string;
+}) {
+  const loaded = useGrantRecipient(rid, jur);
+  if (!loaded.record)
+    return notFound(loaded.error) ? (
+      <Missing name={name} register="grant" />
+    ) : (
+      <LoadState name={name} error={loaded.error} retry={loaded.retry} />
+    );
+  const recipient = loaded.recipient;
+  if (!recipient || !recipient.organisation)
+    return (
+      <Missing
+        name={recipient && !recipient.organisation ? undefined : name}
+        register="grant"
+        body={
+          recipient && !recipient.organisation ? individualsNote : undefined
+        }
+      />
+    );
+  return (
+    <RecipientBody
+      record={loaded.record}
+      recipient={recipient}
+      jur={jur}
+      refreshing={loaded.refreshing}
+      refresh={loaded.refresh}
+    />
+  );
+}
+
+function RecipientBody({
+  record,
+  recipient,
+  jur,
+  refreshing,
+  refresh,
+}: {
+  record: RecordResult<{
+    generated: string;
+    sourceUrl: string;
+    licence: string;
+  }>;
+  recipient: GrantRecipient;
+  jur: 'federal' | 'qld';
+  refreshing: boolean;
+  refresh: () => void;
+}) {
+  const donor = donorNodeFor({ rid: recipient.id, name: recipient.name });
+  const cells = recipient.byYear.filter(([, value]) => value > 0);
+  const range = cells.length
+    ? cells.length === 1
+      ? cells[0]![0].replace('-', '–')
+      : `${cells[0]![0].replace('-', '–')} to ${cells.at(-1)![0].replace('-', '–')}`
+    : 'year not recorded';
+  const source: FigureSource = {
+    asOf: record.asOf ?? record.data.generated,
+    citation: jur === 'qld' ? 'Queensland Treasury' : 'GrantConnect',
+    savedAt: record.stale ? record.savedAt : null,
+    originals: [{ label: 'GrantConnect', url: record.data.sourceUrl }],
+    notes: [
+      'Grant awards as published, by the financial year the grant started. An award is not a payment.',
+      record.stale ? copy.savedCopyNote(record.savedAt) : null,
+    ],
+    licence: record.data.licence || null,
+    testID: 'money-record-grants-source',
+  };
+  const abn = recipient.id.startsWith('abn:') ? recipient.id.slice(4) : null;
+  return (
+    <Page
+      title={recipient.name}
+      share={{
+        path: `/money/grants?jur=${jur}&recipient=${encodeURIComponent(recipient.id)}`,
+        title: recipient.name,
+      }}
+      refreshing={refreshing}
+      onRefresh={refresh}
+    >
+      <Title
+        meta={[
+          donor ? 'Grant recipient and donor' : 'Grant recipient',
+          abn
+            ? `ABN ${abn.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/, '$1 $2 $3 $4')}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(' · ')}
+        name={recipient.name}
+      />
+      {record.stale && record.staleReason !== 'unreadable' ? (
+        <OfflineLine savedAt={record.savedAt} />
+      ) : null}
+      {donor ? (
+        <Text wordSafe variant="footnote" testID="money-record-both-caveat">
+          {bothRegistersCaveat}
+        </Text>
+      ) : null}
+      <Originals
+        rows={[
+          {
+            label: `GrantConnect · awards to ${recipient.name}`,
+            url: GRANTCONNECT,
+          },
+        ]}
+      />
+      <RegisterSection
+        title="Grants received"
+        testID="money-record-grants"
+        figure={{
+          value: recipient.total,
+          label: `in ${formatCount(recipient.count)} grants, ${range}`,
+          caveat: grantsCaveat,
+          source,
+          testID: 'money-focus-grants',
+        }}
+        bars={
+          cells.length > 1
+            ? {
+                data: cells.map(([year, value]) => ({
+                  label: year.replace('-', '–'),
+                  value,
+                })),
+                ink: 'ink',
+                tableTitle: 'Grants by year',
+                dateRange: {
+                  start: `${cells[0]![0].slice(0, 4)}-07-01`,
+                  end: `${Number(cells.at(-1)![0].slice(0, 4)) + 1}-06-30`,
+                },
+                source: 'GrantConnect',
+              }
+            : null
+        }
+      />
+      <More>
+        {donor ? (
+          <LinkRow
+            title={donor.label}
+            detail="Donor on the money map"
+            href={moneyRecordRoute({ node: donor.id }, donor.label)}
+            testID="money-record-donor"
+          />
+        ) : null}
+        <LeadRows name={recipient.name} />
+      </More>
+    </Page>
+  );
+}
+
+// -------------------------------------------------------------- suppliers
+
+function SupplierRecord({
+  rid,
+  agency,
+  name,
+}: {
+  rid: string;
+  agency: string | null;
+  name?: string;
+}) {
+  const loaded = useAgencySupplier(rid, agency);
+  if (!agency)
+    // The per-supplier files are not on the app's allow-list yet; without
+    // the agency the supplier can't be found.
+    return <Missing name={name} register="contract" />;
+  if (!loaded.record)
+    return notFound(loaded.error) ? (
+      <Missing name={name} register="contract" />
+    ) : (
+      <LoadState name={name} error={loaded.error} retry={loaded.retry} />
+    );
+  const found = loaded.found;
+  if (!found || !found.supplier.organisation)
+    return (
+      <Missing
+        name={found ? undefined : name}
+        register="contract"
+        body={found ? individualsNote : undefined}
+      />
+    );
+  return (
+    <SupplierBody
+      found={found}
+      asOf={loaded.record.asOf}
+      savedAt={loaded.record.stale ? loaded.record.savedAt : null}
+      refreshing={loaded.refreshing}
+      refresh={loaded.refresh}
+    />
+  );
+}
+
+function SupplierBody({
+  found,
+  asOf,
+  savedAt,
+  refreshing,
+  refresh,
+}: {
+  found: AgencySupplier;
+  asOf: string | null;
+  savedAt: number | null;
+  refreshing: boolean;
+  refresh: () => void;
+}) {
+  const { supplier, agency, contracts } = found;
+  const donor = donorNodeFor({ name: supplier.name });
+  const starts = contracts
+    .map((c) => Number(c.start.slice(0, 4)))
+    .filter((y) => Number.isInteger(y) && y > 1900);
+  const range = starts.length
+    ? Math.min(...starts) === Math.max(...starts)
+      ? `started ${Math.min(...starts)}`
+      : `started ${Math.min(...starts)} to ${Math.max(...starts)}`
+    : 'start dates not recorded';
+  return (
+    <Page
+      title={supplier.name}
+      share={{
+        path: `/subject/supplier/${encodeURIComponent(supplier.id)}`,
+        title: supplier.name,
+      }}
+      refreshing={refreshing}
+      onRefresh={refresh}
+    >
+      <Title
+        meta={donor ? 'Government supplier and donor' : 'Government supplier'}
+        name={supplier.name}
+      />
+      {donor ? (
+        <Text wordSafe variant="footnote" testID="money-record-both-caveat">
+          {bothRegistersCaveat}
+        </Text>
+      ) : null}
+      <Originals
+        rows={[
+          {
+            label: `AusTender · contracts with ${supplier.name}`,
+            url: AUSTENDER,
+          },
+        ]}
+      />
+      <RegisterSection
+        title="Government contracts"
+        testID="money-record-contracts"
+        figure={{
+          value: supplier.total,
+          label: `in ${formatCount(supplier.count)} ${supplier.count === 1 ? 'contract' : 'contracts'} with ${agency.name}, ${range}`,
+          caveat: contractsCaveat,
+          source: {
+            asOf,
+            citation: 'AusTender',
+            savedAt,
+            originals: [{ label: 'AusTender', url: AUSTENDER }],
+            notes: [
+              'Contract years are calendar years of the recorded start date.',
+              contractsCaveat,
+            ],
+            testID: 'money-record-contracts-source',
+          },
+          testID: 'money-focus-contracts',
+        }}
+      >
+        {contracts.length ? (
+          <View testID="money-record-contract-rows">
+            {contracts.map((contract, index) => (
+              <MoneyRow
+                key={contract.id}
+                name={contract.title || contract.id}
+                detail={[
+                  contract.start
+                    ? `from ${formatDate(contract.start, 'short')}`
+                    : null,
+                  contract.id,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
+                amount={contract.value}
+                href={moneyItemRoute(
+                  {
+                    kind: 'contract',
+                    agency: agency.id,
+                    id: contract.id,
+                    ...onOrganisationPage,
+                  },
+                  contract.title || contract.id,
+                )}
+                testID={`money-record-contract-${index}`}
+              />
+            ))}
+          </View>
+        ) : null}
+      </RegisterSection>
+      <More>
+        <LinkRow
+          title={agency.name}
+          symbol={symbols.contracts}
+          href={agencyRoute(agency.id, agency.name)}
+          testID="money-record-agency"
+        />
+        {donor ? (
+          <LinkRow
+            title={donor.label}
+            detail="Donor on the money map"
+            href={moneyRecordRoute({ node: donor.id }, donor.label)}
+            testID="money-record-donor"
+          />
+        ) : null}
+        <LeadRows name={supplier.name} />
+      </More>
+    </Page>
+  );
+}
+
+const styles = StyleSheet.create({
+  title: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  grow: { flexShrink: 1 },
+  section: { gap: rhythm.tight },
+});

@@ -34,7 +34,10 @@ name: 23 Native money map, held figures, original source and ranked list
 - assertVisible:
     id: BackButton
     text: Today
+- assertVisible:
+    id: money-view-summary
 - takeScreenshot: ${EVIDENCE}/23-orbit-0
+# A sideways drag on the scene orbits it without a preview tap.
 - swipe:
     start: 30%, 42%
     end: 70%, 42%
@@ -45,7 +48,7 @@ name: 23 Native money map, held figures, original source and ranked list
     end: 30%, 39%
     duration: 1000
 - takeScreenshot: ${EVIDENCE}/23-orbit-2
-# This accessible action uses the same year setter as the adjustable rails.
+# This accessible action writes the same from/to params as the Years row.
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
@@ -55,44 +58,43 @@ name: 23 Native money map, held figures, original source and ranked list
 - runFlow:
     file: support/money-screen-scroll-up.yaml
     env:
-      TARGET_ID: money-filters
+      TARGET_ID: money-title
+# Filters is a bar button opening the Filters sheet; changes apply live.
+- tapOn: Filters(, on)?
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
+    timeout: 15000
+- assertVisible:
+    id: filters-row-years
+- takeScreenshot: ${EVIDENCE}/23-filters
 - tapOn:
-    id: money-filters
-- runFlow:
-    file: support/money-screen-scroll.yaml
-    env:
-      TARGET_ID: money-from-year
-- takeScreenshot: ${EVIDENCE}/23-from-year
-- runFlow:
-    file: support/money-screen-scroll.yaml
-    env:
-      TARGET_ID: money-to-year
-- takeScreenshot: ${EVIDENCE}/23-to-year
-- runFlow:
-    file: support/money-screen-scroll.yaml
-    env:
-      TARGET_ID: money-industry
+    id: filters-row-industry
+- extendedWaitUntil:
+    visible:
+      id: filters-choice-unions
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/23-industry
+# A checkmark row: choosing one returns to the sheet.
 - tapOn:
-    id: money-industry
-- runFlow:
-    file: support/money-screen-scroll.yaml
-    env:
-      TARGET_ID: money-industry-unions
+    id: filters-choice-unions
+- extendedWaitUntil:
+    visible:
+      id: filters-row-contracts
+    timeout: 15000
 - tapOn:
-    id: money-industry-unions
-# The options collapse after selection; restore the selected control as the scroll anchor.
-- runFlow:
-    file: support/money-screen-scroll-up.yaml
-    env:
-      TARGET_ID: money-industry
-- runFlow:
-    file: support/money-screen-scroll.yaml
-    env:
-      TARGET_ID: money-layer-contracts
-- tapOn:
-    id: money-layer-contracts
+    id: filters-row-contracts
+- assertVisible:
+    id: filters-reset
 - takeScreenshot: ${EVIDENCE}/23-layers
-# The focus action invokes the same scene focus and sheet callback as a tap.
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+      text: Donations to parties in 2024–25, union donors only
+    timeout: 30000
+# The focus action invokes the same callback as a tap on a node: it pushes
+# the node's money record.
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
@@ -104,14 +106,25 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-focus-name
       text: Labor
     timeout: 30000
+- assertVisible:
+    id: money-record-screen
+- assertVisible:
+    id: money-record-originals
 - scrollUntilVisible:
     element:
       id: money-focus-amount
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
-# One figure says the amount, what it is, its years and its count.
-- assertVisible: '69,010,542 dollars, Disclosed receipts, 2024 · 3,929 receipts'
+# One figure says the amount, its receipts and its year; all years beside it.
+- assertVisible: 69 million dollars, in 3,929 receipts, 2024–25
+- scrollUntilVisible:
+    element:
+      id: money-record-donations-all-years
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- assertVisible: 'All years, \$[0-9,]+ · 60,551 receipts · 1998–99 to 2025–26'
 - takeScreenshot: ${EVIDENCE}/23-focus-amount
 # One source line opens the sheet; the original opens from it.
 - scrollUntilVisible:
@@ -136,58 +149,149 @@ name: 23 Native money map, held figures, original source and ranked list
 - assertVisible: 'https://transparency\.aec\.gov\.au/'
 - takeScreenshot: ${EVIDENCE}/23-source
 - tapOn: Done
-- tapOn: Money map
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+    timeout: 30000
+# The List view: Donors first, with the cut in its caption.
 - runFlow:
     file: support/money-screen-list.yaml
+- scrollUntilVisible:
+    element:
+      id: money-donor-caption
+    centerElement: true
+    timeout: 60000
+- assertVisible:
+    id: money-donor-caption
+    text: Largest in 2024–25 among the 250 largest donors since 1998–99
 - scrollUntilVisible:
     element:
       id: money-donor-0
     centerElement: true
     timeout: 120000
-- assertVisible: '1\. Mining and Energy Union, \$4,102,022 disclosed donations.*2024.*'
-- takeScreenshot: ${EVIDENCE}/23-list
-- scrollUntilVisible:
-    element:
-      id: money-donor-parties-0
-    centerElement: true
-    timeout: 30000
-# The row's own detail names the parties; its source is on the record.
+# No rank number; name, years and parties, then the amount.
 - assertVisible:
-    id: money-donor-parties-0
-    text: '.*Labor.*'
-
-# Every party and public-money hub is reachable from the accessible list.
+    id: money-donor-0
+    text: Mining and Energy Union, 2024–25 · 1 party, 4,102,022 dollars
+- takeScreenshot: ${EVIDENCE}/23-list
+- tapOn:
+    id: money-donor-0
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Mining and Energy Union
+    timeout: 30000
+- assertVisible:
+    id: money-record-screen
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: money-donor-0
+    timeout: 30000
+# Reset filters from the sheet: the list returns to every year and industry.
 - runFlow:
     file: support/money-screen-scroll-up.yaml
     env:
-      TARGET_ID: money-list-records-toggle
+      TARGET_ID: money-title
+- tapOn: Filters(, on)?
+- extendedWaitUntil:
+    visible:
+      id: filters-reset
+    timeout: 15000
 - tapOn:
-    id: money-list-records-toggle
+    id: filters-reset
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+      text: Donations to parties, .*, and public money to donors on the map
+    timeout: 30000
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
-      TARGET_ID: money-list-record-party:Labor
+      TARGET_ID: money-donor-caption
+- assertVisible:
+    id: money-donor-caption
+    text: The 250 largest donors since 1998–99, largest first
+# Individual donors are one footnote under the list, never a row.
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-individual-donors
+- assertVisible:
+    id: money-individual-donors
+    text: '100 individual donors, \$147\.4m, not named\.'
+- takeScreenshot: ${EVIDENCE}/23-list-all-years
+# See all opens every donor on the map.
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-donors-all
 - tapOn:
-    id: money-list-record-party:Labor
+    id: money-donors-all
+- extendedWaitUntil:
+    visible:
+      id: money-donors-screen
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: money-donors-caption
+      text: '[0-9,]+ donors, largest first'
+    timeout: 30000
+- assertVisible:
+    id: money-donor-0
+- takeScreenshot: ${EVIDENCE}/23-donors
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: money-donors-all
+    timeout: 30000
+# Parties: Labor first; each row pushes its record.
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-party-0
+- assertVisible:
+    id: money-party-0
+    text: Labor.*
+- tapOn:
+    id: money-party-0
 - extendedWaitUntil:
     visible:
       id: money-focus-name
       text: Labor
     timeout: 30000
-- tapOn: Money map
+- tapOn:
+    id: BackButton
+# Public money: the contracts held by donors on the map.
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
-      TARGET_ID: money-list-record-grantor:contracts
+      TARGET_ID: money-public-contracts
 - tapOn:
-    id: money-list-record-grantor:contracts
+    id: money-public-contracts
 - extendedWaitUntil:
     visible:
-      id: money-focus-amount
+      id: money-record-contracts
     timeout: 30000
-- assertVisible: .*held by donors on this map across.*contracts.*
+- scrollUntilVisible:
+    element:
+      id: money-focus-amount
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 30000
+- assertVisible: .*in contracts to donors on the map, .*
 - takeScreenshot: ${EVIDENCE}/23-list-public-money
-- tapOn: Money map
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+    timeout: 30000
 # Back to the Today root, which kept its place at the Money map entry.
 - runFlow:
     file: support/restore-tab-bar.yaml

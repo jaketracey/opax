@@ -6,9 +6,11 @@ name: 27 Leads and the declared-interests feed
 # JSON-pointer checks: each "# pointer:" line names a value in the pinned
 # /discovery.json (or another pinned file, "file#pointer"), and
 # tests/leads-journey.test.ts requires the next assertion's text to contain
-# it as the app shows it ("as dollars", "as percent", "as millions", "as
-# count"; a metric object reads "label, value"; a timestamp reads as its
-# date). "# pointer-absent:" requires the assertion that follows to refuse it.
+# it as the app shows it ("as dollars", "as money", "as spoken", "as
+# percent", "as millions", "as count", and "as plain" for a caveat in the
+# lead page's plain words; a metric object reads "label, value"; a timestamp
+# reads as its date). "# pointer-absent:" requires the assertion that
+# follows to refuse it.
 #
 # scrollUntilVisible always swipes from the centre of the screen. Tall AX5
 # elements count as found once a tenth shows and are then centred with
@@ -29,162 +31,93 @@ name: 27 Leads and the declared-interests feed
 - takeScreenshot: ${EVIDENCE}/27-today-entry
 - tapOn:
     id: today-leads-open
-# At AX5 the lede alone fills the screen: wait for the screen, then scroll.
+# Leads (specs/money.md 2.9): the lede, then one section per kind with
+# three cards, "See all" and a source line at its foot. At AX5 the lede
+# alone fills the screen: wait for the screen, then scroll.
 - extendedWaitUntil:
     visible:
       id: leads-lede
     timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: leads-count
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
-# Leads about a donor not named in OPAX are withheld (donor privacy,
-# 10 Oct): the count says how many are shown, the next line how many not.
 - assertVisible:
-    id: leads-count
-    text: 46 leads
-- assertVisible:
-    id: leads-withheld
-    text: 14 leads about a donor not named in OPAX are not shown\.
+    id: leads-lede
+    text: Patterns in the public record are leads, not findings\.
 - takeScreenshot: ${EVIDENCE}/27-leads
-# The first lead is the export's first signal: its title, its one figure
-# and its sentence, as one element that opens the comparison (design pass
-# 5, P2-13: one figure, one sentence, "Evidence (n) ›", no caveat line).
+# Companies in both sort by party receipts, so the export's first signal
+# (Westpac) is the section's first card, lead-6 after the three contract
+# and three party funding cards. The card is one link: its title, its one
+# figure and the figure's label (hint "Opens the lead.").
 # pointer: /signals/0/title
-# pointer: /signals/0/metrics/0
+# pointer: /signals/0/metrics/0 as spoken
 - scrollUntilVisible:
     element:
-      id: lead-0-open
-      text: 'Lead, Companies in both\. Westpac Banking Corporation appears in party receipts and contracts\. Recorded party receipts, 76,984,493 dollars\. .*'
+      id: lead-6
+      text: 'Westpac Banking Corporation appears in party receipts and contracts\. 77 million dollars, in party receipts\.'
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- takeScreenshot: ${EVIDENCE}/27-lead-title
+- takeScreenshot: ${EVIDENCE}/27-lead-card
+# Leads about a donor not named in OPAX are withheld (donor privacy,
+# 10 Oct): the count is not on the screen but in each section's source
+# sheet Notes, word for word.
 - scrollUntilVisible:
     element:
-      id: lead-0-source
-      text: Evidence, 2 example records
+      id: leads-source-donor_contract_overlap
     direction: DOWN
     timeout: 180000
     centerElement: true
     speed: 20
-- takeScreenshot: ${EVIDENCE}/27-lead-caveat
-# The card's Evidence sheet: its example records, every caveat, the as-at
-# date.
 - waitForAnimationToEnd
 - tapOn:
-    id: lead-0-source
+    id: leads-source-donor_contract_overlap
 - extendedWaitUntil:
     visible:
-      id: lead-0-source-sheet
+      id: leads-source-donor_contract_overlap-sheet
     timeout: 15000
-# The receipt names its register, not OPAX's local row number.
-- scrollUntilVisible:
-    element:
-      id: lead-0-source-sheet-original-0
-      text: 'View original, AEC Transparency Register, \$1,803 from Westpac Banking Corporation to Australian Labor Party \(ALP\) · AEC annual receipt · FY 2024–25'
-    direction: DOWN
-    timeout: 60000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-# pointer-absent: /signals/0/evidence/0/record_id
-- assertNotVisible:
-    text: '.*643745.*'
-# pointer: /signals/0/evidence/1/record_id
-- scrollUntilVisible:
-    element:
-      id: lead-0-source-sheet-original-1
-      text: 'View original, AusTender register, \$4,537,500 from Australian Office of Financial Management to Westpac Banking Corporation · Contract value · starts 6 Feb 2017 · record CN3407266'
-    direction: DOWN
-    timeout: 60000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/27-lead-records
-# The sheet's "As at" heading is followed by the date alone.
 # pointer: /generated_at
 - scrollUntilVisible:
     element:
-      text: 21 September 2026
+      text: .*21 September 2026.*
     direction: DOWN
     timeout: 60000
     centerElement: true
     speed: 20
-# Every caveat, in the export's words: the card's first, then the third.
-# pointer: /signals/0/caveats/0
 - scrollUntilVisible:
     element:
-      text: Matching names are not verified legal identities; unrelated entities can share a name\.
+      text: 14 leads about a donor not named in OPAX are not shown\.
     direction: DOWN
     timeout: 60000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/0/caveats/2
-- scrollUntilVisible:
-    element:
-      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
-    direction: DOWN
-    timeout: 60000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- takeScreenshot: ${EVIDENCE}/27-lead-as-at
-# A source opens once the sheet has gone: e2e builds show the checked
-# address locally. The sheet holds every caveat (design pass 5, P2-13), so
-# it is closed and reopened at its top rather than swiped back up, which
-# would dismiss it.
+- takeScreenshot: ${EVIDENCE}/27-leads-notes
 - tapOn: Done
-- waitForAnimationToEnd
-- tapOn:
-    id: lead-0-source
 - extendedWaitUntil:
-    visible:
-      id: lead-0-source-sheet
+    notVisible:
+      id: leads-source-donor_contract_overlap-sheet
     timeout: 15000
+# The export's second signal, the first Party funding card (lead-3): its
+# comparison, its chart, then the same rows as a table.
 - scrollUntilVisible:
     element:
-      id: lead-0-source-sheet-original-0
-    direction: DOWN
-    timeout: 60000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- waitForAnimationToEnd
-- tapOn:
-    id: lead-0-source-sheet-original-0
-# pointer: /signals/0/evidence/0/url
-- extendedWaitUntil:
-    visible:
-      id: source-destination-url
-      text: https://transparency\.aec\.gov\.au/
-    timeout: 15000
-- takeScreenshot: ${EVIDENCE}/27-lead-source
-- tapOn: Done
-- assertVisible:
-    id: leads-screen
-# The second lead's comparison: its chart, then the same rows as a table.
-- scrollUntilVisible:
-    element:
-      id: lead-1-open
-    direction: DOWN
+      id: lead-3
+      text: 'United Australia Party: 78% from one donor\. .*'
+    direction: UP
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - waitForAnimationToEnd
 - tapOn:
-    id: lead-1-open
+    id: lead-3
 - extendedWaitUntil:
     visible:
       id: lead-heading
     timeout: 30000
+- assertVisible:
+    id: lead-meta
+    text: Lead · Party funding
 # pointer: /signals/1/chart/participants/0/name
 - scrollUntilVisible:
     element:
@@ -196,6 +129,16 @@ name: 27 Leads and the declared-interests feed
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/27-comparison
+# pointer: /signals/1/chart/group_total as spoken
+- scrollUntilVisible:
+    element:
+      text: 159 million dollars, in party receipts, 2007–08 to 2024–25
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# The bars are a picture of the rows, not links.
 # pointer: /signals/1/chart/participants/0/name
 # pointer: /signals/1/chart/participants/0/value as millions
 # pointer: /signals/1/chart/participants/0/share as percent
@@ -211,28 +154,32 @@ name: 27 Leads and the declared-interests feed
 - takeScreenshot: ${EVIDENCE}/27-chart
 - scrollUntilVisible:
     element:
-      id: lead-chart-show-table
-    direction: UP
+      id: lead-table-toggle
+      text: Show as table
+    direction: DOWN
     timeout: 180000
     centerElement: true
     speed: 20
 - waitForAnimationToEnd
 - tapOn:
-    id: lead-chart-show-table
-# pointer: /signals/1/chart/participants/0/value as dollars
+    id: lead-table-toggle
+# pointer: /signals/1/chart/participants/0/value as money
 # pointer: /signals/1/chart/participants/0/record_count as count
 - scrollUntilVisible:
     element:
       id: lead-chart-cell-0
-      text: Mineralogy Pty Ltd, value 124,655,455 dollars, share 78\.4 percent, 230 records
-    direction: DOWN
+      text: Mineralogy Pty Ltd, \$124,655,455 · 78\.4% · 230 records
+    direction: UP
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
+- assertVisible:
+    id: lead-table-toggle
+    text: Show as chart
 - takeScreenshot: ${EVIDENCE}/27-table
-# "How this lead was found": the method note, every caveat and the example
-# records; the title, sentence and figures are said once, at the top.
+# "How this lead was found": the method note and every caveat in plain
+# words; the pipeline's own caveat is replaced (specs/money.md 2.10).
 # pointer: /signals/1/chart/record_count as count
 - scrollUntilVisible:
     element:
@@ -243,9 +190,7 @@ name: 27 Leads and the declared-interests feed
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- assertNotVisible:
-    id: lead-card
-# pointer: /signals/1/caveats/0
+# pointer: /signals/1/caveats/0 as plain
 - scrollUntilVisible:
     element:
       id: lead-caveat-0
@@ -255,7 +200,7 @@ name: 27 Leads and the declared-interests feed
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/1/caveats/1
+# pointer: /signals/1/caveats/1 as plain
 - scrollUntilVisible:
     element:
       id: lead-caveat-1
@@ -265,64 +210,243 @@ name: 27 Leads and the declared-interests feed
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-# pointer: /signals/1/caveats/2
+# pointer: /signals/1/caveats/2 as plain
 - scrollUntilVisible:
     element:
       id: lead-caveat-2
-      text: Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification\. State, election and referendum disclosures are excluded\.
+      text: Annual party receipts include more than gifts\. State, election and referendum disclosures are not included\.
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
+- assertNotVisible:
+    text: .*donation_type.*
 - takeScreenshot: ${EVIDENCE}/27-lead-method
-# The comparison's full money map opens natively in the current tab.
+# The party's money record opens natively in the current tab: the map
+# loads, then pushes the record. This also loads the money graph the
+# company lead's subject row needs below.
 - scrollUntilVisible:
     element:
-      id: lead-link-money-map
+      id: lead-money-map
     direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - assertVisible:
-    id: lead-link-money-map
-    text: Open the full money map
+    id: lead-money-map
+    text: Open in the money map
 - tapOn:
-    id: lead-link-money-map
+    id: lead-money-map
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: United Australia.*
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/27-money-record
+- tapOn:
+    id: BackButton
 - extendedWaitUntil:
     visible:
       id: money-view-summary
     timeout: 90000
 # Pushed in the current tab: the tab bar is still there, full or minimised.
 - assertVisible: Tab Bar
-# Back to the lead by the back button's id: its label is the lead's title
-# only once Lead detail names its screen.
 - tapOn:
     id: BackButton
-- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: lead-screen
+    timeout: 30000
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: leads-screen
+    timeout: 30000
+# The bar search sits under the large title: one flat list of matching
+# cards, each naming its kind, under a caption. Leads is a pushed page, so
+# scroll it to its top here (restore-tab-bar pops to the tab root); a pull
+# down at the edge reveals the search field when the bar has hidden it.
 - scrollUntilVisible:
     element:
-      id: lead-link-web
+      id: leads-lede
     direction: UP
+    timeout: 180000
+    centerElement: true
+    speed: 20
+- runFlow:
+    when:
+      notVisible: Agencies, parties and companies
+    commands:
+      - swipe:
+          start: 97%, 40%
+          end: 97%, 75%
+          duration: 600
+      - waitForAnimationToEnd
+- tapOn: Agencies, parties and companies
+- inputText: Westpac
+- extendedWaitUntil:
+    visible:
+      id: leads-search-caption
+      text: ^\d+ leads? match(es)?$
+    timeout: 15000
+# pointer: /signals/0/title
+- assertVisible:
+    id: lead-0
+    text: 'Companies in both\. Westpac Banking Corporation appears in party receipts and contracts\. .*'
+- takeScreenshot: ${EVIDENCE}/27-search
+- tapOn:
+    id: lead-0
+- extendedWaitUntil:
+    visible:
+      id: lead-heading
+      text: Westpac Banking Corporation
+    timeout: 30000
+# Companies in both: the two flows side by side, never added together.
+- scrollUntilVisible:
+    element:
+      id: lead-flows-receipts
+      text: '\$77m, in 1,041 party receipts'
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: lead-flows-contracts
+    text: '\$9\.1m, in 4 government contracts'
+- assertVisible:
+    id: lead-flows-caveat
+    text: Shown beside each other, never added together\.
+- takeScreenshot: ${EVIDENCE}/27-flows
+# pointer: /signals/0/caveats/0 as plain
+- scrollUntilVisible:
+    element:
+      id: lead-caveat-0
+      text: Matching names are not verified legal identities; unrelated entities can share a name\.
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# pointer: /signals/0/caveats/2 as plain
+- scrollUntilVisible:
+    element:
+      id: lead-caveat-2
+      text: Annual party receipts include more than gifts\. State, election and referendum disclosures are not included\.
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# Example records push the record's own page, with its original.
+- scrollUntilVisible:
+    element:
+      id: lead-evidence-0
+    direction: DOWN
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-lead-records
+- waitForAnimationToEnd
+- tapOn:
+    id: lead-evidence-0
+# The receipt names its register, not OPAX's local row number.
+- scrollUntilVisible:
+    element:
+      id: money-item-original-0
+      text: .*AEC Transparency Register.*
+    direction: DOWN
+    timeout: 60000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+# pointer-absent: /signals/0/evidence/0/record_id
+- assertNotVisible:
+    text: '.*643745.*'
+- takeScreenshot: ${EVIDENCE}/27-money-item
+- waitForAnimationToEnd
+- tapOn:
+    id: money-item-original-0
+# E2E builds show the checked address locally.
+# pointer: /signals/0/evidence/0/url
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+      text: https://transparency\.aec\.gov\.au/
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/27-lead-source
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: money-item-original-0
+    timeout: 15000
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: lead-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: lead-evidence-1
+    direction: DOWN
     timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - waitForAnimationToEnd
-- assertVisible:
-    id: lead-screen
 - tapOn:
-    id: lead-link-web
-# E2E shows the guarded web address on the build's reserved origin instead;
-# at AX5 the alert's message can sit below its fold.
-# pointer: /signals/1/category
+    id: lead-evidence-1
+# pointer: /signals/0/evidence/1/record_id
 - scrollUntilVisible:
     element:
-      text: https://opax\.invalid/discover\?category=recipient_concentration&item=recipient_concentration%3Aa186427ec7f0b918
-    timeout: 20000
-- takeScreenshot: ${EVIDENCE}/27-web-link
-- tapOn: OK
+      id: money-item-original-0
+      text: .*AusTender register.*CN3407266.*
+    direction: DOWN
+    timeout: 60000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/27-money-item-contract
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: lead-screen
+    timeout: 30000
+# The company's subject row opens its money record (the graph is loaded).
+# The lead is a pushed page: scroll it to its top, not to the tab root.
+- scrollUntilVisible:
+    element:
+      id: lead-heading
+    direction: UP
+    timeout: 180000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+- assertVisible:
+    id: lead-subject
+    text: Westpac Banking Corporation, Donor on the money map
+- tapOn:
+    id: lead-subject
+- extendedWaitUntil:
+    visible:
+      id: money-record-screen
+    timeout: 30000
+- assertVisible:
+    id: money-focus-name
+    text: Westpac Banking Corporation
+- takeScreenshot: ${EVIDENCE}/27-subject-record
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: lead-heading
+    timeout: 30000
 # The declared-interests feed behind Today's recent declarations. Back to
 # the Today root, which kept its place at the Leads entry.
 - runFlow:

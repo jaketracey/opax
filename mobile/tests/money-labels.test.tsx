@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { StyleSheet } from 'react-native';
 import { Text } from '../src/design/primitives';
 import {
   MoneyMapLabels,
@@ -139,14 +140,16 @@ test('parties are named beside their nodes in the ink role, apart from the focus
       />,
     );
   });
-  const texts = renderer.root
-    .findAllByType(Text)
-    .map((t) => ({ text: t.props.children, colour: t.props.style.color }));
+  const texts = renderer.root.findAllByType(Text).map((t) => ({
+    text: t.props.children,
+    colour: StyleSheet.flatten(t.props.style).color,
+  }));
   // Party slots keep their names; the focus slot shows the selection.
   expect(texts).toContainEqual({ text: 'party:Labor', colour: 'ink-role' });
   expect(texts).toContainEqual({ text: 'donor-a', colour: 'ink-role' });
+  // Clusters are named in sentence case ("Unions", "Mining and energy").
   expect(texts).toContainEqual({
-    text: 'unions',
+    text: 'Unions',
     colour: clusterColour('unions').ink,
   });
   act(() => renderer.unmount());
