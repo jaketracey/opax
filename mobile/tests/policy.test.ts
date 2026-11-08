@@ -24,6 +24,18 @@ test.each(catalogKinds)('one explicit P0 search kind is allowed: %s', (kind) =>
     assertAllowedPath(`/api/search-all?q=Albanese&kind=${kind}&page=1&per=20`),
   ).not.toThrow(),
 );
+// Today's How parliament voted (data lane D1): the exact static path only.
+test('the recent divisions file is an allowed static read', () => {
+  expect(() => assertAllowedPath('/divisions/recent.json')).not.toThrow();
+  for (const path of [
+    '/divisions/recent.json?refresh=1',
+    '/divisions/recent.json#x',
+    '/divisions/older.json',
+    '/divisions/../votes.json',
+    '/divisions/recent.jsonx',
+  ])
+    expect(() => assertAllowedPath(path)).toThrow();
+});
 test.each([
   '/graph/money.json?refresh=1',
   '/graph/money.qld.json?nocache=1',
