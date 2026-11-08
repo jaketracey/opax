@@ -11,6 +11,7 @@ import {
   LinkRow,
   PartyLabel,
 } from '../src/design/primitives';
+import { SegmentedPicker } from '../src/design/controls';
 import BillDetail, { rulerPoints } from '../src/features/bills/BillDetail';
 import BillsList from '../src/features/bills/BillsList';
 import { billTextRoute } from '../src/navigation/routes';
@@ -289,6 +290,53 @@ describe('Bills list (P2-8, P2-19)', () => {
       expect(ids.indexOf('bills-as-at')).toBeGreaterThan(lastRow);
       expect(host(root, 'bills-filters')).toHaveLength(0);
       expect(barItems().map((item) => item.label)).toContain('Filters');
+    },
+  );
+
+  test.each([
+    ['segments that do not fit', 1],
+    ['AX5', 3.571],
+  ])(
+    'with %s the scope is one "Showing" menu row, never a label beside a button',
+    async (_case, fontScale) => {
+      window(402, fontScale);
+      const root = await render(<BillsList />);
+      // The hidden probe measures each segment's label; make them too wide.
+      const segments = root.findByType(SegmentedPicker);
+      const probe = segments.parent!.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityElementsHidden === true,
+      )[0]!;
+      await act(async () => {
+        for (const text of probe.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            typeof node.props.onTextLayout === 'function',
+        ))
+          text.props.onTextLayout({ nativeEvent: { lines: [{ width: 400 }] } });
+        segments.parent!.props.onLayout({
+          nativeEvent: { layout: { width: 370 } },
+        });
+      });
+      const scope = root.findAll(
+        (node) =>
+          typeof node.type !== 'string' &&
+          node.props.testID === 'bills-scope' &&
+          node.props.label === 'Showing',
+      );
+      expect(scope.length).toBeGreaterThan(0);
+      expect(scope.every((node) => node.props.row === true)).toBe(true);
+      // "Showing" is said once, by the row itself.
+      const inside = new Set(scope.flatMap((node) => node.findAll(() => true)));
+      const outside = root.findAll(
+        (node) =>
+          !inside.has(node) &&
+          !scope.includes(node) &&
+          typeof node.type === 'string' &&
+          node.children.includes('Showing'),
+      );
+      expect(outside).toHaveLength(0);
     },
   );
 

@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentProps,
+  type ComponentType,
+} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -521,6 +529,15 @@ function useSearchBarOptions(
  * its third of the width (measured, not tied to a text size); otherwise a
  * "Showing" row with the choice as a menu.
  */
+/**
+ * PopUpButton in its menu row: the label above the current choice. The row
+ * mode is MenuPicker's, which PopUpButton passes through but does not type
+ * (Follow-up in the fix round's last commit).
+ */
+const MenuRow = PopUpButton as unknown as ComponentType<
+  ComponentProps<typeof PopUpButton<BillScope>> & { row: true }
+>;
+
 function ScopeControl({
   value,
   onChange,
@@ -572,16 +589,14 @@ function ScopeControl({
           testID="bills-scope"
         />
       ) : (
-        <View style={styles.menuRow}>
-          <Text variant="body">Showing</Text>
-          <PopUpButton
-            label="Showing"
-            value={value}
-            options={options}
-            onChange={onChange}
-            testID="bills-scope"
-          />
-        </View>
+        <MenuRow
+          row
+          label="Showing"
+          value={value}
+          options={options}
+          onChange={onChange}
+          testID="bills-scope"
+        />
       )}
     </View>
   );
@@ -629,11 +644,5 @@ const styles = StyleSheet.create({
   grow: { flexGrow: 1, flexShrink: 1 },
   probe: { position: 'absolute', opacity: 0, left: 0, top: 0 },
   probeText: { fontWeight: '600' },
-  menuRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: rhythm.tight,
-  },
   paneActions: { flexDirection: 'row', alignItems: 'center' },
 });
