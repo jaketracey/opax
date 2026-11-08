@@ -8,13 +8,13 @@ import { setSelectedTab } from '../../navigation/link-tab';
 import { designFlags } from '../../design/flags';
 import { colors } from '../../design/tokens';
 // Search takes the system role on iOS 26; older iOS and Android keep five tabs.
-// Deviation: on iOS 26 and 27 the search item sits inline as the fifth item
-// in the full bar and stands apart only when the bar is minimised. expo-router
-// 57.0.24 passes role to react-native-screens 4.26 as a UITabBarItem system
-// item (.search) on UITabBarController.viewControllers; UIKit draws the
-// detached search circle in the full bar only for a UISearchTab in the UITab
-// API (UITabBarController.tabs), which react-native-screens does not use. The
-// role still gives the system search item, label and minimised placement.
+// Deviation: the role gives the detached search item on iOS 26, but on iOS 27
+// UIKit draws a .search system item inline in the full bar (it still stands
+// apart in the minimised bar). react-native-screens 4.26 builds a UITabBarItem
+// system item on viewControllers, and its own scenario documents detached on
+// 26 and inline on 27. Detaching it on 27 needs the UITab/UISearchTab API,
+// which react-native-screens 4.26 does not expose and NativeTabs has no
+// switch for.
 // The native tab bar keeps system type and offers the Large Content Viewer
 // at accessibility text sizes. On iPad the same tabs are UIKit's
 // sidebar-adaptable bar: a sidebar (or the top tab bar, which the reader can
