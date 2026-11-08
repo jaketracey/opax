@@ -114,6 +114,7 @@ export function EditionCard({
             <Plate
               edition={edition}
               tier={tier ?? editionTier(edition.date, today)}
+              shownBelow={edition.paragraphs.slice(0, 1)}
             />
             <View style={styles.body}>
               {edition.machineWritten ? (

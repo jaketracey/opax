@@ -17,6 +17,7 @@ import {
   editionInk,
   editionSymbol,
   editionPerson,
+  plateLine,
   type EditionTier,
 } from './model';
 
@@ -27,9 +28,12 @@ export function Plate({
   photograph,
   onTitleLayout,
   titleRef,
+  shownBelow,
   testID = 'today-edition',
 }: {
   edition: EditionView;
+  /** Paragraphs drawn under the plate; the detail line drops their sentences. */
+  shownBelow?: readonly string[];
   tier?: EditionTier;
   story?: boolean;
   photograph?: YearPicture;
@@ -40,6 +44,7 @@ export function Plate({
   const large = useAccessibilitySize();
   const ink = editionInk(edition);
   const person = edition.kind === 'politician' ? editionPerson(edition) : null;
+  const detailLine = plateLine(edition.facts.line, shownBelow);
   const band =
     ink === 'bills'
       ? colors.bandBills
@@ -141,9 +146,14 @@ export function Plate({
             {[person.party, person.place].filter(Boolean).join(' · ')}
           </Text>
         </View>
-      ) : edition.facts.line ? (
-        <Text wordSafe variant="secondary" tone="onBandSoft">
-          {edition.facts.line}
+      ) : detailLine ? (
+        <Text
+          wordSafe
+          variant="secondary"
+          tone="onBandSoft"
+          testID={`${testID}-line`}
+        >
+          {detailLine}
         </Text>
       ) : null}
       <PlateArt edition={edition} story={story} testID={`${testID}-art`} />
