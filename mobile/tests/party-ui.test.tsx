@@ -675,7 +675,7 @@ describe('the party header and Members faces (w5 polish)', () => {
     expect(family ?? '').not.toMatch(/Merriweather/);
   });
 
-  test('the dot centres on the title\'s first line once it is laid out', async () => {
+  test("the dot centres on the title's first line once it is laid out", async () => {
     const r = await render();
     const title = r.root.find(
       (n) =>
@@ -688,10 +688,12 @@ describe('the party header and Members faces (w5 polish)', () => {
         (n) =>
           typeof n.type === 'string' &&
           n.props.accessibilityElementsHidden === true &&
-          [n.props.style].flat(Infinity).some(
-            (s: { backgroundColor?: unknown } | null) =>
-              s?.backgroundColor === partyColors.labor,
-          ),
+          [n.props.style]
+            .flat(Infinity)
+            .some(
+              (s: { backgroundColor?: unknown } | null) =>
+                s?.backgroundColor === partyColors.labor,
+            ),
       );
     const style = () =>
       Object.assign({}, ...[dot().props.style].flat(Infinity).filter(Boolean));
