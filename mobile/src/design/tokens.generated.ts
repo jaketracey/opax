@@ -601,7 +601,10 @@ export const typeRoles = {
 } as const;
 
 /** Type steps at regular width (iPad). */
-export const typeRolesRegular = {} as const;
+export const typeRolesRegular = {
+  /** @deprecated Use `recordTitle`. */
+  title: { fontSize: 28, lineHeight: 34 },
+} as const;
 
 /** One vertical rhythm, applied everywhere. */
 export const rhythm = {

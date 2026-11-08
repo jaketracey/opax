@@ -172,6 +172,7 @@ Heading face: `system`. iOS interface families are unset; Android uses Public Sa
 | `light.lineStrong` | alias (same value) | `light.lineControl` | nothing |
 | `accents.places` | alias (same value) | `accents.people` | nothing |
 | `radius` | alias (same value) | `radii.sm` | nothing |
+| `typeRolesRegular.title` | alias (same value) | `textStyles.recordTitle` | nothing |
 | `spacing.s1` | alias (same value) | `rhythm.line` | nothing |
 | `spacing.s2` | legacy value `6` | `rhythm.tight or rhythm.line` | 6 to 8 or 4 |
 | `spacing.s3` | alias (same value) | `rhythm.tight` | nothing |

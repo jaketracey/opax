@@ -23,6 +23,7 @@ import {
   interfaceFonts,
   textStylesFor,
   radii,
+  typeRolesRegular,
   type CurrentTextVariant,
   hairline,
   layout,
@@ -237,6 +238,7 @@ describe('every name from before the token source keeps its value', () => {
       people: { ink: 'navy', wash: 'navyWash' },
       leads: { ink: 'navy', wash: 'navyWash' },
     });
+    expect(typeRolesRegular.title).toEqual({ fontSize: 28, lineHeight: 34 });
     expect(radii).toMatchObject({
       container: 22,
       tile: 18,

@@ -464,6 +464,9 @@
         "s6": {"value": 32, "use": "rhythm.section, or rhythm.screen at regular width", "change": "32 to 36"},
         "s7": {"value": 52, "use": "rhythm.section at regular width", "change": "52 to 56"}
       },
+      "typeRolesRegular": {
+        "title": {"alias": "recordTitle"}
+      },
       "textStyles": {
         "title": {"alias": "recordTitle"},
         "display": {"alias": "figure"},

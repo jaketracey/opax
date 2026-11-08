@@ -403,6 +403,11 @@ export function buildTs(source) {
     typeRoles[name] = documented(appType(typeRole(role, 'app')), deprecatedDoc(entry))
   }
   const typeRegular = Object.fromEntries(own(source.type).filter(([, role]) => role.regular).map(([name, role]) => [name, { fontSize: role.regular.size, lineHeight: role.regular.lineHeight }]))
+  for (const [name, entry] of own(source.deprecated.app.typeRolesRegular ?? {})) {
+    const role = source.type[entry.alias]
+    if (!role) throw new Error(`unknown regular type alias ${entry.alias}`)
+    typeRegular[name] = documented({ fontSize: role.size, lineHeight: role.lineHeight }, deprecatedDoc(entry))
+  }
   const space = own(source.space)
   const categories = Object.fromEntries(own(source.category).map(([name, pair]) => [name, { ink: pair.ink, wash: pair.wash }]))
   for (const [name, entry] of own(source.deprecated.app.accents)) categories[name] = documented(categories[entry.alias], `@deprecated Use \`${entry.alias}\`.`)
@@ -489,6 +494,7 @@ export function buildDocsTables(source) {
     ...own(app.roles).map(([name, entry]) => [`light.${name}`, { alias: `light.${entry.alias}` }]),
     ...own(app.accents).map(([name, entry]) => [`accents.${name}`, { alias: `accents.${entry.alias}` }]),
     ['radius', app.radius],
+    ...own(app.typeRolesRegular ?? {}).map(([name, entry]) => [`typeRolesRegular.${name}`, { alias: `textStyles.${entry.alias}` }]),
     ...own(app.spacing).map(([name, entry]) => [`spacing.${name}`, entry]),
     ...own(app.textStyles).map(([name, entry]) => [`textStyles.${name}`, entry.alias ? { alias: `textStyles.${entry.alias}` } : { ...entry, value: `${entry.size}/${entry.lineHeight}` }]),
   ])
