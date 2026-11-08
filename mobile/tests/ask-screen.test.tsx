@@ -4,10 +4,12 @@ import { router, useLocalSearchParams } from 'expo-router';
 import {
   AccessibilityInfo,
   ActivityIndicator,
+  Dimensions,
   ScrollView,
   StyleSheet,
 } from 'react-native';
 import AskScreen from '../src/features/ask/AskScreen';
+import { composerLines } from '../src/features/ask/AskDock';
 import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
 import { arriveInAsk, askSession } from '../src/features/ask/session';
@@ -15,7 +17,7 @@ import { reconcileChats, syncSubmittedChat } from '../src/features/ask/sync';
 import { chatsSnapshot } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
-import { colors, rhythm } from '../src/design/tokens';
+import { colors, rhythm, textStyles } from '../src/design/tokens';
 import { designFlags } from '../src/design/flags';
 import { conversationsRoute } from '../src/navigation/routes/ask';
 import { useSeat } from '../src/features/your-mp/useSeat';
@@ -299,6 +301,37 @@ test('a deep-linked draft starts a new conversation and sends nothing', async ()
   expect(askSession.snapshot().thread).toEqual([]);
   expect(byId('ask-options-line')).not.toEqual([]);
   expect(client.askPost).not.toHaveBeenCalled();
+});
+
+test('the composer sets its question in body text; the options line is a 44 pt target beside Clear', async () => {
+  (useLocalSearchParams as jest.Mock).mockReturnValue({
+    entry: 'scoped-entry-target',
+    question: 'What has Sam Placeholder said in parliament this year?',
+    speaker: 'Sam Placeholder',
+  });
+  await mount();
+  const input = StyleSheet.flatten(one('ask-question').props.style);
+  expect(input).toMatchObject({
+    fontFamily: textStyles.body.fontFamily,
+    fontSize: textStyles.body.fontSize,
+    lineHeight: textStyles.body.lineHeight,
+  });
+  const { fontScale } = Dimensions.get('window');
+  expect(input.maxHeight).toBe(
+    textStyles.body.lineHeight *
+      Math.max(1, fontScale) *
+      composerLines(fontScale) +
+      20,
+  );
+  const hit = (id: string) =>
+    byId(id).find((n) => n.props.hitSlop !== undefined)!.props;
+  const line = hit('ask-options-line');
+  expect(line.hitSlop).toEqual({ top: 8, bottom: 8 });
+  expect(StyleSheet.flatten(line.style).minHeight + 16).toBeGreaterThanOrEqual(
+    44,
+  );
+  // No sideways slop, so it never reaches into Clear's.
+  expect(hit('ask-options-clear').hitSlop).toBe(8);
 });
 
 test('mount, typing, Options and a remount never call paid routes', async () => {

@@ -17,11 +17,11 @@ import { Text } from '../../design/text';
 import {
   colors,
   contentSizeCategory,
-  fonts,
   hairline,
   minimumTarget,
   radii,
   rhythm,
+  textStyles,
 } from '../../design/tokens';
 import { formatCount } from '../../design/format';
 import { chips, defaultOptions } from './model';
@@ -86,7 +86,8 @@ export function AskDock({
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
   const lines = composerLines(fontScale);
-  const maxHeight = 23 * Math.max(1, fontScale) * lines + 20;
+  const maxHeight =
+    textStyles.body.lineHeight * Math.max(1, fontScale) * lines + 20;
   const line = [
     s.fresh ? composerCopy.fresh : null,
     ...tags.map((tag) => tag.value),
@@ -132,6 +133,9 @@ export function AskDock({
             accessibilityRole="button"
             accessibilityLabel={spoken}
             accessibilityHint="Opens Options"
+            // 28 tall plus 8 above and below: a 44 pt target that stops
+            // short of Clear's own slop beside it.
+            hitSlop={{ top: 8, bottom: 8 }}
             onPress={onOptions}
             style={styles.optionsText}
             testID={s.fresh ? 'ask-draft-new-conversation' : 'ask-options-line'}
@@ -264,9 +268,7 @@ const styles = StyleSheet.create({
     paddingTop: 11,
     paddingBottom: 11,
     paddingHorizontal: 0,
-    fontFamily: fonts.sans,
-    fontSize: 17,
-    lineHeight: 23,
+    ...textStyles.body,
     color: colors.ink,
   },
   counter: { alignSelf: 'flex-end', paddingRight: rhythm.block },
