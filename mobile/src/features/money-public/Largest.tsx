@@ -1,24 +1,46 @@
-import { useCallback, useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import { Group, SourceLine, StepButtons, Text } from '../../design/primitives';
-import { formatDate, formatMoneyCompact } from '../../design/format';
-import { rhythm } from '../../design/tokens';
-import { RecordStatus } from '../RecordStatus';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Animated, type FlatList, View } from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useReduceMotion } from '../../design/accessibility';
+import { PopUpButton } from '../../design/controls';
+import { formatDate } from '../../design/format';
+import { haptic } from '../../design/haptics';
+import { MoneyRow } from '../../design/rows';
+import { SourceLine } from '../../design/source';
+import { ContentUnavailable } from '../../design/states';
+import { Heading, Text } from '../../design/text';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { largestFor } from './data';
 import { money } from './runtime';
+import { moneyItemHref } from './routes';
 import {
-  MoneyHeader,
   MoneyList,
-  RowSource,
-  Title,
+  MoneyStatus,
+  moneyBar,
   moneyCitation,
   readableDates,
+  recordSource,
 } from './parts';
+
+export const LARGEST_RULE = 'The largest new agreement for each recipient';
+
+/**
+ * Largest grants (specs/money.md 2.5): one name everywhere, the month only
+ * in the pop-up under the title and the share title, the rule line, then
+ * the month's grant rows, each pushing its money item. One SourceLine after
+ * the list.
+ */
 export default function Largest() {
-  const { month: initial } = useLocalSearchParams<{ month?: string }>();
-  const [selected, setSelected] = useState(initial);
+  const { month: requested } = useLocalSearchParams<{ month?: string }>();
   const load = useCallback(async (refresh: boolean) => {
     const [largest, index] = await Promise.all([
       money.largest(refresh),
@@ -30,149 +52,186 @@ export default function Largest() {
     });
   }, []);
   const status = useCatalogRecord(load),
-    data = status.record?.data,
-    month = selected ?? data?.largest.latest ?? '';
-  const rows = data ? largestFor(data.largest, data.index, month) : [];
+    data = status.record?.data;
   const months = Object.keys(data?.largest.months ?? {})
     .sort()
     .reverse();
-  const monthIndex = months.indexOf(month);
-  const label = monthName(month, true);
-  const previous = months[monthIndex + 1],
-    next = monthIndex > 0 ? months[monthIndex - 1] : undefined;
-  // "‹ July" and "September ›" on one row (design pass 5, P3-12): each
-  // names its month. An end of the range names the month beside it, drawn
-  // disabled, and says it has no records.
-  const stepFor = (direction: 'Previous month' | 'Next month') => {
-    const target = direction === 'Next month' ? next : previous;
-    const named =
-      target ?? shiftMonth(month, direction === 'Next month' ? 1 : -1);
-    const name = named ? monthName(named, !sameYear(named, month)) : '';
-    return {
-      label: name || direction,
-      accessibilityLabel: target
-        ? `${direction}, ${monthName(target, true)}`
-        : named
-          ? `${direction}, ${monthName(named, true)}, no records`
-          : direction,
-      disabled: !target,
-      onPress: () => setSelected(target),
-      testID: direction === 'Next month' ? 'largest-next' : 'largest-previous',
-    };
-  };
+  const known = !!requested && months.includes(requested);
+  const month = known ? requested : (data?.largest.latest ?? requested ?? '');
+  const rows = data ? largestFor(data.largest, data.index, month) : [];
+  const titleRef = useRef<View>(null);
+  const title = useTitleOnScroll(titleRef, 'Largest grants');
+  const saved = recordSource(status.record);
+  const label = monthName(month);
+  const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
+  const fade = useMonthChange(listRef, data ? month : null);
   return (
     <>
-      <MoneyHeader
-        title="Largest grants"
-        path={`/money/grants?jur=federal&largest=${month}`}
+      <Stack.Screen
+        options={{
+          title: 'Largest grants',
+          ...moneyBar({
+            name: 'Largest grants',
+            shareTitle: label ? `Largest grants, ${label}` : undefined,
+            path: data ? `/money/grants?jur=federal&largest=${month}` : null,
+          }),
+        }}
       />
       <MoneyList
-        loaded={!!status.record}
+        loaded={!!data}
         id="largest-list"
+        listRef={listRef}
         rows={rows}
         rowKey={(r) => r.id}
         refreshing={status.refreshing}
         refresh={status.refresh}
+        onScroll={title.onScroll}
         header={
           <>
-            <Title id="largest-title">
-              Where did the money go{label ? ` in ${label}` : ''}?
-            </Title>
-            <RecordStatus
-              {...status}
-              label="Loading the month’s largest grants"
+            <View ref={titleRef} onLayout={title.onTitleLayout}>
+              <Heading level={1} kind="page" testID="largest-title">
+                Largest grants
+              </Heading>
+            </View>
+            {month || months.length ? (
+              <View style={{ alignSelf: 'flex-start' }}>
+                <PopUpButton
+                  label="Month"
+                  disabled={!data}
+                  value={month}
+                  options={(months.length ? months : [month]).map((m) => ({
+                    value: m,
+                    label: monthName(m),
+                    shortLabel: monthName(m, true),
+                    testID: `largest-month-${m}`,
+                  }))}
+                  onChange={(next) => {
+                    haptic('selection');
+                    router.setParams({ month: next });
+                  }}
+                  testID="largest-month"
+                />
+              </View>
+            ) : null}
+            <MoneyStatus
+              status={status}
+              name="Largest grants"
+              figure={false}
+              rows={8}
               testID="largest-status"
             />
             {data ? (
-              <>
-                <Text wordSafe>
-                  The largest grant agreements that started in {label}, one per
-                  recipient.
-                </Text>
-                <StepButtons
-                  testID="largest-months"
-                  previous={stepFor('Previous month')}
-                  next={stepFor('Next month')}
-                />
-              </>
+              <Text wordSafe variant="secondary" testID="largest-rule">
+                {requested && !known
+                  ? `${monthName(requested) || 'That month'} has no records. Showing ${label}.`
+                  : LARGEST_RULE}
+              </Text>
             ) : null}
           </>
+        }
+        empty={
+          <ContentUnavailable
+            symbol="calendar"
+            title={`No grant agreements started in ${label}.`}
+            testID="largest-empty"
+          />
         }
         sourceLine={
           data ? (
             <SourceLine
-              title="About the month’s largest grants"
               asOf={data.largest.asOf}
               citation={[moneyCitation('GrantConnect')]}
-              savedAt={status.record?.stale ? status.record.savedAt : null}
+              savedAt={saved.savedAt}
+              state={saved.state}
               originals={[
-                {
-                  label: 'GrantConnect',
-                  url: 'https://www.grants.gov.au/',
-                },
+                { label: 'GrantConnect', url: 'https://www.grants.gov.au/' },
               ]}
-              notes={data.largest.basis.map(readableDates)}
+              notes={[...data.largest.basis, ...saved.stateNotes].map(
+                readableDates,
+              )}
               testID="largest-source"
             />
           ) : null
         }
         render={(r, i) => (
-          <Group gap={rhythm.line}>
-            <Text wordSafe variant="strong" tabular tone="moneyInk">
-              {formatMoneyCompact(r.value)}
-            </Text>
-            <Text wordSafe variant="strong" testID={`largest-recipient-${i}`}>
-              {r.recipient}
-            </Text>
-            {r.purpose ? <Text wordSafe>{r.purpose}</Text> : null}
-            <Text wordSafe variant="metadata">
-              {[
+          <Animated.View style={{ opacity: fade }}>
+            <MoneyRow
+              name={r.recipient}
+              detail={[
                 r.program,
-                r.agency,
-                r.selection,
-                `Agreement from ${formatDate(r.start)}`,
-                r.more
-                  ? `${r.more} more award${r.more === 1 ? '' : 's'} to the same recipient that month`
-                  : null,
+                `from ${formatDate(r.start, 'short').replace(/ \d{4}$/, '')}`,
               ]
                 .filter(Boolean)
                 .join(' · ')}
-            </Text>
-            <RowSource
-              register="GrantConnect"
-              record={r.id}
-              // An individual's award record would name them: no link.
-              url={r.organisation ? r.sourceUrl : null}
-              asOf={data!.largest.asOf}
-              organisation={
-                r.organisation
-                  ? {
-                      name: r.recipient,
-                      path: `/money/grants/federal/recipient/${encodeURIComponent(r.recipientId)}?award=${r.id}`,
-                    }
-                  : null
-              }
-              testID={`largest-source-${i}`}
+              amount={r.value}
+              href={moneyItemHref(
+                { kind: 'largest', month, id: r.id },
+                { name: r.recipient },
+              )}
+              testID={`largest-recipient-${i}`}
             />
-          </Group>
+          </Animated.View>
         )}
       />
     </>
   );
 }
 
+/** How long a new month's rows take to fade in. */
+export const MONTH_FADE_MS = 150;
+
+/**
+ * A new month starts at the top of the list, its rows fading in over
+ * 150 ms; with Reduce Motion they appear at once. The first month shown
+ * (`month` goes from null to a value once the data loads) does neither.
+ * Content y 0 sits behind the native header, so the top is minus the
+ * header's bottom (useHeaderBottom).
+ */
+function useMonthChange<T>(
+  listRef: React.RefObject<FlatList<T> | null>,
+  month: string | null,
+) {
+  const [fade] = useState(() => new Animated.Value(1));
+  const shown = useRef<string | null>(null);
+  const fading = useRef(false);
+  const reduceMotion = useReduceMotion();
+  const headerBottom = useHeaderBottom();
+  // Before paint: back to the top, and the new rows start clear so they
+  // never show at full opacity first.
+  useLayoutEffect(() => {
+    if (month === null || month === shown.current) return;
+    const first = shown.current === null;
+    shown.current = month;
+    if (first) return;
+    listRef.current?.scrollToOffset({ offset: -headerBottom, animated: false });
+    if (reduceMotion) return;
+    fade.setValue(0);
+    fading.current = true;
+  }, [month, listRef, fade, reduceMotion, headerBottom]);
+  // After the old rows have let go of the value: fade the new ones in.
+  useEffect(() => {
+    if (!fading.current) return;
+    fading.current = false;
+    Animated.timing(fade, {
+      toValue: 1,
+      duration: MONTH_FADE_MS,
+      useNativeDriver: true,
+    }).start();
+  }, [month, fade]);
+  return fade;
+}
+
 const MONTH = /^\d{4}-(?:0[1-9]|1[0-2])$/;
-/** "July 2026", or "July" where the year goes without saying. */
-function monthName(month: string, withYear: boolean) {
+/** "August 2026", or "Aug 2026" where space is short. */
+export function monthName(month: string, short = false) {
   return MONTH.test(month)
     ? new Intl.DateTimeFormat('en-AU', {
-        month: 'long',
-        ...(withYear ? { year: 'numeric' as const } : {}),
+        month: short ? 'short' : 'long',
+        year: 'numeric',
         timeZone: 'UTC',
       }).format(new Date(`${month}-01`))
     : '';
 }
-const sameYear = (a: string, b: string) => a.slice(0, 4) === b.slice(0, 4);
 /** "2026-08" one month on is "2026-09"; back from January is December. */
 export function shiftMonth(month: string, by: number): string | undefined {
   if (!MONTH.test(month)) return undefined;

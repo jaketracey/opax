@@ -1,21 +1,23 @@
 appId: au.com.opax.app
-name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
+name: 43 Government agencies, an agency's years, suppliers and contracts, and its lead
 ---
 - launchApp
 - openLink: opax://public-money
 - tapOn:
     text: Open
     optional: true
+# Until the top-suppliers index ships (D6) the contracts card opens the
+# agency list, titled Government agencies, with no Suppliers segment.
 - scrollUntilVisible:
     element:
-      id: money-agencies
+      id: money-card-contracts
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: money-agencies
+    id: money-card-contracts
 - scrollUntilVisible:
     element:
       id: agencies-title
@@ -24,17 +26,25 @@ name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
     centerElement: true
     speed: 20
     timeout: 300000
+- assertNotVisible:
+    id: contracts-view-suppliers
 - takeScreenshot: ${EVIDENCE}/43-agencies
+# Sort is a pop-up on the caption line.
 - scrollUntilVisible:
     element:
-      id: agencies-search
+      id: agencies-sort
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: agencies-search
+    id: agencies-sort
+- tapOn:
+    id: agencies-sort-name
+- takeScreenshot: ${EVIDENCE}/43-agencies-a-to-z
+# The bar search sits under the large title.
+- tapOn: Agencies
 - inputText: Digital Transformation Agency
 - pressKey: Enter
 - scrollUntilVisible:
@@ -56,19 +66,34 @@ name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/43-agency
+# Years: calendar years, a chart that is not tappable, and a table toggle.
 - scrollUntilVisible:
     element:
-      id: agency-years
+      id: agency-chart
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
-- takeScreenshot: ${EVIDENCE}/43-value-over-time
+- assertVisible: Contract value by year the contract started.*
+- assertNotVisible: '20[0-9][0-9]–[0-9][0-9]'
+- takeScreenshot: ${EVIDENCE}/43-years-chart
+- tapOn: Table
+- scrollUntilVisible:
+    element:
+      id: agency-table-toggle
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-years-table
+- tapOn:
+    id: agency-table-toggle
 - scrollUntilVisible:
     element:
       id: agency-suppliers
-    direction: DOWN
+    direction: UP
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -77,7 +102,7 @@ name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
     id: agency-suppliers
 - scrollUntilVisible:
     element:
-      id: agency-search
+      id: agency-supplier-0
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
@@ -103,118 +128,64 @@ name: 43 Agencies, contracts and Discover companies in both (standard and AX5)
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/43-contracts
+# A contract row pushes its money item, with the AusTender original.
+- tapOn:
+    id: agency-contract-0
 - scrollUntilVisible:
     element:
-      id: agency-source-0
+      id: money-item-title
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
+- scrollUntilVisible:
+    element:
+      id: money-item-original-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/43-contract-item
 - tapOn:
-    id: agency-source-0
-- extendedWaitUntil:
-    visible:
-      id: agency-source-0-sheet-original-0
-    timeout: 15000
-- tapOn:
-    id: agency-source-0-sheet-original-0
+    id: money-item-original-0
 - assertVisible: https://www.tenders.gov.au/
 - takeScreenshot: ${EVIDENCE}/43-austender
 - tapOn: OK
-# Companies in both is a row at the foot of the short years view.
+- tapOn: { id: BackButton }
+# The agency's own concentration lead, when Leads has one; else Leads'
+# government contracts list.
 - scrollUntilVisible:
     element:
-      id: agency-years
+      id: agency-title
     direction: UP
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
-- tapOn:
-    id: agency-years
-- scrollUntilVisible:
-    element:
-      id: agency-discover-both
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: agency-discover-both
-- scrollUntilVisible:
-    element:
-      id: discover-title
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/43-discover
-- scrollUntilVisible:
-    element:
-      id: discover-card-0
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/43-companies-both
-- scrollUntilVisible:
-    element:
-      id: discover-procurement_concentration
-    direction: UP
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: discover-procurement_concentration
-- scrollUntilVisible:
-    element:
-      id: discover-card-0
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/43-top-supplier-share
-- scrollUntilVisible:
-    element:
-      id: discover-source-0-0
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: discover-source-0-0
-- extendedWaitUntil:
-    visible:
-      id: discover-source-0-0-sheet-original-0
-    timeout: 15000
-- tapOn:
-    id: discover-source-0-0-sheet-original-0
-- assertVisible: https://www.tenders.gov.au/
-- takeScreenshot: ${EVIDENCE}/43-share-austender
-- tapOn: OK
-- scrollUntilVisible:
-    element:
-      id: discover-recipient_concentration
-    direction: UP
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: discover-recipient_concentration
-- scrollUntilVisible:
-    element:
-      id: discover-card-0
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- takeScreenshot: ${EVIDENCE}/43-party-funding
+- runFlow:
+    when:
+      visible:
+        id: agency-lead
+    commands:
+      - tapOn:
+          id: agency-lead
+      - extendedWaitUntil:
+          visible:
+            id: lead-heading
+          timeout: 30000
+      - takeScreenshot: ${EVIDENCE}/43-agency-lead
+- runFlow:
+    when:
+      notVisible:
+        id: lead-heading
+    commands:
+      - openLink: opax://discover?category=procurement_concentration
+      - tapOn:
+          text: Open
+          optional: true
+      - extendedWaitUntil:
+          visible: Government contracts
+          timeout: 30000
+      - takeScreenshot: ${EVIDENCE}/43-government-contracts-leads

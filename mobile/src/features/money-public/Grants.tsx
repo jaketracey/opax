@@ -1,34 +1,51 @@
 import { useCallback, useMemo, useState } from 'react';
-import { router, useLocalSearchParams } from 'expo-router';
+import { RefreshControl } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { SegmentedPicker } from '../../design/controls';
+import { formatMoney, formatMoneyCompact } from '../../design/format';
+import { Screen } from '../../design/layout';
+import { FigureBlock } from '../../design/record';
+import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
+import { EmptyState } from '../../design/states';
+import { Heading, Text } from '../../design/text';
+import { catalogs } from '../../api/runtime';
+import { electorateRoute } from '../../navigation/routes/your-mp';
 import {
-  LinkRow,
-  BigFigure,
-  Field,
-  Group,
-  RowList,
-  Section,
-  Text,
-} from '../../design/primitives';
-import {
-  formatCount,
-  formatMoneyCompact,
-  moneyAccessibilityLabel,
-  formatPercent,
-} from '../../design/format';
-import { RecordStatus } from '../RecordStatus';
-import { RecordRow } from '../RecordRow';
+  grantProgramRoute,
+  grantsRoute,
+  largestGrantsRoute,
+} from '../../navigation/routes/public-money';
+import { stateChoices } from '../sheets/filter-models';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
-import type { Jurisdiction } from './data';
-import { rhythm } from '../../design/tokens';
+import type { GrantIndex, Jurisdiction } from './data';
+import { FUTURE_YEARS_NOTE, grantsFigure } from './HubCards';
+import { organisationHref } from './routes';
+import { SeatFigure } from './SeatGrants';
 import {
-  MetaSource,
-  MoneyHeader,
-  MoneyChoices,
+  ListCaption,
   MoneyList,
-  ResultCount,
-  Title,
+  MoneyStatus,
+  TitleAlias,
+  counted,
+  fyRange,
+  matches,
+  moneyBar,
+  moneyCitation,
+  readableDates,
+  recordSource,
+  useMoneySearch,
 } from './parts';
+
+/** @deprecated Import from './SeatGrants'. Kept for Your MP and Electorate until wave 6. */
+export { SeatGrants } from './SeatGrants';
+
+/** "New South Wales" for "nsw". */
+export const stateName = (code: string) =>
+  stateChoices.find((s) => s.value === code.toLowerCase())?.label ??
+  code.toUpperCase();
+
+type View = 'programs' | 'recipients' | 'electorates';
 export default function Grants() {
   const params = useLocalSearchParams<{
     jur?: string;
@@ -37,275 +54,375 @@ export default function Grants() {
     view?: string;
   }>();
   const jur: Jurisdiction = params.jur === 'qld' ? 'qld' : 'federal';
+  // A seat is always a federal division; Queensland has no seat view, so a
+  // seat with jur=qld opens the Commonwealth seat view (specs/money.md 2.2).
+  if (params.seat && params.view !== 'electorates')
+    return (
+      <SeatView
+        key={`seat-${params.seat}-${params.state ?? ''}`}
+        seat={params.seat}
+        state={params.state}
+      />
+    );
   return (
     <GrantList
-      key={`${jur}-${params.seat ?? ''}`}
+      key={jur}
       jur={jur}
+      initialView={
+        params.view === 'electorates' && jur === 'federal'
+          ? params.seat
+            ? 'seat'
+            : 'electorates'
+          : params.view === 'recipients' && jur === 'federal'
+            ? 'recipients'
+            : 'programs'
+      }
       seat={params.seat}
       state={params.state}
-      initialView={params.view}
     />
   );
 }
-function GrantList({
-  jur,
-  seat,
-  state,
-  initialView,
-}: {
-  jur: Jurisdiction;
-  seat?: string;
-  state?: string;
-  initialView?: string;
-}) {
+
+function useGrantIndex(jur: Jurisdiction) {
   const load = useCallback(
     (refresh: boolean) => money.grants(jur, refresh),
     [jur],
   );
-  const status = useCatalogRecord(load),
+  return useCatalogRecord(load);
+}
+
+/** The grants sheet's Notes (specs/money.md 2.2, journeys/money.md 4.5). */
+function grantNotes(index: GrantIndex) {
+  const c = index.counts;
+  return [
+    index.meta.coverage,
+    index.jur === 'federal' && c.recipients
+      ? `${c.donorRecipients.toLocaleString('en-AU')} of ${c.recipients.toLocaleString('en-AU')} recipients also appear in political donation records. They received ${formatMoneyCompact(c.donorDollars)}, ${(c.donorShare * 100).toFixed(1)}% of the total.`
+      : null,
+    c.programsTotal > index.programs.length
+      ? `The list shows the ${index.programs.length.toLocaleString('en-AU')} largest of ${c.programsTotal.toLocaleString('en-AU')} programs.`
+      : null,
+    c.undisclosedDollars
+      ? `${formatMoneyCompact(c.undisclosedDollars)} went to recipients the register doesn't name.`
+      : null,
+    index.jur === 'federal' ? FUTURE_YEARS_NOTE : null,
+    index.meta.threshold,
+    ...index.meta.caveats,
+  ];
+}
+
+function GrantList({
+  jur,
+  initialView,
+  seat,
+  state,
+}: {
+  jur: Jurisdiction;
+  initialView: View | 'seat';
+  seat?: string;
+  state?: string;
+}) {
+  const status = useGrantIndex(jur),
     data = status.record?.data;
-  const [view, setView] = useState(
-    initialView === 'electorates' ? 'electorates' : 'programs',
+  const [view, setView] = useState<View>(
+    initialView === 'seat' ? 'electorates' : initialView,
   );
-  const [query, setQuery] = useState(
-    initialView === 'electorates' ? (seat ?? '') : '',
+  const title = jur === 'federal' ? 'Commonwealth grants' : 'Queensland grants';
+  const search = useMoneySearch(
+    view === 'programs'
+      ? 'Grant programs'
+      : view === 'recipients'
+        ? 'Recipients'
+        : 'Electorates',
+  );
+  const query = search.query || (initialView === 'seat' ? (seat ?? '') : '');
+  const organisations = useMemo(
+    () =>
+      (data?.recipients ?? [])
+        .filter((r) => r.organisation)
+        .sort((a, b) => b.total - a.total),
+    [data],
+  );
+  const individuals = useMemo(() => {
+    const people = (data?.recipients ?? []).filter((r) => !r.organisation);
+    return {
+      count: people.length,
+      total: people.reduce((sum, r) => sum + r.total, 0),
+    };
+  }, [data]);
+  const all = useMemo(
+    () =>
+      view === 'programs'
+        ? (data?.programs ?? [])
+        : view === 'recipients'
+          ? organisations
+          : (data?.seats ?? []),
+    [view, data, organisations],
   );
   const rows = useMemo(
     () =>
-      (view === 'programs' ? (data?.programs ?? []) : (data?.seats ?? []))
+      [...all]
         .filter((r) =>
-          r.name
-            .toLocaleLowerCase('en-AU')
-            .includes(query.trim().toLocaleLowerCase('en-AU')),
+          matches(query, r.name, 'state' in r ? stateName(r.state) : ''),
         )
         .sort((a, b) => b.total - a.total),
-    [data, view, query],
+    [all, query],
   );
-  const path = `/money/grants?jur=${jur}${view === 'electorates' ? '&view=electorates' : ''}${seat ? `&q=${encodeURIComponent(seat)}` : ''}`;
+  const noun =
+    view === 'programs'
+      ? ['program', 'programs']
+      : view === 'recipients'
+        ? ['recipient', 'recipients']
+        : ['electorate', 'electorates'];
+  const caption = !data
+    ? ''
+    : query.trim()
+      ? `${rows.length.toLocaleString('en-AU')} of ${counted(all.length, noun[0]!, noun[1])}`
+      : view === 'recipients'
+        ? `The ${counted(all.length, 'largest recipient', 'largest recipients')}, largest first`
+        : `${counted(all.length, noun[0]!, noun[1])}, largest first`;
+  const figure = data ? grantsFigure(data, 'grants') : null;
+  const saved = recordSource(status.record);
+  const path = `/money/grants?jur=${jur}${view === 'electorates' ? '&view=electorates' : ''}`;
   return (
     <>
-      <MoneyHeader title="Grants" path={path} />
+      <Stack.Screen
+        options={{
+          title,
+          headerLargeTitleEnabled: true,
+          headerLargeTitleShadowVisible: false,
+          headerSearchBarOptions: search.options,
+          ...moneyBar({ name: title, path }),
+        }}
+      />
       <MoneyList
-        loaded={!!status.record}
+        loaded={!!data}
         id="grants-list"
         rows={rows}
-        rowKey={(r) => ('key' in r ? r.key : `${r.name}-${r.state}`)}
+        rowKey={(r) =>
+          'key' in r ? r.key : `${r.name}-${'state' in r ? r.state : ''}`
+        }
         refreshing={status.refreshing}
         refresh={status.refresh}
         header={
           <>
-            <Title id="grants-title">
-              {jur === 'federal' ? 'Commonwealth' : 'Queensland'} grants
-            </Title>
-            <RecordStatus
-              {...status}
-              label="Loading grants"
-              testID="grants-status"
-            />
-            {data ? (
-              // The figure the screen is about, the donor overlap in one
-              // sentence, and one source line.
-              <Group gap={rhythm.tight}>
-                <BigFigure
-                  value={formatMoneyCompact(data.counts.dollars)}
-                  spoken={moneyAccessibilityLabel(data.counts.dollars, true)}
+            <TitleAlias title={title} testID="grants-title" />
+            <MoneyStatus status={status} name={title} testID="grants-status" />
+            {data && figure ? (
+              <>
+                <FigureBlock
+                  value={formatMoneyCompact(figure.value)}
+                  ink="money"
                   label={
                     jur === 'qld'
-                      ? `Recorded annual expenditure in ${formatCount(data.counts.grants)} lines`
-                      : `Awarded in ${formatCount(data.counts.grants)} grants`
+                      ? `recorded annual spending, ${fyRange(data.meta.years[0] ?? '', data.meta.years.at(-1) ?? '')}`
+                      : figure.line
                   }
-                  accent="money"
+                  // Spread: opax/transport reads a plain `source` prop as an image.
+                  {...{
+                    source: {
+                      asOf: data.meta.asOf,
+                      citation: [moneyCitation(data.meta.source)],
+                      savedAt: saved.savedAt,
+                      state: saved.state,
+                      originals: data.meta.sourceUrl
+                        ? [
+                            {
+                              label: moneyCitation(data.meta.source).label,
+                              url: data.meta.sourceUrl,
+                            },
+                          ]
+                        : [],
+                      notes: [...grantNotes(data), ...saved.stateNotes].map(
+                        readableDates,
+                      ),
+                      licence: data.meta.licence,
+                      testID: 'grants-total-source',
+                    },
+                  }}
                   testID="grants-total"
                 />
-                <Text wordSafe testID="grants-donor-headline">
-                  Of {formatCount(data.counts.recipients)} recipients resolved
-                  to entities, {formatCount(data.counts.donorRecipients)} appear
-                  in the donor registers;{' '}
-                  {formatPercent(data.counts.donorShare * 100)} of the money,{' '}
-                  {formatMoneyCompact(data.counts.donorDollars)}, went to them.
-                </Text>
-                <MetaSource
-                  meta={data.meta}
-                  record={status.record}
-                  title="About these grants"
-                  testID="grants-source"
-                />
-              </Group>
+                {figure.allYears ? (
+                  <ValueRow
+                    label={figure.allYears.label}
+                    value={formatMoney(figure.allYears.value)}
+                    testID="grants-all-years"
+                  />
+                ) : null}
+                {jur === 'federal' ? (
+                  <SegmentedPicker
+                    accessibilityLabel="Show"
+                    value={view}
+                    onChange={(next) => {
+                      setView(next);
+                      search.setQuery('');
+                    }}
+                    options={[
+                      {
+                        value: 'programs',
+                        label: 'Programs',
+                        testID: 'grants-programs',
+                      },
+                      {
+                        value: 'recipients',
+                        label: 'Recipients',
+                        testID: 'grants-recipients',
+                      },
+                      {
+                        value: 'electorates',
+                        label: 'Electorates',
+                        testID: 'grants-electorates',
+                      },
+                    ]}
+                    testID="grants-view"
+                  />
+                ) : null}
+                <ListCaption announce={!!query.trim()} testID="grants-caption">
+                  {caption}
+                </ListCaption>
+              </>
             ) : null}
-            <MoneyChoices
-              value={view}
-              onChange={(v) => {
-                setView(v);
-                setQuery(v === 'electorates' ? (seat ?? '') : '');
-              }}
-              options={[
-                ['programs', 'Programs', 'grants-programs'],
-                ['electorates', 'Electorates', 'grants-electorates'],
-              ]}
-            />
-            {seat && view === 'programs' ? (
-              <Text wordSafe>
-                Grant programs for {seat}. Open a program to see its listed
-                awards.
-              </Text>
-            ) : null}
-            <Field
-              label={
-                view === 'programs' ? 'Find a program' : 'Find an electorate'
-              }
-              value={query}
-              onChangeText={setQuery}
-              testID="grants-search"
-              returnKeyType="done"
-            />
-            <ResultCount
-              count={data ? rows.length : null}
-              noun={view}
-              detail={
-                data && view === 'programs'
-                  ? `${formatCount(data.counts.programsTotal)} in the source totals`
-                  : null
-              }
-            />
           </>
         }
-        render={(r, i) => (
-          <RecordRow
-            title={r.name}
-            testID={`grants-row-${i}`}
-            detail={`${formatMoneyCompact(r.total)} · ${formatCount(r.count)} grants · ${formatMoneyCompact(r.donorTotal)} to recipients in the donor registers`}
-            onPress={() =>
-              'key' in r
-                ? router.push({
-                    pathname: '/grant-program',
-                    params: {
-                      jur,
-                      id: r.id,
-                      key: r.key,
-                      ...(seat ? { seat, state } : {}),
-                    },
-                  })
-                : router.push({
-                    pathname: '/grants',
-                    params: {
-                      jur,
-                      seat: r.name,
-                      state: r.state,
-                      view: 'programs',
-                    },
-                  })
-            }
-          />
-        )}
+        empty={
+          query.trim() ? (
+            <EmptyState
+              message={`No ${noun[1]} match “${query.trim()}”.`}
+              testID="grants-empty"
+            />
+          ) : null
+        }
+        render={(r, i) =>
+          'key' in r ? (
+            <MoneyRow
+              name={r.name}
+              detail={counted(r.count, 'grant')}
+              amount={r.total}
+              href={grantProgramRoute(r.id, jur, r.name)}
+              testID={`grants-row-${i}`}
+            />
+          ) : 'state' in r ? (
+            <MoneyRow
+              name={r.name}
+              detail={`${stateName(r.state)} · ${counted(r.count, 'grant')}`}
+              amount={r.total}
+              href={grantsRoute({
+                jur: 'federal',
+                seat: r.name,
+                state: r.state,
+              })}
+              testID={`grants-row-${i}`}
+            />
+          ) : (
+            <MoneyRow
+              name={r.name}
+              detail={counted(r.count, 'grant')}
+              amount={r.total}
+              href={organisationHref(r.id, r.name, jur)}
+              testID={`grants-recipient-${i}`}
+            />
+          )
+        }
         footer={
           data ? (
-            <RowList>
-              <LinkRow
-                title={
-                  jur === 'federal'
-                    ? 'Queensland grants'
-                    : 'Commonwealth grants'
-                }
-                testID="grants-switch"
-                onPress={() =>
-                  router.push({
-                    pathname: '/grants',
-                    params: { jur: jur === 'federal' ? 'qld' : 'federal' },
-                  })
-                }
-              />
-              <LinkRow
-                title="The month’s largest grants"
-                testID="grants-largest"
-                onPress={() => router.push('/largest-grants')}
-              />
-            </RowList>
+            <>
+              {view === 'recipients' && individuals.count ? (
+                <Text wordSafe variant="footnote" testID="grants-individuals">
+                  {`${counted(individuals.count, 'individual recipient')}, ${formatMoney(individuals.total)}, not named.`}
+                </Text>
+              ) : null}
+              {jur === 'federal' ? (
+                <LinkRow
+                  title="Largest grants"
+                  testID="grants-largest"
+                  href={largestGrantsRoute()}
+                />
+              ) : null}
+            </>
           ) : null
         }
       />
     </>
   );
 }
-export function SeatGrants({
-  name,
-  state,
-  eligible = true,
-}: {
-  name: string;
-  state: string;
-  eligible?: boolean;
-}) {
-  const load = useCallback(
-    (refresh: boolean) => money.grants('federal', refresh),
-    [],
-  );
+
+/**
+ * Grants in one seat (specs/money.md 2.2, journeys/money.md 12.2 item 5):
+ * gated on the per-seat slice (D5). Until it ships the seat view is the
+ * seat's figure, its source and a row to the electorate: no picker, no
+ * caption, no "See all" and no national figure or list.
+ */
+function SeatView({ seat, state }: { seat: string; state?: string }) {
+  const load = useCallback(async (refresh: boolean) => {
+    const index = await money.grants('federal', refresh);
+    // The electorate page's id, from the shared directory; the row is left
+    // out if the directory can't be read.
+    const directory = await Promise.resolve()
+      .then(() => catalogs.directory())
+      .catch(() => null);
+    return { ...index, directory };
+  }, []);
   const status = useCatalogRecord(load),
     data = status.record?.data;
-  const seat = eligible
-    ? data?.seats.find(
-        (s) =>
-          s.name.toLowerCase() === name.toLowerCase() &&
-          s.state.toLowerCase() === state.toLowerCase(),
-      )
-    : undefined;
+  const title = `Grants in ${seat}`;
+  const electorate =
+    status.record?.directory?.electorates.data.electorates.find(
+      (e) =>
+        e.jurisdiction === 'federal' &&
+        e.chamber === 'representatives' &&
+        e.status !== 'historical' &&
+        e.name.toLocaleLowerCase('en-AU') === seat.toLocaleLowerCase('en-AU') &&
+        (!state || e.state_code.toLowerCase() === state.toLowerCase()),
+    );
   return (
-    <Section title="Grants in this seat" accent="money" testID="seat-grants">
-      <RecordStatus
-        {...status}
-        label="Loading grants in this seat"
-        testID="seat-grants-status"
-      />
-      {data ? (
-        <Group gap={rhythm.tight}>
-          {seat ? (
-            <BigFigure
-              value={formatMoneyCompact(seat.total)}
-              spoken={moneyAccessibilityLabel(seat.total, true)}
-              label={`In ${formatCount(seat.count)} Commonwealth grants`}
-              accent="money"
-              testID="seat-grants-total"
-            />
-          ) : (
-            <Text wordSafe>
-              No matching federal division in the grant records. This is not a
-              zero total.
-            </Text>
-          )}
-          <MetaSource
-            meta={data.meta}
-            record={status.record}
-            title="About grants in this seat"
-            notes={[
-              'Electorate mappings are approximate and use the award’s delivery or recipient postcode.',
-            ]}
-            testID="seat-grants-source"
+    <>
+      <Stack.Screen options={{ title, ...moneyBar({ name: title }) }} />
+      <Screen
+        barTitle={title}
+        testID="grants-seat"
+        refreshControl={
+          <RefreshControl
+            refreshing={status.refreshing}
+            onRefresh={status.refresh}
           />
-        </Group>
-      ) : null}
-      <RowList>
+        }
+      >
+        <Heading level={1} kind="page" testID="grants-title">
+          {title}
+        </Heading>
+        {state ? (
+          <Text wordSafe variant="secondary" testID="grants-seat-state">
+            {stateName(state)}
+          </Text>
+        ) : null}
+        <MoneyStatus
+          status={status}
+          name={title}
+          rows={1}
+          testID="grants-status"
+        />
         {data ? (
-          <LinkRow
-            title="See all"
-            testID="seat-grants-all"
-            onPress={() =>
-              router.push({
-                pathname: '/grants',
-                params: {
-                  jur: 'federal',
-                  seat: name,
-                  state,
-                  view: 'electorates',
-                },
-              })
-            }
+          <SeatFigure
+            index={data}
+            record={status.record}
+            name={seat}
+            state={state}
+            testID="grants-seat"
           />
         ) : null}
-        <LinkRow
-          title="Public money"
-          testID="seat-public-money"
-          onPress={() => router.push('/public-money')}
-        />
-      </RowList>
-    </Section>
+        {data && electorate ? (
+          <LinkRow
+            title={electorate.name}
+            symbol="map"
+            testID="grants-seat-electorate"
+            href={electorateRoute(
+              electorate.electorate_id,
+              undefined,
+              electorate.name,
+            )}
+          />
+        ) : null}
+      </Screen>
+    </>
   );
 }

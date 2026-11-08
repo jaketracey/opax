@@ -1,34 +1,68 @@
-import { useCallback, useDeferredValue, useMemo, useState } from 'react';
-import {
-  Disclosure,
-  Field,
-  Group,
-  LinkRow,
-  SourceLine,
-  Text,
-} from '../../design/primitives';
-import { formatCount } from '../../design/format';
-import { rhythm } from '../../design/tokens';
-import { openOnWeb } from '../../navigation/external';
-import { RecordStatus } from '../RecordStatus';
+import { useCallback, useMemo, useState } from 'react';
+import { Stack } from 'expo-router';
+import { SegmentedPicker } from '../../design/controls';
+import { LinkRow } from '../../design/rows';
+import { SourceLine } from '../../design/source';
+import { EmptyState } from '../../design/states';
+import { Text } from '../../design/text';
+import { connectionRoute } from '../../navigation/routes/public-money';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { money } from './runtime';
-import { passageText } from '../../api/passage-text';
-import type { decodeEvidence } from './data';
-import type { RecordResult } from '../../api/client';
 import {
-  MoneyHeader,
-  MoneyChoices,
+  ListCaption,
   MoneyList,
-  ResultCount,
-  Title,
+  MoneyStatus,
+  TitleAlias,
+  counted,
+  matches,
+  moneyBar,
+  readableDates,
+  recordSource,
+  useMoneySearch,
 } from './parts';
-// OPAX's own collection of public records, said in plain words: each
-// excerpt's line names its own publisher.
-const CONNECTIONS_CITATION = {
-  label: 'Public records',
-  title: 'Public records collected by OPAX; each excerpt names its own source',
+
+/** The three publishers the counts come from (specs/money.md 2.12). */
+export const CONNECTIONS_CITATION = [
+  { label: 'Hansard', title: 'Hansard, Parliament of Australia' },
+  { label: 'Press releases', title: 'Ministers’ and members’ press releases' },
+  { label: 'Queensland grants', title: 'Queensland Government grant records' },
+];
+export const CONNECTIONS_NOTE =
+  'Counts are documents: speeches, press releases and grant records that name each entry. An electorate also counts grant records whose postcode falls in it; postcodes are not precise locations.';
+
+type Kind = 'all' | 'program' | 'place' | 'organisation';
+const kindWords: Record<string, string> = {
+  program: 'Program',
+  place: 'Place',
+  electorate: 'Electorate',
+  organisation: 'Organisation',
 };
+/** "Program", "Electorate": the kind in words. */
+export const kindWord = (kind: string) => kindWords[kind] ?? '';
+/** "Electorate · in 21,742 documents". */
+export const connectionDetail = (kind: string, documents: number) =>
+  [kindWord(kind), `in ${counted(documents, 'document')}`]
+    .filter(Boolean)
+    .join(' · ');
+/**
+ * A name as given, except a name in capitals only ("BACK TO WORK") shown in
+ * title case ("Back To Work").
+ */
+export function displayName(name: string) {
+  if (!/[A-Z]/.test(name) || name !== name.toUpperCase()) return name;
+  return name
+    .toLowerCase()
+    .replace(
+      /(^|[\s(/-])(\p{L})/gu,
+      (_, gap: string, letter: string) => `${gap}${letter.toUpperCase()}`,
+    );
+}
+
+/**
+ * Programs and places (specs/money.md 2.12): programs, places and
+ * organisations named together in the record. Every row pushes its own
+ * native page (`connection?id=`) with the excerpts.
+ */
 export default function Connections() {
   const load = useCallback(
       (refresh: boolean) => money.connections(refresh),
@@ -36,46 +70,44 @@ export default function Connections() {
     ),
     status = useCatalogRecord(load),
     data = status.record?.data;
-  const [query, setQuery] = useState(''),
-    deferred = useDeferredValue(query),
-    [kind, setKind] = useState('');
-  const [selected, setSelected] = useState<{
-    id: string;
-    excerpts?: ReturnType<typeof decodeEvidence>[string]['excerpts'];
-    error?: unknown;
-    record?: Pick<RecordResult<unknown>, 'stale' | 'savedAt' | 'staleReason'>;
-  }>();
+  const search = useMoneySearch('Programs, places and organisations');
+  const [kind, setKind] = useState<Kind>('all');
+  const inKind = useMemo(
+    () =>
+      (data?.entities ?? []).filter(
+        (e) =>
+          kind === 'all' ||
+          e.kind === kind ||
+          (kind === 'place' && e.kind === 'electorate'),
+      ),
+    [data, kind],
+  );
   const rows = useMemo(
     () =>
-      (data?.entities ?? [])
-        .filter(
-          (e) =>
-            (!kind || e.kind === kind) &&
-            e.name.toLowerCase().includes(deferred.trim().toLowerCase()),
-        )
+      inKind
+        .filter((e) => matches(search.query, e.name))
         .sort((a, b) => b.count - a.count),
-    [data, deferred, kind],
+    [inKind, search.query],
   );
-  async function open(id: string, refresh = false) {
-    setSelected({ id });
-    try {
-      const r = await money.evidence(id, refresh);
-      setSelected((current) =>
-        current?.id === id
-          ? { id, excerpts: r.data[id]?.excerpts ?? [], record: r }
-          : current,
-      );
-    } catch (e) {
-      setSelected((current) =>
-        current?.id === id ? { id, error: e } : current,
-      );
-    }
-  }
+  const searching = !!search.query.trim();
+  const caption = searching
+    ? `${rows.length.toLocaleString('en-AU')} of ${counted(inKind.length, 'name')}`
+    : `${counted(inKind.length, 'name')}, most documents first`;
+  const saved = recordSource(status.record);
+  const name = 'Programs and places';
   return (
     <>
-      <MoneyHeader title="Programs & places" path="/connections" />
+      <Stack.Screen
+        options={{
+          title: name,
+          headerLargeTitleEnabled: true,
+          headerLargeTitleShadowVisible: false,
+          headerSearchBarOptions: search.options,
+          ...moneyBar({ name, path: '/connections' }),
+        }}
+      />
       <MoneyList
-        loaded={!!status.record}
+        loaded={!!data}
         id="connections-list"
         rows={rows}
         rowKey={(r) => r.id}
@@ -83,107 +115,84 @@ export default function Connections() {
         refresh={status.refresh}
         header={
           <>
-            <Title id="connections-title">Programs & places</Title>
-            <RecordStatus
-              {...status}
-              label="Loading programs and places"
+            <TitleAlias title={name} testID="connections-title" />
+            <Text wordSafe variant="secondary">
+              Programs, places and organisations named together in Hansard,
+              press releases and Queensland grants.
+            </Text>
+            <MoneyStatus
+              status={status}
+              name={name}
+              figure={false}
               testID="connections-status"
             />
-            <Field
-              label="Find a program, place or organisation"
-              testID="connections-search"
-              value={query}
-              onChangeText={setQuery}
-              returnKeyType="done"
-            />
-            <MoneyChoices
-              value={kind}
-              onChange={setKind}
-              options={[
-                ['', 'All kinds'],
-                ['program', 'Programs'],
-                ['place', 'Places'],
-                ['electorate', 'Electorates'],
-                ['organisation', 'Organisations'],
-              ]}
-            />
-            <ResultCount count={data ? rows.length : null} noun="connections" />
+            {data ? (
+              <>
+                <SegmentedPicker
+                  accessibilityLabel="Show"
+                  value={kind}
+                  onChange={setKind}
+                  options={[
+                    {
+                      value: 'all',
+                      label: 'All',
+                      testID: 'connections-kind-all',
+                    },
+                    {
+                      value: 'program',
+                      label: 'Programs',
+                      testID: 'connections-kind-program',
+                    },
+                    {
+                      value: 'place',
+                      label: 'Places',
+                      testID: 'connections-kind-place',
+                    },
+                    {
+                      value: 'organisation',
+                      label: 'Organisations',
+                      testID: 'connections-kind-organisation',
+                    },
+                  ]}
+                  testID="connections-kind"
+                />
+                <ListCaption announce={searching} testID="connections-caption">
+                  {caption}
+                </ListCaption>
+              </>
+            ) : null}
           </>
+        }
+        empty={
+          searching ? (
+            <EmptyState
+              message={`No names match “${search.query.trim()}”.`}
+              testID="connections-empty"
+            />
+          ) : null
         }
         sourceLine={
           data ? (
             <SourceLine
-              title="About programs and places"
               asOf={data.asOf}
-              citation={[CONNECTIONS_CITATION]}
-              savedAt={status.record?.stale ? status.record.savedAt : null}
-              notes={[data.note]}
+              citation={CONNECTIONS_CITATION}
+              savedAt={saved.savedAt}
+              state={saved.state}
+              notes={[CONNECTIONS_NOTE, data.note, ...saved.stateNotes].map(
+                readableDates,
+              )}
               testID="connections-source"
             />
           ) : null
         }
-        render={(r) =>
-          r.kind === 'organisation' ? (
-            // An organisation is a way onward: its page on opax.com.au.
-            <LinkRow
-              title={r.name}
-              detail={`${formatCount(r.count)} records · ${r.kind}`}
-              external
-              accessibilityHint="Opens on opax.com.au"
-              onPress={() =>
-                void openOnWeb(`/connections?entity=${r.id}`, r.name)
-              }
-            />
-          ) : (
-            <Group gap={rhythm.line}>
-              <Text wordSafe variant="strong">
-                {r.name}
-              </Text>
-              <Text wordSafe variant="metadata">
-                {formatCount(r.count)} records · {r.kind}
-              </Text>
-              <Disclosure
-                label="Source excerpts"
-                testID={`connection-open-${r.id}`}
-                open={selected?.id === r.id}
-                onToggle={(expanded) =>
-                  expanded ? void open(r.id) : setSelected(undefined)
-                }
-              >
-                {selected?.id === r.id ? (
-                  <Group>
-                    <RecordStatus
-                      record={selected.record ?? null}
-                      error={selected.error}
-                      refreshing={false}
-                      refresh={() => open(r.id, true)}
-                      retry={() => open(r.id)}
-                      label="Opening source excerpts"
-                      testID={`connection-evidence-${r.id}`}
-                    />
-                    {selected.excerpts
-                      ? selected.excerpts.map((e, i) => (
-                          <Group key={i} gap={rhythm.line}>
-                            {/* Static evidence shards keep the raw source
-                                window: entities and tags still in it. */}
-                            <Text wordSafe>{passageText(e.text)}</Text>
-                            <SourceLine
-                              title="This excerpt"
-                              asOf={e.date || data!.asOf}
-                              citation={e.source}
-                              originals={
-                                e.url ? [{ label: e.source, url: e.url }] : []
-                              }
-                            />
-                          </Group>
-                        ))
-                      : null}
-                  </Group>
-                ) : null}
-              </Disclosure>
-            </Group>
-          )
-        }
+        render={(r) => (
+          <LinkRow
+            title={displayName(r.name)}
+            detail={connectionDetail(r.kind, r.count)}
+            href={connectionRoute(r.id, displayName(r.name))}
+            testID={`connection-open-${r.id}`}
+          />
+        )}
       />
     </>
   );

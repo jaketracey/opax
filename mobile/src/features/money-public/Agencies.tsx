@@ -1,61 +1,104 @@
-import { useCallback, useMemo, useState } from 'react';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View } from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { catalogs } from '../../api/runtime';
+import { BarSeries } from '../../design/charts';
+import { PopUpButton, SegmentedPicker } from '../../design/controls';
+import { formatMoney, formatMoneyCompact } from '../../design/format';
+import { FigureBlock } from '../../design/record';
+import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
+import { EmptyState } from '../../design/states';
+import { symbols } from '../../design/symbols';
+import { Heading, Text } from '../../design/text';
 import {
-  LinkRow,
-  BigFigure,
-  Field,
-  Group,
-  RowList,
-  Text,
-} from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
-import { openOnWeb } from '../../navigation/external';
-import {
-  formatCount,
-  formatMoneyCompact,
-  moneyAccessibilityLabel,
-  formatDate,
-} from '../../design/format';
-import { RecordRow } from '../RecordRow';
-import { RecordStatus } from '../RecordStatus';
+  agenciesRoute,
+  agencyRoute,
+  leadRoute,
+} from '../../navigation/routes/public-money';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { leadsFor } from '../leads/model';
+import { CONTRACTS_CAVEAT } from './HubCards';
 import { money } from './runtime';
+import { moneyItemHref, organisationHref } from './routes';
 import {
-  MetaSource,
-  MoneyHeader,
-  MoneyChoices,
+  ListCaption,
   MoneyList,
-  ResultCount,
-  RowSource,
-  Title,
+  MoneyStatus,
+  TitleAlias,
+  askAbout,
+  counted,
+  matches,
+  moneyBar,
+  moneyCitation,
+  readableDates,
+  recordSource,
+  useDebouncedAnnounce,
+  useMoneySearch,
+  yearRange,
 } from './parts';
 
 const AGENCY_NAMES =
   'Agency names appear as recorded. Renamed departments are separate entries; no succession or combined history is assumed.';
+const START_YEARS = (from: string, to: string) =>
+  `Years describe the date each contract started. Contracts are counted from notices published ${yearRange(from, to) || 'in the AusTender register'}.`;
+const AUSTENDER = { label: 'AusTender', url: 'https://www.tenders.gov.au/' };
+/** The chart spans the last 15 calendar years up to the latest start year. */
+export const CHART_YEARS = 15;
+
+type Sort = 'total' | 'count' | 'name';
+const sortWords: Record<Sort, string> = {
+  total: 'by value',
+  count: 'by number of contracts',
+  name: 'A to Z',
+};
+
+/**
+ * Government agencies (specs/money.md 2.7, journeys/money.md 4.7). Until
+ * the top-suppliers index ships (journey 11 D6) the "Suppliers | Agencies"
+ * segment is not drawn: the page is the agency list, its sort a pop-up on
+ * the caption line.
+ */
 export default function Agencies() {
   const load = useCallback((refresh: boolean) => money.agencies(refresh), []),
     status = useCatalogRecord(load),
     data = status.record?.data;
-  const [query, setQuery] = useState(''),
-    [sort, setSort] = useState<'total' | 'count' | 'suppliers' | 'name'>(
-      'total',
-    );
+  const search = useMoneySearch('Agencies');
+  const [sort, setSort] = useState<Sort>('total');
+  const all = useMemo(() => data?.agencies ?? [], [data]);
   const rows = useMemo(
     () =>
-      (data?.agencies ?? [])
-        .filter((a) =>
-          a.name.toLowerCase().includes(query.trim().toLowerCase()),
-        )
+      all
+        .filter((a) => matches(search.query, a.name))
         .sort((a, b) =>
           sort === 'name' ? a.name.localeCompare(b.name) : b[sort] - a[sort],
         ),
-    [data, query, sort],
+    [all, search.query, sort],
   );
+  const searching = !!search.query.trim();
+  const count = searching
+    ? `${rows.length.toLocaleString('en-AU')} of ${counted(all.length, 'agency', 'agencies')}`
+    : counted(all.length, 'agency', 'agencies');
+  useDebouncedAnnounce(
+    searching && data ? `${count}, ${sortWords[sort]}` : null,
+  );
+  const total = all.reduce((sum, a) => sum + a.total, 0);
+  const saved = recordSource(status.record);
+  const name = 'Government agencies';
   return (
     <>
-      <MoneyHeader title="Government agencies" path="/subject/agency" />
+      <Stack.Screen
+        options={{
+          title: name,
+          headerLargeTitleEnabled: true,
+          headerLargeTitleShadowVisible: false,
+          headerSearchBarOptions: search.options,
+          ...moneyBar({ name, path: '/subject/agency' }),
+        }}
+      />
       <MoneyList
-        loaded={!!status.record}
+        loaded={!!data}
         id="agencies-list"
         rows={rows}
         rowKey={(a) => a.id}
@@ -63,68 +106,98 @@ export default function Agencies() {
         refresh={status.refresh}
         header={
           <>
-            <Title id="agencies-title">Government agencies</Title>
-            <RecordStatus
-              {...status}
-              label="Loading government agencies"
-              testID="agencies-status"
-            />
-            <Text wordSafe variant="metadata">
-              Who awards Commonwealth contracts, and which companies receive
-              them.
-            </Text>
-            <Field
-              label="Find an agency"
-              value={query}
-              onChangeText={setQuery}
-              testID="agencies-search"
-              returnKeyType="done"
-            />
-            <MoneyChoices
-              value={sort}
-              onChange={setSort}
-              options={[
-                ['total', 'Contract value'],
-                ['count', 'Contracts'],
-                ['suppliers', 'Suppliers'],
-                ['name', 'Name'],
-              ]}
-            />
-            <ResultCount
-              count={data ? rows.length : null}
-              noun="agencies in the available records"
-            />
+            <TitleAlias title={name} testID="agencies-title" />
+            <MoneyStatus status={status} name={name} testID="agencies-status" />
+            {data ? (
+              <>
+                <FigureBlock
+                  value={formatMoneyCompact(total)}
+                  ink="money"
+                  label={`in Commonwealth contracts across ${counted(all.length, 'agency', 'agencies')}${
+                    data.publishedFrom || data.publishedTo
+                      ? `, published ${yearRange(data.publishedFrom, data.publishedTo)}`
+                      : ''
+                  }`}
+                  caveat={CONTRACTS_CAVEAT}
+                  // Spread: opax/transport reads a plain `source` prop as an image.
+                  {...{
+                    source: {
+                      asOf: data.meta.asOf,
+                      citation: [
+                        moneyCitation(data.meta.source || 'AusTender'),
+                      ],
+                      savedAt: saved.savedAt,
+                      state: saved.state,
+                      originals: [AUSTENDER],
+                      notes: [
+                        START_YEARS(data.publishedFrom, data.publishedTo),
+                        AGENCY_NAMES,
+                        ...data.meta.caveats,
+                        ...saved.stateNotes,
+                      ].map(readableDates),
+                      testID: 'agencies-source',
+                    },
+                  }}
+                  testID="agencies-total"
+                />
+                <View style={{ alignSelf: 'flex-start' }}>
+                  <PopUpButton
+                    label="Sort"
+                    value={sort}
+                    onChange={setSort}
+                    options={(['total', 'count', 'name'] as const).map((s) => ({
+                      value: s,
+                      label: `${count}, ${sortWords[s]}`,
+                      shortLabel: sortWords[s],
+                      testID: `agencies-sort-${s === 'total' ? 'value' : s === 'count' ? 'contracts' : 'name'}`,
+                    }))}
+                    testID="agencies-sort"
+                  />
+                </View>
+              </>
+            ) : null}
           </>
         }
-        sourceLine={
-          data ? (
-            <MetaSource
-              meta={data.meta}
-              record={status.record}
-              title="About agencies"
-              notes={[AGENCY_NAMES]}
-              testID="agencies-source"
+        empty={
+          searching ? (
+            <EmptyState
+              message={`No agencies match “${search.query.trim()}”.`}
+              testID="agencies-empty"
             />
           ) : null
         }
         render={(a, i) => (
-          <RecordRow
+          <MoneyRow
+            name={a.name}
+            detail={`${counted(a.count, 'contract')} · ${counted(a.suppliers, 'supplier')}`}
+            amount={a.total}
+            href={agencyRoute(a.id, a.name)}
             testID={`agency-row-${i}`}
-            title={a.name}
-            detail={`${formatMoneyCompact(a.total)} · ${formatCount(a.count)} contracts · ${formatCount(a.suppliers)} suppliers`}
-            onPress={() =>
-              router.push({ pathname: '/agency', params: { id: a.id } })
-            }
           />
         )}
       />
     </>
   );
 }
+
+type AgencyView = 'years' | 'suppliers' | 'contracts';
+
+/**
+ * Agency (specs/money.md 2.8): title, the figure with its start-year range,
+ * the agency's own concentration lead when Leads has one, then "Years |
+ * Suppliers | Contracts". Years is a chart of calendar years (not
+ * interactive, journey 4.7) with a table toggle; supplier rows open the
+ * organisation page; contract rows push their money item.
+ */
 export function Agency() {
-  const { id, section } = useLocalSearchParams<{
+  const {
+    id,
+    section,
+    name: routeName,
+  } = useLocalSearchParams<{
     id: string;
     section?: string;
+    name?: string;
   }>();
   const load = useCallback(
       (refresh: boolean) => money.agency(id, refresh),
@@ -133,189 +206,295 @@ export function Agency() {
     status = useCatalogRecord(load),
     data = status.record?.data,
     profile = data?.profile;
-  const [view, setView] = useState(
-      section === 'contracts' ? 'contracts' : 'years',
-    ),
-    [query, setQuery] = useState('');
-  const rows = useMemo(() => {
-    if (!profile) return [];
-    if (view === 'years')
-      return profile.years.map((r) => ({
-        kind: 'year' as const,
-        ...r,
-        key: String(r.year),
-      }));
+  const [view, setView] = useState<AgencyView>(
+    section === 'contracts' || section === 'suppliers' ? section : 'years',
+  );
+  const [table, setTable] = useState(false);
+  const search = useMoneySearch(
+    view === 'contracts' ? 'Contracts' : 'Suppliers',
+    'button',
+  );
+  const { setQuery } = search;
+  useEffect(() => setQuery(''), [view, setQuery]);
+  const titleRef = useRef<View>(null);
+  const name = profile?.name ?? routeName ?? 'Government agency';
+  const title = useTitleOnScroll(titleRef, name);
+  const openAsk = useOpenAsk();
+  const lead = useAgencyLead(profile?.name);
+  type Row =
+    | ({ kind: 'supplier' } & NonNullable<typeof profile>['suppliers'][number])
+    | ({ kind: 'contract' } & NonNullable<typeof profile>['contracts'][number]);
+  const rows = useMemo((): Row[] => {
+    if (!profile || view === 'years') return [];
     if (view === 'suppliers')
+      // Individuals are never a row (journeys/money.md 4.7): a footnote
+      // counts them; their contracts stay under Contracts.
       return profile.suppliers
-        .filter((s) =>
-          s.name.toLowerCase().includes(query.trim().toLowerCase()),
-        )
+        .filter((s) => s.organisation && matches(search.query, s.name))
         .sort((a, b) => b.total - a.total)
-        .map((s) => ({ kind: 'supplier' as const, ...s, key: s.id }));
+        .map((s) => ({ kind: 'supplier' as const, ...s }));
     return profile.contracts
-      .filter((c) =>
-        [c.supplier, c.title, c.id]
-          .join(' ')
-          .toLowerCase()
-          .includes(query.trim().toLowerCase()),
-      )
-      .map((c) => ({ kind: 'contract' as const, ...c, key: c.id }));
-  }, [profile, view, query]);
+      .filter((c) => matches(search.query, c.supplier, c.title, c.id))
+      .sort((a, b) => b.value - a.value)
+      .map((c) => ({ kind: 'contract' as const, ...c }));
+  }, [profile, view, search.query]);
+  const searching = !!search.query.trim();
+  const individualSuppliers = (profile?.suppliers ?? []).filter(
+    (s) => !s.organisation,
+  );
+  const individuals = {
+    count: individualSuppliers.length,
+    total: individualSuppliers.reduce((sum, s) => sum + s.total, 0),
+  };
+  const all =
+    view === 'suppliers'
+      ? (profile?.suppliers.length ?? 0) - individuals.count
+      : (profile?.contracts.length ?? 0);
+  const noun = view === 'suppliers' ? 'supplier' : 'contract';
+  const caption = searching
+    ? `${rows.length.toLocaleString('en-AU')} of ${counted(all, noun)}`
+    : `${counted(all, noun)}, by value`;
+  const years = profile?.years ?? [];
+  const latest = years.reduce((max, y) => Math.max(max, y.year), 0);
+  const chartYears = years
+    .filter((y) => y.year > latest - CHART_YEARS)
+    .sort((a, b) => a.year - b.year);
+  const earlier = chartYears.length < years.length;
+  const saved = recordSource(status.record);
+  const path = `/subject/agency/${encodeURIComponent(profile?.id ?? id)}`;
+  const first = profile?.firstYear ?? chartYears[0]?.year ?? '',
+    last = profile?.lastYear ?? latest ?? '';
   return (
     <>
-      <MoneyHeader
-        title="Agency"
-        path={`/subject/agency/${encodeURIComponent(profile?.id ?? id)}`}
+      <Stack.Screen
+        options={{
+          title: name,
+          headerSearchBarOptions:
+            profile && view !== 'years' ? search.options : undefined,
+          ...moneyBar({
+            name,
+            path: profile ? path : null,
+            ask: profile
+              ? () => openAsk({ question: askAbout(profile.name) })
+              : null,
+          }),
+        }}
       />
       <MoneyList
-        loaded={!!status.record}
+        loaded={!!profile}
         id="agency-list"
-        rows={rows as (typeof rows)[number][]}
-        rowKey={(r) => r.key}
+        rows={rows}
+        rowKey={(r) => `${r.kind}-${r.id}`}
         refreshing={status.refreshing}
         refresh={status.refresh}
+        onScroll={title.onScroll}
         header={
           <>
-            <Title id="agency-title">
-              {profile?.name ?? 'Government agency'}
-            </Title>
-            <RecordStatus
-              {...status}
-              label="Loading agency records"
-              testID="agency-status"
+            <View ref={titleRef} onLayout={title.onTitleLayout}>
+              <Heading level={1} kind="page" testID="agency-title">
+                {name}
+              </Heading>
+            </View>
+            <MoneyStatus
+              status={status}
+              name={name}
+              notFound={{
+                title: "This agency isn't in the latest contract records",
+                action: {
+                  label: 'See all agencies',
+                  onPress: () => router.push(agenciesRoute),
+                },
+              }}
+              testID="agency"
             />
             {profile && data ? (
-              <Group gap={rhythm.tight}>
-                <BigFigure
+              <>
+                <FigureBlock
                   value={formatMoneyCompact(profile.total)}
-                  spoken={moneyAccessibilityLabel(profile.total, true)}
-                  label="Recorded contract value"
-                  detail={`${formatCount(profile.count)} contracts`}
-                  accent="money"
+                  ink="money"
+                  label={`in ${counted(profile.count, 'contract')}${
+                    first && last ? `, started ${yearRange(first, last)}` : ''
+                  }`}
+                  caveat={
+                    profile.undated > 0
+                      ? `${formatMoneyCompact(profile.undated)} of this has no start date. ${CONTRACTS_CAVEAT}`
+                      : CONTRACTS_CAVEAT
+                  }
+                  // Spread: opax/transport reads a plain `source` prop as an image.
+                  {...{
+                    source: {
+                      asOf: data.meta.asOf,
+                      citation: [
+                        moneyCitation(data.meta.source || 'AusTender'),
+                      ],
+                      savedAt: saved.savedAt,
+                      state: saved.state,
+                      originals: [AUSTENDER],
+                      notes: [
+                        'Years describe the calendar year each contract started.',
+                        AGENCY_NAMES,
+                        ...data.meta.caveats,
+                        ...saved.stateNotes,
+                      ].map(readableDates),
+                      testID: 'agency-source',
+                    },
+                  }}
                   testID="agency-total"
                 />
-                <MetaSource
-                  meta={data.meta}
-                  record={status.record}
-                  title="About this agency"
-                  notes={[
-                    `${formatMoneyCompact(data.profile.undated)} in recorded contracts has no start date, so it is in no year.`,
-                    AGENCY_NAMES,
+                {lead ? (
+                  <LinkRow
+                    title={lead.title}
+                    detail={`Lead · ${lead.categoryLabel}`}
+                    symbol={symbols.leads}
+                    href={leadRoute(lead.id, lead.title)}
+                    testID="agency-lead"
+                  />
+                ) : null}
+                <SegmentedPicker
+                  accessibilityLabel="Show"
+                  value={view}
+                  onChange={setView}
+                  options={[
+                    { value: 'years', label: 'Years', testID: 'agency-years' },
+                    {
+                      value: 'suppliers',
+                      label: 'Suppliers',
+                      testID: 'agency-suppliers',
+                    },
+                    {
+                      value: 'contracts',
+                      label: 'Contracts',
+                      testID: 'agency-contracts',
+                    },
                   ]}
-                  testID="agency-sources"
+                  testID="agency-view"
                 />
-              </Group>
+                {view === 'years' ? (
+                  <View testID="agency-chart">
+                    <Text wordSafe variant="secondary">
+                      {earlier && chartYears.length
+                        ? `Contract value by year the contract started, ${yearRange(chartYears[0]!.year, latest)} (earlier years in the table)`
+                        : 'Contract value by year the contract started'}
+                    </Text>
+                    {table ? (
+                      <>
+                        {[...years]
+                          .sort((a, b) => a.year - b.year)
+                          .map((y) => (
+                            <ValueRow
+                              key={y.year}
+                              label={String(y.year)}
+                              value={`${formatMoneyCompact(y.total)} · ${counted(y.count, 'contract')}`}
+                              testID={`agency-year-${y.year}`}
+                            />
+                          ))}
+                        <LinkRow
+                          title="Show as chart"
+                          onPress={() => setTable(false)}
+                          testID="agency-table-toggle"
+                        />
+                      </>
+                    ) : chartYears.length ? (
+                      <BarSeries
+                        data={chartYears.map((y) => ({
+                          label: String(y.year),
+                          value: y.total,
+                        }))}
+                        ink="money"
+                        format={formatMoneyCompact}
+                        tableTitle="Contract value by year the contract started"
+                        onShowTable={() => setTable(true)}
+                        labels={{ every: 3 }}
+                        values="none"
+                        height={200}
+                        dateRange={{
+                          start: `${chartYears[0]!.year}-01-01`,
+                          end: data.meta.asOf,
+                        }}
+                        // Spread: opax/transport reads a plain `source` prop as an image.
+                        {...{ source: 'AusTender' }}
+                      />
+                    ) : (
+                      <EmptyState message="No contracts in this agency's records have a start date." />
+                    )}
+                  </View>
+                ) : (
+                  <ListCaption announce={searching} testID="agency-caption">
+                    {caption}
+                  </ListCaption>
+                )}
+              </>
             ) : null}
-            <MoneyChoices
-              value={view}
-              onChange={(v) => {
-                setView(v);
-                setQuery('');
-              }}
-              options={[
-                ['years', 'Value over time', 'agency-years'],
-                ['suppliers', 'Suppliers', 'agency-suppliers'],
-                ['contracts', 'Contracts', 'agency-contracts'],
-              ]}
-            />
-            {view !== 'years' ? (
-              <Field
-                label={
-                  view === 'suppliers' ? 'Find a supplier' : 'Find a contract'
-                }
-                value={query}
-                onChangeText={setQuery}
-                testID="agency-search"
-                returnKeyType="done"
-              />
-            ) : null}
-            <ResultCount
-              count={data ? rows.length : null}
-              noun={
-                view === 'years' ? 'years of recorded contract starts' : view
-              }
-              detail={
-                data && view === 'years' && data.profile.undated
-                  ? `${formatMoneyCompact(data.profile.undated)} undated`
-                  : null
-              }
-            />
           </>
         }
+        empty={
+          view !== 'years' && searching ? (
+            <EmptyState
+              message={`No ${noun}s match “${search.query.trim()}”.`}
+              testID="agency-empty"
+            />
+          ) : null
+        }
         render={(r, i) =>
-          r.kind === 'year' ? (
-            <Group gap={rhythm.line}>
-              <Text wordSafe variant="strong">
-                {r.year}
-              </Text>
-              <Text wordSafe variant="metadata">
-                {formatMoneyCompact(r.total)} · {formatCount(r.count)} contracts
-              </Text>
-            </Group>
-          ) : r.kind === 'supplier' ? (
-            r.organisation ? (
-              // A company is a way onward: its page on opax.com.au.
-              <LinkRow
-                title={r.name}
-                detail={`${formatMoneyCompact(r.total)} · ${formatCount(r.count)} contracts`}
-                external
-                accessibilityHint="Opens on opax.com.au"
-                onPress={() =>
-                  void openOnWeb(`/subject/supplier/${r.id}`, r.name)
-                }
-              />
-            ) : (
-              <Group gap={rhythm.line}>
-                <Text wordSafe variant="strong">
-                  {r.name}
-                </Text>
-                <Text wordSafe variant="metadata">
-                  {formatMoneyCompact(r.total)} · {formatCount(r.count)}{' '}
-                  contracts
-                </Text>
-              </Group>
-            )
+          r.kind === 'supplier' ? (
+            <MoneyRow
+              name={r.name}
+              detail={counted(r.count, 'contract')}
+              amount={r.total}
+              href={organisationHref(r.id, r.name)}
+              testID={`agency-supplier-${i}`}
+            />
           ) : (
-            <Group gap={rhythm.line}>
-              <Text wordSafe variant="strong" testID={`agency-contract-${i}`}>
-                {r.supplier}
-              </Text>
-              {r.title ? <Text wordSafe>{r.title}</Text> : null}
-              <Text wordSafe variant="strong" tabular tone="moneyInk">
-                {formatMoneyCompact(r.value)}
-              </Text>
-              <Text wordSafe variant="metadata">
-                {r.method} · Starts{' '}
-                {r.start ? formatDate(r.start) : 'not recorded'} · Ends{' '}
-                {r.end ? formatDate(r.end) : 'not recorded'}
-              </Text>
-              <RowSource
-                register="AusTender"
-                record={r.id}
-                url={r.url}
-                asOf={data!.meta.asOf}
-                testID={`agency-source-${i}`}
-              />
-            </Group>
+            <MoneyRow
+              name={r.supplier}
+              detail={r.title || r.id}
+              amount={r.value}
+              href={moneyItemHref(
+                { kind: 'contract', agency: profile!.id, id: r.id },
+                { name: r.supplier, from: profile!.id },
+              )}
+              testID={`agency-contract-${i}`}
+            />
           )
         }
         footer={
-          data ? (
-            <RowList>
-              <LinkRow
-                title="Discover: companies in both"
-                testID="agency-discover-both"
-                onPress={() =>
-                  router.push({
-                    pathname: '/discover',
-                    params: { category: 'donor_contract_overlap' },
-                  })
-                }
-              />
-            </RowList>
+          view === 'suppliers' && individuals.count ? (
+            <Text wordSafe variant="footnote" testID="agency-individuals">
+              {`${counted(individuals.count, 'individual supplier')}, ${formatMoney(individuals.total)}, not named.`}
+            </Text>
           ) : null
         }
       />
     </>
   );
+}
+
+/**
+ * The agency's own concentration lead, when Leads has one: drawn for every
+ * agency that has such a lead, by the same rule. Loads after the page; a
+ * failure leaves it out.
+ */
+function useAgencyLead(name: string | undefined) {
+  const [lead, setLead] = useState<ReturnType<typeof leadsFor>[number] | null>(
+    null,
+  );
+  useEffect(() => {
+    if (!name) return;
+    let active = true;
+    catalogs
+      .discovery(false)
+      .then((record) => {
+        if (!active) return;
+        setLead(
+          leadsFor(record.data, 'procurement_concentration').find(
+            (l) => l.entity === name,
+          ) ?? null,
+        );
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [name]);
+  return lead;
 }

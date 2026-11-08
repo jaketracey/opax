@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
 import type { ApiClient, RecordResult } from '../src/api/client';
+import { decodeDiscovery } from '../src/api/catalog-decoders';
 import { money } from '../src/features/money-public/runtime';
 import {
   AsAtLine,
@@ -13,9 +14,6 @@ import {
   InfoButton,
   LinkRow,
   OpaxWebLink,
-  RowList,
-  Section,
-  SourceLine,
   SourceLink,
   ViewOriginal,
 } from '../src/design/primitives';
@@ -32,10 +30,38 @@ import Connections from '../src/features/money-public/Connections';
 // one display figure; one source line per block; no as-at lines, ⓘ or "View
 // original" beside it; titles in ink; word-safe text at AX5.
 const mockParams: Record<string, string> = {};
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => mockParams,
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
+jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { View } = require('react-native');
+  const Wrap = (props: object) => React.createElement(View, props);
+  return {
+    Link: Object.assign(Wrap, {
+      Trigger: Wrap,
+      Preview: () => null,
+      Menu: Wrap,
+      MenuAction: Wrap,
+    }),
+    useSegments: () => [],
+    useLocalSearchParams: () => mockParams,
+    router: { push: jest.fn(), setParams: jest.fn() },
+    Stack: { Screen: () => null },
+  };
+});
+jest.mock('@shopify/react-native-skia', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Canvas: require('react-native').View,
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Rect: (props: object) => require('react').createElement('Rect', props),
+}));
+jest.mock('../src/api/runtime', () => ({
+  catalogs: { discovery: jest.fn(), directory: jest.fn() },
+  apiClient: { get: jest.fn() },
+}));
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
 }));
 jest.mock('../src/features/money-public/runtime', () => ({ money: {} }));
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
@@ -90,6 +116,12 @@ beforeEach(() => {
     'evidence',
   ] as const)
     money[name] = fixture[name].bind(fixture) as never;
+  const runtime = jest.requireMock('../src/api/runtime');
+  runtime.catalogs.discovery.mockImplementation(() =>
+    client.get('/discovery.json', decodeDiscovery),
+  );
+  runtime.catalogs.directory.mockRejectedValue(new Error('offline'));
+  runtime.apiClient.get.mockImplementation(client.get);
 });
 async function render(Screen: () => React.ReactElement | null) {
   let rendered!: TestRenderer.ReactTestRenderer;
@@ -124,10 +156,11 @@ test.each(screens)(
     for (const figure of accented) expect(figure.props.accent).toBe('money');
     for (const row of r.root.findAllByType(LinkRow))
       expect(row.props.accent).toBeUndefined();
+    // Large-title lists draw their title in the bar (specs/money.md 1.3).
     const title = r.root
       .findAllByType(Heading)
-      .find((heading) => heading.props.level === 1)!;
-    expect(title.props.tone).toBeUndefined();
+      .find((heading) => heading.props.level === 1);
+    expect(title?.props.tone).toBeUndefined();
     await act(async () => r.unmount());
   },
 );
@@ -146,70 +179,6 @@ test.each(screens)(
   },
 );
 
-test('public money is one heading and one list, every row saying where it goes', async () => {
-  const r = await render(Hub);
-  expect(r.root.findAllByType(Section)).toHaveLength(0);
-  expect(r.root.findAllByType(RowList)).toHaveLength(1);
-  const titles = r.root.findAllByType(LinkRow).map((row) => row.props.title);
-  expect(titles).toEqual([
-    'Commonwealth grants',
-    'Queensland grants',
-    'The month’s largest grants',
-    'Where community funding goes',
-    'Government agencies',
-    'Discover',
-    'Programs & places',
-    'Money map',
-  ]);
-  await act(async () => r.unmount());
-});
-
-test('grants: the total, the donor overlap in one sentence and one source line', async () => {
-  Object.assign(mockParams, { jur: 'federal' });
-  const r = await render(Grants);
-  const figure = r.root.findByType(BigFigure);
-  expect(figure.props.testID).toBe('grants-total');
-  const sources = r.root.findAllByType(SourceLine);
-  expect(sources.map((s) => s.props.testID)).toEqual(['grants-source']);
-  // The overlap table and the per-row caption fold into the head and rows.
-  expect(
-    r.root.findAll((n) => n.props.testID === 'grants-donor-headline'),
-  ).not.toHaveLength(0);
-  await act(async () => r.unmount());
-});
-
-test('largest grants: one source per award, and the month’s dated line at the foot of the first page', async () => {
-  const r = await render(Largest);
-  const sources = r.root.findAllByType(SourceLine);
-  // Design pass 5, P3-9: the list's source line follows its first rows.
-  const rows = sources.filter((s) =>
-    /^largest-source-\d+$/.test(s.props.testID),
-  );
-  expect(rows.length).toBeGreaterThan(0);
-  expect(sources[0]!.props.testID).toBe('largest-source-0');
-  rows.forEach((row, i) => {
-    expect(row.props.testID).toBe(`largest-source-${i}`);
-    // The month's line dates the list; a row names its register and record.
-    expect(row.props.dateLabel).toBeNull();
-    expect(row.props.citation).toEqual([
-      expect.objectContaining({ label: 'GrantConnect' }),
-    ]);
-  });
-  const list = sources.find((s) => s.props.testID === 'largest-source');
-  if (list) {
-    expect(list.props.asOf).toBeTruthy();
-    expect(sources.indexOf(list)).toBeGreaterThan(0);
-  }
-  await act(async () => r.unmount());
-});
-
-test('program notes and audits live in the program’s source sheet', async () => {
-  Object.assign(mockParams, { jur: 'federal', id: 'GO3141' });
-  const r = await render(Program);
-  const notes = r.root
-    .findAllByType(SourceLine)
-    .find((s) => s.props.testID === 'program-notes')!;
-  expect(notes.props.title).toBe('Program notes');
-  expect(notes.props.notes.filter(Boolean).length).toBeGreaterThan(0);
-  await act(async () => r.unmount());
-});
+// The hub, grants, largest and program layout tests of pass 4A were
+// replaced by the Apple-design money screens (specs/money.md 2.1 to 2.5):
+// tests/design-p5-C-money.test.tsx and tests/money-rows.test.tsx cover them.

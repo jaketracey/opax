@@ -1,79 +1,124 @@
-import { LinkRow, RowList, Screen, Text } from '../../design/primitives';
-import { router } from 'expo-router';
-import { fromWebPath } from '../../navigation/routes';
-import { openOnWeb } from '../../navigation/external';
-import { MoneyHeader, Title } from './parts';
+import { Stack } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
+import { useLayout } from '../../design/adaptive';
+import { InsetGroup, Screen } from '../../design/layout';
+import { LinkRow } from '../../design/rows';
+import { Heading } from '../../design/text';
+import { rhythm } from '../../design/tokens';
+import {
+  connectionsRoute,
+  leadsRoute,
+  grantsAllocationRoute,
+  grantsRoute,
+  largestGrantsRoute,
+} from '../../navigation/routes/public-money';
+import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
+import { ContractsCard, GrantsCard, PartiesCard } from './HubCards';
+import { moneyBar } from './parts';
+
+/** The reader's saved House seat, by name and state, or null. */
+function useSavedSeat() {
+  const seat = useSeat();
+  if (seat.status !== 'chosen' || !seat.choice.seatId) return null;
+  const electorate = savedSeatDirectory()?.electorates.data.electorates.find(
+    (e) =>
+      e.electorate_id === seat.choice.seatId &&
+      e.jurisdiction === 'federal' &&
+      e.chamber === 'representatives',
+  );
+  return electorate
+    ? { name: electorate.name, state: electorate.state_code }
+    : null;
+}
 
 /**
- * Public money: one title, one line, one list. Each row says where it goes;
- * the figures and their sources are on the screens it opens.
+ * Public money (specs/money.md 2.1, journeys/money.md 4.3 and 12): three
+ * question cards in the order grants, contracts, parties, each with its
+ * destination's name as a kicker and one dated figure, then one group of
+ * rows with no header. No Share until the web has a hub page; no "Money
+ * map" row (the parties card opens it).
  */
 export default function Hub() {
+  const seat = useSavedSeat();
+  const { regular } = useLayout();
   return (
     <>
-      <MoneyHeader title="Public money" path="/discover" />
-      <Screen testID="money-hub">
-        <Title id="money-hub-title">Public money</Title>
-        <Text wordSafe variant="metadata">
-          Published grants and Commonwealth contracts, and where they meet the
-          donation returns.
-        </Text>
-        <RowList>
+      <Stack.Screen
+        options={moneyBar({
+          name: 'Public money',
+          path: '/money',
+          share: false,
+        })}
+      />
+      <Screen
+        grouped
+        barTitle="Public money"
+        column={regular ? 'wide' : 'readable'}
+        testID="money-hub"
+      >
+        <Heading level={1} kind="page" testID="money-hub-title">
+          Public money
+        </Heading>
+        <View style={[styles.cards, regular ? styles.across : null]}>
+          <View style={regular ? styles.third : null}>
+            <GrantsCard />
+          </View>
+          <View style={regular ? styles.third : null}>
+            <ContractsCard />
+          </View>
+          <View style={regular ? styles.third : null}>
+            <PartiesCard />
+          </View>
+        </View>
+        <InsetGroup testID="money-hub-more">
+          {seat ? (
+            <LinkRow
+              title={`Grants in ${seat.name}`}
+              testID="money-seat"
+              href={grantsRoute({
+                jur: 'federal',
+                seat: seat.name,
+                state: seat.state,
+              })}
+            />
+          ) : null}
           <LinkRow
-            title="Commonwealth grants"
-            detail="By program and by electorate"
-            testID="money-federal"
-            onPress={() =>
-              router.push({ pathname: '/grants', params: { jur: 'federal' } })
-            }
+            title="Leads"
+            detail="Names that appear in both money and the record"
+            testID="money-leads"
+            href={leadsRoute}
+          />
+          <LinkRow
+            title="Largest grants"
+            detail="The biggest new grant agreements each month"
+            testID="money-largest"
+            href={largestGrantsRoute()}
           />
           <LinkRow
             title="Queensland grants"
-            detail="By program and by electorate"
             testID="money-qld"
-            onPress={() =>
-              router.push({ pathname: '/grants', params: { jur: 'qld' } })
-            }
+            href={grantsRoute({ jur: 'qld' })}
           />
           <LinkRow
-            title="The month’s largest grants"
-            testID="money-largest"
-            onPress={() => router.push('/largest-grants')}
-          />
-          <LinkRow
-            title="Where community funding goes"
+            title="Community funding"
+            detail="Election commitment grants, by project and state"
             testID="money-allocation"
-            onPress={() => router.push('/grants-allocation')}
+            href={grantsAllocationRoute}
           />
           <LinkRow
-            title="Government agencies"
-            detail="Who awards Commonwealth contracts"
-            testID="money-agencies"
-            onPress={() => router.push('/agencies')}
-          />
-          <LinkRow
-            title="Discover"
-            detail="Contracts by agency, party funding, companies in both"
-            testID="money-discover"
-            onPress={() => router.push('/discover')}
-          />
-          <LinkRow
-            title="Programs & places"
+            title="Programs and places"
+            detail="Where programs and places are named together"
             testID="money-connections"
-            onPress={() => router.push('/connections')}
+            href={connectionsRoute}
           />
-          <LinkRow
-            title="Money map"
-            detail="Donations and public money in 3D"
-            testID="money-map"
-            onPress={() => {
-              const route = fromWebPath('/money');
-              if (route) router.push(route);
-              else openOnWeb('/money', 'Money map');
-            }}
-          />
-        </RowList>
+        </InsetGroup>
       </Screen>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  cards: { gap: rhythm.block },
+  across: { flexDirection: 'row', alignItems: 'stretch' },
+  third: { flex: 1, minWidth: 0 },
+});

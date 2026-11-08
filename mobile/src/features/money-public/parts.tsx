@@ -1,51 +1,46 @@
 import { useRefreshCommand } from '../../design/keyboard';
-import { headerItems } from '../../navigation/chrome';
-import { useEffect, type ReactNode } from 'react';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { useEffect, useState, type ReactNode, type Ref } from 'react';
 import {
   AccessibilityInfo,
   FlatList,
   RefreshControl,
   StyleSheet,
   View,
-  useWindowDimensions,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
 } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, type Href } from 'expo-router';
+import type { SearchBarProps } from 'react-native-screens';
 import {
   useScreenColumn,
-  useLayout,
-  gridColumns,
   SidebarSafe,
   RegionProvider,
-  Divider,
   EmptyState,
   Group,
   Heading,
   ChoiceChips,
-  SourceLine,
   Text,
   type SourceCitation,
-  type SourceOriginal,
 } from '../../design/primitives';
-import { formatDate, sourceName, type DateInput } from '../../design/format';
-import { colors, layout, rhythm } from '../../design/tokens';
-import { shareHeaderItem } from '../../navigation/share';
-import type { decodeMeta } from './data';
-export function MoneyHeader({ title, path }: { title: string; path: string }) {
-  return (
-    <Stack.Screen
-      options={{
-        title,
-        headerTitle: '',
-        ...headerItems(() => [shareHeaderItem({ title, path })]),
-      }}
-    />
-  );
-}
-type Notes = readonly (string | null | undefined | false)[];
+import { ApiError } from '../../api/errors';
+import { copy } from '../../design/copy';
+import { formatDate, sourceName } from '../../design/format';
+import type { RowMenuAction } from '../../design/row-link';
+import { useListSearchBar } from '../../design/search-bar';
+import { ContentUnavailable, OfflineLine, Skeleton } from '../../design/states';
+import { colors, hairline, layout, rhythm } from '../../design/tokens';
+import { openOnWeb } from '../../navigation/external';
+import {
+  canShare,
+  copyRecordLink,
+  shareHeaderItem,
+  shareRecord,
+} from '../../navigation/share';
 
-// The registers behind public money, by their publishers' short names (design
-// pass 5, P2-5): the line says "AusTender", the sheet the full title, and
-// neither says how the export was built ("Latest contract notice per
+// The registers behind public money, by their publishers' short names
+// (specs/money.md 1.2): the line says "AusTender", the sheet the full title,
+// and neither says how the export was built ("Latest contract notice per
 // amendment lineage"; the caveats say it in plain words).
 const registers: [RegExp, SourceCitation][] = [
   [
@@ -62,7 +57,7 @@ const registers: [RegExp, SourceCitation][] = [
   [
     /^(QLD|Queensland) Government Investment Portal\b/i,
     {
-      label: 'Queensland Government Investment Portal',
+      label: 'Queensland Treasury',
       title: 'Queensland Government Investment Portal (data.qld.gov.au)',
     },
   ],
@@ -73,10 +68,7 @@ const registers: [RegExp, SourceCitation][] = [
       title: 'Centre for Public Integrity, Table 3',
     },
   ],
-  [
-    /^AEC seat status\b/i,
-    { label: 'AEC seat status', title: 'AEC seat status, 2025 election' },
-  ],
+  [/^(AEC|Australian Electoral Commission)\b/i, { label: 'AEC', title: 'AEC' }],
 ];
 /** A money export's raw source as `{ label, title }` for a SourceLine. */
 export function moneyCitation(raw: string): SourceCitation {
@@ -84,13 +76,13 @@ export function moneyCitation(raw: string): SourceCitation {
   const known = registers.find(([pattern]) => pattern.test(text));
   return known ? known[1] : sourceName(text);
 }
-/** The short publisher name for a row's source and its original's label. */
+/** The short publisher name for an original's label. */
 export const moneyRegister = (raw: string) => moneyCitation(raw).label;
 
 const isoDate = /\b(\d{4}-\d{2}-\d{2})\b/g;
 /**
  * An export's note with its ISO dates read as dates ("awards published 30
- * Mar 2011 to 1 May 2028"), as the date rule asks (design pass 5, P3-12).
+ * Mar 2011 to 1 May 2028"), as the date rule asks.
  */
 export function readableDates<T extends string | null | undefined | false>(
   note: T,
@@ -101,104 +93,443 @@ export function readableDates<T extends string | null | undefined | false>(
       : note
   ) as T;
 }
-/** A whole-screen catalog record's saved state, for the source line. */
-type Saved = { stale: boolean; savedAt: number | null } | null | undefined;
 
+/** A grant financial year as published, "2024-25", read "2024–25". */
+export const fy = (year: string) => year.replace(/^(\d{4})-(\d{2})$/, '$1–$2');
+/** "2010–11 to 2027–28", or one year alone. */
+export function fyRange(first: string, last: string) {
+  if (!first && !last) return '';
+  if (!first || !last || first === last) return fy(first || last);
+  return `${fy(first)} to ${fy(last)}`;
+}
+/** "2013 to 2026" from two dates or years; one year alone when equal. */
+export function yearRange(first: string | number, last: string | number) {
+  const a = String(first).slice(0, 4),
+    b = String(last).slice(0, 4);
+  if (!a && !b) return '';
+  return !a || !b || a === b ? a || b : `${a} to ${b}`;
+}
+/** "5,962 grants", "1 grant". */
+export const counted = (count: number, one: string, many = `${one}s`) =>
+  `${count.toLocaleString('en-AU')} ${count === 1 ? one : many}`;
+
+/** A whole-screen catalog record's saved state, for the source line. */
+export type Saved =
+  | {
+      stale: boolean;
+      savedAt: number | null;
+      partial?: boolean;
+      staleReason?: string;
+    }
+  | null
+  | undefined;
 /**
- * A list's one source line, under its figure or count: the export's date
- * and register ("Updated 4 Oct 2026 · GrantConnect"), "Saved …" on a saved
- * copy. The sheet holds the register, the coverage, threshold and caveats in
- * full, and the licence.
+ * Saved and partial live in the SourceLine (specs/money.md 1.5): the line
+ * says "Saved 7 Nov 2026" or "· partial", its sheet says why.
  */
-export function MetaSource({
-  meta,
-  record,
-  notes = [],
-  originals,
-  title,
-  testID,
-}: {
-  meta: ReturnType<typeof decodeMeta>;
-  record?: Saved;
-  /** Notes after the export's own coverage, threshold and caveats. */
-  notes?: Notes;
-  /** Defaults to the export's register. */
-  originals?: readonly SourceOriginal[];
-  title?: string;
-  testID: string;
-}) {
-  return (
-    <SourceLine
-      title={title}
-      asOf={meta.asOf}
-      citation={[moneyCitation(meta.source)]}
-      savedAt={record?.stale ? record.savedAt : null}
-      originals={
-        originals ??
-        (meta.sourceUrl
-          ? [{ label: moneyRegister(meta.source), url: meta.sourceUrl }]
-          : [])
-      }
-      notes={[meta.coverage, meta.threshold, ...meta.caveats, ...notes].map(
-        readableDates,
-      )}
-      licence={meta.licence}
-      testID={testID}
-    />
-  );
+export function recordSource(record: Saved) {
+  return {
+    savedAt: record?.stale ? record.savedAt : null,
+    state: record?.partial ? ('partial' as const) : null,
+    stateNotes: [
+      record?.stale
+        ? "The latest records couldn't be loaded. Showing the saved copy."
+        : null,
+      record?.partial ? copy.partialNote : null,
+    ],
+  };
 }
 
 /**
- * One record's own source in a list row, after the list's dated source
- * line: the register and the record's ID ("GrantConnect · GA123456"). Its
- * sheet opens the original, says the export's date, carries the row's own
- * notes, and for an organisation opens its page on opax.com.au.
+ * The bar for a money page: Share (only with a web page to share), then ⋯
+ * with "Ask about {name}" where the page has one, Copy link and Open on
+ * opax.com.au. A page with no web path has no Share and no Copy link.
  */
-export function RowSource({
-  register,
-  record,
-  url,
-  asOf,
-  notes,
-  organisation,
-  testID,
-}: {
-  register: string;
-  /** The register's own ID: "GA123456", "CN3407266". */
-  record?: string | null;
-  url?: string | null;
-  asOf: DateInput | null | undefined;
-  notes?: Notes;
-  /** The organisation's page on opax.com.au. */
-  organisation?: { name: string; path: string } | null;
-  testID?: string;
+export function moneyBar(options: {
+  name: string;
+  /** The share title when it says more than the name ("Largest grants, August 2026"). */
+  shareTitle?: string;
+  path?: string | null;
+  share?: boolean;
+  ask?: (() => void) | null;
+  extra?: RowMenuAction[];
+  filters?: { active: boolean; href: Href };
 }) {
-  const name = moneyCitation(register);
-  const originals: SourceOriginal[] = [
-    ...(url ? [{ label: name.label, url, record: record ?? undefined }] : []),
-    ...(organisation
+  const { name, path, ask, extra = [], filters } = options;
+  const shareable = !!path && options.share !== false;
+  const share = () =>
+    void shareRecord({ path: path!, title: options.shareTitle ?? name });
+  const menu: RowMenuAction[] = [
+    ...extra,
+    // Filters take the bar's one direct button; Share moves into ⋯.
+    ...(shareable && filters && canShare
       ? [
           {
-            label: 'opax.com.au',
-            url: organisation.path,
-            record: organisation.name,
+            title: copy.share,
+            symbol: 'square.and.arrow.up' as const,
+            onPress: share,
+          },
+        ]
+      : []),
+    ...(ask
+      ? [
+          {
+            title: `Ask about ${name}`,
+            symbol: 'text.bubble' as const,
+            onPress: ask,
+          },
+        ]
+      : []),
+    ...(shareable
+      ? [
+          {
+            title: copy.copyLink,
+            symbol: 'link' as const,
+            onPress: () => void copyRecordLink(path!),
+          },
+        ]
+      : []),
+    ...(path
+      ? [
+          {
+            title: copy.openOnWeb,
+            symbol: 'safari' as const,
+            onPress: () => void openOnWeb(path, name, { preferNative: false }),
           },
         ]
       : []),
   ];
+  return headerItems(
+    menu.length || filters
+      ? pageItems({
+          name,
+          share: shareable && !filters ? share : undefined,
+          filters,
+          menu,
+        })
+      : undefined,
+  );
+}
+
+/** "What has parliament said about {name}?" (journeys/ask.md 14). */
+export const askAbout = (name: string) =>
+  `What has parliament said about ${name}?`;
+
+/**
+ * The bar's own search field (specs/money.md 1.3): `stacked` under a large
+ * title, visible on first appearance and hidden by scrolling after it; or,
+ * on Program and Agency, a search button that expands in the bar.
+ */
+export function useMoneySearch(
+  placeholder: string,
+  placement: 'stacked' | 'button' = 'stacked',
+) {
+  const [query, setQuery] = useState('');
+  const [appeared, setAppeared] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setAppeared(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+  const bar = useListSearchBar({
+    placeholder,
+    onChangeText: setQuery,
+    onSearchButtonPress: setQuery,
+    onCancelButtonPress: () => setQuery(''),
+  });
+  const options: SearchBarProps =
+    placement === 'button'
+      ? {
+          ...bar,
+          placement: 'integratedButton',
+          allowToolbarIntegration: false,
+        }
+      : { ...bar, placement: 'stacked', hideWhenScrolling: appeared };
+  return { query, setQuery, options };
+}
+/** Case-insensitive match of a query against a row's words. */
+export const matches = (
+  query: string,
+  ...words: (string | null | undefined)[]
+) =>
+  !query.trim() ||
+  words
+    .filter(Boolean)
+    .join(' ')
+    .toLocaleLowerCase('en-AU')
+    .includes(query.trim().toLocaleLowerCase('en-AU'));
+
+/**
+ * A changing count said to VoiceOver once, 600 ms after it stops changing
+ * (typing in the search field), never on every keystroke.
+ */
+export function useDebouncedAnnounce(message: string | null, delay = 600) {
+  useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(
+      () => AccessibilityInfo.announceForAccessibility(message),
+      delay,
+    );
+    return () => clearTimeout(timer);
+  }, [message, delay]);
+}
+/** A list's one caption: the count and the order ("500 programs, largest first"). */
+export function ListCaption({
+  children,
+  announce = false,
+  testID,
+}: {
+  children: string;
+  /** Searching: say the new count once typing stops. */
+  announce?: boolean;
+  testID?: string;
+}) {
+  useDebouncedAnnounce(announce ? children : null);
   return (
-    <SourceLine
-      title="This record"
-      dateLabel={null}
-      asOf={asOf}
-      citation={[name]}
-      coverage={record}
-      originals={originals}
-      notes={notes?.map(readableDates)}
-      testID={testID}
+    <Text wordSafe variant="footnote" testID={testID}>
+      {children}
+    </Text>
+  );
+}
+/**
+ * A large-title screen's title for Maestro and VoiceOver order: the native
+ * bar draws it; this zero-height element keeps the screen's title test ID.
+ */
+export function TitleAlias({
+  title,
+  testID,
+}: {
+  title: string;
+  testID: string;
+}) {
+  return (
+    <View
+      accessible={false}
+      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden
+      style={styles.alias}
+    >
+      <Text testID={testID} style={styles.alias}>
+        {title}
+      </Text>
+    </View>
+  );
+}
+
+/** A whole-screen read's state (useCatalogRecord). */
+export interface MoneyStatusInput {
+  record: Saved;
+  error: unknown;
+  retry: () => void;
+}
+/**
+ * The money group's states from one kit (specs/money.md 1.5): a skeleton in
+ * the final shape, ContentUnavailable for an error, an offline first load
+ * or a record the data no longer has, and one OfflineLine on a saved copy.
+ * Saved and partial are said in the SourceLine (recordSource). Renders
+ * nothing when the record is fresh.
+ */
+export function MoneyStatus({
+  status,
+  name,
+  rows = 6,
+  figure = true,
+  notFound,
+  testID,
+}: {
+  status: MoneyStatusInput;
+  /** The screen's name: "Commonwealth grants". */
+  name: string;
+  rows?: number;
+  figure?: boolean;
+  notFound?: {
+    title: string;
+    action?: { label: string; onPress: () => void };
+  };
+  testID: string;
+}) {
+  const { record, error } = status;
+  if (record)
+    return record.stale && !record.staleReason ? (
+      <OfflineLine savedAt={record.savedAt} testID={`${testID}-offline`} />
+    ) : null;
+  if (!error)
+    return (
+      <View style={styles.skeleton} testID={`${testID}-loading`}>
+        {figure ? (
+          <Skeleton shape="figure" count={1} label={`Loading ${name}`} />
+        ) : null}
+        <Skeleton
+          shape="rows"
+          count={rows}
+          label={figure ? `Loading ${name}` : `Loading ${name}`}
+        />
+      </View>
+    );
+  if (error instanceof ApiError && ['offline', 'timeout'].includes(error.code))
+    return (
+      <ContentUnavailable
+        symbol="wifi.slash"
+        title={copy.notSaved}
+        body={copy.notSavedBody}
+        testID={`${testID}-offline-uncached`}
+      />
+    );
+  if (error instanceof ApiError && error.code === 'not-found' && notFound)
+    return (
+      <ContentUnavailable
+        symbol="magnifyingglass"
+        title={notFound.title}
+        action={
+          notFound.action
+            ? { ...notFound.action, testID: `${testID}-missing-action` }
+            : undefined
+        }
+        testID={`${testID}-missing`}
+      />
+    );
+  return (
+    <ContentUnavailable
+      symbol="exclamationmark.triangle"
+      title={`${name} couldn't be loaded`}
+      body="Check your connection and try again."
+      action={{
+        label: copy.tryAgain,
+        onPress: status.retry,
+        testID: `${testID}-retry`,
+      }}
+      testID={`${testID}-error`}
     />
   );
 }
+
+/**
+ * Every money list (specs/money.md 1.3): one list on paper in the readable
+ * column. The header holds the title block, figure, picker and caption; the
+ * rows follow with inset separators; then the footer rows. No "End of
+ * record": the `*-end` view is 1 pt, kept for flows.
+ */
+export function MoneyList<T>({
+  rows,
+  rowKey,
+  render,
+  header,
+  footer,
+  sourceLine,
+  empty,
+  refreshing,
+  refresh,
+  id,
+  loaded,
+  onScroll,
+  listRef,
+}: {
+  rows: T[];
+  rowKey: (row: T) => string;
+  render: (row: T, index: number) => ReactNode;
+  header: ReactNode;
+  footer?: ReactNode;
+  /** A list whose block is the list itself: its source line at the foot. */
+  sourceLine?: ReactNode;
+  /** Drawn in place of rows after a successful load with none to show. */
+  empty?: ReactNode;
+  refreshing: boolean;
+  refresh: () => void;
+  id: string;
+  loaded: boolean;
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  /** The list itself, for a screen that scrolls it (Largest's month). */
+  listRef?: Ref<FlatList<T>>;
+}) {
+  const column = useScreenColumn('readable');
+  useRefreshCommand(refresh, refreshing);
+  return (
+    <SidebarSafe style={styles.screen}>
+      <FlatList
+        ref={listRef}
+        data={rows}
+        keyExtractor={rowKey}
+        testID={id}
+        style={styles.screen}
+        contentContainerStyle={[styles.content, column.content]}
+        onLayout={column.onLayout}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        contentInsetAdjustmentBehavior="automatic"
+        automaticallyAdjustKeyboardInsets
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={7}
+        removeClippedSubviews={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        }
+        ListHeaderComponent={
+          <RegionProvider value={column.inner}>
+            {column.bar}
+            <Group style={styles.header}>{header}</Group>
+          </RegionProvider>
+        }
+        ItemSeparatorComponent={Separator}
+        ListFooterComponent={
+          loaded ? (
+            <Group style={styles.footer}>
+              {rows.length ? <View style={styles.rule} /> : null}
+              {sourceLine ? (
+                <View testID={`${id}-source-foot`}>{sourceLine}</View>
+              ) : null}
+              {footer}
+              <View testID={`${id}-end`} style={styles.end} />
+            </Group>
+          ) : null
+        }
+        ListEmptyComponent={
+          loaded ? (
+            <>
+              {empty === undefined ? (
+                <EmptyState message="No matching records." />
+              ) : (
+                empty
+              )}
+            </>
+          ) : null
+        }
+        renderItem={({ item, index }) => <View>{render(item, index)}</View>}
+      />
+    </SidebarSafe>
+  );
+}
+function Separator() {
+  return <View style={styles.separator} />;
+}
+/** A list's first page: ten rows. */
+export const FIRST_PAGE = 10;
+/**
+ * The row a first page's source line follows: the last row of the first
+ * page, in the first column of a grid, or -1 for an empty list.
+ */
+export function sourceIndex(rows: number, columns = 1): number {
+  if (!rows) return -1;
+  const last = Math.min(FIRST_PAGE * columns, rows) - 1;
+  return last - (last % columns);
+}
+
+// Kept only for features/money-public/Discover.tsx, which w4-money-map-leads
+// owns and retires into Leads. Nothing in this lane draws them; w6-cleanup
+// deletes them with Discover.tsx.
+/** @deprecated Set the bar with moneyBar() in Stack.Screen options. */
+export function MoneyHeader({ title, path }: { title: string; path: string }) {
+  return (
+    <Stack.Screen
+      options={{
+        title,
+        ...headerItems(() => [shareHeaderItem({ title, path })]),
+      }}
+    />
+  );
+}
+/** @deprecated Use SegmentedPicker or a PopUpButton. */
 export function MoneyChoices<T extends string>({
   value,
   onChange,
@@ -220,115 +551,7 @@ export function MoneyChoices<T extends string>({
     />
   );
 }
-export function MoneyList<T>({
-  rows,
-  rowKey,
-  render,
-  header,
-  footer,
-  sourceLine,
-  refreshing,
-  refresh,
-  id,
-  loaded,
-}: {
-  rows: T[];
-  rowKey: (row: T) => string;
-  render: (row: T, index: number) => ReactNode;
-  header: ReactNode;
-  footer?: ReactNode;
-  /**
-   * The list's one source line, at the foot of its first page (design pass
-   * 5, P3-9): under the first rows, or at the list's end when it is short
-   * or empty. Never above the list.
-   */
-  sourceLine?: ReactNode;
-  refreshing: boolean;
-  refresh: () => void;
-  id: string;
-  loaded: boolean;
-}) {
-  const column = useScreenColumn('wide');
-  const adaptive = useLayout();
-  const { fontScale } = useWindowDimensions();
-  const count = gridColumns(column.inner?.width ?? adaptive.width, {
-    columns: { regular: 2, wide: 2 },
-    minItemWidth: 320 * Math.min(Math.max(fontScale, 1), 2),
-  });
-  useRefreshCommand(refresh, refreshing);
-  const sourceAt = sourceLine ? sourceIndex(rows.length, count) : -1;
-  return (
-    <SidebarSafe style={styles.screen}>
-      <FlatList
-        key={`columns-${count}`}
-        numColumns={count}
-        columnWrapperStyle={count > 1 ? { gap: rhythm.block } : undefined}
-        data={rows}
-        keyExtractor={rowKey}
-        testID={id}
-        style={styles.screen}
-        contentContainerStyle={[styles.content, column.content]}
-        onLayout={column.onLayout}
-        contentInsetAdjustmentBehavior="automatic"
-        automaticallyAdjustKeyboardInsets
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        initialNumToRender={6}
-        maxToRenderPerBatch={8}
-        windowSize={5}
-        removeClippedSubviews={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-        }
-        ListHeaderComponent={
-          <RegionProvider value={column.inner}>
-            {column.bar}
-            <Group>{header}</Group>
-          </RegionProvider>
-        }
-        ListFooterComponent={
-          <Group>
-            {sourceLine && sourceAt < 0 && loaded ? (
-              <View testID={`${id}-source-foot`}>{sourceLine}</View>
-            ) : null}
-            {footer}
-            {loaded ? (
-              <Text wordSafe variant="fine" testID={`${id}-end`}>
-                End of record
-              </Text>
-            ) : null}
-          </Group>
-        }
-        ListEmptyComponent={
-          loaded ? <EmptyState message="No matching records." /> : null
-        }
-        renderItem={({ item, index }) => (
-          <Group
-            style={[styles.row, count > 1 ? { flex: 1, minWidth: 0 } : null]}
-          >
-            {render(item, index)}
-            <Divider variant="subtle" />
-            {index === sourceAt ? (
-              <View testID={`${id}-source-foot`}>{sourceLine}</View>
-            ) : null}
-          </Group>
-        )}
-      />
-    </SidebarSafe>
-  );
-}
-/** A list's first page: ten rows, or ten rows of a grid. */
-export const FIRST_PAGE = 10;
-/**
- * The row the list's source line follows: the last row of the first page,
- * in the first column of a grid (so it reads under the page, not beside
- * it), or -1 for an empty list, whose foot holds the line instead.
- */
-export function sourceIndex(rows: number, columns = 1): number {
-  if (!rows) return -1;
-  const last = Math.min(FIRST_PAGE * columns, rows) - 1;
-  return last - (last % columns);
-}
+/** @deprecated Use ListCaption. */
 export function ResultCount({
   count,
   noun,
@@ -336,43 +559,47 @@ export function ResultCount({
 }: {
   count: number | null;
   noun: string;
-  /** Coverage the count needs: "1,024 in the source totals". */
   detail?: string | null;
 }) {
-  useEffect(() => {
-    if (count === null) return;
-    const timer = setTimeout(
-      () =>
-        AccessibilityInfo.announceForAccessibility(
-          `${count.toLocaleString('en-AU')} ${noun}`,
-        ),
-      350,
-    );
-    return () => clearTimeout(timer);
-  }, [count, noun]);
-  if (count === null) return null;
-  return (
-    <Text wordSafe variant="metadata" accessibilityLiveRegion="polite">
-      {count.toLocaleString('en-AU')} {noun}
-      {detail ? ` · ${detail}` : ''}
+  const text =
+    count === null
+      ? null
+      : `${count.toLocaleString('en-AU')} ${noun}${detail ? ` · ${detail}` : ''}`;
+  useDebouncedAnnounce(text);
+  return text ? (
+    <Text wordSafe variant="metadata">
+      {text}
     </Text>
-  );
+  ) : null;
 }
-/** The screen's one title, in ink: the accent is for the figure and marks. */
+/** @deprecated Use Heading level={1} kind="page". */
 export function Title({ children, id }: { children: ReactNode; id: string }) {
   return (
-    <Heading level={1} testID={id}>
+    <Heading level={1} kind="page" testID={id}>
       {children}
     </Heading>
   );
 }
+/** @deprecated Empty lists say what found nothing, per screen. */
+export const NoRecords = () => <EmptyState message="No matching records." />;
+
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
     paddingTop: rhythm.block,
     paddingBottom: rhythm.section,
-    gap: rhythm.block,
   },
-  row: { paddingVertical: rhythm.tight },
+  header: { paddingBottom: rhythm.tight },
+  footer: { paddingTop: rhythm.block },
+  separator: { height: hairline, backgroundColor: colors.dividerSubtle },
+  rule: {
+    height: hairline,
+    backgroundColor: colors.dividerSubtle,
+    marginTop: -rhythm.block,
+    marginBottom: rhythm.block,
+  },
+  end: { height: 1 },
+  skeleton: { gap: rhythm.block },
+  alias: { height: 0, width: 0, opacity: 0, overflow: 'hidden' },
 });

@@ -1,131 +1,222 @@
-import { useCallback, useMemo, useState } from 'react';
-import {
-  Disclosure,
-  Field,
-  Group,
-  KeyValueList,
-  SourceLine,
-  Text,
-} from '../../design/primitives';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { View } from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Button, SegmentedPicker } from '../../design/controls';
+import { formatDate, formatMoneyCompact } from '../../design/format';
+import { FigureBlock } from '../../design/record';
+import { LinkRow, MoneyRow } from '../../design/rows';
+import { EmptyState } from '../../design/states';
+import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
-import {
-  formatDate,
-  formatMoneyCompact,
-  formatPercent,
-} from '../../design/format';
-import { RecordStatus } from '../RecordStatus';
+import { fundingBySeatTypeRoute } from '../../navigation/routes/public-money';
+import { filtersRoute } from '../../navigation/routes/filters';
+import { allocationFilterModel, stateChoices } from '../sheets/filter-models';
+import { registerFilterModel } from '../sheets/filter-model';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { money } from './runtime';
+import { moneyItemHref } from './routes';
 import {
-  MoneyHeader,
-  MoneyChoices,
+  ListCaption,
   MoneyList,
-  ResultCount,
-  Title,
+  MoneyStatus,
+  TitleAlias,
+  counted,
+  matches,
+  moneyBar,
   moneyCitation,
   readableDates,
+  recordSource,
+  useMoneySearch,
+  yearRange,
 } from './parts';
 
 const MERIT =
   'A difference in funding does not establish that a project lacked merit. The government describes this program as delivering election commitments. Assessment scores and unsuccessful applications would be needed to test merit.';
-/**
- * The state filter (design pass 5, P2-15): one choice among peers as chips,
- * never a raw code to type. Values are the export's delivery-state codes.
- */
-export const STATE_CHOICES = [
-  ['all', 'All', 'allocation-state-all'],
-  ['NSW', 'NSW', 'allocation-state-nsw'],
-  ['VIC', 'Vic', 'allocation-state-vic'],
-  ['QLD', 'Qld', 'allocation-state-qld'],
-  ['WA', 'WA', 'allocation-state-wa'],
-  ['SA', 'SA', 'allocation-state-sa'],
-  ['TAS', 'Tas', 'allocation-state-tas'],
-  ['ACT', 'ACT', 'allocation-state-act'],
-  ['NT', 'NT', 'allocation-state-nt'],
-] as const;
-export type StateChoice = (typeof STATE_CHOICES)[number][0];
-/** A record in the chosen state; "all" keeps every record. */
-export const inState = (
-  record: string | null | undefined,
-  state: StateChoice,
-) => state === 'all' || (record ?? '').trim().toUpperCase() === state;
+const EARLIER =
+  'The earlier-grants view is a selection of sourced project examples from other programs, not a complete national or state total. Its year field uses each notice’s original publication year, with the latest known award value. It does not reconstruct the record as it stood that year.';
 const INVITATIONS = {
   label: 'Departmental invitation list',
   title: 'The department’s invitation list, November 2025',
 };
-const EARLIER =
-  'The earlier-grants view is a selection of sourced project examples from other programs, not a complete national or state total. Its year field uses each notice’s original publication year, with the latest known award value. It does not reconstruct the record as it stood that year.';
+export const SEPARATE_LISTS =
+  "Invitations and awards are separate lists. Don't add them together.";
+export const LATEST_VALUES =
+  'Latest award values, not payments made that year.';
+
+export type Stage = 'awards' | 'invitations' | 'history';
+/** A record in the chosen state ('' for all), matched on the export's code. */
+export const inState = (record: string | null | undefined, state: string) =>
+  !state || (record ?? '').trim().toLowerCase() === state.toLowerCase();
+/** "New South Wales" for a state code. */
+const stateLabel = (code: string) =>
+  stateChoices.find((s) => s.value === code.toLowerCase())?.label ?? '';
+const monthYear = (date: string) =>
+  formatDate(date, 'short').replace(/^\d{1,2} /, '');
+/** The financial year a date falls in: "2024–25". */
+const financialYear = (date: string) => {
+  const year = Number(date.slice(0, 4)),
+    month = Number(date.slice(5, 7));
+  const start = month >= 7 ? year : year - 1;
+  return `${start}–${String((start + 1) % 100).padStart(2, '0')}`;
+};
+function span(dates: string[], format: (d: string) => string) {
+  const sorted = dates.filter(Boolean).sort();
+  if (!sorted.length) return '';
+  const a = format(sorted[0]!),
+    b = format(sorted.at(-1)!);
+  return a === b ? a : `${a} to ${b}`;
+}
+
+/**
+ * Community funding (specs/money.md 2.6): large title and bar search, the
+ * stage's figure block, "Awards | Invitations | Earlier grants", a caption,
+ * project rows that push their money item, and "Funding by seat type". The
+ * state and year live in the filter sheet (`/filters/allocation`) and in the
+ * route's params, so they survive Share and back. The election-margin
+ * lookup is gone and `mlci.json` `seats` is no longer read.
+ */
 export default function Allocation() {
+  const params = useLocalSearchParams<{
+    state?: string;
+    through?: string;
+    stage?: string;
+  }>();
+  const state = (params.state ?? '').toLowerCase(),
+    through = /^\d{4}$/.test(params.through ?? '') ? params.through! : '';
   const load = useCallback(async (refresh: boolean) => {
-    const [report, allocation, history, locations] = await Promise.all([
-      money.report(refresh),
+    // The report is still read (next-app-build item 1) but never gates the
+    // page: a failure leaves the list drawn.
+    void money.report(refresh).catch(() => undefined);
+    const [allocation, history, locations] = await Promise.all([
       money.allocation(refresh),
       money.history(refresh),
-      money.locations(refresh),
+      money.locations(refresh).catch(() => null),
     ]);
-    return combine([report, allocation, history, locations], {
-      report: report.data,
-      allocation: allocation.data,
-      history: history.data,
-      locations: locations.data,
-    });
+    return combine(
+      locations ? [allocation, history, locations] : [allocation, history],
+      {
+        allocation: allocation.data,
+        history: history.data,
+        locations: locations?.data ?? null,
+      },
+    );
   }, []);
   const status = useCatalogRecord(load),
     data = status.record?.data;
-  const [stage, setStage] = useState('awards'),
-    [query, setQuery] = useState(''),
-    [state, setState] = useState<StateChoice>('all'),
-    [through, setThrough] = useState(''),
-    [seat, setSeat] = useState(''),
-    [comparison, setComparison] = useState(false),
-    [marginOpen, setMarginOpen] = useState(false);
-  const rows = useMemo(
+  const [stage, setStage] = useState<Stage>(
+    params.stage === 'invitations' || params.stage === 'history'
+      ? params.stage
+      : 'awards',
+  );
+  const search = useMoneySearch('Projects');
+  const years = useMemo(
+    () => [
+      ...new Set(
+        (data?.history.records ?? []).map((r) => Number(r.date.slice(0, 4))),
+      ),
+    ],
+    [data],
+  );
+  useEffect(() => {
+    registerFilterModel(
+      allocationFilterModel({
+        years,
+        earlier: stage === 'history',
+        loaded: !!data,
+      }),
+      {
+        value: { state, year: through ? Number(through) : '' },
+        onChange: (next) =>
+          router.setParams({
+            state: next.state ? String(next.state) : undefined,
+            through: next.year ? String(next.year) : undefined,
+          }),
+      },
+    );
+  }, [years, stage, data, state, through]);
+  const all = useMemo(
     () =>
-      (stage === 'history'
+      stage === 'history'
         ? (data?.history.records ?? [])
         : stage === 'invitations'
           ? (data?.allocation.projects ?? [])
-          : (data?.allocation.awards ?? [])
-      ).filter(
-        (p) =>
-          inState(p.state, state) &&
-          [p.id, p.title]
-            .join(' ')
-            .toLowerCase()
-            .includes(query.trim().toLowerCase()) &&
-          (stage !== 'history' ||
-            !/^\d{4}$/.test(through) ||
-            p.date.slice(0, 4) <= through),
-      ),
-    [data, stage, query, state, through],
+          : (data?.allocation.awards ?? []),
+    [data, stage],
   );
-  const seats =
-    data?.allocation.seats
-      .filter(
-        (s) =>
-          seat.trim() &&
-          s.name.toLowerCase().includes(seat.trim().toLowerCase()),
-      )
-      .slice(0, 10) ?? [];
-  const date =
-    stage === 'history'
-      ? data?.history.asOf
+  const titleOf = useCallback(
+    (r: (typeof all)[number]) =>
+      (stage === 'history'
+        ? undefined
+        : data?.locations?.records.find(
+            (l) =>
+              l.id === r.id &&
+              l.kind === (stage === 'invitations' ? 'invitation' : 'award'),
+          )?.title) ?? r.title,
+    [data, stage],
+  );
+  const filtered = all.filter(
+    (p) =>
+      inState(p.state, state) &&
+      (stage !== 'history' || !through || p.date.slice(0, 4) <= through),
+  );
+  const rows = filtered
+    .filter((p) => matches(search.query, p.id, titleOf(p)))
+    .sort((a, b) => b.value - a.value);
+  const noun =
+    stage === 'awards'
+      ? ['award', 'awards']
       : stage === 'invitations'
-        ? data?.allocation.invitationsAsOf
-        : data?.allocation.asOf;
-  // Short publisher names on the line (design pass 5, P2-5); the earlier
-  // grants' venue checks are OPAX's own work, said in the notes.
-  const source =
-    stage === 'invitations' ? INVITATIONS : moneyCitation('GrantConnect');
+        ? ['invitation', 'invitations']
+        : ['earlier grant', 'earlier grants'];
+  const where = state ? ` in ${stateLabel(state)}` : '';
+  const searching = !!search.query.trim();
+  const caption = searching
+    ? `${rows.length.toLocaleString('en-AU')} of ${counted(filtered.length, noun[0]!, noun[1])}`
+    : `${counted(filtered.length, noun[0]!, noun[1])}${where}, largest first`;
+  const total = all.reduce((sum, p) => sum + p.value, 0);
+  const line =
+    stage === 'awards'
+      ? `in ${counted(all.length, 'published award')}, ${span(
+          all.map((p) => p.date),
+          monthYear,
+        )}`
+      : stage === 'invitations'
+        ? `in ${counted(all.length, 'invitation to apply', 'invitations to apply')}, in the ${data ? formatDate(data.allocation.invitationsAsOf, 'long').replace(/^\d{1,2} /, '') : ''} list`
+        : `in ${counted(all.length, 'earlier grant')}, ${span(
+            all.map((p) => p.date),
+            financialYear,
+          )}`;
+  const saved = recordSource(status.record);
+  const name = 'Community funding';
+  const filtersActive = !!state || (stage === 'history' && !!through);
   return (
     <>
-      <MoneyHeader
-        title="Where community funding goes"
-        path="/money/grants?jur=federal&program=GO7867"
+      <Stack.Screen
+        options={{
+          title: name,
+          headerLargeTitleEnabled: true,
+          headerLargeTitleShadowVisible: false,
+          headerSearchBarOptions: search.options,
+          ...moneyBar({
+            name,
+            path: '/money/grants?jur=federal&program=GO7867',
+            filters: {
+              active: filtersActive,
+              href: filtersRoute('allocation'),
+            },
+            extra: [
+              {
+                title: 'Funding by seat type',
+                symbol: 'chart.bar.doc.horizontal',
+                onPress: () => router.push(fundingBySeatTypeRoute),
+              },
+            ],
+          }),
+        }}
       />
       <MoneyList
-        loaded={!!status.record}
+        loaded={!!data}
         id="allocation-list"
         rows={rows}
         rowKey={(r) => r.id}
@@ -133,253 +224,161 @@ export default function Allocation() {
         refresh={status.refresh}
         header={
           <>
-            <Title id="allocation-title">Where community funding goes</Title>
-            <Text wordSafe variant="metadata">
-              What a grant was for, who it was awarded to and where the project
-              is.
+            <TitleAlias title={name} testID="allocation-title" />
+            <Text wordSafe variant="secondary">
+              Election commitment grants: what each project is for, who received
+              it and where.
             </Text>
-            <RecordStatus
-              {...status}
-              label="Loading community funding"
+            <MoneyStatus
+              status={status}
+              name={name}
               testID="allocation-status"
             />
-            <MoneyChoices
-              value={stage}
-              onChange={setStage}
-              options={[
-                ['awards', 'Published awards', 'allocation-awards'],
-                ['invitations', 'Invitations', 'allocation-invitations'],
-                ['history', 'Earlier grants', 'allocation-history'],
-              ]}
-            />
             {data ? (
-              <Text wordSafe variant="fine" testID="allocation-caveat">
-                {stage === 'history'
-                  ? 'Selected examples at their latest award values; not payments made that year.'
-                  : 'Invitations and awards are separate snapshots: never add them together.'}
-              </Text>
-            ) : null}
-            <Field
-              label="Find a project"
-              testID="allocation-search"
-              value={query}
-              onChangeText={setQuery}
-              returnKeyType="done"
-            />
-            <Group gap={rhythm.tight}>
-              <Text variant="label" accessibilityRole="header">
-                State or territory
-              </Text>
-              <MoneyChoices
-                value={state}
-                onChange={setState}
-                options={STATE_CHOICES}
-              />
-            </Group>
-            {stage === 'history' ? (
-              <Field
-                label="Show grants published by the end of year (blank for all years)"
-                value={through}
-                onChangeText={setThrough}
-                keyboardType="number-pad"
-              />
-            ) : null}
-            <Disclosure
-              label="How invitations were shared"
-              testID="allocation-comparison"
-              open={comparison}
-              onToggle={setComparison}
-            >
-              {data ? (
-                <Group gap={rhythm.tight}>
-                  <Text wordSafe>
-                    These comparisons use the department’s November 2025
-                    invitation list.
-                  </Text>
-                  {data.allocation.comparison.map((r) => (
-                    <Group key={r.name} gap={rhythm.line}>
-                      <Text wordSafe variant="strong">
-                        {r.name}
-                      </Text>
-                      <KeyValueList
-                        items={[
-                          {
-                            label: 'Published comparison',
-                            value: formatMoneyCompact(r.actual),
-                          },
-                          {
-                            label: 'if shared in proportion to seat numbers',
-                            value: formatMoneyCompact(r.expected),
-                          },
-                        ]}
-                      />
-                    </Group>
-                  ))}
-                  <SourceLine
-                    title="About the seat comparison"
-                    asOf={data.allocation.asOf}
-                    citation={[moneyCitation('Centre for Public Integrity')]}
-                    originals={
-                      data.allocation.sources.cpi
-                        ? [
-                            {
-                              label: 'Centre for Public Integrity report',
-                              url: data.allocation.sources.cpi,
-                            },
-                          ]
-                        : []
-                    }
-                    notes={[
-                      data.allocation.provenance,
-                      'The seat comparison reproduces the Centre for Public Integrity’s published Table 3, including its by-election adjustments and Brisbane exception. Opax has not independently reproduced it from every project’s location. The electorate picker uses the AEC’s unadjusted 2025 baseline.',
-                    ]}
-                    testID="allocation-comparison-source"
-                  />
-                </Group>
-              ) : null}
-            </Disclosure>
-            <Disclosure
-              label="Look up an electorate’s election margin"
-              testID="allocation-margin"
-              open={marginOpen}
-              onToggle={setMarginOpen}
-            >
-              <Group gap={rhythm.tight}>
-                <Field
-                  label="Electorate"
-                  value={seat}
-                  onChangeText={setSeat}
-                  testID="allocation-margin-search"
-                  returnKeyType="done"
+              <>
+                <FigureBlock
+                  value={formatMoneyCompact(total)}
+                  ink="money"
+                  label={line}
+                  caveat={stage === 'history' ? LATEST_VALUES : SEPARATE_LISTS}
+                  // Spread: opax/transport reads a plain `source` prop as an image.
+                  {...{
+                    source: {
+                      asOf:
+                        stage === 'history'
+                          ? data.history.asOf
+                          : stage === 'invitations'
+                            ? data.allocation.invitationsAsOf
+                            : data.allocation.asOf,
+                      citation: [
+                        stage === 'invitations'
+                          ? INVITATIONS
+                          : moneyCitation('GrantConnect'),
+                      ],
+                      savedAt: saved.savedAt,
+                      state: saved.state,
+                      originals:
+                        stage === 'invitations' &&
+                        data.allocation.sources.department
+                          ? [
+                              {
+                                label: INVITATIONS.label,
+                                url: data.allocation.sources.department,
+                              },
+                            ]
+                          : [
+                              {
+                                label: 'GrantConnect',
+                                url: 'https://www.grants.gov.au/Ga/List',
+                              },
+                            ],
+                      notes: [
+                        MERIT,
+                        EARLIER,
+                        ...(data.locations?.methodology ?? []),
+                        ...(stage === 'history'
+                          ? data.history.methodology.filter(
+                              (m) => !m.includes('© OpenStreetMap'),
+                            )
+                          : []),
+                        ...saved.stateNotes,
+                      ].map(readableDates),
+                      testID: 'allocation-source',
+                    },
+                  }}
+                  testID="allocation-figure"
                 />
-                {seats.map((s) => (
-                  <Group key={`${s.name}-${s.state}`} gap={rhythm.line}>
-                    <Text wordSafe variant="strong">
-                      {s.name} · {s.state}
-                    </Text>
-                    <Text wordSafe variant="metadata">
-                      {s.party} · {formatPercent(s.margin)} · {s.baseline}
-                    </Text>
-                  </Group>
-                ))}
-                {seat && !seats.length ? (
-                  <Text wordSafe>
-                    No electorate matches the available AEC baseline.
-                  </Text>
-                ) : null}
-                {data ? (
-                  <SourceLine
-                    title="About election margins"
-                    asOf={data.allocation.asOf}
-                    citation={[moneyCitation('AEC seat status')]}
-                    originals={
-                      data.allocation.sources.aec
-                        ? [
-                            {
-                              label: 'AEC seat status, 2025 election',
-                              url: data.allocation.sources.aec,
-                            },
-                          ]
-                        : []
-                    }
-                    notes={[
-                      'These margins describe seats before the 2025 federal election.',
-                    ]}
-                    testID="allocation-margin-source"
-                  />
-                ) : null}
-              </Group>
-            </Disclosure>
-            <ResultCount
-              count={data ? rows.length : null}
-              noun="project records"
-            />
+                <SegmentedPicker
+                  accessibilityLabel="Show"
+                  value={stage}
+                  onChange={(next) => {
+                    setStage(next);
+                    router.setParams({ stage: next });
+                  }}
+                  options={[
+                    {
+                      value: 'awards',
+                      label: 'Awards',
+                      testID: 'allocation-awards',
+                    },
+                    {
+                      value: 'invitations',
+                      label: 'Invitations',
+                      testID: 'allocation-invitations',
+                    },
+                    {
+                      value: 'history',
+                      label: 'Earlier grants',
+                      testID: 'allocation-history',
+                    },
+                  ]}
+                  testID="allocation-stage"
+                />
+                <ListCaption announce={searching} testID="allocation-caption">
+                  {caption}
+                </ListCaption>
+              </>
+            ) : null}
           </>
         }
-        sourceLine={
+        empty={
+          searching ? (
+            <EmptyState
+              message={`No projects match “${search.query.trim()}”.`}
+              testID="allocation-empty"
+            />
+          ) : state ? (
+            <View style={{ gap: rhythm.tight }}>
+              <EmptyState
+                message={`No ${noun[1]} in ${stateLabel(state)}.`}
+                testID="allocation-empty"
+              />
+              <Button
+                label="Show all states"
+                variant="plain"
+                onPress={() => router.setParams({ state: undefined })}
+                testID="allocation-all-states"
+              />
+            </View>
+          ) : null
+        }
+        render={(r, i) => (
+          <MoneyRow
+            name={titleOf(r)}
+            detail={[
+              stateLabel(r.state),
+              r.date ? formatDate(r.date, 'short') : '',
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+            amount={r.value}
+            href={moneyItemHref(
+              {
+                kind:
+                  stage === 'history'
+                    ? 'earlier'
+                    : stage === 'invitations'
+                      ? 'project'
+                      : 'award',
+                id: r.id,
+              },
+              { name: titleOf(r) },
+            )}
+            testID={`allocation-project-${i}`}
+          />
+        )}
+        footer={
           data ? (
-            <SourceLine
-              title="About community funding"
-              asOf={date ?? null}
-              citation={[source]}
-              savedAt={status.record?.stale ? status.record.savedAt : null}
-              notes={[
-                MERIT,
-                EARLIER,
-                ...data.locations.methodology,
-                ...(stage === 'history'
-                  ? data.history.methodology.filter(
-                      (m) => !m.includes('© OpenStreetMap'),
-                    )
-                  : []),
-              ].map(readableDates)}
-              testID="allocation-source"
+            <LinkRow
+              title="Funding by seat type"
+              testID="allocation-seat-type"
+              href={fundingBySeatTypeRoute}
             />
           ) : null
         }
-        render={(r, i) => {
-          const location =
-            stage === 'history'
-              ? undefined
-              : data!.locations.records.find(
-                  (l) =>
-                    l.id === r.id &&
-                    l.kind ===
-                      (stage === 'invitations' ? 'invitation' : 'award'),
-                );
-          return (
-            <Group gap={rhythm.line}>
-              <Text
-                wordSafe
-                variant="strong"
-                testID={`allocation-project-${i}`}
-              >
-                {location?.title ?? r.title}
-              </Text>
-              <Text wordSafe variant="strong" tabular tone="moneyInk">
-                {formatMoneyCompact(r.value)}
-              </Text>
-              <Text wordSafe variant="metadata">
-                {r.id} · {r.state || 'Delivery state not recorded'} ·{' '}
-                {'status' in r ? r.status : r.program}
-                {r.date ? ` · Published ${formatDate(r.date)}` : ''}
-              </Text>
-              {location?.sites.map((site, j) => (
-                <Text key={j} wordSafe>
-                  {site.name} · {site.address}
-                </Text>
-              ))}
-              {/* One source for the row: the award notice, then each
-                  venue's location evidence. */}
-              <SourceLine
-                title="This record"
-                dateLabel={null}
-                asOf={date ?? null}
-                citation={[source]}
-                coverage={r.id}
-                originals={[
-                  ...(r.sourceUrl
-                    ? [{ label: source.label, url: r.sourceUrl, record: r.id }]
-                    : []),
-                  ...(location?.sites ?? []).map((site) => ({
-                    label: 'Project location evidence',
-                    url: site.sourceUrl,
-                    record: site.name,
-                  })),
-                ]}
-                notes={
-                  location?.sites.length
-                    ? [
-                        `Project locations from verified venue sources, as at ${formatDate(data!.locations.asOf)}.`,
-                      ]
-                    : undefined
-                }
-                testID={`allocation-source-${i}`}
-              />
-            </Group>
-          );
-        }}
       />
     </>
   );
 }
+
+export { yearRange };

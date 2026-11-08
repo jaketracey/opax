@@ -9,6 +9,11 @@ import {
 import { publicSignal } from '../src/features/money-public/discovery';
 import { MoneyCatalogs, combine } from '../src/features/money-public/catalog';
 import { fromWebPath } from '../src/navigation/routes';
+import {
+  moneyFromWebPath,
+  moneyItemHref,
+  organisationHref,
+} from '../src/features/money-public/routes';
 import { assertAllowedPath } from '../src/api/policy';
 import { decodeDiscovery } from '../src/api/catalog-decoders';
 import { formatMoneyCompact } from '../src/design/format';
@@ -96,7 +101,13 @@ describe('public-money privacy before presentation', () => {
     const privateIndex = {
       ...index,
       recipients: [
-        { id: row.recipientId, name: unnamedRecipient, organisation: false },
+        {
+          id: row.recipientId,
+          name: unnamedRecipient,
+          organisation: false,
+          total: 0,
+          count: 0,
+        },
       ],
     };
     const safe = d.largestFor(largest, privateIndex, largest.latest)[0]!;
@@ -175,7 +186,8 @@ describe('static exports are validated, dated and retain their source caveats', 
     const allocation = d.decodeAllocation(raw('/research/mlci.json'));
     expect(allocation.projects).toHaveLength(226);
     expect(allocation.awards).toHaveLength(89);
-    expect(allocation.seats).toHaveLength(150);
+    // The election-margin lookup is gone: mlci.json `seats` is not read.
+    expect('seats' in allocation).toBe(false);
     expect(allocation.comparison).toHaveLength(6);
     expect(allocation.provenance).toMatch(/not independently reproduced/);
     expect(
@@ -310,6 +322,10 @@ describe('route and transport boundaries', () => {
     ['/money/grants?jur=federal&program=GO3141', '/grant-program'],
     ['/money/grants?largest=2026-08', '/largest-grants'],
     ['/discover?category=donor_contract_overlap', '/leads'],
+    ['/money?node=donor:westpac', '/money-record'],
+    ['/money?rid=abn:33007457141&jur=federal', '/money-record'],
+    ['/money/grants?jur=federal&program=GO7867', '/grants-allocation'],
+    ['/connections?entity=007830f6188c56962ac2a86b', '/connection'],
     ['/subject/agency', '/agencies'],
     ['/subject/agency/a-7431f054588d4251c0b4', '/agency'],
     ['/subject/donor/Ada', '/money-record'],
@@ -405,5 +421,75 @@ describe('route and transport boundaries', () => {
         /\bfetch\s*\(|[\x27\x22]\/api\/|\/supplier\/[\[]|\/recipient\/[\[]|\/donor\/[\[]/,
       );
     }
+  });
+});
+
+describe('decoders state their years and ranges', () => {
+  test('the grant index carries its years, counts and per-year totals', () => {
+    const index = d.decodeGrantIndex(raw('/graph/grants.federal.json'));
+    expect(index.meta.years.length).toBeGreaterThan(5);
+    expect(index.meta.years[0]).toMatch(/^\d{4}-\d{2}$/);
+    expect(index.counts.recipientsListed).toBeGreaterThan(0);
+    expect(Object.keys(index.byYear).length).toBeGreaterThan(0);
+    for (const r of index.recipients) {
+      expect(typeof r.total).toBe('number');
+      expect(typeof r.count).toBe('number');
+    }
+  });
+  test('a program carries its year span and every electorate', () => {
+    const program = d.decodeProgram(
+      raw('/grants/federal/programs/go3141.json'),
+    );
+    expect(program.years[0]).toMatch(/^\d{4}-\d{2}$/);
+    expect(program.electorates?.length).toBeGreaterThan(0);
+    for (const e of program.electorates ?? []) {
+      expect(e.name).toBeTruthy();
+      expect(e.count).toBeGreaterThan(0);
+    }
+  });
+  test('agencies carry the notice publication window and calendar-year basis', () => {
+    const agencies = d.decodeAgencies(raw('/agencies.json'));
+    expect(agencies.publishedFrom).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    expect(agencies.publishedTo).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    const profile = d.decodeAgency(
+      raw('/agencies/a-7431f054588d4251c0b4.json'),
+    );
+    expect(profile.firstYear).toBeGreaterThan(1900);
+    expect(profile.lastYear).toBeGreaterThanOrEqual(profile.firstYear!);
+    expect(profile.contracts.some((c) => c.supplierId)).toBe(true);
+  });
+});
+
+describe('money item routes', () => {
+  test('a money item carries ids only, and the page it was opened from', () => {
+    expect(
+      moneyItemHref(
+        { kind: 'contract', agency: 'a-1', id: 'CN1' },
+        { name: 'Acme Pty Ltd', from: 'a-1' },
+      ),
+    ).toEqual({
+      pathname: '/money-item',
+      params: {
+        kind: 'contract',
+        agency: 'a-1',
+        id: 'CN1',
+        from: 'a-1',
+        name: 'Acme Pty Ltd',
+      },
+    });
+  });
+  test('an organisation opens its money record by rid and jurisdiction', () => {
+    expect(organisationHref('abn:1', 'Acme Pty Ltd')).toEqual({
+      pathname: '/money-record',
+      params: { rid: 'abn:1', jur: 'federal', name: 'Acme Pty Ltd' },
+    });
+  });
+  test('/discover keeps only its category and item', () => {
+    expect(
+      moneyFromWebPath('/discover?category=donor_contract_overlap&item=x&q=y'),
+    ).toEqual({
+      pathname: '/leads',
+      params: { category: 'donor_contract_overlap', item: 'x' },
+    });
   });
 });

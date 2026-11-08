@@ -1,7 +1,10 @@
 // Decision 3 / App Review 5.1.1. An ABN alone never proves an organisation:
 // sole traders have ABNs. Source entity types override name heuristics.
-export const unnamedRecipient = 'Individual recipient (not named in the app)';
-export const unnamedSupplier = 'Individual supplier (not named in the app)';
+// The label is plain; why OPAX doesn't name them is said once, in the money
+// item's Notes (privateNote), not on every row (specs/money.md 1.2).
+export const unnamedRecipient = 'Individual recipient';
+export const unnamedSupplier = 'Individual supplier';
+export const privateNote = "OPAX doesn't name private individuals.";
 const organisations = new Set([
   'company',
   'association',

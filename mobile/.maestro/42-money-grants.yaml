@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 42 Electorate grants, programs and monthly largest; static public-money screens
+name: 42 Grants in the seat, Commonwealth grants, programs, largest, community funding, programs and places
 ---
 - launchApp
 - tapOn:
@@ -75,16 +75,31 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/42-seat-grants
+# Grants in the seat opens from the hub's seat row until the per-seat
+# slice ships (D5): a figure and its source only, nothing national.
+- openLink: opax://public-money
+- tapOn:
+    text: Open
+    optional: true
 - scrollUntilVisible:
     element:
-      id: seat-grants-all
+      id: money-hub-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-public-money-hub
+- scrollUntilVisible:
+    element:
+      id: money-seat
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: seat-grants-all
+    id: money-seat
 - scrollUntilVisible:
     element:
       id: grants-title
@@ -93,27 +108,46 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     centerElement: true
     speed: 20
     timeout: 300000
-- takeScreenshot: ${EVIDENCE}/42-grants-electorates
+- assertVisible:
+    id: grants-title
+    text: Grants in Grayndler
+- assertVisible: Matched by postcode where one is recorded, so this is a minimum.
 - scrollUntilVisible:
     element:
-      id: grants-row-0
+      id: grants-seat-electorate
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
-- tapOn:
+- assertVisible:
+    id: grants-seat-electorate
+    text: Grayndler.*
+- assertNotVisible:
     id: grants-row-0
+- takeScreenshot: ${EVIDENCE}/42-grants-in-seat
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
     element:
-      id: grants-search
-    direction: DOWN
+      id: money-card-grants
+    direction: UP
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: grants-search
+    id: money-card-grants
+- scrollUntilVisible:
+    element:
+      id: grants-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-commonwealth-grants
+# The bar search sits under the large title, visible on first appearance.
+- tapOn: Grant programs
 - inputText: Community Development Grants
 - pressKey: Enter
 - scrollUntilVisible:
@@ -137,16 +171,51 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
 - takeScreenshot: ${EVIDENCE}/42-program
 - scrollUntilVisible:
     element:
-      id: program-notes
+      id: program-source
     direction: DOWN
+    visibilityPercentage: 10
     centerElement: true
-    timeout: 60000
+    speed: 20
+    timeout: 300000
 - tapOn:
-    id: program-notes
-- assertVisible:
-    id: program-notes-sheet
-- takeScreenshot: ${EVIDENCE}/42-program-notes
+    id: program-source
+- extendedWaitUntil:
+    visible:
+      id: program-source-sheet
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/42-program-source
 - tapOn: Done
+# A grant row pushes its money item, with the GrantConnect original.
+- tapOn:
+    id: program-grants
+- scrollUntilVisible:
+    element:
+      id: program-grant-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- tapOn:
+    id: program-grant-0
+- scrollUntilVisible:
+    element:
+      id: money-item-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- scrollUntilVisible:
+    element:
+      id: money-item-original-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-grant-item
+- tapOn: { id: BackButton }
 # The month's largest grants is a row at the foot of the program's list.
 - scrollUntilVisible:
     element:
@@ -166,6 +235,13 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     centerElement: true
     speed: 20
     timeout: 300000
+- assertVisible:
+    id: largest-title
+    text: Largest grants
+- assertVisible:
+    id: largest-month
+- assertVisible:
+    id: largest-rule
 - takeScreenshot: ${EVIDENCE}/42-largest
 - scrollUntilVisible:
     element:
@@ -175,20 +251,23 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     centerElement: true
     speed: 20
     timeout: 300000
-- takeScreenshot: ${EVIDENCE}/42-largest-recipient
-- openLink: opax://public-money
 - tapOn:
-    text: Open
-    optional: true
+    id: largest-recipient-0
 - scrollUntilVisible:
     element:
-      id: money-hub-title
+      id: money-item-title
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
-- takeScreenshot: ${EVIDENCE}/42-public-money-hub
+- takeScreenshot: ${EVIDENCE}/42-largest-item
+- tapOn: { id: BackButton }
+# Queensland grants from the hub.
+- openLink: opax://public-money
+- tapOn:
+    text: Open
+    optional: true
 - scrollUntilVisible:
     element:
       id: money-qld
@@ -208,6 +287,8 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/42-qld-grants
+# Community funding: figure, stage picker, rows to money items, and the
+# CPI table as published. No margin lookup.
 - openLink: opax://grants-allocation
 - tapOn:
     text: Open
@@ -220,37 +301,17 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     centerElement: true
     speed: 20
     timeout: 300000
+- scrollUntilVisible:
+    element:
+      id: allocation-figure
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
 - takeScreenshot: ${EVIDENCE}/42-allocation
-- scrollUntilVisible:
-    element:
-      id: allocation-comparison
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: allocation-comparison
-- takeScreenshot: ${EVIDENCE}/42-seat-comparison
-- scrollUntilVisible:
-    element:
-      id: allocation-margin
-    centerElement: true
-- tapOn:
+- assertNotVisible:
     id: allocation-margin
-- scrollUntilVisible:
-    element:
-      id: allocation-margin-search
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: allocation-margin-search
-- inputText: Grayndler
-- pressKey: Enter
-- takeScreenshot: ${EVIDENCE}/42-margin
 - scrollUntilVisible:
     element:
       id: allocation-project-0
@@ -259,7 +320,18 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     centerElement: true
     speed: 20
     timeout: 300000
+- tapOn:
+    id: allocation-project-0
+- scrollUntilVisible:
+    element:
+      id: money-item-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
 - takeScreenshot: ${EVIDENCE}/42-project
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
     element:
       id: allocation-invitations
@@ -271,17 +343,40 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
 - tapOn:
     id: allocation-invitations
 - takeScreenshot: ${EVIDENCE}/42-invitations
+- tapOn:
+    id: allocation-history
+- takeScreenshot: ${EVIDENCE}/42-history
 - scrollUntilVisible:
     element:
-      id: allocation-history
+      id: allocation-seat-type
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: allocation-history
-- takeScreenshot: ${EVIDENCE}/42-history
+    id: allocation-seat-type
+- scrollUntilVisible:
+    element:
+      id: seat-type-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- assertVisible: ALP Safe
+- assertVisible: Actual Grant Value
+- takeScreenshot: ${EVIDENCE}/42-seat-type
+- scrollUntilVisible:
+    element:
+      id: seat-type-source
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-seat-type-source
+# Programs and places: every row opens its own page with the excerpts.
 - openLink: opax://connections
 - tapOn:
     text: Open
@@ -295,16 +390,7 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/42-programs-places
-- scrollUntilVisible:
-    element:
-      id: connections-search
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: connections-search
+- tapOn: Programs, places and organisations
 - inputText: Community Development Grants
 - pressKey: Enter
 - takeScreenshot: ${EVIDENCE}/42-connections-search
@@ -318,4 +404,20 @@ name: 42 Electorate grants, programs and monthly largest; static public-money sc
     timeout: 300000
 - tapOn:
     id: connection-open-c87ef697d1bd69e428442b36
-- takeScreenshot: ${EVIDENCE}/42-source-excerpts
+- scrollUntilVisible:
+    element:
+      id: connection-title
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- scrollUntilVisible:
+    element:
+      id: connection-excerpt-0
+    direction: DOWN
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 300000
+- takeScreenshot: ${EVIDENCE}/42-connection

@@ -34,7 +34,7 @@ export const publicMoneyDatasets: Dataset[] = [
   },
   {
     id: 'programs-places',
-    name: 'Programs and places source connections',
+    name: 'Programs and places',
     publisher: 'OPAX; Parliament of Australia; Queensland Government',
     terms: [
       'Connections come from the collected Hansard, press release and Queensland grant records. Original records retain their own copyright and licence: parliamentary copyright and CC BY-NC-ND terms for Hansard; CC BY 4.0 for Queensland Government Investment Portal expenditure. Press releases retain their publisher’s terms.',
