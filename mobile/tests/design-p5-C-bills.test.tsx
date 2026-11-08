@@ -15,6 +15,7 @@ import { SegmentedPicker } from '../src/design/controls';
 import BillDetail, { rulerPoints } from '../src/features/bills/BillDetail';
 import BillsList from '../src/features/bills/BillsList';
 import { billTextRoute } from '../src/navigation/routes';
+import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
 
 // Design pass 5, lane C (bills): the bill header's actions (P1-3), the
@@ -352,6 +353,41 @@ describe('Bills list (P2-8, P2-19)', () => {
       expect(outside).toHaveLength(0);
     },
   );
+
+  test('Filters says why it waits while the bills load, then opens the sheet', async () => {
+    let arrive!: () => void;
+    mock.bills.mockImplementation(
+      (refresh) =>
+        new Promise((resolve) => {
+          arrive = () => resolve(fixture.bills(refresh));
+        }),
+    );
+    await render(<BillsList />);
+    const filters = () =>
+      barItems().find((item) => item.label === 'Filters') as unknown as {
+        disabled?: boolean;
+        accessibilityHint?: string;
+      };
+    expect(filters()).toMatchObject({
+      disabled: true,
+      accessibilityHint: 'Available once bills load',
+    });
+    await act(async () => arrive());
+    expect(filters().disabled).toBe(false);
+    expect(filters().accessibilityHint).toBeUndefined();
+  });
+
+  test('the Votes in parliament row pushes its own route', async () => {
+    const root = await render(<BillsList />);
+    const row = root.find(
+      (node) =>
+        node.props.testID === 'bills-votes' &&
+        typeof node.props.onPress === 'function' &&
+        typeof node.type !== 'string',
+    );
+    act(() => row.props.onPress());
+    expect(router.push).toHaveBeenCalledWith(divisionHistoryRoute);
+  });
 
   test('the iPhone never opens a bill on its own', async () => {
     const root = await render(<BillsList />);

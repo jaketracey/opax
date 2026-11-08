@@ -15,6 +15,8 @@ import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { BillRow } from '../src/design/primitives';
 import BillsList from '../src/features/bills/BillsList';
+import { scopedQuestion } from '../src/features/ask/AskAbout';
+import { askRoute } from '../src/navigation/routes';
 import { pinned, slugs } from './pinned';
 
 // Design pass 5, lane C, P2-21 (bills half), as revised by specs/bills.md
@@ -203,4 +205,34 @@ test("Today's link to Bills (a navigate, with params of its own) opens the first
   expect(route().params.bill).toBe(keyOf(rows(view)[0]!));
   expect(emptyPane(view)).toHaveLength(0);
   expect(todayParams(view)).toEqual({});
+});
+
+test("the pane's Ask drafts the same question as the bill page's", async () => {
+  const navigate = jest.spyOn(router, 'navigate');
+  const view = await render('/bills');
+  const actions = view.root.find(
+    (node) =>
+      typeof node.type === 'function' && node.type.name === 'PaneActions',
+  );
+  const ask = actions.find(
+    (node) =>
+      node.props.testID === 'bill-pane-ask' &&
+      typeof node.props.onPress === 'function',
+  );
+  // Only the draft is checked: this test app has no Ask route.
+  navigate.mockClear().mockImplementation(() => undefined);
+  await act(async () => ask.props.onPress());
+  // Each draft carries its own entry id; the rest is the same.
+  const { entry: _entry, ...draft } = (
+    askRoute(scopedQuestion('bill', actions.props.title)) as {
+      params: Record<string, string>;
+    }
+  ).params;
+  expect(navigate).toHaveBeenCalledWith(
+    expect.objectContaining({
+      pathname: '/ask',
+      params: expect.objectContaining(draft),
+    }),
+  );
+  navigate.mockRestore();
 });

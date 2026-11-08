@@ -59,10 +59,12 @@ import {
 } from '../../navigation/chrome';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { billRoute } from '../../navigation/routes';
+import { divisionHistoryRoute } from '../../navigation/routes/bills';
 import { resultsRoute } from '../../navigation/routes/search';
 import { useListSearchBar } from '../../design/search-bar';
 import { shareRecord } from '../../navigation/share';
 import { useAccount } from '../account/store';
+import { scopedQuestion } from '../ask/AskAbout';
 import { useOpenAsk } from '../ask/open';
 import BillTextReader from '../records/BillTextReader';
 import BillDetail, { PaneMenu } from './BillDetail';
@@ -241,6 +243,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     ]
       .filter(Boolean)
       .join(', '),
+    ...(all ? {} : { accessibilityHint: 'Available once bills load' }),
     disabled: !all,
   };
   const options = {
@@ -267,7 +270,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         <LinkRow
           title="Votes in parliament"
           symbol="hand.raised"
-          onPress={() => router.push('/division-history')}
+          onPress={() => router.push(divisionHistoryRoute)}
           testID="bills-votes"
         />
       )}
@@ -611,9 +614,7 @@ function PaneActions({ billKey, title }: { billKey: string; title: string }) {
         symbol="text.bubble"
         accessibilityLabel="Ask about this bill"
         testID="bill-pane-ask"
-        onPress={() =>
-          openAsk({ question: `What did parliament say about the ${title}?` })
-        }
+        onPress={() => openAsk(scopedQuestion('bill', title))}
       />
       <IconButton
         symbol="square.and.arrow.up"
