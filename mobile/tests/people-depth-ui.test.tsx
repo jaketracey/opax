@@ -11,18 +11,34 @@ import {
   Topics,
   openRecord,
 } from '../src/features/people/Sections';
-import { PartyAccess, PartyFunding } from '../src/features/people/PartyDepth';
+import {
+  PartyAccess,
+  PartyDebts,
+  PartyReturns,
+  usePartyFunding,
+} from '../src/features/people/PartyDepth';
+import { BarSeries } from '../src/design/charts';
 import ExpenseGlossary, {
   categoryKey,
 } from '../src/features/people/ExpenseGlossary';
 import { decodeExpenseCategories } from '../src/api/catalog-decoders';
-import { decodeAccess, decodeFunding } from '../src/features/people/model';
+import {
+  decodeAccess,
+  decodeFunding,
+  receiptsSeries,
+} from '../src/features/people/model';
 import { SegmentedPicker } from '../src/design/controls';
 import { LinkRow } from '../src/design/rows';
 import { recordListRoute } from '../src/navigation/routes';
 import { pinned } from './pinned';
 const mockParams: Record<string, string | undefined> = {};
 const mockOptions: { current?: Record<string, unknown> } = {};
+jest.mock('@shopify/react-native-skia', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- inert host view
+  Canvas: require('react-native').View,
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- inert host element
+  Rect: (props: object) => require('react').createElement('Rect', props),
+}));
 jest.mock('expo-router', () => ({
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
     Trigger: ({ children }: { children?: unknown }) => children,
@@ -72,15 +88,6 @@ async function render(node: React.ReactNode) {
     r = TestRenderer.create(node);
   });
   return r;
-}
-async function press(r: TestRenderer.ReactTestRenderer, id: string) {
-  await act(async () => {
-    r.root
-      .find(
-        (n) => n.props?.testID === id && typeof n.props.onPress === 'function',
-      )
-      .props.onPress();
-  });
 }
 const words = (r: TestRenderer.ReactTestRenderer) =>
   r.root
@@ -295,21 +302,31 @@ test('the ministerial diary is drawn only for a member it covers', async () => {
   await act(async () => failed.unmount());
 });
 
-test('meetings, attendees, lobbying firms and creditors remain plain text; all 27 receipt years are available', async () => {
+function Funding({ name }: { name: string }) {
+  const { read } = usePartyFunding();
+  return read.status === 'ready' ? (
+    <>
+      <PartyReturns record={read.value} name={name} />
+      <PartyDebts record={read.value} name={name} />
+    </>
+  ) : null;
+}
+test('meetings, attendees, lobbying firms and creditors remain plain text; the chart holds every return year', async () => {
   const r = await render(
     <>
       <PartyAccess name="Labor" />
-      <PartyFunding name="Labor" />
+      <Funding name="Labor" />
     </>,
   );
-  expect(words(r)).toContain('No disclosed meetings match');
+  // Empty halves collapse: no "no meetings" sentence is drawn.
+  expect(words(r)).not.toContain('No disclosed meetings match');
   expect(words(r)).toContain('Message4U Pty Ltd');
+  const years = receiptsSeries(funding.parties.Labor!.returns);
+  const chart = r.root.findByType(BarSeries);
+  expect(chart.props.data).toHaveLength(years.length);
+  expect(chart.props.data[0].label).toBe('1998–99');
   expect(
-    r.root.findAll((n) => n.props?.testID === 'party-return-1998-99'),
-  ).toHaveLength(0);
-  await press(r, 'party-all-years');
-  expect(
-    r.root.findAll((n) => n.props?.testID === 'party-return-1998-99').length,
+    r.root.findAll((n) => n.props?.testID === 'party-returns-latest').length,
   ).toBeGreaterThan(0);
   expect(
     r.root.findAll(
@@ -437,8 +454,8 @@ test('a populated access match shows its disclosure wording without linking meet
     'Fixture meeting purpose',
     'Fixture Lobbying Firm',
     'ceased',
-    'newest 1 shown',
-    'registered firms',
+    '1 of 4 shown, newest first.',
+    '1 of 2 shown.',
   ])
     expect(output).toContain(value);
   expect(
