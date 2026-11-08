@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 45 Electorates, dated representation, bill filters and division history
+name: 45 Electorates, dated representation, bill filters and Votes in parliament
 ---
 - launchApp
 - tapOn:
@@ -95,78 +95,82 @@ name: 45 Electorates, dated representation, bill filters and division history
     id: tab-bills
 - extendedWaitUntil:
     visible:
-      id: bills-filters
+      id: bills-count
+    timeout: 30000
+# Filters is the bar's own button; the shared sheet applies each change as
+# it is made, and Done only closes it.
+- tapOn: Filters.*
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
     timeout: 30000
 - tapOn:
-    id: bills-filters
-- scrollUntilVisible:
-    element:
-      id: bill-filter-parliament-48
-    centerElement: true
-    speed: 20
-    timeout: 180000
+    id: filters-row-parliament
+- extendedWaitUntil:
+    visible:
+      id: filters-facet-screen
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/45-bill-parliaments
-- tapOn:
-    id: bill-filter-parliament-48
 - scrollUntilVisible:
     element:
-      id: bill-filter-divided
+      id: filters-choice-48
     centerElement: true
     speed: 20
     timeout: 180000
 - tapOn:
-    id: bill-filter-divided
+    id: filters-choice-48
 - scrollUntilVisible:
     element:
-      id: bill-filter-sort-divisions
+      id: filters-row-divided
     centerElement: true
     speed: 20
     timeout: 180000
+- tapOn:
+    id: filters-row-divided
+- scrollUntilVisible:
+    element:
+      id: filters-row-sort
+    centerElement: true
+    speed: 20
+    timeout: 180000
+- tapOn:
+    id: filters-row-sort
+- extendedWaitUntil:
+    visible:
+      id: filters-choice-divisions
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/45-bill-sorts
 - tapOn:
-    id: bill-filter-sort-divisions
+    id: filters-choice-divisions
 - tapOn: Done
 - extendedWaitUntil:
     visible:
-      id: bills-chip-parliament
+      id: bills-clear
     timeout: 30000
+- assertVisible:
+    id: bills-count
+    text: '\d+ of \d+ bills'
 - takeScreenshot: ${EVIDENCE}/45-filtered-bills
-- scrollUntilVisible:
-    element:
-      id: bills-division-history
-    centerElement: true
-    speed: 20
-    timeout: 180000
 - tapOn:
-    id: bills-division-history
-- extendedWaitUntil:
-    visible:
-      id: division-history-search
-    timeout: 30000
-- takeScreenshot: ${EVIDENCE}/45-division-history-loading
-# Loading is a state, not a caption: the progress line goes once every bill
-# file is in, leaving the list's one source line.
+    id: bills-clear
+# Votes in parliament: one header per bill, its votes inset under it.
 - scrollUntilVisible:
     element:
-      id: division-history-source
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- extendedWaitUntil:
-    notVisible:
-      id: division-history-coverage
-    timeout: 600000
-- takeScreenshot: ${EVIDENCE}/45-division-history-complete
-- scrollUntilVisible:
-    element:
-      id: division-history-search
+      id: bills-votes
     direction: UP
     centerElement: true
     speed: 20
     timeout: 180000
 - tapOn:
-    id: division-history-search
+    id: bills-votes
+- extendedWaitUntil:
+    visible:
+      id: division-history-count
+    timeout: 600000
+- takeScreenshot: ${EVIDENCE}/45-division-history
+- assertVisible: '[\d,]+ votes'
+# Search is the native field in the bar, named by its placeholder.
+- tapOn: Bill names
 - inputText: Interactive Gambling
 - pressKey: Enter
 - scrollUntilVisible:
@@ -177,26 +181,54 @@ name: 45 Electorates, dated representation, bill filters and division history
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/45-division-row
-# A row is titled by its recorded stage, with its outcome and count, then
-# chamber and date; its bill heads the run as one line (pass 5, P2-10). The
-# question is on the bill's divisions, not behind an ⓘ on every row.
+# A vote is titled by its recorded stage, with chamber and date, its
+# outcome and the count in words; its bill heads the run.
 - assertVisible:
     id: division-history-au-federal-r7534-.*
-    text: 'Limitation of debate, [\s\S]*Senate · 19 Aug 2026, Interactive Gambling \(Cost Recovery Levy\) Bill 2026'
+    text: 'Limitation of debate, Senate · 19 Aug 2026, (Agreed to|Not agreed to), .*'
     index: 0
 - assertVisible:
     id: division-history-bill-au-federal-r7534
+# Leave out procedural votes: off on first open; on, no limitation of
+# debate remains, and Filters reads one on.
+- tapOn: Filters.*
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
+    timeout: 30000
+- tapOn:
+    id: filters-row-procedural
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: division-history-count
+    timeout: 30000
+- assertNotVisible: 'Limitation of debate, .*'
+- assertVisible: Filters, 1 on
+- takeScreenshot: ${EVIDENCE}/45-division-history-filtered
 - scrollUntilVisible:
     element:
-      id: division-history-au-federal-r7534-.*
+      id: division-history-source
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 20
+    timeout: 180000
+# The vote opens its bill at that vote, expanded; no "Bill divisions" step.
+- scrollUntilVisible:
+    element:
+      id: division-history-au-federal-r7534-0
+    direction: UP
     visibilityPercentage: 10
     centerElement: true
     timeout: 60000
 - tapOn:
-    id: division-history-au-federal-r7534-.*
-    index: 0
+    id: division-history-au-federal-r7534-0
 - extendedWaitUntil:
     visible:
-      id: bill-divisions
+      id: bill-screen
     timeout: 30000
-- takeScreenshot: ${EVIDENCE}/45-native-bill-divisions
+- extendedWaitUntil:
+    visible:
+      id: bill-division-.*-body
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/45-native-bill-vote
