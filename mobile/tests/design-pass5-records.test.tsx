@@ -30,6 +30,7 @@ import { menuLeaves } from '../src/design/row-link';
 import {
   ContentUnavailable,
   Heading,
+  InsetGroup,
   MachinePill,
   PersonRow,
   RecordRow,
@@ -421,5 +422,22 @@ test('Just added: a failed first read offers Try again', async () => {
   });
   await act(async () => failure.props.action.onPress());
   expect(records.recent).toHaveBeenCalledTimes(2);
+  await act(async () => view.unmount());
+});
+
+test('Just added: rows without a date added follow in a final group with no header', async () => {
+  const feed = decodeRecent(responses['/api/recent']);
+  jest
+    .mocked(records.recent)
+    .mockResolvedValue(
+      record([{ ...feed[0]!, indexed: null }, ...feed.slice(1)]),
+    );
+  const view = await mount(<RecentRecords />);
+  const headers = view.root
+    .findAllByType(InsetGroup)
+    .map((group) => group.props.header);
+  expect(headers.at(-1)).toBeUndefined();
+  expect(headers.slice(0, -1).every((h) => /^Added \d/.test(h))).toBe(true);
+  expect(text(view)).not.toMatch(/not recorded/);
   await act(async () => view.unmount());
 });

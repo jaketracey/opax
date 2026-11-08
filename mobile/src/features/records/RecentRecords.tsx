@@ -28,15 +28,24 @@ import {
 } from './model';
 import type { RecordResult } from '../../api/client';
 
-/** Rows grouped by the day OPAX added them, newest first (the feed's order). */
+/**
+ * Rows grouped by the day OPAX added them, newest first (the feed's order).
+ * Rows without a date added follow in a final group with no header.
+ */
 function byDayAdded(rows: readonly RecentItem[]) {
   const groups: { day: string | null; rows: RecentItem[] }[] = [];
+  const undated: RecentItem[] = [];
   for (const row of rows) {
     const day = row.indexed?.slice(0, 10) ?? null;
+    if (!day) {
+      undated.push(row);
+      continue;
+    }
     const last = groups.at(-1);
     if (last && last.day === day) last.rows.push(row);
     else groups.push({ day, rows: [row] });
   }
+  if (undated.length) groups.push({ day: null, rows: undated });
   return groups;
 }
 
@@ -107,9 +116,7 @@ export default function RecentRecords() {
           <InsetGroup
             key={group.day ?? 'undated'}
             header={
-              group.day
-                ? `Added ${formatDate(group.day, 'long')}`
-                : 'Date added not recorded'
+              group.day ? `Added ${formatDate(group.day, 'long')}` : undefined
             }
           >
             {group.rows.map((row) => {
