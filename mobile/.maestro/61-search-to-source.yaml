@@ -1,0 +1,250 @@
+appId: au.com.opax.app
+name: 61 Search to source, the five questions in journeys/search.md section 8
+---
+# Each question goes from the Search tab to a record's source line and its
+# original, in the tap counts the journey sets. Originals are only shown,
+# not opened, so the run stays in the app.
+#
+# Q1 "Albanese": the Top suggestion is the person; their profile; a block's
+# source line; an original.
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn:
+    id: tab-search
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Albanese
+      PREFIX: 61-q1
+- extendedWaitUntil:
+    visible:
+      id: search-top-suggestion
+    timeout: 30000
+- assertVisible:
+    id: search-suggestion-person-.*
+- takeScreenshot: ${EVIDENCE}/61-q1-top-suggestion
+- tapOn:
+    id: search-top-suggestion
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 20000
+- assertVisible: .*Albanese.*
+- scrollUntilVisible:
+    element:
+      id: person-votes-source
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: person-votes-source
+- extendedWaitUntil:
+    visible:
+      id: person-votes-source-original-0
+    timeout: 10000
+- takeScreenshot: ${EVIDENCE}/61-q1-original
+#
+# Q2 "housing": "Search speeches for" sits under the Top suggestion (the
+# Housing topic); a speech; its source line, on screen on arrival; an
+# original.
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn:
+    id: tab-search
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: housing
+      PREFIX: 61-q2
+- extendedWaitUntil:
+    visible:
+      id: search-top-suggestion
+    timeout: 30000
+- assertVisible:
+    id: search-suggestion-topic-housing
+- assertVisible:
+    id: search-speeches-row
+    below:
+      id: search-top-suggestion
+- takeScreenshot: ${EVIDENCE}/61-q2-suggestions
+- tapOn:
+    id: search-speeches-row
+- scrollUntilVisible:
+    element:
+      id: records-result-0
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: records-result-0
+- extendedWaitUntil:
+    visible:
+      id: doc-reader
+    timeout: 20000
+- assertVisible:
+    id: doc-source
+- takeScreenshot: ${EVIDENCE}/61-q2-record
+- tapOn:
+    id: doc-source
+- extendedWaitUntil:
+    visible:
+      id: doc-source-original-0
+    timeout: 10000
+- takeScreenshot: ${EVIDENCE}/61-q2-original
+#
+# Q3 "vaping": the word sits inside the bill's title, so "Search speeches
+# for" leads and there is no Top suggestion; the bill; its header source
+# line; an original.
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn:
+    id: tab-search
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: vaping
+      PREFIX: 61-q3
+- extendedWaitUntil:
+    visible:
+      id: search-suggestion-bill-.*
+    timeout: 30000
+- assertNotVisible:
+    id: search-top-suggestion
+- assertVisible:
+    id: search-suggestion-bill-.*
+    below:
+      id: search-speeches-row
+- takeScreenshot: ${EVIDENCE}/61-q3-suggestions
+- tapOn:
+    id: search-suggestion-bill-.*
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: bill-source
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: bill-source
+- extendedWaitUntil:
+    visible:
+      id: bill-source-original-0
+    timeout: 10000
+- takeScreenshot: ${EVIDENCE}/61-q3-original
+#
+# Q4 "Qantas": typing offers the speeches and Ask rows; the Search key; the
+# Declared interests row under All (one read on tap); an entry; the
+# member's page; the declarations block's source line; an original.
+- launchApp:
+    clearState: true
+    permissions: {}
+- tapOn:
+    id: tab-search
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Qantas
+      PREFIX: 61-q4
+- assertVisible:
+    id: search-speeches-row
+- assertVisible:
+    id: search-ask-row
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-in-interests
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/61-q4-search-in
+- tapOn:
+    id: search-in-interests
+- extendedWaitUntil:
+    visible:
+      id: results-interests-0
+    timeout: 30000
+- assertVisible:
+    id: results-screen
+- takeScreenshot: ${EVIDENCE}/61-q4-interests
+- tapOn:
+    id: results-interests-0
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: person-interests-source
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: person-interests-source
+- extendedWaitUntil:
+    visible:
+      id: person-interests-source-original-0
+    timeout: 10000
+- takeScreenshot: ${EVIDENCE}/61-q4-original
+#
+# Q5 a shared link: the app opens on the answered results with no tap, and
+# a query that arrived by link never enters Recent (journeys/search.md 4.5).
+- launchApp:
+    clearState: true
+    permissions: {}
+- stopApp
+- openLink: opax://search?q=housing
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: search-count
+    timeout: 90000
+- assertVisible:
+    id: search-scope.*
+- takeScreenshot: ${EVIDENCE}/61-q5-link-results
+- scrollUntilVisible:
+    element:
+      id: records-result-0
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    speed: 20
+    timeout: 90000
+- tapOn:
+    id: records-result-0
+- extendedWaitUntil:
+    visible:
+      id: doc-source
+    timeout: 20000
+- tapOn:
+    id: doc-source
+- extendedWaitUntil:
+    visible:
+      id: doc-source-original-0
+    timeout: 10000
+- takeScreenshot: ${EVIDENCE}/61-q5-original
+- stopApp
+- launchApp
+- tapOn:
+    id: tab-search
+- extendedWaitUntil:
+    visible:
+      id: search-idle
+    timeout: 20000
+- assertNotVisible:
+    id: search-recent
+- takeScreenshot: ${EVIDENCE}/61-q5-no-recent

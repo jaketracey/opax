@@ -1,144 +1,107 @@
 appId: au.com.opax.app
-name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
+name: 34 Speeches, filters, sort, cited summary and the results' sources
 ---
+# Speeches is the one scope with Filters and More (Sort, Share) in the bar
+# (journeys/search.md 3.5). A change in the Filters sheet is one request and
+# shows as one filter line with Clear; Summarise is tap only and cited.
 - launchApp:
     clearState: true
     permissions: {}
 - tapOn:
     id: tab-search
 - takeScreenshot: ${EVIDENCE}/34-search-form
-- tapOn:
-    id: search-input
-- inputText: housing
-- hideKeyboard
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: housing
+      PREFIX: 34
+- pressKey: Enter
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: Speeches
 - scrollUntilVisible:
     element:
-      id: search-kind-menu
-    direction: UP
-    centerElement: true
+      id: search-count
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 20
     timeout: 90000
-- tapOn:
-    id: search-kind-menu
-- tapOn: Records
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: records-count
-    timeout: 90000
-    centerElement: true
 - takeScreenshot: ${EVIDENCE}/34-records
-- scrollUntilVisible:
-    element:
-      id: search-filters
-    direction: UP
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-filters
+- tapOn: ^Filters.*
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
+    timeout: 10000
 - takeScreenshot: ${EVIDENCE}/34-filters
 - scrollUntilVisible:
     element:
-      id: search-filter-from
+      id: filters-years-from
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: search-filter-from
-- inputText: 2025
+    id: filters-years-from
+- tapOn: ^2025$
+- tapOn:
+    id: filters-years-to
+- tapOn: ^2026$
 - scrollUntilVisible:
     element:
-      id: search-filter-to
+      id: filters-row-party
+    direction: UP
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: search-filter-to
-- inputText: 2026
+    id: filters-row-party
+- extendedWaitUntil:
+    visible:
+      id: filters-facet-screen
+    timeout: 10000
 - scrollUntilVisible:
     element:
-      id: search-filter-party
+      id: filters-choice-Labor
     centerElement: true
     timeout: 90000
+- takeScreenshot: ${EVIDENCE}/34-party-choices
+# A single choice goes back to the sheet by itself.
 - tapOn:
-    id: search-filter-party
+    id: filters-choice-Labor
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
+    timeout: 10000
 - scrollUntilVisible:
     element:
-      id: search-filter-party-option-Labor
+      id: filters-result
     centerElement: true
     timeout: 90000
-- tapOn:
-    id: search-filter-party-option-Labor
+- takeScreenshot: ${EVIDENCE}/34-filters-set
+- tapOn: Done
+- extendedWaitUntil:
+    notVisible:
+      id: filters-screen
+    timeout: 10000
 - scrollUntilVisible:
     element:
-      id: search-filter-kind
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-filter-kind
-- scrollUntilVisible:
-    element:
-      id: search-filter-kind-find
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-filter-kind-find
-- inputText: Speeches
-- hideKeyboard
-- scrollUntilVisible:
-    element:
-      id: search-filter-kind-option-speech
-    centerElement: true
-    timeout: 90000
-- takeScreenshot: ${EVIDENCE}/34-record-types
-- tapOn:
-    id: search-filter-kind-option-speech
-- scrollUntilVisible:
-    element:
-      id: search-filters-apply
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-filters-apply
-- scrollUntilVisible:
-    element:
-      id: records-count
+      id: results-filter-summary
+    direction: UP
     centerElement: true
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/34-applied-filters
-# The answered form is short (pass 5, P1-1), so after Apply the count line
-# can sit under the navigation bar, where the hierarchy still calls it
-# visible. Bring the top of the page back before tapping the sort.
-- swipe:
-    start: 50%, 35%
-    end: 50%, 85%
-- swipe:
-    start: 50%, 35%
-    end: 50%, 85%
-- waitForAnimationToEnd
-- tapOn:
-    id: records-sort
-- scrollUntilVisible:
-    element:
-      id: records-sort-option-newest
-    centerElement: true
-    timeout: 90000
+# Sort lives in the bar's More menu on Speeches.
+- tapOn: More
+- tapOn: Sort
 - takeScreenshot: ${EVIDENCE}/34-sorts
-- tapOn:
-    id: records-sort-option-newest
+- tapOn: Newest first
 - scrollUntilVisible:
     element:
-      id: records-result-.*
+      id: records-result-0
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/34-result-row
 - tapOn:
-    id: records-result-.*
-    index: 0
+    id: records-result-0
 - extendedWaitUntil:
     visible:
       id: doc-title
@@ -146,32 +109,32 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
 - assertVisible:
     id: doc-reader
 - takeScreenshot: ${EVIDENCE}/34-native-record
-- tapOn:
-    text: Search
-    index: 0
-    retryTapIfNoChange: false
+- tapOn: { id: BackButton }
 - extendedWaitUntil:
     notVisible:
       id: doc-reader
     timeout: 10000
 - assertNotVisible:
-    id: search-filters-sheet
-# Summarise sits under the first three results (pass 5, P1-1).
+    id: filters-screen
+# Summarise sits after the third result (pass 5, P1-1) and is tap only.
+- assertNotVisible:
+    id: records-summary-machine
 - scrollUntilVisible:
     element:
-      id: records-summary
+      id: results-summarise
     direction: DOWN
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: records-summary
+    id: results-summarise
 - scrollUntilVisible:
     element:
-      id: records-summary-label
+      id: records-summary-machine
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
-- assertVisible: 'Machine-written\. A summary written by a model from the matching records.*'
+- assertVisible:
+    id: summary-scope-line
 - takeScreenshot: ${EVIDENCE}/34-summary
 - scrollUntilVisible:
     element:
@@ -187,95 +150,48 @@ name: 34 Records, filters, sort, cited summary and explicitly chosen briefs
       id: doc-title
     timeout: 20000
 - takeScreenshot: ${EVIDENCE}/34-citation-native-record
-- tapOn:
-    text: Search
-    index: 0
-    retryTapIfNoChange: false
+- tapOn: { id: BackButton }
 - extendedWaitUntil:
     notVisible:
       id: doc-reader
     timeout: 10000
-- assertNotVisible:
-    id: search-filters-sheet
+# The results' one source line is the count line: the notes, coverage and
+# originals open from it.
 - scrollUntilVisible:
     element:
-      id: records-briefs
+      id: search-count
     direction: UP
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: records-briefs
-- takeScreenshot: ${EVIDENCE}/34-briefs-selected
-
-# The results' one source line: the notes, coverage and originals.
-- scrollUntilVisible:
-    element:
-      id: records-sources
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: records-sources
+    id: search-count
+- extendedWaitUntil:
+    visible:
+      id: search-sources
+    timeout: 10000
 - takeScreenshot: ${EVIDENCE}/34-result-notes
 - tapOn:
-    text: Done
+    id: search-sources-done
     retryTapIfNoChange: false
 - extendedWaitUntil:
     notVisible:
-      text: Done
+      id: search-sources
     timeout: 10000
-
-# The 2025–26 filtered records have no prewritten briefs. A pinned 2023
-# public speech also proves the machine-written view when one is available.
+# Clear on the filter line goes back to the unfiltered list, from the
+# session cache.
 - scrollUntilVisible:
     element:
-      id: search-clear-all
+      id: results-filter-clear
     direction: UP
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: search-clear-all
+    id: results-filter-clear
     retryTapIfNoChange: false
 - extendedWaitUntil:
     notVisible:
-      id: search-clear-all
+      id: results-filter-summary
     timeout: 10000
 - assertNotVisible:
-    id: search-filters-sheet
+    id: filters-screen
 - takeScreenshot: ${EVIDENCE}/34-cleared-filters
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-input
-- eraseText
-- inputText: Don Farrell
-- hideKeyboard
-- scrollUntilVisible:
-    element:
-      id: search-kind-menu
-    direction: UP
-    centerElement: true
-    timeout: 90000
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: records-briefs
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: records-briefs
-- scrollUntilVisible:
-    element:
-      text: 'Machine-written\..*'
-    centerElement: true
-    timeout: 90000
-- takeScreenshot: ${EVIDENCE}/34-brief-content

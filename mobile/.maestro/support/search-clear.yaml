@@ -1,0 +1,20 @@
+appId: au.com.opax.app
+name: Empty the Search field
+---
+# iOS: the native bar field's own clear button ("Clear text"); Cancel would
+# put the last results back rather than empty the field. Android: the field.
+# Follow with support/search-query.yaml to type the next query.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: Clear text
+          retryTapIfNoChange: false
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: search-input
+      - eraseText: 60

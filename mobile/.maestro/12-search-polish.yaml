@@ -1,48 +1,56 @@
 appId: au.com.opax.app
-name: 12 Search alternate kinds and native electorate suggestions
+name: 12 Search empty states with a way on, and native electorate suggestions
 ---
+# Every empty state has a way on (journeys/search.md 3.9): All with nothing
+# offers Ask OPAX; a scope with nothing offers Show all results, which keeps
+# the query.
 - launchApp:
     clearState: true
 - tapOn:
     id: tab-search
-- tapOn:
-    id: search-input
-- inputText: zzzznevermatchingcatalog
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    timeout: 90000
-    direction: UP
-- tapOn:
-    id: search-submit
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: zzzznevermatchingcatalog
+      PREFIX: 12-empty
+- pressKey: Enter
 - scrollUntilVisible:
     element:
       id: search-empty
     timeout: 90000
     visibilityPercentage: 1
+- assertVisible:
+    id: search-empty-ask
 - takeScreenshot: ${EVIDENCE}/12-empty
+- runFlow:
+    file: support/search-scope.yaml
+    env:
+      SCOPE: People
 - scrollUntilVisible:
     element:
-      id: search-empty-pay
+      id: search-empty-all-results
     timeout: 90000
     centerElement: true
-- takeScreenshot: ${EVIDENCE}/12-other-kinds
+- takeScreenshot: ${EVIDENCE}/12-empty-people
 - tapOn:
-    id: search-empty-pay
+    id: search-empty-all-results
 - scrollUntilVisible:
     element:
-      id: search-empty
+      id: search-empty-ask
     timeout: 90000
     visibilityPercentage: 1
-- assertVisible: No results for .*zzzznevermatchingcatalog.* in pay.*
-- takeScreenshot: ${EVIDENCE}/12-empty-pay
+- assertNotVisible:
+    id: search-empty-all-results
+- takeScreenshot: ${EVIDENCE}/12-empty-all-again
 - launchApp:
     clearState: true
 - tapOn:
     id: tab-search
-- tapOn:
-    id: search-input
-- inputText: Grayndler
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Grayndler
+      PREFIX: 12-electorate
 # Swipe on the content: iOS visibility checks can see rows behind the keyboard.
 - swipe:
     start: 90%, 40%
