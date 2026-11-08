@@ -38,7 +38,7 @@ export type KeyCommandId =
 export const keyCommandSpecs: readonly (KeyCommandSpec & {
   id: KeyCommandId;
 })[] = [
-  { id: 'find', input: 'f', modifiers: ['command'], title: 'Search' },
+  { id: 'find', input: 'f', modifiers: ['command'], title: 'Find' },
   {
     id: 'new-question',
     input: 'n',

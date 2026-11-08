@@ -95,7 +95,7 @@ describe('keyboard commands', () => {
       .filter((spec) => spec.title)
       .map((spec) => `${spec.modifiers.join('+')}+${spec.input} ${spec.title}`);
     expect(listed).toEqual([
-      'command+f Search',
+      'command+f Find',
       'command+n New question',
       'command+1 Today',
       'command+2 Your MP',
@@ -153,6 +153,7 @@ function create(selected: Entry | null, onSelect: jest.Mock) {
       testID="split"
       list={<View testID="the-list" />}
       selected={selected}
+      initialSelection={() => ({ kind: 'item', key: 'a' })}
       onSelect={onSelect}
       entryKey={(e) => `${e.kind}:${e.key}`}
       entryTitle={(e) => (e.kind === 'item' ? 'Item' : 'More')}
@@ -177,10 +178,13 @@ describe('SplitLayout', () => {
     expect(hosts(tree, 'the-list')).toBe(1);
     expect(hosts(tree, 'split')).toBe(0);
   });
-  test('regular width shows the quiet empty line until something is selected', () => {
+  test('regular width opens the first available row immediately', () => {
     const tree = render(null);
     expect(hosts(tree, 'split-list')).toBe(1);
-    expect(hosts(tree, 'empty')).toBeGreaterThan(0);
+    expect(hosts(tree, 'empty')).toBe(0);
+    expect(
+      tree.root.findAllByProps({ testID: 'detail-item-a' }).length,
+    ).toBeGreaterThan(0);
   });
   test('the pane pushes within itself, Back returns, and a new selection starts again', () => {
     const held: { pane: ReturnType<typeof useSplitPane<Entry>> } = {
@@ -199,6 +203,7 @@ describe('SplitLayout', () => {
         id="test"
         list={<View />}
         selected={selected}
+        initialSelection={() => ({ kind: 'item', key: 'a' })}
         onSelect={onSelect}
         entryKey={(e) => `${e.kind}:${e.key}`}
         entryTitle={(e) => (e.kind === 'item' ? 'Item' : 'More')}

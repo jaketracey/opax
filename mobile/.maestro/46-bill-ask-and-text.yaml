@@ -33,17 +33,12 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     timeout: 15000
 # Follow and ⋯ share one row; Ask about this is under ⋯. The bill text is
 # a row under the meta line (P1-3).
-- scrollUntilVisible:
-    element:
-      id: bill-more
-    direction: DOWN
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/46-bill-entry
-- tapOn:
-    id: bill-more
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: 'Interactive Gambling.*'
 - tapOn: Ask about this
 - extendedWaitUntil:
     visible:

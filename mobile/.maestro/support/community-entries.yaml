@@ -14,7 +14,7 @@ appId: au.com.opax.app
       id: today-community
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/community-after-today-entry
-- tapOn: Account and about
+- tapOn: Account
 - scrollUntilVisible:
     element:
       id: account-community

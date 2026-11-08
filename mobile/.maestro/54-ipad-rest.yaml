@@ -94,6 +94,9 @@ name: 54 iPad remaining screens and rotation
       id: money-view-summary
     timeout: 90000
 - waitForAnimationToEnd
+- assertVisible:
+    id: tab-today
+- assertVisible: Community Development Grants
 - takeScreenshot: ${EVIDENCE}/54-money-map-landscape
 - openLink: opax://largest-grants
 - tapOn:
@@ -242,10 +245,11 @@ name: 54 iPad remaining screens and rotation
     timeout: 90000
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/54-sources-landscape
-- openLink: opax://talk
+- openLink: opax://ask
 - tapOn:
     text: Open
     optional: true
+- tapOn: Talk to OPAX
 - extendedWaitUntil:
     visible:
       id: talk-sheet-message

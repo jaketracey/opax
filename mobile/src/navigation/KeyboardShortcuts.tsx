@@ -54,7 +54,11 @@ export function KeyboardShortcuts() {
     if (router.canGoBack()) router.back();
   });
   useKeyCommand('list-escape', () => {
-    if (/^\/(talk|account|community)(\/|$)/.test(path)) {
+    if (
+      /^\/(talk|account|community|seat|welcome|licence|source|citation|machine-note|rule|licences|conversations|ask-report|source-destination)(\/|$)/.test(
+        path,
+      )
+    ) {
       const state = root.current?.getRootState();
       if (state) root.current?.dispatch({ type: 'GO_BACK', target: state.key });
     } else if (/filters|glossary/.test(path) && router.canDismiss())

@@ -106,16 +106,11 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     speed: 70
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/32-full-text
-- scrollUntilVisible:
-    element:
-      id: doc-more
-    direction: UP
-    centerElement: true
-    speed: 70
-    timeout: 180000
 - waitForAnimationToEnd
-- tapOn:
-    id: doc-more
+- runFlow:
+    file: ../support/open-more.yaml
+    env:
+      NAME: '.*'
 - extendedWaitUntil:
     visible:
       id: person-screen-title

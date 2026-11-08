@@ -47,3 +47,14 @@ name: 30 People in this answer shows each verified portrait and leaves people wi
 - assertNotVisible:
     id: ask-person-portrait-matt-smith
 - takeScreenshot: ${EVIDENCE}/30-ask-people
+
+# A person opened from an answer stays in Ask's stack.
+- tapOn:
+    id: ask-person-portrait-sarah-witty
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 60000
+- assertVisible:
+    id: tab-ask
+    selected: true

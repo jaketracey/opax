@@ -309,17 +309,17 @@ describe('route and transport boundaries', () => {
     ['/money/grants?jur=qld', '/grants'],
     ['/money/grants?jur=federal&program=GO3141', '/grant-program'],
     ['/money/grants?largest=2026-08', '/largest-grants'],
-    ['/discover?category=donor_contract_overlap', '/discover'],
+    ['/discover?category=donor_contract_overlap', '/leads'],
     ['/subject/agency', '/agencies'],
     ['/subject/agency/a-7431f054588d4251c0b4', '/agency'],
-    ['/reports/grants-allocation', '/grants-allocation'],
+    ['/subject/donor/Ada', '/money-record'],
+    ['/subject/supplier/s-123', '/money-record'],
     ['/connections', '/connections'],
   ])('opens native %s', (path, route) =>
     expect(fromWebPath(path!)).toMatchObject({ pathname: route }),
   );
   test.each([
-    '/subject/donor/Ada',
-    '/subject/supplier/s-123',
+    '/reports/grants-allocation',
     '/money/grants/federal/recipient/person%3Aada',
     '/money/grants?open=person%3Aada',
   ])('no new private profile or money-map ownership %s', (path) =>

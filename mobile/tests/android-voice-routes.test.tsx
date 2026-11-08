@@ -7,7 +7,13 @@ import type { Chat } from '../src/features/ask/model';
 // fallback stays. iOS offers them as before, module or not.
 
 type Captured = {
-  screens: { name: string; options?: Record<string, unknown> }[];
+  screens: {
+    name: string;
+    options?:
+      | Record<string, unknown>
+      | ((args: unknown) => Record<string, unknown>);
+    redirect?: boolean;
+  }[];
   guards: { guard: boolean; names: string[] }[];
 };
 const mockCaptured: Captured = { screens: [], guards: [] };
@@ -138,14 +144,14 @@ describe.each(scenarios)('%s', (_name, os, voice, offered) => {
     expect(voiceLinked).toBe(offered);
   });
 
-  test('the root bar offers Talk beside Account only when offered', () => {
+  test('the interim Ask bar keeps Account and offers Talk when linked', () => {
     const items = asBuild(os, voice(), () =>
       jest.requireActual('../src/navigation/chrome').rootHeaderItems(),
     ) as { label: string; accessibilityLabel: string }[];
     expect(items.map((item) => item.label)).toEqual(
-      offered ? ['Talk', 'Account'] : ['Account'],
+      offered ? ['Account', 'Talk'] : ['Account'],
     );
-    if (offered) expect(items[0]!.accessibilityLabel).toBe('Talk to OPAX');
+    expect(items[0]!.accessibilityLabel).toBe('Account');
   });
 
   test('the /talk route is guarded by the same switch', () => {
@@ -153,10 +159,9 @@ describe.each(scenarios)('%s', (_name, os, voice, offered) => {
       const Layout = jest.requireActual('../src/app/_layout').default;
       return <Layout />;
     });
-    expect(mockCaptured.guards).toContainEqual({
-      guard: offered,
-      names: ['talk'],
-    });
+    expect(
+      mockCaptured.screens.find((screen) => screen.name === 'talk')?.redirect,
+    ).toBe(!offered);
     act(() => renderer.unmount());
   });
 
@@ -188,16 +193,18 @@ describe('Android account routes', () => {
         const Layout = jest.requireActual('../src/app/account/_layout').default;
         return <Layout />;
       });
-      expect(mockCaptured.guards).toEqual([
-        { guard: offered, names: ['sign-in', 'delete'] },
-      ]);
+      expect(mockCaptured.guards).toEqual([]);
       const { AndroidReadingHeader } = asBuild('android', voice(), () =>
         jest.requireActual('../src/navigation/AndroidReadingHeader'),
       );
       for (const name of ['sign-in', 'delete']) {
         const screen = mockCaptured.screens.find((s) => s.name === name)!;
-        expect(typeof screen.options!.header).toBe('function');
-        expect((screen.options!.header as () => unknown).name).toBe(
+        expect(screen.redirect).toBe(!offered);
+        const options =
+          typeof screen.options === 'function'
+            ? screen.options({ route: {} })
+            : screen.options!;
+        expect((options.header as () => unknown).name).toBe(
           AndroidReadingHeader.name,
         );
       }
@@ -211,11 +218,21 @@ describe('Android account routes', () => {
       return <Layout />;
     });
     expect(mockCaptured.guards).toEqual([]);
-    expect(mockCaptured.screens.map((s) => s.name)).toEqual([
-      'index',
-      'about',
-      'sources',
-    ]);
+    expect(mockCaptured.screens.map((s) => s.name)).toEqual(
+      expect.arrayContaining([
+        'index',
+        'about',
+        'sources',
+        'consent',
+        'sign-in',
+        'sign-in/code',
+        'delete',
+        'delete/code',
+        'coverage',
+        'methods',
+        'ask',
+      ]),
+    );
     act(() => renderer.unmount());
   });
 });

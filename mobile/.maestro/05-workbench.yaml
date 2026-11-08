@@ -6,7 +6,7 @@ name: 05 Design workbench, every component and state
 - launchApp
 - assertVisible:
     id: today-screen
-- tapOn: Account and about
+- tapOn: Account
 - scrollUntilVisible:
     element:
       id: account-workbench

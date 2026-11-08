@@ -180,7 +180,7 @@ name: Submission reviewer reading walkthrough
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/review-11-similar
 - openLink: opax://
-- tapOn: Account and about
+- tapOn: Account
 - scrollUntilVisible:
     element:
       id: account-about

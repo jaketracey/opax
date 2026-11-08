@@ -143,7 +143,7 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
     id: source-destination-url
     text: '^https://opax\.invalid/support\?record=/money/receipts$'
 - takeScreenshot: ${EVIDENCE}/21-report-support-path
-- tapOn: OK
+- tapOn: Done
 # The e2e browser preview is a separate native-stack route. Leaving Talk ends
 # its call and discards evidence, so explicitly start a fresh fixture call.
 # Stored consent must let this call start without another consent prompt.

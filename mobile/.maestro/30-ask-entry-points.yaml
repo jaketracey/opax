@@ -11,16 +11,11 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
       id: person-screen-title
     timeout: 60000
 # Ask is under the header's ⋯, beside Follow.
-- scrollUntilVisible:
-    element:
-      id: person-more
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-person-entry
-- tapOn:
-    id: person-more
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: 'Anthony Albanese'
 - tapOn: Ask about their speeches
 - assertVisible:
     id: ask-question
@@ -31,16 +26,11 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     visible:
       id: party-title
     timeout: 60000
-- scrollUntilVisible:
-    element:
-      id: party-more
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-party-entry
-- tapOn:
-    id: party-more
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: 'Labor'
 - tapOn: Ask about this
 - assertVisible:
     id: ask-question
@@ -50,16 +40,11 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
     visible:
       id: electorate-name
     timeout: 60000
-- scrollUntilVisible:
-    element:
-      id: electorate-more
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-electorate-entry
-- tapOn:
-    id: electorate-more
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: '.*'
 - tapOn: Ask about this
 - assertVisible:
     id: ask-question
@@ -69,16 +54,11 @@ name: 30 Scoped Ask drafts from native records; arrival never submits
       id: bill-title
     timeout: 60000
 # A bill's Ask is under its header's ⋯ (pass 3C), as on the other records.
-- scrollUntilVisible:
-    element:
-      id: bill-more
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - takeScreenshot: ${EVIDENCE}/30-bill-entry
-- tapOn:
-    id: bill-more
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: 'Interactive Gambling.*'
 - tapOn: Ask about this
 - assertVisible:
     id: ask-question

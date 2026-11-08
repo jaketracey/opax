@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { hasSourcePreview } from '../design/environment';
 import { sourceUrl } from '../navigation/external';
 import { SourceDestination } from '../navigation/SourceDestination';
@@ -21,7 +21,6 @@ export default function SourceDestinationRoute() {
       citation={
         typeof params.citation === 'string' ? params.citation : undefined
       }
-      dismiss={() => router.back()}
     />
   );
 }

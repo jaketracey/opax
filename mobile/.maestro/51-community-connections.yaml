@@ -4,7 +4,7 @@ name: 51 Community members, safety, messages, activity and reading lists
 - launchApp:
     clearState: true
     permissions: {}
-- tapOn: Account and about
+- tapOn: Account
 - runFlow:
     file: support/account-sign-in.yaml
     env:

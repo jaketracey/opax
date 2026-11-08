@@ -99,7 +99,7 @@ name: 58 Ask asks for consent once before the first question; Not now keeps the 
     id: source-destination-url
     text: '^https://opax\.invalid/support$'
 - takeScreenshot: ${EVIDENCE}/58-report-support
-- tapOn: OK
+- tapOn: Done
 - scrollUntilVisible:
     element:
       id: ask-report-thanks

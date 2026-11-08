@@ -17,6 +17,9 @@ name: Cold money map and ranked list from disk cache with the fixture stopped
     visible:
       id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
     timeout: 90000
+- assertVisible:
+    id: tab-today
+- assertVisible: Today
 - takeScreenshot: ${EVIDENCE}/23-offline-map
 - runFlow:
     file: money-screen-list.yaml

@@ -2,6 +2,28 @@ import { act } from 'react';
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 
+import { dispatchKeyCommand, keyCommandSpecs } from '../src/design/keyboard';
+import { SplitLayout, useSplitCursor } from '../src/design/split';
+import { LinkRow } from '../src/design/rows';
+import { SelectedMark, selectedWash } from '../src/design/selection';
+import { colors } from '../src/design/tokens';
+import {
+  decodeEntry,
+  encodeEntry,
+  entryForRoute,
+  entryForWebPath,
+  entryLabel,
+  sharePath,
+} from '../src/features/split/entry';
+import {
+  billRoute,
+  billTextRoute,
+  docRoute,
+  electorateRoute,
+  partyRoute,
+  personRoute,
+} from '../src/navigation/routes';
+
 // Lane 2 (Search, Ask, directories on iPad): the record pane's entries, the
 // split list's Return and cursor keys, and the rows' selected state. The
 // test sets the region `useLayout()` reports; useFocusEffect runs on mount.
@@ -27,28 +49,6 @@ jest.mock('expo-router', () => ({
     jest.requireActual('react').useEffect(effect, []);
   },
 }));
-
-import { dispatchKeyCommand, keyCommandSpecs } from '../src/design/keyboard';
-import { SplitLayout, useSplitCursor } from '../src/design/split';
-import { LinkRow } from '../src/design/rows';
-import { SelectedMark, selectedWash } from '../src/design/selection';
-import { colors } from '../src/design/tokens';
-import {
-  decodeEntry,
-  encodeEntry,
-  entryForRoute,
-  entryForWebPath,
-  entryLabel,
-  sharePath,
-} from '../src/features/split/entry';
-import {
-  billRoute,
-  billTextRoute,
-  docRoute,
-  electorateRoute,
-  partyRoute,
-  personRoute,
-} from '../src/navigation/routes';
 
 const mounted: TestRenderer.ReactTestRenderer[] = [];
 afterEach(() => {
@@ -284,4 +284,51 @@ describe('split rows', () => {
       tree.root.findAll((node) => node.props.name === 'chevron.right'),
     ).toHaveLength(0);
   });
+});
+
+test('an initial selection fills a regular pane immediately without changing compact layouts', () => {
+  const first = { key: 'first' };
+  const select = jest.fn();
+  const draw = jest.fn((entry) => <View testID={`initial-${entry.key}`} />);
+  mockLayout.regular = true;
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(
+      <SplitLayout
+        id="initial"
+        list={<View />}
+        selected={null}
+        initialSelection={() => first}
+        onSelect={select}
+        renderDetail={draw}
+        entryKey={(entry) => entry.key}
+        empty={<View testID="initial-empty" />}
+      />,
+    );
+  });
+  expect(select).toHaveBeenCalledWith(first);
+  expect(
+    view.root.findAllByProps({ testID: 'initial-first' }).length,
+  ).toBeGreaterThan(0);
+  act(() => view.unmount());
+  select.mockClear();
+  draw.mockClear();
+  mockLayout.regular = false;
+  act(() => {
+    view = TestRenderer.create(
+      <SplitLayout
+        id="compact-initial"
+        list={<View testID="compact-list" />}
+        selected={null}
+        initialSelection={() => first}
+        onSelect={select}
+        renderDetail={draw}
+        entryKey={(entry) => entry.key}
+        empty={<View />}
+      />,
+    );
+  });
+  expect(select).not.toHaveBeenCalled();
+  expect(draw).not.toHaveBeenCalled();
+  act(() => view.unmount());
 });

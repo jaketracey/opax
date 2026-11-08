@@ -116,7 +116,7 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 # Portrait credits and licences live on Sources and licences, searchable.
 - launchApp:
     permissions: {}
-- tapOn: Account and about
+- tapOn: Account
 - scrollUntilVisible:
     element:
       id: account-sources

@@ -70,7 +70,11 @@ export function AndroidTabs() {
               // The navigator draws both states and fades between them.
               <View style={[styles.indicator, focused ? styles.chosen : null]}>
                 <Icon
-                  name={symbol}
+                  name={
+                    focused && symbol !== 'magnifyingglass'
+                      ? (`${symbol}.fill` as typeof symbol)
+                      : symbol
+                  }
                   tone={focused ? 'navy' : 'inkSoft'}
                   size={24}
                   maxScale={1}

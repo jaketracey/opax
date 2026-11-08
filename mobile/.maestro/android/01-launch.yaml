@@ -58,7 +58,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: today-screen-message
 # Voice has no Android button or route. About carries no sign-in promise.
 - assertNotVisible: Talk to OPAX
-- tapOn: Account and about
+- tapOn: Account
 - assertVisible:
     id: account-about
 - assertNotVisible: An account will only be needed to talk.*
@@ -70,6 +70,14 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: tab-ask
 - assertVisible:
     id: ask-screen
+- runFlow:
+    when:
+      visible: Talk to OPAX
+    commands:
+      - tapOn: Talk to OPAX
+      - assertVisible:
+          id: talk-sheet-message
+      - pressKey: Back
 - takeScreenshot: ${EVIDENCE}/01-ask
 - tapOn:
     id: tab-today

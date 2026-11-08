@@ -1,0 +1,9 @@
+import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
+export default function Placeholder() {
+  return (
+    <RoutePlaceholder
+      route="account/sources/photos"
+      title="Time machine photographs"
+    />
+  );
+}

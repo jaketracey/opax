@@ -4,7 +4,7 @@ appId: au.com.opax.app
 - launchApp:
     clearState: true
     permissions: {}
-- tapOn: Account and about
+- tapOn: Account
 - runFlow:
     file: account-sign-in.yaml
     env:

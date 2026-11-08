@@ -111,7 +111,7 @@ test('Queensland awards link to their own register, separate from Commonwealth a
   expect(publicMoneySource(federal, 'grants').label).toBe('GrantConnect');
   expect(publicMoneySource(federal, 'contracts').label).toBe('AusTender');
 });
-test('published party and person paths open natively; donor paths have no native profile', () => {
+test('published party, person and money record paths open natively', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
   const party = graph.nodes.find((n) => n.id === 'party:Labor')!;
   expect(moneyProfile(party)).toEqual({
@@ -132,7 +132,10 @@ test('published party and person paths open natively; donor paths have no native
       label: 'Fixture donor',
       profileUrl: undefined,
     }).native,
-  ).toBeNull();
+  ).toMatchObject({
+    pathname: '/money-record',
+    params: { rid: 'Fixture donor' },
+  });
 });
 
 test('state representatives enter their supported jurisdiction, with federal fallback for unavailable states', () => {

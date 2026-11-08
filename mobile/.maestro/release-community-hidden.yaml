@@ -29,7 +29,7 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
 - assertNotVisible:
     id: today-community
 - takeScreenshot: ${EVIDENCE}/release-today-explore
-- tapOn: Account and about
+- tapOn: Account
 - extendedWaitUntil:
     visible: 'Not signed in\. Sign in to talk to OPAX\. Public records stay open without an account\.'
     timeout: 15000

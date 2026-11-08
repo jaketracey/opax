@@ -216,16 +216,11 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
 # A scoped draft returns the composer to view after a scrolled answer.
 # Ask about this is under the bill's ⋯ (as in journey 46).
 - openLink: opax://bill/au-federal-r7534
-- scrollUntilVisible:
-    element:
-      id: bill-more
-    direction: DOWN
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - waitForAnimationToEnd
-- tapOn:
-    id: bill-more
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: 'Interactive Gambling.*'
 - tapOn: Ask about this
 - extendedWaitUntil:
     visible:

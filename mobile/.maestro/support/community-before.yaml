@@ -10,7 +10,7 @@ appId: au.com.opax.app
       id: launch-handoff
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/community-before-today
-- tapOn: Account and about
+- tapOn: Account
 - assertVisible:
     id: account-sheet
 - takeScreenshot: ${EVIDENCE}/community-before-account
