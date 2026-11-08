@@ -119,8 +119,11 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
       id: money-focus-name
       text: Labor
     timeout: 90000
-- assertVisible:
-    id: tab-today
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: money-focus-name
+      TAB_ID: tab-today
 - takeScreenshot: ${EVIDENCE}/25-native-money-focus
 - tapOn: Money map
 - tapOn: Labor

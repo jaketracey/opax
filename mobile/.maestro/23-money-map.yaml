@@ -28,8 +28,11 @@ name: 23 Native money map, held figures, original source and ranked list
     visible:
       id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
     timeout: 90000
-- assertVisible:
-    id: tab-today
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: money-mode-3d
+      TAB_ID: tab-today
 - assertVisible: Today
 - takeScreenshot: ${EVIDENCE}/23-orbit-0
 - swipe:

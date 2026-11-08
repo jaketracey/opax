@@ -29,6 +29,11 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     timeout: 300000
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/01-today-footer
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-screen-message
+      TAB_ID: tab-your-mp
 - tapOn:
     id: tab-your-mp
 - assertVisible:
@@ -45,15 +50,12 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: search-screen
 - tapOn:
     id: tab-today
-# Today keeps its scroll position across tabs: back up the same long feed.
-# The message is the first element, so fast swipes cannot carry past it.
-- scrollUntilVisible:
-    element:
-      id: today-screen-message
-    direction: UP
-    speed: 70
-    timeout: 300000
-    centerElement: true
+# Restore the full bar before leaving Today, which retains its position.
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-screen-message
+      TAB_ID: tab-ask
 - assertVisible:
     id: today-screen-message
 # Talk is reached from the Ask composer; Account remains on every root.
