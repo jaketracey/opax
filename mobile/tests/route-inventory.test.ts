@@ -4,7 +4,9 @@ import { resolve } from 'node:path';
 import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
-import SharedLayout from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
+import SharedLayout, {
+  unstable_settings,
+} from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
 import RootLayout from '../src/app/_layout';
 import AccountLayout from '../src/app/account/_layout';
 import LicenceLayout from '../src/app/licence/_layout';
@@ -232,6 +234,22 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'])(
     expect(actual.includes('bill-filters')).toBe(segment === '(bills)');
   },
 );
+test.each([
+  ['(today)', 'today', 'index'],
+  ['(your-mp)', 'your-mp', 'your-mp'],
+  ['(bills)', 'bills', 'bills'],
+  ['(search)', 'search', 'search'],
+  ['(ask)', 'ask', 'ask'],
+] as const)('%s starts on its own root', (segment, group, root) => {
+  expect(names('shared', segment)[0]).toBe(root);
+  expect(unstable_settings[group].initialRouteName).toBe(root);
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(React.createElement(SharedLayout, { segment }));
+  });
+  expect(view.root.findByType(Stack).props.initialRouteName).toBe(root);
+  act(() => view.unmount());
+});
 test('money-node exists and is registered exactly once, in the shared stack', () => {
   expect(
     [...registered.values()].flat().filter((name) => name === 'money-node'),
