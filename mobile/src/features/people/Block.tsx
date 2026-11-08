@@ -2,11 +2,14 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { Section } from '../../design/layout';
 import { InlineError, Skeleton } from '../../design/states';
-import type { InfoNotes } from '../../design/info';
 import type { SourceDetails } from '../../design/source';
+
 import { rhythm } from '../../design/tokens';
 import { BlockSource, type SourceOverrides } from '../your-mp/Evidence';
 import type { EvidenceBlock } from '../your-mp/model';
+
+/** A source sheet's title and notes. */
+type InfoNotes = { title?: string; notes?: SourceDetails['notes'] };
 
 /**
  * One profile or party block on the detail template (people.md 1.1, 1.4):
@@ -71,7 +74,10 @@ export function ProfileBlock<T>({
         />
       </Section>
     );
-  if (block.data === null && !keepWhenEmpty) return null;
+  // Absence is said only after a read that holds nothing; a file not held
+  // collapses like any other empty block.
+  const empty = block.data === null;
+  if (empty && (!keepWhenEmpty || block.status !== 'ready')) return null;
   const notes = about?.(block.data);
   return (
     <Section title={title} testID={id} headingTestID={`${id}-heading`}>

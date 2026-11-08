@@ -11,12 +11,11 @@ import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
 import type { PersonProfile } from '../api/person-identity';
 import { CachedPortrait } from './CachedPortrait';
-import { PadGrid } from '../design/adaptive';
+import { PadGrid, ReadableColumn } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
 import { Group, Screen } from '../design/layout';
 import { LinkRow } from '../design/rows';
 import { StatStrip, type StatTileProps } from '../design/record';
-import { SourceLine } from '../design/source';
 import { ContentUnavailable, LoadingState, Skeleton } from '../design/states';
 import { Text } from '../design/text';
 import { VoteSplit } from '../design/charts';
@@ -35,7 +34,7 @@ import {
   personSpeechesRoute,
 } from '../navigation/routes';
 import { profileGrid } from './split/grid';
-import { votesSource } from './your-mp/Evidence';
+import { BlockSource, votesSource } from './your-mp/Evidence';
 import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
 import { useIsMyMember } from './your-mp/useIsMyMember';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
@@ -115,7 +114,7 @@ export function officialPage(
   return label ? { url, label } : null;
 }
 
-type Loaded = {
+export type Loaded = {
   profile: ProfileView;
   official: { url: string; label: string } | null;
   /** The sitting House member's seat, for "Set … as my electorate". */
@@ -131,7 +130,7 @@ const sittingFederal = (identity: PersonProfile) =>
   identity.partyStatus !== 'former' &&
   identity.seats.some((s) => s.current && s.jurisdiction === 'federal');
 
-async function loadProfile(slug: string): Promise<Loaded | null> {
+export async function loadProfile(slug: string): Promise<Loaded | null> {
   let person;
   try {
     person = await catalogs.person(slug);
@@ -530,10 +529,6 @@ function ProfileContent({
   const stripPartial = [b.identity, b.votes, b.interests, b.pay].some(
     (block) => block.partial,
   );
-  const saved = [b.identity, b.votes, b.interests, b.pay]
-    .filter((block) => block.stale && block.savedAt != null)
-    .map((block) => block.savedAt!)
-    .sort()[0];
 
   const unlinked = Object.values(b).some(
     (block) => block.status === 'unlinked',
@@ -773,7 +768,7 @@ function ProfileContent({
     more: () => (
       <MoreFromRecord
         subject={{ person: slug, name: identity.name }}
-        kinds={['mentions', 'news']}
+        kinds={['mentions']}
         topics
         testID="person-more"
       />
@@ -795,7 +790,7 @@ function ProfileContent({
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <View style={styles.top} testID="person">
+      <ReadableColumn style={styles.top} testID="person">
         <ProfileHeader
           name={identity.name}
           portrait={
@@ -819,12 +814,11 @@ function ProfileContent({
         {tiles.length ? (
           <Group gap={rhythm.tight}>
             <StatStrip tiles={tiles} testID="person-figures" />
-            <SourceLine
+            <BlockSource
+              block={b.identity}
               title="Profile sources"
-              asOf={strip.asOf}
               citation={strip.citation}
-              state={stripPartial ? 'partial' : null}
-              savedAt={saved ?? null}
+              line={{ asOf: strip.asOf, partial: stripPartial }}
               notes={[
                 stripPartial
                   ? 'Some records for this person could not be read.'
@@ -838,7 +832,7 @@ function ProfileContent({
             />
           </Group>
         ) : null}
-      </View>
+      </ReadableColumn>
       {follow && changes.length ? (
         <View onLayout={(e) => placed('changes')(e.nativeEvent.layout.y)}>
           <AddedSinceGroup

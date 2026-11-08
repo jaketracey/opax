@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="person/[slug]/votes" title="Voting record" />;
-}
+export { PersonVotes as default } from '../../../../../features/people/PersonLists';

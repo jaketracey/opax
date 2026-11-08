@@ -7,8 +7,8 @@ import type { RecordResult } from '../../api/client';
 import { SegmentedPicker } from '../../design/controls';
 import { Group, Section } from '../../design/layout';
 import { LinkRow, ValueRow } from '../../design/rows';
-import type { InfoNotes } from '../../design/info';
 import type { SourceDetails } from '../../design/source';
+
 import { InlineError, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { formatCount, formatDate, formatPercent } from '../../design/format';
@@ -22,6 +22,9 @@ import {
   displayedRecordTitle,
   type RecordRow,
 } from './model';
+
+/** A source sheet's title and notes. */
+type InfoNotes = { title?: string; notes?: SourceDetails['notes'] };
 
 export const topicNames: Record<string, string> = {
   gambling: 'Gambling',

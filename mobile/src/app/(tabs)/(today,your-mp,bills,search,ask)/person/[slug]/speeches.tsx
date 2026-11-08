@@ -1,4 +1,5 @@
-import { RoutePlaceholder } from '../../../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="person/[slug]/speeches" title="Speeches" />;
+import RecordList from '../../../../../features/people/RecordList';
+
+export default function PersonSpeeches() {
+  return <RecordList kind="speeches" />;
 }

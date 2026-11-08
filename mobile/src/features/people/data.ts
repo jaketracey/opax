@@ -51,6 +51,33 @@ export class PeopleDepth {
       briefs: briefs ? await this.briefs(records.data.results.slice(0, 5)) : {},
     };
   }
+  /**
+   * One page of a pushed record list, newest first: a person's speeches or
+   * the record's mentions of a name (people.md 2.1, route 15).
+   */
+  async list(name: string, kind: 'speeches' | 'mentions', page: number) {
+    const params: Record<string, string> =
+      kind === 'speeches'
+        ? {
+            q: name,
+            speaker: name,
+            page: String(page),
+            per: '20',
+            sort: 'newest',
+          }
+        : {
+            q: '"' + name + '"',
+            page: String(page),
+            per: '20',
+            sort: 'newest',
+          };
+    const records = await this.client.getForAction(
+      '/api/search?' + new URLSearchParams(params),
+      decodeRecords,
+    );
+    const briefs = await this.briefs(records.data.results);
+    return { records, briefs };
+  }
   async news() {
     const result = await this.client.getForAction('/api/news', decodeNews);
     return { ...result, asOf: result.data.fetched_at ?? null };
