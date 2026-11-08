@@ -2,6 +2,7 @@ import type { NativeStackHeaderItem } from 'expo-router';
 import type { SFSymbol } from '../../design/icon';
 import { chrome } from '../../design/tokens';
 import type { TranscriptTurn, VoiceSource, VoiceStatus } from '../../voice';
+import { talkCopy, voiceTime } from './model';
 
 /** Reporting is offered once OPAX has answered with words. */
 export const canReport = (transcript: readonly TranscriptTurn[]) =>
@@ -24,8 +25,7 @@ export function timeLeft(
         ? `${minutesLeft(remaining)} left in this call`
         : 'Under a minute left in this call';
   if (!status) return undefined;
-  if (status.unlimited) return 'Unlimited minutes';
-  return `${minutesLeft(status.remainingSeconds)} left`;
+  return voiceTime(status);
 }
 /** Whole minutes, never rounded up: "9 min", or seconds under a minute. */
 export function minutesLeft(seconds: number) {
@@ -36,31 +36,34 @@ export function minutesLeft(seconds: number) {
 const symbol = (name: SFSymbol) => ({ type: 'sfSymbol' as const, name });
 
 /**
- * Talk's "…" menu: everything that is not the call itself. Reporting names
- * a record path or none, never caption words: one record (or none) reports
- * at once, several are a submenu of their titles (reportChoices).
+ * Talk's ⋯ menu (specs/account.md 7.6): everything that is not the call
+ * itself. Captions show or hide here once there are any to show. Reporting
+ * names a record path or none, never caption words: one record (or none)
+ * reports at once, several are a submenu of their titles (reportChoices).
  */
 export function talkMenu({
   title,
-  live,
   active,
-  typing,
+  captions,
+  canCaption,
   report,
   records,
   consent,
-  onType,
+  onCaptions,
   onReport,
   onPrivacy,
   onWithdraw,
 }: {
   title?: string;
-  live: boolean;
   active: boolean;
-  typing: boolean;
+  /** Captions are showing. */
+  captions: boolean;
+  /** There is a call or a transcript to caption. */
+  canCaption: boolean;
   report: boolean;
   records: readonly VoiceSource[];
   consent: boolean;
-  onType: () => void;
+  onCaptions: (on: boolean) => void;
   onReport: (recordPath: string | null) => void;
   onPrivacy: () => void;
   onWithdraw: () => void;
@@ -69,17 +72,17 @@ export function talkMenu({
     NativeStackHeaderItem,
     { type: 'menu' }
   >['menu']['items'] = [];
-  if (live && !typing)
+  if (canCaption)
     items.push({
       type: 'action',
-      label: 'Type a message',
-      icon: symbol('keyboard'),
-      onPress: onType,
+      label: captions ? talkCopy.menu.hideCaptions : talkCopy.menu.showCaptions,
+      icon: symbol(captions ? 'captions.bubble' : 'captions.bubble.fill'),
+      onPress: () => onCaptions(!captions),
     });
   if (report && records.length > 1)
     items.push({
       type: 'submenu',
-      label: 'Report this answer',
+      label: talkCopy.menu.report,
       icon: symbol('flag'),
       items: records.map((record) => ({
         type: 'action' as const,
@@ -90,7 +93,7 @@ export function talkMenu({
   else if (report)
     items.push({
       type: 'action',
-      label: 'Report this answer',
+      label: talkCopy.menu.report,
       icon: symbol('flag'),
       onPress: () => onReport(records[0]?.path ?? null),
     });
@@ -98,23 +101,23 @@ export function talkMenu({
   if (!active)
     items.push({
       type: 'action',
-      label: 'Voice privacy',
+      label: talkCopy.menu.voicePrivacy,
       icon: symbol('hand.raised'),
       onPress: onPrivacy,
     });
   if (consent)
     items.push({
       type: 'action',
-      label: 'Withdraw voice consent',
+      label: talkCopy.menu.withdraw,
       icon: symbol('xmark.circle'),
       destructive: true,
       onPress: onWithdraw,
     });
   return {
     type: 'menu',
-    label: 'More',
+    label: talkCopy.menu.more,
     accessibilityLabel: 'More options',
-    icon: symbol('ellipsis'),
+    icon: symbol('ellipsis.circle'),
     tintColor: chrome.tint,
     menu: { title, items },
   };

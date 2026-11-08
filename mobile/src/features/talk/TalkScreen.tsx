@@ -1,6 +1,6 @@
 import {
+  useCallback,
   useEffect,
-  useEffectEvent,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -11,6 +11,7 @@ import {
   Alert,
   BackHandler,
   findNodeHandle,
+  LayoutAnimation,
   Linking,
   Platform,
   ScrollView,
@@ -18,37 +19,37 @@ import {
   View,
   type LayoutChangeEvent,
 } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack, router, useFocusEffect, type Href } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
-  isPad,
-  EdgeFade,
-  Field,
-  IconButton,
+  Composer,
+  InlineError,
+  MachinePill,
   Text,
+  isPad,
+  useAccessibilitySize,
   useReduceMotion,
 } from '../../design/primitives';
-import {
-  chrome,
-  colors,
-  controlHeight,
-  layout,
-  rhythm,
-} from '../../design/tokens';
+import { designFlags } from '../../design/flags';
+import { colors, layout, rhythm } from '../../design/tokens';
+import { closeSheetItem, androidHeaderBar } from '../../navigation/chrome';
 import { openOnWeb, webPageUrl } from '../../navigation/external';
-import { ProfileScreen } from '../Person';
-import { ElectorateScreen } from '../Electorate';
-import BillDetail from '../bills/BillDetail';
-import DocumentReader from '../records/DocumentReader';
-import BillTextReader from '../records/BillTextReader';
+import {
+  talkRecordRouteFor,
+  talkSignInRoute,
+  talkSourcesRoute,
+  talkConsentRoute,
+} from '../../navigation/routes/account';
 import type { VoiceSource } from '../../voice';
 import {
   endCopy,
   failureCopy,
   microphoneCopy,
   refusal,
-  timeLabel,
+  talkCopy,
+  voiceTime,
+  voiceTimeSpoken,
 } from './model';
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
@@ -57,15 +58,25 @@ import { reportAnswer, reportChoices, type ReportAnswer } from './reportAnswer';
 import { VoiceOrb, type OrbPhase } from './VoiceOrb';
 import { useVoiceLevels } from './useVoiceLevels';
 import { useCaptionsPreference } from './captions-preference';
-import { canReport, minutesLeft, talkMenu, timeLeft } from './menu';
-import { ControlRow } from './CallControls';
-import { openableSources, SourcesSheet } from './SourcesSheet';
-import { Consent, MicrophoneRationale, VoiceDisclosure } from './Consent';
-import { accountCopy } from '../account/copy';
-import { useHeaderBottom } from '../../design/useHeaderBottom';
-import { androidHeaderBar } from '../../navigation/chrome';
+import { canReport, talkMenu, timeLeft } from './menu';
+import { CallControls } from './CallControls';
+import { openableSources } from './SourcesSheet';
+import {
+  MicrophoneRationale,
+  talkMachineNote,
+  VoiceDisclosure,
+} from './Consent';
+import { takeStartAfterConsent } from './consent-store';
+import { publishTalk, resetTalk, takeChosenSource } from './live';
 
-type Action = 'start' | 'signIn' | 'search' | 'settings' | 'retry';
+type Action =
+  | 'start'
+  | 'startAgain'
+  | 'checking'
+  | 'signIn'
+  | 'ask'
+  | 'settings'
+  | 'retry';
 
 /**
  * UIKit drops a sheet, browser or keyboard presented while a menu is still
@@ -82,20 +93,30 @@ const focusOn = (view: View | null) => {
     if (node) AccessibilityInfo.setAccessibilityFocus(node);
   }
 };
+const ORB_MAX = 240;
+const ORB_AX = 120;
+const ORB_CALL = 72;
+/** One question a day from the reviewed Ask starter list (7.3 item 3). */
+function exampleQuestion(): string | null {
+  // The list is not shipped yet (DIR 9.D item D5): no hand-written fallback.
+  return null;
+}
 
+/**
+ * Talk to OPAX (specs/account.md 7). Idle: the orb, what Talk is, one action
+ * for the state, the allowance and the disclosure. In a call: a small orb with
+ * the status, the captions from the first turn, and four controls. Talk never
+ * starts by itself: only Start, or Agree on the consent sheet, starts a call.
+ */
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
 }: { onReportAnswer?: ReportAnswer } = {}) {
   const call = useTalk();
   const { snapshot: s } = call;
   const insets = useSafeAreaInsets();
-  const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
-  const [askingConsent, setAskingConsent] = useState(false);
-  const [record, setRecord] = useState<VoiceSource | null>(null);
+  const large = useAccessibilitySize();
   const [queuedSource, setQueuedSource] = useState<VoiceSource | null>(null);
-  const [sourcesOpen, setSourcesOpen] = useState(false);
-  const [chosenSource, setChosenSource] = useState<VoiceSource | null>(null);
   const [typing, setTyping] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [captions, setCaptions] = useCaptionsPreference();
@@ -105,10 +126,8 @@ export default function TalkScreen({
   );
   const priorAnnouncement = useRef('');
   const statusNode = useRef<View>(null);
-  const page = useRef<ScrollView>(null);
   const captionsList = useRef<ScrollView>(null);
-  // Older caption lines scrolled above the panel fade out at its top edge.
-  const [captionsAbove, setCaptionsAbove] = useState(false);
+  const pinned = useRef(true);
   const focusedEntry = useRef(false);
   const terminal = call.terminal;
   const live = s.state === 'live';
@@ -116,19 +135,29 @@ export default function TalkScreen({
   const active = call.active && (s.state !== 'checking' || call.busy);
   const blocked = refusal(s.status);
   const failure = call.error === 'signedOut' ? null : call.error;
+  const offline = failure === 'network' || failure === 'timeout';
+  const statusFailed = !s.status && failure !== null;
   // Android's answer to the last microphone request (src/voice/microphone.ts).
   const microphoneRefused =
     call.microphone === 'denied' || call.microphone === 'blocked'
       ? microphoneCopy[call.microphone]
       : null;
+  const microphoneDenied =
+    failure === 'microphoneDenied' || call.microphone === 'blocked';
   // Newest first: a failure, then the microphone answer, then this sheet's
-  // own notice (it follows any ending it replaces), then how the last call
-  // ended, then a refusal.
-  const message = failure
-    ? failureCopy[failure]
-    : (microphoneRefused ??
-      notice ??
-      (terminal ? endCopy[terminal] : blocked ? failureCopy[blocked] : null));
+  // own notice, then how the last call ended, then a refusal. Signed out is
+  // not a message: its footnote names the free minutes instead.
+  const message = statusFailed
+    ? null
+    : failure
+      ? failureCopy[failure]
+      : (microphoneRefused ??
+        notice ??
+        (terminal
+          ? endCopy[terminal]
+          : blocked && blocked !== 'signedOut'
+            ? failureCopy[blocked]
+            : null));
   const lastTurn = s.transcript[s.transcript.length - 1];
   const phase: OrbPhase = !active
     ? 'rest'
@@ -143,37 +172,55 @@ export default function TalkScreen({
             : lastTurn?.role === 'user'
               ? 'thinking'
               : 'listening';
-  // Spoken on every change (VoiceOver's announcement, TalkBack's live
-  // region); drawn as the one status line.
-  const stateText =
+  const statusText =
     s.state === 'ending'
-      ? 'Ending the call'
+      ? talkCopy.status.ending
       : active && !live
-        ? 'Connecting'
+        ? talkCopy.status.connecting
         : live
-          ? s.mode === 'muted'
-            ? 'Microphone muted'
-            : s.mode === 'speaking'
-              ? 'OPAX is speaking'
-              : 'Listening'
-          : (message ??
-            (s.status ? 'Ready to talk. Microphone off.' : 'Checking voice'));
-  const action: Action | null = !s.status
-    ? failure
+          ? (talkCopy.status[phase === 'rest' ? 'listening' : phase] ??
+            talkCopy.status.listening)
+          : null;
+  // Spoken on every change (VoiceOver's announcement, TalkBack's live
+  // region): what the call is doing, else what went wrong, else readiness.
+  const stateText =
+    statusText ??
+    (statusFailed
+      ? offline
+        ? talkCopy.offline
+        : talkCopy.checkFailed
+      : (message ??
+        (s.status ? talkCopy.status.ready : talkCopy.status.checking)));
+  const action: Action = !s.status
+    ? statusFailed
       ? 'retry'
-      : null
-    : s.status.enabled && !s.status.signedIn
+      : 'checking'
+    : blocked === 'signedOut'
       ? 'signIn'
       : blocked === 'callOpen'
         ? 'retry'
         : blocked
-          ? 'search'
-          : failure === 'microphoneDenied' || call.microphone === 'blocked'
+          ? 'ask'
+          : microphoneDenied
             ? 'settings'
-            : 'start';
+            : terminal || s.transcript.length
+              ? 'startAgain'
+              : 'start';
   const sources = openableSources(s.sources);
-  const showCaptions = captions && s.transcript.length > 0;
+  const showTranscript = captions && s.transcript.length > 0;
+  const compact = active || showTranscript;
   const levels = useVoiceLevels(live);
+  const startable = action === 'start' || action === 'startAgain';
+  const rationale = !active && call.microphone === 'rationale';
+  const showIntro =
+    !active &&
+    !rationale &&
+    !terminal &&
+    !microphoneDenied &&
+    blocked !== 'allowanceExhausted' &&
+    blocked !== 'budgetClosed' &&
+    blocked !== 'callOpen';
+  const example = exampleQuestion();
 
   useEffect(() => {
     void AccessibilityInfo.isScreenReaderEnabled().then(setScreenReader);
@@ -194,21 +241,23 @@ export default function TalkScreen({
   useEffect(() => {
     if (terminal && screenReader) focusOn(statusNode.current);
   }, [terminal, screenReader]);
-  const resetScroll = useEffectEvent(() => {
-    // Read the latest header offset without resetting as the header collapses.
-    page.current?.scrollTo({ y: -headerBottom, animated: false });
-  });
-  useEffect(() => {
-    // Start and the end of a call bring the orb and controls back into view.
-    resetScroll();
-  }, [active]);
+  // The orb moves between the stage and the call row (7.4).
+  const priorCompact = useRef(compact);
+  useLayoutEffect(() => {
+    if (priorCompact.current === compact) return;
+    priorCompact.current = compact;
+    if (!reduceMotion)
+      LayoutAnimation.configureNext(
+        LayoutAnimation.create(300, 'easeInEaseOut', 'opacity'),
+      );
+  }, [compact, reduceMotion]);
 
   const close = () => {
     if (active)
-      Alert.alert('End the conversation?', undefined, [
-        { text: 'Keep talking', style: 'cancel' },
+      Alert.alert(talkCopy.endConfirm.title, undefined, [
+        { text: talkCopy.endConfirm.keep, style: 'cancel' },
         {
-          text: 'End',
+          text: talkCopy.endConfirm.end,
           style: 'destructive',
           onPress: () => void call.end().then(() => router.back()),
         },
@@ -218,7 +267,7 @@ export default function TalkScreen({
   function openRecord(source: VoiceSource) {
     if (!webPageUrl(source.path)) return;
     if (recordDestination(source.path)) {
-      setRecord(source);
+      router.push(talkRecordRouteFor(source.path));
       return;
     }
     if (!active) {
@@ -226,13 +275,16 @@ export default function TalkScreen({
       return;
     }
     Alert.alert(
-      'Open this record',
-      'This record opens on opax.com.au after the conversation ends.',
+      talkCopy.webRecord.title,
+      talkCopy.webRecord.message(source.title),
       [
-        { text: 'Keep talking', style: 'cancel' },
-        { text: 'Open after the call', onPress: () => setQueuedSource(source) },
+        { text: talkCopy.webRecord.keep, style: 'cancel' },
         {
-          text: 'End the conversation and open',
+          text: talkCopy.webRecord.later,
+          onPress: () => setQueuedSource(source),
+        },
+        {
+          text: talkCopy.webRecord.now,
           onPress: () =>
             void call.end().then(() => openOnWeb(source.path, source.title)),
         },
@@ -241,76 +293,116 @@ export default function TalkScreen({
   }
   const withdraw = () =>
     void call.changeConsent(false).then((stored) => {
-      setAskingConsent(false);
       if (stored) setNotice(endCopy.consentWithdrawn);
     });
   const start = () => {
     setNotice(null);
     setTyping(false);
+    // Consent is asked in its own sheet; the call starts once it has gone.
     if (call.consent) void call.start();
-    else setAskingConsent(true);
+    else router.push(talkConsentRoute);
   };
-  // Header items are native: rebuild them only when the menu changes, never
-  // on each countdown tick, so an open menu is not replaced under a finger.
+  const askInstead = () => {
+    // Under D5 the reader came from Ask: closing returns there.
+    router.back();
+    if (!designFlags.talkInAsk)
+      setTimeout(() => router.navigate('/(tabs)/(ask)/ask' as Href), 500);
+  };
+  // Handlers the native header items and other screens call, kept current
+  // without rebuilding the items on each countdown tick.
   const handlers = useRef({
     close,
     withdraw,
+    openRecord,
+    end: () => void call.end(),
     report: onReportAnswer,
+    startConsented: call.startConsented,
   });
   useLayoutEffect(() => {
-    handlers.current = { close, withdraw, report: onReportAnswer };
+    handlers.current = {
+      close,
+      withdraw,
+      openRecord,
+      end: () => void call.end(),
+      report: onReportAnswer,
+      startConsented: call.startConsented,
+    };
   });
-  // Android's Back is the sheet's Done: during a call it asks first, as
-  // Done does, and from an open record it returns to the call.
+  // Back from the consent sheet (Agree) or the Sources sheet (a choice).
+  useFocusEffect(
+    useCallback(() => {
+      if (takeStartAfterConsent())
+        void handlers.current.startConsented().then(() => setNotice(null));
+      const chosen = takeChosenSource();
+      if (chosen) setTimeout(() => handlers.current.openRecord(chosen), 0);
+    }, []),
+  );
+  // The other Talk screens see the call through this mirror (live.ts).
   useEffect(() => {
-    if (!android || (!active && !record)) return;
+    publishTalk({
+      sources: s.sources,
+      active,
+      live,
+      status: stateText,
+      phase,
+      end: () => handlers.current.end(),
+    });
+  }, [s.sources, active, live, stateText, phase]);
+  useEffect(() => resetTalk, []);
+  // Android's Back is the sheet's Done: during a call it asks first.
+  useEffect(() => {
+    if (!android || !active) return;
     const subscription = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        if (record) setRecord(null);
-        else handlers.current.close();
+        handlers.current.close();
         return true;
       },
     );
     return () => subscription.remove();
-  }, [active, record]);
+  }, [active]);
   const menuTitle = timeLeft(live, s.remaining, s.status);
   const reportable = canReport(s.transcript);
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);
+  const canCaption = active || s.transcript.length > 0;
   const screenOptions = useMemo(() => {
     const items = () => [
       talkMenu({
         title: menuTitle,
-        live,
         active,
-        typing,
+        captions,
+        canCaption,
         report: reportable,
         records,
         consent: call.consent,
-        onType: () => afterMenu(() => setTyping(true)),
+        onCaptions: setCaptions,
         onReport: (path) => afterMenu(() => void handlers.current.report(path)),
         onPrivacy: () =>
-          afterMenu(() => void openOnWeb('/privacy', 'Voice privacy')),
+          afterMenu(
+            () => void openOnWeb('/privacy', talkCopy.menu.voicePrivacy),
+          ),
         onWithdraw: () => handlers.current.withdraw(),
       }),
-      {
-        type: 'button' as const,
-        label: 'Done',
-        tintColor: chrome.tint,
-        accessibilityLabel: 'Done',
-        onPress: () => handlers.current.close(),
-      },
+      { ...closeSheetItem(), onPress: () => handlers.current.close() },
     ];
     return {
-      title: active ? '' : 'Talk to OPAX',
+      title: active ? '' : talkCopy.title,
       gestureEnabled: !active,
       unstable_headerRightItems: items,
       // Android draws the same items in its own bar.
       ...(android ? { headerRight: () => androidHeaderBar(items()) } : {}),
     };
-  }, [menuTitle, live, active, typing, reportable, records, call.consent]);
+  }, [
+    menuTitle,
+    active,
+    captions,
+    canCaption,
+    setCaptions,
+    reportable,
+    records,
+    call.consent,
+  ]);
 
-  const destination = record ? recordDestination(record.path) : null;
   const onStage = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
     setStage((prior) =>
@@ -319,42 +411,39 @@ export default function TalkScreen({
         : { width, height },
     );
   };
-  // Consent and the microphone rationale need the room: the orb steps back
-  // to whatever space is left, and leaves altogether when that is too small
-  // to read as the orb.
-  const consenting =
-    !active &&
-    ((askingConsent && !call.consent) || call.microphone === 'rationale');
-  const fitted = stage ? Math.min(stage.width, stage.height, 380) : 0;
-  const orbSize = consenting && fitted < 64 ? 0 : fitted;
-  const captionsButton = (
-    <IconButton
-      symbol={captions ? 'captions.bubble.fill' : 'captions.bubble'}
-      accessibilityLabel="Captions"
-      variant="default"
-      size="large"
-      selected={captions}
-      testID="talk-captions"
-      onPress={() => setCaptions(!captions)}
-    />
-  );
-  const sourcesButton = sources.length ? (
-    <IconButton
-      symbol="books.vertical"
-      accessibilityLabel={`Sources, ${sources.length}`}
-      variant="default"
-      size="large"
-      badge={sources.length}
-      testID="talk-sources"
-      onPress={() => setSourcesOpen(true)}
-    />
-  ) : (
-    <View style={styles.slot} />
-  );
-  // One plain line under the orb, always in the same place: what went wrong
-  // or how the call ended, otherwise what the call is doing. VoiceOver hears
-  // it from the status element above, so the line itself is hidden.
-  const statusLine = message ?? (active || !s.status ? stateText : null);
+  const cap = large ? ORB_AX : ORB_MAX;
+  const orbSize = stage ? Math.min(stage.width, stage.height, cap) : 0;
+  const statusProps = {
+    ref: statusNode,
+    accessible: true,
+    accessibilityLanguage: 'en-AU',
+    accessibilityLabel: stateText,
+    accessibilityLiveRegion: 'polite' as const,
+    accessibilityHint:
+      screenReader && active
+        ? talkCopy.headphones(android ? 'TalkBack' : 'VoiceOver')
+        : undefined,
+    testID: 'talk-status',
+    onLayout: () => {
+      if (!focusedEntry.current && screenReader) {
+        focusedEntry.current = true;
+        focusOn(statusNode.current);
+      }
+    },
+  };
+  const allowance =
+    s.status?.signedIn && (startable || action === 'checking') ? (
+      <Text
+        wordSafe
+        variant="footnote"
+        tone="inkSoft"
+        style={styles.centre}
+        testID="talk-allowance"
+        accessibilityLabel={voiceTimeSpoken(s.status)}
+      >
+        {voiceTime(s.status)}
+      </Text>
+    ) : null;
 
   return (
     <View
@@ -364,305 +453,226 @@ export default function TalkScreen({
       }}
     >
       <Stack.Screen options={screenOptions} />
-      {destination ? (
-        <>
-          <View style={styles.recordBar}>
-            <Button
-              label="Back to call"
-              icon="chevron.left"
-              variant="quiet"
-              size="compact"
-              testID="talk-record-back"
-              onPress={() => setRecord(null)}
-            />
-            <View
-              ref={statusNode}
-              accessible
-              accessibilityLanguage="en-AU"
-              testID="talk-record-status"
-              accessibilityLabel={stateText}
-              accessibilityLiveRegion="polite"
-              style={styles.recordStatus}
-            >
+      <View
+        testID="talk-sheet"
+        style={[
+          styles.body,
+          isPad ? styles.pad : null,
+          { paddingBottom: Math.max(insets.bottom, rhythm.block) },
+        ]}
+      >
+        {compact ? (
+          <View style={[styles.callRow, large ? styles.callRowStacked : null]}>
+            <View {...statusProps} style={styles.callOrb}>
               <VoiceOrb
                 phase={phase}
                 levels={levels}
-                size={44}
+                size={ORB_CALL}
                 reduceMotion={reduceMotion}
               />
             </View>
-            {active ? (
-              <IconButton
-                symbol="phone.down.fill"
-                accessibilityLabel="End call"
-                variant="danger"
-                testID="talk-record-end"
-                onPress={() => void call.end()}
-              />
+            {statusText ? (
+              <Text
+                wordSafe
+                variant="secondary"
+                testID="talk-state"
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                {statusText}
+              </Text>
             ) : null}
           </View>
-          {destination.pathname === '/bill/[key]' ? (
-            <BillDetail recordKey={destination.params.key} embedded />
-          ) : destination.pathname === '/person/[slug]' ? (
-            <ProfileScreen slug={destination.params.slug} embedded />
-          ) : destination.pathname === '/doc/[slug]' ? (
-            <DocumentReader recordSlug={destination.params.slug} embedded />
-          ) : destination.pathname === '/bill-text/[key]' ? (
-            <BillTextReader recordKey={destination.params.key} embedded />
-          ) : destination.pathname === '/electorate/[id]' ? (
-            <ElectorateScreen id={destination.params.id} embedded />
-          ) : null}
-        </>
-      ) : (
-        <ScrollView
-          ref={page}
-          testID="talk-sheet"
-          style={styles.page}
-          // The sheet's bar is opaque and the dock pads the home indicator,
-          // so the page fits the screen exactly at standard sizes.
-          contentInsetAdjustmentBehavior="never"
-          keyboardShouldPersistTaps="handled"
-          automaticallyAdjustKeyboardInsets
-          contentContainerStyle={[
-            styles.body,
-            isPad
-              ? { width: '100%', maxWidth: 700, alignSelf: 'center' }
-              : null,
-            {
-              paddingBottom:
-                Math.max(insets.bottom, rhythm.block) + rhythm.block,
-            },
-          ]}
-        >
-          <View
-            style={[styles.stage, consenting ? styles.emblem : null]}
-            onLayout={onStage}
+        ) : null}
+        {showTranscript ? (
+          <ScrollView
+            ref={captionsList}
+            testID="talk-captions-list"
+            style={styles.transcript}
+            contentContainerStyle={styles.transcriptContent}
+            keyboardShouldPersistTaps="handled"
+            onContentSizeChange={() => {
+              // Pinned to the newest turn unless the reader scrolled up.
+              if (pinned.current)
+                captionsList.current?.scrollToEnd({ animated: !reduceMotion });
+            }}
+            onScroll={(event) => {
+              const { contentOffset, contentSize, layoutMeasurement } =
+                event.nativeEvent;
+              pinned.current =
+                contentOffset.y + layoutMeasurement.height >=
+                contentSize.height - 24;
+            }}
+            scrollEventThrottle={32}
           >
-            {/* Absolute, so the orb never props the stage open: the stage
-                is exactly the room the dock and captions leave. */}
+            <MachinePill note={talkMachineNote} testID="talk-machine" />
+            {s.transcript.map((turn) => (
+              <AnswerCaption key={`${turn.role}-${turn.id}`} turn={turn} />
+            ))}
+          </ScrollView>
+        ) : (
+          <View style={styles.stage} onLayout={onStage}>
+            {/* Absolute, so the orb never props the stage open. */}
             <View style={styles.orbFrame}>
-              <View
-                ref={statusNode}
-                accessible
-                accessibilityLanguage="en-AU"
-                accessibilityLabel={stateText}
-                accessibilityLiveRegion="polite"
-                accessibilityHint={
-                  screenReader && active
-                    ? `Headphones keep ${android ? 'TalkBack' : 'VoiceOver'} speech out of the microphone.`
-                    : undefined
-                }
-                testID="talk-status"
-                onLayout={() => {
-                  if (!focusedEntry.current && screenReader) {
-                    focusedEntry.current = true;
-                    focusOn(statusNode.current);
-                  }
-                }}
-                style={{ width: orbSize, height: orbSize }}
-              >
-                {orbSize ? (
-                  <VoiceOrb
-                    phase={phase}
-                    levels={levels}
-                    size={orbSize}
-                    reduceMotion={reduceMotion}
-                  />
-                ) : null}
-              </View>
-            </View>
-          </View>
-          {showCaptions ? (
-            <View>
-              <ScrollView
-                ref={captionsList}
-                testID="talk-captions-list"
-                style={styles.captions}
-                contentContainerStyle={styles.captionsContent}
-                onContentSizeChange={() =>
-                  captionsList.current?.scrollToEnd({
-                    animated: !reduceMotion,
-                  })
-                }
-                onScroll={(event) => {
-                  const above = event.nativeEvent.contentOffset.y > 1;
-                  if (above !== captionsAbove) setCaptionsAbove(above);
-                }}
-                scrollEventThrottle={32}
-              >
-                {s.transcript.map((turn) => (
-                  <AnswerCaption key={`${turn.role}-${turn.id}`} turn={turn} />
-                ))}
-              </ScrollView>
-              {captionsAbove ? (
-                <EdgeFade height={40} testID="talk-captions-fade" />
-              ) : null}
-            </View>
-          ) : null}
-          <View style={styles.dock} testID="talk-sheet-message">
-            {active ? (
-              <>
-                {statusLine ? (
-                  <Text
-                    wordSafe
-                    variant="metadata"
-                    style={styles.centre}
-                    testID="talk-state"
-                    accessibilityElementsHidden
-                    importantForAccessibility="no-hide-descendants"
-                  >
-                    {statusLine}
-                  </Text>
-                ) : null}
-                {typing && live ? (
-                  <TypedMessage
-                    send={call.send}
-                    busy={call.busy}
-                    onClose={() => setTyping(false)}
-                  />
-                ) : null}
-                {s.playback === 'truncated' && !captions ? (
-                  <View style={styles.inline} testID="talk-playback">
-                    <Text variant="fine" style={styles.centre}>
-                      Playback was cut short.
-                    </Text>
-                    <Button
-                      label="Show captions"
-                      variant="quiet"
-                      size="compact"
-                      onPress={() => setCaptions(true)}
+              {compact ? null : (
+                <View
+                  {...statusProps}
+                  style={{ width: orbSize, height: orbSize }}
+                >
+                  {orbSize ? (
+                    <VoiceOrb
+                      phase={phase}
+                      levels={levels}
+                      size={orbSize}
+                      reduceMotion={reduceMotion}
                     />
-                  </View>
-                ) : null}
-                <ControlRow>
-                  {captionsButton}
-                  <IconButton
-                    symbol={s.mode === 'muted' ? 'mic.slash.fill' : 'mic.fill'}
-                    accessibilityLabel={s.mode === 'muted' ? 'Unmute' : 'Mute'}
-                    variant="default"
-                    size="large"
-                    selected={s.mode === 'muted'}
-                    disabled={!live || call.busy}
-                    testID="talk-mute"
-                    onPress={() => void call.mute()}
-                  />
-                  <IconButton
-                    symbol="phone.down.fill"
-                    accessibilityLabel={live ? 'End call' : 'Cancel call'}
-                    variant="danger"
-                    size="large"
-                    disabled={s.state === 'ending'}
-                    testID="talk-end"
-                    onPress={() => void call.end()}
-                  />
-                  {sourcesButton}
-                </ControlRow>
-              </>
-            ) : askingConsent && !call.consent ? (
-              <Consent
-                busy={call.busy || !call.consentLoaded}
-                onAgree={() =>
-                  void call.agreeAndStart().then(() => setAskingConsent(false))
-                }
-                onDecline={() => setAskingConsent(false)}
-              />
-            ) : call.microphone === 'rationale' ? (
-              <MicrophoneRationale
-                busy={call.busy}
-                onContinue={() => void call.allowMicrophone()}
-                onDecline={call.declineMicrophone}
-              />
-            ) : (
-              <>
-                {statusLine ? (
-                  <Text
-                    wordSafe
-                    variant={message ? 'body' : 'metadata'}
-                    style={styles.centre}
-                    testID={message ? 'talk-message' : 'talk-state'}
-                    accessibilityElementsHidden
-                    importantForAccessibility="no-hide-descendants"
-                  >
-                    {statusLine}
-                  </Text>
-                ) : null}
-                {queuedSource ? (
-                  <Button
-                    label={`Open ${queuedSource.title}`}
-                    variant="quiet"
-                    testID="talk-queued-source"
-                    onPress={() => {
-                      void openOnWeb(queuedSource.path, queuedSource.title);
-                      setQueuedSource(null);
-                    }}
-                  />
-                ) : null}
-                {action ? (
-                  <ControlRow>
-                    {s.transcript.length ? captionsButton : null}
-                    <View style={styles.primary}>
-                      <PrimaryAction
-                        action={action}
-                        busy={
-                          call.busy ||
-                          (action === 'start' && !call.consentLoaded)
-                        }
-                        onStart={start}
-                        onRetry={() => void call.refresh()}
-                      />
-                    </View>
-                    {s.transcript.length || sources.length
-                      ? sourcesButton
-                      : null}
-                  </ControlRow>
-                ) : null}
-                {s.status?.signedIn ? (
-                  <Text
-                    variant="fine"
-                    style={styles.centre}
-                    testID="talk-allowance"
-                    accessibilityLabel={
-                      s.status.unlimited
-                        ? 'Unlimited voice minutes, up to 10 minutes per call'
-                        : timeLabel(s.status.remainingSeconds)
-                    }
-                  >
-                    {s.status.unlimited
-                      ? 'Unlimited minutes'
-                      : `${minutesLeft(s.status.remainingSeconds)} left`}
-                  </Text>
-                ) : null}
-                {action === 'signIn' ? (
-                  <Text
-                    variant="metadata"
-                    style={styles.centre}
-                    testID="talk-age-limit"
-                  >
-                    {accountCopy.ageLimit}
-                  </Text>
-                ) : null}
-                {action === 'start' ? <VoiceDisclosure /> : null}
-              </>
-            )}
+                  ) : null}
+                </View>
+              )}
+            </View>
           </View>
+        )}
+        <ScrollView
+          style={styles.dockScroll}
+          contentContainerStyle={styles.dock}
+          keyboardShouldPersistTaps="handled"
+          // Sized to its content; it scrolls only when AX text needs it.
+          testID="talk-sheet-message"
+        >
+          {active ? (
+            <>
+              {typing && live ? (
+                <TypedMessage send={call.send} busy={call.busy} />
+              ) : null}
+              {s.playback === 'truncated' && !captions ? (
+                <View style={styles.inline} testID="talk-playback">
+                  <Text variant="footnote" style={styles.centre}>
+                    {talkCopy.playbackCut}
+                  </Text>
+                  <Button
+                    label={talkCopy.menu.showCaptions}
+                    variant="plain"
+                    size="compact"
+                    onPress={() => setCaptions(true)}
+                  />
+                </View>
+              ) : null}
+              <CallControls
+                muted={s.mode === 'muted'}
+                canMute={live && !call.busy}
+                typing={typing && live}
+                canType={live}
+                sources={sources.length}
+                ending={s.state === 'ending'}
+                live={live}
+                onMute={() => void call.mute()}
+                onType={() => setTyping((open) => !open)}
+                onSources={() => router.push(talkSourcesRoute)}
+                onEnd={() => void call.end()}
+              />
+            </>
+          ) : rationale ? (
+            <MicrophoneRationale
+              busy={call.busy}
+              onContinue={() => void call.allowMicrophone()}
+              onDecline={call.declineMicrophone}
+            />
+          ) : (
+            <>
+              {showIntro ? (
+                <Text
+                  wordSafe
+                  variant="body"
+                  style={styles.centre}
+                  testID="talk-intro"
+                >
+                  {talkCopy.intro}
+                </Text>
+              ) : null}
+              {showIntro &&
+              example &&
+              (action === 'start' || action === 'signIn') ? (
+                <Text
+                  wordSafe
+                  variant="secondary"
+                  style={styles.centre}
+                  testID="talk-example"
+                >
+                  {talkCopy.example(example)}
+                </Text>
+              ) : null}
+              {statusFailed ? (
+                <InlineError
+                  subject="voice"
+                  message={offline ? talkCopy.offline : talkCopy.checkFailed}
+                  testID="talk-message"
+                />
+              ) : message ? (
+                <Text
+                  wordSafe
+                  variant="body"
+                  style={styles.centre}
+                  testID="talk-message"
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  {message}
+                </Text>
+              ) : null}
+              {queuedSource ? (
+                <Button
+                  label={talkCopy.open(queuedSource.title)}
+                  variant="plain"
+                  symbol="arrow.up.right.square"
+                  testID="talk-queued-source"
+                  onPress={() => {
+                    void openOnWeb(queuedSource.path, queuedSource.title);
+                    setQueuedSource(null);
+                  }}
+                />
+              ) : null}
+              {sources.length && !active ? (
+                <Button
+                  label={talkCopy.controls.sources}
+                  variant="plain"
+                  symbol="doc.text.magnifyingglass"
+                  accessibilityLabel={talkCopy.sourcesSpoken(sources.length)}
+                  testID="talk-sources"
+                  onPress={() => router.push(talkSourcesRoute)}
+                />
+              ) : null}
+              <PrimaryAction
+                action={action}
+                busy={
+                  action === 'checking' ||
+                  call.busy ||
+                  (startable && !call.consentLoaded)
+                }
+                onStart={start}
+                onRetry={() => void call.refresh()}
+                onAsk={askInstead}
+              />
+              {allowance}
+              {action === 'signIn' ? (
+                <Text
+                  wordSafe
+                  variant="footnote"
+                  tone="inkSoft"
+                  style={styles.centre}
+                  testID="talk-free-minutes"
+                >
+                  {s.status?.totalSeconds
+                    ? talkCopy.freeMinutes(
+                        Math.floor(s.status.totalSeconds / 60),
+                      )
+                    : failureCopy.signedOut}
+                </Text>
+              ) : null}
+              {startable || action === 'checking' ? <VoiceDisclosure /> : null}
+            </>
+          )}
         </ScrollView>
-      )}
-      <SourcesSheet
-        visible={sourcesOpen}
-        sources={s.sources}
-        active={active}
-        onOpen={(source) => {
-          setChosenSource(source);
-          setSourcesOpen(false);
-        }}
-        onClose={() => setSourcesOpen(false)}
-        onDismiss={() => {
-          // Open the record only once the sheet has gone, so an alert or the
-          // embedded record never appears beneath it.
-          if (chosenSource) openRecord(chosenSource);
-          setChosenSource(null);
-        }}
-      />
+      </View>
     </View>
   );
 }
@@ -672,22 +682,27 @@ function PrimaryAction({
   busy,
   onStart,
   onRetry,
+  onAsk,
 }: {
   action: Action;
   busy: boolean;
   onStart: () => void;
   onRetry: () => void;
+  onAsk: () => void;
 }) {
   switch (action) {
     case 'start':
+    case 'startAgain':
+    case 'checking':
       return (
         <Button
-          label="Start"
+          label={action === 'startAgain' ? talkCopy.startAgain : talkCopy.start}
           icon="mic.fill"
           variant="primary"
           size="large"
           fullWidth
           testID="talk-start"
+          loading={action === 'checking'}
           disabled={busy}
           onPress={onStart}
         />
@@ -695,28 +710,30 @@ function PrimaryAction({
     case 'signIn':
       return (
         <Button
-          label="Sign in"
+          label={talkCopy.signIn}
           variant="primary"
           size="large"
           fullWidth
           testID="talk-sign-in"
-          onPress={() => router.replace('/account')}
+          onPress={() => router.push(talkSignInRoute)}
         />
       );
-    case 'search':
+    case 'ask':
       return (
         <Button
-          label="Search the record"
+          label={talkCopy.askInstead}
+          variant="secondary"
           size="large"
           fullWidth
-          testID="talk-search"
-          onPress={() => router.replace('/(tabs)/(search)')}
+          testID="talk-ask"
+          onPress={onAsk}
         />
       );
     case 'settings':
       return (
         <Button
-          label="Open Settings"
+          label={talkCopy.openSettings}
+          variant="secondary"
           size="large"
           fullWidth
           testID="talk-settings"
@@ -726,7 +743,8 @@ function PrimaryAction({
     case 'retry':
       return (
         <Button
-          label="Try again"
+          label={talkCopy.tryAgain}
+          variant="secondary"
           size="large"
           fullWidth
           testID="talk-refresh"
@@ -737,93 +755,55 @@ function PrimaryAction({
   }
 }
 
+/** Type: the composer docked above the controls (7.4). */
 function TypedMessage({
   send,
   busy,
-  onClose,
 }: {
   send: ReturnType<typeof useTalk>['send'];
   busy: boolean;
-  onClose: () => void;
 }) {
   const [text, setText] = useState('');
+  const input = useRef<import('react-native').TextInput>(null);
+  useEffect(() => {
+    input.current?.focus();
+  }, []);
+  const submit = () =>
+    void send(text).then((result) => {
+      if (result?.ok) setText('');
+    });
   return (
-    <View style={styles.typed}>
-      <Field
-        label="Message to OPAX"
-        testID="talk-text"
-        value={text}
-        onChangeText={setText}
-        multiline
-        maxLength={2000}
-        autoFocus
-      />
-      <View style={styles.typedActions}>
-        <Button
-          label="Close"
-          variant="quiet"
-          size="compact"
-          testID="talk-text-close"
-          onPress={onClose}
-        />
-        <Button
-          label="Send"
-          variant="primary"
-          size="compact"
-          testID="talk-send"
-          disabled={!text.trim() || busy}
-          onPress={() =>
-            void send(text).then((result) => {
-              if (result?.ok) setText('');
-            })
-          }
-        />
-      </View>
-    </View>
+    <Composer
+      inputRef={input}
+      label={talkCopy.composer}
+      placeholder={talkCopy.composer}
+      submitLabel={talkCopy.send}
+      value={text}
+      onChangeText={setText}
+      onSubmit={() => {
+        if (text.trim() && !busy) submit();
+      }}
+      maxLength={2000}
+      testID="talk-text"
+      submitTestID="talk-send"
+    />
   );
 }
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.paper },
   body: {
-    flexGrow: 1,
+    flex: 1,
     paddingHorizontal: layout.screenMargin,
     gap: rhythm.group,
   },
+  pad: { width: '100%', maxWidth: 700, alignSelf: 'center' },
   stage: {
     flex: 1,
-    minHeight: 200,
+    minHeight: ORB_AX,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  captions: { flexGrow: 0, maxHeight: 260 },
-  captionsContent: { gap: rhythm.block, paddingVertical: rhythm.tight },
-  dock: { gap: rhythm.block, alignItems: 'stretch' },
-  centre: { textAlign: 'center' },
-  inline: { alignItems: 'center' },
-  // Holds the Sources control's place, so the row never shifts when it comes.
-  slot: { width: controlHeight.large, height: controlHeight.large },
-  primary: { flexGrow: 1, flexShrink: 1, maxWidth: 280 },
-  typed: { gap: rhythm.tight },
-  typedActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    flexWrap: 'wrap',
-    gap: rhythm.tight,
-  },
-  recordBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    gap: rhythm.tight,
-    paddingHorizontal: rhythm.block,
-    paddingVertical: rhythm.tight,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.dividerSubtle,
-  },
-  recordStatus: { width: 44, height: 44 },
-  emblem: { minHeight: 0 },
   orbFrame: {
     position: 'absolute',
     top: 0,
@@ -833,4 +813,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  callRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: rhythm.block,
+    paddingTop: rhythm.tight,
+  },
+  callRowStacked: { flexDirection: 'column', gap: rhythm.tight },
+  callOrb: { width: ORB_CALL, height: ORB_CALL },
+  transcript: { flex: 1 },
+  transcriptContent: { gap: rhythm.block, paddingVertical: rhythm.tight },
+  dockScroll: { flexGrow: 0, flexShrink: 1 },
+  dock: { gap: rhythm.tight, alignItems: 'stretch' },
+  centre: { textAlign: 'center' },
+  inline: { alignItems: 'center' },
 });

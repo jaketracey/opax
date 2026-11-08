@@ -63,18 +63,17 @@ function paint(role: Role, alpha = 1, strong = false, shade = 1): number[] {
 }
 
 /**
- * The orb's colours, all from the palette: hairline bronze rings (the OPAX
- * engraving register) on a navy core with a bronze-bright glow. Under
- * Increase Contrast the rings, the sweep and the core's edge take the
- * stronger bronze ink at full strength.
+ * The orb's colours, all from the palette: hairline navy rings at 10% to
+ * 30% (art, not a surface) on a navy core. Bronze stays in the mark, the icon
+ * and the launch screen only (DIR 2.2, specs/account.md 7.3). Under Increase
+ * Contrast the rings, the sweep and the core's edge draw stronger.
  */
 function orbColours(strong: boolean) {
-  const ring = strong ? 'bronzeInk' : 'bronze';
   return {
     rings: [
-      paint(ring, strong ? 1 : 0.95, strong),
-      paint(ring, strong ? 0.8 : 0.6, strong),
-      paint(ring, 0, strong),
+      paint('navy', strong ? 0.6 : 0.3),
+      paint('navy', strong ? 0.4 : 0.1),
+      paint('navy', 0),
     ],
     rosette: paint('onNavySoft', strong ? 0.35 : 0.2, strong),
     core: [
@@ -83,10 +82,10 @@ function orbColours(strong: boolean) {
       paint('navy'),
       paint('navy', 1, false, 0.6),
     ],
-    glow: [paint('bronzeBright', 0.75), paint('bronzeBright', 0)],
-    halo: [paint('bronzeWash', 0.95), paint('bronzeWash', 0)],
-    sweep: paint(ring, 1, strong),
-    edge: paint('bronzeBright', strong ? 1 : 0.6),
+    glow: [paint('navyRaised', 0.6), paint('navyRaised', 0)],
+    halo: [paint('navyWash', 0.95), paint('navyWash', 0)],
+    sweep: paint('navy', strong ? 0.9 : 0.3),
+    edge: paint('navyRaised', strong ? 1 : 0.6),
   };
 }
 
@@ -101,9 +100,9 @@ function energyOf(raw: number) {
 }
 
 /**
- * The call's living mark. A navy core with bronze contour rings:
+ * The call's living mark. A navy core with navy contour rings:
  * listening draws the rings in when you speak, OPAX's voice sends them out
- * as ripples, connecting and thinking turn a bronze arc like a watch hand,
+ * as ripples, connecting and thinking turn an arc like a watch hand,
  * muted dims and stills. Reduce Motion keeps only a slow fade pulse.
  * Decorative: the caller's status element carries the accessible name.
  */

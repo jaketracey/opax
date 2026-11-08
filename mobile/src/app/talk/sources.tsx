@@ -1,4 +1,2 @@
-import { RoutePlaceholder } from '../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="talk/sources" title="Sources" />;
-}
+// Voice-off production resolves features/talk/entry.production.ts.
+export { TalkSourcesScreen as default } from '../../features/talk/entry';

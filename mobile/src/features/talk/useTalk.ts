@@ -77,46 +77,52 @@ export function useTalk() {
       setError(result.error);
     }
   }, [set]);
+  // The call belongs to this screen's mount, not its focus: a push inside
+  // the Talk stack (the Sources sheet, a record) never ends it. Leaving Talk
+  // unmounts the screen, which ends the call (specs/account.md 7.4).
+  useEffect(() => {
+    mounted.current = true;
+    const unsubscribe = voice.subscribe((event) => {
+      if (!mounted.current) return;
+      sequence.current += 1;
+      for (const key of eventKeys[event.type])
+        revisions.current[key] = sequence.current;
+      if (event.type === 'error') setError(event.error);
+      if (event.type === 'state' && event.reason) setTerminal(event.reason);
+      set(applyEvent(current.current, event));
+    });
+    return () => {
+      mounted.current = false;
+      focusGeneration.current += 1;
+      unsubscribe();
+      void voice.end().then(() => uiBridge.discardEvidence());
+      // The React state and all transient captions belong to this screen only.
+      set({ ...emptySnapshot });
+      setTerminal(null);
+      setError(null);
+    };
+  }, [set]);
+  // Each time Talk is shown: a fresh status read (unless a call is running),
+  // then the native snapshot, then the stored consent.
   useFocusEffect(
     useCallback(() => {
-      mounted.current = true;
-      dispatching.current = false;
-      setBusy(false);
-      setConsentLoaded(false);
-      setMicrophone(null);
       const generation = ++focusGeneration.current;
-      const unsubscribe = voice.subscribe((event) => {
-        if (!mounted.current || generation !== focusGeneration.current) return;
-        sequence.current += 1;
-        for (const key of eventKeys[event.type])
-          revisions.current[key] = sequence.current;
-        if (event.type === 'error') setError(event.error);
-        if (event.type === 'state' && event.reason) setTerminal(event.reason);
-        set(applyEvent(current.current, event));
-      });
-      // Subscribe first; status owns the network read; snapshot recovers atomic
-      // native values afterwards while retaining events newer than that read.
+      const calling = isCallActive(current.current.state);
+      if (!calling) setMicrophone(null);
       void (async () => {
-        await refresh();
-        if (!mounted.current || generation !== focusGeneration.current) return;
-        await recover();
+        if (!calling) {
+          await refresh();
+          if (!mounted.current || generation !== focusGeneration.current)
+            return;
+          await recover();
+        }
         const granted = await uiBridge.readConsent();
         if (mounted.current && generation === focusGeneration.current) {
           showConsent(granted);
           setConsentLoaded(true);
         }
       })();
-      return () => {
-        mounted.current = false;
-        focusGeneration.current += 1;
-        unsubscribe();
-        void voice.end().then(() => uiBridge.discardEvidence());
-        // The React state and all transient captions belong to this screen only.
-        set({ ...emptySnapshot });
-        setTerminal(null);
-        setError(null);
-      };
-    }, [recover, refresh, set]),
+    }, [recover, refresh]),
   );
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
@@ -137,10 +143,10 @@ export function useTalk() {
   async function run(action: () => ReturnType<typeof voice.start>) {
     if (dispatching.current) return;
     dispatching.current = true;
-    const generation = focusGeneration.current;
     setBusy(true);
     const result = await action();
-    if (mounted.current && generation === focusGeneration.current) {
+    // The call outlives a push inside Talk; only leaving Talk drops it.
+    if (mounted.current) {
       dispatching.current = false;
       if (!result.ok) setError(result.error);
       setBusy(false);
@@ -153,9 +159,8 @@ export function useTalk() {
     setTerminal(null);
     setError(null);
     if (asksForMicrophone()) {
-      const generation = focusGeneration.current;
       const granted = await microphoneGranted();
-      if (!mounted.current || generation !== focusGeneration.current) return;
+      if (!mounted.current) return;
       if (!granted) {
         setMicrophone(microphoneBlocked() ? 'blocked' : 'rationale');
         return;
@@ -193,15 +198,21 @@ export function useTalk() {
       await recover();
   }
   async function changeConsent(granted: boolean) {
-    const generation = focusGeneration.current;
     setBusy(true);
     const stored = await uiBridge.setConsent(granted);
-    if (mounted.current && generation === focusGeneration.current) {
+    if (mounted.current) {
       showConsent(stored && granted);
       if (!stored) setError('unavailable');
       setBusy(false);
     }
-    return stored && mounted.current && generation === focusGeneration.current;
+    return stored && mounted.current;
+  }
+  /** Consent was just stored by the consent sheet: start without asking. */
+  async function startConsented() {
+    showConsent(true);
+    setConsentLoaded(true);
+    if (!mounted.current || AppState.currentState === 'background') return;
+    await begin();
   }
   async function agreeAndStart() {
     if (await changeConsent(true)) {
@@ -224,11 +235,11 @@ export function useTalk() {
     refresh,
     changeConsent,
     agreeAndStart,
+    startConsented,
     // End must remain available while Start is awaiting native dispatch.
     end: async () => {
-      const generation = focusGeneration.current;
       const result = await voice.end();
-      if (mounted.current && generation === focusGeneration.current) {
+      if (mounted.current) {
         dispatching.current = false;
         if (!result.ok) setError(result.error);
         setBusy(false);
