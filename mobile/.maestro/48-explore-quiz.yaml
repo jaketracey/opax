@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 48 Record quiz, eight questions, copied result and saved streak
+name: 48 Record quiz, eight questions, typed guesses, result and saved streak
 ---
 - launchApp:
     permissions: {}
@@ -22,17 +22,15 @@ name: 48 Record quiz, eight questions, copied result and saved streak
     timeout: 60000
 - scrollUntilVisible:
     element:
-      id: quiz-number
+      id: quiz-guess-value
     direction: DOWN
     centerElement: true
     timeout: 60000
 - tapOn:
-    id: quiz-number
+    id: quiz-guess-value
 - inputText: '929297'
-- swipe:
-    start: 90%,45%
-    end: 90%,30%
-    duration: 500
+- tapOn:
+    id: quiz-number-done
 - scrollUntilVisible:
     element:
       id: quiz-confirm
@@ -88,17 +86,15 @@ name: 48 Record quiz, eight questions, copied result and saved streak
     timeout: 60000
 - scrollUntilVisible:
     element:
-      id: quiz-number
+      id: quiz-guess-value
     direction: DOWN
     centerElement: true
     timeout: 60000
 - tapOn:
-    id: quiz-number
+    id: quiz-guess-value
 - inputText: '2013'
-- swipe:
-    start: 90%,45%
-    end: 90%,30%
-    duration: 500
+- tapOn:
+    id: quiz-number-done
 - scrollUntilVisible:
     element:
       id: quiz-confirm
@@ -229,17 +225,15 @@ name: 48 Record quiz, eight questions, copied result and saved streak
     timeout: 60000
 - scrollUntilVisible:
     element:
-      id: quiz-number
+      id: quiz-guess-value
     direction: DOWN
     centerElement: true
     timeout: 60000
 - tapOn:
-    id: quiz-number
+    id: quiz-guess-value
 - inputText: '3335'
-- swipe:
-    start: 90%,45%
-    end: 90%,30%
-    duration: 500
+- tapOn:
+    id: quiz-number-done
 - scrollUntilVisible:
     element:
       id: quiz-confirm
@@ -310,33 +304,21 @@ name: 48 Record quiz, eight questions, copied result and saved streak
     timeout: 60000
 - assertVisible:
     id: quiz-result
-    text: 8/8 right · best streak 8
-- scrollUntilVisible:
-    element:
-      id: quiz-save
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- assertVisible: Streak saved on this device
+    text: 8 of 8 right · best streak 8
 - takeScreenshot: ${EVIDENCE}/48-quiz-result
-- scrollUntilVisible:
-    element:
-      id: quiz-copy
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-copy
-- assertVisible: Copied
+- assertVisible:
+    id: quiz-again
 - stopApp
 - launchApp:
     permissions: {}
 - openLink: opax://explore/quiz
 - assertVisible:
     id: quiz-best
-    text: Best streak 8
+    text: 8, Best streak
 - takeScreenshot: ${EVIDENCE}/48-streak-restored
 - openLink: opax://explore
-- assertVisible: Play with the parliamentary record
+- assertVisible:
+    id: explore-screen
+- assertVisible: Quizzes and tools
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/48-explore
