@@ -5,7 +5,7 @@ import {
   View,
   useColorScheme,
   useWindowDimensions,
-  type LayoutChangeEvent,
+  type AccessibilityActionEvent,
 } from 'react-native';
 import { Canvas, Rect } from '@shopify/react-native-skia';
 import { dark, darkHighContrast, light, lightHighContrast } from './palette';
@@ -14,7 +14,7 @@ import { Button } from './controls';
 import { formatCount, formatDate, type DateInput } from './format';
 import { SourceLine } from './source';
 import { Text } from './text';
-import { accents, colors, radii, rhythm, type Accent } from './tokens';
+import { accents, colors, fonts, radii, rhythm, type Accent } from './tokens';
 
 export interface ChartProvenance {
   dateRange: { start: DateInput; end: DateInput };
@@ -23,7 +23,29 @@ export interface ChartProvenance {
 const provenance = ({ dateRange, source }: ChartProvenance) =>
   `${formatDate(dateRange.start)} to ${formatDate(dateRange.end)}. ${source}`;
 
-/** A single neutral split. The words, rather than the drawing, are spoken. */
+type Measurement = { width: number; height: number };
+type TextMeasurementEvent = { nativeEvent: { lines: readonly Measurement[] } };
+function useTextMeasurements() {
+  const [sizes, setSizes] = useState<Record<string, Measurement>>({});
+  const measure = (key: string) => (event: TextMeasurementEvent) => {
+    const width = Math.max(
+      0,
+      ...event.nativeEvent.lines.map((line) => line.width),
+    );
+    const height = event.nativeEvent.lines.reduce(
+      (sum, line) => sum + line.height,
+      0,
+    );
+    setSizes((old) =>
+      old[key]?.width === width && old[key]?.height === height
+        ? old
+        : { ...old, [key]: { width, height } },
+    );
+  };
+  return { sizes, measure };
+}
+
+/** A neutral split, with counts beside the bar or below it at AX sizes. */
 export function VoteSplit({
   ayes,
   noes,
@@ -37,21 +59,27 @@ export function VoteSplit({
   countsStyle: 'votes' | 'ayesNoes';
   onBand?: boolean;
 }) {
+  const large = useAccessibilitySize();
   const total = Math.max(0, ayes) + Math.max(0, noes);
   const words =
     countsStyle === 'votes'
       ? `${formatCount(ayes)} votes to ${formatCount(noes)}`
-      : `${formatCount(ayes)} ${ayes === 1 ? 'aye' : 'ayes'}, ${formatCount(noes)} ${noes === 1 ? 'no' : 'noes'}`;
+      : [
+          ayes ? `${formatCount(ayes)} ${ayes === 1 ? 'aye' : 'ayes'}` : null,
+          noes ? `${formatCount(noes)} ${noes === 1 ? 'no' : 'noes'}` : null,
+        ]
+          .filter(Boolean)
+          .join(', ') || 'No votes';
   return (
     <View
       accessible
       accessibilityLabel={`${words}. ${provenance({ dateRange, source })}`}
-      style={styles.chart}
+      style={[styles.voteSplit, large ? styles.voteSplitStacked : null]}
     >
       <View
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
-        style={styles.split}
+        style={[styles.split, large ? styles.splitStacked : styles.splitInline]}
       >
         <View
           style={{
@@ -66,14 +94,14 @@ export function VoteSplit({
           }}
         />
       </View>
-      <Text variant="secondary" tone={onBand ? 'onBand' : 'ink'}>
+      <Text variant="secondary" tabular tone={onBand ? 'onBand' : 'ink'}>
         {words}
       </Text>
     </View>
   );
 }
 
-/** Measured single-line labels decide the layout, including after rotation. */
+/** Both native label widths and heights determine the horizontal layout. */
 export function StageTimeline({
   stages,
   latestIndex,
@@ -88,25 +116,40 @@ export function StageTimeline({
   const large = useAccessibilitySize();
   const { fontScale } = useWindowDimensions();
   const [width, setWidth] = useState(0);
-  const [measurements, setMeasurements] = useState<Record<string, number>>({});
+  const { sizes, measure } = useTextMeasurements();
   const keys = stages.map(
     (stage, index) => `${fontScale}:${index}:${stage.label}:${stage.date}`,
   );
-  const widths = keys.map((key) => measurements[key]);
-  const measured = widths.every((value) => value !== undefined);
+  const measured = keys.every(
+    (key) => sizes[`${key}:label`] && sizes[`${key}:date`],
+  );
+  const widths = keys.map((key) =>
+    Math.max(
+      sizes[`${key}:label`]?.width ?? 0,
+      sizes[`${key}:date`]?.width ?? 0,
+    ),
+  );
+  const labelHeight = Math.max(
+    0,
+    ...keys.map(
+      (key) =>
+        (sizes[`${key}:label`]?.height ?? 0) +
+        4 +
+        (sizes[`${key}:date`]?.height ?? 0),
+    ),
+  );
   const positions = stages.map((_, index) =>
     stages.length < 2
       ? 0
-      : (index / (stages.length - 1)) * Math.max(0, width - 8),
+      : (index / (stages.length - 1)) * Math.max(0, width - 10),
   );
-  const bounds = widths.map((value, index) => {
-    const size = value ?? 0;
+  const bounds = widths.map((size, index) => {
     const left =
       index === 0
         ? 0
         : index === stages.length - 1
           ? width - size
-          : positions[index]! + 4 - size / 2;
+          : positions[index]! + 5 - size / 2;
     return { left, right: left + size };
   });
   const fits =
@@ -125,8 +168,6 @@ export function StageTimeline({
       style={styles.chart}
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
     >
-      {/* Unconstrained, invisible probes measure the actual native glyph widths.
-        No font-scale heuristic decides whether stage names fit. */}
       <View
         pointerEvents="none"
         accessibilityElementsHidden
@@ -135,48 +176,35 @@ export function StageTimeline({
       >
         {stages.map((stage, index) => (
           <View key={keys[index]} style={styles.probe}>
-            {[stage.label, stage.date].map((line, lineIndex) => (
-              <Text
-                key={lineIndex}
-                variant="footnote"
-                numberOfLines={1}
-                onTextLayout={(event) => {
-                  const size = event.nativeEvent.lines[0]?.width ?? 0;
-                  const key = `${keys[index]}:${lineIndex}`;
-                  setMeasurements((old) =>
-                    old[key] === size &&
-                    old[keys[index]!] ===
-                      Math.max(
-                        size,
-                        old[`${keys[index]}:${1 - lineIndex}`] ?? 0,
-                      )
-                      ? old
-                      : {
-                          ...old,
-                          [key]: size,
-                          [keys[index]!]: Math.max(
-                            size,
-                            old[`${keys[index]}:${1 - lineIndex}`] ?? 0,
-                          ),
-                        },
-                  );
-                }}
-              >
-                {line}
-              </Text>
-            ))}
+            <Text
+              variant="footnote"
+              style={styles.stageLabel}
+              onTextLayout={measure(`${keys[index]}:label`)}
+            >
+              {stage.label}
+            </Text>
+            <Text
+              variant="footnote"
+              onTextLayout={measure(`${keys[index]}:date`)}
+            >
+              {stage.date}
+            </Text>
           </View>
         ))}
       </View>
       <View
         testID="stage-timeline"
-        style={vertical ? styles.verticalTimeline : styles.horizontalTimeline}
+        style={
+          vertical
+            ? styles.verticalTimeline
+            : [styles.horizontalTimeline, { height: 10 + 8 + labelHeight }]
+        }
       >
         {!vertical ? (
           <View
             style={[
               styles.track,
-              { backgroundColor: onBand ? colors.onBandSoft : colors.inkFaint },
+              { backgroundColor: onBand ? colors.onBandSoft : colors.inkSoft },
             ]}
           />
         ) : null}
@@ -200,24 +228,24 @@ export function StageTimeline({
                       ? colors[ink]
                       : onBand
                         ? colors.onBandSoft
-                        : colors.inkFaint,
+                        : colors.inkSoft,
                 },
               ]}
             />
             <View
               style={
                 vertical
-                  ? styles.stageWords
+                  ? styles.verticalStageWords
                   : [
                       styles.stageWords,
                       {
-                        width: widths[index] ?? 0,
+                        width: widths[index],
                         marginLeft:
                           index === 0
                             ? 0
                             : index === stages.length - 1
-                              ? 8 - (widths[index] ?? 0)
-                              : 4 - (widths[index] ?? 0) / 2,
+                              ? 10 - widths[index]!
+                              : 5 - widths[index]! / 2,
                         alignItems:
                           index === 0
                             ? 'flex-start'
@@ -228,7 +256,7 @@ export function StageTimeline({
                     ]
               }
             >
-              <Text variant="footnote" tone={ink}>
+              <Text variant="footnote" tone={ink} style={styles.stageLabel}>
                 {stage.label}
               </Text>
               <Text variant="footnote" tone={onBand ? 'onBandSoft' : 'inkSoft'}>
@@ -245,7 +273,62 @@ export function StageTimeline({
   );
 }
 
-/** Skia is decorative. Each value is readable, and a table is always available. */
+type PositionedLabel = {
+  index: number;
+  left: number;
+  width: number;
+  height: number;
+};
+function positionLabel(
+  index: number,
+  size: Measurement,
+  step: number,
+  width: number,
+): PositionedLabel {
+  const labelWidth = size.width + 1; // Allow for native fractional glyph rounding.
+  return {
+    index,
+    left: Math.max(
+      0,
+      Math.min((index + 0.5) * step - labelWidth / 2, width - labelWidth),
+    ),
+    width: labelWidth,
+    height: size.height,
+  };
+}
+function axisLabels(
+  measurements: (Measurement | undefined)[],
+  width: number,
+  every = 1,
+): PositionedLabel[] {
+  if (!width || measurements.some((size) => !size)) return [];
+  const step = width / measurements.length;
+  const firstStride = Number.isFinite(every)
+    ? Math.max(1, Math.ceil(every))
+    : 1;
+  for (
+    let stride = Math.min(firstStride, measurements.length);
+    stride <= measurements.length;
+    stride++
+  ) {
+    const labels = measurements.flatMap((size, index) =>
+      index % stride === 0 ? [positionLabel(index, size!, step, width)] : [],
+    );
+    if (
+      labels.every(
+        (label, index) =>
+          label.width <= width &&
+          (index === 0 ||
+            label.left >=
+              labels[index - 1]!.left + labels[index - 1]!.width + 8),
+      )
+    )
+      return labels;
+  }
+  return []; // Oversized axis words remain available through each bar and the table.
+}
+
+/** Skia is decorative. Accessible columns retain every value as x labels thin. */
 export function BarSeries({
   data,
   ink,
@@ -257,6 +340,9 @@ export function BarSeries({
   onSelect,
   dateRange,
   source,
+  labels,
+  values = 'latest',
+  height = 160,
 }: ChartProvenance & {
   data: readonly { label: string; value: number }[];
   ink: Accent | 'ink';
@@ -266,17 +352,59 @@ export function BarSeries({
   onShowTable?: () => void;
   selectedIndex?: number;
   onSelect?: (index: number) => void;
+  /** Minimum x-label stride; native measurements may require a larger step. */
+  labels?: { every?: number };
+  values?: 'latest' | 'all' | 'none';
+  height?: number;
 }) {
   const [width, setWidth] = useState(0);
   const [showTable, setShowTable] = useState(false);
+  const { fontScale } = useWindowDimensions();
+  const { sizes, measure } = useTextMeasurements();
   const spark = variant === 'spark';
-  const height = spark ? 24 : 160;
+  const plotHeight = spark ? 24 : height;
   const maximum = Math.max(
     0,
     ...data.map((item) => (Number.isFinite(item.value) ? item.value : 0)),
   );
   const step = data.length ? width / data.length : 0;
-  // Skia takes resolved colours, not DynamicColorIOS objects.
+  const keys = data.map(
+    (item, index) =>
+      `${fontScale}:${index}:${item.label}:${format(item.value)}`,
+  );
+  const xLabels = axisLabels(
+    keys.map((key) => sizes[`${key}:x`]),
+    width,
+    labels?.every,
+  );
+  const xHeight = Math.max(0, ...xLabels.map((label) => label.height));
+  const valueIndexes = data.flatMap((_, index) =>
+    values === 'all' || (values === 'latest' && index === data.length - 1)
+      ? [index]
+      : [],
+  );
+  const measuredValues = valueIndexes.every(
+    (index) => sizes[`${keys[index]}:value`],
+  );
+  const valueLabels =
+    measuredValues && width
+      ? valueIndexes.map((index) =>
+          positionLabel(index, sizes[`${keys[index]}:value`]!, step, width),
+        )
+      : [];
+  const oversizedValues = valueLabels.some((label) => label.width > width);
+  // Stagger explicit all-value labels into measured rows when necessary.
+  const laneEnds: number[] = [];
+  const placedValues = valueLabels.map((label) => {
+    let lane = laneEnds.findIndex((right) => right + 8 <= label.left);
+    if (lane < 0) lane = laneEnds.length;
+    laneEnds[lane] = label.left + label.width;
+    return { ...label, lane };
+  });
+  const valueLineHeight = Math.max(
+    0,
+    ...valueLabels.map((label) => label.height),
+  );
   const darkMode = useColorScheme() === 'dark';
   const contrast = useIncreaseContrast();
   const palette = darkMode
@@ -288,8 +416,19 @@ export function BarSeries({
       : light;
   const colour = palette[ink === 'ink' ? 'ink' : accents[ink].ink];
   const table = onShowTable ?? (() => setShowTable((old) => !old));
-  const onLayout = (event: LayoutChangeEvent) =>
-    setWidth(event.nativeEvent.layout.width);
+  const tableLabel = onShowTable
+    ? 'Table'
+    : showTable
+      ? 'Hide table'
+      : 'Show as table';
+  const tableActions = onShowTable
+    ? [{ name: 'showTable', label: 'Show as table' }]
+    : undefined;
+  const tableAction = onShowTable
+    ? (event: AccessibilityActionEvent) => {
+        if (event.nativeEvent.actionName === 'showTable') onShowTable();
+      }
+    : undefined;
   return (
     <View
       style={styles.chart}
@@ -299,134 +438,176 @@ export function BarSeries({
           ? `${tableTitle}. ${data.map((item) => `${item.label}, ${format(item.value)}`).join('. ')}. ${provenance({ dateRange, source })}`
           : tableTitle
       }
-      accessibilityActions={
-        onShowTable
-          ? [{ name: 'showTable', label: 'Show as table' }]
-          : undefined
-      }
-      onAccessibilityAction={
-        onShowTable
-          ? (event) => {
-              if (event.nativeEvent.actionName === 'showTable') onShowTable();
-            }
-          : undefined
-      }
+      accessibilityActions={tableActions}
+      onAccessibilityAction={tableAction}
     >
-      <View
-        onLayout={onLayout}
-        testID="bar-series-plot"
-        style={{ height }}
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-      >
-        <Canvas style={{ width, height }}>
-          {!spark
-            ? [0, 0.5, 1].map((position) => (
-                <Rect
-                  key={position}
-                  x={0}
-                  y={Math.min(height - 1, height * position)}
-                  width={width}
-                  height={1}
-                  color={palette.dividerSubtle}
-                />
-              ))
-            : null}
-          {data.map((item, index) => {
-            const barHeight = maximum
-              ? (Math.max(0, Number.isFinite(item.value) ? item.value : 0) /
-                  maximum) *
-                height
-              : 0;
-            return (
-              <Rect
-                key={`${item.label}:${index}`}
-                x={index * step + 2}
-                y={height - barHeight}
-                width={Math.max(0, step - 4)}
-                height={barHeight}
-                color={index === selectedIndex ? palette.navy : colour}
-              />
-            );
-          })}
-        </Canvas>
-      </View>
       {!spark ? (
-        <View style={styles.barLabels}>
-          {data.map((item, index) => {
-            const words = (
-              <>
-                <Text variant="footnote" tabular>
-                  {format(item.value)}
-                </Text>
-                <Text variant="footnote" tone="inkSoft">
-                  {item.label}
-                </Text>
-              </>
-            );
-            const label = `${item.label}, ${format(item.value)}`;
-            return onSelect ? (
-              <Pressable
-                key={`${item.label}:${index}`}
-                accessibilityRole="button"
-                accessibilityActions={
-                  onShowTable
-                    ? [{ name: 'showTable', label: 'Show as table' }]
-                    : undefined
-                }
-                onAccessibilityAction={
-                  onShowTable
-                    ? (event) => {
-                        if (event.nativeEvent.actionName === 'showTable')
-                          onShowTable();
-                      }
-                    : undefined
-                }
-                accessibilityLabel={label}
-                accessibilityState={{ selected: selectedIndex === index }}
-                style={styles.barLabel}
-                onPress={() => onSelect(index)}
+        <View
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={styles.probes}
+        >
+          {data.map((item, index) => (
+            <View key={keys[index]} style={styles.probe}>
+              <Text
+                variant="footnote"
+                onTextLayout={measure(`${keys[index]}:x`)}
               >
-                {words}
-              </Pressable>
-            ) : (
-              <View
-                key={`${item.label}:${index}`}
-                accessible
-                accessibilityActions={
-                  onShowTable
-                    ? [{ name: 'showTable', label: 'Show as table' }]
-                    : undefined
-                }
-                onAccessibilityAction={
-                  onShowTable
-                    ? (event) => {
-                        if (event.nativeEvent.actionName === 'showTable')
-                          onShowTable();
-                      }
-                    : undefined
-                }
-                accessibilityLabel={label}
-                style={styles.barLabel}
+                {item.label}
+              </Text>
+              <Text
+                variant="footnote"
+                tabular
+                onTextLayout={measure(`${keys[index]}:value`)}
               >
-                {words}
-              </View>
-            );
-          })}
+                {format(item.value)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
+      {!spark && valueLabels.length ? (
+        <View
+          testID="bar-series-values"
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={
+            oversizedValues
+              ? styles.valuesFlow
+              : { height: laneEnds.length * (valueLineHeight + 4) }
+          }
+        >
+          {placedValues.map((label) => (
+            <Text
+              key={label.index}
+              variant="footnote"
+              tabular
+              style={
+                oversizedValues
+                  ? undefined
+                  : [
+                      styles.positionedLabel,
+                      {
+                        left: label.left,
+                        width: label.width,
+                        top: label.lane * (valueLineHeight + 4),
+                      },
+                    ]
+              }
+            >
+              {format(data[label.index]!.value)}
+            </Text>
+          ))}
+        </View>
+      ) : null}
+      <View
+        onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+        testID="bar-series-plot"
+        style={{ height: plotHeight }}
+      >
+        <View
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          <Canvas style={{ width, height: plotHeight }}>
+            {!spark
+              ? [0, 0.5, 1].map((position) => (
+                  <Rect
+                    key={position}
+                    x={0}
+                    y={Math.min(plotHeight - 1, plotHeight * position)}
+                    width={width}
+                    height={1}
+                    color={palette.dividerSubtle}
+                  />
+                ))
+              : null}
+            {data.map((item, index) => {
+              const barHeight = maximum
+                ? (Math.max(0, Number.isFinite(item.value) ? item.value : 0) /
+                    maximum) *
+                  plotHeight
+                : 0;
+              return (
+                <Rect
+                  key={`${item.label}:${index}`}
+                  x={index * step + 2}
+                  y={plotHeight - barHeight}
+                  width={Math.max(0, step - 4)}
+                  height={barHeight}
+                  color={
+                    onSelect && index === selectedIndex ? palette.navy : colour
+                  }
+                />
+              );
+            })}
+          </Canvas>
+        </View>
+        {!spark
+          ? data.map((item, index) => {
+              const a11y = {
+                accessibilityLabel: `${item.label}, ${format(item.value)}`,
+                accessibilityActions: tableActions,
+                onAccessibilityAction: tableAction,
+              };
+              const style = [
+                styles.barTarget,
+                { left: index * step, width: step },
+              ];
+              return onSelect ? (
+                <Pressable
+                  key={keys[index]}
+                  {...a11y}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: selectedIndex === index }}
+                  style={style}
+                  onPress={() => onSelect(index)}
+                />
+              ) : (
+                <View key={keys[index]} {...a11y} accessible style={style} />
+              );
+            })
+          : null}
+      </View>
+      {!spark && xLabels.length ? (
+        <View
+          testID="bar-series-axis"
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{ height: xHeight }}
+        >
+          {xLabels.map((label) => (
+            <Text
+              key={label.index}
+              variant="footnote"
+              tone="inkSoft"
+              style={[
+                styles.positionedLabel,
+                { left: label.left, width: label.width },
+              ]}
+            >
+              {data[label.index]!.label}
+            </Text>
+          ))}
         </View>
       ) : null}
       {!spark ? (
         <>
           <Button
-            label={
-              onShowTable ? 'Table' : showTable ? 'Hide table' : 'Show as table'
-            }
-            accessibilityLabel="Show as table"
+            label={tableLabel}
+            accessibilityLabel={tableLabel}
             variant="plain"
             onPress={table}
           />
           {showTable ? (
-            <View accessibilityLabel={tableTitle}>
+            <View>
+              <Text variant="subsectionTitle" accessibilityRole="header">
+                {tableTitle}
+              </Text>
               {data.map((item, index) => (
                 <View key={`${item.label}:${index}`} style={styles.tableRow}>
                   <Text variant="body" style={styles.tableCell}>
@@ -451,6 +632,13 @@ export function BarSeries({
 }
 const styles = StyleSheet.create({
   chart: { gap: rhythm.heading, alignSelf: 'stretch' },
+  voteSplit: {
+    gap: rhythm.heading,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  voteSplitStacked: { flexDirection: 'column', alignItems: 'flex-start' },
   split: {
     height: 8,
     borderRadius: radii.bar,
@@ -458,6 +646,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     flexDirection: 'row',
   },
+  splitInline: { flex: 1 },
+  splitStacked: { alignSelf: 'stretch' },
   probes: {
     position: 'absolute',
     opacity: 0,
@@ -466,25 +656,28 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   probe: { alignSelf: 'flex-start', width: 10000 },
-  horizontalTimeline: { minHeight: 72, marginBottom: rhythm.heading },
+  horizontalTimeline: { marginBottom: rhythm.heading },
   verticalTimeline: { gap: rhythm.block },
-  track: { position: 'absolute', top: 3, left: 4, right: 4, height: 2 },
+  track: { position: 'absolute', top: 4, left: 5, right: 5, height: 2 },
   horizontalStage: { position: 'absolute', top: 0 },
   verticalStage: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: rhythm.heading,
   },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    borderCurve: 'continuous',
-    marginTop: 0,
-  },
+  dot: { width: 10, height: 10, borderRadius: 5, borderCurve: 'continuous' },
   stageWords: { gap: 4, marginTop: 8, flexShrink: 1 },
-  barLabels: { flexDirection: 'row', gap: 4 },
-  barLabel: { flex: 1, minHeight: 44, alignItems: 'center', gap: 4 },
+  verticalStageWords: { gap: 4, flexShrink: 1 },
+  stageLabel: { fontFamily: fonts.sansSemiBold, fontWeight: '600' },
+  positionedLabel: { position: 'absolute', textAlign: 'center' },
+  valuesFlow: { gap: 4 },
+  barTarget: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    minHeight: 44,
+    backgroundColor: 'transparent',
+  },
   tableRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',

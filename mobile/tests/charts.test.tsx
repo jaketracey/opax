@@ -222,7 +222,12 @@ const stages = [
   { label: 'Senate', date: '2 Nov' },
   { label: 'Royal Assent', date: '7 Nov' },
 ];
-function timeline(width: number, labelWidth: number, scale = 1) {
+function timeline(
+  width: number,
+  labelWidth: number,
+  scale = 1,
+  labelHeight = 18,
+) {
   act(() =>
     RN.Dimensions.set({
       window: {
@@ -245,7 +250,7 @@ function timeline(width: number, labelWidth: number, scale = 1) {
       .filter((text) => text.props.onTextLayout)
       .forEach((text) =>
         text.props.onTextLayout({
-          nativeEvent: { lines: [{ width: labelWidth }] },
+          nativeEvent: { lines: [{ width: labelWidth, height: labelHeight }] },
         }),
       ),
   );
@@ -258,7 +263,7 @@ test.each([false, true])(
     const layout = RN.StyleSheet.flatten(
       r.root.findByProps({ testID: 'stage-timeline' }).props.style,
     );
-    expect(layout.minHeight).toBe(overflow ? undefined : 72);
+    expect(layout.height).toBe(overflow ? undefined : 58);
     if (!overflow) {
       const horizontal = r.root.findByProps({ testID: 'stage-timeline' });
       const stageViews = horizontal.findAll(
@@ -279,7 +284,7 @@ test.each([false, true])(
             'Royal Assent, 7 Nov, latest stage',
         )!;
       expect(RN.StyleSheet.flatten(first.props.style).left).toBe(0);
-      expect(RN.StyleSheet.flatten(last.props.style).left).toBe(312);
+      expect(RN.StyleSheet.flatten(last.props.style).left).toBe(310);
     }
   },
 );
@@ -288,7 +293,7 @@ test('AX labels are vertical even when the measured strings would fit', () => {
   expect(
     RN.StyleSheet.flatten(
       r.root.findByProps({ testID: 'stage-timeline' }).props.style,
-    ).minHeight,
+    ).height,
   ).toBeUndefined();
 });
 test('a selected series uses navy instead of a party colour', () => {
@@ -300,7 +305,258 @@ test('a selected series uses navy instead of a party colour', () => {
       format={String}
       tableTitle="Decades"
       selectedIndex={1}
+      onSelect={() => {}}
     />,
   );
   expect(r.root.findAllByType(Rect).at(-1)!.props.color).toBe(light.navy);
+});
+
+test.each([1, 1.786])(
+  'VoteSplit counts sit beside the bar, or beneath at font scale %s',
+  (fontScale) => {
+    act(() =>
+      RN.Dimensions.set({
+        window: { ...RN.Dimensions.get('window'), fontScale },
+      }),
+    );
+    const r = render(
+      <VoteSplit {...proof} ayes={40} noes={0} countsStyle="votes" />,
+    );
+    expect(
+      RN.StyleSheet.flatten(r.root.findByType(RN.View).props.style)
+        .flexDirection,
+    ).toBe(fontScale === 1 ? 'row' : 'column');
+    expect(r.root.findByType(Text).props).toMatchObject({
+      variant: 'secondary',
+      tabular: true,
+      children: '40 votes to 0',
+    });
+  },
+);
+test.each([
+  [0, 25, '25 noes'],
+  [25, 0, '25 ayes'],
+  [1, 1, '1 aye, 1 no'],
+  [0, 0, 'No votes'],
+])('VoteSplit ayesNoes %s/%s leaves zero sides out', (ayes, noes, words) => {
+  const r = render(
+    <VoteSplit
+      {...proof}
+      ayes={ayes as number}
+      noes={noes as number}
+      countsStyle="ayesNoes"
+    />,
+  );
+  expect(r.root.findByType(Text).props.children).toBe(words);
+});
+test('StageTimeline height follows measured label heights below AX1', () => {
+  const r = timeline(320, 70, 1.353, 18);
+  const height = () =>
+    RN.StyleSheet.flatten(
+      r.root.findByProps({ testID: 'stage-timeline' }).props.style,
+    ).height;
+  expect(height()).toBe(58);
+  act(() =>
+    r.root
+      .findAllByType(Text)
+      .filter((text) => text.props.onTextLayout)
+      .forEach((text) =>
+        text.props.onTextLayout({
+          nativeEvent: { lines: [{ width: 70, height: 40 }] },
+        }),
+      ),
+  );
+  expect(height()).toBe(102);
+  expect(
+    r.root.findAllByType(RN.View).some((node) => {
+      const style = RN.StyleSheet.flatten(node.props.style);
+      return style?.width === 10 && style?.height === 10;
+    }),
+  ).toBe(true);
+  expect(
+    r.root
+      .findAllByType(Text)
+      .filter((text) => text.props.children === 'Introduced')
+      .every(
+        (text) => RN.StyleSheet.flatten(text.props.style).fontWeight === '600',
+      ),
+  ).toBe(true);
+});
+const dense = Array.from({ length: 15 }, (_, index) => ({
+  label: String(2000 + index),
+  value: index + 1,
+}));
+function measureSeries(
+  r: TestRenderer.ReactTestRenderer,
+  labelWidth = 40,
+  valueWidth = 20,
+) {
+  act(() =>
+    r.root
+      .findByProps({ testID: 'bar-series-plot' })
+      .props.onLayout({ nativeEvent: { layout: { width: 335 } } }),
+  );
+  act(() =>
+    r.root
+      .findAllByType(Text)
+      .filter((text) => text.props.onTextLayout)
+      .forEach((text) =>
+        text.props.onTextLayout({
+          nativeEvent: {
+            lines: [
+              {
+                width: text.props.tabular ? valueWidth : labelWidth,
+                height: 18,
+              },
+            ],
+          },
+        }),
+      ),
+  );
+}
+test.each([undefined, { every: 3 }])(
+  'BarSeries labels=%j thins measured x labels and retains every accessible bar',
+  (labels) => {
+    const r = render(
+      <BarSeries
+        {...proof}
+        data={dense}
+        ink="ink"
+        format={String}
+        tableTitle="Years"
+        labels={labels}
+      />,
+    );
+    measureSeries(r, 30);
+    const texts = r.root
+      .findByProps({ testID: 'bar-series-axis' })
+      .findAllByType(Text);
+    if (labels)
+      expect(texts.map((text) => text.props.children)).toEqual([
+        '2000',
+        '2003',
+        '2006',
+        '2009',
+        '2012',
+      ]);
+    else expect(texts.length).toBeLessThan(15);
+    const bounds = texts.map((text) => RN.StyleSheet.flatten(text.props.style));
+    expect(
+      bounds.every(
+        (box, index) =>
+          box.width >= 30 &&
+          box.left >= 0 &&
+          box.left + box.width <= 335 &&
+          (!index ||
+            box.left >= bounds[index - 1]!.left + bounds[index - 1]!.width),
+      ),
+    ).toBe(true);
+    expect(texts.every((text) => text.props.numberOfLines === undefined)).toBe(
+      true,
+    );
+    const targets = r.root
+      .findAllByType(RN.View)
+      .filter((node) => node.props.accessibilityLabel?.match(/^20\d\d, /));
+    expect(
+      new Set(targets.map((node) => node.props.accessibilityLabel)).size,
+    ).toBe(15);
+    expect(
+      targets.every(
+        (node) =>
+          RN.StyleSheet.flatten(node.props.style).minHeight === 44 &&
+          !node.props.children,
+      ),
+    ).toBe(true);
+  },
+);
+test('BarSeries thins again when measured AX labels grow', () => {
+  const r = render(
+    <BarSeries
+      {...proof}
+      data={dense}
+      ink="ink"
+      format={String}
+      tableTitle="Years"
+    />,
+  );
+  measureSeries(r, 30);
+  const count = r.root
+    .findByProps({ testID: 'bar-series-axis' })
+    .findAllByType(Text).length;
+  measureSeries(r, 120);
+  expect(
+    r.root.findByProps({ testID: 'bar-series-axis' }).findAllByType(Text)
+      .length,
+  ).toBeLessThan(count);
+});
+test.each([undefined, 'latest', 'all', 'none'] as const)(
+  'BarSeries values=%s controls visible values without squeezing columns',
+  (values) => {
+    const r = render(
+      <BarSeries
+        {...proof}
+        data={dense}
+        ink="ink"
+        format={String}
+        tableTitle="Years"
+        values={values}
+      />,
+    );
+    measureSeries(r, 30, 60);
+    const bands = r.root.findAllByProps({ testID: 'bar-series-values' });
+    if (values === 'none') expect(bands).toHaveLength(0);
+    else {
+      const texts = bands[0]!.findAllByType(Text);
+      expect(texts).toHaveLength(values === 'all' ? 15 : 1);
+      expect(texts.at(-1)!.props.children).toBe('15');
+      expect(
+        texts.every(
+          (text) => RN.StyleSheet.flatten(text.props.style).width >= 60,
+        ),
+      ).toBe(true);
+    }
+  },
+);
+test.each([undefined, 200])(
+  'BarSeries height=%s controls only the plot height',
+  (height) => {
+    const r = render(
+      <BarSeries
+        {...proof}
+        data={dense}
+        ink="ink"
+        format={String}
+        tableTitle="Years"
+        height={height}
+      />,
+    );
+    expect(
+      RN.StyleSheet.flatten(
+        r.root.findByProps({ testID: 'bar-series-plot' }).props.style,
+      ).height,
+    ).toBe(height ?? 160);
+  },
+);
+test('the inline table has a visible heading and a matching Hide table spoken action', () => {
+  const r = render(
+    <BarSeries
+      {...proof}
+      data={data}
+      ink="ink"
+      format={String}
+      tableTitle="Monthly totals"
+    />,
+  );
+  act(() => r.root.findByType(Button).props.onPress());
+  expect(r.root.findByType(Button).props).toMatchObject({
+    label: 'Hide table',
+    accessibilityLabel: 'Hide table',
+  });
+  const heading = r.root
+    .findAllByType(Text)
+    .find((text) => text.props.accessibilityRole === 'header');
+  expect(heading?.props).toMatchObject({
+    variant: 'subsectionTitle',
+    children: 'Monthly totals',
+  });
 });
