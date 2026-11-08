@@ -21,7 +21,7 @@ import {
   type PointerHoverProps,
 } from '../../modules/opax-ipad';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { rhythm } from './tokens';
+import { rhythm, rhythmRegular } from './tokens';
 
 /**
  * iPad layout (Oct 2026). One rule decides every adaptive layout: a region
@@ -78,6 +78,12 @@ export type SizeClass = 'compact' | 'regular';
 
 /** An iPad (or an iPad app on a Mac): the only place regular layouts draw. */
 export const isPad = Platform.OS === 'ios' && Platform.isPad;
+
+/** Regular-width spacing is shared with Screen's column padding. */
+export function useScreenMargin() {
+  const layout = useLayout();
+  return layout.regular ? rhythmRegular.screen : layout.width >= 414 ? 20 : 16;
+}
 
 export interface Layout {
   size: SizeClass;
@@ -209,8 +215,7 @@ export function columnBreakout(
   size: SizeClass = sizeClassFor(width),
 ): number {
   if (size === 'compact') return 0;
-  const inset = (max: number) =>
-    readableInset(width, max, rhythm.screen, size);
+  const inset = (max: number) => readableInset(width, max, rhythm.screen, size);
   return Math.max(0, inset(columns[column]) - inset(columns.wide));
 }
 

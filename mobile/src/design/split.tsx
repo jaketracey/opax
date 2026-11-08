@@ -98,6 +98,8 @@ export interface SplitLayoutProps<T> {
   list: ReactNode;
   /** The selected item, or null for the empty state. */
   selected: T | null;
+  /** First available row, used only in a regular-width pane. */
+  initialSelection?: () => T | null;
   onSelect: (entry: T | null) => void;
   /** Draws an entry in the detail pane (the selection or a pushed entry). */
   renderDetail: (entry: T) => ReactNode;
@@ -142,6 +144,7 @@ export function SplitLayout<T>({
   id,
   list,
   selected,
+  initialSelection,
   onSelect,
   renderDetail,
   entryKey,
@@ -155,14 +158,20 @@ export function SplitLayout<T>({
   testID,
 }: SplitLayoutProps<T>) {
   const layout = useLayout();
-  const selectedKey = selected ? entryKey(selected) : null;
+  const first =
+    layout.regular && !selected ? (initialSelection?.() ?? null) : null;
+  const effectiveSelection = selected ?? first;
+  const selectedKey = effectiveSelection ? entryKey(effectiveSelection) : null;
   // A new selection starts the pane's stack again: a stack belongs to the
   // selection it was opened from.
   const [paneState, setPaneState] = useState<{
     key: string | null;
     stack: T[];
-  }>(() => ({ key: selectedKey, stack: selected ? [selected] : [] }));
-  const fresh = selected ? [selected] : [];
+  }>(() => ({
+    key: selectedKey,
+    stack: effectiveSelection ? [effectiveSelection] : [],
+  }));
+  const fresh = effectiveSelection ? [effectiveSelection] : [];
   const stack = paneState.key === selectedKey ? paneState.stack : fresh;
   const setStack = (next: (current: T[]) => T[]) =>
     setPaneState((current) => ({
@@ -192,6 +201,9 @@ export function SplitLayout<T>({
       return () => setFocused(false);
     }, []),
   );
+  useEffect(() => {
+    if (layout.regular && focused && !selected && first) onSelect(first);
+  }, [layout.regular, focused, selected, first, onSelect]);
   const cursorMode = !!onOpenKey;
   const keyboard =
     layout.regular && focused && !!keys && (!!entryForKey || cursorMode);
