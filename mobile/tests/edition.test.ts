@@ -14,7 +14,8 @@ import {
 } from '../src/api/catalogs';
 import { assertAllowedPath, editionPath } from '../src/api/policy';
 import { responseBytes } from './fixture-bytes';
-import { replaceAt } from './pinned';
+import { bills, replaceAt } from './pinned';
+import { editionTitles } from '../src/api/selectors';
 
 // The production response pinned for the fixture (scripts/fixtures/).
 const bytes = responseBytes(snapshot, editionPath);
@@ -159,6 +160,53 @@ describe('the edition decoder', () => {
 });
 
 describe('the edition selector', () => {
+  test('takes a short bill title only from its native bill index row', () => {
+    const row = bills.bills.find((bill) => bill.key === 'au-federal-r7529')!;
+    const index = {
+      ...bills,
+      bills: [{ ...row, short_title: 'Early childhood pay' }],
+    };
+    expect(editionFor(decoded, index).data).toMatchObject({
+      shortTitle: 'Early childhood pay',
+      cardTitle: 'Early childhood pay',
+      title: decoded.edition.title,
+    });
+    expect(
+      editionTitles(
+        { kind: 'topic', title: 'Housing', path: '/bill/au-federal-r7529' },
+        index,
+      ).shortTitle,
+    ).toBeNull();
+    expect(
+      editionFor(decoded, { ...index, bills: [] }).data!.shortTitle,
+    ).toBeNull();
+  });
+  test.each([
+    ['A'.repeat(80), 'A'.repeat(80)],
+    ['A'.repeat(81), `${'A'.repeat(80)}…`],
+    [`First clause (${'detail '.repeat(15)})`, 'First clause…'],
+    [`${'word '.repeat(20)}ending`, `${'word '.repeat(16).trimEnd()}…`],
+  ])(
+    'card title uses the published clause or word boundary: %s',
+    (title, expected) => {
+      expect(
+        editionTitles({ title, kind: 'topic', path: '/reports/housing' })
+          .cardTitle,
+      ).toBe(expected);
+    },
+  );
+  test.each([
+    ['bill', 'Bill'],
+    ['politician', 'Parliamentarian'],
+    ['grant', 'Grant'],
+    ['program', 'Grant program'],
+    ['largest', 'Largest grants'],
+    ['topic', 'Topic'],
+  ] as const)('the %s plate has a short kind label', (kind, kindShort) => {
+    expect(
+      editionFor(decodeEdition(at(['edition', 'kind'], kind))).data!.kindShort,
+    ).toBe(kindShort);
+  });
   test('keeps the post verbatim, less its link line and its clipped title', () => {
     const view = editionFor(decoded);
     expect(view).toMatchObject({
@@ -172,7 +220,10 @@ describe('the edition selector', () => {
       date: '2026-10-04',
       kind: 'bill',
       kindLabel: 'Bill',
+      kindShort: 'Bill',
       title: decoded.edition.title,
+      shortTitle: null,
+      cardTitle: 'Wage Justice for Early Childhood Education and Care Workers…',
       paragraphs: [
         'This bill would keep funding grants that support pay for early childhood education and care workers.',
         'Passed 18 Sep 2026.',
@@ -187,6 +238,7 @@ describe('the edition selector', () => {
         'Bill home page on ParlInfo, CC BY-NC-ND 4.0',
       ],
       facts: {
+        order: [{ type: 'events', index: 0 }],
         kicker: 'Bill · Education portfolio',
         line: 'This bill would keep funding grants that support pay for early childhood education and care workers. Passed 18 Sep 2026.',
         figures: [],
@@ -303,6 +355,7 @@ describe('the edition selector', () => {
       ),
     );
     expect(editionFor(odd).data!.facts).toEqual({
+      order: [],
       kicker: 'Bill · Education portfolio',
       line: null,
       figures: [],
@@ -312,6 +365,7 @@ describe('the edition selector', () => {
     });
     // An edition without slides has no facts, only its text.
     expect(editionFor(decodeEdition(without('slides'))).data!.facts).toEqual({
+      order: [],
       kicker: null,
       line: null,
       figures: [],
