@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Stack, router } from 'expo-router';
 import {
@@ -20,7 +20,7 @@ import { licenceHubRoute } from '../../navigation/routes/reference';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import type { Dataset, DatasetLink } from './datasets';
 import { sourcesHrefs, useSourcesBase } from './base';
-import { loadedAdditions, useSources } from './loader';
+import { hasOwnDate, loadedAdditions, useOwnDates, useSources } from './loader';
 import { sourcesCopy as text } from './parts';
 
 /**
@@ -60,8 +60,17 @@ export function DatasetPage({
   licenceRoot?: boolean;
 }) {
   const href = sourcesHrefs(useSourcesBase());
-  const { list, loaded, settled, refresh, refreshing } = useSources();
+  const sources = useSources();
+  const { list, loaded, settled, refreshing } = sources;
+  // Its own date only, never the whole set (the Licence sheet's root).
+  const [request, setRequest] = useState(0);
+  const own = useOwnDates([id], request);
+  const refresh = () => {
+    sources.refresh();
+    setRequest((n) => n + 1);
+  };
   const dataset = list.find((item) => item.id === id);
+  const dated = settled && (!hasOwnDate(id) || id in own);
   const titleRef = useRef<View>(null);
   const bar = useTitleOnScroll(titleRef, dataset?.name);
   const unread =
@@ -133,9 +142,9 @@ export function DatasetPage({
             {dataset.publisher}
           </Text>
         </View>
-        {settled ? (
+        {dated ? (
           <SourceLine
-            asOf={dataset.asOf ?? null}
+            asOf={dataset.asOf ?? own[id] ?? null}
             citation={dataset.publisher.split('; ')}
             originals={originals}
             testID={`sources-dataset-${dataset.id}-source`}

@@ -4,7 +4,13 @@ import { copy } from '../../design/copy';
 import { updatedText } from '../../design/source';
 import type { Dataset } from './datasets';
 import { sourcesHrefs, useSourcesBase } from './base';
-import { byName, useSources } from './loader';
+import {
+  byName,
+  hasOwnDate,
+  ownDateIds,
+  useOwnDates,
+  useSources,
+} from './loader';
 import {
   matches,
   NoResults,
@@ -22,11 +28,14 @@ export function datasetDetail(dataset: Dataset, settled: boolean): string {
 /**
  * Datasets (account.md 4.3): a long reference list on paper, A to Z, with
  * the bar search field. Datasets that load later take their alphabetical
- * place; one skeleton row says more are coming.
+ * place; one skeleton row says more are coming. The one screen that reads
+ * every dataset's own date: a row shows its publisher alone until its date
+ * read settles.
  */
 export default function DatasetsList() {
   const href = sourcesHrefs(useSourcesBase());
   const { list, settled } = useSources();
+  const own = useOwnDates(ownDateIds());
   const search = useBarSearch(text.searchDatasets);
   const shown = byName(list).filter((dataset) =>
     matches(search.query, [dataset.name, dataset.publisher, dataset.licence]),
@@ -47,7 +56,10 @@ export default function DatasetsList() {
               <LinkRow
                 key={dataset.id}
                 title={dataset.name}
-                detail={datasetDetail(dataset, settled)}
+                detail={datasetDetail(
+                  { ...dataset, asOf: dataset.asOf ?? own[dataset.id] },
+                  settled && (!hasOwnDate(dataset.id) || dataset.id in own),
+                )}
                 href={href.dataset(dataset.id)}
                 testID={`sources-dataset-${dataset.id}`}
               />

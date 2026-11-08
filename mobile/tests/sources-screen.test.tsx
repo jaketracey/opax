@@ -220,7 +220,19 @@ const search = async (query: string) => {
   await act(async () => bar.onChangeText({ nativeEvent: { text: query } }));
 };
 
+// The files read only for a dataset's own date: never the record summary.
+const dateReads = () =>
+  jest
+    .mocked(mock.apiClient.get)
+    .mock.calls.map(([path]) => path)
+    .filter((path) => path !== '/corpus.json');
+
 describe('the hub', () => {
+  test('reads no dataset dates', async () => {
+    await render(<SourcesScreen />);
+    expect(dateReads()).toEqual([]);
+  });
+
   test('one statement, four lists with their counts, then the code', async () => {
     const hub = await render(<SourcesScreen />);
     expect(
@@ -286,10 +298,19 @@ describe('datasets', () => {
     );
   });
 
-  // Only these three have no read the app makes that carries their date:
-  // the homepage previews say they have none, Acts open one at a time in the
-  // record reader, and headlines are dated only by a paid read.
-  const undated = ['topics-preview', 'frl', 'news'];
+  // These have no read the app makes that carries their date, under about
+  // 100 KB compressed: the homepage previews say they have none, Acts open
+  // one at a time in the record reader, headlines are dated only by a paid
+  // read, and the Queensland grants file (about 300 KB) and the connections
+  // index (about 670 KB) are too large to download for a date.
+  const undated = [
+    'topics-preview',
+    'frl',
+    'news',
+    'programs-places',
+    'money-qld-public',
+    'qld-grants',
+  ];
   test('with the reads settled, every dataset that has a date shows it', async () => {
     const list = await render(<DatasetsList />);
     const rows = list.root
@@ -331,6 +352,20 @@ describe('datasets', () => {
 });
 
 describe('a dataset', () => {
+  test('its page reads its own date only, and its source line waits for it', async () => {
+    const page = await render(<DatasetPage id="interests" />);
+    expect(dateReads()).toEqual(['/interests/index.json']);
+    const line = page.root
+      .findAllByType(SourceLine)
+      .find((n) => n.props.testID === 'sources-dataset-interests-source')!;
+    expect(line.props.asOf).toBe('2026-09-04');
+  });
+
+  test('a dataset dated by the shared reads makes no date read of its own', async () => {
+    await render(<DatasetPage id="hansard" licenceRoot />);
+    expect(dateReads()).toEqual([]);
+  });
+
   test('every dataset: its publisher, a dated source line, the licence once, the terms and its originals', async () => {
     for (const dataset of datasets) {
       const page = await render(<DatasetPage id={dataset.id} />);

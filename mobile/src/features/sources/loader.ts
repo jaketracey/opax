@@ -43,52 +43,13 @@ const summarised = [
 /** Datasets added from a read: when that read fails, the page says so. */
 export const loadedAdditions = ['lead-registers', 'release'] as const;
 
-/**
- * A free catalogue file another screen already reads (the money map, grants,
- * agencies, connections, a person's interests and access), read here for its
- * date alone. The cache keeps the raw file, so this small decoder never
- * changes what those screens decode.
- */
-const dateOf =
-  (...paths: string[][]) =>
-  (raw: unknown): string | null => {
-    for (const path of paths) {
-      let value: unknown = raw;
-      for (const key of path)
-        value =
-          value && typeof value === 'object'
-            ? (value as Record<string, unknown>)[key]
-            : undefined;
-      if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value))
-        return value.slice(0, 10);
-    }
-    return null;
-  };
-const generated = [['meta', 'generated']];
-const dateReads: [ids: string[], path: string, at: string[][]][] = [
-  [['money-qld'], '/graph/money.qld.json', generated],
-  [['money-vic'], '/graph/money.vic.json', generated],
-  [['money-tas'], '/graph/money.tas.json', generated],
-  // AusTender's agency file; GrantConnect's awards are generated with it.
-  [
-    ['money-commonwealth', 'austender-agencies'],
-    '/agencies.json',
-    [['meta', 'generated_at']],
-  ],
-  [['money-qld-public', 'qld-grants'], '/graph/grants.qld.json', generated],
-  [['interests'], '/interests/index.json', [['_meta', 'generated']]],
-  [['ministerial-diaries', 'lobbyist-registers'], '/access.json', generated],
-  [['community-funding'], '/research/mlci.json', [['as_of']]],
-  [['programs-places'], '/evidence/index.json', [['meta', 'generated_at']]],
-];
-
 async function read(refresh: boolean): Promise<Loaded> {
   const settle = <T>(load: () => Promise<T>) =>
     load().then(
       (value) => ({ value, error: null as unknown }),
       (error: unknown) => ({ value: undefined, error }),
     );
-  const [expenses, categories, pay, directory, discovery, summary, ...read] =
+  const [expenses, categories, pay, directory, discovery, summary] =
     await Promise.all([
       settle(() => catalogs.expenses()),
       settle(() => catalogs.expenseCategories()),
@@ -96,9 +57,6 @@ async function read(refresh: boolean): Promise<Loaded> {
       settle(() => catalogs.directory(refresh)),
       settle(() => catalogs.discovery(refresh)),
       settle(() => reference.summary(refresh)),
-      ...dateReads.map(([, path, at]) =>
-        settle(() => apiClient.get(path, dateOf(...at), refresh)),
-      ),
     ]);
   const partial = new Set<string>();
   if (expenses.error || categories.error) partial.add('ipea');
@@ -115,10 +73,6 @@ async function read(refresh: boolean): Promise<Loaded> {
     ['parliamentary-directory', 'release', 'aec-electorates'],
     directory.value?.manifest.asOf,
   );
-  // The outlines are held in the app; their edition is their date. The
-  // file is the state suggestion's own, parsed once, never at launch.
-  date(['abs-state-districts'], stateOutlineFile().vintage);
-  dateReads.forEach(([ids], index) => date(ids, read[index]?.value?.data));
   date(['ipea'], expenses.value?.asOf);
   date(['pay'], pay.value?.asOf);
   date(['lead-registers'], discovery.value?.asOf);
@@ -164,9 +118,141 @@ export function loadSources(refresh = false): Promise<Loaded> {
   if (!session || refresh) session = read(refresh);
   return session;
 }
-/** Forget the session's read (tests). */
+/** Forget the session's reads (tests). */
 export function resetSources() {
   session = null;
+  dateSession.clear();
+}
+
+/**
+ * A free catalogue file another screen already reads (the money map,
+ * agencies, a person's interests and access, the grants research), read for
+ * its date alone. The cache keeps the raw file, so this small decoder never
+ * changes what those screens decode.
+ */
+const dateOf =
+  (...paths: string[][]) =>
+  (raw: unknown): string | null => {
+    for (const path of paths) {
+      let value: unknown = raw;
+      for (const key of path)
+        value =
+          value && typeof value === 'object'
+            ? (value as Record<string, unknown>)[key]
+            : undefined;
+      if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value))
+        return value.slice(0, 10);
+    }
+    return null;
+  };
+const fileDate =
+  (path: string, ...at: string[][]) =>
+  (refresh: boolean) =>
+    apiClient.get(path, dateOf(...at), refresh).then((r) => r.data);
+const generated = ['meta', 'generated'];
+
+/**
+ * The datasets dated by a read of their own, each by one file under about
+ * 100 KB compressed. Only the Datasets list reads them all; a dataset's page
+ * reads its own one; the hub reads none. Datasets whose only dated file is
+ * larger (Queensland grants, the connections index) say "Date not
+ * published" rather than download it for a date.
+ */
+const dateSources: Record<
+  string,
+  [key: string, (refresh: boolean) => Promise<string | null>]
+> = {};
+const source = (
+  ids: string[],
+  key: string,
+  load: (refresh: boolean) => Promise<string | null>,
+) => {
+  for (const id of ids) dateSources[id] = [key, load];
+};
+source(
+  ['money-qld'],
+  'money.qld',
+  fileDate('/graph/money.qld.json', generated),
+);
+source(
+  ['money-vic'],
+  'money.vic',
+  fileDate('/graph/money.vic.json', generated),
+);
+source(
+  ['money-tas'],
+  'money.tas',
+  fileDate('/graph/money.tas.json', generated),
+);
+// AusTender's agency file; GrantConnect's awards are generated with it.
+source(
+  ['money-commonwealth', 'austender-agencies'],
+  'agencies',
+  fileDate('/agencies.json', ['meta', 'generated_at']),
+);
+source(
+  ['interests'],
+  'interests',
+  fileDate('/interests/index.json', ['_meta', 'generated']),
+);
+source(
+  ['ministerial-diaries', 'lobbyist-registers'],
+  'access',
+  fileDate('/access.json', generated),
+);
+source(
+  ['community-funding'],
+  'mlci',
+  fileDate('/research/mlci.json', ['as_of']),
+);
+// The outlines are held in the app; their edition is their date. The file
+// is the state suggestion's own, parsed once, and only when asked for here.
+source(['abs-state-districts'], 'outlines', () =>
+  Promise.resolve(stateOutlineFile().vintage),
+);
+
+/** Whether a dataset's date comes from a read of its own. */
+export const hasOwnDate = (id: string) => id in dateSources;
+export const ownDateIds = () => Object.keys(dateSources);
+
+// One read a session per file, shared by datasets that file dates.
+const dateSession = new Map<string, Promise<string | null>>();
+function loadDate(id: string, refresh: boolean): Promise<string | null> {
+  const [key, load] = dateSources[id]!;
+  let pending = dateSession.get(key);
+  if (!pending || refresh) {
+    pending = load(refresh).catch(() => null);
+    dateSession.set(key, pending);
+  }
+  return pending;
+}
+
+/**
+ * The own dates of the given datasets, each as its read settles: absent
+ * while pending, then the date or null. `request` above zero reads again.
+ */
+export function useOwnDates(ids: readonly string[], request = 0) {
+  const key = ids.filter(hasOwnDate).join(' ');
+  const [dates, setDates] = useState<Record<string, string | null>>({});
+  useEffect(() => {
+    let active = true;
+    const wanted = key ? key.split(' ') : [];
+    const refresh = request > 0;
+    // A pull reads each file again once, however many datasets it dates.
+    const reread = new Set<string>();
+    for (const id of wanted) {
+      const [file] = dateSources[id]!;
+      const fresh = refresh && !reread.has(file);
+      reread.add(file);
+      void loadDate(id, fresh).then((value) => {
+        if (active) setDates((d) => ({ ...d, [id]: value }));
+      });
+    }
+    return () => {
+      active = false;
+    };
+  }, [key, request]);
+  return dates;
 }
 
 /**
