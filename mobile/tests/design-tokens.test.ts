@@ -94,8 +94,8 @@ const TYPE_TABLE = {
   largeTitle: ['heading', '700', 34, 41, 'largeTitle', 'ink'],
   inlineTitle: ['heading', '600', 17, 22, 'headline', 'ink'],
   pageTitle: ['heading', '700', 28, 34, 'title1', 'ink'],
-  recordTitle: ['serif', '700', 28, 34, 'title1', 'ink'],
-  recordHeading: ['serif', '700', 22, 28, 'title2', 'ink'],
+  recordTitle: ['serif', '700', 28, 36, 'title1', 'ink'],
+  recordHeading: ['serif', '700', 22, 30, 'title2', 'ink'],
   sectionTitle: ['heading', '700', 22, 28, 'title2', 'ink'],
   subsectionTitle: ['sans', '600', 17, 22, 'headline', 'ink'],
   groupHeader: ['sans', '400', 13, 18, 'footnote', 'inkSoft'],
@@ -238,7 +238,7 @@ describe('every name from before the token source keeps its value', () => {
       people: { ink: 'navy', wash: 'navyWash' },
       leads: { ink: 'navy', wash: 'navyWash' },
     });
-    expect(typeRolesRegular.title).toEqual({ fontSize: 28, lineHeight: 34 });
+    expect(typeRolesRegular.title).toEqual({ fontSize: 28, lineHeight: 36 });
     expect(radii).toMatchObject({
       container: 22,
       tile: 18,
