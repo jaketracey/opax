@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { RefreshControl, ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { isOffline } from '../CatalogState';
@@ -11,7 +11,7 @@ import {
   Skeleton,
   copy,
 } from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
+import { colors, radii, rhythm } from '../../design/tokens';
 import { useRead } from '../reports/parts';
 import { explore } from './runtime';
 import { ExploreHeader } from './parts';
@@ -181,12 +181,23 @@ function YearPage({
               />
             ) : null
           ) : pictures.error ? null : (
-            <Skeleton
-              shape="text"
-              count={3}
-              label="Loading photographs"
+            <View
+              accessible
+              accessibilityRole="progressbar"
+              accessibilityLabel="Loading photographs"
+              accessibilityState={{ busy: true }}
               testID="tm-photo-manifest"
-            />
+              style={styles.photoLoading}
+            >
+              <View
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                style={styles.photoLoading}
+              >
+                <View style={styles.photoFrame} />
+                <Skeleton shape="text" count={3} label="Loading photographs" />
+              </View>
+            </View>
           )}
           {brief.record && meta ? (
             <>
@@ -224,3 +235,14 @@ function YearPage({
     </Screen>
   );
 }
+const styles = StyleSheet.create({
+  photoLoading: { gap: rhythm.line },
+  // The photograph's frame first, so the page does not jump when it arrives.
+  photoFrame: {
+    width: '100%',
+    aspectRatio: 4 / 3,
+    backgroundColor: colors.sunken,
+    borderRadius: radii.thumb,
+    borderCurve: 'continuous',
+  },
+});
