@@ -133,7 +133,7 @@ name: 23 Native money map, held figures, original source and ranked list
 - assertVisible: 'https://transparency\.aec\.gov\.au/'
 - takeScreenshot: ${EVIDENCE}/23-source
 - tapOn: Done
-- tapOn: Done
+- tapOn: Money map
 - runFlow:
     file: support/money-screen-list.yaml
 - scrollUntilVisible:
@@ -171,7 +171,7 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-focus-name
       text: Labor
     timeout: 30000
-- tapOn: Done
+- tapOn: Money map
 - runFlow:
     file: support/money-screen-scroll.yaml
     env:
@@ -184,4 +184,4 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 30000
 - assertVisible: .*held by donors on this map across.*contracts.*
 - takeScreenshot: ${EVIDENCE}/23-list-public-money
-- tapOn: Done
+- tapOn: Money map

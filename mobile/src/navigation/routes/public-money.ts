@@ -5,7 +5,7 @@ export const leadRoute = (id: string, name?: string) => ({
   params: { id, ...(name ? { name } : {}) },
 });
 export const moneyRecordRoute = (
-  params: { rid?: string; jur?: string; node?: string },
+  params: Record<string, string | string[] | undefined>,
   name?: string,
 ) => ({
   pathname: '/money-record' as const,

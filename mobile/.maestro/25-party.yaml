@@ -122,7 +122,7 @@ name: 25 Native party members, pinned receipts, bill divisions and web fallback
 - assertVisible:
     id: tab-today
 - takeScreenshot: ${EVIDENCE}/25-native-money-focus
-- tapOn: Done
+- tapOn: Money map
 - tapOn: Labor
 - scrollUntilVisible:
     element:

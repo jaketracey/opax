@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Stack } from 'expo-router';
+import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import SharedLayout from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
 import RootLayout from '../src/app/_layout';
 import AccountLayout from '../src/app/account/_layout';
@@ -12,6 +12,12 @@ import TalkLayout from '../src/app/talk/_layout';
 import SeatLayout from '../src/app/seat/_layout';
 import WelcomeLayout from '../src/app/welcome/_layout';
 import * as routes from '../src/navigation/routes';
+import LegacyMoneyNode from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-node';
+import MoneyRecord from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-record';
+import MoneyNodeScreen from '../src/features/money/MoneyNodeScreen';
+import { publicMoneyScreens } from '../src/navigation/stack/public-money';
+
+jest.mock('../src/features/money/MoneyNodeScreen', () => () => null);
 
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 jest.mock('expo-router', () => {
@@ -27,7 +33,12 @@ jest.mock('expo-router', () => {
   };
   Stack.Screen = Screen;
   Stack.Protected = Protected;
-  return { Stack, router: { push: jest.fn(), back: jest.fn() } };
+  return {
+    Stack,
+    Redirect: () => null,
+    useLocalSearchParams: jest.fn(),
+    router: { push: jest.fn(), back: jest.fn() },
+  };
 });
 jest.mock('../src/navigation/KeyboardShortcuts', () => ({
   KeyboardShortcuts: () => null,
@@ -218,6 +229,46 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'])(
     expect(actual).toContain('ask');
   },
 );
+test('money-node exists and is registered exactly once, in the shared stack', () => {
+  expect(
+    [...registered.values()].flat().filter((name) => name === 'money-node'),
+  ).toEqual(['money-node']);
+  expect(registered.get('shared')).toContain('money-node');
+  expect(existsSync(resolve(app, 'money-node.tsx'))).toBe(false);
+});
+test('the node redirect preserves every incoming parameter in the current tab', () => {
+  const params = {
+    node: 'party:Labor',
+    jurisdiction: 'nsw',
+    from: '2020',
+    to: '2024',
+    industry: 'unions',
+    layers: ['receipts', 'contracts'],
+    inflation: 'true',
+    rid: 'org',
+    jur: 'nsw',
+    name: 'Money record',
+  };
+  jest.mocked(useLocalSearchParams).mockReturnValue(params);
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(React.createElement(LegacyMoneyNode));
+  });
+  expect(view.root.findByType(Redirect).props.href).toEqual({
+    pathname: '/money-record',
+    params,
+  });
+  act(() => view.unmount());
+});
+test('money-record keeps the working node screen as a pushed Money record page', () => {
+  expect(MoneyRecord).toBe(MoneyNodeScreen);
+  const registration = publicMoneyScreens().find(
+    (screen) => screen.props.name === 'money-record',
+  )!;
+  const options = registration.props.options({ route: { params: {} } });
+  expect(options.title).toBe('Money record');
+  expect(options.presentation ?? 'card').toBe('card');
+});
 test('builders retain subject names and destination parameters', () => {
   expect(routes.personRoute('member', 'Member', 'changes').params).toEqual({
     slug: 'member',

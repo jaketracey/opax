@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="money-record" title="Money record" />;
-}
+export { default } from '../../../features/money/MoneyNodeScreen';

@@ -20,7 +20,6 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
     screen('talk', 'Talk to OPAX', modal, !voiceLinked),
     screen('account', 'Account', modal),
     screen('licence', 'Licence', { ...sheetOptions, headerShown: false }),
-    screen('money-node', 'Money record', { headerShown: false }),
     ...sheetsScreens(),
     ...(communityHome
       ? [
