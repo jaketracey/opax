@@ -74,7 +74,7 @@ info=plistlib.loads((root/'Contents/version.plist').read_bytes())
 build=info['ProductBuildVersion']
 # Fail closed for unknown tools. Update this public release-build allow-list only
 # after checking Apple's release record; beta bundles may be renamed Xcode.app.
-if 'beta' in str(root.resolve()).lower() or build not in {'27A266a'}:
+if 'beta' in str(root.resolve()).lower() or build not in {'27A266a', '27B52'}:
     raise SystemExit('Release requires a verified non-beta Xcode build.')
 print(build)
 PY
