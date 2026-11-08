@@ -6,7 +6,12 @@ import {
   useState,
   type RefObject,
 } from 'react';
-import { RefreshControl, StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  RefreshControl,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {
   Stack,
   useLocalSearchParams,
@@ -151,7 +156,8 @@ const jurisdictionOptions = (
 function sharePath(params: MoneyParams) {
   const query = new URLSearchParams();
   const jurisdiction = param(params.jurisdiction);
-  if (jurisdiction && jurisdiction !== 'federal') query.set('jur', jurisdiction);
+  if (jurisdiction && jurisdiction !== 'federal')
+    query.set('jur', jurisdiction);
   for (const key of ['from', 'to', 'industry', 'layers', 'inflation', 'view'])
     if (param(params[key])) query.set(key, param(params[key])!);
   const text = query.toString();
@@ -195,7 +201,8 @@ export default function MoneyScreen() {
   const [plate] = useState(createPlate);
   const select = useCallback(
     (id: string, name?: string) => {
-      if (filters) router.push(moneyFocusRoute(id, jurisdiction, filters, name));
+      if (filters)
+        router.push(moneyFocusRoute(id, jurisdiction, filters, name));
     },
     [router, filters, jurisdiction],
   );
@@ -370,7 +377,9 @@ export default function MoneyScreen() {
           <MoneyTestHooks
             graph={view}
             onYear={(year) => write({ from: String(year), to: String(year) })}
-            onFocus={(id) => select(id, graph.nodes.find((n) => n.id === id)?.label)}
+            onFocus={(id) =>
+              select(id, graph.nodes.find((n) => n.id === id)?.label)
+            }
           />
         ) : null}
       </Screen>
@@ -481,7 +490,9 @@ function MoneyBody({
     windowNodes.find(
       (n) =>
         n.kind === 'grantor' &&
-        (flow === 'contracts' ? n.flow === 'contracts' : n.flow !== 'contracts'),
+        (flow === 'contracts'
+          ? n.flow === 'contracts'
+          : n.flow !== 'contracts'),
     );
   const grants = filters.grants ? grantor('grants') : undefined;
   const contracts = filters.contracts ? grantor('contracts') : undefined;
@@ -552,7 +563,11 @@ function MoneyBody({
       {mode === '3d' ? (
         <Group>
           <View
-            style={{ marginHorizontal: column.regular ? 0 : -column.content.paddingHorizontal }}
+            style={{
+              marginHorizontal: column.regular
+                ? 0
+                : -column.content.paddingHorizontal,
+            }}
             onLayout={(event) => {
               const { y, height: h } = event.nativeEvent.layout;
               source.layout(y, y + h, height);
@@ -621,12 +636,10 @@ function MoneyBody({
                 action={{
                   label: copy.seeAll,
                   accessibilityLabel: `See all ${formatCount(named.length)} donors`,
-                  href: moneyDonorsRoute(
-                    {
-                      jurisdiction,
-                      ...moneyWindowParams(filters),
-                    },
-                  ),
+                  href: moneyDonorsRoute({
+                    jurisdiction,
+                    ...moneyWindowParams(filters),
+                  }),
                   testID: 'money-donors-all',
                 }}
               />

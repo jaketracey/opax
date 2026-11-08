@@ -63,7 +63,10 @@ export default function MoneyDonors() {
   const view = useMemo(
     () =>
       graph && filters
-        ? { ...moneyView(graph, filters), nodes: moneyWindowNodes(graph, filters) }
+        ? {
+            ...moneyView(graph, filters),
+            nodes: moneyWindowNodes(graph, filters),
+          }
         : null,
     [graph, filters],
   );
@@ -86,7 +89,9 @@ export default function MoneyDonors() {
   const window =
     graph && filters
       ? [
-          isAllYears(graph, filters) ? null : moneyYears(filters.from, filters.to),
+          isAllYears(graph, filters)
+            ? null
+            : moneyYears(filters.from, filters.to),
           filters.industry ? `${industryWords(filters.industry)} donors` : null,
         ]
           .filter(Boolean)
@@ -156,7 +161,12 @@ export default function MoneyDonors() {
                       name={node.label}
                       detail={detail(node)}
                       amount={node.total}
-                      href={moneyFocusRoute(node.id, jurisdiction, filters, node.label)}
+                      href={moneyFocusRoute(
+                        node.id,
+                        jurisdiction,
+                        filters,
+                        node.label,
+                      )}
                       testID={`money-donor-${index}`}
                     />
                   ))}

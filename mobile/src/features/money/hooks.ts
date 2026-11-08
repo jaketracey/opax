@@ -25,11 +25,7 @@ export function useMoneyRecord(jurisdiction: MoneyJurisdiction) {
   useEffect(() => {
     let active = true;
     void apiClient
-      .get(
-        moneyCatalogs[jurisdiction].path,
-        decodeMoneyGraph,
-        attempt.refresh,
-      )
+      .get(moneyCatalogs[jurisdiction].path, decodeMoneyGraph, attempt.refresh)
       .then(
         (record) => {
           rememberMoneyGraph(jurisdiction, record.data);

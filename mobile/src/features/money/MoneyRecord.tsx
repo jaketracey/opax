@@ -40,11 +40,19 @@ import { symbols } from '../../design/symbols';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
-import { leadRoute, moneyItemRoute } from '../../navigation/routes/public-money';
+import {
+  leadRoute,
+  moneyItemRoute,
+} from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { donorNotNamed } from '../../privacy/donorEntity';
 import { leadsAbout } from '../leads/model';
-import type { MoneyFigures, MoneyGraph, MoneyNode, PublicMoneyBlock } from './data';
+import type {
+  MoneyFigures,
+  MoneyGraph,
+  MoneyNode,
+  PublicMoneyBlock,
+} from './data';
 import { useMoneyRecord } from './hooks';
 import { donorNodeFor, partyNodeFor } from './lookup';
 import { moneyPageMenu } from './menu';
@@ -193,7 +201,12 @@ function Title({
       ) : null}
       <View style={styles.title}>
         {party ? <PartyDot party={name} /> : null}
-        <Heading level={1} kind="page" testID="money-focus-name" style={styles.grow}>
+        <Heading
+          level={1}
+          kind="page"
+          testID="money-focus-name"
+          style={styles.grow}
+        >
           {name}
         </Heading>
       </View>
@@ -237,7 +250,12 @@ function RegisterSection({
     source: FigureSource;
     testID?: string;
   };
-  allYears?: { value: number; count: number; noun: string; range: string } | null;
+  allYears?: {
+    value: number;
+    count: number;
+    noun: string;
+    range: string;
+  } | null;
   bars?: {
     data: { label: string; value: number }[];
     ink: 'money' | 'ink';
@@ -440,14 +458,17 @@ function NodeRecord({ params, id }: { params: MoneyParams; id: string }) {
     [graph, filters],
   );
   const name = param(params.name);
-  const node = graph && view
-    ? id.startsWith('party:')
-      ? (() => {
-          const party = partyNodeFor(graph, id);
-          return party ? view.nodes.find((n) => n.id === party.id) : undefined;
-        })()
-      : view.nodes.find((n) => n.id === id)
-    : undefined;
+  const node =
+    graph && view
+      ? id.startsWith('party:')
+        ? (() => {
+            const party = partyNodeFor(graph, id);
+            return party
+              ? view.nodes.find((n) => n.id === party.id)
+              : undefined;
+          })()
+        : view.nodes.find((n) => n.id === id)
+      : undefined;
   if (!record || !graph || !filters || !view)
     return <LoadState name={name} error={error} retry={retry} />;
   if (!node) {
@@ -549,7 +570,10 @@ function NodeBody({
     moneySourceDetails(record, {
       citation: shortSource,
       originals: [
-        { label: 'AEC Transparency Register', url: graph.meta.source_url ?? AEC_REGISTER },
+        {
+          label: 'AEC Transparency Register',
+          url: graph.meta.source_url ?? AEC_REGISTER,
+        },
       ],
       notes: [
         ...moneyNotes(graph),
@@ -570,7 +594,8 @@ function NodeBody({
       originals: [{ label: source.label, url: source.url }],
       notes: [
         source.citation,
-        kind === 'contracts' && typeof graph.meta.contracts_coverage === 'string'
+        kind === 'contracts' &&
+        typeof graph.meta.contracts_coverage === 'string'
           ? `${graph.meta.contracts_coverage}.`
           : null,
         'Matched to the donor on identity (an ABN where one is recorded). Shown beside donations, never added to them.',
@@ -587,11 +612,19 @@ function NodeBody({
           range: moneyYears(figures.firstYear, figures.lastYear),
         }
       : null;
-  const bars = (figures: MoneyFigures, ink: 'money' | 'ink', title: string, source: string) => {
+  const bars = (
+    figures: MoneyFigures,
+    ink: 'money' | 'ink',
+    title: string,
+    source: string,
+  ) => {
     const data = byYearBars(figures);
     return data.length
       ? {
-          data: data.map((d) => ({ label: moneyYears(d.year, d.year), value: d.value })),
+          data: data.map((d) => ({
+            label: moneyYears(d.year, d.year),
+            value: d.value,
+          })),
           ink,
           tableTitle: title,
           dateRange: fyRange(data[0]!.year, data.at(-1)!.year),
@@ -605,7 +638,12 @@ function NodeBody({
     const donors = flows.slice(0, 15);
     const line = `in ${formatCount(node.count)} receipts, ${years}`;
     return (
-      <Page title={node.label} share={share} refreshing={refreshing} onRefresh={refresh}>
+      <Page
+        title={node.label}
+        share={share}
+        refreshing={refreshing}
+        onRefresh={refresh}
+      >
         <Title meta={roleMeta(node)} name={node.label} party />
         {record.stale && record.staleReason !== 'unreadable' ? (
           <OfflineLine savedAt={record.savedAt} />
@@ -674,7 +712,12 @@ function NodeBody({
     const kind = contracts ? 'contracts' : 'grants';
     const line = `in ${kind} to donors on the map, ${years}`;
     return (
-      <Page title={node.label} share={share} refreshing={refreshing} onRefresh={refresh}>
+      <Page
+        title={node.label}
+        share={share}
+        refreshing={refreshing}
+        onRefresh={refresh}
+      >
         <Title meta={roleMeta(node)} name={node.label} />
         {note ? (
           <Text wordSafe variant="secondary" testID="money-record-window">
@@ -700,7 +743,12 @@ function NodeBody({
             testID: 'money-focus-amount',
           }}
           allYears={allYears(full, kind)}
-          bars={bars(node, 'ink', contracts ? 'Contracts by year' : 'Grants by year', contracts ? contractsSource.label : grantsSource.label)}
+          bars={bars(
+            node,
+            'ink',
+            contracts ? 'Contracts by year' : 'Grants by year',
+            contracts ? contractsSource.label : grantsSource.label,
+          )}
         >
           <View testID="money-focus-flows">
             <SectionHeader
@@ -730,7 +778,9 @@ function NodeBody({
   const partyCount = parties.main.length + parties.other.length;
   const grants = filters.grants ? node.grants : undefined;
   const contracts = filters.contracts ? node.contracts : undefined;
-  const sections = [filters.donations, !!grants, !!contracts].filter(Boolean).length;
+  const sections = [filters.donations, !!grants, !!contracts].filter(
+    Boolean,
+  ).length;
   const originals: SourceOriginal[] = node.withheld
     ? []
     : [
@@ -739,10 +789,20 @@ function NodeBody({
           url: graph.meta.source_url ?? AEC_REGISTER,
         },
         ...(grants
-          ? [{ label: `GrantConnect · awards to ${node.label}`, url: GRANTCONNECT }]
+          ? [
+              {
+                label: `GrantConnect · awards to ${node.label}`,
+                url: GRANTCONNECT,
+              },
+            ]
           : []),
         ...(contracts
-          ? [{ label: `AusTender · contracts with ${node.label}`, url: AUSTENDER }]
+          ? [
+              {
+                label: `AusTender · contracts with ${node.label}`,
+                url: AUSTENDER,
+              },
+            ]
           : []),
       ];
   const partyRow = ({ edge, other }: (typeof flows)[number], index: number) => (
@@ -766,16 +826,30 @@ function NodeBody({
     return (
       <RegisterSection
         title={contractsKind ? 'Government contracts' : 'Grants received'}
-        testID={contractsKind ? 'money-record-contracts' : 'money-record-grants'}
+        testID={
+          contractsKind ? 'money-record-contracts' : 'money-record-grants'
+        }
         figure={{
           value: block.total,
           label: `in ${formatCount(block.count)} ${noun}, ${moneyYears(block.firstYear, block.lastYear)}`,
           caveat: contractsKind ? contractsCaveat : grantsCaveat,
-          source: publicSource(kind, contractsKind ? 'money-record-contracts-source' : 'money-record-grants-source'),
-          testID: contractsKind ? 'money-focus-contracts' : 'money-focus-grants',
+          source: publicSource(
+            kind,
+            contractsKind
+              ? 'money-record-contracts-source'
+              : 'money-record-grants-source',
+          ),
+          testID: contractsKind
+            ? 'money-focus-contracts'
+            : 'money-focus-grants',
         }}
         allYears={fullBlock ? allYears(fullBlock, noun) : null}
-        bars={bars(block, 'ink', contractsKind ? 'Contracts by year' : 'Grants by year', source.label)}
+        bars={bars(
+          block,
+          'ink',
+          contractsKind ? 'Contracts by year' : 'Grants by year',
+          source.label,
+        )}
       >
         {block.top?.length ? (
           <View>
@@ -838,7 +912,9 @@ function NodeBody({
                   <Text wordSafe variant="footnote">
                     Other parties
                   </Text>
-                  {parties.other.map((row, i) => partyRow(row, parties.main.length + i))}
+                  {parties.other.map((row, i) =>
+                    partyRow(row, parties.main.length + i),
+                  )}
                 </>
               ) : null}
             </View>
@@ -883,7 +959,11 @@ function MapRow({
       symbol={symbols.money}
       href={{
         pathname: base.pathname,
-        params: { ...('params' in base ? base.params : {}), select: node.id, view: 'map' },
+        params: {
+          ...('params' in base ? base.params : {}),
+          select: node.id,
+          view: 'map',
+        },
       }}
       testID="money-record-map"
     />
@@ -914,7 +994,9 @@ function RecipientRecord({
       <Missing
         name={recipient && !recipient.organisation ? undefined : name}
         register="grant"
-        body={recipient && !recipient.organisation ? individualsNote : undefined}
+        body={
+          recipient && !recipient.organisation ? individualsNote : undefined
+        }
       />
     );
   return (
@@ -935,7 +1017,11 @@ function RecipientBody({
   refreshing,
   refresh,
 }: {
-  record: RecordResult<{ generated: string; sourceUrl: string; licence: string }>;
+  record: RecordResult<{
+    generated: string;
+    sourceUrl: string;
+    licence: string;
+  }>;
   recipient: GrantRecipient;
   jur: 'federal' | 'qld';
   refreshing: boolean;
@@ -974,7 +1060,9 @@ function RecipientBody({
       <Title
         meta={[
           donor ? 'Grant recipient and donor' : 'Grant recipient',
-          abn ? `ABN ${abn.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/, '$1 $2 $3 $4')}` : null,
+          abn
+            ? `ABN ${abn.replace(/^(\d{2})(\d{3})(\d{3})(\d{3})$/, '$1 $2 $3 $4')}`
+            : null,
         ]
           .filter(Boolean)
           .join(' · ')}
@@ -990,7 +1078,10 @@ function RecipientBody({
       ) : null}
       <Originals
         rows={[
-          { label: `GrantConnect · awards to ${recipient.name}`, url: GRANTCONNECT },
+          {
+            label: `GrantConnect · awards to ${recipient.name}`,
+            url: GRANTCONNECT,
+          },
         ]}
       />
       <RegisterSection
@@ -1029,7 +1120,15 @@ function RecipientBody({
             href={moneyFocusRoute(
               donor.id,
               'federal',
-              { from: 0, to: 9999, industry: null, donations: true, grants: true, contracts: true, inflation: false },
+              {
+                from: 0,
+                to: 9999,
+                industry: null,
+                donations: true,
+                grants: true,
+                contracts: true,
+                inflation: false,
+              },
               donor.label,
             )}
             testID="money-record-donor"
@@ -1127,7 +1226,10 @@ function SupplierBody({
       ) : null}
       <Originals
         rows={[
-          { label: `AusTender · contracts with ${supplier.name}`, url: AUSTENDER },
+          {
+            label: `AusTender · contracts with ${supplier.name}`,
+            url: AUSTENDER,
+          },
         ]}
       />
       <RegisterSection
@@ -1158,7 +1260,9 @@ function SupplierBody({
                 key={contract.id}
                 name={contract.title || contract.id}
                 detail={[
-                  contract.start ? `from ${formatDate(contract.start, 'short')}` : null,
+                  contract.start
+                    ? `from ${formatDate(contract.start, 'short')}`
+                    : null,
                   contract.id,
                 ]
                   .filter(Boolean)
@@ -1183,7 +1287,10 @@ function SupplierBody({
         <LinkRow
           title={agency.name}
           symbol="building.columns"
-          href={{ pathname: '/agency', params: { id: agency.id, name: agency.name } }}
+          href={{
+            pathname: '/agency',
+            params: { id: agency.id, name: agency.name },
+          }}
           testID="money-record-agency"
         />
         {donor ? (
@@ -1193,7 +1300,15 @@ function SupplierBody({
             href={moneyFocusRoute(
               donor.id,
               'federal',
-              { from: 0, to: 9999, industry: null, donations: true, grants: true, contracts: true, inflation: false },
+              {
+                from: 0,
+                to: 9999,
+                industry: null,
+                donations: true,
+                grants: true,
+                contracts: true,
+                inflation: false,
+              },
               donor.label,
             )}
             testID="money-record-donor"

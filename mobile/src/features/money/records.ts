@@ -119,7 +119,9 @@ export function industryLabel(group: string) {
     .replace(/_/g, ' ')
     .replace(/\s*&\s*/g, ' and ')
     .trim();
-  return words ? `${words.charAt(0).toLocaleUpperCase('en-AU')}${words.slice(1)}` : words;
+  return words
+    ? `${words.charAt(0).toLocaleUpperCase('en-AU')}${words.slice(1)}`
+    : words;
 }
 /** In a sentence: "mining and energy". */
 export const industryWords = (group: string) =>
@@ -191,7 +193,9 @@ export function partyDonationsTotal(
         .map((n) =>
           windowFigures(n, window.from, window.to, !!window.inflation),
         );
-  const first = parts.flatMap((p) => (p.firstYear === null ? [] : [p.firstYear]));
+  const first = parts.flatMap((p) =>
+    p.firstYear === null ? [] : [p.firstYear],
+  );
   const last = parts.flatMap((p) => (p.lastYear === null ? [] : [p.lastYear]));
   return {
     total: parts.reduce((sum, p) => sum + p.total, 0),
@@ -282,7 +286,9 @@ export function donorDetails(view: MoneyGraph) {
     const count = byDonor.get(node.id)?.size ?? 0;
     return [
       moneyYears(node.firstYear, node.lastYear),
-      count ? `${formatCount(count)} ${count === 1 ? 'party' : 'parties'}` : null,
+      count
+        ? `${formatCount(count)} ${count === 1 ? 'party' : 'parties'}`
+        : null,
     ]
       .filter(Boolean)
       .join(' · ');

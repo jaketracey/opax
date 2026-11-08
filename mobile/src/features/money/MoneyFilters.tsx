@@ -158,7 +158,10 @@ export function useMoneyFilters(
 ) {
   const [owner] = useState(() => `money-${++owners}`);
   const model = useMemo(() => moneyFiltersModel(graph), [graph]);
-  const value = useMemo(() => moneyFilterValues(graph, params), [graph, params]);
+  const value = useMemo(
+    () => moneyFilterValues(graph, params),
+    [graph, params],
+  );
   // Registered at first render so the sheet can open at once; the effect
   // keeps its model, value and writer in step with the route.
   useState(() => registerFilterModel(model, { owner, value }));

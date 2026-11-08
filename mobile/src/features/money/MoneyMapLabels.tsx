@@ -121,9 +121,7 @@ export function MoneyMapLabels({
     >
       {slots.map(({ key, label, ink, point }) => {
         const left = (point?.x ?? 0) - slot / 2;
-        const x = clamp
-          ? Math.max(0, Math.min(width - slot, left))
-          : left;
+        const x = clamp ? Math.max(0, Math.min(width - slot, left)) : left;
         return (
           <View
             key={key}

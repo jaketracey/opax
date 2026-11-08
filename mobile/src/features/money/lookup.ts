@@ -55,7 +55,9 @@ export function donorNodeFor(
   if (!name) return null;
   return (
     donors.find((n) =>
-      [n.label, ...(n.aliases ?? [])].some((alias) => normaliseOrganisation(alias) === name),
+      [n.label, ...(n.aliases ?? [])].some(
+        (alias) => normaliseOrganisation(alias) === name,
+      ),
     ) ?? null
   );
 }
@@ -65,7 +67,9 @@ export function partyNodeFor(graph: MoneyGraph, value: string) {
   const name = value.startsWith('party:') ? value.slice(6) : value;
   return (
     graph.nodes.find((n) => n.id === value && n.kind === 'party') ??
-    graph.nodes.find((n) => n.kind === 'party' && samePartyLabel(n.label, name)) ??
+    graph.nodes.find(
+      (n) => n.kind === 'party' && samePartyLabel(n.label, name),
+    ) ??
     null
   );
 }

@@ -80,7 +80,13 @@ export function decodeRecipientIndex(value: unknown): RecipientIndex {
 /** One government supplier, as its agency's file records it. */
 export interface AgencySupplier {
   agency: { id: string; name: string };
-  supplier: { id: string; name: string; organisation: boolean; total: number; count: number };
+  supplier: {
+    id: string;
+    name: string;
+    organisation: boolean;
+    total: number;
+    count: number;
+  };
   contracts: {
     id: string;
     title: string;
@@ -166,9 +172,8 @@ export function useGrantRecipient(rid: string | null, jur: 'federal' | 'qld') {
  * on the public allow-list, the per-supplier files are not yet.
  */
 export function useAgencySupplier(rid: string | null, agency: string | null) {
-  const loaded = useLoad(
-    rid && agency ? `agency:${agency}` : null,
-    (refresh) => money.agency(agency!, refresh),
+  const loaded = useLoad(rid && agency ? `agency:${agency}` : null, (refresh) =>
+    money.agency(agency!, refresh),
   );
   const profile = loaded.record?.data.profile;
   const supplier = profile?.suppliers.find((s) => s.id === rid) ?? null;

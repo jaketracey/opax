@@ -1,12 +1,14 @@
-import { StyleSheet, View, useColorScheme, useWindowDimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native';
 import type { Href } from 'expo-router';
 import { LinkRow } from '../../design/primitives';
 import { partyDot } from '../../design/party';
 import { partyDotSize } from '../../design/people';
-import {
-  byPartyGroup,
-  partyGroup,
-} from '../../design/party-groups';
+import { byPartyGroup, partyGroup } from '../../design/party-groups';
 import { formatMoney, moneyAccessibilityLabel } from '../../design/format';
 
 /** A party's colour dot, drawn only (the row says the party). */
@@ -21,7 +23,12 @@ export function PartyDot({ party }: { party: string }) {
       importantForAccessibility="no-hide-descendants"
       style={[
         styles.dot,
-        { width: size, height: size, borderRadius: size / 2, backgroundColor: colour },
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: colour,
+        },
       ]}
     />
   );
@@ -65,11 +72,16 @@ export function PartyMoneyRow({
  * Money lists order parties Labor, the Coalition (each party its own row),
  * then Other parties alphabetically (journeys/money.md 12.3 item 1).
  */
-export function moneyPartyGroups<T>(rows: readonly T[], nameOf: (row: T) => string) {
+export function moneyPartyGroups<T>(
+  rows: readonly T[],
+  nameOf: (row: T) => string,
+) {
   const ordered = byPartyGroup(rows, nameOf, { context: 'money' });
   return {
     main: ordered.filter((row) => partyGroup(nameOf(row), 'money') !== 'other'),
-    other: ordered.filter((row) => partyGroup(nameOf(row), 'money') === 'other'),
+    other: ordered.filter(
+      (row) => partyGroup(nameOf(row), 'money') === 'other',
+    ),
   };
 }
 
