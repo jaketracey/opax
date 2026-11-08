@@ -411,7 +411,13 @@ function MenuPicker<T extends string>({
   const button = (
     <View
       testID={testID}
-      style={wide ? styles.full : styles.hug}
+      style={[
+        wide ? styles.full : styles.hug,
+        // Bare, the button sits in a text column under a caption or count:
+        // pull the system button's own label padding back so its value
+        // starts on that column, not 6 pt inside it.
+        row ? null : { marginLeft: -popUpLabelInset },
+      ]}
       onLayout={
         wide
           ? (event) => setMeasuredWidth(event.nativeEvent.layout.width)
@@ -490,6 +496,14 @@ function MenuPicker<T extends string>({
  * With `row`, the label is drawn as the row's title beside it; without, the
  * caller draws the title (a filter row's "From").
  */
+/**
+ * The leading padding a SwiftUI menu-style Picker draws inside its own
+ * frame before the value (measured on iOS 26: money-16's value sat 6 pt
+ * right of the "Find an agency" text above it). A bare PopUpButton offsets
+ * it so the value aligns with the content's text column.
+ */
+export const popUpLabelInset = 6;
+
 export function PopUpButton<T extends string>(props: {
   disabled?: boolean;
   label: string;
