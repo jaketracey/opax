@@ -39,36 +39,36 @@ async function mount() {
 }
 beforeEach(() => mockDisk.clear());
 
-test('captions start off and the switch is remembered, never a caption', async () => {
+test('captions start on (F-2) and hiding them is remembered, never a caption', async () => {
   let renderer = await mount();
-  expect(current[0]).toBe(false);
-  await act(async () => current[1](true));
   expect(current[0]).toBe(true);
+  await act(async () => current[1](false));
+  expect(current[0]).toBe(false);
   expect([...mockDisk.values()].join()).toMatch(
-    /^\{"on":true,"generation":1\}$/,
+    /^\{"on":false,"generation":1\}$/,
   );
   act(() => renderer.unmount());
   renderer = await mount();
-  expect(current[0]).toBe(true);
+  expect(current[0]).toBe(false);
   act(() => renderer.unmount());
 });
 
-test('an unreadable or foreign file leaves captions off', async () => {
+test('an unreadable or foreign file leaves captions on', async () => {
   mockDisk.set('opax-talk-captions-v1.json', '{"on":"yes"}');
   mockDisk.set('opax-talk-captions-v1.b.json', 'not json');
   const renderer = await mount();
-  expect(current[0]).toBe(false);
+  expect(current[0]).toBe(true);
   act(() => renderer.unmount());
 });
 
 test('a choice made while the file is read wins over the stored one', async () => {
-  mockDisk.set('opax-talk-captions-v1.json', '{"on":true,"generation":1}');
+  mockDisk.set('opax-talk-captions-v1.json', '{"on":false,"generation":1}');
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(<Probe />);
   });
-  act(() => current[1](false));
+  act(() => current[1](true));
   await act(async () => {});
-  expect(current[0]).toBe(false);
+  expect(current[0]).toBe(true);
   act(() => renderer.unmount());
 });

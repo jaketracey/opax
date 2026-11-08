@@ -105,17 +105,26 @@ test('idle and signed in: Start is the one primary action, and nothing starts by
   expect(line(renderer, 'talk-state')).toBeUndefined();
 });
 
-test('while voice is checked, one plain line says so', () => {
+test('while voice is checked, the status says so and Start waits with a spinner', () => {
   mockCall = call({ state: 'idle', status: null });
   const renderer = render();
-  expect(line(renderer, 'talk-state')!.props.children).toBe('Checking voice');
+  // Spoken only (7.5): no visible line, the orb's status element says it.
+  expect(line(renderer, 'talk-state')).toBeUndefined();
+  expect(
+    renderer.root.findByProps({ testID: 'talk-status' }).props
+      .accessibilityLabel,
+  ).toBe('Checking voice');
+  const start = renderer.root
+    .findAllByType(Button)
+    .find((node) => node.props.testID === 'talk-start')!;
+  expect(start.props).toMatchObject({ variant: 'primary', loading: true });
 });
 
 test.each([
   [{ state: 'connecting' } as const, 'Connecting'],
   [{ state: 'live', mode: 'listening' } as const, 'Listening'],
   [{ state: 'live', mode: 'speaking' } as const, 'OPAX is speaking'],
-  [{ state: 'live', mode: 'muted' } as const, 'Microphone muted'],
+  [{ state: 'live', mode: 'muted' } as const, 'Muted'],
   [{ state: 'ending' } as const, 'Ending the call'],
 ])('during a call the status line says %j in plain words', (state, words) => {
   mockCall = call({ ...state, status: status() }, true);
@@ -145,14 +154,14 @@ test('the call controls are the shared round IconButton, mute said as selected',
     .findAllByType(IconButton)
     .map((node) => node.props);
   expect(controls.map((props) => props.testID)).toEqual([
-    'talk-captions',
     'talk-mute',
-    'talk-end',
+    'talk-type',
     'talk-sources',
+    'talk-end',
   ]);
   for (const props of controls) expect(props.size).toBe('large');
   const mute = controls.find((props) => props.testID === 'talk-mute')!;
-  expect(mute).toMatchObject({ selected: true, accessibilityLabel: 'Unmute' });
+  expect(mute).toMatchObject({ selected: true, accessibilityLabel: 'Mute' });
   expect(controls.find((props) => props.testID === 'talk-end')!.variant).toBe(
     'danger',
   );
@@ -161,14 +170,15 @@ test('the call controls are the shared round IconButton, mute said as selected',
   ).toMatchObject({ badge: 1, accessibilityLabel: 'Sources, 1' });
 });
 
-test('a refusal is one plain sentence with its one action', () => {
+test('signed out, the free minutes line sits under its one action', () => {
   mockCall = call({
     state: 'idle',
     status: status({ signedIn: false, unlimited: null }),
   });
   const renderer = render();
-  expect(line(renderer, 'talk-message')!.props.children).toBe(
-    'Voice needs a free OPAX account.',
+  expect(line(renderer, 'talk-message')).toBeUndefined();
+  expect(line(renderer, 'talk-free-minutes')!.props.children).toBe(
+    'A free OPAX account includes 10 minutes of voice.',
   );
   expect(
     renderer.root

@@ -44,8 +44,25 @@ jest.mock('expo-router', () => {
     });
     return children;
   };
+  const { createElement } = jest.requireActual('react');
+  // A host element: no hooks, so no second React from this registry.
+  const Link = ({ children, ...props }: { children: ReactNode }) =>
+    createElement('Link', props, children);
+  Link.Trigger = function Trigger({ children }: { children: ReactNode }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
   return {
     Stack,
+    Link,
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
     useFocusEffect: jest.fn(),
   };
@@ -172,13 +189,23 @@ describe.each(scenarios)('%s', (_name, os, voice, offered) => {
       );
       return <AccountScreen />;
     });
-    const ids = (id: string) =>
-      renderer.root.findAll((node) => node.props.testID === id);
-    expect(ids('account-section').length > 0).toBe(offered);
-    expect(ids('account-links').length).toBeGreaterThan(0);
-    const text = JSON.stringify(renderer.toJSON());
-    expect(text).toContain('About OPAX');
-    act(() => renderer.unmount());
+    // Unmounted before the status read settles: its update would render
+    // outside this build's module registry.
+    try {
+      const ids = (id: string) =>
+        renderer.root.findAll((node) => node.props.testID === id);
+      expect(ids('account-section').length > 0).toBe(offered);
+      expect(ids('account-links').length).toBeGreaterThan(0);
+      expect(
+        renderer.root.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.children === 'About OPAX',
+        ).length,
+      ).toBeGreaterThan(0);
+    } finally {
+      act(() => renderer.unmount());
+    }
   });
 });
 

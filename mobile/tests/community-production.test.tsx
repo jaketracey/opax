@@ -20,9 +20,22 @@ import { accountCopy } from '../src/features/account/copy';
 jest.mock('../src/features/community/entry', () =>
   jest.requireActual('../src/features/community/entry.production'),
 );
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
-}));
+jest.mock('expo-router', () => {
+  const { createElement } = jest.requireActual('react');
+  const Link = ({ children, ...props }: { children: unknown }) =>
+    createElement('Link', props, children);
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  return {
+    router: { push: jest.fn(), back: jest.fn() },
+    Link,
+    useFocusEffect: jest.fn(),
+  };
+});
 jest.mock('../src/voice', () => ({
   status: jest.fn(async () => ({ ok: false, error: 'unavailable' })),
   subscribe: jest.fn(() => () => {}),
@@ -178,7 +191,7 @@ test('Account has no Community row, and its copy does not offer Community', asyn
   expect(ids(renderer)).not.toContain('account-community');
   expect(ids(renderer)).toContain('account-about');
   expect(words(renderer)).not.toMatch(/\bCommunity\b/);
-  for (const copy of [accountCopy.signedOut, accountCopy.signInIntro])
+  for (const copy of [accountCopy.signIn, accountCopy.signInDetail])
     expect(copy).not.toMatch(/community|discussion/i);
   act(() => renderer.unmount());
 });

@@ -16,13 +16,13 @@ function menuFor(
   sources: VoiceSource[] = [],
 ) {
   const item = talkMenu({
-    live: true,
     active: true,
-    typing: false,
+    captions: true,
+    canCaption: false,
     report: canReport(transcript),
     records: reportChoices(sources),
     consent: true,
-    onType: jest.fn(),
+    onCaptions: jest.fn(),
     onReport,
     onPrivacy: jest.fn(),
     onWithdraw: jest.fn(),
@@ -120,25 +120,25 @@ test('during a call the menu title changes only at five minutes and each minute 
 
 test('the menu keeps web pages out of a call and offers withdrawal only after consent', () => {
   const during = talkMenu({
-    live: true,
     active: true,
-    typing: false,
+    captions: true,
+    canCaption: true,
     report: false,
     records: [],
     consent: true,
-    onType: jest.fn(),
+    onCaptions: jest.fn(),
     onReport: jest.fn(),
     onPrivacy: jest.fn(),
     onWithdraw: jest.fn(),
   });
   const before = talkMenu({
-    live: false,
     active: false,
-    typing: false,
+    captions: true,
+    canCaption: false,
     report: false,
     records: [],
     consent: false,
-    onType: jest.fn(),
+    onCaptions: jest.fn(),
     onReport: jest.fn(),
     onPrivacy: jest.fn(),
     onWithdraw: jest.fn(),
@@ -149,7 +149,7 @@ test('the menu keeps web pages out of a call and offers withdrawal only after co
           entry.type === 'action' ? entry.label : '',
         )
       : [];
-  expect(labels(during)).toEqual(['Type a message', 'Withdraw voice consent']);
+  expect(labels(during)).toEqual(['Hide captions', 'Withdraw voice consent']);
   expect(labels(before)).toEqual(['Voice privacy']);
 });
 
