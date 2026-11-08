@@ -1,0 +1,78 @@
+appId: au.com.opax.app
+name: 32 Check a claim; the mark opens its passage beside the live answer, re-targets, moves, opens the record and copies a citation
+---
+- launchApp:
+    permissions:
+      all: unset
+    clearState: true
+- tapOn:
+    id: tab-ask
+- tapOn:
+    id: ask-starter-0
+- runFlow: support/ask-consent.yaml
+- scrollUntilVisible:
+    element:
+      id: ask-citation-mark-1
+    direction: DOWN
+    centerElement: true
+    visibilityPercentage: 10
+    timeout: 180000
+# 1 tap: the sheet at half height, the answer undimmed with its claim lit.
+- tapOn:
+    id: ask-citation-mark-1
+- extendedWaitUntil:
+    visible:
+      id: citation-passage
+    timeout: 15000
+- assertVisible:
+    id: citation-title
+- assertVisible:
+    id: ask-sentence-highlight
+- takeScreenshot: ${EVIDENCE}/32-claim-sheet
+# Another mark in the live answer re-targets the open sheet.
+- runFlow:
+    when:
+      visible:
+        id: ask-citation-mark-2
+    commands:
+      - tapOn:
+          id: ask-citation-mark-2
+      - extendedWaitUntil:
+          visible:
+            id: citation-passage
+          timeout: 10000
+      - takeScreenshot: ${EVIDENCE}/32-retargeted
+      - tapOn: Previous source
+      - assertVisible:
+          id: ask-sentence-highlight
+# Copy a citation: mark, ⋯, Copy APA 7 (3 taps from the claim, no screen change).
+- tapOn: More for .*
+- tapOn: Copy APA 7
+- assertVisible:
+    id: citation-passage
+- takeScreenshot: ${EVIDENCE}/32-copied
+# Open record: the sheet closes and the record opens in Ask's stack at its passage.
+- tapOn:
+    id: citation-open-record
+- extendedWaitUntil:
+    notVisible:
+      id: citation-sheet
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: doc-passage-highlight
+    commands:
+      - takeScreenshot: ${EVIDENCE}/32-record-at-passage
+- assertVisible:
+    id: tab-ask
+    selected: true
+- takeScreenshot: ${EVIDENCE}/32-record
+- swipe:
+    start: 1%,50%
+    end: 90%,50%
+    duration: 500
+- assertVisible:
+    id: ask-screen
+- assertNotVisible:
+    id: ask-sentence-highlight

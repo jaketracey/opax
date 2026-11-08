@@ -8,17 +8,29 @@ import {
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { Composer } from '../src/design/controls';
-import { dispatchKeyCommand } from '../src/design/keyboard';
 import { useAskSources } from '../src/features/ask/SourcesPane';
 import { redirectSystemPath } from '../src/app/+native-intent';
 import type { Source, Turn } from '../src/features/ask/model';
 
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn() },
-  useFocusEffect: (effect: () => void | (() => void)) =>
-    jest.requireActual('react').useEffect(effect, []),
-}));
-jest.mock('../src/features/ask/AnswerView', () => ({
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  const Pass = ({ children }: { children?: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children);
+  return {
+    Link: Object.assign(Pass, {
+      Trigger: Pass,
+      Preview: () => null,
+      Menu: Pass,
+      MenuAction: Pass,
+    }),
+    router: { push: jest.fn() },
+    useSegments: () => [],
+    useFocusEffect: (effect: () => void | (() => void)) =>
+      jest.requireActual('react').useEffect(effect, []),
+  };
+});
+jest.mock('../src/api/runtime', () => ({}));
+jest.mock('../src/features/ask/AnswerBody', () => ({
   openAnswerLink: jest.fn(),
 }));
 jest.mock('../src/features/split/RecordDetail', () => {
@@ -69,14 +81,14 @@ test('cold bill links open in Bills and app links name their tab', () => {
     expect(redirectSystemPath({ path, initial: true })).toBe(path);
 });
 
-test('Ask source keys follow cited then also-retrieved order; arrows never open a record', () => {
+test('the Ask pane opens on citation 1 and opens its record in the pane', () => {
   const source = (resource: string, cited: boolean): Source => ({
     resource,
     cited,
     title: `Fixture ${resource}`,
     slug: resource,
     href: `/doc/${resource}`,
-    snippet: '',
+    snippet: `Passage of ${resource}.`,
     answerRanges: [],
   });
   const thread: Turn[] = [
@@ -90,25 +102,26 @@ test('Ask source keys follow cited then also-retrieved order; arrows never open 
     return useAskSources(thread).pane;
   }
   const tree = render(<Pane />);
-  act(() => {
-    dispatchKeyCommand('list-down');
-  });
+  const text = JSON.stringify(tree.toJSON());
+  expect(text).toContain('Passage of speech-2.');
+  expect(text).toContain('Also found, not cited');
+  expect(text).not.toContain('Sources appear here');
   expect(
     tree.root.findAllByProps({ testID: 'opened-record-speech-2' }),
   ).toHaveLength(0);
   act(() => {
-    dispatchKeyCommand('list-down');
-  });
-  act(() => {
-    dispatchKeyCommand('list-up');
-  });
-  act(() => {
-    dispatchKeyCommand('list-open');
+    tree.root
+      .find(
+        (n) =>
+          n.props.testID === 'citation-open-record' &&
+          typeof n.props.onPress === 'function',
+      )
+      .props.onPress();
   });
   expect(
     tree.root.findAllByProps({ testID: 'opened-record-speech-2' }).length,
   ).toBeGreaterThan(0);
-  const { openAnswerLink } = jest.requireMock('../src/features/ask/AnswerView');
+  const { openAnswerLink } = jest.requireMock('../src/features/ask/AnswerBody');
   expect(openAnswerLink).not.toHaveBeenCalled();
 });
 

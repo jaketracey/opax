@@ -71,6 +71,23 @@ export type Answer = {
   pay_answer?: boolean;
   pay_next?: { label: string; href: string }[];
   suggested_question?: string;
+  /** Calculated answers: the date the data was current (ISO date or "2024-25"). */
+  data_as_at?: string;
+  /** The Worker's flag for model-written text in a calculated answer. */
+  model_written?: boolean;
+  /**
+   * Figures in a calculated answer, each with its own as-at date and the
+   * record it came from (journeys/ask.md 10.7). A figure without both is
+   * never drawn as a block.
+   */
+  figures?: AnswerFigure[];
+};
+export type AnswerFigure = {
+  value: string;
+  label?: string;
+  as_at?: string;
+  source?: string;
+  path?: string;
 };
 export type Turn = {
   role: 'user' | 'answer';
@@ -83,6 +100,8 @@ export type Turn = {
   result?: Answer;
   carried?: { source: string };
   followupsRequested?: boolean;
+  /** When the answer arrived (epoch ms, device clock). Answers saved before this build have none. */
+  at?: number;
 };
 export type Chat = {
   id: string;
@@ -153,9 +172,10 @@ export function decodeAnswer(raw: unknown): Answer {
     'money_overview',
     'money_question',
     'suggested_question',
+    'data_as_at',
   ] as const)
     if (typeof v[k] === 'string') out[k] = v[k];
-  for (const k of ['money_ranking', 'pay_answer'] as const)
+  for (const k of ['money_ranking', 'pay_answer', 'model_written'] as const)
     if (typeof v[k] === 'boolean') out[k] = v[k];
   if (Array.isArray(v.evidence_excerpts))
     out.evidence_excerpts = v.evidence_excerpts.flatMap((x) => {
@@ -163,6 +183,16 @@ export function decodeAnswer(raw: unknown): Answer {
       return typeof e.resource === 'string' && typeof e.text === 'string'
         ? [{ resource: e.resource, text: e.text }]
         : [];
+    });
+  if (Array.isArray(v.figures))
+    out.figures = v.figures.flatMap((x) => {
+      const e = object(x);
+      if (typeof e.value !== 'string' || !e.value.trim()) return [];
+      const figure: AnswerFigure = { value: e.value.trim() };
+      for (const k of ['label', 'as_at', 'source', 'path'] as const)
+        if (typeof e[k] === 'string' && (e[k] as string).trim())
+          figure[k] = (e[k] as string).trim();
+      return [figure];
     });
   if (Array.isArray(v.pay_next))
     out.pay_next = v.pay_next.flatMap((x) => {
@@ -194,10 +224,20 @@ export function decodeFollowups(raw: unknown): Followup[] {
         .slice(0, 3)
     : [];
 }
+/** The Sydney calendar year: the same for every reader, never a literal. */
+export function currentYear(now: number = Date.now()): number {
+  return Number(
+    new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'Australia/Sydney',
+      year: 'numeric',
+    }).format(new Date(now)),
+  );
+}
+export const firstYear = 1993;
 export function normaliseOptions(o: AskOptions): AskOptions {
   let { from, to } = o;
   if (from && to && Number(from) > Number(to)) [from, to] = [to, from];
-  if (from === '1993' && to === '2026') {
+  if (from === String(firstYear) && to === String(currentYear())) {
     from = '';
     to = '';
   }
@@ -255,35 +295,24 @@ export function requestBody(
     ...(thread.length ? { context, prior_resources: prior.slice(0, 6) } : {}),
   };
 }
-export const sampleQuestions = [
-  'What has parliament said about housing affordability?',
-  'Who funds the Labor Party?',
-  // Evidence-first, not a judgement (pass 5, P3-6).
-  'Who has received the most from gambling industry donors?',
-  'What has David Pocock proposed about housing affordability?',
-];
-export const parties = [
-  'Labor',
-  'Liberal',
-  'Nationals',
-  'LNP',
-  'Greens',
-  'Independent',
-  'One Nation',
-];
 export const parliaments: Record<string, string> = {
   federal: 'Federal',
-  nsw: 'NSW',
-  vic: 'VIC',
-  sa: 'SA',
-  qld: 'QLD',
-  act: 'ACT',
+  nsw: 'New South Wales',
+  vic: 'Victoria',
+  sa: 'South Australia',
+  qld: 'Queensland',
+  act: 'Australian Capital Territory',
 };
-export function chips(o: AskOptions) {
+/**
+ * The options in force, one per tag: the value is drawn and the key is
+ * spoken ("Person, Sam Placeholder"). "Person" names the member filter: it
+ * holds senators too, and "Speaker" reads as the Speaker of the House.
+ */
+export function chips(o: AskOptions, topicLabel = (slug: string) => slug) {
   const out: { id: keyof AskOptions | 'years'; key: string; value: string }[] =
     [];
   for (const [id, key] of [
-    ['speaker', 'Speaker'],
+    ['speaker', 'Person'],
     ['party', 'Party'],
     ['state', 'Parliament'],
     ['topic', 'Topic'],
@@ -292,14 +321,21 @@ export function chips(o: AskOptions) {
       out.push({
         id,
         key,
-        value: id === 'state' ? parliaments[o[id]] || o[id] : o[id],
+        value:
+          id === 'state'
+            ? parliaments[o[id]] || o[id]
+            : id === 'topic'
+              ? topicLabel(o[id])
+              : o[id],
       });
   if (o.from || o.to)
     out.push({
       id: 'years',
       key: 'Years',
       value:
-        o.from === o.to ? o.from : `${o.from || '1993'} to ${o.to || '2026'}`,
+        o.from === o.to
+          ? o.from
+          : `${o.from || firstYear} to ${o.to || currentYear()}`,
     });
   if (o.kind === 'speech')
     out.push({ id: 'kind', key: 'Type', value: 'Speeches' });
@@ -324,6 +360,14 @@ export function dateRuler(sources: Source[]) {
   return sources
     .filter((s) => /^\d{4}-\d{2}-\d{2}$/.test(s.date || ''))
     .sort((a, b) => a.date!.localeCompare(b.date!));
+}
+/** One answer turn, addressed from a route (`/ask-report?turn=`, `/source`). */
+export const turnKey = (chatId: string, index: number) => `${chatId}:${index}`;
+export function parseTurnKey(
+  key: string,
+): { chat: string; index: number } | null {
+  const match = /^([\w-]{8,64}):(\d{1,4})$/.exec(key);
+  return match ? { chat: match[1]!, index: Number(match[2]) } : null;
 }
 export function titleFor(thread: Turn[]) {
   const first =
@@ -381,6 +425,8 @@ export function decodeChat(raw: unknown): Chat | null {
     );
     if (typeof object(m.carried).source === 'string')
       turn.carried = { source: object(m.carried).source as string };
+    if (Number.isSafeInteger(m.at) && (m.at as number) > 0)
+      turn.at = m.at as number;
     for (const k of ['askedAs', 'fundingQuestion'] as const)
       if (typeof m[k] === 'string') turn[k] = m[k];
     if (turn.role === 'answer') {
@@ -487,6 +533,9 @@ export function syncBody(c: Chat) {
               pay_answer: result.pay_answer,
               pay_next: result.pay_next,
               evidence_excerpts: result.evidence_excerpts,
+              data_as_at: result.data_as_at,
+              model_written: result.model_written,
+              figures: result.figures,
             }
           : {}),
       };

@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="ask-report" title="Report a problem" />;
-}
+export { default } from '../../../features/ask/ReportSheet';

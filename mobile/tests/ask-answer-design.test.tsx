@@ -1,42 +1,121 @@
-import { act } from 'react';
-import { Modal, Text as NativeText } from 'react-native';
+import { act, type ReactNode } from 'react';
+import { dispatchKeyCommand } from '../src/design/keyboard';
 import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
-import {
-  Disclosure,
-  Heading,
-  InfoButton,
-  MachineLabel,
-  ViewOriginal,
-} from '../src/design/primitives';
-import { showMenu } from '../src/design/menu';
+import { CitationMark } from '../src/design/citation-mark';
+import { AnswerBody } from '../src/features/ask/AnswerBody';
+import { parseAnswer } from '../src/features/ask/answer-markdown';
+import { FigureBlock } from '../src/design/record';
+import { haptic } from '../src/design/haptics';
+import { presentSheet, presentSource } from '../src/navigation/sheets';
 import { shareRecord } from '../src/navigation/share';
-import { AnswerView, reportThanks } from '../src/features/ask/AnswerView';
-import { reportAnswer, reportAnswerUrl } from '../src/voice/report-answer';
-import { AnswerSources } from '../src/features/ask/AnswerSources';
+import { copyText } from '../src/features/records/actions';
+import { copyCitation } from '../src/features/ask/cite';
+import {
+  citationSheetLeft,
+  citationSelection,
+} from '../src/features/ask/citation-state';
+import {
+  AnswerView,
+  answerReadyAnnouncement,
+  askSourceDetails,
+} from '../src/features/ask/AnswerView';
+import type { AskPerson } from '../src/features/ask/people';
+import { useAskSources } from '../src/features/ask/SourcesPane';
 import type { Source, Turn } from '../src/features/ask/model';
+import type { SourceDetails } from '../src/design/source';
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-// No portraits here: no source names a roster parliamentarian.
+jest.mock('expo-router', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  const Pass = ({ children }: { children?: ReactNode }) =>
+    React.createElement(React.Fragment, null, children);
+  return {
+    Link: Object.assign(Pass, {
+      Trigger: Pass,
+      Preview: () => null,
+      Menu: Pass,
+      MenuAction: Pass,
+    }),
+    router: { push: jest.fn(), back: jest.fn() },
+    useSegments: () => [],
+  };
+});
+// SwiftUI views as plain views that keep their props, so the answer menu's
+// buttons can be found and pressed.
+jest.mock('@expo/ui/swift-ui', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { View } = require('react-native');
+  const view = (kind: string) => {
+    const SwiftView = ({ children, ...props }: { children?: unknown }) =>
+      React.createElement(View, { ...props, swift: kind }, children);
+    SwiftView.displayName = kind;
+    return SwiftView;
+  };
+  return {
+    Host: view('Host'),
+    Menu: view('Menu'),
+    Button: view('Button'),
+    Section: view('Section'),
+  };
+});
+jest.mock(
+  '@expo/ui/swift-ui/modifiers',
+  () =>
+    new Proxy(
+      {},
+      {
+        get:
+          (_target, name) =>
+          (...args: unknown[]) => ({ modifier: name, args }),
+      },
+    ),
+);
 jest.mock('../src/api/runtime', () => ({}));
-jest.mock('../src/design/menu', () => ({ showMenu: jest.fn() }));
+jest.mock('../src/navigation/sheets', () => ({
+  presentSource: jest.fn(),
+  presentSheet: jest.fn(),
+}));
 jest.mock('../src/navigation/share', () => ({
   shareRecord: jest.fn().mockResolvedValue(undefined),
 }));
-jest.mock('../src/voice/report-answer', () => ({
-  ...jest.requireActual('../src/voice/report-answer'),
-  reportAnswer: jest.fn().mockResolvedValue(undefined),
+jest.mock('../src/features/records/actions', () => ({
+  copyText: jest.fn().mockResolvedValue(true),
+}));
+jest.mock('../src/features/ask/cite', () => ({
+  ...jest.requireActual('../src/features/ask/cite'),
+  copyCitation: jest.fn().mockResolvedValue(undefined),
+}));
+jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
+jest.mock('../src/features/CachedPortrait', () => ({
+  CachedPortrait: () => null,
+}));
+// The reader's own member, worked out on the device from the saved seat.
+jest.mock('../src/features/your-mp/useIsMyMember', () => ({
+  useIsMyMember: (slug: string) => slug === 'sam-placeholder',
+}));
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
+}));
+jest.mock('../src/features/split/RecordDetail', () => ({
+  RecordDetail: () => null,
+  RecordShare: () => null,
 }));
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useReduceMotion: () => true,
 }));
 
-// Design pass 3D (concept board 5): the answer leads under its question,
-// with one machine label and no "Answer" heading or ⓘ; the five utility
-// rows (From the record, Retrieved records, Dates in the record, Viewed,
-// Share answer) become one source line and ⋯. Synthetic fixture records.
-const source = (n: number, cited: boolean): Source => ({
+// Synthetic fixture records; the only person is the neutral placeholder.
+const source = (
+  n: number,
+  cited: boolean,
+  ranges: [number, number][] = [],
+  extra: Partial<Source> = {},
+): Source => ({
   resource: `r${n}`,
   title: `Synthetic Fixture Bill ${n}`,
   slug: `r${n}`,
@@ -45,209 +124,408 @@ const source = (n: number, cited: boolean): Source => ({
   cited,
   date: `2026-08-1${n}`,
   url: `https://example.org/fixture-${n}`,
-  answerRanges: cited ? [[0, 46]] : [],
+  answerRanges: ranges,
+  ...extra,
 });
-const question: Turn = { role: 'user', text: 'Who spoke on the fixture bill?' };
-const turn: Turn = {
+const first = 'The bill would charge a levy.';
+const second = ' It passed the House in August.';
+const text = first + second;
+const question: Turn = {
+  role: 'user',
+  text: 'What did parliament say about the fixture bill?',
+};
+const answer = (over: Partial<NonNullable<Turn['result']>> = {}): Turn => ({
   role: 'answer',
   text: '',
+  at: Date.parse('2026-11-08T22:41:00Z'),
   result: {
-    answer: 'The linked record is Synthetic Fixture Bill 1.',
-    sources: [source(1, true), source(2, false), source(3, false)],
+    answer: text,
+    sources: [
+      source(1, true, [[0, first.length]]),
+      source(2, true, [[0, first.length]], {
+        speaker: 'Sam Placeholder',
+        party: 'Example Party',
+      }),
+      source(3, true, [[first.length, text.length]]),
+      source(4, false),
+    ],
     citations: {},
+    ...over,
   },
-};
+});
+const profiles = new Map<string, AskPerson>([
+  [
+    'Sam Placeholder',
+    {
+      name: 'Sam Placeholder',
+      slug: 'sam-placeholder',
+      party: 'Example Party',
+      place: 'Member for Example, New South Wales',
+    },
+  ],
+]);
 
-function draw(
-  actions = [{ title: 'Start a new conversation', onPress: jest.fn() }],
-) {
+const mounted: TestRenderer.ReactTestRenderer[] = [];
+afterEach(() => {
+  act(() => mounted.splice(0).forEach((tree) => tree.unmount()));
+  act(() => citationSheetLeft());
+  jest.clearAllMocks();
+});
+function draw(turn: Turn = answer(), pane = false) {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
       <AnswerView
         turn={turn}
         question={question}
-        people={new Map()}
-        actions={actions}
+        index={1}
+        chat="fixture-chat"
+        profiles={profiles}
+        paneShowsSources={pane}
       />,
     );
   });
-  const text = () =>
-    renderer.root
-      .findAllByType(NativeText)
-      .map((n) => n.props.children)
-      .flat(Infinity)
-      .filter((c) => typeof c === 'string')
-      .join('\n');
-  const byId = (id: string) =>
-    renderer.root.find(
-      (n) => n.props.testID === id && typeof n.props.onPress === 'function',
+  mounted.push(renderer);
+  return helpers(renderer);
+}
+function helpers(renderer: TestRenderer.ReactTestRenderer) {
+  // Every string the host views draw, in order.
+  const words = () => {
+    const out: string[] = [];
+    const walk = (node: unknown) => {
+      if (typeof node === 'string') out.push(node);
+      else if (Array.isArray(node)) node.forEach(walk);
+      else if (node && typeof node === 'object' && 'children' in node)
+        walk((node as { children: unknown }).children);
+    };
+    walk(renderer.toJSON());
+    return out.join('');
+  };
+  const ids = (id: string) =>
+    renderer.root.findAll(
+      (n) => n.props.testID === id && typeof n.type !== 'string',
     );
-  return { renderer, text, byId };
+  const press = (id: string) =>
+    renderer.root
+      .find(
+        (n) => n.props.testID === id && typeof n.props.onPress === 'function',
+      )
+      .props.onPress();
+  const menuButton = (label: string) =>
+    renderer.root.find(
+      (n) => n.props.swift === 'Button' && n.props.label === label,
+    );
+  return { renderer, words, ids, press, menuButton };
 }
 
-test('the answer leads: no Answer heading or ⓘ, one machine label', () => {
-  const { renderer, text } = draw();
+test('the answer leads with one machine pill and its records, cited once each', () => {
+  const { words, ids, renderer } = draw();
+  expect(ids('ask-machine-label').length).toBeGreaterThan(0);
   expect(
-    renderer.root
-      .findAllByType(Heading)
-      .map((h) => h.props.children)
-      .filter((c) => c === 'Answer'),
-  ).toEqual([]);
-  expect(renderer.root.findAllByType(InfoButton)).toHaveLength(0);
-  expect(
-    renderer.root.findAll((n) => n.props.testID === 'ask-answer-info'),
-  ).toHaveLength(0);
-  expect(renderer.root.findAllByType(MachineLabel)).toHaveLength(1);
-  expect(text()).toContain('The linked record is Synthetic Fixture Bill 1.');
-  // The cited record stays one tap away under the answer.
-  expect(text()).toContain('[1] Synthetic Fixture Bill 1');
+    renderer.root.findAll(
+      (n) =>
+        n.props.testID === 'ask-machine-label' && typeof n.type === 'string',
+    ).length,
+  ).toBeGreaterThan(0);
+  expect(ids('ask-answer-kind')).toHaveLength(0);
+  expect(ids('ask-answer-1').length).toBeGreaterThan(0);
+  expect(words()).toContain('Records cited (3)');
+  for (const n of [1, 2, 3])
+    expect(ids(`ask-citation-${n}`).length).toBeGreaterThan(0);
+  // Retrieved but not cited stays in the sources sheet, not under the answer.
+  expect(words()).not.toContain('Synthetic Fixture Bill 4');
+  expect(words()).not.toMatch(/\[\d\] Synthetic|Also retrieved|retrieved/);
 });
 
-test('the utility rows become one source line and ⋯', () => {
-  const { renderer, text, byId } = draw();
-  // None of the old rows or disclosures are drawn.
-  expect(renderer.root.findAllByType(Disclosure)).toHaveLength(0);
-  expect(renderer.root.findAllByType(ViewOriginal)).toHaveLength(0);
-  for (const old of [
-    'From the record',
-    'Retrieved records',
-    'Dates in the record',
-    'Share answer',
-    'Report this answer',
-    'Start a new conversation',
-  ])
-    expect(text()).not.toContain(old);
-  // One line: the date viewed and the records behind the answer.
-  expect(text()).toMatch(/Viewed \d{1,2} \w{3} \d{4} · /);
-  expect(text()).toContain('3 records');
-  // ⋯ offers Share and Report, then the conversation's own actions.
-  act(() => byId('ask-answer-more').props.onPress());
-  const [title, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
-  expect(title).toBe('This answer');
-  expect(actions.map((a) => a.title)).toEqual([
-    'Share answer',
-    'Report this answer',
-    'Start a new conversation',
+test('adjacent citations merge into one mark that opens the first source beside its claim', () => {
+  const { renderer, press } = draw();
+  const marks = renderer.root.findAllByType(CitationMark);
+  expect(marks.map((m) => m.props.testID)).toEqual([
+    'ask-citation-mark-1',
+    'ask-citation-mark-3',
   ]);
-  act(() => actions[0]!.onPress());
+  expect(marks.map((m) => m.props.label)).toEqual(['1, 2', '3']);
+  const link = marks[0]!.find((n) => n.props.accessibilityRole === 'link');
+  expect(link.props.accessibilityLabel).toBe(
+    'Sources 1 and 2. Double-tap to show the first passage.',
+  );
+  act(() => press('ask-citation-mark-1'));
+  expect(presentSheet).toHaveBeenCalledTimes(1);
+  expect(presentSheet).toHaveBeenCalledWith(
+    expect.objectContaining({ kind: 'citation', citation: { number: 1 } }),
+  );
+  expect(citationSelection()).toEqual({
+    turn: 'fixture-chat:1',
+    n: 1,
+    claim: { block: '0', sentence: 0 },
+  });
+  // The claim's sentence is highlighted while its citation is open.
+  expect(
+    renderer.root.findAll(
+      (n) =>
+        n.props.testID === 'ask-sentence-highlight' &&
+        typeof n.type !== 'string',
+    ).length,
+  ).toBeGreaterThan(0);
+  // With the sheet open, the second mark and a Records cited row re-target it.
+  act(() => press('ask-citation-mark-3'));
+  expect(presentSheet).toHaveBeenCalledTimes(1);
+  expect(citationSelection()?.n).toBe(3);
+  act(() => press('ask-citation-2'));
+  expect(presentSheet).toHaveBeenCalledTimes(1);
+  expect(citationSelection()?.n).toBe(2);
+});
+
+test('the answer text stays selectable and its marks still open on a tap; streamed text does not select', () => {
+  const { renderer, press } = draw();
+  const mark = renderer.root.findAllByType(CitationMark)[0]!;
+  // The block's own Text, the nearest ancestor drawing the sentence.
+  let block = mark.parent;
+  while (block && block.props.selectable === undefined) block = block.parent;
+  expect(block?.props.selectable).toBe(true);
+  act(() => press('ask-citation-mark-1'));
+  expect(presentSheet).toHaveBeenCalledTimes(1);
+  let streamed!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    streamed = TestRenderer.create(
+      <AnswerBody
+        blocks={parseAnswer('Partly written [1]', { streaming: true })}
+        streaming
+      />,
+    );
+  });
+  expect(streamed.root.findAll((n) => n.props.selectable === true)).toEqual([]);
+  act(() => streamed.unmount());
+});
+test('People in this answer are full person rows, the reader’s own member marked', () => {
+  const { ids, words } = draw();
+  expect(ids('ask-people').length).toBeGreaterThan(0);
+  expect(words()).toContain('People in this answer');
+  const row = ids('ask-person-sam-placeholder')[0]!;
+  expect(row.props).toMatchObject({
+    name: 'Sam Placeholder',
+    party: 'Example Party',
+    place: 'Member for Example, New South Wales',
+    yourMP: true,
+  });
+});
+
+test('the foot is the dated Answered line and one answer menu', async () => {
+  const { ids, press, menuButton, renderer } = draw();
+  const foot = ids('ask-answer-sources')[0]!;
+  // The reader's zone, the turn's own time (Sydney: 9 Nov 2026, 9:41 am).
+  expect(foot.props.name).toMatch(
+    /^Answered \d{1,2} (Nov) 2026, \d{1,2}:41 [ap]m · OPAX$/,
+  );
+  expect(foot.props.accessibilityLabel).toMatch(/Source: OPAX$/);
+  for (const label of [
+    'Copy answer',
+    'Share question',
+    'Copy APA 7',
+    'Copy AGLC',
+    'Report a problem',
+  ])
+    expect(menuButton(label)).toBeTruthy();
+  // The ⋯ label itself is a 44 by 44 target.
+  const menu = renderer.root.find((n) => n.props.swift === 'Menu');
+  expect(menu.props.modifiers).toContainEqual({
+    modifier: 'frame',
+    args: [{ minWidth: 44, minHeight: 44 }],
+  });
+  await act(async () => menuButton('Copy answer').props.onPress());
+  expect(copyText).toHaveBeenCalledWith(expect.stringContaining(question.text));
+  expect(haptic).toHaveBeenCalledWith('success');
+  act(() => menuButton('Share question').props.onPress());
   expect(shareRecord).toHaveBeenCalledWith(
     expect.objectContaining({ path: '/ask', title: question.text }),
   );
-});
-
-test('the source line opens the sources: cited, also retrieved, dates and notes', () => {
-  const { renderer, byId } = draw();
-  expect(renderer.root.findAllByType(AnswerSources)).toHaveLength(0);
-  act(() => byId('ask-answer-sources').props.onPress());
-  const sheet = renderer.root.findByType(AnswerSources);
-  expect(sheet.findAllByType(Modal)).toHaveLength(1);
-  const words = sheet
-    .findAllByType(NativeText)
-    .map((n) => n.props.children)
-    .flat(Infinity)
-    .filter((c) => typeof c === 'string')
-    .join('\n');
-  expect(words).toContain('Cited in the answer');
-  expect(words).toContain('1. Synthetic Fixture Bill 1');
-  expect(words).toContain('Synthetic passage 1 from the record.');
-  expect(words).toContain('Also retrieved, not cited');
-  expect(words).toContain('Synthetic Fixture Bill 3');
-  expect(words).toContain('Dates in the record');
-  expect(words).toContain('About this answer');
-  expect(words).toContain(
-    'Answers may be cached. Cite the sources, not this text.',
+  act(() => menuButton('Copy APA 7').props.onPress());
+  expect(copyCitation).toHaveBeenCalledWith(
+    [
+      expect.objectContaining({ resource: 'r1' }),
+      expect.anything(),
+      expect.anything(),
+    ],
+    'apa',
   );
-  // Each record keeps its original, one tap from the sheet.
-  expect(words.match(/View original/g)).toHaveLength(3);
+  act(() => menuButton('Report a problem').props.onPress());
+  expect(router.push).toHaveBeenCalledWith({
+    pathname: '/ask-report',
+    params: { turn: 'fixture-chat:1' },
+  });
+  act(() => press('ask-answer-sources'));
+  expect(presentSource).toHaveBeenCalledWith(expect.anything(), {
+    testID: 'ask-answer-sources',
+  });
 });
 
-test('while a question runs, ⋯ offers only Share and Report', () => {
-  const { byId } = draw([]);
-  act(() => byId('ask-answer-more').props.onPress());
-  const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
-  expect(actions.map((a) => a.title)).toEqual([
-    'Share answer',
-    'Report this answer',
-  ]);
-});
-
-// Guideline 5.1.2(i) and Talk parity: every answer can be reported, by
-// Talk's own path (src/voice/report-answer.ts): OPAX's support page in the
-// in-app browser. No answer text, question, account or model call goes with
-// it; the support page asks the reader for the question and the wrong words.
-test('Report this answer opens Talk’s support page, then thanks the reader', async () => {
-  const fetch = jest.fn();
-  global.fetch = fetch as unknown as typeof global.fetch;
-  const { text, byId } = draw();
-  expect(text()).not.toContain(reportThanks);
-  act(() => byId('ask-answer-more').props.onPress());
-  const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
-  await act(async () =>
-    actions.find((a) => a.title === 'Report this answer')!.onPress(),
-  );
-  expect(reportAnswer).toHaveBeenCalledTimes(1);
-  expect(reportAnswer).toHaveBeenCalledWith(null);
-  expect(text()).toContain('Thanks. We’ll look at this answer.');
-  expect(fetch).not.toHaveBeenCalled();
-  // The page it opens: the published support page, with nothing appended.
-  expect(new URL(reportAnswerUrl(null, true)).pathname).toBe('/support');
-  expect(new URL(reportAnswerUrl(null, true)).search).toBe('');
-});
-
-test('a report that cannot open is not thanked', async () => {
-  const onReport = jest.fn().mockRejectedValue(new Error('No browser'));
+test('the sources sheet never repeats a record title as a serif line', () => {
+  const details: SourceDetails = askSourceDetails({
+    turn: answer(),
+    question,
+    chat: 'fixture-chat',
+    index: 1,
+    legacy: null,
+  });
+  expect(details.report?.label).toBe('Report this answer');
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
-    renderer = TestRenderer.create(
-      <AnswerView
-        turn={turn}
-        question={question}
-        people={new Map()}
-        onReport={onReport}
-      />,
-    );
+    renderer = TestRenderer.create(<>{details.extra}</>);
   });
-  act(() =>
-    renderer.root
-      .find(
-        (n) =>
-          n.props.testID === 'ask-answer-more' &&
-          typeof n.props.onPress === 'function',
-      )
-      .props.onPress(),
-  );
-  const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
-  await act(async () => {
-    actions.find((a) => a.title === 'Report this answer')!.onPress();
-  });
-  expect(onReport).toHaveBeenCalledWith(null);
+  mounted.push(renderer);
+  const texts = renderer.root
+    .findAll(
+      (n) => typeof n.type !== 'string' && typeof n.props.variant === 'string',
+    )
+    .map((n) => ({
+      variant: n.props.variant as string,
+      text: [n.props.children]
+        .flat(Infinity)
+        .filter((c) => typeof c === 'string')
+        .join(''),
+    }));
   expect(
-    renderer.root.findAll((n) => n.props.testID === 'ask-report-thanks'),
-  ).toHaveLength(0);
+    texts.filter(
+      (t) => /record|serif/i.test(t.variant) && t.variant !== 'rowRecord',
+    ),
+  ).toEqual([]);
+  // Each title is one row title in Cited, and once more only among Also found.
+  const titled = (n: number) =>
+    texts.filter(
+      (t) =>
+        t.variant === 'rowRecord' && t.text === `Synthetic Fixture Bill ${n}`,
+    );
+  for (const n of [1, 2, 3, 4]) expect(titled(n)).toHaveLength(1);
+  const { words } = helpers(renderer);
+  // The group is headed "Cited": the details it sits in already say answer.
+  expect(
+    renderer.root.findAll((n) => n.props.header === 'Cited').length,
+  ).toBeGreaterThan(0);
+  expect(words()).not.toContain('Cited in the answer');
+  expect(words()).toContain('Also found, not cited');
+  expect(words()).not.toMatch(/retrieved|—/);
 });
 
-test('a record chosen in the sources sheet opens once the sheet has gone', () => {
-  // Journey 38's bug in Ask: the sheet closed by unmounting, so its Modal
-  // never reported the dismissal and the record waiting on it never opened.
-  const { renderer, byId } = draw();
-  jest.mocked(router.push).mockClear();
-  act(() => byId('ask-answer-sources').props.onPress());
-  const sheet = renderer.root.findByType(AnswerSources).findByType(Modal);
-  expect(sheet.props.visible).toBe(true);
-  act(() => byId('ask-source-1').props.onPress());
-  // Closed, still mounted, so iOS can report the dismissal; the record
-  // waits for it rather than landing behind the sheet.
-  expect(renderer.root.findByType(AnswerSources).findByType(Modal)).toBe(sheet);
-  expect(sheet.props.visible).toBe(false);
-  expect(router.push).not.toHaveBeenCalled();
-  act(() => sheet.props.onDismiss());
-  expect(router.push).toHaveBeenCalledTimes(1);
-  // A dismissal with nothing chosen (Done, a swipe) opens nothing.
-  act(() => byId('ask-answer-sources').props.onPress());
-  expect(sheet.props.visible).toBe(true);
-  act(() => sheet.props.onRequestClose());
-  expect(sheet.props.visible).toBe(false);
-  act(() => sheet.props.onDismiss());
-  expect(router.push).toHaveBeenCalledTimes(1);
+test('a figure is drawn only with its own date and source', () => {
+  const { renderer } = draw(
+    answer({
+      answer_status: 'calculated',
+      pay_answer: true,
+      figures: [
+        {
+          value: '$233,660',
+          as_at: '2026-07-01',
+          source: 'Remuneration Tribunal',
+        },
+        { value: '$1', as_at: '2026-07-01' },
+        { value: '$2', source: 'Remuneration Tribunal' },
+      ],
+    } as Partial<NonNullable<Turn['result']>>),
+  );
+  const figures = renderer.root.findAllByType(FigureBlock);
+  expect(figures).toHaveLength(1);
+  expect(figures[0]!.props.value).toBe('$233,660');
+  expect(figures[0]!.props.source).toEqual({
+    citation: 'Remuneration Tribunal',
+    asOf: expect.stringContaining('2026'),
+  });
+});
+
+test('an empty answer says so above its records and offers Search', () => {
+  const { words, ids, press } = draw(answer({ answer: '' }));
+  expect(words()).toContain(
+    'No written answer came back. The records found are listed below.',
+  );
+  expect(ids('ask-error-empty').length).toBeGreaterThan(0);
+  act(() => press('ask-search-opax'));
+  expect(router.push).toHaveBeenCalledWith(
+    expect.objectContaining({
+      params: expect.objectContaining({ scope: 'all', q: question.text }),
+    }),
+  );
+  const none = draw(answer({ answer: '', sources: [] }));
+  expect(none.words()).toContain('No written answer came back.');
+  expect(none.words()).not.toContain('listed below');
+});
+
+test('on iPad with the pane the column hides Records cited', () => {
+  const { ids } = draw(answer(), true);
+  expect(ids('ask-records-1')).toHaveLength(0);
+  expect(ids('ask-answer-1').length).toBeGreaterThan(0);
+});
+
+test('the ready announcement counts cited records', () => {
+  expect(answerReadyAnnouncement(answer())).toBe(
+    'Answer ready, 3 records cited',
+  );
+  expect(answerReadyAnnouncement(answer({ sources: [source(1, true)] }))).toBe(
+    'Answer ready, 1 record cited',
+  );
+  expect(answerReadyAnnouncement(answer({ sources: [] }))).toBe(
+    'Answer ready, no records cited',
+  );
+});
+
+describe('the iPad pane is never empty', () => {
+  function Pane({ thread }: { thread: Turn[] }) {
+    return useAskSources(thread, {
+      chat: 'fixture-chat',
+      profiles,
+      onAsk: mockAsk,
+    }).pane;
+  }
+  const mockAsk = jest.fn();
+  function drawPane(thread: Turn[]) {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(<Pane thread={thread} />);
+    });
+    mounted.push(renderer);
+    return helpers(renderer);
+  }
+  test('idle: Try asking, whose starters ask at once', () => {
+    const { words, renderer, press } = drawPane([]);
+    expect(words()).toContain('Try asking');
+    expect(words()).not.toContain('Sources appear here');
+    const starters = renderer.root.findAll(
+      (n) =>
+        typeof n.props.testID === 'string' &&
+        /^ask-pane-starter-\d$/.test(n.props.testID) &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(starters.length).toBeGreaterThanOrEqual(3);
+    act(() => press('ask-pane-starter-0'));
+    expect(mockAsk).toHaveBeenCalledTimes(1);
+    expect(words()).toContain(mockAsk.mock.calls[0]![0]);
+  });
+  test('after an answer: citation 1 in the citation anatomy, then the records', () => {
+    const { words, ids, press } = drawPane([question, answer()]);
+    expect(words()).toContain('Synthetic passage 1 from the record.');
+    expect(ids('citation-passage').length).toBeGreaterThan(0);
+    expect(ids('citation-open-record').length).toBeGreaterThan(0);
+    expect(words()).toContain('Records cited (3)');
+    expect(words()).toContain('Also found, not cited');
+    expect(words()).toContain('Synthetic Fixture Bill 4');
+    // A record row selects its citation in the pane and highlights its claim.
+    act(() => press('ask-pane-source-3'));
+    expect(words()).toContain('Synthetic passage 3 from the record.');
+    expect(citationSelection()).toEqual({
+      turn: 'fixture-chat:1',
+      n: 3,
+      claim: { block: '0', sentence: 1 },
+    });
+    act(() => press('ask-pane-previous'));
+    expect(citationSelection()?.n).toBe(2);
+    expect(presentSheet).not.toHaveBeenCalled();
+  });
+  test('Up and Down move between sources; they never open a record', () => {
+    const { words } = drawPane([question, answer()]);
+    act(() => dispatchKeyCommand('list-down'));
+    act(() => dispatchKeyCommand('list-down'));
+    expect(citationSelection()?.n).toBe(2);
+    expect(words()).toContain('Synthetic passage 2 from the record.');
+    act(() => dispatchKeyCommand('list-up'));
+    expect(citationSelection()?.n).toBe(1);
+    expect(presentSheet).not.toHaveBeenCalled();
+  });
 });

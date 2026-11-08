@@ -1,7 +1,7 @@
 import { LinkRow } from '../../design/primitives';
 import { titleSubject } from '../records/citations';
 import { metaString, type DocumentRecord } from '../records/model';
-import { topics } from './Options';
+import { topics } from './topics';
 import { useOpenAsk } from './open';
 
 /** portal/public/app.js docAskQuestion: a draft, never a submitted request. */

@@ -4,11 +4,8 @@ import { Image } from 'react-native';
 import { PeoplePortraits } from '../src/api/people-portraits';
 import type { Catalogs } from '../src/api/catalogs';
 import type { PortraitCache } from '../src/api/portrait-cache';
-import {
-  rosterPeople,
-  type Source,
-  type Turn,
-} from '../src/features/ask/model';
+import { type Source, type Turn } from '../src/features/ask/model';
+import { rosterProfiles } from '../src/features/ask/people';
 import { catalogs } from './pinned';
 // The real verified index over the pinned roster, slugs and photo map.
 jest.mock('../src/api/runtime', () => {
@@ -40,6 +37,10 @@ jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+// The saved seat is read on the device; none is saved here.
+jest.mock('../src/features/your-mp/useIsMyMember', () => ({
+  useIsMyMember: () => false,
+}));
 // The loading veil's breathing loop never settles under act().
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
@@ -68,8 +69,8 @@ const speakers = [
 ];
 
 test('People in this answer shows each verified roster portrait and nothing else', async () => {
-  const people = rosterPeople(catalogs.roster, catalogs.slugs);
-  for (const name of speakers) expect(people.has(name)).toBe(true);
+  const profiles = rosterProfiles(catalogs.roster, catalogs.slugs);
+  for (const name of speakers) expect(profiles.has(name)).toBe(true);
   const turn: Turn = {
     role: 'answer',
     text: 'Answer.',
@@ -81,7 +82,9 @@ test('People in this answer shows each verified roster portrait and nothing else
       <AnswerView
         turn={turn}
         question={{ role: 'user', text: 'Illicit tobacco?' }}
-        people={people}
+        index={1}
+        chat="fixture-chat"
+        profiles={profiles}
       />,
     );
   });
@@ -93,6 +96,25 @@ test('People in this answer shows each verified roster portrait and nothing else
         n.props.loading === true &&
         n.props.name !== undefined,
     ).length;
+  for (let i = 0; i < 2000 && (i === 0 || pending()); i++)
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    });
+  // Three people show; the rest are under "2 more".
+  expect(
+    renderer.root.findAll(
+      (n) =>
+        typeof n.props.testID === 'string' &&
+        /^ask-person-[a-z-]+$/.test(n.props.testID) &&
+        !n.props.testID.startsWith('ask-person-portrait') &&
+        typeof n.type !== 'string',
+    ).length,
+  ).toBeGreaterThan(0);
+  await act(async () =>
+    renderer.root
+      .find((n) => n.props.testID === 'ask-people-more' && n.props.onToggle)
+      .props.onToggle(true),
+  );
   for (let i = 0; i < 2000 && (i === 0 || pending()); i++)
     await act(async () => {
       await new Promise((r) => setTimeout(r, 0));

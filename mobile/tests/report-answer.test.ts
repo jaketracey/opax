@@ -1,3 +1,8 @@
+import {
+  reportMail,
+  reportReasons,
+  reportText,
+} from '../src/features/ask/report-mail';
 import { openSource } from '../src/navigation/external';
 import { reportAnswer, reportAnswerUrl } from '../src/voice/report-answer';
 jest.mock('expo-constants', () => ({
@@ -65,4 +70,64 @@ test.each([
   '/doc/' + 'a'.repeat(301),
 ])('report rejects unsafe record path %s', (path) => {
   expect(() => reportAnswerUrl(path, true)).toThrow();
+});
+
+describe('the report sheet’s Mail fallback (journeys/ask.md 4.9)', () => {
+  const question = {
+    role: 'user' as const,
+    text: 'What has Sam Placeholder said about the example levy in parliament this year, in detail?',
+  };
+  const source = (n: number) => ({
+    resource: String(n).repeat(32).slice(0, 32),
+    title: `Example record ${n}`,
+    slug: `fixture-${n}`,
+    href: `/doc/fixture-${n}`,
+    snippet: 'A passage that must never be quoted in the report.',
+    cited: true,
+    answerRanges: [[0, 4]] as [number, number][],
+  });
+  const long = Array.from({ length: 1700 }, (_, i) => `word${i}`).join(' ');
+  const answer = {
+    role: 'answer' as const,
+    text: long,
+    at: Date.parse('2026-11-08T23:30:00Z'),
+    result: {
+      answer: long,
+      citations: {},
+      sources: [source(1), source(2)],
+    },
+  };
+  const mail = reportMail({
+    reason: reportReasons[1],
+    note: 'The date is a day out.',
+    question,
+    answer,
+  });
+  test('addressed to corrections, the subject cut at 60 characters', () => {
+    expect(mail.url.startsWith('mailto:corrections@opax.com.au?subject=')).toBe(
+      true,
+    );
+    expect(mail.subject.startsWith('Report: ')).toBe(true);
+    expect(mail.subject.length).toBeLessThanOrEqual('Report: '.length + 60);
+    expect(mail.subject.endsWith('…')).toBe(true);
+    const url = new URL(mail.url);
+    expect(url.searchParams.get('body')).toBe(mail.body);
+  });
+  test('a long answer is cut at a word boundary; the body stays under 2,000', () => {
+    expect(long.length).toBeGreaterThan(10_000);
+    expect(mail.body.length).toBeLessThan(2000);
+    expect(mail.body).toMatch(/word\d+…/);
+    expect(mail.body).toContain('Reason: A date, name or figure is wrong');
+    expect(mail.body).toContain('Detail: The date is a day out.');
+    expect(mail.body).toContain(`Question: ${question.text}`);
+    expect(mail.body).toMatch(/Answered \d{1,2} Nov 2026, \d{1,2}:\d{2} [ap]m/);
+  });
+  test('records are linked, not quoted', () => {
+    expect(mail.body).toContain('https://opax.invalid/doc/fixture-1');
+    expect(mail.body).toContain('https://opax.invalid/doc/fixture-2');
+    expect(mail.body).not.toContain('must never be quoted');
+    expect(reportText(mail)).toBe(
+      `To: corrections@opax.com.au\nSubject: ${mail.subject}\n\n${mail.body}`,
+    );
+  });
 });

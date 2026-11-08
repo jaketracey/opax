@@ -3,7 +3,7 @@ import TestRenderer from 'react-test-renderer';
 import { Animated, Platform } from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { askScreens } from '../src/navigation/stack/ask';
 import { tabRootScreen } from '../src/navigation/stack/screen';
@@ -108,32 +108,23 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)'] as const)(
   },
 );
 test.each([false, true])(
-  'Ask registration, wrapper and AskScreen agree on the interim bar when signed in: %s',
+  'Ask registration uses the Ask bar and the route renders AskScreen alone when signed in: %s',
   (signedIn) => {
     mockSignedIn = signedIn;
     const view = tree(<AskRoute />);
-    const wrapper = () => view.root.findByType(Stack.Screen).props.options;
+    // AskScreen sets the live bar; the route adds no Stack.Screen of its own.
+    expect(view.root.findAllByType(Stack.Screen)).toHaveLength(0);
     const registration = askScreens('(ask)', signedIn)
       .find((screen) => screen.props.name === 'ask')!
       .props.options({ route: { params: {} } });
-    const expected = rootHeaderItems();
-    expect(expected).toMatchObject([
-      { accessibilityLabel: 'Account' },
-      { accessibilityLabel: 'Talk to OPAX', icon: { name: 'waveform' } },
+    expect(registration.unstable_headerLeftItems()).toEqual([
+      expect.objectContaining({ label: 'Your conversations' }),
     ]);
-    for (const options of [wrapper(), registration]) {
-      expect(options.unstable_headerRightItems()).toEqual(expected);
-      expect(options).not.toHaveProperty('unstable_headerLeftItems');
-    }
-    act(() => view.update(<AskRoute />));
-    expect(wrapper().unstable_headerRightItems()).toEqual(rootHeaderItems());
-    const talk = expected[1];
-    if (talk.type === 'button') talk.onPress?.();
-    expect(router.push).toHaveBeenLastCalledWith('/talk');
-    mockVoiceLinked = false;
-    expect(rootHeaderItems()).toHaveLength(1);
-    expect(wrapper().unstable_headerRightItems()).toEqual(rootHeaderItems());
-    expect(registration.unstable_headerRightItems()).toEqual(rootHeaderItems());
+    // Talk lives in the composer (D5): the bar is New question and Account.
+    expect(registration.unstable_headerRightItems()).toEqual([
+      expect.objectContaining({ label: 'Account' }),
+      expect.objectContaining({ label: 'New question', disabled: true }),
+    ]);
     act(() => view.unmount());
   },
 );

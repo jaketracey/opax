@@ -1,17 +1,19 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
-import { AskConsent } from '../src/features/ask/AskConsent';
+import { router } from 'expo-router';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AskConsent, { consentCopy } from '../src/features/ask/AskConsent';
 import AskScreen from '../src/features/ask/AskScreen';
-import { Builder } from '../src/features/ask/QuestionBuilder';
 import { client } from '../src/api/runtime';
 import { askSession } from '../src/features/ask/session';
 import { resetAskConsentForTests } from '../src/features/ask/consent';
-import { sampleQuestions } from '../src/features/ask/model';
+import { askConsentRoute } from '../src/navigation/routes/ask';
 import { openOnWeb } from '../src/navigation/external';
 
 // Guideline 5.1.2(i): before the first Ask question leaves the device, the
 // reader agrees to it going to OPAX's server, Progress Agentic RAG and an AI
-// model through OpenRouter. Asked once, stored on the device.
+// model through OpenRouter. Asked once, stored on the device. The sheet is a
+// route (A1): the question is held by the session while it is open.
 const mockDisk = new Map<string, string>();
 jest.mock('expo-file-system', () => ({
   Paths: { document: 'documents' },
@@ -34,7 +36,7 @@ jest.mock('expo-file-system', () => ({
 jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
   useLocalSearchParams: jest.fn(() => ({})),
-  router: { push: jest.fn() },
+  router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },
 }));
 jest.mock('../src/api/runtime', () => ({
   client: { askPost: jest.fn() },
@@ -46,6 +48,7 @@ jest.mock('../src/api/runtime', () => ({
 }));
 jest.mock('../src/navigation/external', () => ({
   openOnWeb: jest.fn(),
+  openSource: jest.fn(),
 }));
 jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: null }),
@@ -59,119 +62,114 @@ jest.mock('../src/features/ask/store', () => {
     subscribeChatDeletion: () => () => {},
     loadChats: jest.fn().mockResolvedValue(undefined),
     saveChats: jest.fn().mockResolvedValue(undefined),
+    forgetActiveChat: jest.fn(),
     clearAskConversations: jest.fn(),
   };
 });
 jest.mock('../src/features/ask/sync', () => ({
   ChatSyncError: jest.requireActual('../src/features/ask/sync').ChatSyncError,
-  pushChat: jest.fn(),
+  syncSubmittedChat: jest.fn().mockResolvedValue(undefined),
   deleteRemoteChat: jest.fn(),
   reconcileChats: jest.fn(),
 }));
-jest.mock('../src/design/primitives', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { Text, View } = require('react-native');
-  const basic = (p: Record<string, unknown>) =>
-    React.createElement(View, p, p.children);
-  return {
-    ...Object.fromEntries(
-      [
-        'Screen',
-        'KeyboardStableScreen',
-        'Icon',
-        'IconButton',
-        'Field',
-        'Group',
-        'Heading',
-        'FilterChip',
-        'Section',
-        'RowList',
-        'Disclosure',
-        'ErrorState',
-        'EmptyState',
-        'LoadingState',
-        'ChoiceChips',
-      ].map((k) => [k, basic]),
-    ),
-    Text: (p: Record<string, unknown>) =>
-      React.createElement(Text, p, p.children),
-    // Labels as text, so the consent's words can be counted.
-    Button: (p: Record<string, unknown>) =>
-      React.createElement(View, p, React.createElement(Text, null, p.label)),
-    LinkRow: (p: Record<string, unknown>) =>
-      React.createElement(View, p, React.createElement(Text, null, p.title)),
-    MachineLabel: (p: Record<string, unknown>) =>
-      React.createElement(View, { testID: p.testID }),
-    Composer: (p: Record<string, unknown> & { onSubmit: () => void }) =>
-      React.createElement(
-        View,
-        null,
-        React.createElement(View, { ...p, onSubmit: undefined }),
-        React.createElement(View, {
-          testID: p.submitTestID,
-          onPress: p.onSubmit,
-        }),
-      ),
-  };
-});
-jest.mock('../src/features/ask/AnswerView', () => ({
-  AnswerView: () => null,
-  machineNote:
-    'Written by a model from the retrieved passages; not the record.',
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
+}));
+jest.mock('../src/features/ask/SourcesPane', () => ({
+  AskPaneProvider: ({ children }: { children: unknown }) => children,
+  useAskSources: () => ({ context: null, onScroll: undefined, pane: null }),
+  useAskPane: () => null,
 }));
 jest.mock('../src/features/ask/Options', () => ({
   topics: { housing: 'Housing' },
-  Options: () => null,
+  openAskOptions: jest.fn(),
 }));
 
-const answer = { answer: 'A synthetic answer.', sources: [] };
+const answer = { answer: 'A synthetic answer.', citations: {}, sources: [] };
 const posted = () =>
   jest
     .mocked(client.askPost)
-    .mock.calls.map(([, body]) => (body as { question: string }).question);
+    .mock.calls.filter(([path]) => path !== '/api/followups')
+    .map(([, body]) => (body as { question: string }).question);
 const consentFile = () =>
   [...mockDisk.entries()].filter(([name]) =>
     name.startsWith('opax-ask-consent'),
   );
 
+const metrics = {
+  frame: { x: 0, y: 0, width: 390, height: 844 },
+  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+};
 let view: ReactTestRenderer;
-beforeEach(async () => {
-  mockDisk.clear();
-  resetAskConsentForTests();
-  jest.mocked(client.askPost).mockReset().mockResolvedValue(answer);
-  askSession.start();
+let sheet: ReactTestRenderer | null = null;
+async function launch() {
   await act(async () => {
     view = create(<AskScreen />);
   });
-});
-afterEach(() => {
-  act(() => view.unmount());
+}
+beforeEach(async () => {
+  mockDisk.clear();
+  resetAskConsentForTests();
+  jest.mocked(router.push).mockClear();
+  jest.mocked(router.back).mockClear();
+  jest.mocked(client.askPost).mockReset().mockResolvedValue(answer);
   askSession.start();
+  askSession.setDraft('');
+  await launch();
+});
+afterEach(async () => {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 30));
+    sheet?.unmount();
+    view.unmount();
+  });
+  sheet = null;
+  askSession.start();
+  askSession.setDraft('');
 });
 
-const byId = (id: string) =>
-  view.root.findAll(
+const pressable = (root: ReactTestRenderer, id: string) =>
+  root.root.findAll(
     (n) =>
       n.props.testID === id &&
       (typeof n.props.onPress === 'function' ||
         typeof n.props.onChangeText === 'function'),
   )[0]!;
-const shown = (id: string) =>
-  view.root.findAll((n) => n.props.testID === id).length > 0;
-async function press(id: string) {
+const shown = (root: ReactTestRenderer | null, id: string) =>
+  !!root && root.root.findAll((n) => n.props.testID === id).length > 0;
+async function press(root: ReactTestRenderer, id: string) {
   await act(async () => {
-    byId(id).props.onPress();
+    await pressable(root, id).props.onPress();
   });
 }
-async function ask(question: string, field = 'ask-question') {
-  act(() => byId(field).props.onChangeText(question));
-  await press(field === 'ask-question' ? 'ask-submit' : 'ask-followup-submit');
+/** Types and sends; when consent is asked for, the route sheet opens. */
+async function ask(question: string) {
+  act(() => pressable(view, 'ask-question').props.onChangeText(question));
+  await press(view, 'ask-submit');
+  await openSheetIfPushed();
+}
+async function openSheetIfPushed() {
+  const pushed = jest
+    .mocked(router.push)
+    .mock.calls.some(([to]) => to === askConsentRoute);
+  if (!pushed || sheet) return;
+  await act(async () => {
+    sheet = create(
+      <SafeAreaProvider initialMetrics={metrics}>
+        <AskConsent />
+      </SafeAreaProvider>,
+    );
+  });
+}
+async function leave(id: 'ask-consent-continue' | 'ask-consent-not-now') {
+  await press(sheet!, id);
+  await act(async () => sheet!.unmount());
+  sheet = null;
+  jest.mocked(router.push).mockClear();
 }
 function consentWords() {
-  const sheet = view.root.findByType(AskConsent);
-  return sheet
+  return sheet!.root
     .findAllByType(NativeText)
     .map((n) => n.props.children)
     .flat(Infinity)
@@ -179,100 +177,119 @@ function consentWords() {
     .join(' ');
 }
 
-test('a first question shows the consent and sends nothing', async () => {
+test('a first question opens the consent sheet and sends nothing', async () => {
   await ask('Who spoke on housing?');
-  expect(shown('ask-consent')).toBe(true);
+  expect(router.push).toHaveBeenCalledWith(askConsentRoute);
+  expect(shown(sheet, 'ask-consent')).toBe(true);
   expect(client.askPost).not.toHaveBeenCalled();
+  expect(askSession.snapshot().pending?.question).toBe('Who spoke on housing?');
   const words = consentWords();
   for (const part of [
-    'Your question, with the earlier questions and answers in this conversation',
-    'OPAX’s server',
+    "Your question and this conversation go to OPAX's server.",
     'Progress Agentic RAG',
     'OpenRouter',
-    'Answers are machine-written',
-    'personal information',
+    'Answers can be wrong, so check the cited records.',
+    "Don't include personal details.",
     'Privacy',
     'Continue',
     'Not now',
   ])
     expect(words).toContain(part);
-  // Plain, short and in sentence case.
-  expect(words.split(/\s+/).filter(Boolean).length).toBeLessThanOrEqual(60);
-  expect(words).not.toMatch(/\b[A-Z]{2,}\b(?<!OPAX|RAG|AI)/);
-  expect(shown('ask-consent-machine')).toBe(true);
-  // One way out, Not now: no ✕ beside it (pass 5, P3-6).
-  expect(shown('ask-consent-close')).toBe(false);
-  await press('ask-consent-privacy');
+  expect(words).not.toMatch(/—/);
+  // Plain and short.
+  expect(consentCopy.body.split(/\s+/).length).toBeLessThanOrEqual(50);
+  // The pill once, and no sentence repeats "machine-written".
+  expect(shown(sheet, 'ask-consent-machine')).toBe(true);
+  expect(words.match(/machine-written/gi)).toHaveLength(1);
+  // The two buttons are the only exits: no ✕ and no Done.
+  expect(shown(sheet, 'ask-consent-close')).toBe(false);
+  await press(sheet!, 'ask-consent-privacy');
   expect(openOnWeb).toHaveBeenCalledWith('/privacy', 'Privacy');
 });
 
-test('Not now leaves the question unsent and the composer intact', async () => {
+test('Not now leaves the question unsent and in the composer', async () => {
   await ask('Who spoke on housing?');
-  await press('ask-consent-not-now');
-  expect(shown('ask-consent')).toBe(false);
+  await leave('ask-consent-not-now');
+  expect(router.back).toHaveBeenCalled();
   expect(client.askPost).not.toHaveBeenCalled();
-  expect(byId('ask-question').props.value).toBe('Who spoke on housing?');
+  expect(askSession.snapshot().pending).toBeNull();
+  expect(pressable(view, 'ask-question').props.value).toBe(
+    'Who spoke on housing?',
+  );
   expect(consentFile()).toEqual([]);
   // Asked again next time, since nothing was agreed.
-  await press('ask-submit');
-  expect(shown('ask-consent')).toBe(true);
+  await press(view, 'ask-submit');
+  await openSheetIfPushed();
+  expect(shown(sheet, 'ask-consent')).toBe(true);
   expect(client.askPost).not.toHaveBeenCalled();
+});
+
+test('a swipe down is Not now', async () => {
+  await ask('Who spoke on housing?');
+  await act(async () => sheet!.unmount());
+  sheet = null;
+  expect(askSession.snapshot().pending).toBeNull();
+  expect(client.askPost).not.toHaveBeenCalled();
+  expect(consentFile()).toEqual([]);
+  expect(pressable(view, 'ask-question').props.value).toBe(
+    'Who spoke on housing?',
+  );
 });
 
 test('Continue sends the held question; the next one goes straight through', async () => {
   await ask('Who spoke on housing?');
-  await press('ask-consent-continue');
-  expect(shown('ask-consent')).toBe(false);
+  await leave('ask-consent-continue');
   expect(posted()).toEqual(['Who spoke on housing?']);
   expect(consentFile()).toHaveLength(1);
   expect(JSON.parse(consentFile()[0]![1])).toEqual({
     version: 1,
     generation: 1,
   });
-  await ask('And on rents?', 'ask-followup-field');
-  expect(shown('ask-consent')).toBe(false);
+  await ask('And on rents?');
+  expect(router.push).not.toHaveBeenCalledWith(askConsentRoute);
+  expect(sheet).toBeNull();
   expect(posted()).toEqual(['Who spoke on housing?', 'And on rents?']);
 });
 
-test('suggested questions and the builder go through the same gate', async () => {
-  await press('ask-sample-0');
-  expect(shown('ask-consent')).toBe(true);
+test('a starter goes through the same gate, and Not now leaves it in the composer', async () => {
+  const starter = view.root
+    .findAll((n) => n.props.testID === 'ask-starter-0')
+    .map((n) => n.props.accessibilityLabel)
+    .find((label) => typeof label === 'string') as string;
+  await press(view, 'ask-starter-0');
+  await openSheetIfPushed();
+  expect(shown(sheet, 'ask-consent')).toBe(true);
   expect(client.askPost).not.toHaveBeenCalled();
-  await press('ask-consent-not-now');
-  const builder = view.root.findByType(Builder);
-  await act(async () => builder.props.onSubmit('What does the bill change?'));
-  expect(shown('ask-consent')).toBe(true);
-  expect(client.askPost).not.toHaveBeenCalled();
-  await press('ask-consent-continue');
-  expect(posted()).toEqual(['What does the bill change?']);
-  expect(sampleQuestions.length).toBeGreaterThan(0);
+  await leave('ask-consent-not-now');
+  expect(pressable(view, 'ask-question').props.value).toBe(starter);
+  await press(view, 'ask-starter-1');
+  await openSheetIfPushed();
+  const second = askSession.snapshot().pending!.question;
+  await leave('ask-consent-continue');
+  expect(posted()).toEqual([second]);
 });
 
 test('the agreement is kept on the device, asked once', async () => {
   await ask('Who spoke on housing?');
-  await press('ask-consent-continue');
+  await leave('ask-consent-continue');
   // A new launch reads the stored agreement.
-  act(() => view.unmount());
+  await act(async () => view.unmount());
   askSession.start();
   resetAskConsentForTests();
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
+  await launch();
   await ask('Who spoke on rents?');
-  expect(shown('ask-consent')).toBe(false);
+  expect(sheet).toBeNull();
   expect(posted()).toEqual(['Who spoke on housing?', 'Who spoke on rents?']);
 });
 
 test('an unreadable or foreign agreement asks again', async () => {
-  act(() => view.unmount());
+  await act(async () => view.unmount());
   mockDisk.set('opax-ask-consent-v1.json', '{"version":"yes"}');
   mockDisk.set('opax-ask-consent-v1.b.json', 'not json');
   askSession.start();
   resetAskConsentForTests();
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
+  await launch();
   await ask('Who spoke on housing?');
-  expect(shown('ask-consent')).toBe(true);
+  expect(shown(sheet, 'ask-consent')).toBe(true);
   expect(client.askPost).not.toHaveBeenCalled();
 });

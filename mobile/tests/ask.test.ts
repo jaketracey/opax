@@ -3,8 +3,10 @@ import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import pin from '../scripts/fixtures/ask-recorded.json';
 import clarifyFixture from '../scripts/fixtures/ask-clarify.json';
-import { builderQuestion, shapes } from '../src/features/ask/builder';
 import { AskController } from '../src/features/ask/controller';
+import { parseAnswer } from '../src/features/ask/answer-markdown';
+import { firstClaim } from '../src/features/ask/citation-state';
+import { askErrorCopy, showAnsweredAs } from '../src/features/ask/turn-copy';
 import { AskFailure, AskStream } from '../src/features/ask/stream';
 import {
   boundedStore,
@@ -162,26 +164,6 @@ test('follow-ups accept historical strings and new evidence-bearing questions', 
   ]);
   expect(decodeFollowups(null)).toEqual([]);
 });
-test('all five builders and every variant match web sentence shapes', () => {
-  const values = {
-    person: 'Roster member',
-    topic: 'housing',
-    party: 'Labor',
-    bill: 'Recorded Bill',
-    industry: 'gambling',
-  };
-  for (const [shape, s] of Object.entries(shapes))
-    for (let i = 0; i < s.variants.length; i++)
-      expect(builderQuestion(shape, i, values)).toMatch(/\?$/);
-  expect(builderQuestion('bill', 0, values)).toBe(
-    'What does the Recorded Bill change?',
-  );
-  expect(builderQuestion('person', 0, values)).toBe(
-    'What did Roster member say about housing?',
-  );
-  expect(builderQuestion('person', 0, {})).toBeNull();
-  expect(builderQuestion('unknown', 0, values)).toBeNull();
-});
 test('options reproduce chip keys, removal and inclusive full-year reset', () => {
   const o = {
     ...defaultOptions,
@@ -199,7 +181,7 @@ test('options reproduce chip keys, removal and inclusive full-year reset', () =>
     to: '',
   });
   expect(chips(o).map((c) => c.key)).toEqual([
-    'Speaker',
+    'Person',
     'Party',
     'Parliament',
     'Topic',
@@ -473,4 +455,183 @@ test('cancellation and account deletion discard late answers without saving', as
   });
   expect(h.store().chats).toHaveLength(0);
   expect(post).toHaveBeenCalledTimes(1);
+});
+
+describe('journeys/ask.md 4.2, 4.4 and 4.14: arrivals, stop and try again', () => {
+  const hanging = () => {
+    let release: (v: unknown) => void = () => undefined;
+    const post = jest.fn((path: string, _b: object, signal: AbortSignal) =>
+      path === '/api/followups'
+        ? Promise.resolve({ questions: [] })
+        : new Promise((resolve, reject) => {
+            release = resolve;
+            signal.addEventListener('abort', () =>
+              reject(new AskFailure('cancelled', 'Cancelled.')),
+            );
+          }),
+    );
+    return { post, release: (v: unknown) => release(v) };
+  };
+  test('an arrival never cancels a running answer and waits as a fresh draft', async () => {
+    const { post, release } = hanging();
+    const h = harness(post);
+    const running = h.controller.submit('First question');
+    h.controller.arrive('Drafted elsewhere', {
+      ...defaultOptions,
+      party: 'Labor',
+    });
+    let s = h.controller.snapshot();
+    expect(s.busy).toBe(true);
+    expect(s.fresh).toBe(true);
+    expect(s.draft).toBe('Drafted elsewhere');
+    expect(h.controller.composerOptions().party).toBe('Labor');
+    expect(h.controller.newConversation()).toBe(false);
+    release(payload);
+    await running;
+    s = h.controller.snapshot();
+    expect(s.thread).toHaveLength(2);
+    expect(s.draft).toBe('Drafted elsewhere');
+    expect(post).toHaveBeenCalledTimes(2);
+  });
+  test('an arrival while idle starts a new conversation and sends nothing', () => {
+    const post = jest.fn();
+    const h = harness(post);
+    h.controller.arrive('What has parliament said about housing?', {
+      ...defaultOptions,
+      topic: 'housing',
+    });
+    const s = h.controller.snapshot();
+    expect(s.thread).toEqual([]);
+    expect(s.options.topic).toBe('housing');
+    expect(s.draft).toBe('What has parliament said about housing?');
+    expect(post).not.toHaveBeenCalled();
+  });
+  test('stop restores the question to an empty composer and keeps a draft', async () => {
+    const one = hanging();
+    const h = harness(one.post);
+    void h.controller.submit('Stopped question');
+    expect(h.controller.stop()).toBe('restored');
+    expect(h.controller.snapshot()).toMatchObject({
+      busy: false,
+      draft: 'Stopped question',
+      thread: [],
+      error: null,
+    });
+    h.controller.setDraft('');
+    void h.controller.submit('Second');
+    h.controller.setDraft('Words typed meanwhile');
+    expect(h.controller.stop()).toBe('kept');
+    expect(h.controller.snapshot().draft).toBe('Words typed meanwhile');
+  });
+  test('try again clears the composer only when it holds the same question', async () => {
+    const post = jest
+      .fn()
+      .mockRejectedValueOnce(new AskFailure('offline', 'raw'))
+      .mockResolvedValueOnce(payload)
+      .mockResolvedValue({ questions: [] });
+    const h = harness(post);
+    await h.controller.submit('Failing question');
+    expect(h.controller.snapshot().draft).toBe('Failing question');
+    expect(h.controller.snapshot().failed?.question).toBe('Failing question');
+    await h.controller.retry();
+    expect(h.controller.snapshot().draft).toBe('');
+    expect(h.controller.snapshot().thread).toHaveLength(2);
+  });
+});
+
+describe('error copy (journeys/ask.md 4.14)', () => {
+  test('every failure maps to plain copy, never the server text', () => {
+    const codes = [
+      'offline',
+      'partial',
+      'rate-limited',
+      'blocked',
+      'invalid',
+      'empty',
+    ] as const;
+    for (const code of codes) {
+      const copy = askErrorCopy(new AskFailure(code, 'Request failed (500)'));
+      expect(copy?.message).not.toMatch(/Request failed|—|Try again/);
+    }
+    expect(askErrorCopy({ code: 'blocked' })?.retry).toBe(false);
+    expect(askErrorCopy({ code: 'empty' })?.retry).toBe(false);
+    expect(askErrorCopy({ code: 'rate-limited' })).toEqual({
+      message: 'OPAX is busy right now.',
+      retry: true,
+    });
+    expect(askErrorCopy({ code: 'cancelled' })).toBeNull();
+  });
+});
+
+describe('Answered as (journeys/ask.md 4.5)', () => {
+  const names = ['Sam Placeholder'];
+  const topics = ['Housing'];
+  test.each([
+    [
+      'case only',
+      'what did parliament say about housing?',
+      'What did parliament say about housing?',
+      false,
+    ],
+    [
+      'punctuation only',
+      'What did parliament say about housing',
+      'What did parliament say about housing?',
+      false,
+    ],
+    [
+      'name expanded',
+      'What has Placeholder said about housing this year?',
+      'What has Sam Placeholder said about housing this year?',
+      false,
+    ],
+    [
+      'pronoun resolved',
+      'How did they vote on it in the end?',
+      'How did each party vote on the Example Bill 2026?',
+      true,
+    ],
+    [
+      'three-word reply',
+      'and the Greens',
+      'What have the Greens said about housing?',
+      true,
+    ],
+    [
+      'person added',
+      'What was said about housing last week?',
+      'What did Sam Placeholder say about housing last week?',
+      true,
+    ],
+    [
+      'year added',
+      'What was said about housing in parliament?',
+      'What was said about housing in parliament in 2025?',
+      true,
+    ],
+    [
+      'topic added',
+      'What did the Example Party promise at the election?',
+      'What did the Example Party promise on housing at the election?',
+      true,
+    ],
+  ])('%s', (_label, question, askedAs, shown) => {
+    expect(showAnsweredAs(question, askedAs, { names, topics })).toBe(shown);
+  });
+  test('the Worker’s rewrite kind settles it when sent', () => {
+    expect(
+      showAnsweredAs('and the Greens', 'What have the Greens said?', {
+        rewriteKind: 'wording',
+      }),
+    ).toBe(false);
+  });
+});
+
+test('Previous and Next move the claim to the source’s first mark', () => {
+  const blocks = parseAnswer(
+    'The bill passed the House. [2]\n\n- One point. [1]\n- Another. [2]',
+  );
+  expect(firstClaim(blocks, 2)).toEqual({ block: '0', sentence: 0 });
+  expect(firstClaim(blocks, 1)).toEqual({ block: '1.0', sentence: 0 });
+  expect(firstClaim(blocks, 3)).toBeUndefined();
 });

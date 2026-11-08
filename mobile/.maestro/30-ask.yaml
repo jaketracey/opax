@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 30 Build a question, streamed answer, native bill citation and grounded follow-up
+name: 30 Ask idle, a starter, the answer with its records, a follow-up, a clarify turn and the seat starter
 ---
 - launchApp:
     permissions:
@@ -9,57 +9,19 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     id: tab-ask
 - assertVisible:
     id: ask-screen
-- takeScreenshot: ${EVIDENCE}/30-ask
-- scrollUntilVisible:
-    element:
-      id: ask-builder-toggle
-    centerElement: true
-    timeout: 180000
-    speed: 20
-- tapOn:
+# Idle (journeys/ask.md 4.1): one line, Try asking, no builder, no options row.
+- assertVisible:
+    id: ask-idle-line
+- assertVisible:
+    id: ask-starter-0
+- assertNotVisible:
     id: ask-builder-toggle
-- scrollUntilVisible:
-    element:
-      id: ask-builder-shape
-    centerElement: true
-    timeout: 180000
+- assertNotVisible:
+    id: ask-options
+- takeScreenshot: ${EVIDENCE}/30-ask
+# A starter asks at once (consent first on a cleared install).
 - tapOn:
-    id: ask-builder-shape
-- scrollUntilVisible:
-    element:
-      text: a bill
-    centerElement: true
-    timeout: 180000
-- tapOn: a bill
-- scrollUntilVisible:
-    element:
-      id: ask-builder-bill-pick
-    centerElement: true
-    timeout: 180000
-- tapOn:
-    id: ask-builder-bill-pick
-- scrollUntilVisible:
-    element:
-      id: ask-builder-bill-pick-choice-0
-    centerElement: true
-    timeout: 180000
-- tapOn:
-    id: ask-builder-bill-pick-choice-0
-- scrollUntilVisible:
-    element:
-      id: ask-builder-sentence
-    visibilityPercentage: 10
-    centerElement: true
-    timeout: 180000
-- assertVisible: What does the .* change\?
-- takeScreenshot: ${EVIDENCE}/30-builder
-- scrollUntilVisible:
-    element:
-      id: ask-builder-submit
-    centerElement: true
-    timeout: 180000
-- tapOn:
-    id: ask-builder-submit
+    id: ask-starter-0
 - runFlow: support/ask-consent.yaml
 - scrollUntilVisible:
     element:
@@ -68,16 +30,25 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     centerElement: true
     visibilityPercentage: 10
     timeout: 180000
-- assertVisible: 'Machine-written\. Written by a model from the retrieved passages; not the record\.'
+- assertVisible:
+    id: ask-user-question
 - takeScreenshot: ${EVIDENCE}/30-answer
-# Design pass 3D: the answer ends in one source line (and ⋯); its sheet
-# holds the cited and retrieved records, the dates and the notes.
+# Records cited lead with the marks' numerals; the first opens its record.
+- scrollUntilVisible:
+    element:
+      id: ask-records-cited
+    direction: DOWN
+    centerElement: true
+    timeout: 90000
+- assertVisible: Records cited \(\d+\)
+# The answer's sources sheet: one dated line, no repeated serif titles.
 - scrollUntilVisible:
     element:
       id: ask-answer-sources
     direction: DOWN
     centerElement: true
     timeout: 90000
+- assertVisible: Answered .* · OPAX
 - tapOn:
     id: ask-answer-sources
 - extendedWaitUntil:
@@ -85,17 +56,12 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
       text: Done
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/30-answer-sources
-# The notes close the sheet, below a long bill title's records.
-- scrollUntilVisible:
-    element:
-      text: About this answer
-    timeout: 30000
 - tapOn:
     text: Done
     retryTapIfNoChange: false
 - extendedWaitUntil:
     notVisible:
-      text: Done
+      id: ask-sources-question
     timeout: 10000
 - scrollUntilVisible:
     element:
@@ -121,6 +87,9 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     duration: 500
 - assertVisible:
     id: ask-screen
+# The composer stays docked above the tab bar while reading.
+- assertVisible:
+    id: ask-question
 - scrollUntilVisible:
     element:
       id: ask-followup-0
@@ -134,30 +103,21 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     id: ask-followup-0
 - scrollUntilVisible:
     element:
-      id: ask-understood
+      id: ask-user-question
+      text: Who spoke for and against.*
     direction: DOWN
     centerElement: true
     visibilityPercentage: 10
     timeout: 180000
-- assertVisible: 'Understood as: Who spoke for and against the Interactive Gambling.*'
-- takeScreenshot: ${EVIDENCE}/30-understood
-- scrollUntilVisible:
-    element:
-      id: ask-followup-field
-    centerElement: true
-    speed: 20
-    timeout: 90000
+- assertNotVisible: 'Understood as: .*'
+- takeScreenshot: ${EVIDENCE}/30-answered-as
+# A typed follow-up from the docked composer.
 - tapOn:
-    id: ask-followup-field
+    id: ask-question
 - inputText: What else was discussed?
-- scrollUntilVisible:
-    element:
-      id: ask-followup-submit
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - tapOn:
-    id: ask-followup-submit
+    id: ask-submit
+    enabled: true
 - scrollUntilVisible:
     element:
       id: ask-user-question
@@ -166,29 +126,19 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
-- assertVisible:
-    id: ask-user-question
-    text: What else was discussed\?
 - takeScreenshot: ${EVIDENCE}/30-typed-followup
-# A follow-up with nothing to search on is a prompt, not an answer to the
-# previous question (Jake's "High", 8 Oct), with its suggestion one tap away.
-- scrollUntilVisible:
-    element:
-      id: ask-followup-field
-    centerElement: true
-    speed: 20
+# Too short to search on: a clarify turn whose suggestion fills the composer
+# (it is a guess, so it never sends), with Search OPAX beside it.
+- extendedWaitUntil:
+    visible:
+      id: ask-machine-label
     timeout: 90000
 - tapOn:
-    id: ask-followup-field
+    id: ask-question
 - inputText: High
-- scrollUntilVisible:
-    element:
-      id: ask-followup-submit
-    centerElement: true
-    speed: 20
-    timeout: 90000
 - tapOn:
-    id: ask-followup-submit
+    id: ask-submit
+    enabled: true
 - scrollUntilVisible:
     element:
       id: ask-clarify-question
@@ -196,35 +146,46 @@ name: 30 Build a question, streamed answer, native bill citation and grounded fo
     centerElement: true
     visibilityPercentage: 10
     timeout: 90000
-- assertVisible: 'That’s too short to search the record on\. Did you mean:'
-- assertNotVisible: 'Understood as: .*'
+- assertVisible: Name a person, party, bill or topic\.
+- assertVisible:
+    id: ask-search-opax
 - assertVisible:
     id: ask-clarify-suggestion
 - takeScreenshot: ${EVIDENCE}/30-clarify
 - tapOn:
     id: ask-clarify-suggestion
-- scrollUntilVisible:
-    element:
-      id: ask-user-question
-      text: What did parliament say about the Interactive Gambling.*
-    direction: DOWN
-    centerElement: true
-    visibilityPercentage: 10
-    timeout: 90000
-- assertNotVisible:
+- assertVisible:
+    id: ask-question
+    text: What did parliament say about the Interactive Gambling.*
+- assertVisible:
     id: ask-clarify
-# A scoped draft returns the composer to view after a scrolled answer.
-# Ask about this is under the bill's ⋯ (as in journey 46).
-- openLink: opax://bill/au-federal-r7534
-- waitForAnimationToEnd
-- runFlow:
-    file: support/open-more.yaml
-    env:
-      NAME: 'Interactive Gambling.*'
-- tapOn: Ask about this
+# New question clears to idle; the conversation is first under Conversations.
+- tapOn: New question
 - extendedWaitUntil:
     visible:
-      id: ask-question
-    timeout: 15000
-- assertVisible: What did parliament say about the Interactive Gambling.*
-- takeScreenshot: ${EVIDENCE}/30-new-draft
+      id: ask-idle-line
+    timeout: 10000
+- assertVisible:
+    id: ask-conversation-0
+# The seat starter fills the composer with the member and Speeches; nothing is sent.
+- tapOn:
+    id: tab-your-mp
+- runFlow: support/location-manual-seat.yaml
+- tapOn:
+    id: tab-ask
+- scrollUntilVisible:
+    element:
+      id: ask-starter-seat
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: ask-starter-seat
+- assertVisible:
+    id: ask-question
+    text: What has .* said in parliament this year\?
+- assertVisible:
+    id: ask-options-line
+- assertVisible: .*Speeches
+- assertNotVisible:
+    id: ask-status
+- takeScreenshot: ${EVIDENCE}/30-seat-starter

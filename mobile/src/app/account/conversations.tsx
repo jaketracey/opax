@@ -1,9 +1,4 @@
-import { RoutePlaceholder } from '../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return (
-    <RoutePlaceholder
-      route="account/conversations"
-      title="Your conversations"
-    />
-  );
+import Conversations from '../../features/ask/Conversations';
+export default function AccountConversations() {
+  return <Conversations mode="account" />;
 }

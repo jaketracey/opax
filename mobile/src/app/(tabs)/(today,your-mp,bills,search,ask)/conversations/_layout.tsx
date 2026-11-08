@@ -11,7 +11,7 @@ export default function Layout() {
       {[
         screen(
           'index',
-          'Your conversations',
+          'Conversations',
           headerItems(() => [closeSheetItem()]),
         ),
       ]}

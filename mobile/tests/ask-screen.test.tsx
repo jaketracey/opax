@@ -1,18 +1,39 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+import type { NativeStackHeaderItem } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import {
+  AccessibilityInfo,
+  ActivityIndicator,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import AskScreen from '../src/features/ask/AskScreen';
+import { composerLines } from '../src/features/ask/AskDock';
 import clarify from '../scripts/fixtures/ask-clarify.json';
-import { client } from '../src/api/runtime';
-import { askSession } from '../src/features/ask/session';
-import { reconcileChats, pushChat } from '../src/features/ask/sync';
-import { useLocalSearchParams } from 'expo-router';
+import { catalogs, client } from '../src/api/runtime';
+import { arriveInAsk, askSession } from '../src/features/ask/session';
+import { reconcileChats, syncSubmittedChat } from '../src/features/ask/sync';
 import { chatsSnapshot } from '../src/features/ask/store';
+import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
-import { rhythm } from '../src/design/tokens';
-const mockScroll = { scrollTo: jest.fn() };
+import { colors, rhythm, textStyles } from '../src/design/tokens';
+import { designFlags } from '../src/design/flags';
+import { conversationsRoute } from '../src/navigation/routes/ask';
+import { useSeat } from '../src/features/your-mp/useSeat';
+import { startersFor } from '../src/features/ask/starters';
+
+// The bar's items, as AskScreen sets them through Stack.Screen.
+const mockBar: { options: Record<string, unknown> } = { options: {} };
 jest.mock('expo-router', () => ({
-  Stack: { Screen: () => null },
+  Stack: {
+    Screen: ({ options }: { options: Record<string, unknown> }) => {
+      mockBar.options = options;
+      return null;
+    },
+  },
   useLocalSearchParams: jest.fn(() => ({})),
-  router: { push: jest.fn() },
+  router: { push: jest.fn(), back: jest.fn(), canGoBack: () => false },
 }));
 jest.mock('../src/api/runtime', () => ({
   client: { askPost: jest.fn() },
@@ -31,6 +52,7 @@ jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: { signedIn: true } }),
   accountSnapshot: () => ({ status: { signedIn: true } }),
 }));
+jest.mock('../src/voice/linked', () => ({ voiceLinked: true }));
 jest.mock('../src/features/ask/store', () => {
   const saved = { v: 1, active: null, chats: [] };
   return {
@@ -39,13 +61,58 @@ jest.mock('../src/features/ask/store', () => {
     subscribeChatDeletion: () => () => {},
     loadChats: jest.fn().mockResolvedValue(undefined),
     saveChats: jest.fn().mockResolvedValue(undefined),
+    forgetActiveChat: jest.fn(),
     clearAskConversations: jest.fn(),
   };
 });
-// Pass 5, P3-6: "Your conversations" shows only with a saved conversation.
+jest.mock('../src/features/ask/sync', () => ({
+  ChatSyncError: jest.requireActual('../src/features/ask/sync').ChatSyncError,
+  syncSubmittedChat: jest.fn().mockResolvedValue(undefined),
+  deleteRemoteChat: jest.fn(),
+  reconcileChats: jest.fn(),
+}));
+// The seat is read on the device only; no seat unless a test sets one.
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: jest.fn(() => ({ status: 'none' })),
+  savedSeatDirectory: jest.fn(() => mockDirectory.current),
+}));
+const mockDirectory: { current: unknown } = { current: null };
+jest.mock('../src/features/your-mp/model', () => ({
+  ...jest.requireActual('../src/features/your-mp/model'),
+  representativeProfile: () => ({
+    name: 'Sam Placeholder',
+    slug: 'sam-placeholder',
+  }),
+}));
+// An answer's own rendering is covered in ask-answer-design; here it only
+// has to exist. The thread's other parts are real.
+jest.mock('../src/features/ask/AnswerView', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { View } = require('react-native');
+  return {
+    AnswerView: () => React.createElement(View, { testID: 'ask-answer' }),
+    SearchOpaxRow: ({ question }: { question: string }) =>
+      React.createElement(View, { testID: 'ask-search-opax', question }),
+    AskRevealContext: React.createContext(null),
+    announceAnswer: jest.fn(),
+    machineNote: { title: 'Machine-written', body: ['Fixture note.'] },
+  };
+});
+jest.mock('../src/features/ask/Options', () => ({
+  topics: { housing: 'Housing' },
+  openAskOptions: jest.fn(),
+}));
+jest.mock('../src/features/ask/SourcesPane', () => ({
+  AskPaneProvider: ({ children }: { children: unknown }) => children,
+  useAskSources: () => ({ context: null, onScroll: undefined, pane: null }),
+  useAskPane: () => null,
+}));
+
 const oneChat = {
   v: 1 as const,
-  active: null,
+  active: 'saved-fixture',
   chats: [
     {
       id: 'saved-fixture',
@@ -54,174 +121,298 @@ const oneChat = {
       speaker: '',
       created: 1,
       updated: 1,
-      thread: [],
+      thread: [
+        { role: 'user' as const, text: 'A saved fixture question?' },
+        { role: 'answer' as const, text: 'A saved fixture answer.' },
+      ],
     },
   ],
 };
 const noChats = { v: 1 as const, active: null, chats: [] };
-function withSavedChat() {
-  jest.mocked(chatsSnapshot).mockImplementation(() => oneChat);
-}
-afterEach(() => {
-  jest.mocked(chatsSnapshot).mockImplementation(() => noChats);
-});
-jest.mock('../src/features/ask/sync', () => ({
-  ChatSyncError: jest.requireActual('../src/features/ask/sync').ChatSyncError,
-  pushChat: jest.fn(),
-  deleteRemoteChat: jest.fn(),
-  reconcileChats: jest.fn(),
-}));
-jest.mock('../src/design/primitives', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { View } = require('react-native');
-  const basic = (p: Record<string, unknown>) =>
-    React.createElement(View, p, p.children);
-  return {
-    ...Object.fromEntries(
-      [
-        'Screen',
-        'Button',
-        'Icon',
-        'IconButton',
-        'Field',
-        'Group',
-        'Heading',
-        'FilterChip',
-        'Text',
-        'Section',
-        'LinkRow',
-        'RowList',
-        'Disclosure',
-        'ErrorState',
-        'EmptyState',
-        'LoadingState',
-      ].map((k) => [k, basic]),
-    ),
-    // The input and its send button, under their own test IDs.
-    Composer: (p: Record<string, unknown> & { onSubmit: () => void }) =>
-      React.createElement(
-        View,
-        null,
-        React.createElement(View, { ...p, onSubmit: undefined }),
-        React.createElement(View, {
-          testID: p.submitTestID,
-          accessibilityLabel: p.submitLabel,
-          onPress: p.onSubmit,
-        }),
-      ),
-    // The real screen's scroll view, as far as the reveal needs it.
-    KeyboardStableScreen: (p: { scrollRef?: { current: unknown } }) => {
-      if (p.scrollRef) p.scrollRef.current = mockScroll;
-      return basic(p);
+const answer = {
+  answer: 'Synthetic fixture answer.',
+  citations: {},
+  sources: [
+    {
+      resource: 'fixture',
+      title: 'Synthetic fixture',
+      slug: 'fixture',
+      snippet: 'Synthetic evidence passage.',
     },
-  };
+  ],
+};
+
+let view: ReactTestRenderer | null = null;
+let scrollTo: jest.SpyInstance;
+beforeEach(() => {
+  jest.mocked(client.askPost).mockReset();
+  jest.mocked(router.push).mockClear();
+  jest.mocked(chatsSnapshot).mockImplementation(() => noChats);
+  scrollTo = jest
+    .spyOn(
+      ScrollView.prototype as unknown as { scrollTo: () => void },
+      'scrollTo',
+    )
+    .mockImplementation(() => undefined);
+  askSession.start();
+  askSession.setDraft('');
 });
-// An answer's own rendering is covered elsewhere; here it only has to exist.
-jest.mock('../src/features/ask/AnswerView', () => ({
-  AnswerView: () => null,
-}));
-jest.mock('../src/features/ask/Options', () => ({
-  topics: { housing: 'Housing' },
-  Options: () => null,
-}));
-test('a scoped cold-start draft takes precedence over the previous saved conversation', async () => {
-  (useLocalSearchParams as jest.Mock).mockReturnValue({
-    entry: 'scoped-entry',
-    question: 'What has Anthony Albanese said in parliament?',
-    speaker: 'Anthony Albanese',
-    kind: 'speech',
+afterEach(async () => {
+  await act(async () => {
+    // Let the reveal's fallback frames run before teardown.
+    await new Promise((r) => setTimeout(r, 30));
+    view?.unmount();
   });
-  jest.mocked(chatsSnapshot).mockReturnValue({
-    v: 1,
-    active: 'previous-chat',
-    chats: [
-      {
-        id: 'previous-chat',
-        title: 'Previous question',
-        kind: 'all',
-        speaker: '',
-        created: 1,
-        updated: 1,
-        thread: [{ role: 'answer', text: 'A previous saved answer.' }],
-      },
-    ],
-  });
-  let view: ReactTestRenderer;
+  view = null;
+  scrollTo.mockRestore();
+  askSession.start();
+  askSession.setDraft('');
+  (useLocalSearchParams as jest.Mock).mockReturnValue({});
+  jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+  jest.mocked(catalogs.roster).mockRejectedValue(new Error('Offline'));
+  mockDirectory.current = null;
+});
+async function mount() {
   await act(async () => {
     view = create(<AskScreen />);
   });
+  return view!;
+}
+const byId = (id: string) => view!.root.findAllByProps({ testID: id });
+const one = (id: string) =>
+  view!.root.findAll(
+    (n) =>
+      n.props.testID === id &&
+      (typeof n.props.onPress === 'function' ||
+        typeof n.props.onChangeText === 'function'),
+  )[0]!;
+/** The first string child under any node with this testID. */
+const textOf = (id: string) =>
+  byId(id)
+    .flatMap((n) => [n, ...n.findAll(() => true)])
+    .map((n) => n.props.children)
+    .find((c) => typeof c === 'string');
+/** The accessibility label or hint given to the row with this testID. */
+const a11y = (id: string, key: 'accessibilityLabel' | 'accessibilityHint') =>
+  byId(id)
+    .map((n) => n.props[key])
+    .find((v) => typeof v === 'string');
+const texts = () =>
+  view!.root
+    .findAll((n) => typeof n.props.children === 'string')
+    .map((n) => n.props.children as string);
+async function type(text: string) {
+  await act(async () => one('ask-question').props.onChangeText(text));
+}
+async function press(id: string) {
+  await act(async () => {
+    await one(id).props.onPress();
+  });
+}
+const bar = () =>
+  mockBar.options as {
+    unstable_headerLeftItems: () => NativeStackHeaderItem[];
+    unstable_headerRightItems: () => NativeStackHeaderItem[];
+  };
+const barButton = (label: string) =>
+  [
+    ...bar().unstable_headerLeftItems(),
+    ...bar().unstable_headerRightItems(),
+  ].find((item) => 'label' in item && item.label === label) as
+    | (NativeStackHeaderItem & { disabled?: boolean; onPress: () => void })
+    | undefined;
+
+test('a cold launch opens idle, with the last conversation first under Conversations', async () => {
+  jest.mocked(chatsSnapshot).mockImplementation(() => oneChat);
+  await mount();
+  expect(askSession.snapshot().thread).toEqual([]);
+  expect(byId('ask-idle-line')).not.toEqual([]);
+  expect(texts()).toContain(
+    'Answers come from parliamentary records and are machine-written.',
+  );
+  expect(byId('ask-starter-0')).not.toEqual([]);
+  expect(byId('ask-conversation-0')).not.toEqual([]);
+  // No Options row, chips or builder on the page.
+  expect(byId('ask-options')).toEqual([]);
+  expect(byId('ask-builder-toggle')).toEqual([]);
+  await press('ask-see-all-conversations');
+  expect(router.push).toHaveBeenCalledWith(conversationsRoute);
+  await press('ask-conversation-0');
+  expect(askSession.snapshot().id).toBe('saved-fixture');
+  expect(client.askPost).not.toHaveBeenCalled();
+});
+
+test('Ask stands on the grouped ground, so its inset groups read as raised', async () => {
+  expect(designFlags.groupedSurfaces).toBe(true);
+  await mount();
+  const scroll = view!.root
+    .findAllByType(ScrollView)
+    .find((n) => n.props.testID === 'ask-screen')!;
+  expect(StyleSheet.flatten(scroll.props.style).backgroundColor).toBe(
+    colors.sunken,
+  );
+});
+test('starters follow Sydney’s day: 9:30 am on 10 Nov is 10 Nov, not UTC’s 9 Nov', async () => {
+  const now = jest
+    .spyOn(Date, 'now')
+    .mockReturnValue(Date.parse('2026-11-09T22:30:00Z'));
+  try {
+    await mount();
+    const shown = [0, 1, 2, 3].map((i) =>
+      a11y(`ask-starter-${i}`, 'accessibilityLabel'),
+    );
+    expect(shown).toEqual(startersFor(Date.UTC(2026, 10, 10, 2), 4));
+    expect(shown).not.toEqual(startersFor(Date.UTC(2026, 10, 9, 2), 4));
+  } finally {
+    now.mockRestore();
+  }
+});
+test('Conversations hides with none saved; the bar keeps Conversations, New question and Account', async () => {
+  await mount();
+  expect(byId('ask-conversations')).toEqual([]);
+  expect(byId('ask-see-all-conversations')).toEqual([]);
+  expect(barButton('Your conversations')?.disabled).toBe(true);
+  expect(barButton('New question')?.disabled).toBe(true);
+  expect(barButton('Account')).toBeDefined();
+  // At most three items, Talk not among them (it is in the composer).
   expect(
-    view!.root.findAllByProps({ testID: 'ask-question' })[0]!.props.value,
-  ).toBe('What has Anthony Albanese said in parliament?');
+    bar().unstable_headerLeftItems().length +
+      bar().unstable_headerRightItems().length,
+  ).toBeLessThanOrEqual(3);
+  expect(barButton('Talk')).toBeUndefined();
+});
+
+test('a deep-linked draft starts a new conversation and sends nothing', async () => {
+  (useLocalSearchParams as jest.Mock).mockReturnValue({
+    entry: 'scoped-entry',
+    question: 'What has Sam Placeholder said in parliament this year?',
+    speaker: 'Sam Placeholder',
+    kind: 'speech',
+  });
+  jest.mocked(chatsSnapshot).mockImplementation(() => oneChat);
+  await mount();
+  expect(one('ask-question').props.value).toBe(
+    'What has Sam Placeholder said in parliament this year?',
+  );
   expect(askSession.snapshot().options).toMatchObject({
-    speaker: 'Anthony Albanese',
+    speaker: 'Sam Placeholder',
     kind: 'speech',
   });
   expect(askSession.snapshot().thread).toEqual([]);
+  expect(byId('ask-options-line')).not.toEqual([]);
   expect(client.askPost).not.toHaveBeenCalled();
-  await act(async () => {
-    view!.unmount();
-    askSession.start();
-  });
-  (useLocalSearchParams as jest.Mock).mockReturnValue({});
-  jest.mocked(chatsSnapshot).mockReturnValue({ v: 1, active: null, chats: [] });
 });
-test('signed-in Ask mount, typing, options and tab remount never call paid routes', async () => {
-  let view: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
+
+test('the composer sets its question in body text; the options line is a 44 pt target beside Clear', async () => {
+  (useLocalSearchParams as jest.Mock).mockReturnValue({
+    entry: 'scoped-entry-target',
+    question: 'What has Sam Placeholder said in parliament this year?',
+    speaker: 'Sam Placeholder',
   });
-  expect(client.askPost).not.toHaveBeenCalled();
-  await act(async () => {
-    view!.root
-      .findAllByProps({ testID: 'ask-question' })[0]!
-      .props.onChangeText('A question');
+  await mount();
+  const input = StyleSheet.flatten(one('ask-question').props.style);
+  expect(input).toMatchObject({
+    fontFamily: textStyles.body.fontFamily,
+    fontSize: textStyles.body.fontSize,
+    lineHeight: textStyles.body.lineHeight,
   });
-  expect(client.askPost).not.toHaveBeenCalled();
-  await act(async () => {
-    view!.root.findAllByProps({ testID: 'ask-options' })[0]!.props.onPress();
-  });
-  expect(client.askPost).not.toHaveBeenCalled();
+  const { fontScale } = Dimensions.get('window');
+  expect(input.maxHeight).toBe(
+    textStyles.body.lineHeight *
+      Math.max(1, fontScale) *
+      composerLines(fontScale) +
+      20,
+  );
+  const hit = (id: string) =>
+    byId(id).find((n) => n.props.hitSlop !== undefined)!.props;
+  const line = hit('ask-options-line');
+  expect(line.hitSlop).toEqual({ top: 8, bottom: 8 });
+  expect(StyleSheet.flatten(line.style).minHeight + 16).toBeGreaterThanOrEqual(
+    44,
+  );
+  // No sideways slop, so it never reaches into Clear's.
+  expect(hit('ask-options-clear').hitSlop).toBe(8);
+});
+
+test('mount, typing, Options and a remount never call paid routes', async () => {
+  await mount();
+  await type('A question');
+  await press('ask-composer-options');
+  expect(openAskOptions).toHaveBeenCalled();
   await act(async () => {
     view!.unmount();
     view = create(<AskScreen />);
   });
   expect(client.askPost).not.toHaveBeenCalled();
   expect(reconcileChats).not.toHaveBeenCalled();
-  expect(pushChat).not.toHaveBeenCalled();
-  await act(async () => {
-    view!.unmount();
-    askSession.start();
-  });
+  expect(syncSubmittedChat).not.toHaveBeenCalled();
 });
-test('failed account sync preserves local history without claiming an account save', async () => {
-  withSavedChat();
-  jest.mocked(reconcileChats).mockRejectedValueOnce(new Error('Unavailable'));
-  let view: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  await act(async () => {
-    await view!.root
-      .findAllByProps({ testID: 'ask-saved' })[0]!
-      .props.onPress();
-  });
-  const rendered = view!.root
-    .findAll((node) => typeof node.props.children === 'string')
-    .map((node) => node.props.children);
-  expect(rendered).toContain('Saved on this iPhone.');
-  expect(rendered).not.toContain('Saved to your account and on this iPhone.');
-  expect(reconcileChats).toHaveBeenCalledTimes(1);
+
+test('Talk sits in the empty composer for a signed-in reader and turns into Send', async () => {
+  await mount();
+  expect(byId('ask-talk')).not.toEqual([]);
+  expect(byId('ask-submit')).toEqual([]);
+  await press('ask-talk');
+  expect(router.push).toHaveBeenCalledWith('/talk');
+  await type('A question');
+  expect(byId('ask-talk')).toEqual([]);
+  expect(one('ask-submit').props.accessibilityLabel).toBe('Send');
+});
+
+test('a starter asks at once; the seat starter only fills the composer', async () => {
+  jest.mocked(useSeat).mockReturnValue({
+    status: 'chosen',
+    choice: { version: 1, seatId: 'el_fixture', stateSeatIds: [] },
+  } as never);
+  mockDirectory.current = {
+    electorates: {
+      data: {
+        electorates: [
+          {
+            electorate_id: 'el_fixture',
+            status: 'current',
+            jurisdiction: 'federal',
+            chamber: 'representatives',
+            representation_status: 'verified',
+            representatives: [{ person_id: 'fixture-person' }],
+          },
+        ],
+      },
+    },
+  };
+  jest.mocked(client.askPost).mockResolvedValue(answer);
+  await mount();
+  const seat = one('ask-starter-seat');
+  expect(seat).toBeDefined();
+  expect(a11y('ask-starter-seat', 'accessibilityLabel')).toBe(
+    'What has Sam Placeholder said in parliament this year?',
+  );
+  expect(a11y('ask-starter-seat', 'accessibilityHint')).toBe(
+    'Puts this question in the box.',
+  );
+  await press('ask-starter-seat');
   expect(client.askPost).not.toHaveBeenCalled();
-  expect(pushChat).not.toHaveBeenCalled();
+  expect(one('ask-question').props.value).toBe(
+    'What has Sam Placeholder said in parliament this year?',
+  );
+  expect(askSession.snapshot().options).toMatchObject({
+    speaker: 'Sam Placeholder',
+    kind: 'speech',
+  });
+  // Three rotating starters plus the seat starter.
+  expect(byId('ask-starter-3')).toEqual([]);
+  // A fresh page: the seat starter's Person option set the composer's.
   await act(async () => {
-    view!.unmount();
-    askSession.start();
+    askSession.newConversation();
+  });
+  const starter = a11y('ask-starter-0', 'accessibilityLabel')!;
+  await press('ask-starter-0');
+  expect(jest.mocked(client.askPost).mock.calls[0]?.[1]).toMatchObject({
+    question: starter,
   });
 });
-test('a submitted question shows its live stages with Cancel and is revealed below the header', async () => {
+
+test('a sent question shows the status line, Stop, and is revealed below the header', async () => {
   let on: StreamHandlers | undefined,
     fail: (e: unknown) => void = () => {};
   jest.mocked(client.askPost).mockImplementationOnce(
@@ -231,300 +422,300 @@ test('a submitted question shows its live stages with Cancel and is revealed bel
         fail = reject;
       }),
   );
-  let view: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  const byId = (id: string) => view!.root.findAllByProps({ testID: id });
-  await act(async () => {
-    byId('ask-question')[0]!.props.onChangeText('Who spoke on housing?');
-  });
-  mockScroll.scrollTo.mockClear();
-  await act(async () => {
-    byId('ask-submit')[0]!.props.onPress();
-  });
+  await mount();
+  await type('Who spoke on housing?');
+  scrollTo.mockClear();
+  await press('ask-submit');
   const turn = byId('ask-turn')[0]!;
-  // The question as asked, then the stages, with Cancel inside the same block.
   expect(turn.findAllByProps({ testID: 'ask-user-question' })).not.toEqual([]);
-  const progress = turn.findAllByProps({ testID: 'ask-progress' })[0]!;
-  expect(progress.findAllByProps({ testID: 'ask-stages' })).not.toEqual([]);
-  expect(progress.findAllByProps({ testID: 'ask-cancel' })).not.toEqual([]);
-  expect(byId('ask-stage-0-active')).not.toEqual([]);
+  expect(textOf('ask-user-question')).toBe('Who spoke on housing?');
+  expect(textOf('ask-status')).toBe('Reading your question');
+  // A system activity indicator leads the line and is never announced.
+  const spinner = byId('ask-progress')[0]!.findAllByType(ActivityIndicator)[0]!;
+  expect(spinner.props).toMatchObject({
+    accessibilityElementsHidden: true,
+    importantForAccessibility: 'no-hide-descendants',
+  });
+  // Send has become Stop; the composer was cleared for the next question.
+  expect(one('ask-stop').props.accessibilityLabel).toBe('Stop answering');
+  expect(byId('ask-submit')).toEqual([]);
+  expect(one('ask-question').props.value).toBe('');
   // The reveal uses the turn's own layout and clears the native header
   // (no navigator here: 44pt), never the raw content y behind the bar.
   await act(async () => {
     turn.props.onLayout({ nativeEvent: { layout: { y: 400 } } });
   });
-  expect(mockScroll.scrollTo).toHaveBeenLastCalledWith(
+  expect(scrollTo).toHaveBeenLastCalledWith(
     expect.objectContaining({ y: 400 - 44 - rhythm.heading }),
   );
   await act(async () => {
     on!.stage('Searching the record');
   });
-  expect(byId('ask-stage-0')).not.toEqual([]);
-  expect(byId('ask-stage-1-active')).not.toEqual([]);
-  // An error after the stages keeps the question, calmly, with a retry.
-  mockScroll.scrollTo.mockClear();
+  expect(textOf('ask-status')).toBe('Searching the record');
+  // An error after text keeps the question with one plain sentence, never
+  // the server's words, and Try again.
   await act(async () => {
     fail(new AskFailure('partial', 'The answer stream failed.'));
   });
-  const failed = byId('ask-turn')[0]!;
-  expect(
-    failed.findAllByProps({ testID: 'ask-failed-question' })[0]!.props.children,
-  ).toBe('Who spoke on housing?');
-  expect(failed.findAllByProps({ testID: 'ask-error-partial' })).not.toEqual(
-    [],
-  );
-  expect(failed.findAllByProps({ testID: 'ask-retry' })).not.toEqual([]);
+  expect(textOf('ask-failed-question')).toBe('Who spoke on housing?');
+  expect(byId('ask-error-partial')).not.toEqual([]);
+  expect(texts().join(' ')).toContain('This answer stopped partway.');
+  expect(texts().join(' ')).not.toContain('The answer stream failed.');
+  expect(byId('ask-retry')).not.toEqual([]);
   expect(byId('ask-progress')).toEqual([]);
-  await act(async () => {
-    failed.props.onLayout({ nativeEvent: { layout: { y: 0 } } });
-  });
-  // Near the top it settles at rest, under the header, not past it.
-  expect(mockScroll.scrollTo).toHaveBeenLastCalledWith(
-    expect.objectContaining({ y: -44 }),
-  );
-  await act(async () => {
-    // Let the reveal's fallback frames run before teardown.
-    await new Promise((r) => setTimeout(r, 50));
-    view!.unmount();
-    askSession.start();
-  });
+  // The failed question returns to the empty composer.
+  expect(one('ask-question').props.value).toBe('Who spoke on housing?');
 });
-test('a follow-up with nothing to search on asks for a full question, with the suggestion one tap away', async () => {
-  const answer = {
-    answer: 'David Pocock’s proposals centre on surplus Commonwealth land.',
+
+test('a stream that stops partway keeps its text under one pill, read as Markdown', async () => {
+  let on: StreamHandlers | undefined,
+    fail: (e: unknown) => void = () => {};
+  jest.mocked(client.askPost).mockImplementationOnce(
+    (_path, _body, _signal, handlers) =>
+      new Promise((_resolve, reject) => {
+        on = handlers;
+        fail = reject;
+      }),
+  );
+  await mount();
+  await type('Who spoke on housing?');
+  await press('ask-submit');
+  await act(async () => {
+    on!.delta(
+      'The bill had **support [1] across the House.\n\n| a | b |\n|---|---|\n| one | two',
+    );
+  });
+  await act(async () => {
+    fail(new AskFailure('partial', 'The answer stream failed.'));
+  });
+  const partial = byId('ask-partial');
+  expect(partial).not.toEqual([]);
+  // Every string drawn in the turn: no Markdown or raw markers survive.
+  const strings: string[] = [];
+  const walk = (node: unknown): void => {
+    if (typeof node === 'string') strings.push(node);
+    else if (Array.isArray(node)) node.forEach(walk);
+    else if (node && typeof node === 'object' && 'children' in node)
+      walk((node as { children: unknown }).children);
+  };
+  walk(view!.toJSON());
+  const drawn = strings.join(' ');
+  expect(drawn).toContain('across the House');
+  expect(drawn).not.toMatch(/[*|]|\[1\]/);
+  expect(
+    byId('ask-machine-label').filter((n) => typeof n.type === 'string'),
+  ).toHaveLength(1);
+  expect(drawn).toContain('This answer stopped partway.');
+  expect(byId('ask-retry')).not.toEqual([]);
+});
+
+test('Stop puts the question back in an empty composer and says so', async () => {
+  const announce = jest
+    .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
+    .mockImplementation(() => undefined);
+  jest
+    .mocked(client.askPost)
+    .mockImplementationOnce(
+      (_path, _body, signal) =>
+        new Promise((_resolve, reject) =>
+          signal.addEventListener('abort', () =>
+            reject(new AskFailure('cancelled', 'Cancelled.')),
+          ),
+        ),
+    );
+  await mount();
+  await type('Who spoke on housing?');
+  await press('ask-submit');
+  await press('ask-stop');
+  expect(askSession.snapshot().busy).toBe(false);
+  expect(one('ask-question').props.value).toBe('Who spoke on housing?');
+  expect(byId('ask-turn')).toEqual([]);
+  expect(byId('ask-error-cancelled')).toEqual([]);
+  expect(announce).toHaveBeenCalledWith(
+    'Stopped. Your question is back in the box.',
+    { queue: true },
+  );
+  announce.mockRestore();
+});
+
+test('a reply with nothing to search on asks for a full question; its suggestion fills, never sends', async () => {
+  const first = {
+    answer: 'A fixture answer about housing affordability.',
     citations: {},
     sources: [],
   };
   jest
     .mocked(client.askPost)
-    .mockReset()
-    .mockResolvedValueOnce(answer)
-    .mockResolvedValueOnce(clarify)
-    .mockResolvedValueOnce(answer);
-  let view: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  const byId = (id: string) => view!.root.findAllByProps({ testID: id });
-  await act(async () => {
-    byId('ask-question')[0]!.props.onChangeText(
-      'What has David Pocock proposed about housing affordability?',
-    );
-  });
-  await act(async () => {
-    await byId('ask-submit')[0]!.props.onPress();
-  });
-  await act(async () => {
-    byId('ask-followup-field')[0]!.props.onChangeText('High');
-  });
-  await act(async () => {
-    await byId('ask-followup-submit')[0]!.props.onPress();
-  });
+    .mockResolvedValueOnce(first)
+    .mockResolvedValueOnce(clarify);
+  await mount();
+  await type('What has Sam Placeholder proposed about housing affordability?');
+  await press('ask-submit');
+  await type('High');
+  await press('ask-submit');
   // Sent as a follow-up, with the conversation as context.
   expect(jest.mocked(client.askPost).mock.calls[1]?.[1]).toMatchObject({
     question: 'High',
     context: [
       {
         author: 'user',
-        text: 'What has David Pocock proposed about housing affordability?',
+        text: 'What has Sam Placeholder proposed about housing affordability?',
       },
-      { author: 'answer', text: answer.answer },
+      { author: 'answer', text: first.answer },
     ],
   });
   const turn = byId('ask-turn')[0]!;
-  expect(
-    turn.findAllByProps({ testID: 'ask-clarify-question' })[0]!.props.children,
-  ).toBe('High');
-  expect(
-    turn.findAllByProps({ testID: 'ask-clarify-message' })[0]!.props.message,
-  ).toBe('That’s too short to search the record on. Did you mean:');
-  const suggestion = turn.findAllByProps({
-    testID: 'ask-clarify-suggestion',
-  })[0]!;
-  expect(suggestion.props.title).toBe(clarify.suggested_question);
-  // No answer, no "Understood as", and the earlier answer's follow-up box stays.
-  expect(byId('ask-understood')).toEqual([]);
-  expect(byId('ask-user-question').map((n) => n.props.children)).not.toContain(
-    'High',
+  expect(turn.findAllByProps({ testID: 'ask-clarify' })).not.toEqual([]);
+  expect(textOf('ask-clarify-question')).toBe('High');
+  expect(textOf('ask-clarify-message')).toBe(
+    'Name a person, party, bill or topic.',
   );
-  expect(byId('ask-followup-field')).not.toEqual([]);
+  expect(
+    turn.findAllByProps({ testID: 'ask-search-opax' })[0]!.props.question,
+  ).toBe('High');
+  // No answer, no "Answered as", and the earlier answer stays the thread.
+  expect(byId('ask-answered-as')).toEqual([]);
+  expect(
+    byId('ask-user-question')
+      .flatMap((n) => n.findAll(() => true))
+      .map((n) => n.props.children),
+  ).not.toContain('High');
   expect(askSession.snapshot().thread).toHaveLength(2);
-  await act(async () => {
-    await suggestion.props.onPress();
-  });
-  const asked = jest.mocked(client.askPost).mock.calls[2]?.[1] as {
-    question: string;
-    context: { text: string }[];
-  };
-  expect(asked.question).toBe(clarify.suggested_question);
-  expect(asked.context.map((c) => c.text)).not.toContain('High');
-  expect(byId('ask-clarify')).toEqual([]);
-  expect(askSession.snapshot().thread).toHaveLength(4);
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, 50));
-    view!.unmount();
-    askSession.start();
-  });
+  await press('ask-clarify-suggestion');
+  expect(client.askPost).toHaveBeenCalledTimes(2);
+  expect(one('ask-question').props.value).toBe(clarify.suggested_question);
 });
 
-test('a failed follow-up hides the previous answer suggestions and keeps Try again', async () => {
+test('Answered as shows only when the rewrite changed the meaning', async () => {
   jest
     .mocked(client.askPost)
-    .mockReset()
     .mockResolvedValueOnce({
-      answer: 'Synthetic fixture answer.',
-      citations: {},
-      sources: [
-        {
-          resource: 'fixture',
-          title: 'Synthetic fixture',
-          slug: 'fixture',
-          snippet: 'Synthetic evidence passage.',
-        },
-      ],
+      ...answer,
+      asked_as: 'How did each party vote on the Example Bill 2026?',
     })
+    .mockResolvedValueOnce({ questions: [] });
+  await mount();
+  await type('How did they vote?');
+  await press('ask-submit');
+  expect(textOf('ask-answered-as')).toBe(
+    'Answered as: How did each party vote on the Example Bill 2026?',
+  );
+  expect(byId('ask-understood')).toEqual([]);
+});
+
+test('Ask next rows send; New question is enabled once there is an answer', async () => {
+  jest
+    .mocked(client.askPost)
+    .mockResolvedValueOnce(answer)
+    .mockResolvedValueOnce({
+      questions: [{ question: 'A grounded fixture follow-up?' }],
+    })
+    .mockResolvedValueOnce(answer)
+    .mockResolvedValueOnce({ questions: [] });
+  await mount();
+  await type('A fixture question?');
+  await press('ask-submit');
+  expect(byId('ask-answer')).not.toEqual([]);
+  expect(byId('ask-idle-line')).toEqual([]);
+  expect(barButton('New question')?.disabled).toBe(false);
+  await press('ask-followup-0');
+  expect(jest.mocked(client.askPost).mock.calls[2]?.[1]).toMatchObject({
+    question: 'A grounded fixture follow-up?',
+  });
+  await act(async () => barButton('New question')!.onPress());
+  expect(askSession.snapshot().thread).toEqual([]);
+  expect(byId('ask-idle-line')).not.toEqual([]);
+});
+
+test('a failed follow-up hides the previous Ask next and holds Try again while OPAX is busy', async () => {
+  jest
+    .mocked(client.askPost)
+    .mockResolvedValueOnce(answer)
     .mockResolvedValueOnce({
       questions: [{ question: 'A grounded fixture follow-up?' }],
     })
     .mockRejectedValueOnce(
       new AskFailure('rate-limited', 'Try again shortly.'),
     );
-  let view!: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  const byId = (id: string) => view.root.findAllByProps({ testID: id });
-  await act(async () => {
-    byId('ask-question')[0]!.props.onChangeText('A fixture question?');
-  });
-  await act(async () => {
-    await byId('ask-submit')[0]!.props.onPress();
-  });
+  await mount();
+  await type('A fixture question?');
+  await press('ask-submit');
   expect(byId('ask-followup-0')).not.toEqual([]);
-  await act(async () => {
-    byId('ask-followup-field')[0]!.props.onChangeText(
-      'A failing fixture question?',
-    );
-  });
-  await act(async () => {
-    await byId('ask-followup-submit')[0]!.props.onPress();
-  });
+  await type('A failing fixture question?');
+  await press('ask-submit');
   expect(byId('ask-followups')).toEqual([]);
   expect(byId('ask-followup-0')).toEqual([]);
-  expect(byId('ask-retry')).not.toEqual([]);
+  expect(texts()).toContain('OPAX is busy right now.');
+  expect(texts().join(' ')).not.toContain('Try again shortly.');
+  const retry = one('ask-retry');
+  expect(retry.props.disabled).toBe(true);
+  expect(retry.props.accessibilityHint).toBe('Available in a moment');
   expect(askSession.snapshot().thread).toHaveLength(2);
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, 50));
-    view.unmount();
-    askSession.start();
-  });
 });
 
-// Design pass 3D (concept board 5): one composer. At idle it leads the page
-// with Options and Your conversations; once there is an answer the question
-// and answer lead, and the same composer follows them as the follow-up.
-test('one composer: the question at idle, the follow-up under an answer', async () => {
-  withSavedChat();
+test('a blocked question offers no Try again', async () => {
   jest
     .mocked(client.askPost)
-    .mockReset()
-    .mockResolvedValueOnce({
-      answer: 'Synthetic fixture answer.',
-      citations: {},
-      sources: [
-        {
-          resource: 'fixture',
-          title: 'Synthetic fixture',
-          slug: 'fixture',
-          snippet: 'Synthetic evidence passage.',
-        },
-      ],
-    })
-    .mockResolvedValueOnce({
-      questions: [{ question: 'A grounded fixture follow-up?' }],
-    });
-  let view!: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  const composers = () =>
-    view.root
-      .findAll(
-        (n) =>
-          typeof n.type === 'function' &&
-          (n.type as { name?: string }).name === 'Composer',
-      )
-      .map((n) => n.props.testID);
-  const byId = (id: string) => view.root.findAllByProps({ testID: id });
-  expect(composers()).toEqual(['ask-question']);
-  expect(byId('ask-options')).not.toEqual([]);
-  expect(byId('ask-saved')).not.toEqual([]);
-  await act(async () => {
-    byId('ask-question')[0]!.props.onChangeText('A fixture question?');
-  });
-  await act(async () => {
-    await byId('ask-submit')[0]!.props.onPress();
-  });
-  expect(composers()).toEqual(['ask-followup-field']);
-  // The conversation's rows and "Start a new conversation" are under ⋯ now.
-  expect(byId('ask-options')).toEqual([]);
-  expect(byId('ask-saved')).toEqual([]);
-  expect(byId('ask-new')).toEqual([]);
-  expect(byId('ask-followup-0')).not.toEqual([]);
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, 50));
-    view.unmount();
-    askSession.start();
-  });
+    .mockRejectedValueOnce(new AskFailure('blocked', 'Forbidden (403)'));
+  await mount();
+  await type('A fixture question?');
+  await press('ask-submit');
+  expect(texts()).toContain("This question couldn't be sent.");
+  expect(byId('ask-retry')).toEqual([]);
 });
 
-test('idle Ask hides Your conversations when none is saved', async () => {
-  let view!: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  expect(view.root.findAllByProps({ testID: 'ask-saved' })).toEqual([]);
-  expect(view.root.findAllByProps({ testID: 'ask-options' })).not.toEqual([]);
-  await act(async () => view.unmount());
-  withSavedChat();
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  const row = view.root.findAllByProps({ testID: 'ask-saved' })[0]!;
-  expect(row.props.value).toBe('1');
-  await act(async () => view.unmount());
-});
-
-test('conversation history shows a skeleton while syncing instead of an empty history', async () => {
-  withSavedChat();
-  let finish!: (value: ReturnType<typeof chatsSnapshot>) => void;
-  jest.mocked(reconcileChats).mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        finish = resolve;
-      }),
+test('an arrival while an answer runs waits in the composer and sends a new conversation', async () => {
+  let finish: (v: unknown) => void = () => {};
+  jest
+    .mocked(client.askPost)
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    )
+    .mockResolvedValueOnce({ questions: [] })
+    .mockResolvedValueOnce(answer)
+    .mockResolvedValueOnce({ questions: [] });
+  await mount();
+  await type('A running question?');
+  await press('ask-submit');
+  await act(async () =>
+    arriveInAsk({
+      question: 'What has Sam Placeholder said in parliament this year?',
+      speaker: 'Sam Placeholder',
+      kind: 'speech',
+    }),
   );
-  let view!: ReactTestRenderer;
-  await act(async () => {
-    view = create(<AskScreen />);
-  });
-  await act(async () => {
-    void view.root.findAllByProps({ testID: 'ask-saved' })[0]!.props.onPress();
-  });
-  // Drop the local rows while the remote history is still pending.
-  jest.mocked(chatsSnapshot).mockReturnValue({ v: 1, active: null, chats: [] });
-  await act(async () => view.update(<AskScreen />));
-  expect(
-    view.root.findAllByProps({ testID: 'ask-history-loading' }).length,
-  ).toBeGreaterThan(0);
-  expect(
-    view.root.findAllByProps({ message: 'No saved conversations.' }),
-  ).toHaveLength(0);
-  await act(async () => finish(chatsSnapshot()));
-  await act(async () => {
-    view.unmount();
-    askSession.start();
+  // Nothing cancelled or sent; Stop stays until the answer completes.
+  expect(askSession.snapshot().busy).toBe(true);
+  expect(client.askPost).toHaveBeenCalledTimes(1);
+  expect(byId('ask-stop')).not.toEqual([]);
+  expect(textOf('ask-draft-new-conversation')).toContain(
+    'Starts a new conversation',
+  );
+  expect(one('ask-question').props.value).toBe(
+    'What has Sam Placeholder said in parliament this year?',
+  );
+  await act(async () => finish(answer));
+  const first = askSession.snapshot().id;
+  // The Person option is checked against the roster before it is sent.
+  jest.mocked(catalogs.roster).mockResolvedValue({
+    data: { people: [{ name: 'Sam Placeholder' }] },
+  } as never);
+  expect(askSession.snapshot().thread).toHaveLength(2);
+  await press('ask-submit');
+  const asked = jest.mocked(client.askPost).mock.calls[2]?.[1] as {
+    question: string;
+    context?: unknown[];
+  };
+  expect(asked.question).toBe(
+    'What has Sam Placeholder said in parliament this year?',
+  );
+  expect(asked.context ?? []).toEqual([]);
+  expect(askSession.snapshot().id).not.toBe(first);
+  expect(askSession.snapshot().options).toMatchObject({
+    speaker: 'Sam Placeholder',
+    kind: 'speech',
   });
 });

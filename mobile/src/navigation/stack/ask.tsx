@@ -1,27 +1,50 @@
-import { rootHeaderItems, headerItems, glassBar } from '../chrome';
+import { router } from 'expo-router';
+import { colors } from '../../design/tokens';
+import { askHeaderItems, glassBar } from '../chrome';
+import { conversationsRoute } from '../routes/ask';
 import { screen, sheetOptions } from './screen';
 
+/**
+ * Ask's routes in the shared tab stack. The Ask root's bar items change with
+ * the conversation (New question disabled while idle or answering), so
+ * AskScreen sets them; these are the first frame's.
+ */
 export function askScreens(segment = '', signedIn = false) {
   return [
     screen('ask', 'Ask', {
       headerLargeTitleEnabled: segment === '(ask)',
       headerTransparent: segment === '(ask)' && glassBar(),
-      ...headerItems(() => rootHeaderItems({ segment: '(ask)', signedIn })),
+      ...askHeaderItems({
+        canStartNew: false,
+        historyEnabled: true,
+        signedIn,
+        onNew: () => undefined,
+        onHistory: () => router.push(conversationsRoute),
+      }),
     }),
+    // A1: two buttons are the only exits; a swipe down is Not now.
     screen('consent', 'Before you ask', {
       ...sheetOptions,
       sheetAllowedDetents: 'fitToContents',
-      ...headerItems(undefined),
+      sheetGrabberVisible: true,
+      contentStyle: { backgroundColor: colors.sunken },
+      unstable_headerRightItems: () => [],
       headerBackVisible: false,
     }),
-    screen('filters/ask', 'Options', { ...sheetOptions, headerShown: false }),
-    screen('conversations', 'Your conversations', {
+    // A3: a modal page sheet with its own stack (conversations/_layout.tsx).
+    screen('conversations', 'Conversations', {
       presentation: 'modal',
       headerShown: false,
     }),
-    screen('ask-report', 'Report a problem', sheetOptions),
+    screen('ask-report', 'Report this answer', {
+      ...sheetOptions,
+      sheetAllowedDetents: [0.5, 1],
+      sheetInitialDetentIndex: 0,
+      sheetGrabberVisible: true,
+    }),
   ];
 }
+/** Account › Ask: the settings page and its Conversations, pushed in Account. */
 export function askAccountScreens() {
-  return [screen('ask', 'Ask'), screen('conversations', 'Your conversations')];
+  return [screen('ask', 'Ask'), screen('conversations', 'Conversations')];
 }

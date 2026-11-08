@@ -19,13 +19,28 @@ export type AskState = {
   options: AskOptions;
   busy: boolean;
   stage: AskStage | null;
-  reading: string[];
+  /** How many records the running answer is reading (a count, never titles). */
+  reading: number;
   streaming: string;
   error: AskFailure | null;
+  /** A question that failed before it joined the thread, shown as its heading. */
+  failed: { question: string; carry?: Followup } | null;
   notice: string | null;
   // A follow-up with nothing to search on ("High", "ok"): the Worker asked
   // for a full question instead of answering. Never part of the thread.
   clarify: { question: string; suggestion?: string } | null;
+  /** The composer's text. It lives here so arrivals can fill it. */
+  draft: string;
+  /**
+   * An arrival from outside Ask that waits for a running answer to end.
+   * Sending it starts a new conversation with `freshOptions`.
+   */
+  fresh: boolean;
+  freshOptions: AskOptions | null;
+  /** A question held for consent (A1): sent on Continue, kept on Not now. */
+  pending: { question: string; carry?: Followup; fromDraft: boolean } | null;
+  /** The newest answer's Ask next request is running (two reserved rows). */
+  nextLoading: boolean;
 };
 export type AskIO = {
   post: (
@@ -37,9 +52,13 @@ export type AskIO = {
   read: () => ChatStore;
   save: (s: ChatStore) => Promise<void>;
   sync?: (id: string) => Promise<void>;
+  /** "New" sticks across launches: the stored active id is cleared. */
+  forgetActive?: () => void;
   id: () => string;
   now: () => number;
 };
+/** What Stop did with the stopped question (journeys/ask.md 4.4 step 4). */
+export type StopResult = 'restored' | 'kept' | null;
 export class AskController {
   private state: AskState = {
     id: null,
@@ -47,14 +66,21 @@ export class AskController {
     options: { ...defaultOptions },
     busy: false,
     stage: null,
-    reading: [],
+    reading: 0,
     streaming: '',
     error: null,
+    failed: null,
     notice: null,
     clarify: null,
+    draft: '',
+    fresh: false,
+    freshOptions: null,
+    pending: null,
+    nextLoading: false,
   };
   private listeners = new Set<() => void>();
   private abort: AbortController | null = null;
+  private running: { before: Turn[]; question: string } | null = null;
   private sequence = 0;
   constructor(private io: AskIO) {}
   snapshot = () => this.state;
@@ -68,8 +94,26 @@ export class AskController {
     this.state = { ...this.state, ...p };
     for (const f of this.listeners) f();
   }
+  /** The options the composer's tags show: a fresh draft's, else the conversation's. */
+  composerOptions(): AskOptions {
+    return this.state.fresh && this.state.freshOptions
+      ? this.state.freshOptions
+      : this.state.options;
+  }
+  /** Options edits go to a fresh draft when one waits, never to a running answer. */
   options(o: AskOptions) {
-    if (!this.state.busy) this.update({ options: o });
+    if (this.state.fresh) this.update({ freshOptions: o });
+    else if (!this.state.busy) this.update({ options: o });
+  }
+  setDraft(text: string) {
+    // Emptying the composer turns a fresh draft back into a follow-up box.
+    if (!text.trim() && this.state.fresh)
+      this.update({ draft: text, fresh: false, freshOptions: null });
+    else this.update({ draft: text });
+  }
+  /** Clears an arrival's options line (its ⓧ): back to the conversation's own. */
+  clearFresh() {
+    this.update({ fresh: false, freshOptions: null });
   }
   open(id: string) {
     if (this.state.busy) return;
@@ -84,29 +128,125 @@ export class AskController {
           speaker: c.speaker,
         },
         error: null,
+        failed: null,
         streaming: '',
         stage: null,
         clarify: null,
+        notice: null,
+        fresh: false,
+        freshOptions: null,
       });
   }
   start(options: AskOptions = { ...defaultOptions }) {
     this.cancel();
     this.sequence++;
+    this.running = null;
+    this.io.forgetActive?.();
     this.update({
       id: null,
       thread: [],
       options,
       busy: false,
       error: null,
+      failed: null,
       streaming: '',
       stage: null,
-      reading: [],
+      reading: 0,
       notice: null,
       clarify: null,
+      fresh: false,
+      freshOptions: null,
+      nextLoading: false,
     });
+  }
+  /** The bar's New question: never while an answer is being written. */
+  newConversation() {
+    if (this.state.busy) return false;
+    this.start();
+    this.update({ draft: '', pending: null });
+    return true;
+  }
+  /**
+   * An "Ask about …" arrival from outside the Ask tab: always a new
+   * conversation, never a cancelled answer, nothing sent.
+   */
+  arrive(question: string, options: AskOptions) {
+    if (this.state.busy)
+      this.update({ draft: question, fresh: true, freshOptions: options });
+    else {
+      this.start(options);
+      this.update({ draft: question, pending: null });
+    }
   }
   cancel() {
     this.abort?.abort();
+  }
+  /**
+   * Stop: the unfinished turn goes. The question returns to an empty
+   * composer; anything already in the composer (a waiting draft, words the
+   * reader typed) is kept as it is.
+   */
+  stop(): StopResult {
+    if (!this.state.busy || !this.running) return null;
+    const { before, question } = this.running;
+    this.sequence++;
+    this.abort?.abort();
+    this.abort = null;
+    this.running = null;
+    const restored = !this.state.draft.trim();
+    this.update({
+      thread: before,
+      busy: false,
+      stage: null,
+      streaming: '',
+      reading: 0,
+      error: null,
+      failed: null,
+      ...(restored ? { draft: question } : {}),
+      ...(before.length ? {} : { id: null }),
+    });
+    return restored ? 'restored' : 'kept';
+  }
+  /** Holds a question until the reader answers the consent sheet. */
+  hold(question: string, carry: Followup | undefined, fromDraft: boolean) {
+    this.update({
+      pending: { question, ...(carry ? { carry } : {}), fromDraft },
+    });
+  }
+  /** Not now: nothing is sent; a starter's question waits in an empty composer. */
+  release() {
+    const held = this.state.pending;
+    if (!held) return;
+    this.update({
+      pending: null,
+      ...(!held.fromDraft && !this.state.draft.trim()
+        ? { draft: held.question }
+        : {}),
+    });
+  }
+  takePending() {
+    const held = this.state.pending;
+    if (held) this.update({ pending: null });
+    return held;
+  }
+  /**
+   * The composer's Send. A fresh draft starts a new conversation with the
+   * arrival's options; the open one is already saved.
+   */
+  async sendDraft() {
+    const q = this.state.draft.trim();
+    if (!q || this.state.busy) return;
+    if (this.state.fresh) this.start(this.state.freshOptions ?? undefined);
+    this.update({ draft: '', fresh: false, freshOptions: null });
+    await this.submit(q);
+  }
+  /** Try again: resends the failed question, clearing it from the composer. */
+  async retry() {
+    const failed = this.state.failed;
+    if (!failed || this.state.busy) return;
+    if (this.state.draft.trim() === failed.question.trim())
+      this.update({ draft: '' });
+    await this.submit(failed.question, failed.carry);
   }
   async persist() {
     const s = this.state;
@@ -133,7 +273,7 @@ export class AskController {
     } catch {
       this.update({
         notice: phoneCopy(
-          'This conversation could not be saved on this iPhone.',
+          "This conversation couldn't be saved on this iPhone.",
         ),
       });
     }
@@ -146,6 +286,7 @@ export class AskController {
     this.abort = abort;
     const before = this.state.thread.slice(),
       o = { ...this.state.options };
+    this.running = { before, question: q };
     const user: Turn = { role: 'user', text: q, options: o };
     this.update({
       id: this.state.id || this.io.id(),
@@ -153,8 +294,9 @@ export class AskController {
       busy: true,
       stage: 'Reading your question',
       streaming: '',
-      reading: [],
+      reading: 0,
       error: null,
+      failed: null,
       notice: null,
       clarify: null,
     });
@@ -183,6 +325,7 @@ export class AskController {
         ),
       );
       if (mine !== this.sequence) return;
+      this.running = null;
       if (data.answer_status === 'needs_question') {
         // Nothing was searched or written: the conversation stays as it was,
         // so the next question is not read against this one.
@@ -193,6 +336,7 @@ export class AskController {
           stage: null,
           streaming: '',
           clarify: { question: q, ...(suggestion ? { suggestion } : {}) },
+          ...(before.length ? {} : { id: null }),
         });
         return;
       }
@@ -206,6 +350,7 @@ export class AskController {
         sources: data.sources,
         result: data,
         options: o,
+        at: this.io.now(),
         ...(carry?.evidence ? { carried: { source: carry.source || '' } } : {}),
       };
       this.update({
@@ -214,36 +359,33 @@ export class AskController {
         stage: null,
         streaming: '',
         error: !data.answer
-          ? new AskFailure(
-              'empty',
-              'The record was searched and the sources below were retrieved, but no written answer came back this time.',
-            )
+          ? new AskFailure('empty', 'No answer was written this time.')
           : null,
       });
       await this.persist();
       if (mine !== this.sequence) return;
       // Generated only once for this answer. Calculated answers have fixed steps.
       await this.followups(answer, data, q, mine);
+      // A failed account push shows only in Conversations, never here.
       if (mine === this.sequence && this.state.id)
-        await this.io.sync?.(this.state.id).catch(() =>
-          this.update({
-            notice: phoneCopy(
-              'Saved on this iPhone. Account sync could not complete.',
-            ),
-          }),
-        );
+        await this.io.sync?.(this.state.id).catch(() => undefined);
     } catch (e) {
       if (mine !== this.sequence) return;
+      this.running = null;
       const failure =
         e instanceof AskFailure
           ? e
           : new AskFailure('invalid', 'The answer could not be read.');
+      // The failed question returns to the composer only when it is empty.
+      const restore = !this.state.draft.trim();
       this.update({
         thread: before,
         busy: false,
         stage: null,
         error: failure,
+        failed: { question: q, ...(carry ? { carry } : {}) },
         streaming: failure.code === 'cancelled' ? '' : this.state.streaming,
+        ...(restore && failure.code !== 'cancelled' ? { draft: q } : {}),
       });
     } finally {
       if (mine === this.sequence) this.abort = null;
@@ -267,6 +409,7 @@ export class AskController {
       .filter((p) => p.text)
       .slice(0, 8);
     if (!passages.length) return;
+    this.update({ nextLoading: true });
     try {
       const next = decodeFollowups(
         await this.io.post(
@@ -277,10 +420,13 @@ export class AskController {
       );
       if (mine !== this.sequence) return;
       turn.next = next;
-      this.update({ thread: this.state.thread.slice() });
+      this.update({ thread: this.state.thread.slice(), nextLoading: false });
       await this.persist();
     } catch {
-      /* The free follow-up field stays available. Never retry generation. */
+      /* The composer stays available. Never retry generation. */
+    } finally {
+      if (this.state.nextLoading && mine === this.sequence)
+        this.update({ nextLoading: false });
     }
   }
 }

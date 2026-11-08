@@ -1,9 +1,4 @@
-import { RoutePlaceholder } from '../../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return (
-    <RoutePlaceholder
-      route="(tabs)/(today,your-mp,bills,search,ask)/conversations/index"
-      title="Your conversations"
-    />
-  );
+import Conversations from '../../../../features/ask/Conversations';
+export default function ConversationsSheet() {
+  return <Conversations mode="sheet" />;
 }

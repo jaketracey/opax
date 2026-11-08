@@ -9,63 +9,45 @@ import {
   type RefObject,
 } from 'react';
 import {
-  Pressable,
+  ScrollView,
   StyleSheet,
   View,
   useWindowDimensions,
-  type ScrollView,
 } from 'react-native';
-import {
-  Group,
-  Heading,
-  Hoverable,
-  LayoutRegion,
-  PaneBar,
-  PaneHost,
-  RowList,
-  Screen,
-  SubSection,
-  SourceLine,
-  Text,
-  useAccessibilitySize,
-  useHover,
-  type SplitPane,
-  EmptyState,
-} from '../../design/primitives';
 // From adaptive, not primitives: screen tests mock primitives' components.
-import { splitPaneWidth, useLayout } from '../../design/adaptive';
-import {
-  SelectedMark,
-  selectedWash,
-  splitRowStyles,
-} from '../../design/selection';
+import { splitPaneWidth, useLayout, LayoutRegion } from '../../design/adaptive';
+import { useAccessibilitySize } from '../../design/accessibility';
+import { IconButton } from '../../design/controls';
+import { InsetGroup } from '../../design/layout';
+import { PaneBar, PaneHost, type SplitPane } from '../../design/split';
+import { Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
-import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { useListKeys } from '../../design/list-keys';
-import { useCursorReveal } from '../split/cursor';
+import { SurfaceContext } from '../../design/row-padding';
+import { askGround } from './ground';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
-import { openAnswerLink } from './AnswerView';
-import { sourceMeta } from './AnswerSources';
-import { openOnWeb, openSource } from '../../navigation/external';
-import {
-  sourceGroups,
-  sourcePassage,
-  type Source,
-  type Turn,
-} from './model';
+import { answerBlocks } from './answer-markdown';
+import { openAnswerLink } from './AnswerBody';
+import { AskIdle } from './AskIdle';
+import { CitedRecordRow } from './AskRows';
+import { CitationContent, citationCopy } from './CitationContent';
+import { firstClaim, selectCitation } from './citation-state';
+import { turnKey, type Turn } from './model';
+import type { AskPerson } from './people';
+import { citedSources } from './source-present';
 
 /**
- * Ask on iPad regular width: the conversation in the main column and, on
- * the right, the sources of the answer being read: its citations first,
- * numbered as in the answer, then what was retrieved but not cited. The pane
- * follows the conversation as it scrolls; a citation tapped in an answer
- * shows that answer's sources with the citation marked; a source opens in
- * the pane (a profile, a bill, a record), with Back to the sources. Sources
- * the app has no page for open as they do on the phone.
+ * Ask on iPad regular width (journeys/ask.md 4.12): the conversation in the
+ * main column and, on the right, a pane that is never empty. Idle, it shows
+ * Try asking and Conversations. After an answer it opens on citation 1 in
+ * the `/citation` anatomy; a mark tapped in the column selects its source
+ * here and highlights its sentence there; Previous and Next move between
+ * sources; Open record opens in the pane with Back to "Sources". The
+ * column's Records cited list is hidden.
  */
 export interface AskPane {
-  /** Opens a source in the pane, or as before when the pane cannot draw it. */
+  /** Opens a record in the pane, or as on the phone when the pane cannot draw it. */
   open: (href: string, title: string) => void;
   /** Citation `n` of the answer at thread index `turn` was tapped. */
   cite: (turn: number, n: number) => void;
@@ -80,15 +62,27 @@ export function useAskPane() {
 export const AskPaneProvider = AskPaneContext.Provider;
 
 /** The pane's state and the conversation's side of it. */
-export function useAskSources(thread: readonly Turn[]) {
+export function useAskSources(
+  thread: readonly Turn[],
+  {
+    chat,
+    profiles,
+    onAsk,
+    readFailed = false,
+  }: {
+    chat?: string | null;
+    profiles?: Map<string, AskPerson>;
+    onAsk?: (question: string) => void;
+    readFailed?: boolean;
+  } = {},
+) {
   const latest = thread.map((turn) => turn.role).lastIndexOf('answer');
   const [active, setActive] = useState<number | null>(null);
   const [mark, setMark] = useState<{ turn: number; n: number } | null>(null);
   const [stack, setStack] = useState<RecordEntry[]>([]);
-  // The answer the pane shows: the one in view, else the newest.
   const shown =
     active !== null && thread[active]?.role === 'answer' ? active : latest;
-  // A new answer brings the pane to it.
+  // A new answer brings the pane to it, on citation 1.
   const [seen, setSeen] = useState(latest);
   if (seen !== latest) {
     setSeen(latest);
@@ -112,7 +106,6 @@ export function useAskSources(thread: readonly Turn[]) {
         const done = () => {
           if (--pending > 0) return;
           measuring.current = false;
-          // The last answer whose top has passed the reading line.
           const line = height * 0.45;
           const reading = [...tops.entries()]
             .filter(([, top]) => top <= line)
@@ -131,7 +124,6 @@ export function useAskSources(thread: readonly Turn[]) {
       }
     }, 120);
   }, [height]);
-  // Stable: it reads only setters and refs.
   const context = useMemo<AskPane>(
     () => ({
       open(href, title) {
@@ -154,18 +146,37 @@ export function useAskSources(thread: readonly Turn[]) {
     [],
   );
   const answer = shown >= 0 ? thread[shown] : undefined;
-  const question = shown > 0 ? thread[shown - 1] : undefined;
+  const marked = mark && mark.turn === shown ? mark.n : 1;
+  const move = (n: number) => {
+    if (!answer || shown < 0) return;
+    const data = answer.result ?? {
+      answer: answer.text,
+      sources: answer.sources ?? [],
+      citations: {},
+    };
+    setMark({ turn: shown, n });
+    setStack([]);
+    if (chat)
+      selectCitation({
+        turn: turnKey(chat, shown),
+        n,
+        claim: firstClaim(answerBlocks(data), n),
+      });
+  };
   return {
     context,
     onScroll,
     pane: (
       <SourcesPane
         answer={answer?.role === 'answer' ? answer : undefined}
-        question={question?.role === 'user' ? question.text : undefined}
-        marked={mark && mark.turn === shown ? mark.n : null}
+        marked={marked}
+        move={move}
         stack={stack}
         setStack={setStack}
         open={context.open}
+        profiles={profiles}
+        onAsk={onAsk}
+        readFailed={readFailed}
       />
     ),
   };
@@ -173,25 +184,30 @@ export function useAskSources(thread: readonly Turn[]) {
 
 function SourcesPane({
   answer,
-  question,
   marked,
+  move,
   stack,
   setStack,
   open,
+  profiles,
+  onAsk,
+  readFailed,
 }: {
   answer?: Turn;
-  question?: string;
-  marked: number | null;
+  marked: number;
+  move: (n: number) => void;
   stack: RecordEntry[];
   setStack: (next: (current: RecordEntry[]) => RecordEntry[]) => void;
   open: (href: string, title: string) => void;
+  profiles?: Map<string, AskPerson>;
+  onAsk?: (question: string) => void;
+  readFailed: boolean;
 }) {
-  // The narrow pane of the one two-pane rule, from the room it shares with
-  // the conversation (inside the sidebar's inset), as a split's list is.
   const { width } = useLayout();
   const large = useAccessibilitySize();
   const paneWidth = splitPaneWidth(width, large);
   const top = stack.at(-1);
+  const ground = askGround();
   const pane: SplitPane<RecordEntry> = {
     push: (entry) => setStack((current) => [...current, entry]),
     back: () => {
@@ -205,218 +221,172 @@ function SourcesPane({
   };
   const below = stack.length > 1 ? stack.at(-2)! : null;
   return (
-    <View style={[styles.pane, { width: paneWidth }]} testID="ask-sources-pane">
-      <LayoutRegion style={styles.grow}>
-        {top ? (
-          <PaneHost
-            pane={pane}
-            bar={
-              <PaneBar
-                back={below ? entryLabel(below) : 'Sources'}
-                onBack={() => pane.back()}
-                actions={<RecordShare entry={top} />}
-              />
-            }
-          >
-            <View
-              key={`${top.kind}:${top.key}:${stack.length}`}
-              style={styles.grow}
+    <SurfaceContext.Provider value={ground}>
+      <View
+        style={[
+          styles.pane,
+          { width: paneWidth, backgroundColor: colors[ground] },
+        ]}
+        testID="ask-sources-pane"
+      >
+        <LayoutRegion style={styles.grow}>
+          {top ? (
+            <PaneHost
+              pane={pane}
+              bar={
+                <PaneBar
+                  back={below ? entryLabel(below) : 'Sources'}
+                  onBack={() => pane.back()}
+                  actions={<RecordShare entry={top} />}
+                />
+              }
             >
-              <RecordDetail entry={top} />
-            </View>
-          </PaneHost>
-        ) : answer ? (
-          <SourceList
-            answer={answer}
-            question={question}
-            marked={marked}
-            open={open}
-          />
-        ) : (
-          <EmptyState
-            size="pane"
-            message="Sources appear here"
-            testID="ask-sources-empty"
-          />
-        )}
-      </LayoutRegion>
-    </View>
+              <View
+                key={`${top.kind}:${top.key}:${stack.length}`}
+                style={styles.grow}
+              >
+                <RecordDetail entry={top} />
+              </View>
+            </PaneHost>
+          ) : answer ? (
+            <SourceList
+              answer={answer}
+              marked={marked}
+              move={move}
+              open={open}
+              profiles={profiles}
+            />
+          ) : (
+            <ScrollView
+              style={styles.grow}
+              contentContainerStyle={styles.content}
+              contentInsetAdjustmentBehavior="automatic"
+              testID="ask-pane-idle-list"
+            >
+              <AskIdle
+                onAsk={(q) => onAsk?.(q)}
+                offline={false}
+                readFailed={readFailed}
+                testPrefix="ask-pane"
+              />
+            </ScrollView>
+          )}
+        </LayoutRegion>
+      </View>
+    </SurfaceContext.Provider>
   );
 }
 
 function SourceList({
   answer,
-  question,
   marked,
+  move,
   open,
+  profiles,
 }: {
   answer: Turn;
-  question?: string;
-  marked: number | null;
+  marked: number;
+  move: (n: number) => void;
   open: (href: string, title: string) => void;
+  profiles?: Map<string, AskPerson>;
 }) {
   const sources = answer.result?.sources ?? answer.sources ?? [];
-  const groups = sourceGroups(sources);
-  const scroll = useRef<ScrollView>(null);
-  const reveal = useCursorReveal(scroll);
-  const ordered = [...groups.cited, ...groups.also];
+  const { cited, also, numbered } = citedSources(sources);
+  const source = numbered ? cited[marked - 1] : undefined;
+  // Up and Down move between the cited sources (journeys/ask.md 4.12);
+  // Return on a source found but not cited opens it in the pane.
+  const ordered = [...cited, ...also];
   const cursor = useListKeys(
-    ordered.map((source) => source.resource),
+    ordered.map((s) => s.resource),
     (key) => {
-      const source = ordered.find((item) => item.resource === key);
-      if (source) open(source.href, source.title);
+      const s = ordered.find((item) => item.resource === key);
+      if (s) open(s.href, s.title);
     },
-    reveal.reveal,
+    () => undefined,
   );
-  const markedRef = useRef<View>(null);
-  const headerBottom = useHeaderBottom();
-  // A tapped citation scrolls its source into view in the pane.
+  const cursorAt = numbered
+    ? cited.findIndex((s) => s.resource === cursor) + 1
+    : 0;
   useEffect(() => {
-    if (marked === null) return;
-    const frame = requestAnimationFrame(() => {
-      const inner = scroll.current?.getInnerViewNode();
-      if (!inner || !markedRef.current) return;
-      markedRef.current.measureLayout(inner, (_x, y) =>
-        scroll.current?.scrollTo({
-          y: Math.max(y - headerBottom - rhythm.block, -headerBottom),
-          animated: true,
-        }),
-      );
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [marked, headerBottom]);
-  const cited = groups.cited.some((source) => source.cited);
+    if (cursorAt && cursorAt !== marked) move(cursorAt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cursorAt]);
   return (
-    <Screen
+    <ScrollView
+      style={styles.grow}
+      contentContainerStyle={styles.content}
+      contentInsetAdjustmentBehavior="automatic"
       testID="ask-sources-list"
-      scrollRef={scroll}
-      onScroll={reveal.onScroll}
     >
-      <Group gap={rhythm.line}>
-        <Heading level={2}>Sources</Heading>
-        {question ? (
-          <Text wordSafe variant="metadata" testID="ask-sources-question">
-            {question}
+      {source ? (
+        <View style={styles.section}>
+          {cited.length > 1 ? (
+            <View style={styles.bar}>
+              <IconButton
+                symbol="chevron.up"
+                accessibilityLabel={citationCopy.previous}
+                disabled={marked <= 1}
+                onPress={() => move(marked - 1)}
+                testID="ask-pane-previous"
+              />
+              <IconButton
+                symbol="chevron.down"
+                accessibilityLabel={citationCopy.next}
+                disabled={marked >= cited.length}
+                onPress={() => move(marked + 1)}
+                testID="ask-pane-next"
+              />
+            </View>
+          ) : null}
+          <CitationContent
+            record={source}
+            n={marked}
+            profiles={profiles}
+            focusKey={`${answer.at ?? ''}:${marked}`}
+            onOpenRecord={() => open(source.href, source.title)}
+            onOpenPerson={(person) =>
+              open(`/subject/person/${person.slug}`, person.name)
+            }
+          />
+        </View>
+      ) : null}
+      {cited.length ? (
+        <View style={styles.section}>
+          <Text variant="groupHeader">
+            {numbered
+              ? `Records cited (${cited.length})`
+              : `Records found (${cited.length})`}
           </Text>
-        ) : null}
-      </Group>
-      {groups.cited.length ? (
-        <RowList>
-          {groups.cited.map((source, i) => (
-            <SourceItem
-              key={source.resource}
-              record={source}
-              n={cited ? i + 1 : undefined}
-              marked={marked === i + 1}
-              itemRef={marked === i + 1 ? markedRef : undefined}
-              highlighted={cursor === source.resource}
-              rows={reveal.rows}
-              open={open}
-            />
-          ))}
-        </RowList>
-      ) : (
-        <Text wordSafe variant="metadata">
-          No records were retrieved for this answer.
-        </Text>
-      )}
-      {groups.also.length ? (
-        <SubSection title="Also retrieved, not cited">
-          <RowList>
-            {groups.also.map((source) => (
-              <SourceItem
-                key={source.resource}
-                record={source}
-                marked={false}
-                highlighted={cursor === source.resource}
-                rows={reveal.rows}
-                open={open}
+          <InsetGroup>
+            {cited.map((s, i) => (
+              <CitedRecordRow
+                key={s.resource}
+                record={s}
+                n={numbered ? i + 1 : undefined}
+                selected={numbered ? marked === i + 1 : cursor === s.resource}
+                onPress={() => (numbered ? move(i + 1) : open(s.href, s.title))}
+                testID={`ask-pane-source-${i + 1}`}
               />
             ))}
-          </RowList>
-        </SubSection>
+          </InsetGroup>
+        </View>
       ) : null}
-    </Screen>
-  );
-}
-
-function SourceItem({
-  record: source,
-  n,
-  marked,
-  itemRef,
-  highlighted,
-  rows,
-  open,
-}: {
-  record: Source;
-  n?: number;
-  marked: boolean;
-  itemRef?: RefObject<View | null>;
-  highlighted: boolean;
-  rows: ReturnType<typeof useCursorReveal>['rows'];
-  open: (href: string, title: string) => void;
-}) {
-  const [hovered, onHover] = useHover();
-  const row = useRef<View>(null);
-  useEffect(() => {
-    rows.set(source.resource, row);
-    return () => {
-      rows.delete(source.resource);
-    };
-  }, [rows, source.resource]);
-  const meta = sourceMeta(source);
-  const title = `${n ? `[${n}] ` : ''}${source.title}`;
-  return (
-    <View ref={row} collapsable={false} style={styles.item}>
-      <View ref={itemRef} collapsable={false}>
-        <Hoverable effect="none" onHover={onHover}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={[title, meta].filter(Boolean).join(', ')}
-            accessibilityState={{ selected: marked }}
-            testID={n ? `ask-pane-source-${n}` : undefined}
-            onPress={() => open(source.href, source.title)}
-            style={({ pressed }) => [
-              styles.source,
-              splitRowStyles.bleed,
-              marked
-                ? selectedWash('people')
-                : pressed || hovered || highlighted
-                  ? { backgroundColor: colors.sunken }
-                  : null,
-            ]}
-          >
-            {marked ? <SelectedMark accent="people" /> : null}
-            <Text wordSafe variant="strong">
-              {title}
-            </Text>
-            {meta ? (
-              <Text wordSafe variant="metadata">
-                {meta}
-              </Text>
-            ) : null}
-            {source.snippet ? (
-              <Text wordSafe variant="record">
-                {sourcePassage(source.snippet)}
-              </Text>
-            ) : null}
-          </Pressable>
-        </Hoverable>
-      </View>
-      {source.url &&
-      (source.url.startsWith('https://') || source.url.startsWith('/')) ? (
-        <SourceLine
-          label="View original"
-          accessibilityLabel={`View original: ${source.title}`}
-          onPress={() =>
-            source.url!.startsWith('/')
-              ? void openOnWeb(source.url!, source.title)
-              : void openSource(source.url!, source.title)
-          }
-        />
+      {also.length ? (
+        <View style={styles.section}>
+          <Text variant="groupHeader">Also found, not cited</Text>
+          <InsetGroup>
+            {also.map((s) => (
+              <CitedRecordRow
+                key={s.resource}
+                record={s}
+                selected={cursor === s.resource}
+                onPress={() => open(s.href, s.title)}
+              />
+            ))}
+          </InsetGroup>
+        </View>
       ) : null}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -425,9 +395,13 @@ const styles = StyleSheet.create({
     height: '100%',
     borderLeftWidth: hairline,
     borderLeftColor: colors.dividerDefault,
-    backgroundColor: colors.paper,
   },
   grow: { flex: 1 },
-  item: { gap: rhythm.line },
-  source: { gap: rhythm.line, paddingVertical: rhythm.heading },
+  content: {
+    gap: rhythm.section,
+    paddingHorizontal: rhythm.block + rhythm.line,
+    paddingVertical: rhythm.block,
+  },
+  section: { gap: rhythm.groupHeader },
+  bar: { flexDirection: 'row', justifyContent: 'flex-end' },
 });

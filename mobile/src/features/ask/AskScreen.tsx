@@ -1,44 +1,27 @@
-import { phoneCopy } from '../../design/phone-copy';
-import { useFocusRequest } from '../../design/keyboard';
 import {
-  AccessibilityInfo,
-  Alert,
-  Keyboard,
-  StyleSheet,
-  View,
-  ScrollView,
-  type TextInput,
-  useWindowDimensions,
-  type LayoutChangeEvent,
-} from 'react-native';
-import { headerItems, rootHeaderItems } from '../../navigation/chrome';
-import {
+  type ReactNode,
+  useCallback,
   useEffect,
   useRef,
   useState,
   useSyncExternalStore,
   type RefObject,
 } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { catalogs } from '../../api/runtime';
 import {
-  Button,
-  IconButton,
-  EmptyState,
-  ErrorState,
-  Composer,
-  FilterChip,
-  Group,
-  Heading,
-  LoadingState,
-  KeyboardStableScreen,
-  Section,
-  Text,
-  Disclosure,
-  LinkRow,
-  RowList,
-} from '../../design/primitives';
-import { colors, hairline, layout, rhythm, spacing } from '../../design/tokens';
+  AccessibilityInfo,
+  Keyboard,
+  LayoutAnimation,
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  type KeyboardEvent,
+  type TextInput,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { catalogs } from '../../api/runtime';
+import { useReduceMotion } from '../../design/accessibility';
 import {
   RegionProvider,
   SidebarSafe,
@@ -48,156 +31,91 @@ import {
   useLayout,
   useMeasuredRegion,
 } from '../../design/adaptive';
-import { AskPaneProvider, useAskSources } from './SourcesPane';
-import { useReduceMotion } from '../../design/accessibility';
+import { designFlags } from '../../design/flags';
+import { SurfaceContext } from '../../design/row-padding';
+import { useFocusRequest } from '../../design/keyboard';
+import { useScreenColumn } from '../../design/layout';
+import { colors, hairline, layout, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
-import { AskProgress } from './AskProgress';
-import { AskSheet } from './AskSheet';
-import { AskConsent } from './AskConsent';
-import { askConsentGiven, giveAskConsent } from './consent';
-import { accountSnapshot, useAccount } from '../account/store';
+import { askHeaderItems } from '../../navigation/chrome';
+import { conversationsRoute } from '../../navigation/routes/ask';
 import { voiceLinked } from '../../voice/linked';
-import { AnswerView } from './AnswerView';
-import type { MenuAction } from '../../design/menu';
-import { Builder } from './QuestionBuilder';
-import { Options, topics } from './Options';
-import {
-  chips,
-  clearChip,
-  defaultOptions,
-  rosterPeople,
-  sampleQuestions,
-  type Followup,
-} from './model';
-import { askSession } from './session';
-import {
-  chatsSnapshot,
-  loadChats,
-  saveChats,
-  subscribeChats,
-  subscribeChatDeletion,
-  clearAskConversations,
-} from './store';
-import {
-  ChatSyncError,
-  deleteRemoteChat,
-  reconcileChats,
-  deleteAllRemoteChats,
-} from './sync';
+import { useAccount } from '../account/store';
+import { AskRevealContext, announceAnswer } from './AnswerView';
+import { AskDock } from './AskDock';
+import { AskIdle } from './AskIdle';
+import { AskThread } from './AskThread';
+import { openAskOptions, topics } from './Options';
+import type { Followup } from './model';
+import { rosterProfiles, type AskPerson } from './people';
+import { arriveInAsk, askQuestion, askSession, type AskScope } from './session';
+import { AskPaneProvider, useAskSources } from './SourcesPane';
+import { chatsSnapshot, loadChats, subscribeChats } from './store';
+import { askGround } from './ground';
+import { stopCopy } from './turn-copy';
+
+const topicNames = Object.values(topics);
+const announce = (text: string) =>
+  AccessibilityInfo.announceForAccessibilityWithOptions(text, { queue: true });
+
+/**
+ * The Ask tab (journeys/ask.md 4): idle (Try asking, Conversations) or the
+ * open conversation, with one composer docked above the tab bar (on iPad,
+ * under the conversation, beside its sources). After a cold launch Ask opens
+ * idle; within a session it keeps what was on screen.
+ */
 export default function AskScreen() {
+  const ground = askGround();
+  const groundStyle = { backgroundColor: colors[ground] };
   const s = useSyncExternalStore(
-      askSession.subscribe,
-      askSession.snapshot,
-      askSession.snapshot,
-    ),
-    saved = useSyncExternalStore(subscribeChats, chatsSnapshot, chatsSnapshot),
-    account = useAccount();
-  const headerBottom = useHeaderBottom(),
-    { height: windowHeight } = useWindowDimensions(),
-    reduceMotion = useReduceMotion();
-  const params = useLocalSearchParams<{
-    question?: string;
-    entry?: string;
-    speaker?: string;
-    kind?: string;
-    party?: string;
-    state?: string;
-    topic?: string;
-    from?: string;
-    to?: string;
-  }>();
-  const [draft, setDraft] = useState(''),
-    [builderOpen, setBuilderOpen] = useState(false),
-    [optionsOpen, setOptionsOpen] = useState(false),
-    [historyOpen, setHistoryOpen] = useState(false),
-    [people, setPeople] = useState<Map<string, string>>(new Map()),
-    [bills, setBills] = useState<string[]>([]),
-    [namesBusy, setNamesBusy] = useState(false),
-    [namesError, setNamesError] = useState(''),
-    [inputError, setInputError] = useState(''),
-    [syncBusy, setSyncBusy] = useState(false),
-    [chatsLoading, setChatsLoading] = useState(true),
-    [chatsError, setChatsError] = useState(false),
-    [syncError, setSyncError] = useState(false),
-    [syncNotice, setSyncNotice] = useState(''),
-    [accountSynced, setAccountSynced] = useState(false),
-    [retryQuestion, setRetryQuestion] = useState(''),
-    // A question held for consent: sent on Continue, dropped on Not now.
-    [consenting, setConsenting] = useState<{
-      question: string;
-      carry?: Followup;
-    } | null>(null);
-  // Cmd-N on iPad (src/navigation/KeyboardShortcuts.tsx) focuses the question.
-  const questionInput = useRef<TextInput>(null);
-  useFocusRequest('ask', questionInput);
-  // iPad: the conversation beside its sources, the composer docked under the
-  // conversation, when the room inside the sidebar's inset is regular width.
-  // The window alone is not enough: a narrow window with the sidebar open
-  // keeps one column, as Bills and Search do.
+    askSession.subscribe,
+    askSession.snapshot,
+    askSession.snapshot,
+  );
+  const saved = useSyncExternalStore(
+    subscribeChats,
+    chatsSnapshot,
+    chatsSnapshot,
+  );
+  const account = useAccount();
+  const signedIn = !!account.status?.signedIn;
+  const params =
+    useLocalSearchParams<Partial<Record<keyof AskScope | 'entry', string>>>();
+  const headerBottom = useHeaderBottom();
+  const reduceMotion = useReduceMotion();
+  const { height: windowHeight } = useWindowDimensions();
+  const [readFailed, setReadFailed] = useState(false);
+  const [inputError, setInputError] = useState('');
+  const [profiles, setProfiles] = useState<Map<string, AskPerson>>(new Map());
+  const [names, setNames] = useState<string[]>([]);
+  const [dockHeight, setDockHeight] = useState(0);
+  // Bar items are built during render, so New question touches no refs:
+  // it asks for the top, and an effect scrolls there.
+  const [topRequest, setTopRequest] = useState(0);
+  const input = useRef<TextInput>(null);
+  const scroll = useRef<ScrollView>(null);
+  const root = useRef<View>(null);
+  const turnY = useRef(0);
+  const pin = useRef(false);
+  const lastStage = useRef<string | null>(null);
+  const lastAnswer = useRef<object | null>(null);
+  const loadingNames = useRef(false);
+  useFocusRequest('ask', input);
+  // iPad: two columns when the room inside the sidebar's inset is regular.
   const [onRoom, room] = useMeasuredRegion();
   const outer = useLayout();
   const docked =
     isPad && sizeClassFor(room?.width ?? outer.width) === 'regular';
-  const sources = useAskSources(s.thread);
-  const noTarget = useRef<View>(null);
-  const column = useRef<View>(null);
-  const lift = useKeyboardLift(column, docked);
-  const scroll = useRef<ScrollView>(null),
-    submitTarget = useRef<View>(null),
-    entry = useRef<string | undefined>(undefined),
-    lastStage = useRef<string | null>(null),
-    lastAnswer = useRef<object | null>(null),
-    turnY = useRef(0),
-    pinTurn = useRef(false),
-    syncVersion = useRef(0),
-    namesLoaded = useRef(false);
-  // The scroll view runs under the native header: content y 0 sits behind the
-  // bar, and the top at rest is minus the header's height.
-  function scrollToTop() {
-    scroll.current?.scrollTo({ y: -headerBottom, animated: false });
-  }
-  // Bring the current turn (the question as asked, then its stages, answer or
-  // error) to just below the header. It runs from the turn's own layout, once
-  // the submitted question has been laid out, never from a stale position.
-  function revealTurn() {
-    if (!pinTurn.current) return;
-    pinTurn.current = false;
-    scroll.current?.scrollTo({
-      y: Math.max(turnY.current - headerBottom - rhythm.heading, -headerBottom),
-      animated: !reduceMotion,
-    });
-  }
-  function pinCurrentTurn() {
-    pinTurn.current = true;
-    // The turn's onLayout normally reveals it; this covers a turn whose frame
-    // did not change. Two frames on, the layout has been committed.
-    requestAnimationFrame(() => requestAnimationFrame(revealTurn));
-  }
-  useEffect(
-    () =>
-      subscribeChatDeletion(() => {
-        syncVersion.current++;
-        setAccountSynced(false);
-      }),
-    [],
-  );
+  const column = useScreenColumn('readable');
+  const keyboard = useKeyboardOverlap(root);
+
   useEffect(() => {
-    void loadChats()
-      .then(() => {
-        const active = chatsSnapshot().active;
-        if (!entry.current && active && !askSession.snapshot().thread.length)
-          askSession.open(active);
-      })
-      .catch(() => {
-        setChatsError(true);
-        setSyncNotice('Saved conversations could not be read.');
-      })
-      .finally(() => setChatsLoading(false));
+    void loadChats().catch(() => setReadFailed(true));
   }, []);
+  // A deep link's draft (useOpenAsk handles taps inside the app itself).
   useEffect(() => {
-    if (!params.entry || params.entry === entry.current) return;
-    entry.current = params.entry;
-    const o = { ...defaultOptions };
+    if (!params.entry) return;
+    const scope: AskScope = { question: params.question ?? '' };
     for (const k of [
       'speaker',
       'party',
@@ -205,678 +123,340 @@ export default function AskScreen() {
       'topic',
       'from',
       'to',
+      'kind',
     ] as const)
-      if (params[k]) o[k] = params[k]!;
-    o.kind = params.kind === 'speech' ? 'speech' : 'all';
-    askSession.start(o);
-    setDraft(params.question || '');
-    setInputError('');
-    setBuilderOpen(false);
-    requestAnimationFrame(scrollToTop);
+      if (params[k]) scope[k] = params[k];
+    arriveInAsk(scope, params.entry);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, [params.entry]);
+  // Each stage is announced once, politely; the line is not a live region.
   useEffect(() => {
-    if (s.stage && s.stage !== lastStage.current) {
-      lastStage.current = s.stage;
-      AccessibilityInfo.announceForAccessibilityWithOptions(s.stage, {
-        queue: true,
-      });
-    }
-    if (!s.stage) lastStage.current = null;
+    if (s.stage && s.stage !== lastStage.current) announce(s.stage);
+    lastStage.current = s.stage;
   }, [s.stage]);
-  useEffect(() => {
-    if (s.clarify)
-      AccessibilityInfo.announceForAccessibilityWithOptions(
-        clarifyCopy(!!s.clarify.suggestion),
-        { queue: true },
-      );
-  }, [s.clarify]);
-  useEffect(() => {
-    if (s.error) pinCurrentTurn();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [s.error]);
-  const answer = s.thread.filter((m) => m.role === 'answer').at(-1);
-  useEffect(() => {
-    if (answer && answer !== lastAnswer.current) {
-      lastAnswer.current = answer;
-      AccessibilityInfo.announceForAccessibilityWithOptions('Answer ready.', {
-        queue: true,
-      });
-      void loadNames();
-    } // Streaming text has no live-region announcements.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [answer]);
   async function loadNames() {
-    if (namesBusy || namesLoaded.current) return;
-    setNamesBusy(true);
-    setNamesError('');
+    if (loadingNames.current || names.length) return;
+    loadingNames.current = true;
     try {
-      const [roster, slugs, index] = await Promise.all([
+      const [roster, slugs] = await Promise.all([
         catalogs.roster(),
         catalogs.slugs(),
-        catalogs.bills(),
       ]);
-      setPeople(rosterPeople(roster.data, slugs.data));
-      setBills(
-        index.data.bills
-          .filter(
-            (b) => b.jurisdiction === 'federal' && Number(b.parliament) >= 47,
-          )
-          .map((b) => b.short_title || b.title),
-      );
-      namesLoaded.current = true;
+      setProfiles(rosterProfiles(roster.data, slugs.data));
+      setNames(roster.data.people.map((p) => p.name));
     } catch {
-      setNamesError('Names from the record could not be loaded. Try again.');
+      /* People rows wait for the roster; the answer reads without them. */
     } finally {
-      setNamesBusy(false);
+      loadingNames.current = false;
     }
   }
-  async function submit(question = draft, carry?: Followup) {
-    if (s.busy || !question.trim()) return;
-    // Nothing leaves the device until the reader agrees, once (consent.ts).
-    // The composer, a builder sentence or a sample keeps its question.
-    if (!(await askConsentGiven())) {
-      Keyboard.dismiss();
-      setConsenting({ question, ...(carry ? { carry } : {}) });
-      return;
-    }
-    setInputError('');
-    if (s.options.speaker) {
-      try {
-        const roster = await catalogs.roster();
-        if (!roster.data.people.some((p) => p.name === s.options.speaker)) {
-          setInputError(
-            'Choose a speaker from the parliamentarian roster in Options.',
-          );
-          return;
-        }
-      } catch {
-        setInputError(
-          'The parliamentarian roster could not be checked. Try again when you are online.',
-        );
-        return;
-      }
-    }
-    Keyboard.dismiss();
-    setRetryQuestion(question);
-    setDraft('');
-    setBuilderOpen(false);
-    const promise = askSession.submit(question, carry);
-    pinCurrentTurn();
-    await promise;
-  }
-  async function history() {
-    setHistoryOpen(true);
-    const status = accountSnapshot().status;
-    if (voiceLinked && (!status || status.signedIn || status.accountHeld))
-      await sync();
-  }
-  async function sync() {
-    if (syncBusy) return;
-    const mine = ++syncVersion.current;
-    setSyncBusy(true);
-    setSyncError(false);
-    setSyncNotice('');
-    try {
-      const next = await reconcileChats(
-        chatsSnapshot(),
-        () => mine === syncVersion.current,
-      );
-      if (mine !== syncVersion.current) return;
-      await saveChats(next);
-      setAccountSynced(true);
-      if (askSession.snapshot().id) askSession.open(askSession.snapshot().id!);
-      setSyncNotice(phoneCopy('Saved to your account and on this iPhone.'));
-    } catch (e) {
-      if (e instanceof ChatSyncError && e.code === 'signed-out') {
-        setAccountSynced(false);
-        if (!accountSnapshot().status) {
-          setSyncNotice('');
-          return;
-        }
-      }
-      setSyncError(true);
-      setSyncNotice(
-        e instanceof Error ? e.message : 'Account sync could not complete.',
-      );
-    } finally {
-      setSyncBusy(false);
-    }
-  }
-  async function remove(id: string) {
-    syncVersion.current++;
-    const store = chatsSnapshot();
-    await saveChats({
-      ...store,
-      active: store.active === id ? null : store.active,
-      chats: store.chats.filter((c) => c.id !== id),
-    }).catch(() =>
-      setSyncNotice(
-        phoneCopy('This conversation could not be deleted from this iPhone.'),
-      ),
-    );
-    if (s.id === id) askSession.start();
-    if (communityAccount)
-      await deleteRemoteChat(id).catch(() =>
-        setSyncNotice(
-          phoneCopy(
-            'Deleted on this iPhone. Account deletion could not complete.',
-          ),
-        ),
-      );
-  }
-  function removeAll() {
-    Alert.alert(
-      'Delete all conversations?',
-      !voiceLinked
-        ? 'This removes your saved conversations on this phone.'
-        : phoneCopy(
-            'This removes your saved conversations on this iPhone and, when signed in, from your account.',
-          ),
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete all',
-          style: 'destructive',
-          onPress: () => {
-            void (async () => {
-              syncVersion.current++;
-              askSession.start();
-              try {
-                await clearAskConversations();
-                if (communityAccount) await deleteAllRemoteChats();
-              } catch {
-                setSyncNotice('Account sync could not complete. Try again.');
-              }
-            })();
-          },
-        },
-      ],
-    );
-  }
-  const names = [...people.keys()].sort((a, b) => a.localeCompare(b));
-  // The current turn starts at the last question. A failed question, or one
-  // the Worker asked to have put in full, never joined the thread, so it is
-  // shown from its own copy instead.
-  const failed = !!s.error && s.error.code !== 'empty',
-    lastQuestion = s.thread.map((m) => m.role).lastIndexOf('user'),
-    split =
-      failed || s.clarify || lastQuestion < 0 ? s.thread.length : lastQuestion,
-    earlier = s.thread.slice(0, split),
-    current = s.thread.slice(split);
-  // Nothing asked yet: the composer leads the page with Options, Your
-  // conversations and the sample questions. Once there is a conversation the
-  // question and its answer lead, and the one composer follows the answer.
-  const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
-  const followup = s.thread.some((m) => m.role === 'answer');
-  function newConversation() {
-    askSession.start();
-    setDraft('');
-    scrollToTop();
-  }
-  function openOptions() {
+
+  const latest = s.thread.at(-1);
+  const wasBusy = useRef(false);
+  useEffect(() => {
+    if (latest?.role !== 'answer' || latest === lastAnswer.current) return;
+    lastAnswer.current = latest;
+    // Announced when written, not when a saved conversation is opened.
+    if (wasBusy.current) announceAnswer(latest);
     void loadNames();
-    setOptionsOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latest]);
+  // After the effect above, so it still sees the answer's run as busy.
+  useEffect(() => {
+    wasBusy.current = s.busy;
+  }, [s.busy]);
+  const scrollToTop = () =>
+    scroll.current?.scrollTo({ y: -headerBottom, animated: false });
+  // The new question goes just under the bar once its turn is laid out.
+  const reveal = () => {
+    if (!pin.current) return;
+    pin.current = false;
+    scroll.current?.scrollTo({
+      y: Math.max(turnY.current - headerBottom - rhythm.heading, -headerBottom),
+      animated: !reduceMotion,
+    });
+  };
+  useEffect(() => {
+    if (topRequest) scrollToTop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topRequest]);
+  const pinTurn = () => {
+    pin.current = true;
+    requestAnimationFrame(() => requestAnimationFrame(reveal));
+  };
+  // A claim moves just above the half-height citation sheet's top edge.
+  const revealClaim = useCallback(
+    (target: View) => {
+      const inner = scroll.current?.getInnerViewNode();
+      if (!inner) return;
+      target.measureLayout(inner, (_x, y, _w, h) => {
+        const sheetTop = windowHeight / 2;
+        const room = sheetTop - headerBottom - rhythm.block;
+        const offset =
+          h > room
+            ? y - headerBottom - rhythm.tight
+            : y + h - sheetTop + rhythm.block;
+        scroll.current?.scrollTo({
+          y: Math.max(offset, -headerBottom),
+          animated: !reduceMotion,
+        });
+      });
+    },
+    [windowHeight, headerBottom, reduceMotion],
+  );
+
+  async function ask(question: string, carry?: Followup) {
+    Keyboard.dismiss();
+    pinTurn();
+    setInputError((await askQuestion(question, { carry })) ?? '');
   }
-  // Under each answer's ⋯, after Share and Report; none while a question runs.
-  const conversationActions: MenuAction[] = s.busy
-    ? []
-    : [
-        { title: 'Start a new conversation', onPress: newConversation },
-        { title: 'Your conversations', onPress: () => void history() },
-        { title: 'Options', onPress: openOptions },
-      ];
-  function renderTurn(turn: (typeof s.thread)[number], i: number) {
-    return turn.role === 'user' ? (
-      <Group key={i}>
-        <Heading level={2} testID="ask-user-question">
-          {turn.text}
-        </Heading>
-        {turn.askedAs ? (
-          <Text wordSafe variant="metadata" testID="ask-understood">
-            Understood as: {turn.askedAs}
-          </Text>
-        ) : null}
-      </Group>
-    ) : (
-      <AnswerView
-        key={i}
-        turn={turn}
-        question={s.thread[i - 1]!}
-        people={people}
-        index={i}
-        actions={conversationActions}
-      />
-    );
+  async function send() {
+    if (!s.draft.trim()) return;
+    Keyboard.dismiss();
+    pinTurn();
+    setInputError((await askQuestion(s.draft, { fromDraft: true })) ?? '');
   }
-  const communityAccount = account.status
-    ? !!(account.status.signedIn || account.status.accountHeld)
-    : accountSynced;
-  // One composer: the question at idle, the follow-up under an answer, and
-  // docked under the conversation on iPad.
-  const composer = (
-    <Composer
-      ref={submitTarget}
-      inputRef={questionInput}
-      label={followup ? 'Ask a follow-up' : 'Your question'}
-      submitLabel={followup ? 'Ask' : 'Ask the record'}
-      placeholder={
-        followup
-          ? 'Ask a follow-up…'
-          : 'Ask a question about the public record…'
-      }
-      value={draft}
-      onChangeText={setDraft}
-      onSubmit={() => void submit()}
-      busy={s.busy}
-      maxLength={2000}
-      testID={followup ? 'ask-followup-field' : 'ask-question'}
-      submitTestID={followup ? 'ask-followup-submit' : 'ask-submit'}
+  function stop() {
+    const result = askSession.stop();
+    if (result) announce(stopCopy[result]);
+  }
+  function retry() {
+    pinTurn();
+    void askSession.retry();
+  }
+  function newConversation() {
+    if (askSession.newConversation()) {
+      setInputError('');
+      setTopRequest((n) => n + 1);
+    }
+  }
+  const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
+  const talk =
+    designFlags.talkInAsk && voiceLinked && signedIn
+      ? () => router.push('/talk')
+      : undefined;
+  const chat = saved.chats.find((c) => c.id === s.id);
+  const sources = useAskSources(s.thread, {
+    chat: s.id,
+    profiles,
+    onAsk: (q) => void ask(q),
+    readFailed,
+  });
+  const dock = (
+    <AskDock
+      inputRef={input}
+      onSend={() => void send()}
+      onStop={stop}
+      onOptions={() => void openAskOptions()}
+      onTalk={talk}
+      offline={false}
+      inputError={inputError}
+      onLayout={(e) => setDockHeight(e.nativeEvent.layout.height)}
     />
   );
-  // The options in force, beside the composer they apply to.
-  const filters = (
-    <>
-      {chips(s.options).map((c) => (
-        <FilterChip
-          key={c.id}
-          filter={c.key.toLowerCase()}
-          value={c.id === 'topic' ? topics[c.value] || c.value : c.value}
-          onRemove={() => askSession.options(clearChip(s.options, c.id))}
-          testID={`ask-chip-${c.id}`}
-        />
-      ))}
-      {chips(s.options).length > 1 ? (
-        <Button
-          label="Clear all"
-          onPress={() => askSession.options({ ...defaultOptions })}
-        />
-      ) : null}
-    </>
-  );
-  const conversation = (
-    <KeyboardStableScreen
+  const content = (
+    <ScrollView
+      ref={scroll}
       testID="ask-screen"
-      scrollRef={scroll}
-      keyboardTarget={docked ? noTarget : submitTarget}
+      style={[styles.fill, groundStyle]}
+      contentInsetAdjustmentBehavior="automatic"
+      keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets={false}
+      keyboardDismissMode="interactive"
+      scrollToOverflowEnabled
+      onLayout={column.onLayout}
       onScroll={docked ? sources.onScroll : undefined}
+      scrollEventThrottle={16}
+      contentContainerStyle={[
+        styles.content,
+        column.content,
+        // Room for the docked composer (and the keyboard under it).
+        {
+          paddingBottom: dockHeight + rhythm.section + (docked ? 0 : keyboard),
+        },
+      ]}
     >
-      {idle ? (
-        <Group gap={rhythm.heading}>
-          {docked ? null : composer}
-          {inputError ? <ErrorState message={inputError} /> : null}
-          <RowList>
-            <LinkRow
-              title="Options"
-              disabled={s.busy}
-              onPress={openOptions}
-              testID="ask-options"
-            />
-            {/* An empty list is not a destination (pass 5, P3-6). */}
-            {saved.chats.length ? (
-              <LinkRow
-                title="Your conversations"
-                value={String(saved.chats.length)}
-                disabled={s.busy}
-                onPress={() => void history()}
-                testID="ask-saved"
-              />
-            ) : null}
-          </RowList>
-          {filters}
-        </Group>
-      ) : null}
-      {idle ? (
-        <Group gap={rhythm.heading}>
-          <RowList>
-            {sampleQuestions.map((q, i) => (
-              <LinkRow
-                key={q}
-                title={q}
-                onPress={() => void submit(q)}
-                testID={`ask-sample-${i}`}
-              />
-            ))}
-            <Disclosure
-              label="Build a question"
-              icon="text.badge.plus"
-              accent="people"
-              open={builderOpen}
-              onToggle={(open) => {
-                if (open) void loadNames();
-                setBuilderOpen(open);
-              }}
-              testID="ask-builder-toggle"
-            >
-              <Group>
-                {namesBusy ? (
-                  <LoadingState label="Loading names from the record" />
-                ) : null}
-                {namesError ? (
-                  <ErrorState
-                    message={namesError}
-                    onRetry={() => void loadNames()}
-                  />
-                ) : null}
-                <Builder
-                  people={names}
-                  bills={bills}
-                  onSubmit={(q) => void submit(q)}
-                  busy={s.busy}
-                />
-              </Group>
-            </Disclosure>
-          </RowList>
-        </Group>
-      ) : null}
-      {earlier.map((turn, i) => renderTurn(turn, i))}
-      {current.length || s.busy || s.error || s.notice || s.clarify ? (
-        <View
-          testID="ask-turn"
-          style={[
-            styles.turn,
-            s.thread.length || s.busy || s.error
-              ? {
-                  // Room below the turn for it to sit under the header
-                  // whatever the answer's length, so the reveal never
-                  // scrolls past the end of the content.
-                  minHeight: Math.max(
-                    0,
-                    windowHeight - headerBottom - rhythm.heading - spacing.s7,
-                  ),
-                }
-              : null,
-          ]}
-          onLayout={(e: LayoutChangeEvent) => {
-            turnY.current = e.nativeEvent.layout.y;
-            revealTurn();
-          }}
-        >
-          {current.map((turn, i) => renderTurn(turn, split + i))}
-          {failed && retryQuestion ? (
-            <Heading level={2} testID="ask-failed-question">
-              {retryQuestion}
-            </Heading>
-          ) : null}
-          {s.clarify && !s.busy ? (
-            <Group testID="ask-clarify">
-              <Heading level={2} testID="ask-clarify-question">
-                {s.clarify.question}
-              </Heading>
-              <EmptyState
-                icon="text.bubble"
-                message={clarifyCopy(!!s.clarify.suggestion)}
-                testID="ask-clarify-message"
-              />
-              {s.clarify.suggestion ? (
-                <RowList>
-                  <LinkRow
-                    title={s.clarify.suggestion}
-                    onPress={() => void submit(s.clarify!.suggestion)}
-                    accessibilityHint="Asks this question"
-                    testID="ask-clarify-suggestion"
-                  />
-                </RowList>
-              ) : null}
-            </Group>
-          ) : null}
-          {s.busy ? (
-            <AskProgress
-              stage={s.stage}
-              reading={s.reading}
-              streaming={s.streaming}
-              onCancel={() => askSession.cancel()}
-            />
-          ) : null}
-          {s.error ? (
-            <Group testID={`ask-error-${s.error.code}`}>
-              <ErrorState
-                message={
-                  s.error.code === 'partial' && s.streaming
-                    ? `${s.error.message} This is an incomplete answer.`
-                    : s.error.message
-                }
-              />
-              {s.streaming ? (
-                <Text wordSafe selectable>
-                  {s.streaming}
-                </Text>
-              ) : null}
-              <Button
-                label="Try again"
-                icon="arrow.clockwise"
-                onPress={() => void submit(retryQuestion)}
-                testID="ask-retry"
-              />
-            </Group>
-          ) : null}
-          {s.notice ? <Text wordSafe>{s.notice}</Text> : null}
-          {answer && !s.busy && !s.error && answer.next?.length ? (
-            <Section title="Ask next" accent="people" testID="ask-followups">
-              <RowList>
-                {answer.next.map((next, i) => (
-                  <LinkRow
-                    key={next.question}
-                    title={next.question}
-                    onPress={() => void submit(next.question, next)}
-                    testID={`ask-followup-${i}`}
-                  />
-                ))}
-              </RowList>
-            </Section>
-          ) : null}
-          {idle ? null : (
-            <Group gap={rhythm.heading}>
-              {filters}
-              {inputError ? <ErrorState message={inputError} /> : null}
-              {/* On iPad the docked composer asks the next question. */}
-              {docked ? null : composer}
-            </Group>
-          )}
-        </View>
-      ) : null}
-    </KeyboardStableScreen>
+      <RegionProvider value={column.inner}>
+        {idle ? (
+          <AskIdle
+            onAsk={(q) => void ask(q)}
+            offline={false}
+            readFailed={readFailed}
+            starterCount={docked ? 3 : 4}
+          />
+        ) : (
+          <AskThread
+            s={s}
+            chat={chat}
+            profiles={profiles}
+            names={names}
+            topics={topicNames}
+            paneShowsSources={docked}
+            onAsk={(q, carry) => void ask(q, carry)}
+            onRetry={retry}
+            onTurnLayout={(y) => {
+              turnY.current = y;
+              reveal();
+            }}
+            minHeight={Math.max(
+              0,
+              windowHeight - headerBottom - dockHeight - rhythm.section * 2,
+            )}
+          />
+        )}
+      </RegionProvider>
+    </ScrollView>
   );
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: 'Ask',
-          ...headerItems(rootHeaderItems),
-          // Two panes: an inline title (large titles over two scroll views
-          // collapse with whichever scrolls first).
-          ...(isPad ? { headerLargeTitleEnabled: !docked } : null),
-        }}
-      />
-      {isPad ? (
-        <SidebarSafe style={styles.fill}>
-          <View
-            style={[styles.fill, docked ? styles.split : null]}
-            onLayout={onRoom}
-          >
-            <RegionProvider value={room}>
-              {docked ? (
-                <>
-                  <View
-                    ref={column}
-                    style={[styles.fill, { paddingBottom: lift }]}
-                  >
-                    <AskPaneProvider value={sources.context}>
-                      {conversation}
-                    </AskPaneProvider>
-                    <View style={styles.dock} testID="ask-dock">
-                      <View
-                        style={[
-                          styles.dockColumn,
-                          {
-                            maxWidth:
-                              columns.readable - layout.screenMargin * 2,
-                          },
-                        ]}
-                      >
-                        {composer}
-                      </View>
-                    </View>
-                  </View>
-                  {sources.pane}
-                </>
-              ) : (
-                conversation
-              )}
-            </RegionProvider>
-          </View>
-        </SidebarSafe>
-      ) : (
-        conversation
-      )}
-      {consenting ? (
-        <AskConsent
-          onAgree={() => {
-            const held = consenting;
-            setConsenting(null);
-            // Held for this launch at once; a failed save asks again later.
-            void giveAskConsent().catch(() => undefined);
-            void submit(held.question, held.carry);
+    <SurfaceContext.Provider value={ground}>
+      <View ref={root} style={[styles.fill, groundStyle]} collapsable={false}>
+        <Stack.Screen
+          options={{
+            ...askHeaderItems({
+              canStartNew: !s.busy && !idle,
+              historyEnabled: saved.chats.length > 0,
+              signedIn,
+              onNew: newConversation,
+              onHistory: () => router.push(conversationsRoute),
+            }),
+            // Two panes: an inline title (a large title over two scroll views
+            // collapses with whichever scrolls first).
+            ...(isPad ? { headerLargeTitleEnabled: !docked } : null),
           }}
-          onDecline={() => setConsenting(null)}
         />
-      ) : null}
-      {optionsOpen ? (
-        <Options
-          value={s.options}
-          people={names}
-          onDone={(o) => {
-            askSession.options(o);
-            setOptionsOpen(false);
-          }}
-          onCancel={() => setOptionsOpen(false)}
-        />
-      ) : null}
-      {historyOpen ? (
-        <AskSheet
-          title="Your conversations"
-          onDone={() => setHistoryOpen(false)}
-          testID="ask-history-screen"
-          doneID="ask-history-done"
-        >
-          <Text wordSafe variant="fine">
-            {communityAccount
-              ? phoneCopy('Saved on this iPhone.')
-              : !voiceLinked
-                ? 'Saved on this phone.'
-                : phoneCopy(
-                    'Saved on this iPhone. Sign in to keep them across devices.',
+        <AskRevealContext.Provider value={revealClaim}>
+          {isPad ? (
+            <SidebarSafe style={[styles.fill, groundStyle]}>
+              <View
+                style={[styles.fill, groundStyle, docked ? styles.split : null]}
+                onLayout={onRoom}
+              >
+                <RegionProvider value={room}>
+                  {docked ? (
+                    <>
+                      <PadColumn dock={dock}>
+                        <AskPaneProvider value={sources.context}>
+                          {content}
+                        </AskPaneProvider>
+                      </PadColumn>
+                      {sources.pane}
+                    </>
+                  ) : (
+                    <>
+                      {content}
+                      <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
+                    </>
                   )}
-          </Text>
-          {!saved.chats.length && (syncBusy || chatsLoading) ? (
-            <LoadingState
-              label="Loading conversations"
-              testID="ask-history-loading"
-            />
-          ) : !saved.chats.length && !chatsError && !syncError ? (
-            <EmptyState message="No saved conversations." />
-          ) : null}
-          {saved.chats.map((c, i) => {
-            const questions = c.thread.filter((m) => m.role === 'user').length;
-            return (
-              <View key={c.id} style={styles.conversation}>
-                <View style={styles.conversationTitle}>
-                  <LinkRow
-                    title={c.title}
-                    detail={`${questions} question${questions === 1 ? '' : 's'}`}
-                    icon="bubble.left.and.bubble.right"
-                    accent="people"
-                    onPress={() => {
-                      askSession.open(c.id);
-                      setHistoryOpen(false);
-                      pinCurrentTurn();
-                    }}
-                    testID={`ask-restore-${i}`}
-                  />
-                </View>
-                <IconButton
-                  symbol="trash"
-                  accessibilityLabel={`Delete conversation: ${c.title}`}
-                  onPress={() => void remove(c.id)}
-                  testID={`ask-delete-${i}`}
-                />
+                </RegionProvider>
               </View>
-            );
-          })}
-          {syncNotice ? (
-            <Text wordSafe testID="ask-sync-notice">
-              {syncNotice}
-            </Text>
-          ) : null}
-          {communityAccount ? (
-            <Button
-              label="Sync conversations"
-              loading={syncBusy}
-              onPress={() => void sync()}
-            />
-          ) : null}
-          <Button
-            label="Delete all conversations"
-            variant="danger"
-            disabled={!saved.chats.length}
-            onPress={removeAll}
-            testID="ask-delete-all"
-          />
-        </AskSheet>
-      ) : null}
-    </>
+            </SidebarSafe>
+          ) : (
+            <>
+              {content}
+              <PhoneDock keyboard={keyboard}>{dock}</PhoneDock>
+            </>
+          )}
+        </AskRevealContext.Provider>
+      </View>
+    </SurfaceContext.Provider>
   );
 }
+
 /**
- * The docked composer's lift above the software keyboard: how far the
- * keyboard overlaps the bottom of `ref` (the conversation column) in the
- * window. Measured, because the column does not start at the window's top.
+ * iPhone (and compact iPad): the composer floats over the content on the
+ * tab bar's top edge. A native safe-area view reads the bar's inset as the
+ * bar minimises and expands (journeys/ask.md 4.4a); with the keyboard up the
+ * composer sits on the keyboard instead.
  */
-function useKeyboardLift(ref: RefObject<View | null>, enabled: boolean) {
-  const [lift, setLift] = useState(0);
-  useEffect(() => {
-    if (!enabled) return;
-    const subscription = Keyboard.addListener(
-      'keyboardWillChangeFrame',
-      (event) => {
-        const top = event.endCoordinates.screenY;
-        ref.current?.measureInWindow((_x, y, _width, height) =>
-          setLift(Math.max(0, Math.round(y + height - top))),
-        );
-      },
-    );
-    const hidden = Keyboard.addListener('keyboardWillHide', () => setLift(0));
-    return () => {
-      subscription.remove();
-      hidden.remove();
-    };
-  }, [ref, enabled]);
-  return enabled ? lift : 0;
+function PhoneDock({
+  keyboard,
+  children,
+}: {
+  keyboard: number;
+  children: ReactNode;
+}) {
+  return (
+    <SafeAreaView
+      edges={keyboard ? [] : ['bottom']}
+      mode="padding"
+      pointerEvents="box-none"
+      style={[styles.phoneDock, keyboard ? { paddingBottom: keyboard } : null]}
+    >
+      <View style={styles.phoneDockInner}>{children}</View>
+    </SafeAreaView>
+  );
 }
-// Nothing was searched for a follow-up like "High" or "ok": say so gently.
-function clarifyCopy(suggested: boolean) {
-  return suggested
-    ? 'That’s too short to search the record on. Did you mean:'
-    : 'That’s too short to search the record on. Ask a full question, naming the person, party or topic.';
+/** iPad regular: the composer docked under the conversation column. */
+function PadColumn({
+  dock,
+  children,
+}: {
+  dock: ReactNode;
+  children: ReactNode;
+}) {
+  const ref = useRef<View>(null);
+  const lift = useKeyboardOverlap(ref);
+  const ground = { backgroundColor: colors[askGround()] };
+  return (
+    <View ref={ref} style={[styles.fill, ground, { paddingBottom: lift }]}>
+      {children}
+      <View style={[styles.padDock, ground]}>
+        <View
+          style={[
+            styles.padDockColumn,
+            { maxWidth: columns.readable - layout.screenMargin * 2 },
+          ]}
+        >
+          {dock}
+        </View>
+      </View>
+    </View>
+  );
+}
+/** How far the software keyboard overlaps the bottom of `ref`, animated with it. */
+function useKeyboardOverlap(ref: RefObject<View | null>) {
+  const [overlap, setOverlap] = useState(0);
+  useEffect(() => {
+    const animate = (event: KeyboardEvent) => {
+      if (event.duration)
+        LayoutAnimation.configureNext({
+          duration: event.duration,
+          update: { type: LayoutAnimation.Types.keyboard },
+        });
+    };
+    const change = Keyboard.addListener('keyboardWillChangeFrame', (event) => {
+      const top = event.endCoordinates.screenY;
+      ref.current?.measureInWindow((_x, y, _w, height) => {
+        animate(event);
+        setOverlap(Math.max(0, Math.round(y + height - top)));
+      });
+    });
+    const hide = Keyboard.addListener('keyboardWillHide', (event) => {
+      animate(event);
+      setOverlap(0);
+    });
+    return () => {
+      change.remove();
+      hide.remove();
+    };
+  }, [ref]);
+  return overlap;
 }
 const styles = StyleSheet.create({
-  conversation: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: rhythm.tight,
-  },
-  conversationTitle: { flex: 1 },
-  turn: { gap: layout.sectionGap },
-  fill: { flex: 1, backgroundColor: colors.paper },
+  fill: { flex: 1 },
+  content: { paddingTop: rhythm.block, gap: rhythm.section },
   split: { flexDirection: 'row' },
-  dock: {
+  phoneDock: { position: 'absolute', left: 0, right: 0, bottom: 0 },
+  phoneDockInner: {
+    paddingHorizontal: layout.screenMargin,
+    paddingBottom: rhythm.tight,
+  },
+  padDock: {
     borderTopWidth: hairline,
     borderTopColor: colors.dividerDefault,
-    backgroundColor: colors.paper,
     paddingHorizontal: layout.screenMargin,
     paddingTop: rhythm.tight,
     paddingBottom: rhythm.heading,
   },
-  // The composer keeps the conversation's readable measure.
-  dockColumn: { width: '100%', alignSelf: 'center' },
+  padDockColumn: { width: '100%', alignSelf: 'center' },
 });
