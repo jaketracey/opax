@@ -1,5 +1,6 @@
 import type { Href } from 'expo-router';
 import { Pressable, Share, StyleSheet, View } from 'react-native';
+import { symbols } from '../../design/symbols';
 import { Icon, type SFSymbol } from '../../design/icon';
 import { RowLink, rowMenus, type RowMenuAction } from '../../design/row-link';
 import { copyText } from '../records/actions';
@@ -29,15 +30,15 @@ export interface LatestRecord extends FollowRecord {
   detail: string;
   href?: Href;
 }
-const symbols: Record<FollowRecord['kind'], SFSymbol> = {
-  vote: 'hand.raised',
-  register: 'list.clipboard',
-  bill: 'doc.text',
-  division: 'hand.raised',
-  speech: 'text.alignleft',
-  stage: 'doc.text',
-  return: 'doc.text',
-  member: 'person',
+const recordSymbols: Record<FollowRecord['kind'], SFSymbol> = {
+  vote: symbols.vote,
+  register: symbols.interests,
+  bill: symbols.bills,
+  division: symbols.vote,
+  speech: symbols.speech,
+  stage: symbols.bills,
+  return: symbols.bills,
+  member: symbols.person,
 };
 export function latestRecord(record: FollowRecord): LatestRecord | null {
   let action = record.action ?? '';
@@ -198,7 +199,7 @@ export function LatestRow({
       ]}
     >
       <Icon
-        name={symbols[record.kind]}
+        name={recordSymbols[record.kind]}
         size={20}
         tone="inkSoft"
         type="hierarchical"
@@ -215,7 +216,7 @@ export function LatestRow({
         <Text variant="secondary">{detail}</Text>
       </View>
       <Icon
-        name={record.href ? 'chevron.right' : 'arrow.up.right.square'}
+        name={record.href ? symbols.chevron : symbols.external}
         size={13}
         tone="inkSoft"
       />

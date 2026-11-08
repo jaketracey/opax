@@ -12,6 +12,7 @@ export function NewDot({ testID }: { testID?: string }) {
         width: size,
         height: size,
         borderRadius: size / 2,
+        borderCurve: 'continuous',
         backgroundColor: colors.navy,
       }}
     />

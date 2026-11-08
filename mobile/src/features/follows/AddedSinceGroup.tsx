@@ -4,6 +4,7 @@ import { LinkRow } from '../../design/rows';
 import { personRoute } from '../../navigation/routes';
 import { View } from 'react-native';
 import { InsetGroup } from '../../design/layout';
+import { rhythm } from '../../design/tokens';
 import { Text } from '../../design/text';
 import { SourceLine } from '../../design/source';
 import { LatestRow, latestRecord } from '../your-mp/LatestRows';
@@ -75,7 +76,10 @@ export function AddedSinceGroup({
   if (!shown.length) return null;
   return (
     <View ref={ref} collapsable={false} testID={testID}>
-      <Text variant="groupHeader">{`Added since ${changeDate(displayed.since).replace(/ \d{4}$/, '')}`}</Text>
+      <Text
+        variant="groupHeader"
+        style={{ marginBottom: rhythm.groupHeader }}
+      >{`Added since ${changeDate(displayed.since).replace(/ \d{4}$/, '')}`}</Text>
       <InsetGroup>
         {shown.map((change, i) => {
           if (change.record?.kind === 'member' && change.record.slug)
@@ -116,7 +120,7 @@ export function AddedSinceGroup({
             <View
               key={`${change.marker}-${i}`}
               testID={`${testID}-${i}`}
-              style={{ paddingVertical: 12, paddingHorizontal: 16 }}
+              style={{ paddingVertical: rhythm.row }}
             >
               <Text
                 variant="body"

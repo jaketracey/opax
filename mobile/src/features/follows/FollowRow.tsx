@@ -11,6 +11,7 @@ import {
 } from '../../navigation/routes';
 import type { FollowState } from './markers';
 import {
+  type Change,
   changeDate,
   sortChanges,
   changeAccessibilityLabel,
@@ -21,7 +22,7 @@ import {
 import { followKey, unfollow, type Follow } from './store';
 
 export function followRoute(
-  follow: Pick<Follow, 'kind' | 'id'> & { changes?: readonly unknown[] },
+  follow: Pick<Follow, 'kind' | 'id'> & { changes?: readonly Change[] },
   state?: FollowState,
 ) {
   const changed =
