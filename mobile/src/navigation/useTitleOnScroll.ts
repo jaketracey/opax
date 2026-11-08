@@ -11,6 +11,8 @@ import {
 import {
   Animated,
   Platform,
+  View as NativeView,
+  useWindowDimensions,
   type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
@@ -31,16 +33,49 @@ export const TitleAnchorContext = createContext<
 // reviewer must confirm this cap at AX5; this lane never boots a simulator.
 export const inlineTitleScaleCap = 23 / 17;
 
-export function BarTitle({ title, shown }: { title: string; shown: boolean }) {
+/**
+ * The widest a bar title may be, centred between the bar's items: iOS 26
+ * draws each item as a 44 pt glass circle 16 pt from the edge, and a group
+ * adds 60 pt an item. A React title view is laid out by Yoga, not UIKit, so
+ * nothing else stops its text running under the items (bills-07). On wide
+ * windows (iPad) the stack can be narrower than the window, so it keeps to
+ * half the window.
+ */
+export function barTitleWidth(windowWidth: number, trailing = 2): number {
+  const side = 16 + 44 + 60 * Math.max(0, trailing - 1) + 8;
+  const room = Math.max(0, windowWidth - 2 * side);
+  return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
+}
+
+/**
+ * The bar's title view. At rest it has no width, so UIKit keeps the room for
+ * a named back button (a hidden but full-width title made it a bare chevron,
+ * wave 4 bills-06, money-03); shown, it truncates inside the bar items.
+ */
+export function BarTitle({
+  title,
+  shown,
+  trailing = 2,
+}: {
+  title: string;
+  shown: boolean;
+  /** How many items the bar draws after the title: ⋯ alone is 1. */
+  trailing?: number;
+}) {
   const reduceMotion = useReduceMotionSetting();
+  const { width } = useWindowDimensions();
   const [opacity] = useState(() => new Animated.Value(shown ? 1 : 0));
+  const [present, setPresent] = useState(shown);
+  if (shown && !present) setPresent(true);
   useEffect(() => {
     const fade = Animated.timing(opacity, {
       toValue: shown ? 1 : 0,
       duration: reduceMotion === false ? motion.duration.crossfade : 0,
       useNativeDriver: true,
     });
-    fade.start();
+    fade.start(({ finished }) => {
+      if (finished && !shown) setPresent(false);
+    });
     return () => fade.stop();
   }, [shown, reduceMotion, opacity]);
   const {
@@ -56,10 +91,32 @@ export function BarTitle({ title, shown }: { title: string; shown: boolean }) {
       maxFontSizeMultiplier: inlineTitleScaleCap,
       accessibilityElementsHidden: !shown,
       importantForAccessibility: shown ? 'auto' : 'no-hide-descendants',
-      style: [style, { color: colors.ink, opacity }],
+      testID: 'bar-title',
+      style: [
+        style,
+        {
+          color: colors.ink,
+          opacity,
+          maxWidth: present ? barTitleWidth(width, trailing) : 0,
+        },
+      ],
     },
-    title,
+    present ? title : '',
   );
+}
+
+/**
+ * A route's bar before its subject's title is known: an empty title view.
+ * `headerTitle: ''` would also blank the route's `title`, which UIKit reads
+ * for the next screen's back button (records-01, bills-15), and leaving it
+ * unset draws the route title as a string at once.
+ */
+export function emptyBarTitle() {
+  return createElement(NativeView, {
+    style: { width: 0, height: 0 },
+    accessibilityElementsHidden: true,
+    importantForAccessibility: 'no-hide-descendants',
+  });
 }
 
 type TitleRef = RefObject<View | Text | null>;
@@ -68,7 +125,11 @@ type TitleRef = RefObject<View | Text | null>;
  * title wrapper and scrolling view. Screen can instead report its content
  * anchor with setAnchorBottom and provide it through TitleAnchorContext.
  */
-export function useTitleOnScroll(ref: TitleRef | null, title?: string) {
+export function useTitleOnScroll(
+  ref: TitleRef | null,
+  title?: string,
+  { trailing = 2 }: { trailing?: number } = {},
+) {
   const navigation = useContext(NavigationContext);
   const headerHeight = useHeaderBottom();
   const [anchor, setAnchor] = useState<number | null>(null);
@@ -89,11 +150,15 @@ export function useTitleOnScroll(ref: TitleRef | null, title?: string) {
         ? { headerTitle: shown.current ? title : '' }
         : {
             headerTitle: () =>
-              createElement(BarTitle, { title, shown: shown.current }),
+              createElement(BarTitle, {
+                title,
+                shown: shown.current,
+                trailing,
+              }),
           }),
     });
     installed.current = true;
-  }, [title, anchor, navigation, headerHeight]);
+  }, [title, anchor, navigation, headerHeight, trailing]);
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
       offset.current =
@@ -108,11 +173,11 @@ export function useTitleOnScroll(ref: TitleRef | null, title?: string) {
           ? { headerTitle: next ? title : '' }
           : {
               headerTitle: () =>
-                createElement(BarTitle, { title, shown: next }),
+                createElement(BarTitle, { title, shown: next, trailing }),
             },
       );
     },
-    [anchor, title, navigation, headerHeight],
+    [anchor, title, navigation, headerHeight, trailing],
   );
   const onTitleLayout = useCallback(
     (event: LayoutChangeEvent) => {

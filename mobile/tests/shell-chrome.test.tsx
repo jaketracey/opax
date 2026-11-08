@@ -1,12 +1,12 @@
 import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Animated, Platform } from 'react-native';
+import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { NavigationContext } from 'expo-router/react-navigation';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { askScreens } from '../src/navigation/stack/ask';
-import { tabRootScreen } from '../src/navigation/stack/screen';
+import { tabRootScreen, untitled } from '../src/navigation/stack/screen';
 import {
   pageItems,
   pageMenu,
@@ -21,8 +21,12 @@ import {
 import {
   useTitleOnScroll,
   BarTitle,
+  barTitleWidth,
+  emptyBarTitle,
   inlineTitleScaleCap,
 } from '../src/navigation/useTitleOnScroll';
+import { recordsScreens } from '../src/navigation/stack/records';
+import { editionScreens } from '../src/navigation/stack/edition';
 import {
   ExternalURLProbe,
   recordExternalURL,
@@ -398,6 +402,80 @@ test('the tab layout records the selected tab for warm Money map links', () => {
   setSelectedTab('(today)');
 });
 
+describe('bar titles leave room for a named back button (wave 4 bills-06, money-03)', () => {
+  const style = (view: TestRenderer.ReactTestRenderer) =>
+    StyleSheet.flatten(view.root.findByType(Animated.Text).props.style);
+  test('at rest the title view has no width and no text', () => {
+    const view = tree(
+      <BarTitle title="Interactive Gambling Bill" shown={false} />,
+    );
+    expect(style(view).maxWidth).toBe(0);
+    expect(view.root.findByType(Animated.Text).props.children).toBe('');
+    act(() => view.unmount());
+  });
+  test('shown, it truncates inside the bar items, never under them (bills-07)', () => {
+    const view = tree(
+      <BarTitle title="Interactive Gambling Bill" shown trailing={2} />,
+    );
+    const text = view.root.findByType(Animated.Text);
+    expect(text.props.children).toBe('Interactive Gambling Bill');
+    expect(text.props.numberOfLines).toBe(1);
+    expect(text.props.ellipsizeMode).toBe('tail');
+    expect(style(view).maxWidth).toBe(
+      barTitleWidth(Dimensions.get('window').width, 2),
+    );
+    act(() => view.unmount());
+  });
+  test('the width is the bar less a 44 pt item, 60 pt a further item, margins and gaps, each side', () => {
+    // 17 Pro: ⋯ alone leaves 266 pt; Share and ⋯ leave 146 pt.
+    expect(barTitleWidth(402, 1)).toBe(266);
+    expect(barTitleWidth(402, 2)).toBe(146);
+    expect(barTitleWidth(375, 1)).toBe(239);
+    // iPad: never wider than half the window.
+    expect(barTitleWidth(1024, 1)).toBe(512);
+  });
+  test('hiding keeps the width while it fades, then gives it back', () => {
+    let finish: Animated.EndCallback | undefined;
+    const timing = jest.spyOn(Animated, 'timing').mockImplementation(
+      () =>
+        ({
+          start: (callback?: Animated.EndCallback) => {
+            finish = callback;
+          },
+          stop: () => undefined,
+        }) as unknown as Animated.CompositeAnimation,
+    );
+    const view = tree(<BarTitle title="Member" shown />);
+    act(() => view.update(<BarTitle title="Member" shown={false} />));
+    expect(style(view).maxWidth).toBeGreaterThan(0);
+    act(() => finish?.({ finished: true }));
+    expect(style(view).maxWidth).toBe(0);
+    act(() => view.unmount());
+    timing.mockRestore();
+  });
+  test('reader and edition routes keep their title for the next back button', () => {
+    expect(untitled.headerTitle).toBe(emptyBarTitle);
+    const options = (screen: React.ReactElement) =>
+      (
+        screen.props as {
+          options: (p: object) => { title: string; headerTitle?: unknown };
+        }
+      ).options({ route: { params: {} }, navigation: undefined });
+    for (const screen of [...recordsScreens(), ...editionScreens()]) {
+      const resolved = options(screen);
+      expect(resolved.headerTitle).not.toBe('');
+      expect(resolved.title).not.toBe('');
+    }
+    const empty = tree(emptyBarTitle());
+    expect(StyleSheet.flatten(empty.root.findByType(View).props.style)).toEqual(
+      {
+        width: 0,
+        height: 0,
+      },
+    );
+    act(() => empty.unmount());
+  });
+});
 test('Reduce Motion cuts the bar title instead of animating it', () => {
   mockReducedMotion = true;
   const animation = jest.spyOn(Animated, 'timing');

@@ -9,6 +9,17 @@ import {
   glassBar,
   type TabSegment,
 } from '../chrome';
+import { emptyBarTitle } from '../useTitleOnScroll';
+
+/**
+ * No bar title until the subject's title scrolls under the bar, with the
+ * route's `title` kept for the next screen's back button. `headerTitle: ''`
+ * blanked that title too, so a screen pushed from a reader or the edition
+ * showed a bare chevron (wave 4 bills-15).
+ */
+export const untitled: NativeStackNavigationOptions = {
+  headerTitle: Platform.OS === 'ios' ? emptyBarTitle : '',
+};
 
 /** Non-empty route titles also supply the next screen's named Back button. */
 export function screen(
