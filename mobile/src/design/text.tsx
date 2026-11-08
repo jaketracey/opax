@@ -321,11 +321,21 @@ export function Text({
   onLayout,
   ...given
 }: OpaxTextProps) {
-  // A record title never ends on a lone short word (bindRecordTitle).
+  // A record title never ends on a lone short word (bindRecordTitle). The
+  // no-break space is for layout only: when binding changed the text, the
+  // label keeps the words as published (VoiceOver, and Maestro's text match
+  // through the accessibility label), unless the caller set its own.
   const titleRole = recordTitleRoles.includes(variant);
-  const props = titleRole
-    ? { ...given, children: bindRecordTitle(given.children) }
-    : given;
+  const bound = titleRole ? bindRecordTitle(given.children) : given.children;
+  const props =
+    bound === given.children
+      ? given
+      : {
+          ...given,
+          children: bound,
+          accessibilityLabel:
+            given.accessibilityLabel ?? textContent(given.children),
+        };
   const bold = useBoldText();
   const highContrast = useHighTextContrast();
   const role = textStyles[variant];

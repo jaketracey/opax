@@ -44,8 +44,11 @@ export function bindRecordTitle(children: ReactNode): ReactNode {
   if (Array.isArray(children)) {
     const index = children.length - 1;
     const last: unknown = children[index];
-    if (typeof last === 'string')
-      return [...children.slice(0, index), bindShortLastWord(last)];
+    if (typeof last === 'string') {
+      const bound = bindShortLastWord(last);
+      // Unchanged runs keep their identity, so callers can tell.
+      if (bound !== last) return [...children.slice(0, index), bound];
+    }
   }
   return children;
 }

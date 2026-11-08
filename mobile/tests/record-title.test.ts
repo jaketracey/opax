@@ -1,3 +1,7 @@
+import { act, createElement } from 'react';
+import TestRenderer from 'react-test-renderer';
+import { Text as NativeText } from 'react-native';
+import { Text } from '../src/design/text';
 import {
   NO_BREAK_SPACE,
   bindRecordTitle,
@@ -45,14 +49,53 @@ test('binds only the last string run of a Text', () => {
   expect(bindRecordTitle('Water Amendment Bill 2026')).toBe(
     `Water Amendment Bill${nb}2026`,
   );
-  expect(bindRecordTitle(['Water Amendment ', 'Bill 2026'])).toEqual([
-    'Water Amendment ',
-    'Bill 2026',
-  ]);
+  const unchanged = ['Water Amendment ', 'Bill 2026'];
+  expect(bindRecordTitle(unchanged)).toBe(unchanged);
   expect(bindRecordTitle(['A ', 'Water Amendment Bill 2026'])).toEqual([
     'A ',
     `Water Amendment Bill${nb}2026`,
   ]);
   expect(bindRecordTitle(42)).toBe(42);
   expect(bindRecordTitle(null)).toBeNull();
+});
+
+function drawn(props: Record<string, unknown>, title: string) {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(createElement(Text, props, title));
+  });
+  const native = renderer.root.findByType(NativeText).props;
+  act(() => renderer.unmount());
+  return native;
+}
+
+test('a bound title keeps its words as published in the accessibility label', () => {
+  const title = 'Interactive Gambling (Cost Recovery Levy) Bill 2026';
+  const native = drawn({ variant: 'recordTitle' }, title);
+  expect(native.children).toBe(
+    `Interactive Gambling (Cost Recovery Levy) Bill${nb}2026`,
+  );
+  expect(native.accessibilityLabel).toBe(title);
+  expect(native.accessibilityLabel).not.toContain(nb);
+});
+
+test("a caller's own accessibility label wins over the plain title", () => {
+  const native = drawn(
+    { variant: 'recordTitle', accessibilityLabel: 'Bill, Gambling levy' },
+    'Interactive Gambling (Cost Recovery Levy) Bill 2026',
+  );
+  expect(native.accessibilityLabel).toBe('Bill, Gambling levy');
+});
+
+test('a title that needs no binding gets no accessibility label', () => {
+  const native = drawn(
+    { variant: 'recordTitle' },
+    'Interactive Gambling Amendment Regulations',
+  );
+  expect(native.children).toBe('Interactive Gambling Amendment Regulations');
+  expect(native).not.toHaveProperty('accessibilityLabel');
+  // Other roles are never bound or labelled.
+  const body = drawn({ variant: 'body' }, 'Water Amendment Bill 2026');
+  expect(body.children).toBe('Water Amendment Bill 2026');
+  expect(body).not.toHaveProperty('accessibilityLabel');
 });
