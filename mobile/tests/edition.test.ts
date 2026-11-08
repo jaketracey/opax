@@ -305,6 +305,11 @@ describe('the edition selector', () => {
       ),
     );
     expect(editionFor(withNumbers).data!.facts).toMatchObject({
+      order: [
+        { type: 'figure', index: 0 },
+        { type: 'bars', index: 0 },
+        { type: 'division', index: 0 },
+      ],
       figures: [{ value: '768', label: 'speeches in the Opax record' }],
       bars: {
         title: 'Most common topic labels',

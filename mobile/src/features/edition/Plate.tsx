@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     lineHeight: 44,
     color: colors.onBand,
   },
-  art: { marginTop: rhythm.block },
+  art: { marginTop: rhythm.heading },
   stageArt: { paddingTop: 4 },
   rail: {
     position: 'absolute',
