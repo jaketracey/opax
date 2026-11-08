@@ -40,6 +40,7 @@ import DivisionHistory, {
 import * as divisionData from '../src/features/directories/division-data';
 import type { DivisionRow } from '../src/features/directories/model';
 import { useFollowStates } from '../src/features/follows/useFollowStates';
+import { bindShortLastWord } from '../src/design/record-title';
 import { bills, pinned, slugs } from './pinned';
 
 const mockParams: { key: string; division?: string; section?: string } = {
@@ -527,7 +528,8 @@ describe('loading a bill (4.3)', () => {
     // The title is the row's, in the page's own heading.
     const title = host(root, 'bill-title');
     expect(title).toHaveLength(1);
-    expect(texts(title[0]!).join('')).toBe(row.title);
+    // The heading binds its short last word (design/record-title.ts).
+    expect(texts(title[0]!).join('')).toBe(bindShortLastWord(row.title));
     // No event beside the status until the key dates resolve it.
     expect(statusText(root).label).toBe('Status: Passed');
     expect(statusText(root).text).not.toMatch(/\d{4}/);

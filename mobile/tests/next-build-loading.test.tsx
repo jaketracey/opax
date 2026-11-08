@@ -6,7 +6,6 @@ import {
   EmptyState,
   InlineError,
   LoadingState,
-  Skeleton,
 } from '../src/design/primitives';
 import { RecordBlock } from '../src/features/your-mp/Evidence';
 import { ProfileBlock } from '../src/features/people/Block';
