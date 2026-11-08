@@ -47,6 +47,7 @@ import {
 } from '../navigation/routes';
 import type { PartySection } from '../navigation/routes/people';
 import { chamberLabel } from './bills/filters';
+import { stageTitle } from './bills/divisions';
 import { useCatalogRecord } from './bills/useCatalogRecord';
 import { AddedSinceGroup } from './follows/AddedSinceGroup';
 import type { Change } from './follows/changes';
@@ -115,8 +116,10 @@ export function PartyPage({
   const notAParty = !isPartyLabel(input) && /^independent/i.test(input);
   const load = useCallback(
     (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
-      catalogs.partyPage(input, refresh, publish),
-    [input],
+      notAParty
+        ? new Promise<PartyPageRecord>(() => {})
+        : catalogs.partyPage(input, refresh, publish),
+    [input, notAParty],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
   const view = notAParty ? null : (record?.data ?? null);
@@ -396,17 +399,19 @@ function PartyContent({
         ) : null}
       </View>
       {follow && changes.length ? (
-        <AddedSinceGroup
-          follow={follow}
-          changes={changes}
-          current={state?.status === 'ready' ? state.current : undefined}
-          stale={state?.status === 'ready' ? state.stale : undefined}
-          savedAt={state?.status === 'ready' ? state.savedAt : undefined}
-          testID="party-added-since"
-          onRowPress={(change) =>
-            jump(change.marker === 'members' ? 'members' : 'receipts')
-          }
-        />
+        <View onLayout={(e) => placed('changes')(e.nativeEvent.layout.y)}>
+          <AddedSinceGroup
+            follow={follow}
+            changes={changes}
+            current={state?.status === 'ready' ? state.current : undefined}
+            stale={state?.status === 'ready' ? state.stale : undefined}
+            savedAt={state?.status === 'ready' ? state.savedAt : undefined}
+            testID="party-added-since"
+            onRowPress={(change) =>
+              jump(change.marker === 'members' ? 'members' : 'receipts')
+            }
+          />
+        </View>
       ) : null}
       <View onLayout={(e) => placed('members')(e.nativeEvent.layout.y)}>
         <ProfileBlock
@@ -581,7 +586,14 @@ function PartyContent({
             ) : fundingRecord ? (
               <PartyDebts record={fundingRecord} name={label} />
             ) : null}
-            {view.associated.status === 'error' ? (
+            {view.associated.status === 'loading' ? (
+              <Skeleton
+                shape="rows"
+                count={3}
+                label="Loading associated entities"
+                testID="party-associated-loading"
+              />
+            ) : view.associated.status === 'error' ? (
               <InlineError
                 subject="Associated entities"
                 onRetry={retry}
@@ -764,7 +776,7 @@ const rowKey = (row: DivisionData) => `${row.billKey}:${row.division.key}`;
 function PartyDivision({ row, label }: { row: DivisionData; label: string }) {
   const outcome =
     row.division.outcome === 'affirmative' ? 'Agreed to' : 'Not agreed to';
-  const stage = row.question || row.division.stage || 'Division';
+  const stage = stageTitle(row.division.stage) || 'Division';
   return (
     <DivisionRow
       title={row.title}

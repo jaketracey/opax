@@ -474,83 +474,76 @@ describe('party', () => {
     await act(async () => r.unmount());
   });
 
-  // PRODUCT BUG (src/features/Party.tsx:399): Party accepts
-  // `section=changes` (line 74) but the Added since group has no wrapper
-  // that reports its place, so the page never scrolls there. Drop
-  // `.failing` when the group reports `placed('changes')`.
-  test.failing(
-    '?section=changes with a followed party scrolls to Added since, above Members',
-    async () => {
-      mockParams.section = 'changes';
-      const scrollTo = jest
-        .spyOn(ScrollView.prototype, 'scrollTo')
-        .mockImplementation(() => undefined);
-      const follow = {
-        kind: 'party' as const,
-        id: partySlug('Labor'),
-        title: 'Labor',
-        followedAt: 1,
-        seen: {},
-        seenAt: 1,
-      };
-      jest.mocked(useFollows).mockReturnValue([follow] as never);
-      jest.mocked(useFollowStates).mockReturnValue({
-        states: new Map([
-          [
-            followKey(follow),
-            {
-              status: 'ready',
-              title: 'Labor',
-              current: {},
-              keys: [],
-              changes: [
-                {
-                  marker: 'members',
-                  text: 'A new sitting member',
-                  citation: 'Parliamentary roster',
-                  asAt: '2026-10-01',
-                },
-              ],
-            },
-          ],
-        ]),
-      } as never);
-      const r = await party('Labor');
-      try {
-        expect(has(r, 'party-added-since')).toBe(true);
-        // It lands above Members: the group comes first.
-        const order = r.root
-          .findAll(
-            (n) =>
-              typeof n.type === 'string' &&
-              ['party-added-since', 'party-members'].includes(n.props.testID),
-          )
-          .map((n) => n.props.testID);
-        expect(order[0]).toBe('party-added-since');
-        // The group's own wrapper reports its place; the page then scrolls.
-        let holder: TestRenderer.ReactTestInstance | null = host(
-          r,
-          'party-added-since',
-        ).parent;
-        while (holder && typeof holder.props.onLayout !== 'function')
-          holder = holder.parent;
-        expect(holder).not.toBeNull();
-        expect(
-          holder!.findAll((n) => n.props.testID === 'party-members'),
-        ).toHaveLength(0);
-        await act(async () =>
-          holder!.props.onLayout({ nativeEvent: { layout: { y: 900 } } }),
-        );
-        expect(scrollTo).toHaveBeenCalled();
-        const target = scrollTo.mock.calls.at(-1)![0] as { y: number };
-        expect(target.y).toBeGreaterThan(0);
-        expect(target.y).toBeLessThanOrEqual(900);
-      } finally {
-        scrollTo.mockRestore();
-        await act(async () => r.unmount());
-      }
-    },
-  );
+  test('?section=changes with a followed party scrolls to Added since, above Members', async () => {
+    mockParams.section = 'changes';
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => undefined);
+    const follow = {
+      kind: 'party' as const,
+      id: partySlug('Labor'),
+      title: 'Labor',
+      followedAt: 1,
+      seen: {},
+      seenAt: 1,
+    };
+    jest.mocked(useFollows).mockReturnValue([follow] as never);
+    jest.mocked(useFollowStates).mockReturnValue({
+      states: new Map([
+        [
+          followKey(follow),
+          {
+            status: 'ready',
+            title: 'Labor',
+            current: {},
+            keys: [],
+            changes: [
+              {
+                marker: 'members',
+                text: 'A new sitting member',
+                citation: 'Parliamentary roster',
+                asAt: '2026-10-01',
+              },
+            ],
+          },
+        ],
+      ]),
+    } as never);
+    const r = await party('Labor');
+    try {
+      expect(has(r, 'party-added-since')).toBe(true);
+      // It lands above Members: the group comes first.
+      const order = r.root
+        .findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            ['party-added-since', 'party-members'].includes(n.props.testID),
+        )
+        .map((n) => n.props.testID);
+      expect(order[0]).toBe('party-added-since');
+      // The group's own wrapper reports its place; the page then scrolls.
+      let holder: TestRenderer.ReactTestInstance | null = host(
+        r,
+        'party-added-since',
+      ).parent;
+      while (holder && typeof holder.props.onLayout !== 'function')
+        holder = holder.parent;
+      expect(holder).not.toBeNull();
+      expect(
+        holder!.findAll((n) => n.props.testID === 'party-members'),
+      ).toHaveLength(0);
+      await act(async () =>
+        holder!.props.onLayout({ nativeEvent: { layout: { y: 900 } } }),
+      );
+      expect(scrollTo).toHaveBeenCalled();
+      const target = scrollTo.mock.calls.at(-1)![0] as { y: number };
+      expect(target.y).toBeGreaterThan(0);
+      expect(target.y).toBeLessThanOrEqual(900);
+    } finally {
+      scrollTo.mockRestore();
+      await act(async () => r.unmount());
+    }
+  });
 
   // Every string the page draws or speaks, by the row it sits in.
   const spoken = (r: TestRenderer.ReactTestRenderer) =>
@@ -594,11 +587,7 @@ describe('party', () => {
     }
   });
 
-  // PRODUCT BUG (src/features/Party.tsx:767): a Recent votes row puts the
-  // division's whole motion text (`row.question`, e.g. "Kate Chaney by
-  // leave\u2014I move amendments ...") in the stage slot of its meta line,
-  // em dash and all. Drop `.failing` when the row draws a stage.
-  test.failing('the Recent votes rows draw no em dash', async () => {
+  test('the Recent votes rows draw no em dash', async () => {
     const r = await party('Labor');
     try {
       const rows = spoken(r).filter((s) => s.division);
