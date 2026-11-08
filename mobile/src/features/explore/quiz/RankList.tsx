@@ -1,9 +1,11 @@
+import { useContext } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { haptic } from '../../../design/haptics';
 import { InsetGroup } from '../../../design/layout';
 import {
   useRowCellStyle,
   useRowHighlight,
+  RowCellInsetContext,
   useRowInset,
 } from '../../../design/row-padding';
 import { Text } from '../../../design/text';
@@ -98,7 +100,8 @@ function RankRow({
 }) {
   const highlight = useRowHighlight();
   const cell = useRowCellStyle();
-  useRowInset(16 + circle + rhythm.tight);
+  // The text column starts after the cell's leading padding, the circle and its gap.
+  useRowInset(useContext(RowCellInsetContext) + circle + rhythm.tight);
   return (
     <Pressable
       accessibilityRole="button"

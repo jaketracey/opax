@@ -13,6 +13,8 @@ import {
   type QuizRecord,
 } from '../src/features/explore/quiz-model';
 import { useAccessibilitySize } from '../src/design/accessibility';
+import { Portrait } from '../src/design/people';
+import { choicePortrait } from '../src/features/explore/quiz/ChoiceList';
 
 let mockRecord: QuizRecord | null = null;
 jest.mock('../src/features/explore/quiz-store', () => ({
@@ -410,3 +412,23 @@ test('a failed save says so, once, with a way to try again', async () => {
 });
 
 export type { ReactTestInstance };
+
+test('a portrait choice insets its text by the size the portrait draws', () => {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <Portrait size={choicePortrait.size} name="Julia Gillard" />,
+    );
+  });
+  const sizes = renderer.root
+    .findAll((node) => typeof node.props.style === 'object')
+    .flatMap((node) => [node.props.style].flat())
+    .filter(
+      (style): style is { width: number } =>
+        !!style && typeof style.width === 'number',
+    )
+    .map((style) => style.width);
+  expect(sizes.length).toBeGreaterThan(0);
+  expect(new Set(sizes)).toEqual(new Set([choicePortrait.drawn]));
+  act(() => renderer.unmount());
+});

@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from '../../../design/accessibility';
 import { haptic } from '../../../design/haptics';
@@ -6,6 +7,7 @@ import { InsetGroup } from '../../../design/layout';
 import {
   useRowCellStyle,
   useRowHighlight,
+  RowCellInsetContext,
   useRowInset,
 } from '../../../design/row-padding';
 import { Text } from '../../../design/text';
@@ -19,6 +21,13 @@ import { marks } from './marks';
  * After the reveal the control locks, nothing greys out, and the marks say
  * which row is right and which was the reader's, by symbol and word.
  */
+/**
+ * A portrait choice's portrait: the size passed to CachedPortrait and the
+ * points it draws at, which the row's text inset adds. Spec 4.4 asks for
+ * 56 pt; CachedPortrait takes only 'row' (44 pt) for now.
+ */
+export const choicePortrait = { size: 'row', drawn: 44 } as const;
+
 export function ChoiceList({
   q,
   value,
@@ -72,7 +81,14 @@ function ChoiceRow({
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
   const cell = useRowCellStyle();
-  useRowInset(portrait && !stacked ? 16 + 44 + rhythm.tight : 16);
+  // The text column starts after the cell's own leading padding, and the
+  // portrait and its gap when they sit beside it.
+  const leading = useContext(RowCellInsetContext);
+  useRowInset(
+    portrait && !stacked
+      ? leading + choicePortrait.drawn + rhythm.tight
+      : leading,
+  );
   const mark = revealed
     ? correct
       ? chosen
@@ -103,7 +119,9 @@ function ChoiceRow({
         pressed && !revealed ? { backgroundColor: highlight } : null,
       ]}
     >
-      {portrait ? <CachedPortrait name={label} /> : null}
+      {portrait ? (
+        <CachedPortrait name={label} size={choicePortrait.size} />
+      ) : null}
       <View style={styles.text}>
         <Text wordSafe variant={chosen ? 'strong' : 'body'}>
           {label}
