@@ -3,7 +3,7 @@
 // a status and the count beside it, under one line per run of a bill's
 // divisions. P2-19: its source line follows the first page. P2-12: the
 // people directory's ⓘ, saved-copy date and as-at line are one SourceLine.
-// P2-21: on iPad landscape the directory opens its first row. The catalog
+// P2-21: on iPad the directory opens its first row. The catalog
 // states say a saved copy once.
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
@@ -30,11 +30,29 @@ import {
 } from '../src/design/primitives';
 
 const mockParams: { kind: string; open?: string } = { kind: 'person' };
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => mockParams,
-  router: { push: jest.fn(), setParams: jest.fn() },
-  Stack: { Screen: () => null },
-}));
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  const Link = ({ children }: { children: unknown }) =>
+    React.createElement(React.Fragment, null, children);
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return {
+    useLocalSearchParams: () => mockParams,
+    router: { push: jest.fn(), setParams: jest.fn() },
+    Stack: { Screen: () => null },
+    Link,
+  };
+});
 jest.mock('../src/features/directories/division-data', () => ({
   loadDivisionHistory: jest.fn(),
 }));
@@ -209,11 +227,11 @@ test('the directory: one source line with the notes, each source dated, a saved 
   await act(async () => renderer.unmount());
 });
 
-test('iPad landscape opens the first row; a cleared selection stays cleared', async () => {
+test('iPad opens the first row in landscape and portrait; a cleared selection stays cleared', async () => {
   setPad(true);
   delete mockParams.open;
   let renderer = await directory('party');
-  // The first row as the list sorts it, not the export's order.
+  // The first row as the list sorts it (by name), not the export's order.
   expect(router.setParams).toHaveBeenCalledWith({ open: 'party:Greens' });
   await act(async () => renderer.unmount());
   jest.mocked(router.setParams).mockClear();
@@ -221,12 +239,12 @@ test('iPad landscape opens the first row; a cleared selection stays cleared', as
   renderer = await directory('party');
   expect(router.setParams).not.toHaveBeenCalled();
   await act(async () => renderer.unmount());
-  // Portrait keeps the list's own width for the reader to choose.
+  // Portrait opens the first row too (people.md 2.3, P2-21).
   delete mockParams.open;
   mockWindow.width = 1024;
   mockWindow.height = 1366;
   renderer = await directory('party');
-  expect(router.setParams).not.toHaveBeenCalled();
+  expect(router.setParams).toHaveBeenCalledWith({ open: 'party:Greens' });
   await act(async () => renderer.unmount());
   mockWindow.width = 1366;
   mockWindow.height = 1024;

@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 37 Party access, creditors, all years, follow and Your MP pay
+name: 37 Party access, mentions, creditors, returns, follow and Your MP pay
 ---
 - launchApp:
     clearState: true
@@ -19,7 +19,10 @@ name: 37 Party access, creditors, all years, follow and Your MP pay
 - extendedWaitUntil:
     visible: { id: party-title }
     timeout: 15000
-- assertVisible: { id: '^people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})$' }
+- assertVisible:
+    {
+      id: '^people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})$',
+    }
 - takeScreenshot: ${EVIDENCE}/37-party-title
 - scrollUntilVisible:
     element: { id: party-access }
@@ -28,34 +31,21 @@ name: 37 Party access, creditors, all years, follow and Your MP pay
     centerElement: true
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/37-party-access
+# Mentions in parliament is a row of "More from the record"; it pushes the
+# paged record list.
 - scrollUntilVisible:
-    element: { id: party-mentions-toggle }
+    element: { id: party-mentions }
     direction: DOWN
     speed: 20
     centerElement: true
     timeout: 180000
-- tapOn: { id: party-mentions-toggle }
-- scrollUntilVisible:
-    element: { text: 'Machine-written\..*' }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
+- tapOn: { id: party-mentions }
+- extendedWaitUntil:
+    visible: { id: record-list-row-0 }
+    timeout: 30000
+- assertVisible: { id: record-list-screen }
 - takeScreenshot: ${EVIDENCE}/37-party-mentions
-- scrollUntilVisible:
-    element: { id: people-news-toggle }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: people-news-toggle }
-- scrollUntilVisible:
-    element: { id: people-news-0 }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- takeScreenshot: ${EVIDENCE}/37-party-news
+- tapOn: { id: BackButton }
 - scrollUntilVisible:
     element: { id: party-debts }
     direction: UP
@@ -64,21 +54,16 @@ name: 37 Party access, creditors, all years, follow and Your MP pay
     centerElement: true
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/37-party-debts
+# Every year's return is one chart inside Receipts, its table behind the
+# chart's own toggle.
 - scrollUntilVisible:
-    element: { id: party-all-years }
+    element: { id: party-returns-chart }
     direction: UP
     speed: 40
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: party-all-years }
-- scrollUntilVisible:
-    element: { id: party-return-1998-99 }
-    direction: DOWN
-    speed: 50
     visibilityPercentage: 10
     centerElement: true
     timeout: 180000
-- takeScreenshot: ${EVIDENCE}/37-all-27-years
+- takeScreenshot: ${EVIDENCE}/37-returns-chart
 - scrollUntilVisible:
     element: { id: party-follow-off }
     direction: UP

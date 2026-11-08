@@ -13,68 +13,54 @@ name: 44 Native people and parties directories
 - takeScreenshot: ${EVIDENCE}/44-search-browse
 - tapOn:
     id: search-browse-person
+# The list draws its first section at once; the count is the list's foot.
 - extendedWaitUntil:
     visible:
-      id: directory-count
+      id: directory-group-sitting
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/44-people-directory
+# Filters is a bar item, reached by its accessibility label.
+- tapOn: Filters
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
+    timeout: 10000
 - tapOn:
-    id: directory-filters
+    id: filters-row-party
 - scrollUntilVisible:
     element:
-      id: directory-filter-party
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- tapOn:
-    id: directory-filter-party
-- scrollUntilVisible:
-    element:
-      id: directory-choice-Labor
+      id: filters-choice-Labor
     centerElement: true
     speed: 20
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/44-party-choices
 - tapOn:
-    id: directory-choice-Labor
+    id: filters-choice-Labor
+- tapOn:
+    id: filters-row-chamber
 - scrollUntilVisible:
     element:
-      id: directory-filter-chamber
+      id: filters-choice-representatives
     centerElement: true
     speed: 20
     timeout: 180000
 - tapOn:
-    id: directory-filter-chamber
+    id: filters-choice-representatives
 - scrollUntilVisible:
     element:
-      id: directory-choice-representatives
+      id: filters-row-sort
     centerElement: true
     speed: 20
     timeout: 180000
 - tapOn:
-    id: directory-choice-representatives
-- scrollUntilVisible:
-    element:
-      id: directory-filter-sort
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- tapOn:
-    id: directory-filter-sort
+    id: filters-row-sort
 - takeScreenshot: ${EVIDENCE}/44-sorts
 - tapOn:
-    id: directory-choice-name
+    id: filters-choice-name
 - takeScreenshot: ${EVIDENCE}/44-people-filters
 - tapOn: Done
-- scrollUntilVisible:
-    element:
-      id: directory-search
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- tapOn:
-    id: directory-search
+# The native search field has no ID: tap its placeholder.
+- tapOn: Name, electorate or state
 - inputText: Anthony Albanese
 - pressKey: Enter
 - scrollUntilVisible:
@@ -110,18 +96,10 @@ name: 44 Native people and parties directories
     id: search-browse-party
 - extendedWaitUntil:
     visible:
-      id: directory-count
+      id: directory-party-screen
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/44-parties-directory
-- scrollUntilVisible:
-    element:
-      id: directory-search
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 180000
-- tapOn:
-    id: directory-search
+- tapOn: Party name
 - inputText: Labor
 - pressKey: Enter
 - scrollUntilVisible:

@@ -3,10 +3,6 @@ import { screen, sheetOptions } from './screen';
 
 export function peopleScreens() {
   return [
-    screen('directory-filters', 'Filters', {
-      presentation: 'modal',
-      headerShown: false,
-    }),
     screen('person/[slug]', 'Parliamentarian'),
     screen('person/[slug]/votes', 'Voting record'),
     screen('person/[slug]/speeches', 'Speeches'),

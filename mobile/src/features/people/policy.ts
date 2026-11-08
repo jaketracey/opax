@@ -29,12 +29,25 @@ export function isPeoplePaidPath(path: string): boolean {
       name(q.slice(1, -1))
     );
   }
+  const page = /^[1-9]\d{0,2}$/.test(p.get('page') ?? '');
+  // The pushed lists (people.md 2.1, route 15): 20 a page, newest first.
+  if (exact(['q', 'page', 'per', 'sort'])) {
+    const q = p.get('q') ?? '';
+    return (
+      q.startsWith('"') &&
+      q.endsWith('"') &&
+      name(q.slice(1, -1)) &&
+      page &&
+      p.get('per') === '20' &&
+      p.get('sort') === 'newest'
+    );
+  }
   return (
     exact(['q', 'speaker', 'page', 'per', 'sort']) &&
     name(p.get('speaker')) &&
     p.get('q') === p.get('speaker') &&
-    p.get('page') === '1' &&
-    p.get('per') === '8' &&
+    ((p.get('page') === '1' && p.get('per') === '8') ||
+      (page && p.get('per') === '20')) &&
     p.get('sort') === 'newest'
   );
 }

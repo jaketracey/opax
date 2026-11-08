@@ -2,7 +2,7 @@
 // source lines (P2-3), declarations grouped by member with no clamp
 // (P3-10), and the declarations list's first screen (P2-19, P3-9).
 import { act, type ReactElement } from 'react';
-import { FlatList, useWindowDimensions } from 'react-native';
+import { SectionList, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import { catalogs as runtime } from '../src/api/runtime';
@@ -53,11 +53,31 @@ jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
   remoteImageURI: (path: string) => `http://127.0.0.1:8918${path}`,
 }));
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => ({}),
-  router: { push: jest.fn(), navigate: jest.fn() },
-  Stack: { Screen: () => null },
-}));
+jest.mock('expo-router', () => {
+  // Just declared entries open a native menu (Link.Menu) on touch and hold.
+  const React = jest.requireActual('react');
+  const Link = function Link({ children }: { children: unknown }) {
+    return React.createElement(React.Fragment, null, children);
+  };
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return {
+    useLocalSearchParams: () => ({}),
+    router: { push: jest.fn(), navigate: jest.fn() },
+    Stack: { Screen: () => null },
+    Link,
+  };
+});
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
   default: jest.fn(),
@@ -294,9 +314,10 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
         expect(strings(host(root, `declaration-text-${index}`)[0]!)).toBe(
           item.description,
         );
+      // The member's words first; the PersonRow already said the name.
       expect(
         host(root, `declaration-entry-${index}`)[0]!.props.accessibilityLabel,
-      ).toMatch(new RegExp(`^${item.name}, `));
+      ).toMatch(new RegExp(`${item.category}\\..*, Register of interests$`));
     }
   });
   test('Today’s Just declared groups its rows the same way', async () => {
@@ -318,51 +339,55 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
   });
 });
 
-describe('the declarations list’s first screen (P2-19, P3-9)', () => {
+describe('the declarations list’s first screen (P2-19, P3-9; people.md 2.7)', () => {
   test.each([standard, ax5])(
-    'the count line is the Filters control, and the source line follows the first page',
+    'nothing above the first row; weeks pin; the source line and count close the list',
     async (size) => {
       jest.mocked(useWindowDimensions).mockReturnValue(size);
       const renderer = await renderAsync(<Declarations />);
       const root = renderer.root;
-      const filters = root.find(
-        (n) =>
-          n.props.testID === 'declarations-filters' &&
-          typeof n.props.onPress === 'function',
-      );
-      // No separate Filters button beside a caption.
+      // No lede, field, count line or Filters capsule above the rows.
+      for (const id of [
+        'declarations-lede',
+        'declarations-member',
+        'declarations-count',
+        'declarations-filters',
+        'declarations-filter-line',
+      ])
+        expect(host(root, id)).toHaveLength(0);
       expect(
         root.findAllByType(Button).filter((b) => b.props.label === 'Filters'),
       ).toHaveLength(0);
+      const list = root.findByType(SectionList);
+      expect(list.props.stickySectionHeadersEnabled).toBe(true);
+      const sections = list.props.sections as {
+        title: string;
+        data: ReturnType<typeof personRuns>;
+      }[];
+      for (const section of sections)
+        expect(section.title).toMatch(
+          /^(This week|Last week|Week of \d{1,2} [A-Z][a-z]+( \d{4})?)$/,
+        );
+      // Every row once, in order, under its week.
       expect(
-        filters.findAll(
-          (n) =>
-            typeof n.type === 'string' &&
-            n.props.testID === 'declarations-count',
+        sections.flatMap((section) =>
+          section.data.flatMap((run) => run.entries.map((e) => e.index)),
         ),
-      ).toHaveLength(1);
-      expect(host(root, 'declarations-filters')[0]!.props).toMatchObject({
-        accessibilityRole: 'button',
-        accessibilityLabel:
-          '300 declarations · All chambers · Federal, Filters',
-      });
-      // After the tenth member's group, as the money lists place theirs,
-      // not after all 300 rows where nobody reaches it. (Jest draws the
-      // first eight rows, so the rows are read from the list itself.)
-      const list = root.findByType(FlatList);
-      const runs = list.props.data as ReturnType<typeof personRuns>;
-      expect(runs.map((run) => run.key)).toEqual(
-        personRuns(all).map((run) => run.key),
+      ).toEqual(all.map((_, i) => i));
+      // The source line is the list's foot, never between rows.
+      expect(holds(list.props.ListFooterComponent, 'declarations-source')).toBe(
+        true,
       );
-      expect(runs.length).toBeGreaterThan(10);
-      const withSource = runs
-        .map((item, index) =>
-          holds(list.props.renderItem({ item, index }), 'declarations-source'),
-        )
-        .flatMap((has, index) => (has ? [index] : []));
-      expect(withSource).toEqual([9]);
-      expect(list.props.ListFooterComponent).toBeNull();
-      expect(order(root).indexOf('declarations-source')).toBe(-1);
+      expect(
+        sections.some((section) =>
+          section.data.some((item, index) =>
+            holds(
+              list.props.renderItem({ item, index, section }),
+              'declarations-source',
+            ),
+          ),
+        ),
+      ).toBe(false);
       act(() => renderer.unmount());
     },
   );

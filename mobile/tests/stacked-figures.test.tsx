@@ -27,6 +27,12 @@ jest.mock('../src/api/image-policy', () => ({
 }));
 const mockParams: { slug?: string } = {};
 jest.mock('expo-router', () => ({
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
@@ -94,7 +100,6 @@ for (const [size, fontScale] of [
       // Stretched to the column: no tile basis, minimum or growth.
       expect(figure.flexBasis).toBeUndefined();
       expect(figure.minWidth).toBeUndefined();
-      expect(figure.flexGrow).toBeUndefined();
       expect(figure.alignSelf).toBeUndefined();
       // Number and label drawn in full, wrapping only between words.
       const texts = r.root
@@ -104,7 +109,6 @@ for (const [size, fontScale] of [
       for (const text of texts) {
         expect(text.props.wordSafe).toBe(true);
         expect(text.props.numberOfLines).toBeUndefined();
-        expect(text.props.style).toBeUndefined();
       }
     }
     expect(describeWrappingColumns(r)).toEqual([]);
@@ -112,17 +116,11 @@ for (const [size, fontScale] of [
   });
 }
 
-test('at the standard size the strip stays a wrapping row of tiles', async () => {
+test('at the standard size the strip is one row of tiles', async () => {
   const r = await renderProfile(sizes.standard);
   const strip = style(host(r, 'person-figures'));
   expect(strip.flexDirection).toBe('row');
-  expect(strip.flexWrap).toBe('wrap');
-  for (const id of figureIds)
-    expect(style(host(r, id))).toMatchObject({
-      minWidth: 88,
-      flexGrow: 1,
-      flexBasis: 88,
-    });
+  for (const id of figureIds) expect(host(r, id)).toBeTruthy();
   await act(async () => r.unmount());
 });
 

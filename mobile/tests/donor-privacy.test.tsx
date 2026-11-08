@@ -76,13 +76,33 @@ jest.mock('react-native-gesture-handler', () => {
 });
 const mockParams: Record<string, string> = {};
 const mockRouter = { push: jest.fn(), replace: jest.fn() };
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => mockParams,
-  useRouter: () => mockRouter,
-  useSegments: () => [],
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
-}));
+jest.mock('expo-router', () => {
+  // Rows with a native menu (Link.Menu): the trigger draws, the menu does not.
+  const React = jest.requireActual('react');
+  const Link = function Link({ children }: { children: unknown }) {
+    return React.createElement(React.Fragment, null, children);
+  };
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return {
+    useLocalSearchParams: () => mockParams,
+    useRouter: () => mockRouter,
+    useSegments: () => [],
+    router: { push: jest.fn() },
+    Stack: { Screen: () => null },
+    Link,
+  };
+});
 jest.mock('../src/navigation/external', () => ({
   ...jest.requireActual('../src/navigation/external'),
   openOnWeb: jest.fn(),

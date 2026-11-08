@@ -12,13 +12,25 @@ import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
 import { PartyPage } from '../src/features/Party';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { openOnWeb } from '../src/navigation/external';
-import { partyRoute } from '../src/navigation/routes';
+import {
+  moneyRecordRoute,
+  partyRoute,
+  personRoute,
+} from '../src/navigation/routes';
+import { moneyAccessibilityLabel } from '../src/design/format';
+import { ContentUnavailable } from '../src/design/states';
 import { partyColors } from '../src/design/palette';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 jest.mock('expo-router', () => ({
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   useSegments: () => [],
-  router: { push: jest.fn() },
+  router: { push: jest.fn(), navigate: jest.fn() },
   Stack: { Screen: () => null },
 }));
 jest.mock('../src/api/runtime', () => ({
@@ -56,6 +68,10 @@ beforeAll(async () => {
   view = await api.partyPage('Labor');
 });
 beforeEach(() => {
+  // A test that spies on AppState restores it to a bare mock.
+  jest
+    .spyOn(AppState, 'addEventListener')
+    .mockImplementation(() => ({ remove: jest.fn() }));
   jest
     .mocked(useWindowDimensions)
     .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
@@ -379,58 +395,67 @@ test('the Independent grey dot is drawn as a label, never a link; other affiliat
   expect(links(r)).toHaveLength(1);
   act(() => r.unmount());
 });
-test('member disclosure opens native profiles; the total and every block have provenance', async () => {
+const host = (r: TestRenderer.ReactTestRenderer, id: string) =>
+  r.root.find((n) => typeof n.type === 'string' && n.props.testID === id);
+const has = (r: TestRenderer.ReactTestRenderer, id: string) =>
+  r.root.findAll((n) => n.props.testID === id).length > 0;
+const unavailable = (r: TestRenderer.ReactTestRenderer) =>
+  r.root.findAllByType(ContentUnavailable).map((n) => n.props.title);
+const drawn = (r: TestRenderer.ReactTestRenderer) =>
+  r.root
+    .findAllByType(NativeText)
+    .map((n) => [n.props.children].flat(Infinity).join(''))
+    .join(' ');
+
+test('recorded members open native profiles; the total and every block have provenance', async () => {
   const r = await render();
-  press(r, 'party-current-toggle');
-  press(r, 'party-member-anthony-albanese');
-  expect(router.push).toHaveBeenCalledWith({
-    pathname: '/person/[slug]',
-    params: { slug: 'anthony-albanese' },
-  });
+  press(r, 'party-recorded-toggle');
+  const member = r.root.findAll(
+    (n) =>
+      typeof n.type !== 'string' &&
+      /^party-member-/.test(n.props.testID ?? '') &&
+      !!n.props.href,
+  )[0]!;
+  const slug = member.props.testID.replace('party-member-', '');
+  expect(member.props.href).toEqual(personRoute(slug, member.props.name));
   for (const id of [
     'party-members-source',
     'party-receipts-source',
-    'party-associated-source',
+    'party-debts-source',
     'party-divisions-source',
   ])
-    expect(r.root.findAll((n) => n.props.testID === id).length).toBeGreaterThan(
-      0,
-    );
-  const total = r.root.find(
-    (n) =>
-      typeof n.type === 'string' && n.props.testID === 'party-receipts-total',
-  );
-  expect(total.props.accessibilityLabel).toBe(
-    'Received (disclosed), $1,120,198,704',
+    expect(has(r, id)).toBe(true);
+  expect(host(r, 'party-receipts-total').props.accessibilityLabel).toBe(
+    `${moneyAccessibilityLabel(view.data!.receipts.data!.node.total)}, disclosed`,
   );
   act(() => r.unmount());
 });
-test('AX5 party text remains uncapped and current/recorded disclosures expose their expanded state', async () => {
+test('AX5 party text remains uncapped and the recorded disclosure exposes its expanded state', async () => {
   jest
     .mocked(useWindowDimensions)
     .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 3.571 });
   const r = await render();
-  press(r, 'party-current-toggle');
   press(r, 'party-recorded-toggle');
   for (const text of r.root.findAllByType(NativeText)) {
     expect(text.props.numberOfLines).toBeUndefined();
     expect(text.props.maxFontSizeMultiplier).toBe(0);
   }
-  for (const id of ['party-current-toggle', 'party-recorded-toggle']) {
-    const control = r.root.find(
-      (n) => typeof n.type === 'string' && n.props.testID === id,
-    );
-    expect(control.props.accessibilityState.expanded).toBe(true);
-  }
+  expect(
+    host(r, 'party-recorded-toggle').props.accessibilityState.expanded,
+  ).toBe(true);
   // A wrapping column draws stretched text blank or clipped (build 33).
   expect(describeWrappingColumns(r)).toEqual([]);
   act(() => r.unmount());
 });
-test('authoritative unresolved party follows the web fallback', async () => {
+test('a resolved absence says so and never leaves the app by itself', async () => {
   jest
     .mocked(runtime.partyPage)
     .mockResolvedValue({ data: null, stale: false });
   const r = await render();
+  expect(has(r, 'party-not-found')).toBe(true);
+  expect(unavailable(r)).toEqual(['This party isn’t in OPAX’s records yet']);
+  expect(openOnWeb).not.toHaveBeenCalled();
+  press(r, 'party-not-found-web');
   expect(openOnWeb).toHaveBeenCalledWith('/subject/party/Labor', 'Labor');
   act(() => r.unmount());
 });
@@ -440,9 +465,24 @@ test('failed read offers retry and does not mistake a network failure for an unk
     .mockRejectedValue(new Error('fixture unavailable'));
   const r = await render();
   expect(openOnWeb).not.toHaveBeenCalled();
-  expect(
-    r.root.findAll((n) => n.props.testID === 'party-error').length,
-  ).toBeGreaterThan(0);
+  expect(has(r, 'party-error')).toBe(true);
+  expect(has(r, 'party-not-found')).toBe(false);
+  expect(unavailable(r)).toEqual(['Couldn’t load this party']);
+  expect(drawn(r)).toContain('Try again');
+  act(() => r.unmount());
+});
+test('Independent is not a party: it points to independent members', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<PartyPage input="Independent" />);
+  });
+  expect(has(r, 'party-not-a-party')).toBe(true);
+  expect(unavailable(r)).toEqual(['Not a party']);
+  press(r, 'party-not-a-party-action');
+  expect(router.push).toHaveBeenCalledWith({
+    pathname: '/directory',
+    params: { kind: 'person', party: 'Independent' },
+  });
   act(() => r.unmount());
 });
 
@@ -482,7 +522,6 @@ test('title and Members render before receipts, associations and splits settle',
     'party-title',
     'party-current-count',
     'party-receipts-loading',
-    'party-associated-loading',
     'party-divisions-loading',
   ])
     expect(r.root.findAll((n) => n.props.testID === id).length).toBeGreaterThan(
@@ -534,11 +573,10 @@ test.each(['pull', 'foreground'] as const)(
       .mockImplementation((...args) => saved.partyPage(...args));
     const r = await render();
     try {
-      press(r, 'party-donor-years-toggle');
       press(r, 'party-recorded-toggle');
       const ids = [
         'party-receipts-total',
-        'party-associated-source',
+        'party-debts-source',
         'party-divisions-source',
       ];
       const nodes = ids.map((id) =>
@@ -560,17 +598,16 @@ test.each(['pull', 'foreground'] as const)(
         ).toBe(nodes[i]);
       expect(
         r.root.findAll((n) =>
-          /party-(receipts|associated|divisions)-loading/.test(
-            n.props.testID ?? '',
-          ),
+          /party-(receipts|divisions)-loading/.test(n.props.testID ?? ''),
         ),
       ).toHaveLength(0);
-      for (const id of ['party-donor-years-toggle', 'party-recorded-toggle'])
-        expect(
-          r.root.find(
-            (n) => typeof n.type === 'string' && n.props.testID === id,
-          ).props.accessibilityState.expanded,
-        ).toBe(true);
+      expect(
+        r.root.find(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.testID === 'party-recorded-toggle',
+        ).props.accessibilityState.expanded,
+      ).toBe(true);
       await act(async () => {
         release();
         await jest.mocked(runtime.partyPage).mock.results.at(-1)!.value;
@@ -588,13 +625,18 @@ test.each(['pull', 'foreground'] as const)(
   },
 );
 
-test('the party money-map seam opens the native canonical party focus', async () => {
+test('the Money map row opens the party in the public money record', async () => {
   const r = await render();
-  press(r, 'party-money-map');
-  expect(router.push).toHaveBeenLastCalledWith({
-    pathname: '/money',
-    params: { focus: 'party:Labor' },
-  });
+  const row = r.root.findAll(
+    (n) =>
+      typeof n.type !== 'string' &&
+      n.props.testID === 'party-money-map' &&
+      !!n.props.href,
+  )[0]!;
+  expect(row.props.href).toEqual(
+    moneyRecordRoute({ node: 'party:Labor' }, 'Labor'),
+  );
+  expect(has(r, 'party-public-money')).toBe(false);
   await act(async () => r.unmount());
 });
 
@@ -610,12 +652,7 @@ test('a total division scan failure is unavailable rather than no party votes', 
   expect(
     r.root.findAllByProps({ testID: 'party-divisions-error' }).length,
   ).toBeGreaterThan(0);
-  expect(
-    r.root.findAll(
-      (node) =>
-        typeof node.props.message === 'string' &&
-        node.props.message.startsWith('No division in the 0'),
-    ),
-  ).toHaveLength(0);
+  expect(drawn(r)).toMatch(/Votes couldn.t be loaded\./);
+  expect(drawn(r)).not.toMatch(/No division in the 0/);
   await act(async () => r.unmount());
 });

@@ -43,6 +43,12 @@ jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 jest.mock('expo-router', () => ({
+  Link: Object.assign(({ children }: { children?: unknown }) => children, {
+    Trigger: ({ children }: { children?: unknown }) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
   useSegments: () => [],
   useLocalSearchParams: () => ({}),
   router: { push: jest.fn() },

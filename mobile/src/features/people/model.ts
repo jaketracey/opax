@@ -15,6 +15,10 @@ import {
 } from '../../api/validation';
 import { serverPassage } from '../../api/passage-text';
 import type { PersonProfile } from '../../api/person-identity';
+import type { ProfileView } from '../your-mp/model';
+import type { SourceCitation } from '../../design/source';
+import { chamberName, jurisdictionName } from '../../design/parliament';
+import { formatDate, formatYearRange } from '../../design/format';
 
 const topic = shape({
   slug: nonempty,
@@ -295,3 +299,222 @@ export function cleanPassage(text: string | undefined) {
   s = s.replace(/^[:;,—–\-\s]+/, '');
   return s;
 }
+
+// ---------------------------------------------------------------------------
+// Profile selectors (people.md 2.1). Each strip tile and its section read the
+// same selector, so a strip figure and its section's figure never differ.
+
+/**
+ * The profile's section order (DECISIONS.md D6, recommended). Jake's answer
+ * is a one-line change: if he keeps the 1.0 order, `receipts` moves first.
+ */
+export const PROFILE_SECTIONS = [
+  'votes',
+  'speeches',
+  'interests',
+  'pay',
+  'expenses',
+  'receipts',
+  'diary',
+  'more',
+] as const;
+export type ProfileSection = (typeof PROFILE_SECTIONS)[number];
+/** The sections a profile link may open at (`?section=`). */
+export type ProfileArrival = 'votes' | 'interests' | 'pay' | 'changes';
+export function profileArrival(value: unknown): ProfileArrival | undefined {
+  return value === 'votes' ||
+    value === 'interests' ||
+    value === 'pay' ||
+    value === 'changes'
+    ? value
+    : undefined;
+}
+
+type Blocks = ProfileView['blocks'];
+export const votesCount = (profile: Pick<ProfileView, 'blocks'>) =>
+  profile.blocks.votes.data?.total ?? null;
+export const interestsCount = (profile: Pick<ProfileView, 'blocks'>) =>
+  profile.blocks.interests.data?.total ?? null;
+export const annualPay = (profile: Pick<ProfileView, 'blocks'>) =>
+  profile.blocks.pay.data?.person.now?.salary ?? null;
+/** The year of the member's earliest recorded division: "votes since 2006". */
+export const votesSince = (profile: Pick<ProfileView, 'blocks'>) =>
+  profile.blocks.votes.data?.years[0] ?? null;
+
+/**
+ * "Prime Minister", "Minister for Health and Aged Care and 1 more",
+ * "Former member", or null (a sitting member with no paid post, and every
+ * state member). Former takes precedence over any post.
+ */
+export function roleLine(
+  profile: Pick<ProfileView, 'blocks'>,
+  former: boolean,
+): string | null {
+  if (former) return 'Former member';
+  const pay = profile.blocks.pay.data;
+  const now = pay?.person.now;
+  if (!now || /^(member|senator)\b/i.test(now.post)) return null;
+  const current = pay.person.spells.filter(([, to]) => to === null);
+  const others = new Set(
+    current.map(([, , post]) => post).filter((post) => post !== now.post),
+  ).size;
+  return others ? `${now.post} and ${others} more` : now.post;
+}
+
+/**
+ * Pay's line: the post and the rate's own effective date from the
+ * instrument, never the date the post began. Salaries re-index each 1 July,
+ * so the date moves with the rate.
+ */
+export function payRateLine(pay: NonNullable<Blocks['pay']['data']>): {
+  line: string;
+  dated: boolean;
+} {
+  const now = pay.person.now;
+  const base = !now || /^(member|senator)\b/i.test(now.post);
+  const subject = base ? 'a year, base salary' : `a year as ${now.post}`;
+  const from = pay.base.from ? formatDate(pay.base.from, 'short') : '';
+  return from
+    ? { line: `${subject}, rate from ${from}`, dated: true }
+    : { line: subject, dated: false };
+}
+
+export interface IdentitySeat {
+  key: string;
+  title: string;
+  detail?: string;
+  electorateId?: string;
+  current: boolean;
+}
+const stateOf = (
+  seat: { jurisdiction: string; chamber: string; name: string },
+  profile: {
+    rosterRow?: {
+      representation?: { electorate: string; state?: string | null }[];
+    };
+  },
+) => {
+  if (seat.jurisdiction !== 'federal') return null;
+  if (seat.chamber === 'senate') return null;
+  const state = profile.rosterRow?.representation?.find(
+    (r) => r.electorate.trim().toLowerCase() === seat.name.toLowerCase(),
+  )?.state;
+  return state ? (jurisdictionName(state) ?? state) : null;
+};
+/**
+ * One row a seat: "Member for Grayndler" / "New South Wales, since 2 Mar
+ * 1996"; "Senator for Victoria"; a state seat names its house. A former
+ * member with a last recorded seat gets one "Former member for …" row;
+ * no seat at all gives no row (never "No current electorate…").
+ */
+export function seatRows(
+  identity: Pick<PersonProfile, 'seats' | 'partyStatus' | 'rosterRow'>,
+): IdentitySeat[] {
+  const current = identity.seats.filter((s) => s.current);
+  const shown = current.length
+    ? current
+    : identity.partyStatus === 'former'
+      ? identity.seats.slice(-1)
+      : identity.seats;
+  return shown.map((seat) => {
+    const senator = seat.chamber === 'senate';
+    const former = !seat.current && identity.partyStatus === 'former';
+    const starts = (seat.periods ?? [])
+      .map((p) => p.start)
+      .filter((d): d is string => !!d)
+      .sort();
+    const ends = (seat.periods ?? [])
+      .map((p) => p.end)
+      .filter((d): d is string => !!d)
+      .sort();
+    const place =
+      seat.jurisdiction === 'federal'
+        ? senator
+          ? null
+          : stateOf(seat, identity)
+        : chamberName(seat.chamber, seat.jurisdiction);
+    const when = former
+      ? starts[0] && ends.at(-1)
+        ? formatYearRange(
+            Number(starts[0].slice(0, 4)),
+            Number(ends.at(-1)!.slice(0, 4)),
+          )
+        : null
+      : starts[0]
+        ? `since ${formatDate(starts[0], 'short')}`
+        : null;
+    return {
+      key: seat.electorate_id,
+      title: `${former ? 'Former member' : senator ? 'Senator' : 'Member'} for ${seat.name}`,
+      detail: [place, when].filter(Boolean).join(', ') || undefined,
+      electorateId: seat.electorate_id,
+      current: seat.current,
+    };
+  });
+}
+
+/** Members in the ministerial diary's jurisdictions (NSW, Queensland). */
+export function diaryEligible(
+  identity: Pick<PersonProfile, 'seats' | 'rosterRow'>,
+): boolean {
+  return [
+    ...identity.seats.map((s) => s.jurisdiction),
+    ...(identity.rosterRow?.states ?? []),
+    ...(identity.rosterRow?.representation ?? []).map((s) => s.jurisdiction),
+  ].some((j) => j === 'nsw' || j === 'qld');
+}
+
+/**
+ * The strip's sources: one per contributing block, each with its own date.
+ * The line carries the oldest date and names the source that holds it first,
+ * so nothing on the line reads fresher than it is (people.md 1.1, V3).
+ */
+export function stripSources(profile: Pick<ProfileView, 'blocks'>): {
+  asOf: string | null;
+  citation: SourceCitation[];
+} {
+  const b = profile.blocks;
+  const entries: SourceCitation[] = [
+    {
+      label: 'Parliamentary service records',
+      title: 'Parliamentary service records (identity)',
+      asOf: b.identity.asAt,
+    },
+  ];
+  if (votesCount(profile) !== null)
+    entries.push({
+      label: 'They Vote For You',
+      title: 'They Vote For You (votes)',
+      asOf: b.votes.asAt,
+    });
+  if (interestsCount(profile) !== null)
+    entries.push({
+      label: 'Register of interests',
+      title: 'Register of interests (interests)',
+      asOf: b.interests.asAt,
+    });
+  if (annualPay(profile) !== null)
+    entries.push({
+      label: 'Parliamentary Library',
+      title: 'Parliamentary Library (pay)',
+      asOf: b.pay.asAt,
+    });
+  const dated = entries.filter((e) => !!e.asOf);
+  const oldest = dated.sort((a, c) =>
+    String(a.asOf).localeCompare(String(c.asOf)),
+  )[0];
+  return {
+    asOf: oldest ? String(oldest.asOf) : null,
+    citation: oldest
+      ? [oldest, ...entries.filter((e) => e !== oldest)]
+      : entries,
+  };
+}
+
+/** The follow engine's key for one bill vote (follows/markers.ts). */
+export const voteRowKey = (vote: {
+  jur?: string;
+  date: string;
+  name: string;
+  stage: string;
+}) => `vote:${vote.jur ?? ''}:${vote.date}:${vote.name}:${vote.stage}`;

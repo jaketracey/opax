@@ -13,6 +13,26 @@ import { Portrait } from '../src/design/primitives';
 import { FeedRow } from '../src/features/declarations/FeedRow';
 import { originalLabel } from '../src/features/today/DeclarationRow';
 import { formatDate } from '../src/design/format';
+// Just declared entries open a native menu (Link.Menu) on touch and hold.
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  const Link = function Link({ children }: { children: unknown }) {
+    return React.createElement(React.Fragment, null, children);
+  };
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return { ...jest.requireActual('expo-router'), Link };
+});
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
 }));
@@ -36,7 +56,7 @@ const render = (item: (typeof items)[number]) => {
   });
   return renderer;
 };
-test('the feed names the party and chamber on the member’s row and the category, change and date on the entry', () => {
+test('the feed names the party and chamber on the member’s row and the words, category and register on the entry', () => {
   const item = items[0]!;
   expect(item).toMatchObject({
     name: 'Susan McDonald',
@@ -48,14 +68,13 @@ test('the feed names the party and chamber on the member’s row and the categor
   expect(label.startsWith(item.name)).toBe(true);
   expect(label).toContain('LNP');
   expect(label).toContain('Senate');
+  // people.md 2.7: the member's words, the category, the name match, then
+  // the register line; the entry opens its source sheet.
   const entry = labelOf(renderer, 'declaration-entry-0');
-  expect(entry.startsWith(`${item.name}, `)).toBe(true);
-  expect(entry).toContain(
-    `Sponsored travel or hospitality, added ${formatDate(item.date)}`,
+  expect(entry).toBe(
+    `${item.description!.replace(/\.$/, '')}. Sponsored travel or hospitality. Same name as an AEC donor: Adani Mining Pty Ltd. Added ${formatDate(item.date)}, Register of interests`,
   );
-  expect(entry).toContain(item.description!);
-  // No source row: the register page is a "View original" action.
-  expect(JSON.stringify(renderer.toJSON())).not.toContain('Register of');
+  expect(JSON.stringify(renderer.toJSON())).toContain('Register of interests');
   expect(originalLabel(item)).toContain('Register of Senators’ Interests');
   act(() => renderer.unmount());
 });

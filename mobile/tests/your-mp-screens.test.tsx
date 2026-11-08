@@ -38,6 +38,7 @@ import {
   Button,
   LinkRow,
   OpaxWebLink,
+  SourceLine,
 } from '../src/design/primitives';
 import {
   loadChoice,
@@ -45,6 +46,7 @@ import {
   subscribeChoice,
 } from '../src/features/your-mp/choice-store';
 import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
+import { MemberVoteRow } from '../src/features/people/MemberVoteRow';
 import { canShare } from '../src/navigation/share';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 jest.mock('../src/api/runtime', () => ({
@@ -125,6 +127,8 @@ const pressable = (r: TestRenderer.ReactTestRenderer, testID: string) =>
   r.root.findAll(
     (n) => n.props.testID === testID && typeof n.props.onPress === 'function',
   )[0]!;
+const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+  r.root.findAll((n) => n.props.testID === testID).length > 0;
 const text = (r: TestRenderer.ReactTestRenderer) =>
   r.root
     .findAllByType(Text)
@@ -170,13 +174,13 @@ test('profile failure in expenses preserves votes, pay and identity; absent loca
   mock.profileFor.mockResolvedValue(p);
   const r = await render(<Person />);
   expect(text(r)).toContain('Penny Wong');
-  expect(text(r)).toContain('These are entitlements set by instrument');
+  expect(text(r)).toContain('Entitlements set by instrument, not payslips.');
   expect(
     r.root.findAll((n) => n.props.testID === 'person-expenses-error').length,
   ).toBeGreaterThan(0);
   expect(r.root.findAllByType(Image)).toHaveLength(0);
   expect(text(r)).not.toContain('Portrait display permission needs review');
-  expect(text(r)).toContain('Record date not published');
+  expect(text(r)).toContain('Date not published');
   expect(text(r)).toContain('Real estate');
   expect(text(r)).not.toContain('real_estate');
   await act(async () => r.unmount());
@@ -191,11 +195,11 @@ test('former roster identity never masquerades as a current affiliation', async 
     c.profileFor(former.canonicalPersonId!, catalogs),
   );
   const r = await render(<Person />);
-  expect(r.root.findByType(PartyLabel).props.status).toBe('former');
+  expect(has(r, 'person-former')).toBe(true);
   // The label is the party she sat for; the header says she left.
   expect(text(r)).not.toContain('Formerly Labor');
   expect(text(r)).toContain('Former member');
-  expect(text(r)).toContain('Historical entitlements are listed below');
+  expect(text(r)).toContain('No current pay. Past entitlements below.');
   await act(async () => r.unmount());
 });
 test('electorate preserves Census vintage and renders candidates as plain public-record text', async () => {
@@ -312,13 +316,18 @@ test('roster-only member says how its records are linked, without fabricating fi
   const identity = c.joinPerson('tony-abbott', slugs, roster, people, manifest);
   mock.person.mockResolvedValue(result(identity));
   const r = await render(<Person />);
-  expect(text(r)).toContain(
-    'records here are linked by the parliamentary roster’s ID and name',
-  );
+  // How its records are linked is a note in the strip's source sheet.
+  expect(
+    r.root
+      .findAllByType(SourceLine)
+      .find((n) => n.props.testID === 'person-figures-source')!
+      .props.notes.join(' '),
+  ).toContain('matched by the parliamentary roster’s ID and name');
+  expect(has(r, 'person-web-foot')).toBe(true);
   expect(mock.profileFor).not.toHaveBeenCalled();
   expect(mock.rosterProfileFor).toHaveBeenCalledWith(identity);
   // The dated Warringah term establishes status without expanding identity coverage.
-  expect(r.root.findByType(PartyLabel).props.status).toBe('former');
+  expect(has(r, 'person-former')).toBe(true);
   expect(text(r)).toContain('Former member');
   expect(text(r)).not.toContain('Formerly Liberal');
   await act(async () => r.unmount());
@@ -336,7 +345,7 @@ test('unverified private identity is refused before any name or profile blocks r
   expect(text(r)).not.toContain('Synthetic witness');
   expect(mock.profileFor).not.toHaveBeenCalled();
   expect(
-    r.root.findAll((n) => n.props.testID === 'person-no-native-profile').length,
+    r.root.findAll((n) => n.props.testID === 'person-not-found').length,
   ).toBeGreaterThan(0);
   expect(
     r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
@@ -404,14 +413,17 @@ test.each([
     const profile = c.profileFor(identity.canonicalPersonId!, catalogs);
     mock.profileFor.mockResolvedValue(profile);
     const r = await render(<Person />);
-    expect(text(r)).toContain(`${aye} ayes`);
-    expect(text(r)).toContain(`${loading} loading`);
-    expect(text(r)).not.toContain('43.0%');
-    expect(text(r)).not.toContain('52.0%');
-    expect(text(r)).not.toContain('160.0%');
-    await act(async () => pressable(r, 'person-pay-posts').props.onPress());
-    expect(text(r)).toContain(`${loading} loading at the end`);
-    expect(text(r)).not.toContain('160.0%');
+    // No ayes percentage on the page (people.md 2.1); the loading is in
+    // Pay's source sheet, at its source precision.
+    expect(text(r)).not.toContain(`${aye} ayes`);
+    const notes = r.root
+      .findAllByType(SourceLine)
+      .find((n) => n.props.testID === 'person-pay-source')!
+      .props.notes.join(' ');
+    expect(notes).toContain(`plus a ${loading} loading`);
+    expect(text(r) + notes).not.toContain('43.0%');
+    expect(text(r) + notes).not.toContain('52.0%');
+    expect(text(r) + notes).not.toContain('160.0%');
     await act(async () => r.unmount());
   },
 );
@@ -451,11 +463,7 @@ test.each([
       /No (voting summary|covered federal salary|expense summary|register file) is held/,
     );
     expect(text(r)).not.toContain("party receipts for this person's party");
-    expect(
-      r.root
-        .findAllByType(OpaxWebLink)
-        .some((n) => n.props.path === `/subject/person/${slug}`),
-    ).toBe(true);
+    expect(has(r, 'person-web-foot')).toBe(true);
     expect(mock.profileFor).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   },
@@ -475,12 +483,10 @@ test('Windsor has a profile even without a representation row', async () => {
   expect(text(r)).toContain('Antony Windsor');
   // No dated seat links him (the release names Antony Harold Curties
   // Windsor), but no sitting federal member is a Windsor: former, 9 Oct.
-  expect(r.root.findByType(PartyLabel).props.status).toBe('former');
+  expect(has(r, 'person-former')).toBe(true);
   expect(text(r)).toContain('Former member');
-  expect(text(r)).toContain('does not show');
-  expect(
-    r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
-  ).toBe(false);
+  // No whole-page retry (Topics keeps its own; its read is not mocked here).
+  expect(has(r, 'person-error')).toBe(false);
   await act(async () => r.unmount());
 });
 
@@ -492,7 +498,7 @@ test.each(['brown', 'james', 'cook'])(
       result(c.joinPerson(slug, slugs, roster, people, manifest)),
     );
     const r = await render(<Person />);
-    expect(text(r)).toContain('No native profile yet');
+    expect(has(r, 'person-not-found')).toBe(true);
     expect(r.root.findAllByType(PartyLabel)).toHaveLength(0);
     expect(
       r.root.findAll((n) => n.props.testID === 'person-votes'),
@@ -539,26 +545,25 @@ test('profile bill votes push the matched native bill route and keep unmatched v
   mock.person.mockResolvedValue(result(identity));
   mock.profileFor.mockResolvedValue(profile);
   const r = await render(<Person />);
-  await act(async () => pressable(r, 'person-bill-votes').props.onPress());
+  await act(async () => pressable(r, 'person-votes-all').props.onPress());
   const votes = profile.blocks.votes.data!;
-  const links = r.root
-    .findAllByType(LinkRow)
-    .filter((n) => n.props.testID?.startsWith('person-bill-'));
+  const rows = r.root.findAllByType(MemberVoteRow);
+  expect(rows).toHaveLength(votes.for.length + votes.against.length);
+  const links = rows.filter((n) => n.props.href);
   expect(links).toHaveLength(
     [...votes.for, ...votes.against].filter((row) => row.billKey).length,
   );
   const first = links[0]!;
-  const [, , side, index] = first.props.testID.split('-');
-  const row = votes[side as 'for' | 'against'][Number(index)]!;
-  await act(async () => first.props.onPress());
-  expect(router.push).toHaveBeenCalledWith(billRoute(row.billKey!));
-  expect(text(r)).toContain('Not matched to a bill record');
+  const row = [...votes.for, ...votes.against].find(
+    (v) => v.name === first.props.name && v.stage === first.props.stage,
+  )!;
+  // Each vote opens the division on its bill's page.
+  expect(first.props.href).toMatchObject(
+    billRoute(row.billKey!, undefined, { section: 'divisions' }),
+  );
+  // An unmatched vote is the same row, static, with no apology text.
+  expect(text(r)).not.toContain('Not matched to a bill record');
   expect(text(r)).not.toContain('Bill record on opax.com.au');
-  expect(
-    r.root
-      .findAllByType(OpaxWebLink)
-      .some((n) => n.props.path.startsWith('/bill/')),
-  ).toBe(false);
   await act(async () => r.unmount());
 });
 
@@ -578,9 +583,8 @@ test('missing register ties do not refer to an existing file; expense copy uses 
   const r = await render(<Person />);
   // Ties sit inside Declared interests (pass 5, P3-4): with no register
   // file, that block's one sentence says so for both.
-  expect(text(r)).toContain(
-    'No register file is held for this person in the covered registers.',
-  );
+  // With no register file the block collapses: nothing claims absence.
+  expect(text(r)).not.toContain('No register file is held');
   expect(text(r)).not.toContain('in this register file');
   expect(text(r)).not.toContain('Declared ties');
   await act(async () => r.unmount());
@@ -597,7 +601,9 @@ test('missing register ties do not refer to an existing file; expense copy uses 
     c.profileFor(albanese.canonicalPersonId!, catalogs),
   );
   const a = await render(<Person />);
-  expect(text(a)).toContain('about $2,440,277');
+  expect(text(a)).toContain('Average a year');
+  expect(text(a)).toContain('$2,440,277');
+  expect(text(a)).not.toContain('about $2,440,277');
   expect(text(a)).not.toContain('A bar past its tick');
   // The benchmark method is in the block's source sheet, in full.
   await act(async () => pressable(a, 'person-expenses-source').props.onPress());
@@ -606,7 +612,7 @@ test('missing register ties do not refer to an existing file; expense copy uses 
     .mock.calls.at(-1)![0] as { params: { key: string } };
   expect(
     sheetPayload(sourceParams.key, 'source')?.details.notes?.join(' '),
-  ).toContain('divided by its covered calendar years');
+  ).toContain('For reference, the median a year across all parliamentarians');
   await act(async () => a.unmount());
 });
 

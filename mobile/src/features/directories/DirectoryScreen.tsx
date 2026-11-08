@@ -1,40 +1,50 @@
-import { PartyDirectoryRow } from './PartyDirectoryRow';
-import { directoryNotes } from './notes';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
-  FlatList,
   Keyboard,
+  Pressable,
   RefreshControl,
+  SectionList,
   StyleSheet,
   View,
-  useWindowDimensions,
-  type ListRenderItemInfo,
+  type SectionListData,
+  type SectionListRenderItemInfo,
   type ViewToken,
 } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import type { SearchBarCommands } from 'react-native-screens';
 import {
   Button,
+  ContentUnavailable,
   Divider,
   EmptyState,
-  ErrorState,
-  Field,
-  FilterChip,
-  Group,
-  Heading,
-  LoadingState,
-  LinkRow,
-  OfflineBanner,
-  PersonRow,
-  SourceLine,
-  Text,
-  errorMessage,
   LayoutRegion,
+  OfflineLine,
   SidebarSafe,
+  Skeleton,
+  SourceLine,
   SplitLayout,
+  Text,
+  copy,
   isPad,
+  rowMenus,
   useLayout,
 } from '../../design/primitives';
+import type { SourceDetails } from '../../design/source';
+import { useListSearchBar } from '../../design/search-bar';
+import {
+  filterStore,
+  registerFilterModel,
+  useFilterState,
+} from '../sheets/filter-model';
+import { directoryFilterModel } from '../sheets/filter-models';
+import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
+import { ApiError } from '../../api/errors';
+import type { Electorate } from '../../api/catalog-decoders';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { filtersRoute } from '../../navigation/routes/filters';
+import { resultsRoute } from '../../navigation/routes/search';
+import { presentSource } from '../../navigation/sheets';
 import {
   encodeEntry,
   decodeEntry,
@@ -42,159 +52,139 @@ import {
   type RecordEntry,
 } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
-import { colors, layout, rhythm } from '../../design/tokens';
-import { formatCount, formatYearRange } from '../../design/format';
-import { ApiError } from '../../api/errors';
-import type { Electorate } from '../../api/catalog-decoders';
-import {
-  personRoute,
-  electorateRoute,
-  partyRoute,
-} from '../../navigation/routes';
-import { shareHeaderItem } from '../../navigation/share';
-import { CachedPortrait } from '../CachedPortrait';
 import { savedCopy } from '../search/present';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { seatContext } from '../your-mp/model';
-import { loadDirectory } from './data';
+import { loadDirectory, type DirectoryRecord } from './data';
+import { directoryNotes } from './notes';
 import {
-  sortSummary,
-  matchingPeople,
-  matchingParties,
+  ElectorateDirectoryRow,
+  PartyDirectoryRow,
+  PersonDirectoryRow,
+  entryFor,
+} from './DirectoryRows';
+import {
+  directoryCount,
+  directoryKind,
+  electorateSections,
   matchingElectorates,
-  sittingGroupStarts,
-  sittingGroupTitles,
-  type PeopleRow,
+  matchingParties,
+  matchingPeople,
+  partyName,
+  peopleSections,
+  type DirectoryKind,
+  type DirectorySection,
+  type Filters,
   type PartyRow,
-  type SittingGroup,
+  type PeopleRow,
 } from './model';
-import { directoryKind, directoryStore, useDirectoryState } from './store';
 
-const titles = {
+const titles: Record<DirectoryKind, string> = {
   person: 'Parliamentarians',
   party: 'Parties',
   electorate: 'Electorates',
 };
+const placeholders: Record<DirectoryKind, string> = {
+  person: 'Name, electorate or state',
+  party: 'Party name',
+  electorate: 'Electorate, member or state',
+};
+// "No parliamentarian matches …", "Choose a party".
+const singular: Record<DirectoryKind, string> = {
+  person: 'parliamentarian',
+  party: 'party',
+  electorate: 'electorate',
+};
 type Row = PeopleRow | PartyRow | Electorate;
-/** The record a directory row opens: a profile, a party, an electorate. */
-function entryFor(item: Row): RecordEntry {
-  if ('profile' in item)
-    return { kind: 'person', key: item.key, title: item.name };
-  if ('money' in item)
-    return { kind: 'party', key: item.name, title: item.name };
-  return { kind: 'electorate', key: item.electorate_id, title: item.name };
-}
-type GroupStart = { group: SittingGroup; count: number };
-/** Heads the first row of Sitting, status not recorded, and Former. */
-function GroupHeading({ group, count }: GroupStart) {
-  return (
-    <View style={styles.groupHeading}>
-      <Heading level={3} testID={`directory-group-${group}`}>
-        {`${sittingGroupTitles[group]} · ${formatCount(count)}`}
-      </Heading>
-    </View>
-  );
-}
-const DirectoryRow = memo(function DirectoryRow({
+type Section = DirectorySection<Row>;
+const rowKey = (item: Row) => ('key' in item ? item.key : item.electorate_id);
+
+function DirectoryRow({
   item,
   selected,
   onSelect,
-  group,
 }: {
   item: Row;
-  /** iPad split: whether this row is in the detail pane (see LinkRow). */
   selected?: boolean;
   onSelect?: (entry: RecordEntry) => void;
-  /** The person directory's group this row starts, if any. */
-  group?: GroupStart;
 }) {
   if ('profile' in item)
     return (
-      <>
-        {group ? <GroupHeading {...group} /> : null}
-        <PersonRow
-          name={item.name}
-          testID={`directory-person-${item.key}`}
-          testDrawnName
-          portrait={<CachedPortrait name={item.name} slug={item.key} />}
-          party={item.profile.party}
-          partyStatus={item.profile.partyStatus}
-          formerly={item.profile.formerly}
-          // The years line ("1998 to 2019") under its Sitting or Former
-          // heading says whether they sit; the party label never does.
-          statusShown={!!item.row?.first}
-          place={
-            item.row?.full && item.row.full !== item.name
-              ? item.row.full
-              : undefined
-          }
-          detail={[
-            item.row?.roster_only || item.row?.speeches === undefined
-              ? 'From the member roster. No speech count yet'
-              : `${formatCount(item.row.speeches)} speeches`,
-            item.divisions ? `${formatCount(item.divisions)} divisions` : null,
-            item.row?.first
-              ? formatYearRange(item.row.first, item.row.last ?? item.row.first)
-              : null,
-          ]
-            .filter(Boolean)
-            .join(' · ')}
-          selected={selected}
-          onPress={() =>
-            onSelect
-              ? onSelect(entryFor(item))
-              : router.push(personRoute(item.key))
-          }
-        />
-      </>
+      <PersonDirectoryRow item={item} selected={selected} onSelect={onSelect} />
     );
   if ('money' in item)
     return (
-      <PartyDirectoryRow
-        item={item}
-        selected={selected}
-        onPress={
-          onSelect
-            ? () => onSelect(entryFor(item))
-            : () => router.push(partyRoute(item.name))
-        }
-      />
+      <PartyDirectoryRow item={item} selected={selected} onSelect={onSelect} />
     );
   return (
-    <LinkRow
-      title={item.name}
-      icon="map"
-      accent="people"
-      testID={`directory-electorate-${item.slug}`}
-      detail={[
-        seatContext(item),
-        item.status === 'historical' ? 'Historical' : null,
-        item.representatives.length
-          ? item.representatives
-              .map((r) => [r.person.name, r.party].filter(Boolean).join(' · '))
-              .join('; ')
-          : 'Member not confirmed',
-        item.election_count
-          ? `${formatCount(item.election_count)} elections`
-          : 'No election results yet',
-      ]
-        .filter(Boolean)
-        .join('\n')}
+    <ElectorateDirectoryRow
+      item={item}
       selected={selected}
-      onPress={() =>
-        onSelect
-          ? onSelect(entryFor(item))
-          : router.push(electorateRoute(item.electorate_id))
-      }
+      onSelect={onSelect}
     />
   );
-});
+}
 const separator = () => <Divider variant="subtle" />;
-const saved = (record: {
-  stale: boolean;
-  staleReason?: 'unreadable' | 'unavailable';
-}) => savedCopy(record.stale, record.staleReason);
-const rowKey = (item: Row) => ('key' in item ? item.key : item.electorate_id);
+function SectionTitle({ section }: { section: SectionListData<Row, Section> }) {
+  return section.title ? (
+    <View style={styles.sectionHeader}>
+      <Text
+        wordSafe
+        variant="groupHeader"
+        accessibilityRole="header"
+        testID={`directory-group-${section.key}`}
+      >
+        {section.title}
+      </Text>
+    </View>
+  ) : null;
+}
+
+/** The directory's one source sheet: the foot line and ⋯ › Sources. */
+function sourceDetails(
+  kind: DirectoryKind,
+  record: DirectoryRecord,
+): SourceDetails {
+  const saved = savedCopy(record.stale, record.staleReason);
+  return {
+    citation: record.sources.map((s) => ({ label: s.label, asOf: s.asAt })),
+    savedAt: record.stale ? record.savedAt : null,
+    state: record.partial ? 'partial' : saved.state,
+    notes: [
+      ...directoryNotes[kind],
+      saved.note,
+      record.partial ? copy.partialNote : null,
+    ],
+  };
+}
+
+/** The filter store for this kind, registered before its first read. */
+function useDirectoryFilters(kind: DirectoryKind) {
+  useState(
+    () =>
+      filterStore('directory', kind) ??
+      registerFilterModel(directoryFilterModel({ kind }), { owner: kind }),
+  );
+  return useFilterState('directory', kind)[0] as Filters;
+}
+/** The rows and switches that are on, in words: "Labor · Senate". */
+function activeFilters(kind: DirectoryKind, filters: Filters): string[] {
+  const model = filterStore('directory', kind)?.model;
+  if (!model) return [];
+  return [
+    ...model.rows
+      .filter((row) => row.key !== 'sort' && row.value(filters))
+      .map((row) => {
+        const value = row.value(filters);
+        return (
+          row.choices(filters).find((c) => c.value === value)?.label ?? value
+        );
+      }),
+    ...(model.toggles ?? [])
+      .filter((toggle) => toggle.value(filters))
+      .map((toggle) => toggle.label),
+  ];
+}
+
 export default function DirectoryScreen() {
   const params = useLocalSearchParams<{ kind: string }>();
   const kind = directoryKind(params.kind);
@@ -210,23 +200,59 @@ export default function DirectoryScreen() {
     </SidebarSafe>
   );
 }
-function DirectoryView({ kind }: { kind: keyof typeof titles }) {
+function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const title = titles[kind];
   const load = useCallback(
     (refresh: boolean) => loadDirectory(kind, refresh),
     [kind],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
-  const { filters, facets } = useDirectoryState(kind);
+  const filters = useDirectoryFilters(kind);
+  const params = useLocalSearchParams<{
+    open?: string;
+    party?: string;
+    sitting?: string;
+  }>();
+  // The party page's Members row and a row's "Open party" arrive filtered.
+  useEffect(() => {
+    if (params.party === undefined && params.sitting === undefined) return;
+    const store = filterStore('directory', kind);
+    if (!store) return;
+    store.set({
+      ...store.model.initial,
+      sort: store.get().sort,
+      ...(params.party ? { party: partyName(params.party) } : {}),
+      ...(params.sitting === '1' ? { sitting: '1' } : {}),
+    });
+  }, [kind, params.party, params.sitting]);
+  useEffect(() => {
+    if (record)
+      registerFilterModel(
+        directoryFilterModel({ kind, facets: record.facets }),
+        { owner: kind },
+      );
+  }, [kind, record]);
+
   const [text, setText] = useState(''),
     [query, setQuery] = useState('');
   useEffect(() => {
-    const timer = setTimeout(() => setQuery(text.trim()), 120);
+    const timer = setTimeout(() => setQuery(text.trim()), 150);
     return () => clearTimeout(timer);
   }, [text]);
-  useEffect(() => {
-    if (record) directoryStore.facets(kind, record.facets);
-  }, [kind, record]);
+  const searchBar = useListSearchBar({
+    placeholder: placeholders[kind],
+    onChangeText: setText,
+    onSearchButtonPress: (value) => {
+      setText(value);
+      setQuery(value.trim());
+      Keyboard.dismiss();
+    },
+    onCancelButtonPress: () => {
+      setText('');
+      setQuery('');
+    },
+  });
+
   const rows = useMemo<Row[]>(
     () =>
       !record
@@ -238,46 +264,45 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
             : matchingElectorates(record.electorates, filters, query),
     [kind, record, filters, query],
   );
-  const total = record
-    ? kind === 'person'
-      ? record.people.length
-      : kind === 'party'
-        ? record.parties.length
-        : record.electorates.length
-    : 0;
-  const count = `${rows.length === total ? '' : `${formatCount(rows.length)} of `}${formatCount(total)} ${title.toLowerCase()}`;
+  const sections = useMemo<Section[]>(
+    () =>
+      kind === 'person'
+        ? (peopleSections(rows as PeopleRow[]) as Section[])
+        : kind === 'electorate'
+          ? (electorateSections(
+              rows as Electorate[],
+              String(filters.sort ?? ''),
+            ) as Section[])
+          : rows.length
+            ? [{ key: 'all', title: null, data: rows }]
+            : [],
+    [kind, rows, filters.sort],
+  );
+  const active = activeFilters(kind, filters);
+  const filtered = active.length > 0;
+  const count = directoryCount(kind, rows.length);
   useEffect(() => {
     if (record) AccessibilityInfo.announceForAccessibility(count);
   }, [count, record]);
   const clear = () => {
-    directoryStore.set(kind, {});
+    const store = filterStore('directory', kind);
+    store?.set({ ...store.model.initial, sort: filters.sort });
     setText('');
     setQuery('');
+    (searchBar.ref as { current: SearchBarCommands | null }).current?.setText(
+      '',
+    );
   };
-  const chips = Object.entries(filters).filter(([k, v]) => k !== 'sort' && v);
+  const source = record ? sourceDetails(kind, record) : null;
 
   // iPad regular width: list left, the record right, the selection in the
   // route (`/directory?kind=person&open=person:…`), as Bills does.
   const split = useLayout().regular;
-  const params = useLocalSearchParams<{ open?: string }>();
   const selected = split ? decodeEntry(params.open) : null;
   const selectedKey = selected ? encodeEntry(selected) : null;
-  const groups = useMemo(
-    () =>
-      kind === 'person'
-        ? sittingGroupStarts(rows as PeopleRow[])
-        : new Map<string, GroupStart>(),
-    [kind, rows],
-  );
-  const renderRow = useCallback(
-    ({ item }: ListRenderItemInfo<Row>) => (
-      <DirectoryRow item={item} group={groups.get(rowKey(item))} />
-    ),
-    [groups],
-  );
-  const listRef = useRef<FlatList<Row>>(null);
+  const listRef = useRef<SectionList<Row, Section>>(null);
   const visible = useRef(new Set<string>());
-  // FlatList needs one stable callback for its whole life.
+  // SectionList needs one stable callback for its whole life.
   const [onViewable] = useState(
     () =>
       ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -290,49 +315,171 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
     (entry: RecordEntry | null) => {
       Keyboard.dismiss();
       router.setParams({ open: entry ? encodeEntry(entry) : '' });
+      if (!entry) return;
       // A keyboard step past the visible rows brings the row into view.
-      const at = entry
-        ? rows.findIndex(
-            (row) => encodeEntry(entryFor(row)) === encodeEntry(entry),
-          )
-        : -1;
-      if (at >= 0 && !visible.current.has(rowKey(rows[at]!)))
-        listRef.current?.scrollToIndex({
-          index: at,
-          viewPosition: 0.5,
-          animated: true,
-        });
+      const key = encodeEntry(entry);
+      sections.some((section, sectionIndex) => {
+        const itemIndex = section.data.findIndex(
+          (row) => encodeEntry(entryFor(row)) === key,
+        );
+        if (itemIndex < 0) return false;
+        if (!visible.current.has(rowKey(section.data[itemIndex]!)))
+          listRef.current?.scrollToLocation({
+            sectionIndex,
+            itemIndex,
+            viewPosition: 0.5,
+            animated: true,
+          });
+        return true;
+      });
     },
-    [rows],
+    [sections],
+  );
+  const renderRow = useCallback(
+    ({ item }: SectionListRenderItemInfo<Row, Section>) => (
+      <DirectoryRow item={item} />
+    ),
+    [],
   );
   const renderSplitRow = useCallback(
-    ({ item }: ListRenderItemInfo<Row>) => (
+    ({ item }: SectionListRenderItemInfo<Row, Section>) => (
       <DirectoryRow
         item={item}
         selected={encodeEntry(entryFor(item)) === selectedKey}
         onSelect={select}
-        group={groups.get(rowKey(item))}
       />
     ),
-    [selectedKey, select, groups],
+    [selectedKey, select],
   );
   const entries = useMemo(
     () =>
       new Map(rows.map((row) => [encodeEntry(entryFor(row)), entryFor(row)])),
     [rows],
   );
-  // iPad landscape: the pane opens on the first row rather than empty (pass
-  // 5, P2-21). A selection, not a navigation: VoiceOver focus stays on the
-  // list, and a cleared selection (`open=`) stays cleared.
-  const window = useWindowDimensions();
-  const landscape = window.width > window.height;
+  // iPad: the pane opens on the first row rather than empty, in portrait as
+  // in landscape (P2-21). A selection, not a navigation: VoiceOver focus
+  // stays on the list, and a cleared selection (`open=`) stays cleared.
   const first = rows[0];
   useEffect(() => {
-    if (!split || !landscape || params.open !== undefined || !first) return;
+    if (!split || params.open !== undefined || !first) return;
     router.setParams({ open: encodeEntry(entryFor(first)) });
-  }, [split, landscape, params.open, first]);
+  }, [split, params.open, first]);
+
+  const offline = record ? savedCopy(record.stale, record.staleReason) : null;
+  const header =
+    offline?.state === 'offline' || (record && (filtered || query)) ? (
+      <View style={styles.header}>
+        {offline?.state === 'offline' ? (
+          <OfflineLine savedAt={record!.savedAt} />
+        ) : null}
+        {filtered || query ? (
+          <View style={styles.filterLine}>
+            <Text
+              wordSafe
+              variant="footnote"
+              tone="inkSoft"
+              testID="directory-filter-line"
+              style={styles.grow}
+            >
+              {[...active, count].join(' · ')}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={filtered ? 'Clear filters' : 'Clear search'}
+              testID="directory-filter-clear"
+              onPress={clear}
+              style={styles.clear}
+            >
+              <Text wordSafe variant="footnote" tone="navy">
+                Clear
+              </Text>
+            </Pressable>
+          </View>
+        ) : null}
+      </View>
+    ) : null;
+  const unavailable = !record ? (
+    error ? (
+      error instanceof ApiError && error.code === 'offline' ? (
+        <ContentUnavailable
+          symbol="wifi.slash"
+          title={copy.notSaved}
+          body={copy.notSavedBody}
+          testID="directory-offline"
+        />
+      ) : (
+        <ContentUnavailable
+          symbol="exclamationmark.triangle"
+          title={`Couldn't load ${title.toLowerCase()}`}
+          body={
+            error instanceof ApiError && error.code === 'invalid-data'
+              ? error.message
+              : 'Check your connection and try again.'
+          }
+          action={{
+            label: copy.tryAgain,
+            onPress: retry,
+            testID: 'directory-retry',
+          }}
+          testID="directory-error"
+        />
+      )
+    ) : (
+      <Skeleton
+        shape={kind === 'person' ? 'people' : 'rows'}
+        count={8}
+        label={`Loading ${title.toLowerCase()}`}
+        testID="directory-loading"
+      />
+    )
+  ) : (
+    <View style={styles.empty}>
+      <ContentUnavailable
+        symbol="magnifyingglass"
+        title="No results"
+        body={
+          query
+            ? `No ${singular[kind]} matches “${query}”.`
+            : `No ${singular[kind]} matches these filters.`
+        }
+        action={
+          filtered
+            ? {
+                label: 'Clear filters',
+                onPress: clear,
+                testID: 'directory-empty-clear',
+              }
+            : undefined
+        }
+        testID="directory-empty"
+      />
+      {query ? (
+        <Button
+          label={`Search OPAX for “${query}”`}
+          variant="plain"
+          testID="directory-search-all"
+          onPress={() => router.push(resultsRoute('all', { q: query }))}
+        />
+      ) : null}
+    </View>
+  );
+  const footer =
+    record && source && rows.length ? (
+      <View style={styles.footer}>
+        <SourceLine {...source} testID="directory-source" />
+        <Text
+          wordSafe
+          variant="footnote"
+          tone="inkSoft"
+          testID="directory-count"
+        >
+          {count}
+        </Text>
+      </View>
+    ) : null;
+  const path = `/subject/${kind}`;
   const list = (
-    <FlatList<Row>
+    <SectionList<Row, Section>
       ref={listRef}
       testID={`directory-${kind}-screen`}
       style={styles.screen}
@@ -344,137 +491,27 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
-      data={rows}
+      sections={sections}
       keyExtractor={rowKey}
       renderItem={split ? renderSplitRow : renderRow}
+      renderSectionHeader={({ section }) => <SectionTitle section={section} />}
+      stickySectionHeadersEnabled
       extraData={split ? selectedKey : undefined}
       onViewableItemsChanged={split ? onViewable : undefined}
+      // A row not yet measured: scroll near it; the next step lands on it.
       onScrollToIndexFailed={({ index: at, averageItemLength }) =>
-        listRef.current?.scrollToOffset({
-          offset: averageItemLength * at,
-          animated: true,
-        })
+        listRef.current
+          ?.getScrollResponder()
+          ?.scrollTo({ y: averageItemLength * at, animated: true })
       }
       ItemSeparatorComponent={separator}
-      initialNumToRender={8}
+      initialNumToRender={10}
       maxToRenderPerBatch={8}
       windowSize={7}
       removeClippedSubviews={false}
-      ListHeaderComponent={
-        <Group>
-          <Field
-            label={`Search ${title.toLowerCase()} by name`}
-            testID="directory-search"
-            value={text}
-            onChangeText={setText}
-            onSubmitEditing={() => {
-              setQuery(text.trim());
-              Keyboard.dismiss();
-            }}
-            returnKeyType="search"
-            autoCorrect={false}
-            autoCapitalize="none"
-            clearButtonMode="while-editing"
-          />
-          <Button
-            label={
-              chips.length ? `Filters (${chips.length})` : 'Filters and sort'
-            }
-            icon="line.3.horizontal.decrease.circle"
-            size="compact"
-            testID="directory-filters"
-            disabled={!record}
-            onPress={() => {
-              Keyboard.dismiss();
-              router.push({
-                pathname: '/directory-filters',
-                params: { kind },
-              });
-            }}
-          />
-          {chips.length ? (
-            <View style={styles.chips}>
-              {chips.map(([key, value]) => (
-                <FilterChip
-                  key={key}
-                  filter={facets.find((f) => f.key === key)?.label ?? key}
-                  value={
-                    facets
-                      .find((f) => f.key === key)
-                      ?.choices?.find((c) => c.value === value)?.label ?? 'Yes'
-                  }
-                  onRemove={() => {
-                    const next = { ...filters };
-                    delete next[key];
-                    directoryStore.set(kind, next);
-                  }}
-                />
-              ))}
-            </View>
-          ) : null}
-          {record ? (
-            <>
-              <Text wordSafe variant="metadata" testID="directory-count">
-                {count} · {sortSummary(kind, filters.sort)}
-              </Text>
-              {/* One source line: the notes the ⓘ held, each source with its
-                  own date, and a saved copy as its state (pass 5, P2-12). */}
-              <SourceLine
-                title={`About ${title.toLowerCase()}`}
-                citation={record.sources.map((s) => ({
-                  label: s.label,
-                  asOf: s.asAt,
-                }))}
-                savedAt={record.stale ? record.savedAt : null}
-                state={record.partial ? 'partial' : saved(record).state}
-                notes={[
-                  ...directoryNotes[kind],
-                  saved(record).note,
-                  record.partial ? 'Some records could not be read.' : null,
-                ]}
-                testID="directory-source"
-              />
-              {record.stale ? (
-                <Button
-                  label="Try again"
-                  variant="quiet"
-                  size="compact"
-                  loading={refreshing}
-                  onPress={refresh}
-                  testID="directory-refresh"
-                />
-              ) : null}
-            </>
-          ) : error ? (
-            <>
-              {error instanceof ApiError && error.code === 'offline' ? (
-                <OfflineBanner cached={false} />
-              ) : null}
-              <ErrorState message={errorMessage(error)} onRetry={retry} />
-            </>
-          ) : (
-            <LoadingState
-              shape="people"
-              label={`Loading ${title.toLowerCase()}`}
-            />
-          )}
-        </Group>
-      }
-      ListHeaderComponentStyle={styles.header}
-      ListEmptyComponent={
-        record ? (
-          <Group>
-            <EmptyState
-              message={`Nothing in the ${title.toLowerCase()} directory matches that.`}
-            />
-            <Button
-              label="Clear filters"
-              testID="directory-clear"
-              onPress={clear}
-            />
-          </Group>
-        ) : null
-      }
+      ListHeaderComponent={header}
+      ListEmptyComponent={unavailable}
+      ListFooterComponent={footer}
     />
   );
   return (
@@ -483,9 +520,31 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
         options={{
           title,
           headerLargeTitleEnabled: false,
-          unstable_headerRightItems: () => [
-            shareHeaderItem({ path: `/subject/${kind}`, title }),
-          ],
+          headerSearchBarOptions: { ...searchBar, obscureBackground: false },
+          ...headerItems(
+            pageItems({
+              name: title,
+              filters: {
+                active: filtered,
+                href: filtersRoute('directory', kind),
+              },
+              menu: [
+                ...(source
+                  ? [
+                      {
+                        title: copy.sources,
+                        symbol: 'doc.text.magnifyingglass' as const,
+                        onPress: () =>
+                          presentSource(source, {
+                            testID: 'directory-sources',
+                          }),
+                      },
+                    ]
+                  : []),
+                ...rowMenus.record({ title, path }),
+              ],
+            }),
+          ),
         }}
       />
       {isPad ? (
@@ -504,10 +563,7 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
           empty={
             <EmptyState
               size="pane"
-              icon={kind === 'electorate' ? 'map' : 'person.2'}
-              accent="people"
-              title={`No ${kind === 'person' ? 'parliamentarian' : kind} selected`}
-              message={record ? count : undefined}
+              title={`Choose ${kind === 'electorate' ? 'an' : 'a'} ${singular[kind]}`}
               testID="directory-split-empty"
             />
           }
@@ -522,10 +578,27 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
     paddingBottom: rhythm.section,
   },
-  header: { paddingBottom: rhythm.block },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
-  groupHeading: { paddingTop: rhythm.block, paddingBottom: rhythm.tight },
+  header: { paddingTop: rhythm.tight, gap: rhythm.tight },
+  filterLine: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+  },
+  grow: { flexGrow: 1, flexShrink: 1 },
+  clear: {
+    minHeight: minimumTarget,
+    minWidth: minimumTarget,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sectionHeader: {
+    backgroundColor: colors.paper,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.tight,
+  },
+  empty: { gap: rhythm.block, paddingTop: rhythm.block },
+  footer: { gap: rhythm.tight, paddingTop: rhythm.block },
 });

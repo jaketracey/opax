@@ -3,7 +3,8 @@ import TestRenderer from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
 import { LoadingState, EmptyState, ErrorState } from '../src/design/primitives';
 import { RecordBlock } from '../src/features/your-mp/Evidence';
-import { PartyBlock } from '../src/features/Party';
+import { ProfileBlock } from '../src/features/people/Block';
+import { Skeleton } from '../src/design/states';
 import { MoneyList } from '../src/features/money-public/parts';
 import DivisionHistory from '../src/features/directories/DivisionHistory';
 import { useCatalogRecord } from '../src/features/bills/useCatalogRecord';
@@ -92,16 +93,16 @@ test('evidence retains a saved block while refreshing', async () => {
 
 test('party blocks show a skeleton before the first response', async () => {
   const r = await render(
-    <PartyBlock
+    <ProfileBlock
+      title="Recent votes"
       block={loading}
-      empty="No divisions."
-      onRetry={jest.fn()}
-      testID="divisions"
+      retry={jest.fn()}
+      id="divisions"
     >
       {() => null}
-    </PartyBlock>,
+    </ProfileBlock>,
   );
-  expect(r.root.findAllByType(LoadingState)).toHaveLength(1);
+  expect(r.root.findAllByType(Skeleton)).toHaveLength(1);
   expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
   await unmount(r);
 });

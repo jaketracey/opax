@@ -1,29 +1,33 @@
 import { useRefreshCommand } from '../../design/keyboard';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  FlatList,
+  AccessibilityInfo,
   Keyboard,
   Pressable,
   RefreshControl,
+  SectionList,
   StyleSheet,
   View,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import type { SearchBarCommands } from 'react-native-screens';
 import { catalogs } from '../../api/runtime';
+import { ApiError } from '../../api/errors';
 import {
-  useAccessibilitySize,
   useScreenColumn,
   SidebarSafe,
   RegionProvider,
-  Button,
+  ContentUnavailable,
   Divider,
-  EmptyState,
-  Field,
-  Group,
-  Icon,
+  OfflineLine,
+  Skeleton,
   SourceLine,
   Text,
+  copy,
+  rowMenus,
 } from '../../design/primitives';
+import type { SourceDetails } from '../../design/source';
+import { useListSearchBar } from '../../design/search-bar';
 import { formatCount } from '../../design/format';
 import {
   chrome,
@@ -32,35 +36,54 @@ import {
   minimumTarget,
   rhythm,
 } from '../../design/tokens';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { filtersRoute } from '../../navigation/routes/filters';
 import { personRoute } from '../../navigation/routes';
+import { presentSource } from '../../navigation/sheets';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { RecordStatus } from '../RecordStatus';
-import { sourceIndex } from '../money-public/parts';
-import { FeedGroup } from './FeedRow';
-import { FilterSheet } from './FilterSheet';
+import { savedCopy } from '../search/present';
 import {
-  feedCountLine,
+  filterStore,
+  registerFilterModel,
+  useFilterState,
+} from '../sheets/filter-model';
+import { declarationsFilterModel } from '../sheets/filter-models';
+import { FeedGroup } from './FeedRow';
+import {
+  changesCount,
   feedFacets,
   filterFeed,
-  filterSummary,
-  noFilters,
-  personRuns,
-  type FeedFilters,
+  weekRuns,
+  type FeedRow,
 } from './model';
 
-const coverageNote = (rows: number, available: number) =>
-  `Showing the newest ${formatCount(rows)} of ${formatCount(available)} dated register changes. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact name matches, ignoring case and spacing.`;
+const coverageNotes = (rows: number, available: number) => [
+  `Showing the newest ${formatCount(rows)} of ${formatCount(available)} dated register changes.`,
+  'Entries are as declared, in the member’s own words. OPAX does not verify them. Additions and deletions carry the date the register records.',
+  'A name match means an organisation in the entry has the same name in AEC Transparency Register returns, the lobbyist registers or FITS. Matches use exact names, ignoring case and spacing; a shared name is not evidence of wrongdoing. A gift or trip with no match names an organisation those registers do not list under that spelling.',
+];
+type Run = ReturnType<typeof weekRuns<FeedRow>>[number]['data'][number];
+type Week = { key: string; title: string; data: Run[] };
+
+/** The feed's filter store, registered before its first read. */
+function useFeedFilters() {
+  useState(
+    () =>
+      filterStore('declarations') ??
+      registerFilterModel(declarationsFilterModel()),
+  );
+  const [state] = useFilterState('declarations');
+  const chamber = String(state.chamber || 'all');
+  const jurisdiction = String(state.jurisdiction || 'all');
+  return useMemo(() => ({ chamber, jurisdiction }), [chamber, jurisdiction]);
+}
 
 /**
- * The declared-interests feed behind Today's recent declarations: every row
- * of /interests/recent.json, newest first, filtered on the device by member
- * and, in a Filters sheet, by chamber and jurisdiction. The summary line
- * ("300 declarations · All chambers · Federal") is the Filters control, so
- * the first row follows the field. Consecutive entries by one member sit
- * under one PersonRow, with the member's profile and any name match the
- * export found. One source line dates the export and holds its coverage
- * note: after the first page of rows, as the money lists place theirs (P3-9),
- * or at the foot of a shorter or empty list.
+ * Just declared: every row of /interests/recent.json, newest first, by
+ * week, filtered on the device by member (the bar's search field) and, in
+ * the filter sheet, by chamber and parliament. Consecutive entries by one
+ * member sit under one PersonRow; each entry opens its own source sheet.
+ * The source line and the count close the list.
  */
 export default function Declarations() {
   const load = useCallback(
@@ -68,128 +91,247 @@ export default function Declarations() {
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
-  const [filters, setFilters] = useState<FeedFilters>(noFilters);
-  const [text, setText] = useState('');
-  const [sheet, setSheet] = useState(false);
-  const stacked = useAccessibilitySize();
+  const params = useLocalSearchParams<{ person?: string; member?: string }>();
+  const arrival = (params.person ?? params.member ?? '').trim();
+  const [text, setText] = useState(arrival);
+  const [member, setMember] = useState(arrival);
+  const filters = useFeedFilters();
   // Filter as the reader types, a beat behind the keyboard.
   useEffect(() => {
-    const timer = setTimeout(
-      () => setFilters((f) => ({ ...f, member: text.trim() })),
-      150,
-    );
+    const timer = setTimeout(() => setMember(text.trim()), 150);
     return () => clearTimeout(timer);
   }, [text]);
+  const searchBar = useListSearchBar({
+    placeholder: 'Member’s name',
+    onChangeText: setText,
+    onSearchButtonPress: (value) => {
+      setText(value);
+      setMember(value.trim());
+      Keyboard.dismiss();
+    },
+    onCancelButtonPress: () => {
+      setText('');
+      setMember('');
+    },
+  });
+  const field = searchBar.ref as { current: SearchBarCommands | null };
+  // Today's "See all" and a Today entry arrive with the member's name; the
+  // native field shows it once it has mounted.
+  const [arrived, setArrived] = useState(arrival);
+  if (arrived !== arrival) {
+    setArrived(arrival);
+    setText(arrival);
+    setMember(arrival);
+  }
+  useEffect(() => {
+    if (!arrival) return;
+    const fill = () => field.current?.setText(arrival);
+    fill();
+    const timer = setTimeout(fill, 300);
+    return () => clearTimeout(timer);
+  }, [arrival, field]);
   const column = useScreenColumn();
   useRefreshCommand(refresh, refreshing);
   const all = useMemo(() => record?.data ?? [], [record]);
   const facets = useMemo(() => feedFacets(all), [all]);
-  const rows = useMemo(() => filterFeed(all, filters), [all, filters]);
-  const runs = useMemo(() => personRuns(rows), [rows]);
-  const filtered =
-    filters.chamber !== 'all' ||
-    filters.jurisdiction !== 'all' ||
-    !!filters.member;
-  const summary = filterSummary(filters, facets);
+  useEffect(() => {
+    if (record)
+      registerFilterModel(
+        declarationsFilterModel({
+          chambers: facets.chambers.map((f) => ({
+            value: f.id,
+            label: f.label,
+          })),
+          jurisdictions: facets.jurisdictions.map((f) => ({
+            value: f.id,
+            label: f.label,
+          })),
+        }),
+      );
+  }, [record, facets]);
+  const rows = useMemo(
+    () => filterFeed(all, { ...filters, member }),
+    [all, filters, member],
+  );
+  const [today] = useState(() => new Date());
+  const sections = useMemo<Week[]>(() => weekRuns(rows, today), [rows, today]);
+  const active = [
+    filters.chamber !== 'all'
+      ? (facets.chambers.find((f) => f.id === filters.chamber)?.label ??
+        filters.chamber)
+      : null,
+    filters.jurisdiction !== 'all'
+      ? (facets.jurisdictions.find((f) => f.id === filters.jurisdiction)
+          ?.label ?? filters.jurisdiction)
+      : null,
+  ].filter((label): label is string => !!label);
+  const filtered = active.length > 0;
+  const count = changesCount(rows.length);
+  useEffect(() => {
+    if (record) AccessibilityInfo.announceForAccessibility(count);
+  }, [count, record]);
+  const clear = () => {
+    const store = filterStore('declarations');
+    store?.set(store.model.initial);
+    setText('');
+    setMember('');
+    field.current?.setText('');
+  };
+  const saved = record ? savedCopy(record.stale, record.staleReason) : null;
+  const source: SourceDetails | null = record
+    ? {
+        asOf: record.asAt,
+        citation: record.meta.source,
+        savedAt: record.stale ? record.savedAt : null,
+        state: record.partial ? 'partial' : saved!.state,
+        notes: [
+          ...coverageNotes(record.meta.rows, record.meta.available),
+          saved!.note,
+          record.partial ? copy.partialNote : null,
+        ],
+      }
+    : null;
 
-  const countLine = `${feedCountLine(rows.length, all.length)} · ${summary}`;
-  // A row here is a member's group of entries; the line follows the tenth.
-  const sourceAt = record ? sourceIndex(runs.length) : -1;
-  const sourceLine = record ? (
-    <View style={styles.foot} testID="declarations-source-foot">
-      <SourceLine
-        title="About these declarations"
-        asOf={record.asAt}
-        citation={record.meta.source}
-        savedAt={record.stale ? record.savedAt : null}
-        notes={[coverageNote(record.meta.rows, record.meta.available)]}
-        testID="declarations-source"
-      />
-    </View>
-  ) : null;
-  const header = (
-    <Group style={styles.header}>
-      <Text wordSafe variant="body" testID="declarations-lede">
-        The newest additions and deletions recorded in parliamentarians’
-        registers of interests, in their own words. Entries are as declared, not
-        verified by OPAX.
-      </Text>
-      <RecordStatus
-        record={record}
-        error={error}
-        refreshing={refreshing}
-        refresh={refresh}
-        retry={retry}
-        label="Loading the declarations"
-        testID="declarations"
-      />
-      {record ? (
-        <>
-          <Field
-            label="Member"
-            placeholder="Name"
-            testID="declarations-member"
-            value={text}
-            onChangeText={setText}
-            onSubmitEditing={() => {
-              setFilters((f) => ({ ...f, member: text.trim() }));
-              Keyboard.dismiss();
-            }}
-            returnKeyType="search"
-            autoCorrect={false}
-            autoCapitalize="words"
-            clearButtonMode="while-editing"
+  const header =
+    saved?.state === 'offline' || (record && (filtered || member)) ? (
+      <View style={styles.header}>
+        {saved?.state === 'offline' ? (
+          <OfflineLine
+            savedAt={record!.savedAt}
+            testID="declarations-offline"
           />
-          {/* The count line is the Filters control: one line, not a
-              button beside a caption. */}
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`${countLine}, Filters`}
-            accessibilityHint="Opens the chamber and jurisdiction filters"
-            testID="declarations-filters"
-            onPress={() => {
-              Keyboard.dismiss();
-              setSheet(true);
-            }}
-            style={({ pressed }) => [
-              styles.filters,
-              stacked ? styles.stacked : null,
-              pressed ? styles.pressed : null,
-            ]}
-          >
+        ) : null}
+        {filtered || member ? (
+          <View style={styles.filterLine}>
             <Text
               wordSafe
-              variant="metadata"
-              testID="declarations-count"
-              style={stacked ? null : styles.grow}
+              variant="footnote"
+              tone="inkSoft"
+              testID="declarations-filter-line"
+              style={styles.grow}
             >
-              {countLine}
+              {[...active, count].join(' · ')}
             </Text>
-            <View style={styles.filtersLabel}>
-              <Icon name="slider.horizontal.3" size={17} tone="navy" />
-              <Text wordSafe variant="control" tone="navy">
-                Filters
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={filtered ? 'Clear filters' : 'Clear search'}
+              testID="declarations-filter-clear"
+              onPress={clear}
+              style={styles.clear}
+            >
+              <Text wordSafe variant="footnote" tone="navy">
+                Clear
               </Text>
-            </View>
-          </Pressable>
-          <FilterSheet
-            visible={sheet}
-            filters={filters}
-            facets={facets}
-            onChange={setFilters}
-            onClear={() =>
-              setFilters((f) => ({ ...f, chamber: 'all', jurisdiction: 'all' }))
-            }
-            onClose={() => setSheet(false)}
-          />
-        </>
-      ) : null}
-    </Group>
+            </Pressable>
+          </View>
+        ) : null}
+      </View>
+    ) : null;
+  const unavailable = !record ? (
+    error ? (
+      error instanceof ApiError && error.code === 'offline' ? (
+        <ContentUnavailable
+          symbol="wifi.slash"
+          title={copy.notSaved}
+          body={copy.notSavedBody}
+          testID="declarations-offline-uncached"
+        />
+      ) : (
+        <ContentUnavailable
+          symbol="exclamationmark.triangle"
+          title="Couldn't load declarations"
+          body="Check your connection and try again."
+          action={{
+            label: copy.tryAgain,
+            onPress: retry,
+            testID: 'declarations-retry',
+          }}
+          testID="declarations-error"
+        />
+      )
+    ) : (
+      <Skeleton
+        shape="people"
+        count={8}
+        label="Loading declarations"
+        testID="declarations-loading"
+      />
+    )
+  ) : (
+    <View style={styles.empty}>
+      <ContentUnavailable
+        symbol="magnifyingglass"
+        title="No results"
+        body={
+          member
+            ? `No declaration matches “${member}”.`
+            : 'No declaration matches these filters.'
+        }
+        action={
+          filtered || member
+            ? {
+                label: 'Clear filters',
+                onPress: clear,
+                testID: 'declarations-empty-clear',
+              }
+            : undefined
+        }
+        testID="declarations-empty"
+      />
+    </View>
   );
+  const footer =
+    source && rows.length ? (
+      <View style={styles.foot} testID="declarations-source-foot">
+        <SourceLine {...source} testID="declarations-source" />
+        <Text
+          wordSafe
+          variant="footnote"
+          tone="inkSoft"
+          testID="declarations-total"
+        >
+          {count}
+        </Text>
+      </View>
+    ) : null;
 
   return (
     <SidebarSafe style={styles.screen}>
-      <FlatList
+      <Stack.Screen
+        options={{
+          title: 'Just declared',
+          headerLargeTitleEnabled: false,
+          headerSearchBarOptions: { ...searchBar, obscureBackground: false },
+          ...headerItems(
+            pageItems({
+              name: 'Just declared',
+              filters: {
+                active: filtered,
+                href: filtersRoute('declarations'),
+              },
+              menu: [
+                ...(source
+                  ? [
+                      {
+                        title: copy.sources,
+                        symbol: 'doc.text.magnifyingglass' as const,
+                        onPress: () =>
+                          presentSource(source, {
+                            testID: 'declarations-sources',
+                          }),
+                      },
+                    ]
+                  : []),
+                ...rowMenus.record({
+                  title: 'Just declared',
+                  path: '/declared',
+                }),
+              ],
+            }),
+          ),
+        }}
+      />
+      <SectionList<Run, Week>
         testID="declarations-screen"
         refreshControl={
           <RefreshControl
@@ -205,20 +347,30 @@ export default function Declarations() {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
         automaticallyAdjustKeyboardInsets
-        data={runs}
+        sections={sections}
         keyExtractor={(run) => run.key}
-        renderItem={({ item: run, index }) => {
+        stickySectionHeadersEnabled
+        renderSectionHeader={({ section }) => (
+          <View style={styles.sectionHeader}>
+            <Text
+              wordSafe
+              variant="groupHeader"
+              accessibilityRole="header"
+              testID={`declarations-week-${section.key}`}
+            >
+              {section.title}
+            </Text>
+          </View>
+        )}
+        renderItem={({ item: run }) => {
           const slug = run.entries[0]!.item.profileSlug;
           return (
-            <>
-              <FeedGroup
-                entries={run.entries}
-                onOpenPerson={
-                  slug ? () => router.push(personRoute(slug)) : undefined
-                }
-              />
-              {index === sourceAt ? sourceLine : null}
-            </>
+            <FeedGroup
+              entries={run.entries}
+              onOpenPerson={
+                slug ? () => router.push(personRoute(slug)) : undefined
+              }
+            />
           );
         }}
         ItemSeparatorComponent={() => <Divider variant="subtle" />}
@@ -228,27 +380,8 @@ export default function Declarations() {
             {header}
           </RegionProvider>
         }
-        ListEmptyComponent={
-          record ? (
-            <Group>
-              <EmptyState
-                message="No alterations match these filters."
-                testID="declarations-empty"
-              />
-              {filtered ? (
-                <Button
-                  label="Clear filters"
-                  onPress={() => {
-                    setText('');
-                    setFilters(noFilters);
-                  }}
-                  testID="declarations-clear"
-                />
-              ) : null}
-            </Group>
-          ) : null
-        }
-        ListFooterComponent={sourceAt < 0 ? sourceLine : null}
+        ListEmptyComponent={unavailable}
+        ListFooterComponent={footer}
         initialNumToRender={8}
       />
     </SidebarSafe>
@@ -259,25 +392,27 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.block,
     paddingBottom: rhythm.section + rhythm.block,
   },
-  header: { paddingBottom: rhythm.tight },
-  filters: {
+  header: { paddingTop: rhythm.tight, gap: rhythm.tight },
+  filterLine: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    gap: rhythm.heading,
-    minHeight: minimumTarget,
-    paddingVertical: rhythm.line,
+    columnGap: rhythm.tight,
   },
-  stacked: { flexDirection: 'column', alignItems: 'flex-start', gap: 0 },
-  pressed: { backgroundColor: colors.sunken },
-  grow: { flex: 1 },
-  filtersLabel: {
-    flexDirection: 'row',
+  grow: { flexGrow: 1, flexShrink: 1 },
+  clear: {
+    minHeight: minimumTarget,
+    minWidth: minimumTarget,
     alignItems: 'center',
-    gap: rhythm.tight,
-    minHeight: minimumTarget,
+    justifyContent: 'center',
   },
-  foot: { paddingTop: rhythm.block },
+  sectionHeader: {
+    backgroundColor: colors.paper,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.tight,
+  },
+  empty: { gap: rhythm.block, paddingTop: rhythm.block },
+  foot: { gap: rhythm.tight, paddingTop: rhythm.block },
 });

@@ -12,6 +12,7 @@ const amount = pointer
   .reduce((value, key) => value[key], money);
 if (money.nodes[0].id !== 'party:Labor')
   throw new Error('Labor pointer drifted');
+// The total's spoken label: "4,537,500 dollars, disclosed".
 output.partyReceiptsLabel =
-  'Received (disclosed), $' +
-  String(Math.round(amount)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  String(Math.round(amount)).replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
+  ' dollars, disclosed';

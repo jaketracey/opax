@@ -1,4 +1,1 @@
-import { RoutePlaceholder } from '../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="record-list" title="Records" />;
-}
+export { default } from '../../../features/people/RecordList';

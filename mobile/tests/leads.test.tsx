@@ -23,7 +23,12 @@ import {
 } from '../src/api/cache';
 import { isPartialCatalog } from '../src/api/validation';
 import { ApiError } from '../src/api/errors';
-import { LeadCard } from '../src/design/primitives';
+import {
+  ContentUnavailable,
+  LeadCard,
+  RowLink,
+} from '../src/design/primitives';
+import { filterStore } from '../src/features/sheets/filter-model';
 import { chamberName } from '../src/design/parliament';
 import { webPageUrl } from '../src/navigation/external';
 import {
@@ -70,11 +75,37 @@ jest.mock('../src/api/image-policy', () => ({
   remoteImageURI: (path: string) => `http://127.0.0.1:8918${path}`,
 }));
 const mockParams: { id?: string } = {};
-jest.mock('expo-router', () => ({
-  useLocalSearchParams: () => mockParams,
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
-}));
+const mockScreen: { options?: Record<string, unknown> } = {};
+jest.mock('expo-router', () => {
+  // Just declared entries open a native menu (Link.Menu) on touch and hold.
+  const React = jest.requireActual('react');
+  const Link = function Link({ children }: { children: unknown }) {
+    return React.createElement(React.Fragment, null, children);
+  };
+  Link.Trigger = function Trigger({ children }: { children: unknown }) {
+    return children;
+  };
+  Link.Preview = function Preview() {
+    return null;
+  };
+  Link.Menu = function Menu() {
+    return null;
+  };
+  Link.MenuAction = function MenuAction() {
+    return null;
+  };
+  return {
+    useLocalSearchParams: () => mockParams,
+    router: { push: jest.fn() },
+    Stack: {
+      Screen: ({ options }: { options?: Record<string, unknown> }) => {
+        mockScreen.options = options;
+        return null;
+      },
+    },
+    Link,
+  };
+});
 
 const discovery = decodeDiscovery(pinned('/discovery.json'));
 const signals = discovery.signals;
@@ -825,75 +856,83 @@ describe('the declared-interests feed', () => {
     expect(chamberName('house', 'federal')).toBe('House of Representatives');
     expect(chamberName('house', 'qld')).toBeNull();
   });
+  // people.md 2.7: the bar's search field and filter sheet; a footnote
+  // line says what is on.
+  const search = async (text: string) => {
+    const bar = mockScreen.options!.headerSearchBarOptions as {
+      onSearchButtonPress: (e: { nativeEvent: { text: string } }) => void;
+    };
+    await act(async () => bar.onSearchButtonPress({ nativeEvent: { text } }));
+  };
+  const filterLine = (root: ReactTestInstance) =>
+    root
+      .findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          n.props.testID === 'declarations-filter-line',
+      )
+      .map((n) => [n.props.children].flat(3).join(''));
   test('the screen filters by chamber and a row opens the member’s native profile', async () => {
     const renderer = await render(<Declarations />);
     const root = renderer.root;
-    // One summary line; the chamber and jurisdiction chips are in a sheet,
-    // and a single jurisdiction is named, not offered.
-    expect(texts(root)).toContain('300 declarations · All chambers · Federal');
-    expect(
-      root.findAll((n) => n.props.testID === 'declarations-chamber-house'),
-    ).toHaveLength(0);
-    await press(root, 'declarations-filters');
-    expect(
-      root.findAll((n) => n.props.testID === 'declarations-jurisdiction'),
-    ).toHaveLength(0);
-    // No label sits over chips that name themselves.
-    expect(texts(root)).not.toContain('Chamber');
-    await press(root, 'declarations-chamber-house');
-    await press(root, 'declarations-filters-sheet-done');
-    expect(texts(root)).toContain(
-      '176 of 300 declarations · House of Representatives · Federal',
-    );
-    const field = root.find(
-      (n) =>
-        n.props.testID === 'declarations-member' &&
-        typeof n.props.onChangeText === 'function',
-    );
-    await act(async () => field.props.onChangeText('Briskey'));
-    await act(async () => field.props.onSubmitEditing());
-    expect(texts(root)).toContain(
-      '3 of 300 declarations · House of Representatives · Federal',
-    );
-    // Today's anatomy: the category joins the date line; no chip per row.
+    // Nothing above the first row while nothing is filtered.
+    expect(filterLine(root)).toHaveLength(0);
+    expect(texts(root)).toContain('300 changes');
+    const store = filterStore('declarations')!;
+    // A single jurisdiction is named, not offered.
+    expect(store.model.rows.map((row) => row.title)).toEqual(['Chamber']);
+    await act(async () => store.set({ ...store.get(), chamber: 'house' }));
+    expect(filterLine(root)).toEqual([
+      'House of Representatives · 176 changes',
+    ]);
+    await search('Briskey');
+    expect(filterLine(root)).toEqual(['House of Representatives · 3 changes']);
+    // The category alone; the PersonRow's place says the chamber.
     expect(byTestID(root, 'declaration-change-0').props.children).toMatch(
-      /^[A-Z][^·]+ · (added|deleted|changed) \d{1,2} [A-Z][a-z]{2}( \d{4})? · House of Representatives$/,
+      /^[A-Z][^·]+$/,
     );
     await press(root, 'declaration-person-0');
     expect(router.push).toHaveBeenCalledWith(personRoute('jo-briskey'));
-    // The feed adds the export's name matches and their caveat.
-    await act(async () => field.props.onChangeText('Susan McDonald'));
-    await act(async () => field.props.onSubmitEditing());
-    await press(root, 'declarations-filters');
-    await press(root, 'declarations-filters-clear');
-    await press(root, 'declarations-filters-sheet-done');
-    expect(
-      texts(root).some((t) =>
-        t.startsWith(
-          'Name match: Adani Mining Pty Ltd, AEC donor · mining. Exact names only;',
-        ),
-      ),
-    ).toBe(true);
-    // The export's coverage note is in its one source line's sheet, in full.
+    // The name match is one short line; the caveat is in the sheet.
+    await search('Susan McDonald');
+    await act(async () => store.set(store.model.initial));
+    expect(texts(root)).toContain(
+      'Same name as an AEC donor: Adani Mining Pty Ltd',
+    );
+    expect(texts(root).some((t) => t.includes('wrongdoing'))).toBe(false);
+    // An entry opens its own sheet: the register page, dated.
+    // The entry is a RowLink whose tap selects (Link handles it on iOS).
+    const entry = root
+      .findAllByType(RowLink)
+      .find(
+        (link) =>
+          link.findAll((n) => n.props.testID === 'declaration-entry-0').length,
+      )!;
+    await act(async () => entry.props.select());
+    expect(lastSource().originals![0]!.label).toBe(
+      'Register of Senators’ Interests',
+    );
+    expect(lastSource().notes!.join(' ')).toContain(
+      'not evidence of wrongdoing',
+    );
+    // The export's coverage note is in its one source line's sheet.
     await press(root, 'declarations-source');
     expect(lastSource().notes).toContain(
-      'Showing the newest 300 of 1,660 dated register changes. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact name matches, ignoring case and spacing.',
+      'Showing the newest 300 of 1,660 dated register changes.',
     );
+    await act(async () => store.set(store.model.initial));
     act(() => renderer.unmount());
   });
   test('nothing matching offers to clear the filters', async () => {
     const renderer = await render(<Declarations />);
     const root = renderer.root;
-    const field = root.find(
-      (n) =>
-        n.props.testID === 'declarations-member' &&
-        typeof n.props.onChangeText === 'function',
-    );
-    await act(async () => field.props.onChangeText('Nobody'));
-    await act(async () => field.props.onSubmitEditing());
-    expect(texts(root)).toContain('No alterations match these filters.');
-    await press(root, 'declarations-clear');
-    expect(texts(root)).toContain('300 declarations · All chambers · Federal');
+    await search('Nobody');
+    const empty = root.findByType(ContentUnavailable);
+    expect(empty.props.title).toBe('No results');
+    expect(empty.props.body).toBe('No declaration matches “Nobody”.');
+    await act(async () => empty.props.action.onPress());
+    expect(filterLine(root)).toHaveLength(0);
+    expect(texts(root)).toContain('300 changes');
     act(() => renderer.unmount());
   });
 });

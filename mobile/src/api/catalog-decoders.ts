@@ -1021,10 +1021,11 @@ const oneOf =
     values.includes(v as T) ? (v as T) : invalid();
 const calendarDay = (v: unknown) => date(matching(/^\d{4}-\d{2}-\d{2}$/)(v));
 // The reader's link rule (storedEdition): an https page on the public site
-// under a member, bill, grants or report path. The card opens only its path
-// and query, on the build's own web origin, through the web link guard.
-const editionPage =
-  /^\/(?:subject\/person\/|bill\/|money\/grants(?:\/|$)|reports\/)/;
+// under a member, bill or grants path. Reports are retired, so an edition
+// that links one is refused rather than drawn with a dead destination. The
+// card opens only its path and query, on the build's own web origin,
+// through the web link guard.
+const editionPage = /^\/(?:subject\/person\/|bill\/|money\/grants(?:\/|$))/;
 const editionLink = (v: unknown): string => {
   const raw = nonempty(v);
   let link: URL;

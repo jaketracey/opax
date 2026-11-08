@@ -140,9 +140,7 @@ test('Jake’s screenshot: Bridget McKenzie’s liability and totals', async () 
     'Added 29 Sep 2026',
   );
   const shown = lines(await renderOpen(register));
-  expect(shown).toContain(
-    'Showing the latest 6 of 84. The original register has them all.',
-  );
+  expect(shown).toContain('Newest 6 of 84.');
 });
 
 test('House holders, deletions, pages and OCR are said in words', () => {

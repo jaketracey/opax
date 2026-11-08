@@ -1,18 +1,13 @@
-import {
-  BigFigure,
-  Disclosure,
-  Group,
-  RowList,
-  Text,
-} from '../../design/primitives';
+import { useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Disclosure } from '../../design/disclosure';
+import { Group } from '../../design/layout';
+import { Text } from '../../design/text';
 import { formatCount, formatDate } from '../../design/format';
-import { rhythm } from '../../design/tokens';
+import { colors, hairline, rhythm } from '../../design/tokens';
 import type { InterestDetail } from '../../api/catalogs';
-import {
-  registerCategoryLabel,
-  registerEntry,
-  registerTotalsLine,
-} from '../your-mp/model';
+import { NewDot } from '../follows/NewDot';
+import { registerCategoryLabel, registerEntry } from '../your-mp/model';
 
 /**
  * How the register was read, for the block's source sheet: OCR entries and
@@ -30,44 +25,76 @@ export function registerNotes(r: InterestDetail): string[] {
 }
 
 /**
- * A member's register file: the entry total, then one disclosure per
- * category. Each entry is the declared item in plain words (see
- * registerEntry); the export serves at most six per category, so a capped
- * category says how many the original register holds. The total says where
- * its entries came from only when that adds something ("20 in the statement
- * of 4 Aug 2025 · 8 added since"), never the total again.
+ * The block's one line (people.md 2.1): "Statement of 4 Aug 2025", or with
+ * the changes since it ("Statement of 4 Aug 2025 · 14 changes since").
+ */
+export function statementLine(r: InterestDetail): string | null {
+  const changes = r.alterations.added + r.alterations.deleted;
+  const statement = r.statement_date
+    ? `Statement of ${formatDate(r.statement_date, 'short')}`
+    : null;
+  const since = changes
+    ? `${formatCount(changes)} ${changes === 1 ? 'change' : 'changes'}${statement ? ' since' : ''}`
+    : null;
+  return [statement, since].filter(Boolean).join(' · ') || null;
+}
+
+const LONG = 280;
+
+/** The member's own words; a long entry opens with "More". */
+function EntryText({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  const long = text.length > LONG;
+  return (
+    <View style={styles.entryText}>
+      <Text
+        wordSafe
+        variant="recordText"
+        numberOfLines={long && !open ? 6 : undefined}
+      >
+        {text}
+      </Text>
+      {long && !open ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="More"
+          hitSlop={8}
+          onPress={() => setOpen(true)}
+        >
+          <Text variant="strong" tone="navy">
+            More
+          </Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+/**
+ * A member's register: the statement line, then one disclosure per category
+ * with its count. Inside, each entry in the member's words and when it was
+ * added; a category that holds more than it shows says "Newest 6 of 14."
+ * (the original register is in the source sheet). `isNew` marks an entry
+ * added since the reader last looked.
  */
 export function DeclaredInterests({
   register: r,
-  figure = true,
+  isNew,
 }: {
   register: InterestDetail;
-  /** False where the page's figure strip already shows the total. */
+  /** @deprecated The page's strip carries the total. */
   figure?: boolean;
+  isNew?: (row: InterestDetail['buckets'][string]['items'][number]) => boolean;
 }) {
-  // Where the entries came from, without saying the total twice: the
-  // statement's date alone, or the statement and its alterations.
-  const { added, deleted } = r.alterations;
-  const totals =
-    added || deleted
-      ? registerTotalsLine(r)
-      : r.statement_date
-        ? `In the statement of ${formatDate(r.statement_date, 'short')}`
-        : null;
+  const line = statementLine(r);
   return (
-    <Group>
-      {figure ? (
-        <BigFigure
-          value={formatCount(r.total)}
-          label="Declared entries"
-          detail={totals ?? undefined}
-        />
-      ) : totals ? (
-        <Text wordSafe variant="metadata">
-          {totals}
+    <Group gap={rhythm.tight}>
+      {line ? (
+        <Text wordSafe variant="secondary" testID="person-interests-line">
+          {line}
         </Text>
       ) : null}
-      <RowList>
+      <View>
         {Object.entries(r.buckets).map(([name, bucket]) => (
           <Disclosure
             key={name}
@@ -76,49 +103,64 @@ export function DeclaredInterests({
             testID={`interest-bucket-${name}`}
           >
             {() => (
-              <Group gap={rhythm.tight}>
-                <RowList>
-                  {bucket.items.map((row, i) => {
-                    const entry = registerEntry(row, r.statement_date);
-                    return (
-                      <Group
-                        key={i}
-                        gap={rhythm.line}
-                        testID={`interest-entry-${name}-${i}`}
-                      >
+              <View>
+                {bucket.items.map((row, i) => {
+                  const entry = registerEntry(row, r.statement_date);
+                  const fresh = isNew?.(row) ?? false;
+                  return (
+                    <View
+                      key={i}
+                      style={[styles.entry, i ? styles.inset : null]}
+                      testID={`interest-entry-${name}-${i}`}
+                    >
+                      {fresh ? (
+                        <NewDot testID={`interest-entry-${name}-${i}-new`} />
+                      ) : null}
+                      <View style={styles.grow}>
                         {entry.title ? (
                           <Text wordSafe variant="strong">
                             {entry.title}
                           </Text>
                         ) : null}
                         {entry.detail ? (
-                          <Text wordSafe>{entry.detail}</Text>
+                          <EntryText text={entry.detail} />
                         ) : null}
                         {entry.meta ? (
-                          <Text wordSafe variant="fine">
+                          <Text wordSafe variant="secondary">
                             {entry.meta}
                           </Text>
                         ) : null}
-                      </Group>
-                    );
-                  })}
-                </RowList>
+                      </View>
+                    </View>
+                  );
+                })}
                 {bucket.items.length < bucket.count ? (
                   <Text
                     wordSafe
-                    variant="fine"
+                    variant="footnote"
                     testID={`interest-bucket-${name}-more`}
                   >
-                    Showing the latest {formatCount(bucket.items.length)} of{' '}
-                    {formatCount(bucket.count)}. The original register has them
-                    all.
+                    Newest {formatCount(bucket.items.length)} of{' '}
+                    {formatCount(bucket.count)}.
                   </Text>
                 ) : null}
-              </Group>
+              </View>
             )}
           </Disclosure>
         ))}
-      </RowList>
+      </View>
     </Group>
   );
 }
+
+const styles = StyleSheet.create({
+  entry: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+    paddingVertical: rhythm.tight,
+  },
+  entryText: { gap: rhythm.line, alignItems: 'flex-start' },
+  grow: { flex: 1, gap: rhythm.line },
+  inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+});

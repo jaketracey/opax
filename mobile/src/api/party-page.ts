@@ -296,6 +296,5 @@ export function partyDivisions(label: string, bills: BillDetail[]) {
     .sort((a, b) => b.division.date.localeCompare(a.division.date));
 }
 export const partyPageCopy = {
-  caption: 'Received (disclosed)',
   aec: 'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
 };
