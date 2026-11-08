@@ -283,3 +283,12 @@ test('speech titles preserve subject punctuation and passages omit source furnit
     'A complete source sentence.',
   );
 });
+test('every profile the harness opens has its pinned topics response', () => {
+  // people-01 opens Anthony Albanese and people-07 Julia Gillard; an unpinned
+  // topics request fails the harness request audit.
+  for (const name of ['Anthony Albanese', 'Julia Gillard']) {
+    const path = '/api/person-topics?' + new URLSearchParams({ name });
+    expect(() => assertAllowedPath(path)).not.toThrow();
+    expect(decodePersonTopics(fixtures[path]).name).toBe(name);
+  }
+});
