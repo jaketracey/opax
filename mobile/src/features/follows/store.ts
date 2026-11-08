@@ -1,7 +1,9 @@
 import { useEffect, useSyncExternalStore } from 'react';
-import { readCopies, writeCopy } from '../../storage/two-slot';
+import { readCopies, writeCopy, TwoSlotStore } from '../../storage/two-slot';
+import type { FollowState } from './markers';
 import { partySlug } from '../../design/party';
 import { billKey, electorateId, personId } from '../../api/ids';
+import { currentKeys, type FollowRecord } from './changes';
 
 /**
  * Local follows: what this iPhone follows and the change markers it last
@@ -15,6 +17,7 @@ export interface Reading {
   /** Words for "was …" lines, such as names or a party. */
   words?: string;
   asAt: string | null;
+  records?: FollowRecord[];
 }
 export type Fingerprint = Record<string, Reading>;
 export interface Follow {
@@ -27,9 +30,18 @@ export interface Follow {
   /** Markers when last looked at; null until first computed. */
   seen: Fingerprint | null;
   seenAt: number | null;
+  /** Most recently shown record identities, across markers. */
+  seenKeys?: string[];
 }
+/** Future kinds are retained verbatim, and never interpreted by this build. */
+export interface OpaqueFollow {
+  kind: string;
+  id: string;
+  [field: string]: unknown;
+}
+export type SavedFollow = Follow | OpaqueFollow;
 export const FOLLOW_LIMIT = 50;
-export const followKey = (f: { kind: FollowKind; id: string }) =>
+export const followKey = (f: { kind: string; id: string }) =>
   `${f.kind}:${f.id}`;
 const ids: Record<FollowKind, (v: unknown) => string> = {
   person: personId,
@@ -53,6 +65,10 @@ const ids: Record<FollowKind, (v: unknown) => string> = {
 // its destination before moving. A read takes the newest copy that decodes,
 // so a save cut short (a torn or missing slot) leaves the previous list.
 const SLOTS = ['opax-follows-v1.json', 'opax-follows-v1.b.json'] as const;
+const TOPIC_SLOTS = [
+  'opax-follows-topics-v1.json',
+  'opax-follows-topics-v1.b.json',
+] as const;
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
 const time = (v: unknown) =>
@@ -70,12 +86,33 @@ function decodeReading(v: unknown): Reading | null {
     value,
     ...(typeof v.words === 'string' ? { words: v.words } : {}),
     asAt: typeof v.asAt === 'string' ? v.asAt : null,
+    ...(Array.isArray(v.records)
+      ? {
+          records: v.records.filter(
+            (r): r is FollowRecord =>
+              isRecord(r) &&
+              typeof r.key === 'string' &&
+              typeof r.title === 'string' &&
+              typeof r.kind === 'string' &&
+              typeof r.date === 'string',
+          ),
+        }
+      : {}),
   };
 }
-function decodeFollow(v: unknown): Follow | null {
+export function isKnownFollow(v: SavedFollow): v is Follow {
+  return Object.hasOwn(ids, v.kind);
+}
+function decodeFollow(v: unknown): SavedFollow | null {
   if (!isRecord(v)) return null;
   const kind = v.kind as FollowKind;
-  if (!Object.hasOwn(ids, kind)) return null;
+  if (!Object.hasOwn(ids, kind))
+    return typeof v.kind === 'string' &&
+      v.kind &&
+      typeof v.id === 'string' &&
+      v.id
+      ? (v as OpaqueFollow)
+      : null;
   let id: string;
   try {
     id = ids[kind](v.id);
@@ -100,13 +137,22 @@ function decodeFollow(v: unknown): Follow | null {
     followedAt,
     seen,
     seenAt: seen ? time(v.seenAt) : null,
+    ...(Array.isArray(v.seenKeys)
+      ? {
+          seenKeys: [
+            ...new Set(
+              v.seenKeys.filter((k): k is string => typeof k === 'string'),
+            ),
+          ].slice(0, 50),
+        }
+      : {}),
   };
 }
 /** The saved list, keeping only well-formed, distinct follows up to the cap. */
-export function decodeFollows(v: unknown): Follow[] {
+export function decodeFollows(v: unknown): SavedFollow[] {
   if (!isRecord(v) || v.version !== 1 || !Array.isArray(v.follows)) return [];
   const seen = new Set<string>();
-  const out: Follow[] = [];
+  const out: SavedFollow[] = [];
   for (const row of v.follows) {
     const follow = decodeFollow(row);
     if (!follow || seen.has(followKey(follow))) continue;
@@ -119,17 +165,59 @@ export function decodeFollows(v: unknown): Follow[] {
 
 // The slot holding the newest saved copy, and its number; slot -1 is none.
 let newest = { slot: -1, generation: 0 };
+let topicNewest = { slot: -1, generation: 0 };
+let primaryEntries: SavedFollow[] = [];
+let topicEntries: SavedFollow[] = [];
 async function readFollows(): Promise<Follow[]> {
-  const copy = await readCopies(SLOTS, (raw) =>
+  const decode = (raw: unknown) =>
     isRecord(raw) && raw.version === 1 && Array.isArray(raw.follows)
       ? decodeFollows(raw)
-      : null,
-  );
+      : null;
+  const [copy, topics] = await Promise.all([
+    readCopies(SLOTS, decode),
+    readCopies(TOPIC_SLOTS, decode),
+  ]);
   newest = { slot: copy.slot, generation: copy.generation };
-  return copy.value ?? [];
+  topicNewest = { slot: topics.slot, generation: topics.generation };
+  primaryEntries = copy.value ?? [];
+  topicEntries = topics.value ?? [];
+  return [...primaryEntries, ...topicEntries].filter(isKnownFollow);
 }
 function writeFollows(follows: Follow[]) {
-  newest = writeCopy(SLOTS, newest, { version: 1, follows });
+  const next = new Map(follows.map((f) => [followKey(f), f]));
+  const topics = topicEntries.flatMap<SavedFollow>((f) =>
+    isKnownFollow(f)
+      ? next.has(followKey(f))
+        ? [next.get(followKey(f))!]
+        : []
+      : [f],
+  );
+  const topicKeys = new Set(topicEntries.map(followKey));
+  const primaryKeys = new Set(primaryEntries.map(followKey));
+  const primary = [
+    ...primaryEntries.flatMap<SavedFollow>((f) =>
+      isKnownFollow(f)
+        ? next.has(followKey(f))
+          ? [next.get(followKey(f))!]
+          : []
+        : [f],
+    ),
+    ...follows.filter(
+      (f) => !topicKeys.has(followKey(f)) && !primaryKeys.has(followKey(f)),
+    ),
+  ];
+  // Ordinarily only the primary file changes. Leave future/topic bytes alone.
+  if (JSON.stringify(primary) !== JSON.stringify(primaryEntries)) {
+    newest = writeCopy(SLOTS, newest, { version: 1, follows: primary });
+    primaryEntries = primary;
+  }
+  if (JSON.stringify(topics) !== JSON.stringify(topicEntries)) {
+    topicNewest = writeCopy(TOPIC_SLOTS, topicNewest, {
+      version: 1,
+      follows: topics,
+    });
+    topicEntries = topics;
+  }
 }
 
 let state: Follow[] | null = null;
@@ -172,7 +260,10 @@ export function follow(item: {
   return update((follows) => {
     if (follows.some((f) => followKey(f) === followKey(item)))
       return [follows, 'already'];
-    if (follows.length >= FOLLOW_LIMIT) return [follows, 'limit'];
+    const allKeys = new Set(
+      [...primaryEntries, ...topicEntries].map(followKey),
+    );
+    if (allKeys.size >= FOLLOW_LIMIT) return [follows, 'limit'];
     return [
       [
         ...follows,
@@ -205,20 +296,47 @@ const sameReading = (a: Reading | undefined, b: Reading) =>
  * time keep their earlier value, so a failed catalog never hides a change.
  * Nothing is written when every marker is already as seen.
  */
-export function markSeen(key: string, current: Fingerprint): Promise<void> {
+export function markSeen(
+  key: string,
+  current: Fingerprint,
+  keys?: readonly string[],
+): Promise<void> {
   return update((follows) => {
     const index = follows.findIndex((f) => followKey(f) === key);
     const was = follows[index];
     if (!was) return [follows, undefined];
+    const memberKeys = new Set(
+      was.kind === 'party'
+        ? [
+            ...(was.seen?.members?.records ?? []),
+            ...(current.members?.records ?? []),
+          ].map((record) => record.key)
+        : [],
+    );
+    const activeKeys = new Set(
+      currentKeys({ ...(was.seen ?? {}), ...current }),
+    );
+    const candidates = [
+      ...new Set([...(keys ?? []), ...(was.seenKeys ?? [])]),
+    ].filter((key) => !memberKeys.has(key));
+    const seenKeys =
+      keys === undefined
+        ? was.seenKeys
+        : [
+            ...candidates.filter((key) => activeKeys.has(key)),
+            ...candidates.filter((key) => !activeKeys.has(key)),
+          ].slice(0, 50);
     const unchanged =
       was.seen !== null &&
-      Object.entries(current).every(([k, r]) => sameReading(was.seen![k], r));
+      Object.entries(current).every(([k, r]) => sameReading(was.seen![k], r)) &&
+      JSON.stringify(seenKeys) === JSON.stringify(was.seenKeys);
     if (unchanged) return [follows, undefined];
     const next = [...follows];
     next[index] = {
       ...was,
       seen: { ...(was.seen ?? {}), ...current },
       seenAt: Date.now(),
+      ...(seenKeys !== undefined ? { seenKeys } : {}),
     };
     return [next, undefined];
   });
@@ -244,4 +362,107 @@ export function resetFollowsForTests() {
   loading = null;
   queue = Promise.resolve();
   newest = { slot: -1, generation: 0 };
+  topicNewest = { slot: -1, generation: 0 };
+  primaryEntries = [];
+  topicEntries = [];
+}
+/** Marks every ready follow using the shared catalogs already read by follows. */
+export async function markAllSeen(): Promise<void> {
+  // Keep the local store independent of build-bound services until requested.
+  const { catalogs } =
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../../api/runtime') as typeof import('../../api/runtime');
+  const { followState, needsFor } =
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('./markers') as typeof import('./markers');
+  const follows = await loadFollows();
+  const sources = await catalogs.followSources(needsFor(follows));
+  for (const follow of follows) {
+    const state = followState(follow, sources);
+    if (state.status === 'ready')
+      await markSeen(followKey(follow), state.current, state.keys);
+  }
+}
+
+export interface StoredFollowResult {
+  version: 1;
+  shape: 'collapsed' | 'expanded';
+  checkedAt: number;
+  states: [string, FollowState][];
+  sourceDates: Record<string, string | null>;
+}
+/** Describes the visible change set, independent of check time or row order. */
+export function followResultKey(
+  result: Pick<StoredFollowResult, 'states'>,
+): string {
+  return JSON.stringify(
+    result.states
+      .flatMap(([key, state]) =>
+        state.status === 'ready'
+          ? state.changes
+              .filter((c) => c.today !== false)
+              .map(
+                (c) => `${key}|${c.key ?? c.marker}|${c.text}|${c.asAt ?? ''}`,
+              )
+          : [],
+      )
+      .sort(),
+  );
+}
+const resultStore = new TwoSlotStore<StoredFollowResult>(
+  ['opax-follows-today-v1.json', 'opax-follows-today-v1.b.json'],
+  (raw) => {
+    if (
+      !isRecord(raw) ||
+      raw.version !== 1 ||
+      !['collapsed', 'expanded'].includes(String(raw.shape)) ||
+      !time(raw.checkedAt) ||
+      !Array.isArray(raw.states) ||
+      !isRecord(raw.sourceDates)
+    )
+      return null;
+    for (const entry of raw.states) {
+      if (
+        !Array.isArray(entry) ||
+        typeof entry[0] !== 'string' ||
+        !isRecord(entry[1])
+      )
+        return null;
+      const state = entry[1];
+      if (state.status === 'ready') {
+        if (
+          typeof state.title !== 'string' ||
+          !isRecord(state.current) ||
+          !Array.isArray(state.keys) ||
+          !state.keys.every((k) => typeof k === 'string') ||
+          !Array.isArray(state.changes)
+        )
+          return null;
+        for (const change of state.changes)
+          if (
+            !isRecord(change) ||
+            typeof change.text !== 'string' ||
+            typeof change.marker !== 'string' ||
+            typeof change.citation !== 'string' ||
+            !(change.asAt === null || typeof change.asAt === 'string')
+          )
+            return null;
+      } else if (state.status !== 'missing' && state.status !== 'unavailable')
+        return null;
+    }
+    return {
+      version: 1,
+      shape: raw.shape,
+      checkedAt: raw.checkedAt,
+      states: raw.states,
+      sourceDates: raw.sourceDates,
+    } as StoredFollowResult;
+  },
+  (value) => value,
+);
+export function loadFollowResult(): Promise<StoredFollowResult | null> {
+  return resultStore.read();
+}
+export function saveFollowResult(result: StoredFollowResult): Promise<void> {
+  return resultStore.save(result);
 }

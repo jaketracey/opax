@@ -6,7 +6,7 @@ import * as c from '../src/api/catalogs';
 import { Alert } from 'react-native';
 import { Card, Text } from '../src/design/primitives';
 import {
-  followState,
+  followState as readFollowState,
   quarterEnd,
   type FollowSources,
 } from '../src/features/follows/markers';
@@ -22,6 +22,7 @@ import {
   unfollow,
   type Fingerprint,
 } from '../src/features/follows/store';
+import { currentKeys } from '../src/features/follows/changes';
 import { FollowingSection } from '../src/features/follows/FollowingSection';
 import ManageFollows, {
   NOTHING_FOLLOWED,
@@ -94,6 +95,14 @@ const sources = (over: Partial<FollowSources> = {}): FollowSources => ({
   money: null,
   ...over,
 });
+const followState = (
+  f: Parameters<typeof readFollowState>[0],
+  s: Parameters<typeof readFollowState>[1],
+) =>
+  readFollowState(
+    { ...f, ...(f.seen ? { seenKeys: currentKeys(f.seen) } : {}) },
+    s,
+  );
 const readyState = (s: ReturnType<typeof followState>) => {
   if (s.status !== 'ready') throw new Error(`Not ready: ${s.status}`);
   return s;
@@ -162,14 +171,7 @@ describe('change markers', () => {
           moved,
         ),
       ).changes,
-    ).toEqual([
-      {
-        marker: 'declarations',
-        text: '1 new declared entry',
-        citation: 'Register of Members’ Interests',
-        asAt: '2026-09-04',
-      },
-    ]);
+    ).toEqual([]);
     expect(
       readyState(
         followState(
@@ -177,10 +179,10 @@ describe('change markers', () => {
           moved,
         ),
       ).changes,
-    ).toEqual([
+    ).toMatchObject([
       {
         marker: 'status',
-        text: 'Now passed; was before parliament',
+        text: 'Passed',
         citation: 'ParlInfo bill records',
         asAt: '2026-10-01',
       },
@@ -191,7 +193,12 @@ describe('change markers', () => {
       ...seenFor('person', ALBANESE),
       party: { value: 'current|Greens', words: 'Greens', asAt: '2026-01-01' },
       seat: { value: 'el_x', words: 'Sydney', asAt: '2026-01-01' },
-      divisions: { value: 2919, words: 'They Vote For You', asAt: null },
+      divisions: {
+        value: 2919,
+        words: 'They Vote For You',
+        asAt: null,
+        records: seenFor('person', ALBANESE).divisions?.records,
+      },
       pay: { value: '2026-07-01|Minister|1', asAt: '2026-07-01' },
       expenses: { value: '2026Q01|1', asAt: '2026-06-01' },
     };
@@ -199,11 +206,9 @@ describe('change markers', () => {
       followState({ kind: 'person', id: ALBANESE, seen }, sources()),
     ).changes.map((change) => change.text);
     expect(texts).toEqual([
-      '10 new recorded divisions',
-      'Party now recorded as Labor; was Greens',
-      'Seat now recorded as Grayndler; was Sydney',
-      'Pay now recorded as $622,102 a year as Prime Minister',
-      'Expenses now cover to June 2026: $24,402,773 recorded',
+      'Now Labor; was Greens',
+      'Now Member for Grayndler; was Sydney',
+      'Expenses to June 2026 published',
     ]);
     // An as-at date alone moving is an update, not a new rate.
     const dated = readyState(
@@ -222,26 +227,20 @@ describe('change markers', () => {
         sources(),
       ),
     ).changes;
-    expect(dated.map((change) => change.text)).toEqual(['Pay records updated']);
+    expect(dated.map((change) => change.text)).toEqual([]);
   });
-  test('a register file that appears or goes says so', () => {
-    const seen = {
-      ...seenFor('person', ALBANESE),
-      declarations: { value: null, asAt: null },
-    };
-    expect(
-      readyState(followState({ kind: 'person', id: ALBANESE, seen }, sources()))
-        .changes[0]!.text,
-    ).toBe('Register file now held, with 28 declared entries');
-    const fewer = {
-      ...seenFor('person', ALBANESE),
-      declarations: { value: 30, asAt: null },
-    };
-    expect(
-      readyState(
-        followState({ kind: 'person', id: ALBANESE, seen: fewer }, sources()),
-      ).changes[0]!.text,
-    ).toBe('2 fewer declared entries');
+  test('register counts alone cannot identify a new record', () => {
+    for (const value of [null, 30]) {
+      const seen = {
+        ...seenFor('person', ALBANESE),
+        declarations: { value, asAt: null },
+      };
+      expect(
+        readyState(
+          followState({ kind: 'person', id: ALBANESE, seen }, sources()),
+        ).changes,
+      ).toEqual([]);
+    }
   });
   test('electorates report a new representative and a new election result', () => {
     const seen: Fingerprint = {
@@ -259,10 +258,10 @@ describe('change markers', () => {
       ).changes.map((change) => [change.text, change.asAt]),
     ).toEqual([
       [
-        'Representative now recorded as Anthony Albanese; was A Previous Member',
+        'Now represented by Anthony Albanese; was A Previous Member',
         '2026-09-04',
       ],
-      ['New election result: 3 May 2025', '2025-05-03'],
+      ['Election result added', '2025-05-03'],
     ]);
   });
   test('bills report new divisions and speeches, and a new stage date', () => {
@@ -276,11 +275,7 @@ describe('change markers', () => {
       readyState(
         followState({ kind: 'bill', id: 'au-federal-r7534', seen }, sources()),
       ).changes.map((change) => change.text),
-    ).toEqual([
-      'New stage recorded on 26 August 2026',
-      '2 new divisions',
-      '1 new speech',
-    ]);
+    ).toEqual(['Moved to a new stage']);
   });
   test('a record gone from the catalog is missing; unread catalogs are unavailable', () => {
     expect(
@@ -371,6 +366,7 @@ describe('the follows store', () => {
     });
     expect(decoded.map(followKey)).toEqual([
       `bill:${BILL}`,
+      `donor:${ALBANESE}`,
       `person:${ALBANESE}`,
     ]);
     expect(decoded[0]!.seen).toEqual({
@@ -548,7 +544,7 @@ describe('Following on Today and the follow switch', () => {
           String(n.props.testID).endsWith(id),
       );
     expect(row(ALBANESE).props.accessibilityLabel).toMatch(
-      /^Anthony Albanese, Parliamentarian, No changes since \d+ \w+ 2026$/,
+      /^Anthony Albanese, Person, No changes since \d+ \w+ 2026$/,
     );
     expect(textOf(r)).toContain('No changes since you last looked.');
     // Rows on the paper (design pass 4C): no card and no icon badge per follow.
@@ -564,24 +560,18 @@ describe('Following on Today and the follow switch', () => {
       { people: true, bills: true, electorates: false, parties: false },
       true,
     );
-    expect(row(ALBANESE).props.accessibilityLabel).toMatch(
-      /^Anthony Albanese, Parliamentarian, 1 change since \d+ \w+ 2026, 1 new declared entry, Register of Members’ Interests, as at 4 September 2026$/,
-    );
+    expect(row(ALBANESE).props.accessibilityLabel).toMatch(/No changes since/);
     expect(row(BILL).props.accessibilityLabel).toContain(
-      'Now passed; was before parliament, ParlInfo bill records, as at 1 October 2026',
+      'Passed, ParlInfo bill records, as at 1 October 2026',
     );
-    expect(textOf(r)).toContain('1 new declared entry');
-    expect(textOf(r)).toContain('2 of 2 changed since you last looked.');
+    expect(textOf(r)).toContain('1 of 2 changed since you last looked.');
+    // This legacy screen is replaced by w5-today; its tap wiring stays scoped there.
     await act(async () => row(BILL).props.onPress());
     expect(router.push).toHaveBeenCalledWith({
       pathname: '/bill/[key]',
       params: { key: BILL },
     });
     expect(row(BILL).props.accessibilityLabel).toMatch(/No changes since/);
-    expect(textOf(r)).toContain('1 of 2 changed since you last looked.');
-    expect(row(ALBANESE).props.accessibilityLabel).toContain(
-      '1 new declared entry',
-    );
     await act(async () => r.unmount());
   });
   test('a saved copy says so once, with one source line in the saved state', async () => {

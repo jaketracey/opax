@@ -2,46 +2,41 @@ import { isPartialCatalog } from '../../api/validation';
 import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
 import { billName, billSentenceCase } from '../../api/bill-transforms';
-import { formatCount, formatDate, formatMoney } from '../../design/format';
+import { partyMembers } from '../../api/party-page';
+import { nameKey } from '../../api/ids';
+import { formatMoney } from '../../design/format';
 import { formerMember, partySlug, partyText } from '../../design/party';
-import type { Fingerprint, Follow, FollowKind, Reading } from './store';
+import {
+  changesFor,
+  currentKeys,
+  questionType,
+  voteAction,
+  type Change,
+  type FollowRecord,
+  type QuestionType,
+} from './changes';
+import type { Fingerprint, Follow, FollowKind } from './store';
 
-/**
- * Change markers for local follows, computed on this iPhone from the shared
- * catalogs the app already reads. Each marker is a small reading of one
- * published field and that field's own date. The table of markers, their
- * source fields and dates is in this folder's README.
- */
+export type { Change } from './changes';
 export type FollowSources = Awaited<ReturnType<Catalogs['followSources']>>;
-export interface Change {
-  marker: string;
-  /** What changed, in plain words: "1 new declared entry". */
-  text: string;
-  /** Who publishes the record: "Register of Members’ Interests". */
-  citation: string;
-  /** The date the record gives for the new reading, if it gives one. */
-  asAt: string | null;
-}
 export type FollowState =
-  /** Markers for the record as published now, and what changed since seen. */
   | {
       status: 'ready';
       title: string;
       current: Fingerprint;
+      keys: string[];
       changes: Change[];
+      stale?: boolean;
+      savedAt?: number | null;
     }
-  /** The record is no longer in the published catalog. */
   | { status: 'missing' }
-  /** The catalogs this follow reads are not available yet. */
   | { status: 'unavailable' };
-
 export const kindLabels: Record<FollowKind, string> = {
-  person: 'Parliamentarian',
+  person: 'Person',
   party: 'Party',
   bill: 'Bill',
   electorate: 'Electorate',
 };
-/** Which shared catalogs a set of follows needs. */
 export function needsFor(follows: readonly Pick<Follow, 'kind'>[]) {
   return {
     parties: follows.some((f) => f.kind === 'party'),
@@ -50,54 +45,60 @@ export function needsFor(follows: readonly Pick<Follow, 'kind'>[]) {
     electorates: follows.some((f) => f.kind === 'electorate'),
   };
 }
-
 const citations = {
   roster: catalogSources.people.label,
   release: catalogSources.electorates.label,
   bills: catalogSources.bills.label,
 };
-const plural = (n: number, one: string, many: string) =>
-  `${formatCount(n)} ${n === 1 ? one : many}`;
-/** "2026Q02" → "June 2026", the last month an IPEA quarter covers. */
 export function quarterEnd(quarter: string) {
   const match = /^(\d{4})Q0([1-4])$/.exec(quarter);
-  if (!match) return quarter;
-  return `${['March', 'June', 'September', 'December'][Number(match[2]) - 1]} ${match[1]}`;
+  return match
+    ? `${['March', 'June', 'September', 'December'][Number(match[2]) - 1]} ${match[1]}`
+    : quarter;
 }
-// Source dates as published: calendar dates stay as they are, timestamps
-// are read in the device's zone (formatDate), as every as-at line is.
 const dateOf = (value: string | null | undefined) => value ?? null;
-/** A marker read both times with a different value: [before, after]. */
-function pairOf(
-  before: Fingerprint,
-  after: Fingerprint,
-  key: string,
-): [Reading, Reading] | null {
-  const b = before[key],
-    a = after[key];
-  return b && a && b.value !== a.value ? [b, a] : null;
+const object = (v: unknown): v is Record<string, unknown> =>
+  !!v && typeof v === 'object' && !Array.isArray(v);
+/** Optional future fields are consumed in place; this module never fetches. */
+function recordsFrom(
+  value: unknown,
+  kind: FollowRecord['kind'],
+): FollowRecord[] | undefined {
+  if (value === undefined || value === null) return undefined;
+  const rows = Array.isArray(value) ? value : [value];
+  return rows.flatMap((r): FollowRecord[] => {
+    if (!object(r) || typeof r.date !== 'string') return [];
+    const key = r.key ?? r.id ?? r.slug;
+    if (typeof key !== 'string' && kind !== 'stage') return [];
+    const str = (v: unknown) => (typeof v === 'string' ? v : undefined);
+    const record: FollowRecord = {
+      key: String(key ?? `stage:${r.stage}:${r.chamber}:${r.date}`),
+      kind,
+      date: r.date,
+      added: str(r.added),
+      title:
+        str(r.short_title) ??
+        str(r.title) ??
+        str(r.description) ??
+        str(r.name) ??
+        str(r.stage) ??
+        '',
+      stage: str(r.stage) ?? (kind === 'stage' ? str(r.name) : undefined),
+      chamber: str(r.chamber) ?? str(r.house),
+      outcome: str(r.outcome),
+      name: str(r.speaker_name) ?? str(r.speaker) ?? str(r.name),
+      category: str(r.category) ?? str(r.bucket),
+      operation:
+        r.kind === 'deletion' || r.operation === 'deletion'
+          ? 'deletion'
+          : 'addition',
+      billKey: str(r.bill_key),
+      divisionKey: kind === 'division' ? String(key) : str(r.division_key),
+      url: str(r.url),
+    };
+    return [record];
+  });
 }
-
-/** A number that went up or down, or a record that appeared or went. */
-function countChange(
-  before: Reading,
-  after: Reading,
-  words: {
-    more: (n: number) => string;
-    fewer: (n: number, total: number) => string;
-    held: (total: number) => string;
-    gone: string;
-  },
-) {
-  if (typeof before.value === 'number' && typeof after.value === 'number') {
-    const delta = after.value - before.value;
-    return delta > 0 ? words.more(delta) : words.fewer(-delta, after.value);
-  }
-  if (typeof after.value === 'number') return words.held(after.value);
-  return words.gone;
-}
-
-// ---- Parliamentarians -----------------------------------------------------
 
 function personFingerprint(id: string, sources: FollowSources) {
   const { manifest, roster, slugs, people } = sources;
@@ -113,6 +114,7 @@ function personFingerprint(id: string, sources: FollowSources) {
       interestIndex: sources.interestIndex ?? undefined,
       pay: sources.pay ?? undefined,
       expenses: sources.expenses ?? undefined,
+      bills: sources.bills ?? undefined,
     });
   } catch {
     return null;
@@ -188,6 +190,93 @@ function personFingerprint(id: string, sources: FollowSources) {
       words: expenses ? formatMoney(expenses.person.total) : undefined,
       asAt: dateOf(sources.expenses.meta.generated),
     };
+  const voteData = profile.blocks.votes.data;
+  if (sources.votes && profile.blocks.votes.status !== 'error') {
+    const records: FollowRecord[] = [];
+    for (const position of ['for', 'against'] as const)
+      for (const vote of voteData?.[position] ?? []) {
+        const raw = vote as typeof vote & {
+          key?: string;
+          division_key?: string;
+          question_type?: QuestionType;
+          url?: string;
+        };
+        const kind = questionType(raw);
+        if (!voteAction(kind, position)) continue;
+        records.push({
+          key:
+            raw.key ??
+            raw.division_key ??
+            `vote:${vote.jur ?? ''}:${vote.date}:${vote.name}:${vote.stage}`,
+          kind: 'vote',
+          date: vote.date,
+          title: vote.name,
+          stage: vote.stage,
+          position,
+          question_type: kind,
+          ...(vote.billKey ? { billKey: vote.billKey } : {}),
+          ...(raw.division_key ? { divisionKey: raw.division_key } : {}),
+          url:
+            raw.url ??
+            `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(vote.name)}`,
+        });
+      }
+    markers.divisions!.records = records;
+  }
+  const register =
+    profile.interestKey && sources.interestIndex?.people[profile.interestKey];
+  if (register && markers.declarations) {
+    const rich = register as typeof register & {
+      latest?: unknown[];
+      items?: unknown[];
+    };
+    const records = recordsFrom(rich.latest ?? rich.items, 'register');
+    if (records)
+      markers.declarations.records = records
+        .sort((a, b) => (b.added ?? b.date).localeCompare(a.added ?? a.date))
+        .slice(0, 20)
+        .map((r) => ({
+          ...r,
+          slug: profile.slug ?? id,
+        }));
+  }
+  // Bills are used only if the shared follow sources already include them.
+  if (sources.bills) {
+    const records = sources.bills.bills
+      .flatMap((bill) => {
+        const raw = bill as typeof bill & { sponsor_person_id?: string };
+        if (
+          !bill.introduced ||
+          !(
+            (!!raw.sponsor_person_id &&
+              (raw.sponsor_person_id === id ||
+                raw.sponsor_person_id === identity.legacyPersonId)) ||
+            bill.sponsor === identity.name
+          )
+        )
+          return [];
+        return [
+          {
+            key: bill.key,
+            kind: 'bill' as const,
+            date: bill.introduced,
+            title: billName(bill),
+            billKey: bill.key,
+            chamber: bill.originating_house ?? undefined,
+          },
+        ];
+      })
+      .sort(
+        (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
+      )
+      .slice(0, 10);
+    markers.introduced = {
+      value: records.length,
+      asAt: null,
+      records,
+      words: citations.bills,
+    };
+  }
   return { title: identity.name, markers };
 }
 // The register named by the member's seat (registerSourceLabelFor's names).
@@ -202,110 +291,10 @@ function registerCitation(
     return 'Register of Members’ Interests';
   return 'Register of interests';
 }
-function personChanges(before: Fingerprint, after: Fingerprint): Change[] {
-  const out: Change[] = [];
-  const changed = (key: string) => pairOf(before, after, key);
-  const declarations = changed('declarations');
-  if (declarations) {
-    const [b, a] = declarations;
-    out.push({
-      marker: 'declarations',
-      text: countChange(b, a, {
-        more: (n) =>
-          `${plural(n, 'new declared entry', 'new declared entries')}`,
-        fewer: (n) =>
-          `${formatCount(n)} fewer declared ${n === 1 ? 'entry' : 'entries'}`,
-        held: (t) =>
-          `Register file now held, with ${plural(t, 'declared entry', 'declared entries')}`,
-        gone: 'No register file is held now',
-      }),
-      citation: a.words ?? 'Register of interests',
-      asAt: a.asAt,
-    });
-  }
-  const divisions = changed('divisions');
-  if (divisions) {
-    const [b, a] = divisions;
-    out.push({
-      marker: 'divisions',
-      text: countChange(b, a, {
-        more: (n) =>
-          plural(n, 'new recorded division', 'new recorded divisions'),
-        fewer: (_n, t) => `Recorded divisions revised to ${formatCount(t)}`,
-        held: (t) =>
-          `Voting record now held, with ${plural(t, 'recorded division', 'recorded divisions')}`,
-        gone: 'No voting record is held now',
-      }),
-      citation: a.words ?? 'They Vote For You',
-      asAt: a.asAt,
-    });
-  }
-  const party = changed('party');
-  if (party)
-    out.push({
-      marker: 'party',
-      text: `Party now recorded as ${party[1].words}; was ${party[0].words}`,
-      citation: citations.roster,
-      asAt: party[1].asAt,
-    });
-  const seat = changed('seat');
-  if (seat) {
-    const [b, a] = seat;
-    out.push({
-      marker: 'seat',
-      text: !a.words
-        ? `No current seat recorded; was ${b.words}`
-        : !b.words
-          ? `Now recorded for ${a.words}`
-          : `Seat now recorded as ${a.words}; was ${b.words}`,
-      citation: citations.release,
-      asAt: a.asAt,
-    });
-  }
-  const pay = changed('pay');
-  if (pay) {
-    const [b, a] = pay;
-    const [, postB, salaryB] = String(b.value ?? '').split('|');
-    const [, postA, salaryA] = String(a.value ?? '').split('|');
-    out.push({
-      marker: 'pay',
-      text:
-        a.value === null
-          ? 'No covered pay record is held now'
-          : b.value === null || postA !== postB || salaryA !== salaryB
-            ? `Pay now recorded as ${a.words}`
-            : 'Pay records updated',
-      citation: 'Remuneration Tribunal; Parliamentary Handbook',
-      asAt: a.asAt,
-    });
-  }
-  const expenses = changed('expenses');
-  if (expenses) {
-    const [b, a] = expenses;
-    const [toB] = String(b.value ?? '').split('|');
-    const [toA] = String(a.value ?? '').split('|');
-    out.push({
-      marker: 'expenses',
-      text:
-        a.value === null
-          ? 'No expense summary is held now'
-          : b.value === null || toA !== toB
-            ? `Expenses now cover to ${quarterEnd(toA!)}: ${a.words} recorded`
-            : `Recorded expenses revised to ${a.words}`,
-      citation: 'Independent Parliamentary Expenses Authority',
-      asAt: a.asAt,
-    });
-  }
-  return out;
-}
-
-// ---- Bills ----------------------------------------------------------------
-
 function billFingerprint(key: string, sources: FollowSources) {
   if (!sources.bills) return undefined;
   const row = sources.bills.bills.find((b) => b.key === key);
   if (!row) return null;
-  const generated = dateOf(sources.bills.generated_at);
   const markers: Fingerprint = {
     status: {
       value: row.status,
@@ -313,56 +302,31 @@ function billFingerprint(key: string, sources: FollowSources) {
       asAt: row.status_as_of,
     },
     moved: { value: row.status_as_of, asAt: row.status_as_of },
-    divisions: { value: row.divisions, asAt: generated },
-    speeches: { value: row.speeches, asAt: generated },
+    divisions: {
+      value: row.divisions,
+      asAt: dateOf(sources.bills.generated_at),
+    },
+    speeches: { value: row.speeches, asAt: dateOf(sources.bills.generated_at) },
   };
+  const rich = row as typeof row & {
+    latest_stage?: unknown;
+    latest_division?: unknown;
+    latest_speech?: unknown;
+  };
+  for (const [marker, kind, value] of [
+    ['moved', 'stage', rich.latest_stage],
+    ['divisions', 'division', rich.latest_division],
+    ['speeches', 'speech', rich.latest_speech],
+  ] as const) {
+    const records = recordsFrom(value, kind);
+    if (records)
+      markers[marker]!.records = records
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 1)
+        .map((r) => ({ ...r, billKey: key }));
+  }
   return { title: billName(row), markers };
 }
-function billChanges(before: Fingerprint, after: Fingerprint): Change[] {
-  const out: Change[] = [];
-  const changed = (key: string) =>
-    before[key] && after[key] && before[key]!.value !== after[key]!.value;
-  const source = (marker: string, text: string): Change => ({
-    marker,
-    text,
-    citation: citations.bills,
-    asAt: after[marker]!.asAt,
-  });
-  if (changed('status'))
-    out.push(
-      source(
-        'status',
-        `Now ${after.status!.words}; was ${before.status!.words}`,
-      ),
-    );
-  else if (changed('moved') && after.moved!.value)
-    out.push(
-      source(
-        'moved',
-        `New stage recorded on ${formatDate(String(after.moved!.value))}`,
-      ),
-    );
-  for (const [marker, one, many] of [
-    ['divisions', 'new division', 'new divisions'],
-    ['speeches', 'new speech', 'new speeches'],
-  ] as const)
-    if (changed(marker)) {
-      const delta =
-        Number(after[marker]!.value) - Number(before[marker]!.value);
-      out.push(
-        source(
-          marker,
-          delta > 0
-            ? plural(delta, one, many)
-            : `${marker === 'divisions' ? 'Divisions' : 'Speeches'} recorded revised to ${formatCount(Number(after[marker]!.value))}`,
-        ),
-      );
-    }
-  return out;
-}
-
-// ---- Electorates ----------------------------------------------------------
-
 function electorateFingerprint(id: string, sources: FollowSources) {
   if (!sources.electorates) return undefined;
   const seat = sources.electorates.electorates.find(
@@ -390,117 +354,82 @@ function electorateFingerprint(id: string, sources: FollowSources) {
     };
   return { title: seat.name, markers };
 }
-const list = (names: string[]) =>
-  names.length < 2
-    ? (names[0] ?? '')
-    : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
-function electorateChanges(before: Fingerprint, after: Fingerprint): Change[] {
-  const out: Change[] = [];
-  const changed = (key: string) =>
-    before[key] && after[key] && before[key]!.value !== after[key]!.value;
-  const source = (marker: string, text: string): Change => ({
-    marker,
-    text,
-    citation: citations.release,
-    asAt: after[marker]!.asAt,
-  });
-  if (changed('representatives')) {
-    const b = before.representatives!,
-      a = after.representatives!;
-    if (a.value === null)
-      out.push(
-        source('representatives', 'No verified representation is recorded now'),
-      );
-    else if (b.value === null)
-      out.push(
-        source(
-          'representatives',
-          `Verified representation now recorded: ${list((a.words ?? '').split('|').filter(Boolean))}`,
-        ),
-      );
-    else {
-      const pair = (r: Reading) => {
-        const ids = String(r.value).split(',');
-        const names = (r.words ?? '').split('|');
-        return new Map(ids.map((id, i) => [id, names[i] ?? '']));
-      };
-      const was = pair(b),
-        now = pair(a);
-      const joined = [...now].filter(([id]) => !was.has(id)).map(([, n]) => n);
-      const left = [...was].filter(([id]) => !now.has(id)).map(([, n]) => n);
-      out.push(
-        source(
-          'representatives',
-          joined.length === 1 && left.length === 1
-            ? `Representative now recorded as ${joined[0]}; was ${left[0]}`
-            : [
-                joined.length ? `${list(joined)} now recorded` : null,
-                left.length ? `${list(left)} no longer recorded` : null,
-              ]
-                .filter(Boolean)
-                .join('; '),
-        ),
-      );
-    }
-  }
-  if (changed('status'))
-    out.push(
-      source(
-        'status',
-        after.status!.value === 'historical'
-          ? 'Now recorded as abolished'
-          : 'Now recorded as a current seat',
-      ),
-    );
-  if (changed('election')) {
-    const [latestB] = String(before.election!.value).split('|');
-    const [latestA] = String(after.election!.value).split('|');
-    out.push(
-      source(
-        'election',
-        latestA && latestA !== latestB
-          ? `New election result: ${formatDate(latestA)}`
-          : 'Election records updated',
-      ),
-    );
-  }
-  return out;
-}
-
-// ---- Shared ---------------------------------------------------------------
-
 function partyFingerprint(id: string, sources: FollowSources) {
   if (!sources.money) return undefined;
   const node = sources.money.nodes.find(
     (n) => n.kind === 'party' && partySlug(n.label) === id,
   );
   if (!node) return null;
-  return {
-    title: node.label,
-    markers: {
-      receipts: { value: node.total, asAt: sources.money.meta.generated },
-      donations: { value: node.count, asAt: sources.money.meta.generated },
+  const years = Object.keys(node.byYear).sort().reverse();
+  const markers: Fingerprint = {
+    returns: {
+      value: years[0] ?? null,
+      asAt: sources.money.meta.generated,
+      words: 'AEC disclosure returns, CC BY 4.0',
+      records: years.slice(0, 1).map((year) => ({
+        key: `return:${year}`,
+        kind: 'return',
+        title: financialYear(year),
+        date: sources.money!.meta.generated,
+      })),
     },
   };
+  if (sources.people && sources.roster && sources.slugs && sources.manifest) {
+    const personIds = new Map(
+      sources.people.people.flatMap((person) =>
+        [person.name, ...person.aliases].map(
+          (name) => [nameKey(name), person.person_id] as const,
+        ),
+      ),
+    );
+    const rosterIds = new Map(
+      sources.roster.people
+        .filter((person) => person.pid)
+        .map((person) => [nameKey(person.name), `roster:${person.pid}`]),
+    );
+    const members = [
+      ...new Map(
+        partyMembers(
+          node.label,
+          sources.roster,
+          sources.people,
+          sources.slugs,
+          sources.manifest,
+        ).current.map((member): [string, FollowRecord] => {
+          const key =
+            personIds.get(nameKey(member.name)) ??
+            rosterIds.get(nameKey(member.name)) ??
+            member.slug;
+          return [
+            key,
+            {
+              key,
+              kind: 'member',
+              name: member.name,
+              title: member.name,
+              slug: member.slug,
+              date: member.asAt ?? sources.roster!.meta.generated,
+            },
+          ];
+        }),
+      ).values(),
+    ];
+    markers.members = {
+      value: members
+        .map((m) => m.key)
+        .sort()
+        .join(','),
+      records: members,
+      asAt: sources.roster.meta.generated,
+      words: citations.roster,
+    };
+  }
+  return { title: node.label, markers };
 }
-function partyChanges(before: Fingerprint, after: Fingerprint): Change[] {
-  return ['receipts', 'donations'].flatMap((marker) =>
-    pairOf(before, after, marker)
-      ? [
-          {
-            marker,
-            text:
-              marker === 'receipts'
-                ? 'Donations counted revised to ' +
-                  formatMoney(Number(after[marker]!.value))
-                : 'Donation records counted revised to ' +
-                  formatCount(Number(after[marker]!.value)),
-            citation: 'AEC disclosure returns, CC BY 4.0',
-            asAt: after[marker]!.asAt,
-          },
-        ]
-      : [],
-  );
+function financialYear(year: string) {
+  return /^\d{4}$/.test(year)
+    ? `${Number(year) - 1}–${year.slice(-2)}`
+    : year.replace('-', '–');
 }
 const fingerprints = {
   party: partyFingerprint,
@@ -508,19 +437,11 @@ const fingerprints = {
   bill: billFingerprint,
   electorate: electorateFingerprint,
 };
-const changesFor = {
-  party: partyChanges,
-  person: personChanges,
-  bill: billChanges,
-  electorate: electorateChanges,
-};
-/** One follow against the published record: its markers and what changed. */
 export function followState(
-  follow: Pick<Follow, 'kind' | 'id' | 'seen'>,
+  follow: Pick<Follow, 'kind' | 'id' | 'seen'> &
+    Pick<Partial<Follow>, 'seenKeys'>,
   sources: FollowSources | null,
 ): FollowState {
-  // Also defend callers holding decoded catalogs directly, outside ApiClient.
-  // Omitted markers stay last-seen: markSeen merges only readable markers.
   const complete = sources
     ? (Object.fromEntries(
         Object.entries(sources).map(([key, value]) => [
@@ -538,8 +459,34 @@ export function followState(
     status: 'ready',
     title: reading.title,
     current: reading.markers,
-    changes: follow.seen
-      ? changesFor[follow.kind](follow.seen, reading.markers)
-      : [],
+    keys: currentKeys(reading.markers),
+    changes: changesFor(follow, reading.markers).map((change) => ({
+      ...change,
+      ...(follow.kind === 'electorate' &&
+      change.marker === 'representatives' &&
+      change.asAt &&
+      sources?.electorates?.electorates.find(
+        (s) => s.electorate_id === follow.id,
+      )?.representatives.length === 1
+        ? (() => {
+            const person = sources.electorates!.electorates.find(
+              (s) => s.electorate_id === follow.id,
+            )!.representatives[0]!;
+            return {
+              record: {
+                key: person.person_id,
+                kind: 'member' as const,
+                date: change.asAt!,
+                title: person.person.name,
+                slug: person.person_id,
+              },
+            };
+          })()
+        : {}),
+      stale: sources?.stale || !!sources?.error,
+      savedAt: sources?.savedAt,
+    })),
+    stale: sources?.stale || !!sources?.error,
+    savedAt: sources?.savedAt,
   };
 }
