@@ -30,7 +30,7 @@ const read = (path: string) =>
   JSON.parse(
     readFileSync(resolve(__dirname, '../../portal/public/' + path), 'utf8'),
   );
-test('quiz record links never open private donor profiles and search opens a native draft', () => {
+test('quiz record links never open private donor profiles and search opens submitted results', () => {
   expect(quizRecordPath('/subject/donor/Jane%20Citizen')).toBeNull();
   expect(quizRecordPath('/subject/donor/Maurice%20Blackburn%20Pty%20Ltd')).toBe(
     '/subject/donor/Maurice%20Blackburn%20Pty%20Ltd',
@@ -38,7 +38,7 @@ test('quiz record links never open private donor profiles and search opens a nat
   const path = quizRecordPath(
     '/search?speaker=Glenn+Sterle&from=2025&to=2025',
   )!;
-  expect(fromWebPath(path)?.pathname).toBe('/search');
+  expect(fromWebPath(path)?.pathname).toBe('/results/[kind]');
 });
 test.each(Array.from({ length: 29 }, (_, i) => 1998 + i))(
   'year %i keeps exact brief and dated voices, rejects invalid dates',
