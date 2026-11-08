@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { colors } from '../../design/tokens';
 import { askHeaderItems, glassBar } from '../chrome';
 import { conversationsRoute } from '../routes/ask';
 import { screen, sheetOptions } from './screen';
@@ -25,6 +26,8 @@ export function askScreens(segment = '', signedIn = false) {
     screen('consent', 'Before you ask', {
       ...sheetOptions,
       sheetAllowedDetents: 'fitToContents',
+      sheetGrabberVisible: true,
+      contentStyle: { backgroundColor: colors.sunken },
       unstable_headerRightItems: () => [],
       headerBackVisible: false,
     }),
