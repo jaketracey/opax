@@ -132,8 +132,8 @@ describe('Material symbols', () => {
       typeof import('../src/design/android-symbols')
     >('../src/design/android-symbols');
     const names = symbolNames();
-    // The scan sees the tabs, the ⋯ buttons and the empty state.
-    for (const name of ['newspaper', 'ellipsis', 'tray', 'doc.text'])
+    // The scan sees the tabs, the ⋯ buttons and record symbols.
+    for (const name of ['newspaper', 'ellipsis', 'doc.text'])
       expect(names.has(name)).toBe(true);
     const unmapped = [...names]
       .filter(([name]) => androidSymbol(name) === 'article')

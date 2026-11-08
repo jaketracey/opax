@@ -2,7 +2,12 @@
 import { act, type ReactElement } from 'react';
 import * as RN from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui';
+import {
+  Host,
+  Picker,
+  Text as SwiftText,
+  Image as SwiftImage,
+} from '@expo/ui/swift-ui';
 import {
   Button,
   Composer,
@@ -16,6 +21,7 @@ import {
 import { Icon } from '../src/design/icon';
 import { Text } from '../src/design/text';
 import { haptic } from '../src/design/haptics';
+import { colors } from '../src/design/tokens';
 import { symbols } from '../src/design/symbols';
 import { follow, useFollows } from '../src/features/follows/store';
 import { showMenu } from '../src/design/menu';
@@ -24,6 +30,7 @@ jest.mock('../src/features/follows/useFollowStates', () => ({
   markSeenNow: jest.fn(),
 }));
 jest.mock('../src/features/follows/store', () => ({
+  FOLLOW_LIMIT: 50,
   useFollows: jest.fn(() => []),
   followKey: jest.fn(() => 'bill:b'),
   follow: jest.fn(),
@@ -398,6 +405,10 @@ test('FollowButton retains its feature logic and presents the exact follow-limit
   const r = render(
     <FollowButton kind="bill" id="b" title="A bill" testID="follow" />,
   );
+  expect(press(r, 'follow-off').props).toMatchObject({
+    accessibilityRole: 'button',
+    accessibilityState: { selected: false },
+  });
   await act(async () => {
     await press(r, 'follow-off').props.onPress();
   });
@@ -408,4 +419,167 @@ test('FollowButton retains its feature logic and presents the exact follow-limit
     'Edit Following',
   );
   expect(haptic).not.toHaveBeenCalled();
+});
+
+test.each([false, true])(
+  'FollowButton selected=%s is a button, never a switch',
+  (selected) => {
+    jest
+      .mocked(useFollows)
+      .mockReturnValue(
+        selected ? ([{ kind: 'bill', id: 'b', title: 'A bill' }] as never) : [],
+      );
+    const r = render(
+      <FollowButton kind="bill" id="b" title="A bill" testID="follow" />,
+    );
+    const button = press(r, `follow-${selected ? 'on' : 'off'}`);
+    expect(button.props.accessibilityRole).toBe('button');
+    expect(button.props.accessibilityState).toMatchObject({ selected });
+    expect(button.props.accessibilityState.checked).toBeUndefined();
+    expect(button.props.accessibilityLabel).toBe(
+      `${selected ? 'Following' : 'Follow'} A bill`,
+    );
+  },
+);
+test.each([false, true])(
+  'PopUpButton disabled=%s blocks native selection and exposes the dimmed state',
+  (disabled) => {
+    const changed = jest.fn();
+    const r = render(
+      <PopUpButton
+        disabled={disabled}
+        label="Month"
+        value="all"
+        options={options}
+        onChange={changed}
+      />,
+    );
+    const picker = r.root.findByType(Picker);
+    expect(picker.props.modifiers).toContainEqual({
+      $type: 'disabled',
+      disabled,
+    });
+    expect(picker.props.modifiers).toContainEqual(
+      expect.objectContaining({
+        $type: 'accessibilityLabel',
+        label: `Month, All jurisdictions, pop-up button${disabled ? ', dimmed' : ''}`,
+      }),
+    );
+    act(() => picker.props.onSelectionChange('vic'));
+    expect(changed).toHaveBeenCalledTimes(disabled ? 0 : 1);
+  },
+);
+test.each([false, true])(
+  'Android PopUpButton disabled=%s reaches its target',
+  (disabled) => {
+    const original = RN.Platform.OS;
+    Object.defineProperty(RN.Platform, 'OS', {
+      value: 'android',
+      configurable: true,
+    });
+    try {
+      const r = render(
+        <PopUpButton
+          disabled={disabled}
+          label="Month"
+          value="all"
+          options={options}
+          onChange={noop}
+          testID="month"
+        />,
+      );
+      expect(press(r, 'month').props.disabled).toBe(disabled);
+      expect(press(r, 'month').props.accessibilityState.disabled).toBe(
+        disabled,
+      );
+    } finally {
+      Object.defineProperty(RN.Platform, 'OS', {
+        value: original,
+        configurable: true,
+      });
+    }
+  },
+);
+test('the AX menu row measures its column and uses quiet value and chevron inks', () => {
+  size(2.143);
+  const r = render(
+    <SegmentedPicker
+      options={options}
+      value="all"
+      onChange={noop}
+      accessibilityLabel="Status"
+      testID="status"
+    />,
+  );
+  expect(RN.StyleSheet.flatten(r.root.findByType(Host).props.style).width).toBe(
+    335,
+  );
+  act(() =>
+    r.root
+      .find(
+        (node) =>
+          node.props.testID === 'status' &&
+          typeof node.props.onLayout === 'function',
+      )
+      .props.onLayout({ nativeEvent: { layout: { width: 300 } } }),
+  );
+  expect(RN.StyleSheet.flatten(r.root.findByType(Host).props.style).width).toBe(
+    300,
+  );
+  const value = r.root
+    .findAllByType(SwiftText)
+    .find((node) => node.props.children === 'All')!;
+  expect(value.props.modifiers).toContainEqual(
+    expect.objectContaining({
+      $type: 'foregroundStyle',
+      style: { type: 'color', color: colors.inkSoft },
+    }),
+  );
+  const image = r.root.findByType(SwiftImage);
+  expect(image.props.modifiers).toContainEqual(
+    expect.objectContaining({
+      $type: 'foregroundStyle',
+      style: { type: 'color', color: colors.inkFaint },
+    }),
+  );
+  expect(image.props.modifiers).toContainEqual(
+    expect.objectContaining({ $type: 'font', size: 13 }),
+  );
+});
+
+test('the follow limit comes from the store and Edit Following is driven by its state', async () => {
+  jest.replaceProperty(
+    jest.requireMock('../src/features/follows/store'),
+    'FOLLOW_LIMIT',
+    7,
+  );
+  jest.mocked(useFollows).mockReturnValue([]);
+  jest
+    .mocked(follow)
+    .mockResolvedValueOnce('limit')
+    .mockRejectedValueOnce(new Error('storage'));
+  const r = render(
+    <FollowButton kind="bill" id="b" title="A bill" testID="follow" />,
+  );
+  await act(async () => {
+    await press(r, 'follow-off').props.onPress();
+  });
+  const message = r.root
+    .findAllByType(Text)
+    .find((node) => node.props.testID === 'follow-message')!;
+  expect(message.props).toMatchObject({
+    variant: 'footnote',
+    children: 'You can follow up to 7. Unfollow one to add this.',
+  });
+  expect(press(r, 'follow-edit-following').props.accessibilityLabel).toBe(
+    'Edit Following',
+  );
+  await act(async () => {
+    await press(r, 'follow-off').props.onPress();
+  });
+  expect(
+    r.root
+      .findAllByType(Button)
+      .filter((node) => node.props.testID === 'follow-edit-following'),
+  ).toHaveLength(0);
 });

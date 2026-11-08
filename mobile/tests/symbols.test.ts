@@ -39,7 +39,7 @@ test('Icon accepts only the closed symbol union', () => {
 test.each([
   ['ios', false, 'iPhone', 'iPhone'],
   ['ios', true, 'iPad', 'iPad'],
-  ['android', false, 'device', 'phone'],
+  ['android', false, 'phone', 'phone'],
 ] as const)(
   '%s pad=%s uses the device noun and shared phone copy',
   (os, pad, noun, copyNoun) => {

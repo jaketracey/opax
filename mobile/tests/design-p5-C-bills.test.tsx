@@ -123,8 +123,8 @@ describe('bill header (P1-3)', () => {
         (node) =>
           node.type === Button && node.props.testID === 'bill-follow-off',
       );
-      expect(follow.props.on).toBe(false);
-      expect(follow.props.variant).toBeUndefined();
+      expect(follow.props.selected).toBe(false);
+      expect(follow.props.variant).toBe('secondary');
       // No navy primary on the page's header.
       expect(
         root.findAll(

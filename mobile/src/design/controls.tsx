@@ -41,13 +41,15 @@ import {
   padding,
   background,
   clipShape,
+  disabled as nativeDisabled,
+  foregroundStyle,
 } from '@expo/ui/swift-ui/modifiers';
 import type { FollowKind } from '../features/follows/store';
 import { haptic } from './haptics';
 import { showMenu } from './menu';
 import { symbols } from './symbols';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
-import { Hoverable } from './adaptive';
+import { Hoverable, useLayout, columns } from './adaptive';
 import { Icon, type SFSymbol } from './icon';
 import { ChoiceChip } from './labels';
 import { Text, type TextTone } from './text';
@@ -59,6 +61,7 @@ import {
   minimumTarget,
   radii,
   rhythm,
+  rhythmRegular,
   size as sizes,
   spacing,
   type ControlSize,
@@ -153,6 +156,8 @@ export interface ButtonProps {
   accessibilityHint?: string;
   /** Disclosure state; disabled and busy remain controlled by the button. */
   expanded?: AccessibilityState['expanded'];
+  /** Selected button state without switch semantics. */
+  selected?: boolean;
   /**
    * A legacy toggle, said as a switch with its state. Follow passes secondary
    * explicitly so both states use the same tint capsule. `variant` does not apply to a toggle; give the
@@ -182,6 +187,7 @@ export function Button({
   accessibilityLabel,
   accessibilityHint,
   expanded,
+  selected,
   on,
   hitSlop,
   testID,
@@ -215,6 +221,7 @@ export function Button({
           disabled: inert,
           busy: loading,
           ...(toggle ? { checked: on, selected: on } : {}),
+          ...(selected === undefined ? {} : { selected }),
           ...(expanded === undefined ? {} : { expanded }),
         }}
         testID={testID}
@@ -348,6 +355,7 @@ function MenuPicker<T extends string>({
   onChange,
   testID,
   row = false,
+  disabled = false,
 }: {
   label: string;
   value: T;
@@ -355,19 +363,29 @@ function MenuPicker<T extends string>({
   onChange: (value: T) => void;
   testID?: string;
   row?: boolean;
+  disabled?: boolean;
 }) {
   const large = useAccessibilitySize();
   const selected = options.find((option) => option.value === value);
   const current =
     (large ? selected?.shortLabel : undefined) ?? selected?.label ?? value;
-  const { width } = useWindowDimensions();
+  const layout = useLayout();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  const fallbackWidth = Math.max(
+    0,
+    Math.min(
+      layout.width -
+        2 * (layout.regular ? rhythmRegular.screen : rhythm.screen),
+      columns.readable,
+    ),
+  );
   const spoken = `${label}, ${selected?.label ?? value}, pop-up button`;
   if (Platform.OS !== 'ios')
     return (
       <Button
         label={current}
         variant="secondary"
+        disabled={disabled}
         trailingIcon={symbols.menu}
         accessibilityLabel={spoken}
         testID={testID}
@@ -398,7 +416,7 @@ function MenuPicker<T extends string>({
         style={
           row
             ? {
-                width: measuredWidth ?? width - (width < 414 ? 16 : 20) * 2,
+                width: measuredWidth ?? fallbackWidth,
                 maxWidth: '100%',
               }
             : { minHeight: minimumTarget, maxWidth: '100%' }
@@ -407,7 +425,7 @@ function MenuPicker<T extends string>({
         <Picker
           selection={value}
           onSelectionChange={(next: T) => {
-            if (next !== value) onChange(next);
+            if (!disabled && next !== value) onChange(next);
           }}
           label={
             row ? (
@@ -416,13 +434,21 @@ function MenuPicker<T extends string>({
                   <SwiftText modifiers={[font({ textStyle: 'body' })]}>
                     {label}
                   </SwiftText>
-                  <SwiftText modifiers={[font({ textStyle: 'body' })]}>
+                  <SwiftText
+                    modifiers={[
+                      font({ textStyle: 'body' }),
+                      foregroundStyle(colors.inkSoft),
+                    ]}
+                  >
                     {current}
                   </SwiftText>
                 </VStack>
                 <SwiftImage
                   systemName={symbols.menu}
-                  modifiers={[font({ textStyle: 'footnote' })]}
+                  modifiers={[
+                    font({ size: 13, textStyle: 'footnote' }),
+                    foregroundStyle(colors.inkFaint),
+                  ]}
                 />
               </HStack>
             ) : (
@@ -439,6 +465,7 @@ function MenuPicker<T extends string>({
           }
           modifiers={[
             pickerStyle('menu'),
+            nativeDisabled(disabled),
             menuIndicator('hidden'),
             tint(colors.navy),
             font({ textStyle: 'subheadline' }),
@@ -451,7 +478,7 @@ function MenuPicker<T extends string>({
                   clipShape('capsule'),
                   frame({ minHeight: minimumTarget }),
                 ]),
-            nativeLabel(spoken),
+            nativeLabel(`${spoken}${disabled ? ', dimmed' : ''}`),
             ...(testID ? [accessibilityIdentifier(testID)] : []),
           ]}
         >
@@ -467,6 +494,7 @@ function MenuPicker<T extends string>({
 }
 
 export function PopUpButton<T extends string>(props: {
+  disabled?: boolean;
   label: string;
   value: T;
   options: readonly PickerOption<T>[];

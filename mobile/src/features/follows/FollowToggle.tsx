@@ -8,6 +8,7 @@ import { symbols } from '../../design/symbols';
 import { router } from 'expo-router';
 import { spacing } from '../../design/tokens';
 import {
+  FOLLOW_LIMIT,
   follow,
   followKey,
   unfollow,
@@ -18,8 +19,8 @@ import { markSeenNow } from './useFollowStates';
 
 /**
  * Follow or unfollow a parliamentarian, bill or electorate on this iPhone: a
- * secondary capsule (plus while off, checkmark while following), a switch for VoiceOver ("Follow Grayndler, switch button,
- * on"). Opening the page of something followed marks it seen.
+ * secondary capsule (plus while off, checkmark while following), a selected
+ * button for VoiceOver. Opening the page of something followed marks it seen.
  */
 export function FollowToggle({
   kind,
@@ -39,6 +40,7 @@ export function FollowToggle({
   const following = !!current;
   const [bounce, setBounce] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const marked = useRef(false);
   useEffect(() => {
@@ -52,12 +54,16 @@ export function FollowToggle({
     setBounce(false);
     setBusy(true);
     setMessage(null);
+    setLimitReached(false);
     try {
       if (following) {
         await unfollow(key);
-      } else if ((await follow({ kind, id, title })) === 'limit')
-        setMessage('You can follow up to 50. Unfollow one to add this.');
-      else {
+      } else if ((await follow({ kind, id, title })) === 'limit') {
+        setLimitReached(true);
+        setMessage(
+          `You can follow up to ${FOLLOW_LIMIT}. Unfollow one to add this.`,
+        );
+      } else {
         setBounce(true);
         haptic('success');
       }
@@ -71,7 +77,7 @@ export function FollowToggle({
   return (
     <Group gap={spacing.s3}>
       <Button
-        on={following}
+        selected={following}
         variant="secondary"
         label={following ? 'Following' : 'Follow'}
         symbol={following ? symbols.following : symbols.follow}
@@ -84,11 +90,11 @@ export function FollowToggle({
         testID={`${testID}-${following ? 'on' : 'off'}`}
       />
       {message ? (
-        <Text wordSafe variant="fine" testID={`${testID}-message`}>
+        <Text wordSafe variant="footnote" testID={`${testID}-message`}>
           {message}
         </Text>
       ) : null}
-      {message === 'You can follow up to 50. Unfollow one to add this.' ? (
+      {limitReached ? (
         <Button
           label="Edit Following"
           variant="plain"
