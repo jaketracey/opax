@@ -200,16 +200,12 @@ test('All, Then and Now switch the loaded profiles without another request', asy
   );
   await press(r, 'person-topics-toggle');
   expect(words(r)).toContain('Housing');
-  for (const label of ['Then', 'Now', 'All']) {
-    await act(async () =>
-      r.root
-        .find(
-          (n) =>
-            n.props?.accessibilityLabel === label &&
-            typeof n.props.onPress === 'function',
-        )
-        .props.onPress(),
-    );
+  // On iOS the eras are one native segmented picker.
+  const eras = r.root.findAll(
+    (n) => typeof n.props?.onSelectionChange === 'function',
+  )[0]!;
+  for (const value of ['then', 'now', 'all']) {
+    await act(async () => eras.props.onSelectionChange(value));
   }
   expect(peopleDepth.topics).toHaveBeenCalledTimes(1);
   await act(async () => r.unmount());
