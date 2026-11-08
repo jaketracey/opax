@@ -32,7 +32,6 @@ export type SearchKind =
   | 'party'
   | 'agency'
   | 'grant'
-  | 'report'
   | 'bill';
 export const scopeKinds = [
   ...searchKinds,
@@ -53,11 +52,6 @@ export const scopeKinds = [
   },
   { value: 'grant' as const, label: 'Grants', testID: 'search-kind-grant' },
   { value: 'bill' as const, label: 'Bills', testID: 'search-kind-bill' },
-  {
-    value: 'report' as const,
-    label: 'Research reports',
-    testID: 'search-kind-report',
-  },
 ];
 export const kindLabel = (kind: SearchKind) =>
   scopeKinds.find((k) => k.value === kind)!.label;

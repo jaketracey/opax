@@ -40,16 +40,15 @@ export const datasets: Dataset[] = [
     ],
   },
   {
-    id: 'reports-preview',
-    name: 'Reports, topic labels and homepage previews',
+    id: 'topics-preview',
+    name: 'Topic labels and homepage previews',
     publisher: 'OPAX',
     terms: [
-      'Reports and their machine-written sections cite the retrieved parliamentary record. Topic counts and decade shares describe the labelled record, with the labelling pass still running. Original records retain their own copyright and licence.',
-      'Homepage previews are copied from OPAX’s static homepage. The export supplies no snapshot date.',
+      'Topic counts and decade shares describe the labelled record, and not every speech is labelled yet. Original records retain their own copyright and licence.',
+      'Homepage previews are copied from OPAX’s homepage. No snapshot date is given.',
       'AGPL-3.0. Source and issue tracker: github.com/jaketracey/opax. Data errors are corrections we want, so please report them.',
     ],
     links: [
-      { label: 'Reports', url: canonicalUrl('/reports') },
       { label: 'Methods and how to cite', url: canonicalUrl('/methods') },
     ],
   },
@@ -326,13 +325,13 @@ export const datasets: Dataset[] = [
   },
   {
     id: 'search-catalog',
-    name: 'Search catalog, topic taxonomy and research reports',
+    name: 'Search catalog and topic taxonomy',
     publisher: 'OPAX',
     terms: [
-      'OPAX indexes public source records and publishes its topic taxonomy and research reports. Source records retain their original copyright and licence.',
+      'OPAX indexes public source records and publishes its topic taxonomy. Source records retain their original copyright and licence.',
       'Machine briefs are automated summaries; passages are extracts from the record.',
     ],
-    links: [{ label: 'OPAX reports', url: canonicalUrl('/reports') }],
+    links: [{ label: 'OPAX topics', url: canonicalUrl('/subject/topic') }],
   },
 ];
 
@@ -347,7 +346,7 @@ datasets.push(
     licence: 'NSW: CC BY 4.0; Queensland: CC BY',
     terms: [
       'NSW Cabinet Office ministers’ diary disclosures are published under the NSW Government CC BY 4.0 copyright statement. Queensland Cabinet ministerial diary disclosures carry CC BY terms. Attribution: NSW Cabinet Office; Queensland Government.',
-      'OPAX’s access export joins the published diary disclosures to the guarded parliamentary roster. The original documents retain their publishers’ copyright and licence.',
+      'OPAX joins the published diary disclosures to the parliamentary roster. The original documents retain their publishers’ copyright and licence.',
     ],
     links: [
       {
@@ -367,7 +366,7 @@ datasets.push(
       'Attorney-General’s Department; NSW Electoral Commission; Queensland Integrity Commissioner; Victorian Public Sector Commission; South Australian Department of the Premier and Cabinet; Western Australian Public Sector Commission',
     terms: [
       'Attribution: the six register publishers listed above. Federal, Queensland and Victorian registers carry CC BY 4.0 terms. The NSW source review records CC BY-SA 3.0 AU as unverified. The South Australian register does not state a licence. Western Australian material retains Crown copyright; its website terms discourage automated access.',
-      'OPAX’s access export does not publish one combined reuse licence. Check the original register’s terms before reuse.',
+      'OPAX publishes no single reuse licence for these records. Check the original register’s terms before reuse.',
     ],
     links: [
       {
@@ -395,7 +394,7 @@ datasets.push(
     name: 'Politics headlines',
     publisher: 'ABC News; The Guardian',
     terms: [
-      'Headlines are read from the publishers’ public RSS feeds. Copyright remains with ABC News and The Guardian. The news export does not publish a reuse licence. Each headline opens its original article.',
+      'Headlines are read from the publishers’ public RSS feeds. Copyright remains with ABC News and The Guardian. OPAX publishes no reuse licence for these headlines. Each headline opens its original article.',
     ],
     links: [
       { label: 'ABC News', url: 'https://www.abc.net.au/news/' },

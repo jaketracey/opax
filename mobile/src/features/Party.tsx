@@ -537,6 +537,12 @@ export function PartyPage({
                             />
                           ))}
                         </RowList>
+                      ) : data.failed && !data.scanned ? (
+                        <ErrorState
+                          message="Bill divisions could not be loaded. Try again."
+                          onRetry={retry}
+                          testID="party-divisions-error"
+                        />
                       ) : (
                         <EmptyState
                           message={`No division in the ${data.scanned} most recent bills the register could open records a vote by this party.`}
@@ -574,7 +580,7 @@ export function PartyPage({
  * source, "partial" or "Saved [date]", and the notes, originals and licence
  * in the source sheet.
  */
-function PartyBlock<T>({
+export function PartyBlock<T>({
   block,
   empty,
   onRetry,

@@ -53,9 +53,8 @@ export function fromWebPath(
   | typeof recentRecordsRoute
   | typeof expenseGlossaryRoute
   | ReturnType<typeof exploreFromWebPath>
-  | ReturnType<typeof reportRoute>
   | ReturnType<typeof topicRoute>
-  | { pathname: '/reports' | '/topics' | '/stats' | '/methods' }
+  | { pathname: '/topics' | '/stats' | '/methods' }
   | ReturnType<typeof moneyFromWebPath> {
   const community = communityFromWebPath(path);
   if (community) return community;
@@ -65,18 +64,21 @@ export function fromWebPath(
   if (money) return money;
   if (path === '/money' || path === '/money/') return moneyRoute();
   const directory = /^\/subject\/(person|party|electorate)\/?$/.exec(path);
-  if (directory?.[1]) return directoryRoute(directory[1] as 'person' | 'party' | 'electorate');
+  if (directory?.[1])
+    return directoryRoute(directory[1] as 'person' | 'party' | 'electorate');
   if (path === '/bills?view=divisions') return divisionHistoryRoute;
-  if (path === '/reports') return {pathname:'/reports'};
-  if (path === '/subject/topic') return {pathname:'/topics'};
-  if (path === '/stats' || path === '/methods') return {pathname:path};
-  const report = /^\/reports\/(climate|gambling|housing|immigration|indigenous|media)(?:\/s\/([1-9]\d*))?\/?$/.exec(path);
-  if (report?.[1]) return reportRoute(report[1], report[2]);
+  if (path === '/subject/topic') return { pathname: '/topics' };
+  if (path === '/stats' || path === '/methods') return { pathname: path };
   const topic = /^\/subject\/topic\/([a-z0-9-]+)\/?$/.exec(path.split('?')[0]!);
   if (topic?.[1]) {
     const query = new URLSearchParams(path.split('?')[1]);
     const keys = ['party', 'state', 'from', 'to', 'debate'];
-    if ([...query.keys()].some(key => !keys.includes(key) || query.getAll(key).length !== 1)) return null;
+    if (
+      [...query.keys()].some(
+        (key) => !keys.includes(key) || query.getAll(key).length !== 1,
+      )
+    )
+      return null;
     return topicRoute(topic[1], Object.fromEntries(query));
   }
   if (path === '/expenses' || path === '/expenses/')
@@ -97,10 +99,18 @@ export function fromWebPath(
       });
     return null;
   }
-  const electorate = /^\/subject\/electorate\/([a-z0-9-]+|el_[a-f0-9]{24})\/?(?:\?asof=(\d{4}-\d{2}-\d{2}))?$/.exec(path);
+  const electorate =
+    /^\/subject\/electorate\/([a-z0-9-]+|el_[a-f0-9]{24})\/?(?:\?asof=(\d{4}-\d{2}-\d{2}))?$/.exec(
+      path,
+    );
   if (electorate?.[1]) {
     const asof = electorate[2];
-    if (asof && (!Number.isFinite(Date.parse(asof)) || new Date(asof).toISOString().slice(0, 10) !== asof)) return null;
+    if (
+      asof &&
+      (!Number.isFinite(Date.parse(asof)) ||
+        new Date(asof).toISOString().slice(0, 10) !== asof)
+    )
+      return null;
     return electorateRoute(electorate[1], asof);
   }
   const party = /^\/subject\/party\/([^/?#]+)\/?$/.exec(path);
@@ -178,10 +188,10 @@ export const leadRoute = (id: string) => ({
 export const declarationsRoute = { pathname: '/declarations' as const };
 // Local follows: the list and its management, pushed within the current tab.
 export const followsRoute = '/follows';
-export const reportRoute = (slug: string, section?: string) => ({
-  pathname: '/report/[slug]' as const, params: {slug, ...(section ? {section} : {})},
-});
-export const topicRoute = (slug: string, filters: Record<string,string> = {}) => ({pathname: '/topic/[slug]' as const, params: {slug, ...filters}});
+export const topicRoute = (
+  slug: string,
+  filters: Record<string, string> = {},
+) => ({ pathname: '/topic/[slug]' as const, params: { slug, ...filters } });
 
 /** A draft in native Ask. Arrival never submits a paid request. */
 export const askRoute = (scope: {
@@ -220,8 +230,18 @@ export const directoryRoute = (kind: 'person' | 'party' | 'electorate') => ({
 });
 export const divisionHistoryRoute = { pathname: '/division-history' as const };
 
-export function exploreFromWebPath(path: string): {pathname:'/explore'} | {pathname:'/explore/[tool]';params:{tool:string}} | null {
-  if (path === '/explore' || path === '/explore/') return {pathname:'/explore'};
-  const match = /^\/explore\?game=(quiz|ballot|tm|tide|matrix|wd)$/.exec(path);
-  return match?.[1] ? {pathname:'/explore/[tool]',params:{tool:match[1]}} : null;
+export function exploreFromWebPath(
+  path: string,
+):
+  | { pathname: '/explore' }
+  | { pathname: '/explore/[tool]'; params: { tool: string } }
+  | null {
+  if (path === '/explore' || path === '/explore/')
+    return { pathname: '/explore' };
+  const match = /^\/explore\?game=(quiz|tm|tide|matrix|wd)$/.exec(path);
+  return match?.[1]
+    ? { pathname: '/explore/[tool]', params: { tool: match[1] } }
+    : /^\/explore\/?\?game=[a-z]+$/.test(path)
+      ? { pathname: '/explore' }
+      : null;
 }

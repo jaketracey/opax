@@ -8,9 +8,16 @@ import {
   interestKey,
   personSlug,
 } from '../src/api/ids';
-test.each(servedFiles.filter((p) => p.endsWith('.json')))(
-  'reviewed fixture GET is allowed: %s',
-  (p) => expect(() => assertAllowedPath(p)).not.toThrow(),
+const retiredReports = servedFiles.filter(
+  (p) => p.startsWith('/reports/') && p !== '/reports/grants-allocation.json',
+);
+test.each(retiredReports)('retired report JSON is refused: %s', (p) =>
+  expect(() => assertAllowedPath(p)).toThrow(),
+);
+test.each(
+  servedFiles.filter((p) => p.endsWith('.json') && !retiredReports.includes(p)),
+)('reviewed fixture GET is allowed: %s', (p) =>
+  expect(() => assertAllowedPath(p)).not.toThrow(),
 );
 test.each(catalogKinds)('one explicit P0 search kind is allowed: %s', (kind) =>
   expect(() =>

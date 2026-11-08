@@ -503,7 +503,7 @@ export function Results({
           />
           <Text>
             {p.kind === 'speech'
-              ? 'No indexed speech uses that phrase. Hansard is literal: a company, a place or a person is usually named in full, and often only once.'
+              ? 'No speech in the record uses that phrase. Hansard is literal: a company, a place or a person is usually named in full, and often only once.'
               : 'No matching public records were returned. Try another phrase or remove a filter.'}
           </Text>
           {/["“”]/.test(p.query) ? (

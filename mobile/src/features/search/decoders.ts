@@ -81,16 +81,6 @@ export const decodeManifest = shape({
   coverage: nonempty,
   recordShardSize: count,
 });
-export const decodeReports = shape({
-  reports: array(
-    shape({
-      slug: matching(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-      title: nonempty,
-      blurb: optional(text),
-      updated: date,
-    }),
-  ),
-});
 export const decodeBriefs = shape({
   briefs: dict(nonempty, matching(/^[a-f0-9]{32}$/)),
 });

@@ -6,11 +6,7 @@ import { assertAllowedPath } from '../src/api/policy';
 import { canonicalUrl } from '../src/navigation/external';
 import { fromWebPath } from '../src/navigation/routes';
 import {
-  decodeBallot,
   decodeYear,
-  changePreference,
-  validPreferences,
-  ballotPlan,
   wordsPanel,
   pairings,
   yearOpening,
@@ -34,9 +30,6 @@ const read = (path: string) =>
   JSON.parse(
     readFileSync(resolve(__dirname, '../../portal/public/' + path), 'utf8'),
   );
-const ballotRaw = read(
-  'electorates/releases/b56417062ccc33cf/el_5d600e7f6dca5b72ae04d686.json',
-);
 test('quiz record links never open private donor profiles and search opens a native draft', () => {
   expect(quizRecordPath('/subject/donor/Jane%20Citizen')).toBeNull();
   expect(quizRecordPath('/subject/donor/Maurice%20Blackburn%20Pty%20Ltd')).toBe(
@@ -46,45 +39,6 @@ test('quiz record links never open private donor profiles and search opens a nat
     '/search?speaker=Glenn+Sterle&from=2025&to=2025',
   )!;
   expect(fromWebPath(path)?.pathname).toBe('/search');
-});
-test('ballot retains the exact 2025 draw and refuses unverified candidates, source, incomplete and duplicate preferences', () => {
-  const ballot = decodeBallot(ballotRaw),
-    original = ballotRaw.elections.find(
-      (c: { election: { poll_date: string } }) =>
-        c.election.poll_date === '2025-05-03',
-    );
-  expect(() => decodeBallot(ballotRaw, 'el_wrong_seat')).toThrow();
-  expect(ballot.candidates.map((c) => c.name)).toEqual(
-    [...original.candidates]
-      .sort(
-        (a: { ballot_position: number }, b: { ballot_position: number }) =>
-          a.ballot_position - b.ballot_position,
-      )
-      .map((c: { name: string }) => c.name),
-  );
-  let order: string[] = [];
-  for (const c of ballot.candidates)
-    order = changePreference(order, ballot.candidates, 'add', c.candidate_id);
-  expect(validPreferences(order, ballot.candidates, true)).toBe(true);
-  expect(validPreferences([...order, order[0]!], ballot.candidates)).toBe(
-    false,
-  );
-  expect(() => ballotPlan(ballot, order.slice(1))).toThrow();
-  const moved = changePreference(order, ballot.candidates, 'up', order[1]!);
-  expect(moved[0]).toBe(order[1]);
-  expect(ballotPlan(ballot, moved)).toContain(
-    'For practice only. This is not a current ballot or an official voting document.',
-  );
-  expect(ballotPlan(ballot, moved)).toContain(
-    `2. ${ballot.candidates[0]!.name}`,
-  );
-  const broken = structuredClone(ballotRaw);
-  broken.elections.find(
-    (c: { election: { poll_date: string } }) =>
-      c.election.poll_date === '2025-05-03',
-  ).candidates[0].ballot_position = 99;
-  expect(() => decodeBallot(broken)).toThrow();
-  expect(() => decodeBallot({ ...ballotRaw, sources: {} })).toThrow();
 });
 test.each(Array.from({ length: 29 }, (_, i) => 1998 + i))(
   'year %i keeps exact brief and dated voices, rejects invalid dates',
@@ -226,7 +180,7 @@ test('words per dollar never merges Other into a party or mistakes unseparated s
     expect(panel.moneyTotal).toBe(panel.rows.reduce((n, r) => n + r.money, 0));
   }
 });
-test.each(['quiz', 'ballot', 'tm', 'tide', 'matrix', 'wd'])(
+test.each(['quiz', 'tm', 'tide', 'matrix', 'wd'])(
   'canonical and native Explore share destination: %s',
   (tool) => {
     const path = `/explore?game=${tool}`;
@@ -235,5 +189,18 @@ test.each(['quiz', 'ballot', 'tm', 'tide', 'matrix', 'wd'])(
       params: { tool },
     });
     expect(canonicalUrl(path).endsWith(path)).toBe(true);
+  },
+);
+
+
+test.each(['/explore?game=ballot', '/explore/?game=ballot'])(
+  'a retired tool link opens the Explore hub: %s', (path) => {
+    expect(fromWebPath(path)).toEqual({ pathname: '/explore' });
+    expect(canonicalUrl(path)).not.toContain('game=ballot');
+  },
+);
+test.each(['/reports', '/reports/housing', '/reports/housing/s/1'])(
+  'a retired report has no native destination: %s', (path) => {
+    expect(fromWebPath(path)).toBeNull();
   },
 );

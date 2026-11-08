@@ -53,11 +53,7 @@ export default function Program() {
       const entry = index.data.programs.find(
         (p) => p.id === id || p.key === inputKey || p.key === id,
       );
-      if (!entry)
-        throw new ApiError(
-          'not-found',
-          'Program not found in the available export.',
-        );
+      if (!entry) throw new ApiError('not-found', 'Program not found.');
       const [program, notes] = await Promise.all([
         money.program(jur, entry.key, refresh),
         money.notes(refresh),
@@ -140,7 +136,7 @@ export default function Program() {
                 <Text wordSafe variant="fine" testID="program-caveat">
                   {seat
                     ? `Listed awards mapped to ${seat}; not a complete total for this seat.`
-                    : `${formatCount(program.listed)} of ${formatCount(program.available)} program grants listed in the export.`}
+                    : `${formatCount(program.listed)} of ${formatCount(program.available)} program grants listed.`}
                 </Text>
                 <MetaSource
                   meta={{ ...data.index.meta, asOf: program.asOf }}
@@ -173,7 +169,7 @@ export default function Program() {
                       ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
                       : null,
                     seat
-                      ? `${formatCount(program.listed)} of ${formatCount(program.available)} program grants listed in the export.`
+                      ? `${formatCount(program.listed)} of ${formatCount(program.available)} program grants listed.`
                       : null,
                   ]}
                   testID="program-notes"

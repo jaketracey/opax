@@ -292,15 +292,15 @@ export function MoneyList<T>({
               <View testID={`${id}-source-foot`}>{sourceLine}</View>
             ) : null}
             {footer}
-            <Text wordSafe variant="fine" testID={`${id}-end`}>
-              End of record
-            </Text>
+            {loaded ? (
+              <Text wordSafe variant="fine" testID={`${id}-end`}>
+                End of record
+              </Text>
+            ) : null}
           </Group>
         }
         ListEmptyComponent={
-          loaded ? (
-            <EmptyState message="No matching records in the available export." />
-          ) : null
+          loaded ? <EmptyState message="No matching records." /> : null
         }
         renderItem={({ item, index }) => (
           <Group

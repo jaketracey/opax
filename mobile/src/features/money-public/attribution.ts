@@ -9,7 +9,7 @@ export const publicMoneyDatasets: Dataset[] = [
     publisher:
       'Department of Infrastructure; Australian Electoral Commission; Centre for Public Integrity; councils and venue operators',
     terms: [
-      'OPAX combines the departmental invitation list, GrantConnect awards, the AEC 2025 election seat status fact sheet and the Centre for Public Integrity’s published comparison. Original documents retain their publisher’s copyright and reuse terms; the combined export does not publish one verified licence.',
+      'OPAX combines the departmental invitation list, GrantConnect awards, the AEC 2025 election seat status fact sheet and the Centre for Public Integrity’s published comparison. Original documents retain their publisher’s copyright and reuse terms; OPAX publishes no single licence for the combined records.',
       'Some venue geometry © OpenStreetMap contributors, ODbL. https://www.openstreetmap.org/copyright',
       'Project locations come from council and venue-operator evidence linked to each checked record. Earlier grants are a selected, sourced sample, not a national total.',
     ],
@@ -37,7 +37,7 @@ export const publicMoneyDatasets: Dataset[] = [
     name: 'Programs and places source connections',
     publisher: 'OPAX; Parliament of Australia; Queensland Government',
     terms: [
-      'Connections are derived from the collected Hansard, press release and Queensland grant corpus. Original records retain their own copyright and licence: parliamentary copyright and CC BY-NC-ND terms for Hansard; CC BY 4.0 for Queensland Government Investment Portal expenditure. Press releases retain their publisher’s terms.',
+      'Connections come from the collected Hansard, press release and Queensland grant records. Original records retain their own copyright and licence: parliamentary copyright and CC BY-NC-ND terms for Hansard; CC BY 4.0 for Queensland Government Investment Portal expenditure. Press releases retain their publisher’s terms.',
       'Exact unambiguous recorded names and structured source locations. Exact full-name identity decisions retain ABN provenance; unresolved candidates are unpublished.',
     ],
     links: [

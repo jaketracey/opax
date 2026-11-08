@@ -4,12 +4,13 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import Search from '../src/features/Search';
-import { catalogs } from '../src/api/runtime';
+import { catalogs, recordSearch } from '../src/api/runtime';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { Field, LoadingState, PersonRow } from '../src/design/primitives';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
+  recordSearch: { suggestions: jest.fn() },
   catalogs: {
     suggestionSources: jest.fn(),
     suggestionSourcesOnFocus: jest.fn(),
@@ -43,6 +44,23 @@ test('building the suggestion roster folds each name a bounded number of times',
   expect(suggestions.people.length).toBeGreaterThan(600);
   expect(normalize.mock.calls.length).toBeLessThan(10 * names);
   normalize.mockRestore();
+});
+
+beforeEach(() => {
+  jest.mocked(recordSearch.suggestions).mockResolvedValue({
+    manifest: {
+      data: {
+        version: '1',
+        count: 0,
+        counts: {},
+        coverage: '',
+        recordShardSize: 0,
+      },
+      stale: false,
+      savedAt: 1,
+      asOf: null,
+    },
+  });
 });
 
 test('idle Browse never shows a placeholder for suggestions it does not draw', async () => {
@@ -81,4 +99,55 @@ test('idle Browse never shows a placeholder for suggestions it does not draw', a
   expect(renderer.root.findAllByType(LoadingState)).toHaveLength(0);
   expect(renderer.root.findAllByType(PersonRow).length).toBeGreaterThan(0);
   await act(async () => renderer.unmount());
+});
+
+test('an empty roster does not show no suggestions before the topic catalog responds', async () => {
+  const source = { stale: false, savedAt: null, asAt: null, sources: [] };
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue({
+    roster: { ...roster, people: [] },
+    people,
+    manifest,
+    slugs,
+    electorates: { ...index, electorates: [] },
+    bills: { ...bills, bills: [] },
+    provenance: { people: source, electorates: source, bills: source },
+  } as unknown as Awaited<ReturnType<typeof catalogs.suggestionSources>>);
+  let finish!: (
+    value: Awaited<ReturnType<typeof recordSearch.suggestions>>,
+  ) => void;
+  jest.mocked(recordSearch.suggestions).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<Search initialQuery="zzzzzz" />);
+  });
+  expect(r.root.findAllByType(LoadingState)).toHaveLength(1);
+  expect(
+    r.root.findAllByProps({ testID: 'search-suggestions-empty' }),
+  ).toHaveLength(0);
+  await act(async () =>
+    finish({
+      manifest: {
+        data: {
+          version: '1',
+          count: 0,
+          counts: {},
+          coverage: '',
+          recordShardSize: 0,
+        },
+        stale: false,
+        savedAt: 1,
+        asOf: null,
+      },
+    }),
+  );
+  expect(r.root.findAllByType(LoadingState)).toHaveLength(0);
+  expect(
+    r.root.findAllByProps({ testID: 'search-suggestions-empty' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => r.unmount());
 });

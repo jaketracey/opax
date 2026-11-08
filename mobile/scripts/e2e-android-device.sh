@@ -155,9 +155,7 @@ for flow in "${FLOWS[@]}"; do
     # 26 needs the changed-data fixture: run it alone, OPAX_FIXTURE_DATA=changed.
     26) file=.maestro/android/26-follows.yaml ;;
     32) file=.maestro/android/32-record-reader.yaml ;;
-    38) file=.maestro/android/38-reports.yaml ;;
     39) file=.maestro/android/39-topics.yaml ;;
-    40) file=.maestro/40-report-record.yaml ;;
     *) echo 'Unsupported Android journey' >&2; exit 2 ;;
   esac
   assert_lock

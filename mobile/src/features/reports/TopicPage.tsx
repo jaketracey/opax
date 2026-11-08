@@ -21,13 +21,7 @@ import {
 import { formatMoney } from '../../design/format';
 import { shareHeaderItem } from '../../navigation/share';
 import { RecordRow } from '../RecordRow';
-import {
-  moneyRows,
-  parliamentNames,
-  partyName,
-  topicNames,
-  topicReport,
-} from './model';
+import { moneyRows, parliamentNames, partyName, topicNames } from './model';
 import {
   AEC_NOTE,
   ReadState,
@@ -220,22 +214,12 @@ function TopicContent({
                   accent="votes"
                   testID="topic-count"
                 />
-                {topicReport[slug] ? (
-                  <RecordRow
-                    path={`/reports/${topicReport[slug]}`}
-                    title={`Read the ${title} report`}
-                    onPress={() =>
-                      openRecord(`/reports/${topicReport[slug]}`, title)
-                    }
-                    testID="topic-report"
-                  />
-                ) : null}
                 <SourceLine
                   {...meta}
                   citation={LABELLED}
                   title="About the topic count"
                   notes={[
-                    `${data.count.toLocaleString()} speeches carry this label so far, of ${data.labelled.toLocaleString()} labelled to date. The labelling pass is still running.`,
+                    `${data.count.toLocaleString()} speeches carry this label so far, of ${data.labelled.toLocaleString()} labelled to date. Not every speech is labelled yet.`,
                   ]}
                   testID="topic-as-at"
                 />

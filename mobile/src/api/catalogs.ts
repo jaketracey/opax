@@ -748,7 +748,7 @@ export class Catalogs {
           errors.push(
             new ApiError(
               'invalid-data',
-              'Some rows in this export could not be read.',
+              'Some records could not be read.',
             ),
           );
           return null;
@@ -919,7 +919,7 @@ export class Catalogs {
         if (electorates.data.meta.release_id !== manifest.data.release_id)
           throw new ApiError(
             'invalid-data',
-            'The seat release does not match its manifest.',
+            'The electorate records are out of step. Try again shortly.',
           );
         const provenance = suggestionProvenanceFor({
           people: roster?.asOf ?? null,
@@ -1143,7 +1143,7 @@ export class Catalogs {
     if (people && people.data.meta.release_id !== bridge![1].data.release_id)
       throw new ApiError(
         'invalid-data',
-        'The person release does not match its manifest.',
+        'The people records are out of step. Try again shortly.',
       );
     const membership =
       kind === 'person' ||

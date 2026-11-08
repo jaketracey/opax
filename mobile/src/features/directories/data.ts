@@ -102,7 +102,9 @@ export async function loadDirectory(
     const manifest = await catalogs.manifest(refresh),
       index = await catalogs.electorates(manifest.data, refresh);
     if (index.data.meta.release_id !== manifest.data.release_id)
-      throw new Error('The electorate release does not match its manifest.');
+      throw new Error(
+        'The electorate records are out of step. Try again shortly.',
+      );
     rows.electorates = index.data.electorates;
     rows.facets = electorateFacets(rows.electorates);
     records.push(manifest, index);

@@ -366,9 +366,9 @@ test('decode fallback and partial screens state the problem without claiming off
       .map((n) => [n.props.children].flat(3).join(''))
       .join(' ');
     expect(words).toContain(
-      'The latest public export could not be read. Showing the saved copy.',
+      'The latest records could not be read. Showing the saved copy.',
     );
-    expect(words).toContain('Some rows in this export could not be read.');
+    expect(words).toContain('Some records could not be read.');
     expect(words).toContain('Saved');
     expect(words).not.toContain('Offline');
     act(() => renderer.unmount());
@@ -460,7 +460,7 @@ test.each([true, false])(
             savedAt: null,
           }}
           missing="No voting summary is held for this person in the release."
-          partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
+          partialMissing="No record could be shown for this person. Some records could not be read."
           retry={() => {}}
         >
           {() => null}
@@ -473,7 +473,7 @@ test.each([true, false])(
       .join(' ');
     if (partial) {
       expect(words).toContain(
-        'No readable record was found for this person. Some rows in the latest public export were unreadable.',
+        'No record could be shown for this person. Some records could not be read.',
       );
       expect(words).not.toContain('No voting summary is held');
     } else {

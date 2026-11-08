@@ -84,7 +84,9 @@ function guardFrom(source: string): Guard {
   const module = { exports: {} as { forbiddenOpaxRoute: Guard } };
   const stubs: Record<string, unknown> = {
     './routes': { searchRouteFromWebPath: () => null },
-    '../features/community/entry': jest.requireActual('../src/features/community/entry'),
+    '../features/community/entry': jest.requireActual(
+      '../src/features/community/entry',
+    ),
     'react-native': {},
     'expo-router': { router: {} },
     'expo-web-browser': {},
@@ -213,7 +215,6 @@ const reachesContent: [string, Partial<Outcome>][] = [
   ['/money#/money/grants', { panel: 'money-records' }],
   ['/#/subject/person/Anthony%20Albanese', { panel: 'subject' }],
   ['/#/subject/party', { panel: 'subject' }],
-  ['/#/reports/gambling', { panel: 'reports' }],
   ['/#/doc/x', { panel: 'doc' }],
   ['/subject/person/anthony-albanese#person-pay', { panel: 'subject' }],
   ['/community?view=thread&id=x#reply-ab12', { end: 'community', token: null }],

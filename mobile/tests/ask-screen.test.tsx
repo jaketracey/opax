@@ -495,3 +495,35 @@ test('idle Ask hides Your conversations when none is saved', async () => {
   expect(row.props.value).toBe('1');
   await act(async () => view.unmount());
 });
+
+test('conversation history shows a skeleton while syncing instead of an empty history', async () => {
+  withSavedChat();
+  let finish!: (value: ReturnType<typeof chatsSnapshot>) => void;
+  jest.mocked(reconcileChats).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  let view!: ReactTestRenderer;
+  await act(async () => {
+    view = create(<AskScreen />);
+  });
+  await act(async () => {
+    void view.root.findAllByProps({ testID: 'ask-saved' })[0]!.props.onPress();
+  });
+  // Drop the local rows while the remote history is still pending.
+  jest.mocked(chatsSnapshot).mockReturnValue({ v: 1, active: null, chats: [] });
+  await act(async () => view.update(<AskScreen />));
+  expect(
+    view.root.findAllByProps({ testID: 'ask-history-loading' }).length,
+  ).toBeGreaterThan(0);
+  expect(
+    view.root.findAllByProps({ message: 'No saved conversations.' }),
+  ).toHaveLength(0);
+  await act(async () => finish(chatsSnapshot()));
+  await act(async () => {
+    view.unmount();
+    askSession.start();
+  });
+});

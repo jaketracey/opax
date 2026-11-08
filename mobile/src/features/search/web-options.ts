@@ -73,10 +73,6 @@ export const recordTypes = [
     label: 'Government transcripts and releases',
   },
   {
-    value: 'report',
-    label: 'Research reports',
-  },
-  {
     value: 'grant_invitation',
     label: 'Grant invitations',
   },

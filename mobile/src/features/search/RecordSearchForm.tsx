@@ -295,7 +295,7 @@ export function RecordSearchForm({
     <Group>
       {collapsed ? null : (
         <Button
-          label={`Search ${scope === 'records' ? 'records' : scope === 'grant' ? 'grants' : scope === 'party' ? 'parties' : scope === 'agency' ? 'government agencies' : scope === 'bill' ? 'bills' : 'reports'}`}
+          label={`Search ${scope === 'records' ? 'records' : scope === 'grant' ? 'grants' : scope === 'party' ? 'parties' : scope === 'agency' ? 'government agencies' : 'bills'}`}
           variant="primary"
           ref={submitRef}
           testID="search-submit"

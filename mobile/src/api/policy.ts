@@ -53,7 +53,6 @@ const staticPaths = new Set([
 
   '/access.json',
   '/search-catalog/manifest.json',
-  '/reports/index.json',
   // Reviewed immutable state graph exports for the native money map: no Worker/model/auth request.
   '/graph/money.qld.json',
   '/graph/money.vic.json',

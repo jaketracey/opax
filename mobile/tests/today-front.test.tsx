@@ -392,12 +392,11 @@ describe('explore the record', () => {
     ['today-leads-open', 'Leads', leadsRoute],
     ['today-money-map', 'Money map', moneyRoute()],
     ['today-public-money', 'Public money', '/public-money'],
-    ['today-reports', 'Reports', { pathname: '/reports' }],
     ['today-community', 'Community', '/community/home'],
     ['today-explore-open', 'Explore', '/explore'],
     ['today-records-open', 'Just added', recentRecordsRoute],
   ] as const;
-  test('one heading and seven tiles of one card style, in order, each opening its screen', () => {
+  test('one heading and six tiles of one card style, in order, each opening its screen', () => {
     const { root } = render(<ExploreGrid />);
     expect(strings(root)).toMatch(/^Explore the record/);
     expect(root.findAllByType(Card)).toHaveLength(tiles.length);

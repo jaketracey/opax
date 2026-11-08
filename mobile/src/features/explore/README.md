@@ -7,9 +7,6 @@ Today opens the hub. Only the selected tool mounts; the hub does no data reads.
   answers and grading follow that engine. Best streaks use the device's two-slot
   store. Private donor profile links are suppressed using the existing
   organisation gate.
-- Ballot: the verified 3 May 2025 federal House contest, with candidate IDs and
-  original ballot positions retained. The saved seat is the default. Export
-  preserves original candidate order and adds the user's preference numbers.
 - Time machine: static `/years/{year}.json`, bills and the web's `/years/pictures.json` manifest.
   Opening Photographs loads that year's unchanged `/years/pictures/YYYY/name.webp`
   files through the existing bounded WebP cache. Native images read local files

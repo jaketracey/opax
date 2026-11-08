@@ -530,8 +530,10 @@ describe('Android journeys', () => {
 
   test('the runner offers the journeys the design passes touched, and each exists', () => {
     expect(cases.map(([key]) => key)).toEqual(
-      expect.arrayContaining(['03', '13', '26', '38', '39', '40']),
+      expect.arrayContaining(['03', '13', '26', '39']),
     );
+    for (const key of ['38', '40'])
+      expect(cases.map(([offered]) => offered)).not.toContain(key);
     for (const [, file] of cases)
       expect(statSync(join(MOBILE, file)).isFile()).toBe(true);
     expect(

@@ -307,7 +307,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
   if (people.meta.release_id !== manifest.release_id)
     throw new ApiError(
       'invalid-data',
-      'The person release does not match its manifest.',
+      'The people records are out of step. Try again shortly.',
     );
   const canonicalId = personId(id);
   const p = unique(
@@ -1328,7 +1328,7 @@ export function yourMPFor(
   if (index.meta.release_id !== manifest.release_id)
     throw new ApiError(
       'invalid-data',
-      'The seat release does not match its manifest.',
+      'The electorate records are out of step. Try again shortly.',
     );
   const seat = index.electorates.find((s) => s.electorate_id === id);
   if (!seat)

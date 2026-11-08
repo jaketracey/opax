@@ -36,7 +36,7 @@ import type { Roster } from '../../api/catalog-decoders';
 const filterNotes = [
   'Results are limited to public records and roster parliamentarians. This page excludes recipient profiles and records without a reliable organisation classification.',
   'Document search is not available for Tasmania, Western Australia or the Northern Territory. Those jurisdictions remain available for public-record catalogs.',
-  'Unavailable record types are shown in the list. Choose people, interests, expenses or pay from Search kind.',
+  'Some types are not in this list. Choose people, interests, expenses or pay from Search kind.',
 ];
 
 type Choice = { value: string; label: string; reason?: string };
@@ -191,7 +191,7 @@ export function FiltersSheet({
       ],
     },
     kind: {
-      label: 'Record type',
+      label: 'Type',
       choices: recordTypes.map((t) => ({
         ...t,
         reason: excludedKinds[t.value]

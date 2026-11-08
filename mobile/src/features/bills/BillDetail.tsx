@@ -1103,7 +1103,7 @@ function Speeches({
         <SourceLine
           title="About these speeches"
           asOf={view.speeches.asAt}
-          citation="OPAX indexed parliamentary record"
+          citation="OPAX parliamentary record"
           savedAt={savedAt}
           notes={[copy.speeches, briefs ? copy.briefs : null]}
           testID="bill-speeches-source"

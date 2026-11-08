@@ -352,7 +352,10 @@ describe('the edition card', () => {
       pathname: '/grants-allocation',
     });
   });
-  test('a standing report opens through the shared native resolver', async () => {
+  test('a retired report opens on the web instead of a deleted native screen', async () => {
+    const alert = jest
+      .spyOn(Alert, 'alert')
+      .mockImplementation(() => undefined);
     jest.mocked(router.push).mockClear();
     const { root } = render(
       <EditionCard
@@ -365,11 +368,13 @@ describe('the edition card', () => {
         }}
       />,
     );
-    await press(root, 'today-edition-open');
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: '/report/[slug]',
-      params: { slug: 'housing' },
-    });
+    await press(root, 'today-edition-link');
+    expect(router.push).not.toHaveBeenCalled();
+    expect(alert).toHaveBeenCalledWith(
+      expect.any(String),
+      `${webOrigin}/reports/housing`,
+    );
+    alert.mockRestore();
   });
   test.each([
     '/subject/person/Tony%20Abbott',

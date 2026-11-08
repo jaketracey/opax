@@ -71,7 +71,7 @@ export function CatalogState<T>({
         state={block.partial && !block.stale ? 'partial' : null}
         notes={[
           refreshing ? 'Checking for a newer copy.' : null,
-          block.partial ? 'Some rows in this export could not be read.' : null,
+          block.partial ? 'Some records could not be read.' : null,
         ]}
         testID={`${testID}-as-at`}
       />

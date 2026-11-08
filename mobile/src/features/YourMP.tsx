@@ -262,7 +262,7 @@ export default function YourMP() {
       {!ready || (choice && !view && !chooser && !error) ? (
         <LoadingState shape="people" label="Loading your representatives" />
       ) : null}
-      {chooser ? (
+      {chooser && directory ? (
         <Group>
           {stateChoosing ? (
             <Heading level={2}>Choose your state electorate</Heading>
@@ -286,9 +286,9 @@ export default function YourMP() {
           {/* The field is the chooser's main task, so it comes first; its
               label says what to type, with no helper line repeating it
               (pass 5, P2-20 and P3-1). */}
-          {!query.trim() ? null : !matches.length ? (
+          {!query.trim() || error ? null : !matches.length ? (
             <EmptyState
-              message="No matching electorate or member in this release."
+              message="No matching electorate or member."
               testID="seat-no-results"
             />
           ) : (
@@ -690,10 +690,10 @@ export default function YourMP() {
                 </>
               ) : (
                 <Text wordSafe>
-                  OPAX does not yet have a verified roster of{' '}
+                  No confirmed member list for{' '}
                   {jurisdictionName(view.seat.data!.state_code) ??
-                    'this jurisdiction’s'}{' '}
-                  members.
+                    'this jurisdiction'}{' '}
+                  yet.
                 </Text>
               )}
             </Section>

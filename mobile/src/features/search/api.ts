@@ -4,7 +4,6 @@ import {
   decodeBriefs,
   decodeManifest,
   decodeRecords,
-  decodeReports,
   decodeSummary,
 } from './decoders';
 import {
@@ -75,10 +74,11 @@ export class RecordSearch {
     );
   }
   async suggestions(refresh = false) {
-    const [manifest, reports] = await Promise.all([
-      this.client.get('/search-catalog/manifest.json', decodeManifest, refresh),
-      this.client.get('/reports/index.json', decodeReports, refresh),
-    ]);
-    return { manifest, reports };
+    const manifest = await this.client.get(
+      '/search-catalog/manifest.json',
+      decodeManifest,
+      refresh,
+    );
+    return { manifest };
   }
 }

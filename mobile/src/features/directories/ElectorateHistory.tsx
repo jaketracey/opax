@@ -65,6 +65,7 @@ export function ElectorateHistory({
       .map((t) => t.observed_through)
       .sort()
       .at(-1) ?? null;
+  if (!terms.length && !selected) return null;
   return (
     <Section
       title="Representation history"
@@ -128,7 +129,7 @@ export function ElectorateHistory({
               message={
                 selected.status === 'verified'
                   ? 'Vacant at this observation.'
-                  : 'Representation has not yet been verified for this date.'
+                  : 'No confirmed member for this date.'
               }
             />
           )}
@@ -153,9 +154,7 @@ export function ElectorateHistory({
         <Text variant="fine">
           {formatCount(terms.length)} service periods · newest first
         </Text>
-      ) : (
-        <EmptyState message="Historical service has not yet been imported." />
-      )}
+      ) : null}
       <RowList>
         {terms.map((t, i) => {
           const person = view.people[t.person_id],
@@ -212,7 +211,7 @@ export function ElectorateHistory({
             'Dated service records, newest first. Party changes may create a new period. Open-ended records are not proof of current membership.',
             'End dates are exclusive. Gaps indicate missing coverage.',
             'On a date: representation is shown only as recorded in the dated release, and the outline is not a reconstruction of that date.',
-            'Explore each parliamentarian’s page for their speeches, divisions and other indexed records.',
+            'Explore each parliamentarian’s page for their speeches, divisions and other records.',
           ]}
           testID="electorate-history-source"
         />

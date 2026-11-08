@@ -57,14 +57,6 @@ const tiles: readonly Tile[] = [
     route: '/public-money',
     testID: 'today-public-money',
   },
-  {
-    title: 'Reports',
-    detail: 'Standing investigations and topics',
-    icon: 'chart.bar.doc.horizontal',
-    hint: 'Opens the reports',
-    route: { pathname: '/reports' },
-    testID: 'today-reports',
-  },
   ...(communityHome
     ? [
         {
@@ -87,7 +79,7 @@ const tiles: readonly Tile[] = [
   },
   {
     title: 'Just added',
-    detail: 'Newly indexed records',
+    detail: 'New records',
     icon: 'tray.full',
     hint: 'Opens the newest records',
     route: recentRecordsRoute,

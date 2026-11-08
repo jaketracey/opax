@@ -4,6 +4,7 @@ import type { RecordResult } from '../../api/client';
 import { votingMetaFor, type EvidenceBlock, type ProfileView } from './model';
 import {
   EmptyState,
+  LoadingState,
   ErrorState,
   Heading,
   Section,
@@ -60,12 +61,12 @@ export function votesSource(
   };
 }
 
-const PARTIAL_NOTE = 'Some rows in this export could not be read.';
+const PARTIAL_NOTE = 'Some records could not be read.';
 function staleNote(block: SourcedBlock): string {
   if (block.staleReason === 'unreadable')
-    return 'The latest public export could not be read. Showing the saved copy.';
+    return 'The latest records could not be read. Showing the saved copy.';
   if (block.staleReason === 'unavailable')
-    return 'The latest public export could not be loaded. Showing the saved copy.';
+    return 'The latest records could not be loaded. Showing the saved copy.';
   return 'This is a saved copy. It may be out of date.';
 }
 
@@ -331,11 +332,16 @@ export function RecordBlock<T>({
 }) {
   const body = (
     <>
-      {block.status === 'unlinked' ? (
+      {block.status === 'loading' && block.data === null ? (
+        <LoadingState
+          label={`Loading ${title.toLowerCase()}`}
+          testID={`${id}-loading`}
+        />
+      ) : block.status === 'unlinked' ? (
         <EmptyState
           message={
             unlinked ??
-            `This release does not link this person's ${title.toLowerCase()}. See the record on opax.com.au.`
+            `The app does not show this person's ${title.toLowerCase()} yet. See the record on opax.com.au.`
           }
           testID={`${id}-unlinked`}
         />

@@ -24,7 +24,7 @@ const draw = (onChange = jest.fn()) => {
   return { renderer, open, option, onChange };
 };
 
-test('the kind row opens a list of the ten kinds, the current one checked', () => {
+test('the kind row opens a list of the nine kinds, the current one checked', () => {
   const { renderer, open, option } = draw();
   expect(renderer.root.findAllByType(Modal)).toHaveLength(0);
   open();
@@ -47,7 +47,6 @@ test('the kind row opens a list of the ten kinds, the current one checked', () =
     'Government agencies',
     'Grants',
     'Bills',
-    'Research reports',
   ]);
   expect(option('person').props.accessibilityState).toMatchObject({
     selected: true,

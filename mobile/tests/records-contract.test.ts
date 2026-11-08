@@ -19,7 +19,6 @@ import {
   decodeBriefs,
   decodeManifest,
   decodeRecords,
-  decodeReports,
   decodeSummary,
   summaryStreamBody,
 } from '../src/features/search/decoders';
@@ -33,7 +32,6 @@ import { fromWebPath } from '../src/navigation/routes';
 import { canonicalUrl, sourceUrl } from '../src/navigation/external';
 import { searchFixture } from '../scripts/search-fixture';
 import manifest from '../scripts/fixtures/search/search-catalog-manifest.json';
-import reports from '../scripts/fixtures/search/reports-index.json';
 import grants from '../scripts/fixtures/search/grants.json';
 import bills from '../scripts/fixtures/search/bills.json';
 import provenance from '../scripts/fixtures/search/provenance.json';
@@ -49,11 +47,11 @@ test('web option lists and fixture source hashes remain pinned to the authoritat
   const html = readFileSync('../portal/public/index.html', 'utf8');
   const block = /<select id="search-kind"[\s\S]*?<\/select>/.exec(html)![0];
   expect(recordTypes).toEqual(
-    [...block.matchAll(/<option value="([^"]+)">([^<]+)<\/option>/g)].map(
-      (m) => ({ value: m[1], label: m[2] }),
-    ),
+    [...block.matchAll(/<option value="([^"]+)">([^<]+)<\/option>/g)]
+      .map((m) => ({ value: m[1], label: m[2] }))
+      .filter((row) => row.value !== 'report'),
   );
-  expect(recordTypes).toHaveLength(24);
+  expect(recordTypes).toHaveLength(23);
   expect(jurisdictions).toHaveLength(9);
   expect(Object.keys(topics)).toHaveLength(21);
   expect(sorts).toHaveLength(6);
@@ -144,7 +142,7 @@ test('summary and brief paths have exact action contracts', () => {
   expect(() =>
     assertAllowedPath('/api/brief?rids=' + 'a'.repeat(32)),
   ).not.toThrow();
-  for (const path of ['/search-catalog/manifest.json', '/reports/index.json'])
+  for (const path of ['/search-catalog/manifest.json'])
     expect(() => assertAllowedPath(path)).not.toThrow();
 });
 test('decoders handle real pinned rows, strict pagination, optional briefs and SSE cache hits', () => {
@@ -164,7 +162,7 @@ test('decoders handle real pinned rows, strict pagination, optional briefs and S
   ).toThrow();
   expect(decodeBriefs({ briefs: {} })).toEqual({ briefs: {} });
   expect(() => decodeBriefs({ briefs: { bad: 'text' } })).toThrow();
-  expect(decodeReports(reports).reports).toHaveLength(7);
+  expect(() => assertAllowedPath('/reports/index.json')).toThrow();
   expect(decodeManifest(manifest).counts.grant).toBeGreaterThan(0);
   const response = searchFixture(
     new URL(
@@ -266,25 +264,17 @@ test('unified bill search accepts bill text beside catalog bills, but refuses un
   ).toThrow();
 });
 test('richer suggestions use only static catalogs and the roster, with canonical destinations', () => {
-  const sources = [
-    roster,
-    decodeManifest(manifest),
-    decodeReports(reports),
-  ] as const;
+  const sources = [roster, decodeManifest(manifest)] as const;
   expect(richerSuggestions('Labor', ...sources).parties).toContain('Labor');
   expect(richerSuggestions('Housing', ...sources).topics).toEqual([
     { slug: 'housing', title: 'Housing' },
   ]);
-  expect(richerSuggestions('Housing', ...sources).reports[0]?.slug).toBe(
-    'housing',
-  );
   expect(
     richerSuggestions('Private Fixture Individual', ...sources).parties,
   ).toEqual([]);
   expect(richerSuggestions('h', ...sources)).toEqual({
     parties: [],
     topics: [],
-    reports: [],
   });
 });
 test('year normalisation, removable chips and sharing preserve filter state without submitting on mount', () => {
@@ -320,6 +310,10 @@ test('generic records search keeps 20-row pages beside the distinct six-row rela
   const path = '/api/search?' + searchParams('housing', defaultFilters);
   expect(() => assertAllowedPath(path)).not.toThrow();
   for (const per of ['6', '7', '200'])
-    expect(() => assertAllowedPath(path.replace('per=20', 'per=' + per))).toThrow();
-  expect(() => assertAllowedPath('/api/search?q=Housing&kind=speech&per=6&topic=housing')).not.toThrow();
+    expect(() =>
+      assertAllowedPath(path.replace('per=20', 'per=' + per)),
+    ).toThrow();
+  expect(() =>
+    assertAllowedPath('/api/search?q=Housing&kind=speech&per=6&topic=housing'),
+  ).not.toThrow();
 });

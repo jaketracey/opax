@@ -13,11 +13,6 @@ export const tools = [
     title: 'The record quiz',
     detail: 'Money and words in one sitting',
   },
-  {
-    game: 'ballot',
-    title: 'Build your ballot',
-    detail: '2025 House practice ballot',
-  },
   { game: 'tm', title: 'Time machine', detail: '1998 to 2026' },
   {
     game: 'tide',
