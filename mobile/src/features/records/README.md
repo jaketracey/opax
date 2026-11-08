@@ -2,15 +2,20 @@
 
 `doc/[slug]` is the shared reader for public resource slugs accepted by the
 Worker. Bill and Talk source links and `fromWebPath` converge here. A record's
-Cite, Copy link and Share are one menu, `recordActions` in `RecordActions.tsx`:
-the reader's navigation-bar ⋯ (`recordMenuItem`), or the inline ⋯
-(`RecordActions`) in an iPad pane. None of them fetches anything until Cite
-opens the record.
+⋯ is one menu, `recordActions` in `RecordActions.tsx`: Cite (an inline
+section of one Copy per style, then Citation formats…), Copy link and Open on
+opax.com.au. It is the reader's only bar item (`recordBarItems`), the iPad
+pane bar's ⋯ (`split/RecordDetail.tsx`) and part of a record row's menu. None
+of them fetches anything until Cite opens the record. `opax://doc-cite/<slug>`
+opens the record, then Citation formats over it.
 
-The reader's header is one title, one meta line ("Speech · House of
-Representatives · 18 Aug 2026"), the speaker as a person row, and one source
-line (`source.ts`) whose sheet holds the original, the text's notes and the
-licence. "Ask about this" is the one drawn action.
+The reader's header is one meta line ("Speech · House of Representatives"),
+the title in the record face (`recordHeadline` in `model.ts`), the speaker as
+a person row, and one source line (`source.ts`) whose sheet holds the
+original, the record's date, the text's notes and the licence. On iPhone,
+Ask about this and Share are the bottom toolbar; in an iPad pane and on
+Android Ask about this is a row under the source line. A search arriving with
+a query opens a find bar over the toolbar.
 
 The document source is preserved in contiguous, selectable text slices in a
 FlatList. Speaker/profile links require one unambiguous roster and slug-directory
@@ -25,19 +30,21 @@ focus refreshes or background reads.
 | --------------------------------------------- | ----------------------------------------------------------- | ------------------------ |
 | `/api/resource/<slug>`                        | Open the reader, or open Cite directly from a search result | 1                        |
 | `/api/search?q=…&kind=speech&per=6[&topic=…]` | Tap Similar speeches                                        | 1                        |
-| `/bill-texts/<key>/index.json`                | Open Bill text                                              | 1                        |
-| `/bill-texts/<key>/<version>.json`            | Tap Read full bill text or choose a version                 | 1                        |
-| `/api/recent`                                 | Open Just added to the record                               | 1                        |
+| `/bill-texts/<key>/index.json`                | Open Bill text (with the default version)                   | 1                        |
+| `/bill-texts/<key>/<version>.json`            | Open Bill text (default version), or choose a version       | 1                        |
+| `/api/recent`                                 | Open Just added, or pull to refresh it                      | 1                        |
 
 Repeating an action for a successfully loaded path makes zero additional
 requests. Opening Cite from an already loaded document costs zero resource
 requests. Similar results use source passages rather than a second brief request.
-Opening Bill text first shows the collected versions; Read full bill text is a
-separate action, as on the web. Downloads contain the displayed version's exact
-full source text.
+Opening Bill text costs 2 static requests, the index and the default version,
+and shows the text at once. The version is a bar menu and Contents a sheet
+that hands its choice back through `contentsChannel.ts`, reading the version
+from the session copy. Share as text file contains the displayed version's
+exact full source text. Pull to refresh on Just added is the one read that
+bypasses the session copy; a failed refresh keeps the list.
 
-Canonical paths are `/doc/<slug>`, `/bill/<key>#bill-full-text` and
-`/#hp-indexed-title`. The resolver also accepts legacy `#/doc/<slug>` links and
+Canonical paths are `/doc/<slug>` and `/bill/<key>#bill-full-text`. The resolver also accepts legacy `#/doc/<slug>` links and
 `text-version` bill links. Citation strings receive the configured canonical web
 origin; e2e's reserved origin never escapes to production.
 
@@ -53,20 +60,18 @@ text never invents quotations or legal provisions about real people. The divisio
 text comes from the pinned public bill export. The generator has no networking.
 Tests execute the actual resource and bill-text handlers against these seeds.
 Journey 32 verifies the exact native clipboard bytes while the device harness
-owns the pasteboard lock; journey 33 covers version selection, text navigation,
-download, recent records, a division and a release.
+owns the pasteboard lock; journey 33 covers version selection, Contents,
+Share as text file, recent records, a division and a release.
 
-The web's generic summary caption says “this speech” even for releases and
-research documents. Those native records instead use its truthful label,
-“Machine summary · not part of the record”. Speech and bill-text summary notes
-retain the web's exact wording behind an info button. The reading flow keeps
-a short machine-written label.
+Machine-written text (In short, a bill version's overview) carries the
+Machine-written pill; how it was written is in the pill's sheet, worded for
+the record's kind. Divisions and other Markdown texts are read with their
+headings as part titles (`markdownParts` in `api/passage-text.ts`).
 
-The reader uses the shared rhythm and category accents, compact link rows,
-and disclosures for related speeches, versions and text navigation. Long
-coverage, transcription and citation notes open in InfoSheet. Each original
-record keeps one small View original action; source terms live on Sources and
+The reader uses the shared rhythm, compact link rows, and closed disclosures
+for In short and related speeches. Coverage, transcription and citation
+notes are in the source line's sheet; source terms live on Sources and
 licences. Full source text remains selectable and virtualised at every size.
 
-The Ask lane supplies the reader's compact Ask action through `askRoute`.
-It carries the web's document question into a draft; arrival never submits.
+Ask about this goes through `useOpenAsk`. It carries the web's document
+question into a draft; arrival never submits.

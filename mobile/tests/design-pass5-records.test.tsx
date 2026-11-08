@@ -1,11 +1,11 @@
-// Design pass 5, lane A, P1-2 (docs/design/review-2026-10/pass5-app-critique.md):
-// the records reader is migrated. One title with no kicker, one meta line
-// ("Speech · House of Representatives · 18 Aug 2026"), the speaker as a
-// PersonRow with their party, one SourceLine holding the original, the
-// text's notes and the licence, Cite / Copy link / Share under one ⋯, and
-// "Ask about this" as the one drawn action, a plain row.
+// Records, Apple-design wave 4 (records.md 2 to 5), after design pass 5:
+// the reader has one meta line, the title in the record face, the speaker as
+// a PersonRow, one SourceLine holding the original, notes and licence, and
+// Cite / Copy link / Open on opax.com.au under the bar's ⋯. Bill text opens
+// on its text with the version as a bar menu. Just added is a list of
+// record rows grouped by the day they were added.
 import { act } from 'react';
-import { Platform, Text as NativeText } from 'react-native';
+import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import {
@@ -13,35 +13,27 @@ import {
   decodeBillTextManifest,
   decodeDocument,
   decodeRecent,
+  metaLine,
 } from '../src/features/records/model';
 import { records } from '../src/features/records/runtime';
 import { catalogs } from '../src/api/runtime';
-import DocumentReader, {
-  metaLine,
-} from '../src/features/records/DocumentReader';
+import DocumentReader from '../src/features/records/DocumentReader';
 import BillTextReader from '../src/features/records/BillTextReader';
 import RecentRecords from '../src/features/records/RecentRecords';
-import * as recordReads from '../src/features/records/useRead';
 import {
   RecordActions,
   recordActions,
-  recordPageActions,
-  recordMenuItem,
+  recordBarItems,
 } from '../src/features/records/RecordActions';
 import { recordSource } from '../src/features/records/source';
 import { menuLeaves } from '../src/design/row-link';
-import { SectionHeader } from '../src/design/layout';
 import {
-  AsAtLine,
-  Button,
-  LinkRow,
-  EmptyState,
-  ErrorState,
-  LoadingState,
-  MachineLabel,
+  ContentUnavailable,
+  Heading,
+  MachinePill,
   PersonRow,
+  RecordRow,
   SourceLine,
-  ViewOriginal,
 } from '../src/design/primitives';
 import { index, manifest, people, roster, slugs } from './pinned';
 
@@ -68,18 +60,41 @@ jest.mock('../src/api/runtime', () => ({
     billFor: jest.fn(),
     directory: jest.fn(),
     bills: jest.fn(),
+    corpus: jest.fn(),
   },
 }));
 jest.mock('../src/design/menu', () => ({ showMenu: jest.fn() }));
-jest.mock('expo-router', () => ({
-  useSegments: () => [],
-  router: { push: jest.fn() },
-  Stack: { Screen: () => null },
-  useLocalSearchParams: () => ({
-    slug: 'speech-1205524',
-    key: 'au-federal-r7534',
-  }),
-}));
+let mockOptions: Record<string, unknown> = {};
+jest.mock('expo-router', () => {
+  const { createElement } = jest.requireActual<typeof React>('react');
+  const part = (name: string) => (props: { children?: React.ReactNode }) =>
+    createElement(name, props, props.children);
+  return {
+    useSegments: () => [],
+    router: { push: jest.fn(), setParams: jest.fn(), back: jest.fn() },
+    Link: Object.assign(part('Link'), {
+      Trigger: part('LinkTrigger'),
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    }),
+    Stack: {
+      Screen: ({ options }: { options?: Record<string, unknown> }) => {
+        if (options) mockOptions = options;
+        return null;
+      },
+      Toolbar: Object.assign(part('Toolbar'), {
+        Button: part('ToolbarButton'),
+        Spacer: () => null,
+        View: part('ToolbarView'),
+      }),
+    },
+    useLocalSearchParams: () => ({
+      slug: 'speech-1205524',
+      key: 'au-federal-r7534',
+    }),
+  };
+});
 
 async function mount(component: React.ReactElement) {
   let view!: TestRenderer.ReactTestRenderer;
@@ -95,9 +110,18 @@ const text = (view: TestRenderer.ReactTestRenderer) =>
     .flat(Infinity)
     .filter((c) => typeof c === 'string')
     .join('\n');
+const barLabels = () => {
+  const items = (
+    mockOptions.unstable_headerRightItems as
+      | (() => { label: string }[])
+      | undefined
+  )?.();
+  return items?.map((item) => item.label) ?? [];
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockOptions = {};
   jest.mocked(catalogs.directory).mockResolvedValue({
     roster: record(roster),
     slugs: record(slugs),
@@ -108,22 +132,22 @@ beforeEach(() => {
   jest.mocked(catalogs.bills).mockResolvedValue(record({ bills: [] }) as never);
   jest.mocked(catalogs.billFor).mockRejectedValue(new Error('none'));
   jest.mocked(records.document).mockResolvedValue(record(speech));
+  jest.mocked(records.similar).mockResolvedValue(record([]) as never);
 });
 
-test('one meta line says the kind, the chamber and the date; no kicker or date line', async () => {
-  expect(metaLine(speech)).toBe(
-    'Speech · House of Representatives · 18 Aug 2026',
-  );
-  // A title that is the kind and date leaves them off the line.
-  expect(metaLine(doc('/api/resource/speech-18098'))).toBe(
-    'House of Representatives',
+test('one meta line says the kind and the chamber; the date is in the source line', async () => {
+  expect(metaLine(speech, { date: false })).toBe(
+    'Speech · House of Representatives',
   );
   const view = await mount(<DocumentReader />);
+  expect(textOfId(view, 'doc-meta')).toBe('Speech · House of Representatives');
   const drawn = text(view);
-  expect(drawn).toContain('Speech · House of Representatives · 18 Aug 2026');
-  expect(drawn).not.toMatch(/^Speech$/m);
   expect(drawn).not.toMatch(/Speech date|View original|More by this speaker/);
   expect(view.root.findAllByProps({ testID: 'doc-date' })).toHaveLength(0);
+  // The title is the record's own words, in the record face.
+  const title = view.root.findByType(Heading);
+  expect(title.props).toMatchObject({ level: 1, testID: 'doc-title' });
+  expect(title.props.kind).toBeUndefined();
   await act(async () => view.unmount());
 });
 
@@ -135,72 +159,72 @@ test('the speaker is a person row with their party, opening their profile', asyn
     testID: 'doc-more',
   });
   expect(row.props.party).toBeTruthy();
-  expect(typeof row.props.onPress).toBe('function');
+  expect(row.props.href ?? row.props.onPress).toBeTruthy();
+  expect(typeof row.props.yourMP).toBe('boolean');
   await act(async () => view.unmount());
 });
 
 test('the record has one source line, holding the original, notes and licence', async () => {
   const view = await mount(<DocumentReader />);
-  expect(view.root.findAllByType(ViewOriginal)).toHaveLength(0);
-  expect(view.root.findAllByType(AsAtLine)).toHaveLength(0);
-  const line = view.root.findByProps({ testID: 'doc-source' });
-  expect(line.type).toBe(SourceLine);
+  const line = view.root
+    .findAllByType(SourceLine)
+    .find((node) => node.props.testID === 'doc-source')!;
   expect(line.props).toMatchObject({
+    dateRole: 'recorded',
     citation: [{ label: 'Hansard', title: 'Hansard' }],
     licence: 'CC BY-NC-ND',
     licenceDataset: 'hansard',
-    originals: [
-      expect.objectContaining({
-        label: 'Speech in Hansard',
-        url: speech.url,
-      }),
-    ],
+    originals: [expect.objectContaining({ url: speech.url })],
   });
   await act(async () => view.unmount());
 });
 
-test('Cite, Copy link and Share are one menu; Ask about this is a plain row', async () => {
+test('the bar holds ⋯ only: Cite inline, Copy link, Open on opax.com.au', async () => {
   const view = await mount(<DocumentReader />);
-  expect(
-    view.root
-      .findAllByType(Button)
-      .filter((b) => /Cite|Copy link/.test(b.props.label)),
-  ).toHaveLength(0);
-  const ask = view.root
-    .findAllByType(LinkRow)
-    .find((r) => r.props.testID === 'doc-ask')!;
-  expect(ask.props.icon).toBeUndefined();
-  // The disclosure for similar speeches carries no icon tile either.
-  expect(
-    view.root.findByProps({ testID: 'doc-similar' }).props.icon,
-  ).toBeUndefined();
+  expect(barLabels()).toEqual(['More']);
+  // Ask about this and Share are the bottom toolbar on iPhone.
+  const toolbar = view.root.findAll(
+    (node) => (node.type as unknown) === 'ToolbarButton',
+  );
+  expect(toolbar.map((node) => node.props.accessibilityLabel)).toEqual(
+    expect.arrayContaining(['Ask about this record']),
+  );
+  // No drawn Ask row on iPhone (pane and Android only).
+  expect(view.root.findAllByProps({ testID: 'doc-ask' })).toHaveLength(0);
   await act(async () => view.unmount());
   const target = { slug: 'speech-1205524', title: 'A speech' };
-  expect(recordActions(target).map((a) => a.title)).toEqual([
+  const actions = recordActions(target);
+  expect(actions.map((a) => a.title)).toEqual([
     'Cite',
     'Copy link',
-    'Share',
+    'Open on opax.com.au',
   ]);
-  expect(recordActions({ slug: '../nope', title: 'x' })).toEqual([]);
-  const item = recordMenuItem(target);
-  expect(Platform.OS).toBe('ios');
-  expect(item).toMatchObject({ type: 'menu', label: 'More' });
-  expect(
-    (item as Extract<typeof item, { type: 'menu' }>).menu.items.map(
-      (i) => (i as { label: string }).label,
-    ),
-  ).toEqual(['Cite', 'Copy link', 'Share']);
-  expect(
-    menuLeaves(recordPageActions(target)).map((action) => action.title),
-  ).toEqual(['Cite', 'Copy link', 'Open on opax.com.au']);
+  expect(actions[0]).toMatchObject({ inline: true });
+  expect(menuLeaves(actions).map((a) => a.title)).toEqual([
+    'Copy APA 7',
+    'Copy AGLC',
+    'Copy BibTeX',
+    'Copy RIS',
+    'Citation formats…',
+    'Copy link',
+    'Open on opax.com.au',
+  ]);
+  const item = recordBarItems(target)()[0]!;
+  expect(item).toMatchObject({
+    type: 'menu',
+    label: 'More',
+    accessibilityLabel: 'More for this record',
+  });
   const inline = await mount(<RecordActions {...target} />);
   expect(inline.toJSON()).toBeNull();
   await act(async () => inline.unmount());
 });
 
-test('an embedded reader draws its ⋯ beside the meta line', async () => {
+test('an embedded reader draws Ask about this as a row under the source line', async () => {
   const view = await mount(<DocumentReader embedded />);
-  expect(view.root.findAllByType(RecordActions)).toHaveLength(1);
+  expect(
+    view.root.findAllByProps({ testID: 'doc-ask' }).length,
+  ).toBeGreaterThan(0);
   await act(async () => view.unmount());
 });
 
@@ -232,7 +256,17 @@ test('each record kind names its own source and only a verified licence', () => 
   expect(state.licence).toBeUndefined();
 });
 
-test('the bill-text reader: no kicker, one source line per block, a machine pill', async () => {
+const textOfId = (view: TestRenderer.ReactTestRenderer, testID: string) =>
+  view.root
+    .findAll((node) => node.props.testID === testID)
+    .slice(0, 1)
+    .flatMap((node) => node.findAllByType(NativeText))
+    .map((n) => n.props.children)
+    .flat(Infinity)
+    .filter((c) => typeof c === 'string')
+    .join('');
+
+function mockBillText() {
   jest
     .mocked(records.billManifest)
     .mockResolvedValue(
@@ -254,62 +288,107 @@ test('the bill-text reader: no kicker, one source line per block, a machine pill
           ),
         ) as never,
     );
+}
+
+test('bill text opens on its text with the stage, one source line and the bar items', async () => {
+  mockBillText();
   const view = await mount(<BillTextReader />);
-  expect(view.root.findAllByType(AsAtLine)).toHaveLength(0);
-  expect(view.root.findAllByType(ViewOriginal)).toHaveLength(0);
-  expect(
-    view.root.findByProps({ testID: 'bill-text-collected-source' }).props.notes,
-  ).toHaveLength(1);
-  expect(text(view)).not.toMatch(/^Bill text$/m);
-  await act(async () =>
-    view.root.findByProps({ testID: 'bill-text-read' }).props.onPress(),
+  expect(records.billVersion).toHaveBeenCalledWith(
+    'au-federal-r7534',
+    'r7534-aspassed',
   );
-  const source = view.root.findByProps({ testID: 'bill-text-source' });
-  expect(source.type).toBe(SourceLine);
-  expect(source.props.originals).toHaveLength(1);
-  expect(view.root.findAllByProps({ testID: 'bill-text-info' })).toHaveLength(
+  expect(view.root.findAllByProps({ testID: 'bill-text-read' })).toHaveLength(
     0,
   );
-  if (view.root.findAllByProps({ testID: 'bill-text-overview' }).length)
-    expect(
-      view.root
-        .findAllByType(MachineLabel)
-        .some((l) => l.props.testID === 'bill-text-overview-label'),
-    ).toBe(true);
+  expect(textOfId(view, 'bill-text-meta')).toBe('Bill text');
+  expect(textOfId(view, 'bill-text-stage')).toBe(
+    'As passed: synthetic fixture',
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'reader-text-0' }).length,
+  ).toBeGreaterThan(0);
+  const source = view.root
+    .findAllByType(SourceLine)
+    .find((node) => node.props.testID === 'bill-text-source')!;
+  expect(source.props).toMatchObject({
+    dateRole: 'recorded',
+    licenceDataset: 'bills',
+  });
+  expect(source.props.originals).toHaveLength(1);
+  expect(barLabels()).toEqual(['As passed', 'Contents', 'More']);
+  // The overview is a closed disclosure with its machine pill inside.
+  const overview = view.root.find(
+    (node) =>
+      node.props.testID === 'bill-text-overview' && !!node.props.onPress,
+  );
+  await act(async () => overview.props.onPress());
+  expect(
+    view.root
+      .findAllByType(MachinePill)
+      .some((pill) => pill.props.testID === 'bill-text-overview-label'),
+  ).toBe(true);
   await act(async () => view.unmount());
 });
 
-test('Just added: the indexed-date note is in a source line, not an ⓘ', async () => {
+test('choosing another version from the bar menu loads it in place', async () => {
+  mockBillText();
+  const view = await mount(<BillTextReader />);
+  const version = (
+    mockOptions.unstable_headerRightItems as () => {
+      label: string;
+      menu?: { items: { label: string; state: string; onPress: () => void }[] };
+    }[]
+  )()[0]!;
+  expect(version.menu!.items.map((item) => [item.label, item.state])).toEqual([
+    ['As passed: synthetic fixture, 1 Oct 2026', 'on'],
+    ['First reading: synthetic fixture, 1 Oct 2026', 'off'],
+  ]);
+  await act(async () => version.menu!.items[1]!.onPress());
+  expect(records.billVersion).toHaveBeenLastCalledWith(
+    'au-federal-r7534',
+    'r7534-first-reps',
+  );
+  expect(textOfId(view, 'bill-text-stage')).toBe(
+    'First reading: synthetic fixture',
+  );
+  await act(async () => view.unmount());
+});
+
+test('Just added: rows are record rows grouped by the day added, with a source line', async () => {
   jest
     .mocked(records.recent)
     .mockResolvedValue(record(decodeRecent(responses['/api/recent'])));
   const view = await mount(<RecentRecords />);
+  expect(textOfId(view, 'recent-title')).toBe('Just added');
+  const rows = view.root.findAllByType(RecordRow);
+  expect(rows).toHaveLength(3);
+  for (const row of rows) {
+    expect(row.props.title).not.toMatch(/—|\d{4}-\d{2}-\d{2}/);
+    expect(row.props.meta).toBeTruthy();
+    expect(
+      (row.props.menu as { title: string }[]).map((item) => item.title),
+    ).toContain('Cite');
+  }
   const line = view.root.findByProps({ testID: 'recent-source' });
+  expect(line.props.citation).toBe('OPAX');
   expect(line.props.notes[0]).toMatch(/date.*added to OPAX/);
-  expect(view.root.findAllByProps({ testID: 'recent-info' })).toHaveLength(0);
+  expect(text(view)).not.toMatch(/indexed|Just added to the record/i);
   await act(async () => view.unmount());
 });
 
-test('Just added explains a successful empty response and keeps its source line', async () => {
+test('Just added says so when nothing is new, without a loading state', async () => {
   jest.mocked(records.recent).mockResolvedValue(record([]));
   const view = await mount(<RecentRecords />);
-  expect(
-    view.root
-      .findAllByType(SectionHeader)
-      .filter((node) => node.props.title === 'New in OPAX'),
-  ).toHaveLength(1);
-  expect(view.root.findByType(EmptyState).props.message).toBe(
-    'No new records yet.',
+  expect(view.root.findByType(ContentUnavailable).props.title).toBe(
+    'No new records yet',
   );
-  expect(view.root.findAllByType(LoadingState)).toHaveLength(0);
-  expect(text(view)).not.toContain('Loading new records');
-  expect(
-    view.root.findAllByProps({ testID: 'recent-source' }).length,
-  ).toBeGreaterThan(0);
+  expect(view.root.findAllByProps({ testID: 'recent-loading' })).toHaveLength(
+    0,
+  );
   await act(async () => view.unmount());
 });
 
-test('Just added shows its loading state without empty copy before the first response', async () => {
+test('Just added shows its loading state before the first response', async () => {
   let finish!: (value: Awaited<ReturnType<typeof records.recent>>) => void;
   jest.mocked(records.recent).mockImplementationOnce(
     () =>
@@ -319,48 +398,28 @@ test('Just added shows its loading state without empty copy before the first res
   );
   const view = await mount(<RecentRecords />);
   expect(
-    view.root
-      .findAllByType(SectionHeader)
-      .filter((node) => node.props.title === 'New in OPAX'),
-  ).toHaveLength(1);
-  expect(view.root.findByType(LoadingState).props.label).toBe(
-    'Loading new records',
-  );
-  expect(view.root.findAllByType(EmptyState)).toHaveLength(0);
-  expect(text(view)).not.toContain('No new records yet.');
+    view.root.findAllByProps({ testID: 'recent-loading' }).length,
+  ).toBeGreaterThan(0);
+  expect(text(view)).not.toContain('No new records yet');
   await act(async () => finish(record([])));
-  expect(view.root.findAllByType(LoadingState)).toHaveLength(0);
-  expect(view.root.findByType(EmptyState).props.message).toBe(
-    'No new records yet.',
+  expect(view.root.findAllByProps({ testID: 'recent-loading' })).toHaveLength(
+    0,
   );
   await act(async () => view.unmount());
 });
 
-test('Just added keeps a refresh error visible when its saved response is empty', async () => {
-  const retry = jest.fn();
-  const read = jest.spyOn(recordReads, 'useRead').mockReturnValue({
-    value: record([]),
-    error: new Error('Unavailable'),
-    retry,
+test('Just added: a failed first read offers Try again', async () => {
+  jest
+    .mocked(records.recent)
+    .mockRejectedValueOnce(new Error('Unavailable'))
+    .mockResolvedValue(record([]));
+  const view = await mount(<RecentRecords />);
+  const failure = view.root.findByType(ContentUnavailable);
+  expect(failure.props).toMatchObject({
+    title: "New records couldn't be loaded",
+    testID: 'recent-error',
   });
-  let view: TestRenderer.ReactTestRenderer | undefined;
-  try {
-    view = await mount(<RecentRecords />);
-    expect(
-      view.root
-        .findAllByType(SectionHeader)
-        .filter((node) => node.props.title === 'New in OPAX'),
-    ).toHaveLength(1);
-    const failure = view.root.findByType(ErrorState);
-    expect(view.root.findAllByType(LoadingState)).toHaveLength(0);
-    expect(view.root.findAllByType(EmptyState)).toHaveLength(0);
-    expect(
-      view.root.findAllByProps({ testID: 'recent-source' }).length,
-    ).toBeGreaterThan(0);
-    await act(async () => failure.props.onRetry());
-    expect(retry).toHaveBeenCalledTimes(1);
-  } finally {
-    if (view) await act(async () => view!.unmount());
-    read.mockRestore();
-  }
+  await act(async () => failure.props.action.onPress());
+  expect(records.recent).toHaveBeenCalledTimes(2);
+  await act(async () => view.unmount());
 });
