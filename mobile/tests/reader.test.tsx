@@ -122,21 +122,53 @@ test('Ask about this in the toolbar drafts a question and never sends it', async
   await act(async () => view.unmount());
 });
 
+const org = 'Example Research Ltd';
 test.each([
   [
     'with a recipient id',
-    { recipient_id: 'org-123', recipient_name: 'Example Research Ltd' },
-    true,
+    { recipient_id: 'org-123', recipient_name: org },
+    {},
+    'federal',
   ],
-  ['without a recipient id', { recipient_name: 'Example Research Ltd' }, false],
-])(
+  ['without a recipient id', { recipient_name: org }, {}, null],
+  // A private individual is never named or linked (money-public/privacy.ts).
+  [
+    'to a named person',
+    { recipient_id: 'org-124', recipient_name: 'Mr John Smith' },
+    {},
+    null,
+  ],
+  [
+    'to a person id',
+    { recipient_id: 'person:42', recipient_name: org },
+    {},
+    null,
+  ],
+  [
+    'in Queensland',
+    {
+      recipient_id: 'org-123',
+      recipient_name: org,
+      jurisdiction: 'Queensland',
+    },
+    {},
+    'qld',
+  ],
+  // Money records know federal and Queensland only.
+  [
+    'labelled NSW',
+    { recipient_id: 'org-123', recipient_name: org },
+    { state: 'nsw' },
+    'federal',
+  ],
+] as const)(
   'a grant record %s: the organisation row follows',
-  async (_case, metadata, shown) => {
+  async (_case, metadata, labels, jur) => {
     jest.mocked(records.document).mockResolvedValue(
       record({
         ...speech,
         speaker: null,
-        labels: { ...speech.labels, kind: 'grant_award' },
+        labels: { ...speech.labels, ...labels, kind: 'grant_award' },
         metadata: { ...speech.metadata, ...metadata },
       }),
     );
@@ -144,14 +176,11 @@ test.each([
     const rows = view.root
       .findAllByType(LinkRow)
       .filter((row) => row.props.testID === 'doc-organisation');
-    if (shown) {
+    if (jur) {
       expect(rows).toHaveLength(1);
-      expect(rows[0]!.props.title).toBe('Open Example Research Ltd');
+      expect(rows[0]!.props.title).toBe(`Open ${org}`);
       expect(rows[0]!.props.href).toEqual(
-        moneyRecordRoute(
-          { rid: 'org-123', jur: 'federal' },
-          'Example Research Ltd',
-        ),
+        moneyRecordRoute({ rid: 'org-123', jur }, org),
       );
     } else expect(rows).toHaveLength(0);
     await act(async () => view.unmount());

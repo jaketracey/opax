@@ -57,6 +57,7 @@ import { CachedPortrait } from '../CachedPortrait';
 import { documentQuestion } from '../ask/DocumentAsk';
 import { useOpenAsk } from '../ask/open';
 import { useIsMyMember } from '../your-mp/useIsMyMember';
+import { isOrganisation } from '../money-public/privacy';
 import type { Records } from './data';
 import { records } from './runtime';
 import {
@@ -672,6 +673,11 @@ function RecordSourceLine({
 }
 
 /** A grant or contract record names its recipient or supplier's money page. */
+/**
+ * The grant recipient or contract supplier, when the record names an
+ * organisation with an id. A private individual is never named or linked
+ * (money-public/privacy.ts, App Review 5.1.1).
+ */
 function organisationOf(doc: DocumentRecord) {
   const kind = doc.labels.kind ?? '';
   if (!/^(grant_award|grant|contract)$/.test(kind)) return null;
@@ -687,13 +693,27 @@ function organisationOf(doc: DocumentRecord) {
       }
     return '';
   };
+  const abr = [doc.metadata.abr, fields.abr].find(
+    (value): value is Record<string, unknown> =>
+      !!value && typeof value === 'object',
+  );
   const rid = read('recipient_id', 'supplier_id', 'rid');
   const name = read('recipient_name', 'supplier_name', 'organisation');
   if (!rid || !name) return null;
+  // The money data's own fields: the entity kind and the ABN entity type.
+  const entity = read('recipient_kind', 'supplier_kind', 'entity_type', 'k');
+  const abnType =
+    read('abn_type') ||
+    (typeof abr?.etype === 'string' ? abr.etype : '') ||
+    read('entity_type');
+  if (!isOrganisation(name, entity || undefined, abnType || undefined, rid))
+    return null;
+  // Money records know federal and Queensland only.
+  const place = read('jur', 'jurisdiction') || doc.labels.state || '';
   return {
     rid,
     name,
-    jur: read('jur', 'jurisdiction') || doc.labels.state || 'federal',
+    jur: /^(qld|queensland)$/i.test(place) ? 'qld' : 'federal',
   };
 }
 function OrganisationRow({
