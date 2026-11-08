@@ -128,6 +128,8 @@ export function decodeRecent(value: unknown): RecentFeed {
       dropped = true;
     }
   }
+  // One bad row is dropped; a feed with no readable row at all is unreadable.
+  if (dropped && !items.length) invalid();
   if (dropped) items.partial = true;
   return items;
 }
@@ -140,6 +142,15 @@ export function decodeSimilar(value: unknown) {
       speaker: optional(text)(raw.speaker) ?? null,
       date: optional(date)(raw.date) ?? null,
       snippet: optional(text)(raw.snippet) ?? '',
+      party: optionalText(raw.party) ?? null,
+      chamber: optionalText(raw.chamber) ?? null,
+      url: (() => {
+        try {
+          return optional(url)(raw.url) ?? null;
+        } catch {
+          return null;
+        }
+      })(),
     };
   })(object(value).results);
 }
@@ -260,16 +271,33 @@ export function decodeBillText(value: unknown) {
   };
 }
 
-/** Contiguous source slices. Never elide words or cut a sentence for a preview. */
+/**
+ * Contiguous source slices that break at paragraph ends, so a quote inside
+ * one paragraph selects in one drag. A paragraph longer than the target
+ * splits at a sentence end. Never elide words or cut a sentence.
+ */
 export function textChunks(text: string, target = 1200): string[] {
   const chunks: string[] = [];
   let start = 0;
+  let paragraph = 0;
   for (const match of text.matchAll(/[.!?]["'”’)]*(?=\s|$)|\r?\n/g)) {
     const end = match.index! + match[0].length;
-    if (end - start >= target) {
-      chunks.push(text.slice(start, end));
-      start = end;
+    if (match[0].endsWith('\n')) {
+      if (end - start >= target) {
+        chunks.push(text.slice(start, end));
+        start = end;
+      }
+      paragraph = end;
+      continue;
     }
+    if (end - paragraph < target || end - start < target) continue;
+    // A long paragraph: what came before it is its own slice.
+    if (paragraph > start) {
+      chunks.push(text.slice(start, paragraph));
+      start = paragraph;
+    }
+    chunks.push(text.slice(start, end));
+    start = end;
   }
   if (start < text.length) chunks.push(text.slice(start));
   return chunks;

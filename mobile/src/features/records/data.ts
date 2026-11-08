@@ -16,16 +16,30 @@ export class Records {
   // In-flight requests are shared too. Failed reads are evicted for a deliberate retry.
   private session = new Map<string, Promise<RecordResult<unknown>>>();
   constructor(private client: Pick<ApiClient, 'get'>) {}
-  private read<T>(path: string, decode: Decoder<T>): Promise<RecordResult<T>> {
-    let pending = this.session.get(path);
-    if (!pending) {
-      pending = this.client.get(path, decode).catch((error) => {
-        this.session.delete(path);
-        throw error;
-      });
-      this.session.set(path, pending);
-    }
+  /**
+   * `fresh` (a pull to refresh) bypasses the session copy for this one path.
+   * A failed fresh read keeps the copy already held, so the list stays.
+   */
+  private read<T>(
+    path: string,
+    decode: Decoder<T>,
+    { fresh = false }: { fresh?: boolean } = {},
+  ): Promise<RecordResult<T>> {
+    const held = this.session.get(path);
+    if (held && !fresh) return held as Promise<RecordResult<T>>;
+    const pending = this.client.get(path, decode, fresh).catch((error) => {
+      if (this.session.get(path) === pending) {
+        if (held && fresh) this.session.set(path, held);
+        else this.session.delete(path);
+      }
+      throw error;
+    });
+    this.session.set(path, pending);
     return pending as Promise<RecordResult<T>>;
+  }
+  /** A session copy already held for a path, without a request. */
+  held(path: string): boolean {
+    return this.session.has(path);
   }
   document(slug: string) {
     recordSlug(slug);
@@ -35,8 +49,8 @@ export class Records {
       return doc;
     });
   }
-  recent() {
-    return this.read('/api/recent', decodeRecent);
+  recent({ fresh = false }: { fresh?: boolean } = {}) {
+    return this.read('/api/recent', decodeRecent, { fresh });
   }
   similar(doc: DocumentRecord, knownTopics: ReadonlySet<string>) {
     const params = new URLSearchParams({

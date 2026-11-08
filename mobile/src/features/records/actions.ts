@@ -2,11 +2,15 @@ import { Alert, AccessibilityInfo } from 'react-native';
 import { OpaxShare } from '../../../modules/opax-share';
 import { haptic } from '../../design/haptics';
 import { isE2E } from '../../design/environment';
-export async function copyText(text: string): Promise<boolean> {
+/** Copies text; VoiceOver hears `announcement` ("Copied BibTeX citation"). */
+export async function copyText(
+  text: string,
+  announcement = 'Copied',
+): Promise<boolean> {
   try {
     if (!OpaxShare) throw new Error('Copy is unavailable in this build.');
     await OpaxShare.copyText(text);
-    AccessibilityInfo.announceForAccessibility('Copied');
+    AccessibilityInfo.announceForAccessibility(announcement);
     return true;
   } catch {
     Alert.alert('Copy', 'This text could not be copied.');
