@@ -144,11 +144,13 @@ describe.each(scenarios)('%s', (_name, os, voice, offered) => {
     expect(voiceLinked).toBe(offered);
   });
 
-  test('the root bar keeps Account and Talk is reached from Ask', () => {
+  test('the interim Ask bar keeps Account and offers Talk when linked', () => {
     const items = asBuild(os, voice(), () =>
       jest.requireActual('../src/navigation/chrome').rootHeaderItems(),
     ) as { label: string; accessibilityLabel: string }[];
-    expect(items.map((item) => item.label)).toEqual(['Account']);
+    expect(items.map((item) => item.label)).toEqual(
+      offered ? ['Account', 'Talk'] : ['Account'],
+    );
     expect(items[0]!.accessibilityLabel).toBe('Account');
   });
 
