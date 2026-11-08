@@ -140,11 +140,14 @@ export function SeatGrants({
   );
   const status = useCatalogRecord(load),
     data = status.record?.data;
+  // A seat that isn't a federal division has no block at all
+  // (journeys/money.md 7, specs/your-mp.md 3.6).
+  if (variant === 'seat-home' && !eligible) return null;
   if (variant === 'seat-home')
     return (
       <View testID="seat-grants" style={{ gap: rhythm.tight }}>
         <SectionHeader title={`Grants in ${name}`} testID="seat-grants-title" />
-        {data && eligible ? (
+        {data ? (
           <SeatFigure
             index={data}
             record={status.record}
@@ -152,10 +155,6 @@ export function SeatGrants({
             state={state}
             testID="seat-grants"
           />
-        ) : data ? (
-          <Text wordSafe testID="seat-grants-unmatched">
-            {noSeatMatch(name)}
-          </Text>
         ) : status.error ? (
           <InlineError
             subject="Grants"

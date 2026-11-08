@@ -123,6 +123,22 @@ describe('SeatGrants with no variant renders exactly as before', () => {
     expect(r.root.findAllByType(FigureBlock)).toHaveLength(0);
     await act(async () => r.unmount());
   });
+  test('an ineligible seat keeps the old sentence and rows', async () => {
+    const r = await render(
+      <SeatGrants name={seat.name} state={seat.state} eligible={false} />,
+    );
+    expect(r.root.findAllByType(BigFigure)).toHaveLength(0);
+    const text = r.root
+      .findAll((n) => typeof n.props.children === 'string')
+      .map((n) => n.props.children as string);
+    expect(text).toContain(
+      'No matching federal division in the grant records. This is not a zero total.',
+    );
+    expect(
+      r.root.findAllByType(LinkRow).map((row) => row.props.testID),
+    ).toEqual(['seat-grants-all', 'seat-public-money']);
+    await act(async () => r.unmount());
+  });
   test('an unmatched seat says it is not a zero total', async () => {
     const r = await render(<SeatGrants name="Nowhere" state="NSW" />);
     const text = r.root
@@ -169,6 +185,19 @@ describe('SeatGrants variant="seat-home"', () => {
       noSeatMatch('Nowhere'),
     );
     expect(r.root.findAllByType(SourceLine).length).toBeGreaterThan(0);
+    await act(async () => r.unmount());
+  });
+  test('a seat that is not a federal division draws no block at all', async () => {
+    const r = await render(
+      <SeatGrants
+        name={seat.name}
+        state={seat.state}
+        eligible={false}
+        variant="seat-home"
+      />,
+    );
+    expect(r.toJSON()).toBeNull();
+    expect(byID(r.root, 'seat-grants')).toHaveLength(0);
     await act(async () => r.unmount());
   });
   test('a failed read is an inline error, not a blank block', async () => {
