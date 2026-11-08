@@ -62,6 +62,9 @@ export function useStackChrome() {
   const sizes = navigationTitleSizes(fontScale);
   return {
     headerTintColor: colors.navy,
+    // Inline and sheet bars must not inherit Expo's transparent form-sheet
+    // default. Large-title roots opt into translucency for native collapse.
+    headerTransparent: false,
     ...opaqueBar(),
     headerTitleStyle: {
       fontFamily: textStyles.inlineTitle.fontFamily,
@@ -79,7 +82,10 @@ export function useStackChrome() {
       ...(headingFace === 'serif' ? { fontSize: sizes.largeTitle } : {}),
       color: colors.ink,
     },
-    scrollEdgeEffects: { top: 'soft' as const, bottom: 'soft' as const },
+    // The soft top edge lets record text remain legible behind bar items on
+    // iOS 27. Use UIKit's defined top boundary, retaining its system material
+    // and the soft edge at the minimising tab bar. No custom fill or blur.
+    scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,
@@ -261,14 +267,14 @@ export function pageItems(props: {
   filters?: { active: boolean; href: Href };
   menu: RowMenuAction[];
 }): () => NativeStackHeaderItem[] {
-  // Native items are ordered outside in: index zero is the rightmost item.
+  // iOS 27 renders these in visual order: the last item is rightmost.
   return () => [
-    pageMenu({ name: props.name, items: props.menu }),
     ...(props.filters
       ? [filtersItem(props.filters)]
       : props.share && canShare
         ? [shareItem({ name: props.name, onPress: props.share })]
         : []),
+    pageMenu({ name: props.name, items: props.menu }),
   ];
 }
 
@@ -295,9 +301,7 @@ export function androidHeaderBar(items: NativeStackHeaderItem[]) {
   return createElement(
     View,
     { style: { flexDirection: 'row' } },
-    ...((items[0]?.type === 'button' && items[0].label === 'Account') ||
-    (items[0]?.type === 'menu' &&
-      items[0].accessibilityLabel?.startsWith('More for '))
+    ...(items[0]?.type === 'button' && items[0].label === 'Account'
       ? [...items].reverse()
       : items
     ).map((item, index) =>
@@ -396,4 +400,6 @@ export const shortSheet = {
     Platform.OS === 'android' ? ('modal' as const) : ('formSheet' as const),
   sheetAllowedDetents: [0.5, 1] as number[],
   sheetGrabberVisible: true,
+  sheetExpandsWhenScrolledToEdge: true,
+  headerTransparent: false,
 };

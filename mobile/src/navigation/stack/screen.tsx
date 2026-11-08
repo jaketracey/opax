@@ -58,6 +58,7 @@ export function tabRootScreen(
     ? [
         screen(name, title, {
           headerLargeTitleEnabled: true,
+          headerTransparent: Platform.OS === 'ios',
           ...headerItems(() =>
             rootHeaderItems({ segment: expected, signedIn }),
           ),

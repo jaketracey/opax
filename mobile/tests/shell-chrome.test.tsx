@@ -12,6 +12,9 @@ import {
   rootHeaderItems,
   askHeaderItems,
   opaqueBar,
+  useStackChrome,
+  shortSheet,
+  androidHeaderBar,
 } from '../src/navigation/chrome';
 import {
   useTitleOnScroll,
@@ -174,17 +177,48 @@ test('a pushed page has More outermost and one direct action, with no menu title
     ],
   })();
   expect(items).toHaveLength(2);
-  expect(items[0]).toMatchObject({
+  expect(items[1]).toMatchObject({
     type: 'menu',
     accessibilityLabel: 'More for Member',
     icon: { name: 'ellipsis.circle' },
   });
-  expect(items[1]).toMatchObject({
+  expect(items[0]).toMatchObject({
     type: 'button',
     accessibilityLabel: 'Filters, on',
   });
   const menu = pageMenu({ name: 'Member', items: [] });
   expect(menu.type === 'menu' && menu.menu).not.toHaveProperty('title');
+});
+test('page Share precedes More in native and Android bars', () => {
+  const items = pageItems({ name: 'Money map', share: jest.fn(), menu: [] })();
+  expect(items.map((item) => 'label' in item && item.label)).toEqual([
+    'Share',
+    'More',
+  ]);
+  const view = tree(androidHeaderBar(items));
+  expect(
+    view.root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'button',
+      )
+      .map((node) => node.props.accessibilityLabel),
+  ).toEqual(['Share Money map', 'More for Money map']);
+  act(() => view.unmount());
+});
+test('inline and sheet bars cover content and roots keep a native scroll edge', () => {
+  let chrome!: ReturnType<typeof useStackChrome>;
+  function Harness() {
+    chrome = useStackChrome();
+    return null;
+  }
+  const view = tree(<Harness />);
+  expect(chrome.headerTransparent).toBe(false);
+  expect(chrome.scrollEdgeEffects).toEqual({ top: 'hard', bottom: 'soft' });
+  expect(shortSheet.headerTransparent).toBe(false);
+  expect(shortSheet.sheetExpandsWhenScrolledToEdge).toBe(true);
+  act(() => view.unmount());
 });
 test('iOS 26 leaves material to the system and older bars accept the screen ground', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
@@ -293,6 +327,7 @@ jest.mock('../src/design/flags', () => ({
 
 test.each([
   [26, true, ['(today)', '(your-mp)', '(bills)', '(ask)', '(search)']],
+  [27, true, ['(today)', '(your-mp)', '(bills)', '(ask)', '(search)']],
   [18, true, ['(today)', '(your-mp)', '(bills)', '(search)', '(ask)']],
   [26, false, ['(today)', '(your-mp)', '(bills)', '(search)', '(ask)']],
 ])('iOS %s honours the search role flag %s', (version, enabled, order) => {
@@ -309,7 +344,10 @@ test.each([
   expect(tabs.map((tab) => tab.props.name)).toEqual(order);
   const search = tabs.find((tab) => tab.props.name === '(search)')!;
   expect(search.props.role).toBe(
-    version === 26 && enabled ? 'search' : undefined,
+    (version as number) >= 26 && enabled ? 'search' : undefined,
+  );
+  expect(search.findByType(NativeTabs.Trigger.Label).props.children).toBe(
+    'Search',
   );
   expect(view.root.findByType(NativeTabs).props.minimizeBehavior).toBe(
     'onScrollDown',
