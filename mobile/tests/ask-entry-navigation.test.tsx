@@ -31,6 +31,10 @@ const shared = {
   'party/[slug]': entry('party'),
   'electorate/[id]': entry('electorate'),
   'doc/[slug]': record,
+  money: () => <Text>Money map</Text>,
+  'results/[kind]': () => <Text>Results</Text>,
+  'topic/[slug]': () => <Text>Topic</Text>,
+  'money-record': () => <Text>Money record</Text>,
 };
 const prefix = (group: string) =>
   Object.fromEntries(
@@ -44,6 +48,9 @@ const app = inMemoryContext({
   _layout: () => <Stack screenOptions={{ headerShown: false }} />,
   '(tabs)/_layout': () => <Tabs />,
   '(tabs)/(today)/index': () => <Text>Today</Text>,
+  '(tabs)/(your-mp)/your-mp': () => <Text>Your MP</Text>,
+  '(tabs)/(bills)/bills': () => <Text>Bills</Text>,
+  '(tabs)/(search)/search': () => <Text>Search</Text>,
   ...prefix('(today,your-mp,bills,search,ask)'),
   '(tabs)/(today,your-mp,bills,search,ask)/ask': AskDraft,
 });
@@ -100,5 +107,31 @@ test.each(entries)(
     expect(route().segments).toEqual(['(tabs)', '(ask)', 'ask']);
     expect(route().params.question).toMatch(/\?$/);
     expect(router.canGoBack()).toBe(false);
+  },
+);
+
+test.each([
+  ['today', '/'],
+  ['your-mp', '/your-mp'],
+  ['bills', '/bills'],
+  ['search', '/search'],
+  ['ask', '/ask'],
+])(
+  '%s keeps Ask, money and all shared details in its own stack',
+  async (tab, root) => {
+    await render();
+    await act(async () =>
+      router.navigate(`/(tabs)/(${tab})${root === '/' ? '' : root}`),
+    );
+    for (const path of [
+      '/money',
+      '/results/speech',
+      '/topic/housing',
+      '/money-record?rid=org',
+      '/ask',
+    ]) {
+      await act(async () => router.push(path));
+      expect(route().segments[1]).toBe(`(${tab})`);
+    }
   },
 );

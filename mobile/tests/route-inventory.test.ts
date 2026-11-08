@@ -1,0 +1,427 @@
+import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import React, { act } from 'react';
+import TestRenderer from 'react-test-renderer';
+import { Stack } from 'expo-router';
+import SharedLayout from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
+import RootLayout from '../src/app/_layout';
+import AccountLayout from '../src/app/account/_layout';
+import LicenceLayout from '../src/app/licence/_layout';
+import TalkLayout from '../src/app/talk/_layout';
+import SeatLayout from '../src/app/seat/_layout';
+import WelcomeLayout from '../src/app/welcome/_layout';
+import * as routes from '../src/navigation/routes';
+
+jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  const Screen = () => null;
+  const Protected = ({ children }: { children: React.ReactNode }) => children;
+  const Stack = ({ children }: { children: React.ReactNode }) => {
+    React.Children.forEach(children, (child: React.ReactElement) => {
+      if (child && child.type !== Screen && child.type !== Protected)
+        throw new Error('Stack children must be direct screens');
+    });
+    return React.createElement(React.Fragment, null, children);
+  };
+  Stack.Screen = Screen;
+  Stack.Protected = Protected;
+  return { Stack, router: { push: jest.fn(), back: jest.fn() } };
+});
+jest.mock('../src/navigation/KeyboardShortcuts', () => ({
+  KeyboardShortcuts: () => null,
+}));
+jest.mock('../src/launch/splash', () => ({}));
+jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
+jest.mock('../src/onboarding/state', () => ({
+  useTourState: () => 'hidden',
+  checkFirstLaunch: jest.fn(),
+  hideTour: jest.fn(),
+  leaveTour: jest.fn(),
+}));
+jest.mock('../src/onboarding/WelcomeTour', () => ({ WelcomeTour: () => null }));
+jest.mock('../src/launch/LaunchHandoff', () => ({ LaunchHandoff: () => null }));
+jest.mock('../src/features/account/store', () => ({
+  useAccount: () => ({ status: null }),
+  accountSnapshot: () => ({ status: null }),
+}));
+jest.mock('../src/voice/linked', () => ({ voiceLinked: true }));
+jest.mock('../src/design/environment', () => ({
+  isProduction: false,
+  hasSourcePreview: true,
+  isE2E: true,
+  webOrigin: 'https://opax.invalid',
+}));
+
+const app = resolve(__dirname, '../src/app');
+const sharedFolder = '(tabs)/(today,your-mp,bills,search,ask)';
+const layouts = {
+  shared: SharedLayout,
+  root: RootLayout,
+  account: AccountLayout,
+  licence: LicenceLayout,
+  talk: TalkLayout,
+  seat: SeatLayout,
+  welcome: WelcomeLayout,
+};
+function names(kind: keyof typeof layouts, segment = '(today)') {
+  let tree!: TestRenderer.ReactTestRenderer;
+  const Layout = layouts[kind];
+  act(() => {
+    tree = TestRenderer.create(React.createElement(Layout, { segment }));
+  });
+  const result = tree.root
+    .findAllByType(Stack.Screen)
+    .map((node) => node.props.name as string);
+  expect(new Set(result).size).toBe(result.length);
+  act(() => tree.unmount());
+  return result;
+}
+
+// Each inventory row specifies its actual stack, registration and file.
+const shared = [
+  'edition',
+  'members',
+  'election',
+  'electorate-date',
+  'follows',
+  'person/[slug]',
+  'person/[slug]/votes',
+  'person/[slug]/speeches',
+  'person/[slug]/interests',
+  'party-sources',
+  'party/[slug]',
+  'bill-list',
+  'bill/[key]',
+  'record-list',
+  'bill-text-contents/[key]',
+  'results/[kind]',
+  'consent',
+  'filters/ask',
+  'conversations',
+  'ask-report',
+  'money',
+  'money-node',
+  'money-record',
+  'money-item',
+  'money-donors',
+  'funding-by-seat-type',
+  'agency-list',
+  'connection',
+  'explore/index',
+  'explore/[tool]',
+  'explore/photo',
+  'explore/tide-table',
+  'explore/years',
+  ...[
+    'bills',
+    'divisions',
+    'directory',
+    'declarations',
+    'connections',
+    'search',
+    'money',
+    'allocation',
+  ].map((list) => `filters/${list}`),
+];
+const inventory: [keyof typeof layouts, string, string][] = [
+  ...shared.map(
+    (name) =>
+      ['shared', name, `${sharedFolder}/${name}`] as [
+        keyof typeof layouts,
+        string,
+        string,
+      ],
+  ),
+  ...[
+    'consent',
+    'sign-in/code',
+    'delete/code',
+    'coverage',
+    'methods',
+    'sources/datasets',
+    'sources/dataset/[id]',
+    'sources/portraits',
+    'sources/photos',
+    'sources/fonts',
+    'ask',
+    'conversations',
+  ].map(
+    (name) =>
+      ['account', name, `account/${name}`] as [
+        keyof typeof layouts,
+        string,
+        string,
+      ],
+  ),
+  ...['[id]', 'sources/[...path]'].map(
+    (name) =>
+      ['licence', name, `licence/${name}`] as [
+        keyof typeof layouts,
+        string,
+        string,
+      ],
+  ),
+  ...['index', 'consent', 'sources', 'record', 'sign-in', 'sign-in/code'].map(
+    (name) =>
+      ['talk', name, `talk/${name}`] as [keyof typeof layouts, string, string],
+  ),
+  ...['index', 'state/[code]'].map(
+    (name) =>
+      ['seat', name, `seat/${name}`] as [keyof typeof layouts, string, string],
+  ),
+  ...['index', 'seat/index', 'seat/state/[code]'].map(
+    (name) =>
+      ['welcome', name, `welcome/${name}`] as [
+        keyof typeof layouts,
+        string,
+        string,
+      ],
+  ),
+  ...[
+    'source',
+    'machine-note',
+    'citation',
+    'rule',
+    'licences',
+    'seat',
+    'welcome',
+    'talk',
+    'licence',
+    'account',
+  ].map(
+    (name) => ['root', name, name] as [keyof typeof layouts, string, string],
+  ),
+];
+const registered = new Map<keyof typeof layouts, string[]>();
+beforeAll(() => {
+  for (const kind of Object.keys(layouts) as (keyof typeof layouts)[])
+    registered.set(kind, names(kind));
+});
+test.each(inventory)(
+  '%s registers %s and resolves its file',
+  (kind, name, file) => {
+    expect(registered.get(kind)).toContain(name);
+    expect(
+      [`${file}.tsx`, `${file}/index.tsx`, `${file}/_layout.tsx`].some((path) =>
+        existsSync(resolve(app, path)),
+      ),
+    ).toBe(true);
+  },
+);
+test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'])(
+  '%s has every shared detail and only its root has a large title',
+  (segment) => {
+    const actual = names('shared', segment);
+    for (const screen of shared) expect(actual).toContain(screen);
+    expect(actual).toContain('ask');
+  },
+);
+test('builders retain subject names and destination parameters', () => {
+  expect(routes.personRoute('member', 'Member', 'changes').params).toEqual({
+    slug: 'member',
+    name: 'Member',
+    section: 'changes',
+  });
+  expect(
+    routes.billRoute('bill', 'Bill title', {
+      division: 'vote',
+      section: 'divisions',
+    }).params,
+  ).toEqual({
+    key: 'bill',
+    name: 'Bill title',
+    division: 'vote',
+    section: 'divisions',
+  });
+  expect(
+    routes.resultsRoute('speech', {
+      q: 'housing',
+      group: 'speeches',
+      scope: 'all',
+      speaker: 'member',
+    }).pathname,
+  ).toBe('/results/[kind]');
+  expect(routes.exploreQuizRoute('question').params).toMatchObject({
+    tool: 'quiz',
+    q: 'question',
+  });
+  expect(
+    routes.moneyRecordRoute({ rid: 'org', jur: 'federal', node: 'party:Labor' })
+      .params,
+  ).toEqual({ rid: 'org', jur: 'federal', node: 'party:Labor' });
+  expect(routes.todayFollowsRoute.pathname).toBe('/(tabs)/(today)/follows');
+});
+test('shared barrels and layouts delegate group registrations', () => {
+  for (const file of ['routes.ts', 'external.ts']) {
+    const source = readFileSync(
+      resolve(__dirname, '../src/navigation', file),
+      'utf8',
+    );
+    expect(source).not.toMatch(/pathname:\s*['"]|Stack.Screen/);
+  }
+  for (const file of ['_layout.tsx', `${sharedFolder}/_layout.tsx`])
+    expect(readFileSync(resolve(app, file), 'utf8')).not.toContain(
+      '<Stack.Screen',
+    );
+  for (const [, , file] of inventory) {
+    const path = resolve(app, `${file}.tsx`);
+    if (existsSync(path))
+      expect(readFileSync(path, 'utf8')).not.toContain('features/ComingSoon');
+  }
+});
+
+const builders = [
+  ['shared', 'edition', routes.editionRoute()],
+  ['shared', 'members', routes.membersRoute('seat')],
+  ['shared', 'election', routes.electionRoute('seat', 'key')],
+  ['shared', 'electorate-date', routes.electorateDateRoute('seat')],
+  ['shared', 'person/[slug]', routes.personRoute('member')],
+  ['shared', 'person/[slug]/votes', routes.personVotesRoute('member')],
+  ['shared', 'person/[slug]/speeches', routes.personSpeechesRoute('member')],
+  ['shared', 'person/[slug]/interests', routes.personInterestsRoute('member')],
+  ['shared', 'party-sources', routes.partySourcesRoute('party')],
+  ['shared', 'party/[slug]', routes.partyRoute('Labor')],
+  ['shared', 'bill-list', routes.billListRoute()],
+  ['shared', 'bill/[key]', routes.billRoute('key')],
+  [
+    'shared',
+    'record-list',
+    routes.recordListRoute({ person: 'member', kind: 'speeches' }),
+  ],
+  ['shared', 'bill-text-contents/[key]', routes.billTextContentsRoute('key')],
+  ['shared', 'results/[kind]', routes.resultsRoute('speech')],
+  ['shared', 'ask', routes.askRoute({ question: '' })],
+  ['shared', 'consent', routes.askConsentRoute],
+  ['shared', 'filters/ask', routes.askFiltersRoute],
+  ['shared', 'conversations', routes.conversationsRoute],
+  ['shared', 'ask-report', routes.askReportRoute('turn')],
+  ['shared', 'money', routes.moneyRoute()],
+  ['shared', 'money-node', routes.moneyNodeRoute('node')],
+  ['shared', 'money-record', routes.moneyRecordRoute({ rid: 'org' })],
+  ['shared', 'money-item', routes.moneyItemRoute({ id: 'record' })],
+  ['shared', 'money-donors', routes.moneyDonorsRoute()],
+  ['shared', 'funding-by-seat-type', routes.fundingBySeatTypeRoute],
+  ['shared', 'agency-list', routes.agencyListRoute('agency', 'suppliers')],
+  ['shared', 'connection', routes.connectionRoute('program')],
+  ['account', 'ask', routes.askAccountRoute],
+  ['account', 'consent', routes.voiceConsentRoute],
+  ['account', 'sign-in/code', routes.signInCodeRoute()],
+  ['account', 'delete/code', routes.deleteCodeRoute],
+  ['account', 'coverage', routes.coverageRoute],
+  ['account', 'methods', routes.methodsRoute],
+  ['account', 'sources/datasets', routes.datasetsRoute],
+  ['account', 'sources/dataset/[id]', routes.datasetRoute('dataset')],
+  ['account', 'sources/portraits', routes.portraitsRoute],
+  ['account', 'sources/photos', routes.photosRoute],
+  ['account', 'sources/fonts', routes.fontsRoute],
+  ['licence', '[id]', routes.licenceRoute('licence')],
+  [
+    'licence',
+    'sources/[...path]',
+    routes.licenceSourcesRoute(['dataset', 'id']),
+  ],
+  ['talk', 'index', routes.talkRoute],
+  ['talk', 'consent', routes.talkConsentRoute],
+  ['talk', 'sources', routes.talkSourcesRoute],
+  ['talk', 'record', routes.talkRecordRoute],
+  ['talk', 'sign-in', routes.talkSignInRoute],
+  ['talk', 'sign-in/code', routes.talkSignInCodeRoute()],
+  ['seat', 'index', routes.seatRoute()],
+  ['seat', 'state/[code]', routes.seatStateRoute('vic')],
+  ['welcome', 'index', routes.welcomeRoute()],
+  ['welcome', 'seat/index', routes.welcomeSeatRoute()],
+  ['welcome', 'seat/state/[code]', routes.welcomeSeatStateRoute('vic')],
+  ['shared', 'explore/[tool]', routes.exploreQuizRoute('question')],
+  ['shared', 'explore/photo', routes.explorePhotoRoute('1975', 'id')],
+  ['shared', 'explore/tide-table', routes.exploreTideTableRoute()],
+  ['shared', 'explore/years', routes.exploreYearsRoute()],
+  ...(
+    [
+      'bills',
+      'divisions',
+      'directory',
+      'declarations',
+      'connections',
+      'search',
+      'money',
+      'allocation',
+    ] as const
+  ).map(
+    (list) => ['shared', `filters/${list}`, routes.filtersRoute(list)] as const,
+  ),
+  ['root', 'source', routes.sourceRoute()],
+  ['root', 'machine-note', routes.machineNoteRoute()],
+  ['root', 'citation', routes.citationRoute()],
+  ['root', 'rule', routes.ruleRoute()],
+  ['root', 'licences', routes.licencesRoute],
+] as const;
+test.each(builders)(
+  '%s builder for %s targets its registered screen',
+  (kind, name, built) => {
+    expect(registered.get(kind)).toContain(name);
+    const prefix = kind === 'shared' || kind === 'root' ? '' : `/${kind}`;
+    const path =
+      name === 'index'
+        ? prefix || '/'
+        : `${prefix}/${name.replace(/\/index$/, '')}`;
+    expect(built.pathname).toBe(path);
+  },
+);
+
+test('sheet presentations and named fallback titles come from the owning modules', () => {
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(
+      React.createElement(SharedLayout, { segment: '(ask)' }),
+    );
+  });
+  const options = (name: string, params = {}) =>
+    view.root
+      .findAllByType(Stack.Screen)
+      .find((node) => node.props.name === name)!
+      .props.options({ route: { params } });
+  expect(options('person/[slug]').title).toBe('Parliamentarian');
+  expect(options('person/[slug]', { name: 'Loaded name' }).title).toBe(
+    'Loaded name',
+  );
+  expect(options('consent')).toMatchObject({
+    presentation: 'formSheet',
+    sheetAllowedDetents: 'fitToContents',
+  });
+  expect(options('ask-report')).toMatchObject({
+    presentation: 'formSheet',
+    sheetAllowedDetents: [0.5, 1],
+  });
+  expect(options('conversations')).toMatchObject({
+    presentation: 'modal',
+    headerShown: false,
+  });
+  expect(options('explore/photo')).toMatchObject({
+    presentation: 'fullScreenModal',
+  });
+  expect(options('ask').headerLargeTitleEnabled).toBe(true);
+  expect(options('money').headerLargeTitleEnabled).toBe(false);
+  act(() => view.unmount());
+});
+
+test('reference pages opened as the Account sheet root have Done', () => {
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(React.createElement(AccountLayout));
+  });
+  const options = view.root
+    .findAllByType(Stack.Screen)
+    .find((node) => node.props.name === 'methods')!.props.options;
+  expect(
+    options({
+      route: {},
+      navigation: { getState: () => ({ index: 0 }) },
+    }).unstable_headerRightItems()[0],
+  ).toMatchObject({ label: 'Done', variant: 'plain' });
+  expect(
+    options({ route: {}, navigation: { getState: () => ({ index: 1 }) } }),
+  ).not.toHaveProperty('unstable_headerRightItems');
+  act(() => view.unmount());
+});

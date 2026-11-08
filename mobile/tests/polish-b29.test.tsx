@@ -58,12 +58,14 @@ test.each([
     );
   },
 );
-test('other links retain the router handling', () => {
-  for (const path of [
-    'opax://bill/au-federal-r7534',
-    'opax://search?q=gambling',
-    '/(tabs)/(today)/directory?kind=person',
-  ])
+test('cold bill links open in Today and other links retain the router handling', () => {
+  expect(
+    redirectSystemPath({ path: 'opax://bill/au-federal-r7534', initial: true }),
+  ).toBe('/(tabs)/(today)/bill/au-federal-r7534');
+  expect(
+    redirectSystemPath({ path: 'opax://search?q=gambling', initial: true }),
+  ).toBe('/search?q=gambling');
+  for (const path of ['/(tabs)/(today)/directory?kind=person'])
     expect(redirectSystemPath({ path, initial: true })).toBe(path);
 });
 

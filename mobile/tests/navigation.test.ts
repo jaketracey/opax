@@ -619,8 +619,8 @@ test.each([
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     await openOnWeb(path, 'Open');
     expect(alert).toHaveBeenCalledWith(
-      'opax.com.au',
-      'This page could not be opened.',
+      "Couldn't open the page",
+      'Check your connection.',
     );
     alert.mockRestore();
   },

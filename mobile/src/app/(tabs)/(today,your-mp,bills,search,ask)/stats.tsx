@@ -1,1 +1,4 @@
-export { default } from '../../../features/reports/Stats';
+import { Redirect } from 'expo-router';
+export default function LegacyReference() {
+  return <Redirect href="/account/coverage" />;
+}

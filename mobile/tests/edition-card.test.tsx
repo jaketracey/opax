@@ -337,7 +337,7 @@ describe('the edition card', () => {
     );
     alert.mockRestore();
   });
-  test('the community-funding report opens through the public money lane', async () => {
+  test('a retired community-funding report does not create a removed native destination', () => {
     jest.mocked(router.push).mockClear();
     const report = {
       ...edition,
@@ -347,10 +347,10 @@ describe('the edition card', () => {
       path: '/reports/grants-allocation',
     };
     const { root } = render(<EditionCard edition={report} />);
-    await press(root, 'today-edition-open');
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: '/grants-allocation',
-    });
+    expect(
+      root.findAll((node) => node.props.testID === 'today-edition-open'),
+    ).toHaveLength(0);
+    expect(router.push).not.toHaveBeenCalled();
   });
   test('a retired report opens on the web instead of a deleted native screen', async () => {
     const alert = jest

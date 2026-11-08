@@ -193,7 +193,7 @@ test('no deep link, web link or request reaches a Community screen', () => {
   // Other links keep the router's handling.
   expect(
     redirectSystemPath({ path: 'opax://bill/au-federal-r7534', initial: true }),
-  ).toBe('opax://bill/au-federal-r7534');
+  ).toBe('/(tabs)/(today)/bill/au-federal-r7534');
   for (const path of [
     '/community',
     '/community?view=thread&id=abc',

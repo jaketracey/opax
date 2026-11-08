@@ -7,6 +7,8 @@ import { chrome } from '../design/tokens';
 import { canonicalUrl } from './external';
 import type { AskOptions } from '../features/ask/model';
 
+export const canShare = isE2E || OpaxShare !== null;
+
 export interface ShareTarget {
   question?: { text: string; options: AskOptions };
   /** The canonical web path: "/subject/person/anthony-albanese". */
@@ -36,12 +38,9 @@ export async function shareRecord({
     Alert.alert(`Share: ${title}`, url);
     return;
   }
-  if (!OpaxShare) {
-    Alert.alert('Share', 'Sharing is not available in this build.');
-    return;
-  }
+  if (!OpaxShare) return;
   await OpaxShare.share({ url, title }).catch(() =>
-    Alert.alert('Share', 'This link could not be shared.'),
+    Alert.alert("Couldn't share this link"),
   );
 }
 

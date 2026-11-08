@@ -1,19 +1,21 @@
 // First: holds the native splash until the launch handoff replaces it.
 import '../launch/splash';
+import { useStackChrome } from '../navigation/chrome';
+import { rootScreens, rootSettings } from '../navigation/stack/root';
 import {
-  headerItems,
-  closeSheetItem,
-  useStackChrome,
-} from '../navigation/chrome';
+  ExternalURLProbe,
+  presentSourceDestination,
+  sourceDestination,
+  subscribeSourceDestination,
+} from '../navigation/source-destination';
 import { AndroidMenuHost } from '../design/menu';
-import { AndroidReadingHeader } from '../navigation/AndroidReadingHeader';
 import { useCallback, useEffect, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Stack, router, type Href } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { hasSourcePreview, isProduction } from '../design/environment';
+import { hasSourcePreview } from '../design/environment';
 import { fonts, light } from '../design/tokens';
 import { requestSeatChooser } from '../features/your-mp/chooser-request';
 import { LaunchHandoff } from '../launch/LaunchHandoff';
@@ -26,13 +28,8 @@ import {
 import { WelcomeTour } from '../onboarding/WelcomeTour';
 import { isPad } from '../design/adaptive';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
-import { communityHome } from '../features/community/entry';
-import { voiceLinked } from '../voice/linked';
-import {
-  presentSourceDestination,
-  sourceDestination,
-  subscribeSourceDestination,
-} from '../navigation/source-destination';
+export const unstable_settings = rootSettings;
+
 export default function Layout() {
   const [loaded, error] = useFonts({
     [fonts.serif]: require('../../assets/fonts/Merriweather.ttf'),
@@ -63,95 +60,21 @@ export default function Layout() {
     });
   }, []);
   if (!loaded && !error) return null;
-  // Talk and Account and about are full-height sheets from the navigation bar
-  // (IOS-UX section 3). Their lanes replace the placeholder content.
-  const sheet = {
-    ...chrome,
-    headerShown: true,
-    presentation: 'modal' as const,
-    ...headerItems(() => [closeSheetItem()]),
-  };
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <View style={styles.app} onLayout={() => setLaidOut(true)}>
         <AndroidMenuHost />
+        <ExternalURLProbe />
         {isPad ? <KeyboardShortcuts /> : null}
         <Stack
           screenOptions={{
+            ...chrome,
             headerShown: false,
             contentStyle: { backgroundColor: light.paper },
           }}
         >
-          <Stack.Screen name="(tabs)" options={{ title: 'Back' }} />
-          <Stack.Screen
-            name="money-node"
-            options={{
-              ...sheet,
-              // Android bottom sheets omit native headers and their Done item.
-              presentation: Platform.OS === 'android' ? 'modal' : 'formSheet',
-              ...(Platform.OS === 'android'
-                ? { header: AndroidReadingHeader }
-                : {}),
-              title: 'Money record',
-              sheetAllowedDetents: [1],
-              sheetGrabberVisible: true,
-            }}
-          />
-          {/* Android needs its OpaxVoice module (src/voice/linked.ts). */}
-          <Stack.Protected guard={voiceLinked}>
-            <Stack.Screen
-              name="talk"
-              options={{ ...sheet, headerShown: false }}
-            />
-          </Stack.Protected>
-          {communityHome ? (
-            // Not in production 1.0: metro.config.js leaves the route out.
-            <Stack.Screen
-              name="community"
-              options={{
-                ...sheet,
-                presentation: 'fullScreenModal',
-                headerShown: false,
-              }}
-            />
-          ) : null}
-          <Stack.Screen
-            name="account"
-            options={{ ...sheet, headerShown: false }}
-          />
-          {hasSourcePreview ? (
-            <Stack.Screen
-              name="source-destination"
-              options={{
-                headerShown: false,
-                presentation: 'fullScreenModal',
-                animation: 'none',
-              }}
-            />
-          ) : null}
-          {isProduction ? null : (
-            // Development and e2e only: the route file is excluded from release
-            // bundles by metro.config.js.
-            <Stack.Screen
-              name="workbench"
-              options={{
-                ...sheet,
-                presentation: 'fullScreenModal',
-                title: 'Workbench',
-              }}
-            />
-          )}
-          {isProduction ? null : (
-            <Stack.Screen
-              name="money-map-spike"
-              options={{
-                ...chrome,
-                headerShown: true,
-                title: 'Money map spike',
-              }}
-            />
-          )}
+          {[...rootScreens(chrome)]}
         </Stack>
         {/* Above the tabs; a replay closes the Account sheet first. */}
         {tour === 'visible' ? (

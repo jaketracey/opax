@@ -83,16 +83,17 @@ function guardFrom(source: string): Guard {
   });
   const module = { exports: {} as { forbiddenOpaxRoute: Guard } };
   const stubs: Record<string, unknown> = {
-    './routes': { searchRouteFromWebPath: () => null },
-    '../features/community/entry': jest.requireActual(
+    './paths': { fromWebPath: () => null },
+    '../routes/search': { searchRouteFromWebPath: () => null },
+    '../../features/community/entry': jest.requireActual(
       '../src/features/community/entry',
     ),
     'react-native': {},
     'expo-router': { router: {} },
     'expo-web-browser': {},
-    '../design/environment': { webOrigin: origin, isE2E: true },
-    '../design/tokens': { light: {} },
-    './source-destination': {},
+    '../../design/environment': { webOrigin: origin, isE2E: true },
+    '../../design/palette': { light: {}, dark: {} },
+    '../source-destination': {},
   };
   vm.runInNewContext(outputText, {
     module,
@@ -262,7 +263,7 @@ describe('where the web app takes an address', () => {
 
   test('a guard without its "q" rules lets the sweep through', () => {
     const source = readFileSync(
-      resolve(mobile, 'src/navigation/external.ts'),
+      resolve(mobile, 'src/navigation/external/sheets.ts'),
       'utf8',
     );
     expect(slips(outcomes, guardFrom(source))).toEqual([]);
@@ -302,4 +303,105 @@ describe('where the web app takes an address', () => {
       /app\.js: "function parseHash\(" is gone/,
     );
   });
+});
+
+describe('native incoming links', () => {
+  const fromWebPath = jest.requireActual<
+    typeof import('../src/navigation/external')
+  >('../src/navigation/external').fromWebPath;
+  const redirectSystemPath = jest.requireActual<
+    typeof import('../src/app/+native-intent')
+  >('../src/app/+native-intent').redirectSystemPath;
+  test.each([
+    [
+      '/subject/person/anthony-albanese',
+      '/person/[slug]',
+      { slug: 'anthony-albanese' },
+    ],
+    [
+      '/subject/electorate/el_5d600e7f6dca5b72ae04d686',
+      '/electorate/[id]',
+      { id: 'el_5d600e7f6dca5b72ae04d686' },
+    ],
+    [
+      '/discover?category=grants&item=record',
+      '/leads',
+      { category: 'grants', item: 'record' },
+    ],
+    ['/money?node=party:Labor', '/money-record', { node: 'party:Labor' }],
+    [
+      '/explore?game=quiz&q=question',
+      '/explore/[tool]',
+      { tool: 'quiz', q: 'question' },
+    ],
+    [
+      '/explore?game=tm&year=1975&photo=1',
+      '/explore/[tool]',
+      { tool: 'tm', year: '1975', photo: '1' },
+    ],
+  ])('%s maps to a native group route', (path, pathname, params) => {
+    expect(fromWebPath(path as string)).toMatchObject({ pathname, params });
+  });
+  test('retired report paths never create a deleted native destination', () =>
+    expect(fromWebPath('/reports/grants-allocation')).toBeNull());
+  test('a removed Explore tool returns to the hub and money stays in the tab stack', () => {
+    expect(fromWebPath('/explore?game=ballot')).toEqual({
+      pathname: '/explore',
+    });
+    expect(fromWebPath('/money')).toMatchObject({ pathname: '/money' });
+  });
+  test.each([
+    '/source',
+    '/citation',
+    '/machine-note',
+    '/rule',
+    '/seat',
+    '/welcome',
+    '/filters/bills',
+  ])('web paths never create internal sheets: %s', (path) =>
+    expect(fromWebPath(path)).toBeNull(),
+  );
+  test.each([
+    ['opax://seat', '/seat'],
+    ['opax://follows', '/(tabs)/(today)/follows'],
+    [
+      'https://opax.com.au/subject/person/anthony-albanese',
+      '/(tabs)/(today)/person/anthony-albanese',
+    ],
+    [
+      'https://opax.com.au/subject/electorate/el_5d600e7f6dca5b72ae04d686',
+      '/(tabs)/(today)/electorate/el_5d600e7f6dca5b72ae04d686',
+    ],
+    ['opax://person/member?name=Untrusted', '/person/member'],
+    ['opax://money?name=Untrusted', '/money'],
+  ])('%s arrives without a supplied back-button name', (path, target) => {
+    expect(redirectSystemPath({ path, initial: false })).toBe(target);
+  });
+  test('cold money opens in Today and warm money keeps its active stack', () => {
+    expect(redirectSystemPath({ path: 'opax://money', initial: true })).toBe(
+      '/(tabs)/(today)/money',
+    );
+    expect(redirectSystemPath({ path: 'opax://money', initial: false })).toBe(
+      '/money',
+    );
+    expect(fromWebPath('/subject/person/member?name=Untrusted')).toEqual({
+      pathname: '/person/[slug]',
+      params: { slug: 'member' },
+    });
+  });
+});
+
+test('cold root links select an existing tab route rather than a missing Today child', () => {
+  const { redirectSystemPath } = jest.requireActual(
+    '../src/app/+native-intent',
+  );
+  expect(redirectSystemPath({ path: 'opax://your-mp', initial: true })).toBe(
+    '/(tabs)/(your-mp)/your-mp',
+  );
+  expect(
+    redirectSystemPath({
+      path: 'https://opax.com.au/ask?view=search&q=housing',
+      initial: true,
+    }),
+  ).toBe('/(tabs)/(search)/search?q=housing&kind=all');
 });

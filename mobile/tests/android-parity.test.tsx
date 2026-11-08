@@ -264,8 +264,8 @@ describe('Android bars', () => {
   test('iOS keeps its Dynamic Type title sizes and system bar', () => {
     const atDefault = chromeFor('ios', 1);
     const atDouble = chromeFor('ios', 2);
-    expect(atDefault.headerTitleStyle.fontSize).toBe(17);
-    expect(atDouble.headerTitleStyle.fontSize).toBe(23);
+    expect(atDefault.headerTitleStyle.fontSize).toBeUndefined();
+    expect(atDouble.headerTitleStyle.fontSize).toBeUndefined();
     expect('headerShadowVisible' in atDefault).toBe(false);
   });
 
@@ -314,7 +314,7 @@ describe('Android reading header', () => {
   test('a pushed reading screen backs out with Material’s arrow, labelled Back', () => {
     const { renderer, goBack } = header(true);
     const back = pressable(renderer, 'header-back');
-    expect(back.props.accessibilityLabel).toBe('Back');
+    expect(back.props.accessibilityLabel).toBe('Back to Account and about');
     const symbol = back.findAll(
       (n) => n.props.name && typeof n.props.name === 'string',
     )[0]!;

@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../design/controls';
 import { Heading, Text } from '../design/text';
-import { colors, layout, spacing } from '../design/tokens';
+import { colors, layout, rhythm } from '../design/tokens';
 
 /** UIKit alerts truncate long URL messages even after scrolling at AX5. */
 export function SourceDestination({
@@ -12,7 +12,7 @@ export function SourceDestination({
 }: {
   url: string | null;
   citation?: string;
-  dismiss: () => void;
+  dismiss?: () => void;
 }) {
   return (
     <SafeAreaProvider>
@@ -39,9 +39,11 @@ export function SourceDestination({
             <Text>This source link could not be opened.</Text>
           )}
         </ScrollView>
-        <View style={styles.dismiss}>
-          <Button label="OK" onPress={dismiss} />
-        </View>
+        {dismiss ? (
+          <View style={styles.dismiss}>
+            <Button label="Done" onPress={dismiss} />
+          </View>
+        ) : null}
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -49,7 +51,7 @@ export function SourceDestination({
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   scroll: { flex: 1 },
-  content: { padding: layout.screenMargin, gap: spacing.s4 },
+  content: { padding: layout.screenMargin, gap: rhythm.block },
   // This is a column with unrestricted width: retain every measured URL line.
   url: { flexShrink: 0 },
   dismiss: { padding: layout.screenMargin },

@@ -1,82 +1,14 @@
-import {
-  shortSheet,
-  headerItems,
-  closeSheetItem,
-  rootHeaderItems,
-  useStackChrome,
-} from '../../../navigation/chrome';
 import { Stack } from 'expo-router';
+import { useStackChrome } from '../../../navigation/chrome';
+import { sharedScreens, tabSettings } from '../../../navigation/stack';
+import { useAccount } from '../../../features/account/store';
 
-// Each tab owns a native stack. Root screens live in their own group
-// ((today)/index, (your-mp)/your-mp, ...); detail routes in this folder are
-// shared, so a person pushed from Search stays in the Search tab.
-export const unstable_settings = {
-  anchor: 'index',
-  'your-mp': { anchor: 'your-mp' },
-  bills: { anchor: 'bills' },
-  search: { anchor: 'search' },
-  ask: { anchor: 'ask' },
-};
-
-const roots: Record<string, { name: string; title: string }> = {
-  '(today)': { name: 'index', title: 'Today' },
-  '(your-mp)': { name: 'your-mp', title: 'Your MP' },
-  '(bills)': { name: 'bills', title: 'Bills' },
-  '(search)': { name: 'search', title: 'Search' },
-  '(ask)': { name: 'ask', title: 'Ask' },
-};
-
+export const unstable_settings = tabSettings;
 export default function TabStack({ segment }: { segment: string }) {
-  const chrome = useStackChrome();
-  const root = roots[segment] ?? roots['(today)']!;
+  const account = useAccount();
   return (
-    <Stack screenOptions={chrome}>
-      <Stack.Screen
-        name={root.name}
-        options={{
-          title: root.title,
-          headerLargeTitleEnabled: true,
-          ...headerItems(rootHeaderItems),
-        }}
-      />
-      <Stack.Screen name="money" options={{ title: 'Money map' }} />
-      <Stack.Screen name="directory-filters" options={{ presentation: 'modal', headerShown: false }} />
-      <Stack.Screen name="party/[slug]" options={{ title: '' }} />
-      <Stack.Screen name="person/[slug]" options={{ title: '' }} />
-      <Stack.Screen name="doc/[slug]" options={{ title: '' }} />
-      <Stack.Screen name="doc-cite/[slug]" options={{ title: 'Cite' }} />
-      <Stack.Screen name="bill-text/[key]" options={{ title: 'Bill text' }} />
-      <Stack.Screen name="recent-records" options={{ title: 'Just added' }} />
-      <Stack.Screen name="bill/[key]" options={{ title: '' }} />
-      {segment === '(bills)' ? (
-        // The bill list's filters: a sheet over the Bills stack, closed by Done.
-        <Stack.Screen
-          name="bill-filters"
-          options={{
-            title: 'Filter bills',
-            ...shortSheet,
-            headerLargeTitleEnabled: false,
-            ...headerItems(() => [closeSheetItem()]),
-          }}
-        />
-      ) : null}
-      <Stack.Screen name="electorate/[id]" options={{ title: '' }} />
-      <Stack.Screen name="leads" options={{ title: 'Leads' }} />
-      <Stack.Screen name="lead/[id]" options={{ title: '' }} />
-      <Stack.Screen
-        name="declarations"
-        options={{ title: 'Declared interests' }}
-      />
-      <Stack.Screen name="follows" options={{ title: 'Following' }} />
-      <Stack.Screen
-        name="expense-glossary"
-        options={{
-          title: 'Expense glossary',
-          ...shortSheet,
-          headerLargeTitleEnabled: false,
-          ...headerItems(() => [closeSheetItem()]),
-        }}
-      />
+    <Stack screenOptions={useStackChrome()}>
+      {[...sharedScreens(segment, !!account.status?.signedIn)]}
     </Stack>
   );
 }

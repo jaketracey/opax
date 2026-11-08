@@ -2,7 +2,7 @@ import type { NativeStackHeaderProps } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
-import { fonts, light, rhythm } from '../design/tokens';
+import { fonts, light, rhythm, textStyles } from '../design/tokens';
 import { androidBar } from './chrome';
 
 /**
@@ -26,7 +26,7 @@ export function AndroidReadingHeader({
         {back ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Back"
+            accessibilityLabel={`Back to ${back.title || 'previous screen'}`}
             testID="header-back"
             onPress={() => navigation.goBack()}
             style={styles.action}
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    fontFamily: fonts.serif,
+    fontFamily: textStyles.inlineTitle.fontFamily,
     fontSize: androidBar.title,
     color: light.ink,
   },
