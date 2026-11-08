@@ -420,3 +420,216 @@ test('plain notes: no pipeline words, no em dashes', () => {
     );
   }
 });
+
+/* ------------------------------------------------------------------ */
+/* Screen harness for the tool screens.                              */
+/* ------------------------------------------------------------------ */
+jest.mock('@shopify/react-native-skia', () => ({
+  Canvas: jest.requireActual('react-native').View,
+  Rect: () => null,
+}));
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  const part = (name: string) =>
+    function Part(props: { children?: unknown }) {
+      return React.createElement(name, props, props.children);
+    };
+  return {
+    router: { push: jest.fn(), back: jest.fn() },
+    Stack: {
+      Screen: part('StackScreen'),
+      Toolbar: Object.assign(part('Toolbar'), {
+        Button: part('ToolbarButton'),
+        Spacer: () => null,
+        View: part('ToolbarView'),
+      }),
+    },
+    Link: Object.assign(part('Link'), {
+      Trigger: part('LinkTrigger'),
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    }),
+    useLocalSearchParams: jest.fn(() => ({})),
+    useSegments: () => ['(tabs)', '(today)'],
+  };
+});
+jest.mock('../src/features/explore/runtime', () => ({
+  explore: { tide: jest.fn(), matrix: jest.fn() },
+}));
+jest.mock('../src/api/runtime', () => ({
+  apiClient: { get: jest.fn(), getForAction: jest.fn() },
+  reports: { money: jest.fn() },
+  catalogs: {},
+  yearPictures: { get: jest.fn() },
+}));
+jest.mock('../src/navigation/sheets', () => ({
+  presentSheet: jest.fn(),
+  presentSource: jest.fn(),
+}));
+
+const uiTexts = (r: import('react-test-renderer').ReactTestRenderer) => {
+  const { Text } = jest.requireActual('react-native');
+  const flat = (c: unknown): string =>
+    typeof c === 'string' || typeof c === 'number'
+      ? String(c)
+      : Array.isArray(c)
+        ? c.map(flat).join('')
+        : c && typeof c === 'object' && 'props' in c
+          ? flat((c as { props: { children?: unknown } }).props.children)
+          : '';
+  return r.root
+    .findAllByType(Text)
+    .map((n) => flat(n.props.children))
+    .filter(Boolean);
+};
+const labelsOf = (r: import('react-test-renderer').ReactTestRenderer) =>
+  r.root
+    .findAll((n) => typeof n.props.accessibilityLabel === 'string')
+    .map((n) => n.props.accessibilityLabel as string);
+async function render(element: unknown) {
+  const { act } = jest.requireActual('react');
+  const TestRenderer = jest.requireActual('react-test-renderer');
+  let renderer!: import('react-test-renderer').ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(element);
+  });
+  await act(async () => {});
+  return renderer;
+}
+/* ------------------------------------------------------------------ */
+/* Words per dollar.                                                   */
+/* ------------------------------------------------------------------ */
+describe('words per dollar', () => {
+  const { createElement } = jest.requireActual('react');
+  const explore = () =>
+    jest.requireMock('../src/features/explore/runtime').explore;
+  const reports = () => jest.requireMock('../src/api/runtime').reports;
+  const moneyRecord = () => ({
+    data: decodeIndustryMoney(read('graph/money.json')),
+    stale: false,
+    asOf: null,
+    savedAt: 1000,
+  });
+  beforeEach(() => jest.clearAllMocks());
+  const host = (
+    r: import('react-test-renderer').ReactTestRenderer,
+    id: string,
+  ) =>
+    r.root.findAll(
+      (n) => typeof n.type === 'string' && n.props.testID === id,
+    )[0];
+
+  test('one subject in party-groups order, money opens the in-tab money map for that industry and party, speeches open the topic', async () => {
+    const money = moneyRecord();
+    reports().money.mockResolvedValue(money);
+    const base = decodeDatedMatrix(matrixRaw);
+    const labels = {
+      ...base,
+      cells: {
+        ...base.cells,
+        agriculture: { Labor: 300, Nationals: 200 },
+      } as Record<string, Record<string, number>>,
+      totals: { ...base.totals, agriculture: 500 },
+      generated_at: '2026-11-02',
+    };
+    explore().matrix.mockResolvedValue({
+      data: labels,
+      stale: false,
+      asOf: '2026-11-02',
+      savedAt: 1000,
+    });
+    const WordsDollars = jest.requireActual(
+      '../src/features/explore/WordsDollars',
+    ).default;
+    const { pairFigures } = jest.requireActual(
+      '../src/features/explore/WordsDollars',
+    );
+    const r = await render(createElement(WordsDollars));
+    expect(host(r, 'wd-loading')).toBeUndefined();
+    const pair = pairings[0]!;
+    expect(pair.topic).toBe('agriculture');
+    const { rows } = pairFigures(pair, labels, money.data);
+    const drawn = r.root
+      .findAll(
+        (n) =>
+          typeof n.type === 'string' && /^wd-row-/.test(n.props.testID ?? ''),
+      )
+      .map((n) => n.props.testID.slice('wd-row-'.length));
+    expect(drawn).toEqual(rows.map((row: { party: string }) => row.party));
+    const paid = rows.find((row: { money: number }) => row.money > 0);
+    expect(paid).toBeDefined();
+    {
+      const line = host(r, `wd-money-${paid.party}`)!;
+      expect(line.props.accessibilityRole).toBe('link');
+      const link = r.root.findAll(
+        (n) =>
+          (n.type as unknown) === 'Link' &&
+          n.findAll((c) => c.props.testID === `wd-money-${paid.party}`).length >
+            0,
+      )[0];
+      expect(link?.props.href).toEqual({
+        pathname: '/money',
+        params: { focus: `party:${paid.party}`, industry: pair.industries[0] },
+      });
+    }
+    const spoke = rows.find((row: { speech: string | null }) => row.speech);
+    expect(spoke).toBeDefined();
+    {
+      const link = r.root.findAll(
+        (n) =>
+          (n.type as unknown) === 'Link' &&
+          n.findAll((c) => c.props.testID === `wd-speech-${spoke.party}`)
+            .length > 0,
+      )[0];
+      expect(link?.props.href).toEqual({
+        pathname: '/topic/[slug]',
+        params: {
+          slug: pair.topic,
+          party: spoke.party,
+          name: topicLabel(pair.topic),
+        },
+      });
+    }
+    const texts = uiTexts(r).join(' ');
+    expect(texts).toContain('Comparison, never causation');
+    expect(texts).toContain(
+      'disclosed by agriculture donors to political parties',
+    );
+    expect(texts).toContain('A floor, not a ceiling');
+    expect(texts).not.toMatch(/labelled|so far|\bpass\b|—/);
+    // Every link stays in the app: no web page for money.
+    expect(
+      r.root
+        .findAll((n) => (n.type as unknown) === 'Link')
+        .every((n) => typeof n.props.href !== 'string'),
+    ).toBe(true);
+    const line = r.root.findAll(
+      (n) => n.props.testID === 'wd-as-at' && !!n.props.accessibilityLabel,
+    )[0]!;
+    expect(line.props.accessibilityLabel).toMatch(
+      /^Updated .+, AEC annual returns and 1 more$/,
+    );
+    r.unmount();
+  });
+
+  test('a failed speech read says Not loaded, never zero', async () => {
+    reports().money.mockResolvedValue(moneyRecord());
+    explore().matrix.mockRejectedValue(new Error('500'));
+    const WordsDollars = jest.requireActual(
+      '../src/features/explore/WordsDollars',
+    ).default;
+    const r = await render(createElement(WordsDollars));
+    expect(host(r, 'wd-speech-error')).toBeDefined();
+    const speech = r.root.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        /^wd-speech-(?!error)/.test(n.props.testID ?? '') &&
+        !!n.props.accessibilityLabel,
+    );
+    expect(speech.length).toBeGreaterThan(0);
+    for (const n of speech)
+      expect(n.props.accessibilityLabel).toMatch(/Speeches: Not loaded$/);
+    r.unmount();
+  });
+});

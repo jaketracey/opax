@@ -1,9 +1,49 @@
 appId: au.com.opax.app
-name: 49 Time machine and native debate matrix
+name: 49 Explore from Today, words per dollar, the Time machine and who owns which debate
 ---
 - launchApp:
     clearState: true
     permissions: {}
+- extendedWaitUntil:
+    notVisible:
+      id: launch-handoff
+    timeout: 30000
+- assertVisible:
+    id: today-screen
+# Today's Explore entry opens the hub.
+- scrollUntilVisible:
+    element:
+      id: today-explore-open
+    visibilityPercentage: 100
+    timeout: 90000
+- tapOn:
+    id: today-explore-open
+- extendedWaitUntil:
+    visible:
+      id: explore-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: explore-wd
+    timeout: 30000
+- tapOn:
+    id: explore-wd
+# Words per dollar: one subject, its dated figure, then the parties.
+- extendedWaitUntil:
+    visible:
+      id: explore-wd-screen
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: wd-loading
+    timeout: 90000
+- assertVisible:
+    id: wd-subject
+- assertVisible:
+    id: wd-figure
+- assertVisible:
+    id: wd-as-at
+- takeScreenshot: ${EVIDENCE}/49-words-per-dollar
 - openLink: opax://explore/tm
 # The year shows at once: no field and no Open year.
 - extendedWaitUntil:
