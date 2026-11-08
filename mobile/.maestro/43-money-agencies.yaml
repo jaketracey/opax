@@ -76,7 +76,7 @@ name: 43 Government agencies, an agency's years, suppliers and contracts, and it
     speed: 20
     timeout: 300000
 - assertVisible: Contract value by year the contract started.*
-- assertNotVisible: "20[0-9][0-9]–[0-9][0-9]"
+- assertNotVisible: '20[0-9][0-9]–[0-9][0-9]'
 - takeScreenshot: ${EVIDENCE}/43-years-chart
 - tapOn: Table
 - scrollUntilVisible:

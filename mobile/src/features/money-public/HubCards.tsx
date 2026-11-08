@@ -16,6 +16,7 @@ import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
 import { copy } from '../../design/copy';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { symbols } from '../../design/symbols';
 import { useMoneyRecord } from '../money/hooks';
 import type { MoneyGraph } from '../money/data';
 import { moneyRoute } from '../../navigation/routes/money-map';
@@ -167,7 +168,7 @@ export function QuestionCard({
           <Text wordSafe variant="sectionTitle" style={styles.grow}>
             {question}
           </Text>
-          <Icon name="chevron.right" size={15} tone="inkFaint" />
+          <Icon name={symbols.chevron} size={15} tone="inkFaint" />
         </View>
         {state.status === 'loading' ? (
           <View
@@ -260,7 +261,7 @@ export function GrantsCard() {
   return (
     <QuestionCard
       kicker="Commonwealth grants"
-      symbol="dollarsign.circle"
+      symbol={symbols.money}
       question="Who gets grants?"
       href={grantsRoute({ jur: 'federal' })}
       testID="money-card-grants"
@@ -292,7 +293,7 @@ export function ContractsCard() {
   return (
     <QuestionCard
       kicker="Government agencies"
-      symbol="building.2"
+      symbol={symbols.contracts}
       question="Who wins government contracts?"
       href={agenciesRoute}
       testID="money-card-contracts"
@@ -323,7 +324,7 @@ export function PartiesCard() {
   return (
     <QuestionCard
       kicker="Money map"
-      symbol="person.3"
+      symbol={symbols.party}
       question="Who gives to parties?"
       href={{ ...moneyRoute(), params: { view: 'list' } } as Href}
       testID="money-card-parties"

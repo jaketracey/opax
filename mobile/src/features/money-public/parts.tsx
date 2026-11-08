@@ -480,7 +480,17 @@ export function MoneyList<T>({
             </Group>
           ) : null
         }
-        ListEmptyComponent={loaded ? <>{empty ?? null}</> : null}
+        ListEmptyComponent={
+          loaded ? (
+            <>
+              {empty === undefined ? (
+                <EmptyState message="No matching records." />
+              ) : (
+                empty
+              )}
+            </>
+          ) : null
+        }
         renderItem={({ item, index }) => <View>{render(item, index)}</View>}
       />
     </SidebarSafe>

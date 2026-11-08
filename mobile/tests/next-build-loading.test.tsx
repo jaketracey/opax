@@ -128,7 +128,8 @@ test('a money list has no end marker or empty copy under its loading skeleton', 
   await act(async () =>
     r.update(<MoneyList {...props} loaded header={null} />),
   );
-  expect(words(r)).toContain('End of record');
+  // The Apple-design lists end without a marker (specs/money.md 1.3).
+  expect(words(r)).not.toContain('End of record');
   expect(r.root.findAllByType(EmptyState)).toHaveLength(1);
   await unmount(r);
 });
