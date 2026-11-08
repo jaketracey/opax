@@ -85,9 +85,11 @@ export function useStackChrome() {
       ...(headingFace === 'serif' ? { fontSize: sizes.largeTitle } : {}),
       color: colors.ink,
     },
-    // The soft top edge lets record text remain legible behind bar items on
-    // iOS 27. Use UIKit's defined top boundary, retaining its system material
-    // and the soft edge at the minimising tab bar. No custom fill or blur.
+    // Deviation from shell.md 2.3 (soft top): the wave 2 captures showed the
+    // soft top edge active but too light, with serif record text legible
+    // through the title and bar buttons. The hard edge is UIKit's own opaque
+    // boundary with a divider. The bottom stays soft at the minimising tab
+    // bar. No custom fill or blur.
     scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
