@@ -6,11 +6,11 @@ export function publicMoneyScreens() {
     screen('leads', 'Leads'),
     screen('lead/[id]', 'Lead'),
     screen('discover', 'Leads'),
-    screen('grants', 'Grants'),
-    screen('grant-program', 'Program'),
+    screen('grants', 'Commonwealth grants'),
+    screen('grant-program', 'Grant program'),
     screen('largest-grants', 'Largest grants'),
-    screen('agencies', 'Agencies'),
-    screen('agency', 'Agency'),
+    screen('agencies', 'Government agencies'),
+    screen('agency', 'Government agency'),
     screen('connections', 'Programs and places'),
     screen('grants-allocation', 'Community funding'),
     screen('money-record', 'Money record'),
@@ -18,6 +18,6 @@ export function publicMoneyScreens() {
     screen('money-donors', 'Donors'),
     screen('funding-by-seat-type', 'Funding by seat type'),
     screen('agency-list', 'Agency records'),
-    screen('connection', 'Program or place'),
+    screen('connection', 'Programs and places'),
   ];
 }
