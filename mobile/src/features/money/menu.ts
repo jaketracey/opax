@@ -37,3 +37,11 @@ export function moneyPageMenu(target: {
     },
   ];
 }
+
+/** A card's long-press menu: Share and Copy link, never the web. */
+export function moneyCardMenu(target: {
+  path: string;
+  title: string;
+}): RowMenuAction[] {
+  return moneyPageMenu(target).slice(0, 2);
+}

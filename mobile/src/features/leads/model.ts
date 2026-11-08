@@ -2,6 +2,7 @@ import type { Discovery, DiscoverySignal } from '../../api/catalog-decoders';
 import {
   formatCount,
   formatDate,
+  formatMoneyCompact,
   formatPercent,
   moneyAccessibilityLabel,
 } from '../../design/format';
@@ -27,31 +28,53 @@ const isLeadCategory = (value: string): value is LeadCategory =>
 // and the count noun filterDiscoveries() writes.
 const categoryWords: Record<
   LeadCategory,
-  { label: string; option: string; one: string; many: string }
+  {
+    label: string;
+    one: string;
+    many: string;
+    /** "See all 28 government contract leads". */
+    seeAll: string;
+    /** The kind list's bar search. */
+    search: string;
+    /** Who publishes the records behind this kind. */
+    source: string;
+  }
 > = {
   procurement_concentration: {
     label: 'Government contracts',
-    option: 'Contracts by agency',
     one: 'agency',
     many: 'agencies',
+    seeAll: 'government contract leads',
+    search: 'Agencies',
+    source: 'AusTender',
   },
   recipient_concentration: {
     label: 'Party funding',
-    option: 'Party funding',
     one: 'party',
     many: 'parties',
+    seeAll: 'party funding leads',
+    search: 'Parties',
+    source: 'AEC',
   },
   donor_contract_overlap: {
     label: 'Companies in both',
-    option: 'Companies in both',
     one: 'company',
     many: 'companies',
+    seeAll: 'company leads',
+    search: 'Companies',
+    source: 'AEC and AusTender',
   },
 };
 export const categoryLabel = (category: LeadCategory) =>
   categoryWords[category].label;
-export const categoryOption = (category: LeadCategory) =>
-  categoryWords[category].option;
+export const isCategory = (value: unknown): value is LeadCategory =>
+  typeof value === 'string' && isLeadCategory(value);
+export const categorySeeAll = (category: LeadCategory, count: number) =>
+  `See all ${formatCount(count)} ${categoryWords[category].seeAll}`;
+export const categorySearch = (category: LeadCategory) =>
+  categoryWords[category].search;
+export const categorySource = (category: LeadCategory) =>
+  categoryWords[category].source;
 
 /** An example record as the reader sees it (design/lead.tsx). */
 export type LeadEvidenceView = LeadEvidence;
@@ -196,6 +219,8 @@ export type LeadComparison =
       takeaway: string;
       chartTitle: string;
       total: number;
+      /** The figure's label: "in contracts from this agency, started 2015 to 2026". */
+      figureLabel: string;
       rows: ChartRow[];
       note: string;
     }
@@ -207,14 +232,6 @@ export type LeadComparison =
       contracts: { value: number; records: number };
       note: string;
     };
-
-export interface LeadLink {
-  label: string;
-  /** What VoiceOver says: the label in context. */
-  accessibilityLabel: string;
-  path: string;
-  testID: string;
-}
 
 export interface LeadView {
   id: string;
@@ -229,7 +246,6 @@ export interface LeadView {
   /** The as-at line's sources: who publishes the records behind the lead. */
   citation: string[];
   comparison: LeadComparison;
-  links: LeadLink[];
 }
 
 const metricValue = (signal: DiscoverySignal, label: string) =>
@@ -250,6 +266,21 @@ function periodText(chart: NonNullable<DiscoverySignal['chart']>) {
   if (period.kind === 'financial_year')
     return `FY ${period.from.replace('-', '–')} to ${period.to.replace('-', '–')}`;
   return `Contract start years ${period.from.slice(0, 4)}–${period.to.slice(0, 4)}`;
+}
+
+// The lead's own span in figure words: "started 2015 to 2026" for contract
+// start years, "1998–99 to 2024–25" for financial years.
+function spanText(chart: NonNullable<DiscoverySignal['chart']>) {
+  const period = chart.period;
+  if (!period?.from || !period.to) return 'all available years';
+  if (period.kind === 'financial_year') {
+    const from = period.from.replace('-', '–');
+    const to = period.to.replace('-', '–');
+    return from === to ? from : `${from} to ${to}`;
+  }
+  const from = period.from.slice(0, 4);
+  const to = period.to.slice(0, 4);
+  return from === to ? `started ${from}` : `started ${from} to ${to}`;
 }
 
 /**
@@ -293,8 +324,9 @@ function comparisonFor(
       takeaway: `${formatPercent(lead.share)} ${contracts ? 'of recorded contract value went to' : 'of recorded receipts came from'} ${lead.name}.`,
       chartTitle: contracts
         ? 'Who got the contracts?'
-        : 'Where did the funding come from?',
+        : 'Who gave to the party?',
       total: chart.group_total,
+      figureLabel: `${contracts ? 'in contracts from this agency' : 'in party receipts'}, ${spanText(chart)}`,
       rows,
       note: `${formatCount(chart.record_count)} ${contracts ? 'contracts' : 'receipts'} · ${periodText(chart)}. ${contracts ? 'Recorded contract values, not the agency’s whole budget.' : 'Party receipts include more than gifts.'}${missing ? ` ${formatCount(missing)} records have no valid date.` : ''}`,
     };
@@ -313,37 +345,6 @@ function comparisonFor(
     },
     note: 'Different money flows and reporting periods. A shared name doesn’t show that one led to the other.',
   };
-}
-
-// The web's actions (discoveryDetailHTML). "Find mentions in parliament"
-// opens /search, which the Worker sends to Ask's model-backed search, so the
-// app leaves it out (navigation/external.ts). The web draws the money map
-// inside the lead's own page ("Explore connections on the money map"), so the
-// app opens that page, and the full map through the web's own "Open the full
-// money map" link.
-function linksFor(signal: DiscoverySignal, category: LeadCategory): LeadLink[] {
-  const links: LeadLink[] = [];
-  if (category !== 'recipient_concentration')
-    links.push({
-      label: 'Explore supplier profile',
-      accessibilityLabel: `Explore supplier profile, ${signal.entity}`,
-      path: supplierPath(signal.entity),
-      testID: 'supplier',
-    });
-  links.push({
-    label: 'Open this comparison on opax.com.au',
-    accessibilityLabel: `Open the ${signal.chart?.group_label ?? signal.entity} comparison`,
-    path: discoverPath(signal),
-    testID: 'web',
-  });
-  if (category !== 'procurement_concentration')
-    links.push({
-      label: 'Open the full money map',
-      accessibilityLabel: 'Open the full money map',
-      path: '/money',
-      testID: 'money-map',
-    });
-  return links;
 }
 
 // Who publishes the records behind each kind of lead (coverage.receipt_scope;
@@ -375,7 +376,6 @@ export function leadFor(signal: DiscoverySignal): LeadView | null {
     evidence: signal.evidence.map(leadEvidenceFor),
     citation: citations[category],
     comparison,
-    links: linksFor(signal, category),
   };
 }
 
@@ -392,19 +392,6 @@ export function leadFigure(lead: Pick<LeadView, 'metrics'>) {
     lead.metrics[0] ??
     null
   );
-}
-
-/**
- * The card's way into its sheet: "Evidence (2)", read as "Evidence, 2
- * example records". With no example records the sheet still holds every
- * caveat.
- */
-export function evidenceLink(count: number): { text: string; spoken: string } {
-  if (!count) return { text: 'Caveats', spoken: 'Caveats' };
-  return {
-    text: `Evidence (${formatCount(count)})`,
-    spoken: `Evidence, ${formatCount(count)} example ${count === 1 ? 'record' : 'records'}`,
-  };
 }
 
 export type LeadFilter = 'all' | LeadCategory;
@@ -493,4 +480,110 @@ export function leadsAbout(
       );
     })
     .map((lead) => ({ id: lead.id, title: lead.title }));
+}
+
+// The card's figure label, in plain words (specs/money.md 2.9).
+const figureLabels: Record<string, string> = {
+  'Recorded party receipts': 'in party receipts',
+  'Largest supplier value': 'to the largest supplier',
+  'Largest donor value': 'from the largest donor',
+};
+/** A lead card's one figure: "$2.3bn", "to the largest supplier". */
+export function leadCardFigure(lead: Pick<LeadView, 'metrics'>) {
+  const metric = leadFigure(lead);
+  if (!metric) return null;
+  const value = Number(metric.value);
+  const money = metric.format === 'currency' && Number.isFinite(value);
+  return {
+    text: money ? formatMoneyCompact(value) : String(metric.value),
+    spoken: money ? moneyAccessibilityLabel(value, true) : String(metric.value),
+    label:
+      figureLabels[metric.label] ??
+      metric.label.charAt(0).toLocaleLowerCase('en-AU') + metric.label.slice(1),
+  };
+}
+
+// Pipeline words in a caveat: an identifier with an underscore or "ingestion".
+const pipeline = /\b\w+_\w+\b|ingestion/i;
+const knownCaveats: Record<string, string> = {
+  'Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded.':
+    'Annual party receipts include more than gifts. State, election and referendum disclosures are not included.',
+};
+/**
+ * A caveat in plain language (specs/money.md 2.10): the known pipeline
+ * strings replaced, any other clause naming a pipeline identifier dropped.
+ */
+export function plainCaveat(caveat: string): string {
+  const known = knownCaveats[caveat];
+  if (known) return known;
+  if (!pipeline.test(caveat)) return caveat;
+  return caveat
+    .split(/(?<=\.)\s+/)
+    .map((sentence) => {
+      if (!pipeline.test(sentence)) return sentence;
+      const at = sentence.search(/[;,]/);
+      if (at < 0) return '';
+      const head = sentence.slice(0, at).trim();
+      return pipeline.test(head) ? '' : `${head}.`;
+    })
+    .filter(Boolean)
+    .join(' ');
+}
+
+/**
+ * The root's three sections in their fixed order, each with its leads
+ * largest total first. A kind with no leads is left out.
+ */
+export function leadSections(discovery: Discovery) {
+  return leadCategories
+    .map((category) => ({ category, leads: leadsFor(discovery, category) }))
+    .filter((section) => section.leads.length);
+}
+
+/**
+ * Leads matching a search, across kinds in the fixed order, largest total
+ * first within each, matched on the subject's name, the chart's group and
+ * the lead's own sentence.
+ */
+export function searchLeads(
+  discovery: Discovery,
+  query: string,
+  category?: LeadCategory,
+  sort: LeadSort = 'value',
+) {
+  const words = query
+    .toLocaleLowerCase('en-AU')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  const pool = category
+    ? leadsFor(discovery, category, sort)
+    : leadSections(discovery).flatMap((section) => section.leads);
+  if (!words.length) return pool;
+  return pool.filter((lead) => {
+    const signal = discovery.signals.find((s) => s.id === lead.id);
+    const text = [lead.entity, lead.title, signal?.chart?.group_label]
+      .filter(Boolean)
+      .join(' ')
+      .toLocaleLowerCase('en-AU');
+    return words.every((word) => text.includes(word));
+  });
+}
+
+/** The withheld and unreadable counts, for a source sheet's notes. */
+export function leadsHiddenNotes(
+  discovery: Discovery & { withheld?: number },
+): string[] {
+  const unreadable =
+    discovery.unreadable +
+    discovery.signals.length -
+    leadsFor(discovery).length;
+  return [
+    discovery.withheld
+      ? `${leadCount(discovery.withheld, 'all')} about a donor not named in OPAX ${discovery.withheld === 1 ? 'is' : 'are'} not shown.`
+      : null,
+    unreadable
+      ? `${leadCount(unreadable, 'all')} could not be read and ${unreadable === 1 ? 'is' : 'are'} not shown.`
+      : null,
+  ].filter((note): note is string => !!note);
 }
