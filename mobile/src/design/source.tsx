@@ -19,6 +19,7 @@ import {
   type DateInput,
 } from './format';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
+import { useRowHighlight } from './row-padding';
 import { useKeyCommand } from './keyboard';
 import { Heading, Text } from './text';
 import { colors, hairline, minimumTarget, radii, rhythm } from './tokens';
@@ -192,14 +193,14 @@ export function sourceLineParts({
 
 /**
  * One source line at the foot of a block: a document glyph, the date and the
- * source's name in bronze ink, and a state when there is one ("Updated 4 Oct
+ * source's name in navy, and a state when there is one ("Updated 4 Oct
  * 2026 · AEC annual returns · saved copy"). Tapping it opens the source
  * sheet: the original records, the as-at date and coverage, the notes and
  * caveats, and the licence, with Sources and licences one row further. It
  * replaces a block's separate as-at line, "View original", ⓘ and caveat
  * paragraphs: every figure stays dated and one tap from its source.
  *
- * 32pt drawn, 44pt to touch (48 on Android); the column's full width at
+ * 44pt to touch (48 on Android); the column's full width at
  * accessibility sizes, so its word-safe text has a fixed frame. VoiceOver
  * hears the line as drawn ("Updated 4 Oct 2026, AEC annual returns") and
  * that it opens the sources.
@@ -233,7 +234,7 @@ export function SourceLine({
   return (
     <>
       <SourceAffordance
-        glyph={label ? EXTERNAL_GLYPH : 'doc.text'}
+        glyph={label ? EXTERNAL_GLYPH : sourceSymbol}
         date={visible.date}
         name={visible.name}
         rest={visible.rest}
@@ -262,6 +263,7 @@ export function SourceLine({
  * The drawn source line, shared by SourceLine and the provenance adapters
  * (SourceLink, ViewOriginal): one anatomy for every way into a source.
  */
+/** @deprecated Compatibility drawing for source adapters; use SourceLine. */
 export function SourceAffordance({
   glyph,
   date,
@@ -289,6 +291,7 @@ export function SourceAffordance({
   // A hugging line's width follows its text, so word-safe sizing could chase
   // its own frame. At accessibility sizes it takes the column's full width.
   const fixed = useAccessibilitySize();
+  const highlight = useRowHighlight();
   return (
     <Pressable
       ref={ref}
@@ -301,28 +304,23 @@ export function SourceAffordance({
       style={({ pressed }) => [
         styles.line,
         fixed ? styles.fixed : styles.hug,
-        pressed ? styles.pressed : null,
+        pressed ? { backgroundColor: highlight } : null,
       ]}
     >
-      {({ pressed }) => (
+      {() => (
         <>
           <View style={styles.glyph}>
-            <Icon name={glyph} size={14} tone="bronzeInk" />
+            <Icon name={glyph} size={13} maxScale={1.5} tone="inkSoft" />
           </View>
           <Text
             wordSafe={fixed}
-            variant="fine"
+            variant="footnote"
             // A bare name ("View original") is one run in the link colour.
-            tone={name && !date && !rest.length ? 'bronzeInk' : undefined}
+            tone={name && !date && !rest.length ? 'navy' : undefined}
             accessible={false}
-            style={[
-              styles.shrink,
-              pressed && name && !date && !rest.length
-                ? styles.underline
-                : null,
-            ]}
+            style={styles.shrink}
           >
-            {lineChildren(date, name, rest, pressed)}
+            {lineChildren(date, name, rest)}
           </Text>
         </>
       )}
@@ -338,18 +336,12 @@ function lineChildren(
   date: string | null | undefined,
   name: string | null | undefined,
   rest: readonly string[],
-  pressed: boolean,
 ): ReactNode {
   if (!name) return [date, ...rest].filter(Boolean).join(' · ');
   if (!date && !rest.length) return name;
   return [
     date ? `${date} · ` : '',
-    <Text
-      key="name"
-      variant="fine"
-      tone="bronzeInk"
-      style={pressed ? styles.underline : null}
-    >
+    <Text key="name" variant="footnote" tone="navy">
       {name}
     </Text>,
     rest.length ? ` · ${rest.join(' · ')}` : '',
@@ -661,15 +653,18 @@ export function SheetBody({
   );
 }
 
+const sourceSymbol = 'doc.text.magnifyingglass';
+
 const styles = StyleSheet.create({
   line: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.line + 2,
-    minHeight: Platform.OS === 'android' ? minimumTarget : 32,
-    paddingHorizontal: rhythm.line,
-    marginHorizontal: -rhythm.line,
-    borderRadius: radii.sm,
+    minHeight: minimumTarget,
+    paddingHorizontal: rhythm.tight,
+    marginHorizontal: -rhythm.tight,
+    borderRadius: radii.thumb,
+    borderCurve: 'continuous',
   },
   hug: { alignSelf: 'flex-start', maxWidth: '100%' },
   // The column's full width, whatever row the line sits in.
@@ -677,7 +672,6 @@ const styles = StyleSheet.create({
   // The glyph sits on the first line's centre when the text wraps.
   glyph: { alignSelf: 'flex-start', paddingTop: 2 },
   shrink: { flexShrink: 1 },
-  underline: { textDecorationLine: 'underline' },
   pressed: { backgroundColor: colors.sunken },
   group: { gap: rhythm.tight },
   notes: { gap: rhythm.block },

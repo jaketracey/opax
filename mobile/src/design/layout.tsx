@@ -1,5 +1,11 @@
 import {
   Children,
+  cloneElement,
+  createContext,
+  useContext,
+  useEffect,
+  useCallback,
+  useState,
   isValidElement,
   useRef,
   type ReactElement,
@@ -9,13 +15,16 @@ import {
 } from 'react';
 import {
   ScrollView,
+  Animated,
+  useColorScheme,
+  Pressable,
   Platform,
   StyleSheet,
   View,
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
-import { useAccessibilitySize } from './accessibility';
+import { useReduceMotion, useAccessibilitySize } from './accessibility';
 import {
   RegionProvider,
   Grid,
@@ -23,33 +32,45 @@ import {
   SidebarSafe,
   columnBreakout,
   columns,
-  readableInset,
   useColumnChoice,
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
-import { Divider } from './controls';
-import { InfoButton, type InfoNotes } from './info';
-import { ROW_OWNS_PADDING } from './row-padding';
+import { type InfoNotes } from './info';
+import { type Href } from 'expo-router';
+import {
+  NavigationContext,
+  HeaderHeightContext,
+} from 'expo-router/react-navigation';
+import { Icon } from './icon';
+import { copy } from './copy';
+import type { DateInput } from './format';
+import { RowLink } from './row-link';
+import { light, dark } from './palette';
+import { designFlags } from './flags';
+import { useInCard } from './card';
+import { SurfaceContext, RowInsetContext } from './row-padding';
 import { Heading, Text, type TextTone } from './text';
 import {
-  accents,
   colors,
-  light,
+  accents,
   hairline,
   layout,
   rhythm,
-  spacing,
+  radii,
+  minimumTarget,
+  rhythmRegular,
+  textStyles,
+  motion,
   type Accent,
 } from './tokens';
-import { useInSplitList, usePaneBar } from './split';
+import { usePaneBar } from './split';
 import { useStableKeyboard } from './useStableKeyboard';
 import { useRefreshCommand } from './keyboard';
 
 /**
  * The column a screen's content sits in. On compact width (every iPhone,
- * and a narrow iPad window) content runs edge to edge inside the 20pt
- * margin, as before. On regular width it is centred at `readable` (700pt,
+ * and a narrow iPad window) content uses the 16 or 20 pt screen margin. On regular width it is centred at `readable` (700pt,
  * long text) or `wide` (1180pt, front pages and grids), and the children
  * read the column's width from `useLayout()`. Screens built on a FlatList
  * use it directly: `onLayout` on the list, `content` in its
@@ -63,16 +84,20 @@ export function useScreenColumn(own: keyof typeof columns = 'readable') {
   const [onLayout, region] = useMeasuredRegion();
   const outer = useLayout();
   const width = region?.width ?? outer.width;
-  const inset = readableInset(width, columns[column]);
-  const content =
-    inset === layout.screenMargin ? null : { paddingHorizontal: inset };
+  const regular = isPad && width >= columns.readable;
+  const inset = regular
+    ? Math.max(rhythmRegular.screen, Math.round((width - columns[column]) / 2))
+    : width < 414
+      ? 16
+      : 20;
+  const content = { paddingHorizontal: inset };
   const inner = region
     ? { width: region.width - inset * 2, height: region.height }
     : null;
   const breakout = columnBreakout(width, column);
   // Inside a split pane: its Back and actions, first in the content.
   const bar = usePaneBar();
-  return { onLayout, content, inner, bar, breakout };
+  return { onLayout, content, inner, bar, breakout, regular };
 }
 
 /**
@@ -88,8 +113,14 @@ export function Screen({
   scrollRef,
   onScroll,
   column = 'readable',
+  grouped = false,
+  barTitle,
+  offline,
 }: {
   testID?: string;
+  grouped?: boolean;
+  barTitle?: string;
+  offline?: { savedAt: DateInput | null } | null;
   scrollRef?: Ref<ScrollView>;
   onScroll?: (y: number) => void;
   children: ReactNode;
@@ -97,34 +128,66 @@ export function Screen({
   /** The content column on regular width: `readable` (700pt) or `wide`. */
   column?: keyof typeof columns;
 }) {
-  const { onLayout, content, inner, bar } = useScreenColumn(column);
+  const { onLayout, content, inner, bar, regular } = useScreenColumn(column);
+  const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
+  const contentRoot = useRef<View>(null);
+  const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
+  const titleScroll = useRef<TitleScrollHandler | null>(null);
+  const suppliedBridge = useContext(ScreenTitleContext);
+  const nativeBridge = useScreenBarTitle(
+    barTitle,
+    ground,
+    anchorBottom !== null,
+  );
+  const titleBridge = suppliedBridge ?? nativeBridge;
+  useEffect(() => {
+    titleScroll.current =
+      barTitle && titleBridge ? titleBridge(barTitle) : null;
+  }, [barTitle, titleBridge]);
   useRefreshCommand(
     refreshControl?.props.onRefresh,
     !!refreshControl?.props.refreshing,
   );
   return (
-    <SidebarSafe style={styles.screen}>
+    <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
       <ScrollView
         ref={scrollRef}
         testID={testID}
-        style={styles.screen}
+        style={[styles.screen, { backgroundColor: colors[ground] }]}
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
         keyboardDismissMode="on-drag"
         refreshControl={refreshControl}
-        contentContainerStyle={[styles.content, content]}
+        contentContainerStyle={[
+          styles.content,
+          content,
+          regular ? { gap: rhythmRegular.section } : null,
+        ]}
         onLayout={onLayout}
-        onScroll={
-          onScroll
-            ? (event) => onScroll(event.nativeEvent.contentOffset.y)
-            : undefined
-        }
-        scrollEventThrottle={onScroll ? 16 : undefined}
+        onScroll={(event) => {
+          const y = event.nativeEvent.contentOffset.y;
+          titleScroll.current?.(y, anchorBottom);
+          onScroll?.(y);
+        }}
+        scrollEventThrottle={16}
       >
         <RegionProvider value={inner}>
-          {bar}
-          {children}
+          <SurfaceContext.Provider value={ground}>
+            <TitleAnchorContext.Provider value={setAnchorBottom}>
+              <TitleContentContext.Provider value={contentRoot}>
+                <View
+                  ref={contentRoot}
+                  style={{
+                    gap: regular ? rhythmRegular.section : rhythm.section,
+                  }}
+                >
+                  {bar}
+                  {anchorHeadings(withOffline(children, offline))}
+                </View>
+              </TitleContentContext.Provider>
+            </TitleAnchorContext.Provider>
+          </SurfaceContext.Provider>
         </RegionProvider>
       </ScrollView>
     </SidebarSafe>
@@ -192,94 +255,372 @@ export function KeyboardStableScreen({
 
 /** Vertical spacing for related items (16pt by default). */
 export function Group({
-  gap = spacing.s4,
+  gap = rhythm.block,
   style,
   ...props
 }: ViewProps & { gap?: number }) {
   return <View {...props} style={[{ gap }, style]} />;
 }
 
-/**
- * A major section: a default rule, then a serif heading, an optional ⓘ for
- * the block's methodology and caveats, and an optional trailing action ("All
- * bills"). No card, filled box or icon tile marks the boundary; the rule and
- * the heading do (TestFlight, 8 Oct: an icon on a section heading is too
- * busy). A category `accent` draws a short 2pt mark in its ink over the
- * start of the rule. Heading to content is 12pt; blocks inside step 16pt.
- */
+export type SectionAction = {
+  label?: string;
+  accessibilityLabel: string;
+  href?: Href;
+  onPress?: () => void;
+  testID?: string;
+};
+export function SectionHeader({
+  title,
+  action,
+  testID,
+  level = 2,
+}: {
+  title: string;
+  action?: SectionAction;
+  testID?: string;
+  level?: 2 | 3;
+}) {
+  const stacked = useAccessibilitySize();
+  const button = action ? (
+    <Pressable
+      accessibilityRole={action.href ? 'link' : 'button'}
+      accessibilityLabel={action.accessibilityLabel}
+      onPress={action.onPress}
+      testID={action.testID}
+      style={({ pressed }) => [
+        styles.sectionAction,
+        pressed ? { backgroundColor: colors.sunken } : null,
+      ]}
+    >
+      <Text wordSafe variant="strong" tone="navy">
+        {action.label ?? 'See all'}
+      </Text>
+    </Pressable>
+  ) : null;
+  return (
+    <View style={stacked ? styles.sectionHeadStacked : styles.sectionHead}>
+      <Heading level={level} style={styles.grow} testID={testID}>
+        {title}
+      </Heading>
+      {action?.href && button ? (
+        <RowLink href={action.href}>{button}</RowLink>
+      ) : (
+        button
+      )}
+    </View>
+  );
+}
+/** Section boundaries use space and a heading. Legacy props remain until wave 6. */
 export function Section({
   title,
-  accent,
-  info,
   action,
   children,
   testID,
   headingTestID,
-  rule = true,
 }: {
-  /** False for the first section under a sheet's bar: no top rule. */
-  rule?: boolean;
   title?: string;
-  /** The category's accent, as a short mark over the rule. */
-  accent?: Accent;
-  /** Long notes behind an ⓘ: methodology and caveats, shown in full there. */
-  info?: InfoNotes & { testID?: string };
-  /** A trailing link such as "All bills". */
-  action?: ReactNode;
+  action?: SectionAction | ReactNode;
   children: ReactNode;
   testID?: string;
   headingTestID?: string;
+  /** @deprecated Section headers no longer draw a rule. */ rule?: boolean;
+  /** @deprecated Use a SourceLine for notes. */ info?: InfoNotes & {
+    testID?: string;
+  };
+  /** @deprecated Section headers have no accent. */ accent?: Accent;
 }) {
-  const stacked = useAccessibilitySize();
-  // In a split's list pane the detail carries the view's one accent.
-  const quiet = useInSplitList();
+  const isAction =
+    action &&
+    typeof action === 'object' &&
+    !isValidElement(action) &&
+    'accessibilityLabel' in action;
   return (
-    <View
-      testID={testID}
-      style={[styles.section, rule ? null : styles.unruled]}
-    >
-      {rule && accent && !quiet ? (
-        <View
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={[
-            styles.accentMark,
-            { backgroundColor: colors[accents[accent].ink] },
-          ]}
+    <View testID={testID} style={styles.section}>
+      {title ? (
+        <SectionHeader
+          title={title}
+          action={isAction ? (action as SectionAction) : undefined}
+          testID={headingTestID}
         />
       ) : null}
-      {title || action || info ? (
-        stacked && title && (action || (info && Platform.OS !== 'android')) ? (
-          // At accessibility sizes the title takes the whole line and the
-          // ⓘ and action sit on their own line below: a large "See all"
-          // never squeezes the heading into a narrow column.
-          <View style={styles.sectionHeadStacked}>
-            <Heading level={2} testID={headingTestID}>
-              {title}
-            </Heading>
-            <View style={styles.sectionTools}>
-              {/* A column of fixed width for the action's word-safe label. */}
-              {action ? <View style={styles.grow}>{action}</View> : null}
-              {info ? <InfoButton {...info} /> : null}
-            </View>
-          </View>
-        ) : (
-          <View style={[styles.sectionHead, styles.sectionHeadSpaced]}>
-            {title ? (
-              <Heading level={2} style={styles.grow} testID={headingTestID}>
-                {title}
-              </Heading>
-            ) : (
-              <View style={styles.grow} />
-            )}
-            {info ? <InfoButton {...info} /> : null}
-            {action}
-          </View>
-        )
-      ) : null}
+      {action && !isAction ? (action as ReactNode) : null}
       {children}
     </View>
   );
+}
+const InGroup = createContext(false);
+function InsetRow({
+  children,
+  separator,
+  grouped,
+}: {
+  children: ReactNode;
+  separator: boolean;
+  grouped: boolean;
+}) {
+  const [inset, setInset] = useState(16);
+  return (
+    <View>
+      {separator ? (
+        <View
+          style={{
+            marginLeft: grouped ? inset : 0,
+            height: hairline,
+            backgroundColor: colors.dividerSubtle,
+          }}
+        />
+      ) : null}
+      <View style={grouped ? { paddingHorizontal: 16 } : undefined}>
+        <RowInsetContext.Provider value={setInset}>
+          {children}
+        </RowInsetContext.Provider>
+      </View>
+    </View>
+  );
+}
+/** A short group of rows. Its surface comes from the enclosing Screen. */
+export function InsetGroup({
+  header,
+  footer,
+  children,
+  testID,
+}: {
+  header?: string;
+  footer?: ReactNode;
+  children: ReactNode;
+  testID?: string;
+}) {
+  const nested = useContext(InGroup);
+  const inCard = useInCard();
+  const surface = useContext(SurfaceContext);
+  const rows = Children.toArray(children);
+  const grouped = surface === 'sunken' && designFlags.groupedSurfaces;
+  if (__DEV__ && (nested || inCard))
+    console.warn(
+      'InsetGroup is for a short list of rows, never inside a card or another group.',
+    );
+  return (
+    <View testID={testID}>
+      {header ? (
+        <Text
+          wordSafe
+          variant="groupHeader"
+          style={{ marginBottom: rhythm.groupHeader }}
+        >
+          {header}
+        </Text>
+      ) : null}
+      <View style={grouped ? styles.insetGroup : undefined}>
+        <InGroup.Provider value>
+          <SurfaceContext.Provider value={grouped ? 'raised' : surface}>
+            {rows.map((row, index) => (
+              <InsetRow
+                key={isValidElement(row) ? (row.key ?? index) : index}
+                separator={index > 0}
+                grouped={grouped}
+              >
+                {row}
+              </InsetRow>
+            ))}
+          </SurfaceContext.Provider>
+        </InGroup.Provider>
+      </View>
+      {footer ? (
+        <View style={{ marginTop: rhythm.tight }}>
+          {typeof footer === 'string' ? (
+            <Text wordSafe variant="footnote">
+              {footer}
+            </Text>
+          ) : (
+            footer
+          )}
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+/** A fallback for Screen; the shell may supply its shared title renderer. */
+function ScreenBarTitle({ title, shown }: { title: string; shown: boolean }) {
+  const reduced = useReduceMotion();
+  const [opacity] = useState(() => new Animated.Value(shown ? 1 : 0));
+  useEffect(() => {
+    const animation = Animated.timing(opacity, {
+      toValue: shown ? 1 : 0,
+      duration: reduced ? 0 : motion.duration.crossfade,
+      useNativeDriver: true,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [opacity, shown, reduced]);
+  return (
+    <Animated.Text
+      numberOfLines={1}
+      ellipsizeMode="tail"
+      maxFontSizeMultiplier={1.353}
+      allowFontScaling
+      accessibilityElementsHidden={!shown}
+      importantForAccessibility={shown ? 'auto' : 'no-hide-descendants'}
+      style={{
+        fontFamily: textStyles.inlineTitle.fontFamily,
+        fontWeight: textStyles.inlineTitle.fontWeight,
+        fontSize: textStyles.inlineTitle.fontSize,
+        color: colors.ink,
+        opacity,
+      }}
+    >
+      {title}
+    </Animated.Text>
+  );
+}
+function useScreenBarTitle(
+  title: string | undefined,
+  ground: 'paper' | 'sunken',
+  anchored: boolean,
+) {
+  const navigation = useContext(NavigationContext);
+  const header = useContext(HeaderHeightContext) || 44;
+  const shown = useRef(false);
+  useEffect(() => {
+    if (title) navigation?.setOptions({ title });
+  }, [navigation, title]);
+  useEffect(() => {
+    if (
+      Platform.OS === 'ios' &&
+      Number.parseInt(String(Platform.Version), 10) < 26
+    )
+      navigation?.setOptions({
+        headerStyle: { backgroundColor: colors[ground] },
+      });
+  }, [navigation, ground]);
+  useEffect(() => {
+    if (!title || !anchored) return;
+    shown.current = false;
+    navigation?.setOptions({
+      headerTitle: () => <ScreenBarTitle title={title} shown={false} />,
+    });
+  }, [navigation, title, anchored]);
+  return useCallback(
+    (barTitle: string): TitleScrollHandler =>
+      (y, bottom) => {
+        if (bottom === null) return;
+        const next = y + header > bottom;
+        if (next === shown.current) return;
+        shown.current = next;
+        navigation?.setOptions(
+          Platform.OS === 'android'
+            ? { headerTitle: next ? barTitle : '' }
+            : {
+                headerTitle: () => (
+                  <ScreenBarTitle title={barTitle} shown={next} />
+                ),
+              },
+        );
+      },
+    [navigation, header],
+  );
+}
+
+/** The shell lane installs its fading title renderer using this bridge. */
+export type TitleScrollHandler = (
+  y: number,
+  anchorBottom: number | null,
+) => void;
+export const ScreenTitleContext = createContext<
+  ((title: string) => TitleScrollHandler) | null
+>(null);
+export const TitleAnchorContext = createContext<
+  ((bottom: number) => void) | null
+>(null);
+export const TitleContentContext = createContext<RefObject<View | null> | null>(
+  null,
+);
+export function TitleAnchor({ children }: { children: ReactNode }) {
+  const report = useContext(TitleAnchorContext);
+  const content = useContext(TitleContentContext);
+  const anchor = useRef<View>(null);
+  return (
+    <View
+      ref={anchor}
+      onLayout={(event) => {
+        const fallback = () =>
+          report?.(
+            event.nativeEvent.layout.y + event.nativeEvent.layout.height,
+          );
+        if (anchor.current && content?.current)
+          anchor.current.measureLayout(
+            content.current,
+            (_x, y, _width, height) => report?.(y + height + rhythm.block),
+            fallback,
+          );
+        else fallback();
+      }}
+    >
+      {children}
+    </View>
+  );
+}
+/** Marks the date or page heading that precedes the page's offline line. */
+export function ScreenHeader({ children }: { children: ReactNode }) {
+  return <>{children}</>;
+}
+const offlineSymbol = 'wifi.slash';
+function withOffline(
+  children: ReactNode,
+  offline: { savedAt: DateInput | null } | null | undefined,
+) {
+  if (!offline) return children;
+  const items = Children.toArray(children);
+  let index = 0;
+  while (index < items.length) {
+    const item = items[index];
+    if (
+      !isValidElement<{ screenHeader?: boolean }>(item) ||
+      (item.type !== ScreenHeader && !item.props.screenHeader)
+    )
+      break;
+    index++;
+  }
+  items.splice(
+    index,
+    0,
+    <View
+      key="screen-offline"
+      style={{
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        gap: rhythm.tight,
+      }}
+    >
+      <Icon name={offlineSymbol} size={15} maxScale={1.5} tone="inkSoft" />
+      <Text wordSafe variant="secondary" style={{ flexShrink: 1 }}>
+        {offline.savedAt === null
+          ? "You're offline."
+          : copy.offline(offline.savedAt)}
+      </Text>
+    </View>,
+  );
+  return items;
+}
+// Also handle the existing direct Heading children while Heading adopts the context.
+function anchorHeadings(children: ReactNode): ReactNode {
+  return Children.map(children, (child) => {
+    if (!isValidElement<{ level?: number; children?: ReactNode }>(child))
+      return child;
+    if (child.type === Heading && child.props.level === 1)
+      return <TitleAnchor>{child}</TitleAnchor>;
+    if (
+      typeof child.type === 'string' ||
+      child.type === View ||
+      child.type === Group
+    )
+      return cloneElement(
+        child,
+        undefined,
+        anchorHeadings(child.props.children),
+      );
+    return child;
+  });
 }
 
 /**
@@ -287,6 +628,7 @@ export function Section({
  * clear, so lines that have scrolled up read as "more above" rather than cut
  * off. Decorative; place it last inside a relatively positioned wrapper.
  */
+/** @deprecated Native scroll edge effects replace this fade. */
 export function EdgeFade({
   height = 32,
   testID,
@@ -294,6 +636,7 @@ export function EdgeFade({
   height?: number;
   testID?: string;
 }) {
+  const palette = useColorScheme() === 'dark' ? dark : light;
   return (
     <View
       pointerEvents="none"
@@ -304,7 +647,7 @@ export function EdgeFade({
         styles.fade,
         {
           height,
-          experimental_backgroundImage: `linear-gradient(to bottom, ${light.paper} 0%, ${light.paper}00 100%)`,
+          experimental_backgroundImage: `linear-gradient(to bottom, ${palette.paper} 0%, ${palette.paper}00 100%)`,
         },
       ]}
     />
@@ -312,6 +655,7 @@ export function EdgeFade({
 }
 
 /** A second list within a section: subtle rule and a subsection heading. */
+/** @deprecated Use Heading level 3 and a tight gap. */
 export function SubSection({
   title,
   children,
@@ -334,6 +678,7 @@ export function SubSection({
  * either side of a control row (LinkRow, Disclosure, PersonRow, a web link)
  * that carries its own 44pt height and padding, so a one-line row is 48pt.
  */
+/** @deprecated Use InsetGroup. */
 export function RowList({
   children,
   grid = false,
@@ -342,24 +687,11 @@ export function RowList({
   grid?: boolean;
 }) {
   const { regular } = useLayout();
-  const rows = Children.toArray(children);
-  if (grid && isPad && regular) return <Grid minItemWidth={320}>{rows}</Grid>;
-  return (
-    <View>
-      {rows.map((row, index) => (
-        <View key={index}>
-          {index > 0 ? <Divider variant="subtle" /> : null}
-          <View style={ownsPadding(row) ? styles.controlRow : styles.row}>
-            {row}
-          </View>
-        </View>
-      ))}
-    </View>
+  return grid && isPad && regular ? (
+    <Grid minItemWidth={320}>{children}</Grid>
+  ) : (
+    <InsetGroup>{children}</InsetGroup>
   );
-}
-function ownsPadding(row: ReactNode) {
-  if (!isValidElement(row) || typeof row.type === 'string') return false;
-  return !!(row.type as unknown as Record<symbol, boolean>)[ROW_OWNS_PADDING];
 }
 
 export interface KeyValue {
@@ -373,6 +705,7 @@ export interface KeyValue {
  * Facts as label and value. Side by side at ordinary sizes; stacked at
  * accessibility sizes so neither is squeezed.
  */
+/** @deprecated Use ValueRows in an InsetGroup. */
 export function KeyValueList({ items }: { items: readonly KeyValue[] }) {
   const stacked = useAccessibilitySize();
   return (
@@ -387,7 +720,7 @@ export function KeyValueList({ items }: { items: readonly KeyValue[] }) {
           testID={item.testID}
           style={stacked ? styles.kvStacked : styles.kvInline}
         >
-          <Text variant="metadata" style={stacked ? null : styles.kvLabel}>
+          <Text variant="secondary" style={stacked ? null : styles.kvLabel}>
             {item.label}
           </Text>
           <Text
@@ -414,6 +747,7 @@ export interface Stat {
  * Figures with their labels, wrapping into a row of tiles; one per line at
  * accessibility sizes. Each tile reads "value, label".
  */
+/** @deprecated Use StatStrip with a dated source for its block. */
 export function StatRow({
   stats,
   accent,
@@ -434,10 +768,10 @@ export function StatRow({
           testID={stat.testID}
           style={stacked ? null : styles.stat}
         >
-          <Text variant="display" tone={tone}>
+          <Text variant="figure" tone={tone}>
             {stat.value}
           </Text>
-          <Text wordSafe variant="metadata">
+          <Text wordSafe variant="secondary">
             {stat.label}
           </Text>
         </View>
@@ -450,25 +784,22 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
     paddingHorizontal: layout.screenMargin,
-    paddingTop: spacing.s4,
-    paddingBottom: spacing.s7,
+    paddingTop: rhythm.block,
+    paddingBottom: rhythm.section,
     gap: layout.sectionGap,
   },
-  section: {
-    gap: rhythm.block,
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerDefault,
-    paddingTop: rhythm.block + rhythm.line,
+  section: { gap: rhythm.heading },
+  sectionAction: {
+    minHeight: minimumTarget,
+    justifyContent: 'center',
+    borderRadius: radii.thumb,
+    borderCurve: 'continuous',
   },
-  unruled: { borderTopWidth: 0, paddingTop: 0 },
-  // Sits over the start of the hairline rule, which it replaces there.
-  accentMark: {
-    position: 'absolute',
-    top: -hairline - 0.5,
-    left: 0,
-    width: 28,
-    height: 2,
-    borderRadius: 1,
+  insetGroup: {
+    backgroundColor: colors.raised,
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
   },
   fade: { position: 'absolute', top: 0, left: 0, right: 0 },
   sectionHead: {
@@ -502,9 +833,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'baseline',
     justifyContent: 'space-between',
-    gap: spacing.s4,
+    gap: rhythm.block,
   },
-  kvStacked: { gap: spacing.s1 },
+  kvStacked: { gap: rhythm.line },
   kvLabel: { flex: 1 },
   kvValue: { textAlign: 'right', flexShrink: 1, maxWidth: '60%' },
   stats: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.block },

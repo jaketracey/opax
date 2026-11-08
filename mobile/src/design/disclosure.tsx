@@ -11,7 +11,7 @@ import {
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import { Icon, type SFSymbol } from './icon';
 import { Text } from './text';
-import { accents, colors, minimumTarget, rhythm, type Accent } from './tokens';
+import { colors, minimumTarget, rhythm, type Accent } from './tokens';
 
 /** Expand and collapse smoothly, or instantly with Reduce Motion. */
 export function animateLayout(reduceMotion: boolean) {
@@ -28,11 +28,11 @@ export function animateLayout(reduceMotion: boolean) {
  * "collapsed". The body is built only while open.
  */
 export function Disclosure({
-  label,
+  label = 'More',
   value,
   detail,
   icon,
-  accent,
+  accent: _accent,
   accessibilityLabel,
   testID,
   bodyTestID,
@@ -41,7 +41,7 @@ export function Disclosure({
   onToggle,
   children,
 }: {
-  label: string;
+  label?: string;
   /** A short trailing value: a count or a total. Never wraps. */
   value?: string;
   /** A line under the label: "Parliament of Australia · CC BY-NC-ND". */
@@ -74,7 +74,7 @@ export function Disclosure({
         useNativeDriver: true,
       }).start();
   }, [open, reduceMotion, turn]);
-  const tint = accent ? accents[accent].ink : 'navy';
+  const tint = 'inkSoft';
   return (
     <View>
       <Pressable
@@ -103,7 +103,7 @@ export function Disclosure({
               {label}
             </Text>
             {detail ? (
-              <Text wordSafe variant="metadata">
+              <Text wordSafe variant="secondary">
                 {detail}
               </Text>
             ) : null}
@@ -120,13 +120,18 @@ export function Disclosure({
               {
                 rotate: turn.interpolate({
                   inputRange: [0, 1],
-                  outputRange: ['0deg', '90deg'],
+                  outputRange: ['0deg', '180deg'],
                 }),
               },
             ],
           }}
         >
-          <Icon name="chevron.right" size={13} tone="inkSoft" />
+          <Icon
+            name={disclosureChevron}
+            size={13}
+            maxScale={1.5}
+            tone="inkFaint"
+          />
         </Animated.View>
       </Pressable>
       {open ? (
@@ -141,13 +146,15 @@ export function Disclosure({
   );
 }
 
+const disclosureChevron = 'chevron.down';
+
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.tight,
     minHeight: minimumTarget,
-    paddingVertical: 6,
+    paddingVertical: rhythm.row,
   },
   text: {
     flex: 1,

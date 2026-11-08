@@ -1,4 +1,4 @@
-import { cloneElement, type ReactElement } from 'react';
+import { cloneElement, useEffect, useState, type ReactElement } from 'react';
 import { Alert, Platform, Pressable, type PressableProps } from 'react-native';
 import { Link, router, type Href } from 'expo-router';
 import { canonicalUrl, openOnWeb } from '../navigation/external';
@@ -8,6 +8,7 @@ import {
   follow,
   unfollow,
   useFollows,
+  loadFollows,
   type FollowKind,
 } from '../features/follows/store';
 import { haptic } from './haptics';
@@ -289,25 +290,61 @@ export const rowMenus = {
   },
 };
 
-/** Used only by the opt-in shorthand menus; callers can instead supply actions. */
+/** Resolve profile slugs through the same reviewed identity join as the page. */
+async function followIdentity(kind: FollowKind, id: string): Promise<string> {
+  if (kind !== 'person' || /^person_[a-f0-9]{24}$/.test(id)) return id;
+  // Load build-bound services only for an opted-in person menu.
+  const { catalogs } =
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../api/runtime') as typeof import('../api/runtime');
+  const profile = await catalogs.person(id);
+  if (!profile.data.canonicalPersonId)
+    throw new Error('No canonical person identity');
+  return profile.data.canonicalPersonId;
+}
+/** The shorthand menus keep canonical follow IDs distinct from route slugs. */
 export function useRowFollow(
   kind: FollowKind,
   id: string | undefined,
   title: string,
 ): FollowAction {
   const follows = useFollows();
-  const key = `${kind}:${id}`;
+  const [resolved, setResolved] = useState<{
+    routeId: string;
+    id: string;
+  } | null>(null);
+  const canonical =
+    kind === 'person' && id && !/^person_[a-f0-9]{24}$/.test(id)
+      ? resolved?.routeId === id
+        ? resolved.id
+        : undefined
+      : id;
+  useEffect(() => {
+    if (!id || kind !== 'person' || canonical) return;
+    let active = true;
+    void followIdentity(kind, id)
+      .then((value) => {
+        if (active) setResolved({ routeId: id, id: value });
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [kind, id, canonical]);
   return {
-    following: !!follows?.some((item) => `${item.kind}:${item.id}` === key),
+    following:
+      !!canonical &&
+      !!follows?.some((item) => item.kind === kind && item.id === canonical),
     onFollow: () => {
       if (!id) return;
-      const change = follows?.some((item) => `${item.kind}:${item.id}` === key)
-        ? unfollow(key)
-        : follow({ kind, id, title }).then((result) => {
-            if (result === 'limit')
-              Alert.alert('Following', 'Unfollow an item to add another.');
-          });
-      void change.catch(() =>
+      void (async () => {
+        const followId = canonical ?? (await followIdentity(kind, id));
+        const current = await loadFollows();
+        if (current.some((item) => item.kind === kind && item.id === followId))
+          await unfollow(`${kind}:${followId}`);
+        else if ((await follow({ kind, id: followId, title })) === 'limit')
+          Alert.alert('Following', 'Unfollow an item to add another.');
+      })().catch(() =>
         Alert.alert('Following', 'Your follows could not be saved.'),
       );
     },

@@ -1,88 +1,282 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import {
+  Children,
+  useState,
+  createContext,
+  useContext,
+  isValidElement,
+  type ReactNode,
+} from 'react';
 import {
   Pressable,
   StyleSheet,
   View,
+  useColorScheme,
+  useWindowDimensions,
   type ColorValue,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { colors, hairline, radii, rhythm } from './tokens';
+import type { Href } from 'expo-router';
+import { useAccessibilitySize } from './accessibility';
+import { useLayout, gridColumns } from './adaptive';
+import { RowLink, type RowMenuAction } from './row-link';
+import { SurfaceContext } from './row-padding';
+import { Icon, type SFSymbol } from './icon';
+import { Text } from './text';
+import {
+  colors,
+  accents,
+  minimumTarget,
+  radii,
+  rhythm,
+  type Role,
+  type Accent,
+} from './tokens';
+import { designFlags } from './flags';
 
 const InCard = createContext(false);
-/** True inside a Card: a card never holds another. */
 export const useInCard = () => useContext(InCard);
-
-/**
- * A unit you can pick up: an edition, a lead, a report, a Today tile, an iPad
- * grid cell. Radius 12, raised, a 1pt subtle line, no shadow, padding 16.
- * Cards never nest and never wrap a list, a chart, In short or a section;
- * sections are separated by a rule, not a box. With `onPress` the whole card
- * is one link and darkens to sunken while pressed. `ground` replaces the
- * raised surface with a wash (the edition's subject).
- */
+const LeadTile = createContext(false);
 export function Card({
   children,
+  href,
   onPress,
+  zoom,
+  menu,
   ground,
+  shadow,
   padded = true,
   accessibilityLabel,
   accessibilityHint,
   accessibilityRole = 'button',
+  accessibilityActions = [],
   style,
   testID,
 }: {
   children: ReactNode;
+  href?: Href;
   onPress?: () => void;
-  ground?: ColorValue;
-  /** False when the content runs to the edge (a header band, a picture). */
+  zoom?: boolean;
+  menu?: RowMenuAction[];
+  ground?: Role | ColorValue;
+  shadow?: 'edition';
   padded?: boolean;
   accessibilityLabel?: string;
   accessibilityHint?: string;
   accessibilityRole?: 'button' | 'link';
+  accessibilityActions?: {
+    name: string;
+    label: string;
+    onAction: () => void;
+  }[];
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }) {
   const nested = useInCard();
+  const { width } = useWindowDimensions();
+  const dark = useColorScheme() === 'dark';
   if (nested && __DEV__)
     console.error(
       'Cards never nest: draw the inner unit as rows or a section instead.',
     );
+  const band = typeof ground === 'string' && ground.startsWith('band');
+  const fill =
+    typeof ground === 'string' && ground in colors
+      ? colors[ground as Role]
+      : ground;
   const face = [
-    styles.card,
-    padded ? styles.padded : null,
-    ground ? { backgroundColor: ground } : null,
+    nested ? undefined : styles.card,
+    padded && !nested ? { padding: width < 375 ? 16 : 20 } : null,
+    fill ? { backgroundColor: fill } : null,
   ];
-  const content = <InCard.Provider value>{children}</InCard.Provider>;
-  if (!onPress)
-    return (
+  const content = (
+    <InCard.Provider value>
+      <SurfaceContext.Provider value="raised">
+        {children}
+      </SurfaceContext.Provider>
+    </InCard.Provider>
+  );
+  const wrapShadow = (element: React.ReactElement) =>
+    shadow === 'edition' && !dark && !nested ? (
+      <View style={styles.editionShadow}>{element}</View>
+    ) : (
+      element
+    );
+  if (!href && !onPress)
+    return wrapShadow(
       <View testID={testID} style={[...face, style]}>
         {content}
-      </View>
+      </View>,
     );
-  return (
+  const card = (
     <Pressable
-      accessibilityRole={accessibilityRole}
+      accessible
+      accessibilityRole={href ? 'link' : accessibilityRole}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
+      accessibilityActions={accessibilityActions.map(({ name, label }) => ({
+        name,
+        label,
+      }))}
+      onAccessibilityAction={(event) =>
+        accessibilityActions
+          .find((action) => action.name === event.nativeEvent.actionName)
+          ?.onAction()
+      }
       testID={testID}
       onPress={onPress}
-      style={({ pressed }) => [...face, pressed ? styles.pressed : null, style]}
+      style={({ pressed }) => [
+        ...face,
+        pressed && !band ? { backgroundColor: colors.sunken } : null,
+        style,
+      ]}
     >
       {content}
     </Pressable>
   );
+  return wrapShadow(
+    href ? (
+      <RowLink href={href} menu={menu} zoom={zoom}>
+        {card}
+      </RowLink>
+    ) : (
+      card
+    ),
+  );
 }
-
+export function Tile({
+  title,
+  line,
+  symbol,
+  ink,
+  href,
+  testID,
+}: {
+  title: string;
+  line: string;
+  symbol: SFSymbol;
+  ink: Accent | 'navy';
+  href: Href;
+  testID?: string;
+}) {
+  const lead = useContext(LeadTile);
+  return (
+    <RowLink href={href}>
+      <Pressable
+        accessible
+        accessibilityRole="link"
+        accessibilityLabel={`${title}, ${line}`}
+        testID={testID}
+        style={({ pressed }) => [
+          styles.tile,
+          lead ? styles.leadTile : null,
+          pressed ? { backgroundColor: colors.sunken } : null,
+        ]}
+      >
+        <Icon
+          name={symbol}
+          size={28}
+          maxScale={1.5}
+          tone={
+            designFlags.categorySymbols
+              ? ink === 'navy'
+                ? 'navy'
+                : accents[ink].ink
+              : 'inkSoft'
+          }
+          {...{ type: 'hierarchical' as const }}
+        />
+        <View style={styles.tileText}>
+          <Text wordSafe variant="subsectionTitle">
+            {title}
+          </Text>
+          <Text wordSafe variant="footnote">
+            {line}
+          </Text>
+        </View>
+      </Pressable>
+    </RowLink>
+  );
+}
+export function TileGrid({
+  children,
+  lead = false,
+  testID,
+}: {
+  children: ReactNode;
+  lead?: boolean;
+  testID?: string;
+}) {
+  const { width, window, regular } = useLayout();
+  const stacked = useAccessibilitySize();
+  const [measuredWidth, setWidth] = useState<number | null>(null);
+  const gap = rhythm.tight + rhythm.line;
+  const available = measuredWidth ?? width;
+  const count =
+    stacked || window.width < 375
+      ? 1
+      : regular
+        ? gridColumns(available, {
+            columns: { regular: 3, wide: 4 },
+            minItemWidth: 150,
+            gap,
+          })
+        : 2;
+  const items = Children.toArray(children);
+  return (
+    <View
+      testID={testID}
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+      style={{ flexDirection: 'row', flexWrap: 'wrap', gap }}
+    >
+      {items.map((child, index) => {
+        const span =
+          count > 1 &&
+          (lead
+            ? index === 0
+            : index === items.length - 1 && items.length % count === 1)
+            ? Math.min(2, count)
+            : 1;
+        return (
+          <View
+            key={isValidElement(child) ? (child.key ?? index) : index}
+            style={{
+              width:
+                ((available - gap * (count - 1)) / count) * span +
+                gap * (span - 1),
+            }}
+          >
+            <LeadTile.Provider value={lead && index === 0 && count > 1}>
+              {child}
+            </LeadTile.Provider>
+          </View>
+        );
+      })}
+    </View>
+  );
+}
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.raised,
-    borderRadius: radii.md,
+    borderRadius: radii.container,
     borderCurve: 'continuous',
-    borderWidth: hairline,
-    borderColor: colors.dividerSubtle,
     overflow: 'hidden',
   },
-  padded: { padding: rhythm.block },
-  pressed: { backgroundColor: colors.sunken },
+  editionShadow: {
+    shadowColor: colors.ink,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+  },
+  tile: {
+    backgroundColor: colors.raised,
+    borderRadius: radii.tile,
+    borderCurve: 'continuous',
+    padding: rhythm.block,
+    minHeight: minimumTarget,
+    gap: rhythm.tight,
+    height: '100%',
+  },
+  leadTile: { flexDirection: 'row', alignItems: 'center' },
+  tileText: { flexShrink: 1, gap: rhythm.line },
 });

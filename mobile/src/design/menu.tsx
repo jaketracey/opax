@@ -44,9 +44,13 @@ export function confirmAction(
       title,
       options: [...actions.map((action) => action.title), 'Cancel'],
       cancelButtonIndex: actions.length,
-      destructiveButtonIndex: actions.flatMap((action, index) =>
-        action.destructive ? [index] : [],
-      ),
+      ...(actions.some((action) => action.destructive)
+        ? {
+            destructiveButtonIndex: actions.flatMap((action, index) =>
+              action.destructive ? [index] : [],
+            ),
+          }
+        : {}),
       ...(Platform.OS === 'ios' && Platform.isPad && anchor ? { anchor } : {}),
     },
     (index) => {

@@ -144,21 +144,21 @@ const noop = () => undefined;
 
 describe('StatusLabel', () => {
   test.each([
-    ['Passed', 'done'],
-    ['Assented', 'done'],
-    ['Agreed to', 'done'],
-    ['Voted for', 'done'],
+    ['Passed', 'neutral'],
+    ['Assented', 'neutral'],
+    ['Agreed to', 'neutral'],
+    ['Voted for', 'neutral'],
     ['Before parliament', 'active'],
     ['Introduced', 'active'],
     ['Second reading', 'active'],
-    ['Exposure draft', 'draft'],
-    ['Lapsed', 'ended'],
-    ['Negatived', 'ended'],
-    ['Not passed', 'ended'],
-    ['Not agreed to', 'ended'],
-    ['Voted against', 'ended'],
-    ['Withdrawn', 'ended'],
-    ['Outcome not recorded', 'ended'],
+    ['Exposure draft', 'active'],
+    ['Lapsed', 'neutral'],
+    ['Negatived', 'neutral'],
+    ['Not passed', 'neutral'],
+    ['Not agreed to', 'neutral'],
+    ['Voted against', 'neutral'],
+    ['Withdrawn', 'neutral'],
+    ['Outcome not recorded', 'neutral'],
   ] as const)('"%s" reads as %s', (word, tone) => {
     expect(statusTone(word)).toBe(tone);
   });
@@ -168,12 +168,12 @@ describe('StatusLabel', () => {
     expect(box.props.accessible).toBe(true);
     expect(box.props.accessibilityLabel).toBe('Passed');
     const style = flat(box.props.style);
-    expect(style.borderRadius).toBe(radii.sm);
-    expect(hex(style.backgroundColor)).toBe(light.moneyWash);
+    expect(style.borderRadius).toBe(radii.capsule);
+    expect(hex(style.backgroundColor)).toBe(light.sunken);
     const text = nativeTexts(root)[0]!;
     const textStyle = flat(text.props.style);
     expect(textStyle.fontSize).toBe(textStyles.label.fontSize);
-    expect(hex(textStyle.color)).toBe(light.moneyInk);
+    expect(hex(textStyle.color)).toBe(light.inkSoft);
     expect(strings(root)).toEqual(['Passed']);
   });
   test('inside a row that says it, it is drawn only', () => {
@@ -224,13 +224,13 @@ describe('Tag', () => {
     const face = root.find(
       (n) => typeof n.type === 'string' && flat(n.props.style).minHeight === 28,
     );
-    expect(flat(face.props.style).borderRadius).toBe(radii.sm);
-    expect(hex(flat(face.props.style).backgroundColor)).toBe(light.bronzeWash);
-    expect(hex(flat(nativeTexts(root)[0]!.props.style).color)).toBe(light.navy);
+    expect(flat(face.props.style).borderRadius).toBe(radii.capsule);
+    expect(hex(flat(face.props.style).backgroundColor)).toBe(light.navyWash);
+    expect(hex(flat(nativeTexts(root)[0]!.props.style).color)).toBe(light.ink);
     // No decorative hash: the label alone.
     expect(strings(root)).toEqual(['Housing']);
   });
-  test('a linked tag is a 44pt link; pressed adds an outline and underline', () => {
+  test('a linked tag is a 44pt link; pressed uses a surface highlight without an underline', () => {
     const root = render(<Tag label="Housing" onPress={noop} testID="t" />).root;
     const link = root.find(
       (n) => n.props.testID === 't' && typeof n.props.children === 'function',
@@ -241,9 +241,10 @@ describe('Tag', () => {
     const face = pressed.find(
       (n) => typeof n.type === 'string' && flat(n.props.style).minHeight === 28,
     );
-    expect(flat(face.props.style).borderWidth).toBe(1);
+    expect(hex(flat(face.props.style).backgroundColor)).toBe(light.sunken);
+    expect(flat(face.props.style).borderWidth).toBeUndefined();
     expect(flat(nativeTexts(pressed)[0]!.props.style).textDecorationLine).toBe(
-      'underline',
+      undefined,
     );
   });
 });
@@ -266,7 +267,7 @@ describe('PartyLabel', () => {
     );
     expect(flat(dot.props.style).backgroundColor).toBe('#B02E33');
     const text = nativeTexts(root)[0]!;
-    expect(flat(text.props.style).fontSize).toBe(textStyles.label.fontSize);
+    expect(flat(text.props.style).fontSize).toBe(textStyles.secondary.fontSize);
     expect(hex(flat(text.props.style).color)).toBe(light.inkSoft);
     expect(strings(root)).toEqual(['Labor']);
   });
@@ -326,7 +327,14 @@ describe('PartyLabel', () => {
   });
 });
 
-describe('ChoiceChip', () => {
+describe('ChoiceChip on Android', () => {
+  const originalOS = Platform.OS;
+  beforeEach(() => {
+    Platform.OS = 'android';
+  });
+  afterEach(() => {
+    Platform.OS = originalOS;
+  });
   const chip = (props: Partial<Parameters<typeof ChoiceChip>[0]> = {}) =>
     render(
       <ChoiceChip
@@ -412,11 +420,11 @@ describe('MachineLabel', () => {
     const style = flat(
       face.find(
         (n) =>
-          typeof n.type === 'string' && flat(n.props.style).minHeight === 26,
+          typeof n.type === 'string' && flat(n.props.style).minHeight === 32,
       ).props.style,
     );
     expect(style.borderRadius).toBe(radii.pill);
-    expect(hex(style.backgroundColor)).toBe(light.billsWash);
+    expect(hex(style.backgroundColor)).toBe(light.navyWash);
     expect(flat(pill('m').props.style).minHeight).toBe(44);
   });
   test('tapping it opens the attribution and the guidance', () => {
@@ -466,7 +474,7 @@ describe('SourceLine and SourceSheet', () => {
     expect(hex(flat(outer!.props.style).color)).toBe(light.inkSoft);
     // 32pt drawn, 44pt to touch.
     expect(pressedStyle(line, false).minHeight).toBe(
-      Platform.OS === 'android' ? 48 : 32,
+      Platform.OS === 'android' ? 48 : 44,
     );
     expect(line.props.hitSlop).toEqual({ top: 6, bottom: 6 });
     expect(hex(pressedStyle(line, true).backgroundColor)).toBe(light.sunken);
@@ -649,7 +657,7 @@ describe('SourceLine and SourceSheet', () => {
 });
 
 describe('Card', () => {
-  test('radius 12, raised, a hairline, no shadow; pressed is sunken', () => {
+  test('continuous container corners, raised, no outline or shadow; pressed is sunken', () => {
     const root = render(
       <Card onPress={noop} accessibilityLabel="Open the report" testID="card">
         <Text>Gambling</Text>
@@ -661,11 +669,12 @@ describe('Card', () => {
     const rest = pressedStyle(card, false);
     expect(rest).toMatchObject({
       borderRadius: radii.md,
-      borderWidth: 1,
-      padding: 16,
+      borderCurve: 'continuous',
+      padding: 20,
     });
     expect(hex(rest.backgroundColor)).toBe(light.raised);
-    expect(hex(rest.borderColor)).toBe(light.dividerSubtle);
+    expect(rest.borderColor).toBeUndefined();
+    expect(rest.borderWidth).toBeUndefined();
     for (const key of ['shadowColor', 'shadowOpacity', 'elevation'])
       expect(rest[key]).toBeUndefined();
     expect(hex(pressedStyle(card, true).backgroundColor)).toBe(light.sunken);
