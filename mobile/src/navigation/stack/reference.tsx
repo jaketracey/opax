@@ -27,6 +27,6 @@ export function licenceScreens() {
     ),
   ];
 }
-export function legacyReferenceScreens() {
+export function referenceSharedScreens() {
   return [screen('stats', 'Coverage'), screen('methods', 'Methods')];
 }

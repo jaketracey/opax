@@ -15,10 +15,6 @@ export function peopleScreens() {
     screen('party-sources', 'Largest sources by year'),
     screen('declarations', 'Just declared'),
     screen('expense-glossary', 'Expense categories', sheetOptions),
-  ];
-}
-export function directoryScreens() {
-  return [
     <Stack.Screen
       key="directory"
       name="directory"

@@ -6,10 +6,8 @@ export function billsScreens(segment = '', signedIn = false) {
     screen('bill/[key]', 'Bill'),
     screen('bill-list', 'Bills'),
     screen('division-history', 'Votes in parliament'),
+    ...(segment === '(bills)'
+      ? [screen('bill-filters', 'Filters', sheetOptions)]
+      : []),
   ];
-}
-export function legacyBillFilterScreens(segment: string) {
-  return segment === '(bills)'
-    ? [screen('bill-filters', 'Filters', sheetOptions)]
-    : [];
 }

@@ -1,8 +1,8 @@
 import { todayScreens } from './today';
 import { editionScreens } from './edition';
 import { yourMpScreens } from './your-mp';
-import { peopleScreens, directoryScreens } from './people';
-import { billsScreens, legacyBillFilterScreens } from './bills';
+import { peopleScreens } from './people';
+import { billsScreens } from './bills';
 import { recordsScreens } from './records';
 import { searchScreens } from './search';
 import { askScreens } from './ask';
@@ -10,7 +10,7 @@ import { moneyMapScreens } from './money-map';
 import { publicMoneyScreens } from './public-money';
 import { exploreScreens } from './explore';
 import { filtersScreens } from './filters';
-import { legacyReferenceScreens } from './reference';
+import { referenceSharedScreens } from './reference';
 
 export const tabSettings = {
   anchor: 'index',
@@ -27,14 +27,12 @@ export function sharedScreens(segment: string, signedIn: boolean) {
     ...peopleScreens(),
     ...billsScreens(segment, signedIn),
     ...recordsScreens(),
+    ...referenceSharedScreens(),
     ...searchScreens(segment, signedIn),
     ...askScreens(segment, signedIn),
     ...moneyMapScreens(),
     ...publicMoneyScreens(),
     ...exploreScreens(),
     ...filtersScreens(),
-    ...directoryScreens(),
-    ...legacyBillFilterScreens(segment),
-    ...legacyReferenceScreens(),
   ];
 }

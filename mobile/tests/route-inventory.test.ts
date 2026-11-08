@@ -227,6 +227,9 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'])(
     const actual = names('shared', segment);
     for (const screen of shared) expect(actual).toContain(screen);
     expect(actual).toContain('ask');
+    for (const screen of ['directory', 'stats', 'methods'])
+      expect(actual).toContain(screen);
+    expect(actual.includes('bill-filters')).toBe(segment === '(bills)');
   },
 );
 test('money-node exists and is registered exactly once, in the shared stack', () => {
