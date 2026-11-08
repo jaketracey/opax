@@ -281,6 +281,18 @@ describe('Topic page', () => {
       expect(jest.mocked(read)).not.toHaveBeenCalled();
   });
 
+  it('counts speeches about the topic and says the count is a floor', async () => {
+    const page = await render(<TopicPage />);
+    const text = words(page);
+    expect(text).toContain('1,234');
+    expect(text).toContain('speeches about gambling');
+    expect(text).toContain(
+      'Not every speech is labelled yet, so this is a floor.',
+    );
+    expect(text).not.toContain('carry this label');
+    expect(text).not.toContain('so far');
+  });
+
   it('filters Speeches in place and never pushes a route', async () => {
     const page = await render(<TopicPage />);
     await press(page.root, 'topic-state-row-federal');

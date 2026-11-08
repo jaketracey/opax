@@ -94,20 +94,25 @@ const metaOf = (record: {
   savedAt: record.stale ? record.savedAt : null,
 });
 
-/** The topic's count: a figure, dated and sourced. */
+/**
+ * The topic's count: a figure, dated and sourced (specs/search.md 5.2
+ * item 2). Labelling is incomplete, so the count is a floor and says so.
+ */
 function countFigure(
+  slug: string,
   data: { count: number; labelled: number },
   record: { asOf: string | null; stale: boolean; savedAt: number | null },
 ): ComponentProps<typeof FigureBlock> {
   return {
     value: formatCount(data.count),
-    label: 'speeches carry this label so far',
+    label: `speeches about ${topicPhrase(slug)}`,
+    caveat: 'Not every speech is labelled yet, so this is a floor.',
     source: {
       asOf: record.asOf,
       savedAt: metaOf(record).savedAt,
       citation: TOPIC_CITATION,
       notes: [
-        `${formatCount(data.count)} of the ${formatCount(data.labelled)} speeches labelled so far carry this topic. Not every speech is labelled yet.`,
+        `${formatCount(data.count)} of the ${formatCount(data.labelled)} labelled speeches are about ${topicPhrase(slug)}.`,
         LABEL_NOTE,
       ],
       testID: 'topic-count-source',
@@ -226,7 +231,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
           ) : null}
         </View>
         {count && topic.record ? (
-          <FigureBlock {...countFigure(count, topic.record)} />
+          <FigureBlock {...countFigure(slug, count, topic.record)} />
         ) : topic.error ? (
           isOffline(topic.error) ? (
             <ContentUnavailable
