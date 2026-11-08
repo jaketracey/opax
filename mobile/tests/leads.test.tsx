@@ -729,9 +729,7 @@ describe('a lead’s comparison', () => {
   test('an ID not in the export says so', async () => {
     mockParams.id = 'procurement_concentration:missing';
     const renderer = await render(<LeadDetail />);
-    expect(texts(renderer.root)).toContain(
-      'This lead is not in the current export.',
-    );
+    expect(texts(renderer.root)).toContain('This lead is no longer listed.');
     act(() => renderer.unmount());
   });
 });
@@ -852,7 +850,7 @@ describe('the declared-interests feed', () => {
     // The export's coverage note is in its one source line's sheet, in full.
     await press(root, 'declarations-source');
     expect(texts(root)).toContain(
-      'This export holds the newest 300 of 1,660 dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.',
+      'Showing the newest 300 of 1,660 dated register changes. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact name matches, ignoring case and spacing.',
     );
     act(() => renderer.unmount());
   });

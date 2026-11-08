@@ -20,7 +20,7 @@ import { openRecord } from './open';
 
 const NOTES = [
   'Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.',
-  'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.',
+  'A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. Not every speech is labelled yet.',
 ];
 
 type TopicCount = { slug: string; count: number };
@@ -134,7 +134,10 @@ export default function TopicsIndex() {
               {/* A topic no speech carries yet has no count or share to
                   give: it is named here, apart, until the pass reaches it. */}
               {data.topics.some((t) => topicNames[t.slug] && t.count === 0) ? (
-                <Section title="Not yet labelled" testID="topics-unlabelled">
+                <Section
+                  title="No labelled speeches yet"
+                  testID="topics-unlabelled"
+                >
                   <RowList grid>
                     {listed(data.topics, 'name', (t) => t.count === 0).map(
                       (t) => (

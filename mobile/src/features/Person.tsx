@@ -71,7 +71,7 @@ import { EvidenceFooter, RecordBlock, votesSource } from './your-mp/Evidence';
 import { DeclaredInterests, registerNotes } from './people/DeclaredInterests';
 import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
 const partialMissing =
-  'No readable record was found for this person. Some rows in the latest public export were unreadable.';
+  'No record could be shown for this person. Some records could not be read.';
 type Jump = 'votes' | 'interests' | 'pay';
 export default function Person() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -532,11 +532,7 @@ export function ProfileScreen({
                                           </Text>
                                         ) : null}
                                       </>
-                                    ) : (
-                                      <Text wordSafe variant="fine">
-                                        Category definition not held.
-                                      </Text>
-                                    )}
+                                    ) : null}
                                   </Group>
                                 );
                               })}
@@ -599,7 +595,7 @@ function DeclaredTies({
   if (!ties?.length)
     return (
       <Text wordSafe variant="metadata" testID="person-ties-missing">
-        No declared organisation ties are held in this register file.
+        No declared organisation ties.
       </Text>
     );
   return (
@@ -650,7 +646,7 @@ function SeatLines({ identity }: { identity: PersonProfile }) {
   if (!identity.seats.length)
     return (
       <Text wordSafe variant="metadata">
-        No current electorate observation is held in this release.
+        No current electorate recorded.
       </Text>
     );
   return (

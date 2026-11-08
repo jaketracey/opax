@@ -309,9 +309,7 @@ function BillsScreen() {
         savedAt={record?.stale ? record.savedAt : null}
         state={record?.partial ? 'partial' : null}
         notes={[
-          record?.partial
-            ? 'Some rows in this export could not be read.'
-            : null,
+          record?.partial ? 'Some records could not be read.' : null,
           FINEPRINT,
         ]}
         testID="bills-as-at"

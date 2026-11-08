@@ -279,7 +279,7 @@ function Topics({
       )}
       <ReadDate
         record={data.person}
-        citation="OPAX topic labels on indexed speeches"
+        citation="OPAX topic labels on speeches"
         about={{
           title: 'About the topic profile',
           notes: [data.person.data.coverage],
@@ -302,7 +302,7 @@ export function recordItem(
 ): MoreItem {
   const title =
     kind === 'speeches'
-      ? 'Latest indexed speeches'
+      ? 'Latest speeches'
       : kind === 'party'
         ? 'In parliament'
         : 'Mentions in parliament';
@@ -368,16 +368,16 @@ export function recordItem(
             </Group>
           ))}
           {!data.records.data.results.length ? (
-            <EmptyState message="No mentions found in the indexed record." />
+            <EmptyState message="No mentions in the record." />
           ) : null}
           <ReadDate
             record={data.records}
-            citation="OPAX indexed parliamentary record; each row opens its source record"
+            citation="OPAX parliamentary record; each row opens its source record"
             about={{
               title: 'About this parliamentary record',
               notes: [
                 kind === 'speeches'
-                  ? 'Newest results within the indexed retrieval window.'
+                  ? 'Newest matching results. Older speeches may not appear here.'
                   : null,
                 'Machine briefs are automated summaries; passages are extracts from the record.',
                 data.records.data.coverage,

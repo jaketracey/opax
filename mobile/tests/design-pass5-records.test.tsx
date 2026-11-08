@@ -283,7 +283,7 @@ test('Just added: the indexed-date note is in a source line, not an ⓘ', async 
     .mockResolvedValue(record(decodeRecent(responses['/api/recent'])));
   const view = await mount(<RecentRecords />);
   const line = view.root.findByProps({ testID: 'recent-source' });
-  expect(line.props.notes[0]).toMatch(/indexed date/);
+  expect(line.props.notes[0]).toMatch(/date.*added to OPAX/);
   expect(view.root.findAllByProps({ testID: 'recent-info' })).toHaveLength(0);
   await act(async () => view.unmount());
 });

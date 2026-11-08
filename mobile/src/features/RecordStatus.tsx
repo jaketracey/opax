@@ -24,9 +24,9 @@ export function savedSentence(
 ) {
   return [
     reason === 'unreadable'
-      ? 'The latest public export could not be read. Showing the saved copy.'
+      ? 'The latest records could not be read. Showing the saved copy.'
       : reason === 'unavailable'
-        ? 'The latest public export could not be loaded. Showing the saved copy.'
+        ? 'The latest records could not be loaded. Showing the saved copy.'
         : null,
     savedAt !== null ? staleText(savedAt) : null,
     refreshing ? 'Checking for a newer copy.' : null,

@@ -2,7 +2,7 @@ import type { DirectoryKind } from './model';
 
 export const directoryNotes: Record<DirectoryKind, readonly string[]> = {
   person: [
-    'Names appear as Hansard prints them. Speech counts follow the site’s corpus rule (speeches since the 1993 election, 200+ characters, procedural rows removed). Verified representatives are included independently of that threshold; their missing speech totals are labelled explicitly.',
+    'Names appear as Hansard prints them. Speech counts include speeches since the 1993 election of 200 or more characters, with procedural rows removed. Verified representatives are included independently of that threshold; their missing speech totals are labelled explicitly.',
     'Party is the label the person’s speeches carry, or the members register’s where they carry none; many state Hansard rows record neither.',
   ],
   party: [
@@ -10,7 +10,7 @@ export const directoryNotes: Record<DirectoryKind, readonly string[]> = {
     'Receipts are per commission and are not summed: AEC totals already include state branches. Party receipts include internal party transfers; donor totals exclude them.',
   ],
   electorate: [
-    'Coverage varies by parliament. A missing representative or result means it has not been verified in this release.',
+    'Coverage varies by parliament. A missing representative or result has not been confirmed yet.',
     'State outlines use 2025 statistical geography.',
   ],
 };

@@ -9,7 +9,7 @@ import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import Search from '../src/features/Search';
-import { catalogs } from '../src/api/runtime';
+import { catalogs, recordSearch } from '../src/api/runtime';
 import { showMenu } from '../src/design/menu';
 import {
   Button,
@@ -33,6 +33,7 @@ import records from '../scripts/fixtures/search/records.json';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
+  recordSearch: { suggestions: jest.fn() },
   catalogs: {
     suggestionSources: jest.fn(),
     suggestionSourcesOnFocus: jest.fn(),
@@ -50,6 +51,7 @@ jest.mock('expo-router', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.mocked(recordSearch.suggestions).mockResolvedValue({ manifest: { data: { version: '1', count: 0, counts: {}, coverage: '', recordShardSize: 0 }, stale: false, savedAt: 1, asOf: null } });
   const source = { stale: false, savedAt: null, asAt: null, sources: [] };
   jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue({
     roster,

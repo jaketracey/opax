@@ -307,7 +307,7 @@ const publishers: [RegExp, string][] = [
   ],
   [/^OPAX federal roster\b/, 'OPAX parliamentary roster'],
   [/^OPAX existing parliamentary person identifiers$/, 'OPAX people list'],
-  [/^parli\.db speeches\b/, 'OPAX indexed speeches'],
+  [/^parli\.db speeches\b/, 'OPAX parliamentary speeches'],
 ];
 const isoDate = /\b(\d{4}-\d{2}-\d{2})\b/g;
 

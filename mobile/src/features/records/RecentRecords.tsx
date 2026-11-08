@@ -5,7 +5,6 @@ import {
   LinkRow,
   RowList,
   Section,
-  EmptyState,
   ErrorState,
   Heading,
   LoadingState,
@@ -42,53 +41,53 @@ export default function RecentRecords() {
         header={
           <>
             <Heading level={1}>Just added to the record</Heading>
-            <Section title="Newly indexed" accent="bills" rule={false}>
-              {error ? (
-                <ErrorState
-                  message={errorMessage(error)}
-                  onRetry={retry}
-                  testID="recent-error"
-                />
-              ) : !value ? (
-                <LoadingState label="Loading newly indexed records" />
-              ) : value.data.length ? (
-                <RowList>
-                  {value.data.map((row, index) => (
-                    <LinkRow
-                      key={row.slug}
-                      dragPath={`/doc/${row.slug}`}
-                      title={row.title}
-                      detail={
-                        row.indexed
-                          ? `Indexed ${formatDate(row.indexed, 'short')}`
-                          : 'Indexed date not published'
-                      }
-                      onPress={() => router.push(docRoute(row.slug))}
-                      testID={`recent-record-${index}`}
-                    />
-                  ))}
-                </RowList>
-              ) : (
-                <EmptyState message="No newly indexed records are available." />
-              )}
-              {value ? (
-                <SourceLine
-                  title="About indexed dates"
-                  asOf={
-                    value.data
-                      .map((row) => row.indexed ?? '')
-                      .filter(Boolean)
-                      .sort()
-                      .at(-1) ?? null
-                  }
-                  citation="OPAX record index"
-                  notes={[
-                    'Newly indexed records. The indexed date is when the record entered OPAX, rather than when it was published.',
-                  ]}
-                  testID="recent-source"
-                />
-              ) : null}
-            </Section>
+            {!value || value.data.length ? (
+              <Section title="New in OPAX" accent="bills" rule={false}>
+                {error ? (
+                  <ErrorState
+                    message={errorMessage(error)}
+                    onRetry={retry}
+                    testID="recent-error"
+                  />
+                ) : !value ? (
+                  <LoadingState label="Loading new records" />
+                ) : value.data.length ? (
+                  <RowList>
+                    {value.data.map((row, index) => (
+                      <LinkRow
+                        key={row.slug}
+                        dragPath={`/doc/${row.slug}`}
+                        title={row.title}
+                        detail={
+                          row.indexed
+                            ? `Added ${formatDate(row.indexed, 'short')}`
+                            : 'Date added not recorded'
+                        }
+                        onPress={() => router.push(docRoute(row.slug))}
+                        testID={`recent-record-${index}`}
+                      />
+                    ))}
+                  </RowList>
+                ) : null}
+                {value ? (
+                  <SourceLine
+                    title="About dates added"
+                    asOf={
+                      value.data
+                        .map((row) => row.indexed ?? '')
+                        .filter(Boolean)
+                        .sort()
+                        .at(-1) ?? null
+                    }
+                    citation="OPAX record index"
+                    notes={[
+                      'Records added recently. The date is when the record was added to OPAX, not when it was published.',
+                    ]}
+                    testID="recent-source"
+                  />
+                ) : null}
+              </Section>
+            ) : null}
           </>
         }
       />

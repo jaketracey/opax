@@ -101,7 +101,7 @@ test.each([
         id={`person-${kind}`}
         block={after}
         missing={missing}
-        partialMissing="No readable record was found for this person. Some rows in the latest public export were unreadable."
+        partialMissing="No record could be shown for this person. Some records could not be read."
         retry={() => {}}
       >
         {() => null}
@@ -113,7 +113,7 @@ test.each([
     .map((n) => [n.props.children].flat(3).join(''))
     .join(' ');
   expect(words).toContain(
-    'No readable record was found for this person. Some rows in the latest public export were unreadable.',
+    'No record could be shown for this person. Some records could not be read.',
   );
   expect(words).not.toContain('This record could not be read');
   expect(words).not.toContain(missing);

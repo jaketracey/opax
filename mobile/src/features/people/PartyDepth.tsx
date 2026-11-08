@@ -92,7 +92,7 @@ export function PartyAccess({ name }: { name: string }) {
               </Text>
             </RowList>
           ) : (
-            <EmptyState message="No disclosed meetings match this party in this export." />
+            <EmptyState message="No disclosed meetings match this party." />
           )}
           <Heading level={3}>Registered lobbying client of</Heading>
           {d?.lobbyists?.length ? (
@@ -112,7 +112,7 @@ export function PartyAccess({ name }: { name: string }) {
               ))}
             </RowList>
           ) : (
-            <EmptyState message="No registered lobbying client match is held for this party in this export." />
+            <EmptyState message="No registered lobbying client matches this party." />
           )}
           {(d?.lobbyists_total ?? 0) > (d?.lobbyists?.length ?? 0) ? (
             <Text wordSafe variant="fine">

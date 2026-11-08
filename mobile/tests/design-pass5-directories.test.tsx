@@ -241,7 +241,7 @@ const words = (renderer: TestRenderer.ReactTestRenderer) =>
 
 test('a whole-screen saved copy says its reason and date in one sentence', () => {
   expect(savedSentence('unavailable', Date.UTC(2026, 9, 3))).toBe(
-    'The latest public export could not be loaded. Showing the saved copy. Saved 3 October 2026. It may be out of date.',
+    'The latest records could not be loaded. Showing the saved copy. Saved 3 October 2026. It may be out of date.',
   );
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {

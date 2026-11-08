@@ -49,7 +49,7 @@ import {
 } from './model';
 
 const coverageNote = (rows: number, available: number) =>
-  `This export holds the newest ${formatCount(rows)} of ${formatCount(available)} dated register alterations. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact normalised names.`;
+  `Showing the newest ${formatCount(rows)} of ${formatCount(available)} dated register changes. Entries are as declared, not verified by OPAX. Additions and deletions carry the date the register records. A gift or trip with no organisation match names one the AEC and lobbyist registers do not list under that spelling. Organisation matches to AEC Transparency Register returns, the lobbyist registers and FITS use exact name matches, ignoring case and spacing.`;
 
 /**
  * The declared-interests feed behind Today's recent declarations: every row

@@ -62,11 +62,11 @@ export default function Stats() {
               <KeyValueList
                 items={[
                   {
-                    label: 'passages indexed',
+                    label: 'passages',
                     value: data.paragraphs.toLocaleString(),
                   },
                   {
-                    label: 'speeches indexed',
+                    label: 'speeches',
                     value:
                       data.kinds?.speech?.toLocaleString() ??
                       'Live figures are unavailable right now.',
@@ -105,8 +105,8 @@ export default function Stats() {
         <Section title="Collection coverage">
           <ReadState
             read={corpus}
-            citation="OPAX corpus manifest"
-            sheet={(data) => ({ coverage: `Corpus version ${data.version}` })}
+            citation="OPAX record summary"
+            sheet={(data) => ({ coverage: `Snapshot ${data.version}` })}
             testID="stats-corpus"
           >
             {(data) => (

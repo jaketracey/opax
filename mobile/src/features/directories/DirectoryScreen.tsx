@@ -130,7 +130,7 @@ const DirectoryRow = memo(function DirectoryRow({
           }
           detail={[
             item.row?.roster_only || item.row?.speeches === undefined
-              ? 'From the member roster. Speech total not yet indexed'
+              ? 'From the member roster. No speech count yet'
               : `${formatCount(item.row.speeches)} speeches`,
             item.divisions ? `${formatCount(item.divisions)} divisions` : null,
             item.row?.first
@@ -173,10 +173,10 @@ const DirectoryRow = memo(function DirectoryRow({
           ? item.representatives
               .map((r) => [r.person.name, r.party].filter(Boolean).join(' · '))
               .join('; ')
-          : 'Representation not yet verified',
+          : 'Member not confirmed',
         item.election_count
-          ? `${formatCount(item.election_count)} elections indexed`
-          : 'Results not yet indexed',
+          ? `${formatCount(item.election_count)} elections`
+          : 'No election results yet',
       ]
         .filter(Boolean)
         .join('\n')}
@@ -430,9 +430,7 @@ function DirectoryView({ kind }: { kind: keyof typeof titles }) {
                 notes={[
                   ...directoryNotes[kind],
                   saved(record).note,
-                  record.partial
-                    ? 'Some rows in this export could not be read.'
-                    : null,
+                  record.partial ? 'Some records could not be read.' : null,
                 ]}
                 testID="directory-source"
               />

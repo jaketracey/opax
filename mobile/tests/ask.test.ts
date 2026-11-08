@@ -204,7 +204,7 @@ test('options reproduce chip keys, removal and inclusive full-year reset', () =>
     'Parliament',
     'Topic',
     'Years',
-    'Record type',
+    'Type',
   ]);
   expect(clearChip(o, 'speaker').speaker).toBe('');
   expect(clearChip(o, 'years').from).toBe('');

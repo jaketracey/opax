@@ -77,7 +77,7 @@ export default function LeadDetail() {
         />
         {discovery && !lead ? (
           <EmptyState
-            message="This lead is not in the current export."
+            message="This lead is no longer listed."
             testID="lead-missing"
           />
         ) : null}

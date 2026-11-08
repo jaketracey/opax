@@ -302,7 +302,7 @@ export function chips(o: AskOptions) {
         o.from === o.to ? o.from : `${o.from || '1993'} to ${o.to || '2026'}`,
     });
   if (o.kind === 'speech')
-    out.push({ id: 'kind', key: 'Record type', value: 'Speeches' });
+    out.push({ id: 'kind', key: 'Type', value: 'Speeches' });
   return out;
 }
 export function clearChip(

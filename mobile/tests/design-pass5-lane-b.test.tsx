@@ -149,7 +149,7 @@ describe('profile', () => {
     expect(titles).toContain('More from the record');
     for (const one of [
       'What they talk about',
-      'Latest indexed speeches',
+      'Latest speeches',
       'Mentions in parliament',
       'News headlines',
     ])

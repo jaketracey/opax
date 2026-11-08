@@ -145,8 +145,8 @@ function GrantList({
             />
             {seat && view === 'programs' ? (
               <Text wordSafe>
-                Programs in the available export. Open a program to see its
-                listed awards for {seat}.
+                Grant programs for {seat}. Open a program to see its listed
+                awards.
               </Text>
             ) : null}
             <Field
@@ -267,8 +267,8 @@ export function SeatGrants({
             />
           ) : (
             <Text wordSafe>
-              No matching federal division is recorded in the grant export. This
-              is not a zero total.
+              No matching federal division in the grant records. This is not a
+              zero total.
             </Text>
           )}
           <MetaSource

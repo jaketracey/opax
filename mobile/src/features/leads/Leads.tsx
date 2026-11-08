@@ -152,10 +152,7 @@ export default function Leads() {
               ))}
             </View>
           ) : (
-            <EmptyState
-              message="No leads of this kind are in this export."
-              testID="leads-empty"
-            />
+            <EmptyState message="No leads of this kind." testID="leads-empty" />
           )}
           {leads.length > visible ? (
             <Button

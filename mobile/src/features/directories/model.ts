@@ -481,7 +481,7 @@ export const directorySorts: Record<DirectoryKind, Choice[]> = {
   ],
   electorate: [
     { value: 'name', label: 'Name A–Z' },
-    { value: 'elections', label: 'Most elections indexed' },
+    { value: 'elections', label: 'Most elections' },
   ],
 };
 export function validDate(s: string) {
