@@ -195,19 +195,20 @@ const headingLayout = {
 test('a native heading waits for the automatic resting inset before its viewport measurement', () => {
   const measure = jest.fn((done) => done(0, 0, 300, 80, 0, 120));
   const ref = { current: { measure } as unknown as View };
-  const { hook, inline } = scrollTitle(ref);
+  const { hook, inline, setOptions } = scrollTitle(ref);
   act(() => hook.onTitleLayout(headingLayout));
   expect(measure).not.toHaveBeenCalled();
   expect(inline().props.shown).toBe(false);
   act(() => hook.onScroll(-100));
   expect(measure).toHaveBeenCalledTimes(1);
   expect(inline().props.shown).toBe(false);
-  const restingTitle = inline();
+  const restingTitle = setOptions.mock.calls.at(-1)![0]
+    .headerTitle as () => React.ReactElement;
   act(() => hook.onScroll(0));
   expect(inline().props.shown).toBe(false);
   act(() => hook.onScroll(1));
   expect(inline().props.shown).toBe(true);
-  expect(restingTitle.props.shown).toBe(false);
+  expect(restingTitle().props.shown).toBe(false);
   act(() => hook.onScroll(-100));
   expect(inline().props.shown).toBe(false);
 });
