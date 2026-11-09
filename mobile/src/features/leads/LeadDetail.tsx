@@ -300,7 +300,6 @@ export default function LeadDetail() {
                   ink="money"
                   label={comparison.figureLabel}
                   accessibilityLabel={`${moneyAccessibilityLabel(comparison.total, true)}, ${comparison.figureLabel}`}
-                  // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
                   citation={source}
                   testID="lead-total"
                 />

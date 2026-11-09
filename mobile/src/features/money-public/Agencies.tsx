@@ -119,24 +119,19 @@ export default function Agencies() {
                       : ''
                   }`}
                   caveat={CONTRACTS_CAVEAT}
-                  // Spread: opax/transport reads a plain `source` prop as an image.
-                  {...{
-                    citation: {
-                      asOf: data.meta.asOf,
-                      citation: [
-                        moneyCitation(data.meta.source || 'AusTender'),
-                      ],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals: [AUSTENDER],
-                      notes: [
-                        START_YEARS(data.publishedFrom, data.publishedTo),
-                        AGENCY_NAMES,
-                        ...data.meta.caveats,
-                        ...saved.stateNotes,
-                      ].map(readableDates),
-                      testID: 'agencies-source',
-                    },
+                  citation={{
+                    asOf: data.meta.asOf,
+                    citation: [moneyCitation(data.meta.source || 'AusTender')],
+                    savedAt: saved.savedAt,
+                    state: saved.state,
+                    originals: [AUSTENDER],
+                    notes: [
+                      START_YEARS(data.publishedFrom, data.publishedTo),
+                      AGENCY_NAMES,
+                      ...data.meta.caveats,
+                      ...saved.stateNotes,
+                    ].map(readableDates),
+                    testID: 'agencies-source',
                   }}
                   testID="agencies-total"
                 />
@@ -320,24 +315,19 @@ export function Agency() {
                       ? `${formatMoneyCompact(profile.undated)} of this has no start date. ${CONTRACTS_CAVEAT}`
                       : CONTRACTS_CAVEAT
                   }
-                  // Spread: opax/transport reads a plain `source` prop as an image.
-                  {...{
-                    citation: {
-                      asOf: data.meta.asOf,
-                      citation: [
-                        moneyCitation(data.meta.source || 'AusTender'),
-                      ],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals: [AUSTENDER],
-                      notes: [
-                        'Years describe the calendar year each contract started.',
-                        AGENCY_NAMES,
-                        ...data.meta.caveats,
-                        ...saved.stateNotes,
-                      ].map(readableDates),
-                      testID: 'agency-source',
-                    },
+                  citation={{
+                    asOf: data.meta.asOf,
+                    citation: [moneyCitation(data.meta.source || 'AusTender')],
+                    savedAt: saved.savedAt,
+                    state: saved.state,
+                    originals: [AUSTENDER],
+                    notes: [
+                      'Years describe the calendar year each contract started.',
+                      AGENCY_NAMES,
+                      ...data.meta.caveats,
+                      ...saved.stateNotes,
+                    ].map(readableDates),
+                    testID: 'agency-source',
                   }}
                   testID="agency-total"
                 />
@@ -411,8 +401,7 @@ export function Agency() {
                           start: `${chartYears[0]!.year}-01-01`,
                           end: data.meta.asOf,
                         }}
-                        // Spread: opax/transport reads a plain `source` prop as an image.
-                        {...{ citation: 'AusTender' }}
+                        citation={'AusTender'}
                       />
                     ) : (
                       <EmptyState message="No contracts in this agency's records have a start date." />

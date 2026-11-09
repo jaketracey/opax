@@ -289,48 +289,45 @@ export default function Program() {
                           ? `${program.listed.toLocaleString('en-AU')} of the ${program.available.toLocaleString('en-AU')} grants are listed below.`
                           : undefined
                     }
-                    // Spread: opax/transport reads a plain `source` prop as an image.
-                    {...{
-                      citation: {
-                        asOf: program.asOf,
-                        citation: [register],
-                        savedAt: saved.savedAt,
-                        state: saved.state,
-                        originals: [
-                          ...(data.index.meta.sourceUrl
-                            ? [
-                                {
-                                  label: register.label,
-                                  url: data.index.meta.sourceUrl,
-                                },
-                              ]
-                            : []),
-                          ...(note?.audits ?? []).map((a) => ({
-                            label: a.title,
-                            url: a.url,
-                          })),
-                          ...(note?.sources ?? []).map((s) => ({
-                            label: s.title,
-                            url: s.url,
-                          })),
-                        ],
-                        notes: [
-                          seat
-                            ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
-                            : null,
-                          seat ? SEAT_RULE : null,
-                          note?.summary,
-                          ...(note?.audits ?? []).map(
-                            (a) => `${a.title}: ${a.finding}`,
-                          ),
-                          note && data.notes
-                            ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
-                            : null,
-                          ...saved.stateNotes,
-                        ].map(readableDates),
-                        licence: data.index.meta.licence,
-                        testID: 'program-source',
-                      },
+                    citation={{
+                      asOf: program.asOf,
+                      citation: [register],
+                      savedAt: saved.savedAt,
+                      state: saved.state,
+                      originals: [
+                        ...(data.index.meta.sourceUrl
+                          ? [
+                              {
+                                label: register.label,
+                                url: data.index.meta.sourceUrl,
+                              },
+                            ]
+                          : []),
+                        ...(note?.audits ?? []).map((a) => ({
+                          label: a.title,
+                          url: a.url,
+                        })),
+                        ...(note?.sources ?? []).map((s) => ({
+                          label: s.title,
+                          url: s.url,
+                        })),
+                      ],
+                      notes: [
+                        seat
+                          ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
+                          : null,
+                        seat ? SEAT_RULE : null,
+                        note?.summary,
+                        ...(note?.audits ?? []).map(
+                          (a) => `${a.title}: ${a.finding}`,
+                        ),
+                        note && data.notes
+                          ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
+                          : null,
+                        ...saved.stateNotes,
+                      ].map(readableDates),
+                      licence: data.index.meta.licence,
+                      testID: 'program-source',
                     }}
                     testID="program-total"
                   />

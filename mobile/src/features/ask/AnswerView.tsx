@@ -228,7 +228,7 @@ export function AnswerView({
           key={i}
           // FigureBlock's `source` is its citation, not an image (follow-up:
           // design/record.tsx renames it to `citation`).
-          {...{ citation: { citation: figure.source, asOf: figure.asAt } }}
+          citation={{ citation: figure.source, asOf: figure.asAt }}
           value={figure.value}
           label={figure.label ?? `As at ${figure.asAt}`}
           caveat={note && isCalculated(data) ? note : undefined}

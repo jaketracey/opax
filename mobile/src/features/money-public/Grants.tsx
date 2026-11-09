@@ -216,27 +216,24 @@ function GrantList({
                       ? `recorded annual spending, ${fyRange(data.meta.years[0] ?? '', data.meta.years.at(-1) ?? '')}`
                       : figure.line
                   }
-                  // Spread: opax/transport reads a plain `source` prop as an image.
-                  {...{
-                    citation: {
-                      asOf: data.meta.asOf,
-                      citation: [moneyCitation(data.meta.source)],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals: data.meta.sourceUrl
-                        ? [
-                            {
-                              label: moneyCitation(data.meta.source).label,
-                              url: data.meta.sourceUrl,
-                            },
-                          ]
-                        : [],
-                      notes: [...grantNotes(data), ...saved.stateNotes].map(
-                        readableDates,
-                      ),
-                      licence: data.meta.licence,
-                      testID: 'grants-total-source',
-                    },
+                  citation={{
+                    asOf: data.meta.asOf,
+                    citation: [moneyCitation(data.meta.source)],
+                    savedAt: saved.savedAt,
+                    state: saved.state,
+                    originals: data.meta.sourceUrl
+                      ? [
+                          {
+                            label: moneyCitation(data.meta.source).label,
+                            url: data.meta.sourceUrl,
+                          },
+                        ]
+                      : [],
+                    notes: [...grantNotes(data), ...saved.stateNotes].map(
+                      readableDates,
+                    ),
+                    licence: data.meta.licence,
+                    testID: 'grants-total-source',
                   }}
                   testID="grants-total"
                 />

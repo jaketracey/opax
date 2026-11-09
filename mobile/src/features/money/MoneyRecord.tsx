@@ -302,8 +302,7 @@ function RegisterSection({
         ink={figure.ink}
         label={figure.label}
         caveat={figure.caveat}
-        // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
-        {...{ citation: figure.source }}
+        citation={figure.source}
         accessibilityLabel={`${moneyAccessibilityLabel(figure.value, true)}, ${figure.label}`}
         testID={figure.testID}
       />
@@ -321,8 +320,7 @@ function RegisterSection({
           format={formatMoneyCompact}
           tableTitle={bars.tableTitle}
           dateRange={bars.dateRange}
-          // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
-          {...{ citation: bars.source }}
+          citation={bars.source}
         />
       ) : null}
       {children}

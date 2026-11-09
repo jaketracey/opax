@@ -550,15 +550,12 @@ function MoneyBody({
       label={donationsLine}
       caveat={donationsCaveat}
       accessibilityLabel={`${moneyAccessibilityLabel(donations.total, true)}, ${donationsLine}`}
-      // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
-      {...{
-        citation: moneySourceDetails(record, {
-          citation: shortSource,
-          originals: moneyOriginals(graph).slice(0, 1),
-          notes: moneyNotes(graph),
-          testID: 'money-source',
-        }),
-      }}
+      citation={moneySourceDetails(record, {
+        citation: shortSource,
+        originals: moneyOriginals(graph).slice(0, 1),
+        notes: moneyNotes(graph),
+        testID: 'money-source',
+      })}
       testID="money-donations"
     />
   ) : null;

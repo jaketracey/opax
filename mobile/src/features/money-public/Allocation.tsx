@@ -241,50 +241,47 @@ export default function Allocation() {
                   ink="money"
                   label={line}
                   caveat={stage === 'history' ? LATEST_VALUES : SEPARATE_LISTS}
-                  // Spread: opax/transport reads a plain `source` prop as an image.
-                  {...{
-                    citation: {
-                      asOf:
-                        stage === 'history'
-                          ? data.history.asOf
-                          : stage === 'invitations'
-                            ? data.allocation.invitationsAsOf
-                            : data.allocation.asOf,
-                      citation: [
-                        stage === 'invitations'
-                          ? INVITATIONS
-                          : moneyCitation('GrantConnect'),
-                      ],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals:
-                        stage === 'invitations' &&
-                        data.allocation.sources.department
-                          ? [
-                              {
-                                label: INVITATIONS.label,
-                                url: data.allocation.sources.department,
-                              },
-                            ]
-                          : [
-                              {
-                                label: 'GrantConnect',
-                                url: 'https://www.grants.gov.au/Ga/List',
-                              },
-                            ],
-                      notes: [
-                        MERIT,
-                        EARLIER,
-                        ...(data.locations?.methodology ?? []),
-                        ...(stage === 'history'
-                          ? data.history.methodology.filter(
-                              (m) => !m.includes('© OpenStreetMap'),
-                            )
-                          : []),
-                        ...saved.stateNotes,
-                      ].map(readableDates),
-                      testID: 'allocation-source',
-                    },
+                  citation={{
+                    asOf:
+                      stage === 'history'
+                        ? data.history.asOf
+                        : stage === 'invitations'
+                          ? data.allocation.invitationsAsOf
+                          : data.allocation.asOf,
+                    citation: [
+                      stage === 'invitations'
+                        ? INVITATIONS
+                        : moneyCitation('GrantConnect'),
+                    ],
+                    savedAt: saved.savedAt,
+                    state: saved.state,
+                    originals:
+                      stage === 'invitations' &&
+                      data.allocation.sources.department
+                        ? [
+                            {
+                              label: INVITATIONS.label,
+                              url: data.allocation.sources.department,
+                            },
+                          ]
+                        : [
+                            {
+                              label: 'GrantConnect',
+                              url: 'https://www.grants.gov.au/Ga/List',
+                            },
+                          ],
+                    notes: [
+                      MERIT,
+                      EARLIER,
+                      ...(data.locations?.methodology ?? []),
+                      ...(stage === 'history'
+                        ? data.history.methodology.filter(
+                            (m) => !m.includes('© OpenStreetMap'),
+                          )
+                        : []),
+                      ...saved.stateNotes,
+                    ].map(readableDates),
+                    testID: 'allocation-source',
                   }}
                   testID="allocation-figure"
                 />
