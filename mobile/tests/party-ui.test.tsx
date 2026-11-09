@@ -10,7 +10,7 @@ import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
-import { PartyLabel, PersonRow } from '../src/design/people';
+import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { ContentUnavailable } from '../src/design/states';
 import { textStyles } from '../src/design/tokens';
 import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
@@ -438,9 +438,20 @@ test('AX5 party text remains uncapped and the recorded disclosure exposes its ex
     .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 3.571 });
   const r = await render();
   press(r, 'party-recorded-toggle');
+  const portraitInitials = new Set(
+    r.root
+      .findAllByType(Portrait)
+      .flatMap((portrait) => portrait.findAllByType(NativeText)),
+  );
   for (const text of r.root.findAllByType(NativeText)) {
     expect(text.props.numberOfLines).toBeUndefined();
-    expect([0, 1.353]).toContain(text.props.maxFontSizeMultiplier);
+    if (portraitInitials.has(text)) {
+      expect(text.props.accessible).toBe(false);
+      expect(text.props.maxFontSizeMultiplier).toBeGreaterThanOrEqual(1);
+      expect(text.props.maxFontSizeMultiplier).toBeLessThan(3.571);
+    } else {
+      expect(text.props.maxFontSizeMultiplier).toBe(0);
+    }
   }
   expect(
     host(r, 'party-recorded-toggle').props.accessibilityState.expanded,

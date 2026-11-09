@@ -284,7 +284,7 @@ describe('people', () => {
     const root = render(<Portrait size="profile" />);
     const view = root.findByType(View);
     expect(view.props.accessibilityElementsHidden).toBe(true);
-    expect(root.findAllByType(NativeText)).toHaveLength(1);
+    expect(root.findAllByType(NativeText)).toHaveLength(0);
   });
 });
 

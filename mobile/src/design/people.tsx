@@ -36,12 +36,21 @@ import {
   useRowInset,
 } from './row-padding';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
+import { symbols } from './symbols';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
-import { colors, hairline, minimumTarget, rhythm } from './tokens';
+import {
+  colors,
+  hairline,
+  minimumTarget,
+  rhythm,
+  size as sizeTokens,
+  textStyles,
+  type CurrentTextVariant,
+} from './tokens';
 
-const portraitSizes = { row: 44, profile: 96 } as const;
-/** A circular portrait; an absent or failed image stays a blank circle. */
+const portraitSizes = { row: sizeTokens.portraitRow, profile: 96 } as const;
+/** A circular portrait; absent or failed images show initials or a decorative person symbol. */
 export function Portrait({
   size = 'row',
   testID,
@@ -65,12 +74,36 @@ export function Portrait({
 }) {
   const [failed, setFailed] = useState<string | null>(null);
   const dimension = typeof size === 'number' ? size : portraitSizes[size];
+  const initials = (
+    name
+      ?.trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((word) => Array.from(word)[0])
+      .join('') ?? ''
+  )
+    .toLocaleUpperCase('en-AU')
+    .slice(0, 2);
+  const initialsVariant: CurrentTextVariant =
+    dimension < sizeTokens.portraitRow
+      ? 'capsule'
+      : dimension < sizeTokens.portraitHeader
+        ? 'strong'
+        : 'tileFigure';
+  const initialsRole = textStyles[initialsVariant];
+  // Allow two wide initials and a full line inside the circle, with an inset.
+  // The smallest portraits keep the role's default size rather than shrinking.
+  const initialsScale = Math.max(
+    1,
+    (dimension - rhythm.tight) /
+      Math.hypot(2 * initialsRole.fontSize, initialsRole.lineHeight),
+  );
   const input = localURI ?? uri;
   let source: string | undefined;
   try {
     if (input && input !== failed) source = localImageURI(input);
   } catch {
-    /* Retain the blank circle for a rejected URI. */
+    /* Retain the placeholder for a rejected URI. */
   }
   const decorative = nameBeside || !name || !source;
   return (
@@ -116,15 +149,23 @@ export function Portrait({
         <View
           style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Text variant="strong" tone="inkSoft" maxFontSizeMultiplier={1.353}>
-            {name
-              ?.trim()
-              .split(/\s+/)
-              .map((word) => word[0])
-              .filter(Boolean)
-              .slice(0, 2)
-              .join('') || '○'}
-          </Text>
+          {initials ? (
+            <Text
+              variant={initialsVariant}
+              tone="inkSoft"
+              maxFontSizeMultiplier={initialsScale}
+              accessible={false}
+            >
+              {initials}
+            </Text>
+          ) : (
+            <Icon
+              name={symbols.person}
+              tone="inkSoft"
+              size={dimension / 2}
+              maxScale={1}
+            />
+          )}
         </View>
       )}
     </View>

@@ -8,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Switch,
+  View,
 } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import {
@@ -22,6 +23,7 @@ import {
   segmentsFit,
 } from '../src/design/controls';
 import { light, lightHighContrast } from '../src/design/palette';
+import { FaceStack, Portrait } from '../src/design/people';
 import {
   Button,
   Card,
@@ -37,9 +39,11 @@ import {
   statusTone,
 } from '../src/design/primitives';
 import { roleColour, textContent } from '../src/design/text';
+import { symbols } from '../src/design/symbols';
 import {
   accentTint,
   radii,
+  rhythm,
   statusTint,
   textStyles,
 } from '../src/design/tokens';
@@ -146,6 +150,89 @@ beforeAll(() =>
 );
 afterAll(() => Dimensions.set({ window: jestWindow, screen: jestScreen }));
 const noop = () => undefined;
+
+describe('Portrait', () => {
+  test.each([undefined, '', '   '])(
+    'a nameless 28pt portrait draws a decorative person symbol (%p)',
+    (name) => {
+      const root = render(<Portrait size={28} name={name} />).root;
+      expect(nativeTexts(root)).toHaveLength(0);
+      const symbol = root.findByType(SymbolView);
+      expect(symbol.props.name).toBe(symbols.person);
+      expect(symbol.props.size).toBe(28 / 2);
+      expect(hex(symbol.props.tintColor)).toBe(light.inkSoft);
+      expect(symbol.props.accessible).toBe(false);
+      expect(symbol.props.accessibilityElementsHidden).toBe(true);
+    },
+  );
+  test('a 44pt Zali Steggall portrait draws ZS without repeating her name to VoiceOver', () => {
+    const root = render(<Portrait size={44} name="Zali Steggall" />).root;
+    expect(strings(root)).toEqual(['ZS']);
+    expect(root.findAllByType(SymbolView)).toHaveLength(0);
+    const text = nativeTexts(root)[0]!;
+    expect(flat(text.props.style).fontSize).toBe(textStyles.strong.fontSize);
+    expect(text.props.accessible).toBe(false);
+    const circle = root.findAllByType(View)[0]!;
+    expect(circle.props.accessibilityElementsHidden).toBe(true);
+    expect(circle.props.importantForAccessibility).toBe('no-hide-descendants');
+  });
+  test.each([
+    ['  zali steggall  ', 'ZS'],
+    ['david van Dijk', 'DV'],
+    ['walsh', 'W'],
+    ['ßtefan müller', 'SS'],
+  ])(
+    'initials are upper-case and at most two letters (%s)',
+    (name, expected) => {
+      expect(strings(render(<Portrait name={name} />).root)).toEqual([
+        expected,
+      ]);
+    },
+  );
+  test.each([
+    [28, 'capsule'],
+    [44, 'strong'],
+    [56, 'strong'],
+    [72, 'tileFigure'],
+    [80, 'tileFigure'],
+    [96, 'tileFigure'],
+  ] as const)(
+    '%spt initials use %s and stay within the circle at AX5',
+    (size, variant) => {
+      atSize(AX5, () => {
+        const root = render(
+          <Portrait size={size} name="William Watson" />,
+        ).root;
+        const text = nativeTexts(root)[0]!;
+        const style = flat(text.props.style);
+        const role = textStyles[variant];
+        expect(style.fontSize).toBe(role.fontSize);
+        expect(style.fontWeight).toBe(role.fontWeight);
+        expect(text.props.allowFontScaling).toBe(true);
+        const scale = Math.min(AX5, text.props.maxFontSizeMultiplier);
+        expect(scale).toBeGreaterThanOrEqual(1);
+        // Reserve space for two full-em letters and the role's full line height.
+        expect(2 * role.fontSize * scale).toBeLessThanOrEqual(
+          size - rhythm.line,
+        );
+        expect((style.lineHeight as number) * scale).toBeLessThanOrEqual(
+          size - rhythm.line,
+        );
+      });
+    },
+  );
+  test('no portrait or face stack draws the hollow-circle text character', () => {
+    for (const size of [28, 44, 56, 72, 80, 96] as const) {
+      for (const name of [undefined, 'Zali Steggall']) {
+        const root = render(<Portrait size={size} name={name} />).root;
+        expect(strings(root).join('')).not.toContain('○');
+      }
+    }
+    const stack = render(<FaceStack portraits={[null, null]} />).root;
+    expect(nativeTexts(stack)).toHaveLength(0);
+    expect(stack.findAllByType(SymbolView)).toHaveLength(2);
+  });
+});
 
 describe('StatusCapsule', () => {
   test.each([
