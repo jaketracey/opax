@@ -158,24 +158,16 @@ describe('Maestro lane ports', () => {
   );
 });
 
-// The capture plan is intentionally outside git. Exercise it when present in
-// this worktree, the integration worktree, or an explicitly supplied location.
-// Python imports only plans.py. This fake never imports driver.py or idb.
-const capturePlan =
-  process.env.OPAX_CAPTURE_PLAN ??
-  [
-    resolve('private/apple-design/harness/plans.py'),
-    resolve('../../apple-design/mobile/private/apple-design/harness/plans.py'),
-  ].find(existsSync);
+// Exercise a committed helper contract in every worktree. Python imports only
+// this fixture, never driver.py, idb or a neighbouring ignored harness copy.
+const capturePlan = resolve('tests/fixtures/capture-harness/plans.py');
 
-(capturePlan ? test : test.skip)(
-  'capture controls focus native input, reach chrome and confirm sheet state without a device',
-  () => {
-    const output = execFileSync(
-      'python3',
-      [
-        '-c',
-        String.raw`
+test('capture controls focus native input, reach chrome and confirm sheet state without a device', () => {
+  const output = execFileSync(
+    'python3',
+    [
+      '-c',
+      String.raw`
 import asyncio
 import importlib.util
 import sys
@@ -367,56 +359,49 @@ async def check():
 
 asyncio.run(check())
 `,
-        capturePlan!,
-      ],
-      { encoding: 'utf8' },
-    );
-    expect(output).toContain('capture helper regressions passed');
-  },
-);
+      capturePlan,
+    ],
+    { encoding: 'utf8' },
+  );
+  expect(output).toContain('capture helper regressions passed');
+});
 
-const fixtureAudit =
-  capturePlan && join(dirname(capturePlan), 'fixture-audit.mjs');
-(fixtureAudit && existsSync(fixtureAudit) ? test : test.skip)(
-  'capture request audit accepts only the exact local expected 404 states',
-  () => {
-    const dir = mkdtempSync(join(tmpdir(), 'capture-audit-'));
-    try {
-      const file = join(dir, 'fixture.log');
-      const audit = (
-        path: string,
-        status = 404,
-        host = '127.0.0.1:8910',
-        allowed = false,
-      ) => {
-        writeFileSync(
-          file,
-          `fixture ready\n${JSON.stringify({ path, status, host, allowed })}\n`,
-        );
-        return spawnSync(process.execPath, [fixtureAudit!, file, '8910'], {
-          encoding: 'utf8',
-        });
-      };
-      for (const path of [
-        '/interests/11023.json',
-        '/api/person-topics?name=Basem+Abdo',
-        '/bills/au-federal-r1.json',
-      ]) {
-        const result = audit(path);
-        expect(result.status).toBe(0);
-        expect(JSON.parse(result.stdout).expectedErrorStates).toEqual([path]);
-        expect(audit(path, 500).status).toBe(1);
-        const offHost = audit(path, 404, 'opax.com.au', true);
-        expect(offHost.status).toBe(1);
-        expect(JSON.parse(offHost.stdout).offHost).toBe(1);
-      }
-      expect(audit('/interests/11024.json').status).toBe(1);
-      expect(audit('/api/person-topics?name=Basem+Abdo&extra=1').status).toBe(
-        1,
+const fixtureAudit = join(dirname(capturePlan), 'fixture-audit.mjs');
+test('capture request audit accepts only the exact local expected 404 states', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'capture-audit-'));
+  try {
+    const file = join(dir, 'fixture.log');
+    const audit = (
+      path: string,
+      status = 404,
+      host = '127.0.0.1:8910',
+      allowed = false,
+    ) => {
+      writeFileSync(
+        file,
+        `fixture ready\n${JSON.stringify({ path, status, host, allowed })}\n`,
       );
-      expect(audit('/api/person-topics?name=Someone+Else').status).toBe(1);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
+      return spawnSync(process.execPath, [fixtureAudit, file, '8910'], {
+        encoding: 'utf8',
+      });
+    };
+    for (const path of [
+      '/interests/11023.json',
+      '/api/person-topics?name=Basem+Abdo',
+      '/bills/au-federal-r1.json',
+    ]) {
+      const result = audit(path);
+      expect(result.status).toBe(0);
+      expect(JSON.parse(result.stdout).expectedErrorStates).toEqual([path]);
+      expect(audit(path, 500).status).toBe(1);
+      const offHost = audit(path, 404, 'opax.com.au', true);
+      expect(offHost.status).toBe(1);
+      expect(JSON.parse(offHost.stdout).offHost).toBe(1);
     }
-  },
-);
+    expect(audit('/interests/11024.json').status).toBe(1);
+    expect(audit('/api/person-topics?name=Basem+Abdo&extra=1').status).toBe(1);
+    expect(audit('/api/person-topics?name=Someone+Else').status).toBe(1);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
