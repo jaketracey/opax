@@ -5,7 +5,7 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import { ActionSheetIOS, Platform, ScrollView } from 'react-native';
+import { ActionSheetIOS, Platform } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
@@ -246,7 +246,7 @@ function setUp({
 }
 
 test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
-  'Today scroll events protect its bar and leave the %s root options intact',
+  'Today follows native header height without a final scroll event on the %s root',
   async (name) => {
     setUp();
     const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
@@ -266,26 +266,22 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       }),
       setOptions,
     };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={height}>
+              <Today />
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
     try {
-      const renderer = await render(
-        <NavigationContext.Provider value={navigation as never}>
-          <NavigationRouteContext.Provider value={route}>
-            <SafeAreaInsetsContext.Provider
-              value={{ top: 24, bottom: 0, left: 0, right: 0 }}
-            >
-              <HeaderHeightContext.Provider value={160}>
-                <Today />
-              </HeaderHeightContext.Provider>
-            </SafeAreaInsetsContext.Provider>
-          </NavigationRouteContext.Provider>
-        </NavigationContext.Provider>,
-      );
-      const scroll = (distance: number) =>
-        act(() =>
-          renderer.root.findByType(ScrollView).props.onScroll({
-            nativeEvent: { contentOffset: { y: distance - 160 } },
-          }),
-        );
+      const renderer = await render(page(160));
+      expect(renderer.root.findByType(Screen).props.onScroll).toBeUndefined();
       const expanded = setOptions.mock.calls.at(-1)![0];
       const ground = expanded.contentStyle.backgroundColor;
       expect(expanded).toEqual(
@@ -294,21 +290,27 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       expect(expanded.headerStyle).toEqual({});
       expect(expanded.headerLargeStyle).toEqual({});
       setOptions.mockClear();
-      for (const distance of [0, -20, 0]) scroll(distance);
+      for (const height of [160, 159.75, 160])
+        act(() => renderer.update(page(height)));
       expect(setOptions).not.toHaveBeenCalled();
-      for (const distance of [0.5, 40, 300, 600, 40]) scroll(distance);
+      for (const height of [159, 120, 100])
+        act(() => renderer.update(page(height)));
       if (name === 'index') {
         expect(setOptions).toHaveBeenCalledTimes(1);
         expect(setOptions).toHaveBeenLastCalledWith(
           todayTitleBar(ground, false, true),
         );
-        scroll(0);
-        expect(setOptions).toHaveBeenCalledTimes(2);
-        expect(setOptions).toHaveBeenLastCalledWith(expanded);
-      } else {
-        scroll(0);
-        expect(setOptions).not.toHaveBeenCalled();
-      }
+      } else expect(setOptions).not.toHaveBeenCalled();
+      act(() => renderer.update(page(68)));
+      expect(setOptions).toHaveBeenLastCalledWith(
+        (name === 'index' ? todayTitleBar : largeTitleBar)(ground, true),
+      );
+      act(() => renderer.update(page(160)));
+      expect(setOptions).toHaveBeenLastCalledWith(expanded);
+      const returnedCalls = name === 'index' ? 3 : 2;
+      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
+      for (const height of [192, 160]) act(() => renderer.update(page(height)));
+      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
     } finally {
       Object.defineProperty(Platform, 'Version', version);
     }

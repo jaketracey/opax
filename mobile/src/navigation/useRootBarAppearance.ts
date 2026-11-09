@@ -35,35 +35,6 @@ const searches = new WeakMap<
   object,
   { pinned: boolean; listeners: Set<() => void> }
 >();
-const todayScrolls = new WeakMap<
-  object,
-  { underBar: boolean; listeners: Set<() => void> }
->();
-
-function todayScrollState(navigation: object) {
-  let state = todayScrolls.get(navigation);
-  if (!state) {
-    state = { underBar: false, listeners: new Set() };
-    todayScrolls.set(navigation, state);
-  }
-  return state;
-}
-
-/** Share Today's real scroll position with Screen, the sole appearance owner. */
-export function useTodayBarScroll() {
-  const navigation = useContext(NavigationContext);
-  return useCallback(
-    (distance: number) => {
-      if (!navigation || !glassBar() || !Number.isFinite(distance)) return;
-      const state = todayScrollState(navigation);
-      const underBar = distance > 0;
-      if (state.underBar === underBar) return;
-      state.underBar = underBar;
-      state.listeners.forEach((listener) => listener());
-    },
-    [navigation],
-  );
-}
 
 function searchState(navigation: object) {
   let state = searches.get(navigation);
@@ -100,8 +71,8 @@ export function useRootBarSearchOptions(
 
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
- * their FlatList/ScrollView does not use Screen. Only the collapsed/expanded
- * transition changes options, not each native header-height notification.
+ * their FlatList/ScrollView does not use Screen. Only appearance transitions
+ * change options, including Today's first shrink from its expanded height.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -162,9 +133,11 @@ export function useRootBarAppearance(
   const collapsedHeight =
     compactHeight +
     (pinnedSearch ? stackedSearchHeight + stackedSearchSlack : 1);
-  const expandedRoute = useRef<{ key: string; collapsedHeight: number }>(
-    undefined,
-  );
+  const expandedRoute = useRef<{
+    key: string;
+    collapsedHeight: number;
+    expandedHeight: number;
+  }>(undefined);
   const applied = useRef<{
     key: string;
     setter: typeof setOptions;
@@ -176,32 +149,25 @@ export function useRootBarAppearance(
   const colour = ground ?? tabRootGround(root?.name ?? '');
   const rootKey = root?.key;
   const today = root?.name === 'index';
-  const subscribeToday = useCallback(
-    (listener: () => void) => {
-      if (!navigation || !today) return () => {};
-      const state = todayScrollState(navigation);
-      state.listeners.add(listener);
-      return () => {
-        state.listeners.delete(listener);
-      };
-    },
-    [navigation, today],
-  );
-  const todayScrolled = useSyncExternalStore(
-    subscribeToday,
-    () =>
-      today && navigation
-        ? (todayScrolls.get(navigation)?.underBar ?? false)
-        : false,
-    () => false,
-  );
   useLayoutEffect(() => {
     if (!rootKey) {
       applied.current = undefined;
       return;
     }
-    if (headerHeight > collapsedHeight)
-      expandedRoute.current = { key: rootKey, collapsedHeight };
+    if (headerHeight > collapsedHeight) {
+      const previous = expandedRoute.current;
+      expandedRoute.current = {
+        key: rootKey,
+        collapsedHeight,
+        // Retain the first expanded measurement for this route and threshold.
+        // An overscroll stretch must not raise the reference height.
+        expandedHeight:
+          previous?.key === rootKey &&
+          previous.collapsedHeight === collapsedHeight
+            ? previous.expandedHeight
+            : headerHeight,
+      };
+    }
     // NativeStack starts with an estimated inline height before UIKit reports
     // the expanded bar. Do not mistake that first estimate for a collapse.
     const collapsed =
@@ -209,6 +175,13 @@ export function useRootBarAppearance(
       (expandedRoute.current?.key === rootKey &&
         expandedRoute.current.collapsedHeight === collapsedHeight &&
         headerHeight <= collapsedHeight);
+    // Native layout reports the settled expanded height even if the last JS
+    // scroll event was missed. Half a point ignores subpixel rounding at rest.
+    const todayScrolled =
+      today &&
+      expandedRoute.current?.key === rootKey &&
+      expandedRoute.current.collapsedHeight === collapsedHeight &&
+      headerHeight < expandedRoute.current.expandedHeight - 0.5;
     const previous = applied.current;
     if (
       previous?.key === rootKey &&
@@ -243,7 +216,6 @@ export function useRootBarAppearance(
     landscapePhone,
     largeTitleEnabled,
     today,
-    todayScrolled,
   ]);
   return !!root;
 }

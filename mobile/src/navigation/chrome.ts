@@ -74,9 +74,10 @@ export const largeTitleBar = (
     : opaqueBar(ground);
 
 /**
- * Today's soft edge leaves the dot map and large title clear at rest. Once
- * content moves under the bar, use the other roots' protective native edge:
- * soft alone blurs only the status strip, leaving cards sharp behind the title.
+ * Today's soft edge leaves the dot map and large title clear at rest. Native
+ * header height shrinking below its known expanded height selects the other
+ * roots' protective edge; a settled full height or overscroll restores soft.
+ * Soft alone blurs only the status strip, leaving cards sharp behind the title.
  * A permanently hard edge paints a divider at rest. Switching the edge keeps
  * both expanded appearances background-free (react-native-screens#3100).
  */

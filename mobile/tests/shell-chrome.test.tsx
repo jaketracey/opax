@@ -759,6 +759,8 @@ test('Today uses the shared protective edge only under content, preserving expan
       });
       expect(today.headerShadowVisible).toBe(true);
       expect(today.headerLargeStyle).toEqual({});
+      expect(today.headerLargeStyle).not.toHaveProperty('backgroundColor');
+      expect(today).not.toHaveProperty('headerLargeTitleEnabled', false);
       if (!collapsed) expect(today.headerStyle).toEqual({});
     }
     expect(todayTitleBar(colors.sunken).headerStyle).toEqual({});
@@ -868,24 +870,60 @@ test.each(
           .contentInsetAdjustmentBehavior,
       ).toBe('automatic');
       navigation.setOptions.mockClear();
-      for (const height of [120, 115, 100, 80])
+      for (const height of [120, 119.75, 119.5, 120])
         act(() => renderer!.update(page(height)));
       expanded();
       expect(navigation.setOptions).not.toHaveBeenCalled();
+      if (name === 'index')
+        expect(current.scrollEdgeEffects).toEqual({
+          top: 'soft',
+          bottom: 'soft',
+        });
+      act(() => renderer!.update(page(119.4)));
+      expanded(); // A shrinking large title still needs both backgrounds clear.
+      if (name === 'index') {
+        expect(current.scrollEdgeEffects).toEqual({
+          top: 'hard',
+          bottom: 'soft',
+        });
+        expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      } else expect(navigation.setOptions).not.toHaveBeenCalled();
+      for (const height of [115, 100, 80])
+        act(() => renderer!.update(page(height)));
+      expanded();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(
+        name === 'index' ? 1 : 0,
+      );
       act(() => renderer!.update(page(68)));
       expect(current.headerStyle).toEqual({ backgroundColor: ground });
+      expect(current.headerLargeStyle).toEqual({});
+      expect(current.headerLargeTitleEnabled).toBe(true);
       if (name === 'index')
         expect(current.scrollEdgeEffects).toEqual({
           top: 'hard',
           bottom: 'soft',
         });
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      const collapsedCalls = name === 'index' ? 2 : 1;
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls);
       for (let i = 0; i < 40; i++)
         act(() => renderer!.update(page(68 + (i % 2) / 2)));
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls);
       act(() => renderer!.update(page(120)));
       expanded();
-      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls + 1);
+      // Stretching above the rest height must neither select hard nor raise
+      // the reference height, including after a slow return from collapse.
+      for (const height of [132, 144, 120, 119.75, 120]) {
+        act(() => renderer!.update(page(height)));
+        expanded();
+        if (name === 'index')
+          expect(current.scrollEdgeEffects).toEqual({
+            top: 'soft',
+            bottom: 'soft',
+          });
+        else expect(current).not.toHaveProperty('scrollEdgeEffects');
+      }
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls + 1);
     } finally {
       if (renderer) act(() => renderer!.unmount());
       Object.defineProperty(Platform, 'Version', version);

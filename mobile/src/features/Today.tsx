@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { Block, EditionView, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
 import { useOffline } from '../api/useOffline';
@@ -18,16 +18,12 @@ import { Screen } from '../design/layout';
 import { ContentUnavailable } from '../design/states';
 import { rhythm } from '../design/tokens';
 import { releaseSplash } from '../launch/splash';
-import { useTodayBarScroll } from '../navigation/useRootBarAppearance';
 import { welcomeDeclinedThisLaunch } from '../onboarding/state';
 import { EditionCard, EditionSkeleton } from './edition/EditionCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
 import { AustraliaDots, useTodayDotsScroll } from './today/AustraliaDots';
-import {
-  dotScrollDistance,
-  electorateDotState,
-} from './today/australia-dots-model';
+import { electorateDotState } from './today/australia-dots-model';
 import { BillsBlock } from './today/BillFeed';
 import { DailyPair } from './today/DailyPair';
 import { DeclarationsBlock } from './today/DeclarationRow';
@@ -227,17 +223,6 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
  */
 export default function Today() {
   const dots = useTodayDotsScroll();
-  const barScroll = useTodayBarScroll();
-  const onScroll = useCallback(
-    (y: number) =>
-      barScroll(
-        dotScrollDistance(
-          y,
-          Platform.OS === 'ios' ? dots.expandedHeader.value : 0,
-        ),
-      ),
-    [barScroll, dots.expandedHeader],
-  );
   const offline = useOffline();
   const now = useNow();
   const day = sydneyDay(now);
@@ -409,7 +394,6 @@ export default function Today() {
       column="wide"
       grouped
       scrollRef={dots.scrollRef}
-      onScroll={onScroll}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
