@@ -475,7 +475,7 @@ name: 27 Leads and the declared-interests feed
     element:
       id: today-declarations-all
     direction: DOWN
-    timeout: 60000
+    timeout: 180000
     visibilityPercentage: 10
     centerElement: true
     speed: 20

@@ -130,13 +130,14 @@ test('screens 4.26.0 patch applies cleanly and assigns menu and plain header ids
 
 // Parse actual Maestro commands so selectors and gesture bounds are checked
 // without starting Maestro, a fixture server or a simulator.
-test('flow 27 restores chrome within six swipes then searches down from Today top', () => {
+test('flow 27 bounds chrome recovery and the top fallback before searching down', () => {
   const steps = maestroSteps;
   const restore = steps('.maestro/support/restore-tab-bar.yaml');
   const gestures = restore.find(
     (step: any) => step.repeat?.while?.notVisible,
   )?.repeat;
   expect(gestures.while.notVisible).toEqual({ id: '${TAB_ID}' });
+  expect(gestures.times).toBe(3);
   expect(gestures.times * gestures.commands.length).toBeLessThanOrEqual(6);
   expect(gestures.commands[0].swipe).toEqual({
     start: '97%, 60%',
@@ -154,10 +155,25 @@ test('flow 27 restores chrome within six swipes then searches down from Today to
   expect(topTap).toBeGreaterThan(
     restore.findIndex((step: any) => step.assertVisible?.id === '${TAB_ID}'),
   );
-  expect(restore[topTap + 1].extendedWaitUntil).toEqual({
-    visible: { id: '${TOP_ID}' },
-    timeout: 15000,
+  expect(restore[topTap + 1]).toEqual({
+    waitForAnimationToEnd: { timeout: 5000 },
   });
+  const fallback = restore[topTap + 2].repeat;
+  expect(fallback.times).toBe(12);
+  expect(fallback.while.notVisible).toEqual({ id: '${TOP_ID}' });
+  expect(fallback.commands).toEqual([
+    { swipe: { start: '97%, 30%', end: '97%, 85%', duration: 600 } },
+  ]);
+  expect(restore[topTap + 3]).toEqual({ assertVisible: { id: '${TOP_ID}' } });
+  const repeats = restore
+    .filter((step: any) => typeof step.repeat === 'object')
+    .map((step: any) => step.repeat);
+  expect(repeats).toHaveLength(3);
+  for (const repeat of repeats) {
+    expect(Number.isInteger(repeat.times)).toBe(true);
+    expect(repeat.times).toBeGreaterThan(0);
+    expect(repeat.times).toBeLessThanOrEqual(12);
+  }
   const lead = steps('.maestro/27-leads.yaml');
   const returnAt = lead.findIndex(
     (step: any) => step.runFlow?.file === 'support/restore-tab-bar.yaml',
@@ -173,12 +189,23 @@ test('flow 27 restores chrome within six swipes then searches down from Today to
         step.scrollUntilVisible?.element?.id === 'today-declarations-all',
     ).scrollUntilVisible;
   expect(declarations.direction).toBe('DOWN');
-  expect(declarations.timeout).toBeLessThanOrEqual(60000);
+  const opening = lead.find(
+    (step: any) => step.scrollUntilVisible?.element?.id === 'today-leads-open',
+  ).scrollUntilVisible;
+  expect(declarations.timeout).toBe(opening.timeout);
+  expect(declarations.timeout).toBe(180000);
 });
 
-test('Ask idle excludes the options row without matching the composer Options button', () => {
-  const idle = maestroSteps('.maestro/30-ask.yaml').slice(0, 10);
+test('Ask idle excludes both options row ids without matching the composer Options button', () => {
+  const steps = maestroSteps('.maestro/30-ask.yaml');
+  const idle = steps.slice(
+    0,
+    steps.findIndex((step: any) => step.takeScreenshot),
+  );
   expect(idle).toContainEqual({ assertNotVisible: { id: 'ask-options-line' } });
+  expect(idle).toContainEqual({
+    assertNotVisible: { id: 'ask-draft-new-conversation' },
+  });
   expect(idle).not.toContainEqual({ assertNotVisible: { text: 'Options' } });
 });
 

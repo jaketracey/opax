@@ -39,7 +39,19 @@ name: Return to the tab root and reveal the native tab bar
 # invokes the native scroll-to-top action regardless of the retained offset.
 - tapOn:
     point: 50%, 1%
-- extendedWaitUntil:
-    visible:
-      id: ${TOP_ID}
-    timeout: 15000
+# This wait succeeds even if animation outlasts its timeout, so a missed
+# status-bar tap still reaches the bounded fallback instead of failing early.
+- waitForAnimationToEnd:
+    timeout: 5000
+- repeat:
+    times: 12
+    while:
+      notVisible:
+        id: ${TOP_ID}
+    commands:
+      - swipe:
+          start: 97%, 30%
+          end: 97%, 85%
+          duration: 600
+- assertVisible:
+    id: ${TOP_ID}
