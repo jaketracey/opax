@@ -73,6 +73,25 @@ export const largeTitleBar = (
       }
     : opaqueBar(ground);
 
+/**
+ * Today alone uses UIKit's scroll-edge shadow transition. A hard top edge
+ * paints its own divider, even when the scroll-edge appearance has no shadow.
+ * Soft removes that divider without giving either expanded appearance a
+ * background, preserving large titles (react-native-screens#3100).
+ */
+export const todayTitleBar = (
+  ground: ColorValue = colors.paper,
+  collapsed = false,
+) => ({
+  ...largeTitleBar(ground, collapsed),
+  ...(glassBar()
+    ? {
+        headerLargeTitleShadowVisible: false,
+        scrollEdgeEffects: { top: 'soft' as const, bottom: 'soft' as const },
+      }
+    : {}),
+});
+
 /** Initial tab grounds, also used by roots with their own scrolling view. */
 export const tabRootGround = (name: string) =>
   name === 'ask' || (name !== 'bills' && designFlags.groupedSurfaces)

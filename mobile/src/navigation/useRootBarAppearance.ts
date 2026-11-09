@@ -14,7 +14,13 @@ import {
 } from 'react';
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { glassBar, largeTitleBar, opaqueBar, tabRootGround } from './chrome';
+import {
+  glassBar,
+  largeTitleBar,
+  opaqueBar,
+  tabRootGround,
+  todayTitleBar,
+} from './chrome';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 
@@ -139,6 +145,7 @@ export function useRootBarAppearance(
   }>(undefined);
   const colour = ground ?? tabRootGround(root?.name ?? '');
   const rootKey = root?.key;
+  const today = root?.name === 'index';
   useLayoutEffect(() => {
     if (!rootKey) {
       applied.current = undefined;
@@ -163,7 +170,9 @@ export function useRootBarAppearance(
     )
       return;
     setOptions(
-      largeTitleEnabled ? largeTitleBar(colour, collapsed) : opaqueBar(colour),
+      largeTitleEnabled
+        ? (today ? todayTitleBar : largeTitleBar)(colour, collapsed)
+        : opaqueBar(colour),
     );
     applied.current = {
       key: rootKey,
@@ -180,6 +189,7 @@ export function useRootBarAppearance(
     collapsedHeight,
     landscapePhone,
     largeTitleEnabled,
+    today,
   ]);
   return !!root;
 }
