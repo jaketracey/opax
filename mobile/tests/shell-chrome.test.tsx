@@ -933,6 +933,123 @@ test.each(
 );
 
 test.each([
+  ['font scale', { fontScale: 1 }],
+  ['window width', { width: 380 }],
+  ['window height', { height: 820 }],
+] as const)(
+  'Today resets its expanded reference when %s changes',
+  (_input, change) => {
+    const window = Dimensions.get('window');
+    const display = Dimensions.get('screen');
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    Dimensions.set({
+      window: { ...window, width: 390, height: 844, fontScale: 1.353 },
+      screen: { ...display, width: 390, height: 844, fontScale: 1.353 },
+    });
+    const route = { key: 'today-root', name: 'index' };
+    const entry = tabRootScreen(
+      '(today)',
+      '(today)',
+      'index',
+      'Today',
+      false,
+    )[0]!;
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: sharedScreens('(today)', false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+      setOptions: jest.fn((next: object) => {
+        current = { ...current, ...next };
+      }),
+    };
+    let current = {
+      ...opaqueBar(),
+      ...entry.props.options({ route, navigation }),
+    };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={height}>
+              <Screen grouped>
+                <View />
+              </Screen>
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const soft = () => {
+      expect(current).toMatchObject({
+        headerLargeTitleEnabled: true,
+        headerLargeTitleShadowVisible: false,
+        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+      });
+      expect(current.headerStyle).toEqual({});
+      expect(current.headerLargeStyle).toEqual({});
+    };
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    const resize = (change: Partial<typeof window>, height: number) =>
+      act(() => {
+        Dimensions.set({
+          window: { ...Dimensions.get('window'), ...change },
+          screen: { ...Dimensions.get('screen'), ...change },
+        });
+        renderer!.update(page(height));
+      });
+    try {
+      renderer = tree(page(120));
+      soft();
+      navigation.setOptions.mockClear();
+      resize(change, 112);
+      soft();
+      expect(navigation.setOptions).not.toHaveBeenCalled();
+      act(() => renderer!.update(page(111.4)));
+      expect(current.scrollEdgeEffects).toEqual({
+        top: 'hard',
+        bottom: 'soft',
+      });
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      act(() => renderer!.update(page(112)));
+      soft();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      resize({ fontScale: 1.786 }, 130);
+      soft();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      act(() => renderer!.update(page(129.4)));
+      expect(current.scrollEdgeEffects).toEqual({
+        top: 'hard',
+        bottom: 'soft',
+      });
+      expect(navigation.setOptions).toHaveBeenCalledTimes(3);
+      act(() => renderer!.update(page(130)));
+      soft();
+      for (const height of [144, 130]) {
+        act(() => renderer!.update(page(height)));
+        soft();
+      }
+      expect(navigation.setOptions).toHaveBeenCalledTimes(4);
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', version);
+      Dimensions.set({ window, screen: display });
+    }
+  },
+);
+
+test.each([
   ['(search)', 'search', false, 56],
   ['(search)', 'search', true, 56],
   ['(search)', 'search', false, 60],

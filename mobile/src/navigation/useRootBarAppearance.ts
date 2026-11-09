@@ -137,6 +137,9 @@ export function useRootBarAppearance(
     key: string;
     collapsedHeight: number;
     expandedHeight: number;
+    fontScale: number;
+    width: number;
+    height: number;
   }>(undefined);
   const applied = useRef<{
     key: string;
@@ -159,11 +162,17 @@ export function useRootBarAppearance(
       expandedRoute.current = {
         key: rootKey,
         collapsedHeight,
-        // Retain the first expanded measurement for this route and threshold.
-        // An overscroll stretch must not raise the reference height.
+        fontScale: frame.fontScale,
+        width: frame.width,
+        height: frame.height,
+        // Retain the first expanded measurement until the route, threshold,
+        // font scale or window size changes. Overscroll must not raise it.
         expandedHeight:
           previous?.key === rootKey &&
-          previous.collapsedHeight === collapsedHeight
+          previous.collapsedHeight === collapsedHeight &&
+          previous.fontScale === frame.fontScale &&
+          previous.width === frame.width &&
+          previous.height === frame.height
             ? previous.expandedHeight
             : headerHeight,
       };
@@ -181,6 +190,9 @@ export function useRootBarAppearance(
       today &&
       expandedRoute.current?.key === rootKey &&
       expandedRoute.current.collapsedHeight === collapsedHeight &&
+      expandedRoute.current.fontScale === frame.fontScale &&
+      expandedRoute.current.width === frame.width &&
+      expandedRoute.current.height === frame.height &&
       headerHeight < expandedRoute.current.expandedHeight - 0.5;
     const previous = applied.current;
     if (
@@ -216,6 +228,9 @@ export function useRootBarAppearance(
     landscapePhone,
     largeTitleEnabled,
     today,
+    frame.fontScale,
+    frame.width,
+    frame.height,
   ]);
   return !!root;
 }
