@@ -68,6 +68,14 @@ name: 37 Party mentions, creditors, returns, follow and Your MP pay
 - tapOn: { id: party-follow-off }
 - assertVisible: { id: party-follow-on }
 - takeScreenshot: ${EVIDENCE}/37-party-followed
+# The profile helper entered through Search. Unwind to that root and expand
+# its minimised native bar before switching to Today. Match the segmented
+# scope picker and the scope menu used from AX3.
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: search-scope.*
+      TAB_ID: tab-today
 - tapOn: { id: tab-today }
 - scrollUntilVisible:
     element: { id: today-following-collapsed }

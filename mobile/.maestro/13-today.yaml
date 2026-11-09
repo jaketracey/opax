@@ -176,9 +176,9 @@ name: 13 Today front page, its native records and dated original sources
 - scrollUntilVisible:
     element:
       id: today-independence
-      text: OPAX is independent and non-partisan\..*
     direction: DOWN
     timeout: 300000
     visibilityPercentage: 10
     centerElement: true
+- assertVisible: OPAX is independent and non-partisan\..*
 - takeScreenshot: ${EVIDENCE}/13-foot

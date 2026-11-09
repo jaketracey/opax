@@ -80,7 +80,7 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     direction: UP
     centerElement: true
     timeout: 300000
-- assertNotVisible: Gabagool2005.*
+- assertNotVisible: .*Gabagool2005.*
 - takeScreenshot: ${EVIDENCE}/08-commons-portrait
 - runFlow:
     file: 08-open-profile.yaml
@@ -153,7 +153,9 @@ name: 08 Independent profile blocks, current senator, former member and local sh
       id: sources-portrait-sheena-watt
     centerElement: true
     timeout: 90000
-- assertVisible: Gabagool2005.*CC0.*Wikimedia Commons, cropped.*
+- assertVisible:
+    id: sources-portrait-sheena-watt
+    text: .*Gabagool2005.*CC0.*Wikimedia Commons, cropped.*
 - takeScreenshot: ${EVIDENCE}/08-commons-credit
 - scrollUntilVisible:
     element:

@@ -78,8 +78,9 @@ name: 66 My MP from first launch to the latest division and the official page
 - tapOn: Parliament of Australia page
 - extendedWaitUntil:
     visible:
-      id: debug-last-external-url
+      id: source-destination-url
       text: .*aph\.gov\.au.*
     timeout: 15000
 # end: today-official-page
 - takeScreenshot: ${EVIDENCE}/66-official-page
+- tapOn: Done

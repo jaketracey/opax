@@ -1,6 +1,13 @@
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, readdirSync } from 'node:fs';
-import { resolve } from 'node:path';
+import {
+  existsSync,
+  mkdtempSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 
 // Exercise the wait parser alone. No locks, build gates or devices are used.
 test.each([
@@ -172,6 +179,9 @@ const capturePlan =
 import asyncio
 import importlib.util
 import sys
+import tempfile
+import json
+from pathlib import Path
 from types import SimpleNamespace
 
 spec = importlib.util.spec_from_file_location('capture_plans', sys.argv[1])
@@ -188,6 +198,8 @@ class Fake:
         self.els, self.lines = list(els), list(lines)
         self.taps, self.typed, self.deleted, self.keys, self.notes = [], [], [], [], []
         self.swipes, self.after_tap, self.after_swipe, self.echo = 0, None, None, True
+        self.gone, self.after_gone, self.events = True, None, []
+        self.clock, self.launches = 0, []
         self.c = SimpleNamespace(tap=self.long_press, key=self.key)
     def frame(self, el):
         f = el['frame']
@@ -202,6 +214,15 @@ class Fake:
                      (test_id is None or el.get('AXUniqueId') == test_id) and
                      (label is None or el.get('AXLabel') == label)), None)
     async def wait(self, *args, **kwargs): return await self.find(*args, **kwargs)
+    async def wait_gone(self, uid, **kwargs):
+        self.events.append(('gone', uid))
+        if self.after_gone: self.after_gone()
+        return self.gone
+    async def link(self, url): self.events.append(('link', url))
+    async def dump(self, name): pass
+    async def shot(self, name): pass
+    def launch(self, *args): self.launches.append(args)
+    def reset(self): raise AssertionError('probe must not reinstall')
     async def tap(self, test_id=None, **kwargs):
         el = await self.find(test_id, **kwargs)
         if not el: return False
@@ -224,7 +245,7 @@ class Fake:
     async def key(self, n): self.keys.append(n)
     async def hid(self, what, fn): await fn()
     async def settle(self): pass
-    async def pause(self, seconds): pass
+    async def pause(self, seconds): self.clock += seconds
     async def swipe(self, *args):
         self.swipes += 1
         if self.after_swipe: self.after_swipe()
@@ -253,6 +274,13 @@ async def check():
     assert not await p.native_search(d, 'Zzqx', 'Electorate or member’s name')
 
     # Accept UIKit's alternate bar role and the foreground sheet frame.
+    # The native ids beat both a misleading label and a measured slot.
+    for label, uid in [('More for Daily edition', 'header-more'),
+                       ('Filters', 'header-filters'), ('Account', 'header-account')]:
+        d = Fake([element(label, x=300, y=100),
+                  element(uid=uid, label='', x=245, y=64, w=44, h=44)])
+        assert await p.bar_action(d, label)
+        assert d.taps == [(267, 86)], (label, d.taps)
     d = Fake([element(kind='NavigationBar', x=8, y=475, w=386, h=52)])
     assert await p.bar_action(d, 'Done')
     assert d.taps == [(354, 501)], d.taps
@@ -286,11 +314,55 @@ async def check():
     d.after_tap = lambda: setattr(d, 'lines', [])
     assert await p.close_sheet(d, title='Sources')
 
-    # The cited record's normal tap pushes a bill. Show passage is the
-    # action that presents /citation; exercise its actual long press path.
-    d = Fake([element(uid='ask-citation-1', y=350)])
-    d.after_tap = lambda: setattr(d, 'lines', [('Citation 1', 150, 485, 100, 24)])
+    # The citation screen has an empty bar title and a combined Source 1
+    # heading. Require the passage content, never an invented bar title.
+    d = Fake([element(uid='ask-citation-mark-1', y=350)])
+    d.after_tap = lambda: setattr(d, 'els', [element(uid='citation-passage', y=550)])
     assert await p.open_citation(d)
+    # Fall back to the row's Show passage menu if idb omits the inline mark.
+    d = Fake([element(uid='ask-citation-1', y=350)])
+    d.after_tap = lambda: setattr(d, 'els', [element(uid='citation-no-passage', y=550)])
+    assert await p.open_citation(d)
+    d = Fake([element(uid='ask-citation-1', y=350)])
+    assert not await p.open_citation(d), 'a menu tap alone is not a citation'
+
+    # Do not route while the chosen checkmark/modal is still present. After
+    # it closes, idb may omit your-seat-name but OCR must show the right seat.
+    row = element(uid='seat-row-federal-representatives-nsw-grayndler', y=250)
+    d = Fake([row])
+    d.after_gone = lambda: setattr(d, 'lines', [('Grayndler, New South Wales', 16, 150, 350, 24)])
+    assert await p.choose_grayndler(d)
+    assert [event[0] for event in d.events] == ['gone', 'link'], d.events
+    d = Fake([row])
+    d.gone = False
+    assert not await p.choose_grayndler(d)
+    assert not any(event[0] == 'link' for event in d.events)
+    d = Fake([row], [('Sydney, New South Wales', 16, 150, 350, 24)])
+    assert not await p.choose_grayndler(d)
+
+    # Sample the entire ten seconds after a warm relaunch, including initial
+    # empty samples and a real native item frame when it becomes available.
+    class Geometry(Fake):
+        async def elements(self):
+            return [] if self.clock < 2 else [element(uid='header-account', x=310, y=60, w=44, h=44)]
+    with tempfile.TemporaryDirectory() as root:
+        d = Geometry([element(uid='today-screen-message')])
+        d.evidence = Path(root)
+        await p.cold_account(d, now=lambda: d.clock)
+        result = json.loads((d.evidence / 'w9-account-geometry.json').read_text())
+        assert len(d.launches) == 2
+        assert result['windowSeconds'] == 10 and not result['reinstalled']
+        assert result['samples'][0] == dict(elapsed=0, frames=[])
+        assert result['samples'][-1] == dict(elapsed=9.75, frames=[[310, 60, 44, 44]])
+        assert d.clock == 10
+        # Empty geometry is a failed measurement, with its evidence retained.
+        d = Fake([element(uid='today-screen-message')])
+        d.evidence = Path(root)
+        try:
+            await p.cold_account(d, now=lambda: d.clock)
+            raise AssertionError('empty Account measurement passed')
+        except RuntimeError as error:
+            assert 'no measurable frame' in str(error)
     print('capture helper regressions passed')
 
 asyncio.run(check())
@@ -300,5 +372,51 @@ asyncio.run(check())
       { encoding: 'utf8' },
     );
     expect(output).toContain('capture helper regressions passed');
+  },
+);
+
+const fixtureAudit =
+  capturePlan && join(dirname(capturePlan), 'fixture-audit.mjs');
+(fixtureAudit && existsSync(fixtureAudit) ? test : test.skip)(
+  'capture request audit accepts only the exact local expected 404 states',
+  () => {
+    const dir = mkdtempSync(join(tmpdir(), 'capture-audit-'));
+    try {
+      const file = join(dir, 'fixture.log');
+      const audit = (
+        path: string,
+        status = 404,
+        host = '127.0.0.1:8910',
+        allowed = false,
+      ) => {
+        writeFileSync(
+          file,
+          `fixture ready\n${JSON.stringify({ path, status, host, allowed })}\n`,
+        );
+        return spawnSync(process.execPath, [fixtureAudit!, file, '8910'], {
+          encoding: 'utf8',
+        });
+      };
+      for (const path of [
+        '/interests/11023.json',
+        '/api/person-topics?name=Basem+Abdo',
+        '/bills/au-federal-r1.json',
+      ]) {
+        const result = audit(path);
+        expect(result.status).toBe(0);
+        expect(JSON.parse(result.stdout).expectedErrorStates).toEqual([path]);
+        expect(audit(path, 500).status).toBe(1);
+        const offHost = audit(path, 404, 'opax.com.au', true);
+        expect(offHost.status).toBe(1);
+        expect(JSON.parse(offHost.stdout).offHost).toBe(1);
+      }
+      expect(audit('/interests/11024.json').status).toBe(1);
+      expect(audit('/api/person-topics?name=Basem+Abdo&extra=1').status).toBe(
+        1,
+      );
+      expect(audit('/api/person-topics?name=Someone+Else').status).toBe(1);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   },
 );
