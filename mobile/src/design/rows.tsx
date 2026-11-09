@@ -112,6 +112,7 @@ export function LinkRow({
   highlighted,
 }: LinkRowProps) {
   const stacked = useAccessibilitySize();
+  const [firstLineHeight, setFirstLineHeight] = useState<number | undefined>();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined && accessory !== 'checkmark';
@@ -174,15 +175,32 @@ export function LinkRow({
       ) : null}
       <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
         <View style={[styles.titles, stacked ? null : styles.grow]}>
-          {leading}
-          <Text
-            wordSafe
-            variant={titleRole}
-            tone={destructive ? 'danger' : undefined}
-            testID={titleTestID}
-          >
-            {title}
-          </Text>
+          <View style={leading ? styles.titleLine : undefined}>
+            {leading ? (
+              <View
+                style={{ height: firstLineHeight, justifyContent: 'center' }}
+              >
+                {leading}
+              </View>
+            ) : null}
+            <Text
+              wordSafe
+              variant={titleRole}
+              tone={destructive ? 'danger' : undefined}
+              testID={titleTestID}
+              style={leading ? styles.grow : undefined}
+              onTextLayout={
+                leading
+                  ? (event) => {
+                      const line = event.nativeEvent.lines[0];
+                      if (line) setFirstLineHeight(line.height);
+                    }
+                  : undefined
+              }
+            >
+              {title}
+            </Text>
+          </View>
           {secondary}
           {detail ? (
             <Text wordSafe variant="secondary" testID={detailTestID}>
@@ -991,6 +1009,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   titles: { gap: rhythm.line, alignSelf: 'stretch', flexShrink: 1 },
+  titleLine: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
   grow: { flex: 1 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
   line: {
