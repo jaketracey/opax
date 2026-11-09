@@ -67,7 +67,6 @@ it.each([
     '# budget: figure-original\n- tapOn: Source\n',
     'unclosed budget',
   ],
-  ['missing', '- tapOn: Source\n', 'no tap budget markers'],
   [
     'recursive',
     '# budget: figure-original\n- runFlow: fixture.yaml\n# end: figure-original\n',
@@ -179,6 +178,28 @@ it('audits id parameters passed through nested runFlow env blocks', () => {
     expect(output).not.toContain(': welcome-screen');
     expect(output).not.toContain('ignored-not-an-id');
     expect(output).toContain('1 missing; 0 held only by a prefix template.');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('accepts unbudgeted flows alongside journeys and still requires journey markers', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'maestro-budget-'));
+  try {
+    const file = path.join(dir, '01-launch.yaml');
+    writeFileSync(file, 'appId: test\n---\n- tapOn: Account\n');
+    const result = execFileSync(process.execPath, [script, file, ...flows], {
+      encoding: 'utf8',
+    });
+    expect(result).toContain('01-launch.yaml: no declared tap budgets');
+    expect(result).toContain('figure-original: 2/2');
+    const required = path.join(dir, '66-my-mp-journey.yaml');
+    writeFileSync(required, 'appId: test\n---\n- tapOn: Member\n');
+    const missing = spawnSync(process.execPath, [script, required], {
+      encoding: 'utf8',
+    });
+    expect(missing.status).toBe(1);
+    expect(missing.stderr).toContain('missing budget first-launch-member');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
