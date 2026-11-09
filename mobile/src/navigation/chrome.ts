@@ -142,12 +142,17 @@ export type TabSegment =
 const openAccount = () => router.push('/account');
 const openTalk = () => router.push('/talk');
 
+// Expo preserves extra item properties through to the native dictionary.
+// RNSBarButtonItem must map testID to accessibilityIdentifier for iOS test
+// selectors. identifier alone only matches items across UIKit transitions.
+export type TestableHeaderItem = NativeStackHeaderItem & { testID?: string };
+
 /** Account is outermost. A root has room for just one feature action. */
 export function rootHeaderItems(props?: {
   segment: TabSegment;
   extra?: NativeStackHeaderItem[];
   signedIn: boolean;
-}): NativeStackHeaderItem[] {
+}): TestableHeaderItem[] {
   const signedIn = props?.signedIn ?? !!accountSnapshot().status?.signedIn;
   // AskScreen calls without props. Keep Talk reachable until w4-ask puts
   // it in the composer and removes that screen's own header options.
@@ -165,6 +170,8 @@ export function rootHeaderItems(props?: {
       type: 'button',
       label: 'Account',
       accessibilityLabel: 'Account',
+      testID: 'header-account',
+      identifier: 'header-account',
       tintColor: colors.navy,
       icon: {
         type: 'sfSymbol',
@@ -246,10 +253,12 @@ function nativeMenuRows(items: RowMenuAction[]): NativeMenuRow[] {
 export function pageMenu(props: {
   name: string;
   items: RowMenuAction[];
-}): NativeStackHeaderItem {
+}): TestableHeaderItem {
   return {
     type: 'menu',
     label: 'More',
+    testID: 'header-more',
+    identifier: 'header-more',
     accessibilityLabel: `More for ${props.name}`,
     icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
     menu: { items: nativeMenuRows(props.items) },
@@ -270,10 +279,12 @@ export function shareItem(props: {
 export function filtersItem(props: {
   active: boolean;
   href: Href;
-}): NativeStackHeaderItem {
+}): TestableHeaderItem {
   return {
     type: 'button',
     label: 'Filters',
+    testID: 'header-filters',
+    identifier: 'header-filters',
     accessibilityLabel: props.active ? 'Filters, on' : 'Filters',
     icon: {
       type: 'sfSymbol',
@@ -323,7 +334,7 @@ function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
  * Android's bar for a screen's items: a button's word, and a menu's word
  * that opens its rows as a bottom sheet. Labelled, scalable touch targets.
  */
-export function androidHeaderBar(items: NativeStackHeaderItem[]) {
+export function androidHeaderBar(items: TestableHeaderItem[]) {
   return createElement(
     View,
     { style: { flexDirection: 'row' } },
@@ -336,7 +347,9 @@ export function androidHeaderBar(items: NativeStackHeaderItem[]) {
             Pressable,
             {
               key: index,
-              testID: `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
+              testID:
+                item.testID ??
+                `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
               accessibilityRole: 'button',
               accessibilityLabel: item.accessibilityLabel ?? item.label,
               onPress:
