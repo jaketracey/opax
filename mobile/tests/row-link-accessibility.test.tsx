@@ -1,7 +1,7 @@
 import { act, type ReactElement } from 'react';
 import { Platform, Pressable, StyleSheet, Text } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { LinkRow, BillRow } from '../src/design/rows';
 import { Tile } from '../src/design/card';
 import { RowLink } from '../src/design/row-link';
@@ -13,30 +13,13 @@ jest.mock('../src/features/follows/store', () => ({
   unfollow: jest.fn(),
 }));
 
-// Keep the installed LinkWithPreview, Link.Trigger and Radix Slot. Only
+// Keep the installed Link, LinkWithPreview, Link.Trigger and Radix Slot. Only
 // navigation and native views are stand-ins: the old row-hosting mock skipped
 // NativeLinkPreview altogether, so it could not catch the missing subtree.
 jest.mock('expo-router', () => {
   const actual = jest.requireActual('expo-router');
-  const { LinkWithPreview } = jest.requireActual(
-    'expo-router/build/link/LinkWithPreview',
-  );
-  const React = jest.requireActual('react');
   return {
     ...actual,
-    Link: Object.assign(
-      (props: { href: string }) =>
-        React.createElement(LinkWithPreview, {
-          ...props,
-          hrefForPreviewNavigation: props.href,
-        }),
-      {
-        Trigger: actual.Link.Trigger,
-        Preview: actual.Link.Preview,
-        Menu: actual.Link.Menu,
-        MenuAction: actual.Link.MenuAction,
-      },
-    ),
     router: { push: jest.fn(), navigate: jest.fn() },
     useSegments: () => [],
   };
@@ -85,11 +68,26 @@ jest.mock('expo-router/build/link/preview/native', () => {
     ),
     NativeLinkPreviewContent: () => null,
     NativeLinkPreviewAction: () => null,
+    LinkZoomTransitionEnabler: () => null,
+    LinkZoomTransitionSource: (props: Record<string, unknown>) => (
+      <View {...props} style={{ display: 'contents' }} />
+    ),
+    LinkZoomTransitionAlignmentRectDetector: (
+      props: Record<string, unknown>,
+    ) => <View {...props} style={{ display: 'contents' }} />,
   };
 });
 
 const mounted: TestRenderer.ReactTestRenderer[] = [];
 const originalOS = Platform.OS;
+const originalExpoOS = process.env.EXPO_OS;
+beforeAll(() => {
+  process.env.EXPO_OS = 'ios';
+});
+afterAll(() => {
+  if (originalExpoOS === undefined) delete process.env.EXPO_OS;
+  else process.env.EXPO_OS = originalExpoOS;
+});
 function render(element: ReactElement) {
   let tree!: TestRenderer.ReactTestRenderer;
   act(() => {
@@ -277,4 +275,36 @@ test('a normal row still pushes by touch through the preview trigger', () => {
   act(() => pressable(root).props.onPress());
   expect(router.push).toHaveBeenCalledTimes(1);
   expect(router.push).toHaveBeenCalledWith('/explore');
+});
+
+test('a link without a preview or menu exposes its Pressable directly', () => {
+  const root = render(
+    <RowLink href="/money" preview={false}>
+      <Pressable
+        accessibilityLabel="Public money"
+        testID="money"
+        style={{ minHeight: 44 }}
+      >
+        <Text>Public money</Text>
+      </Pressable>
+    </RowLink>,
+  );
+  const target = expectAccessibleLink(root, 'money', 'Public money');
+  expect(
+    hosts(root).some((node) => node.props.nativeID === 'preview-boundary'),
+  ).toBe(false);
+  expect(StyleSheet.flatten(target.props.style).minHeight).toBe(44);
+});
+
+test('an accessible host keeps the native preview and zoom trigger', () => {
+  const root = render(
+    <RowLink href="/money" zoom>
+      <Pressable accessibilityLabel="Public money" testID="money">
+        <Text>Public money</Text>
+      </Pressable>
+    </RowLink>,
+  );
+  expectAccessibleLink(root, 'money', 'Public money');
+  expect(root.findAllByType(Link.Preview)).toHaveLength(1);
+  expect(root.findByType(Link.Trigger).props.withAppleZoom).toBe(true);
 });

@@ -113,9 +113,15 @@ function host(root: ReactTestInstance, testID: string) {
   );
 }
 function row(root: ReactTestInstance, testID = 'row') {
-  return root.find(
+  const direct = root.findAll(
     (node) =>
       typeof node.props.style === 'function' && node.props.testID === testID,
+  )[0];
+  // RowLink owns the accessible ID outside the native preview boundary;
+  // the Pressable inside still owns the visual row and its style function.
+  return (
+    direct ??
+    host(root, testID).find((node) => typeof node.props.style === 'function')
   );
 }
 const flat = (style: unknown) =>

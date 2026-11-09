@@ -80,10 +80,27 @@ afterEach(() => {
     for (const renderer of mounted.splice(0)) renderer.unmount();
   });
 });
-const host = (root: ReactTestInstance, testID: string) =>
+const target = (root: ReactTestInstance, testID: string) =>
   root.find(
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
+const rowPressable = (root: ReactTestInstance, testID: string) =>
+  root.findAll(
+    (node) =>
+      typeof node.props.style === 'function' && node.props.testID === testID,
+  )[0] ??
+  target(root, testID).find(
+    (node) =>
+      typeof node.type !== 'string' && typeof node.props.style === 'function',
+  );
+const host = (root: ReactTestInstance, testID: string) => {
+  const accessible = target(root, testID);
+  const pressable = accessible.findAll(
+    (node) =>
+      typeof node.type !== 'string' && typeof node.props.style === 'function',
+  )[0];
+  return pressable?.find((node) => typeof node.type === 'string') ?? accessible;
+};
 const flat = (style: unknown) =>
   (StyleSheet.flatten(style as never) ?? {}) as Record<string, unknown>;
 
@@ -153,16 +170,7 @@ function expectOneLine(
 }
 const press = (root: ReactTestInstance, testID: string) =>
   act(() => {
-    // The outermost element carrying the row's id is its Pressable, holding
-    // whatever onPress the host handed it.
-    root
-      .findAll(
-        (node) =>
-          typeof node.type !== 'string' &&
-          node.props.testID === testID &&
-          typeof node.props.onPress === 'function',
-      )[0]
-      .props.onPress();
+    rowPressable(root, testID).props.onPress();
   });
 
 beforeEach(() => jest.mocked(router.push).mockClear());
@@ -217,7 +225,9 @@ describe('rows keep one line in every host (iOS, through Link.Trigger)', () => {
     expectOneLine(tree.root, 'search-result-anthony-albanese', {
       text: textOf(row, 'Member for Grayndler'),
     });
-    expect(row.props.accessible).toBe(true);
+    expect(
+      target(tree.root, 'search-result-anthony-albanese').props.accessible,
+    ).toBe(true);
   });
 
   test('BillRow with an href in an InsetGroup and bare', () => {
@@ -397,12 +407,7 @@ describe('tiles keep a bounded height through the Link slot', () => {
 
   test('the tile Pressable grows into its cell in both pressed states', () => {
     const tree = render(tiles);
-    const pressable = tree.root.findAll(
-      (node) =>
-        typeof node.type !== 'string' &&
-        node.props.testID === 'tile-money' &&
-        typeof node.props.style === 'function',
-    )[0];
+    const pressable = rowPressable(tree.root, 'tile-money');
     expect(pressable).toBeDefined();
     for (const pressed of [false, true]) {
       const style = flat(pressable.props.style({ pressed }));
