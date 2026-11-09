@@ -1044,10 +1044,15 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   grow: { flex: 1 },
-  // Labels keep their natural width. The value owns the remaining space
-  // and wraps instead of forcing labels such as From onto two lines.
-  valueLabel: { flexShrink: 0 },
-  value: { flex: 1, flexShrink: 1, textAlign: 'right' },
+  // Both sides can wrap. Reserve enough label width for short words such
+  // as From, and retain a short figure's natural width beside long labels.
+  valueLabel: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 'auto',
+    minWidth: '35%',
+  },
+  value: { flexShrink: 1, maxWidth: '65%', textAlign: 'right' },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
   line: {
     flexDirection: 'row',

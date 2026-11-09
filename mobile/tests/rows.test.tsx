@@ -153,6 +153,53 @@ afterEach(() => {
 });
 
 const href = '/person/person_0123456789abcdef01234567';
+
+test.each([
+  ['From', 'Australian Office of Financial Management'],
+  ['Commonwealth Bank of Australia Limited', '$1,234,567'],
+])(
+  'inline ValueRow balances %s and %s without a zero-basis value',
+  (label, value) => {
+    const root = render(<ValueRow label={label} value={value} />).root;
+    const [labelText, valueText] = root.findAllByType(NativeText);
+    expect(labelText!.props.children).toBe(label);
+    expect(flat(labelText!.props.style)).toMatchObject({
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 'auto',
+      minWidth: '35%',
+    });
+    expect(flat(valueText!.props.style)).toMatchObject({
+      flexShrink: 1,
+      maxWidth: '65%',
+      textAlign: 'right',
+    });
+    expect(flat(valueText!.props.style).flex).toBeUndefined();
+    expect(valueText!.props.numberOfLines).toBeUndefined();
+  },
+);
+
+test.each([1.786, 3.571])(
+  'ValueRow retains the stacked layout at font scale %s',
+  (scale) => {
+    size(scale);
+    const root = render(
+      <ValueRow
+        label="From"
+        value="Australian Office of Financial Management"
+      />,
+    ).root;
+    const [label, value] = root.findAllByType(Text);
+    expect(label!.props.style).toBeUndefined();
+    expect(value!.props.style).toBeUndefined();
+    expect(flat(label!.parent!.props.style)).toMatchObject({
+      flexDirection: 'column',
+      flexWrap: 'nowrap',
+      alignItems: 'flex-start',
+    });
+  },
+);
+
 for (const scale of [1, 1.786, 3.571]) {
   describe(`row anatomy at fontScale ${scale}`, () => {
     const rows: [string, ReactElement, boolean][] = [
