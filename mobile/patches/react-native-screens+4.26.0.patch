@@ -1,0 +1,41 @@
+--- a/node_modules/react-native-screens/ios/RNSBarButtonItem.mm
++++ b/node_modules/react-native-screens/ios/RNSBarButtonItem.mm
+@@ -102,6 +102,10 @@
+     } else {
+       self.style = UIBarButtonItemStylePlain;
+     }
++  }
++
++  if (dict[@"testID"]) {
++    self.accessibilityIdentifier = dict[@"testID"];
+   }
+ 
+   if (dict[@"accessibilityLabel"]) {
+@@ -188,11 +192,15 @@
+                  image = img;
+                }];
+ 
+-  return [UIMenu menuWithTitle:dict[@"title"]
++  UIMenu *menu = [UIMenu menuWithTitle:dict[@"title"]
+                          image:image
+                     identifier:nil
+                        options:RNSMakeUIMenuOptionsFromConfig(dict)
+                       children:elements];
++  if (dict[@"testID"]) {
++    menu.accessibilityIdentifier = dict[@"testID"];
++  }
++  return menu;
+ }
+ 
+ + (UIAction *)createActionItemFromConfig:(NSDictionary *)dict
+@@ -213,6 +221,10 @@
+                completionBlock:^(UIImage *img) {
+                  actionElement.image = img;
+                }];
++
++  if (dict[@"testID"]) {
++    actionElement.accessibilityIdentifier = dict[@"testID"];
++  }
+ 
+   NSString *discoverabilityLabel = dict[@"discoverabilityLabel"];
+   if (discoverabilityLabel != nil) {

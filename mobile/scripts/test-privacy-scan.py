@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Negative privacy gates with synthetic binaries; no Apple/network access."""
+import hashlib
 import importlib.util
 import json
 import os
@@ -203,6 +204,35 @@ puts replacement.shell_script
 
 
 class PatchReplayTests(unittest.TestCase):
+    def test_screens_426_bar_button_and_menu_identifiers_apply_without_fuzz(self):
+        mobile = Path(__file__).resolve().parent.parent
+        entry = next(row for row in json.loads((mobile / 'patches/privacy-patches.json').read_text())
+                     if row['package'] == 'react-native-screens')
+        self.assertEqual(entry['version'], '4.26.0')
+        self.assertEqual(json.loads((mobile / 'node_modules/react-native-screens/package.json').read_text())['version'],
+                         entry['version'])
+        reviewed_patch = mobile / 'patches' / entry['patch']
+        row = entry['files'][0]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'node_modules/react-native-screens' / row['path']
+            source.parent.mkdir(parents=True)
+            shutil.copyfile(mobile / 'node_modules/react-native-screens' / row['path'], source)
+            digest = lambda: hashlib.sha256(source.read_bytes()).hexdigest()
+            args = ['/usr/bin/patch', '--batch', '--fuzz=0', '-p1', '-i', str(reviewed_patch)]
+            if digest() == row['after']:
+                subprocess.run(args + ['--reverse'], cwd=root, capture_output=True, text=True, check=True)
+            # The clean input is the exact pinned upstream source, not just a
+            # nearby hunk that happens to accept the diff.
+            self.assertEqual(digest(), row['before'])
+            for extra in (['--dry-run'], []):
+                result = subprocess.run(args + extra, cwd=root, capture_output=True, text=True, check=True)
+                self.assertNotRegex(result.stdout + result.stderr, r'(?i)offset|fuzz')
+            self.assertEqual(digest(), row['after'])
+            patched = source.read_text()
+            for target in ('self', 'menu', 'actionElement'):
+                self.assertIn(f'{target}.accessibilityIdentifier = dict[@"testID"];', patched)
+
     def test_clean_replay_idempotency_version_and_source_drift(self):
         mobile = Path(__file__).resolve().parent.parent
         spec = importlib.util.spec_from_file_location('privacy_patches', mobile / 'scripts/apply-privacy-patches.py')
@@ -245,14 +275,18 @@ class PatchReplayTests(unittest.TestCase):
                 finish()
             applicator.apply(root)
             applicator.apply(root)
-            package = root / 'node_modules/expo-location'
-            source = package / 'ios/LocationModule.swift'
-            source.write_text(source.read_text() + '\n// unexpected\n')
-            with self.assertRaisesRegex(ValueError, 'Unexpected'):
-                applicator.apply(root)
-            (package / 'package.json').write_text('{"version":"57.0.21"}')
-            with self.assertRaisesRegex(ValueError, 'version changed'):
-                applicator.apply(root)
+            for entry in entries:
+                package = root / 'node_modules' / entry['package']
+                source = package / next(row['path'] for row in entry['files'] if row['after'])
+                original = source.read_text()
+                source.write_text(original + '\n// unexpected\n')
+                with self.assertRaisesRegex(ValueError, 'Unexpected'):
+                    applicator.apply(root)
+                source.write_text(original)
+                (package / 'package.json').write_text('{"version":"0.0.0"}')
+                with self.assertRaisesRegex(ValueError, 'version changed'):
+                    applicator.apply(root)
+                (package / 'package.json').write_text(json.dumps({'version': entry['version']}))
 
 
 if __name__ == '__main__':
