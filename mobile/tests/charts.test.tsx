@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Skia test doubles render only inert host views. */
+import { Rect } from '@shopify/react-native-skia';
 import { act, type ReactElement } from 'react';
 import * as RN from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { Rect } from '@shopify/react-native-skia';
 import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
 import { Button } from '../src/design/controls';
-import { Text } from '../src/design/text';
-import { SourceLine } from '../src/design/source';
 import { light } from '../src/design/palette';
+import { SourceLine } from '../src/design/source';
+import { Text } from '../src/design/text';
 
 jest.mock('@shopify/react-native-skia', () => ({
   Canvas: require('react-native').View,
@@ -15,7 +15,7 @@ jest.mock('@shopify/react-native-skia', () => ({
 }));
 const proof = {
   dateRange: { start: '2026-10-01', end: '2026-11-07' },
-  source: 'ParlInfo',
+  citation: 'ParlInfo',
 };
 const data = [
   { label: 'October', value: 5 },

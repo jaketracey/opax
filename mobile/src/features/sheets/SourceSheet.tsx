@@ -1,29 +1,25 @@
 import { router } from 'expo-router';
-import { Alert, Appearance, Pressable, View } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { hasSourcePreview, isE2E, webOrigin } from '../../design/environment';
-import { dark, light } from '../../design/palette';
-import {
-  presentSourceDestination,
-  recordExternalURL,
-} from '../../navigation/source-destination';
+import { Alert, Appearance, Pressable, View } from 'react-native';
 import { copy } from '../../design/copy';
+import { hasSourcePreview, isE2E, webOrigin } from '../../design/environment';
 import { calendarDate, formatDate, type DateInput } from '../../design/format';
 import { InsetGroup } from '../../design/layout';
-import { LinkRow } from '../../design/rows';
-import { Text } from '../../design/text';
+import { dark, light } from '../../design/palette';
 import {
   useRowCellStyle,
   useRowHighlight,
   useRowInset,
 } from '../../design/row-padding';
-import { minimumTarget, rhythm } from '../../design/tokens';
+import { LinkRow } from '../../design/rows';
 import {
-  sourceCitations,
   licenceText,
+  sourceCitations,
   type SourceDetails,
   type SourceOriginal,
 } from '../../design/source';
+import { Text } from '../../design/text';
+import { minimumTarget, rhythm } from '../../design/tokens';
 import {
   canonicalUrl,
   fromWebPath,
@@ -31,8 +27,15 @@ import {
   openSource,
   sourceUrl,
 } from '../../navigation/external';
-import { licenceRoute } from '../../navigation/routes/reference';
+import {
+  licenceHubRoute,
+  licenceRoute,
+} from '../../navigation/routes/reference';
 import { useSheetPayload } from '../../navigation/sheets';
+import {
+  presentSourceDestination,
+  recordExternalURL,
+} from '../../navigation/source-destination';
 import { MissingPayload, SheetFrame } from './frame';
 
 export function sourceDate(value: DateInput | null | undefined, short = false) {
@@ -43,6 +46,7 @@ export function sourceDate(value: DateInput | null | undefined, short = false) {
       : formatDate(value, short ? 'short' : 'long');
 }
 export function sourceHeader(details: SourceDetails) {
+  if (details.header) return details.header;
   const newest = sourceCitations(details.citation)
     .flatMap(({ asOf }) => {
       const day = asOf == null ? null : calendarDate(asOf);
@@ -160,7 +164,24 @@ export function OriginalsGroup({
                 .filter(Boolean)
                 .join(' · ') || undefined
             }
-            external
+            external={
+              !fromWebPath(
+                original.url.startsWith('/')
+                  ? original.url
+                  : (() => {
+                      try {
+                        const u = new URL(original.url);
+                        return ['opax.com.au', 'www.opax.com.au'].includes(
+                          u.hostname,
+                        )
+                          ? u.pathname + u.search + u.hash
+                          : '';
+                      } catch {
+                        return '';
+                      }
+                    })(),
+              )
+            }
             onPress={() => openOriginal(original, overModal)}
             testID={testID ? `${testID}-original-${index}` : undefined}
           />
@@ -263,20 +284,13 @@ export function SourceContent({
         ) : null}
         <LinkRow
           title="Sources and licences"
-          onPress={() =>
-            router.push({
-              pathname: '/licences',
-              params: details.licenceDataset
-                ? { dataset: details.licenceDataset }
-                : {},
-            })
-          }
+          onPress={() => router.push(licenceHubRoute)}
           testID={testID && `${testID}-licences`}
         />
         <TintRow
           title={details.report?.label ?? copy.reportCorrection}
           onPress={details.report?.onPress ?? (() => void openCorrection())}
-          testID={testID && `${testID}-correction`}
+          testID={details.report?.testID ?? (testID && `${testID}-correction`)}
         />
       </InsetGroup>
     </>

@@ -1,13 +1,14 @@
 import type { ComponentProps } from 'react';
-import { FigureBlock } from '../../design/record';
-import { InsetGroup, Section } from '../../design/layout';
-import { LinkRow, ValueRow } from '../../design/rows';
 import {
   formatMoney,
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../../design/format';
+import { InsetGroup, Section } from '../../design/layout';
 import { byPartyGroup } from '../../design/party-groups';
+import { FigureBlock } from '../../design/record';
+import { LinkRow, ValueRow } from '../../design/rows';
+import { symbols } from '../../design/symbols';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { moneyRows, topicMoneyTitles, type IndustryMoney } from './model';
 import type { ReadMeta } from './parts';
@@ -60,7 +61,7 @@ export function TopicMoney({
     label,
     accessibilityLabel: `${moneyAccessibilityLabel(total, true)} ${label}`,
     caveat: MONEY_CAVEAT,
-    source: {
+    citation: {
       asOf: meta.asOf ?? money.meta.generated,
       savedAt: meta.savedAt,
       citation: MONEY_CITATION,
@@ -87,7 +88,7 @@ export function TopicMoney({
       <InsetGroup>
         <LinkRow
           title="Open the money map"
-          symbol="dollarsign.circle"
+          symbol={symbols.money}
           href={moneyRoute()}
           testID="topic-money-map"
         />
