@@ -199,7 +199,11 @@ test('starting a round keeps the named Back button when the question installs it
     isFocused: () => true,
     addListener: () => () => {},
     getState: () => ({
-      routes: [{ key: 'hub', name: 'explore/index' }, route],
+      routes: [
+        { key: 'today', name: 'index' },
+        { key: 'hub', name: 'explore/index' },
+        route,
+      ],
     }),
   };
   await mount(
@@ -213,11 +217,11 @@ test('starting a round keeps the named Back button when the question installs it
   expect(options()).toMatchObject({
     title: 'The record quiz',
     headerTitle: 'The record quiz',
-    headerBackTitle: 'Quizzes and tools',
+    headerBackTitle: 'Tools',
     headerBackButtonDisplayMode: 'default',
   });
   expect(navigation.setOptions).toHaveBeenCalledWith(
-    expect.objectContaining({ headerBackTitle: 'Quizzes and tools' }),
+    expect.objectContaining({ headerBackTitle: 'Tools' }),
   );
 });
 
