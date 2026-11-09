@@ -590,3 +590,16 @@ test('topic arc policy accepts oldest sorting while rejecting duplicate and unsu
     false,
   );
 });
+
+test('one speech is singular for a parliament and a party', async () => {
+  jest.mocked(reports.topic).mockResolvedValue(
+    result({
+      ...topic,
+      parties: [['Labor', 1]],
+      states: [['sa', 1, 0.01]],
+    }) as never,
+  );
+  const page = await render(<TopicPage />);
+  expect(words(page)).toContain('1 speech');
+  expect(words(page)).not.toMatch(/\b1 speeches\b/);
+});

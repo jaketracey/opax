@@ -3,7 +3,7 @@ import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
 import { reports } from '../../api/runtime';
 import { useRead } from '../../api/useRead';
-import { formatCount, formatMoney } from '../../design/format';
+import { counted, formatMoney } from '../../design/format';
 import {
   ContentUnavailable,
   Heading,
@@ -304,7 +304,7 @@ export default function WordsDollars() {
                 ) : null}
                 {matrix.record && base > 0 && base < THIN_PARTY_BASE ? (
                   <Text wordSafe variant="footnote" testID="wd-thin">
-                    {`A party is recorded for only ${formatCount(base)} speeches on this subject, so shares are not shown.`}
+                    {`A party is recorded for only ${counted(base, 'speech', 'speeches')} on this subject, so shares are not shown.`}
                   </Text>
                 ) : null}
               </>

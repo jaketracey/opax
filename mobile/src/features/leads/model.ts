@@ -1,5 +1,6 @@
 import type { Discovery, DiscoverySignal } from '../../api/catalog-decoders';
 import {
+  counted,
   formatCount,
   formatDate,
   formatMoneyCompact,
@@ -342,7 +343,7 @@ function comparisonFor(
       total: chart.group_total,
       figureLabel: `${contracts ? 'in contracts from this agency' : 'in party receipts'}, ${spanText(chart)}`,
       rows,
-      note: `${formatCount(chart.record_count)} ${contracts ? 'contracts' : 'receipts'} · ${periodText(chart)}. ${contracts ? 'Recorded contract values, not the agency’s whole budget.' : 'Party receipts include more than gifts.'}${missing ? ` ${formatCount(missing)} records have no valid date.` : ''}`,
+      note: `${formatCount(chart.record_count)} ${contracts ? 'contracts' : 'receipts'} · ${periodText(chart)}. ${contracts ? 'Recorded contract values, not the agency’s whole budget.' : 'Party receipts include more than gifts.'}${missing ? ` ${counted(missing, 'record', 'records')} ${missing === 1 ? 'has' : 'have'} no valid date.` : ''}`,
     };
   }
   return {
@@ -452,15 +453,14 @@ export function leadsFor(
 
 /** "60 leads", "28 agencies", "1 party". */
 export function leadCount(count: number, filter: LeadFilter) {
-  if (filter === 'all')
-    return `${formatCount(count)} ${count === 1 ? 'lead' : 'leads'}`;
+  if (filter === 'all') return `${counted(count, 'lead', 'leads')}`;
   const words = categoryWords[filter];
   return `${formatCount(count)} ${count === 1 ? words.one : words.many}`;
 }
 
 /** The web's "About these numbers" lede (renderDiscoveryPage). */
 export function aboutLede(discovery: Discovery) {
-  return `A concentration is a reason to look closer, not proof of wrongdoing. This page covers ${formatCount(discovery.coverage.contracts)} contracts and ${formatCount(discovery.coverage.donations)} party receipts.`;
+  return `A concentration is a reason to look closer, not proof of wrongdoing. This page covers ${counted(discovery.coverage.contracts, 'contract', 'contracts')} and ${formatCount(discovery.coverage.donations)} party receipts.`;
 }
 /** The export's calendar date, in UTC as the web reads it. */
 export const discoveryAsOf = (discovery: Discovery) =>

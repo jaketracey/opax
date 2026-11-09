@@ -4,7 +4,7 @@ import {
   Section,
   SourceLine,
 } from '../../design/primitives';
-import { formatCount } from '../../design/format';
+import { counted } from '../../design/format';
 import { byPartyGroup } from '../../design/party-groups';
 import {
   parliamentNames,
@@ -56,7 +56,7 @@ export function TopicWho({
               <LinkRow
                 key={row.code}
                 title={row.name}
-                value={`${formatCount(row.count)} speeches`}
+                value={`${counted(row.count, 'speech', 'speeches')}`}
                 accessory="checkmark"
                 selected={selected}
                 onPress={() =>
@@ -76,7 +76,7 @@ export function TopicWho({
               <LinkRow
                 key={state}
                 title={parliamentNames[state]!}
-                value={`${formatCount(count)} speeches`}
+                value={`${counted(count, 'speech', 'speeches')}`}
                 accessory="checkmark"
                 selected={selected}
                 onPress={() =>

@@ -16,6 +16,7 @@ import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, isPad, useLayout } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
 import {
+  counted,
   disclosureYearNote,
   formatCount,
   formatDate,
@@ -430,7 +431,7 @@ function PartyContent({
         view.members.data
           ? {
               label: 'See all',
-              accessibilityLabel: `See all ${formatCount(view.members.data.currentCount)} ${label} members`,
+              accessibilityLabel: `See all ${counted(view.members.data.currentCount, `${label} member`)}`,
               href: partyMembersRoute(label),
               testID: 'party-members-all',
             }
@@ -457,7 +458,7 @@ function PartyContent({
               </View>
             }
             href={partyMembersRoute(label)}
-            accessibilityLabel={`${formatCount(data.currentCount)} sitting ${label} members`}
+            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}`}
             accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
             testID="party-current-count"
           />
@@ -714,7 +715,7 @@ function PartyContent({
             'Party is each member’s recorded affiliation, not a reconstruction of who they sat with on the day. A division on an amendment is not a vote on the bill itself.',
             data?.basisNote,
             data?.failed
-              ? `${formatCount(data.failed)} bills could not be read. This block is partial.`
+              ? `${counted(data.failed, 'bill', 'bills')} could not be read. This block is partial.`
               : null,
           ],
         })}

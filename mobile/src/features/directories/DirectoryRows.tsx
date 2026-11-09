@@ -23,7 +23,7 @@ import {
   selectedWash,
   splitRowStyles,
 } from '../../design/selection';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import { isPartyLabel, partySlug } from '../../design/party';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import { minimumTarget, rhythm } from '../../design/tokens';
@@ -150,7 +150,7 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
 }: RowProps<PartyRow>) {
   const slug = partySlug(item.name);
   const follow = useRowFollow('party', slug, item.name);
-  const detail = `${formatCount(item.members)} ${item.members === 1 ? 'member' : 'members'} on record`;
+  const detail = `${counted(item.members, 'member', 'members')} on record`;
   return (
     <LinkRow
       title=""

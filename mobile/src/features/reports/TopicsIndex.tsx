@@ -5,7 +5,7 @@ import { RefreshControl, View } from 'react-native';
 import { reports } from '../../api/runtime';
 import { useRead } from '../../api/useRead';
 import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
+import { counted } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
@@ -159,7 +159,7 @@ export default function TopicsIndex() {
                     value={
                       t.count === undefined
                         ? undefined
-                        : `${formatCount(t.count)} speeches`
+                        : `${counted(t.count, 'speech', 'speeches')}`
                     }
                     detail={t.description}
                     href={topicRoute(t.slug)}

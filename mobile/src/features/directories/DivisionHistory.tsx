@@ -22,7 +22,7 @@ import {
 import { billFoldText } from '../../api/bill-transforms';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
-import { formatCount, formatDate } from '../../design/format';
+import { counted, formatCount, formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
 import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import {
@@ -68,7 +68,7 @@ const RULE =
 const NOTE =
   'A vote here is a division: a question decided by counting members. Most questions are decided on the voices, without a recorded vote.';
 
-const votes = (n: number) => `${formatCount(n)} ${n === 1 ? 'vote' : 'votes'}`;
+const votes = (n: number) => `${counted(n, 'vote', 'votes')}`;
 
 /** One bill's run of consecutive votes: the section header and its rows. */
 export interface HistorySection {
@@ -302,7 +302,7 @@ export default function DivisionHistory() {
   useEffect(() => {
     if (complete && !error && loaded)
       AccessibilityInfo.announceForAccessibility(
-        `${formatCount(record.rows.length)} votes shown`,
+        `${counted(record.rows.length, 'vote', 'votes')} shown`,
       );
   }, [complete, error, loaded, record?.rows.length]);
 
@@ -387,7 +387,7 @@ export default function DivisionHistory() {
       {record?.failed && record.loaded ? (
         <InlineError
           subject="some votes"
-          message={`Votes from ${formatCount(record.loaded)} of ${formatCount(record.total)} bills. ${formatCount(record.failed)} couldn't be loaded.`}
+          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn't be loaded.`}
           onRetry={refresh}
           testID="division-history-partial"
         />

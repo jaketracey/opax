@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import type { BillSplit, billSplits } from '../../api/bill-transforms';
 import { billName } from '../../api/bill-transforms';
 import { Button } from '../../design/controls';
-import { formatCount, formatDate } from '../../design/format';
+import { counted, formatCount, formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
 import { MACHINE_LABEL, MachinePill } from '../../design/labels';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
@@ -751,7 +751,7 @@ export function PartyVotes({
         })}
       {paired ? (
         <Text variant="footnote" tone="inkSoft">
-          {`${formatCount(paired)} ${paired === 1 ? 'pair' : 'pairs'}`}
+          {`${counted(paired, 'pair', 'pairs')}`}
         </Text>
       ) : null}
     </View>

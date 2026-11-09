@@ -1,3 +1,4 @@
+import { counted } from '../../design/format';
 // Methods and Coverage say what OPAX holds and how it works, in the app's own
 // words (records.md 6 and 7). The web's Methods page says some of this
 // differently; until the web plain-language lane matches it, this copy is the
@@ -128,9 +129,9 @@ export const coverageCopy = {
   pageError: 'Coverage couldn’t be loaded',
   otherRecords: 'Other records',
   otherParliaments: 'Other parliaments',
-  records: (n: string) => `${n} records`,
-  speeches: (n: string) => `${n} speeches`,
-  total: (n: string) => `${n} records in all`,
+  records: (n: number) => counted(n, 'record'),
+  speeches: (n: number) => counted(n, 'speech', 'speeches'),
+  total: (n: number) => `${counted(n, 'record')} in all`,
 } as const;
 
 /** Record kinds by their reader names (records.md 7.2); others are summed. */

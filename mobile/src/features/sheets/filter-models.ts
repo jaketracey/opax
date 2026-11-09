@@ -1,6 +1,6 @@
 import {
+  counted,
   formatFinancialYear as financialYear,
-  formatCount,
 } from '../../design/format';
 import type { FilterList } from '../../navigation/routes/filters';
 import {
@@ -154,7 +154,7 @@ export function divisionsFilterModel(
       ? (state) => {
           const count = options.resultCount!(state);
           return count
-            ? `${formatCount(count)} ${count === 1 ? 'vote matches' : 'votes match'}`
+            ? `${counted(count, 'vote matches', 'votes match')}`
             : 'No votes match';
         }
       : undefined,

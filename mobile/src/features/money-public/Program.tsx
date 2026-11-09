@@ -287,7 +287,7 @@ export default function Program() {
                       seatFigure?.line
                         ? seatFigure.caveat
                         : program.listed < program.available
-                          ? `${program.listed.toLocaleString('en-AU')} of the ${program.available.toLocaleString('en-AU')} grants are listed below.`
+                          ? `${program.listed.toLocaleString('en-AU')} of the ${counted(program.available, 'grant')} ${program.listed === 1 ? 'is' : 'are'} listed below.`
                           : undefined
                     }
                     citation={{

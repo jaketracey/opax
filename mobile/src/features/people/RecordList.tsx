@@ -5,7 +5,7 @@ import { AccessibilityInfo, FlatList, StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
 import { serverPassage } from '../../api/passage-text';
 import { peopleDepth } from '../../api/runtime';
-import { formatCount, formatDate } from '../../design/format';
+import { counted, formatDate } from '../../design/format';
 import { MachinePill } from '../../design/labels';
 import { useScreenColumn } from '../../design/layout';
 import { chamberName } from '../../design/parliament';
@@ -51,8 +51,8 @@ type Load =
 
 const noun = (kind: 'speeches' | 'mentions', n: number) =>
   kind === 'speeches'
-    ? `${formatCount(n)} ${n === 1 ? 'speech' : 'speeches'}`
-    : `${formatCount(n)} ${n === 1 ? 'mention' : 'mentions'}`;
+    ? `${counted(n, 'speech', 'speeches')}`
+    : `${counted(n, 'mention', 'mentions')}`;
 
 /**
  * Speeches and Mentions in parliament (people.md 2.1, route 15): pushed from

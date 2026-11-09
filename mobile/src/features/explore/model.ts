@@ -13,6 +13,7 @@ import {
   text,
 } from '../../api/validation';
 import {
+  counted,
   formatCount,
   formatPercent,
   largestRemainder,
@@ -296,8 +297,7 @@ export function tideCellText(point: Pick<TidePoint, 'share' | 'count'>) {
     ? `${shareText(point.share)} · ${speechesText(point.count)}`
     : 'None';
 }
-export const speechesText = (n: number) =>
-  `${formatCount(n)} ${n === 1 ? 'speech' : 'speeches'}`;
+export const speechesText = (n: number) => counted(n, 'speech', 'speeches');
 
 export type Matrix = ReturnType<typeof decodeMatrix> & {
   generated_at?: string;

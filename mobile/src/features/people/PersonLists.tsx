@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, View } from 'react-native';
 import { SegmentedPicker } from '../../design/controls';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import { useScreenColumn } from '../../design/layout';
 import { useListSearchBar } from '../../design/search-bar';
 import {
@@ -212,7 +212,7 @@ export function PersonVotes() {
                   testID="person-votes-list-source"
                 />
                 <Text wordSafe variant="footnote">
-                  {`${formatCount(rows.length)} ${rows.length === 1 ? 'vote' : 'votes'} on bills`}
+                  {`${counted(rows.length, 'vote', 'votes')} on bills`}
                 </Text>
               </View>
             }

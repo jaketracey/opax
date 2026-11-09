@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, StyleSheet, View } from 'react-native';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import {
   Group,
   InsetGroup,
@@ -297,8 +297,8 @@ function useHeader(
       settled: !!sources,
       count:
         scope === 'people'
-          ? `${formatCount(n)} ${n === 1 ? 'person' : 'people'}`
-          : `${formatCount(n)} ${n === 1 ? 'bill' : 'bills'}`,
+          ? `${counted(n, 'person', 'people')}`
+          : `${counted(n, 'bill', 'bills')}`,
       source: localSource(
         sources,
         scope === 'people' ? ['people', 'electorates'] : ['bills'],

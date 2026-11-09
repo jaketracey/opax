@@ -1,5 +1,5 @@
 import type { SourceCitation } from '../../design/source';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 
 /**
  * Topic counts come from OPAX's labels over six parliaments' Hansard: the
@@ -40,7 +40,7 @@ export const PARTY_GAP_NOTE = (count: number) =>
 /** The topics source sheet's notes. */
 export function topicNotes(labelled: number): string[] {
   return [
-    `${formatCount(labelled)} speeches carry a topic label so far. Not every speech is labelled yet, so counts grow as labelling continues.`,
+    `${counted(labelled, 'speech', 'speeches')} ${labelled === 1 ? 'carries' : 'carry'} a topic label so far. Not every speech is labelled yet, so counts grow as labelling continues.`,
     LABEL_NOTE,
   ];
 }

@@ -20,6 +20,7 @@ import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
 import {
+  counted,
   formatCount,
   formatDate,
   formatMoney,
@@ -932,7 +933,7 @@ function NodeBody({
           testID="money-record-donations"
           figure={{
             value: node.total,
-            label: `disclosed to ${formatCount(partyCount)} ${partyCount === 1 ? 'party' : 'parties'}, ${years}`,
+            label: `disclosed to ${counted(partyCount, 'party', 'parties')}, ${years}`,
             ink: 'money',
             caveat: donationsCaveat,
             source: donorSource('money-source'),
@@ -1145,7 +1146,7 @@ function RecipientBody({
         testID="money-record-grants"
         figure={{
           value: recipient.total,
-          label: `in ${formatCount(recipient.count)} grants, ${range}`,
+          label: `in ${counted(recipient.count, 'grant', 'grants')}, ${range}`,
           caveat: grantsCaveat,
           source,
           testID: 'money-focus-grants',
@@ -1280,7 +1281,7 @@ function SupplierBody({
         testID="money-record-contracts"
         figure={{
           value: supplier.total,
-          label: `in ${formatCount(supplier.count)} ${supplier.count === 1 ? 'contract' : 'contracts'} with ${agency.name}, ${range}`,
+          label: `in ${counted(supplier.count, 'contract', 'contracts')} with ${agency.name}, ${range}`,
           caveat: contractsCaveat,
           source: {
             asOf,

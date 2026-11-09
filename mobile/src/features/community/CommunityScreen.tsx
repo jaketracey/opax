@@ -17,7 +17,7 @@ import {
   View,
 } from 'react-native';
 import { webOrigin } from '../../design/environment';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import { useRefreshCommand } from '../../design/keyboard';
 import {
   Button,
@@ -229,7 +229,7 @@ function ThreadRows({ items }: { items: Row[] }) {
 }
 function replyCount(row: Row) {
   const n = count(row, 'replies');
-  return `${formatCount(n)} ${n === 1 ? 'reply' : 'replies'}`;
+  return `${counted(n, 'reply', 'replies')}`;
 }
 /**
  * Who wrote a discussion or reply, linked to their profile, with one quiet

@@ -9,7 +9,7 @@ import { Text } from '../../design/text';
 import { colors, radii } from '../../design/tokens';
 import { editionRoute } from '../../navigation/routes/edition';
 import { sourceRoute } from '../../navigation/routes/sheets';
-import { formatDate } from '../../design/format';
+import { counted, formatDate } from '../../design/format';
 import { copy } from '../../design/copy';
 import { symbols } from '../../design/symbols';
 import { canShare } from '../../navigation/share';
@@ -67,7 +67,7 @@ export function EditionCard({
   const figure = edition.facts.figures[0];
   const division = edition.facts.division;
   const artLabel = division
-    ? `${division.ayes} votes to ${division.noes}.`
+    ? `${counted(division.ayes, 'vote')} to ${division.noes}.`
     : ['program', 'grant', 'largest'].includes(edition.kind) && figure
       ? `${figure.value}, ${figure.label}.`
       : '';

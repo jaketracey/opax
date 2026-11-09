@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Section, SourceLine, Text } from '../../design/primitives';
-import { formatCount, formatPercent } from '../../design/format';
+import { counted, formatCount, formatPercent } from '../../design/format';
 import { colors, rhythm } from '../../design/tokens';
 import type { DecadeBucket, decodeTide } from './model';
 import type { ReadMeta } from './parts';
@@ -43,7 +43,7 @@ export function TopicTide({
             <Pressable
               key={bar.decade.slug}
               accessibilityRole="button"
-              accessibilityLabel={`${bar.decade.label}, ${share} of labelled federal speeches, ${formatCount(bar.count)} speeches`}
+              accessibilityLabel={`${bar.decade.label}, ${share} of labelled federal speeches, ${counted(bar.count, 'speech', 'speeches')}`}
               accessibilityHint={
                 selected
                   ? 'Shows speeches from every year'

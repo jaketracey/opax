@@ -1,4 +1,4 @@
-import { formatCount, formatFinancialYear } from '../../design/format';
+import { counted, formatFinancialYear } from '../../design/format';
 import { fromWebPath } from '../../navigation/routes';
 import { moneyRecordRoute } from '../../navigation/routes/public-money';
 import {
@@ -315,9 +315,7 @@ export function donorDetails(view: MoneyGraph) {
     const count = byDonor.get(node.id)?.size ?? 0;
     return [
       moneyYears(node.firstYear, node.lastYear),
-      count
-        ? `${formatCount(count)} ${count === 1 ? 'party' : 'parties'}`
-        : null,
+      count ? `${counted(count, 'party', 'parties')}` : null,
     ]
       .filter(Boolean)
       .join(' · ');

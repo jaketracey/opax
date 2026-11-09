@@ -1,6 +1,6 @@
 import type { Catalogs } from '../../api/catalogs';
 import { nameKey } from '../../api/ids';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import {
   CHAMBER_NOT_RECORDED,
   chamberName,
@@ -80,7 +80,7 @@ export function filterFeed(rows: readonly FeedRow[], filters: FeedFilters) {
 }
 
 const declarations = (n: number) =>
-  `${formatCount(n)} ${n === 1 ? 'declaration' : 'declarations'}`;
+  `${counted(n, 'declaration', 'declarations')}`;
 /** "300 declarations", or "176 of 300 declarations" once filtered. */
 export function feedCountLine(shown: number, total: number) {
   return shown === total
@@ -116,8 +116,7 @@ export function personRuns<
 }
 
 /** "300 changes", "1 change": the feed's count at its foot. */
-export const changesCount = (n: number) =>
-  `${formatCount(n)} ${n === 1 ? 'change' : 'changes'}`;
+export const changesCount = (n: number) => `${counted(n, 'change', 'changes')}`;
 
 const MONTHS = [
   'January',

@@ -108,8 +108,7 @@ export function yearRange(first: string | number, last: string | number) {
   return !a || !b || a === b ? a || b : `${a} to ${b}`;
 }
 /** "5,962 grants", "1 grant". */
-export const counted = (count: number, one: string, many = `${one}s`) =>
-  `${count.toLocaleString('en-AU')} ${count === 1 ? one : many}`;
+export { counted } from '../../design/format';
 
 /** A whole-screen catalog record's saved state, for the source line. */
 export type Saved =

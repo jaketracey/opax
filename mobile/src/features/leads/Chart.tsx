@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
-  formatCount,
+  counted,
   formatMoney,
   formatMoneyCompact,
   formatPercent,
@@ -47,7 +47,7 @@ export function ConcentrationChart({
                 formatPercent(row.share),
                 row.records === null
                   ? null
-                  : `${formatCount(row.records)} ${row.records === 1 ? 'record' : 'records'}`,
+                  : `${counted(row.records, 'record', 'records')}`,
               ]
                 .filter(Boolean)
                 .join(' · ')}

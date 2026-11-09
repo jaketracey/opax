@@ -2,7 +2,6 @@ import { decodeCorpus, type Corpus } from '../../api/catalog-decoders';
 import type { ApiClient, RecordResult } from '../../api/client';
 import { apiClient } from '../../api/runtime';
 import { count, dict, nullable, shape } from '../../api/validation';
-import { formatCount } from '../../design/format';
 import { coverageCopy, kindNames, parliamentNames } from './copy';
 
 /** `/api/stats`: what OPAX holds now, by kind and by parliament. */
@@ -73,7 +72,7 @@ export function coverageSources(corpus: Corpus): CoverageSource[] {
   return corpus.sources
     .map((source) => {
       const name = sourceName(source.name);
-      const n = formatCount(source.docs);
+      const n = source.docs;
       return {
         name,
         window: coverageWindow(source.coverage),

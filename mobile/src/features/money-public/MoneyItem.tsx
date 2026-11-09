@@ -5,7 +5,7 @@ import { useCallback, useRef, type ReactNode } from 'react';
 import { RefreshControl, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
-import { formatDate, formatMoney } from '../../design/format';
+import { counted, formatDate, formatMoney } from '../../design/format';
 import { Screen, SectionHeader } from '../../design/layout';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
@@ -453,7 +453,7 @@ async function readMoneyItem(
           notes: [
             CONTRACTS_CAVEAT,
             contracts.length < s.count
-              ? `${contracts.length.toLocaleString('en-AU')} of the ${s.count.toLocaleString('en-AU')} contracts are listed in this agency's file.`
+              ? `${contracts.length.toLocaleString('en-AU')} of the ${counted(s.count, 'contract')} ${contracts.length === 1 ? 'is' : 'are'} listed in this agency's file.`
               : '',
             s.organisation ? '' : privateNote,
           ].filter(Boolean),

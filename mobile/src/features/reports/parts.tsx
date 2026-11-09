@@ -1,3 +1,4 @@
+import { counted } from '../../design/format';
 import { Fragment, type ReactNode } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
 import { useRead } from '../../api/useRead';
@@ -136,7 +137,7 @@ export function ShareBars({
   return (
     <View
       accessible={!onSelect}
-      accessibilityLabel={`${label}: ${points.map((p) => `${p.label} ${(p.share * 100).toFixed(1)}%${p.count === undefined ? '' : `, ${p.count.toLocaleString()} speeches`}`).join('; ')}`}
+      accessibilityLabel={`${label}: ${points.map((p) => `${p.label} ${(p.share * 100).toFixed(1)}%${p.count === undefined ? '' : `, ${counted(p.count, 'speech', 'speeches')}`}`).join('; ')}`}
       style={{ gap: rhythm.tight }}
     >
       <View
@@ -163,7 +164,7 @@ export function ShareBars({
         onSelect ? (
           <RecordRow
             key={i}
-            title={`${p.label}: ${(p.share * 100).toFixed(1)}%${p.count === undefined ? '' : ` · ${p.count.toLocaleString()} speeches`}`}
+            title={`${p.label}: ${(p.share * 100).toFixed(1)}%${p.count === undefined ? '' : ` · ${counted(p.count, 'speech', 'speeches')}`}`}
             onPress={() => onSelect(i)}
           />
         ) : (
@@ -171,7 +172,7 @@ export function ShareBars({
             {p.label}: {(p.share * 100).toFixed(1)}%
             {p.count === undefined
               ? ''
-              : ` · ${p.count.toLocaleString()} speeches`}
+              : ` · ${counted(p.count, 'speech', 'speeches')}`}
           </Text>
         ),
       )}

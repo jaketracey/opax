@@ -26,6 +26,11 @@ export function formatCount(value: number): string {
   return sign + grouped + (fraction ? `.${fraction}` : '');
 }
 
+/** A formatted count with its singular or plural noun. */
+export function counted(count: number, one: string, many = `${one}s`): string {
+  return `${formatCount(count)} ${count === 1 ? one : many}`;
+}
+
 function roundTo(value: number, places: number): number {
   const factor = 10 ** places;
   return Math.round(value * factor) / factor;

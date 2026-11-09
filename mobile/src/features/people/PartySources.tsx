@@ -5,8 +5,8 @@ import { SectionList, StyleSheet, View } from 'react-native';
 import type { PartyPageRecord } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import {
+  counted,
   disclosureYearNote,
-  formatCount,
   formatDisclosureYear,
 } from '../../design/format';
 import { useScreenColumn } from '../../design/layout';
@@ -157,7 +157,7 @@ export default function PartySources() {
                     variant="footnote"
                     testID="party-sources-count"
                   >
-                    {`${formatCount(sections.length)} ${sections.length === 1 ? 'year' : 'years'}`}
+                    {`${counted(sections.length, 'year', 'years')}`}
                   </Text>
                 </View>
               ) : null

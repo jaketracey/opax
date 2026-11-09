@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
@@ -36,8 +36,8 @@ import { moneyView, moneyWindowNodes, rankedDonors } from './view';
 /** "400 donors, largest first"; searching, "12 of 400 donors". */
 export function donorsCaption(shown: number, all: number, searching: boolean) {
   return searching
-    ? `${formatCount(shown)} of ${formatCount(all)} ${all === 1 ? 'donor' : 'donors'}`
-    : `${formatCount(all)} ${all === 1 ? 'donor' : 'donors'}, largest first`;
+    ? `${formatCount(shown)} of ${counted(all, 'donor', 'donors')}`
+    : `${counted(all, 'donor', 'donors')}, largest first`;
 }
 
 /**

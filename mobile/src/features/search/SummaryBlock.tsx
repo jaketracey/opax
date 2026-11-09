@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import type { Roster } from '../../api/catalog-decoders';
-import { formatDate } from '../../design/format';
+import { counted, formatDate } from '../../design/format';
 import {
   Group,
   InlineError,
@@ -107,7 +107,7 @@ export function SummaryBlock({
     <Group gap={rhythm.block} testID="records-summary">
       <MachinePill note={machineNote} testID="records-summary-machine" />
       <Text variant="secondary" testID="summary-scope-line">
-        {`From the ${scopeWord[sort]} ${Math.min(20, summary.data.reviewed_count || 20)} speeches for “${q.trim()}”`}
+        {`From the ${scopeWord[sort]} ${counted(Math.min(20, summary.data.reviewed_count || 20), 'speech', 'speeches')} for “${q.trim()}”`}
       </Text>
       {summary.data.points.map((point, index) => {
         const numbers = point.source_ids

@@ -5,7 +5,7 @@ import { RefreshControl, StyleSheet, View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
@@ -67,8 +67,7 @@ export function kindCaption(
   all: number,
   searching: boolean,
 ) {
-  const leads = (n: number) =>
-    `${formatCount(n)} ${n === 1 ? 'lead' : 'leads'}`;
+  const leads = (n: number) => `${counted(n, 'lead', 'leads')}`;
   if (searching) return `${formatCount(shown)} of ${leads(all)}`;
   if (category === 'donor_contract_overlap')
     return `${leads(all)}, largest first`;
@@ -276,7 +275,7 @@ export default function Leads() {
           accessibilityLiveRegion="polite"
           testID="leads-search-caption"
         >
-          {`${formatCount(results.length)} ${results.length === 1 ? 'lead matches' : 'leads match'}`}
+          {`${counted(results.length, 'lead matches', 'leads match')}`}
         </Text>
         {results.length ? (
           <>
