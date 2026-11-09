@@ -3,11 +3,54 @@ import {
   existsSync,
   mkdtempSync,
   readdirSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
+
+describe('Maestro startup budgets', () => {
+  // Evaluate only the real configuration block, before any device work.
+  const runner = readFileSync('scripts/e2e.sh', 'utf8');
+  const block = runner
+    .slice(runner.indexOf('export OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS='))
+    .split('SIZE=')[0]!;
+  const budget = (server = '', driver = '') =>
+    spawnSync(
+      '/bin/bash',
+      [
+        '-c',
+        `${block}\nprintf '%s %s' "$OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS" "$MAESTRO_DRIVER_STARTUP_TIMEOUT"`,
+      ],
+      {
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS: server,
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: driver,
+        },
+      },
+    );
+  test.each([
+    ['', '', '180 360000'],
+    ['235', '', '235 415000'],
+    ['090', '', '90 270000'],
+    ['235', '0600000', '235 600000'],
+  ])('server %j and CLI %j resolve to %s', (server, driver, expected) => {
+    const result = budget(server, driver);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toBe(expected);
+  });
+  test.each(['0', '-1', '1.5', 'SECONDS+1', '$(exit 99)', '9999999999999'])(
+    'invalid CLI milliseconds %j fail before device work',
+    (driver) => {
+      const result = budget('', driver);
+      expect(result.status).toBe(2);
+      expect(result.stderr).toContain('positive integer in milliseconds');
+    },
+  );
+});
 
 // Exercise the wait parser alone. No locks, build gates or devices are used.
 test.each([

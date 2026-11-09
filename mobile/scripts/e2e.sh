@@ -23,14 +23,19 @@ qa_check_flow_selectors "$@" || exit 2
 PORT=${OPAX_FIXTURE_PORT:-8910}
 export OPAX_FIXTURE_PORT=$PORT
 qa_maestro_port || exit 2
-# Keep the CLI and watcher on the same startup budget. Maestro's value is ms;
-# OPAX's value is seconds, also usable when invoking maestro-watch.py directly.
+# The watcher grants readiness time from the native server signal. The CLI
+# starts counting at launch, so add 180 s for runner preflight under load.
+# Maestro's value is milliseconds; OPAX's server allowance is seconds.
 export OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS=${OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS:-180}
 if [[ ! "$OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS" =~ ^[0-9]+$ || ${#OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS} -gt 9 ]] || [ "$((10#$OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS))" -eq 0 ]; then
   echo 'OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS must be a positive integer' >&2; exit 2
 fi
 export OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS=$((10#$OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS))
-export MAESTRO_DRIVER_STARTUP_TIMEOUT=${MAESTRO_DRIVER_STARTUP_TIMEOUT:-$((OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS * 1000))}
+export MAESTRO_DRIVER_STARTUP_TIMEOUT=${MAESTRO_DRIVER_STARTUP_TIMEOUT:-$(((180 + OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS) * 1000))}
+if [[ ! "$MAESTRO_DRIVER_STARTUP_TIMEOUT" =~ ^[0-9]+$ || ${#MAESTRO_DRIVER_STARTUP_TIMEOUT} -gt 12 ]] || [ "$((10#$MAESTRO_DRIVER_STARTUP_TIMEOUT))" -eq 0 ]; then
+  echo 'MAESTRO_DRIVER_STARTUP_TIMEOUT must be a positive integer in milliseconds' >&2; exit 2
+fi
+export MAESTRO_DRIVER_STARTUP_TIMEOUT=$((10#$MAESTRO_DRIVER_STARTUP_TIMEOUT))
 SIZE=${OPAX_CONTENT_SIZE:-large}
 # The app is light-only; dark is for checking the launch screen (journey 28b).
 APPEARANCE=${OPAX_APPEARANCE:-light}

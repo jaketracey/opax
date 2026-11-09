@@ -18,6 +18,19 @@ PROBE = ('[Failed] Perform XCUITest driver status check on simulator, '
 
 
 class StartupTests(unittest.TestCase):
+    def test_cli_preflight_plus_server_allowance_in_milliseconds(self):
+        for env, expected in (({}, 360000),
+                              ({'OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS': '235'}, 415000),
+                              ({'OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS': '090'}, 270000),
+                              ({'MAESTRO_DRIVER_STARTUP_TIMEOUT': '600000'}, 600000)):
+            with self.subTest(env=env), patch.dict(os.environ, env, clear=True):
+                self.assertEqual(watch.driver_startup_timeout_ms(), expected)
+        for value in ('0', '-1', '1.5', 'seconds'):
+            with self.subTest(value=value), patch.dict(
+                    os.environ, MAESTRO_DRIVER_STARTUP_TIMEOUT=value):
+                with self.assertRaisesRegex(ValueError, 'positive integer'):
+                    watch.driver_startup_timeout_ms()
+
     def test_default_180_seconds_including_a_probe_after_60_seconds(self):
         with patch.dict(os.environ, {}, clear=True):
             self.assertEqual(watch.startup_timeout_seconds(), 180)
@@ -79,21 +92,32 @@ class StartupTests(unittest.TestCase):
 
 
 class WatcherProcessTests(unittest.TestCase):
-    def run_child(self, source, seconds='30'):
+    def run_child(self, source, seconds='30', driver_timeout=''):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             debug = root / 'debug'
             debug.mkdir()
-            env = dict(os.environ, OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS='180')
+            env = dict(os.environ, OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS='180',
+                       MAESTRO_DRIVER_STARTUP_TIMEOUT=driver_timeout)
             result = subprocess.run(
                 [sys.executable, str(WATCHER), str(root / 'console.log'),
                  str(debug), seconds, sys.executable, '-c', source, str(root)],
                 env=env, capture_output=True, text=True, timeout=60,
             )
-            return result
+            console = (root / 'console.log').read_text()
+            return result, console
+
+    def test_direct_watcher_sets_the_cli_budget_and_preserves_override(self):
+        for value, expected in (('', '360000'), ('600000', '600000')):
+            result, console = self.run_child(
+                'import os; print(os.environ["MAESTRO_DRIVER_STARTUP_TIMEOUT"])',
+                driver_timeout=value,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(console.strip(), expected)
 
     def test_success_report_wins_over_post_flow_simulator_syslog(self):
-        result = self.run_child('''
+        result, _ = self.run_child('''
 from pathlib import Path
 import sys, time
 root = Path(sys.argv[1])
@@ -105,7 +129,7 @@ time.sleep(0.5)
         self.assertNotIn('Maestro driver failed', result.stderr)
 
     def test_success_report_does_not_hide_real_cli_failure(self):
-        result = self.run_child('''
+        result, _ = self.run_child('''
 from pathlib import Path
 import sys
 root = Path(sys.argv[1])
@@ -116,7 +140,7 @@ sys.exit(23)
         self.assertEqual(result.returncode, 23, result.stderr)
 
     def test_runner_unit_test_transport_messages_are_not_flow_failures(self):
-        result = self.run_child('''
+        result, _ = self.run_child('''
 from pathlib import Path
 import sys, time
 root = Path(sys.argv[1])
@@ -126,7 +150,7 @@ time.sleep(0.5)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_native_preflight_without_a_server_is_still_bounded_overall(self):
-        result = self.run_child('''
+        result, _ = self.run_child('''
 from pathlib import Path
 import sys, time
 root = Path(sys.argv[1])
@@ -137,7 +161,7 @@ time.sleep(300)
         self.assertIn('Maestro exceeded 1s', result.stderr)
 
     def test_real_driver_debug_errors_still_fail(self):
-        result = self.run_child('''
+        result, _ = self.run_child('''
 from pathlib import Path
 import sys, time
 root = Path(sys.argv[1])
