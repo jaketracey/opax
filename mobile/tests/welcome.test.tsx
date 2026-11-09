@@ -1,25 +1,31 @@
+import { router, Stack } from 'expo-router';
 import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
 import { Dimensions, Text as NativeText } from 'react-native';
-import { router } from 'expo-router';
-import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
-import { releaseSplash } from '../src/launch/splash';
+import TestRenderer from 'react-test-renderer';
+import WelcomeLayout from '../src/app/welcome/_layout';
+import { copy } from '../src/design/copy';
+import { rhythm } from '../src/design/tokens';
+import { replayWelcome } from '../src/features/welcome/replay';
+import ShortWelcome from '../src/features/welcome/ShortWelcome';
 import Welcome, {
   continuePinned,
   WELCOME_COLUMN,
 } from '../src/features/welcome/Welcome';
-import ShortWelcome from '../src/features/welcome/ShortWelcome';
-import WelcomeLayout from '../src/app/welcome/_layout';
-import { replayWelcome } from '../src/features/welcome/replay';
-import { copy } from '../src/design/copy';
-import { rhythm } from '../src/design/tokens';
+import { releaseSplash } from '../src/launch/splash';
+import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 
 const mockStack: { screenOptions?: unknown } = {};
 jest.mock('expo-router', () => ({
   Stack: Object.assign(
-    ({ screenOptions }: { screenOptions: unknown }) => {
+    ({
+      screenOptions,
+      children,
+    }: {
+      screenOptions: unknown;
+      children?: React.ReactNode;
+    }) => {
       mockStack.screenOptions = screenOptions;
-      return null;
+      return <>{children}</>;
     },
     { Screen: () => null },
   ),
@@ -304,16 +310,14 @@ describe('replay', () => {
 describe('the welcome stack', () => {
   test('the page hides the hard top edge: no divider under the status bar', async () => {
     const r = await render(<WelcomeLayout />);
-    const options = mockStack.screenOptions as (props: {
-      route: { name: string };
-    }) => { scrollEdgeEffects?: { top: string; bottom: string } };
-    expect(options({ route: { name: 'index' } }).scrollEdgeEffects?.top).toBe(
-      'hidden',
-    );
-    // The seat step keeps the stack's hard edge under its bar.
+    const index = r.root
+      .findAllByType(Stack.Screen)
+      .find((n) => n.props.name === 'index');
     expect(
-      options({ route: { name: 'seat/index' } }).scrollEdgeEffects?.top,
-    ).toBe('hard');
+      index?.props.options({ route: { name: 'index', key: 'index' } })
+        .scrollEdgeEffects.top,
+    ).toBe('hidden');
+    expect((mockStack.screenOptions as any).scrollEdgeEffects.top).toBe('hard');
     await act(async () => r.unmount());
   });
 });

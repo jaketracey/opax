@@ -1,5 +1,6 @@
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { IconButton, Text, type SFSymbol } from '../../design/primitives';
+import { symbols } from '../../design/symbols';
 import { controlHeight, rhythm } from '../../design/tokens';
 import { talkCopy } from './model';
 
@@ -42,7 +43,7 @@ export function CallControls({
   const controls = [
     <Control
       key="mute"
-      symbol="mic.slash.fill"
+      symbol={muted ? 'mic.slash.fill' : symbols.mute}
       label={talkCopy.controls.mute}
       selected={muted}
       disabled={!canMute}

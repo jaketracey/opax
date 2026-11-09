@@ -4,10 +4,10 @@
 // every account route file imports its screen from here.
 export { AccountScreen as default } from './AccountScreen';
 export { ConsentScreen } from './ConsentScreen';
-export {
-  SignInScreen,
-  SignInCodeScreen,
-  TalkSignInScreen,
-  TalkSignInCodeScreen,
-} from './SignInScreen';
 export { DeleteAccountScreen, DeleteCodeScreen } from './DeleteAccountScreen';
+export {
+  SignInCodeScreen,
+  SignInScreen,
+  TalkSignInCodeScreen,
+  TalkSignInScreen,
+} from './SignInScreen';

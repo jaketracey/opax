@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { Screen } from '../../design/primitives';
 import { colors } from '../../design/tokens';
-import { AccountGroups } from './AccountGroups';
-import { AccountLinks, VersionFoot } from './AccountLinks';
-import { AccountRowsScreen } from './AccountRows';
-import { refreshAccount } from './store';
-import { communityHome } from '../community/entry';
 import { voiceLinked } from '../../voice/linked';
+import { communityHome } from '../community/entry';
+import { AccountGroups } from './AccountGroups';
+import { AccountLinks } from './AccountLinks';
+import { AccountRowsScreen } from './AccountRows';
+import { VersionFoot } from './parts';
+import { refreshAccount } from './store';
 
 /**
  * The Account sheet (specs/account.md 2): the account groups, then about,

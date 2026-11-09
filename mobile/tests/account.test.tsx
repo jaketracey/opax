@@ -1,22 +1,23 @@
-import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
-import { StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import * as voice from '../src/voice';
-import type { VoiceEvent, VoiceStatus } from '../src/voice';
+import { act } from 'react';
+import { StyleSheet } from 'react-native';
+import TestRenderer from 'react-test-renderer';
+import { confirmAction } from '../src/design/menu';
 import {
   Button,
   ErrorState,
   Field,
   InlineError,
 } from '../src/design/primitives';
-import { confirmAction } from '../src/design/menu';
+import { AccountGroups } from '../src/features/account/AccountGroups';
+import { AccountScreen } from '../src/features/account/AccountScreen';
 import {
   codeDigits,
   codeGate,
   isEmailAddress,
   resendWait,
 } from '../src/features/account/code';
+import { ConsentScreen } from '../src/features/account/ConsentScreen';
 import {
   accountCopy,
   consumeRefusal,
@@ -25,6 +26,18 @@ import {
   requestRefusal,
 } from '../src/features/account/copy';
 import {
+  DeleteCode,
+  DeleteIntro,
+} from '../src/features/account/DeleteAccountFlow';
+import { DeleteCodeScreen } from '../src/features/account/DeleteAccountScreen';
+import AccountEntry from '../src/features/account/entry';
+import { finishSignIn } from '../src/features/account/navigation';
+import { CodeStep, EmailStep } from '../src/features/account/SignInFlow';
+import {
+  SignInCodeScreen,
+  SignInScreen,
+} from '../src/features/account/SignInScreen';
+import {
   accountDeleted,
   accountSignedIn,
   accountView,
@@ -32,29 +45,16 @@ import {
   resetAccountStore,
   signOut,
 } from '../src/features/account/store';
-import { CodeStep, EmailStep } from '../src/features/account/SignInFlow';
-import {
-  DeleteCode,
-  DeleteIntro,
-} from '../src/features/account/DeleteAccountFlow';
-import { AccountGroups } from '../src/features/account/AccountGroups';
-import { AccountScreen } from '../src/features/account/AccountScreen';
-import { ConsentScreen } from '../src/features/account/ConsentScreen';
-import {
-  SignInCodeScreen,
-  SignInScreen,
-} from '../src/features/account/SignInScreen';
-import { DeleteCodeScreen } from '../src/features/account/DeleteAccountScreen';
-import { finishSignIn } from '../src/features/account/navigation';
 import {
   issueChallenge,
   resetChallenges,
 } from '../src/features/account/useCodeChallenge';
-import AccountEntry from '../src/features/account/entry';
 import { clearAskConversations } from '../src/features/ask/store';
 import { readConsent, setConsent } from '../src/features/talk/bridge';
 import { takeConsentAfterSignIn } from '../src/features/talk/consent-store';
 import { openOnWeb } from '../src/navigation/external';
+import type { VoiceEvent, VoiceStatus } from '../src/voice';
+import * as voice from '../src/voice';
 
 jest.mock('../src/voice', () => ({
   status: jest.fn(),
@@ -617,8 +617,10 @@ describe('Voice consent page', () => {
     const renderer = await render(<ConsentScreen />);
     await press(renderer, 'account-withdraw-consent');
     expect(confirmAction).toHaveBeenCalledWith(
-      'Withdraw voice consent? Talk will ask again before your next call.',
+      'Withdraw voice consent?',
       [expect.objectContaining({ title: 'Withdraw' })],
+      undefined,
+      'Talk will ask again before your next call.',
     );
     await confirmLast();
     expect(setConsent).toHaveBeenCalledWith(false);
@@ -974,13 +976,15 @@ describe('Delete account', () => {
     expect(mocked.deleteAccount).not.toHaveBeenCalled();
     await press(renderer, 'account-delete-final');
     expect(confirmAction).toHaveBeenCalledWith(
-      'Delete your OPAX account? This can’t be undone.',
+      'Delete your OPAX account?',
       [
         expect.objectContaining({
           title: 'Delete account',
           destructive: true,
         }),
       ],
+      undefined,
+      'This can’t be undone.',
     );
     expect(mocked.deleteAccount).not.toHaveBeenCalled();
     await confirmLast();

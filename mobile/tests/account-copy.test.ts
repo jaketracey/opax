@@ -1,5 +1,5 @@
 import { accountCopy, refusalCopy } from '../src/features/account/copy';
-import { linksCopy } from '../src/features/account/AccountLinks';
+import { linksCopy } from '../src/features/account/parts';
 
 // Account's words, pinned as specs/account.md 2.3, 5.5 and 6.6 print them.
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

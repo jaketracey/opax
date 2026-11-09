@@ -1,6 +1,6 @@
 import type { NativeStackHeaderItem } from 'expo-router';
 import type { SFSymbol } from '../../design/icon';
-import { chrome } from '../../design/tokens';
+import { currentChromeColours } from '../../design/tokens';
 import type { TranscriptTurn, VoiceSource, VoiceStatus } from '../../voice';
 import { talkCopy, voiceTime } from './model';
 
@@ -118,7 +118,7 @@ export function talkMenu({
     label: talkCopy.menu.more,
     accessibilityLabel: 'More options',
     icon: symbol('ellipsis.circle'),
-    tintColor: chrome.tint,
+    tintColor: currentChromeColours().tint,
     menu: { title, items },
   };
 }
