@@ -193,8 +193,8 @@ describe('Words per dollar, on the served fixture', () => {
     const all = texts(root);
     expect(all).not.toContain('Not loaded');
     expect(all.some((t) => /^(<1|\d+)% · [\d,]+ speech/.test(t))).toBe(true);
-    // A line with a destination goes through RowLink; its host keeps the
-    // row style (the wave 4 regression stacked glyph, bar, value, chevron).
+    // The Pressable inside each accessible RowLink host keeps the row style
+    // (the wave 4 regression stacked glyph, bar, value, chevron).
     const linked = root.findAll(
       (node) =>
         typeof node.type === 'string' &&
@@ -203,10 +203,14 @@ describe('Words per dollar, on the served fixture', () => {
     );
     expect(linked.length).toBeGreaterThan(0);
     for (const line of linked) {
-      const style = StyleSheet.flatten(line.props.style) as Record<
-        string,
-        unknown
-      >;
+      const pressable = line.find(
+        (node) =>
+          typeof node.type !== 'string' &&
+          typeof node.props.style === 'function',
+      );
+      const style = StyleSheet.flatten(
+        pressable.props.style({ pressed: false }),
+      ) as Record<string, unknown>;
       expect(style.flexDirection).toBe('row');
       expect(style.alignItems).toBe('center');
     }

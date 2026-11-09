@@ -227,6 +227,47 @@ test('preview slots keep the Pressable style function in both pressed states', (
   }
 });
 
+test.each([
+  {
+    name: 'flex and alignment',
+    childStyle: { flex: 1, alignSelf: 'flex-start' as const },
+    hostStyle: { flex: 1, alignSelf: 'flex-start' },
+  },
+  {
+    name: 'growth, shrink and basis without visual properties',
+    childStyle: {
+      flexGrow: 0,
+      flexShrink: 1,
+      flexBasis: '50%' as const,
+      margin: 4,
+      padding: 8,
+      width: 120,
+      backgroundColor: 'white',
+    },
+    hostStyle: { flexGrow: 0, flexShrink: 1, flexBasis: '50%' },
+  },
+])(
+  'the host carries $name and keeps the Pressable style function',
+  ({ childStyle, hostStyle }) => {
+    const style = () => childStyle;
+    const root = render(
+      <RowLink href="/money">
+        <Pressable
+          accessibilityLabel="Public money"
+          testID="money"
+          style={style}
+        >
+          <Text>Public money</Text>
+        </Pressable>
+      </RowLink>,
+    );
+    const target = expectAccessibleLink(root, 'money', 'Public money');
+    expect(StyleSheet.flatten(target.props.style)).toEqual(hostStyle);
+    expect(pressable(root).props.style).toBe(style);
+    expect(pressable(root).props.style({ pressed: false })).toEqual(childStyle);
+  },
+);
+
 test('selection and custom menu actions work on the accessible host', () => {
   const select = jest.fn(),
     follow = jest.fn(),

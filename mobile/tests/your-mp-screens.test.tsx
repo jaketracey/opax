@@ -230,9 +230,10 @@ test('electorate preserves Census vintage and renders candidates as plain public
   const link = r.root.findAll(
     (n) => n.props.href?.pathname === '/election' && n.props.asChild,
   )[0]!;
-  expect(link.findAll((n) => n.props.testID === 'election-row-0')).not.toEqual(
-    [],
+  const firstRow = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'election-row-0',
   );
+  expect(firstRow.findAll((n) => n === link)).toHaveLength(1);
   expect(
     r.root.findAll((n) => n.props.testID === 'election-expand-0'),
   ).toHaveLength(0);

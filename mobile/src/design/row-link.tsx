@@ -246,6 +246,11 @@ export function RowLink({
   const layout = StyleSheet.flatten(
     typeof style === 'function' ? style({ pressed: false }) : style,
   );
+  const flexItemStyle = Object.fromEntries(
+    (['flex', 'flexGrow', 'flexShrink', 'flexBasis', 'alignSelf'] as const)
+      .filter((prop) => layout?.[prop] !== undefined)
+      .map((prop) => [prop, layout![prop]]),
+  );
   const trigger = cloneElement(child, {
     ...accessibility,
     ...(hasNativeHost
@@ -288,10 +293,10 @@ export function RowLink({
       collapsable={false}
       pointerEvents="box-none"
       onAccessibilityTap={open}
-      // A Tile must still fill its stretched grid cell. Ordinary rows and
-      // inline links keep their intrinsic size. Its style function stays on
-      // the Pressable, protected from Slot's merge by RowTrigger.
-      style={{ flexGrow: layout?.flexGrow }}
+      // The host is now the parent's flex item, so mirror its flex and
+      // alignment properties. Spacing, dimensions, colours and the original
+      // style function stay on the Pressable, protected from Slot by RowTrigger.
+      style={flexItemStyle}
     >
       {link}
     </View>
