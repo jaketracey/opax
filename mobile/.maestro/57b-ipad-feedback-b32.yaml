@@ -79,7 +79,8 @@ name: 57b iPad - build 32 feedback, Search focus, directory labels and filter, a
 - assertVisible:
     id: person-former
 - scrollUntilVisible:
-    element: Labor party receipts
+    element:
+      id: person-party-receipts
     centerElement: true
     speed: 20
     timeout: 120000

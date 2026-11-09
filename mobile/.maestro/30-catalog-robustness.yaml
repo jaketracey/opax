@@ -11,11 +11,11 @@ name: 30 People and Person survive a null optional roster field
     id: search-screen
 - scrollUntilVisible:
     element:
-      id: search-input
+      text: People, bills, topics and more
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: search-input
+    text: People, bills, topics and more
 - inputText: Anthony Albanese
 - pressKey: Enter
 - scrollUntilVisible:

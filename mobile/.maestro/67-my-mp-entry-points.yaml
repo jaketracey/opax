@@ -30,20 +30,25 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
       id: your-seat-name
       text: Grayndler, New South Wales
     timeout: 30000
-# A figure's source line, then its first original. Kept at two taps.
+- openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-figures
+    timeout: 60000
+# The figure strip's source line, then its first original. Two taps.
 # budget: figure-original
 - scrollUntilVisible:
     element:
-      id: your-member-source
+      id: person-figures-source
     timeout: 30000
 - tapOn:
-    id: your-member-source
+    id: person-figures-source
 - extendedWaitUntil:
     visible:
-      id: your-member-source-sheet-original-0
+      id: person-figures-source-sheet-original-0
     timeout: 15000
 - tapOn:
-    id: your-member-source-sheet-original-0
+    id: person-figures-source-sheet-original-0
 - assertVisible:
     id: debug-last-external-url
     text: https://.*

@@ -17,6 +17,7 @@ name: A money link keeps the current tab and returns to its root
 - extendedWaitUntil:
     visible:
       id: ${READY}
+      text: ${TITLE}
     timeout: 120000
 - assertVisible:
     id: BackButton

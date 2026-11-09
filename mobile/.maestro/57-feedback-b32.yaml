@@ -122,13 +122,16 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
 - assertVisible:
     id: person-former
 - scrollUntilVisible:
-    element: Labor party receipts
+    element:
+      id: person-party-receipts
     centerElement: true
     speed: 20
     timeout: 120000
 - takeScreenshot: ${EVIDENCE}/57-shorten-receipts
 - scrollUntilVisible:
-    element: .*recorded divisions.*
+    element:
+      id: person-votes-summary
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 120000

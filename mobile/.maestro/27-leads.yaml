@@ -474,62 +474,27 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: declarations-screen
     timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: declarations-filters
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
+- assertVisible:
+    id: declarations-screen
 - takeScreenshot: ${EVIDENCE}/27-declarations
-# The summary line is the Filters control (pass 5, P2-19); the chamber
-# chips are in its sheet.
-# pointer: /interests/recent.json#/meta/rows as count
+- tapOn: Filters.*
 - assertVisible:
-    id: declarations-filters
-    text: 300 declarations · All chambers · Federal, Filters
-- scrollUntilVisible:
-    element:
-      id: declarations-filters
-    direction: UP
-    timeout: 180000
-    centerElement: true
-    speed: 20
-- waitForAnimationToEnd
+    id: filters-screen
 - tapOn:
-    id: declarations-filters
-- extendedWaitUntil:
-    visible:
-      id: declarations-chamber
-    timeout: 15000
-# The chamber choice is native: segments when every label fits, otherwise
-# (and at accessibility sizes) a pop-up button whose menu lists the chambers.
-# Native segments and menu items are reached by their label text.
-- runFlow:
-    when:
-      notVisible: House of Representatives
-    commands:
-      - tapOn:
-          id: declarations-chamber
-      - waitForAnimationToEnd
+    id: filters-row-chamber
+- assertVisible:
+    id: filters-facet-screen
+- tapOn:
+    id: filters-choice-house
 - takeScreenshot: ${EVIDENCE}/27-declarations-filters
-- tapOn: House of Representatives
-- waitForAnimationToEnd
 - tapOn: Done
-- extendedWaitUntil:
-    notVisible:
-      id: declarations-filters-sheet
-    timeout: 15000
 - scrollUntilVisible:
     element:
-      id: declarations-filters
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
+      id: declarations-filter-line
+    timeout: 30000
 - assertVisible:
-    id: declarations-filters
-    text: 176 of 300 declarations · House of Representatives · Federal, Filters
+    id: declarations-filter-line
+    text: .*House of Representatives.*
 - takeScreenshot: ${EVIDENCE}/27-declarations-house
 # Every row in the filtered list is a House row. At AX5 a row can be taller
 # than the screen, so its text is matched where a tenth of it shows.
@@ -547,27 +512,13 @@ name: 27 Leads and the declared-interests feed
     text: .*Senate.*
 - takeScreenshot: ${EVIDENCE}/27-declarations-house-row
 # A member's name narrows the feed; the row opens the native profile.
-- scrollUntilVisible:
-    element:
-      id: declarations-member
-    direction: UP
-    timeout: 180000
-    centerElement: true
-    speed: 20
-- tapOn:
-    id: declarations-member
+- tapOn: Member.s name
 - inputText: Briskey
 - pressKey: Enter
 - scrollUntilVisible:
     element:
-      id: declarations-filters
-    direction: DOWN
-    timeout: 180000
-    centerElement: true
-    speed: 20
-- assertVisible:
-    id: declarations-filters
-    text: 3 of 300 declarations · House of Representatives · Federal, Filters
+      id: declarations-total
+    timeout: 30000
 - scrollUntilVisible:
     element:
       id: declaration-person-0

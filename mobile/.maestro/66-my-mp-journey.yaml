@@ -1,7 +1,9 @@
 appId: au.com.opax.app
 name: 66 My MP from first launch to the latest division and the official page
 ---
-# Requires DATA-7 in the fixture: Grayndler's member has an aph.gov.au URL.
+# Fixture contract: DATA-7 gives Grayndler's member an aph.gov.au URL;
+# Latest 0 is a verified member vote with a bill key and division key.
+# The current pinned fixture needs the overlays recorded in Follow-up lines.
 - launchApp:
     clearState: true
     permissions:

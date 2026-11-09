@@ -73,49 +73,28 @@ name: 37 Party access, mentions, creditors, returns, follow and Your MP pay
 - tapOn: { id: party-follow-off }
 - assertVisible: { id: party-follow-on }
 - takeScreenshot: ${EVIDENCE}/37-party-followed
-- tapOn: { id: tab-your-mp }
+- tapOn: { id: tab-today }
 - scrollUntilVisible:
-    element: { id: your-following-manage }
-    direction: DOWN
-    speed: 40
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: your-following-manage }
-- assertVisible: Parties
-- assertVisible: { id: follows-open-party-labor }
+    element: { id: today-following-collapsed }
+    timeout: 90000
+- tapOn: { id: today-following-collapsed }
+- assertVisible: { id: follows-row-party-labor }
 - takeScreenshot: ${EVIDENCE}/37-following-party
-- tapOn: { id: BackButton }
-- scrollUntilVisible:
-    element: { id: seat-search }
-    direction: UP
-    speed: 40
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: seat-search }
+- openLink: opax://seat
+- assertVisible: { id: seat-sheet }
+- tapOn: Electorate or member.s name
 - inputText: Grayndler
-- pressKey: Enter
+- tapOn: { id: seat-row-federal-representatives-nsw-grayndler }
+- openLink: opax://your-mp
+- assertVisible: { id: your-profile-pay }
+- tapOn: { id: your-profile-pay }
 - scrollUntilVisible:
-    element: { id: seat-choice-federal-representatives-nsw-grayndler }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
-- tapOn: { id: seat-choice-federal-representatives-nsw-grayndler }
-- scrollUntilVisible:
-    element: { id: your-pay-heading }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
+    element: { id: person-pay-heading }
+    timeout: 90000
 - takeScreenshot: ${EVIDENCE}/37-your-mp-pay
 - scrollUntilVisible:
-    element: { id: your-receipts-link }
-    direction: DOWN
-    speed: 20
-    centerElement: true
-    timeout: 180000
+    element: { id: person-party-receipts }
+    timeout: 90000
+- tapOn: { id: person-party-receipts }
+- assertVisible: { id: party-title }
 - takeScreenshot: ${EVIDENCE}/37-your-mp-receipts
-- tapOn: { id: your-receipts-link }
-- extendedWaitUntil:
-    visible: { id: party-title }
-    timeout: 15000

@@ -108,16 +108,16 @@ name: 39 Topics, a topic page, coverage and Methods
 - tapOn:
     id: topics-stats
 - assertVisible:
-    id: stats-screen
+    id: coverage-screen
 - takeScreenshot: ${EVIDENCE}/39-stats
 - scrollUntilVisible:
     element:
-      id: stats-methods
+      id: coverage-methods
     direction: DOWN
     timeout: 300000
     centerElement: true
 - tapOn:
-    id: stats-methods
+    id: coverage-methods
 - assertVisible:
     id: methods-screen
 - takeScreenshot: ${EVIDENCE}/39-methods

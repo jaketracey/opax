@@ -40,8 +40,7 @@ name: 43 Government agencies, an agency's years, suppliers and contracts, and it
     timeout: 300000
 - tapOn:
     id: agencies-sort
-- tapOn:
-    id: agencies-sort-name
+- tapOn: Name
 - takeScreenshot: ${EVIDENCE}/43-agencies-a-to-z
 # The bar search sits under the large title.
 - tapOn: Agencies
@@ -92,14 +91,14 @@ name: 43 Government agencies, an agency's years, suppliers and contracts, and it
     id: agency-table-toggle
 - scrollUntilVisible:
     element:
-      id: agency-suppliers
+      text: Suppliers
     direction: UP
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: agency-suppliers
+    text: Suppliers
 - scrollUntilVisible:
     element:
       id: agency-supplier-0
@@ -111,14 +110,14 @@ name: 43 Government agencies, an agency's years, suppliers and contracts, and it
 - takeScreenshot: ${EVIDENCE}/43-suppliers
 - scrollUntilVisible:
     element:
-      id: agency-contracts
+      text: Contracts
     direction: UP
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: agency-contracts
+    text: Contracts
 - scrollUntilVisible:
     element:
       id: agency-contract-0

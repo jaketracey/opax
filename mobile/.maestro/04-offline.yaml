@@ -1,95 +1,46 @@
 appId: au.com.opax.app
-name: 04 Read saved public catalogs with the fixture stopped
+name: 04 Saved catalogs and bill with the fixture stopped, no saved search response
 ---
+# scripts/e2e.sh warms the catalogs and bill before stopping the fixture.
 - launchApp
-- tapOn:
-    id: tab-search
-# Search pages are session-only. Explicitly refresh the saved public catalogs
-# to demonstrate their offline fallback after an app relaunch. Refresh shows
-# only beside suggestions (pass 5, P3-12), so type a name first.
-- tapOn:
-    id: search-input
-- eraseText
-- inputText: Anthony Albanese
-- hideKeyboard
-- waitForAnimationToEnd
-- scrollUntilVisible:
-    element:
-      id: search-refresh
-    direction: DOWN
-    timeout: 20000
-- tapOn:
-    id: search-refresh
+- openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
     visible:
-      id: search-suggestions-offline
-    timeout: 20000
-# Swipe on content above the keyboard; visibility checks can see through it.
-- swipe:
-    start: 90%, 40%
-    end: 90%, 20%
-- scrollUntilVisible:
-    element:
-      text: Updated .*OPAX parliamentary roster.*
-    direction: DOWN
+      id: bill-title
     timeout: 60000
 - scrollUntilVisible:
     element:
+      id: bill-offline
+    timeout: 60000
+- assertVisible:
+    id: bill-offline
+- takeScreenshot: ${EVIDENCE}/04-offline-bill
+- openLink: opax://search
+- runFlow:
+    file: support/search-query.yaml
+    env:
+      QUERY: Anthony Albanese
+      PREFIX: 04-offline
+- scrollUntilVisible:
+    element:
       id: search-suggestion-person-.*
-    direction: UP
-    centerElement: true
-    timeout: 20000
-- takeScreenshot: ${EVIDENCE}/04-offline-suggestion
+    timeout: 30000
 - tapOn:
     id: search-suggestion-person-.*
-- scrollUntilVisible:
-    element:
-      id: person-party
-    direction: DOWN
-    timeout: 20000
-- scrollUntilVisible:
-    element:
+- extendedWaitUntil:
+    visible:
       id: person-electorate
-    direction: DOWN
-    timeout: 20000
-# One seat line since pass 3B: "Member for Grayndler · House of Representatives".
+    timeout: 60000
 - assertVisible:
     id: person-electorate
     text: Member for Grayndler.*
 - takeScreenshot: ${EVIDENCE}/04-offline-profile
-# A submitted search has no disk fallback, even though catalogs remain saved.
-- tapOn: Search
-- scrollUntilVisible:
-    element:
-      id: search-input
-    direction: UP
-    timeout: 20000
-- tapOn:
-    id: search-input
-- eraseText
-- inputText: offline submitted search
-# Leave the field and let the page settle before submitting. With the
-# keyboard up the page scrolls to keep the field in view; when the keyboard
-# goes, this short page moves back down (52 to 100pt on the assigned phones),
-# and on iOS 27 a tap aimed before that move opened the kind menu instead.
-- hideKeyboard
-- waitForAnimationToEnd
-- scrollUntilVisible:
-    element:
-      id: search-submit
-    direction: DOWN
-    timeout: 90000
-- waitForAnimationToEnd
-- tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: search-offline-uncached
-    direction: DOWN
-    timeout: 90000
-- assertVisible: This record is not saved on this iPhone yet\. It will load when you are back online\.
-- assertVisible:
-    id: search-error
+- openLink: opax://search?q=offline%20submitted%20search&scope=speeches
+- extendedWaitUntil:
+    visible:
+      id: search-speeches-error
+    timeout: 60000
+- assertVisible: Speeches need a connection\.
 - assertNotVisible:
-    id: search-result-.*
+    id: records-result-0
 - takeScreenshot: ${EVIDENCE}/04-offline-submitted-search

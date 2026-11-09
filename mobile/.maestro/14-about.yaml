@@ -25,7 +25,7 @@ name: 14 About as a reading page, its coverage line, then Coverage pushed in the
 - assertVisible: 'OPAX is independent and non-partisan\..*'
 - scrollUntilVisible:
     element:
-      id: about-privacy-device
+      text: Privacy policy-device
     timeout: 90000
     visibilityPercentage: 1
 - assertVisible: '.*Your electorate and follows are saved on this iPhone only\..*'
@@ -43,13 +43,13 @@ name: 14 About as a reading page, its coverage line, then Coverage pushed in the
 - assertVisible: 'Updated .*OPAX.*'
 - takeScreenshot: ${EVIDENCE}/14-coverage-as-at
 - assertNotVisible:
-    id: about-support
+    text: Contact OPAX support
 - assertNotVisible:
-    id: about-privacy
+    text: Privacy policy
 - assertNotVisible:
-    id: about-sources-open
+    text: Sources and credits
 - assertNotVisible:
-    id: about-methods
+    text: Methods
 - assertNotVisible: We aim to respond within 2 business days.
 # Coverage pushes inside the same sheet, with About OPAX as its Back.
 - scrollUntilVisible:

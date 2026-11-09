@@ -44,6 +44,16 @@ name: 49 Explore from Today, words per dollar, the Time machine and who owns whi
 - assertVisible:
     id: wd-as-at
 - takeScreenshot: ${EVIDENCE}/49-words-per-dollar
+- openLink: opax://explore/tide
+- extendedWaitUntil:
+    visible:
+      id: explore-tide-screen
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: tide
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/49-tide
 - openLink: opax://explore/tm
 # The year shows at once: no field and no Open year.
 - extendedWaitUntil:

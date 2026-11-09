@@ -29,19 +29,14 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
     arguments:
       OPAXEditionAge: fresh
       OPAXEditionCache: present
-# Today on regular width: the broadsheet masthead, the edition beside its
-# rail (Following when something is followed, then the tile grid), then the
-# two feeds side by side.
+# Today uses a 3:2 pair of columns: edition, Bills, votes and declarations
+# lead; the invitation, Following, daily pair and More to explore trail.
 - extendedWaitUntil:
     visible:
       id: today-edition
     timeout: 90000
 - assertNotVisible:
     id: today-following
-- scrollUntilVisible:
-    element:
-      id: today-leads-open
-    timeout: 60000
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/52-today-portrait
 - scrollUntilVisible:
@@ -58,6 +53,10 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
       id: today-declaration-0
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/52-today-portrait-grid
+- scrollUntilVisible:
+    element:
+      id: today-leads-open
+    timeout: 60000
 # The sidebar: the top tab bar's leading button expands it, and it lists
 # the five sections; Bills opens from it.
 - tapOn: Toggle sidebar

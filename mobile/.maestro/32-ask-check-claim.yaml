@@ -58,12 +58,7 @@ name: 32 Check a claim; the mark opens its passage beside the live answer, re-ta
     notVisible:
       id: citation-sheet
     timeout: 10000
-- runFlow:
-    when:
-      visible:
-        id: doc-passage-highlight
-    commands:
-      - takeScreenshot: ${EVIDENCE}/32-record-at-passage
+- takeScreenshot: ${EVIDENCE}/32-record-at-passage
 - assertVisible:
     id: tab-ask
     selected: true

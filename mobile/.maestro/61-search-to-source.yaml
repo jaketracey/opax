@@ -42,7 +42,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
     id: person-votes-source
 - extendedWaitUntil:
     visible:
-      id: person-votes-source-original-0
+      id: person-votes-source-sheet-original-0
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/61-q1-original
 #
@@ -93,7 +93,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
     id: doc-source
 - extendedWaitUntil:
     visible:
-      id: doc-source-original-0
+      id: doc-source-sheet-original-0
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/61-q2-original
 #
@@ -139,7 +139,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
     id: bill-source
 - extendedWaitUntil:
     visible:
-      id: bill-source-original-0
+      id: bill-source-sheet-original-0
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/61-q3-original
 #
@@ -195,7 +195,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
     id: person-interests-source
 - extendedWaitUntil:
     visible:
-      id: person-interests-source-original-0
+      id: person-interests-source-sheet-original-0
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/61-q4-original
 #
@@ -234,7 +234,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
     id: doc-source
 - extendedWaitUntil:
     visible:
-      id: doc-source-original-0
+      id: doc-source-sheet-original-0
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/61-q5-original
 - stopApp
