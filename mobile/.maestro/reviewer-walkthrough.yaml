@@ -6,158 +6,104 @@ name: Submission reviewer reading walkthrough
     permissions: {}
     arguments:
       OPAXWelcomeTour: 'on'
-- extendedWaitUntil:
-    visible: Page 1 of 5
-    timeout: 60000
-- extendedWaitUntil:
-    notVisible:
-      id: launch-handoff
-    timeout: 60000
-- waitForAnimationToEnd
-- takeScreenshot: ${EVIDENCE}/review-01-welcome
+      OPAXEditionAge: fresh
+      OPAXEditionCache: present
+- assertVisible:
+    id: welcome-screen
 - scrollUntilVisible:
     element:
-      id: tour-page-about
-    visibilityPercentage: 90
+      id: welcome-continue
     timeout: 30000
-- takeScreenshot: ${EVIDENCE}/review-01-welcome-notice
+- takeScreenshot: ${EVIDENCE}/review-01-welcome
 - tapOn:
-    id: tour-skip
+    id: welcome-continue
+- assertVisible:
+    id: welcome-seat
+- tapOn: Not now
 - assertVisible:
     id: today-screen-message
 - takeScreenshot: ${EVIDENCE}/review-02-today
 - tapOn:
     id: tab-your-mp
+- tapOn:
+    id: your-invitation-find
 - assertVisible:
-    id: seat-search
+    id: seat-sheet
 - takeScreenshot: ${EVIDENCE}/review-03-chooser
-- tapOn:
-    id: seat-search
+- tapOn: Electorate or member.s name
 - inputText: Grayndler
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-federal-representatives-nsw-grayndler
-    centerElement: true
-    timeout: 60000
 - tapOn:
-    id: seat-choice-federal-representatives-nsw-grayndler
-- extendedWaitUntil:
-    visible:
-      id: your-seat-name
-    timeout: 30000
+    id: seat-row-federal-representatives-nsw-grayndler
+- assertVisible:
+    id: your-seat-name
 - takeScreenshot: ${EVIDENCE}/review-04-your-mp
-- scrollUntilVisible:
-    element:
-      id: your-member-anthony-albanese
-    centerElement: true
-    timeout: 90000
 - tapOn:
     id: your-member-anthony-albanese
-- extendedWaitUntil:
-    visible:
-      id: person-screen-title
-    timeout: 30000
+- assertVisible:
+    id: person-screen-title
 - takeScreenshot: ${EVIDENCE}/review-05-profile
 - scrollUntilVisible:
     element:
       id: person-votes-heading
-    centerElement: true
     timeout: 90000
-- takeScreenshot: ${EVIDENCE}/review-05a-votes
+- takeScreenshot: ${EVIDENCE}/review-05-votes
 - scrollUntilVisible:
     element:
       id: person-interests-heading
-    centerElement: true
     timeout: 90000
-- takeScreenshot: ${EVIDENCE}/review-05b-interests
+- takeScreenshot: ${EVIDENCE}/review-05-interests
 - scrollUntilVisible:
     element:
       id: person-pay-heading
-    centerElement: true
     timeout: 90000
-- takeScreenshot: ${EVIDENCE}/review-05c-pay
+- takeScreenshot: ${EVIDENCE}/review-05-pay
 - scrollUntilVisible:
     element:
       id: person-expenses-heading
-    centerElement: true
     timeout: 90000
-- takeScreenshot: ${EVIDENCE}/review-05d-expenses
-- tapOn:
-    text: Your MP
-    index: 0
-- scrollUntilVisible:
-    element:
-      id: your-seat-name
-    direction: UP
-    timeout: 30000
-- scrollUntilVisible:
-    element:
-      id: your-electorate
-    direction: UP
-    centerElement: true
-    timeout: 90000
-- tapOn:
-    id: your-electorate
+- takeScreenshot: ${EVIDENCE}/review-05-expenses
+- openLink: opax://electorate/federal-representatives-nsw-grayndler
 - extendedWaitUntil:
     visible:
       id: electorate-screen
-    timeout: 30000
+    timeout: 90000
+- waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/review-06-electorate
 - scrollUntilVisible:
     element:
-      text: Elections
-    centerElement: true
-    timeout: 90000
-- takeScreenshot: ${EVIDENCE}/review-06a-elections
-- scrollUntilVisible:
-    element:
-      text: Census 2021
-    centerElement: true
+      id: electorate-census
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/review-06b-context
-- openLink: opax://
 - tapOn:
     id: tab-bills
-- extendedWaitUntil:
-    visible:
-      id: bills-count
-    timeout: 30000
-- takeScreenshot: ${EVIDENCE}/review-07a-bills-list
-- tapOn:
-    id: bills-search
+- assertVisible:
+    id: bills-count
+- tapOn: Bills, sponsors and portfolios
 - inputText: Interactive Gambling
 - pressKey: Enter
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-r7534
-    centerElement: true
-    speed: 20
     timeout: 90000
 - tapOn:
     id: bill-row-au-federal-r7534
-- extendedWaitUntil:
-    visible:
-      id: bill-title
-    timeout: 30000
+- assertVisible:
+    id: bill-title
 - takeScreenshot: ${EVIDENCE}/review-07-bill
 - scrollUntilVisible:
     element:
-      id: bill-speech-0-web
-    centerElement: true
-    speed: 70
+      id: bill-speech-0
     timeout: 120000
-- takeScreenshot: ${EVIDENCE}/review-08-bill-speeches
 - tapOn:
-    id: bill-speech-0-web
-- extendedWaitUntil:
-    visible:
-      id: doc-title
-    timeout: 30000
+    id: bill-speech-0
+- assertVisible:
+    id: doc-title
 - takeScreenshot: ${EVIDENCE}/review-09-reader
-# Cite lives under the navigation bar's ⋯ (pass 5, P1-2).
-- tapOn: More for this record
-- tapOn: Cite
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: this record
+- tapOn: Citation formats…
 - assertVisible:
     id: doc-citations
 - takeScreenshot: ${EVIDENCE}/review-10-cite
@@ -165,95 +111,71 @@ name: Submission reviewer reading walkthrough
 - extendedWaitUntil:
     visible:
       id: doc-title
-    timeout: 30000
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/review-11-reader
 - scrollUntilVisible:
     element:
       id: doc-similar
-    centerElement: true
     timeout: 120000
 - tapOn:
     id: doc-similar
 - scrollUntilVisible:
     element:
       id: doc-similar-0
-    centerElement: true
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/review-11-similar
-- openLink: opax://
-- tapOn: Account
-- scrollUntilVisible:
-    element:
-      id: account-about
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: account-about
+- openLink: opax://account/about
 - extendedWaitUntil:
     visible:
       id: about-screen
-    timeout: 30000
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/review-12-about
 - scrollUntilVisible:
     element:
       id: about-deceased-notice
-    centerElement: false
-    speed: 20
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/review-12-about-notice
+# Support, privacy and sources live on Account.
+- tapOn:
+    id: BackButton
 - scrollUntilVisible:
     element:
-      id: about-support
-    centerElement: true
+      id: account-support
     timeout: 60000
 - tapOn:
-    id: about-support
+    id: account-support
 - assertVisible: https://opax.invalid/support
 - takeScreenshot: ${EVIDENCE}/review-13-support
 - tapOn: OK
-- scrollUntilVisible:
-    element:
-      id: about-privacy
-    centerElement: true
-    timeout: 60000
 - tapOn:
-    id: about-privacy
+    id: account-privacy
 - assertVisible: https://opax.invalid/privacy
 - takeScreenshot: ${EVIDENCE}/review-14-privacy
 - tapOn: OK
 - scrollUntilVisible:
     element:
-      id: about-sources-open
+      id: account-sources
     direction: UP
-    centerElement: true
     timeout: 60000
 - tapOn:
-    id: about-sources-open
-- extendedWaitUntil:
-    visible:
-      id: sources-screen
-    timeout: 30000
+    id: account-sources
+- assertVisible:
+    id: sources-screen
 - takeScreenshot: ${EVIDENCE}/review-15-sources
-- scrollUntilVisible:
-    element:
-      id: sources-portrait-search
-    centerElement: true
-    speed: 70
-    timeout: 120000
-- tapOn:
-    id: sources-portrait-search
+- openLink: opax://account/sources/portraits
+- tapOn: Name or photographer
 - inputText: Sheena Watt
 - hideKeyboard
 - scrollUntilVisible:
     element:
       id: sources-portrait-sheena-watt
-    centerElement: true
     timeout: 60000
 - assertVisible: Gabagool2005.*CC0.*Wikimedia Commons, cropped.*
 - takeScreenshot: ${EVIDENCE}/review-16-cropped-credit
-- openLink: opax://
-- tapOn:
-    id: tab-search
-- assertVisible: Search people, places and bills
-- takeScreenshot: ${EVIDENCE}/review-17-search
+- openLink: opax://search
+- assertVisible: People, bills, topics and more
 - runFlow:
     file: support/search-query.yaml
     env:
@@ -263,6 +185,5 @@ name: Submission reviewer reading walkthrough
 - scrollUntilVisible:
     element:
       id: search-result-anthony-albanese
-    centerElement: true
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/review-18-search-results

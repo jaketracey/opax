@@ -12,12 +12,12 @@ name: 23 Native money map, held figures, original source and ranked list
 # "Today".
 - scrollUntilVisible:
     element:
-      id: today-public-money
+      text: Public money.*
     centerElement: true
     timeout: 120000
 - takeScreenshot: ${EVIDENCE}/23-today-entry
 - tapOn:
-    id: today-public-money
+    text: Public money.*
     waitToSettleTimeoutMs: 1000
 - scrollUntilVisible:
     element:
@@ -335,5 +335,5 @@ name: 23 Native money map, held figures, original source and ranked list
 - runFlow:
     file: support/restore-tab-bar.yaml
     env:
-      TOP_ID: today-public-money
+      TOP_ID: today-screen-message
       TAB_ID: tab-today

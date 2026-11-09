@@ -8,17 +8,11 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
     permissions:
       all: unset
     clearState: true
-- extendedWaitUntil:
-    notVisible:
-      id: launch-handoff
-    timeout: 30000
 - assertVisible:
     id: today-screen
 # The grid's own section ID is not in the hierarchy; its tiles are.
-- scrollUntilVisible:
-    element:
-      id: today-reports
-    timeout: 90000
+- assertNotVisible:
+    text: Reports
 - scrollUntilVisible:
     element:
       id: today-records-open
@@ -27,11 +21,12 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
 - assertVisible:
     id: today-explore-open
 - assertNotVisible:
-    id: today-community
+    text: Community
 - takeScreenshot: ${EVIDENCE}/release-today-explore
 - tapOn: Account
 - extendedWaitUntil:
-    visible: 'Not signed in\. Sign in to talk to OPAX\. Public records stay open without an account\.'
+    visible:
+      id: account-sheet-message
     timeout: 15000
 - scrollUntilVisible:
     element:

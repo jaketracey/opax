@@ -126,11 +126,17 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     id: account-sources
 - scrollUntilVisible:
     element:
-      id: sources-portrait-search
+      id: sources-portraits
+    timeout: 90000
+- tapOn:
+    id: sources-portraits
+- scrollUntilVisible:
+    element:
+      text: Name or photographer
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: sources-portrait-search
+    text: Name or photographer
 - inputText: Sheena Watt
 - hideKeyboard
 - scrollUntilVisible:
@@ -142,12 +148,12 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 - takeScreenshot: ${EVIDENCE}/08-commons-credit
 - scrollUntilVisible:
     element:
-      id: sources-portrait-search
+      text: Name or photographer
     direction: UP
     centerElement: true
     timeout: 90000
 - tapOn:
-    id: sources-portrait-search
+    text: Name or photographer
 - eraseText: 20
 - inputText: Anthony Albanese
 - hideKeyboard

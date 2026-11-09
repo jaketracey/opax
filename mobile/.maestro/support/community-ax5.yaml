@@ -13,19 +13,13 @@ appId: au.com.opax.app
     visible:
       id: account-sheet
     timeout: 30000
-- extendedWaitUntil:
-    notVisible:
-      id: launch-handoff
-    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/community-ax5-account
-- tapOn: Done
 - scrollUntilVisible:
     element:
-      id: today-community
-    timeout: 90000
-- takeScreenshot: ${EVIDENCE}/community-ax5-today-entry
+      id: account-community
+    timeout: 30000
 - tapOn:
-    id: today-community
+    id: account-community
 - extendedWaitUntil:
     visible: Questions, sources and conversations worth following.
     timeout: 30000

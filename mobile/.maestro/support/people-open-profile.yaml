@@ -4,21 +4,11 @@ name: People lane profile helper
 - launchApp: { permissions: {} }
 - tapOn:
     id: tab-search
-- scrollUntilVisible:
-    element: { id: search-input }
-    direction: UP
-    speed: 20
-    centerElement: true
-    timeout: 90000
-- extendedWaitUntil:
-    notVisible: { id: search-suggestions-loading }
-    timeout: 90000
-- longPressOn: { id: search-input }
-- eraseText
-- inputText: ${NAME}
-- assertVisible:
-    id: search-input
-    text: ^${NAME}$
+- runFlow:
+    file: search-query.yaml
+    env:
+      QUERY: ${NAME}
+      PREFIX: 08-${SLUG}
 - pressKey: Enter
 - scrollUntilVisible:
     element:

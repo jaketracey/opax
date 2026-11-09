@@ -10,7 +10,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 20000
 - scrollUntilVisible:
     element:
-      id: bill-speech-0-web
+      id: bill-speech-0
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
@@ -18,7 +18,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 180000
 - waitForAnimationToEnd
 - tapOn:
-    id: bill-speech-0-web
+    id: bill-speech-0
 - extendedWaitUntil:
     visible:
       id: doc-title
@@ -27,7 +27,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 # The header's More holds the copy actions, Citation formats, Copy link,
 # Open on opax.com.au, Ask about this and Share (records.md 2.3).
 - assertNotVisible:
-    id: doc-cite
+    text: Cite
 - tapOn:
     id: header-more
 - waitForAnimationToEnd

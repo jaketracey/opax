@@ -2,42 +2,14 @@ appId: au.com.opax.app
 name: 42 Grants in the seat, Commonwealth grants, programs, largest, community funding, programs and places
 ---
 - launchApp
-- tapOn:
-    id: tab-your-mp
-- runFlow:
-    when:
-      notVisible:
-        id: seat-search
-    commands:
-      - scrollUntilVisible:
-          element:
-            id: change-seat
-          centerElement: true
-          timeout: 300000
-      - tapOn:
-          id: change-seat
-- scrollUntilVisible:
-    element:
-      id: seat-search
-    direction: UP
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
-- tapOn:
-    id: seat-search
+- openLink: opax://seat
+- assertVisible:
+    id: seat-sheet
+- tapOn: Electorate or member.s name
 - inputText: Grayndler
-- pressKey: Enter
-- scrollUntilVisible:
-    element:
-      id: seat-choice-federal-representatives-nsw-grayndler
-    direction: DOWN
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-    timeout: 300000
 - tapOn:
-    id: seat-choice-federal-representatives-nsw-grayndler
+    id: seat-row-federal-representatives-nsw-grayndler
+- openLink: opax://your-mp
 - scrollUntilVisible:
     element:
       id: seat-grants-total
@@ -181,7 +153,7 @@ name: 42 Grants in the seat, Commonwealth grants, programs, largest, community f
     id: program-source
 - extendedWaitUntil:
     visible:
-      id: program-source-sheet
+      id: program-source-sheet-original-0
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/42-program-source
 - tapOn: Done
@@ -311,7 +283,7 @@ name: 42 Grants in the seat, Commonwealth grants, programs, largest, community f
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/42-allocation
 - assertNotVisible:
-    id: allocation-margin
+    id: allocation-figure
 - scrollUntilVisible:
     element:
       id: allocation-project-0
@@ -334,17 +306,17 @@ name: 42 Grants in the seat, Commonwealth grants, programs, largest, community f
 - tapOn: { id: BackButton }
 - scrollUntilVisible:
     element:
-      id: allocation-invitations
+      text: Invitations
     direction: UP
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - tapOn:
-    id: allocation-invitations
+    text: Invitations
 - takeScreenshot: ${EVIDENCE}/42-invitations
 - tapOn:
-    id: allocation-history
+    text: Earlier grants
 - takeScreenshot: ${EVIDENCE}/42-history
 - scrollUntilVisible:
     element:

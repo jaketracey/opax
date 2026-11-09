@@ -1,0 +1,12 @@
+appId: au.com.opax.app
+---
+- runFlow:
+    when:
+      true: ${HAS_URL == 'yes'}
+    commands:
+      - assertVisible: Parliament of Australia page
+- runFlow:
+    when:
+      true: ${HAS_URL == 'no'}
+    commands:
+      - assertNotVisible: Parliament of Australia page

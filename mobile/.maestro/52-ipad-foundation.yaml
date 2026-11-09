@@ -26,17 +26,17 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
 - launchApp:
     clearState: true
     permissions: {}
-# Today on regular width: the broadsheet masthead, the edition beside its
-# rail (Following when something is followed, then the tile grid), then the
-# two feeds side by side.
+    arguments:
+      OPAXEditionAge: fresh
+      OPAXEditionCache: present
+# Today uses a 3:2 pair of columns: edition, Bills, votes and declarations
+# lead; the invitation, Following, daily pair and More to explore trail.
 - extendedWaitUntil:
     visible:
-      id: today-edition-head
+      id: today-edition
     timeout: 90000
 - assertNotVisible:
     id: today-following
-- assertVisible:
-    id: today-leads-open
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/52-today-portrait
 - scrollUntilVisible:
@@ -45,12 +45,18 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
     direction: DOWN
     timeout: 60000
     centerElement: true
-# Columns, not one long column: the bills sit beside the declarations.
+# The leading column holds Bills, then Just declared.
 - assertVisible:
     id: today-bill-0
-- assertVisible:
-    id: today-declaration-0
+- scrollUntilVisible:
+    element:
+      id: today-declaration-0
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/52-today-portrait-grid
+- scrollUntilVisible:
+    element:
+      id: today-leads-open
+    timeout: 60000
 # The sidebar: the top tab bar's leading button expands it, and it lists
 # the five sections; Bills opens from it.
 - tapOn: Toggle sidebar
@@ -65,7 +71,7 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
 - takeScreenshot: ${EVIDENCE}/52-bills-empty
 # The list filters on the device; selecting a row opens it in the pane.
 - tapOn:
-    id: bills-search
+    text: Bills, sponsors and portfolios
 - inputText: interactive gambling levy
 - extendedWaitUntil:
     visible:
@@ -93,6 +99,10 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
     id: split-pane-back
 - assertVisible:
     id: bill-row-au-federal-r7534
+- assertVisible:
+    id: bill-text-version
+- assertVisible:
+    id: bill-text-contents
 - takeScreenshot: ${EVIDENCE}/52-bill-text-pane
 - tapOn:
     id: split-pane-back
@@ -118,7 +128,7 @@ name: 52 iPad foundation, Today grid, sidebar, Bills split view, rotation and a 
     timeout: 30000
 - scrollUntilVisible:
     element:
-      id: today-masthead
+      id: today-screen-message
     direction: UP
     timeout: 60000
 - waitForAnimationToEnd

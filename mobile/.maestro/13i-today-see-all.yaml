@@ -14,20 +14,20 @@ name: 13i Today's Bills See all opens its own list, whose scope never leaks into
     id: today-screen-message
 - scrollUntilVisible:
     element:
-      id: today-bills-segment
+      text: Passed
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - waitForAnimationToEnd
 - tapOn:
-    id: today-bills-passed
+    text: Passed
 - extendedWaitUntil:
     visible:
       id: today-bill-0
     timeout: 30000
 - tapOn:
-    id: today-bills-all
+    text: See all passed bills
 - extendedWaitUntil:
     visible:
       id: bills-count
@@ -98,20 +98,20 @@ name: 13i Today's Bills See all opens its own list, whose scope never leaks into
     id: today-screen
 - scrollUntilVisible:
     element:
-      id: today-bills-segment
+      text: Passed
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
     speed: 20
 - waitForAnimationToEnd
 - tapOn:
-    id: today-bills-new
+    text: New
 - extendedWaitUntil:
     visible:
       id: today-bill-0
     timeout: 30000
 - tapOn:
-    id: today-bills-all
+    text: See all new bills
 - extendedWaitUntil:
     visible:
       id: bills-count

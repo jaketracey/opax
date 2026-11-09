@@ -60,11 +60,11 @@ name: 26 Follow a member, a bill and an electorate; Today shows what changed
     id: tab-search
 - scrollUntilVisible:
     element:
-      id: search-input
+      text: People, bills, topics and more
     centerElement: true
     timeout: 300000
 - tapOn:
-    id: search-input
+    text: People, bills, topics and more
 - inputText: Anthony Albanese
 - pressKey: Enter
 - scrollUntilVisible:

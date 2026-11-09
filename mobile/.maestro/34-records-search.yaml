@@ -191,7 +191,7 @@ name: 34 Speeches, filters, sort, cited summary and the results' sources
     timeout: 10000
 - takeScreenshot: ${EVIDENCE}/34-result-notes
 - tapOn:
-    id: search-sources-done
+    text: Done
     retryTapIfNoChange: false
 - extendedWaitUntil:
     notVisible:

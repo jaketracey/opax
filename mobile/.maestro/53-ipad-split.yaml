@@ -22,7 +22,7 @@ name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/53-search-empty
 - tapOn:
-    id: search-input
+    text: People, bills, topics and more
 - inputText: Anthony Albanese
 - extendedWaitUntil:
     visible:
@@ -36,9 +36,9 @@ name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
       id: person-screen-title
     timeout: 60000
 - assertVisible:
-    id: search-split-list
+    id: search-screen
 - assertVisible:
-    id: search-input
+    text: People, bills, topics and more
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/53-search-portrait
 - setOrientation: LANDSCAPE_LEFT
@@ -65,7 +65,7 @@ name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
 - openLink: opax://ask
 - extendedWaitUntil:
     visible:
-      id: ask-sources-empty
+      id: ask-pane-starter-0
     timeout: 60000
 - assertVisible:
     id: ask-dock
@@ -82,11 +82,11 @@ name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
       id: ask-pane-source-1
     timeout: 120000
 - assertVisible:
-    id: ask-sources-question
+    id: citation-passage
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/53-ask-portrait
 - tapOn:
-    id: ask-pane-source-1
+    id: citation-open-record
 - extendedWaitUntil:
     visible:
       id: bill-title
@@ -94,7 +94,7 @@ name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
 - assertVisible:
     id: split-pane-back
 - assertVisible:
-    id: ask-answer-body
+    id: ask-answer-1
 - takeScreenshot: ${EVIDENCE}/53-ask-source-open
 - setOrientation: LANDSCAPE_LEFT
 - waitForAnimationToEnd
@@ -119,7 +119,7 @@ name: 53 iPad splits, Search, Ask with its sources pane, directories, rotation
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/53-directory-empty
 - tapOn:
-    id: directory-search
+    text: Name, electorate or state
 - inputText: Anthony Albanese
 - extendedWaitUntil:
     visible:

@@ -13,7 +13,7 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
       id: bills-count
     timeout: 20000
 - tapOn:
-    id: bills-search
+    text: Bills, sponsors and portfolios
 - inputText: interactive gambling levy
 - pressKey: Enter
 - scrollUntilVisible:
@@ -31,15 +31,16 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     visible:
       id: bill-screen
     timeout: 15000
-# Follow and ⋯ share one row; Ask about this is under ⋯. The bill text is
-# a row under the meta line (P1-3).
+# Share is in the bar; Ask about this bill and the bill text are rows.
+# The bill text is a row under the meta line (P1-3).
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/46-bill-entry
-- runFlow:
-    file: support/open-more.yaml
-    env:
-      NAME: 'Interactive Gambling.*'
-- tapOn: Ask about this
+- scrollUntilVisible:
+    element:
+      id: bill-ask
+    timeout: 90000
+- tapOn:
+    id: bill-ask
 - extendedWaitUntil:
     visible:
       id: ask-question

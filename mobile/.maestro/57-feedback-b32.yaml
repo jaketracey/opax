@@ -8,7 +8,7 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
     id: tab-search
 - scrollUntilVisible:
     element:
-      id: search-input
+      text: People, bills, topics and more
     direction: UP
     centerElement: true
     speed: 20
@@ -22,10 +22,9 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
     times: 20
     commands:
       - tapOn:
-          id: search-input
+          text: People, bills, topics and more
       - inputText: Albanese
       - assertVisible:
-          id: search-input
           text: ^Albanese$
       - eraseText: 12
       - hideKeyboard
@@ -42,12 +41,12 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
     id: search-browse-person
 - extendedWaitUntil:
     visible:
-      id: directory-count
+      id: directory-person-screen
     timeout: 30000
-- assertVisible: .*Sitting first, then most speeches.*
+- assertVisible: Parliamentarians
 - takeScreenshot: ${EVIDENCE}/57-directory
 - tapOn:
-    id: directory-search
+    text: Name, electorate or state
 - inputText: Joe Hockey
 - pressKey: Enter
 - scrollUntilVisible:
@@ -63,38 +62,26 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
 # At AX5 the row is taller than the screen: return to the field first.
 - scrollUntilVisible:
     element:
-      id: directory-search
+      text: Name, electorate or state
     direction: UP
     centerElement: true
     speed: 20
     timeout: 60000
 - tapOn:
-    id: directory-search
+    text: Name, electorate or state
 - eraseText: 20
 - hideKeyboard
 # ALUtpHq6: Sitting members only, beside Voting record and Portrait.
-- scrollUntilVisible:
-    element:
-      id: directory-filters
-    direction: UP
-    centerElement: true
-    speed: 20
-    timeout: 60000
+- tapOn: Filters.*
+- assertVisible:
+    id: filters-screen
 - tapOn:
-    id: directory-filters
-- scrollUntilVisible:
-    element:
-      id: directory-filter-sitting
-    centerElement: true
-    speed: 20
-    timeout: 60000
-- tapOn:
-    id: directory-filter-sitting
+    id: filters-row-sitting
 - takeScreenshot: ${EVIDENCE}/57-filters-sitting
 - tapOn: Done
 - extendedWaitUntil:
     visible:
-      id: directory-count
+      id: directory-person-screen
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/57-directory-sitting-only
 # ANGYQm3w: Bill Shorten's page links his votes and Labor's receipts. The
@@ -113,10 +100,10 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
     id: search-browse-person
 - extendedWaitUntil:
     visible:
-      id: directory-count
+      id: directory-person-screen
     timeout: 30000
 - tapOn:
-    id: directory-search
+    text: Name, electorate or state
 - inputText: Bill Shorten
 - pressKey: Enter
 - scrollUntilVisible:
@@ -135,16 +122,19 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
 - assertVisible:
     id: person-former
 - scrollUntilVisible:
-    element: Labor party receipts
+    element:
+      id: person-party-receipts
     centerElement: true
     speed: 20
     timeout: 120000
 - takeScreenshot: ${EVIDENCE}/57-shorten-receipts
 - scrollUntilVisible:
-    element: .*recorded divisions.*
+    element:
+      id: person-votes-summary
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 120000
 - assertNotVisible:
-    id: person-votes-unlinked
+    text: Voting record not linked
 - takeScreenshot: ${EVIDENCE}/57-shorten-votes

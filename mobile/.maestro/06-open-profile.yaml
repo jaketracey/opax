@@ -9,9 +9,9 @@ name: Open a profile from Search and check its party label (PARTY, never NOT_PAR
     id: tab-search
 - scrollUntilVisible:
     element:
-      id: search-input
+      text: People, bills, topics and more
 - tapOn:
-    id: search-input
+    text: People, bills, topics and more
 - inputText: ${NAME}
 - pressKey: Enter
 - scrollUntilVisible:

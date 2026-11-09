@@ -10,7 +10,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 20000
 - scrollUntilVisible:
     element:
-      id: bill-speech-0-web
+      id: bill-speech-0
     direction: DOWN
     visibilityPercentage: 10
     centerElement: true
@@ -18,7 +18,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 180000
 - waitForAnimationToEnd
 - tapOn:
-    id: bill-speech-0-web
+    id: bill-speech-0
 - extendedWaitUntil:
     visible:
       id: doc-title
@@ -30,7 +30,7 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
 # The bar holds ⋯ only: Cite, Copy link and Open on opax.com.au. Ask about
 # this and Share are the bottom toolbar.
 - assertNotVisible:
-    id: doc-cite
+    text: Cite
 - tapOn: More for this record
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/32-reader-more

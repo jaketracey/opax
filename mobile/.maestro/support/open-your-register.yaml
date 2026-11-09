@@ -11,4 +11,4 @@ appId: au.com.opax.app
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/${REGISTER_PREFIX}-register-target-settled
 - assertVisible:
-    id: your-latest-0
+    id: your-latest-source

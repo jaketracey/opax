@@ -73,5 +73,5 @@ name: 12 Search empty states with a way on, and native electorate suggestions
 - runFlow:
     file: review-pages.yaml
     env:
-      END: election-expand-0
+      END: election-row-0
       PREFIX: 12-native-representation

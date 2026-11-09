@@ -1,0 +1,54 @@
+appId: au.com.opax.app
+name: 68 My MP neutrality across Labor, Coalition and crossbench, with and without official URLs
+---
+# Fixture contract: DATA-7 URLs held for Albanese, Ley and Steggall; no URLs
+# for Plibersek, Tehan and Haines. Each trio has the same data availability.
+# No party determines which verbs, menu items or Your MP capsule are shown.
+- runFlow:
+    file: support/my-mp-neutrality-member.yaml
+    env:
+      SEAT: Grayndler
+      SEAT_SLUG: federal-representatives-nsw-grayndler
+      MEMBER: Anthony Albanese
+      SLUG: anthony-albanese
+      HAS_URL: 'yes'
+- runFlow:
+    file: support/my-mp-neutrality-member.yaml
+    env:
+      SEAT: Farrer
+      SEAT_SLUG: federal-representatives-nsw-farrer
+      MEMBER: Sussan Ley
+      SLUG: sussan-ley
+      HAS_URL: 'yes'
+- runFlow:
+    file: support/my-mp-neutrality-member.yaml
+    env:
+      SEAT: Warringah
+      SEAT_SLUG: federal-representatives-nsw-warringah
+      MEMBER: Zali Steggall
+      SLUG: zali-steggall
+      HAS_URL: 'yes'
+- runFlow:
+    file: support/my-mp-neutrality-member.yaml
+    env:
+      SEAT: Sydney
+      SEAT_SLUG: federal-representatives-nsw-sydney
+      MEMBER: Tanya Plibersek
+      SLUG: tanya-plibersek
+      HAS_URL: 'no'
+- runFlow:
+    file: support/my-mp-neutrality-member.yaml
+    env:
+      SEAT: Wannon
+      SEAT_SLUG: federal-representatives-vic-wannon
+      MEMBER: Dan Tehan
+      SLUG: dan-tehan
+      HAS_URL: 'no'
+- runFlow:
+    file: support/my-mp-neutrality-member.yaml
+    env:
+      SEAT: Indi
+      SEAT_SLUG: federal-representatives-vic-indi
+      MEMBER: Helen Haines
+      SLUG: helen-haines
+      HAS_URL: 'no'
