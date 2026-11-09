@@ -325,6 +325,52 @@ test('Money map expands the industry sheet before scrolling to Unions', () => {
   });
 });
 
+test('Money record source returns below the bar before its tap and waits for the original', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const allYears = steps.findIndex(
+    (step: any) =>
+      step.scrollUntilVisible?.element?.id ===
+      'money-record-donations-all-years',
+  );
+  const source = steps.findIndex(
+    (step: any) => step.scrollUntilVisible?.element?.id === 'money-source',
+  );
+  expect(source).toBeGreaterThan(allYears);
+  expect(steps[source - 2]).toEqual({
+    swipe: { start: '50%, 40%', end: '50%, 60%', duration: 600 },
+  });
+  expect(steps[source - 1]).toBe('waitForAnimationToEnd');
+  expect(steps[source].scrollUntilVisible).toMatchObject({
+    element: { id: 'money-source' },
+    direction: 'UP',
+    centerElement: true,
+  });
+  expect(steps[source + 1]).toBe('waitForAnimationToEnd');
+  expect(steps[source + 2]).toEqual({ tapOn: { id: 'money-source' } });
+  expect(steps[source + 3].extendedWaitUntil.visible).toEqual({
+    id: 'money-source-sheet-original-0',
+  });
+});
+
+test('See all donors is centred upwards from the later footnote before tapping', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const footnote = steps.findIndex(
+    (step: any) => step.runFlow?.env?.TARGET_ID === 'money-individual-donors',
+  );
+  const all = steps.findIndex(
+    (step: any) => step.scrollUntilVisible?.element?.id === 'money-donors-all',
+  );
+  expect(all).toBeGreaterThan(footnote);
+  expect(steps[all].scrollUntilVisible).toMatchObject({
+    element: { id: 'money-donors-all' },
+    direction: 'UP',
+    centerElement: true,
+    speed: 20,
+  });
+  expect(steps[all + 1]).toBe('waitForAnimationToEnd');
+  expect(steps[all + 2]).toEqual({ tapOn: { id: 'money-donors-all' } });
+});
+
 test('declarations retry the profile push without clearing search and dismiss it only after checking the return', () => {
   const steps = maestroSteps('.maestro/27-leads.yaml');
   const at = steps.findIndex(
