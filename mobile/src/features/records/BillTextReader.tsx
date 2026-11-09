@@ -135,6 +135,7 @@ export default function BillTextReader({
       : null;
   const shortTitle =
     summaryState.value?.data.identity.data?.shortTitle ?? manifest?.title ?? '';
+  const routeTitle = ready && shortTitle ? shortTitle : 'Bill text';
   const changes = summary?.changes.filter(Boolean) ?? [];
   const [jumpTo, setJump] = useState<{ index: number; attempt: number } | null>(
     null,
@@ -183,7 +184,7 @@ export default function BillTextReader({
   // The bar title fits beside Version, Contents and ⋯ (barItems).
   const title = useTitleOnScroll(
     embedded ? null : titleRef,
-    embedded ? undefined : 'Bill text',
+    embedded ? undefined : routeTitle,
     {
       trailing:
         1 +
@@ -352,7 +353,7 @@ export default function BillTextReader({
       {embedded ? null : (
         <RouteOptions
           options={{
-            title: 'Bill text',
+            title: routeTitle,
             ...headerItems(ready ? barItems : undefined),
           }}
         />

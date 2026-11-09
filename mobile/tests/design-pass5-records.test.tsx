@@ -1,4 +1,5 @@
 import { withNavigationOptions } from './navigation-options';
+import { RouteOptions } from '../src/navigation/preview';
 import { menuLeaves } from '../src/design/row-link';
 import {
   recordActions,
@@ -258,8 +259,15 @@ function mockBillText() {
 test('bill text opens on its text with the stage, one source line and the bar items', async () => {
   mockBillText();
   const view = await mount(<BillTextReader />);
-  expect(mockOptions.title).toBe('Bill text');
+  const shortTitle = decodeBillTextManifest(
+    responses['/bill-texts/au-federal-r7534/index.json'],
+  ).title;
+  expect(mockOptions.title).toBe(shortTitle);
   expect(typeof mockOptions.headerTitle).toBe('function');
+  expect(
+    (mockOptions.headerTitle as () => React.ReactElement<{ title: string }>)()
+      .props.title,
+  ).toBe(shortTitle);
   expect(records.billVersion).toHaveBeenCalledWith(
     'au-federal-r7534',
     'r7534-aspassed',
@@ -318,6 +326,30 @@ test('bill text keeps a named route title before its text loads', async () => {
   expect(mockOptions.title).toBe('Bill text');
   await act(async () => view.unmount());
 });
+
+test.each(['Synthetic short bill name', ''])(
+  'bill text shares one non-empty route and inline title when the short title is %j',
+  async (shortTitle) => {
+    mockBillText();
+    jest.mocked(catalogs.billFor).mockResolvedValue(
+      record({
+        identity: { data: { shortTitle } },
+        summary: { data: null },
+      }) as never,
+    );
+    const view = await mount(<BillTextReader />);
+    const expected = shortTitle || 'Bill text';
+    expect(view.root.findByType(RouteOptions).props.options.title).toBe(
+      expected,
+    );
+    expect(mockOptions.title).toBe(expected);
+    expect(
+      (mockOptions.headerTitle as () => React.ReactElement<{ title: string }>)()
+        .props.title,
+    ).toBe(expected);
+    await act(async () => view.unmount());
+  },
+);
 
 test('choosing another version from the bar menu loads it in place', async () => {
   mockBillText();
