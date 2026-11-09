@@ -32,7 +32,7 @@ import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
-import { MoneyList } from '../src/features/money-public/parts';
+import { MoneyList, TitleAlias } from '../src/features/money-public/parts';
 import { BarTitle } from '../src/navigation/useTitleOnScroll';
 import {
   decodeGrantIndex,
@@ -239,7 +239,6 @@ test.each([
     'grant-program',
     'grants',
   ],
-  ['Agencies', Agencies, {}, 'agencies', 'index'],
   ['Agency', Agency, { id: agencyId }, 'agency', 'agencies'],
 ] as const)(
   '%s reveals from its retained native heading, including a partly hidden heading',
@@ -276,6 +275,7 @@ test.each([
     if (name === 'grant-program') {
       expect(options.headerBackTitle).toBe('Grants');
       expect(options.headerBackButtonMenuEnabled).toBe(false);
+      expect(inline().props.backTitle).toBe('Grants');
       expect(inline().props.trailing).toBe(1);
       expect(options.headerSearchBarOptions).toMatchObject({
         placement: 'stacked',
@@ -310,13 +310,29 @@ test.each([
     expect(inline().props.shown).toBe(true);
     await scroll(9000, 140);
     expect(inline().props.shown).toBe(false);
-    if (name === 'agencies') {
-      expect(inline().props.title).toBe('Agencies');
-      expect(options.title).toBe('Government agencies');
-    }
     await act(async () => rendered.unmount());
   },
 );
+
+test('Agencies keeps its system large title, stacked search and zero-height title alias', async () => {
+  const rendered = await mount(Agencies);
+  const options = rendered.root.findByType(RouteOptions).props.options;
+  expect(options).toMatchObject({
+    title: 'Government agencies',
+    headerTitle: 'Government agencies',
+    headerLargeTitleEnabled: true,
+    headerSearchBarOptions: { placement: 'stacked' },
+  });
+  const list = rendered.root.findByType(MoneyList);
+  expect(list.props.onScroll).toBeUndefined();
+  const alias = list.props.header.props.children[0];
+  expect(alias.type).toBe(TitleAlias);
+  expect(alias.props).toEqual({
+    title: 'Government agencies',
+    testID: 'agencies-title',
+  });
+  await act(async () => rendered.unmount());
+});
 
 test.each([
   ['Public money', Hub, {}, 'money-hub-title'],

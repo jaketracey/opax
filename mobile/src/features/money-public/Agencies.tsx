@@ -32,6 +32,7 @@ import {
   MoneyStatus,
   readableDates,
   recordSource,
+  TitleAlias,
   useDebouncedAnnounce,
   useMoneySearch,
   yearRange,
@@ -86,14 +87,13 @@ export default function Agencies() {
   const total = all.reduce((sum, a) => sum + a.total, 0);
   const saved = recordSource(status.record);
   const name = 'Government agencies';
-  const titleRef = useRef<View>(null);
-  const title = useTitleOnScroll(titleRef, 'Agencies', { routeTitle: name });
   return (
     <>
       <RouteOptions
         options={{
           title: name,
-          headerLargeTitleEnabled: false,
+          headerTitle: name,
+          headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,
           ...moneyBar({ name, path: '/subject/agency' }),
@@ -106,18 +106,9 @@ export default function Agencies() {
         rowKey={(a) => a.id}
         refreshing={status.refreshing}
         refresh={status.refresh}
-        onScroll={title.onScroll}
         header={
           <>
-            <View
-              ref={titleRef}
-              collapsable={false}
-              onLayout={title.onTitleLayout}
-            >
-              <Heading level={1} kind="page" testID="agencies-title">
-                {name}
-              </Heading>
-            </View>
+            <TitleAlias title={name} testID="agencies-title" />
             <MoneyStatus status={status} name={name} testID="agencies-status" />
             {data ? (
               <>
