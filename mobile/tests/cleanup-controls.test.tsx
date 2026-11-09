@@ -1,3 +1,5 @@
+import { NavigationContext } from 'expo-router/react-navigation';
+import { PaneHost } from '../src/design/split';
 import { useNetworkState } from 'expo-network';
 import { act } from 'react';
 import { Pressable, RefreshControl } from 'react-native';
@@ -121,6 +123,49 @@ test.each([
       r = TestRenderer.create(<Probe />);
     });
     expect(observed).toBe(expected);
+    act(() => r.unmount());
+  },
+);
+
+test.each([false, true])(
+  'a screen changes its own bar ground and title, never its parent pane bar (embedded=%s)',
+  (embedded) => {
+    const setOptions = jest.fn();
+    const screen = (
+      <Screen grouped barTitle="A record">
+        <Pressable />
+      </Screen>
+    );
+    const pane = {
+      entries: [],
+      depth: 0,
+      push: jest.fn(),
+      select: jest.fn(),
+      back: () => false,
+    };
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(
+        <NavigationContext.Provider
+          value={
+            {
+              setOptions,
+              isFocused: () => true,
+              addListener: () => () => undefined,
+            } as never
+          }
+        >
+          {embedded ? (
+            <PaneHost pane={pane} bar={null}>
+              {screen}
+            </PaneHost>
+          ) : (
+            screen
+          )}
+        </NavigationContext.Provider>,
+      );
+    });
+    expect(setOptions).toHaveBeenCalledTimes(embedded ? 0 : 2);
     act(() => r.unmount());
   },
 );

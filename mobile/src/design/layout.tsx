@@ -52,7 +52,7 @@ import {
   RowInsetContext,
   SurfaceContext,
 } from './row-padding';
-import { usePaneBar } from './split';
+import { usePaneBar, useSplitPane } from './split';
 import { StatePageProvider } from './states';
 import { Heading, Text } from './text';
 import {
@@ -141,15 +141,20 @@ export function Screen({
   const { onLayout, content, inner, bar, regular } = useScreenColumn(column);
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const navigation = useContext(NavigationContext);
+  const inPane = useSplitPane() !== null;
   useEffect(() => {
-    navigation?.setOptions?.(opaqueBar(colors[ground]));
-  }, [navigation, ground]);
+    // A detail pane must not recolour its parent route's navigation bar.
+    if (!inPane) navigation?.setOptions?.(opaqueBar(colors[ground]));
+  }, [navigation, ground, inPane]);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
   const suppliedBridge = useContext(ScreenTitleContext);
-  const nativeBridge = useBarTitle(barTitle, anchorBottom !== null);
-  const titleBridge = suppliedBridge ?? nativeBridge;
+  const nativeBridge = useBarTitle(
+    inPane ? undefined : barTitle,
+    anchorBottom !== null,
+  );
+  const titleBridge = suppliedBridge ?? (inPane ? null : nativeBridge);
   useEffect(() => {
     titleScroll.current =
       barTitle && titleBridge ? titleBridge(barTitle) : null;

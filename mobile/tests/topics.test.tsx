@@ -1,5 +1,4 @@
 import { allowsReportsPath } from '../src/api/reports-policy';
-import { arcPath } from '../src/features/reports/model';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
 import { router } from 'expo-router';
 import { act, type ReactElement } from 'react';
@@ -12,6 +11,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { reports } from '../src/api/runtime';
 import { rhythm } from '../src/design/tokens';
 import {
+  arcPath,
   chosenDecade,
   decodeIndustryMoney,
   normaliseTopicFilters,
