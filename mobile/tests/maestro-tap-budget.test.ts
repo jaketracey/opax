@@ -92,3 +92,94 @@ it.each([
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+const auditScript = path.resolve(__dirname, '../scripts/maestro-id-audit.mjs');
+
+it('anchors every template part, escapes literals and reports weak prefix matches', () => {
+  const probe = `
+    import { classifySelector, sourceTemplate } from ${JSON.stringify(`file://${auditScript}`)};
+    const source = {
+      strings: new Set(['welcome-screen', 'word.before.word']),
+      templates: [
+        ['bill-speech-', ''],
+        ['', '-original-', ''],
+        ['sheet.', '-ready'],
+        ['ab', ''],
+      ].map(sourceTemplate).filter(Boolean),
+    };
+    console.log(JSON.stringify([
+      'welcome-screen',
+      'welcome',
+      'word.before.*',
+      '^bill-speech-[0-9]+$',
+      'bill-speech-0',
+      'thing-original-0',
+      'thing-original-0-extra',
+      'thing-original-',
+      'sheet.name-ready',
+      'sheetXname-ready',
+      'ab-unknown',
+      'seat-search',
+      'today-edition-head',
+    ].map(id => classifySelector(id, source))));
+  `;
+  const result = execFileSync(
+    process.execPath,
+    ['--input-type=module', '-e', probe],
+    { encoding: 'utf8' },
+  );
+  expect(JSON.parse(result)).toEqual([
+    'found',
+    'missing',
+    'found',
+    'prefix',
+    'prefix',
+    'found',
+    'found',
+    'missing',
+    'found',
+    'missing',
+    'missing',
+    'missing',
+    'missing',
+  ]);
+});
+
+it('audits id parameters passed through nested runFlow env blocks', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'maestro-id-audit-'));
+  try {
+    writeFileSync(
+      path.join(dir, 'child.yaml'),
+      'appId: test\n---\n- assertVisible:\n    id: ${END}\n',
+    );
+    writeFileSync(
+      path.join(dir, 'middle.yaml'),
+      'appId: test\n---\n- runFlow:\n    file: child.yaml\n    env:\n      END: ${TARGET}\n',
+    );
+    const file = path.join(dir, 'fixture.yaml');
+    writeFileSync(
+      file,
+      `appId: test
+---
+- runFlow:
+    file: middle.yaml
+    env:
+      TARGET: audit-intentionally-unknown
+      UNUSED: ignored-not-an-id
+- runFlow:
+    file: child.yaml
+    env:
+      END: welcome-screen
+`,
+    );
+    const output = execFileSync(process.execPath, [auditScript, file], {
+      encoding: 'utf8',
+    });
+    expect(output).toContain('(id ${END}): audit-intentionally-unknown');
+    expect(output).not.toContain(': welcome-screen');
+    expect(output).not.toContain('ignored-not-an-id');
+    expect(output).toContain('1 missing; 0 held only by a prefix template.');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
