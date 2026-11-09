@@ -282,7 +282,7 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
     mounted.push(r);
     const root = r.root;
     expect(root.findByType(RouteOptions).props.options).toMatchObject({
-      headerTitle: 'Votes in parliament',
+      title: 'Votes in parliament',
       headerBackTitle: 'Bills',
       headerBackButtonDisplayMode: 'default',
     });
