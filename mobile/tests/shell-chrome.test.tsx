@@ -324,7 +324,8 @@ test('40 scroll events past the title anchor set options only once, then once on
       <Harness />
     </NavigationContext.Provider>,
   );
-  expect(setOptions).not.toHaveBeenCalled();
+  expect(setOptions.mock.calls[0]![0].headerTitle().props.shown).toBe(false);
+  setOptions.mockClear();
   act(() => hook.setAnchorBottom(200));
   expect(setOptions.mock.calls[0]![0].title).toBe('Member');
   setOptions.mockClear();
@@ -337,7 +338,7 @@ test('40 scroll events past the title anchor set options only once, then once on
   expect(setOptions.mock.calls[1]![0]).not.toHaveProperty('title');
   act(() => view.unmount());
 });
-test('the bar title shows once half the heading is under the bar (money-19)', () => {
+test('the bar title stays hidden until the entire heading passes under the bar', () => {
   const setOptions = jest.fn();
   let hook!: ReturnType<typeof useTitleOnScroll>;
   function Harness() {
@@ -356,9 +357,9 @@ test('the bar title shows once half the heading is under the bar (money-19)', ()
     } as never),
   );
   setOptions.mockClear();
-  act(() => hook.onScroll(59));
+  act(() => hook.onScroll(99));
   expect(setOptions).not.toHaveBeenCalled();
-  act(() => hook.onScroll(61));
+  act(() => hook.onScroll(101));
   expect(setOptions).toHaveBeenCalledTimes(1);
   act(() => view.unmount());
 });

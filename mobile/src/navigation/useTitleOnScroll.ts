@@ -141,8 +141,8 @@ export function useTitleOnScroll(
     [],
   );
   useEffect(() => {
-    if (!title || anchor === null) return;
-    shown.current = offset.current + headerHeight > anchor;
+    if (!title) return;
+    shown.current = anchor !== null && offset.current + headerHeight > anchor;
     setOptions({
       title,
       ...(Platform.OS === 'android'
@@ -156,7 +156,7 @@ export function useTitleOnScroll(
               }),
           }),
     });
-    installed.current = true;
+    installed.current = anchor !== null;
   }, [title, anchor, setOptions, headerHeight, trailing]);
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -177,19 +177,16 @@ export function useTitleOnScroll(
     },
     [anchor, title, setOptions, headerHeight, trailing],
   );
-  // The title shows once half the heading is under the bar, as UIKit's
-  // large title hands over. Waiting for its last line kept a short page's
-  // two-line heading (an agency's name) out of the bar for good: the page
-  // could not scroll that far (wave 4 money-19).
+  // Hand over only after the heading's bottom has passed under the bar.
   const onTitleLayout = useCallback(
     (event: LayoutChangeEvent) => {
       if (ref?.current) {
         ref.current.measure((_x, _y, _width, height, _pageX, pageY) =>
-          setAnchorBottom(pageY + offset.current + height / 2),
+          setAnchorBottom(pageY + offset.current + height),
         );
       } else {
         const { y, height } = event.nativeEvent.layout;
-        setAnchorBottom(y + height / 2);
+        setAnchorBottom(y + height);
       }
     },
     [ref, setAnchorBottom],

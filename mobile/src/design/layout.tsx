@@ -467,7 +467,11 @@ function useBarTitle(title: string | undefined, anchored: boolean) {
   const header = useContext(HeaderHeightContext) || 44;
   const shown = useRef(false);
   useEffect(() => {
-    if (title) setOptions({ title });
+    if (title)
+      setOptions({
+        title,
+        headerTitle: () => <BarTitle title={title} shown={false} />,
+      });
   }, [setOptions, title]);
   useEffect(() => {
     if (!title || !anchored) return;
