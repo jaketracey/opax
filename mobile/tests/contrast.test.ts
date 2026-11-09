@@ -3,7 +3,6 @@ import {
   componentPairsFor,
   contrastRatio,
   forbiddenPairs,
-  partyWashPairs,
   requiredRatio,
 } from '../src/design/contrast';
 import {
@@ -27,14 +26,21 @@ describe('contrast of every pair the components draw', () => {
       expect(value).toBeGreaterThanOrEqual(requiredRatio[pair.kind]);
     },
   );
-  test.each(partyWashPairs.map((pair) => [pair.use, pair] as const))(
-    '%s',
-    (_, pair) => {
-      expect(
-        contrastRatio(pair.foreground, pair.background),
-      ).toBeGreaterThanOrEqual(requiredRatio.text);
-    },
-  );
+  test('drawn pairs name current components and contain no bronze text claims', () => {
+    expect(
+      componentPairs.filter((pair) =>
+        /Location progress|SourceLink|OpaxWebLink|ViewOriginal|InfoButton|PartyChip|MachineWritten/.test(
+          pair.use,
+        ),
+      ),
+    ).toEqual([]);
+    expect(
+      componentPairs.filter(
+        (pair) =>
+          pair.foregroundRole === 'bronzeInk' && pair.kind !== 'non-text',
+      ),
+    ).toEqual([]);
+  });
   test('the pairs IOS-UX forbids really fail', () => {
     for (const pair of forbiddenPairs)
       expect(

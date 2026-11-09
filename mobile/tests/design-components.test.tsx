@@ -41,7 +41,6 @@ import {
   accentTint,
   radii,
   statusTint,
-  statusTones,
   textStyles,
 } from '../src/design/tokens';
 import { SourceContent } from '../src/features/sheets/SourceSheet';
@@ -190,16 +189,25 @@ describe('StatusCapsule', () => {
     expect(box.props.accessible).toBe(false);
     expect(box.props.accessibilityElementsHidden).toBe(true);
   });
-  test('every tone is a listed text pair, and 7:1 under Increase Contrast', () => {
-    for (const { ink, wash } of Object.values(statusTones)) {
-      expect(listedPair(light[ink], light[wash], 'text')).toBeTruthy();
-      expect(contrastRatio(light[ink], light[wash])).toBeGreaterThanOrEqual(
+  test('every drawn status is a listed text pair, and 7:1 under Increase Contrast', () => {
+    for (const status of [
+      'Before parliament',
+      'Exposure draft',
+      'Passed',
+      'Lapsed',
+    ]) {
+      const root = render(<StatusCapsule status={status} testID="s" />).root;
+      const colour = flat(nativeTexts(root)[0]!.props.style).color;
+      const background = hex(
+        flat(host(root, 's').props.style).backgroundColor,
+      )!;
+      expect(listedPair(hex(colour)!, background, 'text')).toBeTruthy();
+      expect(contrastRatio(hex(colour)!, background)).toBeGreaterThanOrEqual(
         requiredRatio.text,
       );
-      const strong = lightHighContrast[ink] ?? light[ink];
-      expect(contrastRatio(strong, light[wash])).toBeGreaterThanOrEqual(
-        ink === 'inkSoft' ? 7 : 7,
-      );
+      expect(
+        contrastRatio(strongHex(colour)!, background),
+      ).toBeGreaterThanOrEqual(7);
     }
   });
   test('hugs its word, and takes the full width (word-safe) at AX5', () => {

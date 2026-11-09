@@ -273,8 +273,8 @@ export function SourceLine({
 }
 
 /**
- * The drawn source line, shared by SourceLine and the provenance adapters
- * (SourceLink, ViewOriginal): one anatomy for every way into a source.
+ * The drawn source line shared by SourceLine, AnswerView and CitationContent:
+ * one anatomy for block provenance and Ask's source footers.
  */
 export function SourceAffordance({
   glyph,
