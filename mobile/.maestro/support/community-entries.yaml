@@ -6,7 +6,7 @@ appId: au.com.opax.app
     id: today-screen
 - takeScreenshot: ${EVIDENCE}/community-after-today
 - assertNotVisible:
-    id: today-community
+    text: Community
 - takeScreenshot: ${EVIDENCE}/community-after-today-entry
 - tapOn: Account
 - scrollUntilVisible:

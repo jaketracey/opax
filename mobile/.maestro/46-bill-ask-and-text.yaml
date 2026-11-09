@@ -32,8 +32,7 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
       id: bill-screen
     timeout: 15000
 # Share is in the bar; Ask about this bill and the bill text are rows.
-# The bill text is
-# a row under the meta line (P1-3).
+# The bill text is a row under the meta line (P1-3).
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/46-bill-entry
 - scrollUntilVisible:

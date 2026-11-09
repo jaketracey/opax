@@ -15,14 +15,15 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     timeout: 60000
 - assertVisible:
     id: search-result-anthony-albanese
-    text: .*Member for Grayndler.*
+    containsDescendants:
+      - text: .*Member for Grayndler.*
 # A second occurrence would be a duplicate person result.
 - assertNotVisible:
-    text: Anthony Albanese,.*Member for Grayndler.*
+    text: .*Member for Grayndler.*
     index: 1
 - longPressOn:
     id: search-result-anthony-albanese
-- tapOn: Set as my electorate
+- tapOn: Set Grayndler as my electorate
 - assertNotVisible: Replace .* with Grayndler\?
 - openLink: opax://your-mp
 - extendedWaitUntil:
@@ -61,7 +62,7 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     timeout: 60000
 - longPressOn:
     id: search-result-tanya-plibersek
-- tapOn: Set as my electorate
+- tapOn: Set Sydney as my electorate
 - assertVisible: Replace Grayndler with Sydney\?
 - tapOn: Cancel
 # The saved electorate cannot offer to save itself again.
@@ -74,7 +75,7 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     file: support/open-more.yaml
     env:
       NAME: Grayndler
-- assertNotVisible: Set as my electorate
+- assertNotVisible: Set Grayndler as my electorate
 - tapOn:
     point: 10%, 80%
 - openLink: opax://seat

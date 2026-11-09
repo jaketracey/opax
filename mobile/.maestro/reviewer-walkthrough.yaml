@@ -92,10 +92,10 @@ name: Submission reviewer reading walkthrough
 - takeScreenshot: ${EVIDENCE}/review-07-bill
 - scrollUntilVisible:
     element:
-      id: bill-speech-0-web
+      id: bill-speech-0
     timeout: 120000
 - tapOn:
-    id: bill-speech-0-web
+    id: bill-speech-0
 - assertVisible:
     id: doc-title
 - takeScreenshot: ${EVIDENCE}/review-09-reader

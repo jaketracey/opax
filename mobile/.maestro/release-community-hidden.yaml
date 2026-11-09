@@ -12,7 +12,7 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
     id: today-screen
 # The grid's own section ID is not in the hierarchy; its tiles are.
 - assertNotVisible:
-    id: today-reports
+    text: Reports
 - scrollUntilVisible:
     element:
       id: today-records-open
@@ -21,7 +21,7 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
 - assertVisible:
     id: today-explore-open
 - assertNotVisible:
-    id: today-community
+    text: Community
 - takeScreenshot: ${EVIDENCE}/release-today-explore
 - tapOn: Account
 - extendedWaitUntil:

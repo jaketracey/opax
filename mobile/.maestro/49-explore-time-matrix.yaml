@@ -64,7 +64,7 @@ name: 49 Explore from Today, words per dollar, the Time machine and who owns whi
     id: tm-year-menu
     text: 'Year, 2025'
 - assertNotVisible:
-    id: tm-open
+    text: Open year
 - extendedWaitUntil:
     visible:
       id: tm-photo-2025-cooper-polling-place-loaded

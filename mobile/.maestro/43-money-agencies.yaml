@@ -27,7 +27,7 @@ name: 43 Government agencies, an agency's years, suppliers and contracts, and it
     speed: 20
     timeout: 300000
 - assertNotVisible:
-    id: contracts-view-suppliers
+    text: Suppliers
 - takeScreenshot: ${EVIDENCE}/43-agencies
 # Sort is a pop-up on the caption line.
 - scrollUntilVisible:

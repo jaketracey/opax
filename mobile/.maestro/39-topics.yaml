@@ -123,7 +123,7 @@ name: 39 Topics, a topic page, coverage and Methods
 - takeScreenshot: ${EVIDENCE}/39-methods
 - scrollUntilVisible:
     element:
-      id: methods-8
+      id: methods-section-cite
     direction: DOWN
     timeout: 300000
     visibilityPercentage: 10

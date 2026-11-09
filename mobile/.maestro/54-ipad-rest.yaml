@@ -106,7 +106,7 @@ name: 54 iPad remaining screens and rotation
 - openLink: opax://topics
 - extendedWaitUntil:
     visible:
-      id: topics-count
+      id: topics-screen
     timeout: 90000
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/54-topics-landscape
