@@ -212,11 +212,11 @@ const texts = (r: TestRenderer.ReactTestRenderer) =>
     .join('\n');
 const linkRow = (r: TestRenderer.ReactTestRenderer, testID: string) =>
   r.root.findAllByType(LinkRow).find((node) => node.props.testID === testID)!;
-const lastOptions = () =>
-  navigation.setOptions.mock.calls.at(-1)![0] as Record<
-    string,
-    () => { label: string }[]
-  >;
+const resolvedOptions = () =>
+  Object.assign(
+    {},
+    ...navigation.setOptions.mock.calls.map(([options]) => options),
+  ) as Record<string, () => { label: string }[]>;
 
 describe('Methods', () => {
   test('on paper under a paper bar, inside the sunken Account sheet', async () => {
@@ -283,14 +283,14 @@ describe('Methods', () => {
 
   test('pushed, Share is trailing after Back', async () => {
     await render(<Methods />, false);
-    expect(lastOptions().unstable_headerRightItems!()).toMatchObject([
+    expect(resolvedOptions().unstable_headerRightItems!()).toMatchObject([
       { label: 'Share', path: '/methods' },
     ]);
   });
 
   test('as the sheet root, Share leads and the stack keeps Done trailing', async () => {
     await render(<Methods />, true);
-    const options = lastOptions();
+    const options = resolvedOptions();
     expect(options.unstable_headerLeftItems!()).toMatchObject([
       { label: 'Share', path: '/methods' },
     ]);
@@ -378,7 +378,7 @@ describe('Coverage', () => {
 
   test('Share uses the /stats link the web and 1.0 already know', async () => {
     await render(<Coverage />, false);
-    expect(lastOptions().unstable_headerRightItems!()).toMatchObject([
+    expect(resolvedOptions().unstable_headerRightItems!()).toMatchObject([
       { label: 'Share', path: '/stats' },
     ]);
   });
