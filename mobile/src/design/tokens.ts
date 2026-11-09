@@ -1,26 +1,27 @@
 import Constants from 'expo-constants';
 import {
+  Appearance,
   DynamicColorIOS,
   Platform,
   useColorScheme,
   type ColorValue,
 } from 'react-native';
 import {
-  light,
   dark,
   darkHighContrast,
+  light,
   lightHighContrast,
+  paletteFor,
   partyColors,
   partyWashes,
   type Palette,
   type Role,
 } from './palette';
 import {
-  border,
   categories as accentCategories,
-  fonts as registeredFonts,
+  border,
   headingFace as defaultHeadingFace,
-  radii,
+  fonts as registeredFonts,
   rhythm,
   size,
   statusTones,
@@ -30,8 +31,7 @@ import {
 export { light, partyColors, partyWashes };
 export type { Palette, Role };
 // Values come from docs/design/design-tokens.json through tokens.generated.ts;
-// this file resolves them for the platform. Old names are aliases (see
-// docs/design/TOKENS.md) and carry @deprecated.
+// this file resolves only the canonical mobile roles for the platform.
 export {
   border,
   breakpoints,
@@ -43,7 +43,6 @@ export {
   rhythm,
   rhythmRegular,
   size,
-  spacing,
   splitPane,
   statusTones,
   typeRolesRegular,
@@ -52,7 +51,7 @@ export {
 // iOS resolves appearance and Increase Contrast natively. Release builds
 // remain light through app.config.ts; capture builds can follow the system.
 function resolve(role: Role): ColorValue {
-  const base = light[role];
+  const base = paletteFor('light')[role];
   if (Platform.OS !== 'ios') return base;
   return DynamicColorIOS({
     light: base,
@@ -65,13 +64,13 @@ export const colors = Object.fromEntries(
   (Object.keys(light) as Role[]).map((role) => [role, resolve(role)]),
 ) as Record<Role, ColorValue>;
 
-// Existing string-only native APIs retain their light fallback until their
-// lane adopts useChromeColours(). Dynamic roles are available as chromeColours.
-export const chrome = {
-  tint: light.navy,
-  inactive: light.inkSoft,
-  title: light.ink,
-};
+/** Current hex colours for imperative native APIs. */
+export function currentChromeColours() {
+  const palette = paletteFor(
+    Appearance.getColorScheme() === 'dark' ? 'dark' : 'light',
+  );
+  return { tint: palette.navy, inactive: palette.inkSoft, title: palette.ink };
+}
 export const chromeColours = {
   tint: colors.navy,
   inactive: colors.inkSoft,
@@ -94,8 +93,6 @@ export const headingFace: HeadingFace =
 
 // Unset family means UIKit's SF Pro. Android keeps its bundled Public Sans.
 // Registered names remain available to the existing useFonts loader.
-/** @deprecated Registered asset names for the existing loader; use interfaceFonts for UI. */
-export const fonts = registeredFonts;
 export const interfaceFonts = {
   ...registeredFonts,
   sans: Platform.OS === 'ios' ? undefined : registeredFonts.sans,
@@ -180,8 +177,6 @@ export type StatusTone = keyof typeof statusTones;
 
 // One CSS pixel is one point: rules are 1pt, not the device hairline.
 export const hairline = border.hairline;
-/** @deprecated Use purpose names from radii: bar, container, tile, capsule. */
-export const radius = radii.bar;
 export const minimumTarget =
   Platform.OS === 'android' ? size.targetAndroid : size.target;
 // Minimum heights; controls grow with their text rather than clipping.
@@ -235,54 +230,10 @@ export type CurrentTextVariant =
   | 'figure'
   | 'tileFigure';
 
-/** @deprecated Migrate each alias to its canonical role. */
-export const deprecatedRoles = {
-  /** @deprecated Use recordTitle. */
-  title: 'recordTitle',
-  /** @deprecated Use figure. */
-  display: 'figure',
-  /** @deprecated Use sectionTitle. */
-  heading: 'sectionTitle',
-  /** @deprecated Use rowRecord. */
-  subheading: 'rowRecord',
-  /** @deprecated Use recordText. */
-  record: 'recordText',
-  /** @deprecated Use secondary. */
-  metadata: 'secondary',
-  /** @deprecated Use footnote. */
-  fine: 'footnote',
-  /** @deprecated Use capsule. */
-  label: 'capsule',
-  /** @deprecated Use strong. */
-  control: 'strong',
-  /** @deprecated Use recordTitle. */
-  padTitle: 'recordTitle',
-  /** @deprecated Use body. */
-  padLede: 'body',
-  /** @deprecated Use body. */
-  lede: 'body',
-  /** @deprecated Use footnote. */
-  caption: 'footnote',
-  /** @deprecated Use strong with tabular. */
-  figureInline: 'strong',
-  /** @deprecated Use capsule. */
-  tag: 'capsule',
-  /** @deprecated Use capsule. */
-  kicker: 'capsule',
-  /** @deprecated Use capsule. */
-  chip: 'capsule',
-  /** @deprecated Use strong with tabular. */
-  countdown: 'strong',
-} as const satisfies Record<string, CurrentTextVariant>;
-export const deprecatedTextVariants = deprecatedRoles;
-
 /** Resolve both D1 faces without changing the record's typeface or figures. */
-export function textStylesFor(face: HeadingFace): Record<
-  CurrentTextVariant,
-  TextRole
-> & {
-  [Name in keyof typeof deprecatedRoles]: TextRole;
-} {
+export function textStylesFor(
+  face: HeadingFace,
+): Record<CurrentTextVariant, TextRole> {
   return Object.fromEntries(
     Object.entries(typeRoles).map(([name, role]) => {
       const font =
@@ -372,26 +323,3 @@ export const largeTitleSizes: Record<ContentSizeCategory, number> = {
   ax4: 56,
   ax5: 60,
 };
-const headlineSizes: Record<ContentSizeCategory, number> = {
-  xSmall: 14,
-  small: 15,
-  medium: 16,
-  large: 17,
-  xLarge: 19,
-  xxLarge: 21,
-  xxxLarge: 23,
-  ax1: 28,
-  ax2: 33,
-  ax3: 40,
-  ax4: 47,
-  ax5: 53,
-};
-// Inline bar titles stop at xxxLarge, as the system's do: the bar keeps its
-// height, and the Large Content Viewer covers larger sizes.
-export function navigationTitleSizes(fontScale: number) {
-  const category = contentSizeCategory(fontScale);
-  return {
-    largeTitle: largeTitleSizes[category],
-    title: Math.min(headlineSizes[category], headlineSizes.xxxLarge),
-  };
-}

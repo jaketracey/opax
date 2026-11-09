@@ -13,25 +13,22 @@ import {
   partyWashesDark,
   type Palette,
 } from '../src/design/palette';
-import { contrastRules } from '../src/design/tokens.generated';
 import {
   accents,
-  chrome,
   controlHeight,
-  deprecatedTextVariants,
-  fonts,
-  interfaceFonts,
-  textStylesFor,
-  radii,
-  typeRolesRegular,
-  type CurrentTextVariant,
+  currentChromeColours,
+  interfaceFonts as fonts,
   hairline,
+  interfaceFonts,
   layout,
   minimumTarget,
-  radius,
+  radii,
   rhythm,
-  spacing,
+  textStylesFor,
+  typeRolesRegular,
+  type CurrentTextVariant,
 } from '../src/design/tokens';
+import { contrastRules } from '../src/design/tokens.generated';
 
 // Design tokens (docs/design/TOKENS.md): tokens.generated.ts is fresh, every
 // name the app used before the token source keeps its value, the promised
@@ -42,7 +39,7 @@ test('tokens.generated.ts matches docs/design/design-tokens.json', () => {
   // Throws, with the generator's message, while the file is stale.
   execFileSync(
     process.execPath,
-    ['../scripts/build_tokens.mjs', '--check', '--only', 'app'],
+    ['scripts/build-design-tokens.mjs', '--check'],
     { cwd: MOBILE, stdio: 'pipe' },
   );
 });
@@ -66,8 +63,6 @@ const BEFORE_LIGHT = {
   danger: '#A4262C',
   dividerDefault: '#B8B4A8',
   dividerSubtle: '#DFDCD2',
-  line: '#DFDCD2',
-  lineStrong: '#8D897B',
   moneyInk: '#2B6447',
   moneyWash: '#E5EAE5',
   votesInk: '#3A4C96',
@@ -91,12 +86,12 @@ const BEFORE_HIGH_CONTRAST = {
 };
 // Full shell 2.1 contract: family, weight, size, leading, ramp, colour, tabular.
 const TYPE_TABLE = {
-  largeTitle: ['heading', '700', 34, 41, 'largeTitle', 'ink'],
-  inlineTitle: ['heading', '600', 17, 22, 'headline', 'ink'],
-  pageTitle: ['heading', '700', 28, 34, 'title1', 'ink'],
+  largeTitle: ['sectionTitle', '700', 34, 41, 'largeTitle', 'ink'],
+  inlineTitle: ['sectionTitle', '600', 17, 22, 'headline', 'ink'],
+  pageTitle: ['sectionTitle', '700', 28, 34, 'title1', 'ink'],
   recordTitle: ['serif', '700', 28, 36, 'title1', 'ink'],
   recordHeading: ['serif', '700', 22, 30, 'title2', 'ink'],
-  sectionTitle: ['heading', '700', 22, 28, 'title2', 'ink'],
+  sectionTitle: ['sectionTitle', '700', 22, 28, 'title2', 'ink'],
   subsectionTitle: ['sans', '600', 17, 22, 'headline', 'ink'],
   groupHeader: ['sans', '400', 13, 18, 'footnote', 'inkSoft'],
   name: ['sans', '600', 17, 22, 'headline', 'ink'],
@@ -124,7 +119,6 @@ describe('every name from before the token source keeps its value', () => {
     // Increase Contrast it steps to the default divider as dividerSubtle does.
     expect(lightHighContrast).toMatchObject({
       ...BEFORE_HIGH_CONTRAST,
-      line: BEFORE_LIGHT.dividerDefault,
     });
     expect(partyColors).toEqual({
       labor: '#B02E33',
@@ -146,7 +140,7 @@ describe('every name from before the token source keeps its value', () => {
       independent: '#E3E6E7',
       other: '#EBE7EA',
     });
-    expect(chrome).toEqual({
+    expect(currentChromeColours()).toEqual({
       tint: '#142A43',
       inactive: '#575C52',
       title: '#23271F',
@@ -156,9 +150,7 @@ describe('every name from before the token source keeps its value', () => {
     'all eighteen type roles under %s headings',
     (face) => {
       const styles = textStylesFor(face);
-      const canonical = Object.keys(styles).filter(
-        (name) => !(name in deprecatedTextVariants),
-      );
+      const canonical = Object.keys(styles);
       expect(canonical.sort()).toEqual(Object.keys(TYPE_TABLE).sort());
       for (const [name, values] of Object.entries(TYPE_TABLE)) {
         const [
@@ -171,7 +163,7 @@ describe('every name from before the token source keeps its value', () => {
           tabular,
         ] = values;
         const serif =
-          family === 'serif' || (family === 'heading' && face === 'serif');
+          family === 'serif' || (family === 'sectionTitle' && face === 'serif');
         expect(styles[name as CurrentTextVariant]).toEqual({
           fontFamily: serif
             ? fontWeight === '400'
@@ -186,13 +178,6 @@ describe('every name from before the token source keeps its value', () => {
           ...(tabular ? { tabular: true } : {}),
         });
       }
-      for (const [alias, role] of Object.entries(deprecatedTextVariants))
-        expect(styles[alias as keyof typeof styles]).toEqual({
-          ...styles[role],
-          ...(['figureInline', 'countdown'].includes(alias)
-            ? { tabular: true }
-            : {}),
-        });
       expect(
         [...new Set(Object.values(styles).map((r) => r.fontSize))].sort(
           (a, b) => a - b,
@@ -204,15 +189,6 @@ describe('every name from before the token source keeps its value', () => {
     },
   );
   test('space, shape and size', () => {
-    expect(spacing).toEqual({
-      s1: 4,
-      s2: 6,
-      s3: 8,
-      s4: 16,
-      s5: 26,
-      s6: 32,
-      s7: 52,
-    });
     expect(rhythm).toMatchObject({
       line: 4,
       tight: 8,
@@ -238,7 +214,7 @@ describe('every name from before the token source keeps its value', () => {
       people: { ink: 'navy', wash: 'navyWash' },
       leads: { ink: 'navy', wash: 'navyWash' },
     });
-    expect(typeRolesRegular.title).toEqual({ fontSize: 28, lineHeight: 36 });
+    expect(typeRolesRegular).toEqual({});
     expect(radii).toMatchObject({
       container: 22,
       tile: 18,
@@ -246,11 +222,8 @@ describe('every name from before the token source keeps its value', () => {
       bar: 4,
       capsule: 999,
       round: 999,
-      sm: 4,
-      md: 22,
-      pill: 999,
     });
-    expect([hairline, radius, minimumTarget]).toEqual([1, 4, 44]);
+    expect([hairline, radii.bar, minimumTarget]).toEqual([1, 4, 44]);
     expect(controlHeight).toEqual({ compact: 44, default: 48, large: 56 });
   });
 });

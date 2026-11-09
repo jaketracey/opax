@@ -25,6 +25,9 @@ const reviewedExpoSubpaths = new Set([
   // SwiftUI views and modifiers rendered in a Host: no I/O.
   '@expo/ui/swift-ui',
   '@expo/ui/swift-ui/modifiers',
+  // Compose Host/Slider with semantics/testID modifiers: native rendering only.
+  '@expo/ui/jetpack-compose',
+  '@expo/ui/jetpack-compose/modifiers',
 ]);
 const globals = new Set(['globalThis', 'window', 'global', 'self']);
 const banned = new Set([
