@@ -50,5 +50,5 @@ name: 05 Design workbench, every component and state
 - tapOn: Done
 - scrollUntilVisible:
     element:
-      id: account-sheet-message
+      id: account-sheet
     direction: UP

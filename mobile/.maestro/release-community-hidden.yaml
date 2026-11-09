@@ -26,7 +26,7 @@ name: Community hidden, as in the 1.0 App Store build - Today and Account offer 
 - tapOn: Account
 - extendedWaitUntil:
     visible:
-      id: account-sheet-message
+      id: account-sheet
     timeout: 15000
 - scrollUntilVisible:
     element:

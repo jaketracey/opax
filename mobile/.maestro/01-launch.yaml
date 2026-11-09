@@ -89,7 +89,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: today-screen-message
 - tapOn: Account
 - assertVisible:
-    id: account-sheet-message
+    id: account-sheet
 - takeScreenshot: ${EVIDENCE}/01-account-sheet
 - tapOn: Done
 - assertVisible:

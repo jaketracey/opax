@@ -120,6 +120,11 @@ name: 08 Independent profile blocks, current senator, former member and local sh
 # Portrait credits and licences live on Sources and licences, searchable.
 - launchApp:
     permissions: {}
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 60000
+- waitForAnimationToEnd
 - tapOn: Account
 - scrollUntilVisible:
     element:
