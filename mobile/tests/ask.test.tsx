@@ -178,13 +178,18 @@ describe('dates in the device time zone', () => {
 });
 
 type Node = ReactTestRenderer['root'];
+const mounted: ReactTestRenderer[] = [];
 async function render(element: React.ReactElement) {
   let renderer!: ReactTestRenderer;
   await act(async () => {
     renderer = create(element);
   });
+  mounted.push(renderer);
   return renderer.root;
 }
+afterEach(() => {
+  act(() => mounted.splice(0).forEach((renderer) => renderer.unmount()));
+});
 const byID = (root: Node, testID: string) =>
   root.findAll((n) => n.props.testID === testID && typeof n.type !== 'string');
 const swiftByID = (root: Node, id: string) =>
@@ -284,7 +289,7 @@ describe('Account › Ask', () => {
     'the notice is a tinted action at scale %s and resets consent',
     async (fontScale) => {
       const previous = Dimensions.get('window');
-      Dimensions.set({ window: { ...previous, fontScale } });
+      act(() => Dimensions.set({ window: { ...previous, fontScale } }));
       const root = await render(<AskSettings />);
       try {
         const row = byID(root, 'ask-settings-notice')[0]!;
@@ -310,7 +315,7 @@ describe('Account › Ask', () => {
         expect(resetAskConsent).toHaveBeenCalled();
         expect(haptic).toHaveBeenCalledWith('success');
       } finally {
-        Dimensions.set({ window: previous });
+        act(() => Dimensions.set({ window: previous }));
       }
     },
   );
