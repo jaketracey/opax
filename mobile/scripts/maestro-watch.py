@@ -26,8 +26,9 @@ connection = re.compile(
 class StartupAllowance:
     """Bound readiness probes, anchored to the runner server when it reports it.
 
-    Older runners do not forward their server signal, so launch is the fallback.
-    The separate overall flow deadline always bounds both phases together.
+    Native preflight stays under the overall flow deadline until the server
+    signal arrives. Without native runner logs, launch is the fallback.
+    The overall deadline always bounds both phases together.
     """
     server_started = re.compile(
         r'\bserver\s+started\b|\[FlyingFox\]\s+starting server\b', re.IGNORECASE,
@@ -40,8 +41,14 @@ class StartupAllowance:
         self.seconds = seconds
         self.saw_server = False
         self.connected = False
+        self.waiting_for_server = False
 
-    def observe(self, line, now):
+    def observe(self, line, now, runner=False):
+        if runner:
+            # Native preflight/classification tests are not readiness probes.
+            # They remain bounded by the overall flow deadline, then the
+            # readiness allowance starts at the server signal itself.
+            self.waiting_for_server = True
         if not self.saw_server and self.server_started.search(line):
             self.anchor = now
             self.saw_server = True
@@ -50,7 +57,8 @@ class StartupAllowance:
 
     def allows(self, line, now):
         return (self.probe in line and not self.connected
-                and now - self.anchor < self.seconds)
+                and ((self.waiting_for_server and not self.saw_server)
+                     or now - self.anchor < self.seconds))
 
 
 def positive_seconds(value, name):
@@ -187,7 +195,7 @@ def run(log, debug, seconds, *command):
                     fresh = tails.get(path, '') + fresh
                     tails[path] = fresh.rsplit('\n', 1)[-1][-4096:]
                     for line in fresh.splitlines():
-                        startup.observe(line, time.monotonic())
+                        startup.observe(line, time.monotonic(), runner=not transport)
                         if not transport:
                             continue
                         match = forbidden.search(line) or connection.search(line)

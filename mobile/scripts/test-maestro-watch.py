@@ -43,6 +43,14 @@ class StartupTests(unittest.TestCase):
         allowance.observe('HTTP server started on port 9010', 300)
         self.assertFalse(allowance.allows(PROBE, 355))
 
+    def test_visible_native_preflight_does_not_spend_the_readiness_budget(self):
+        allowance = watch.StartupAllowance(0, 180)
+        allowance.observe("Test Suite 'SwipeRouteHandlerV2ClassificationTests' started.", 10, runner=True)
+        self.assertTrue(allowance.allows(PROBE, 250))
+        allowance.observe('[FlyingFox] starting server 127.0.0.1:9010', 300, runner=True)
+        self.assertTrue(allowance.allows(PROBE, 479))
+        self.assertFalse(allowance.allows(PROBE, 480))
+
     def test_maestro_210_flyingfox_server_signal_anchors_readiness(self):
         allowance = watch.StartupAllowance(0, 180)
         allowance.observe('maestro-driver-iosUITests-Runner[3610] [FlyingFox] starting server 127.0.0.1:9010', 175)
@@ -71,7 +79,7 @@ class StartupTests(unittest.TestCase):
 
 
 class WatcherProcessTests(unittest.TestCase):
-    def run_child(self, source):
+    def run_child(self, source, seconds='30'):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             debug = root / 'debug'
@@ -79,7 +87,7 @@ class WatcherProcessTests(unittest.TestCase):
             env = dict(os.environ, OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS='180')
             result = subprocess.run(
                 [sys.executable, str(WATCHER), str(root / 'console.log'),
-                 str(debug), '30', sys.executable, '-c', source, str(root)],
+                 str(debug), seconds, sys.executable, '-c', source, str(root)],
                 env=env, capture_output=True, text=True, timeout=60,
             )
             return result
@@ -116,6 +124,17 @@ root = Path(sys.argv[1])
 time.sleep(0.5)
 ''')
         self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_native_preflight_without_a_server_is_still_bounded_overall(self):
+        result = self.run_child('''
+from pathlib import Path
+import sys, time
+root = Path(sys.argv[1])
+(root / 'debug/xctest_runner_2026.log').write_text("Test Suite 'ClassificationTests' started.\\n")
+time.sleep(300)
+''', seconds='1')
+        self.assertEqual(result.returncode, 124, result.stderr)
+        self.assertIn('Maestro exceeded 1s', result.stderr)
 
     def test_real_driver_debug_errors_still_fail(self):
         result = self.run_child('''
