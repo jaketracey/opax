@@ -122,7 +122,7 @@ export function citeItems(target: RecordTarget): RowMenuLeaf[] {
 /**
  * A record's secondary actions, in one place (records.md 2.2): Cite as an
  * inline section (`displayInline`, so a citation is two taps from the
- * page), Copy link and Open on opax.com.au. Share is the reading
+ * page), Copy link and Open on the website. Share is the reading
  * toolbar's, or the pane bar's. Opening the menu calls no API.
  */
 export function recordActions(

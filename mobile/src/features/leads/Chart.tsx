@@ -20,6 +20,9 @@ import { chartRowLabel, type ChartRow, type LeadComparison } from './model';
 
 type Concentration = Extract<LeadComparison, { type: 'concentration' }>;
 
+// Narrowest table width in points at scale 1 where name and value columns both fit without wrapping the value into a squeezed column.
+const MIN_TWO_COLUMN_TABLE_WIDTH = 600;
+
 /**
  * A concentration's share chart: the five largest named participants and
  * the rest, each a bar on a common 0 to 100% scale with its amount and
@@ -40,7 +43,8 @@ export function ConcentrationChart({
   // Two real columns only when both have room. Measure the table rather
   // than the window so iPad panes and readable columns follow the same rule.
   const stacked =
-    isAccessibilityCategory(fontScale) || tableWidth < 600 * fontScale;
+    isAccessibilityCategory(fontScale) ||
+    tableWidth < MIN_TWO_COLUMN_TABLE_WIDTH * fontScale;
   return (
     <View testID={testID} style={styles.chart}>
       {table ? (
