@@ -179,15 +179,14 @@ export default function LeadDetail() {
   // The bar title fades in by scroll with no width at rest, so the back
   // button keeps its label (money-03), and truncates inside the bar items.
   const barTitleRef = useRef<View>(null);
-  const barTitle = useTitleOnScroll(
-    barTitleRef,
-    comparison?.heading || undefined,
-  );
+  const barTitle = useTitleOnScroll(barTitleRef, lead ? 'Lead' : undefined, {
+    trailing: 1,
+  });
   return (
     <>
       <RouteOptions
         options={{
-          title: comparison?.heading || 'Lead',
+          title: 'Lead',
           ...headerItems(
             lead
               ? pageItems({

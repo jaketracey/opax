@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { RouteOptions } from '../src/navigation/preview';
+import { withNavigationOptions } from './navigation-options';
 import { sheetPayload } from '../src/navigation/sheets';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
@@ -9,6 +10,7 @@ import { decodeDiscovery } from '../src/api/catalogs';
 import type { RecordResult } from '../src/api/client';
 import {
   Card,
+  Group,
   Heading,
   SourceSheet,
   Text as DesignText,
@@ -196,7 +198,44 @@ describe('a lead’s page', () => {
     await act(async () =>
       resolve({ data: discovery, stale: false, savedAt: 1, asOf: null }),
     );
-    expect(options().title).toBe(lead.comparison.heading);
+    expect(options().title).toBe('Lead');
+    await act(async () => r.unmount());
+  });
+
+  test('a scrolled lead reveals Lead rather than its comparison heading', async () => {
+    const lead = leads.find((l) => l.category === 'procurement_concentration')!;
+    mockParams.id = lead.id;
+    let options: Record<string, unknown> = {};
+    const r = await render(
+      withNavigationOptions(<LeadDetail />, (next) => {
+        options = next;
+      }),
+    );
+    const inline = () => (options.headerTitle as () => React.ReactElement)();
+    const heading = r.root
+      .findAllByType(Group)
+      .flatMap((group) => [group.props.children].flat())
+      .find(
+        (child) => child?.props?.children?.props?.testID === 'lead-heading',
+      );
+    heading.props.ref.current.measure = (
+      done: (...coordinates: number[]) => void,
+    ) => done(0, 0, 300, 80, 0, 140);
+    await act(async () =>
+      heading.props.onLayout({
+        nativeEvent: { layout: { y: 24, height: 80 } },
+      }),
+    );
+    const screen = () => r.root.findByProps({ testID: 'lead-screen' });
+    await act(async () => screen().props.onScroll(-44));
+    expect(inline().props.shown).toBe(false);
+    await act(async () => screen().props.onScroll(200));
+    expect(inline().props).toMatchObject({
+      title: 'Lead',
+      shown: true,
+      trailing: 1,
+    });
+    expect(texts(r.root)).toContain(lead.comparison.heading);
     await act(async () => r.unmount());
   });
 
