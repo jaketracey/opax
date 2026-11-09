@@ -1,0 +1,688 @@
+appId: au.com.opax.app
+name: 65 Money links from Today and Ask, all web families and native money routes
+---
+# journeys/money.md 4.12. These are required behaviour assertions, including
+# recipient award overlays and warm-link tab retention. See the lane's final
+# Follow-up lines for resolver gaps in the current source.
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-01
+      URL: https://opax.com.au/money
+      READY: money-view-summary
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-02
+      URL: https://opax.com.au/money?node=party%3ALabor
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-03
+      URL: https://opax.com.au/money/grants
+      READY: grants-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-04
+      URL: https://opax.com.au/money/grants?jur=qld
+      READY: grants-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-05
+      URL: https://opax.com.au/money/grants?jur=federal&program=go3141
+      READY: program-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-06
+      URL: https://opax.com.au/money/grants?largest=2026-08
+      READY: largest-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-07
+      URL: https://opax.com.au/money/grants?program=GO7867
+      READY: allocation-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-08
+      URL: https://opax.com.au/money/grants/federal/recipient/abn%3A19277850689
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-09
+      URL: https://opax.com.au/money/grants/federal/recipient/abn%3A19277850689?award=GA217859
+      READY: money-focus-name
+      AWARD: 'yes'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-10
+      URL: https://opax.com.au/subject/agency
+      READY: agencies-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-11
+      URL: https://opax.com.au/subject/agency/a-7431f054588d4251c0b4
+      READY: agency-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-12
+      URL: https://opax.com.au/subject/supplier/s-d921acc93dfeadc7a1f7?agency=a-aaa167b0097858604254
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-13
+      URL: https://opax.com.au/subject/donor/westpac%20banking%20corporation
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-14
+      URL: https://opax.com.au/discover?category=companies_in_both
+      READY: leads-lede
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-15
+      URL: https://opax.com.au/connections
+      READY: connections-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-16
+      URL: opax://public-money
+      READY: money-hub-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-17
+      URL: opax://money
+      READY: money-view-summary
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-18
+      URL: opax://money-record?node=donor%3Awestpac%20banking%20corporation
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-19
+      URL: opax://money-record?rid=abn%3A11602416697&jur=federal
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-20
+      URL: opax://money-node?node=party%3ALabor
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-21
+      URL: opax://money-item?kind=grant&jur=federal&program=go3141&id=GA217859
+      READY: money-item-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-22
+      URL: opax://grants?jur=federal
+      READY: grants-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-23
+      URL: opax://grant-program?jur=federal&id=go3141
+      READY: program-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-24
+      URL: opax://largest-grants?month=2026-08
+      READY: largest-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-25
+      URL: opax://agencies
+      READY: agencies-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-26
+      URL: opax://agency?id=a-7431f054588d4251c0b4
+      READY: agency-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-27
+      URL: opax://leads
+      READY: leads-lede
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-28
+      URL: opax://grants-allocation
+      READY: allocation-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-29
+      URL: opax://connections
+      READY: connections-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-30
+      URL: opax://money-donors
+      READY: money-donors-screen
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://
+      ROOT_ID: today-screen
+      TAB: today
+      BACK: Today
+      CASE: link-31
+      URL: opax://funding-by-seat-type
+      READY: seat-type-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-01
+      URL: https://opax.com.au/money
+      READY: money-view-summary
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-02
+      URL: https://opax.com.au/money?node=party%3ALabor
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-03
+      URL: https://opax.com.au/money/grants
+      READY: grants-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-04
+      URL: https://opax.com.au/money/grants?jur=qld
+      READY: grants-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-05
+      URL: https://opax.com.au/money/grants?jur=federal&program=go3141
+      READY: program-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-06
+      URL: https://opax.com.au/money/grants?largest=2026-08
+      READY: largest-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-07
+      URL: https://opax.com.au/money/grants?program=GO7867
+      READY: allocation-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-08
+      URL: https://opax.com.au/money/grants/federal/recipient/abn%3A19277850689
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-09
+      URL: https://opax.com.au/money/grants/federal/recipient/abn%3A19277850689?award=GA217859
+      READY: money-focus-name
+      AWARD: 'yes'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-10
+      URL: https://opax.com.au/subject/agency
+      READY: agencies-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-11
+      URL: https://opax.com.au/subject/agency/a-7431f054588d4251c0b4
+      READY: agency-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-12
+      URL: https://opax.com.au/subject/supplier/s-d921acc93dfeadc7a1f7?agency=a-aaa167b0097858604254
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-13
+      URL: https://opax.com.au/subject/donor/westpac%20banking%20corporation
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-14
+      URL: https://opax.com.au/discover?category=companies_in_both
+      READY: leads-lede
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-15
+      URL: https://opax.com.au/connections
+      READY: connections-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-16
+      URL: opax://public-money
+      READY: money-hub-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-17
+      URL: opax://money
+      READY: money-view-summary
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-18
+      URL: opax://money-record?node=donor%3Awestpac%20banking%20corporation
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-19
+      URL: opax://money-record?rid=abn%3A11602416697&jur=federal
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-20
+      URL: opax://money-node?node=party%3ALabor
+      READY: money-focus-name
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-21
+      URL: opax://money-item?kind=grant&jur=federal&program=go3141&id=GA217859
+      READY: money-item-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-22
+      URL: opax://grants?jur=federal
+      READY: grants-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-23
+      URL: opax://grant-program?jur=federal&id=go3141
+      READY: program-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-24
+      URL: opax://largest-grants?month=2026-08
+      READY: largest-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-25
+      URL: opax://agencies
+      READY: agencies-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-26
+      URL: opax://agency?id=a-7431f054588d4251c0b4
+      READY: agency-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-27
+      URL: opax://leads
+      READY: leads-lede
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-28
+      URL: opax://grants-allocation
+      READY: allocation-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-29
+      URL: opax://connections
+      READY: connections-title
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-30
+      URL: opax://money-donors
+      READY: money-donors-screen
+      AWARD: 'no'
+- runFlow:
+    file: support/money-link.yaml
+    env:
+      ROOT_URL: opax://ask
+      ROOT_ID: ask-screen
+      TAB: ask
+      BACK: Ask
+      CASE: link-31
+      URL: opax://funding-by-seat-type
+      READY: seat-type-title
+      AWARD: 'no'

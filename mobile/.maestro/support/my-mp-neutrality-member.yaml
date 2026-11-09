@@ -1,0 +1,92 @@
+appId: au.com.opax.app
+name: Equal Today, hero and profile affordances for one member
+---
+- launchApp:
+    clearState: true
+- openLink: opax://seat
+- assertVisible:
+    id: seat-sheet
+- tapOn: Electorate or member.s name
+- inputText: ${SEAT}
+- extendedWaitUntil:
+    visible:
+      id: seat-row-${SEAT_SLUG}
+    timeout: 30000
+- tapOn:
+    id: seat-row-${SEAT_SLUG}
+- extendedWaitUntil:
+    visible:
+      id: today-your-mp-member
+      text: ${MEMBER}.*
+    timeout: 60000
+- assertVisible:
+    id: today-your-mp-seat
+- assertVisible:
+    id: today-your-mp-sources
+- longPressOn:
+    id: today-your-mp-member
+- runFlow:
+    file: my-mp-neutrality-menu.yaml
+- tapOn:
+    point: 10%, 80%
+- openLink: opax://your-mp
+- extendedWaitUntil:
+    visible:
+      id: your-member-${SLUG}
+      text: ${MEMBER}.*
+    timeout: 30000
+- assertVisible:
+    id: your-profile-votes
+    text: Voting record.*
+- assertVisible:
+    id: your-profile-interests
+    text: Declared interests.*
+- assertVisible:
+    id: your-profile-pay
+    text: Pay and expenses.*
+- longPressOn:
+    id: your-member-${SLUG}
+- runFlow:
+    file: my-mp-neutrality-menu.yaml
+- tapOn:
+    point: 10%, 80%
+- tapOn:
+    id: your-member-${SLUG}
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+      text: ${MEMBER}
+    timeout: 60000
+- assertVisible:
+    id: person-your-mp
+    text: Your MP
+- assertVisible:
+    id: person-party
+- assertVisible:
+    id: person-electorate
+- assertVisible:
+    id: person-follow-off
+    text: Follow ${MEMBER}
+# The header has the same capsule set: Your MP, no party-specific badge.
+- runFlow:
+    when:
+      true: ${HAS_URL == 'yes'}
+    commands:
+      - assertVisible:
+          id: person-official
+          text: Parliament of Australia page.*
+- runFlow:
+    when:
+      true: ${HAS_URL == 'no'}
+    commands:
+      - assertNotVisible:
+          id: person-official
+- runFlow:
+    file: open-more.yaml
+    env:
+      NAME: ${MEMBER}
+- runFlow:
+    file: my-mp-neutrality-menu.yaml
+- tapOn:
+    point: 10%, 80%
+- takeScreenshot: ${EVIDENCE}/68-${SLUG}

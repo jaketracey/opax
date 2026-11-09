@@ -1,0 +1,82 @@
+appId: au.com.opax.app
+name: 66 My MP from first launch to the latest division and the official page
+---
+# Requires DATA-7 in the fixture: Grayndler's member has an aph.gov.au URL.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+    arguments:
+      OPAXWelcomeTour: 'on'
+      OPAXEditionAge: fresh
+      OPAXEditionCache: present
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-launch-cover
+    timeout: 10000
+# budget: first-launch-member
+- scrollUntilVisible:
+    element:
+      id: welcome-continue
+    timeout: 30000
+- tapOn:
+    id: welcome-continue
+- assertVisible:
+    id: welcome-seat
+# Large text: the native search field focuses on arrival. No field tap.
+- inputText: Grayndler
+- extendedWaitUntil:
+    visible:
+      id: seat-row-federal-representatives-nsw-grayndler
+    timeout: 30000
+- tapOn:
+    id: seat-row-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: today-your-mp
+    timeout: 60000
+- assertVisible:
+    id: today-your-mp-member
+    text: Anthony Albanese.*
+# end: first-launch-member
+- takeScreenshot: ${EVIDENCE}/66-member
+# budget: today-latest-vote
+- scrollUntilVisible:
+    element:
+      id: today-your-mp-latest-0
+    timeout: 30000
+- tapOn:
+    id: today-your-mp-latest-0
+- extendedWaitUntil:
+    visible:
+      id: bill-division-.*-body
+    timeout: 60000
+# end: today-latest-vote
+- assertVisible:
+    id: BackButton
+    text: Today
+- takeScreenshot: ${EVIDENCE}/66-latest-division
+- tapOn:
+    id: BackButton
+- assertVisible:
+    id: today-screen
+# budget: today-official-page
+- scrollUntilVisible:
+    element:
+      id: today-your-mp-member
+    direction: UP
+    timeout: 30000
+- longPressOn:
+    id: today-your-mp-member
+- tapOn: Parliament of Australia page
+- extendedWaitUntil:
+    visible:
+      id: debug-last-external-url
+      text: .*aph\.gov\.au.*
+    timeout: 15000
+# end: today-official-page
+- takeScreenshot: ${EVIDENCE}/66-official-page

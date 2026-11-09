@@ -1,0 +1,101 @@
+appId: au.com.opax.app
+name: 67 My MP entry points, one search row, save, replace, senator and a seat link
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-search
+- tapOn:
+    text: People, bills, topics and more
+- inputText: Albanese
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: search-result-anthony-albanese
+    timeout: 60000
+- assertVisible:
+    id: search-result-anthony-albanese
+    text: .*Member for Grayndler.*
+# A second occurrence would be a duplicate person result.
+- assertNotVisible:
+    text: Anthony Albanese,.*Member for Grayndler.*
+    index: 1
+- longPressOn:
+    id: search-result-anthony-albanese
+- tapOn: Set as my electorate
+- assertNotVisible: Replace .* with Grayndler\?
+- openLink: opax://your-mp
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+      text: Grayndler, New South Wales
+    timeout: 30000
+# A figure's source line, then its first original. Kept at two taps.
+# budget: figure-original
+- scrollUntilVisible:
+    element:
+      id: your-member-source
+    timeout: 30000
+- tapOn:
+    id: your-member-source
+- extendedWaitUntil:
+    visible:
+      id: your-member-source-sheet-original-0
+    timeout: 15000
+- tapOn:
+    id: your-member-source-sheet-original-0
+- assertVisible:
+    id: debug-last-external-url
+    text: https://.*
+# end: figure-original
+- takeScreenshot: ${EVIDENCE}/67-original
+- openLink: opax://search?q=Plibersek
+- extendedWaitUntil:
+    visible:
+      id: search-result-tanya-plibersek
+    timeout: 60000
+- longPressOn:
+    id: search-result-tanya-plibersek
+- tapOn: Set as my electorate
+- assertVisible: Replace Grayndler with Sydney\?
+- tapOn: Cancel
+# The saved electorate cannot offer to save itself again.
+- openLink: opax://electorate/federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: electorate-name
+    timeout: 30000
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: Grayndler
+- assertNotVisible: Set as my electorate
+- tapOn:
+    point: 10%, 80%
+- openLink: opax://seat
+- extendedWaitUntil:
+    visible:
+      id: seat-sheet
+    timeout: 15000
+- tapOn: Electorate or member.s name
+- inputText: Wong
+- extendedWaitUntil:
+    visible:
+      id: seat-person-lead-penny-wong
+      text: .*Senator for South Australia.*
+    timeout: 30000
+- tapOn:
+    id: seat-person-lead-penny-wong
+- extendedWaitUntil:
+    visible:
+      id: seat-state-sa
+    timeout: 15000
+- assertVisible: South Australia
+- takeScreenshot: ${EVIDENCE}/67-senator-state
+# A fresh seat deep link presents the chooser, even with a seat saved.
+- openLink: opax://your-mp
+- openLink: opax://seat
+- assertVisible:
+    id: seat-sheet
+- assertVisible:
+    id: seat-saved-row

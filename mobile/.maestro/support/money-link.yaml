@@ -1,0 +1,45 @@
+appId: au.com.opax.app
+name: A money link keeps the current tab and returns to its root
+---
+# Start each link at a root so Back's title proves the owning tab. Merely
+# seeing the tab bar would also pass if the link silently switched tabs.
+- launchApp:
+    clearState: true
+- openLink: ${ROOT_URL}
+- extendedWaitUntil:
+    visible:
+      id: ${ROOT_ID}
+    timeout: 60000
+- openLink: ${URL}
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: ${READY}
+    timeout: 120000
+- assertVisible:
+    id: BackButton
+    text: ${BACK}
+- assertVisible:
+    id: tab-${TAB}
+- runFlow:
+    when:
+      true: ${AWARD == 'yes'}
+    commands:
+      - assertVisible:
+          id: money-record-screen
+      - assertVisible:
+          id: money-item-title
+      - assertVisible:
+          id: money-item-original-0
+- takeScreenshot: ${EVIDENCE}/65-${TAB}-${CASE}
+- runFlow:
+    when:
+      true: ${AWARD == 'yes'}
+    commands:
+      - tapOn: Done
+- tapOn:
+    id: BackButton
+- assertVisible:
+    id: ${ROOT_ID}
