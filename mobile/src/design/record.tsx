@@ -247,11 +247,26 @@ export function PageFoot({
           pressed ? { backgroundColor: highlight } : null,
         ]}
       >
-        <Text wordSafe variant="footnote" tone="navy">
-          {variant === 'today'
-            ? copy.reportCorrection
-            : `Report a correction: ${copy.correctionsEmail}`}
-        </Text>
+        {variant === 'today' ? (
+          <Text wordSafe variant="footnote" tone="navy">
+            {copy.reportCorrection}
+          </Text>
+        ) : (
+          <>
+            <Text wordSafe variant="footnote" tone="navy">
+              Report a correction:
+            </Text>
+            <Text
+              variant="footnote"
+              tone="navy"
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.5}
+            >
+              {copy.correctionsEmail}
+            </Text>
+          </>
+        )}
       </Pressable>
       {variant === 'authorised' ? (
         <Text wordSafe variant="footnote" tone="inkSoft">

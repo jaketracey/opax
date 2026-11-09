@@ -1442,6 +1442,11 @@ describe('a lead’s page', () => {
       ),
     ).toHaveLength(0);
     expect(texts(byTestID(root, 'lead-evidence'))).toContain('Example records');
+    // Examples are a page section, outside the method's tight text rhythm.
+    const method = byTestID(root, 'lead-method');
+    expect(
+      method.findAll((node) => node.props.testID === 'lead-evidence'),
+    ).toHaveLength(0);
     expect(texts(root).join('\n')).not.toMatch(/→|Example records \(/);
     lead.evidence.forEach((item, i) => {
       const row = evidenceRow(item)!;

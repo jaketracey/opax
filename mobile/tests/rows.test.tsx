@@ -781,30 +781,44 @@ test('MachinePill is a named button on a navy wash and standalone choices stay c
   expect(choice.findAllByType(ChoiceChip)).toHaveLength(1);
   expect(choice.findAllByType(Pressable)).toHaveLength(0);
 });
-test('PageFoot orders authorisation, the correction link and response time', () => {
-  expect(strings(render(<PageFoot variant="today" />).root)).toContain(
-    'OPAX is independent and non-partisan. It is not a government app.',
-  );
-  const root = render(<PageFoot variant="authorised" />).root;
-  expect(strings(root)).toEqual([
-    AUTHORISATION_LINE,
-    'Report a correction: corrections@opax.com.au',
-    'We aim to respond within 2 business days.',
-  ]);
-  expect(
-    root
+test.each([1, 3.571])(
+  'PageFoot keeps the address whole at fontScale %s',
+  (scale) => {
+    size(scale);
+    expect(strings(render(<PageFoot variant="today" />).root)).toContain(
+      'OPAX is independent and non-partisan. It is not a government app.',
+    );
+    const root = render(<PageFoot variant="authorised" />).root;
+    expect(strings(root)).toEqual([
+      AUTHORISATION_LINE,
+      'Report a correction:',
+      'corrections@opax.com.au',
+      'We aim to respond within 2 business days.',
+    ]);
+    expect(
+      root
+        .findAllByType(Text)
+        .map((node) => [node.props.variant, node.props.tone]),
+    ).toEqual([
+      ['footnote', 'inkSoft'],
+      ['footnote', 'navy'],
+      ['footnote', 'navy'],
+      ['footnote', 'inkSoft'],
+    ]);
+    const address = root
       .findAllByType(Text)
-      .map((node) => [node.props.variant, node.props.tone]),
-  ).toEqual([
-    ['footnote', 'inkSoft'],
-    ['footnote', 'navy'],
-    ['footnote', 'inkSoft'],
-  ]);
-  expect(
-    root.find((node) => node.props.accessibilityRole === 'link').props
-      .accessibilityLabel,
-  ).toBe('Report a correction by email to corrections@opax.com.au');
-});
+      .find((node) => node.props.children === 'corrections@opax.com.au')!;
+    expect(address.props).toMatchObject({
+      numberOfLines: 1,
+      adjustsFontSizeToFit: true,
+      minimumFontScale: 0.5,
+    });
+    expect(
+      root.find((node) => node.props.accessibilityRole === 'link').props
+        .accessibilityLabel,
+    ).toBe('Report a correction by email to corrections@opax.com.au');
+  },
+);
 
 test('standard bill and person menus stay available when split rows select', () => {
   for (const element of [
