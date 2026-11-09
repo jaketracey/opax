@@ -253,9 +253,14 @@ const testIDs = (root: ReactTestInstance) =>
         typeof node.type === 'string' && typeof node.props.testID === 'string',
     )
     .map((node) => node.props.testID as string);
-/** The href of the link wrapping an element: where tapping it goes. */
+/** The href associated with this target: where tapping it goes. */
 function hrefOf(root: ReactTestInstance, testID: string) {
   let node: ReactTestInstance | null = byTestID(root, testID);
+  const inner = node.findAll((child) => child.type === 'ExpoLink');
+  if (inner.length) {
+    expect(inner).toHaveLength(1);
+    return inner[0]!.props.href;
+  }
   while (node && node.type !== 'ExpoLink') node = node.parent;
   return node?.props.href;
 }

@@ -204,9 +204,10 @@ test('election rows push the election screen, newest first', async () => {
   expect(links[0]!.props.href.params.seat).toBe(
     seat('Grayndler').electorate_id,
   );
-  expect(
-    links[0]!.findAll((n) => n.props.testID === 'election-row-0').length,
-  ).toBeGreaterThan(0);
+  const firstRow = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'election-row-0',
+  );
+  expect(firstRow.findAll((n) => n === links[0])).toHaveLength(1);
   expect(has(r, 'election-expand-0')).toBe(false);
   await act(async () => r.unmount());
 });

@@ -514,11 +514,11 @@ test('LatestRow keeps its year and caps both glyphs with the standard row gaps',
       node.props?.accessibilityLabel === label &&
       node.props?.accessibilityRole === 'link',
   )[0]!;
-  const style = StyleSheet.flatten(
-    typeof row.props.style === 'function'
-      ? row.props.style({ pressed: false })
-      : row.props.style,
+  const pressable = row.find(
+    (node) =>
+      typeof node.type !== 'string' && typeof node.props.style === 'function',
   );
+  const style = StyleSheet.flatten(pressable.props.style({ pressed: false }));
   expect(style.gap).toBe(rhythm.tight);
   const words = renderer!.root
     .findAllByType(View)

@@ -9,8 +9,9 @@ import {
   Alert,
   Platform,
   Pressable,
+  StyleSheet,
+  View,
   type PressableProps,
-  type View,
 } from 'react-native';
 import { Link, router, type Href } from 'expo-router';
 import { canonicalUrl, openOnWeb } from '../navigation/external';
@@ -184,10 +185,27 @@ export function RowLink({
   const items = menuSections(menu);
   const leaves = menuLeaves(items);
   const actions = rowAccessibilityActions(items);
+  const open = () => {
+    if (child.props.disabled || child.props.accessibilityState?.disabled)
+      return;
+    if (select) select();
+    else router.push(href);
+  };
   const accessibility: Pick<
     PressableProps,
-    'accessibilityActions' | 'onAccessibilityAction'
+    | 'accessible'
+    | 'accessibilityRole'
+    | 'role'
+    | 'accessibilityElementsHidden'
+    | 'importantForAccessibility'
+    | 'accessibilityActions'
+    | 'onAccessibilityAction'
   > = {
+    accessible: true,
+    accessibilityRole: 'link',
+    role: 'link',
+    accessibilityElementsHidden: false,
+    importantForAccessibility: 'yes',
     accessibilityActions: [
       ...(child.props.accessibilityActions ?? []),
       ...actions,
@@ -205,25 +223,46 @@ export function RowLink({
       <Pressable
         {...child.props}
         {...accessibility}
-        onPress={() => (select ? select() : router.push(href))}
+        onPress={open}
         onLongPress={leaves.length ? () => showMenu('', leaves) : undefined}
       />
     );
-  // expo-router 57.0.24: build/link/elements.js:170-183 forwards Trigger props
-  // through Slot; Preview (:132-151) and Menu (:94-102) set no hiding flags.
-  // build/link/LinkWithPreview.js:101-128 wraps the trigger in NativeLinkPreview;
-  // build/link/preview/native.js:30-34 only forwards props. None sets accessible,
-  // accessibilityElementsHidden or importantForAccessibility. Native mounting
-  // (ios/LinkPreview/LinkPreviewNativeView.swift:56-78) also leaves them intact.
-  // Keep the trigger explicitly exposed, including its custom menu actions.
+  const hasNativeHost = (preview && !select) || items.length > 0;
+  // expo-router 57.0.24 LinkWithPreview hardcodes a zero-frame native host
+  // (`display: contents`, disableForceFlatten). iOS omits its whole subtree
+  // from accessibility, even with accessible/importantForAccessibility on the
+  // trigger. Link props only reach BaseExpoRouterLink, not that native host.
+  // Give accessibility a real box outside it, while leaving the Pressable,
+  // native context-menu interaction and preview/zoom machinery intact inside.
+  const semantics = Object.fromEntries(
+    Object.entries(child.props).filter(
+      ([prop]) =>
+        prop.startsWith('accessibility') ||
+        prop.startsWith('onAccessibility') ||
+        prop.startsWith('aria-'),
+    ),
+  );
+  const style = child.props.style;
+  const layout = StyleSheet.flatten(
+    typeof style === 'function' ? style({ pressed: false }) : style,
+  );
+  const flexItemStyle = Object.fromEntries(
+    (['flex', 'flexGrow', 'flexShrink', 'flexBasis', 'alignSelf'] as const)
+      .filter((prop) => layout?.[prop] !== undefined)
+      .map((prop) => [prop, layout![prop]]),
+  );
   const trigger = cloneElement(child, {
     ...accessibility,
-    accessible: true,
-    accessibilityElementsHidden: false,
-    importantForAccessibility: 'yes',
+    ...(hasNativeHost
+      ? {
+          // The outer host groups this content, including inferred labels.
+          accessible: false,
+          testID: undefined,
+        }
+      : {}),
     onPress: undefined,
   });
-  return (
+  const link = (
     <Link
       href={href}
       asChild
@@ -242,6 +281,25 @@ export function RowLink({
       {preview && !select ? <Link.Preview /> : null}
       {items.length ? <Link.Menu>{nativeItems(items)}</Link.Menu> : null}
     </Link>
+  );
+  // A plain Link has no preview ancestor, so its Pressable is already the
+  // accessible host. Account links and split selections need no extra box.
+  if (!hasNativeHost) return link;
+  return (
+    <View
+      {...semantics}
+      {...accessibility}
+      testID={child.props.testID}
+      collapsable={false}
+      pointerEvents="box-none"
+      onAccessibilityTap={open}
+      // The host is now the parent's flex item, so mirror its flex and
+      // alignment properties. Spacing, dimensions, colours and the original
+      // style function stay on the Pressable, protected from Slot by RowTrigger.
+      style={flexItemStyle}
+    >
+      {link}
+    </View>
   );
 }
 

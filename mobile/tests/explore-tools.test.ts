@@ -685,11 +685,7 @@ describe('words per dollar', () => {
       .map((n) => n.props.testID.slice('wd-row-'.length));
     expect(drawn).toEqual(rows.map((row: { party: string }) => row.party));
     const linkTo = (id: string) =>
-      r.root.findAll(
-        (n) =>
-          (n.type as unknown) === 'Link' &&
-          n.findAll((c) => c.props.testID === id).length > 0,
-      )[0];
+      host(r, id)!.find((n) => (n.type as unknown) === 'Link');
     const paid = rows.find((row: { money: number }) => row.money > 0);
     expect(paid).toBeDefined();
     expect(host(r, `wd-money-${paid.party}`)!.props.accessibilityLabel).toBe(
