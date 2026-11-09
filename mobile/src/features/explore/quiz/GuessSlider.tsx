@@ -1,3 +1,18 @@
+import {
+  Host as ComposeHost,
+  Slider as ComposeSlider,
+} from '@expo/ui/jetpack-compose';
+import {
+  testID as composeTestID,
+  semantics,
+} from '@expo/ui/jetpack-compose/modifiers';
+import { Host, Slider } from '@expo/ui/swift-ui';
+import {
+  accessibilityIdentifier,
+  accessibilityLabel,
+  accessibilityValue,
+  disabled,
+} from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
 import {
   InputAccessoryView,
@@ -6,13 +21,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Host, Slider } from '@expo/ui/swift-ui';
-import {
-  accessibilityIdentifier,
-  accessibilityLabel,
-  accessibilityValue,
-  disabled,
-} from '@expo/ui/swift-ui/modifiers';
 import { useAccessibilitySize } from '../../../design/accessibility';
 import { Button, Field } from '../../../design/controls';
 import { Icon } from '../../../design/icon';
@@ -42,9 +50,7 @@ const trackInset = 14;
  * typed field), the native slider, and its range. A typed value is kept
  * exactly; only a drag rounds, to two significant figures.
  *
- * Android has the typed value only until `@expo/ui/jetpack-compose` is a
- * reviewed import (scripts/transport-policy.js); its Compose `Slider` then
- * takes the same mapping.
+ * Android’s Compose Slider takes the same value mapping and retains typed input.
  */
 export function GuessSlider({
   q,
@@ -176,7 +182,37 @@ export function GuessSlider({
               ]}
             />
           </Host>
-        ) : null}
+        ) : (
+          <ComposeHost
+            style={{ minHeight: minimumTarget }}
+            matchContents={{ vertical: true }}
+          >
+            <ComposeSlider
+              value={toSlider(q, value)}
+              min={range.min}
+              max={range.max}
+              steps={
+                range.step
+                  ? Math.max(
+                      0,
+                      Math.round((range.max - range.min) / range.step) - 1,
+                    )
+                  : 0
+              }
+              enabled={!revealed}
+              onValueChange={drag}
+              colors={{
+                thumbColor: colors.navy,
+                activeTrackColor: colors.navy,
+                inactiveTrackColor: colors.dividerSubtle,
+              }}
+              modifiers={[
+                semantics({ contentDescription: `Your guess, ${shown}` }),
+                composeTestID('quiz-slider'),
+              ]}
+            />
+          </ComposeHost>
+        )}
         {tick !== null ? (
           <View
             pointerEvents="none"

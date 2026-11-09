@@ -1,28 +1,31 @@
+import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { reports } from '../../api/runtime';
+import { useRead } from '../../api/useRead';
 import {
+  Button,
+  Group,
+  LinkRow,
   Screen,
   Section,
-  Group,
   Text,
-  Button,
-  LinkRow,
   useAccessibilitySize,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
+import { topicRoute } from '../../navigation/routes/search';
 import { topicNames } from '../reports/model';
-import { useRead, ReadState } from '../reports/parts';
-import { openTopicWindow, openRecord } from '../reports/open';
+import { openRecord } from '../reports/open';
+import { ReadState } from '../reports/parts';
 import { MATRIX_NOTE } from './model';
-import { ExploreHeader } from './parts';
+import { ExploreChrome } from './parts';
 export default function Matrix() {
   const read = useRead(reports.matrix),
     ax = useAccessibilitySize();
   return (
     <>
-      <ExploreHeader title="Debates" game="matrix" />
+      <ExploreChrome title="Debates" game="matrix" />
       <Screen column="wide" testID="explore-matrix-screen">
-        <Section rule={false}>
+        <Section>
           <Text wordSafe variant="body">
             Each party’s share of a debate’s labelled speeches
           </Text>
@@ -50,7 +53,7 @@ export default function Matrix() {
                     <LinkRow
                       title={`${(data.totals[slug] ?? 0).toLocaleString('en-AU')} labelled speeches`}
                       onPress={() =>
-                        openTopicWindow(slug, {}, topicNames[slug]!)
+                        router.push(topicRoute(slug, {}, topicNames[slug]!))
                       }
                     />
                     <View
@@ -76,10 +79,12 @@ export default function Matrix() {
                                 label={label}
                                 accessibilityHint={`${count.toLocaleString('en-AU')} of ${total.toLocaleString('en-AU')} labelled ${topicNames[slug]} speeches. Opens the topic.`}
                                 onPress={() =>
-                                  openTopicWindow(
-                                    slug,
-                                    { party },
-                                    topicNames[slug]!,
+                                  router.push(
+                                    topicRoute(
+                                      slug,
+                                      { party },
+                                      topicNames[slug]!,
+                                    ),
                                   )
                                 }
                                 testID={`matrix-cell-${i}-${j}`}

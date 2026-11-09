@@ -1,6 +1,7 @@
+import { Stack } from 'expo-router';
 import { useMemo } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
-import { Stack } from 'expo-router';
+import { formatCount } from '../../design/format';
 import {
   Divider,
   InlineError,
@@ -12,7 +13,7 @@ import {
   useScreenColumn,
   type SourceOriginal,
 } from '../../design/primitives';
-import { formatCount } from '../../design/format';
+import { StatePageProvider } from '../../design/states';
 import { colors, rhythm } from '../../design/tokens';
 import { useRead } from '../methods/read';
 import {
@@ -23,8 +24,8 @@ import {
   sourcesCopy as text,
   useBarSearch,
 } from '../sources/parts';
-import { explore } from './runtime';
 import type { YearPicture } from './pictures';
+import { explore } from './runtime';
 
 /**
  * A photograph's originals: its Wikimedia Commons page, then its licence.
@@ -97,71 +98,73 @@ export function PhotoCreditsList() {
           ...paperBar,
         }}
       />
-      <SectionList
-        testID="explore-photo-credits"
-        style={styles.screen}
-        contentContainerStyle={[styles.content, column.content]}
-        onLayout={column.onLayout}
-        contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        stickySectionHeadersEnabled={false}
-        sections={sections}
-        keyExtractor={(p) => p.file}
-        ListHeaderComponent={
-          <RegionProvider value={column.inner}>
-            {column.bar}
-            {!record ? (
-              read.error ? (
-                <InlineError
-                  subject={text.photos}
-                  message={text.photosError}
-                  onRetry={read.retry}
-                  testID="explore-photo-credits-error"
-                />
-              ) : (
-                <Skeleton count={8} label={text.loadingPhotos} />
-              )
-            ) : null}
-          </RegionProvider>
-        }
-        renderSectionHeader={({ section }) => (
-          <View
-            accessibilityRole="header"
-            accessible
-            accessibilityLabel={`${section.year}, ${formatCount(section.data.length)} photographs`}
-            style={styles.year}
-          >
-            <Text wordSafe variant="groupHeader" style={styles.grow}>
-              {section.year}
-            </Text>
-            <Text wordSafe variant="groupHeader" tabular>
-              {formatCount(section.data.length)}
-            </Text>
-          </View>
-        )}
-        ItemSeparatorComponent={() => <Divider variant="subtle" />}
-        renderItem={({ item: p }) => (
-          <CreditRow
-            title={p.caption}
-            detail={`Photo: ${p.author} · ${p.licence}`}
-            url={p.source_url}
-            label="Wikimedia Commons"
-            testID={`explore-photo-source-${p.file}`}
-          />
-        )}
-        ListEmptyComponent={
-          record && search.query ? (
-            <NoResults
-              query={search.query}
-              body={text.tryName}
-              testID="explore-photo-credits-empty"
+      <StatePageProvider refreshing={false}>
+        <SectionList
+          testID="explore-photo-credits"
+          style={styles.screen}
+          contentContainerStyle={[styles.content, column.content]}
+          onLayout={column.onLayout}
+          contentInsetAdjustmentBehavior="automatic"
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          stickySectionHeadersEnabled={false}
+          sections={sections}
+          keyExtractor={(p) => p.file}
+          ListHeaderComponent={
+            <RegionProvider value={column.inner}>
+              {column.bar}
+              {!record ? (
+                read.error ? (
+                  <InlineError
+                    subject={text.photos}
+                    message={text.photosError}
+                    onRetry={read.retry}
+                    testID="explore-photo-credits-error"
+                  />
+                ) : (
+                  <Skeleton count={8} label={text.loadingPhotos} />
+                )
+              ) : null}
+            </RegionProvider>
+          }
+          renderSectionHeader={({ section }) => (
+            <View
+              accessibilityRole="header"
+              accessible
+              accessibilityLabel={`${section.year}, ${formatCount(section.data.length)} photographs`}
+              style={styles.year}
+            >
+              <Text wordSafe variant="groupHeader" style={styles.grow}>
+                {section.year}
+              </Text>
+              <Text wordSafe variant="groupHeader" tabular>
+                {formatCount(section.data.length)}
+              </Text>
+            </View>
+          )}
+          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          renderItem={({ item: p }) => (
+            <CreditRow
+              title={p.caption}
+              detail={`Photo: ${p.author} · ${p.licence}`}
+              url={p.source_url}
+              label="Wikimedia Commons"
+              testID={`explore-photo-source-${p.file}`}
             />
-          ) : null
-        }
-        ListFooterComponent={footer}
-        initialNumToRender={12}
-      />
+          )}
+          ListEmptyComponent={
+            record && search.query ? (
+              <NoResults
+                query={search.query}
+                body={text.tryName}
+                testID="explore-photo-credits-empty"
+              />
+            ) : null
+          }
+          ListFooterComponent={footer}
+          initialNumToRender={12}
+        />
+      </StatePageProvider>
     </SidebarSafe>
   );
 }

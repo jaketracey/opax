@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Animated, Easing, Image, StyleSheet, View } from 'react-native';
-import { yearPictures } from '../../api/runtime';
 import { localImageURI } from '../../api/image-policy';
+import { yearPictures } from '../../api/runtime';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { useReduceMotion } from '../../design/accessibility';
-import { Button, Icon, Text } from '../../design/primitives';
+import { InlineError } from '../../design/primitives';
 import { colors, radii, rhythm } from '../../design/tokens';
-import { symbols } from '../../design/symbols';
 
-/** A photo's black ground in every scheme: no token role draws it (yet). */
-export const PHOTO_BLACK = '#000';
+/** A photo’s black ground in every scheme. */
+export const PHOTO_BLACK = colors.photoGround;
 
 /**
  * One year photograph in its frame. Native Image reads only a device cache
@@ -119,19 +118,10 @@ export function Picture({
       ) : null}
       {current?.failed ? (
         <View style={styles.failed}>
-          <Icon name={symbols.error} size={28} tone="inkSoft" />
-          <Text
-            wordSafe
-            variant="secondary"
-            tone="inkSoft"
-            style={styles.center}
-          >
-            {"Photo couldn't be loaded."}
-          </Text>
-          <Button
-            label="Try again"
-            variant="plain"
-            onPress={() => setRetry((v) => v + 1)}
+          <InlineError
+            subject="Photo"
+            message="Photo couldn't be loaded."
+            onRetry={() => setRetry((v) => v + 1)}
           />
         </View>
       ) : null}

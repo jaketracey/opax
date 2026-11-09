@@ -1,6 +1,7 @@
+import type { Href } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import type { Href } from 'expo-router';
+import { formatMoney } from '../../design/format';
 import {
   Icon,
   PartyLabel,
@@ -8,7 +9,6 @@ import {
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
-import { formatMoney } from '../../design/format';
 import { symbols } from '../../design/symbols';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { moneyRoute } from '../../navigation/routes/money-map';
@@ -133,7 +133,7 @@ export function PairRow({
   const stacked = useAccessibilitySize();
   const moneyHref =
     row.money > 0
-      ? (pairMoneyRoute(row.party, pairing.industries[0]) as Href)
+      ? (pairMoneyRoute(row.party, pairing.industries.join(',')) as Href)
       : null;
   const speechHref = hasSpeeches(row)
     ? topicRoute(pairing.topic, { party: row.party }, topicLabel(pairing.topic))

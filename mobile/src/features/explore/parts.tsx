@@ -1,5 +1,5 @@
-import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
 import { haptic } from '../../design/haptics';
 import type { RowMenuAction } from '../../design/row-link';
 import { headerItems, pageItems } from '../../navigation/chrome';
@@ -82,6 +82,7 @@ export function ExploreChrome({
   name,
   sort,
   share,
+  menu,
 }: {
   /** A fixed bar title; leave unset for the title by scroll. */
   title?: string;
@@ -92,8 +93,9 @@ export function ExploreChrome({
   /** The screen's name for Share and VoiceOver; defaults to the tool's. */
   name?: string;
   sort?: ExploreSort;
+  menu?: RowMenuAction[];
   /** Replaces the shared title: the quiz result shares its score. */
-  share?: { title: string };
+  share?: { title: string; text?: string };
 }) {
   const label = name ?? toolName(game);
   const path = exploreWebPath(game, params);
@@ -105,25 +107,18 @@ export function ExploreChrome({
           pageItems({
             name: label,
             share: () =>
-              void shareRecord({ path, title: share?.title ?? label }),
-            menu: exploreMenu({ name: label, path, sort }),
+              void shareRecord({
+                path,
+                title: share?.title ?? label,
+                ...(share?.text ? { text: share.text } : {}),
+              }),
+            menu: [
+              ...(menu ?? []),
+              ...exploreMenu({ name: label, path, sort }),
+            ],
           }),
         ),
       }}
     />
   );
-}
-
-/**
- * @deprecated Use ExploreChrome. Kept for the Explore tools until wave 6
- * switches their imports; it draws the same bar with a fixed title.
- */
-export function ExploreHeader({
-  title,
-  game,
-}: {
-  title: string;
-  game?: string;
-}) {
-  return <ExploreChrome title={title} game={game} />;
 }

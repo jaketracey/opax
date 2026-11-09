@@ -18,6 +18,7 @@ import java.util.UUID
 class ShareRequest : Record {
   @Field var url: String = ""
   @Field var title: String = ""
+  @Field var text: String? = null
 }
 
 class TextShareRequest : Record {
@@ -43,7 +44,7 @@ class OpaxShareModule : Module() {
         uri.userInfo == null && uri.port == -1) { "Only canonical https links can be shared" }
       val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
-        putExtra(Intent.EXTRA_TEXT, request.url)
+        putExtra(Intent.EXTRA_TEXT, listOfNotNull(request.text?.trim()?.take(4000)?.takeIf { it.isNotEmpty() }, request.url).joinToString("\n"))
         putExtra(Intent.EXTRA_SUBJECT, request.title)
       }
       appContext.throwingActivity.startActivity(Intent.createChooser(intent, request.title))

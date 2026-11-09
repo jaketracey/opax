@@ -1,18 +1,19 @@
+import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
+import type { NativeStackHeaderItem } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
+  Text as NativeText,
   PanResponder,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text as NativeText,
-  View,
   useWindowDimensions,
+  View,
 } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
-import type { NativeStackHeaderItem } from 'expo-router';
+import { useRead } from '../../api/useRead';
 import {
   useAccessibilitySize,
   useIncreaseContrast,
@@ -22,11 +23,10 @@ import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/primitives';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { useRead } from '../reports/parts';
-import { explore } from './runtime';
 import { PHOTO_BLACK, Picture } from './Picture';
 import { openPhotoSource, photoIndex, pictureKey } from './YearGallery';
 import type { YearPicture } from './pictures';
+import { explore } from './runtime';
 
 const close = () => router.back();
 /** "2 of 6"; "2/6" at accessibility sizes, before it would wrap. */
@@ -219,7 +219,7 @@ export default function PhotoViewer() {
         },
       }
     : null;
-  const band = contrast ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.7)';
+  const band = contrast ? colors.photoScrimStrong : colors.photoScrim;
   const glass = Platform.OS === 'ios' && isLiquidGlassAvailable();
   return (
     <View
@@ -233,7 +233,7 @@ export default function PhotoViewer() {
           headerShown: chrome,
           title: current ? pageTitle(shown, photos.length, large) : '',
           headerTransparent: true,
-          headerStyle: { backgroundColor: 'rgba(0,0,0,0.4)' },
+          headerStyle: { backgroundColor: colors.photoBarScrim },
           headerTintColor: colors.onBand,
           headerTitleStyle: { color: colors.onBand },
           headerBackVisible: false,

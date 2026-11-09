@@ -59,6 +59,7 @@ func anchorPopover(_ controller: UIViewController, in presenter: UIViewControlle
 struct ShareRequest: Record {
   @Field var url: String = ""
   @Field var title: String = ""
+  @Field var text: String? = nil
 }
 
 struct TextShareRequest: Record {
@@ -129,7 +130,9 @@ public final class OpaxShareModule: Module {
         presenter = presented
       }
       let item = OpaxLinkItem(url: url, title: request.title, icon: self.appIcon())
-      let controller = UIActivityViewController(activityItems: [item], applicationActivities: nil)
+      let sentence = request.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+      let items: [Any] = sentence.isEmpty ? [item] : [String(sentence.prefix(4000)), item]
+      let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
       anchorPopover(controller, in: presenter)
       controller.completionWithItemsHandler = { _, completed, _, _ in
         promise.resolve(completed)

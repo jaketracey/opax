@@ -5,11 +5,13 @@ import {
   View,
   type ScrollView,
 } from 'react-native';
+import { useOffline } from '../../api/useOffline';
 import { useReduceMotion } from '../../design/accessibility';
 import { useLayout } from '../../design/adaptive';
 import { Button } from '../../design/controls';
 import { formatCount } from '../../design/format';
 import { Screen } from '../../design/layout';
+import { OfflineLine } from '../../design/states';
 import { rhythm } from '../../design/tokens';
 import { ExploreChrome, toolName } from './parts';
 import {
@@ -56,6 +58,7 @@ export default function Quiz({
   /** Open straight on the round in progress. */
   resume?: boolean;
 }) {
+  const offline = useOffline();
   const session = useQuizSession();
   const inProgress = useQuizInProgress();
   const single = useMemo(() => frontPageQuestion(questionId), [questionId]);
@@ -245,6 +248,11 @@ export default function Quiz({
                   summary.correct,
                   summary.round.length,
                 ),
+                text: quizShareText(
+                  summary.points,
+                  summary.correct,
+                  summary.round.length,
+                ),
               }
             : undefined
         }
@@ -256,6 +264,13 @@ export default function Quiz({
         testID="explore-quiz-screen"
       >
         <ColumnWidth onWidth={setWidth} />
+        {offline && mode === 'intro' ? (
+          <OfflineLine
+            savedAt={null}
+            message="You're offline. The record quiz still works."
+            testID="quiz-offline"
+          />
+        ) : null}
         {mode === 'round' && round && q ? (
           <ProgressStrip
             index={round.index}

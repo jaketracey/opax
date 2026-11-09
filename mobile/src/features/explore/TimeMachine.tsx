@@ -1,8 +1,8 @@
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
-import { isOffline } from '../CatalogState';
+import { useRead } from '../../api/useRead';
 import {
   ContentUnavailable,
   InlineError,
@@ -12,10 +12,10 @@ import {
   copy,
 } from '../../design/primitives';
 import { colors, radii, rhythm } from '../../design/tokens';
-import { useRead } from '../reports/parts';
-import { explore } from './runtime';
-import { ExploreHeader } from './parts';
+import { isOffline } from '../CatalogState';
+import { ExploreChrome } from './parts';
 import { readExploreChoices, saveExploreChoice } from './repository';
+import { explore } from './runtime';
 import { YearBills } from './YearBills';
 import { YearBrief } from './YearBrief';
 import { YearGallery } from './YearGallery';
@@ -92,7 +92,7 @@ export default function TimeMachine() {
   const shown = year ?? defaultYear();
   return (
     <>
-      <ExploreHeader title="Time machine" game="tm" />
+      <ExploreChrome name="Time machine" game="tm" />
       <YearPage
         key={shown}
         year={shown}

@@ -51,7 +51,13 @@ export function decodePictures(value: unknown): Record<string, YearPicture[]> {
           event: nonempty(p.event),
           date: nullable(nonempty)(p.date),
           author: nonempty(p.author),
-          credit: nonempty(p.credit),
+          credit: /^(own work|self[- ](?:made|photographed))\.?$/i.test(
+            nonempty(p.credit),
+          )
+            ? /^(own work|unknown|anonymous)\.?$/i.test(nonempty(p.author))
+              ? ''
+              : nonempty(p.author)
+            : nonempty(p.credit),
           licence: nonempty(p.licence),
           licence_url: nullable(url)(p.licence_url),
           source_url: url(p.source_url),

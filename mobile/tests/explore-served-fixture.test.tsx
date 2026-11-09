@@ -1,20 +1,20 @@
 import { act } from 'react';
 import { StyleSheet } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { exploreFixture } from '../scripts/explore-fixture';
+import { reportsFixture } from '../scripts/reports-fixture';
 import { Button, PopUpButton, Text } from '../src/design/primitives';
 import Matrix from '../src/features/explore/Matrix';
+import { pairSpeechText } from '../src/features/explore/PairRow';
 import WordsDollars, {
   pairFigures,
 } from '../src/features/explore/WordsDollars';
-import { pairSpeechText } from '../src/features/explore/PairRow';
 import { pairings } from '../src/features/explore/model';
 import { decodeDatedMatrix } from '../src/features/explore/repository';
 import {
   decodeIndustryMoney,
   decodeMatrix,
 } from '../src/features/reports/model';
-import { exploreFixture } from '../scripts/explore-fixture';
-import { reportsFixture } from '../scripts/reports-fixture';
 import { pinnedBytes } from './pinned';
 
 // The bytes the e2e fixture server sends for a path, in its own order
@@ -132,6 +132,7 @@ describe('Who owns which debate, on the served fixture', () => {
     const raw = json('/api/matrix');
     expect(Object.keys(raw as object).sort()).toEqual([
       'cells',
+      'generated_at',
       'labelled',
       'parties',
       'totals',

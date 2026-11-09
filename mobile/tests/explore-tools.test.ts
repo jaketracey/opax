@@ -1,9 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { ApiClient } from '../src/api/client';
+import { reportsFixture } from '../scripts/reports-fixture';
 import { CatalogCache } from '../src/api/cache';
+import { ApiClient } from '../src/api/client';
 import { assertAllowedPath } from '../src/api/policy';
+import { isReportsPaidPath } from '../src/api/reports-policy';
 import {
+  MATRIX_NOTE,
+  TIDE_PARLIAMENTS,
+  WORDS_NOTE,
   changeText,
   cleanSpeechTitle,
   decodeYear,
@@ -25,21 +30,16 @@ import {
   voicesDebates,
   voicesNote,
   wordsPanel,
-  MATRIX_NOTE,
-  TIDE_PARLIAMENTS,
-  WORDS_NOTE,
   type Tide,
 } from '../src/features/explore/model';
+import { isExplorePaidPath } from '../src/features/explore/policy';
 import {
   ExploreRepository,
   decodeDatedMatrix,
   decodeDatedTide,
 } from '../src/features/explore/repository';
 import { decodeIndustryMoney } from '../src/features/reports/model';
-import { isExplorePaidPath } from '../src/features/explore/policy';
-import { isReportsPaidPath } from '../src/api/reports-policy';
 import { pinnedBytes } from './pinned';
-import { reportsFixture } from '../scripts/reports-fixture';
 
 jest.mock('../src/storage/two-slot', () => ({
   TwoSlotStore: class {
@@ -107,8 +107,10 @@ const visible = (value: unknown): string[] =>
       : [];
 
 test('D-E1: the tide and matrix decoders keep generated_at when present, and never invent one', () => {
-  expect(decodeDatedTide(tideRaw).generated_at).toBeUndefined();
-  expect(decodeDatedMatrix(matrixRaw).generated_at).toBeUndefined();
+  const { generated_at: _tideDate, ...undatedTide } = tideRaw;
+  const { generated_at: _matrixDate, ...undatedMatrix } = matrixRaw;
+  expect(decodeDatedTide(undatedTide).generated_at).toBeUndefined();
+  expect(decodeDatedMatrix(undatedMatrix).generated_at).toBeUndefined();
   expect(
     decodeDatedTide({ ...tideRaw, generated_at: '2026-11-02' }).generated_at,
   ).toBe('2026-11-02');

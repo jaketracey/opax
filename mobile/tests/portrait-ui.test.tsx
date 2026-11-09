@@ -1,12 +1,12 @@
 import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
 import { Image } from 'react-native';
+import TestRenderer from 'react-test-renderer';
+import { portraitFor } from '../src/api/selectors';
+import { Portrait } from '../src/design/people';
 import {
   CachedPortrait,
   portraitCreditLine,
 } from '../src/features/CachedPortrait';
-import { portraitFor } from '../src/api/selectors';
-import { Portrait } from '../src/design/people';
 const mockPortraitGet = jest.fn();
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: (request: unknown) => mockPortraitGet(request) },
@@ -18,7 +18,7 @@ jest.mock('../src/api/image-policy', () => ({
     return uri;
   },
 }));
-test('portrait reads local unaltered bytes, skips VoiceOver beside a name and falls back without initials', () => {
+test('portrait reads local unaltered bytes, skips VoiceOver beside a name and falls back to initials', () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
@@ -37,7 +37,7 @@ test('portrait reads local unaltered bytes, skips VoiceOver beside a name and fa
   expect(image.props.accessible).toBe(false);
   act(() => image.props.onError());
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);
-  expect(JSON.stringify(renderer.toJSON())).not.toContain('AA');
+  expect(JSON.stringify(renderer.toJSON())).toContain('AA');
   act(() =>
     renderer.update(
       <Portrait
