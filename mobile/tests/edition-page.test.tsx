@@ -522,6 +522,28 @@ describe('the replacement edition card', () => {
         ).toBe(false);
     },
   );
+  test.each([1, 3.12])(
+    'the edition status line scales without a cap at scale %s',
+    async (fontScale) => {
+      Platform.OS = 'ios';
+      const window = { width: 390, height: 844, scale: 3, fontScale };
+      Dimensions.set({ window, screen: window });
+      const { root } = await render(
+        <EditionCard edition={ready} today="2026-10-05" />,
+      );
+      const line = host(root, 'today-edition-line')[0]!;
+      expect(line.props.children).toBe('Passed 18 Sep 2026.');
+      expect(line.props.allowFontScaling).toBe(true);
+      expect(line.props.dynamicTypeRamp).toBe('subheadline');
+      expect(line.props.maxFontSizeMultiplier).toBe(0);
+      expect(line.props.numberOfLines).toBeUndefined();
+      expect(
+        root
+          .findAllByType(Text)
+          .find((n) => n.props.testID === 'today-edition-line')!.props.wordSafe,
+      ).toBe(true);
+    },
+  );
   test('a recent card has its weekday date and a saved copy keeps the edition age', async () => {
     const savedAt = Date.parse('2026-10-10T00:00:00Z');
     const { root } = await render(
