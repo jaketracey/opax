@@ -105,7 +105,8 @@ export function ExploreChrome({
   return (
     <RouteOptions
       options={{
-        ...(title ? { title, headerTitle: title, ...backOptions } : {}),
+        ...backOptions,
+        ...(title ? { title, headerTitle: title } : {}),
         ...headerItems(
           pageItems({
             name: label,

@@ -18,14 +18,10 @@ import {
   grantProgramRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { evidenceRecord } from '../leads/evidence';
-import {
-  discoveryAsOf,
-  discoverPath,
-  leadFor,
-  plainCaveat,
-} from '../leads/model';
+import { discoveryAsOf, discoverPath, leadFor } from '../leads/model';
 import { combine } from './catalog';
 import { largestFor, programRecipients, type Jurisdiction } from './data';
 import { stateName } from './Grants';
@@ -157,7 +153,7 @@ async function readMoneyItem(
           children: [],
           originals: [item.original],
           onward: [],
-          notes: lead.caveats.map(plainCaveat),
+          notes: [],
           path: discoverPath({ id: lead.id, category: lead.category }),
         },
       };
@@ -668,6 +664,7 @@ export function itemParams(
  * SourceLine.
  */
 export default function MoneyItem() {
+  const backOptions = useNamedBackOptions();
   const raw = useLocalSearchParams<Record<string, string>>();
   const params = itemParams(raw);
   const key = JSON.stringify(params);
@@ -689,6 +686,7 @@ export default function MoneyItem() {
       <RouteOptions
         options={{
           title: name,
+          ...backOptions,
           ...(item?.path ? moneyBar({ name, path: item.path }) : {}),
         }}
       />

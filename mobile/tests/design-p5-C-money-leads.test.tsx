@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { RouteOptions } from '../src/navigation/preview';
 import { sheetPayload } from '../src/navigation/sheets';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
@@ -180,6 +181,25 @@ describe('a lead’s card', () => {
 });
 
 describe('a lead’s page', () => {
+  test('the route has a title before loading and after the subject arrives', async () => {
+    let resolve!: (value: RecordResult<typeof discovery>) => void;
+    jest.mocked(runtime.discovery).mockReturnValue(
+      new Promise((done) => {
+        resolve = done;
+      }),
+    );
+    const lead = leads.find((l) => l.category === 'recipient_concentration')!;
+    mockParams.id = lead.id;
+    const r = await render(<LeadDetail />);
+    const options = () => r.root.findByType(RouteOptions).props.options;
+    expect(options().title).toBe('Lead');
+    await act(async () =>
+      resolve({ data: discovery, stale: false, savedAt: 1, asOf: null }),
+    );
+    expect(options().title).toBe(lead.comparison.heading);
+    await act(async () => r.unmount());
+  });
+
   test('"How this lead was found": the method and every caveat in plain words, not the claim again', async () => {
     const lead = leads.find((l) => l.category === 'recipient_concentration')!;
     mockParams.id = lead.id;

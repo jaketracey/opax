@@ -17,7 +17,16 @@ import Allocation from '../src/features/money-public/Allocation';
 import FundingBySeatType from '../src/features/money-public/FundingBySeatType';
 import Connections from '../src/features/money-public/Connections';
 import Connection from '../src/features/money-public/Connection';
-import MoneyItem from '../src/features/money-public/MoneyItem';
+import MoneyItem, {
+  loadMoneyItem,
+} from '../src/features/money-public/MoneyItem';
+import { leadsFor, plainCaveat } from '../src/features/leads/model';
+import { evidenceRecord } from '../src/features/leads/evidence';
+import { RouteOptions } from '../src/navigation/preview';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow } from '../src/design/rows';
@@ -133,6 +142,52 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
       .findAll((n) => typeof n.props.testID === 'string')
       .map((n) => n.props.testID as string),
   );
+
+test('a lead example names its back destination and has no lead methodology in Notes', async () => {
+  const lead = leadsFor(decodeDiscovery(raw('/discovery.json'))).find(
+    (lead) => lead.caveats.length && lead.evidence.some(evidenceRecord),
+  )!;
+  const params = {
+    kind: 'evidence' as const,
+    lead: lead.id,
+    i: String(lead.evidence.findIndex((item) => !!evidenceRecord(item))),
+  };
+  Object.assign(mockParams, params);
+  const record = await loadMoneyItem(params, false);
+  // The evidence export has no record notes. Caveats belong to the lead.
+  expect(record.data.notes).toEqual([]);
+  const route = { key: 'item', name: 'money-item' };
+  const navigation = {
+    getState: () => ({
+      routes: [
+        { key: 'today', name: 'index' },
+        { key: 'lead', name: 'lead/[id]' },
+        route,
+      ],
+    }),
+    setOptions: jest.fn(),
+    isFocused: () => true,
+    addListener: () => () => {},
+  };
+  const r = await mount(() => (
+    <NavigationContext.Provider value={navigation as never}>
+      <NavigationRouteContext.Provider value={route}>
+        <MoneyItem />
+      </NavigationRouteContext.Provider>
+    </NavigationContext.Provider>
+  ));
+  expect(r.root.findByType(RouteOptions).props.options).toMatchObject({
+    headerBackTitle: 'Lead',
+    headerBackButtonDisplayMode: 'default',
+  });
+  const shown = r.root
+    .findAll((node) => typeof node.props.children === 'string')
+    .map((node) => node.props.children);
+  expect(shown).not.toContain('Notes');
+  for (const caveat of lead.caveats)
+    expect(shown).not.toContain(plainCaveat(caveat));
+  await act(async () => r.unmount());
+});
 
 test.each([
   ['Public money', Hub, {}, 'money-hub-title'],
