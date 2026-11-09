@@ -206,9 +206,10 @@ puts replacement.shell_script
 class PatchReplayTests(unittest.TestCase):
     @staticmethod
     def clean_screens_source(text):
-        # Worktrees may contain pristine, wave 10 or current patched sources.
+        # Worktrees may contain pristine, wave 10/11 or current patched sources.
         # Reconstruct the input, then require its exact upstream hash below.
         text = re.sub(r'  // Menu and target/action setup[\s\S]*?(?=  return self;)', '', text)
+        text = re.sub(r'\n *// OPAX menu accessibility:[\s\S]*?// OPAX menu accessibility end\.\n', '', text)
         text = re.sub(r'\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)'
                       r'\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n', '', text)
         return text.replace('  UIMenu *menu = [UIMenu menuWithTitle:',
@@ -222,27 +223,36 @@ class PatchReplayTests(unittest.TestCase):
         self.assertEqual(json.loads((mobile / 'node_modules/react-native-screens/package.json').read_text())['version'],
                          entry['version'])
         reviewed_patch = mobile / 'patches' / entry['patch']
-        row = entry['files'][0]
+        self.assertEqual(hashlib.sha256(reviewed_patch.read_bytes()).hexdigest(), entry['sha256'],
+                         'Follow-up: patches/privacy-patches.json must pin the reviewed menu-view patch')
+        self.assertEqual({row['path'] for row in entry['files']},
+                         {'ios/RNSBarButtonItem.mm', 'ios/RNSScreen.mm'})
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            source = root / 'node_modules/react-native-screens' / row['path']
-            source.parent.mkdir(parents=True)
-            shutil.copyfile(mobile / 'node_modules/react-native-screens' / row['path'], source)
-            source.write_text(self.clean_screens_source(source.read_text()))
-            digest = lambda: hashlib.sha256(source.read_bytes()).hexdigest()
+            for row in entry['files']:
+                source = root / 'node_modules/react-native-screens' / row['path']
+                source.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(mobile / 'node_modules/react-native-screens' / row['path'], source)
+                source.write_text(self.clean_screens_source(source.read_text()))
+                self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), row['before'])
             args = ['/usr/bin/patch', '--batch', '--fuzz=0', '-p1', '-i', str(reviewed_patch)]
             # The clean input is the exact pinned upstream source, not just a
             # nearby hunk that happens to accept the diff.
-            self.assertEqual(digest(), row['before'])
             for extra in (['--dry-run'], []):
                 result = subprocess.run(args + extra, cwd=root, capture_output=True, text=True, check=True)
                 self.assertNotRegex(result.stdout + result.stderr, r'(?i)offset|fuzz')
-            self.assertEqual(digest(), row['after'])
-            patched = source.read_text()
+            for row in entry['files']:
+                source = root / 'node_modules/react-native-screens' / row['path']
+                self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), row['after'])
+            patched = (root / 'node_modules/react-native-screens/ios/RNSBarButtonItem.mm').read_text()
             for target in ('menu', 'actionElement'):
                 self.assertIn(f'{target}.accessibilityIdentifier = dict[@"testID"];', patched)
             self.assertIn('self.accessibilityIdentifier = testID;', patched)
             self.assertIn('self.menu.accessibilityIdentifier = testID;', patched)
+            screen = (root / 'node_modules/react-native-screens/ios/RNSScreen.mm').read_text()
+            self.assertIn('view.accessibilityIdentifier = item.accessibilityIdentifier;', screen)
+            self.assertIn('navigationController.topViewController == self', screen)
+            self.assertNotRegex(screen, r'valueForKey:|NSSelectorFromString|method_exchangeImplementations')
 
     def test_clean_replay_idempotency_version_and_source_drift(self):
         mobile = Path(__file__).resolve().parent.parent

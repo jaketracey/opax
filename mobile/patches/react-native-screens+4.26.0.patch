@@ -46,3 +46,54 @@
  
    NSString *discoverabilityLabel = dict[@"discoverabilityLabel"];
    if (discoverabilityLabel != nil) {
+--- a/node_modules/react-native-screens/ios/RNSScreen.mm
++++ b/node_modules/react-native-screens/ios/RNSScreen.mm
+@@ -36,6 +36,22 @@
+ 
+ constexpr NSInteger SHEET_FIT_TO_CONTENTS = -1;
+ constexpr NSInteger SHEET_LARGEST_UNDIMMED_DETENT_NONE = -1;
++
++// OPAX menu accessibility: UIKit exposes _UIButtonBarButton, not the UIMenu.
++// Match the public accessibility label after layout, without private selectors.
++#if RNS_IPHONE_OS_VERSION_AVAILABLE(26_0) && !TARGET_OS_TV
++static void RNSApplyMenuButtonAccessibilityIdentifier(UIView *view, UIBarButtonItem *item)
++{
++  if (view.isAccessibilityElement && [view.accessibilityLabel isEqualToString:item.accessibilityLabel]) {
++    view.accessibilityIdentifier = item.accessibilityIdentifier;
++    return;
++  }
++  for (UIView *subview in view.subviews) {
++    RNSApplyMenuButtonAccessibilityIdentifier(subview, item);
++  }
++}
++#endif
++// OPAX menu accessibility end.
+ 
+ struct ContentWrapperBox {
+   __weak RNSScreenContentWrapper *contentWrapper{nil};
+@@ -1542,6 +1558,25 @@
+ {
+   [super viewDidLayoutSubviews];
+ 
++  // OPAX menu accessibility: reapply to UIKit's presenting view after each layout.
++#if RNS_IPHONE_OS_VERSION_AVAILABLE(26_0) && !TARGET_OS_TV
++  if (@available(iOS 26.0, *)) {
++    UINavigationController *navigationController = self.navigationController;
++    if (navigationController.topViewController == self) {
++      UINavigationBar *bar = navigationController.navigationBar;
++      [bar layoutIfNeeded];
++      NSArray<UIBarButtonItem *> *items = [(self.navigationItem.leftBarButtonItems ?: @[])
++          arrayByAddingObjectsFromArray:(self.navigationItem.rightBarButtonItems ?: @[])];
++      for (UIBarButtonItem *item in items) {
++        if (item.menu && item.accessibilityIdentifier.length > 0 && item.accessibilityLabel.length > 0) {
++          RNSApplyMenuButtonAccessibilityIdentifier(bar, item);
++        }
++      }
++    }
++  }
++#endif
++  // OPAX menu accessibility end.
++
+   // The below code makes the screen view adapt dimensions provided by the system. We take these
+   // into account only when the view is mounted under RNSNavigationController in which case system
+   // provides additional padding to account for possible header, and in the case when screen is

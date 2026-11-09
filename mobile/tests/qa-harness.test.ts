@@ -2,6 +2,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -66,52 +67,78 @@ describe('Maestro startup budgets', () => {
   );
 });
 
-test('screens 4.26.0 patch applies cleanly and assigns menu and plain header ids last', () => {
-  const version = JSON.parse(
-    readFileSync('node_modules/react-native-screens/package.json', 'utf8'),
-  ).version;
-  expect(version).toBe('4.26.0');
-  const file = 'node_modules/react-native-screens/ios/RNSBarButtonItem.mm';
+test('screens 4.26.0 patch applies cleanly to the menu item and its exposed view', () => {
+  expect(
+    JSON.parse(
+      readFileSync('node_modules/react-native-screens/package.json', 'utf8'),
+    ).version,
+  ).toBe('4.26.0');
   const patch = resolve('patches/react-native-screens+4.26.0.patch');
   const digest = (value: string) =>
     createHash('sha256').update(value).digest('hex');
-  // Accept pristine or previously patched installs, then verify the exact
-  // upstream bytes before replay. No installed package is modified by this test.
-  const upstream = readFileSync(file, 'utf8')
-    .replace(/  \/\/ Menu and target\/action setup[^]*?(?=  return self;)/, '')
-    .replace(
-      /\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n/g,
-      '',
-    )
-    .replace(
-      '  UIMenu *menu = [UIMenu menuWithTitle:',
-      '  return [UIMenu menuWithTitle:',
-    )
-    .replace('  return menu;\n', '\n');
-  expect(digest(upstream)).toBe(
-    'f6680e8d632552969582162782db40a5b20a7fa5ce36f1584bf4736c1b3547d3',
-  );
+  const files = [
+    {
+      name: 'RNSBarButtonItem.mm',
+      before:
+        'f6680e8d632552969582162782db40a5b20a7fa5ce36f1584bf4736c1b3547d3',
+      after: 'd2ecac91610e46bb0a0fce42ceb61563326fd06fc886b4d769021aac1f553066',
+    },
+    {
+      name: 'RNSScreen.mm',
+      before:
+        '7685f8732386a62dc82c8ab21fb37211ce4f51299af9e9ea6dea1a2d1c279207',
+      after: 'd2dfc7ebfcca140ab2da8ed2e39c86ef53222ea6177dbdb5ab16593b0f8eb551',
+    },
+  ];
   expect(digest(readFileSync(patch, 'utf8'))).toBe(
-    '8b763ee16ec844d570af33facdddd3e2de57f696c966ea1e734c689a8ae6aae7',
+    '58341749258e695f7cdabca91ff6bfad69130324055421e73aa3e3786e88ec4c',
   );
   const root = mkdtempSync(join(tmpdir(), 'screens-patch-'));
+  const directory = join(root, 'node_modules/react-native-screens/ios');
+  mkdirSync(directory, { recursive: true });
   try {
-    const target = join(root, 'RNSBarButtonItem.mm');
-    writeFileSync(target, upstream);
+    for (const file of files) {
+      // Accept pristine, wave 10/11 or current installs, then verify exact
+      // upstream bytes. Tests never modify the installed package.
+      const upstream = readFileSync(
+        join('node_modules/react-native-screens/ios', file.name),
+        'utf8',
+      )
+        .replace(
+          /  \/\/ Menu and target\/action setup[^]*?(?=  return self;)/,
+          '',
+        )
+        .replace(
+          /\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n/g,
+          '',
+        )
+        .replace(
+          '  UIMenu *menu = [UIMenu menuWithTitle:',
+          '  return [UIMenu menuWithTitle:',
+        )
+        .replace('  return menu;\n', '\n')
+        .replace(
+          /\n *\/\/ OPAX menu accessibility:[^]*?\/\/ OPAX menu accessibility end\.\n/g,
+          '',
+        );
+      expect(digest(upstream)).toBe(file.before);
+      writeFileSync(join(directory, file.name), upstream);
+    }
     for (const extra of [['--dry-run'], []]) {
       const result = spawnSync(
         '/usr/bin/patch',
-        ['--batch', '--fuzz=0', '-p1', target, '-i', patch, ...extra],
-        { encoding: 'utf8' },
+        ['--batch', '--fuzz=0', '-p1', '-i', patch, ...extra],
+        { cwd: root, encoding: 'utf8' },
       );
       expect(result.status).toBe(0);
       expect(result.stdout + result.stderr).not.toMatch(/offset|fuzz/i);
     }
-    const source = readFileSync(target, 'utf8');
-    expect(digest(source)).toBe(
-      'd2ecac91610e46bb0a0fce42ceb61563326fd06fc886b4d769021aac1f553066',
-    );
-    const init = source.split('+ (void)resolveImageFromConfig')[0]!;
+    for (const file of files)
+      expect(digest(readFileSync(join(directory, file.name), 'utf8'))).toBe(
+        file.after,
+      );
+    const item = readFileSync(join(directory, files[0]!.name), 'utf8');
+    const init = item.split('+ (void)resolveImageFromConfig')[0]!;
     expect(init).toContain(
       'NSString *testID = dict[@"testID"] ?: dict[@"identifier"];',
     );
@@ -120,9 +147,33 @@ test('screens 4.26.0 patch applies cleanly and assigns menu and plain header ids
     expect(idAt).toBeGreaterThan(init.indexOf('self.action ='));
     expect(init).toContain('self.menu.accessibilityIdentifier = testID;');
     for (const target of ['menu', 'actionElement'])
-      expect(source).toContain(
+      expect(item).toContain(
         `${target}.accessibilityIdentifier = dict[@"testID"];`,
       );
+    const screen = readFileSync(join(directory, files[1]!.name), 'utf8');
+    expect(screen).toContain(
+      'view.isAccessibilityElement && [view.accessibilityLabel isEqualToString:item.accessibilityLabel]',
+    );
+    expect(screen).toContain(
+      'view.accessibilityIdentifier = item.accessibilityIdentifier;',
+    );
+    expect(screen).toContain(
+      'RNSApplyMenuButtonAccessibilityIdentifier(subview, item);',
+    );
+    const layout = screen
+      .split('- (void)viewDidLayoutSubviews')[1]!
+      .split('- (BOOL)isModalWithHeader')[0]!;
+    expect(layout).toContain('if (@available(iOS 26.0, *))');
+    expect(layout).toContain('navigationController.topViewController == self');
+    expect(layout).toContain(
+      'item.menu && item.accessibilityIdentifier.length > 0 && item.accessibilityLabel.length > 0',
+    );
+    expect(
+      layout.indexOf('RNSApplyMenuButtonAccessibilityIdentifier(bar, item);'),
+    ).toBeGreaterThan(layout.indexOf('[bar layoutIfNeeded];'));
+    expect(screen).not.toMatch(
+      /valueForKey:|NSSelectorFromString|method_exchangeImplementations/,
+    );
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
