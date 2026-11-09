@@ -204,6 +204,16 @@ puts replacement.shell_script
 
 
 class PatchReplayTests(unittest.TestCase):
+    @staticmethod
+    def clean_screens_source(text):
+        # Worktrees may contain pristine, wave 10 or current patched sources.
+        # Reconstruct the input, then require its exact upstream hash below.
+        text = re.sub(r'  // Menu and target/action setup[\s\S]*?(?=  return self;)', '', text)
+        text = re.sub(r'\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)'
+                      r'\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n', '', text)
+        return text.replace('  UIMenu *menu = [UIMenu menuWithTitle:',
+                            '  return [UIMenu menuWithTitle:').replace('  return menu;\n', '\n')
+
     def test_screens_426_bar_button_and_menu_identifiers_apply_without_fuzz(self):
         mobile = Path(__file__).resolve().parent.parent
         entry = next(row for row in json.loads((mobile / 'patches/privacy-patches.json').read_text())
@@ -218,10 +228,9 @@ class PatchReplayTests(unittest.TestCase):
             source = root / 'node_modules/react-native-screens' / row['path']
             source.parent.mkdir(parents=True)
             shutil.copyfile(mobile / 'node_modules/react-native-screens' / row['path'], source)
+            source.write_text(self.clean_screens_source(source.read_text()))
             digest = lambda: hashlib.sha256(source.read_bytes()).hexdigest()
             args = ['/usr/bin/patch', '--batch', '--fuzz=0', '-p1', '-i', str(reviewed_patch)]
-            if digest() == row['after']:
-                subprocess.run(args + ['--reverse'], cwd=root, capture_output=True, text=True, check=True)
             # The clean input is the exact pinned upstream source, not just a
             # nearby hunk that happens to accept the diff.
             self.assertEqual(digest(), row['before'])
@@ -230,8 +239,10 @@ class PatchReplayTests(unittest.TestCase):
                 self.assertNotRegex(result.stdout + result.stderr, r'(?i)offset|fuzz')
             self.assertEqual(digest(), row['after'])
             patched = source.read_text()
-            for target in ('self', 'menu', 'actionElement'):
+            for target in ('menu', 'actionElement'):
                 self.assertIn(f'{target}.accessibilityIdentifier = dict[@"testID"];', patched)
+            self.assertIn('self.accessibilityIdentifier = testID;', patched)
+            self.assertIn('self.menu.accessibilityIdentifier = testID;', patched)
 
     def test_clean_replay_idempotency_version_and_source_drift(self):
         mobile = Path(__file__).resolve().parent.parent
@@ -249,6 +260,11 @@ class PatchReplayTests(unittest.TestCase):
                         dest.touch()
                     else:
                         shutil.copyfile(mobile / 'node_modules' / entry['package'] / row['path'], dest)
+                if entry['package'] == 'react-native-screens':
+                    for row in entry['files']:
+                        dest = package / row['path']
+                        dest.write_text(self.clean_screens_source(dest.read_text()))
+                    continue
                 # Reconstruct pristine fixture inputs independently from the
                 # reviewed diff; macOS patch cannot reverse-create /dev/null files.
                 current = None; cursor = 0; original = []; after = []

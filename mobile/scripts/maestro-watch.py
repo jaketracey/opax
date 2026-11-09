@@ -74,6 +74,16 @@ def startup_timeout_seconds():
     )
 
 
+def driver_startup_timeout_ms():
+    # Unlike the watcher, Maestro counts native preflight against its timeout.
+    # Keep 180 s of preflight headroom in addition to the server allowance.
+    return positive_seconds(
+        os.environ.get('MAESTRO_DRIVER_STARTUP_TIMEOUT') or str(
+            (180 + startup_timeout_seconds()) * 1000),
+        'MAESTRO_DRIVER_STARTUP_TIMEOUT',
+    )
+
+
 def log_sources(log, debug):
     # Read runner readiness before queued console probes. XCTest's own unit
     # tests can print deliberate transport errors, so use these logs for the
@@ -168,7 +178,8 @@ def run(log, debug, seconds, *command):
         raise SystemExit(128 + signum)
 
     with open(log, 'a') as output:
-        child = subprocess.Popen(command, stdout=output, stderr=output)
+        env = dict(os.environ, MAESTRO_DRIVER_STARTUP_TIMEOUT=str(driver_startup_timeout_ms()))
+        child = subprocess.Popen(command, stdout=output, stderr=output, env=env)
         child_start = subprocess.run(['/bin/ps', '-o', 'lstart=', '-p', str(child.pid)],
                                      capture_output=True, text=True, check=False).stdout.strip()
         tracked[child.pid] = ' '.join(child_start.split())

@@ -5,9 +5,8 @@ name: Return to the tab root and reveal the native tab bar
 # pushed page inherits that. A pushed page already at its top cannot bring it
 # back, so go back to the tab root first, where scrolling up expands it.
 #
-# TOP_ID is an anchor on the tab root: its first element, or the entry the
-# flow left it at (a root keeps its scroll position). TAB_ID is the tab to
-# assert once the full bar shows.
+# TAB_ID is the tab to assert once the full bar shows. Reveal the bar before
+# looking for content: TOP_ID may be below the current position or removed.
 - repeat:
     times: 12
     while:
@@ -17,9 +16,35 @@ name: Return to the tab root and reveal the native tab bar
       - tapOn:
           id: BackButton
       - waitForAnimationToEnd
-# Scroll up on the root, at the edge, until the anchor shows.
+# A short downward content scroll followed by an upward one expands the bar,
+# including at the top or bottom of a root. Never chase a content anchor here.
 - repeat:
-    times: 160
+    times: 3
+    while:
+      notVisible:
+        id: ${TAB_ID}
+    commands:
+      - swipe:
+          start: 97%, 60%
+          end: 97%, 45%
+          duration: 600
+      - swipe:
+          start: 97%, 30%
+          end: 97%, 85%
+          duration: 600
+- waitForAnimationToEnd
+- assertVisible:
+    id: ${TAB_ID}
+# Existing callers use TOP_ID to verify the root's top. A status-bar tap
+# invokes the native scroll-to-top action regardless of the retained offset.
+- tapOn:
+    point: 50%, 1%
+# This wait succeeds even if animation outlasts its timeout, so a missed
+# status-bar tap still reaches the bounded fallback instead of failing early.
+- waitForAnimationToEnd:
+    timeout: 5000
+- repeat:
+    times: 12
     while:
       notVisible:
         id: ${TOP_ID}
@@ -30,21 +55,3 @@ name: Return to the tab root and reveal the native tab bar
           duration: 600
 - assertVisible:
     id: ${TOP_ID}
-# A root already at its top: scroll down a little, then back up. The upward
-# scroll is what expands a minimised bar.
-- runFlow:
-    when:
-      notVisible:
-        id: ${TAB_ID}
-    commands:
-      - swipe:
-          start: 97%, 60%
-          end: 97%, 45%
-          duration: 600
-      - swipe:
-          start: 97%, 40%
-          end: 97%, 75%
-          duration: 600
-- waitForAnimationToEnd
-- assertVisible:
-    id: ${TAB_ID}

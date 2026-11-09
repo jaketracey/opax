@@ -1,17 +1,24 @@
 --- a/node_modules/react-native-screens/ios/RNSBarButtonItem.mm
 +++ b/node_modules/react-native-screens/ios/RNSBarButtonItem.mm
-@@ -102,6 +102,10 @@
-     } else {
-       self.style = UIBarButtonItemStylePlain;
-     }
+@@ -126,6 +126,17 @@
+     self.action = @selector(handleBarButtonItemPress:);
+     _itemAction = action;
+     _buttonId = buttonId;
 +  }
-+
-+  if (dict[@"testID"]) {
-+    self.accessibilityIdentifier = dict[@"testID"];
++  // Menu and target/action setup can rebuild UIKit's accessibility metadata.
++  // Reapply the header id last, including the menu's presenting bar button.
++  NSString *testID = dict[@"testID"] ?: dict[@"identifier"];
++  if (testID) {
++    self.accessibilityIdentifier = testID;
++#if !TARGET_OS_TV || __TV_OS_VERSION_MAX_ALLOWED >= 170000
++    if (@available(tvOS 17.0, *)) {
++      self.menu.accessibilityIdentifier = testID;
++    }
++#endif
    }
- 
-   if (dict[@"accessibilityLabel"]) {
-@@ -188,11 +192,15 @@
+   return self;
+ }
+@@ -188,11 +199,15 @@
                   image = img;
                 }];
  
@@ -28,7 +35,7 @@
  }
  
  + (UIAction *)createActionItemFromConfig:(NSDictionary *)dict
-@@ -213,6 +221,10 @@
+@@ -213,6 +228,10 @@
                 completionBlock:^(UIImage *img) {
                   actionElement.image = img;
                 }];

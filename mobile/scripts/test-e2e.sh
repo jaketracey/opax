@@ -439,12 +439,12 @@ export MOCK_DRIVER_ERROR=startup
 run_lane driver-startup-probe 01
 check_rc driver-startup-probe 0
 unset MOCK_DRIVER_ERROR
-[ "$(cat "$SCRATCH/driver-startup-probe.startup-budget")" = '180 180000' ] || fail 'watcher/CLI startup defaults differ'
+[ "$(cat "$SCRATCH/driver-startup-probe.startup-budget")" = '180 360000' ] || fail 'CLI startup lacks preflight headroom'
 pass 'the expected pre-install driver probe is allowed during bounded startup'
 export OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS=235
 run_lane driver-startup-configured 01
 check_rc driver-startup-configured 0
-[ "$(cat "$SCRATCH/driver-startup-configured.startup-budget")" = '235 235000' ] || fail 'watcher/CLI startup override differs'
+[ "$(cat "$SCRATCH/driver-startup-configured.startup-budget")" = '235 415000' ] || fail 'CLI startup lost preflight headroom'
 unset OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS
 pass 'startup configuration reaches the watcher and CLI in seconds and milliseconds'
 export MOCK_DRIVER_ERROR=bytes403

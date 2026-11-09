@@ -1,13 +1,213 @@
 import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import {
   existsSync,
   mkdtempSync,
   readdirSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
+
+const maestroSteps = (file: string) =>
+  JSON.parse(
+    execFileSync(
+      process.execPath,
+      [
+        '-e',
+        'process.stdout.write(JSON.stringify(require("yaml").parseAllDocuments(require("fs").readFileSync(process.argv[1], "utf8"))[1].toJS()))',
+        file,
+      ],
+      { encoding: 'utf8' },
+    ),
+  );
+
+describe('Maestro startup budgets', () => {
+  // Evaluate only the real configuration block, before any device work.
+  const runner = readFileSync('scripts/e2e.sh', 'utf8');
+  const block = runner
+    .slice(runner.indexOf('export OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS='))
+    .split('SIZE=')[0]!;
+  const budget = (server = '', driver = '') =>
+    spawnSync(
+      '/bin/bash',
+      [
+        '-c',
+        `${block}\nprintf '%s %s' "$OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS" "$MAESTRO_DRIVER_STARTUP_TIMEOUT"`,
+      ],
+      {
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS: server,
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: driver,
+        },
+      },
+    );
+  test.each([
+    ['', '', '180 360000'],
+    ['235', '', '235 415000'],
+    ['090', '', '90 270000'],
+    ['235', '0600000', '235 600000'],
+  ])('server %j and CLI %j resolve to %s', (server, driver, expected) => {
+    const result = budget(server, driver);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toBe(expected);
+  });
+  test.each(['0', '-1', '1.5', 'SECONDS+1', '$(exit 99)', '9999999999999'])(
+    'invalid CLI milliseconds %j fail before device work',
+    (driver) => {
+      const result = budget('', driver);
+      expect(result.status).toBe(2);
+      expect(result.stderr).toContain('positive integer in milliseconds');
+    },
+  );
+});
+
+test('screens 4.26.0 patch applies cleanly and assigns menu and plain header ids last', () => {
+  const version = JSON.parse(
+    readFileSync('node_modules/react-native-screens/package.json', 'utf8'),
+  ).version;
+  expect(version).toBe('4.26.0');
+  const file = 'node_modules/react-native-screens/ios/RNSBarButtonItem.mm';
+  const patch = resolve('patches/react-native-screens+4.26.0.patch');
+  const digest = (value: string) =>
+    createHash('sha256').update(value).digest('hex');
+  // Accept pristine or previously patched installs, then verify the exact
+  // upstream bytes before replay. No installed package is modified by this test.
+  const upstream = readFileSync(file, 'utf8')
+    .replace(/  \/\/ Menu and target\/action setup[^]*?(?=  return self;)/, '')
+    .replace(
+      /\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n/g,
+      '',
+    )
+    .replace(
+      '  UIMenu *menu = [UIMenu menuWithTitle:',
+      '  return [UIMenu menuWithTitle:',
+    )
+    .replace('  return menu;\n', '\n');
+  expect(digest(upstream)).toBe(
+    'f6680e8d632552969582162782db40a5b20a7fa5ce36f1584bf4736c1b3547d3',
+  );
+  expect(digest(readFileSync(patch, 'utf8'))).toBe(
+    '8b763ee16ec844d570af33facdddd3e2de57f696c966ea1e734c689a8ae6aae7',
+  );
+  const root = mkdtempSync(join(tmpdir(), 'screens-patch-'));
+  try {
+    const target = join(root, 'RNSBarButtonItem.mm');
+    writeFileSync(target, upstream);
+    for (const extra of [['--dry-run'], []]) {
+      const result = spawnSync(
+        '/usr/bin/patch',
+        ['--batch', '--fuzz=0', '-p1', target, '-i', patch, ...extra],
+        { encoding: 'utf8' },
+      );
+      expect(result.status).toBe(0);
+      expect(result.stdout + result.stderr).not.toMatch(/offset|fuzz/i);
+    }
+    const source = readFileSync(target, 'utf8');
+    expect(digest(source)).toBe(
+      'd2ecac91610e46bb0a0fce42ceb61563326fd06fc886b4d769021aac1f553066',
+    );
+    const init = source.split('+ (void)resolveImageFromConfig')[0]!;
+    expect(init).toContain(
+      'NSString *testID = dict[@"testID"] ?: dict[@"identifier"];',
+    );
+    const idAt = init.indexOf('self.accessibilityIdentifier = testID;');
+    expect(idAt).toBeGreaterThan(init.indexOf('self.menu ='));
+    expect(idAt).toBeGreaterThan(init.indexOf('self.action ='));
+    expect(init).toContain('self.menu.accessibilityIdentifier = testID;');
+    for (const target of ['menu', 'actionElement'])
+      expect(source).toContain(
+        `${target}.accessibilityIdentifier = dict[@"testID"];`,
+      );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+// Parse actual Maestro commands so selectors and gesture bounds are checked
+// without starting Maestro, a fixture server or a simulator.
+test('flow 27 bounds chrome recovery and the top fallback before searching down', () => {
+  const steps = maestroSteps;
+  const restore = steps('.maestro/support/restore-tab-bar.yaml');
+  const gestures = restore.find(
+    (step: any) => step.repeat?.while?.notVisible,
+  )?.repeat;
+  expect(gestures.while.notVisible).toEqual({ id: '${TAB_ID}' });
+  expect(gestures.times).toBe(3);
+  expect(gestures.times * gestures.commands.length).toBeLessThanOrEqual(6);
+  expect(gestures.commands[0].swipe).toEqual({
+    start: '97%, 60%',
+    end: '97%, 45%',
+    duration: 600,
+  });
+  expect(gestures.commands[1].swipe).toEqual({
+    start: '97%, 30%',
+    end: '97%, 85%',
+    duration: 600,
+  });
+  const topTap = restore.findIndex(
+    (step: any) => step.tapOn?.point === '50%, 1%',
+  );
+  expect(topTap).toBeGreaterThan(
+    restore.findIndex((step: any) => step.assertVisible?.id === '${TAB_ID}'),
+  );
+  expect(restore[topTap + 1]).toEqual({
+    waitForAnimationToEnd: { timeout: 5000 },
+  });
+  const fallback = restore[topTap + 2].repeat;
+  expect(fallback.times).toBe(12);
+  expect(fallback.while.notVisible).toEqual({ id: '${TOP_ID}' });
+  expect(fallback.commands).toEqual([
+    { swipe: { start: '97%, 30%', end: '97%, 85%', duration: 600 } },
+  ]);
+  expect(restore[topTap + 3]).toEqual({ assertVisible: { id: '${TOP_ID}' } });
+  const repeats = restore
+    .filter((step: any) => typeof step.repeat === 'object')
+    .map((step: any) => step.repeat);
+  expect(repeats).toHaveLength(3);
+  for (const repeat of repeats) {
+    expect(Number.isInteger(repeat.times)).toBe(true);
+    expect(repeat.times).toBeGreaterThan(0);
+    expect(repeat.times).toBeLessThanOrEqual(12);
+  }
+  const lead = steps('.maestro/27-leads.yaml');
+  const returnAt = lead.findIndex(
+    (step: any) => step.runFlow?.file === 'support/restore-tab-bar.yaml',
+  );
+  expect(lead[returnAt].runFlow.env).toEqual({
+    TOP_ID: 'today-screen-message',
+    TAB_ID: 'tab-today',
+  });
+  const declarations = lead
+    .slice(returnAt)
+    .find(
+      (step: any) =>
+        step.scrollUntilVisible?.element?.id === 'today-declarations-all',
+    ).scrollUntilVisible;
+  expect(declarations.direction).toBe('DOWN');
+  const opening = lead.find(
+    (step: any) => step.scrollUntilVisible?.element?.id === 'today-leads-open',
+  ).scrollUntilVisible;
+  expect(declarations.timeout).toBe(opening.timeout);
+  expect(declarations.timeout).toBe(180000);
+});
+
+test('Ask idle excludes both options row ids without matching the composer Options button', () => {
+  const steps = maestroSteps('.maestro/30-ask.yaml');
+  const idle = steps.slice(
+    0,
+    steps.findIndex((step: any) => step.takeScreenshot),
+  );
+  expect(idle).toContainEqual({ assertNotVisible: { id: 'ask-options-line' } });
+  expect(idle).toContainEqual({
+    assertNotVisible: { id: 'ask-draft-new-conversation' },
+  });
+  expect(idle).not.toContainEqual({ assertNotVisible: { text: 'Options' } });
+});
 
 // Exercise the wait parser alone. No locks, build gates or devices are used.
 test.each([
@@ -191,7 +391,7 @@ class Fake:
         self.taps, self.typed, self.deleted, self.keys, self.notes = [], [], [], [], []
         self.swipes, self.after_tap, self.after_swipe, self.echo = 0, None, None, True
         self.gone, self.after_gone, self.events = True, None, []
-        self.clock, self.launches = 0, []
+        self.clock, self.launches, self.shots = 0, [], []
         self.c = SimpleNamespace(tap=self.long_press, key=self.key)
     def frame(self, el):
         f = el['frame']
@@ -212,7 +412,7 @@ class Fake:
         return self.gone
     async def link(self, url): self.events.append(('link', url))
     async def dump(self, name): pass
-    async def shot(self, name): pass
+    async def shot(self, name): self.shots.append((name, self.clock))
     def launch(self, *args): self.launches.append(args)
     def reset(self): raise AssertionError('probe must not reinstall')
     async def tap(self, test_id=None, **kwargs):
@@ -246,6 +446,47 @@ class Fake:
     def note(self, text): self.notes.append(text)
 
 async def check():
+    # A busy launch can leave SpringBoard visible past five seconds. Its OPAX
+    # icon is not an app frame, even when the tree has stopped changing.
+    class Launch(Fake):
+        async def elements(self):
+            return ([element(uid='welcome-title')] if self.clock >= 5.5 else
+                    [element('OPAX', uid='au.com.opax.app')])
+    d = Launch()
+    await p.cold_launch_frame(d, now=lambda: d.clock)
+    assert d.shots == [('shell-07', 5.5)], d.shots
+    assert len(d.launches) == 1
+    d = Fake([element(uid='today-screen-message')])
+    await p.cold_launch_frame(d, now=lambda: d.clock)
+    assert d.shots == [('shell-07', 0)]
+
+    class SlowRead(Fake):
+        async def elements(self):
+            self.clock += 61
+            return [element(uid='welcome-title')]
+    class StuckRead(Fake):
+        async def elements(self):
+            await asyncio.Future()
+    class FailedRead(Fake):
+        async def elements(self):
+            raise RuntimeError('accessibility tree unavailable')
+    for d, timeout in ((Fake([element('OPAX', uid='au.com.opax.app')]), 60),
+                       (Fake([element(uid='welcome-title', y=-100)]), 60),
+                       (SlowRead(), 60), (FailedRead(), 60), (StuckRead(), 0.01)):
+        recorded = len(p.SPEC)
+        # Like shell() awaiting _w4_welcome next, the next capture step must
+        # still run when shell-07 is skipped. Any exception fails this test.
+        await p.cold_launch_frame(d, now=lambda: d.clock, timeout=timeout)
+        await d.link('opax://welcome')
+        assert d.shots == [], d.shots
+        assert d.notes == [f'shell-07 skipped: OPAX did not reach the foreground in {timeout:g} s; no frame saved'], d.notes
+        assert d.events == [('link', 'opax://welcome')], d.events
+        assert len(p.SPEC) == recorded
+        assert d.clock <= 61, d.clock
+    # Specification generation also lists the gated shell-07 without a device.
+    await p.cold_launch_frame(p._Null())
+    assert p.SPEC[-1]['id'] == 'shell-07'
+
     # idb exposes the seat search as a labelled button, even if another
     # TextField appears first. The native field can be in the bottom bar.
     field = element('Electorate or member’s name')
