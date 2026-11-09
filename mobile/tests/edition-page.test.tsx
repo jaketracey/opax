@@ -745,7 +745,7 @@ describe('the native edition reader', () => {
   test('How this is chosen presents the edition rule and draws its content', async () => {
     const { root } = await render(<EditionStory />);
     const items = root
-      .findByType(Stack.Screen)
+      .findByType(RouteOptions)
       .props.options.unstable_headerRightItems();
     const action = items[1].menu.items.find(
       (item: { label: string }) => item.label === 'How this is chosen',
