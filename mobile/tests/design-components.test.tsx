@@ -1,3 +1,4 @@
+import { StageTimeline } from '../src/design/charts';
 import { Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
@@ -1101,4 +1102,38 @@ test('an empty pane is a quiet centred line without a symbol or wash', () => {
       (n) => typeof n.type === 'string' && flat(n.props.style).width === 64,
     ),
   ).toHaveLength(0);
+});
+
+test('vertical timeline bullets centre on the first text line at Large and AX5', () => {
+  for (const scale of [1, AX5])
+    atSize(scale, () => {
+      const root = render(
+        <StageTimeline
+          stages={Array.from({ length: 5 }, (_, i) => ({
+            label: `Stage ${i}`,
+            date: '12 Aug 2026',
+          }))}
+          latestIndex={4}
+          dateRange={{ start: '2026-08-12', end: '2026-08-12' }}
+          citation="Parliament"
+        />,
+      ).root;
+      const stage = root
+        .findAllByType(View)
+        .find(
+          (node) => node.props.accessibilityLabel === 'Stage 0, 12 Aug 2026',
+        )!;
+      const label = stage.findAllByType(Text)[0]!;
+      const height = textStyles.footnote.lineHeight * scale;
+      act(() =>
+        label.props.onTextLayout({ nativeEvent: { lines: [{ height }] } }),
+      );
+      const dot = stage
+        .findAllByType(View)
+        .find((node) => flat(node.props.style).borderRadius === 5)!;
+      const style = flat(dot.props.style);
+      expect(
+        (style.marginTop as number) + (style.height as number) / 2,
+      ).toBeCloseTo(height / 2);
+    });
 });

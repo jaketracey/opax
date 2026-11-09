@@ -21,6 +21,8 @@ import {
   interfaceFonts as fonts,
   radii,
   rhythm,
+  textStyles,
+  size,
   type Accent,
 } from './tokens';
 
@@ -129,6 +131,7 @@ export function StageTimeline({
   const large = useAccessibilitySize();
   const { fontScale } = useWindowDimensions();
   const [width, setWidth] = useState(0);
+  const [firstLines, setFirstLines] = useState<Record<string, number>>({});
   const { sizes, measure } = useTextMeasurements();
   const keys = stages.map(
     (stage, index) => `${fontScale}:${index}:${stage.label}:${stage.date}`,
@@ -236,6 +239,17 @@ export function StageTimeline({
               style={[
                 styles.dot,
                 {
+                  ...(vertical
+                    ? {
+                        marginTop: Math.max(
+                          0,
+                          ((firstLines[keys[index]!] ??
+                            textStyles.footnote.lineHeight * fontScale) -
+                            size.partyDot) /
+                            2,
+                        ),
+                      }
+                    : {}),
                   backgroundColor:
                     index <= latestIndex
                       ? colors[ink]
@@ -269,7 +283,21 @@ export function StageTimeline({
                     ]
               }
             >
-              <Text variant="footnote" tone={ink} style={styles.stageLabel}>
+              <Text
+                variant="footnote"
+                tone={ink}
+                style={styles.stageLabel}
+                onTextLayout={(event) => {
+                  const line = event.nativeEvent.lines[0];
+                  const key = keys[index]!;
+                  if (line)
+                    setFirstLines((seen) =>
+                      seen[key] === line.height
+                        ? seen
+                        : { ...seen, [key]: line.height },
+                    );
+                }}
+              >
                 {stage.label}
               </Text>
               <Text variant="footnote" tone={onBand ? 'onBandSoft' : 'inkSoft'}>
