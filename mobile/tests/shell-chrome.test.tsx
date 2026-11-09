@@ -30,6 +30,7 @@ import {
   rootHeaderItems,
   shortSheet,
   tabRootGround,
+  todayTitleBar,
   useStackChrome,
 } from '../src/navigation/chrome';
 import { RouteOptions } from '../src/navigation/preview';
@@ -736,6 +737,35 @@ test('quiz and division history keep named native Back buttons and centred inlin
   });
 });
 
+test('Today changes only the scroll-edge shadow and edge effect, preserving transparent appearances', () => {
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
+  try {
+    for (const collapsed of [false, true]) {
+      const shared = largeTitleBar(colors.sunken, collapsed);
+      expect(todayTitleBar(colors.sunken, collapsed)).toEqual({
+        ...shared,
+        headerLargeTitleShadowVisible: false,
+        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+      });
+      expect(todayTitleBar(colors.sunken, collapsed).headerShadowVisible).toBe(
+        true,
+      );
+      expect(todayTitleBar(colors.sunken, collapsed).headerLargeStyle).toEqual(
+        {},
+      );
+    }
+    expect(todayTitleBar(colors.sunken).headerStyle).toEqual({});
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 25,
+    });
+    expect(todayTitleBar(colors.sunken)).toEqual(largeTitleBar(colors.sunken));
+  } finally {
+    Object.defineProperty(Platform, 'Version', version);
+  }
+});
+
 const tabCases = [
   ['(today)', 'index', 'Today'],
   ['(your-mp)', 'your-mp', 'Your MP'],
@@ -815,6 +845,15 @@ test.each(
       expanded(); // Static options must replace the navigator's opaque default.
       renderer = tree(page(68)); // NativeStack's first estimated inline height.
       expanded();
+      if (name === 'index') {
+        expect(current).toMatchObject({
+          headerLargeTitleShadowVisible: false,
+          scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+        });
+      } else {
+        // The other roots keep their inherited hard edge, byte for byte.
+        expect(current).not.toHaveProperty('scrollEdgeEffects');
+      }
       expect(
         renderer.root.findByType(ScrollView).props
           .contentInsetAdjustmentBehavior,

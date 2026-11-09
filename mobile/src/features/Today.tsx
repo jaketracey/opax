@@ -1,5 +1,6 @@
 import * as Router from 'expo-router';
 import {
+  Fragment,
   useCallback,
   useEffect,
   useRef,
@@ -21,6 +22,8 @@ import { welcomeDeclinedThisLaunch } from '../onboarding/state';
 import { EditionCard, EditionSkeleton } from './edition/EditionCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
+import { AustraliaDots, useTodayDotsScroll } from './today/AustraliaDots';
+import { electorateDotState } from './today/australia-dots-model';
 import { BillsBlock } from './today/BillFeed';
 import { DailyPair } from './today/DailyPair';
 import { DeclarationsBlock } from './today/DeclarationRow';
@@ -51,6 +54,7 @@ import {
 import { editionTier, sydneyDay, type SydneyDate } from './today/rules';
 import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
+import { VoiceCard } from './today/VoiceCard';
 import { VotesBlock } from './today/VotesBlock';
 import { StateSeatCard, YourMPCard } from './today/YourMPCard';
 import { saveChoice } from './your-mp/choice-store';
@@ -218,6 +222,7 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
  * on its own, keeps its saved copy and ends in its own dated line.
  */
 export default function Today() {
+  const dots = useTodayDotsScroll();
   const offline = useOffline();
   const now = useNow();
   const day = sydneyDay(now);
@@ -357,7 +362,12 @@ export default function Today() {
           />
         );
       case 'ask':
-        return <AskBlock key={name} today={today} />;
+        return (
+          <Fragment key={name}>
+            <VoiceCard />
+            <AskBlock today={today} />
+          </Fragment>
+        );
       case 'foot':
         return <TodayFoot key={name} />;
     }
@@ -383,11 +393,24 @@ export default function Today() {
       onLayout={() => releaseSplash('today')}
       column="wide"
       grouped
+      scrollRef={dots.scrollRef}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <Masthead now={now} offlineSavedAt={offlineAt ?? null} />
+      <Masthead
+        now={now}
+        offlineSavedAt={offlineAt ?? null}
+        mark={
+          seat.status !== 'loading' ? (
+            <AustraliaDots
+              state={electorateDotState(home)}
+              scroll={dots.scroll}
+              expandedHeader={dots.expandedHeader}
+            />
+          ) : null
+        }
+      />
       <TodayReports value={reports}>
         {order && ready ? (
           <TodayBody order={order} slot={slot} />

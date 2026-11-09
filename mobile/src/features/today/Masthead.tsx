@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
 import type { DateInput } from '../../design/format';
 import { OfflineLine } from '../../design/states';
@@ -93,13 +93,17 @@ export function useNow(): Date {
 export function Masthead({
   now,
   offlineSavedAt,
+  mark,
 }: {
   now: Date;
   /** Set when offline: the oldest saved date among the drawn blocks. */
   offlineSavedAt?: DateInput | null;
+  /** Absolute decorative art, behind the date and the native large title. */
+  mark?: ReactNode;
 }) {
   return (
     <View testID="today-masthead" style={styles.masthead}>
+      {mark}
       <Text
         wordSafe
         variant="secondary"
