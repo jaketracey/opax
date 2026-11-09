@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 // The cost guard (journeys/search.md 3.4 and 10): zero requests while
 // typing, at most one paid request per explicit action, scope switches and
 // Back from the session cache, paging only on tap, and superseded requests
@@ -142,7 +143,11 @@ const byID = (r: TestRenderer.ReactTestRenderer, id: string) =>
 async function mount() {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<SearchScreen />);
+    r = TestRenderer.create(
+      withNavigationOptions(<SearchScreen />, (options) => {
+        if (options.headerSearchBarOptions) mockBar.options = options;
+      }),
+    );
   });
   return r;
 }

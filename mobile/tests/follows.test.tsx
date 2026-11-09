@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import { ActionSheetIOS } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -520,7 +521,11 @@ describe('Following on Today and the follow switch', () => {
   async function render(element: React.ReactElement) {
     let r!: TestRenderer.ReactTestRenderer;
     await act(async () => {
-      r = TestRenderer.create(element);
+      r = TestRenderer.create(
+        withNavigationOptions(element, (options) => {
+          mockOptions = options;
+        }),
+      );
     });
     return r;
   }
@@ -587,7 +592,16 @@ describe('Following on Today and the follow switch', () => {
     mock.followSources.mockResolvedValue(changedSources());
     await act(async () =>
       r.update(
-        <FollowingSection refresh={1} refreshing={false} onRetry={jest.fn()} />,
+        withNavigationOptions(
+          <FollowingSection
+            refresh={1}
+            refreshing={false}
+            onRetry={jest.fn()}
+          />,
+          (options) => {
+            mockOptions = options;
+          },
+        ),
       ),
     );
     expect(mock.followSources).toHaveBeenLastCalledWith(
@@ -666,7 +680,11 @@ describe('Following', () => {
   async function render() {
     let r!: TestRenderer.ReactTestRenderer;
     await act(async () => {
-      r = TestRenderer.create(<Following />);
+      r = TestRenderer.create(
+        withNavigationOptions(<Following />, (options) => {
+          mockOptions = options;
+        }),
+      );
     });
     return r;
   }

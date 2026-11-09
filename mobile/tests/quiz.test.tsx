@@ -1,3 +1,4 @@
+import { RouteOptions } from '../src/navigation/preview';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
 import { Picker, Slider } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
@@ -111,10 +112,7 @@ const press = async (id: string) => {
     node.props.onPress();
   });
 };
-const options = () =>
-  root()
-    .findAllByType('StackScreen' as never)
-    .at(-1)!.props.options;
+const options = () => root().findAllByType(RouteOptions).at(-1)!.props.options;
 /** The pinned footer above the tab bar (iOS below AX1). */
 const footer = () =>
   root().findAll(

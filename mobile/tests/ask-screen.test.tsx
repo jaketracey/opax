@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -181,7 +182,11 @@ afterEach(async () => {
 });
 async function mount() {
   await act(async () => {
-    view = create(<AskScreen />);
+    view = create(
+      withNavigationOptions(<AskScreen />, (options) => {
+        mockBar.options = options;
+      }),
+    );
   });
   return view!;
 }
@@ -365,7 +370,11 @@ test('mount, typing, Options and a remount never call paid routes', async () => 
   input.current = null;
   await act(async () => {
     view!.unmount();
-    view = create(<AskScreen />);
+    view = create(
+      withNavigationOptions(<AskScreen />, (options) => {
+        mockBar.options = options;
+      }),
+    );
   });
   expect(client.askPost).not.toHaveBeenCalled();
   expect(reconcileChats).not.toHaveBeenCalled();

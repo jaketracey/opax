@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { menuLeaves } from '../src/design/row-link';
 import {
   recordActions,
@@ -100,7 +101,11 @@ jest.mock('expo-router', () => {
 async function mount(component: React.ReactElement) {
   let view!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    view = TestRenderer.create(component);
+    view = TestRenderer.create(
+      withNavigationOptions(component, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   return view;
 }

@@ -7,7 +7,6 @@ import {
   isValidElement,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,

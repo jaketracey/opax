@@ -193,7 +193,17 @@ async function android(run: (show: Show) => Promise<void>) {
       const spies = spy(RN, screenReader);
       let renderer!: TestRendererType.ReactTestRenderer;
       await app.React.act(async () => {
-        renderer = app.TestRenderer.create(element(app));
+        const { withNavigationOptions } = jest.requireActual(
+          './navigation-options',
+        );
+        renderer = app.TestRenderer.create(
+          withNavigationOptions(
+            element(app),
+            (options: Record<string, unknown>) => {
+              mockOptions = options;
+            },
+          ),
+        );
       });
       mounted.push(renderer);
       return { app, renderer, spies };

@@ -118,7 +118,10 @@ test('ordinary option errors propagate, and an unfocused real route keeps its op
   const setOptions = jest.fn();
   let safe!: ReturnType<typeof useSafeSetOptions>;
   function Harness() {
-    safe = useSafeSetOptions();
+    const setter = useSafeSetOptions();
+    useEffect(() => {
+      safe = setter;
+    }, [setter]);
     return null;
   }
   let renderer!: TestRenderer.ReactTestRenderer;

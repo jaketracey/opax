@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 // Design pass 5, lane A, carried into the four-scope Search
 // (journeys/search.md 3.4 to 3.6). P1-1: once a query is answered nothing
 // asks again (no Kind, no submit pill): the scope control and the count
@@ -103,7 +104,11 @@ const items = () =>
 async function submitted(q = 'housing') {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<SearchScreen />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<SearchScreen />, (options) => {
+        if (options.headerSearchBarOptions) mockBar.options = options;
+      }),
+    );
   });
   await act(async () =>
     bar().headerSearchBarOptions.onSearchButtonPress({
@@ -165,7 +170,11 @@ test('Summarise sits after the third result, with its pill only once tapped', as
 test('idle Search draws no Refresh row and no suggestions', async () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<SearchScreen />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<SearchScreen />, (options) => {
+        if (options.headerSearchBarOptions) mockBar.options = options;
+      }),
+    );
   });
   expect(ids(renderer)).toContain('search-browse-person');
   expect(ids(renderer)).not.toContain('search-refresh');

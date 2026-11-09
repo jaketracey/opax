@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Text as NativeText, StyleSheet } from 'react-native';
@@ -100,7 +101,11 @@ async function open(kind: string, record: DirectoryRecord) {
   jest.mocked(loadDirectory).mockResolvedValue(record);
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<DirectoryScreen />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<DirectoryScreen />, (options) => {
+        mockScreen.options = options;
+      }),
+    );
   });
   return renderer;
 }
@@ -124,7 +129,11 @@ test('a directory-kind deep link starts a blank query and waits for that kind’
   mockParams.kind = 'person';
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<DirectoryScreen />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<DirectoryScreen />, (options) => {
+        mockScreen.options = options;
+      }),
+    );
   });
   expect(
     (mockScreen.options!.headerSearchBarOptions as { placeholder: string })
@@ -133,7 +142,13 @@ test('a directory-kind deep link starts a blank query and waits for that kind’
   await search('Anthony Albanese');
   expect(byID(renderer, 'directory-filter-line')).not.toHaveLength(0);
   mockParams.kind = 'party';
-  await act(async () => renderer.update(<DirectoryScreen />));
+  await act(async () =>
+    renderer.update(
+      withNavigationOptions(<DirectoryScreen />, (options) => {
+        mockScreen.options = options;
+      }),
+    ),
+  );
   expect(
     (mockScreen.options!.headerSearchBarOptions as { placeholder: string })
       .placeholder,
@@ -245,7 +260,11 @@ test('a failed read is a whole-screen state with the plain reason and Try again'
     .mockResolvedValue(empty);
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<DirectoryScreen />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<DirectoryScreen />, (options) => {
+        mockScreen.options = options;
+      }),
+    );
   });
   const state = renderer.root.findByType(ContentUnavailable);
   expect(state.props.title).toBe("Couldn't load parliamentarians");

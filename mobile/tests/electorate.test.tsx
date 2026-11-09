@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { catalogs as runtime } from '../src/api/runtime';
@@ -99,7 +100,11 @@ function load(name: string, jurisdiction?: string) {
 async function render(element: ReactElement) {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(element);
+    r = TestRenderer.create(
+      withNavigationOptions(element, (options) => {
+        mockOptions.push(options);
+      }),
+    );
   });
   return r;
 }

@@ -1,4 +1,5 @@
-import { router, Stack } from 'expo-router';
+import { RouteOptions } from '../src/navigation/preview';
+import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { act, Children, type ReactElement } from 'react';
 import {
@@ -174,7 +175,7 @@ test.each([
     expect(sourceHeader(payload.details)).toBe(header);
     mockParams = { key: lastKey() };
     const sheet = render(<SourceSheet />);
-    expect(sheet.findByType(Stack.Screen).props.options.title).toBe(
+    expect(sheet.findByType(RouteOptions).props.options.title).toBe(
       copy.sources,
     );
     expect(text(sheet)).toContain(header);
@@ -308,7 +309,7 @@ test.each([SourceSheet, MachineNoteSheet, RuleSheet, CitationSheet])(
     expect(
       root.findAll((node) => node.props.title === 'Nothing to show').length,
     ).toBeGreaterThan(0);
-    const options = root.findByType(Stack.Screen).props.options;
+    const options = root.findByType(RouteOptions).props.options;
     const done = options.unstable_headerRightItems()[0];
     expect(done).toMatchObject({ label: 'Done', variant: 'plain' });
     act(() => done.onPress());
@@ -523,7 +524,7 @@ test('FilterRoute Cancel restores the opening snapshot after a rendered switch c
   act(() => root.findByType(SwitchRow).props.onValueChange(true));
   expect(store.get().divided).toBe(true);
   const cancel = root
-    .findByType(Stack.Screen)
+    .findByType(RouteOptions)
     .props.options.unstable_headerLeftItems()[0];
   expect(cancel.label).toBe('Cancel');
   act(() => cancel.onPress());
