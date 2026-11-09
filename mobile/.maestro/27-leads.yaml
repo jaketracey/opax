@@ -82,8 +82,9 @@ name: 27 Leads and the declared-interests feed
       visible: Half screen
     commands:
       - swipe:
-          start: 50%, 54%
-          end: 50%, 15%
+          from:
+            text: Half screen
+          direction: UP
           duration: 600
       - waitForAnimationToEnd
 # pointer: /generated_at
