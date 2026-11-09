@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Platform } from 'react-native';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
@@ -333,6 +334,63 @@ test('Agencies keeps its system large title, stacked search and zero-height titl
   });
   await act(async () => rendered.unmount());
 });
+
+test.each([
+  ['Grants', Grants, 'grants', 'Commonwealth grants'],
+  ['Agencies', Agencies, 'agencies', 'Government agencies'],
+] as const)(
+  '%s keeps its collapsed title and installs static back names only on iOS when known',
+  async (_label, Page, name, title) => {
+    const original = Platform.OS;
+    for (const [os, previous, backTitle] of [
+      ['ios', 'index', 'Today'],
+      ['ios', 'public-money', 'Public money'],
+      ['ios', 'person/[slug]', undefined],
+      ['android', 'index', undefined],
+    ] as const) {
+      let rendered: TestRenderer.ReactTestRenderer | undefined;
+      try {
+        Platform.OS = os;
+        const route = { key: 'subject', name };
+        const navigation = {
+          getState: () => ({
+            index: 1,
+            routes: [{ key: 'previous', name: previous }, route],
+          }),
+          setOptions: jest.fn(),
+          isFocused: () => true,
+          addListener: () => () => {},
+        };
+        rendered = await mount(() => (
+          <NavigationContext.Provider value={navigation as never}>
+            <NavigationRouteContext.Provider value={route}>
+              <Page />
+            </NavigationRouteContext.Provider>
+          </NavigationContext.Provider>
+        ));
+        const options = rendered.root.findByType(RouteOptions).props.options;
+        expect(options).toMatchObject({
+          title,
+          headerTitle: title,
+          headerLargeTitleEnabled: true,
+        });
+        if (backTitle) {
+          expect(options).toMatchObject({
+            headerBackTitle: backTitle,
+            headerBackButtonMenuEnabled: false,
+            headerBackButtonDisplayMode: 'default',
+          });
+        } else {
+          expect(options).not.toHaveProperty('headerBackTitle');
+          expect(options).not.toHaveProperty('headerBackButtonMenuEnabled');
+        }
+      } finally {
+        if (rendered) await act(async () => rendered!.unmount());
+        Platform.OS = original;
+      }
+    }
+  },
+);
 
 test.each([
   ['Public money', Hub, {}, 'money-hub-title'],

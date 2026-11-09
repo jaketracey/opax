@@ -1,7 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { BarSeries } from '../../design/charts';
 import { PopUpButton, SegmentedPicker } from '../../design/controls';
@@ -17,6 +17,7 @@ import {
   leadRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { leadsFor } from '../leads/model';
@@ -87,12 +88,20 @@ export default function Agencies() {
   const total = all.reduce((sum, a) => sum + a.total, 0);
   const saved = recordSource(status.record);
   const name = 'Government agencies';
+  const backTitle = useNamedBackTitle();
   return (
     <>
       <RouteOptions
         options={{
           title: name,
           headerTitle: name,
+          ...(Platform.OS === 'ios' && backTitle
+            ? {
+                headerBackTitle: backTitle,
+                headerBackButtonMenuEnabled: false,
+                headerBackButtonDisplayMode: 'default' as const,
+              }
+            : {}),
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,

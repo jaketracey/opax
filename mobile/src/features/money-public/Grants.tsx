@@ -1,7 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { View as NativeView, RefreshControl } from 'react-native';
+import { View as NativeView, Platform, RefreshControl } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
@@ -17,6 +17,7 @@ import {
 } from '../../navigation/routes/public-money';
 import { electorateRoute } from '../../navigation/routes/your-mp';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { stateChoices } from '../sheets/filter-models';
 import type { GrantIndex, Jurisdiction } from './data';
@@ -127,6 +128,7 @@ function GrantList({
     initialView === 'seat' ? 'electorates' : initialView,
   );
   const title = jur === 'federal' ? 'Commonwealth grants' : 'Queensland grants';
+  const backTitle = useNamedBackTitle();
   const search = useMoneySearch(
     view === 'programs'
       ? 'Grant programs'
@@ -189,6 +191,13 @@ function GrantList({
         options={{
           title,
           headerTitle: title,
+          ...(Platform.OS === 'ios' && backTitle
+            ? {
+                headerBackTitle: backTitle,
+                headerBackButtonMenuEnabled: false,
+                headerBackButtonDisplayMode: 'default' as const,
+              }
+            : {}),
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,
