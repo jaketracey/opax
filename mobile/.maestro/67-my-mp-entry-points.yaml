@@ -49,11 +49,14 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     timeout: 15000
 - tapOn:
     id: person-figures-source-sheet-original-0
-- assertVisible:
-    id: debug-last-external-url
-    text: https://.*
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+      text: https://.*
+    timeout: 15000
 # end: figure-original
 - takeScreenshot: ${EVIDENCE}/67-original
+- tapOn: Done
 - openLink: opax://search?q=Plibersek
 - extendedWaitUntil:
     visible:
