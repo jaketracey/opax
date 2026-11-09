@@ -14,6 +14,9 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import DivisionHistory from '../src/features/directories/DivisionHistory';
+import Members from '../src/features/your-mp/Members';
+import { catalogs } from '../src/api/runtime';
+import { Screen } from '../src/design/layout';
 import { loadDivisionHistory } from '../src/features/directories/division-data';
 import { useNamedBackOptions } from '../src/navigation/useNamedBackOptions';
 import {
@@ -22,10 +25,14 @@ import {
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
 
+const mockParams = { seat: 'federal-senate-nsw-new-south-wales' };
 jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
+  useLocalSearchParams: () => mockParams,
 }));
-jest.mock('../src/api/runtime', () => ({ catalogs: {} }));
+jest.mock('../src/api/runtime', () => ({
+  catalogs: { directory: jest.fn(), electorateFor: jest.fn() },
+}));
 jest.mock('../src/features/directories/division-data', () => ({
   loadDivisionHistory: jest.fn(),
 }));
@@ -35,6 +42,24 @@ afterEach(() => {
   if (view) act(() => view!.unmount());
   view = undefined;
 });
+
+function nativeMeasurements() {
+  const pending: Parameters<View['measure']>[0][] = [];
+  const measure = jest.fn((done: Parameters<View['measure']>[0]) => {
+    pending.push(done);
+  });
+  const node = { measure } as unknown as View;
+  return {
+    node,
+    ref: { current: node } as React.RefObject<View | null>,
+    measure,
+    answer: (request: number, pageY: number, height = 80, width = 300) =>
+      act(async () => {
+        await Promise.resolve();
+        pending[request]!(0, 0, width, height, 0, pageY);
+      }),
+  };
+}
 
 function navigationFor(...names: string[]) {
   const routes = names.map((name, i) => ({ name, key: `route-${i}` }));
@@ -148,25 +173,88 @@ test('Votes keeps its named back button and shows the inline title only after th
   const list = view!.root.findByType(SectionList);
   const heading = list.props.ListHeaderComponent.props.children[0];
   expect(heading.props.collapsable).toBe(false);
-  heading.props.ref.current.measure = (
-    done: (...coordinates: number[]) => void,
-  ) => done(0, 0, 300, 60, 0, 44);
+  const native = nativeMeasurements();
+  heading.props.ref.current.measure = native.measure;
   act(() =>
     heading.props.onLayout({ nativeEvent: { layout: { y: 0, height: 60 } } }),
   );
-  // Native automatic insets can arrive after the first layout event.
+  expect(native.measure).not.toHaveBeenCalled();
   expect(inline().props.shown).toBe(false);
   act(() =>
     list.props.onScroll({ nativeEvent: { contentOffset: { y: -44 } } }),
   );
+  await native.answer(0, 140, 60);
   expect(inline().props.shown).toBe(false);
   act(() =>
-    list.props.onScroll({ nativeEvent: { contentOffset: { y: 200 } } }),
+    list.props.onScroll({ nativeEvent: { contentOffset: { y: -800 } } }),
   );
+  // Window coordinates already include the native scroll, even though the
+  // JS offset still looks like a negative resting inset.
+  await native.answer(1, -20, 60);
   expect(inline().props.shown).toBe(true);
   act(() =>
-    list.props.onScroll({ nativeEvent: { contentOffset: { y: -44 } } }),
+    list.props.onScroll({ nativeEvent: { contentOffset: { y: 9000 } } }),
   );
+  await native.answer(2, 140, 60);
+  expect(inline().props.shown).toBe(false);
+});
+
+test('the NSW Members route reveals Senators from asynchronous window coordinates', async () => {
+  jest.mocked(catalogs.directory).mockResolvedValue({
+    electorates: {
+      data: {
+        electorates: [
+          {
+            electorate_id: mockParams.seat,
+            slug: mockParams.seat,
+            name: 'New South Wales',
+            state_code: 'NSW',
+            jurisdiction: 'federal',
+            chamber: 'senate',
+            representatives: [],
+            detail_url: '/electorates/nsw.json',
+            url: 'https://www.aph.gov.au/Senators_and_Members/Senators',
+          },
+        ],
+      },
+      stale: false,
+    },
+  } as never);
+  jest
+    .mocked(catalogs.electorateFor)
+    .mockResolvedValue({ data: { terms: [] } } as never);
+  const { route, navigation } = navigationFor('index', 'members');
+  const options: Record<string, unknown> = {};
+  navigation.setOptions.mockImplementation((next) =>
+    Object.assign(options, next),
+  );
+  await act(async () => {
+    view = TestRenderer.create(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={100}>
+            <Members />
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  const screen = view!.root.findByType(Screen);
+  const heading = screen.props.children[0].props.children[0];
+  const native = nativeMeasurements();
+  heading.props.ref.current.measure = native.measure;
+  const inline = () => (options.headerTitle as () => React.ReactElement)();
+  expect(inline().props).toMatchObject({ title: 'Senators', shown: false });
+  act(() => heading.props.onLayout(headingLayout));
+  expect(native.measure).not.toHaveBeenCalled();
+  act(() => screen.props.onScroll(10000));
+  await native.answer(0, 120);
+  expect(inline().props.shown).toBe(false);
+  act(() => screen.props.onScroll(-1000));
+  await native.answer(1, 10);
+  expect(inline().props).toMatchObject({ title: 'Senators', shown: true });
+  act(() => screen.props.onScroll(20000));
+  await native.answer(2, 200);
   expect(inline().props.shown).toBe(false);
 });
 
@@ -193,8 +281,11 @@ function scrollTitle(ref: React.RefObject<View | null> | null) {
         hook.onTitleLayout(...args),
       onScroll: (...args: Parameters<typeof hook.onScroll>) =>
         hook.onScroll(...args),
+      setAnchorBottom: (...args: Parameters<typeof hook.setAnchorBottom>) =>
+        hook.setAnchorBottom(...args),
     },
     inline: () => (options.headerTitle as () => React.ReactElement)(),
+    header: () => options.headerTitle,
     setOptions,
   };
 }
@@ -203,81 +294,208 @@ const headingLayout = {
   nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 80 } },
 } as never;
 
-test('a native heading waits for the automatic resting inset before its viewport measurement', () => {
-  const measure = jest.fn((done) => done(0, 0, 300, 80, 0, 120));
-  const ref = { current: { measure } as unknown as View };
-  const { hook, inline, setOptions } = scrollTitle(ref);
-  act(() => hook.onTitleLayout(headingLayout));
-  expect(measure).not.toHaveBeenCalled();
-  expect(inline().props.shown).toBe(false);
-  act(() => hook.onScroll(-100));
-  expect(measure).toHaveBeenCalledTimes(1);
-  expect(inline().props.shown).toBe(false);
+test('iOS compares asynchronous window measurements without using the JS scroll offset', async () => {
+  const native = nativeMeasurements();
+  const { hook, inline, setOptions } = scrollTitle(native.ref);
   const restingTitle = setOptions.mock.calls.at(-1)![0]
     .headerTitle as () => React.ReactElement;
-  act(() => hook.onScroll(0));
+  setOptions.mockClear();
+  act(() => hook.onTitleLayout(headingLayout));
+  expect(native.measure).not.toHaveBeenCalled();
   expect(inline().props.shown).toBe(false);
-  act(() => hook.onScroll(1));
+  expect(setOptions).not.toHaveBeenCalled();
+
+  act(() => hook.onScroll(5000));
+  expect(inline().props.shown).toBe(false);
+  await native.answer(0, 120);
+  expect(inline().props.shown).toBe(false);
+  expect(setOptions).not.toHaveBeenCalled();
+
+  act(() => hook.onScroll(-900));
+  await native.answer(1, 20);
   expect(inline().props.shown).toBe(true);
   expect(restingTitle().props.shown).toBe(false);
-  act(() => hook.onScroll(-100));
+  expect(setOptions).toHaveBeenCalledTimes(1);
+
+  act(() => hook.onScroll(-1000));
+  await native.answer(2, -400);
+  expect(native.measure).toHaveBeenCalledTimes(3);
+  expect(setOptions).toHaveBeenCalledTimes(1);
+
+  act(() => hook.onScroll(9000));
+  await native.answer(3, 120);
+  expect(inline().props.shown).toBe(false);
+  expect(setOptions).toHaveBeenCalledTimes(2);
+});
+
+test('only the newest asynchronous measurement can change visibility', async () => {
+  const native = nativeMeasurements();
+  const { hook, inline } = scrollTitle(native.ref);
+  act(() => {
+    hook.onScroll(-100);
+    hook.onScroll(-200);
+  });
+  expect(native.measure).toHaveBeenCalledTimes(2);
+  await native.answer(1, 10);
+  expect(inline().props.shown).toBe(true);
+  await native.answer(0, 200);
+  expect(inline().props.shown).toBe(true);
+
+  act(() => {
+    hook.onScroll(10000);
+    hook.onScroll(-4000);
+  });
+  await native.answer(3, 200);
+  expect(inline().props.shown).toBe(false);
+  await native.answer(2, -400);
   expect(inline().props.shown).toBe(false);
 });
 
 test.each([
-  [0, 0, 0],
-  [300, 0, 0],
-  [300, 80, NaN],
+  [NaN, 80, 300],
+  [Infinity, 80, 300],
+  [20, NaN, 300],
+  [20, Infinity, 300],
+  [20, 0, 300],
+  [20, -1, 300],
+  [20, 80, NaN],
 ])(
-  'invalid initial native measurements (%j, %j, %j) never reveal a title',
-  (width, height, pageY) => {
-    const measure = jest.fn((done) => done(0, 0, width, height, 0, pageY));
-    const { hook, inline } = scrollTitle({
-      current: { measure } as unknown as View,
-    });
-    act(() => hook.onTitleLayout(headingLayout));
-    act(() => hook.onScroll(-100));
+  'invalid window measurement (%j, %j, %j) preserves visibility',
+  async (pageY, height, width) => {
+    const native = nativeMeasurements();
+    const { hook, inline, setOptions } = scrollTitle(native.ref);
+    setOptions.mockClear();
+    act(() => hook.onScroll(5000));
+    await native.answer(0, pageY, height, width);
     expect(inline().props.shown).toBe(false);
-    measure.mockImplementation((done) => done(0, 0, 300, 80, 0, 120));
-    act(() => hook.onScroll(-100));
-    expect(inline().props.shown).toBe(false);
-    act(() => hook.onScroll(1));
+    expect(setOptions).not.toHaveBeenCalled();
+
+    act(() => hook.onScroll(-500));
+    await native.answer(1, 10);
     expect(inline().props.shown).toBe(true);
+    setOptions.mockClear();
+    act(() => hook.onScroll(9000));
+    await native.answer(2, pageY, height, width);
+    expect(inline().props.shown).toBe(true);
+    expect(setOptions).not.toHaveBeenCalled();
   },
 );
 
-test('a missing native ref never uses a nested wrapper’s local coordinates', () => {
-  const ref: React.RefObject<View | null> = { current: null };
-  const { hook, inline } = scrollTitle(ref);
+test.each([
+  [21, true],
+  [21.1, false],
+])(
+  'the window boundary has 1 pt tolerance at pageY %s',
+  async (pageY, expected) => {
+    const native = nativeMeasurements();
+    const { hook, inline } = scrollTitle(native.ref);
+    act(() => hook.onScroll(-1000));
+    await native.answer(0, pageY);
+    expect(inline().props.shown).toBe(expected);
+  },
+);
+
+test('relayout mid-scroll keeps the shown title while a fresh window measurement is pending', async () => {
+  const native = nativeMeasurements();
+  const { hook, inline, setOptions } = scrollTitle(native.ref);
+  act(() => hook.onScroll(-900));
+  await native.answer(0, 10);
+  expect(inline().props.shown).toBe(true);
+  setOptions.mockClear();
+
   act(() => hook.onTitleLayout(headingLayout));
-  act(() => hook.onScroll(0));
+  expect(native.measure).toHaveBeenCalledTimes(2);
+  expect(inline().props.shown).toBe(true);
+  expect(setOptions).not.toHaveBeenCalled();
+  await native.answer(1, -20);
+  expect(inline().props.shown).toBe(true);
+  expect(setOptions).not.toHaveBeenCalled();
+
+  act(() => hook.onTitleLayout(headingLayout));
+  expect(inline().props.shown).toBe(true);
+  await native.answer(2, 200);
   expect(inline().props.shown).toBe(false);
-  ref.current = {
-    measure: (done) => done(0, 0, 300, 80, 0, 120),
-  } as View;
-  act(() => hook.onScroll(0));
+});
+
+test('a virtualised heading keeps its revealed title and invalidates the old node’s response', async () => {
+  const native = nativeMeasurements();
+  const { hook, inline } = scrollTitle(native.ref);
+  act(() => hook.onScroll(-1000));
+  await native.answer(0, 10);
+  expect(inline().props.shown).toBe(true);
+
+  act(() => hook.onScroll(9000));
+  native.ref.current = null;
+  act(() => hook.onScroll(-2000));
+  await native.answer(1, 200);
+  expect(inline().props.shown).toBe(true);
+
+  const replacement = nativeMeasurements();
+  native.ref.current = replacement.node;
+  act(() => hook.onTitleLayout(headingLayout));
+  await replacement.answer(0, 200);
+  expect(inline().props.shown).toBe(false);
+});
+
+test('a replaced heading cannot block later measurements, even if its old request never answers', async () => {
+  const native = nativeMeasurements();
+  const { hook, inline } = scrollTitle(native.ref);
+  act(() => hook.onScroll(-100));
+  const replacement = nativeMeasurements();
+  native.ref.current = replacement.node;
+  act(() => hook.onTitleLayout(headingLayout));
+  expect(replacement.measure).toHaveBeenCalledTimes(1);
+  await replacement.answer(0, 10);
+  expect(inline().props.shown).toBe(true);
+  await native.answer(0, 200);
+  expect(inline().props.shown).toBe(true);
+  act(() => hook.onScroll(5000));
+  await replacement.answer(1, 200);
+  expect(inline().props.shown).toBe(false);
+});
+
+test('an unmounted heading cannot install a late title', async () => {
+  const native = nativeMeasurements();
+  const { hook, setOptions } = scrollTitle(native.ref);
+  act(() => hook.onScroll(-1000));
+  act(() => view!.unmount());
+  view = undefined;
+  setOptions.mockClear();
+  await native.answer(0, 10);
+  expect(setOptions).not.toHaveBeenCalled();
+});
+
+test('Screen-provided content anchors keep the baseline threshold', () => {
+  const { hook, inline } = scrollTitle(null);
+  act(() => hook.setAnchorBottom(200));
+  act(() => hook.onScroll(99));
   expect(inline().props.shown).toBe(false);
   act(() => hook.onScroll(101));
   expect(inline().props.shown).toBe(true);
+  act(() => hook.onScroll(0));
+  expect(inline().props.shown).toBe(false);
 });
 
-test('an asynchronous heading measurement never mixes two scroll offsets', () => {
-  let complete!: (...coordinates: number[]) => void;
-  const measure = jest.fn((done) => {
-    complete = done;
-  });
-  const { hook, inline } = scrollTitle({
-    current: { measure } as unknown as View,
-  });
-  act(() => hook.onTitleLayout(headingLayout));
-  act(() => hook.onScroll(-100));
-  act(() => hook.onScroll(0));
-  act(() => complete(0, 0, 300, 80, 0, 120));
-  expect(inline().props.shown).toBe(false);
-  expect(measure).toHaveBeenCalledTimes(2);
-  act(() => complete(0, 0, 300, 80, 0, 20));
-  act(() => hook.onScroll(1));
-  expect(inline().props.shown).toBe(true);
+test('Android keeps its baseline content-coordinate measurement and string title', async () => {
+  const original = Platform.OS;
+  try {
+    Platform.OS = 'android';
+    const native = nativeMeasurements();
+    const { hook, header } = scrollTitle(native.ref);
+    act(() => hook.onTitleLayout(headingLayout));
+    expect(native.measure).toHaveBeenCalledTimes(1);
+    await native.answer(0, 200);
+    act(() => hook.onScroll(179));
+    expect(header()).toBe('');
+    act(() => hook.onScroll(181));
+    expect(header()).toBe('Votes in parliament');
+    act(() => hook.onScroll(0));
+    expect(header()).toBe('');
+    act(() => view!.unmount());
+    view = undefined;
+  } finally {
+    Platform.OS = original;
+  }
 });
 
 test.each([
