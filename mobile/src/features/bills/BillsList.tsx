@@ -1,5 +1,5 @@
+import { RouteOptions } from '../../navigation/preview';
 import {
-  Stack,
   router,
   useLocalSearchParams,
   type NativeStackHeaderItem,
@@ -474,13 +474,13 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   if (!isPad)
     return (
       <>
-        <Stack.Screen options={options} />
+        <RouteOptions options={options} />
         {listView}
       </>
     );
   return (
     <>
-      <Stack.Screen options={options} />
+      <RouteOptions options={options} />
       <SplitLayout<BillEntry>
         id="bills"
         testID="bills-split"

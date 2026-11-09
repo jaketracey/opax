@@ -1,4 +1,5 @@
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -331,7 +332,7 @@ export default function AskScreen() {
   return (
     <SurfaceContext.Provider value={ground}>
       <View ref={root} style={[styles.fill, groundStyle]} collapsable={false}>
-        <Stack.Screen
+        <RouteOptions
           options={{
             ...askHeaderItems({
               canStartNew: !s.busy && !idle,

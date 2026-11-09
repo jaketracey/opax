@@ -16,6 +16,7 @@ import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 
 const mockStack: { screenOptions?: unknown } = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: Object.assign(
     ({
       screenOptions,

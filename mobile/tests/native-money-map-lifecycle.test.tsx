@@ -13,6 +13,7 @@ jest.mock('expo-gl', () => ({
 }));
 let mockBlur: (() => void) | undefined;
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   useFocusEffect: (callback: () => () => void) =>
     jest.requireActual('react').useEffect(() => {
       mockBlur = callback();

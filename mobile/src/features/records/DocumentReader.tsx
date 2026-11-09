@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -343,7 +344,7 @@ export default function DocumentReader({
   return (
     <>
       {embedded ? null : (
-        <Stack.Screen
+        <RouteOptions
           options={{
             ...headerItems(
               findBar

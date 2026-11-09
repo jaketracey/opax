@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, View } from 'react-native';
 import { SegmentedPicker } from '../../design/controls';
@@ -129,7 +130,7 @@ export function PersonVotes() {
     : [];
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{ title: 'Voting record', headerSearchBarOptions: search }}
       />
       {load.status !== 'ready' || !v || !votes ? (
@@ -243,7 +244,7 @@ export function PersonInterests() {
     : [];
   return (
     <>
-      <Stack.Screen options={{ title: 'Declared interests' }} />
+      <RouteOptions options={{ title: 'Declared interests' }} />
       {load.status !== 'ready' || !r || !interests ? (
         <View style={styles.page} testID="person-interests-screen">
           {load.status === 'ready' ? (

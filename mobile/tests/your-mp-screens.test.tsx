@@ -76,6 +76,7 @@ jest.mock('../src/features/ask/open', () => ({
   useOpenAsk: () => mockOpenAsk,
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(
     ({ children, ...props }: { children: unknown }) =>
       jest

@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams, useRouter, type Href } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { ApiError } from '../../api/errors';
@@ -197,7 +198,7 @@ export default function LeadDetail() {
   );
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={headerItems(
           lead
             ? pageItems({

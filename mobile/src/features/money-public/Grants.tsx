@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View as NativeView, RefreshControl } from 'react-native';
 import { catalogs } from '../../api/runtime';
@@ -184,7 +185,7 @@ function GrantList({
   const path = `/money/grants?jur=${jur}${view === 'electorates' ? '&view=electorates' : ''}`;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           headerLargeTitleEnabled: true,
@@ -375,7 +376,7 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <>
-      <Stack.Screen options={{ title, ...moneyBar({ name: title }) }} />
+      <RouteOptions options={{ title, ...moneyBar({ name: title }) }} />
       <Screen
         onScroll={barTitle.onScroll}
         testID="grants-seat"

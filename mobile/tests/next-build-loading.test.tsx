@@ -18,6 +18,7 @@ import { catalogs } from '../src/api/runtime';
 import type { EvidenceBlock } from '../src/features/your-mp/model';
 
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
 }));

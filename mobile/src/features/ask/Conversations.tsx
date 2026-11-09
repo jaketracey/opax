@@ -1,6 +1,7 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
-import { router, Stack, type Href } from 'expo-router';
+import { router, type Href } from 'expo-router';
 import {
   Button as SwiftButton,
   ContextMenu,
@@ -165,7 +166,7 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
       ]
     : [];
   const bar = (
-    <Stack.Screen
+    <RouteOptions
       options={{
         title: conversationsCopy.title,
         headerLargeTitleEnabled: false,

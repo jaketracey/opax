@@ -1,4 +1,5 @@
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -292,7 +293,7 @@ export default function Declarations() {
 
   return (
     <SidebarSafe style={styles.screen}>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Just declared',
           headerLargeTitleEnabled: false,

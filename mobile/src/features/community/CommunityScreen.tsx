@@ -1,5 +1,5 @@
+import { RouteOptions } from '../../navigation/preview';
 import {
-  Stack,
   router,
   useFocusEffect,
   useLocalSearchParams,
@@ -1580,7 +1580,7 @@ function CommunityPage() {
   }
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={
           // The bar keeps the view's name for Back ("‹ Discussion").
           heading

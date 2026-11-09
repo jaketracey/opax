@@ -1,9 +1,5 @@
-import {
-  Stack,
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-} from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -291,7 +287,7 @@ export default function MoneyScreen() {
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <GestureHandlerRootView style={styles.root}>
-      <Stack.Screen options={options} />
+      <RouteOptions options={options} />
       <Screen
         column="wide"
         testID="money-screen"

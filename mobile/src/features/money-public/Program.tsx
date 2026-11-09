@@ -1,4 +1,5 @@
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { ApiError } from '../../api/errors';
@@ -218,7 +219,7 @@ export default function Program() {
     jur === 'qld' ? 'Queensland grants' : 'Commonwealth grants';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerSearchBarOptions: program ? search.options : undefined,

@@ -1,4 +1,5 @@
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   useEffect,
   useRef,
@@ -315,7 +316,7 @@ function ElectorateBar({
 }) {
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           headerTransparent: glassBar(),
           ...(loaded ? {} : headerItems(undefined)),
@@ -390,7 +391,7 @@ export function useElectorateMenu(
 function ElectorateMenu({ seat, asof }: { seat: Seat; asof: string }) {
   const { share, menu } = useElectorateMenu(seat, asof);
   return (
-    <Stack.Screen
+    <RouteOptions
       options={headerItems(pageItems({ name: seat.name, share, menu }))}
     />
   );

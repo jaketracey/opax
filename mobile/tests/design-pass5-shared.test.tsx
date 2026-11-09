@@ -29,6 +29,7 @@ jest.mock('react-native-safe-area-context', () => ({
 let mockSheetParams: Record<string, string> = {};
 
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },
   Link: Object.assign(({ children }: any) => children, {
     Trigger: ({ children }: any) => children,

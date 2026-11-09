@@ -1,4 +1,5 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+
 import { Platform } from 'react-native';
 import { haptic } from '../../design/haptics';
 import type { RowMenuAction } from '../../design/row-link';
@@ -100,7 +101,7 @@ export function ExploreChrome({
   const label = name ?? toolName(game);
   const path = exploreWebPath(game, params);
   return (
-    <Stack.Screen
+    <RouteOptions
       options={{
         ...(title ? { title, headerTitle: title } : {}),
         ...headerItems(

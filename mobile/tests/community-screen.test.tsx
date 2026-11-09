@@ -10,6 +10,7 @@ let mockFocused = false;
 let mockSignedIn = true;
 let mockOptions: Record<string, unknown> = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: {
     Screen: (p: { options: Record<string, unknown> }) => {
       mockOptions = p.options;

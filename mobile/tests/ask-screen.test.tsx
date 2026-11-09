@@ -31,6 +31,7 @@ import { startersFor } from '../src/features/ask/starters';
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: {
     Screen: ({ options }: { options: Record<string, unknown> }) => {
       mockBar.options = options;

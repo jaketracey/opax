@@ -42,6 +42,7 @@ import {
 const { colors } = tokens;
 
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: { Screen: () => null },
   useSegments: () => ['(tabs)', '(ask)'],
   router: { push: jest.fn(), back: jest.fn() },

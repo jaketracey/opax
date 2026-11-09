@@ -2,7 +2,6 @@ import {
   createContext,
   createElement,
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -19,7 +18,7 @@ import {
   type Text,
   type View,
 } from 'react-native';
-import { NavigationContext } from 'expo-router/react-navigation';
+import { useSafeSetOptions } from './preview';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import { useReduceMotionSetting } from '../design/accessibility';
 import { colors, motion, textStyles } from '../design/tokens';
@@ -130,7 +129,7 @@ export function useTitleOnScroll(
   title?: string,
   { trailing = 2 }: { trailing?: number } = {},
 ) {
-  const navigation = useContext(NavigationContext);
+  const setOptions = useSafeSetOptions();
   const headerHeight = useHeaderBottom();
   const [anchor, setAnchor] = useState<number | null>(null);
   const shown = useRef(false);
@@ -142,9 +141,9 @@ export function useTitleOnScroll(
     [],
   );
   useEffect(() => {
-    if (!title || anchor === null || !navigation) return;
+    if (!title || anchor === null) return;
     shown.current = offset.current + headerHeight > anchor;
-    navigation.setOptions({
+    setOptions({
       title,
       ...(Platform.OS === 'android'
         ? { headerTitle: shown.current ? title : '' }
@@ -158,17 +157,16 @@ export function useTitleOnScroll(
           }),
     });
     installed.current = true;
-  }, [title, anchor, navigation, headerHeight, trailing]);
+  }, [title, anchor, setOptions, headerHeight, trailing]);
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
       offset.current =
         typeof event === 'number' ? event : event.nativeEvent.contentOffset.y;
-      if (!installed.current || anchor === null || !title || !navigation)
-        return;
+      if (!installed.current || anchor === null || !title) return;
       const next = offset.current + headerHeight > anchor;
       if (next === shown.current) return;
       shown.current = next;
-      navigation.setOptions(
+      setOptions(
         Platform.OS === 'android'
           ? { headerTitle: next ? title : '' }
           : {
@@ -177,7 +175,7 @@ export function useTitleOnScroll(
             },
       );
     },
-    [anchor, title, navigation, headerHeight, trailing],
+    [anchor, title, setOptions, headerHeight, trailing],
   );
   // The title shows once half the heading is under the bar, as UIKit's
   // large title hands over. Waiting for its last line kept a short page's

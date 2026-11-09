@@ -1,4 +1,5 @@
-import { Stack, router } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { RefreshControl, View } from 'react-native';
 import { reports } from '../../api/runtime';
@@ -78,7 +79,7 @@ export default function TopicsIndex() {
   const loading = !read.record && !read.error;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Topics',
           headerSearchBarOptions: { ...search, hideWhenScrolling: true },

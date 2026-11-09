@@ -1,4 +1,5 @@
-import { Stack, type NativeStackHeaderItem } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { type NativeStackHeaderItem } from 'expo-router';
 import {
   createContext,
   memo,
@@ -447,7 +448,7 @@ export default function DivisionHistory() {
     );
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: TITLE,
           headerLargeTitleEnabled: false,

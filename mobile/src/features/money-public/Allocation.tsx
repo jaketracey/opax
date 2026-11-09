@@ -1,4 +1,5 @@
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Button, SegmentedPicker } from '../../design/controls';
@@ -192,7 +193,7 @@ export default function Allocation() {
   const filtersActive = !!state || (stage === 'history' && !!through);
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerLargeTitleEnabled: true,

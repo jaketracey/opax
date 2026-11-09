@@ -24,6 +24,7 @@ jest.mock('../src/api/runtime', () => ({
   catalogs: { search: jest.fn() },
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn() },
   useSegments: () => [],
   Link: Object.assign(({ children }: { children: unknown }) => children, {

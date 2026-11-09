@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -314,7 +315,7 @@ export default function BillDetail({
   return (
     <>
       {embedded ? null : (
-        <Stack.Screen
+        <RouteOptions
           options={{
             // The back label for the next screen; the bar title appears by
             // scroll once the H1 passes under the bar.

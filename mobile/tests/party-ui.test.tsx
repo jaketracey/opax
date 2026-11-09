@@ -25,6 +25,7 @@ import {
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
     Trigger: ({ children }: { children?: unknown }) => children,
     Preview: () => null,

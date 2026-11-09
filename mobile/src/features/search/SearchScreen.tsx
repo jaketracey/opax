@@ -1,3 +1,4 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import {
   Platform,
@@ -5,7 +6,7 @@ import {
   ScrollView,
   type TextInput,
 } from 'react-native';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
 import { Field, Screen } from '../../design/primitives';
 import { searchTabRole, useFocusRequest } from '../../design/keyboard';
@@ -153,7 +154,7 @@ export function SearchScreen({
   const items = phase === 'results' ? controls.items() : [];
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           ...(Platform.OS === 'ios'
             ? {

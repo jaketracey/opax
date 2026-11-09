@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Platform, ScrollView, type TextInput } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
@@ -92,7 +93,7 @@ export function ResultsScreen() {
   const title = target.group ? groups[target.group].label : 'Results';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           ...(Platform.OS === 'ios'

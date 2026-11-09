@@ -1,4 +1,5 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+
 import { useMemo } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
 import { formatCount } from '../../design/format';
@@ -91,7 +92,7 @@ export function PhotoCreditsList() {
   ) : null;
   return (
     <SidebarSafe style={styles.screen}>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: text.photos,
           headerSearchBarOptions: search.options,

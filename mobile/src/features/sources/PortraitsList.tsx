@@ -1,4 +1,5 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import type { PortraitListing } from '../../api/people-portraits';
@@ -109,7 +110,7 @@ export default function PortraitsList() {
   );
   return (
     <SidebarSafe style={styles.screen}>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: text.portraits,
           headerSearchBarOptions: search.options,

@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { router, Stack, useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
@@ -377,7 +378,7 @@ export function SeatChooser({
 
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: vic ? vicCopy.title : seatCopy.title,
           headerSearchBarOptions: {

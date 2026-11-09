@@ -40,6 +40,7 @@ jest.mock('@shopify/react-native-skia', () => ({
   Rect: (props: object) => require('react').createElement('Rect', props),
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
     Trigger: ({ children }: { children?: unknown }) => children,
     Preview: () => null,

@@ -1,7 +1,8 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCallback, useRef } from 'react';
 import { RefreshControl, View } from 'react-native';
-import { Stack } from 'expo-router';
+
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
 import { InsetGroup, Screen } from '../../design/layout';
@@ -63,7 +64,7 @@ export default function FundingBySeatType() {
   const barTitle = useTitleOnScroll(barTitleRef, name || undefined);
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           ...moneyBar({

@@ -1,4 +1,5 @@
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -521,7 +522,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   );
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           headerLargeTitleEnabled: false,

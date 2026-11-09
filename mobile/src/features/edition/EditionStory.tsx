@@ -1,4 +1,5 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+
 import { Fragment, useRef } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { EditionView } from '../../api/selectors';
@@ -87,7 +88,7 @@ export function EditionStory() {
         },
       ]}
     >
-      <Stack.Screen
+      <RouteOptions
         // Share sits in the bar beside ⋯ (today 6.2): a bottom toolbar is
         // drawn under the floating tab bar on iOS 26, which stays visible
         // on pushes from Today.

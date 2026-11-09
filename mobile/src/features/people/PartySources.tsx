@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
 import type { PartyPageRecord } from '../../api/catalogs';
@@ -62,7 +63,7 @@ export default function PartySources() {
   const { onLayout, content } = useScreenColumn('readable');
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Largest sources by year',
           ...headerItems(

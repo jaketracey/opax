@@ -12,6 +12,7 @@ import fixtures from '../scripts/fixtures/records/contracts.json';
 import { arriveInAsk } from '../src/features/ask/session';
 
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { dismissTo: jest.fn(), navigate: jest.fn() },
   useSegments: () => ['(tabs)', '(today)', 'doc', '[slug]'],
 }));

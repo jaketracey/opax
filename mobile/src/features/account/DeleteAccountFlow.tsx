@@ -1,4 +1,5 @@
-import { Stack, router } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
 import { confirmAction } from '../../design/menu';
@@ -222,7 +223,7 @@ export function DeleteCode({
 
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         // No swipe or back while the deletion request runs (1.1, 6.4).
         options={{ gestureEnabled: !deleting, headerBackVisible: !deleting }}
       />

@@ -1,3 +1,4 @@
+import { RouteOptions } from '../../navigation/preview';
 import {
   useCallback,
   useEffect,
@@ -19,7 +20,7 @@ import {
   View,
   type LayoutChangeEvent,
 } from 'react-native';
-import { Stack, router, useFocusEffect, type Href } from 'expo-router';
+import { router, useFocusEffect, type Href } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -472,7 +473,7 @@ export default function TalkScreen({
         if (live) void call.mute();
       }}
     >
-      <Stack.Screen options={screenOptions} />
+      <RouteOptions options={screenOptions} />
       <View
         testID="talk-sheet"
         style={[

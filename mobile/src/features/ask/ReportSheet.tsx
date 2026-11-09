@@ -1,3 +1,4 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useState } from 'react';
 import {
   AccessibilityInfo,
@@ -11,7 +12,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   router,
-  Stack,
   useLocalSearchParams,
   type NativeStackHeaderItem,
 } from 'expo-router';
@@ -103,7 +103,7 @@ export default function ReportSheet() {
   };
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Report this answer',
           headerTitleStyle: textStyles.inlineTitle,

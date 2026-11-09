@@ -11,7 +11,8 @@ import { stateInRunningCopy } from '../src/features/your-mp/state-names';
 
 // Hoisted above the imports by babel-jest.
 jest.mock('../src/api/runtime', () => ({ catalogs: {}, portraits: null }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 
 type Vote = {
   name: string;

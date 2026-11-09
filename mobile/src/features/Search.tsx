@@ -1,6 +1,7 @@
+import { RouteOptions } from '../navigation/preview';
 import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Stack } from 'expo-router';
+
 import {
   EmptyState,
   LayoutRegion,
@@ -78,7 +79,7 @@ function SearchSplit() {
     <>
       {/* The list column keeps an inline title; large titles over two
           panes would collapse with whichever scrolls first. */}
-      <Stack.Screen options={{ headerLargeTitleEnabled: false }} />
+      <RouteOptions options={{ headerLargeTitleEnabled: false }} />
       <SplitLayout<RecordEntry>
         id="search"
         testID="search-split"

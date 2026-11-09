@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import { StyleSheet, View } from 'react-native';
-import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import { Button, useReduceMotion } from '../../design/primitives';
 import { colors } from '../../design/tokens';
 import { ProfileScreen } from '../Person';
@@ -31,7 +32,7 @@ export function TalkRecordScreen() {
   if (!destination) return <Redirect href="/talk" />;
   return (
     <View style={styles.page}>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: '',
           gestureEnabled: !talk.active,

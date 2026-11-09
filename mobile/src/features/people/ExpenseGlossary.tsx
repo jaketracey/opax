@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useRef } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import {
   AccessibilityInfo,
   Platform,
@@ -72,7 +73,7 @@ export default function ExpenseGlossary() {
     !!target && (name === target || categoryKey(name) === categoryKey(target));
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Expense categories',
           ...(Platform.OS === 'android'

@@ -1,6 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import {
   router,
-  Stack,
   useLocalSearchParams,
   useNavigation,
   useRouter,
@@ -177,7 +177,7 @@ function Page({
   const scrollTitle = useTitleOnScroll(titleRef, title);
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={headerItems(
           share
             ? pageItems({ name: share.title, menu: moneyPageMenu(share) })

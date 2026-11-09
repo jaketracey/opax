@@ -1,8 +1,5 @@
 import { type Href } from 'expo-router';
-import {
-  HeaderHeightContext,
-  NavigationContext,
-} from 'expo-router/react-navigation';
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import {
   Children,
   cloneElement,
@@ -28,6 +25,7 @@ import {
   type ViewProps,
 } from 'react-native';
 import { opaqueBar } from '../navigation/chrome';
+import { useSafeSetOptions } from '../navigation/preview';
 import { BarTitle } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
 import {
@@ -140,12 +138,12 @@ export function Screen({
 }) {
   const { onLayout, content, inner, bar, regular } = useScreenColumn(column);
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
-  const navigation = useContext(NavigationContext);
+  const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
   useEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
-    if (!inPane) navigation?.setOptions?.(opaqueBar(colors[ground]));
-  }, [navigation, ground, inPane]);
+    if (!inPane) setOptions(opaqueBar(colors[ground]));
+  }, [setOptions, ground, inPane]);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
@@ -465,19 +463,19 @@ export function InsetGroup({
 }
 
 function useBarTitle(title: string | undefined, anchored: boolean) {
-  const navigation = useContext(NavigationContext);
+  const setOptions = useSafeSetOptions();
   const header = useContext(HeaderHeightContext) || 44;
   const shown = useRef(false);
   useEffect(() => {
-    if (title) navigation?.setOptions({ title });
-  }, [navigation, title]);
+    if (title) setOptions({ title });
+  }, [setOptions, title]);
   useEffect(() => {
     if (!title || !anchored) return;
     shown.current = false;
-    navigation?.setOptions({
+    setOptions({
       headerTitle: () => <BarTitle title={title} shown={false} />,
     });
-  }, [navigation, title, anchored]);
+  }, [setOptions, title, anchored]);
   return useCallback(
     (barTitle: string): TitleScrollHandler =>
       (y, bottom) => {
@@ -485,7 +483,7 @@ function useBarTitle(title: string | undefined, anchored: boolean) {
         const next = y + header > bottom;
         if (next === shown.current) return;
         shown.current = next;
-        navigation?.setOptions(
+        setOptions(
           Platform.OS === 'android'
             ? { headerTitle: next ? barTitle : '' }
             : {
@@ -493,7 +491,7 @@ function useBarTitle(title: string | undefined, anchored: boolean) {
               },
         );
       },
-    [navigation, header],
+    [setOptions, header],
   );
 }
 

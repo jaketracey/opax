@@ -1,4 +1,5 @@
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { catalogs } from '../../api/runtime';
@@ -88,7 +89,7 @@ export default function Agencies() {
   const name = 'Government agencies';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerLargeTitleEnabled: true,
@@ -261,7 +262,7 @@ export function Agency() {
     last = profile?.lastYear ?? latest ?? '';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerSearchBarOptions:

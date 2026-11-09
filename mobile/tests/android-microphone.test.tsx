@@ -32,6 +32,7 @@ jest.mock('../src/features/talk/bridge', () => ({
   sendText: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   useFocusEffect: (effect: () => void | (() => void)) => {
     jest
       .requireActual<typeof import('react')>('react')

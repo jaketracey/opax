@@ -1,4 +1,5 @@
-import { Stack, router, useLocalSearchParams, type Href } from 'expo-router';
+import { RouteOptions } from '../navigation/preview';
+import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Platform,
@@ -176,7 +177,7 @@ export function PartyPage({
   return (
     <>
       {embedded ? null : (
-        <Stack.Screen
+        <RouteOptions
           options={{
             // The back button on the next page names this one.
             ...(view || notAParty || record

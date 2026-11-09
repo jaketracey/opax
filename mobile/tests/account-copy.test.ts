@@ -2,7 +2,8 @@ import { accountCopy, refusalCopy } from '../src/features/account/copy';
 import { linksCopy } from '../src/features/account/parts';
 
 // Account's words, pinned as specs/account.md 2.3, 5.5 and 6.6 print them.
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 
 /** Every string a copy table can produce, with sample arguments. */
 function strings(table: Record<string, unknown>): string[] {

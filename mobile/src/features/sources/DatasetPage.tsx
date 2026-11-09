@@ -1,4 +1,5 @@
-import { Stack, router } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { copy } from '../../design/copy';
@@ -79,7 +80,7 @@ export function DatasetPage({
   if (!dataset)
     return (
       <>
-        <Stack.Screen options={{ title: '' }} />
+        <RouteOptions options={{ title: '' }} />
         <Screen grouped testID="sources-dataset-screen">
           {!settled ? (
             <Skeleton

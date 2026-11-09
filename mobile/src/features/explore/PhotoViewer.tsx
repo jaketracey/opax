@@ -1,6 +1,7 @@
+import { RouteOptions } from '../../navigation/preview';
 import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
@@ -228,7 +229,7 @@ export default function PhotoViewer() {
       accessibilityViewIsModal
       onAccessibilityEscape={close}
     >
-      <Stack.Screen
+      <RouteOptions
         options={{
           headerShown: chrome,
           title: current ? pageTitle(shown, photos.length, large) : '',

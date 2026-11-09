@@ -1,4 +1,5 @@
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -87,7 +88,7 @@ export default function TopicPage() {
 function UnknownTopic() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Topic' }} />
+      <RouteOptions options={{ title: 'Topic' }} />
       <Screen testID="topic-screen">
         <ContentUnavailable
           symbol={symbols.topic}
@@ -270,7 +271,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
   const count = topic.record?.data;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           ...headerItems(

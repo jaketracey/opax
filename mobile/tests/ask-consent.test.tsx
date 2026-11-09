@@ -34,6 +34,7 @@ jest.mock('expo-file-system', () => ({
   },
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: { Screen: () => null },
   useLocalSearchParams: jest.fn(() => ({})),
   router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },

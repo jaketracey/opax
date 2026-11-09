@@ -1,4 +1,5 @@
-import { router, Stack } from 'expo-router';
+import { RouteOptions } from '../navigation/preview';
+import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActionSheetIOS,
@@ -301,7 +302,7 @@ export default function YourMP() {
         <RefreshControl refreshing={refreshing} onRefresh={retry} />
       }
     >
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Your MP',
           headerLargeTitleEnabled: true,

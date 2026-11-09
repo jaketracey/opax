@@ -7,6 +7,7 @@ import NotFound from '../src/app/+not-found';
 import { ContentUnavailable } from '../src/design/states';
 
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: { Screen: () => null },
   router: { canGoBack: jest.fn(), back: jest.fn(), replace: jest.fn() },
 }));

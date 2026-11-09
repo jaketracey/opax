@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { ApiError } from '../../api/errors';
@@ -331,7 +332,7 @@ export default function Leads() {
   }
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           headerLargeTitle: true,

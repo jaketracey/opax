@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, FlatList, StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
@@ -197,7 +198,7 @@ export default function RecordList({
     : false;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           ...headerItems(

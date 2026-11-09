@@ -1,4 +1,5 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+
 import {
   InsetGroup,
   LinkRow,
@@ -15,7 +16,7 @@ import { openOnWeb } from '../../navigation/external';
 export function AndroidCommunityScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Community' }} />
+      <RouteOptions options={{ title: 'Community' }} />
       <Screen testID="community-home">
         <Section>
           <Text wordSafe>

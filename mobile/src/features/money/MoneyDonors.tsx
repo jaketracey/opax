@@ -1,4 +1,5 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { ApiError } from '../../api/errors';
@@ -102,7 +103,7 @@ export default function MoneyDonors() {
       : '';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Donors',
           headerLargeTitle: true,

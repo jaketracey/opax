@@ -37,7 +37,8 @@ jest.mock('../src/api/runtime', () => {
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 // The saved seat is read on the device; none is saved here.
 jest.mock('../src/features/your-mp/useIsMyMember', () => ({
   useIsMyMember: () => false,

@@ -38,6 +38,7 @@ jest.mock('../src/features/ask/open', () => ({
 const mockParams: Record<string, string | undefined> = {};
 const mockOptions: Record<string, unknown>[] = [];
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(
     ({ children, ...props }: { children: unknown }) =>
       jest

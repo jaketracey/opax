@@ -47,6 +47,7 @@ const mockParams: { key: string; division?: string; section?: string } = {
   key: 'au-federal-r7520',
 };
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn(), setParams: jest.fn() },

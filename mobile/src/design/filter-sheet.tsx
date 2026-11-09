@@ -1,4 +1,5 @@
-import { router, Stack, type NativeStackHeaderItem } from 'expo-router';
+import { RouteOptions } from '../navigation/preview';
+import { router, type NativeStackHeaderItem } from 'expo-router';
 import { useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import type {
@@ -97,7 +98,7 @@ export function FilterSheet<S extends object>({
   const groupCount = (model.rows.length ? 1 : 0) + toggleGroups.size;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{ title: 'Filters', ...filterBar(onDone, onCancel) }}
       />
       <Screen grouped testID="filters-screen">
@@ -273,7 +274,7 @@ export function FilterFacet<S extends object>({
   });
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: row?.title ?? 'Filters',
           headerBackTitle: 'Filters',

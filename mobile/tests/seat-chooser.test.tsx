@@ -14,6 +14,7 @@ import { index, manifest, people, roster, slugs } from './pinned';
 const mockScreen: { options: Record<string, any> } = { options: {} };
 const mockGoBack = jest.fn();
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), back: jest.fn() },
   useNavigation: () => ({ getParent: () => ({ goBack: mockGoBack }) }),
   Stack: {

@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import type { Href } from 'expo-router';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useRef, type ReactNode } from 'react';
 import { RefreshControl, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
@@ -642,7 +643,7 @@ export default function MoneyItem() {
   const saved = recordSource(status.record);
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           ...(item?.path ? moneyBar({ name, path: item.path }) : {}),

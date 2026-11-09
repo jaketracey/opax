@@ -45,6 +45,7 @@ jest.mock('../src/design/adaptive', () => {
   };
 });
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), navigate: jest.fn(), setParams: jest.fn() },
   useFocusEffect: (effect: () => void | (() => void)) => {
     jest.requireActual('react').useEffect(effect, []);

@@ -1,4 +1,5 @@
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Platform,
@@ -270,7 +271,7 @@ export function ProfileScreen({
   return (
     <>
       {embedded ? null : (
-        <Stack.Screen
+        <RouteOptions
           options={{
             // The back button on the next page names this one.
             ...(name ? { title: name } : {}),

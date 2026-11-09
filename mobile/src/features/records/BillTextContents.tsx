@@ -1,4 +1,5 @@
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '../../design/primitives';
@@ -62,7 +63,7 @@ export default function BillTextContents() {
   return (
     <>
       {sections.length > SEARCH_FROM ? (
-        <Stack.Screen options={{ headerSearchBarOptions: search }} />
+        <RouteOptions options={{ headerSearchBarOptions: search }} />
       ) : null}
       <StatePageProvider refreshing={false}>
         <FlatList

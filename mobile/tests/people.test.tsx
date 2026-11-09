@@ -95,6 +95,7 @@ const mockParams: {
   person?: string;
 } = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
     Trigger: ({ children }: { children?: unknown }) => children,
     Preview: () => null,
