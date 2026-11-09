@@ -120,6 +120,16 @@ name: 13 Today front page, its native records and dated original sources
     timeout: 15000
 - takeScreenshot: ${EVIDENCE}/13-bill-source-original
 - tapOn: Done
+# Original is presented over Sources. Close both before returning to Today.
+- extendedWaitUntil:
+    visible:
+      id: bill-source-sheet-original-0
+    timeout: 15000
+- tapOn: Done
+- extendedWaitUntil:
+    notVisible:
+      id: bill-source-sheet-original-0
+    timeout: 15000
 - tapOn: Today
 - assertVisible:
     id: today-screen

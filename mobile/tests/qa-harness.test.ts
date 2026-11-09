@@ -1,5 +1,6 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 // Exercise the wait parser alone. No locks, build gates or devices are used.
 test.each([
@@ -149,3 +150,155 @@ describe('Maestro lane ports', () => {
     },
   );
 });
+
+// The capture plan is intentionally outside git. Exercise it when present in
+// this worktree, the integration worktree, or an explicitly supplied location.
+// Python imports only plans.py. This fake never imports driver.py or idb.
+const capturePlan =
+  process.env.OPAX_CAPTURE_PLAN ??
+  [
+    resolve('private/apple-design/harness/plans.py'),
+    resolve('../../apple-design/mobile/private/apple-design/harness/plans.py'),
+  ].find(existsSync);
+
+(capturePlan ? test : test.skip)(
+  'capture controls focus native input, reach chrome and confirm sheet state without a device',
+  () => {
+    const output = execFileSync(
+      'python3',
+      [
+        '-c',
+        String.raw`
+import asyncio
+import importlib.util
+import sys
+from types import SimpleNamespace
+
+spec = importlib.util.spec_from_file_location('capture_plans', sys.argv[1])
+p = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(p)
+
+def element(label='', value=None, kind='Button', x=20, y=800, w=350, h=44, uid=None):
+    return dict(AXLabel=label, AXValue=value, type=kind, AXUniqueId=uid,
+                frame=dict(x=x, y=y, width=w, height=h))
+
+class Fake:
+    width, height = 402, 874
+    def __init__(self, els=(), lines=()):
+        self.els, self.lines = list(els), list(lines)
+        self.taps, self.typed, self.deleted, self.keys, self.notes = [], [], [], [], []
+        self.swipes, self.after_tap, self.after_swipe, self.echo = 0, None, None, True
+        self.c = SimpleNamespace(tap=self.long_press, key=self.key)
+    def frame(self, el):
+        f = el['frame']
+        return f['x'], f['y'], f['width'], f['height']
+    def on_screen(self, el):
+        x, y, w, h = self.frame(el)
+        return w > 0 and h > 0 and 0 <= x < self.width and 0 <= y < self.height
+    async def elements(self): return self.els
+    def ocr(self): return self.lines
+    async def find(self, test_id=None, label=None, **kwargs):
+        return next((el for el in self.els if
+                     (test_id is None or el.get('AXUniqueId') == test_id) and
+                     (label is None or el.get('AXLabel') == label)), None)
+    async def wait(self, *args, **kwargs): return await self.find(*args, **kwargs)
+    async def tap(self, test_id=None, **kwargs):
+        el = await self.find(test_id, **kwargs)
+        if not el: return False
+        x, y, w, h = self.frame(el)
+        await self.tap_xy(x + w / 2, y + h / 2)
+        return True
+    async def tap_xy(self, x, y):
+        self.taps.append((x, y))
+        if self.after_tap: self.after_tap()
+    async def long_press(self, **kwargs):
+        assert kwargs['duration'] >= 0.5
+        self.lines = [('Show passage', 50, 350, 160, 30)]
+    async def text(self, text):
+        assert self.taps, 'input sent without focusing the field'
+        self.typed.append(text)
+        if self.echo:
+            if self.els: self.els[-1]['AXValue'] = text
+            self.lines = [(text, 70, 800, 220, 30)]
+    async def erase(self, n): self.deleted.append(n)
+    async def key(self, n): self.keys.append(n)
+    async def hid(self, what, fn): await fn()
+    async def settle(self): pass
+    async def pause(self, seconds): pass
+    async def swipe(self, *args):
+        self.swipes += 1
+        if self.after_swipe: self.after_swipe()
+    async def scroll_to(self, uid, **kwargs): return await self.find(uid)
+    async def scroll_to_top(self, uid, **kwargs): return await self.find(uid)
+    def note(self, text): self.notes.append(text)
+
+async def check():
+    # idb exposes the seat search as a labelled button, even if another
+    # TextField appears first. The native field can be in the bottom bar.
+    field = element('Electorate or member’s name')
+    d = Fake([element('Unrelated input', kind='TextField', y=200), field])
+    assert await p.native_search(d, 'Zzqx', 'Electorate or member’s name')
+    assert d.taps[0] == (195, 822), d.taps
+    assert await p.native_search(d, 'Grayndler', 'Electorate or member’s name', previous='Zzqx')
+    assert d.deleted == [5] and d.keys == [79] * 4
+    assert d.typed == ['Zzqx', 'Grayndler']
+
+    # OCR-only search and a normal TextField both still work.
+    d = Fake(lines=[('Q Electorate or member’s name', 30, 800, 320, 28)])
+    assert await p.native_search(d, 'Grayndler', 'Electorate or member’s name')
+    d = Fake([element(kind='Text Field')])
+    assert await p.native_search(d, 'housing', 'People, bills, topics and more')
+    d = Fake([element('Electorate or member’s name')])
+    d.echo = False
+    assert not await p.native_search(d, 'Zzqx', 'Electorate or member’s name')
+
+    # Accept UIKit's alternate bar role and the foreground sheet frame.
+    d = Fake([element(kind='NavigationBar', x=8, y=475, w=386, h=52)])
+    assert await p.bar_action(d, 'Done')
+    assert d.taps == [(354, 501)], d.taps
+    d = Fake(lines=[('Parliamentarians', 100, 75, 200, 24)])
+    assert await p.bar_action(d, 'Filters', trailing=1, title='Parliamentarians')
+    assert d.taps == [(306, 87)], d.taps
+    d = Fake(lines=[('Parliamentari...', 130, 75, 120, 24)])
+    assert await p.bar_action(d, 'Filters', trailing=1, title='Parliamentarians')
+    assert d.taps == [(306, 87)], d.taps
+    d = Fake(lines=[('Sources Done', 170, 485, 200, 24)])
+    assert await p.bar_action(d, 'Done')
+    assert d.taps[0][0] > 300
+
+    # Scope is above the count. Vision may merge the segments into one line.
+    d = Fake(lines=[('Speeches about housing', 16, 180, 370, 44)])
+    d.after_swipe = lambda: setattr(d, 'lines', [('All People Bills Speeches', 16, 180, 370, 44)])
+    assert await p.search_scope(d, 'Speeches')
+    assert d.swipes == 1 and d.taps[0][0] > 250
+
+    # A tap alone must not claim that Sources opened or closed.
+    d = Fake([element(uid='today-declarations-sources', y=600)],
+             [('Registers of interests', 150, 600, 200, 25)])
+    assert not await p.open_sources(d, 'today-declarations-sources', 'Registers of interests')
+    d.after_tap = lambda: setattr(d, 'lines', [('Sources', 170, 485, 80, 24)])
+    assert await p.open_sources(d, 'today-declarations-sources', 'Registers of interests')
+    d.lines = [('Updated 4 Sep 2026 · Registers of interests', 16, 600, 370, 25)]
+    assert await p.open_sources(d, 'today-declarations-sources', 'Registers of interests')
+    assert d.taps[-1][0] > 200
+    d.after_tap = None
+    assert not await p.close_sheet(d, title='Sources')
+    d.after_tap = lambda: setattr(d, 'lines', [])
+    assert await p.close_sheet(d, title='Sources')
+
+    # The cited record's normal tap pushes a bill. Show passage is the
+    # action that presents /citation; exercise its actual long press path.
+    d = Fake([element(uid='ask-citation-1', y=350)])
+    d.after_tap = lambda: setattr(d, 'lines', [('Citation 1', 150, 485, 100, 24)])
+    assert await p.open_citation(d)
+    print('capture helper regressions passed')
+
+asyncio.run(check())
+`,
+        capturePlan!,
+      ],
+      { encoding: 'utf8' },
+    );
+    expect(output).toContain('capture helper regressions passed');
+  },
+);

@@ -29,7 +29,8 @@ name: 66 My MP from first launch to the latest division and the official page
     id: welcome-continue
 - assertVisible:
     id: welcome-seat
-# Large text: the native search field focuses on arrival. No field tap.
+# Focus the native search field explicitly before typing.
+- tapOn: Electorate or member.s name
 - inputText: Grayndler
 - extendedWaitUntil:
     visible:

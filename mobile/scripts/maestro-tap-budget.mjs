@@ -6,7 +6,9 @@ import { fileURLToPath } from 'node:url';
 import { isSeq, parseAllDocuments } from 'yaml';
 
 const budgets = {
-  'first-launch-member': 2,
+  // The native field needs an explicit focus tap in the current app.
+  // Count it alongside Continue and choosing the row; never hide it as typing.
+  'first-launch-member': 3,
   'today-latest-vote': 1,
   'today-official-page': 2,
   'figure-original': 2,
