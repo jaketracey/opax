@@ -407,6 +407,14 @@ test('the useful minimum includes a whole first word and the capped text scale',
   );
 });
 
+test('Program has room for Commonwealth at Large with Grants and More', () => {
+  const fontScale = 1.118;
+  const room = barTitleWidth(402, 1, undefined, 'Grants', fontScale);
+  expect(room).toBeGreaterThanOrEqual(
+    minimumBarTitleWidth('Commonwealth Home Support Programme', fontScale),
+  );
+});
+
 test('iOS compares asynchronous window measurements without using the JS scroll offset', async () => {
   const native = nativeMeasurements();
   const { hook, inline, setOptions } = scrollTitle(native.ref);
@@ -691,6 +699,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
     });
     const text = () => view!.root.findByType(Animated.Text);
     expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
+    expect(StyleSheet.flatten(text().props.style).width).toBe(82);
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(1);
     expect(text().props).toMatchObject({
       numberOfLines: 1,
@@ -709,6 +718,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
       ),
     );
     expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
+    expect(StyleSheet.flatten(text().props.style).width).toBe(82);
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(0);
     expect(text().props).toMatchObject({
       children: 'Bill name',

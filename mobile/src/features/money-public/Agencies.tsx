@@ -32,7 +32,6 @@ import {
   MoneyStatus,
   readableDates,
   recordSource,
-  TitleAlias,
   useDebouncedAnnounce,
   useMoneySearch,
   yearRange,
@@ -87,12 +86,14 @@ export default function Agencies() {
   const total = all.reduce((sum, a) => sum + a.total, 0);
   const saved = recordSource(status.record);
   const name = 'Government agencies';
+  const titleRef = useRef<View>(null);
+  const title = useTitleOnScroll(titleRef, 'Agencies', { routeTitle: name });
   return (
     <>
       <RouteOptions
         options={{
           title: name,
-          headerLargeTitleEnabled: true,
+          headerLargeTitleEnabled: false,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,
           ...moneyBar({ name, path: '/subject/agency' }),
@@ -105,9 +106,18 @@ export default function Agencies() {
         rowKey={(a) => a.id}
         refreshing={status.refreshing}
         refresh={status.refresh}
+        onScroll={title.onScroll}
         header={
           <>
-            <TitleAlias title={name} testID="agencies-title" />
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={title.onTitleLayout}
+            >
+              <Heading level={1} kind="page" testID="agencies-title">
+                {name}
+              </Heading>
+            </View>
             <MoneyStatus status={status} name={name} testID="agencies-status" />
             {data ? (
               <>
@@ -214,7 +224,9 @@ export function Agency() {
   useEffect(() => setQuery(''), [view, setQuery]);
   const titleRef = useRef<View>(null);
   const name = profile?.name ?? routeName ?? 'Government agency';
-  const title = useTitleOnScroll(titleRef, name);
+  const title = useTitleOnScroll(titleRef, name, {
+    trailing: profile && view !== 'years' ? 3 : 2,
+  });
   const openAsk = useOpenAsk();
   const lead = useAgencyLead(profile?.name);
   type Row =
@@ -286,7 +298,11 @@ export function Agency() {
         onScroll={title.onScroll}
         header={
           <>
-            <View ref={titleRef} onLayout={title.onTitleLayout}>
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={title.onTitleLayout}
+            >
               <Heading level={1} kind="page" testID="agency-title">
                 {name}
               </Heading>

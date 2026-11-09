@@ -188,6 +188,7 @@ function GrantList({
       <RouteOptions
         options={{
           title,
+          headerTitle: title,
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,
@@ -370,8 +371,7 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
         e.name.toLocaleLowerCase('en-AU') === seat.toLocaleLowerCase('en-AU') &&
         (!state || e.state_code.toLowerCase() === state.toLowerCase()),
     );
-  // The bar title fades in by scroll with no width at rest, so the back
-  // button keeps its label (money-03), and truncates inside the bar items.
+  // Keep the constrained title laid out while hidden at rest.
   const barTitleRef = useRef<NativeView>(null);
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (

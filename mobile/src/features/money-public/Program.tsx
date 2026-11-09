@@ -21,6 +21,8 @@ import {
   largestGrantsRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
+import { shareRecord } from '../../navigation/share';
 import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
@@ -152,11 +154,11 @@ export default function Program() {
   const [view, setView] = useState<'recipients' | 'grants'>('recipients');
   const search = useMoneySearch(
     view === 'recipients' ? 'Recipients' : 'Grants',
-    'button',
   );
   const titleRef = useRef<View>(null);
   const name = program?.name ?? routeName ?? 'Grant program';
-  const title = useTitleOnScroll(titleRef, name);
+  const title = useTitleOnScroll(titleRef, name, { trailing: 1 });
+  const backOptions = useNamedBackOptions();
   const openAsk = useOpenAsk();
   const seatGrants = useMemo(
     () =>
@@ -222,10 +224,22 @@ export default function Program() {
       <RouteOptions
         options={{
           title: name,
+          ...backOptions,
           headerSearchBarOptions: program ? search.options : undefined,
           ...moneyBar({
             name,
             path: program ? path : null,
+            share: false,
+            // Keep a named back item and a readable program name together.
+            extra: program
+              ? [
+                  {
+                    title: 'Share',
+                    symbol: 'square.and.arrow.up',
+                    onPress: () => void shareRecord({ path, title: name }),
+                  },
+                ]
+              : [],
             ask: program
               ? () => openAsk({ question: askAbout(program.name) })
               : null,
@@ -242,7 +256,11 @@ export default function Program() {
         onScroll={title.onScroll}
         header={
           <>
-            <View ref={titleRef} onLayout={title.onTitleLayout}>
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={title.onTitleLayout}
+            >
               <Heading level={1} testID="program-title">
                 {name}
               </Heading>

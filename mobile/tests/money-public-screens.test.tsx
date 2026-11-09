@@ -24,6 +24,7 @@ import { leadsFor, plainCaveat } from '../src/features/leads/model';
 import { evidenceRecord } from '../src/features/leads/evidence';
 import { RouteOptions } from '../src/navigation/preview';
 import {
+  HeaderHeightContext,
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
@@ -31,6 +32,8 @@ import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
+import { MoneyList } from '../src/features/money-public/parts';
+import { BarTitle } from '../src/navigation/useTitleOnScroll';
 import {
   decodeGrantIndex,
   decodeProgram,
@@ -224,6 +227,93 @@ test.each([
     expect(calls.every((path) => !path.startsWith('/api/'))).toBe(true);
     expect(rendered.toJSON()).not.toBeNull();
     if (loaded) expect(ids(rendered)).toContain(loaded);
+    await act(async () => rendered.unmount());
+  },
+);
+
+test.each([
+  [
+    'Program',
+    Program,
+    { jur: 'federal', id: 'GO3141' },
+    'grant-program',
+    'grants',
+  ],
+  ['Agencies', Agencies, {}, 'agencies', 'index'],
+  ['Agency', Agency, { id: agencyId }, 'agency', 'agencies'],
+] as const)(
+  '%s reveals from its retained native heading, including a partly hidden heading',
+  async (_label, Page, params, name, previous) => {
+    Object.assign(mockParams, params);
+    const route = { key: 'subject', name };
+    const options: Record<string, unknown> = {};
+    const navigation = {
+      getState: () => ({
+        routes: [{ key: 'previous', name: previous }, route],
+      }),
+      setOptions: jest.fn((next) => Object.assign(options, next)),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    const rendered = await mount(() => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={100}>
+            <Page />
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    ));
+    const list = rendered.root.findByType(MoneyList);
+    const heading = list.props.header.props.children[0];
+    const pending: ((...values: number[]) => void)[] = [];
+    const measure = jest.fn((done) => pending.push(done));
+    heading.props.ref.current = { measure };
+    const inline = () => (options.headerTitle as () => React.ReactElement)();
+    expect(inline().type).toBe(BarTitle);
+    expect(inline().props.shown).toBe(false);
+    expect(heading.props.collapsable).toBe(false);
+    if (name === 'grant-program') {
+      expect(options.headerBackTitle).toBe('Grants');
+      expect(options.headerBackButtonMenuEnabled).toBe(false);
+      expect(inline().props.trailing).toBe(1);
+      expect(options.headerSearchBarOptions).toMatchObject({
+        placement: 'stacked',
+      });
+      const items = (
+        options.unstable_headerRightItems as () => {
+          label: string;
+          menu?: { items: { label: string }[] };
+        }[]
+      )();
+      expect(items).toHaveLength(1);
+      expect(items[0]!.label).toBe('More');
+      expect(items[0]!.menu!.items.map((item) => item.label)).toContain(
+        'Share',
+      );
+    }
+    act(() =>
+      heading.props.onLayout({
+        nativeEvent: { layout: { y: 0, height: 120 } },
+      }),
+    );
+    expect(measure).not.toHaveBeenCalled();
+    const scroll = (y: number, pageY: number) =>
+      act(async () => {
+        list.props.onScroll({ nativeEvent: { contentOffset: { y } } });
+        await Promise.resolve();
+        pending.shift()!(0, 0, 300, 120, 0, pageY);
+      });
+    await scroll(9000, 140);
+    expect(inline().props.shown).toBe(false);
+    await scroll(-900, 40);
+    expect(inline().props.shown).toBe(true);
+    await scroll(9000, 140);
+    expect(inline().props.shown).toBe(false);
+    if (name === 'agencies') {
+      expect(inline().props.title).toBe('Agencies');
+      expect(options.title).toBe('Government agencies');
+    }
     await act(async () => rendered.unmount());
   },
 );
