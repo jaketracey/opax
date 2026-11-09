@@ -35,6 +35,35 @@ const searches = new WeakMap<
   object,
   { pinned: boolean; listeners: Set<() => void> }
 >();
+const todayScrolls = new WeakMap<
+  object,
+  { underBar: boolean; listeners: Set<() => void> }
+>();
+
+function todayScrollState(navigation: object) {
+  let state = todayScrolls.get(navigation);
+  if (!state) {
+    state = { underBar: false, listeners: new Set() };
+    todayScrolls.set(navigation, state);
+  }
+  return state;
+}
+
+/** Share Today's real scroll position with Screen, the sole appearance owner. */
+export function useTodayBarScroll() {
+  const navigation = useContext(NavigationContext);
+  return useCallback(
+    (distance: number) => {
+      if (!navigation || !glassBar() || !Number.isFinite(distance)) return;
+      const state = todayScrollState(navigation);
+      const underBar = distance > 0;
+      if (state.underBar === underBar) return;
+      state.underBar = underBar;
+      state.listeners.forEach((listener) => listener());
+    },
+    [navigation],
+  );
+}
 
 function searchState(navigation: object) {
   let state = searches.get(navigation);
@@ -142,10 +171,30 @@ export function useRootBarAppearance(
     colour: ColorValue;
     collapsed: boolean;
     largeTitleEnabled: boolean;
+    todayScrolled: boolean;
   }>(undefined);
   const colour = ground ?? tabRootGround(root?.name ?? '');
   const rootKey = root?.key;
   const today = root?.name === 'index';
+  const subscribeToday = useCallback(
+    (listener: () => void) => {
+      if (!navigation || !today) return () => {};
+      const state = todayScrollState(navigation);
+      state.listeners.add(listener);
+      return () => {
+        state.listeners.delete(listener);
+      };
+    },
+    [navigation, today],
+  );
+  const todayScrolled = useSyncExternalStore(
+    subscribeToday,
+    () =>
+      today && navigation
+        ? (todayScrolls.get(navigation)?.underBar ?? false)
+        : false,
+    () => false,
+  );
   useLayoutEffect(() => {
     if (!rootKey) {
       applied.current = undefined;
@@ -166,12 +215,15 @@ export function useRootBarAppearance(
       previous.setter === setOptions &&
       previous.colour === colour &&
       previous.collapsed === collapsed &&
-      previous.largeTitleEnabled === largeTitleEnabled
+      previous.largeTitleEnabled === largeTitleEnabled &&
+      previous.todayScrolled === todayScrolled
     )
       return;
     setOptions(
       largeTitleEnabled
-        ? (today ? todayTitleBar : largeTitleBar)(colour, collapsed)
+        ? today
+          ? todayTitleBar(colour, collapsed, todayScrolled)
+          : largeTitleBar(colour, collapsed)
         : opaqueBar(colour),
     );
     applied.current = {
@@ -180,6 +232,7 @@ export function useRootBarAppearance(
       colour,
       collapsed,
       largeTitleEnabled,
+      todayScrolled,
     };
   }, [
     rootKey,
@@ -190,6 +243,7 @@ export function useRootBarAppearance(
     landscapePhone,
     largeTitleEnabled,
     today,
+    todayScrolled,
   ]);
   return !!root;
 }

@@ -737,23 +737,29 @@ test('quiz and division history keep named native Back buttons and centred inlin
   });
 });
 
-test('Today changes only the scroll-edge shadow and edge effect, preserving transparent appearances', () => {
+test('Today uses the shared protective edge only under content, preserving expanded appearances', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
   try {
-    for (const collapsed of [false, true]) {
+    for (const [collapsed, scrolled] of [
+      [false, false],
+      [false, true],
+      [true, false],
+      [true, true],
+    ]) {
       const shared = largeTitleBar(colors.sunken, collapsed);
-      expect(todayTitleBar(colors.sunken, collapsed)).toEqual({
+      const today = todayTitleBar(colors.sunken, collapsed, scrolled);
+      expect(today).toEqual({
         ...shared,
         headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+        scrollEdgeEffects: {
+          top: collapsed || scrolled ? 'hard' : 'soft',
+          bottom: 'soft',
+        },
       });
-      expect(todayTitleBar(colors.sunken, collapsed).headerShadowVisible).toBe(
-        true,
-      );
-      expect(todayTitleBar(colors.sunken, collapsed).headerLargeStyle).toEqual(
-        {},
-      );
+      expect(today.headerShadowVisible).toBe(true);
+      expect(today.headerLargeStyle).toEqual({});
+      if (!collapsed) expect(today.headerStyle).toEqual({});
     }
     expect(todayTitleBar(colors.sunken).headerStyle).toEqual({});
     Object.defineProperty(Platform, 'Version', {
@@ -761,6 +767,9 @@ test('Today changes only the scroll-edge shadow and edge effect, preserving tran
       value: 25,
     });
     expect(todayTitleBar(colors.sunken)).toEqual(largeTitleBar(colors.sunken));
+    expect(todayTitleBar(colors.sunken, true, true)).toEqual(
+      largeTitleBar(colors.sunken, true),
+    );
   } finally {
     Object.defineProperty(Platform, 'Version', version);
   }
@@ -865,6 +874,11 @@ test.each(
       expect(navigation.setOptions).not.toHaveBeenCalled();
       act(() => renderer!.update(page(68)));
       expect(current.headerStyle).toEqual({ backgroundColor: ground });
+      if (name === 'index')
+        expect(current.scrollEdgeEffects).toEqual({
+          top: 'hard',
+          bottom: 'soft',
+        });
       expect(navigation.setOptions).toHaveBeenCalledTimes(1);
       for (let i = 0; i < 40; i++)
         act(() => renderer!.update(page(68 + (i % 2) / 2)));

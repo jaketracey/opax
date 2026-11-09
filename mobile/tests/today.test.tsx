@@ -1,6 +1,12 @@
 import { useNetworkState } from 'expo-network';
 import { act, type ReactElement, type ReactNode } from 'react';
-import { ActionSheetIOS } from 'react-native';
+import {
+  HeaderHeightContext,
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
+import { ActionSheetIOS, Platform, ScrollView } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import * as c from '../src/api/catalogs';
@@ -16,6 +22,7 @@ import { invitationBody } from '../src/features/today/SeatInvitation';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { releaseSplash } from '../src/launch/splash';
+import { largeTitleBar, todayTitleBar } from '../src/navigation/chrome';
 import { welcomeDeclinedThisLaunch } from '../src/onboarding/state';
 import { responseBytes } from './fixture-bytes';
 import {
@@ -237,6 +244,76 @@ function setUp({
   );
   mock.bills.mockResolvedValue(result(bills) as never);
 }
+
+test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
+  'Today scroll events protect its bar and leave the %s root options intact',
+  async (name) => {
+    setUp();
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const route = { key: `${name}-root`, name };
+    const setOptions = jest.fn();
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: [name, 'bill/[key]', 'explore/[tool]'],
+      }),
+      setOptions,
+    };
+    try {
+      const renderer = await render(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <SafeAreaInsetsContext.Provider
+              value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+            >
+              <HeaderHeightContext.Provider value={160}>
+                <Today />
+              </HeaderHeightContext.Provider>
+            </SafeAreaInsetsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      const scroll = (distance: number) =>
+        act(() =>
+          renderer.root.findByType(ScrollView).props.onScroll({
+            nativeEvent: { contentOffset: { y: distance - 160 } },
+          }),
+        );
+      const expanded = setOptions.mock.calls.at(-1)![0];
+      const ground = expanded.contentStyle.backgroundColor;
+      expect(expanded).toEqual(
+        (name === 'index' ? todayTitleBar : largeTitleBar)(ground),
+      );
+      expect(expanded.headerStyle).toEqual({});
+      expect(expanded.headerLargeStyle).toEqual({});
+      setOptions.mockClear();
+      for (const distance of [0, -20, 0]) scroll(distance);
+      expect(setOptions).not.toHaveBeenCalled();
+      for (const distance of [0.5, 40, 300, 600, 40]) scroll(distance);
+      if (name === 'index') {
+        expect(setOptions).toHaveBeenCalledTimes(1);
+        expect(setOptions).toHaveBeenLastCalledWith(
+          todayTitleBar(ground, false, true),
+        );
+        scroll(0);
+        expect(setOptions).toHaveBeenCalledTimes(2);
+        expect(setOptions).toHaveBeenLastCalledWith(expanded);
+      } else {
+        scroll(0);
+        expect(setOptions).not.toHaveBeenCalled();
+      }
+    } finally {
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
 
 describe('the launch order', () => {
   test('A, with a seat: Your MP, then the edition; the daily pair opens More to explore', async () => {
