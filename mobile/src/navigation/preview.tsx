@@ -45,11 +45,14 @@ export function useSafeSetOptions() {
 export function RouteOptions({
   options,
 }: {
-  options: NativeStackNavigationOptions;
+  options?: NativeStackNavigationOptions;
 }) {
   const setOptions = useSafeSetOptions();
   // Stack.Screen installs options in its own effect, outside our guard.
   // Install before paint so native items start in their final positions.
-  useLayoutEffect(() => setOptions(options), [setOptions, options]);
+  useLayoutEffect(() => {
+    // Match Expo Screen's empty-options guard (expo/router#452).
+    if (options && Object.keys(options).length) setOptions(options);
+  }, [setOptions, options]);
   return null;
 }

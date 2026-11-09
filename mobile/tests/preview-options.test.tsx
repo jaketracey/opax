@@ -10,6 +10,7 @@ import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { Screen } from '../src/design/layout';
 import Methods from '../src/features/methods/Methods';
+import { colors } from '../src/design/tokens';
 import { RouteOptions, useSafeSetOptions } from '../src/navigation/preview';
 import { useTitleOnScroll } from '../src/navigation/useTitleOnScroll';
 
@@ -63,6 +64,73 @@ const destinations: [string, () => ReactNode][] = [
 ];
 
 afterEach(() => jest.clearAllMocks());
+
+test.each([undefined, {}])(
+  'empty RouteOptions %p never calls setOptions',
+  (options) => {
+    jest.mocked(useIsPreview).mockReturnValue(false);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider
+          value={{ setOptions: mockSetOptions } as never}
+        >
+          <RouteOptions options={options} />
+        </NavigationContext.Provider>,
+      );
+    });
+    expect(mockSetOptions).not.toHaveBeenCalled();
+    act(() => renderer.unmount());
+  },
+);
+
+test.each([false, true])(
+  'preview promotion installs page options and ground, reuse navigation = %s',
+  (reuse) => {
+    jest.mocked(useIsPreview).mockReturnValue(false);
+    const route = { key: 'destination', name: 'bill/[key]' };
+    const state = { index: 0, routes: [{ key: 'root', name: 'index' }] };
+    const placeholder = jest.fn(() => {
+      throw new Error('Options cannot be set from a placeholder screen.');
+    });
+    const real = jest.fn();
+    const navigation = {
+      getState: () => state,
+      isFocused: () => false,
+      addListener: () => () => {},
+      setOptions: placeholder as (options: object) => void,
+    };
+    const page = (nav: typeof navigation) => (
+      <NavigationContext.Provider value={nav as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <Screen>
+            <RouteOptions options={{ title: 'The bill' }} />
+            <View />
+          </Screen>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(page(navigation));
+    });
+    expect(placeholder).not.toHaveBeenCalled();
+    state.routes.push(route);
+    state.index = 1;
+    const promoted = reuse ? navigation : { ...navigation };
+    promoted.setOptions = real;
+    promoted.isFocused = () => true;
+    act(() => renderer.update(page(promoted)));
+    expect(real).toHaveBeenCalledWith({ title: 'The bill' });
+    expect(real).toHaveBeenCalledWith(
+      expect.objectContaining({
+        headerStyle: { backgroundColor: colors.paper },
+        headerLargeStyle: { backgroundColor: colors.paper },
+      }),
+    );
+    act(() => renderer.unmount());
+  },
+);
 
 test.each([false, true])(
   'a placeholder is safe even without preview context, registered route = %s',
