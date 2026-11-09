@@ -270,7 +270,7 @@ test('bar search cancellation recognises the iOS 26 Close label before restoring
   expect(dismiss.runFlow.commands[1]).toBe('waitForAnimationToEnd');
 });
 
-test('Ask dismisses the New question keyboard before navigating to the seat starter', () => {
+test('Ask drags the interactive keyboard down and waits for the tab before the seat starter', () => {
   const steps = maestroSteps('.maestro/30-ask.yaml');
   const fresh = steps.findIndex((step: any) => step.tapOn === 'New question');
   const tab = steps.findIndex(
@@ -278,11 +278,22 @@ test('Ask dismisses the New question keyboard before navigating to the seat star
       index > fresh && step.tapOn?.id === 'tab-your-mp',
   );
   const dismiss = steps.findIndex(
-    (step: any, index: number) => index > fresh && step === 'hideKeyboard',
+    (step: any, index: number) => index > fresh && step.swipe,
   );
   expect(dismiss).toBeGreaterThan(fresh);
   expect(dismiss).toBeLessThan(tab);
+  expect(steps).not.toContain('hideKeyboard');
+  expect(steps[dismiss].swipe).toEqual({
+    start: '50%, 30%',
+    end: '50%, 90%',
+    duration: 600,
+  });
   expect(steps[dismiss + 1]).toBe('waitForAnimationToEnd');
+  expect(steps[dismiss + 2].extendedWaitUntil.visible).toEqual({
+    id: 'tab-your-mp',
+  });
+  expect(dismiss + 2).toBeLessThan(tab);
+  expect(steps.slice(fresh)).not.toContainEqual({ pressKey: 'Enter' });
   expect(steps[tab + 1]).toEqual({
     runFlow: 'support/location-manual-seat.yaml',
   });
@@ -382,6 +393,37 @@ test('Bill text scrolls past the summary, returns to the overview and opens Cont
     text: 'More for ${NAME}',
   });
   expect(more.tapOn).toEqual(wait.extendedWaitUntil.visible);
+});
+
+test('bill text selects Version by id, checks its accessible stage and retains the in-content stage assertion', () => {
+  const steps = maestroSteps('.maestro/33-bill-text-recent.yaml');
+  const version = steps.findIndex(
+    (step: any) => step.tapOn?.id === 'bill-text-version',
+  );
+  expect(version).toBeGreaterThan(0);
+  expect(steps).not.toContainEqual({ tapOn: 'As passed' });
+  const choose = steps.findIndex(
+    (step: any) =>
+      step.tapOn === 'First reading: synthetic fixture, 1 Oct 2026',
+  );
+  expect(choose).toBeGreaterThan(version);
+  expect(steps[choose + 1].extendedWaitUntil.visible).toEqual({
+    id: 'bill-text-version',
+    text: 'Version, First reading: synthetic fixture(, 1 October 2026)?',
+  });
+  expect(steps[choose + 2].scrollUntilVisible.element).toEqual({
+    id: 'bill-text-stage',
+  });
+  expect(steps[choose + 3].assertVisible).toEqual({
+    id: 'bill-text-stage',
+    text: 'First reading: synthetic fixture',
+  });
+  expect(steps).toContainEqual({
+    runFlow: {
+      file: 'support/open-more.yaml',
+      env: { NAME: 'this bill text' },
+    },
+  });
 });
 
 test('all three typed quiz guesses use the exposed Done label and wait for editing to finish', () => {
