@@ -41,6 +41,7 @@ const mockFocus: {
   cleanup?: void | (() => void);
 } = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   useFocusEffect: (effect: () => void | (() => void)) => {
     jest.requireActual<typeof import('react')>('react').useEffect(() => {
       mockFocus.effect = effect;

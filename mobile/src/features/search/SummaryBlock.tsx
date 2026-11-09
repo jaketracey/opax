@@ -1,10 +1,13 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
+import type { Roster } from '../../api/catalog-decoders';
+import { counted, formatDate } from '../../design/format';
 import {
   Group,
   InlineError,
+  InsetGroup,
   MachinePill,
   RecordRow,
-  RowList,
   SectionHeader,
   Skeleton,
   SourceLine,
@@ -12,15 +15,12 @@ import {
   Text,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
-import { formatDate } from '../../design/format';
-import { router } from 'expo-router';
-import type { Roster } from '../../api/catalog-decoders';
 import type { SearchSummary } from './decoders';
 import type { SpeechFilters } from './filters';
-import { summaryRequest, summaryKey, useRead } from './requests';
-import { resultMeta, resultTitle, savedCopy } from './present';
 import { searchPathRoute } from './navigation';
+import { resultMeta, resultTitle, savedCopy } from './present';
 import { failureRecovery } from './recovery';
+import { summaryKey, summaryRequest, useRead } from './requests';
 import type { SpeechSort } from './speeches';
 
 const scopeWord: Record<SpeechSort, string> = {
@@ -60,14 +60,14 @@ export function SummaryBlock({
   };
   if (!asked || !read)
     return (
-      <RowList>
+      <InsetGroup>
         <SuggestionRow
           symbol="sparkles"
           name="Summarise these speeches"
           onPress={run}
           testID="results-summarise"
         />
-      </RowList>
+      </InsetGroup>
     );
   if (read.status === 'loading')
     return (
@@ -91,13 +91,13 @@ export function SummaryBlock({
   if (summary.data.status === 'empty')
     return (
       <Group gap={rhythm.line}>
-        <RowList>
+        <InsetGroup>
           <SuggestionRow
             symbol="sparkles"
             name="Summarise these speeches"
             testID="results-summarise"
           />
-        </RowList>
+        </InsetGroup>
         <Text variant="secondary">No summary for these results.</Text>
       </Group>
     );
@@ -107,7 +107,7 @@ export function SummaryBlock({
     <Group gap={rhythm.block} testID="records-summary">
       <MachinePill note={machineNote} testID="records-summary-machine" />
       <Text variant="secondary" testID="summary-scope-line">
-        {`From the ${scopeWord[sort]} ${Math.min(20, summary.data.reviewed_count || 20)} speeches for “${q.trim()}”`}
+        {`From the ${scopeWord[sort]} ${counted(Math.min(20, summary.data.reviewed_count || 20), 'speech', 'speeches')} for “${q.trim()}”`}
       </Text>
       {summary.data.points.map((point, index) => {
         const numbers = point.source_ids
@@ -141,7 +141,7 @@ export function SummaryBlock({
       })}
       <Group gap={rhythm.heading}>
         <SectionHeader title={`Records cited (${sources.length})`} level={3} />
-        <RowList>
+        <InsetGroup>
           {sources.map((s, index) => {
             const route = searchPathRoute(s.href);
             return (
@@ -156,7 +156,7 @@ export function SummaryBlock({
               />
             );
           })}
-        </RowList>
+        </InsetGroup>
       </Group>
       <SourceLine
         asOf={summary.asOf}

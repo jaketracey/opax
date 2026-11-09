@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
 import { router, type NativeStackHeaderItem } from 'expo-router';
-import {
-  filtersItem,
-  pageMenu,
-  type RowMenuAction,
-} from '../../navigation/chrome';
-import { shareHeaderItem, shareRecord } from '../../navigation/share';
-import { filtersRoute } from '../../navigation/routes/filters';
-import { useOpenAsk } from '../ask/open';
+import { useEffect, useState } from 'react';
 import type { Roster } from '../../api/catalog-decoders';
+import type { RowMenuAction } from '../../design/row-link';
+import { filtersItem, pageMenu } from '../../navigation/chrome';
+import { filtersRoute } from '../../navigation/routes/filters';
+import { shareHeaderItem, shareRecord } from '../../navigation/share';
+import { useOpenAsk } from '../ask/open';
+import type { RecoveryHandlers } from './EmptyResults';
 import {
   clearedFilters,
   filtersToParams,
@@ -18,9 +16,8 @@ import {
   type SpeechFilters,
 } from './filters';
 import { askDraft, withoutQuotes } from './recovery';
-import type { RecoveryHandlers } from './EmptyResults';
-import { speechSorts, type SpeechSort } from './speeches';
 import { webSearchPath, type ResultsTarget, type Scope } from './scopes';
+import { speechSorts, type SpeechSort } from './speeches';
 
 const SHARE_TITLE = 'Search on OPAX';
 

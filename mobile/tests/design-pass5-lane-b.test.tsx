@@ -2,23 +2,11 @@ import { router } from 'expo-router';
 import { sheetPayload } from '../src/navigation/sheets';
 // Design pass 5, lane B (docs/design/review-2026-10/pass5-app-critique.md):
 // profiles and places. Each test names the critique item it holds.
-import { catalogs as runtime } from '../src/api/runtime';
 import { act, type ReactElement } from 'react';
-import TestRenderer from 'react-test-renderer';
 import { StyleSheet } from 'react-native';
+import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
-import {
-  catalogs,
-  index,
-  manifest,
-  people,
-  roster,
-  slugs,
-  pinned,
-} from './pinned';
-import Person from '../src/features/Person';
-import YourMP from '../src/features/YourMP';
-import Electorate, { censusCaveat } from '../src/features/Electorate';
+import { catalogs as runtime } from '../src/api/runtime';
 import {
   Portrait,
   ReadableColumn,
@@ -27,6 +15,9 @@ import {
   SourceLine,
   Text,
 } from '../src/design/primitives';
+import Electorate from '../src/features/Electorate';
+import Person from '../src/features/Person';
+import { loadChoice } from '../src/features/your-mp/choice-store';
 import {
   BlockSource,
   isOpaxDataset,
@@ -34,11 +25,16 @@ import {
   representationBlock,
   sourceLicence,
 } from '../src/features/your-mp/Evidence';
+import YourMP from '../src/features/YourMP';
 import {
-  rosterName,
-  serviceSpan,
-} from '../src/features/directories/ElectorateHistory';
-import { loadChoice } from '../src/features/your-mp/choice-store';
+  catalogs,
+  index,
+  manifest,
+  people,
+  pinned,
+  roster,
+  slugs,
+} from './pinned';
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn() },
   catalogs: {
@@ -60,6 +56,7 @@ jest.mock('../src/api/image-policy', () => ({
 }));
 const mockParams: { slug?: string; id?: string } = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(
     ({ children, ...props }: { children: unknown }) =>
       jest
@@ -439,30 +436,5 @@ describe('source helpers', () => {
     expect(block.sources.map((s) => s.label)).toEqual([
       'OpenAustralia parliamentary service records',
     ]);
-  });
-
-  test('P3-5 and P2-7 copy helpers', () => {
-    expect(
-      serviceSpan({
-        start: '1996-03-02',
-        end: null,
-        observed_through: '2026-09-09',
-      }),
-    ).toBe('Since 2 Mar 1996 (current at 9 Sep 2026)');
-    expect(serviceSpan({ start: '1993-03-13', end: '1996-01-29' })).toBe(
-      '13 Mar 1993 to 29 Jan 1996',
-    );
-    expect(rosterName('LEO McLEAY')).toBe('Leo McLeay');
-    expect(rosterName('Jeannette McHugh')).toBe('Jeannette McHugh');
-    expect(rosterName('Anthony Albanese')).toBe('Anthony Albanese');
-    expect(
-      censusCaveat(
-        '2021 Census geography; values have not been redistributed to current boundaries.',
-        '2021 Census geography',
-      ),
-    ).toBe('Values have not been redistributed to current boundaries.');
-    expect(censusCaveat('Other note.', '2021 Census geography')).toBe(
-      'Other note.',
-    );
   });
 });

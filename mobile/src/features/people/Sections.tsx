@@ -11,7 +11,12 @@ import type { SourceDetails } from '../../design/source';
 
 import { InlineError, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
-import { formatCount, formatDate, formatPercent } from '../../design/format';
+import {
+  counted,
+  formatCount,
+  formatDate,
+  formatPercent,
+} from '../../design/format';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import { fromWebPath, recordListRoute } from '../../navigation/routes';
 import { openOnWeb } from '../../navigation/external';
@@ -201,7 +206,7 @@ export function Topics({ name }: { name: string }) {
         about={{
           title: 'Topics',
           notes: [
-            `Share of ${formatCount(profile.labelled)} speeches with topic labels, ${profile.label}.`,
+            `Share of ${counted(profile.labelled, 'speech', 'speeches')} with topic labels, ${profile.label}.`,
             data.person.data.coverage,
           ],
         }}

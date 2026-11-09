@@ -20,7 +20,7 @@ export function hideNativeSplash() {
  *
  * - `holdSplashForWelcome()`: the welcome is due. Only the welcome's first
  *   layout (`releaseSplash('welcome')`) or the failsafe release the cover.
- * - `decideSplashPlain()`: no welcome. Today's cached reads
+ * - `decideSplashPlain()`: no welcome. Today's first layout, including skeletons,
  *   (`releaseSplash('today')`) release it, or the handoff's own
  *   `latestFade`, whichever comes first.
  */
@@ -76,7 +76,10 @@ export function resetSplashForTests() {
 
 // If the handoff never draws (fonts or the image fail), never leave anyone
 // on the splash.
-setTimeout(() => {
+const failsafe = setTimeout(() => {
   hideNativeSplash();
   releaseSplash('failsafe');
 }, handoff.splashFailsafe);
+
+// Node tests may finish while the native failsafe remains armed.
+(failsafe as ReturnType<typeof setTimeout> & { unref?: () => void }).unref?.();

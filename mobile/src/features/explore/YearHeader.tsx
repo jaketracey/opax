@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
-import { StepButtons, Text } from '../../design/primitives';
 import { formatDate } from '../../design/format';
+import { MonthPager, Text } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { FIRST_YEAR, LAST_YEAR, YearMenu } from './YearMenu';
 
@@ -63,22 +63,19 @@ export function YearPager({
   const previous = year > FIRST_YEAR ? year - 1 : null,
     next = year < LAST_YEAR ? year + 1 : null;
   return (
-    <StepButtons
+    <MonthPager
+      month={String(year)}
+      unit="year"
+      labels
       testID="tm-pager"
-      previous={{
-        label: previous ? String(previous) : 'Previous year',
-        accessibilityLabel: `Previous year${previous ? `, ${previous}` : ''}`,
-        disabled: !previous,
-        onPress: () => previous && onYear(previous),
-        testID: 'tm-previous',
-      }}
-      next={{
-        label: next ? String(next) : 'Next year',
-        accessibilityLabel: `Next year${next ? `, ${next}` : ''}`,
-        disabled: !next,
-        onPress: () => next && onYear(next),
-        testID: 'tm-next',
-      }}
+      previousTestID="tm-previous"
+      nextTestID="tm-next"
+      previous={
+        previous
+          ? { label: String(previous), onPress: () => onYear(previous) }
+          : null
+      }
+      next={next ? { label: String(next), onPress: () => onYear(next) } : null}
     />
   );
 }

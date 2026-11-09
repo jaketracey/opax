@@ -1,35 +1,35 @@
-import { sheetPayload } from '../src/navigation/sheets';
-import { act } from 'react';
 import { router } from 'expo-router';
-import TestRenderer from 'react-test-renderer';
+import { act } from 'react';
 import { Text as NativeText } from 'react-native';
-import { catalogs, peopleDepth } from '../src/api/runtime';
+import TestRenderer from 'react-test-renderer';
+import { decodeExpenseCategories } from '../src/api/catalog-decoders';
 import type { PersonProfile } from '../src/api/person-identity';
+import { catalogs, peopleDepth } from '../src/api/runtime';
+import { BarSeries } from '../src/design/charts';
+import { SegmentedPicker } from '../src/design/controls';
+import { LinkRow } from '../src/design/rows';
+import ExpenseGlossary, {
+  categoryKey,
+} from '../src/features/people/ExpenseGlossary';
 import {
-  MoreFromRecord,
-  PersonDiary,
-  Topics,
-  openRecord,
-} from '../src/features/people/Sections';
+  decodeAccess,
+  decodeFunding,
+  receiptsSeries,
+} from '../src/features/people/model';
 import {
   PartyAccess,
   PartyDebts,
   PartyReturns,
   usePartyFunding,
 } from '../src/features/people/PartyDepth';
-import { BarSeries } from '../src/design/charts';
-import ExpenseGlossary, {
-  categoryKey,
-} from '../src/features/people/ExpenseGlossary';
-import { decodeExpenseCategories } from '../src/api/catalog-decoders';
 import {
-  decodeAccess,
-  decodeFunding,
-  receiptsSeries,
-} from '../src/features/people/model';
-import { SegmentedPicker } from '../src/design/controls';
-import { LinkRow } from '../src/design/rows';
+  MoreFromRecord,
+  PersonDiary,
+  Topics,
+  openRecord,
+} from '../src/features/people/Sections';
 import { recordListRoute } from '../src/navigation/routes';
+import { sheetPayload } from '../src/navigation/sheets';
 import { pinned } from './pinned';
 const mockParams: Record<string, string | undefined> = {};
 const mockOptions: { current?: Record<string, unknown> } = {};
@@ -40,6 +40,7 @@ jest.mock('@shopify/react-native-skia', () => ({
   Rect: (props: object) => require('react').createElement('Rect', props),
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
     Trigger: ({ children }: { children?: unknown }) => children,
     Preview: () => null,
@@ -70,9 +71,6 @@ jest.mock('../src/navigation/external', () => ({
   openOnWeb: jest.fn(),
   openSource: jest.fn(),
   sourceUrl: (s: string) => s,
-}));
-jest.mock('../src/features/follows/FollowToggle', () => ({
-  FollowToggle: () => null,
 }));
 const result = <T,>(data: T) => ({
   data,

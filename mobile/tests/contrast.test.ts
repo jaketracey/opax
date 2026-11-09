@@ -3,13 +3,12 @@ import {
   componentPairsFor,
   contrastRatio,
   forbiddenPairs,
-  partyWashPairs,
   requiredRatio,
 } from '../src/design/contrast';
 import {
-  light,
   dark,
   darkHighContrast,
+  light,
   lightHighContrast,
   partyColors,
   type Palette,
@@ -27,14 +26,21 @@ describe('contrast of every pair the components draw', () => {
       expect(value).toBeGreaterThanOrEqual(requiredRatio[pair.kind]);
     },
   );
-  test.each(partyWashPairs.map((pair) => [pair.use, pair] as const))(
-    '%s',
-    (_, pair) => {
-      expect(
-        contrastRatio(pair.foreground, pair.background),
-      ).toBeGreaterThanOrEqual(requiredRatio.text);
-    },
-  );
+  test('drawn pairs name current components and contain no bronze text claims', () => {
+    expect(
+      componentPairs.filter((pair) =>
+        /Location progress|SourceLink|OpaxWebLink|ViewOriginal|InfoButton|PartyChip|MachineWritten/.test(
+          pair.use,
+        ),
+      ),
+    ).toEqual([]);
+    expect(
+      componentPairs.filter(
+        (pair) =>
+          pair.foregroundRole === 'bronzeInk' && pair.kind !== 'non-text',
+      ),
+    ).toEqual([]);
+  });
   test('the pairs IOS-UX forbids really fail', () => {
     for (const pair of forbiddenPairs)
       expect(
@@ -60,7 +66,7 @@ describe('ratios recorded in IOS-UX section 5', () => {
     expect(ratio(light.onNavy, light.navy)).toBeCloseTo(14.56, 1);
     expect(ratio(light.onNavySoft, light.navy)).toBeCloseTo(8.39, 1);
     expect(ratio(light.bronzeBright, light.navy)).toBeCloseTo(6.69, 1);
-    expect(ratio(light.lineStrong, light.paper)).toBeCloseTo(3.33, 1);
+    expect(ratio(light.lineControl, light.paper)).toBeCloseTo(3.33, 1);
   });
   test('party dots clear 3:1 on paper', () => {
     for (const hex of Object.values(partyColors))

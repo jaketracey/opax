@@ -1,27 +1,30 @@
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Platform, ScrollView, type TextInput } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
+import { formatCount } from '../../design/format';
 import {
   ContentUnavailable,
   Field,
   Group,
+  InsetGroup,
   Screen,
   SectionHeader,
-  RowList,
 } from '../../design/primitives';
-import { rhythm } from '../../design/tokens';
 import { useListSearchBar } from '../../design/search-bar';
+import { rhythm } from '../../design/tokens';
 import { headerItems } from '../../navigation/chrome';
-import { ResultsView, localSource } from './ResultsView';
-import { GroupResults, useGroupList } from './GroupResults';
-import { ResultsHeader } from './ResultsHeader';
-import { MatchRow } from './rows';
 import { resultID } from './AllResults';
 import { EmptyResults, type RecoveryHandlers } from './EmptyResults';
+import { GroupResults, useGroupList } from './GroupResults';
+import { ResultsHeader } from './ResultsHeader';
+import { ResultsView, localSource } from './ResultsView';
+import { SEARCH_PLACEHOLDER } from './SearchScreen';
 import { useResultsControls } from './controls';
 import { filtersFromParams } from './filters';
 import { matchAll } from './ranking';
+import { MatchRow } from './rows';
 import {
   capQuery,
   groups,
@@ -33,8 +36,6 @@ import {
   type Scope,
 } from './scopes';
 import { useSearchSources, type SearchSources } from './sources';
-import { SEARCH_PLACEHOLDER } from './SearchScreen';
-import { formatCount } from '../../design/format';
 
 /**
  * `/results/[kind]`, pushed in every stack (journeys/search.md 4.3): the
@@ -92,7 +93,7 @@ export function ResultsScreen() {
   const title = target.group ? groups[target.group].label : 'Results';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           ...(Platform.OS === 'ios'
@@ -214,7 +215,7 @@ function LocalList({
       ) : (
         <>
           <SectionHeader title={groups[group].label} level={3} />
-          <RowList>
+          <InsetGroup>
             {rows.map((match) => (
               <MatchRow
                 key={`${match.kind}:${match.key}`}
@@ -225,7 +226,7 @@ function LocalList({
                 testID={resultID(match)}
               />
             ))}
-          </RowList>
+          </InsetGroup>
         </>
       )}
     </Group>

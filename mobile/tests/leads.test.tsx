@@ -1,10 +1,14 @@
-import { sheetPayload } from '../src/navigation/sheets';
-import { sourceHeader } from '../src/features/sheets/SourceSheet';
+import { router } from 'expo-router';
+import { createHash } from 'node:crypto';
 import { act } from 'react';
 import { Linking, Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { router } from 'expo-router';
-import { apiClient, catalogs as runtime } from '../src/api/runtime';
+import {
+  CatalogCache,
+  type CacheEntry,
+  type CacheIndexEntry,
+  type CacheStore,
+} from '../src/api/cache';
 import {
   Catalogs,
   decodeDiscovery,
@@ -13,56 +17,21 @@ import {
   recentDeclarationsFor,
   type Discovery,
 } from '../src/api/catalogs';
-import { createHash } from 'node:crypto';
 import { ApiClient, dataAsOf, type RecordResult } from '../src/api/client';
-import {
-  CatalogCache,
-  type CacheEntry,
-  type CacheIndexEntry,
-  type CacheStore,
-} from '../src/api/cache';
-import { isPartialCatalog } from '../src/api/validation';
 import { ApiError } from '../src/api/errors';
+import { apiClient, catalogs as runtime } from '../src/api/runtime';
+import { isPartialCatalog } from '../src/api/validation';
 import { copy } from '../src/design/copy';
+import { chamberName } from '../src/design/parliament';
 import {
   Card,
   ContentUnavailable,
-  LeadCard,
+  Text as DesignText,
   RowLink,
   StatStrip,
-  Text as DesignText,
 } from '../src/design/primitives';
 import { accents } from '../src/design/tokens';
-import { filterStore } from '../src/features/sheets/filter-model';
-import { chamberName } from '../src/design/parliament';
-import { openOnWeb, openSource, webPageUrl } from '../src/navigation/external';
-import {
-  declarationsRoute,
-  leadRoute,
-  leadsRoute,
-  personRoute,
-} from '../src/navigation/routes';
-import { leadsKindRoute, moneyRoute } from '../src/navigation/routes/money-map';
-import {
-  agencyRoute,
-  moneyItemRoute,
-} from '../src/navigation/routes/public-money';
-import { partyRoute } from '../src/navigation/routes/people';
 import Today from '../src/features/Today';
-import Leads, {
-  kindCaption,
-  leadsCitation,
-  leadsLede,
-} from '../src/features/leads/Leads';
-import { publicDiscovery } from '../src/features/money-public/discovery';
-import { money } from '../src/features/money-public/runtime';
-import { decodeAgencies } from '../src/features/money-public/data';
-import { decodeMoneyGraph } from '../src/features/money/data';
-import {
-  forgetMoneyGraphs,
-  rememberMoneyGraph,
-} from '../src/features/money/lookup';
-import LeadDetail, { evidenceRow } from '../src/features/leads/LeadDetail';
 import Declarations from '../src/features/declarations/Declarations';
 import {
   feedCountLine,
@@ -70,6 +39,12 @@ import {
   filterFeed,
   noFilters,
 } from '../src/features/declarations/model';
+import LeadDetail, { evidenceRow } from '../src/features/leads/LeadDetail';
+import Leads, {
+  kindCaption,
+  leadsCitation,
+  leadsLede,
+} from '../src/features/leads/Leads';
 import {
   aboutLede,
   categoryLabel,
@@ -91,11 +66,35 @@ import {
   searchLeads,
   supplierPath,
 } from '../src/features/leads/model';
+import { decodeAgencies } from '../src/features/money-public/data';
+import { publicDiscovery } from '../src/features/money-public/discovery';
+import { money } from '../src/features/money-public/runtime';
+import { decodeMoneyGraph } from '../src/features/money/data';
+import {
+  forgetMoneyGraphs,
+  rememberMoneyGraph,
+} from '../src/features/money/lookup';
+import { sourceHeader } from '../src/features/sheets/SourceSheet';
+import { filterStore } from '../src/features/sheets/filter-model';
+import { openOnWeb, openSource, webPageUrl } from '../src/navigation/external';
+import {
+  declarationsRoute,
+  leadRoute,
+  leadsRoute,
+  personRoute,
+} from '../src/navigation/routes';
+import { leadsKindRoute, moneyRoute } from '../src/navigation/routes/money-map';
+import { partyRoute } from '../src/navigation/routes/people';
+import {
+  agencyRoute,
+  moneyItemRoute,
+} from '../src/navigation/routes/public-money';
+import { sheetPayload } from '../src/navigation/sheets';
 import {
   bills,
-  catalogs as pinnedCatalogs,
   pinned,
   pinnedBytes,
+  catalogs as pinnedCatalogs,
   slugs,
 } from './pinned';
 
@@ -916,29 +915,6 @@ describe('leads', () => {
     expect(
       evidenceRow(leadEvidenceFor({ ...westpac, label: 'Donation record 1' })),
     ).toBeNull();
-  });
-  test('every card keeps every caveat verbatim, its figures and its as-at line, and no local row ID', async () => {
-    for (const lead of leadsFor(discovery)) {
-      const renderer = await render(
-        <LeadCard
-          lead={lead}
-          category={lead.categoryLabel}
-          asAt={{ asOf: discoveryAsOf(discovery), citation: lead.citation }}
-          testID="card"
-        />,
-      );
-      const shownText = [...texts(renderer.root), ...labels(renderer.root)];
-      for (const caveat of lead.caveats) expect(shownText).toContain(caveat);
-      for (const metric of lead.metrics)
-        expect(shownText.some((t) => t.startsWith(`${metric.label}, `))).toBe(
-          true,
-        );
-      expect(shownText).toContain(
-        `As at 21 September 2026 · Source: ${lead.citation.join('; ')}`,
-      );
-      expect(shownText.join('\n')).not.toMatch(/local record/);
-      act(() => renderer.unmount());
-    }
   });
 });
 

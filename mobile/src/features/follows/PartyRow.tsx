@@ -1,7 +1,7 @@
-import { LinkRow } from '../../design/rows';
+import { partySlug } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import { rowMenus, useRowFollow } from '../../design/row-link';
-import { partySlug } from '../../design/party';
+import { LinkRow } from '../../design/rows';
 import { partyRoute } from '../../navigation/routes';
 export interface PartyRowProps {
   party: string;
@@ -14,8 +14,7 @@ export function PartyRow({ party, testID, detail, onPress }: PartyRowProps) {
   const follow = useRowFollow('party', slug, party);
   return (
     <LinkRow
-      title=""
-      leading={
+      title={
         <PartyLabel party={party} status="current" nested linked={false} />
       }
       detail={detail}

@@ -1,35 +1,6 @@
-import { ApiError } from './errors';
-import { decodeBoundary, type Boundary } from './electorate-geometry';
-import {
-  array,
-  boolean,
-  count,
-  date,
-  dict,
-  exact,
-  invalid,
-  matching,
-  nonempty,
-  nonemptyArray,
-  nullable,
-  number,
-  object,
-  rows,
-  records,
-  isPartialCatalog,
-  markPartial,
-  filterRows,
-  filterRecords,
-  uniqueRows,
-  catalogWarning,
-  optional,
-  shape,
-  text,
-  url,
-  type Decoded,
-  type Decoder,
-} from './validation';
 import { publicTie, withholdIndividualDonors } from '../privacy/donorEntity';
+import { decodeBoundary, type Boundary } from './electorate-geometry';
+import { ApiError } from './errors';
 import {
   billKey,
   electorateId,
@@ -42,6 +13,35 @@ import {
   rosterId,
   voteKey,
 } from './ids';
+import {
+  array,
+  boolean,
+  catalogWarning,
+  count,
+  date,
+  dict,
+  exact,
+  filterRecords,
+  filterRows,
+  invalid,
+  isPartialCatalog,
+  markPartial,
+  matching,
+  nonempty,
+  nonemptyArray,
+  nullable,
+  number,
+  object,
+  optional,
+  records,
+  rows,
+  shape,
+  text,
+  uniqueRows,
+  url,
+  type Decoded,
+  type Decoder,
+} from './validation';
 
 const strings = array(text);
 const maybeText = optional(nullable(text));
@@ -445,6 +445,9 @@ export const decodeBill = shape({
 });
 export type BillDetail = Decoded<typeof decodeBill>;
 const voteBill = shape({
+  division_key: optional(nonempty),
+  billKey: optional(nonempty),
+  question_type: optional(text),
   name: nonempty,
   stage: text,
   date,

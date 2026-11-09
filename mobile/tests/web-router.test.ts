@@ -454,7 +454,11 @@ describe('incoming links open in the tab the shell spec gives them', () => {
         ['opax://agencies', '/(tabs)/(today)/agencies'],
         ['opax://edition', '/(tabs)/(today)/edition'],
       ])
-        expect(redirectSystemPath({ path: path!, initial })).toBe(target);
+        expect(redirectSystemPath({ path: path!, initial })).toBe(
+          !initial && path !== 'opax://edition'
+            ? target!.replace('/(today)/', '/(bills)/')
+            : target,
+        );
     },
   );
   test('the Money map opens in Today cold and in the selected tab warm', () => {

@@ -1,16 +1,14 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
-// Design programme pass 2B (docs/design/DESIGN-REVIEW-2026-10.md 5.3): the
-// deprecated recipes that still have uses outside src/design. Their uses may
-// only go down: a new file or a higher count fails. Recipes with no uses left
-// are errors in the `opax/deprecated-design` lint rule instead. After moving
-// screens off a recipe (pass 3 and 4), lower the baseline with
-//   UPDATE_DEPRECATED_BASELINE=1 npx jest tests/deprecated-recipes.test.ts
+// Retired recipes have no callers. The empty baseline is a fixed guard:
+// it cannot be raised by an environment variable or an update command.
 const MOBILE = join(__dirname, '..');
 const BASELINE = join(__dirname, 'fixtures', 'deprecated-recipes.json');
 
 const RECIPES: Record<string, { pattern: RegExp; use: string }> = {
+  RowList: { pattern: /<RowList\b/g, use: 'InsetGroup' },
+  KeyValueList: { pattern: /<KeyValueList\b/g, use: 'ValueRow in InsetGroup' },
   AsAtLine: { pattern: /<AsAtLine\b/g, use: 'SourceLine' },
   SourceLink: { pattern: /<SourceLink\b/g, use: 'SourceLine originals' },
   ViewOriginal: { pattern: /<ViewOriginal\b/g, use: 'SourceLine originals' },
@@ -19,17 +17,18 @@ const RECIPES: Record<string, { pattern: RegExp; use: string }> = {
   StaleNotice: { pattern: /<StaleNotice\b/g, use: 'SourceLine savedAt' },
   UpdatedCaption: { pattern: /<UpdatedCaption\b/g, use: 'SourceLine' },
   OpaxWebLink: { pattern: /<OpaxWebLink\b/g, use: 'LinkRow external' },
-  BillStatus: { pattern: /<BillStatus\b/g, use: 'StatusLabel' },
-  VoteSide: { pattern: /<VoteSide\b/g, use: 'StatusLabel' },
+  BillStatus: { pattern: /<BillStatus\b/g, use: 'StatusCapsule' },
+  VoteSide: { pattern: /<VoteSide\b/g, use: 'StatusCapsule' },
   RoundButton: { pattern: /<RoundButton\b/g, use: 'IconButton' },
-  Figure: { pattern: /<(Money)?Figure\b/g, use: 'BigFigure' },
+  Figure: { pattern: /<(Money)?Figure\b/g, use: 'FigureBlock' },
   'static palette read': {
     pattern: /\blight\.[a-zA-Z]+/g,
     use: 'colors.<role>, which resolves Increase Contrast',
   },
   'radius token': {
-    pattern: /(?<![\w.])radius(?![\w:])/g,
-    use: 'radii.sm, radii.md or radii.pill',
+    pattern:
+      /import\s*\{[^}]*\bradius\b[^}]*\}\s*from\s*['"][^'"]*design\/(?:tokens|primitives)['"]/g,
+    use: 'radii.bar, radii.container or radii.capsule',
   },
   'old spacing step': {
     pattern: /\bspacing\.s[2567]\b/g,
@@ -44,7 +43,7 @@ function files(dir: string): string[] {
     return ['.ts', '.tsx'].includes(extname(path)) ? [path] : [];
   });
 }
-// Everything outside the design system, which keeps the aliases.
+// Screen recipes are also enforced in the kit by the AST rules below.
 function census(): Record<string, Record<string, number>> {
   const counts: Record<string, Record<string, number>> = {};
   for (const path of files(join(MOBILE, 'src'))) {
@@ -61,14 +60,11 @@ function census(): Record<string, Record<string, number>> {
 
 test('deprecated recipes are not used anywhere new or more often', () => {
   const now = census();
-  if (process.env.UPDATE_DEPRECATED_BASELINE) {
-    writeFileSync(BASELINE, `${JSON.stringify(now, null, 2)}\n`);
-    return;
-  }
   const baseline = JSON.parse(readFileSync(BASELINE, 'utf8')) as Record<
     string,
     Record<string, number>
   >;
+  expect(baseline).toEqual({});
   const grown: string[] = [];
   for (const [recipe, perFile] of Object.entries(now))
     for (const [file, n] of Object.entries(perFile)) {
@@ -135,13 +131,13 @@ export const A = () => <Section accent="places" title="x"><PartyChip party="Labo
 const s = StyleSheet.create({ k: { letterSpacing: 1 } });
 export const A = (d: string) => <>{d.toLocaleUpperCase('en-AU')}</>;`),
   ).toHaveLength(2);
-  // The design system keeps its aliases.
+  // The kit has no internal exemption for a retired component.
   expect(
     lint(
       `export const A = () => <PartyChip party="Labor" status="current" />;`,
       'src/design/Example.tsx',
     ),
-  ).toEqual([]);
+  ).toEqual(['PartyChip is retired: use PartyLabel (dense, linked={false}).']);
 });
 
 // The AST rules cover every source file, including existing design components.
@@ -164,7 +160,7 @@ function designMessages(code: string, file = 'src/features/New.tsx') {
         },
         plugins: { opax: { rules: designRule.rules } },
         rules: Object.fromEntries(
-          Object.keys(designRule.rules).map((key) => [`opax/${key}`, 'warn']),
+          Object.keys(designRule.rules).map((key) => [`opax/${key}`, 'error']),
         ),
       },
     ],
@@ -196,7 +192,7 @@ test('old roles, the entire spacing scale, static light reads and new design rul
   expect(failures).toEqual([]);
 });
 
-test('new rules warn for invalid recipes and allow canonical equivalents', () => {
+test('new rules reject invalid recipes and allow canonical equivalents', () => {
   const bad = designMessages(`import { showMenu } from '../design/menu';
 const a = <Text variant="body" tone="moneyInk">x</Text>;
 const b = <Icon name="doc.text" tone="moneyInk" />;
@@ -213,7 +209,7 @@ const old = <Text variant="heading">x</Text>;`);
       'opax/deprecated-design',
     ]),
   );
-  expect(bad.every((m) => m.severity === 1)).toBe(true);
+  expect(bad.every((m) => m.severity === 2)).toBe(true);
   expect(
     designMessages(`const a = <Text variant="figure" tone="moneyInk">42</Text>;
 const b = <Icon name={symbols.money} tone="moneyInk" type="hierarchical" />;

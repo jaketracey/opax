@@ -10,7 +10,7 @@ import { SourceLine } from '../../design/source';
 import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Text, useAccessibilitySize } from '../../design/primitives';
 import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
 import { resultsRoute } from '../../navigation/routes/search';
@@ -233,7 +233,7 @@ export function TopicSpeeches({
           </View>
           {full ? (
             <Text wordSafe variant="secondary" testID="topic-speeches-window">
-              {`Showing the newest ${formatCount(SPEECH_WINDOW)} speeches.`}
+              {`Showing the newest ${counted(SPEECH_WINDOW, 'speech', 'speeches')}.`}
             </Text>
           ) : null}
         </>

@@ -1,3 +1,4 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useState } from 'react';
 import {
   ActionSheetIOS,
@@ -8,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Screen, InsetGroup } from '../../design/layout';
 import {
   ContentUnavailable,
@@ -216,7 +217,7 @@ export default function Following() {
         />
       }
     >
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Following',
           headerLargeTitleEnabled: false,

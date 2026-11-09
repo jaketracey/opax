@@ -99,6 +99,7 @@ AUDIT_PID=$!
 timed 60 xcrun simctl launch "$UDID" au.com.opax.app > "$OUT/launch.log" 2>&1 || true
 timed 60 xcrun simctl terminate "$UDID" au.com.opax.app >> "$OUT/launch.log" 2>&1 || true
 printf 'device_setup_seconds=%s\n' "$((SECONDS - device_start))" >> "$OUT/device-timing.txt"
+suite_rc=0
 for journey in "$@"; do
   # Journey 24 needs a simulated fix per case; restore clears it.
   case "$journey" in
@@ -115,13 +116,18 @@ for journey in "$@"; do
   rc=0
   qa_maestro_run "$OUT/maestro.log" "$OUT/maestro" --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/$journey_name-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" -e CONTENT_SIZE="$SIZE" "$journey" || rc=$?
   printf '%s exit=%s\n' "$journey_name" "$rc" >> "$OUT/maestro-exits.txt"
-  if [ "$rc" != 0 ]; then cat "$OUT/maestro.log" >&2; exit "$rc"; fi
+  if [ "$rc" != 0 ]; then cat "$OUT/maestro.log" >&2; [ "$suite_rc" != 0 ] || suite_rc=$rc; fi
   # Journey 32 copies BibTeX in the native reader. Verify its actual clipboard
   # bytes before this same lock owner restores and shuts down the simulator.
-  if [ "$journey_name" = '32-record-reader' ]; then
+  if [ "$journey_name" = '32-record-reader' ] && [ "$rc" = 0 ]; then
     assert_device_lock
-    timed "$UI_TIMEOUT" xcrun simctl pbpaste "$UDID" > "$OUT/records-pasteboard.txt"
-    ./node_modules/.bin/tsx scripts/check-record-copy.ts "$OUT/records-pasteboard.txt" > "$OUT/records-copy-check.json"
+    copy_rc=0
+    timed "$UI_TIMEOUT" xcrun simctl pbpaste "$UDID" > "$OUT/records-pasteboard.txt" || copy_rc=$?
+    if [ "$copy_rc" = 0 ]; then
+      ./node_modules/.bin/tsx scripts/check-record-copy.ts "$OUT/records-pasteboard.txt" > "$OUT/records-copy-check.json" || copy_rc=$?
+    fi
+    printf '32-record-reader-copy exit=%s\n' "$copy_rc" >> "$OUT/maestro-exits.txt"
+    [ "$copy_rc" = 0 ] || { [ "$suite_rc" != 0 ] || suite_rc=$copy_rc; }
   fi
 done
 if [ "$OFFLINE" = 1 ]; then
@@ -129,23 +135,27 @@ if [ "$OFFLINE" = 1 ]; then
   assert_device_lock
   rc=0
   qa_maestro_run "$OUT/offline-maestro.log" "$OUT/offline-maestro" --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml || rc=$?
-  if [ "$rc" != 0 ]; then cat "$OUT/offline-maestro.log" >&2; exit "$rc"; fi
+  printf 'offline exit=%s\n' "$rc" >> "$OUT/maestro-exits.txt"
+  if [ "$rc" != 0 ]; then cat "$OUT/offline-maestro.log" >&2; [ "$suite_rc" != 0 ] || suite_rc=$rc; fi
 fi
 if [ "$MAP_OFFLINE" = 1 ]; then
   stop_fixture
   assert_device_lock
   rc=0
   qa_maestro_run "$OUT/map-offline-maestro.log" "$OUT/map-offline-maestro" --device "$UDID" test --test-output-dir "$OUT/map-offline-maestro" --debug-output "$OUT/map-offline-maestro" --format junit --output "$OUT/map-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/electorate-map-offline.yaml || rc=$?
-  if [ "$rc" != 0 ]; then cat "$OUT/map-offline-maestro.log" >&2; exit "$rc"; fi
+  printf 'map-offline exit=%s\n' "$rc" >> "$OUT/maestro-exits.txt"
+  if [ "$rc" != 0 ]; then cat "$OUT/map-offline-maestro.log" >&2; [ "$suite_rc" != 0 ] || suite_rc=$rc; fi
 fi
 if [ "$MONEY_OFFLINE" = 1 ]; then
   stop_fixture
   assert_device_lock
   rc=0
   qa_maestro_run "$OUT/money-offline-maestro.log" "$OUT/money-offline-maestro" --device "$UDID" test --test-output-dir "$OUT/money-offline-maestro" --debug-output "$OUT/money-offline-maestro" --format junit --output "$OUT/money-offline-report.xml" -e EVIDENCE=screenshots .maestro/support/money-map-offline.yaml || rc=$?
-  if [ "$rc" != 0 ]; then cat "$OUT/money-offline-maestro.log" >&2; exit "$rc"; fi
+  printf 'money-offline exit=%s\n' "$rc" >> "$OUT/maestro-exits.txt"
+  if [ "$rc" != 0 ]; then cat "$OUT/money-offline-maestro.log" >&2; [ "$suite_rc" != 0 ] || suite_rc=$rc; fi
 fi
 kill "$AUDIT_PID"
 rc=0; wait "$AUDIT_PID" || rc=$?
 AUDIT_PID=
-if [ "$rc" != 0 ]; then cat "$OUT/connection-audit.log" >&2; exit "$rc"; fi
+if [ "$rc" != 0 ]; then cat "$OUT/connection-audit.log" >&2; [ "$suite_rc" != 0 ] || suite_rc=$rc; fi
+exit "$suite_rc"

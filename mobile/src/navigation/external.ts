@@ -1,3 +1,3 @@
 export { fromWebPath } from './external/paths';
-export * from './external/sheets';
 export { openCorrection } from './external/reference';
+export * from './external/sheets';

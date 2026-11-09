@@ -89,6 +89,7 @@ jest.mock('../src/design/useHeaderBottom', () => ({
 }));
 let mockOptions: Record<string, unknown> = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
   Stack: {
     Screen: ({ options }: { options: Record<string, unknown> }) => {

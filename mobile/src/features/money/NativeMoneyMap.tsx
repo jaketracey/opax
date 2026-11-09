@@ -1,3 +1,5 @@
+import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
+import { useFocusEffect } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -16,9 +18,8 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { useFocusEffect } from 'expo-router';
-import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { isE2E } from '../../design/environment';
 import {
   Icon,
   useLayout,
@@ -26,14 +27,13 @@ import {
 } from '../../design/primitives';
 import { colors, hairline, minimumTarget, rhythm } from '../../design/tokens';
 import type { MoneyGraph } from './data';
-import { NativeMoneyScene, type ProjectedLabel } from './NativeMoneyScene';
-import { isE2E } from '../../design/environment';
 import { moneyProbeId } from './money-probe';
 import {
   MoneyMapLabels,
   moneyLabelGroups,
   moneyLabelParties,
 } from './MoneyMapLabels';
+import { NativeMoneyScene, type ProjectedLabel } from './NativeMoneyScene';
 import { moneyMapLabel, moneySceneHeight } from './scene-size';
 
 export interface NativeMoneyMapHandle {
@@ -43,7 +43,7 @@ export interface NativeMoneyMapHandle {
 export { moneyMapLabel, moneySceneHeight };
 // "Fit map" until the vocabulary gains the spec's
 // arrow.up.left.and.arrow.down.right (Follow-up: src/design/symbols.ts).
-const fitSymbol = 'square.3.layers.3d' as const;
+const fitSymbol = 'arrow.up.left.and.arrow.down.right' as const;
 export function NativeMoneyMap({
   graph,
   view,
@@ -378,6 +378,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.raised,
     borderWidth: hairline,
-    borderColor: colors.line,
+    borderColor: colors.dividerSubtle,
+    borderCurve: 'continuous',
   },
 });

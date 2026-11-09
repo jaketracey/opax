@@ -1,3 +1,9 @@
+import { RouteOptions } from '../../navigation/preview';
+import {
+  router,
+  useLocalSearchParams,
+  type NativeStackHeaderItem,
+} from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -17,21 +23,18 @@ import {
   type TextLayoutEvent,
   type ViewToken,
 } from 'react-native';
-import {
-  Stack,
-  router,
-  useLocalSearchParams,
-  type NativeStackHeaderItem,
-} from 'expo-router';
-import { ApiError } from '../../api/errors';
 import { billName } from '../../api/bill-transforms';
 import { billsFor } from '../../api/catalogs';
+import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
+import { copy } from '../../design/copy';
+import { formatDate } from '../../design/format';
 import { useRefreshCommand } from '../../design/keyboard';
 import {
   Button,
   ContentUnavailable,
   Divider,
+  EmptyState,
   IconButton,
   InlineError,
   LayoutRegion,
@@ -39,36 +42,34 @@ import {
   OfflineLine,
   PopUpButton,
   SegmentedPicker,
-  Skeleton,
   SidebarSafe,
+  Skeleton,
   SourceLine,
   SplitLayout,
-  EmptyState,
   Text,
   isPad,
   useAccessibilitySize,
   useLayout,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import { formatDate } from '../../design/format';
-import { chrome, colors, layout, rhythm } from '../../design/tokens';
+import { useListSearchBar } from '../../design/search-bar';
+import { StatePageProvider } from '../../design/states';
+import { colors, layout, rhythm } from '../../design/tokens';
 import {
   filtersItem,
   headerItems,
   rootHeaderItems,
 } from '../../navigation/chrome';
-import { filtersRoute } from '../../navigation/routes/filters';
 import { billRoute } from '../../navigation/routes';
 import { divisionHistoryRoute } from '../../navigation/routes/bills';
+import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
-import { useListSearchBar } from '../../design/search-bar';
 import { shareRecord } from '../../navigation/share';
 import { useAccount } from '../account/store';
 import { scopedQuestion } from '../ask/AskAbout';
 import { useOpenAsk } from '../ask/open';
 import BillTextReader from '../records/BillTextReader';
+import { BillTextPaneBar } from '../split/RecordDetail';
 import BillDetail, { PaneMenu } from './BillDetail';
-import type { BillEntry } from './navigation';
 import {
   activeFilterCount,
   billRows,
@@ -82,6 +83,7 @@ import {
   type BillScope,
   type BillSort,
 } from './filters';
+import type { BillEntry } from './navigation';
 import { BillIndexRow } from './parts';
 import { useCatalogRecord } from './useCatalogRecord';
 
@@ -407,55 +409,61 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   ) : null;
 
   const listView = (
-    <FlatList
-      ref={listRef}
-      testID="bills-screen"
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={refresh}
-          tintColor={chrome.tint}
-        />
-      }
-      style={styles.screen}
-      contentContainerStyle={styles.content}
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      automaticallyAdjustKeyboardInsets
-      data={record ? rows : []}
-      keyExtractor={(bill) => bill.key}
-      renderItem={({ item }) => (
-        <BillIndexRow
-          bill={item}
-          showStatus={scope === 'all'}
-          selected={
-            split ? item.key === (selected ?? firstEntry())?.key : undefined
-          }
-          onPress={
-            split
-              ? () =>
-                  select({ kind: 'bill', key: item.key, title: billName(item) })
-              : () => router.push(billRoute(item.key, billName(item)))
-          }
-        />
-      )}
-      extraData={split ? selectedKey : scope}
-      onViewableItemsChanged={split ? onViewable : undefined}
-      onScrollToIndexFailed={({ index: at, averageItemLength }) =>
-        listRef.current?.scrollToOffset({
-          offset: averageItemLength * at,
-          animated: true,
-        })
-      }
-      ItemSeparatorComponent={() => <Divider variant="subtle" />}
-      ListHeaderComponent={header}
-      ListHeaderComponentStyle={styles.header}
-      ListFooterComponent={rows.length ? footer : null}
-      ListFooterComponentStyle={styles.footer}
-      ListEmptyComponent={body}
-      initialNumToRender={12}
-    />
+    <StatePageProvider refreshing={refreshing}>
+      <FlatList
+        ref={listRef}
+        testID="bills-screen"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            tintColor={colors.navy}
+          />
+        }
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        automaticallyAdjustKeyboardInsets
+        data={record ? rows : []}
+        keyExtractor={(bill) => bill.key}
+        renderItem={({ item }) => (
+          <BillIndexRow
+            bill={item}
+            showStatus={scope === 'all'}
+            selected={
+              split ? item.key === (selected ?? firstEntry())?.key : undefined
+            }
+            onPress={
+              split
+                ? () =>
+                    select({
+                      kind: 'bill',
+                      key: item.key,
+                      title: billName(item),
+                    })
+                : () => router.push(billRoute(item.key, billName(item)))
+            }
+          />
+        )}
+        extraData={split ? selectedKey : scope}
+        onViewableItemsChanged={split ? onViewable : undefined}
+        onScrollToIndexFailed={({ index: at, averageItemLength }) =>
+          listRef.current?.scrollToOffset({
+            offset: averageItemLength * at,
+            animated: true,
+          })
+        }
+        ItemSeparatorComponent={() => <Divider variant="subtle" />}
+        ListHeaderComponent={header}
+        ListHeaderComponentStyle={styles.header}
+        ListFooterComponent={rows.length ? footer : null}
+        ListFooterComponentStyle={styles.footer}
+        ListEmptyComponent={body}
+        initialNumToRender={12}
+      />
+    </StatePageProvider>
   );
   function firstEntry(): BillEntry | null {
     const first = rows[0];
@@ -466,13 +474,13 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   if (!isPad)
     return (
       <>
-        <Stack.Screen options={options} />
+        <RouteOptions options={options} />
         {listView}
       </>
     );
   return (
     <>
-      <Stack.Screen options={options} />
+      <RouteOptions options={options} />
       <SplitLayout<BillEntry>
         id="bills"
         testID="bills-split"
@@ -490,12 +498,16 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
             <BillTextReader recordKey={entry.key} embedded />
           )
         }
-        detailActions={(entry) => (
-          <PaneActions
-            billKey={entry.key}
-            title={entry.title ?? titleFor(entry.key) ?? 'Bill'}
-          />
-        )}
+        detailActions={(entry) =>
+          entry.kind === 'text' ? (
+            <BillTextPaneBar billKey={entry.key} />
+          ) : (
+            <PaneActions
+              billKey={entry.key}
+              title={entry.title ?? titleFor(entry.key) ?? 'Bill'}
+            />
+          )
+        }
         keys={rows.map((bill) => bill.key)}
         entryForKey={(key) => ({ kind: 'bill', key, title: titleFor(key) })}
         empty={

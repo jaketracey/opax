@@ -3,10 +3,10 @@ import { Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import {
   closeSheetItem,
-  headerItems,
-  shortSheet,
-  rootHeaderItems,
   glassBar,
+  headerItems,
+  rootHeaderItems,
+  shortSheet,
   type TabSegment,
 } from '../chrome';
 import { emptyBarTitle } from '../useTitleOnScroll';
@@ -21,13 +21,23 @@ export const untitled: NativeStackNavigationOptions = {
   headerTitle: Platform.OS === 'ios' ? emptyBarTitle : '',
 };
 
-/** The tab roots' titles, by route name (navigation/stack/index.tsx). */
+/** Stable tab and list titles, available before destination data or layout. */
 const rootTitles: Record<string, string> = {
   index: 'Today',
   'your-mp': 'Your MP',
   bills: 'Bills',
   search: 'Search',
   ask: 'Ask',
+  'public-money': 'Public money',
+  grants: 'Commonwealth grants',
+  'largest-grants': 'Largest grants',
+  'grants-allocation': 'Community funding',
+  agencies: 'Government agencies',
+  connections: 'Programs and places',
+  'money-record': 'Money record',
+  'money-item': 'Money record',
+  'explore/index': 'Quizzes and tools',
+  'division-history': 'Votes in parliament',
 };
 /**
  * The back label for a screen pushed straight onto a tab root. UIKit reads
@@ -47,11 +57,24 @@ export function rootBackTitle(
       }
     | undefined,
   key: string | undefined,
+  stackRootTitle?: string,
 ): string | undefined {
   const routes = navigation?.getState?.()?.routes ?? [];
   const at = routes.findIndex((route) => route.key === key);
   const previous = at > 0 ? routes[at - 1] : undefined;
+  if (at === 1 && stackRootTitle) return stackRootTitle;
   return previous?.name ? rootTitles[previous.name] : undefined;
+}
+
+/** A modal's root has its own name, independent of the presenting tab. */
+export function screenInStack(rootTitle: string) {
+  return (
+    name: string,
+    title: string,
+    options: NativeStackNavigationOptions = {},
+    redirect = false,
+    doneWhenRoot = false,
+  ) => screen(name, title, options, redirect, doneWhenRoot, rootTitle);
 }
 
 /** Non-empty route titles also supply the next screen's named Back button. */
@@ -61,6 +84,7 @@ export function screen(
   options: NativeStackNavigationOptions = {},
   redirect = false,
   doneWhenRoot = false,
+  stackRootTitle?: string,
 ) {
   return (
     <Stack.Screen
@@ -74,8 +98,15 @@ export function screen(
             ? (route.params as { name: string }).name
             : title,
         headerLargeTitleEnabled: false,
-        ...(Platform.OS === 'ios' && rootBackTitle(navigation, route.key)
-          ? { headerBackTitle: rootBackTitle(navigation, route.key) }
+        ...(Platform.OS === 'ios' &&
+        rootBackTitle(navigation, route.key, stackRootTitle)
+          ? {
+              headerBackTitle: rootBackTitle(
+                navigation,
+                route.key,
+                stackRootTitle,
+              ),
+            }
           : {}),
         ...(doneWhenRoot && navigation?.getState().index === 0
           ? headerItems(() => [closeSheetItem()])
@@ -91,9 +122,6 @@ export const sheetOptions: NativeStackNavigationOptions = {
   ...headerItems(() => [closeSheetItem()]),
   ...(Platform.OS === 'android' ? { header: AndroidReadingHeader } : {}),
 };
-export function placeholderStack(screens: { name: string; title: string }[]) {
-  return screens.map(({ name, title }) => screen(name, title));
-}
 
 export function tabRootScreen(
   segment: string,

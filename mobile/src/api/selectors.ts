@@ -1,3 +1,16 @@
+import {
+  billDedupeDivisions,
+  billDisplay,
+  billFoldText,
+  billName,
+  billNoteLinks,
+  billNoteText,
+  billQuestionParts,
+  billSentenceCase,
+  billSourceLabel,
+  billSplits,
+  billStage,
+} from './bill-transforms';
 import type {
   AppEdition,
   BillDetail,
@@ -20,41 +33,28 @@ import type {
   Slugs,
   Votes,
 } from './catalog-decoders';
-import {
-  billDedupeDivisions,
-  billDisplay,
-  billFoldText,
-  billName,
-  billNoteLinks,
-  billNoteText,
-  billQuestionParts,
-  billSentenceCase,
-  billSourceLabel,
-  billSplits,
-  billStage,
-} from './bill-transforms';
-import {
-  personPartyFor,
-  partyReceiptsFor,
-  receiptParties,
-} from './party-transforms';
 import { ApiError } from './errors';
 import {
+  interestKey,
+  nameKey,
+  nameValues,
   personId,
   personSlug,
   rosterId,
-  nameKey,
-  nameValues,
-  interestKey,
   type PersonId,
 } from './ids';
 import {
-  namedRosterRow,
+  partyReceiptsFor,
+  personPartyFor,
+  receiptParties,
+} from './party-transforms';
+import {
   joinPerson,
+  namedRosterRow,
+  numericPersonId,
   personSlugForResult,
   rosterChambersFor,
   rosterRowFor,
-  numericPersonId,
   type PersonProfile,
 } from './person-identity';
 import {
@@ -251,7 +251,7 @@ export function portraitFor(
       attribution: '',
       display: 'website-file' as const,
       notice:
-        'Official portrait: native display, offline copies and further crops need review against the non-commercial, no-derivatives terms.',
+        'Official portrait: display, offline copies and further crops need review against the non-commercial, no-derivatives terms.',
     };
   const c = credits[key];
   if (!c || !commonsLicenceShown(c.licence)) return null;
@@ -718,7 +718,9 @@ export function recentBillsFor(
   const dated =
     kind === 'passed'
       ? bills.bills
-          .filter((b) => b.status === 'passed' && (b.status_as_of ?? b.introduced))
+          .filter(
+            (b) => b.status === 'passed' && (b.status_as_of ?? b.introduced),
+          )
           .map((b) => ({ b, on: (b.status_as_of ?? b.introduced)! }))
       : bills.bills
           .filter((b) => b.introduced)
@@ -1496,6 +1498,6 @@ export function coverageFor(corpus: Corpus) {
       structuredSources: corpus.refresh.structured_sources,
     },
     corpus.refresh.checked_at,
-    [{ label: 'OPAX collection coverage snapshot', url: '/corpus.json' }],
+    [{ label: 'OPAX collection coverage record', url: '/corpus.json' }],
   );
 }

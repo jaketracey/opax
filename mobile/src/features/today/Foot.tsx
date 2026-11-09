@@ -13,7 +13,7 @@ export function TodayFoot() {
     <View testID="today-foot" collapsable={false}>
       <View testID="today-independence" collapsable={false}>
         <View testID="today-screen-footer" collapsable={false}>
-          <PageFoot variant="today" />
+          <PageFoot variant="today" correctionTestID="today-correction" />
         </View>
       </View>
     </View>

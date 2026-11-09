@@ -1,3 +1,5 @@
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -12,26 +14,26 @@ import {
   useWindowDimensions,
   type ScrollView,
 } from 'react-native';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { reports } from '../../api/runtime';
+import { useRead } from '../../api/useRead';
+import { useReduceMotion } from '../../design/accessibility';
 import { copy } from '../../design/copy';
 import { formatCount } from '../../design/format';
 import { Screen } from '../../design/layout';
 import { FigureBlock } from '../../design/record';
-import { ContentUnavailable, Skeleton } from '../../design/states';
-import { Heading, Text } from '../../design/text';
-import { symbols } from '../../design/symbols';
-import { rhythm } from '../../design/tokens';
-import { useReduceMotion } from '../../design/accessibility';
-import { useHeaderBottom } from '../../design/useHeaderBottom';
 import type { RowMenuAction } from '../../design/row-link';
+import { ContentUnavailable, Skeleton } from '../../design/states';
+import { symbols } from '../../design/symbols';
+import { Heading, Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
 import { copyRecordLink, shareRecord } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useOpenAsk } from '../ask/open';
-import { topicLabel } from '../search/ranking';
 import { isOffline } from '../CatalogState';
+import { topicLabel } from '../search/ranking';
 import {
   chosenDecade,
   defaultDecades,
@@ -42,7 +44,7 @@ import {
   type DecadeBucket,
   type SpeechFilters,
 } from './model';
-import { useRead, type ReadMeta } from './parts';
+import { type ReadMeta } from './parts';
 import { LABEL_NOTE, TOPIC_CITATION } from './topic-copy';
 import { TopicMoney, hasTopicMoney } from './TopicMoney';
 import { SPEECH_PAGE, TopicSpeeches } from './TopicSpeeches';
@@ -86,7 +88,7 @@ export default function TopicPage() {
 function UnknownTopic() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Topic' }} />
+      <RouteOptions options={{ title: 'Topic' }} />
       <Screen testID="topic-screen">
         <ContentUnavailable
           symbol={symbols.topic}
@@ -121,7 +123,7 @@ function countFigure(
     value: formatCount(data.count),
     label: `speeches about ${topicPhrase(slug)}`,
     caveat: 'Not every speech is labelled yet, so this is a floor.',
-    source: {
+    citation: {
       asOf: record.asOf,
       savedAt: metaOf(record).savedAt,
       citation: TOPIC_CITATION,
@@ -269,7 +271,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
   const count = topic.record?.data;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           ...headerItems(

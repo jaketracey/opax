@@ -1,29 +1,29 @@
-import { act, type ReactNode } from 'react';
-import { dispatchKeyCommand } from '../src/design/keyboard';
-import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
+import { act, type ReactNode } from 'react';
+import TestRenderer from 'react-test-renderer';
 import { CitationMark } from '../src/design/citation-mark';
-import { AnswerBody } from '../src/features/ask/AnswerBody';
-import { parseAnswer } from '../src/features/ask/answer-markdown';
-import { FigureBlock } from '../src/design/record';
 import { haptic } from '../src/design/haptics';
-import { presentSheet, presentSource } from '../src/navigation/sheets';
-import { shareRecord } from '../src/navigation/share';
-import { copyText } from '../src/features/records/actions';
-import { copyCitation } from '../src/features/ask/cite';
-import {
-  citationSheetLeft,
-  citationSelection,
-} from '../src/features/ask/citation-state';
+import { dispatchKeyCommand } from '../src/design/keyboard';
+import { FigureBlock } from '../src/design/record';
+import type { SourceDetails } from '../src/design/source';
+import { AnswerBody } from '../src/features/ask/AnswerBody';
 import {
   AnswerView,
   answerReadyAnnouncement,
   askSourceDetails,
 } from '../src/features/ask/AnswerView';
-import type { AskPerson } from '../src/features/ask/people';
 import { useAskSources } from '../src/features/ask/SourcesPane';
+import { parseAnswer } from '../src/features/ask/answer-markdown';
+import {
+  citationSelection,
+  citationSheetLeft,
+} from '../src/features/ask/citation-state';
+import { copyCitation } from '../src/features/ask/cite';
 import type { Source, Turn } from '../src/features/ask/model';
-import type { SourceDetails } from '../src/design/source';
+import type { AskPerson } from '../src/features/ask/people';
+import { copyText } from '../src/features/records/actions';
+import { shareRecord } from '../src/navigation/share';
+import { presentSheet, presentSource } from '../src/navigation/sheets';
 
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -425,7 +425,7 @@ test('a figure is drawn only with its own date and source', () => {
   const figures = renderer.root.findAllByType(FigureBlock);
   expect(figures).toHaveLength(1);
   expect(figures[0]!.props.value).toBe('$233,660');
-  expect(figures[0]!.props.source).toEqual({
+  expect(figures[0]!.props.citation).toEqual({
     citation: 'Remuneration Tribunal',
     asOf: expect.stringContaining('2026'),
   });

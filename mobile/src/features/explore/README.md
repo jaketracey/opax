@@ -13,8 +13,8 @@ the hub does no data reads.
 - `parts.tsx`: `ExploreChrome`, the bar for every Explore screen: Share, then
   one ⋯ menu with an optional Sort by submenu, Copy link and Open on
   opax.com.au. The title fades in by scroll (`Screen barTitle` and a level 1
-  heading); `title` fixes it instead (a quiz round). `ExploreHeader` is a
-  deprecated alias with a fixed title, kept for the tools until wave 6.
+  heading); `title` fixes it instead (a quiz round). Every tool uses this
+  shared chrome; the earlier header alias is removed.
 - `explore/[tool].tsx`: the five tools; any other tool returns to the hub
   already in the stack (`dismissTo`) or redirects to it. `q` and `resume` go
   to the quiz; the Time machine reads `year` and `photo` from the same params.

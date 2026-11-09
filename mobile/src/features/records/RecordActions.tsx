@@ -1,19 +1,19 @@
-import { Alert, Platform } from 'react-native';
-import { showMenu, type MenuAction } from '../../design/menu';
-import { router } from 'expo-router';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { haptic } from '../../design/haptics';
-import { webOrigin } from '../../design/environment';
+import { router } from 'expo-router';
+import { Alert, Platform } from 'react-native';
+import { isRecordSlug } from '../../api/record-policy';
+import { catalogs } from '../../api/runtime';
 import { copy as words } from '../../design/copy';
+import { webOrigin } from '../../design/environment';
+import { haptic } from '../../design/haptics';
+import { showMenu, type MenuAction } from '../../design/menu';
 import {
   menuLeaves,
   type RowMenuAction,
   type RowMenuLeaf,
 } from '../../design/row-link';
-import { catalogs } from '../../api/runtime';
-import { isRecordSlug } from '../../api/record-policy';
-import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { pageMenu } from '../../navigation/chrome';
+import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { citeRoute } from '../../navigation/routes';
 import { copyText } from './actions';
 import { citationsFor } from './citations';
@@ -176,18 +176,10 @@ export function recordBarItems(
   };
 }
 
-/** @deprecated Use recordActions. */
-export const recordPageActions = (target: RecordTarget) =>
-  recordActions(target);
-/** @deprecated The pane's ⋯ is in its bar (`RecordShare`); nothing in content. */
-export function RecordActions(_props: RecordTarget & { testID?: string }) {
-  return null;
-}
-
 /**
  * A pane bar's menu (iPad split, records.md 2.3 and 4.3): the pane has no
  * navigation bar to hold a native menu, so its ⋯ and Version open a sheet.
  */
 export function showPaneMenu(title: string, actions: readonly MenuAction[]) {
-  showMenu(title, actions);
+  if (Platform.OS !== 'ios') showMenu(title, actions);
 }

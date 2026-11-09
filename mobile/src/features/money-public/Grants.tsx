@@ -1,7 +1,8 @@
-import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { RefreshControl, View as NativeView } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { View as NativeView, RefreshControl } from 'react-native';
+import { catalogs } from '../../api/runtime';
 import { SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
 import { Screen } from '../../design/layout';
@@ -9,20 +10,17 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Heading, Text } from '../../design/text';
-import { catalogs } from '../../api/runtime';
-import { electorateRoute } from '../../navigation/routes/your-mp';
 import {
   grantProgramRoute,
   grantsRoute,
   largestGrantsRoute,
 } from '../../navigation/routes/public-money';
-import { stateChoices } from '../sheets/filter-models';
+import { electorateRoute } from '../../navigation/routes/your-mp';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { money } from './runtime';
+import { stateChoices } from '../sheets/filter-models';
 import type { GrantIndex, Jurisdiction } from './data';
 import { FUTURE_YEARS_NOTE, grantsFigure } from './HubCards';
-import { organisationHref } from './routes';
-import { SeatFigure } from './SeatGrants';
 import {
   ListCaption,
   MoneyList,
@@ -37,9 +35,9 @@ import {
   recordSource,
   useMoneySearch,
 } from './parts';
-
-/** @deprecated Import from './SeatGrants'. Kept for Your MP and Electorate until wave 6. */
-export { SeatGrants } from './SeatGrants';
+import { organisationHref } from './routes';
+import { money } from './runtime';
+import { SeatFigure } from './SeatGrants';
 
 /** "New South Wales" for "nsw". */
 export const stateName = (code: string) =>
@@ -187,7 +185,7 @@ function GrantList({
   const path = `/money/grants?jur=${jur}${view === 'electorates' ? '&view=electorates' : ''}`;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           headerLargeTitleEnabled: true,
@@ -219,27 +217,24 @@ function GrantList({
                       ? `recorded annual spending, ${fyRange(data.meta.years[0] ?? '', data.meta.years.at(-1) ?? '')}`
                       : figure.line
                   }
-                  // Spread: opax/transport reads a plain `source` prop as an image.
-                  {...{
-                    source: {
-                      asOf: data.meta.asOf,
-                      citation: [moneyCitation(data.meta.source)],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals: data.meta.sourceUrl
-                        ? [
-                            {
-                              label: moneyCitation(data.meta.source).label,
-                              url: data.meta.sourceUrl,
-                            },
-                          ]
-                        : [],
-                      notes: [...grantNotes(data), ...saved.stateNotes].map(
-                        readableDates,
-                      ),
-                      licence: data.meta.licence,
-                      testID: 'grants-total-source',
-                    },
+                  citation={{
+                    asOf: data.meta.asOf,
+                    citation: [moneyCitation(data.meta.source)],
+                    savedAt: saved.savedAt,
+                    state: saved.state,
+                    originals: data.meta.sourceUrl
+                      ? [
+                          {
+                            label: moneyCitation(data.meta.source).label,
+                            url: data.meta.sourceUrl,
+                          },
+                        ]
+                      : [],
+                    notes: [...grantNotes(data), ...saved.stateNotes].map(
+                      readableDates,
+                    ),
+                    licence: data.meta.licence,
+                    testID: 'grants-total-source',
                   }}
                   testID="grants-total"
                 />
@@ -381,7 +376,7 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <>
-      <Stack.Screen options={{ title, ...moneyBar({ name: title }) }} />
+      <RouteOptions options={{ title, ...moneyBar({ name: title }) }} />
       <Screen
         onScroll={barTitle.onScroll}
         testID="grants-seat"

@@ -7,16 +7,15 @@ import {
   PersonRow,
   Text,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
+import { CachedPortrait } from '../CachedPortrait';
 import {
   representativeProfile,
   type Directory,
   type ElectorateView,
 } from '../your-mp/model';
 import { preciseDate } from '../your-mp/RepresentativeRows';
-import { CachedPortrait } from '../CachedPortrait';
 import { representationAt } from './model';
 
 type Term = ElectorateView['terms'][number];
@@ -49,25 +48,6 @@ export function termSpan(
   return t.start_precision === 'day'
     ? `${start} to ${end}`
     : `From ${start} to ${end}`;
-}
-
-/**
- * @deprecated The page reads termSpan; kept for the copy-helper tests.
- * "13 Mar 1993 to 29 Jan 1996", or "Since 2 Mar 1996 (current at 9 Sep 2026)".
- */
-export function serviceSpan(t: {
-  start?: string | null;
-  end?: string | null;
-  observed_through?: string | null;
-}): string {
-  const start = t.start ? formatDate(t.start, 'short') : '';
-  if (t.end)
-    return `${start || 'Start not recorded'} to ${formatDate(t.end, 'short')}`;
-  const observed = t.observed_through
-    ? formatDate(t.observed_through, 'short')
-    : '';
-  const since = start ? `Since ${start}` : 'Start not recorded';
-  return observed ? `${since} (current at ${observed})` : since;
 }
 
 /**

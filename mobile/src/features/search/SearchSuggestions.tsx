@@ -1,18 +1,18 @@
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { formatCount } from '../../design/format';
 import {
   Group,
   InlineError,
+  InsetGroup,
   LinkRow,
-  RowList,
   SectionHeader,
   Skeleton,
   SuggestionRow,
 } from '../../design/primitives';
-import { formatCount } from '../../design/format';
-import { scopeMenuAt } from './ScopeBar';
 import { rhythm } from '../../design/tokens';
-import { MatchRow, type RowSources } from './rows';
 import { suggestionList, type GroupKind, type MatchSources } from './ranking';
+import { MatchRow, type RowSources } from './rows';
+import { scopeMenuAt } from './ScopeBar';
 
 /**
  * Typing (journeys/search.md 3.3). Computed on the device from files the
@@ -58,7 +58,7 @@ export function SearchSuggestions({
   );
   return (
     <Group gap={rhythm.group} testID="search-suggestions">
-      <RowList>
+      <InsetGroup>
         {list.top ? (
           <MatchRow
             match={list.top}
@@ -69,7 +69,7 @@ export function SearchSuggestions({
           />
         ) : null}
         {speeches}
-      </RowList>
+      </InsetGroup>
       {loading && !sources ? (
         <Skeleton shape="people" count={3} label="Loading suggestions" />
       ) : null}
@@ -77,7 +77,7 @@ export function SearchSuggestions({
         <View key={group.kind} testID={`search-suggestions-${group.kind}`}>
           <SectionHeader title={group.label} level={3} />
           <View style={styles.rows}>
-            <RowList>
+            <InsetGroup>
               {group.rows.map((match) => (
                 <MatchRow
                   key={`${match.kind}:${match.key}`}
@@ -94,7 +94,7 @@ export function SearchSuggestions({
                   testID={`search-suggestions-${group.kind}-all`}
                 />
               ) : null}
-            </RowList>
+            </InsetGroup>
           </View>
         </View>
       ))}
@@ -106,14 +106,14 @@ export function SearchSuggestions({
           testID="search-suggestions-error"
         />
       ) : null}
-      <RowList>
+      <InsetGroup>
         <SuggestionRow
           symbol="text.bubble"
           name={`Ask OPAX about “${text}”`}
           onPress={onAsk}
           testID="search-ask-row"
         />
-      </RowList>
+      </InsetGroup>
     </Group>
   );
 }

@@ -5,9 +5,9 @@ import { haptic } from '../../../design/haptics';
 import { Icon } from '../../../design/icon';
 import { InsetGroup } from '../../../design/layout';
 import {
+  RowCellInsetContext,
   useRowCellStyle,
   useRowHighlight,
-  RowCellInsetContext,
   useRowInset,
 } from '../../../design/row-padding';
 import { Text } from '../../../design/text';
@@ -24,9 +24,9 @@ import { marks } from './marks';
 /**
  * A portrait choice's portrait: the size passed to CachedPortrait and the
  * points it draws at, which the row's text inset adds. Spec 4.4 asks for
- * 56 pt; CachedPortrait takes only 'row' (44 pt) for now.
+ * 56 pt, shared with the row inset.
  */
-export const choicePortrait = { size: 'row', drawn: 44 } as const;
+export const choicePortrait = { size: 56, drawn: 56 } as const;
 
 export function ChoiceList({
   q,

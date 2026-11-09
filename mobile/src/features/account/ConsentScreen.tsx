@@ -1,13 +1,13 @@
+import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
-import { useFocusEffect } from 'expo-router';
-import { InsetGroup, LinkRow, Screen } from '../../design/primitives';
 import { confirmAction } from '../../design/menu';
+import { InsetGroup, LinkRow, Screen } from '../../design/primitives';
 import { openOnWeb } from '../../navigation/external';
 import { readConsent, setConsent } from '../talk/bridge';
 import { VoiceConsentText } from '../talk/Consent';
-import { SettingsRow } from './AccountLinks';
 import { accountCopy } from './copy';
+import { SettingsRow } from './parts';
 
 /**
  * `/account/consent` (specs/account.md 2.2): what voice sends and keeps, the
@@ -30,7 +30,7 @@ export function ConsentScreen() {
   );
   const withdraw = () =>
     confirmAction(
-      `${accountCopy.withdrawTitle} ${accountCopy.withdrawMessage}`,
+      accountCopy.withdrawTitle,
       [
         {
           title: accountCopy.withdraw,
@@ -44,6 +44,8 @@ export function ConsentScreen() {
             }),
         },
       ],
+      undefined,
+      accountCopy.withdrawMessage,
     );
   return (
     <Screen grouped testID="account-consent-screen">

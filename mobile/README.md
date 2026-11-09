@@ -397,8 +397,8 @@ Windowed Apps. Run the three in this order:
 
 ```sh
 scripts/e2e.sh <ipad> 56
-OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <ipad> .maestro/ipad-tour-ax5.yaml
-scripts/e2e.sh <ipad> .maestro/ipad-tour-compact.yaml
+OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <ipad> .maestro/56-ipad-welcome.yaml
+OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <udid> .maestro/28-welcome-ax5.yaml
 ```
 
 ## Never-call rule

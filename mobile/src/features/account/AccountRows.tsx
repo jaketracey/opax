@@ -1,6 +1,7 @@
 import { Screen } from '../../design/primitives';
-import { AccountLinks, VersionFoot } from './AccountLinks';
 import { communityHome } from '../community/entry';
+import { AccountLinks } from './AccountLinks';
+import { VersionFoot } from './parts';
 
 /**
  * The Account sheet with no account groups (specs/account.md 9): groups 4

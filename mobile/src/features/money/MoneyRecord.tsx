@@ -1,14 +1,32 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { RouteOptions } from '../../navigation/preview';
 import {
-  Stack,
+  router,
   useLocalSearchParams,
   useNavigation,
   useRouter,
 } from 'expo-router';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
+import { copy } from '../../design/copy';
+import {
+  counted,
+  formatCount,
+  formatDate,
+  formatMoney,
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../../design/format';
 import {
   BarSeries,
   ContentUnavailable,
@@ -27,16 +45,8 @@ import {
   type FigureSource,
   type SourceOriginal,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import {
-  formatCount,
-  formatDate,
-  formatMoney,
-  formatMoneyCompact,
-  moneyAccessibilityLabel,
-} from '../../design/format';
-import { chrome, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
@@ -47,6 +57,7 @@ import {
   moneyRecordRoute,
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { donorNotNamed } from '../../privacy/donorEntity';
 import { leadsAbout } from '../leads/model';
 import type {
@@ -59,9 +70,9 @@ import { useMoneyRecord } from './hooks';
 import { donorNodeFor, partyNodeFor } from './lookup';
 import { moneyPageMenu } from './menu';
 import {
+  notFound,
   useAgencySupplier,
   useGrantRecipient,
-  notFound,
   type AgencySupplier,
   type GrantRecipient,
 } from './organisation';
@@ -70,8 +81,8 @@ import {
   bothRegistersCaveat,
   donationsCaveat,
   filtersFromParams,
-  industryLabel,
   industryDonors,
+  industryLabel,
   isAllYears,
   moneyFocusRoute,
   moneyJurisdiction,
@@ -135,12 +146,18 @@ export default function MoneyRecordScreen() {
         rid={rid}
         jur={param(params.jur) === 'qld' ? 'qld' : 'federal'}
         name={param(params.name)}
+        award={param(params.award)}
       />
     );
   return <Missing name={param(params.name)} register="donation" />;
 }
 
 // ---------------------------------------------------------------- layout
+
+const MoneyTitleMeasure = createContext<{
+  ref: React.RefObject<View | null>;
+  onLayout: React.ComponentProps<typeof View>['onLayout'];
+} | null>(null);
 
 function Page({
   title,
@@ -157,9 +174,11 @@ function Page({
   onRefresh?: () => void;
   children: ReactNode;
 }) {
+  const titleRef = useRef<View>(null);
+  const scrollTitle = useTitleOnScroll(titleRef, title);
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={headerItems(
           share
             ? pageItems({ name: share.title, menu: moneyPageMenu(share) })
@@ -167,19 +186,23 @@ function Page({
         )}
       />
       <Screen
-        barTitle={title}
+        onScroll={scrollTitle.onScroll}
         testID={testID}
         refreshControl={
           onRefresh ? (
             <RefreshControl
               refreshing={!!refreshing}
               onRefresh={onRefresh}
-              tintColor={chrome.tint}
+              tintColor={colors.navy}
             />
           ) : undefined
         }
       >
-        {children}
+        <MoneyTitleMeasure.Provider
+          value={{ ref: titleRef, onLayout: scrollTitle.onTitleLayout }}
+        >
+          {children}
+        </MoneyTitleMeasure.Provider>
       </Screen>
     </>
   );
@@ -194,6 +217,7 @@ function Title({
   name: string;
   party?: boolean;
 }) {
+  const measure = useContext(MoneyTitleMeasure);
   return (
     <Group gap={rhythm.tight}>
       {meta ? (
@@ -201,7 +225,11 @@ function Title({
           {meta}
         </Text>
       ) : null}
-      <View style={styles.title}>
+      <View
+        ref={measure?.ref}
+        onLayout={measure?.onLayout}
+        style={styles.title}
+      >
         {party ? <PartyDot party={name} /> : null}
         <Heading
           level={1}
@@ -275,8 +303,7 @@ function RegisterSection({
         ink={figure.ink}
         label={figure.label}
         caveat={figure.caveat}
-        // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
-        {...{ source: figure.source }}
+        citation={figure.source}
         accessibilityLabel={`${moneyAccessibilityLabel(figure.value, true)}, ${figure.label}`}
         testID={figure.testID}
       />
@@ -294,8 +321,7 @@ function RegisterSection({
           format={formatMoneyCompact}
           tableTitle={bars.tableTitle}
           dateRange={bars.dateRange}
-          // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
-          {...{ source: bars.source }}
+          citation={bars.source}
         />
       ) : null}
       {children}
@@ -907,7 +933,7 @@ function NodeBody({
           testID="money-record-donations"
           figure={{
             value: node.total,
-            label: `disclosed to ${formatCount(partyCount)} ${partyCount === 1 ? 'party' : 'parties'}, ${years}`,
+            label: `disclosed to ${counted(partyCount, 'party', 'parties')}, ${years}`,
             ink: 'money',
             caveat: donationsCaveat,
             source: donorSource('money-source'),
@@ -989,12 +1015,30 @@ function RecipientRecord({
   rid,
   jur,
   name,
+  award,
 }: {
   rid: string;
   jur: 'federal' | 'qld';
   name?: string;
+  award?: string;
 }) {
   const loaded = useGrantRecipient(rid, jur);
+  const opened = useRef<string | null>(null);
+  useEffect(() => {
+    if (!award || !loaded.recipient?.organisation || opened.current === award)
+      return;
+    opened.current = award;
+    router.push(
+      moneyItemRoute({
+        kind: 'grant',
+        jur,
+        rid,
+        id: award,
+        sheet: '1',
+        from: rid,
+      }),
+    );
+  }, [award, rid, jur, loaded.recipient]);
   if (!loaded.record)
     return notFound(loaded.error) ? (
       <Missing name={name} register="grant" />
@@ -1102,7 +1146,7 @@ function RecipientBody({
         testID="money-record-grants"
         figure={{
           value: recipient.total,
-          label: `in ${formatCount(recipient.count)} grants, ${range}`,
+          label: `in ${counted(recipient.count, 'grant', 'grants')}, ${range}`,
           caveat: grantsCaveat,
           source,
           testID: 'money-focus-grants',
@@ -1237,7 +1281,7 @@ function SupplierBody({
         testID="money-record-contracts"
         figure={{
           value: supplier.total,
-          label: `in ${formatCount(supplier.count)} ${supplier.count === 1 ? 'contract' : 'contracts'} with ${agency.name}, ${range}`,
+          label: `in ${counted(supplier.count, 'contract', 'contracts')} with ${agency.name}, ${range}`,
           caveat: contractsCaveat,
           source: {
             asOf,

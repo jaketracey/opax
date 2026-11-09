@@ -15,24 +15,28 @@ import {
   useWindowDimensions,
 } from 'react-native';
 // From adaptive, not primitives: screen tests mock primitives' components.
-import { splitPaneWidth, useLayout, LayoutRegion } from '../../design/adaptive';
 import { useAccessibilitySize } from '../../design/accessibility';
+import { LayoutRegion, splitPaneWidth, useLayout } from '../../design/adaptive';
 import { IconButton } from '../../design/controls';
 import { InsetGroup } from '../../design/layout';
+import { useListKeys } from '../../design/list-keys';
+import { SurfaceContext } from '../../design/row-padding';
 import { PaneBar, PaneHost, type SplitPane } from '../../design/split';
 import { Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
-import { useListKeys } from '../../design/list-keys';
-import { SurfaceContext } from '../../design/row-padding';
-import { askGround } from './ground';
 import { entryForWebPath, entryLabel, type RecordEntry } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { answerBlocks } from './answer-markdown';
 import { openAnswerLink } from './AnswerBody';
 import { AskIdle } from './AskIdle';
 import { CitedRecordRow } from './AskRows';
-import { CitationContent, citationCopy } from './CitationContent';
 import { firstClaim, selectCitation } from './citation-state';
+import {
+  CitationContent,
+  citationCopy,
+  citationPassage,
+} from './CitationContent';
+import { askGround } from './ground';
 import { turnKey, type Turn } from './model';
 import type { AskPerson } from './people';
 import { citedSources } from './source-present';
@@ -343,7 +347,14 @@ function SourceList({
             n={marked}
             profiles={profiles}
             focusKey={`${answer.at ?? ''}:${marked}`}
-            onOpenRecord={() => open(source.href, source.title)}
+            onOpenRecord={() =>
+              open(
+                source.slug && citationPassage(source)
+                  ? `/doc/${source.slug}?${new URLSearchParams({ passage: citationPassage(source)!.slice(0, 4000) })}`
+                  : source.href,
+                source.title,
+              )
+            }
             onOpenPerson={(person) =>
               open(`/subject/person/${person.slug}`, person.name)
             }

@@ -1,5 +1,7 @@
 import { useRef, type ReactNode } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
+import { copy } from '../design/copy';
+import { formatCount } from '../design/format';
 import {
   Heading,
   InlineError,
@@ -12,12 +14,9 @@ import {
   SourceLine,
   Text,
 } from '../design/primitives';
-import { copy } from '../design/copy';
-import { formatCount } from '../design/format';
-import { chrome, rhythm } from '../design/tokens';
+import { colors, rhythm } from '../design/tokens';
 import { coverageRoute } from '../navigation/routes/reference';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
-import { deceasedPersonsNotice } from '../onboarding/pages';
 import { voiceLinked } from '../voice/linked';
 import { AboutHeader } from './about/AboutHeader';
 import { aboutCopy as text } from './about/copy';
@@ -51,7 +50,7 @@ export default function About() {
         <RefreshControl
           refreshing={summary.refreshing}
           onRefresh={summary.refresh}
-          tintColor={chrome.tint}
+          tintColor={colors.navy}
         />
       }
     >
@@ -68,7 +67,7 @@ export default function About() {
       </View>
       <Block title={text.culturalNotice}>
         <Text wordSafe variant="body" testID="about-deceased-notice">
-          {deceasedPersonsNotice}
+          {copy.deceasedNotice}
         </Text>
       </Block>
       <Block title={text.privacy} testID="about-privacy-section">

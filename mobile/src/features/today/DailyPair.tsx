@@ -7,12 +7,12 @@ import { Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
-import { presentSheet } from '../../navigation/sheets';
 import { shareRecord } from '../../navigation/share';
-import type { YearPicture } from '../explore/pictures';
+import { presentSheet } from '../../navigation/sheets';
 import { Picture } from '../explore/Picture';
-import { frontPageDeck } from '../explore/quiz/data';
+import type { YearPicture } from '../explore/pictures';
 import type { FrontPageQuestion } from '../explore/quiz-model';
+import { frontPageDeck } from '../explore/quiz/data';
 import { explore } from '../explore/runtime';
 import { archiveYear, questionIndex, type SydneyDate } from './rules';
 import { rules } from './sources';
@@ -98,7 +98,7 @@ export function ArchiveCard({
         photo: picture.file,
       })}
       accessibilityRole="link"
-      accessibilityLabel={`From the archive, ${year}. ${picture.caption}. Photo: ${picture.credit}.`}
+      accessibilityLabel={`From the archive, ${year}. ${picture.caption}.${picture.credit ? ` Photo: ${picture.credit}.` : ''}`}
       accessibilityHint="Opens the Time machine"
       menu={[
         howChosen(rules.archive),
@@ -123,9 +123,13 @@ export function ArchiveCard({
         <Text wordSafe variant="secondary" numberOfLines={3}>
           {picture.caption}
         </Text>
-        <Text wordSafe variant="footnote" tone="inkSoft">
-          {`Photo: ${picture.credit}`}
-        </Text>
+        {picture.credit ? (
+          <Text
+            wordSafe
+            variant="footnote"
+            tone="inkSoft"
+          >{`Photo: ${picture.credit}`}</Text>
+        ) : null}
       </View>
     </Card>
   );
@@ -220,10 +224,10 @@ export function DailyPair({
 
 const styles = StyleSheet.create({
   pair: { gap: 12 },
-  row: { flexDirection: 'row', alignItems: 'stretch' },
+  row: { flexDirection: 'row', alignItems: 'flex-start' },
   cell: { flex: 1 },
   loading: { minHeight: 200 },
-  card: { flex: 1 },
+  card: { flexGrow: 0, flexShrink: 1 },
   words: { padding: 12, gap: rhythm.line },
   question: { gap: rhythm.tight },
   kicker: { flexDirection: 'row', alignItems: 'center', gap: 6 },

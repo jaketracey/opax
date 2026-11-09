@@ -1,6 +1,8 @@
+import { useOffline } from '../../api/useOffline';
 import { Tile, TileGrid } from '../../design/card';
 import type { SFSymbol } from '../../design/icon';
 import { Screen } from '../../design/layout';
+import { OfflineLine } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading } from '../../design/text';
 import type { Accent } from '../../design/tokens';
@@ -41,8 +43,7 @@ export const tools: readonly ExploreTool[] = [
     game: 'tide',
     title: 'The tide',
     line: 'Which subjects parliament talks about more, or less, since 1993',
-    // chart.line.uptrend.xyaxis is not in the symbol vocabulary yet.
-    symbol: 'chart.bar.doc.horizontal',
+    symbol: symbols.trends,
     ink: 'votes',
   },
   {
@@ -64,6 +65,7 @@ export const tools: readonly ExploreTool[] = [
 /** Quizzes and tools: five tiles, the quiz across the full width. */
 export default function ExploreHub() {
   const inProgress = useQuizInProgress();
+  const offline = useOffline();
   return (
     <>
       <ExploreChrome name={hubName} />
@@ -71,6 +73,13 @@ export default function ExploreHub() {
         <Heading level={1} kind="page">
           {hubName}
         </Heading>
+        {offline ? (
+          <OfflineLine
+            savedAt={null}
+            message="You're offline. The record quiz still works."
+            testID="explore-offline"
+          />
+        ) : null}
         <TileGrid lead testID="explore-tools">
           {tools.map((tool) => {
             const resume = tool.game === 'quiz' && inProgress;

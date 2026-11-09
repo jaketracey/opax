@@ -50,7 +50,7 @@ export function isPartyLabel(party: string | null | undefined): boolean {
   const name = party
     ?.trim()
     .toLocaleLowerCase('en-AU')
-    .replace(/[‐‑‒–—]/g, '-');
+    .replace(/[‐‑‒–\u2014]/g, '-');
   return (
     !!name &&
     !/^(?:ind(?:ependent)?s?\b|unaligned\b|non[ -]?aligned\b|unaffiliated\b|non[ -]?party\b|pres$|spk$|(?:party )?not recorded$)/.test(

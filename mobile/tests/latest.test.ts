@@ -5,14 +5,14 @@ import {
   questionType,
   voteAction,
 } from '../src/features/your-mp/latest';
+import { decodeChoice } from '../src/features/your-mp/model';
 import { tenureYear } from '../src/features/your-mp/RepresentativesGroup';
 import { stateInRunningCopy } from '../src/features/your-mp/state-names';
-import { NO_SEAT_ID } from '../src/features/your-mp/forget';
-import { decodeChoice } from '../src/features/your-mp/model';
 
 // Hoisted above the imports by babel-jest.
 jest.mock('../src/api/runtime', () => ({ catalogs: {}, portraits: null }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 
 type Vote = {
   name: string;
@@ -77,7 +77,7 @@ describe('the question rule', () => {
     ['Third Reading', 'Housing Bill 2023', 'bill-stage'],
     ['', 'That the bill be now read a second time', 'bill-stage'],
     ['Passage', 'Climate Bill', 'bill-stage'],
-    ['Second Reading Amendment', 'Online Safety Bill 2026', 'amendment'],
+    ['Second reading amendment', 'Online Safety Bill 2026', 'amendment'],
     ['Consideration in Detail', 'Online Safety Bill 2026', 'amendment'],
     ['Committee of the Whole', 'Aged Care Bill', 'amendment'],
     ['', 'Limitation of debate', 'procedural'],
@@ -118,7 +118,7 @@ describe('Lately', () => {
         votesAgainst: [
           {
             name: 'Online Safety Amendment (Social Media Minimum Age) Bill 2026',
-            stage: 'Second Reading Amendment',
+            stage: 'Second reading amendment',
             date: '2026-07-01',
             billKey: 'r7284',
           },
@@ -132,7 +132,7 @@ describe('Lately', () => {
     if (state.status !== 'ready') return;
     expect(state.records).toHaveLength(1);
     expect(state.records[0]!.action).toBe('Voted against an amendment');
-    expect(state.records[0]!.detail).toBe('Second Reading Amendment');
+    expect(state.records[0]!.detail).toBe('Second reading amendment');
   });
   test('newest first; ties by kind (vote, register, bill) then title; limit', () => {
     const votes = Array.from({ length: 6 }, (_, i) => ({
@@ -281,7 +281,8 @@ test('territories take "the" in running copy; states do not', () => {
   expect(stateInRunningCopy('nsw')).toBe('New South Wales');
 });
 
-test('a forgotten seat still decodes, so the older slot never returns', () => {
+test('legacy unknown seat IDs remain readable for migration', () => {
+  const NO_SEAT_ID = `el_${'0'.repeat(24)}`;
   expect(
     decodeChoice({ version: 1, seatId: NO_SEAT_ID, stateSeatIds: [] }),
   ).toEqual({ version: 1, seatId: NO_SEAT_ID, stateSeatIds: [] });

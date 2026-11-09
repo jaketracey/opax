@@ -1,60 +1,56 @@
+import { StageTimeline } from '../src/design/charts';
+import { Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
-import { sheetPayload } from '../src/navigation/sheets';
-import { SourceContent } from '../src/features/sheets/SourceSheet';
+import { SymbolView } from 'expo-symbols';
 import { act, type ReactElement } from 'react';
 import {
   Dimensions,
+  Text as NativeText,
   Platform,
   StyleSheet,
   Switch,
-  Text as NativeText,
+  View,
 } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { SymbolView } from 'expo-symbols';
-import { Picker, Text as SwiftText } from '@expo/ui/swift-ui';
+import {
+  contrastRatio,
+  listedPair,
+  requiredRatio,
+} from '../src/design/contrast';
 import {
   ChoiceChips,
   PopUpButton,
   SegmentedPicker,
   segmentsFit,
 } from '../src/design/controls';
-import { openSource } from '../src/navigation/external';
-import {
-  contrastRatio,
-  listedPair,
-  requiredRatio,
-} from '../src/design/contrast';
 import { light, lightHighContrast } from '../src/design/palette';
+import { FaceStack, Portrait } from '../src/design/people';
 import {
-  AsAtLine,
   Button,
   Card,
   ChoiceChip,
   EmptyState,
   IconButton,
-  InfoButton,
-  MACHINE_GUIDANCE,
-  MachineLabel,
-  MachineWritten,
-  PartyChip,
   PartyLabel,
   SourceLine,
-  SourceLink,
-  StatusLabel,
+  StatusCapsule,
   SwitchRow,
-  SplitEmpty,
   Tag,
   Text,
   statusTone,
 } from '../src/design/primitives';
 import { roleColour, textContent } from '../src/design/text';
+import { symbols } from '../src/design/symbols';
 import {
   accentTint,
   radii,
+  rhythm,
   statusTint,
-  statusTones,
   textStyles,
 } from '../src/design/tokens';
+import { SourceContent } from '../src/features/sheets/SourceSheet';
+import { openSource } from '../src/navigation/external';
+import { sheetPayload } from '../src/navigation/sheets';
 
 jest.mock('expo-router', () => ({
   ...jest.requireActual('expo-router'),
@@ -156,7 +152,90 @@ beforeAll(() =>
 afterAll(() => Dimensions.set({ window: jestWindow, screen: jestScreen }));
 const noop = () => undefined;
 
-describe('StatusLabel', () => {
+describe('Portrait', () => {
+  test.each([undefined, '', '   '])(
+    'a nameless 28pt portrait draws a decorative person symbol (%p)',
+    (name) => {
+      const root = render(<Portrait size={28} name={name} />).root;
+      expect(nativeTexts(root)).toHaveLength(0);
+      const symbol = root.findByType(SymbolView);
+      expect(symbol.props.name).toBe(symbols.person);
+      expect(symbol.props.size).toBe(28 / 2);
+      expect(hex(symbol.props.tintColor)).toBe(light.inkSoft);
+      expect(symbol.props.accessible).toBe(false);
+      expect(symbol.props.accessibilityElementsHidden).toBe(true);
+    },
+  );
+  test('a 44pt Zali Steggall portrait draws ZS without repeating her name to VoiceOver', () => {
+    const root = render(<Portrait size={44} name="Zali Steggall" />).root;
+    expect(strings(root)).toEqual(['ZS']);
+    expect(root.findAllByType(SymbolView)).toHaveLength(0);
+    const text = nativeTexts(root)[0]!;
+    expect(flat(text.props.style).fontSize).toBe(textStyles.strong.fontSize);
+    expect(text.props.accessible).toBe(false);
+    const circle = root.findAllByType(View)[0]!;
+    expect(circle.props.accessibilityElementsHidden).toBe(true);
+    expect(circle.props.importantForAccessibility).toBe('no-hide-descendants');
+  });
+  test.each([
+    ['  zali steggall  ', 'ZS'],
+    ['david van Dijk', 'DV'],
+    ['walsh', 'W'],
+    ['ßtefan müller', 'SS'],
+  ])(
+    'initials are upper-case and at most two letters (%s)',
+    (name, expected) => {
+      expect(strings(render(<Portrait name={name} />).root)).toEqual([
+        expected,
+      ]);
+    },
+  );
+  test.each([
+    [28, 'capsule'],
+    [44, 'strong'],
+    [56, 'strong'],
+    [72, 'tileFigure'],
+    [80, 'tileFigure'],
+    [96, 'tileFigure'],
+  ] as const)(
+    '%spt initials use %s and stay within the circle at AX5',
+    (size, variant) => {
+      atSize(AX5, () => {
+        const root = render(
+          <Portrait size={size} name="William Watson" />,
+        ).root;
+        const text = nativeTexts(root)[0]!;
+        const style = flat(text.props.style);
+        const role = textStyles[variant];
+        expect(style.fontSize).toBe(role.fontSize);
+        expect(style.fontWeight).toBe(role.fontWeight);
+        expect(text.props.allowFontScaling).toBe(true);
+        const scale = Math.min(AX5, text.props.maxFontSizeMultiplier);
+        expect(scale).toBeGreaterThanOrEqual(1);
+        // Reserve space for two full-em letters and the role's full line height.
+        expect(2 * role.fontSize * scale).toBeLessThanOrEqual(
+          size - rhythm.line,
+        );
+        expect((style.lineHeight as number) * scale).toBeLessThanOrEqual(
+          size - rhythm.line,
+        );
+      });
+    },
+  );
+  test('no portrait or face stack draws the hollow-circle text character', () => {
+    for (const size of [28, 44, 56, 72, 80, 96] as const) {
+      for (const name of [undefined, 'Zali Steggall']) {
+        const root = render(<Portrait size={size} name={name} />).root;
+        expect(strings(root).join('')).not.toContain('○');
+      }
+    }
+    const stack = render(<FaceStack portraits={[null, null]} />).root;
+    expect(nativeTexts(stack)).toHaveLength(0);
+    expect(stack.findAllByType(SymbolView)).toHaveLength(2);
+  });
+});
+
+describe('StatusCapsule', () => {
   test.each([
     ['Passed', 'neutral'],
     ['Assented', 'neutral'],
@@ -177,37 +256,46 @@ describe('StatusLabel', () => {
     expect(statusTone(word)).toBe(tone);
   });
   test('a word on its tone: 4-radius wash, the label role, said as the word', () => {
-    const root = render(<StatusLabel label="Passed" testID="s" />).root;
+    const root = render(<StatusCapsule status="Passed" testID="s" />).root;
     const box = host(root, 's');
     expect(box.props.accessible).toBe(true);
-    expect(box.props.accessibilityLabel).toBe('Passed');
+    expect(box.props.accessibilityLabel).toBe('Status: Passed');
     const style = flat(box.props.style);
     expect(style.borderRadius).toBe(radii.capsule);
     expect(hex(style.backgroundColor)).toBe(light.sunken);
     const text = nativeTexts(root)[0]!;
     const textStyle = flat(text.props.style);
-    expect(textStyle.fontSize).toBe(textStyles.label.fontSize);
+    expect(textStyle.fontSize).toBe(textStyles.capsule.fontSize);
     expect(hex(textStyle.color)).toBe(light.inkSoft);
     expect(strings(root)).toEqual(['Passed']);
   });
   test('inside a row that says it, it is drawn only', () => {
     const box = host(
-      render(<StatusLabel label="Lapsed" hidden testID="s" />).root,
+      render(<StatusCapsule status="Lapsed" hidden testID="s" />).root,
       's',
     );
     expect(box.props.accessible).toBe(false);
     expect(box.props.accessibilityElementsHidden).toBe(true);
   });
-  test('every tone is a listed text pair, and 7:1 under Increase Contrast', () => {
-    for (const { ink, wash } of Object.values(statusTones)) {
-      expect(listedPair(light[ink], light[wash], 'text')).toBeTruthy();
-      expect(contrastRatio(light[ink], light[wash])).toBeGreaterThanOrEqual(
+  test('every drawn status is a listed text pair, and 7:1 under Increase Contrast', () => {
+    for (const status of [
+      'Before parliament',
+      'Exposure draft',
+      'Passed',
+      'Lapsed',
+    ]) {
+      const root = render(<StatusCapsule status={status} testID="s" />).root;
+      const colour = flat(nativeTexts(root)[0]!.props.style).color;
+      const background = hex(
+        flat(host(root, 's').props.style).backgroundColor,
+      )!;
+      expect(listedPair(hex(colour)!, background, 'text')).toBeTruthy();
+      expect(contrastRatio(hex(colour)!, background)).toBeGreaterThanOrEqual(
         requiredRatio.text,
       );
-      const strong = lightHighContrast[ink] ?? light[ink];
-      expect(contrastRatio(strong, light[wash])).toBeGreaterThanOrEqual(
-        ink === 'inkSoft' ? 7 : 7,
-      );
+      expect(
+        contrastRatio(strongHex(colour)!, background),
+      ).toBeGreaterThanOrEqual(7);
     }
   });
   test('hugs its word, and takes the full width (word-safe) at AX5', () => {
@@ -215,7 +303,7 @@ describe('StatusLabel', () => {
       let s: Record<string, unknown> = {};
       atSize(fontScale, () => {
         const root = render(
-          <StatusLabel label="Before parliament" testID="s" />,
+          <StatusCapsule status="Before parliament" testID="s" />,
         ).root;
         s = flat(host(root, 's').props.style);
         expect(nativeTexts(root)[0]!.props.dynamicTypeRamp).toBe(
@@ -320,13 +408,6 @@ describe('PartyLabel', () => {
     expect(label.props.accessible).toBe(false);
     expect(label.props.accessibilityRole).toBeUndefined();
   });
-  test('the retired PartyChip draws a PartyLabel: no capsule fill', () => {
-    const root = render(<PartyChip party="Greens" status="current" />).root;
-    expect(root.findAllByType(PartyLabel)).toHaveLength(1);
-    expect(strings(root)).toEqual(['GRN']);
-    for (const node of root.findAll((n) => typeof n.type === 'string'))
-      expect(flat(node.props.style).borderRadius).not.toBe(999);
-  });
   test('on a navy header: onNavySoft text and a ringed dot', () => {
     const root = render(
       <PartyLabel party="Liberal" status="unknown" onDeep nested />,
@@ -372,7 +453,7 @@ describe('ChoiceChip on Android', () => {
     });
     expect(node.props.accessibilityValue).toEqual({ text: '2 of 4' });
     const style = pressedStyle(node, false);
-    expect(style.borderRadius).toBe(radii.pill);
+    expect(style.borderRadius).toBe(radii.capsule);
     expect(style.minHeight).toBe(36);
     expect(node.props.hitSlop).toBe(Platform.OS === 'android' ? 6 : 4);
   });
@@ -399,7 +480,7 @@ describe('ChoiceChip on Android', () => {
       const root = chip();
       const style = pressedStyle(pressable(root), false);
       expect(style.alignSelf).toBe('stretch');
-      expect(style.borderRadius).toBe(radii.md);
+      expect(style.borderRadius).toBe(radii.container);
     });
   });
 });
@@ -590,61 +671,6 @@ describe('compact iOS choices', () => {
   });
 });
 
-describe('MachineLabel', () => {
-  test('one phrase, drawn and spoken, whatever the old label said', () => {
-    const root = render(
-      <>
-        <MachineLabel
-          explanation="Written by a model from the explanatory memorandum; not the record"
-          testID="m"
-        />
-        <MachineWritten
-          label="Machine brief"
-          explanation="An automated summary written by a model; not the record."
-          testID="w"
-        />
-      </>,
-    ).root;
-    const pill = (id: string) =>
-      root.find(
-        (n) => n.props?.testID === id && typeof n.props.children === 'function',
-      );
-    expect(pill('m').props.accessibilityLabel).toBe(
-      'Machine-written. Written by a model from the explanatory memorandum; not the record.',
-    );
-    expect(pill('w').props.accessibilityLabel).toBe(
-      'Machine-written. An automated summary written by a model; not the record.',
-    );
-    const face = render(pill('w').props.children({ pressed: false })).root;
-    expect(strings(face)).toEqual(['Machine-written']);
-    const style = flat(
-      face.find(
-        (n) =>
-          typeof n.type === 'string' && flat(n.props.style).minHeight === 32,
-      ).props.style,
-    );
-    expect(style.borderRadius).toBe(radii.pill);
-    expect(hex(style.backgroundColor)).toBe(light.navyWash);
-    expect(flat(pill('m').props.style).minHeight).toBe(44);
-  });
-  test('tapping it opens the attribution and the guidance', () => {
-    const renderer = render(
-      <MachineLabel explanation="Written by a model" testID="m" />,
-    );
-    const pill = renderer.root.find(
-      (n) => n.props.testID === 'm' && typeof n.props.onPress === 'function',
-    );
-    act(() => pill.props.onPress());
-    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
-      params: { key: string };
-    };
-    expect(sheetPayload(params.key, 'machine')?.note.body).toEqual([
-      'Written by a model.',
-      MACHINE_GUIDANCE,
-    ]);
-  });
-});
-
 describe('SourceLine and SourceSheet', () => {
   beforeEach(() => jest.mocked(openSource).mockClear());
   test('date and source name, the name in the link colour; said as drawn', () => {
@@ -771,65 +797,6 @@ describe('SourceLine and SourceSheet', () => {
       );
     });
   });
-  test('AsAtLine draws a SourceLine and keeps its spoken sentence', () => {
-    const root = render(
-      <AsAtLine
-        asOf="2026-09-21"
-        citation={['AEC annual returns', 'AusTender']}
-        testID="asat"
-      />,
-    ).root;
-    expect(root.findAllByType(SourceLine)).toHaveLength(1);
-    const line = root.find(
-      (n) => n.props.testID === 'asat' && typeof n.props.style === 'function',
-    );
-    expect(line.props.accessibilityLabel).toBe(
-      'As at 21 September 2026 · Source: AEC annual returns; AusTender',
-    );
-    expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Updated 21 Sep 2026 · AEC annual returns and 1 more',
-    );
-  });
-  test('SourceLink keeps opening its original directly, in the line’s anatomy', () => {
-    const root = render(
-      <SourceLink
-        citation="They Vote For You"
-        record="division, 19 Aug 2026"
-        url="https://theyvoteforyou.org.au/divisions/1"
-        kind="record"
-        testID="sl"
-      />,
-    ).root;
-    const link = root.find(
-      (n) => n.props.testID === 'sl' && typeof n.props.onPress === 'function',
-    );
-    expect(link.props.accessibilityRole).toBe('link');
-    expect(link.props.accessibilityLabel).toBe(
-      'View original, They Vote For You, division, 19 Aug 2026',
-    );
-    expect(strings(root)).toEqual(['View original']);
-    act(() => link.props.onPress());
-    expect(openSource).toHaveBeenCalledWith(
-      'https://theyvoteforyou.org.au/divisions/1',
-      'They Vote For You · division, 19 Aug 2026',
-    );
-  });
-  test('the ⓘ opens the same sheet, with its notes', () => {
-    const renderer = render(
-      <InfoButton title="About these figures" notes={['A note.']} testID="i" />,
-    );
-    const button = renderer.root.find(
-      (n) => n.props.testID === 'i' && typeof n.props.onPress === 'function',
-    );
-    expect(flat(button.props.style({ pressed: false })).borderRadius).toBe(
-      radii.pill,
-    );
-    act(() => button.props.onPress());
-    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
-      params: { key: string };
-    };
-    expect(sheetPayload(params.key, 'rule')?.rule).toBe('A note.');
-  });
 });
 
 describe('Card', () => {
@@ -844,7 +811,7 @@ describe('Card', () => {
     );
     const rest = pressedStyle(card, false);
     expect(rest).toMatchObject({
-      borderRadius: radii.md,
+      borderRadius: radii.container,
       borderCurve: 'continuous',
       padding: 20,
     });
@@ -895,7 +862,7 @@ describe('Button as a toggle (Follow)', () => {
     expect(off.props.accessibilityRole).toBe('switch');
     expect(off.props.accessibilityLabel).toBe('Follow Grayndler');
     expect(off.props.accessibilityState).toMatchObject({ checked: false });
-    expect(pressedStyle(off, false).borderRadius).toBe(radii.pill);
+    expect(pressedStyle(off, false).borderRadius).toBe(radii.capsule);
     expect(hex(pressedStyle(off, false).backgroundColor)).toBe(light.navyWash);
     const onRoot = toggle(true);
     const on = pressable(onRoot);
@@ -916,7 +883,7 @@ describe('Button as a toggle (Follow)', () => {
     atSize(AX5, () => {
       const style = pressedStyle(pressable(toggle(false)), false);
       expect(style.alignSelf).toBe('stretch');
-      expect(style.borderRadius).toBe(radii.md);
+      expect(style.borderRadius).toBe(radii.container);
     });
   });
 });
@@ -1063,44 +1030,12 @@ describe('EmptyState', () => {
     ).root;
     expect(strings(root)).toEqual(['No declared interests.']);
   });
-  test('pane: one quiet line, the same in every split; SplitEmpty is this size', () => {
-    const pane = render(
-      <EmptyState size="pane" message="No bill selected" testID="e" />,
-    ).root;
-    expect(strings(pane)).toEqual(['No bill selected']);
-    const line = nativeTexts(pane)[0]!;
-    expect(hex(flat(line.props.style).color)).toBe(light.inkSoft);
-    expect(flat(line.props.style).textAlign).toBe('center');
-    // No symbol, no wash, no heading: nothing 64pt wide, no category colour.
-    expect(
-      pane.findAll(
-        (n) => typeof n.type === 'string' && flat(n.props.style).width === 64,
-      ),
-    ).toHaveLength(0);
-    // An older call with a title and a count draws the title alone.
-    const older = render(
-      <EmptyState
-        size="pane"
-        icon="doc.text"
-        accent="bills"
-        title="No bill selected"
-        message="12 bills"
-        testID="e"
-      />,
-    ).root;
-    expect(strings(older)).toEqual(['No bill selected']);
-    const alias = render(
-      <SplitEmpty icon="doc.text" title="No bill selected" testID="e" />,
-    ).root;
-    expect(alias.findAllByType(EmptyState)[0]!.props.size).toBe('pane');
-    expect(strings(alias)).toEqual(['No bill selected']);
-  });
 });
 
 describe('Increase Contrast and Android high-contrast text', () => {
   test('iOS: the new components draw role colours that step up natively', () => {
     if (Platform.OS !== 'ios') return;
-    const root = render(<StatusLabel label="Before parliament" />).root;
+    const root = render(<StatusCapsule status="Before parliament" />).root;
     const colour = flat(nativeTexts(root)[0]!.props.style).color;
     expect(strongHex(colour)).toBe(lightHighContrast.billsInk);
     expect(
@@ -1124,7 +1059,7 @@ describe('Increase Contrast and Android high-contrast text', () => {
     expect(roleColour('ink', true)).toBe(light.ink);
     mockHighText = true;
     try {
-      const root = render(<Text variant="metadata">Grayndler</Text>).root;
+      const root = render(<Text variant="secondary">Grayndler</Text>).root;
       expect(flat(nativeTexts(root)[0]!.props.style).color).toBe(
         lightHighContrast.inkSoft,
       );
@@ -1152,4 +1087,53 @@ describe('Increase Contrast and Android high-contrast text', () => {
         4.5,
       );
   });
+});
+
+test('an empty pane is a quiet centred line without a symbol or wash', () => {
+  const pane = render(
+    <EmptyState size="pane" message="No bill selected" testID="e" />,
+  ).root;
+  expect(strings(pane)).toEqual(['No bill selected']);
+  const line = nativeTexts(pane)[0]!;
+  expect(hex(flat(line.props.style).color)).toBe(light.inkSoft);
+  expect(flat(line.props.style).textAlign).toBe('center');
+  expect(
+    pane.findAll(
+      (n) => typeof n.type === 'string' && flat(n.props.style).width === 64,
+    ),
+  ).toHaveLength(0);
+});
+
+test('vertical timeline bullets centre on the first text line at Large and AX5', () => {
+  for (const scale of [1, AX5])
+    atSize(scale, () => {
+      const root = render(
+        <StageTimeline
+          stages={Array.from({ length: 5 }, (_, i) => ({
+            label: `Stage ${i}`,
+            date: '12 Aug 2026',
+          }))}
+          latestIndex={4}
+          dateRange={{ start: '2026-08-12', end: '2026-08-12' }}
+          citation="Parliament"
+        />,
+      ).root;
+      const stage = root
+        .findAllByType(View)
+        .find(
+          (node) => node.props.accessibilityLabel === 'Stage 0, 12 Aug 2026',
+        )!;
+      const label = stage.findAllByType(Text)[0]!;
+      const height = textStyles.footnote.lineHeight * scale;
+      act(() =>
+        label.props.onTextLayout({ nativeEvent: { lines: [{ height }] } }),
+      );
+      const dot = stage
+        .findAllByType(View)
+        .find((node) => flat(node.props.style).borderRadius === 5)!;
+      const style = flat(dot.props.style);
+      expect(
+        (style.marginTop as number) + (style.height as number) / 2,
+      ).toBeCloseTo(height / 2);
+    });
 });

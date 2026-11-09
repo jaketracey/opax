@@ -1,14 +1,17 @@
+import { allowsReportsPath } from '../src/api/reports-policy';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
+import { router } from 'expo-router';
 import { act, type ReactElement } from 'react';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Dimensions, Platform, ScrollView } from 'react-native';
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
 } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { reports } from '../src/api/runtime';
+import { rhythm } from '../src/design/tokens';
 import {
+  arcPath,
   chosenDecade,
   decodeIndustryMoney,
   normaliseTopicFilters,
@@ -16,7 +19,6 @@ import {
 } from '../src/features/reports/model';
 import TopicPage, { topicQuestion } from '../src/features/reports/TopicPage';
 import TopicsIndex from '../src/features/reports/TopicsIndex';
-import { rhythm } from '../src/design/tokens';
 
 let mockParams: Record<string, string> = {};
 const mockScreens: { options?: Record<string, unknown> }[] = [];
@@ -575,4 +577,29 @@ describe('Topics index', () => {
     expect(host(page.root, 'topics-methods')).toHaveLength(1);
     expect(words(page)).not.toContain(' & ');
   });
+});
+
+test('topic arc policy accepts oldest sorting while rejecting duplicate and unsupported sorts', () => {
+  const path = arcPath('housing');
+  expect(allowsReportsPath(path)).toBe(true);
+  expect(allowsReportsPath(path.replace('sort=newest', 'sort=oldest'))).toBe(
+    true,
+  );
+  expect(allowsReportsPath(path + '&sort=oldest')).toBe(false);
+  expect(allowsReportsPath(path.replace('sort=newest', 'sort=random'))).toBe(
+    false,
+  );
+});
+
+test('one speech is singular for a parliament and a party', async () => {
+  jest.mocked(reports.topic).mockResolvedValue(
+    result({
+      ...topic,
+      parties: [['Labor', 1]],
+      states: [['sa', 1, 0.01]],
+    }) as never,
+  );
+  const page = await render(<TopicPage />);
+  expect(words(page)).toContain('1 speech');
+  expect(words(page)).not.toMatch(/\b1 speeches\b/);
 });

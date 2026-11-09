@@ -1,28 +1,28 @@
+import { formatDisclosureYear } from '../src/design/format';
 import { decodeMoneyGraph, moneyCatalogs } from '../src/features/money/data';
 import {
   filtersFromParams,
+  industryDonors,
+  industryLabel,
+  latestCompleteYear,
   moneyCaveats,
   moneyFocusRoute,
   moneyJurisdiction,
   moneyProfile,
   moneySource,
-  publicMoneySource,
   moneyWindowYears,
-  latestCompleteYear,
   partyDonationsTotal,
-  industryDonors,
-  industryLabel,
+  publicMoneySource,
 } from '../src/features/money/records';
-import { moneyRoute } from '../src/navigation/routes';
-import { pinned } from './pinned';
 import {
-  moneyView,
   defaultMoneyFilters,
   donationRanks,
-  rankedDonors,
+  moneyView,
   moneyWindowNodes,
+  rankedDonors,
 } from '../src/features/money/view';
-import { formatDisclosureYear } from '../src/design/format';
+import { moneyRoute } from '../src/navigation/routes';
+import { pinned } from './pinned';
 
 test('empty recorded windows are distinct from undated-only returns, and years are financial years', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
@@ -139,7 +139,7 @@ test('published party, person and money record paths open natively', () => {
     }).native,
   ).toMatchObject({
     pathname: '/money-record',
-    params: { rid: 'Fixture donor' },
+    params: { node: 'donor:Fixture donor', jur: 'federal' },
   });
 });
 

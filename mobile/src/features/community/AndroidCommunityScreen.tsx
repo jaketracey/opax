@@ -1,7 +1,8 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+
 import {
+  InsetGroup,
   LinkRow,
-  RowList,
   Screen,
   Section,
   Text,
@@ -15,15 +16,15 @@ import { openOnWeb } from '../../navigation/external';
 export function AndroidCommunityScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Community' }} />
+      <RouteOptions options={{ title: 'Community' }} />
       <Screen testID="community-home">
-        <Section rule={false}>
+        <Section>
           <Text wordSafe>
             Community discussions, profiles and messages are available on
             opax.com.au. Community sign-in is not available in this Android
             build.
           </Text>
-          <RowList>
+          <InsetGroup>
             <LinkRow
               title="Community on opax.com.au"
               external
@@ -31,7 +32,7 @@ export function AndroidCommunityScreen() {
               testID="community-open-web"
               onPress={() => void openOnWeb('/community', 'Community')}
             />
-          </RowList>
+          </InsetGroup>
         </Section>
       </Screen>
     </>

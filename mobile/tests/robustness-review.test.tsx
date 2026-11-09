@@ -1,17 +1,15 @@
-import { router } from 'expo-router';
-import { sheetPayload } from '../src/navigation/sheets';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import * as d from '../src/api/catalog-decoders';
-import { ApiClient, type RecordResult } from '../src/api/client';
-import { Catalogs, profileFor, personId } from '../src/api/catalogs';
 import {
   CatalogCache,
   type CacheEntry,
-  type CacheStore,
   type CacheIndexEntry,
+  type CacheStore,
 } from '../src/api/cache';
+import * as d from '../src/api/catalog-decoders';
+import { Catalogs, personId, profileFor } from '../src/api/catalogs';
+import { ApiClient } from '../src/api/client';
 import { ApiError } from '../src/api/errors';
 import {
   filterRows,
@@ -21,14 +19,14 @@ import {
   rows,
   shape,
 } from '../src/api/validation';
+import { SourceLine } from '../src/design/source';
+import { CatalogState } from '../src/features/CatalogState';
 import {
   followState,
   type FollowSources,
 } from '../src/features/follows/markers';
+import { recordSourceState } from '../src/features/RecordStatus';
 import { RecordBlock } from '../src/features/your-mp/Evidence';
-import { RecordStatus } from '../src/features/RecordStatus';
-import { CatalogState } from '../src/features/CatalogState';
-import { SourceAffordance } from '../src/design/source';
 import { catalogs, index, manifest, pinned, replaceAt, slugs } from './pinned';
 
 jest.mock('expo-router', () => ({
@@ -334,63 +332,6 @@ test('programming errors in shaped or keyed vote records escape isolation', () =
   });
   expect(() => d.decodeVotes(raw)).toThrow(TypeError);
 });
-test('decode fallback and partial screens state the problem without claiming offline', () => {
-  const record: RecordResult<unknown> = {
-    data: {},
-    stale: true,
-    staleReason: 'unreadable',
-    partial: true,
-    savedAt: 1000,
-    asOf: null,
-  };
-  for (const element of [
-    <RecordStatus
-      key="record"
-      record={record}
-      error={null}
-      refreshing={false}
-      refresh={() => {}}
-      retry={() => {}}
-      label="Loading"
-      testID="record"
-    />,
-    <CatalogState
-      key="block"
-      block={{ ...record, status: 'ready', asAt: null, sources: [] }}
-      empty="Empty"
-      onRetry={() => {}}
-      testID="block"
-    >
-      {() => null}
-    </CatalogState>,
-  ]) {
-    let renderer!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      renderer = TestRenderer.create(element);
-    });
-    if (element.type === CatalogState) {
-      act(() => renderer.root.findByType(SourceAffordance).props.onPress());
-    }
-    let words = renderer.root
-      .findAllByType(NativeText)
-      .map((n) => [n.props.children].flat(3).join(''))
-      .join(' ');
-    if (element.type === CatalogState) {
-      const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
-        params: { key: string };
-      };
-      words +=
-        ' ' + sheetPayload(params.key, 'source')?.details.notes?.join(' ');
-    }
-    expect(words).toContain(
-      'The latest records could not be read. Showing the saved copy.',
-    );
-    expect(words).toContain('Some records could not be read.');
-    expect(words).toContain('Saved');
-    expect(words).not.toContain('Offline');
-    act(() => renderer.unmount());
-  }
-});
 
 const seatPath =
   '/electorates/releases/b56417062ccc33cf/el_5d600e7f6dca5b72ae04d686.json';
@@ -502,3 +443,46 @@ test.each([true, false])(
     act(() => renderer.unmount());
   },
 );
+
+test('unreadable and partial copies keep their explanation in provenance without claiming offline', () => {
+  const record = {
+    data: {},
+    stale: true,
+    staleReason: 'unreadable' as const,
+    partial: true,
+    savedAt: 1000,
+    asOf: null,
+  };
+  const adapter = recordSourceState(record);
+  expect(adapter.savedAt).toBe(1000);
+  expect(adapter.note).toContain(
+    'The latest records could not be read. Showing the saved copy.',
+  );
+  expect(adapter.note).toContain('Some records could not be read.');
+  expect(adapter.note).not.toContain('Offline');
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <CatalogState
+        block={{ ...record, status: 'ready', asAt: null, sources: [] }}
+        empty="Empty"
+        onRetry={() => {}}
+        testID="block"
+      >
+        {() => null}
+      </CatalogState>,
+    );
+  });
+  const line = renderer.root.findByType(SourceLine);
+  expect(line.props.savedAt).toBe(1000);
+  expect(line.props.notes).toEqual(
+    expect.arrayContaining([expect.stringContaining('could not be read')]),
+  );
+  const words = renderer.root
+    .findAllByType(NativeText)
+    .map((n) => [n.props.children].flat(3).join(''))
+    .join(' ');
+  expect(words).toContain('Saved');
+  expect(words).not.toContain('Offline');
+  act(() => renderer.unmount());
+});

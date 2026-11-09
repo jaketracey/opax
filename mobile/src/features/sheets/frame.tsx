@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import type { ReactNode } from 'react';
-import { Stack, type NativeStackNavigationOptions } from 'expo-router';
+import { type NativeStackNavigationOptions } from 'expo-router';
 import { Platform, ScrollView, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -69,7 +70,7 @@ export function SheetFrame({
   ];
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           ...routeSheetOptions({ short, citation, accessible }),
           title,

@@ -63,6 +63,7 @@ export function allowsReportsPath(path: string): boolean {
       ),
     }).split('?')[1],
   );
+  if (params.get('sort') === 'oldest') expected.set('sort', 'oldest');
   return (
     [...params.keys()].length === [...expected.keys()].length &&
     [...expected].every(

@@ -6,7 +6,7 @@
 export const docRoute = (
   slug: string,
   name?: string,
-  open: { q?: string; match?: number; cite?: boolean } = {},
+  open: { q?: string; match?: number; cite?: boolean; passage?: string } = {},
 ) => ({
   pathname: '/doc/[slug]' as const,
   params: {
@@ -15,6 +15,7 @@ export const docRoute = (
     ...(open.q ? { q: open.q } : {}),
     ...(open.q && open.match != null ? { match: String(open.match) } : {}),
     ...(open.cite ? { cite: '1' } : {}),
+    ...(open.passage ? { passage: open.passage.slice(0, 4000) } : {}),
   },
 });
 export const citeRoute = (slug: string, name?: string) => ({

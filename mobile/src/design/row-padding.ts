@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect } from 'react';
 import { colors } from './tokens';
 
-/** Marks a row component that draws its own vertical padding in a RowList. */
+/** Marks a row component that draws its own vertical padding in a InsetGroup. */
 export const ROW_OWNS_PADDING = Symbol.for('opax.rowOwnsPadding');
 
 /** Control rows (LinkRow, Disclosure, PersonRow, web links) own their 44pt. */

@@ -1,3 +1,10 @@
+import {
+  router,
+  type Href,
+  type NativeStackHeaderItem,
+  type NativeStackHeaderItemMenuAction,
+  type NativeStackHeaderItemMenuSubmenu,
+} from 'expo-router';
 import { createElement } from 'react';
 import {
   Platform,
@@ -7,47 +14,54 @@ import {
   useWindowDimensions,
   type ColorValue,
 } from 'react-native';
-import {
-  router,
-  type Href,
-  type NativeStackHeaderItem,
-  type NativeStackHeaderItemMenuAction,
-  type NativeStackHeaderItemMenuSubmenu,
-} from 'expo-router';
+import { designFlags } from '../design/flags';
+import { showMenu, type MenuAction } from '../design/menu';
+import type { RowMenuAction } from '../design/row-link';
 import {
   colors,
+  contentSizeCategory,
+  interfaceFonts as fonts,
   headingFace,
-  fonts,
-  navigationTitleSizes,
+  headlineSizes,
+  largeTitleSizes,
   textStyles,
 } from '../design/tokens';
-import { showMenu, type MenuAction } from '../design/menu';
-import { voiceLinked } from '../voice/linked';
-import { designFlags } from '../design/flags';
 import { accountSnapshot } from '../features/account/store';
+import { voiceLinked } from '../voice/linked';
 import { canShare } from './share';
-import type { SFSymbol } from '../design/icon';
 
 /**
  * Header styling shared by every stack, using the selected heading face
  * and system Dynamic Type. Buttons and named back buttons use the tint.
  */
 // On iOS 26 a bar background or blur hides the large title (a UIKit bug,
-// react-native-screens#3100), so there the system's glass bar is left alone.
-// Earlier versions keep an opaque paper bar, so content never shows through.
+// react-native-screens#3100), so use headerBackground there without changing
+// the native bar's background or blur. Earlier versions use an opaque bar.
 // Android's bar is flat paper like the redesign's: no elevation shadow.
 /** iOS 26 and later: the system glass bar and scroll edge effects. */
 export const glassBar = () =>
   Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
 
+/**
+ * Expo Router's supported headerBackground keeps the native config transparent
+ * (no blur or opaque headerStyle), preserving iOS 26 large-title collapse.
+ * The background follows the measured native header height at rest and scroll.
+ * See expo-router 57 useHeaderConfigProps and NativeStackView.native.
+ */
 export const opaqueBar = (ground: ColorValue = colors.paper) =>
-  Platform.OS === 'android' || (Platform.OS === 'ios' && !glassBar())
+  glassBar()
     ? {
+        headerBackground: () =>
+          createElement(View, {
+            pointerEvents: 'none',
+            style: { flex: 1, backgroundColor: ground },
+          }),
+      }
+    : {
         headerStyle: { backgroundColor: ground },
         headerLargeStyle: { backgroundColor: ground },
         ...(Platform.OS === 'android' ? { headerShadowVisible: false } : {}),
-      }
-    : {};
+      };
 
 /**
  * Android bar text, in sp. The native bar sets its title in sp, so the
@@ -56,13 +70,17 @@ export const opaqueBar = (ground: ColorValue = colors.paper) =>
  * bar title is the screen's title: the `heading` size, Material's title size.
  */
 export const androidBar = {
-  title: textStyles.heading.fontSize,
-  action: textStyles.metadata.fontSize,
+  title: textStyles.sectionTitle.fontSize,
+  action: textStyles.secondary.fontSize,
 } as const;
 
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
-  const sizes = navigationTitleSizes(fontScale);
+  const category = contentSizeCategory(fontScale);
+  const sizes = {
+    largeTitle: largeTitleSizes[category],
+    title: Math.min(headlineSizes[category], headlineSizes.xxxLarge),
+  };
   return {
     headerTintColor: colors.navy,
     // Inline and sheet bars must not inherit Expo's transparent form-sheet
@@ -89,7 +107,7 @@ export function useStackChrome() {
     // soft top edge active but too light, with serif record text legible
     // through the title and bar buttons. The hard edge is UIKit's own opaque
     // boundary with a divider. The bottom stays soft at the minimising tab
-    // bar. No custom fill or blur.
+    // bar. Its page ground is supplied through headerBackground, without a blur.
     scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
@@ -180,22 +198,6 @@ export function askHeaderItems(props: {
       : {}),
   };
 }
-
-// Structurally identical to design/row-link's contract. Kept here until its
-// parallel wave adds that export, so neither lane depends on an empty stub.
-export type RowMenuAction =
-  | {
-      title: string;
-      symbol?: SFSymbol;
-      onPress: () => void;
-      destructive?: boolean;
-    }
-  | {
-      title: string;
-      symbol?: SFSymbol;
-      items: RowMenuAction[];
-      inline?: boolean;
-    };
 
 type NativeMenuRow =
   | NativeStackHeaderItemMenuAction
@@ -294,7 +296,10 @@ function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
       onPress:
         item.type === 'action'
           ? item.onPress
-          : () => showMenu(item.label, menuActions(item.items)),
+          : () => {
+              if (Platform.OS === 'android')
+                showMenu(item.label, menuActions(item.items));
+            },
     }));
 }
 
@@ -320,14 +325,16 @@ export function androidHeaderBar(items: NativeStackHeaderItem[]) {
               accessibilityLabel: item.accessibilityLabel ?? item.label,
               onPress:
                 item.type === 'menu'
-                  ? () =>
-                      showMenu(
-                        item.menu.title ??
-                          (item.accessibilityLabel?.startsWith('More for ')
-                            ? ''
-                            : item.label),
-                        menuActions(item.menu.items),
-                      )
+                  ? () => {
+                      if (Platform.OS === 'android')
+                        showMenu(
+                          item.menu.title ??
+                            (item.accessibilityLabel?.startsWith('More for ')
+                              ? ''
+                              : item.label),
+                          menuActions(item.menu.items),
+                        );
+                    }
                   : item.onPress,
               hitSlop: 4,
               style: {
@@ -380,7 +387,7 @@ export function headerItems(
 
 /**
  * The Done button that closes a sheet: plain text in the tint, as every
- * sheet draws it (SheetBody). Not the `done` variant, which iOS 26 fills as
+ * sheet draws it. Not the `done` variant, which iOS 26 fills as
  * a navy pill (pass 5, P3-8).
  */
 export function closeSheetItem(): NativeStackHeaderItem {
@@ -390,7 +397,7 @@ export function closeSheetItem(): NativeStackHeaderItem {
     variant: 'plain',
     tintColor: colors.navy,
     accessibilityLabel: 'Done',
-    onPress: () => router.back(),
+    onPress: () => (router.canGoBack() ? router.back() : router.replace('/')),
   };
 }
 

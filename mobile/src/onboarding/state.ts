@@ -1,8 +1,8 @@
-import { useSyncExternalStore } from 'react';
 import { File, Paths } from 'expo-file-system';
 import { router } from 'expo-router';
-import { TwoSlotStore } from '../storage/two-slot';
+import { useSyncExternalStore } from 'react';
 import { isE2E } from '../design/environment';
+import { TwoSlotStore } from '../storage/two-slot';
 import { e2eTourRequested } from './launch-flag';
 
 /**
@@ -143,18 +143,6 @@ export function checkFirstLaunch(): Promise<void> {
       if (state === 'checking') set(show ? 'visible' : 'hidden');
     });
   return checked;
-}
-
-/**
- * @deprecated Use `replayWelcome()` (features/welcome/replay.ts). Kept for
- * Account's current row, which closes its sheet before calling this.
- */
-export function showTour() {
-  router.push({ pathname: '/welcome', params: {} });
-}
-/** @deprecated The welcome records itself; use `markWelcomeSeen()`. */
-export function leaveTour(): Promise<void> {
-  return markWelcomeSeen().catch(() => undefined);
 }
 /** The root has presented the launch welcome; the decision is spent. */
 export function hideTour() {

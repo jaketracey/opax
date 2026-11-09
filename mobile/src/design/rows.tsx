@@ -1,48 +1,49 @@
-import { useRef, useState, type ReactNode } from 'react';
-import { Pressable, StyleSheet, View, findNodeHandle } from 'react-native';
 import { router, type Href } from 'expo-router';
-import { openOnWeb, openSource } from '../navigation/external';
+import { useState, type ReactNode } from 'react';
+import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useOpenAsk } from '../features/ask/open';
+import { openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
 import { Hoverable, useHover } from './adaptive';
+import { ContextMenu } from './context-menu';
+import { Disclosure } from './disclosure';
+import { designFlags } from './flags';
+import {
+  cleanRecordTitle,
+  formatCount,
+  formatDate,
+  formatMoney,
+  moneyAccessibilityLabel,
+  recordTitleStage,
+} from './format';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { StatusCapsule } from './labels';
-import type { PartyContext } from './party';
 import { PartyLabel, Portrait } from './people';
 import {
   RowLink,
-  rowAccessibilityActions,
   menuLeaves,
+  rowAccessibilityActions,
   rowMenus,
   useRowFollow,
   type RowMenuAction,
 } from './row-link';
 import {
   ownsRowPadding,
+  useRowCellStyle,
   useRowHighlight,
   useRowInset,
-  useRowCellStyle,
 } from './row-padding';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
-import { showMenu } from './menu';
-import { SourceAffordance } from './source';
-import {
-  cleanRecordTitle,
-  recordTitleStage,
-  formatMoney,
-  formatDate,
-  formatCount,
-  moneyAccessibilityLabel,
-} from './format';
-import { Disclosure } from './disclosure';
-import { Text } from './text';
-import { designFlags } from './flags';
+import { Skeleton } from './states';
+import { symbols } from './symbols';
+import { Text, textContent } from './text';
 import {
   accents,
   colors,
   minimumTarget,
   radii,
   rhythm,
+  textStyles,
   type Accent,
 } from './tokens';
 
@@ -57,15 +58,17 @@ type Navigation = {
 };
 
 export interface LinkRowProps extends Navigation {
-  title: string;
+  title: ReactNode;
+  titleRole?: import('./tokens').TextVariant;
+  secondary?: ReactNode;
+  leadingAccessory?: ReactNode;
+  valueLoading?: boolean;
   detail?: string;
   value?: string;
   /** Money amounts use the stronger trailing figure treatment. */
   valueEmphasis?: boolean;
   symbol?: SFSymbol;
   symbolInk?: Accent;
-  /** @deprecated Use symbol. */ icon?: SFSymbol;
-  /** @deprecated Use symbolInk. */ accent?: Accent;
   external?: External | boolean;
   destructive?: boolean;
   disabled?: boolean;
@@ -77,18 +80,21 @@ export interface LinkRowProps extends Navigation {
   detailTestID?: string;
   dragPath?: string;
   accessory?: 'chevron' | 'checkmark' | 'none';
+  accessoryAlign?: 'center' | 'first-line';
   selected?: boolean;
   highlighted?: boolean;
 }
 export function LinkRow({
   title,
+  titleRole = 'body',
+  secondary,
+  leadingAccessory,
+  valueLoading = false,
   detail,
   value,
   valueEmphasis = false,
   symbol,
   symbolInk,
-  icon,
-  accent,
   external = false,
   destructive,
   disabled = false,
@@ -104,18 +110,22 @@ export function LinkRow({
   detailTestID,
   dragPath,
   accessory = 'chevron',
+  accessoryAlign = 'center',
   selected,
   highlighted,
 }: LinkRowProps) {
   const stacked = useAccessibilitySize();
+  const { fontScale } = useWindowDimensions();
+  const [firstLineHeight, setFirstLineHeight] = useState<number | undefined>();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined && accessory !== 'checkmark';
   const [hovered, onHover] = useHover();
   const onActivate =
     select ?? onPress ?? (href ? () => router.push(href) : undefined);
-  const glyph = symbol ?? icon;
-  const ink = symbolInk ?? accent;
+  const plainTitle = typeof title === 'string' ? title : textContent(title);
+  const glyph = symbol;
+  const ink = symbolInk;
   useRowInset(glyph ? 44 : 16);
   const press =
     typeof external === 'object'
@@ -128,7 +138,10 @@ export function LinkRow({
         href || external ? 'link' : onPress ? 'button' : undefined
       }
       accessibilityLabel={
-        accessibilityLabel ?? [title, value, detail].filter(Boolean).join(', ')
+        accessibilityLabel ??
+        [plainTitle, valueLoading ? 'Loading' : value, detail]
+          .filter(Boolean)
+          .join(', ')
       }
       accessibilityHint={accessibilityHint}
       accessibilityState={{
@@ -152,6 +165,7 @@ export function LinkRow({
       ]}
     >
       {split && selected ? <SelectedMark /> : null}
+      {leadingAccessory}
       {glyph ? (
         <Icon
           name={glyph}
@@ -165,22 +179,46 @@ export function LinkRow({
       ) : null}
       <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
         <View style={[styles.titles, stacked ? null : styles.grow]}>
-          {leading}
-          <Text
-            wordSafe
-            variant="body"
-            tone={destructive ? 'danger' : undefined}
-            testID={titleTestID}
-          >
-            {title}
-          </Text>
+          <View style={leading ? styles.titleLine : undefined}>
+            {leading ? (
+              <View
+                style={{ height: firstLineHeight, justifyContent: 'center' }}
+              >
+                {leading}
+              </View>
+            ) : null}
+            {plainTitle ? (
+              <Text
+                wordSafe
+                variant={titleRole}
+                tone={destructive ? 'danger' : undefined}
+                testID={titleTestID}
+                style={leading ? styles.grow : undefined}
+                onTextLayout={
+                  leading
+                    ? (event) => {
+                        const line = event.nativeEvent.lines[0];
+                        if (line) setFirstLineHeight(line.height);
+                      }
+                    : undefined
+                }
+              >
+                {title}
+              </Text>
+            ) : null}
+          </View>
+          {secondary}
           {detail ? (
             <Text wordSafe variant="secondary" testID={detailTestID}>
               {detail}
             </Text>
           ) : null}
         </View>
-        {value ? (
+        {valueLoading ? (
+          <View style={{ width: 44 }}>
+            <Skeleton shape="rows" count={1} label="Loading" />
+          </View>
+        ) : value ? (
           <Text
             wordSafe
             variant={valueEmphasis ? 'strong' : 'body'}
@@ -194,12 +232,26 @@ export function LinkRow({
       {!destructive && accessory === 'checkmark' && selected ? (
         <Icon name={checkmark} size={13} tone="navy" />
       ) : !destructive && !split && accessory === 'chevron' ? (
-        <Icon
-          name={external ? EXTERNAL_GLYPH : chevron}
-          size={13}
-          maxScale={1.5}
-          tone="inkSoft"
-        />
+        <View
+          style={
+            accessoryAlign === 'first-line'
+              ? {
+                  alignSelf: 'flex-start',
+                  height:
+                    firstLineHeight ??
+                    textStyles[titleRole].lineHeight * fontScale,
+                  justifyContent: 'center',
+                }
+              : undefined
+          }
+        >
+          <Icon
+            name={external ? EXTERNAL_GLYPH : chevron}
+            size={13}
+            maxScale={1.5}
+            tone="inkSoft"
+          />
+        </View>
       ) : null}
     </Pressable>
   );
@@ -208,7 +260,7 @@ export function LinkRow({
       effect="none"
       onActivate={disabled ? undefined : onActivate}
       onHover={disabled ? undefined : onHover}
-      drag={dragPath ? { path: dragPath, title } : undefined}
+      drag={dragPath ? { path: dragPath, title: plainTitle } : undefined}
     >
       {href && !disabled ? (
         <RowLink
@@ -222,26 +274,6 @@ export function LinkRow({
         row
       )}
     </Hoverable>
-  );
-}
-
-/** @deprecated Use a bare symbol in a row; retained until screen migration. */
-export function IconTile({
-  name,
-  accent,
-  size = 'row',
-}: {
-  name: SFSymbol;
-  accent?: Accent;
-  size?: 'row' | 'section';
-}) {
-  return (
-    <Icon
-      name={name}
-      size={size === 'row' ? 20 : 28}
-      maxScale={1.5}
-      tone={accent ? accents[accent].ink : 'inkSoft'}
-    />
   );
 }
 
@@ -309,11 +341,6 @@ export interface BillRowProps {
   showStatus?: boolean;
   dateLabel?: string;
   meta?: { portfolio: string } | { sponsor: string; party: string | null };
-  /** @deprecated Use meta. */ by?: string | null;
-  /** @deprecated Use meta. */ party?: PartyContext | null;
-  /** @deprecated Chamber metadata retires as callers migrate. */ detail?:
-    | string
-    | null;
   href?: Href;
   menu?: 'bill' | RowMenuAction[];
   onPress?: () => void;
@@ -364,9 +391,6 @@ export function BillRow({
   dateLabel,
   showStatus = true,
   meta,
-  by,
-  party,
-  detail,
   href,
   menu = 'bill',
   onPress,
@@ -393,11 +417,15 @@ export function BillRow({
       ? `${dateLabel} ${formattedDate.replace(/^(?:Introduced|Passed|Assented|Lapsed|Status as at)\s+/i, '')}`
       : formattedDate
     : null;
-  const who = meta ? ('portfolio' in meta ? meta.portfolio : meta.sponsor) : by;
+  const who = meta
+    ? 'portfolio' in meta
+      ? meta.portfolio
+      : meta.sponsor
+    : null;
   const affiliation =
     meta && 'sponsor' in meta
       ? { party: meta.party, status: 'unknown' as const }
-      : party;
+      : null;
   const row = (
     <Pressable
       accessible
@@ -447,11 +475,6 @@ export function BillRow({
               <PartyLabel {...affiliation} linked={false} nested />
             ) : null}
           </View>
-        ) : null}
-        {detail && !meta ? (
-          <Text wordSafe variant="secondary">
-            {detail}
-          </Text>
         ) : null}
       </View>
       {!split ? (
@@ -700,6 +723,8 @@ export interface DivisionRowProps {
   menu?: RowMenuAction[];
   testID?: string;
   expandable?: boolean;
+  expanded?: boolean;
+  onToggle?: () => void;
   children?: ReactNode;
   split?: { ayes: number; noes: number; partyVote?: 'aye' | 'no' };
 }
@@ -714,10 +739,14 @@ export function DivisionRow({
   menu,
   testID,
   expandable = false,
+  expanded: controlledExpanded,
+  onToggle,
   children,
   split,
 }: DivisionRowProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [localExpanded, setExpanded] = useState(false);
+  const expanded = controlledExpanded ?? localExpanded;
+  const toggleExpanded = onToggle ?? (() => setExpanded((value) => !value));
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset();
@@ -754,7 +783,7 @@ export function DivisionRow({
         .join(', ')}
       accessibilityState={expandable ? { expanded } : undefined}
       testID={testID}
-      onPress={expandable ? () => setExpanded(!expanded) : undefined}
+      onPress={expandable ? () => toggleExpanded() : undefined}
       accessibilityActions={
         href ? undefined : rowAccessibilityActions(menu ?? [])
       }
@@ -806,7 +835,7 @@ export function DivisionRow({
       </View>
       {expandable || href ? (
         <Icon
-          name={expandable ? 'chevron.down' : chevron}
+          name={expandable ? symbols.chevronDown : chevron}
           size={13}
           maxScale={1.5}
           tone="inkSoft"
@@ -819,11 +848,13 @@ export function DivisionRow({
       {href ? (
         <RowLink
           href={href}
-          select={expandable ? () => setExpanded(!expanded) : undefined}
+          select={expandable ? () => toggleExpanded() : undefined}
           menu={menu}
         >
           {row}
         </RowLink>
+      ) : menu?.length ? (
+        <ContextMenu items={menu}>{row}</ContextMenu>
       ) : (
         row
       )}
@@ -982,75 +1013,6 @@ function SuggestionName({
   );
 }
 
-export interface Original {
-  /** Who holds the record: "They Vote For You", "Register of interests". */
-  label: string;
-  /** An https source, or an OPAX web path ("/subject/person/…"). */
-  url: string;
-}
-/**
- * @deprecated A block's originals belong in its SourceLine (`originals`),
- * listed in the source sheet. This adapter draws the source line's anatomy
- * ("View original", 32pt drawn, 44pt to touch, full width at accessibility
- * sizes). With one source it opens it; with several, a native menu names
- * each one.
- */
-export function ViewOriginal({
-  sources,
-  label = 'View original',
-  testID,
-  children,
-}: {
-  sources: readonly Original[];
-  label?: string;
-  testID?: string;
-  children?: ReactNode;
-}) {
-  const anchor = useRef<View>(null);
-  const usable = sources.filter(
-    (s, i) =>
-      (s.url.startsWith('https://') || s.url.startsWith('/')) &&
-      sources.findIndex((o) => o.url === s.url) === i,
-  );
-  if (!usable.length) return children ? <>{children}</> : null;
-  const open = (s: Original) =>
-    s.url.startsWith('/')
-      ? openOnWeb(s.url, s.label)
-      : openSource(s.url, s.label);
-  const press = () => {
-    if (usable.length === 1) {
-      void open(usable[0]!);
-      return;
-    }
-    showMenu(
-      'Original records',
-      usable.map((source) => ({
-        title: source.label,
-        onPress: () => void open(source),
-      })),
-      findNodeHandle(anchor.current) ?? undefined,
-    );
-  };
-  return (
-    <SourceAffordance
-      ref={anchor}
-      glyph={usable.length === 1 ? EXTERNAL_GLYPH : 'list.bullet.rectangle'}
-      name={label}
-      accessibilityRole="link"
-      accessibilityLabel={
-        usable.length === 1
-          ? `${label}: ${usable[0]!.label}`
-          : `${label}, ${usable.length} records`
-      }
-      accessibilityHint={
-        usable.length === 1 ? 'Opens the source' : 'Lists the original records'
-      }
-      testID={testID}
-      onPress={press}
-    />
-  );
-}
-
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
@@ -1067,6 +1029,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   titles: { gap: rhythm.line, alignSelf: 'stretch', flexShrink: 1 },
+  titleLine: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
   grow: { flex: 1 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
   line: {

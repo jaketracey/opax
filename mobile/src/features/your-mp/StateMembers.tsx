@@ -1,3 +1,4 @@
+import { counted } from '../../design/format';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
@@ -124,7 +125,7 @@ export function StateMembers({
             ) : null}
             {region && region.representatives.length ? (
               <FaceStackRow
-                title={`${region.representatives.length} members for ${region.name}`}
+                title={`${counted(region.representatives.length, 'member')} for ${region.name}`}
                 people={[...region.representatives]
                   .sort(byFamilyName((r) => r.person.name))
                   .map((r) => ({

@@ -1,3 +1,4 @@
+import { useFocusEffect } from 'expo-router';
 import {
   createContext,
   useCallback,
@@ -14,7 +15,7 @@ import {
   View,
   type AccessibilityActionEvent,
 } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useAccessibilitySize } from './accessibility';
 import {
   Hoverable,
   RegionProvider,
@@ -23,19 +24,11 @@ import {
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
-import { useAccessibilitySize } from './accessibility';
-import { Icon, type SFSymbol } from './icon';
+import { Icon } from './icon';
 import { useKeyCommand } from './keyboard';
-import { EmptyState } from './states';
+import { symbols } from './symbols';
 import { Text } from './text';
-import {
-  colors,
-  hairline,
-  minimumTarget,
-  radii,
-  rhythm,
-  type Accent,
-} from './tokens';
+import { colors, hairline, minimumTarget, radii, rhythm } from './tokens';
 
 /**
  * The detail pane's own small stack: the selected item first, then what was
@@ -397,8 +390,8 @@ function PaneBack({ label, onPress }: { label: string; onPress: () => void }) {
           pressed ? { backgroundColor: colors.sunken } : null,
         ]}
       >
-        <Icon name="chevron.left" size={17} tone="navy" />
-        <Text variant="control" tone="navy" wordSafe style={styles.shrink}>
+        <Icon name={symbols.previous} size={17} tone="navy" />
+        <Text variant="strong" tone="navy" wordSafe style={styles.shrink}>
           {label}
         </Text>
       </Pressable>
@@ -467,35 +460,6 @@ function Divider({
   );
 }
 
-/**
- * @deprecated Use `EmptyState` with `size="pane"`. An empty detail pane's
- * one quiet line; `icon`, `message` and `accent` no longer draw.
- */
-export function SplitEmpty({
-  icon,
-  title,
-  message,
-  accent = 'people',
-  testID,
-}: {
-  icon: SFSymbol;
-  title: string;
-  message?: string;
-  accent?: Accent;
-  testID?: string;
-}) {
-  return (
-    <EmptyState
-      size="pane"
-      icon={icon}
-      title={title}
-      message={message}
-      accent={accent}
-      testID={testID}
-    />
-  );
-}
-
 const styles = StyleSheet.create({
   split: { flex: 1, flexDirection: 'row', backgroundColor: colors.paper },
   listPane: { height: '100%' },
@@ -517,7 +481,7 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: colors.dividerDefault,
   },
-  dividerLineActive: { width: 3, backgroundColor: colors.bronze },
+  dividerLineActive: { width: 3, backgroundColor: colors.navy },
   paneBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -533,6 +497,7 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingHorizontal: rhythm.tight,
     marginHorizontal: -rhythm.tight,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
+    borderCurve: 'continuous',
   },
 });

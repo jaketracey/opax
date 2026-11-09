@@ -1,3 +1,4 @@
+import { Rect } from '@shopify/react-native-skia';
 import { useState } from 'react';
 import {
   Pressable,
@@ -7,22 +8,35 @@ import {
   useWindowDimensions,
   type AccessibilityActionEvent,
 } from 'react-native';
-import { Rect } from '@shopify/react-native-skia';
-import { SizedCanvas } from './canvas';
-import { dark, darkHighContrast, light, lightHighContrast } from './palette';
 import { useAccessibilitySize, useIncreaseContrast } from './accessibility';
+import { SizedCanvas } from './canvas';
 import { Button } from './controls';
 import { formatCount, formatDate, type DateInput } from './format';
+import { dark, darkHighContrast, light, lightHighContrast } from './palette';
 import { SourceLine } from './source';
 import { Text } from './text';
-import { accents, colors, fonts, radii, rhythm, type Accent } from './tokens';
+import {
+  accents,
+  colors,
+  interfaceFonts as fonts,
+  radii,
+  rhythm,
+  textStyles,
+  size,
+  type Accent,
+} from './tokens';
 
 export interface ChartProvenance {
   dateRange: { start: DateInput; end: DateInput };
-  source: string;
+  citation: string;
 }
-const provenance = ({ dateRange, source }: ChartProvenance) =>
-  `${formatDate(dateRange.start)} to ${formatDate(dateRange.end)}. ${source}`;
+const provenance = ({ dateRange, citation }: ChartProvenance) => {
+  const start = formatDate(dateRange.start),
+    end = formatDate(dateRange.end);
+  return [start === end ? start : `${start} to ${end}`, citation]
+    .filter(Boolean)
+    .join('. ');
+};
 
 type Measurement = { width: number; height: number };
 type TextMeasurementEvent = { nativeEvent: { lines: readonly Measurement[] } };
@@ -53,7 +67,7 @@ export function VoteSplit({
   countsStyle,
   onBand = false,
   dateRange,
-  source,
+  citation,
 }: ChartProvenance & {
   ayes: number;
   noes: number;
@@ -74,7 +88,7 @@ export function VoteSplit({
   return (
     <View
       accessible
-      accessibilityLabel={`${words}. ${provenance({ dateRange, source })}`}
+      accessibilityLabel={`${words}. ${provenance({ dateRange, citation })}`}
       style={[styles.voteSplit, large ? styles.voteSplitStacked : null]}
     >
       <View
@@ -108,7 +122,7 @@ export function StageTimeline({
   latestIndex,
   onBand = false,
   dateRange,
-  source,
+  citation,
 }: ChartProvenance & {
   stages: readonly { label: string; date: string }[];
   latestIndex: number;
@@ -117,6 +131,7 @@ export function StageTimeline({
   const large = useAccessibilitySize();
   const { fontScale } = useWindowDimensions();
   const [width, setWidth] = useState(0);
+  const [firstLines, setFirstLines] = useState<Record<string, number>>({});
   const { sizes, measure } = useTextMeasurements();
   const keys = stages.map(
     (stage, index) => `${fontScale}:${index}:${stage.label}:${stage.date}`,
@@ -224,6 +239,17 @@ export function StageTimeline({
               style={[
                 styles.dot,
                 {
+                  ...(vertical
+                    ? {
+                        marginTop: Math.max(
+                          0,
+                          ((firstLines[keys[index]!] ??
+                            textStyles.footnote.lineHeight * fontScale) -
+                            size.partyDot) /
+                            2,
+                        ),
+                      }
+                    : {}),
                   backgroundColor:
                     index <= latestIndex
                       ? colors[ink]
@@ -257,7 +283,21 @@ export function StageTimeline({
                     ]
               }
             >
-              <Text variant="footnote" tone={ink} style={styles.stageLabel}>
+              <Text
+                variant="footnote"
+                tone={ink}
+                style={styles.stageLabel}
+                onTextLayout={(event) => {
+                  const line = event.nativeEvent.lines[0];
+                  const key = keys[index]!;
+                  if (line)
+                    setFirstLines((seen) =>
+                      seen[key] === line.height
+                        ? seen
+                        : { ...seen, [key]: line.height },
+                    );
+                }}
+              >
                 {stage.label}
               </Text>
               <Text variant="footnote" tone={onBand ? 'onBandSoft' : 'inkSoft'}>
@@ -268,7 +308,7 @@ export function StageTimeline({
         ))}
       </View>
       <Text variant="footnote" tone={onBand ? 'onBandSoft' : 'inkSoft'}>
-        {provenance({ dateRange, source })}
+        {provenance({ dateRange, citation })}
       </Text>
     </View>
   );
@@ -340,16 +380,22 @@ export function BarSeries({
   selectedIndex,
   onSelect,
   dateRange,
-  source,
+  citation,
   labels,
   values = 'latest',
   height = 160,
+  sourceLine,
+  tableTestID,
+  emphasisFrom,
 }: ChartProvenance & {
   data: readonly { label: string; value: number }[];
   ink: Accent | 'ink';
   format: (value: number) => string;
   tableTitle: string;
   variant?: 'default' | 'spark';
+  sourceLine?: React.ReactNode | false;
+  tableTestID?: string;
+  emphasisFrom?: number;
   onShowTable?: () => void;
   selectedIndex?: number;
   onSelect?: (index: number) => void;
@@ -436,7 +482,7 @@ export function BarSeries({
       accessible={spark || undefined}
       accessibilityLabel={
         spark
-          ? `${tableTitle}. ${data.map((item) => `${item.label}, ${format(item.value)}`).join('. ')}. ${provenance({ dateRange, source })}`
+          ? `${tableTitle}. ${data.map((item) => `${item.label}, ${format(item.value)}`).join('. ')}. ${provenance({ dateRange, citation })}`
           : tableTitle
       }
       accessibilityActions={tableActions}
@@ -540,7 +586,11 @@ export function BarSeries({
                   width={Math.max(0, step - 4)}
                   height={barHeight}
                   color={
-                    onSelect && index === selectedIndex ? palette.navy : colour
+                    onSelect && index === selectedIndex
+                      ? palette.navy
+                      : emphasisFrom !== undefined && index < emphasisFrom
+                        ? palette.inkSoft
+                        : colour
                   }
                 />
               );
@@ -599,6 +649,7 @@ export function BarSeries({
       {!spark ? (
         <>
           <Button
+            testID={tableTestID}
             label={tableLabel}
             accessibilityLabel={tableLabel}
             variant="plain"
@@ -621,11 +672,19 @@ export function BarSeries({
               ))}
             </View>
           ) : null}
-          <SourceLine
-            asOf={dateRange.end}
-            citation={source}
-            coverage={`${formatDate(dateRange.start)} to ${formatDate(dateRange.end)}`}
-          />
+          {sourceLine === false
+            ? null
+            : (sourceLine ?? (
+                <SourceLine
+                  asOf={dateRange.end}
+                  citation={citation}
+                  coverage={
+                    formatDate(dateRange.start) === formatDate(dateRange.end)
+                      ? undefined
+                      : `${formatDate(dateRange.start)} to ${formatDate(dateRange.end)}`
+                  }
+                />
+              ))}
         </>
       ) : null}
     </View>

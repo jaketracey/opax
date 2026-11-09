@@ -1,6 +1,7 @@
+import type { RecordResult } from '../../api/client';
 import {
-  boolean,
   array,
+  boolean,
   count,
   date,
   invalid,
@@ -11,19 +12,8 @@ import {
   shape,
   text,
 } from '../../api/validation';
-import type { RecordResult } from '../../api/client';
-import type { NativeStackHeaderItem } from 'expo-router';
-import { headerItems } from '../../navigation/chrome';
-import { openOnWeb } from '../../navigation/external';
-import { copyRecordLink, shareHeaderItem } from '../../navigation/share';
 import {
-  decodeIndustryMoney,
-  decodeMatrix,
-  decodeTide,
-  partyName,
-  topicNames,
-} from '../reports/model';
-import {
+  counted,
   formatCount,
   formatPercent,
   largestRemainder,
@@ -35,6 +25,13 @@ import {
   partyGroupLabel,
   type PartyGroup,
 } from '../../design/party-groups';
+import {
+  decodeIndustryMoney,
+  decodeMatrix,
+  decodeTide,
+  partyName,
+  topicNames,
+} from '../reports/model';
 
 const yearSource = shape({
   slug: nonempty,
@@ -152,7 +149,7 @@ export function rosterMatch(
   const ids = Object.entries(slugs).filter(([, n]) => n.trim() === wanted);
   return ids.length === 1 ? ids[0]![0] : null;
 }
-/** "Statements by Members", from "Scott Buchholz — Statements by Members — 2025-02-10". */
+/** "Statements by Members", from "Scott Buchholz \u2014 Statements by Members \u2014 2025-02-10". */
 export function cleanSpeechTitle(source: {
   title?: string | null;
   slug: string;
@@ -161,7 +158,7 @@ export function cleanSpeechTitle(source: {
 }) {
   const raw = source.title?.trim();
   if (!raw) return null;
-  const parts = raw.split(/\s+—\s+/).filter(Boolean);
+  const parts = raw.split(/\s+\u2014\s+/).filter(Boolean);
   if (source.speaker && parts[0] === source.speaker.trim()) parts.shift();
   if (parts.length && /^\d{4}-\d{2}-\d{2}$/.test(parts.at(-1)!)) parts.pop();
   return parts.join(', ') || null;
@@ -300,8 +297,7 @@ export function tideCellText(point: Pick<TidePoint, 'share' | 'count'>) {
     ? `${shareText(point.share)} · ${speechesText(point.count)}`
     : 'None';
 }
-export const speechesText = (n: number) =>
-  `${formatCount(n)} ${n === 1 ? 'speech' : 'speeches'}`;
+export const speechesText = (n: number) => counted(n, 'speech', 'speeches');
 
 export type Matrix = ReturnType<typeof decodeMatrix> & {
   generated_at?: string;
@@ -492,64 +488,3 @@ export const WORDS_NOTE =
   'Shown together for comparison. OPAX does not claim one causes the other. Donations under the disclosure threshold are not reported, so totals are a floor, not a ceiling. AEC data groups party recipients; money to independents is not separated. Not every speech has a topic label yet, so speech counts are floors and shares may shift.';
 export type Result<T> = RecordResult<T>;
 export const identityObject = (raw: unknown) => object(raw);
-
-/**
- * The bar's items for an Explore tool with a sort: Share, then ⋯ holding
- * "Sort by" (checkmarked) above Copy link and Open on opax.com.au (explore
- * spec 1.2). `ExploreChrome` takes this over in wave 6.
- */
-export function sortHeaderOptions<T extends string>({
-  name,
-  game,
-  sorts,
-  sort,
-  onSort,
-}: {
-  name: string;
-  game: string;
-  sorts: readonly { value: T; label: string }[];
-  sort: T;
-  onSort: (value: T) => void;
-}) {
-  const path = `/explore?game=${game}`;
-  return headerItems((): NativeStackHeaderItem[] => [
-    shareHeaderItem({ title: name, path }),
-    {
-      type: 'menu',
-      label: 'More',
-      accessibilityLabel: `More for ${name}`,
-      icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
-      menu: {
-        items: [
-          {
-            type: 'submenu',
-            label: 'Sort by',
-            items: sorts.map((s) => ({
-              type: 'action' as const,
-              label: s.label,
-              state: s.value === sort ? ('on' as const) : ('off' as const),
-              onPress: () => onSort(s.value),
-            })),
-          },
-          {
-            type: 'submenu',
-            label: '',
-            inline: true,
-            items: [
-              {
-                type: 'action',
-                label: 'Copy link',
-                onPress: () => void copyRecordLink(path),
-              },
-              {
-                type: 'action',
-                label: 'Open on opax.com.au',
-                onPress: () => void openOnWeb(path, name),
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ]);
-}

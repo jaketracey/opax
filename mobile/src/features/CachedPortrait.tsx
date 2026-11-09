@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { PortraitInfo } from '../api/portrait-index';
 import { portraits } from '../api/runtime';
 import { Portrait } from '../design/people';
-import type { PortraitInfo } from '../api/portrait-index';
 /**
  * The credit line under a portrait. Commons files are OPAX's face-aware crop
  * and resize, which CC BY 4.0 section 3(a)(1)(B) asks to indicate.
@@ -22,7 +22,7 @@ export function CachedPortrait({
 }: {
   name: string;
   slug?: string;
-  size?: 'row' | 'profile';
+  size?: 'row' | 'profile' | 56;
   testID?: string;
   onCredit?: (info: PortraitInfo | null) => void;
   retryKey?: number;

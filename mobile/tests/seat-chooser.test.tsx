@@ -1,23 +1,20 @@
-import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
-import { Dimensions, Linking, Text as NativeText } from 'react-native';
-import { catalogs as runtime } from '../src/api/runtime';
 import { router } from 'expo-router';
-import { suggestFromLocation } from '../src/features/electorate-map/location';
-import { saveChoice } from '../src/features/your-mp/choice-store';
+import { act } from 'react';
+import { Dimensions, Linking, Text as NativeText } from 'react-native';
+import TestRenderer from 'react-test-renderer';
+import { catalogs as runtime } from '../src/api/runtime';
 import { confirmAction } from '../src/design/menu';
-import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
-import {
-  CHOSEN_MARK_MS,
-  FORGOTTEN_SEAT_ID,
-  SeatChooser,
-} from '../src/features/seat/SeatChooser';
+import { suggestFromLocation } from '../src/features/electorate-map/location';
+import { CHOSEN_MARK_MS, SeatChooser } from '../src/features/seat/SeatChooser';
 import { SeatStateList } from '../src/features/seat/SeatStateList';
+import { forgetChoice } from '../src/features/your-mp/choice-store';
+import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 import { index, manifest, people, roster, slugs } from './pinned';
 
 const mockScreen: { options: Record<string, any> } = { options: {} };
 const mockGoBack = jest.fn();
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), back: jest.fn() },
   useNavigation: () => ({ getParent: () => ({ goBack: mockGoBack }) }),
   Stack: {
@@ -38,10 +35,11 @@ jest.mock('../src/features/electorate-map/location', () => ({
   suggestFromLocation: jest.fn(),
 }));
 jest.mock('../src/features/your-mp/choice-store', () => ({
-  saveChoice: jest.fn(async () => undefined),
+  forgetChoice: jest.fn(async () => undefined),
 }));
 const mockSeat: { current: Record<string, unknown> } = { current: {} };
 jest.mock('../src/features/your-mp/useSeat', () => ({
+  migratedSeat: () => null,
   useSeat: () => mockSeat.current,
 }));
 jest.mock('../src/design/menu', () => ({ confirmAction: jest.fn() }));
@@ -223,11 +221,7 @@ describe('the sheet', () => {
       destructive: true,
     });
     await act(async () => actions[0].onPress());
-    expect(saveChoice).toHaveBeenCalledWith({
-      version: 1,
-      seatId: FORGOTTEN_SEAT_ID,
-      stateSeatIds: [],
-    });
+    expect(forgetChoice).toHaveBeenCalledTimes(1);
     expect(closeWelcome).toHaveBeenCalledTimes(1);
     await act(async () => r.unmount());
   });

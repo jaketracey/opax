@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useCallback, useMemo, useState } from 'react';
-import { Stack } from 'expo-router';
+
 import { SegmentedPicker } from '../../design/controls';
 import { LinkRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
@@ -97,7 +98,7 @@ export default function Connections() {
   const name = 'Programs and places';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerLargeTitleEnabled: true,

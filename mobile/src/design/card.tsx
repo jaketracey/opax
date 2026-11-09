@@ -1,9 +1,10 @@
+import type { Href } from 'expo-router';
 import {
   Children,
-  useState,
   createContext,
-  useContext,
   isValidElement,
+  useContext,
+  useState,
   type ReactNode,
 } from 'react';
 import {
@@ -16,23 +17,24 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import type { Href } from 'expo-router';
 import { useAccessibilitySize } from './accessibility';
-import { useLayout, gridColumns } from './adaptive';
+import { gridColumns, useLayout } from './adaptive';
+import { ContextMenu } from './context-menu';
+import { designFlags } from './flags';
+import { Icon, type SFSymbol } from './icon';
 import { RowLink, type RowMenuAction } from './row-link';
 import { SurfaceContext } from './row-padding';
-import { Icon, type SFSymbol } from './icon';
+import { symbols } from './symbols';
 import { Text } from './text';
 import {
-  colors,
   accents,
+  colors,
   minimumTarget,
   radii,
   rhythm,
-  type Role,
   type Accent,
+  type Role,
 } from './tokens';
-import { designFlags } from './flags';
 
 const InCard = createContext(false);
 export const useInCard = () => useContext(InCard);
@@ -102,7 +104,7 @@ export function Card({
     ) : (
       element
     );
-  if (!href && !onPress)
+  if (!href && !onPress && !menu?.length)
     return wrapShadow(
       <View testID={testID} style={[...face, style]}>
         {content}
@@ -139,6 +141,8 @@ export function Card({
       <RowLink href={href} menu={menu} zoom={zoom}>
         {card}
       </RowLink>
+    ) : menu?.length ? (
+      <ContextMenu items={menu}>{card}</ContextMenu>
     ) : (
       card
     ),
@@ -150,8 +154,10 @@ export function Tile({
   symbol,
   ink,
   href,
+  menu,
   testID,
 }: {
+  menu?: RowMenuAction[];
   title: string;
   line: string;
   symbol: SFSymbol;
@@ -161,7 +167,7 @@ export function Tile({
 }) {
   const lead = useContext(LeadTile);
   return (
-    <RowLink href={href}>
+    <RowLink href={href} menu={menu}>
       <Pressable
         accessible
         accessibilityRole="link"
@@ -194,6 +200,7 @@ export function Tile({
             {line}
           </Text>
         </View>
+        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkFaint" />
       </Pressable>
     </RowLink>
   );

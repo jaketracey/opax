@@ -19,7 +19,7 @@ import {
  * individual is addressed by index.
  */
 export type MoneyItemParams =
-  | { kind: 'grant'; jur: string; program: string; id: string }
+  | { kind: 'grant'; jur: string; program?: string; rid?: string; id: string }
   | { kind: 'recipient'; jur: string; program: string; recipient: string }
   | { kind: 'largest'; month: string; id: string }
   | { kind: 'contract'; agency: string; id: string }
@@ -98,14 +98,26 @@ export function moneyFromWebPath(path: string) {
       ? connectionRoute(entity)
       : connectionsRoute;
   }
+  const recipient =
+    /^\/money\/grants\/(federal|qld)\/recipient\/([^/]+)\/?$/.exec(pathname);
+  if (recipient && !decodeURIComponent(recipient[2]!).startsWith('person:'))
+    return moneyRecordRoute({
+      rid: decodeURIComponent(recipient[2]!),
+      jur: recipient[1]!,
+      ...(p.get('award') ? { award: p.get('award')! } : {}),
+    });
   const money =
     /^\/subject\/(donor|supplier|recipient|campaigner)\/([^/]+)\/?$/.exec(
       pathname,
     );
   if (money?.[2])
     return moneyRecordRoute({
-      rid: decodeURIComponent(money[2]),
+      ...(money[1] === 'donor'
+        ? { node: `donor:${decodeURIComponent(money[2])}` }
+        : { rid: decodeURIComponent(money[2]) }),
       jur: p.get('jur') ?? 'federal',
+      ...(p.get('agency') ? { agency: p.get('agency')! } : {}),
+      ...(p.get('award') ? { award: p.get('award')! } : {}),
     });
   return null;
 }

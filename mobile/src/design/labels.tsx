@@ -1,19 +1,12 @@
-import { type ReactNode } from 'react';
+import { useContext } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { presentSheet } from '../navigation/sheets';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
-import { presentSheet } from '../navigation/sheets';
-import { Text } from './text';
-import { type SourceDetails } from './source';
 import { SurfaceContext, useRowHighlight } from './row-padding';
-import { useContext } from 'react';
-import {
-  colors,
-  minimumTarget,
-  radii,
-  rhythm,
-  type StatusTone,
-} from './tokens';
+import { type SourceDetails } from './source';
+import { Text } from './text';
+import { colors, minimumTarget, radii, rhythm } from './tokens';
 
 // Labels use continuous capsules. Only MachinePill acts; its navy wash keeps
 // it distinct from an active bill's never-interactive status capsule.
@@ -80,26 +73,6 @@ export function StatusCapsule({
     </View>
   );
 }
-/** @deprecated Use StatusCapsule. */
-export function StatusLabel({
-  label,
-  tone: _tone,
-  ...props
-}: {
-  label: string;
-  tone?: StatusTone;
-  hidden?: boolean;
-  accessibilityLabel?: string;
-  testID?: string;
-}) {
-  return (
-    <StatusCapsule
-      status={label}
-      accessibilityLabel={props.accessibilityLabel ?? label}
-      {...props}
-    />
-  );
-}
 
 /** A topic on navyWash. Legacy linked tags retain their 44 pt target. */
 export function Tag({
@@ -159,87 +132,8 @@ export function Tag({
     </Pressable>
   );
 }
-
-/** What every machine-written sheet adds after the text's own attribution. */
-/** @deprecated Put this guidance in the MachineNote body. */
-export const MACHINE_GUIDANCE =
-  'OPAX labels every passage a model wrote. Check the original record before relying on it. Patterns are leads, not findings.';
-/** What a stored machine brief is, for its pill's sheet and VoiceOver. */
-/** @deprecated Put the attribution in the MachineNote body. */
-export const MACHINE_BRIEF_EXPLANATION =
-  'An automated summary written by a model; not the record.';
 /** The one phrase, everywhere: on the pill, in the sheet and to VoiceOver. */
 export const MACHINE_LABEL = 'Machine-written';
-
-/**
- * The machine-written label: a pill (a sparkle and "Machine-written") once
- * at the top of each machine-written block, never a sentence, a badge plus a
- * paragraph or one per paragraph. Tapping it opens a sheet with the text's
- * own attribution ("Written by a model from the explanatory memorandum; not
- * the record") and `MACHINE_GUIDANCE`. VoiceOver hears the whole disclosure
- * on the pill: "Machine-written. Written by a model …". 32pt drawn, 44pt to
- * touch.
- */
-/** @deprecated Use MachinePill. */
-export function MachineLabel({
-  explanation,
-  testID,
-  children,
-}: {
-  /** The attribution in the record's own words. */
-  explanation: string;
-  testID?: string;
-  /**
-   * @deprecated A surface's own face for the pill (Today's edition card).
-   * Pass 3 draws the pill there too.
-   */
-  children?: ReactNode;
-}) {
-  const fixed = useAccessibilitySize();
-  const sentence = explanation.trim().replace(/\.?$/, '.');
-  return (
-    <>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`${MACHINE_LABEL}. ${sentence}`}
-        accessibilityHint="Opens the explanation"
-        testID={testID}
-        onPress={() =>
-          presentSheet({
-            kind: 'machine',
-            note: { title: MACHINE_LABEL, body: [sentence, MACHINE_GUIDANCE] },
-            testID,
-          })
-        }
-        style={[styles.machineTarget, fixed ? styles.fixed : styles.hug]}
-      >
-        {({ pressed }) =>
-          children ?? (
-            <View
-              style={[
-                styles.machine,
-                fixed ? styles.machineFixed : styles.hug,
-                {
-                  backgroundColor: pressed ? colors.sunken : colors.navyWash,
-                },
-              ]}
-            >
-              <Icon name={machineSymbol} size={12} tone="navy" />
-              <Text
-                wordSafe={fixed}
-                variant="capsule"
-                tone="navy"
-                style={styles.shrink}
-              >
-                {MACHINE_LABEL}
-              </Text>
-            </View>
-          )
-        }
-      </Pressable>
-    </>
-  );
-}
 
 /**
  * One choice among peers in a filter row or sheet: a pill, a navy wash, navy
@@ -247,7 +141,7 @@ export function MachineLabel({
  * its place ("2 of 4"), as a segment does. Use FilterChip to remove an
  * applied filter, and a row or link to navigate.
  */
-/** @deprecated Use ChoiceChips to group peers into a native picker on iOS. */
+/** Android chip fallback; iOS uses the native picker controls. */
 export function ChoiceChip({
   label,
   selected,
@@ -267,6 +161,7 @@ export function ChoiceChip({
   testID?: string;
 }) {
   const fixed = useAccessibilitySize();
+  if (Platform.OS === 'ios') return null;
   return (
     <Pressable
       accessibilityRole="button"
@@ -294,7 +189,7 @@ export function ChoiceChip({
       ]}
     >
       <Text
-        variant="control"
+        variant="strong"
         tone={disabled ? 'inkSoft' : selected ? 'onNavy' : 'navy'}
         wordSafe={fixed}
         style={fixed ? styles.shrink : styles.center}

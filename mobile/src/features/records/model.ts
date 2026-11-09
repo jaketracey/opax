@@ -1,3 +1,4 @@
+import { billTextPathPattern, isRecordSlug } from '../../api/record-policy';
 import {
   array,
   date,
@@ -8,7 +9,6 @@ import {
   text,
   url,
 } from '../../api/validation';
-import { isRecordSlug, billTextPathPattern } from '../../api/record-policy';
 import { formatDate } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import { titleSubject } from './citations';
@@ -347,7 +347,7 @@ export function recordKind(rec: RecordLike): string {
   if (/^grant(?:connect)?-award-/.test(slug)) return 'grant_award';
   return '';
 }
-/** A stored title's parts: "Speaker — Debate — 2026-08-18". */
+/** A stored title's parts: "Speaker \u2014 Debate \u2014 2026-08-18". */
 function storedParts(title: string) {
   const parts = title.trim().split(DASH);
   const last = parts.at(-1) ?? '';
@@ -355,7 +355,7 @@ function storedParts(title: string) {
   const body = date ? parts.slice(0, -1) : parts;
   return { date, body };
 }
-/** "Speaker — Debate — 2026-08-18", or a speech's "Speaker — 2026-08-18". */
+/** "Speaker \u2014 Debate \u2014 2026-08-18", or a speech's "Speaker \u2014 2026-08-18". */
 function titleSpeaker(rec: RecordLike): string | null {
   const { date, body } = storedParts(rec.title);
   if (!date) return null;
@@ -370,7 +370,7 @@ export function recordDate(rec: RecordLike): string | null {
   if (division) return division[2]!;
   return storedParts(rec.title).date;
 }
-/** "Mr Speaker — 2026-08-18" read as written: dashes and ISO dates go. */
+/** "Mr Speaker \u2014 2026-08-18" read as written: dashes and ISO dates go. */
 function plainTitle(title: string): string {
   let first = true;
   return title

@@ -3,6 +3,24 @@ import type { SFSymbol } from './symbols';
 
 // Same meaning as the iOS symbol; Material Symbols are bundled by expo-symbols.
 export const androidSymbols: Record<SFSymbol, AndroidSymbol> = {
+  photo: 'image',
+  'australiandollarsign.circle': 'payments',
+  'mic.slash': 'mic_off',
+  'lock.fill': 'lock',
+  'questionmark.circle': 'help',
+  'envelope.fill': 'mail',
+  'hand.wave.fill': 'waving_hand',
+  'hammer.fill': 'handyman',
+  'arrow.up.circle': 'arrow_circle_up',
+  'arrow.up.left': 'north_west',
+  'xmark.circle.fill': 'cancel',
+  'arrow.up.left.and.arrow.down.right': 'fit_screen',
+  'doc.plaintext': 'description',
+  'plus.circle': 'add_circle',
+  'minus.circle.fill': 'do_not_disturb_on',
+  'chart.line.uptrend.xyaxis': 'trending_up',
+  'checkmark.circle.fill': 'check_circle',
+
   heart: 'favorite',
   'heart.fill': 'favorite',
   bookmark: 'bookmark',
@@ -42,7 +60,6 @@ export const androidSymbols: Record<SFSymbol, AndroidSymbol> = {
   creditcard: 'credit_card',
   'doc.on.doc': 'content_copy',
   'doc.text': 'description',
-  'dollarsign.circle': 'paid',
   // Material's overflow mark; TalkBack reads the button's own label.
   ellipsis: 'more_vert',
   envelope: 'mail',

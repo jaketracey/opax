@@ -1,9 +1,9 @@
-import { CachedPortrait } from '../CachedPortrait';
-import { formatDate } from '../../design/format';
 import type { Electorate } from '../../api/catalogs';
-import { PersonRow, RowList } from '../../design/primitives';
+import { formatDate } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
+import { InsetGroup, PersonRow } from '../../design/primitives';
 import { personRoute } from '../../navigation/routes';
+import { CachedPortrait } from '../CachedPortrait';
 import { representativeProfile, type Directory } from './model';
 
 /**
@@ -15,7 +15,6 @@ import { representativeProfile, type Directory } from './model';
 export function RepresentativeRows({
   rows,
   directory,
-  asAt: _asAt,
   id,
   placeLine = false,
   detailFor,
@@ -23,8 +22,6 @@ export function RepresentativeRows({
 }: {
   rows: Electorate['representatives'];
   directory: Directory;
-  /** @deprecated The block's date is in its source line. */
-  asAt?: string | null;
   id: string;
   placeLine?: boolean;
   detailFor?: (personId: string) => string | null | undefined;
@@ -70,7 +67,7 @@ export function RepresentativeRows({
       />
     );
   });
-  return wrap ? <RowList>{items}</RowList> : <>{items}</>;
+  return wrap ? <InsetGroup>{items}</InsetGroup> : <>{items}</>;
 }
 
 /**

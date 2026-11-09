@@ -1,24 +1,24 @@
 import { communityRequestAllowed } from '../features/community/entry';
-import { isPeoplePaidPath } from '../features/people/policy';
 import {
   isExplorePaidPath,
   isExploreStaticPath,
 } from '../features/explore/policy';
-import { isPortraitPath } from './portrait-policy';
-import { isYearPicturePath } from './year-picture-policy';
-import { allowsReportsPath } from './reports-policy';
+import { isPeoplePaidPath } from '../features/people/policy';
 import {
   documentKinds,
-  moreCatalogKinds,
   jurisdictions,
-  topics,
+  moreCatalogKinds,
   sorts,
+  topics,
 } from '../features/search/contracts';
+import { isPortraitPath } from './portrait-policy';
 import {
-  isRecordSlug,
   billTextPathPattern,
+  isRecordSlug,
   isSimilarRequest,
 } from './record-policy';
+import { allowsReportsPath } from './reports-policy';
+import { isYearPicturePath } from './year-picture-policy';
 // Public GETs; paid search and briefs require an explicit action in the UI.
 // Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
@@ -136,6 +136,13 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  if (
+    !query &&
+    /^\/(?:grants\/(?:federal|qld)\/shard-\d{2}|suppliers\/[a-f0-9]{2})\.json$/.test(
+      pathname!,
+    )
+  )
+    return;
   if (communityRequestAllowed(path)) return;
   if (allowsReportsPath(path)) return;
   if (isExplorePaidPath(path) || isExploreStaticPath(path)) return;

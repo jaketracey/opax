@@ -10,7 +10,7 @@ import {
   type NativeSyntheticEvent,
 } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { spacing } from './tokens';
+import { rhythm } from './tokens';
 
 /**
  * Own keyboard space and the opening reveal of the action. UIKit owns the
@@ -46,7 +46,7 @@ export function useStableKeyboard(
               height -
               (windowHeight -
                 (Platform.OS === 'android' ? 0 : keyboard.current) -
-                spacing.s4);
+                rhythm.block);
             if (obscured > 0)
               scroll.current?.scrollTo({
                 y: offset.current + obscured,
@@ -105,7 +105,7 @@ export function useStableKeyboard(
         offsetFloor === null
           ? 0
           : Math.max(0, viewportHeight - bottomInset + offsetFloor),
-      paddingBottom: spacing.s7 + keyboardHeight,
+      paddingBottom: rhythm.section + keyboardHeight,
     },
   };
 }

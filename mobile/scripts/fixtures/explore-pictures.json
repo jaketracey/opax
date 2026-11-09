@@ -28,5 +28,10 @@
     "file": "explore-pictures/democracy-sausages-mullumbimby.webp",
     "sha256": "fc68f58d93057fda7d7082cb78ebb0ef0b8b3d2bd9d1df92a52a274c4b384fbe",
     "bytes": 135508
+  },
+  "/years/pictures/2014/march-in-march-melbourne.webp": {
+    "file": "explore-pictures/march-in-march-melbourne.webp",
+    "sha256": "fb9fb4c1e4432834c9d2179cd0aa4c311cb86667fc4294d536a22a6052d2573d",
+    "bytes": 167848
   }
 }

@@ -8,6 +8,7 @@ import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { closeSheetItem, headerItems } from '../../navigation/chrome';
 import { canShare, shareHeaderItem } from '../../navigation/share';
+import { useSafeSetOptions } from '../../navigation/preview';
 
 /**
  * One read for a block: its record, its failure and two ways to read again.
@@ -91,20 +92,19 @@ export function useSheetRoot(): boolean {
  * was pushed. The stack module supplies Done on the root.
  */
 export function useShareItem(target: { path: string; title: string }) {
-  const navigation = useContext(NavigationContext);
+  const setOptions = useSafeSetOptions();
   const root = useSheetRoot();
   const { path, title } = target;
   useEffect(() => {
-    if (!navigation) return;
     const share = () => [shareHeaderItem({ path, title })];
     if (Platform.OS === 'android')
-      navigation.setOptions(
+      setOptions(
         headerItems(() => (root ? [...share(), closeSheetItem()] : share())),
       );
     else if (root)
-      navigation.setOptions({
+      setOptions({
         unstable_headerLeftItems: () => (canShare ? share() : []),
       });
-    else navigation.setOptions(headerItems(share));
-  }, [navigation, root, path, title]);
+    else setOptions(headerItems(share));
+  }, [setOptions, root, path, title]);
 }

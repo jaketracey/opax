@@ -1,3 +1,4 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useState, useSyncExternalStore } from 'react';
 import {
   router,
@@ -31,7 +32,7 @@ function knownList(list: string | undefined): list is FilterList {
 function MissingFilters() {
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{ title: 'Filters', ...filterBar(() => router.back()) }}
       />
       <ContentUnavailable

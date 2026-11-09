@@ -41,6 +41,7 @@ const mockFocus: {
   cleanup?: void | (() => void);
 } = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(
     ({ children, ...props }: { children: unknown }) =>
       jest

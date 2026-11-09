@@ -1,6 +1,4 @@
 import { StyleSheet, View } from 'react-native';
-import { useAccessibilitySize } from '../../design/accessibility';
-import { Button } from '../../design/controls';
 import { ContentUnavailable } from '../../design/states';
 import { rhythm } from '../../design/tokens';
 
@@ -11,7 +9,6 @@ import { rhythm } from '../../design/tokens';
  * column's width, as every button does there.
  */
 export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
-  const large = useAccessibilitySize();
   return (
     <View style={styles.page}>
       <ContentUnavailable
@@ -19,18 +16,13 @@ export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
         title="This person isn’t in OPAX"
         body="Profiles cover people who have served in an Australian parliament."
         testID="person-not-found"
+        action={{
+          label: 'Search',
+          onPress: onSearch,
+          testID: 'person-not-found-search',
+          containerTestID: 'person-not-found-action',
+        }}
       />
-      <View
-        style={large ? null : styles.centred}
-        testID="person-not-found-action"
-      >
-        <Button
-          label="Search"
-          variant="secondary"
-          onPress={onSearch}
-          testID="person-not-found-search"
-        />
-      </View>
     </View>
   );
 }

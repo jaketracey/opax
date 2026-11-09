@@ -1,20 +1,20 @@
+import {
+  counted,
+  formatFinancialYear as financialYear,
+} from '../../design/format';
 import type { FilterList } from '../../navigation/routes/filters';
 import {
   directorySorts,
   type DirectoryKind,
   type Facet,
 } from '../directories/model';
-import { parties, topics, defaultFilters } from '../search/contracts';
-import {
-  formatCount,
-  formatFinancialYear as financialYear,
-} from '../../design/format';
+import { defaultFilters, parties, topics } from '../search/contracts';
 import {
   defineModel,
   facet,
-  toggle,
-  registerFilterModel,
   filterStore,
+  registerFilterModel,
+  toggle,
   type FilterChoice,
   type FilterModel,
   type FilterValues,
@@ -154,7 +154,7 @@ export function divisionsFilterModel(
       ? (state) => {
           const count = options.resultCount!(state);
           return count
-            ? `${formatCount(count)} ${count === 1 ? 'vote matches' : 'votes match'}`
+            ? `${counted(count, 'vote matches', 'votes match')}`
             : 'No votes match';
         }
       : undefined,
@@ -271,9 +271,7 @@ export function directoryFilterModel(
     rows: [...rows, facet('sort', 'Sort', sort)],
     toggles,
     footer:
-      kind === 'person'
-        ? 'Sitting members come first in every order.'
-        : undefined,
+      kind === 'person' ? 'Sitting members always come first.' : undefined,
   });
 }
 
@@ -406,7 +404,7 @@ export function recordFilterModel(
     list,
     initial,
     rows: [
-      facet('speaker', 'Member', [any(), ...members], {
+      facet('speaker', 'Person', [any(), ...members], {
         searchPlaceholder: 'Name or electorate',
       }),
       facet('party', 'Party', [any(), ...partyChoices]),

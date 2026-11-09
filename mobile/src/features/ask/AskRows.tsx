@@ -1,9 +1,8 @@
-import { Pressable, StyleSheet, View } from 'react-native';
 import { router, type Href } from 'expo-router';
-import { CitationBadge } from '../../design/citation-mark';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from '../../design/accessibility';
+import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
-import { symbols } from '../../design/symbols';
 import { confirmAction } from '../../design/menu';
 import { PartyLabel } from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
@@ -12,12 +11,15 @@ import {
   useRowHighlight,
   useRowInset,
 } from '../../design/row-padding';
+import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
-import { fromWebPath } from '../../navigation/routes';
 import { openSource } from '../../navigation/external';
+import { fromWebPath } from '../../navigation/routes';
+import { docRoute } from '../../navigation/routes/records';
 import { shareRecord } from '../../navigation/share';
-import { copyCitation, citeStyles } from './cite';
+import { citationPassage } from './CitationContent';
+import { citeStyles, copyCitation } from './cite';
 import type { Source } from './model';
 import { personName, sourceMeta, sourceTitle } from './source-present';
 
@@ -66,9 +68,13 @@ export function sourceRoute(source: Source): Href | null {
   try {
     // A relative href needs no origin: retry its path without the query
     // or fragment (origins belong in build config, qa-static).
-    return (
-      fromWebPath(source.href) ?? fromWebPath(source.href.split(/[?#]/)[0]!)
-    );
+    const route =
+      fromWebPath(source.href) ?? fromWebPath(source.href.split(/[?#]/)[0]!);
+    return route?.pathname === '/doc/[slug]' && source.slug
+      ? docRoute(source.slug, sourceTitle(source), {
+          passage: citationPassage(source) ?? undefined,
+        })
+      : route;
   } catch {
     return null;
   }

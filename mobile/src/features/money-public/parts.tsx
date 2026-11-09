@@ -1,5 +1,4 @@
-import { useRefreshCommand } from '../../design/keyboard';
-import { headerItems, pageItems } from '../../navigation/chrome';
+import { type Href } from 'expo-router';
 import { useEffect, useState, type ReactNode, type Ref } from 'react';
 import {
   AccessibilityInfo,
@@ -10,33 +9,32 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
-import { Stack, type Href } from 'expo-router';
 import type { SearchBarProps } from 'react-native-screens';
-import {
-  useScreenColumn,
-  SidebarSafe,
-  RegionProvider,
-  EmptyState,
-  Group,
-  Heading,
-  ChoiceChips,
-  Text,
-  type SourceCitation,
-} from '../../design/primitives';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
 import { formatDate, sourceName } from '../../design/format';
+import { useRefreshCommand } from '../../design/keyboard';
+import {
+  EmptyState,
+  Group,
+  RegionProvider,
+  SidebarSafe,
+  Text,
+  useScreenColumn,
+  type SourceCitation,
+} from '../../design/primitives';
 import type { RowMenuAction } from '../../design/row-link';
 import { useListSearchBar } from '../../design/search-bar';
-import { ContentUnavailable, OfflineLine, Skeleton } from '../../design/states';
-import { colors, hairline, layout, rhythm } from '../../design/tokens';
-import { openOnWeb } from '../../navigation/external';
 import {
-  canShare,
-  copyRecordLink,
-  shareHeaderItem,
-  shareRecord,
-} from '../../navigation/share';
+  ContentUnavailable,
+  OfflineLine,
+  Skeleton,
+  StatePageProvider,
+} from '../../design/states';
+import { colors, hairline, layout, rhythm } from '../../design/tokens';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { openOnWeb } from '../../navigation/external';
+import { canShare, copyRecordLink, shareRecord } from '../../navigation/share';
 
 // The registers behind public money, by their publishers' short names
 // (specs/money.md 1.2): the line says "AusTender", the sheet the full title,
@@ -110,8 +108,7 @@ export function yearRange(first: string | number, last: string | number) {
   return !a || !b || a === b ? a || b : `${a} to ${b}`;
 }
 /** "5,962 grants", "1 grant". */
-export const counted = (count: number, one: string, many = `${one}s`) =>
-  `${count.toLocaleString('en-AU')} ${count === 1 ? one : many}`;
+export { counted } from '../../design/format';
 
 /** A whole-screen catalog record's saved state, for the source line. */
 export type Saved =
@@ -444,59 +441,61 @@ export function MoneyList<T>({
   useRefreshCommand(refresh, refreshing);
   return (
     <SidebarSafe style={styles.screen}>
-      <FlatList
-        ref={listRef}
-        data={rows}
-        keyExtractor={rowKey}
-        testID={id}
-        style={styles.screen}
-        contentContainerStyle={[styles.content, column.content]}
-        onLayout={column.onLayout}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        contentInsetAdjustmentBehavior="automatic"
-        automaticallyAdjustKeyboardInsets
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        initialNumToRender={10}
-        maxToRenderPerBatch={10}
-        windowSize={7}
-        removeClippedSubviews={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-        }
-        ListHeaderComponent={
-          <RegionProvider value={column.inner}>
-            {column.bar}
-            <Group style={styles.header}>{header}</Group>
-          </RegionProvider>
-        }
-        ItemSeparatorComponent={Separator}
-        ListFooterComponent={
-          loaded ? (
-            <Group style={styles.footer}>
-              {rows.length ? <View style={styles.rule} /> : null}
-              {sourceLine ? (
-                <View testID={`${id}-source-foot`}>{sourceLine}</View>
-              ) : null}
-              {footer}
-              <View testID={`${id}-end`} style={styles.end} />
-            </Group>
-          ) : null
-        }
-        ListEmptyComponent={
-          loaded ? (
-            <>
-              {empty === undefined ? (
-                <EmptyState message="No matching records." />
-              ) : (
-                empty
-              )}
-            </>
-          ) : null
-        }
-        renderItem={({ item, index }) => <View>{render(item, index)}</View>}
-      />
+      <StatePageProvider refreshing={refreshing}>
+        <FlatList
+          ref={listRef}
+          data={rows}
+          keyExtractor={rowKey}
+          testID={id}
+          style={styles.screen}
+          contentContainerStyle={[styles.content, column.content]}
+          onLayout={column.onLayout}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          contentInsetAdjustmentBehavior="automatic"
+          automaticallyAdjustKeyboardInsets
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={7}
+          removeClippedSubviews={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          }
+          ListHeaderComponent={
+            <RegionProvider value={column.inner}>
+              {column.bar}
+              <Group style={styles.header}>{header}</Group>
+            </RegionProvider>
+          }
+          ItemSeparatorComponent={Separator}
+          ListFooterComponent={
+            loaded ? (
+              <Group style={styles.footer}>
+                {rows.length ? <View style={styles.rule} /> : null}
+                {sourceLine ? (
+                  <View testID={`${id}-source-foot`}>{sourceLine}</View>
+                ) : null}
+                {footer}
+                <View testID={`${id}-end`} style={styles.end} />
+              </Group>
+            ) : null
+          }
+          ListEmptyComponent={
+            loaded ? (
+              <>
+                {empty === undefined ? (
+                  <EmptyState message="No matching records." />
+                ) : (
+                  empty
+                )}
+              </>
+            ) : null
+          }
+          renderItem={({ item, index }) => <View>{render(item, index)}</View>}
+        />
+      </StatePageProvider>
     </SidebarSafe>
   );
 }
@@ -514,74 +513,6 @@ export function sourceIndex(rows: number, columns = 1): number {
   const last = Math.min(FIRST_PAGE * columns, rows) - 1;
   return last - (last % columns);
 }
-
-// Kept only for features/money-public/Discover.tsx, which w4-money-map-leads
-// owns and retires into Leads. Nothing in this lane draws them; w6-cleanup
-// deletes them with Discover.tsx.
-/** @deprecated Set the bar with moneyBar() in Stack.Screen options. */
-export function MoneyHeader({ title, path }: { title: string; path: string }) {
-  return (
-    <Stack.Screen
-      options={{
-        title,
-        ...headerItems(() => [shareHeaderItem({ title, path })]),
-      }}
-    />
-  );
-}
-/** @deprecated Use SegmentedPicker or a PopUpButton. */
-export function MoneyChoices<T extends string>({
-  value,
-  onChange,
-  options,
-}: {
-  value: T;
-  onChange: (value: T) => void;
-  options: readonly (readonly [T, string, string?])[];
-}) {
-  return (
-    <ChoiceChips
-      value={value}
-      onChange={onChange}
-      segments={options.map(([value, label, testID]) => ({
-        value,
-        label,
-        testID,
-      }))}
-    />
-  );
-}
-/** @deprecated Use ListCaption. */
-export function ResultCount({
-  count,
-  noun,
-  detail,
-}: {
-  count: number | null;
-  noun: string;
-  detail?: string | null;
-}) {
-  const text =
-    count === null
-      ? null
-      : `${count.toLocaleString('en-AU')} ${noun}${detail ? ` · ${detail}` : ''}`;
-  useDebouncedAnnounce(text);
-  return text ? (
-    <Text wordSafe variant="metadata">
-      {text}
-    </Text>
-  ) : null;
-}
-/** @deprecated Use Heading level={1} kind="page". */
-export function Title({ children, id }: { children: ReactNode; id: string }) {
-  return (
-    <Heading level={1} kind="page" testID={id}>
-      {children}
-    </Heading>
-  );
-}
-/** @deprecated Empty lists say what found nothing, per screen. */
-export const NoRecords = () => <EmptyState message="No matching records." />;
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },

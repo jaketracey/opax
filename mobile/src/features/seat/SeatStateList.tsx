@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useState } from 'react';
-import { Stack, useNavigation } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import { copy } from '../../design/copy';
 import { InsetGroup, Screen } from '../../design/layout';
 import { useListSearchBar } from '../../design/search-bar';
@@ -59,7 +60,7 @@ export function SeatStateList({
   const busy = savingId !== null || chosenId !== null;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           headerSearchBarOptions: {

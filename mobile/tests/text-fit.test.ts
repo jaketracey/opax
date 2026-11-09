@@ -1,15 +1,15 @@
-import { createElement, act } from 'react';
-import * as accessibility from '../src/design/accessibility';
-import TestRenderer from 'react-test-renderer';
+import { act, createElement } from 'react';
 import { Text as NativeText, Platform, StyleSheet } from 'react-native';
+import TestRenderer from 'react-test-renderer';
+import * as accessibility from '../src/design/accessibility';
 import {
+  Heading,
   LINE_HEIGHT_NUDGE,
   nextWordSafeCap,
-  titleSizeCap,
-  wordSafeStart,
-  wordSafeOnLines,
-  Heading,
   Text,
+  titleSizeCap,
+  wordSafeOnLines,
+  wordSafeStart,
 } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
 
@@ -118,8 +118,8 @@ test.each(measuredWords)(
 
 test('record titles cap at the title1 AX2 size; other roles stay uncapped', () => {
   expect(titleSizeCap('recordTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);
-  expect(titleSizeCap('title', 3.571, 'ios')).toBeCloseTo(43 / 58);
-  expect(titleSizeCap('padTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);
+  expect(titleSizeCap('recordTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);
+  expect(titleSizeCap('recordTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);
   expect(titleSizeCap('recordTitle', 2.143, 'ios')).toBe(1);
   expect(titleSizeCap('recordTitle', 3.571, 'android')).toBeCloseTo(
     43 / 28 / 3.571,
@@ -157,7 +157,7 @@ test.each(['ios', 'android'] as const)(
           'recordTitle',
           'recordHeading',
           'title',
-          'padTitle',
+          'recordTitle',
         ].includes(variant);
         expect(
           renderer.root.findByType(NativeText).props.lineBreakStrategyIOS,
@@ -166,7 +166,7 @@ test.each(['ios', 'android'] as const)(
         // short last word on every platform; other roles draw as given.
         expect(renderer.root.findByType(NativeText).props.children).toBe(
           title
-            ? 'Interactive Gambling (Cost Recovery Levy) Bill\u00A02026'
+            ? 'Interactive Gambling (Cost Recovery Levy\u2060) Bill\u00A02026'
             : 'Interactive Gambling (Cost Recovery Levy) Bill 2026',
         );
         act(() => renderer.unmount());

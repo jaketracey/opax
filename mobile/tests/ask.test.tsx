@@ -26,6 +26,7 @@ import { confirmAction } from '../src/design/menu';
 import { haptic } from '../src/design/haptics';
 
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: { Screen: () => null },
   router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
 }));

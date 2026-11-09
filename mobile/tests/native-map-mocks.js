@@ -1,4 +1,4 @@
-/* global jest */
+/* global jest, beforeEach */
 // Component tests verify labels and workflow; journey 24 probes native pixels.
 jest.mock('@shopify/react-native-skia', () => ({
   ColorType: { RGBA_8888: 4 },
@@ -25,3 +25,13 @@ jest.mock('react-native-reanimated', () => ({
     callbackId: -1,
   }),
 }));
+
+// Connectivity is supplied explicitly by its regression tests. No native monitor in Jest.
+jest.mock('expo-network', () => ({ useNetworkState: jest.fn(() => ({})) }));
+
+// Legacy explicit router mocks describe normal routes unless a test supplies
+// the preview hook. Preview regressions supply their own true/false mock.
+beforeEach(() => {
+  const router = require('expo-router');
+  if (router.useIsPreview === undefined) router.useIsPreview = () => false;
+});

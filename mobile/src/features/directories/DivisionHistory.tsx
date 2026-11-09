@@ -1,3 +1,5 @@
+import { RouteOptions } from '../../navigation/preview';
+import { type NativeStackHeaderItem } from 'expo-router';
 import {
   createContext,
   memo,
@@ -17,7 +19,12 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Stack, type NativeStackHeaderItem } from 'expo-router';
+import { billFoldText } from '../../api/bill-transforms';
+import { ApiError } from '../../api/errors';
+import { copy } from '../../design/copy';
+import { counted, formatCount, formatDate } from '../../design/format';
+import { haptic } from '../../design/haptics';
+import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import {
   Button,
   ContentUnavailable,
@@ -31,29 +38,26 @@ import {
   Text,
   useScreenColumn,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import { chrome, colors, layout, rhythm } from '../../design/tokens';
-import { formatCount, formatDate } from '../../design/format';
-import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import { rowMenus, useRowFollow } from '../../design/row-link';
 import { useListSearchBar } from '../../design/search-bar';
+import { StatePageProvider } from '../../design/states';
 import { symbols } from '../../design/symbols';
-import { billFoldText } from '../../api/bill-transforms';
-import { ApiError } from '../../api/errors';
+import { Heading } from '../../design/text';
+import { colors, layout, rhythm } from '../../design/tokens';
 import { filtersItem, headerItems, pageMenu } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { billRoute } from '../../navigation/routes';
 import { filtersRoute } from '../../navigation/routes/filters';
-import { copyText } from '../records/actions';
-import { haptic } from '../../design/haptics';
-import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { countWords, isProcedural, outcomeWord } from '../bills/divisions';
-import { divisionsFilterModel } from '../sheets/filter-models';
+import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { copyText } from '../records/actions';
 import {
   filterStore,
   registerFilterModel,
   type FilterValues,
 } from '../sheets/filter-model';
+import { divisionsFilterModel } from '../sheets/filter-models';
 import { loadDivisionHistory } from './division-data';
 import type { DivisionRow as Division } from './model';
 
@@ -64,7 +68,7 @@ const RULE =
 const NOTE =
   'A vote here is a division: a question decided by counting members. Most questions are decided on the voices, without a recorded vote.';
 
-const votes = (n: number) => `${formatCount(n)} ${n === 1 ? 'vote' : 'votes'}`;
+const votes = (n: number) => `${counted(n, 'vote', 'votes')}`;
 
 /** One bill's run of consecutive votes: the section header and its rows. */
 export interface HistorySection {
@@ -298,7 +302,7 @@ export default function DivisionHistory() {
   useEffect(() => {
     if (complete && !error && loaded)
       AccessibilityInfo.announceForAccessibility(
-        `${formatCount(record.rows.length)} votes shown`,
+        `${counted(record.rows.length, 'vote', 'votes')} shown`,
       );
   }, [complete, error, loaded, record?.rows.length]);
 
@@ -350,8 +354,15 @@ export default function DivisionHistory() {
     />
   ) : null;
 
+  const titleRef = useRef<View>(null);
+  const scrollTitle = useTitleOnScroll(titleRef, TITLE, { trailing: 2 });
   const header = (
     <View style={styles.header}>
+      <View ref={titleRef} onLayout={scrollTitle.onTitleLayout}>
+        <Heading level={1} kind="page">
+          {TITLE}
+        </Heading>
+      </View>
       {record?.stale && !record.failed ? (
         <OfflineLine
           savedAt={record.savedAt}
@@ -376,7 +387,7 @@ export default function DivisionHistory() {
       {record?.failed && record.loaded ? (
         <InlineError
           subject="some votes"
-          message={`Votes from ${formatCount(record.loaded)} of ${formatCount(record.total)} bills. ${formatCount(record.failed)} couldn't be loaded.`}
+          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn't be loaded.`}
           onRetry={refresh}
           testID="division-history-partial"
         />
@@ -437,7 +448,7 @@ export default function DivisionHistory() {
     );
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: TITLE,
           headerLargeTitleEnabled: false,
@@ -471,45 +482,49 @@ export default function DivisionHistory() {
       <SidebarSafe style={styles.screen}>
         <ReportInset.Provider value={setInset}>
           <VoteInset.Provider value={inset}>
-            <SectionList
-              testID="division-history-screen"
-              style={styles.screen}
-              contentContainerStyle={[styles.content, column.content]}
-              onLayout={column.onLayout}
-              contentInsetAdjustmentBehavior="automatic"
-              keyboardDismissMode="on-drag"
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={refresh}
-                  tintColor={chrome.tint}
-                />
-              }
-              sections={loaded ? sections : []}
-              stickySectionHeadersEnabled={false}
-              keyExtractor={(item) => item.key}
-              renderSectionHeader={({ section }) => (
-                <BillHeader section={section as HistorySection} />
-              )}
-              renderItem={({ item, index }) => (
-                <Vote item={item} index={index} />
-              )}
-              ItemSeparatorComponent={Separator}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              windowSize={7}
-              removeClippedSubviews={false}
-              ListHeaderComponent={header}
-              ListEmptyComponent={empty}
-              ListFooterComponent={
-                <View style={styles.footer}>
-                  {loaded && !complete ? (
-                    <Skeleton shape="rows" count={2} label="Loading votes" />
-                  ) : null}
-                  {loaded ? source : null}
-                </View>
-              }
-            />
+            <StatePageProvider refreshing={refreshing}>
+              <SectionList
+                onScroll={scrollTitle.onScroll}
+                scrollEventThrottle={16}
+                testID="division-history-screen"
+                style={styles.screen}
+                contentContainerStyle={[styles.content, column.content]}
+                onLayout={column.onLayout}
+                contentInsetAdjustmentBehavior="automatic"
+                keyboardDismissMode="on-drag"
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={refresh}
+                    tintColor={colors.navy}
+                  />
+                }
+                sections={loaded ? sections : []}
+                stickySectionHeadersEnabled={false}
+                keyExtractor={(item) => item.key}
+                renderSectionHeader={({ section }) => (
+                  <BillHeader section={section as HistorySection} />
+                )}
+                renderItem={({ item, index }) => (
+                  <Vote item={item} index={index} />
+                )}
+                ItemSeparatorComponent={Separator}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={7}
+                removeClippedSubviews={false}
+                ListHeaderComponent={header}
+                ListEmptyComponent={empty}
+                ListFooterComponent={
+                  <View style={styles.footer}>
+                    {loaded && !complete ? (
+                      <Skeleton shape="rows" count={2} label="Loading votes" />
+                    ) : null}
+                    {loaded ? source : null}
+                  </View>
+                }
+              />
+            </StatePageProvider>
           </VoteInset.Provider>
         </ReportInset.Provider>
       </SidebarSafe>

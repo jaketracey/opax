@@ -1,3 +1,4 @@
+import { useNetworkState } from 'expo-network';
 import { act, type ReactElement, type ReactNode } from 'react';
 import { ActionSheetIOS } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -6,15 +7,16 @@ import * as c from '../src/api/catalogs';
 import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
+import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
-import { loadChoice } from '../src/features/your-mp/choice-store';
-import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { readCachedEdition } from '../src/features/today/edition-store';
 import { readInvitationDates } from '../src/features/today/invitation-store';
 import { addDays, sydneyDay } from '../src/features/today/rules';
+import { invitationBody } from '../src/features/today/SeatInvitation';
+import { loadChoice } from '../src/features/your-mp/choice-store';
+import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { releaseSplash } from '../src/launch/splash';
 import { welcomeDeclinedThisLaunch } from '../src/onboarding/state';
-import { invitationBody } from '../src/features/today/SeatInvitation';
 import { responseBytes } from './fixture-bytes';
 import {
   bills,
@@ -475,9 +477,15 @@ describe('the page', () => {
     expect(spoken).toHaveLength(1);
     expect(spoken[0]!.props.testID).toBe('today-your-mp-loading');
   });
-  test('releases the splash once its first reads answer', async () => {
+  test('releases the splash on first layout, including a skeleton', async () => {
     setUp({ cached: 'missing' });
-    await render(<Today />);
+    const renderer = await render(<Today />);
+    expect(releaseSplash).not.toHaveBeenCalled();
+    act(() =>
+      renderer.root.findByType(Screen).props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 844 } },
+      }),
+    );
     expect(releaseSplash).toHaveBeenCalledWith('today');
   });
   test('a grouped screen; How parliament voted is absent until its file exists', async () => {
@@ -543,3 +551,39 @@ describe('the invitation’s line', () => {
     ).toBe('Choose your current federal electorate.');
   });
 });
+
+test.each(['edition', 'bills', 'declarations'] as const)(
+  'device offline state draws one line for a fresh saved %s block',
+  async (cached) => {
+    setUp({ edition: { ...editionAged(1), savedAt: 1 } });
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: false });
+    if (cached !== 'edition')
+      mock.todayEdition.mockResolvedValue({
+        status: 'missing',
+        data: null,
+        asAt: null,
+        sources: [],
+        stale: false,
+        savedAt: null,
+      });
+    if (cached === 'bills')
+      mock.todayBills.mockResolvedValue({
+        ...c.recentBillsFor(bills, 3),
+        savedAt: 1,
+        stale: false,
+      });
+    if (cached === 'declarations') {
+      const saved = { ...declarations, savedAt: 1, stale: false };
+      mock.todayDeclarations.mockResolvedValue(saved);
+      mock.todayDeclarationsProfiled.mockResolvedValue(saved);
+    }
+    const r = await render(<Today />);
+    try {
+      expect(r.root.findAllByType(OfflineLine)).toHaveLength(1);
+      expect(r.root.findByType(OfflineLine).props.testID).toBe('today-offline');
+    } finally {
+      await act(async () => r.unmount());
+      jest.mocked(useNetworkState).mockReturnValue({});
+    }
+  },
+);

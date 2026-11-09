@@ -1,6 +1,7 @@
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, View } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
+import { useAccessibilitySize } from '../../design/accessibility';
 import {
   Icon,
   InlineError,
@@ -14,16 +15,15 @@ import {
   useRowHighlight,
   useRowInset,
 } from '../../design/row-padding';
-import { useAccessibilitySize } from '../../design/accessibility';
 import { symbols } from '../../design/symbols';
 import { minimumTarget, rhythm } from '../../design/tokens';
-import { voiceLinked } from '../../voice/linked';
 import type { VoiceStatus } from '../../voice';
+import { voiceLinked } from '../../voice/linked';
+import { clearAskConversations } from '../ask/store';
 import { readConsent } from '../talk/bridge';
 import { voiceTime, voiceTimeSpoken } from '../talk/model';
-import { clearAskConversations } from '../ask/store';
-import { closeSheetThen, SettingsRow } from './AccountLinks';
 import { accountCopy } from './copy';
+import { closeSheetThen, SettingsRow } from './parts';
 import {
   accountView,
   clearNotice,

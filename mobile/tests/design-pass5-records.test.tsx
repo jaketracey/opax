@@ -1,33 +1,20 @@
+import { menuLeaves } from '../src/design/row-link';
+import {
+  recordActions,
+  recordBarItems,
+} from '../src/features/records/RecordActions';
 // Records, Apple-design wave 4 (records.md 2 to 5), after design pass 5:
 // the reader has one meta line, the title in the record face, the speaker as
 // a PersonRow, one SourceLine holding the original, notes and licence, and
 // Cite / Copy link / Open on opax.com.au under the bar's ⋯. Bill text opens
 // on its text with the version as a bar menu. Just added is a list of
 // record rows grouped by the day they were added.
+import { NavigationContext } from 'expo-router/react-navigation';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
-import {
-  decodeBillText,
-  decodeBillTextManifest,
-  decodeDocument,
-  decodeRecent,
-  metaLine,
-} from '../src/features/records/model';
-import { records } from '../src/features/records/runtime';
 import { catalogs } from '../src/api/runtime';
-import DocumentReader from '../src/features/records/DocumentReader';
-import BillTextReader from '../src/features/records/BillTextReader';
-import RecentRecords from '../src/features/records/RecentRecords';
-import { NavigationContext } from 'expo-router/react-navigation';
-import {
-  RecordActions,
-  recordActions,
-  recordBarItems,
-} from '../src/features/records/RecordActions';
-import { recordSource } from '../src/features/records/source';
-import { menuLeaves } from '../src/design/row-link';
 import {
   ContentUnavailable,
   Heading,
@@ -37,6 +24,18 @@ import {
   RecordRow,
   SourceLine,
 } from '../src/design/primitives';
+import BillTextReader from '../src/features/records/BillTextReader';
+import DocumentReader from '../src/features/records/DocumentReader';
+import {
+  decodeBillText,
+  decodeBillTextManifest,
+  decodeDocument,
+  decodeRecent,
+  metaLine,
+} from '../src/features/records/model';
+import RecentRecords from '../src/features/records/RecentRecords';
+import { records } from '../src/features/records/runtime';
+import { recordSource } from '../src/features/records/source';
 import { index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
@@ -179,46 +178,6 @@ test('the record has one source line, holding the original, notes and licence', 
     originals: [expect.objectContaining({ url: speech.url })],
   });
   await act(async () => view.unmount());
-});
-
-test('the bar holds Share and ⋯: Cite inline, Copy link, Open on opax.com.au', async () => {
-  const view = await mount(<DocumentReader />);
-  expect(barLabels()).toEqual(['Share', 'More']);
-  // iOS draws no bottom toolbar, which the floating tab bar would cover:
-  // Ask about this is a row, and Share (where it can) sits beside ⋯.
-  expect(
-    view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
-  ).toHaveLength(0);
-  expect(
-    view.root.findAllByProps({ testID: 'doc-ask' }).length,
-  ).toBeGreaterThan(0);
-  await act(async () => view.unmount());
-  const target = { slug: 'speech-1205524', title: 'A speech' };
-  const actions = recordActions(target);
-  expect(actions.map((a) => a.title)).toEqual([
-    'Cite',
-    'Copy link',
-    'Open on opax.com.au',
-  ]);
-  expect(actions[0]).toMatchObject({ inline: true });
-  expect(menuLeaves(actions).map((a) => a.title)).toEqual([
-    'Copy APA 7',
-    'Copy AGLC',
-    'Copy BibTeX',
-    'Copy RIS',
-    'Citation formats…',
-    'Copy link',
-    'Open on opax.com.au',
-  ]);
-  const item = recordBarItems(target)()[0]!;
-  expect(item).toMatchObject({
-    type: 'menu',
-    label: 'More',
-    accessibilityLabel: 'More for this record',
-  });
-  const inline = await mount(<RecordActions {...target} />);
-  expect(inline.toJSON()).toBeNull();
-  await act(async () => inline.unmount());
 });
 
 test('an embedded reader draws Ask about this as a row under the source line', async () => {
@@ -480,4 +439,41 @@ test('Just added: rows without a date added follow in a final group with no head
   expect(headers.slice(0, -1).every((h) => /^Added \d/.test(h))).toBe(true);
   expect(text(view)).not.toMatch(/not recorded/);
   await act(async () => view.unmount());
+});
+
+test('the bar holds Share and ⋯: Cite inline, Copy link, Open on opax.com.au', async () => {
+  const view = await mount(<DocumentReader />);
+  expect(barLabels()).toEqual(['Share', 'More']);
+  // iOS draws no bottom toolbar, which the floating tab bar would cover:
+  // Ask about this is a row, and Share (where it can) sits beside ⋯.
+  expect(
+    view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
+  ).toHaveLength(0);
+  expect(
+    view.root.findAllByProps({ testID: 'doc-ask' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => view.unmount());
+  const target = { slug: 'speech-1205524', title: 'A speech' };
+  const actions = recordActions(target);
+  expect(actions.map((a) => a.title)).toEqual([
+    'Cite',
+    'Copy link',
+    'Open on opax.com.au',
+  ]);
+  expect(actions[0]).toMatchObject({ inline: true });
+  expect(menuLeaves(actions).map((a) => a.title)).toEqual([
+    'Copy APA 7',
+    'Copy AGLC',
+    'Copy BibTeX',
+    'Copy RIS',
+    'Citation formats…',
+    'Copy link',
+    'Open on opax.com.au',
+  ]);
+  const item = recordBarItems(target)()[0]!;
+  expect(item).toMatchObject({
+    type: 'menu',
+    label: 'More',
+    accessibilityLabel: 'More for this record',
+  });
 });

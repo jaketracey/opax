@@ -1,7 +1,6 @@
 // opax/deprecated-design: blocks the design recipes that pass 2B retired
 // (docs/design/DESIGN-REVIEW-2026-10.md 5.3) from coming back in new code.
-// The adapters still in use are counted by tests/deprecated-recipes.test.ts,
-// which only lets their uses go down.
+// Retired recipes have zero callers and cannot return.
 
 const ROLES = {
   title: 'recordTitle',
@@ -23,20 +22,35 @@ const ROLES = {
   chip: 'capsule',
   countdown: 'strong with tabular',
 };
-// Retired components: zero uses outside src/design, which keeps any alias.
-// Aliases still in use (UpdatedCaption, VoteSide, AsAtLine, SourceLink, ...)
-// are counted by the ratchet test instead.
+// Retired components have zero uses, including inside the kit.
 const COMPONENTS = {
-  BillStatus: 'StatusLabel',
+  AsAtLine: 'SourceLine',
+  SourceLink: 'SourceLine originals',
+  OpaxWebLink: 'LinkRow external',
+  Figure: 'FigureBlock',
+  MoneyFigure: 'FigureBlock',
+  BigFigure: 'FigureBlock',
+  ViewOriginal: 'SourceLine originals',
+  EdgeFade: 'native scroll edges',
+  StaleNotice: 'SourceLine savedAt',
+  StatRow: 'StatStrip',
+  RowList: 'InsetGroup',
+  KeyValueList: 'ValueRow in InsetGroup',
+  SubSection: 'Section',
+  SheetBody: 'SheetFrame',
+  RecordStatus: 'recordSourceState',
+  MachineLabel: 'MachinePill',
+  StatusLabel: 'StatusCapsule',
+  BillStatus: 'StatusCapsule',
   RoundButton: 'IconButton (size="large")',
   PartyChip: 'PartyLabel (dense, linked={false})',
-  MachineWritten: 'MachineLabel',
+  MachineWritten: 'MachinePill',
   SplitEmpty: 'EmptyState size="pane"',
   TodayCard: 'Card',
   ToggleRow: 'SwitchRow',
   MoneyToggle: 'SwitchRow',
   InlineLink: 'LinkRow',
-  Chip: 'StatusLabel, Tag, PartyLabel or ChoiceChip',
+  Chip: 'StatusCapsule, Tag, PartyLabel or SegmentedPicker',
 };
 
 const literal = (node) =>
@@ -71,7 +85,7 @@ const deprecatedRule = {
   },
   create(context) {
     const file = context.filename.replace(/\\/g, '/');
-    // The design system keeps the aliases; everything else uses the new names.
+    // Only low-level kit styling is exempt from screen-specific recipes.
     const inDesign = /\/src\/design\//.test(file);
     return {
       JSXAttribute(node) {
@@ -126,7 +140,6 @@ const deprecatedRule = {
           });
       },
       JSXOpeningElement(node) {
-        if (inDesign) return;
         const name = node.name && node.name.name;
         if (name && COMPONENTS[name])
           context.report({
@@ -163,7 +176,7 @@ const deprecatedRule = {
 };
 
 const warningRule = (messages, create) => ({
-  meta: { type: 'suggestion', schema: [], messages },
+  meta: { type: 'problem', schema: [], messages },
   create,
 });
 const attributes = (node) =>
@@ -258,7 +271,20 @@ const rules = {
           if (node.imported.name === 'showMenu') names.add(node.local.name);
         },
         CallExpression(node) {
-          if (!inDesign && names.has(node.callee.name))
+          if (
+            !inDesign &&
+            names.has(node.callee.name) &&
+            !context.sourceCode
+              .getAncestors(node)
+              .some(
+                (parent) =>
+                  (parent.type === 'IfStatement' ||
+                    parent.type === 'ConditionalExpression') &&
+                  /Platform\.OS\s*(?:!==?\s*['\"]ios|===?\s*['\"]android)/.test(
+                    context.sourceCode.getText(parent.test),
+                  ),
+              )
+          )
             context.report({ node, messageId: 'menu' });
         },
       };
@@ -266,295 +292,8 @@ const rules = {
   ),
 };
 
-// Per-file counts measured on 8 November 2026. New files start at zero.
-// Named warning rules are exported for the shared ESLint config to register.
-// The existing deprecated-design config stays usable before that follow-up.
-const ratchetBaseline = {
-  'deprecated-design/staticLightReads': {
-    'src/app/_layout.tsx': 1,
-    'src/design/contrast.ts': 3,
-    'src/design/layout.tsx': 2,
-    'src/design/people.tsx': 5,
-    'src/design/text.tsx': 1,
-    'src/design/tokens.ts': 4,
-    'src/features/electorate-map/OutlineMap.tsx': 2,
-    'src/features/explore/Picture.tsx': 3,
-    'src/features/talk/VoiceOrb.tsx': 1,
-    'src/navigation/AndroidReadingHeader.tsx': 5,
-    'src/navigation/chrome.ts': 3,
-    'src/navigation/external.ts': 1,
-    'src/onboarding/PadTour.tsx': 2,
-    'src/workbench/Workbench.tsx': 3,
-  },
-  'deprecated-design/radius': {
-    'src/design/card.tsx': 1,
-    'src/design/controls.tsx': 12,
-    'src/design/info.tsx': 1,
-    'src/design/labels.tsx': 6,
-    'src/design/rows.tsx': 1,
-    'src/design/selection.tsx': 1,
-    'src/design/source.tsx': 2,
-    'src/design/split.tsx': 1,
-    'src/design/states.tsx': 2,
-    'src/features/Person.tsx': 2,
-    'src/features/bills/parts.tsx': 1,
-    'src/features/electorate-map/LocationSuggestion.tsx': 1,
-    'src/features/electorate-map/OutlineMap.tsx': 1,
-    'src/features/leads/Chart.tsx': 1,
-    'src/features/records/BillTextReader.tsx': 1,
-    'src/features/today/EditionHero.tsx': 1,
-    'src/features/today/ExploreGrid.tsx': 1,
-    'src/navigation/AndroidSheet.tsx': 2,
-    'src/navigation/AndroidTabs.tsx': 1,
-    'src/onboarding/PadTour.tsx': 1,
-  },
-  'deprecated-design/role': {
-    'src/design/controls.tsx': 10,
-    'src/design/disclosure.tsx': 1,
-    'src/design/labels.tsx': 4,
-    'src/design/layout.tsx': 3,
-    'src/design/lead.tsx': 7,
-    'src/design/people.tsx': 5,
-    'src/design/record.tsx': 5,
-    'src/design/rows.tsx': 5,
-    'src/design/source.tsx': 6,
-    'src/design/split.tsx': 1,
-    'src/design/states.tsx': 2,
-    'src/features/About.tsx': 2,
-    'src/features/CatalogNotice.tsx': 2,
-    'src/features/ComingSoon.tsx': 2,
-    'src/features/Electorate.tsx': 3,
-    'src/features/Party.tsx': 5,
-    'src/features/Person.tsx': 16,
-    'src/features/Placeholder.tsx': 1,
-    'src/features/RecordStatus.tsx': 1,
-    'src/features/Search.tsx': 1,
-    'src/features/YourMP.tsx': 5,
-    'src/features/account/AccountSection.tsx': 2,
-    'src/features/account/DeleteAccountFlow.tsx': 1,
-    'src/features/account/SignInFlow.tsx': 4,
-    'src/features/ask/AnswerSources.tsx': 4,
-    'src/features/ask/AnswerView.tsx': 3,
-    'src/features/ask/AskProgress.tsx': 2,
-    'src/features/ask/AskScreen.tsx': 2,
-    'src/features/ask/Options.tsx': 1,
-    'src/features/ask/QuestionBuilder.tsx': 1,
-    'src/features/ask/SourcesPane.tsx': 4,
-    'src/features/ask/choices.tsx': 1,
-    'src/features/bills/BillDetail.tsx': 16,
-    'src/features/bills/BillsList.tsx': 1,
-    'src/features/bills/parts.tsx': 7,
-    'src/features/community/CommunityScreen.tsx': 12,
-    'src/features/declarations/Declarations.tsx': 2,
-    'src/features/declarations/FeedRow.tsx': 2,
-    'src/features/directories/DirectoryChoice.tsx': 1,
-    'src/features/directories/DirectoryScreen.tsx': 1,
-    'src/features/directories/DivisionHistory.tsx': 2,
-    'src/features/directories/ElectorateHistory.tsx': 2,
-    'src/features/directories/PartyDirectoryRow.tsx': 2,
-    'src/features/electorate-map/LocationSuggestion.tsx': 4,
-    'src/features/explore/Ballot.tsx': 3,
-    'src/features/explore/Matrix.tsx': 2,
-    'src/features/explore/PhotoCredits.tsx': 2,
-    'src/features/explore/Picture.tsx': 1,
-    'src/features/explore/Quiz.tsx': 4,
-    'src/features/explore/Tide.tsx': 1,
-    'src/features/explore/TimeMachine.tsx': 1,
-    'src/features/explore/WordsDollars.tsx': 4,
-    'src/features/explore/YearPictures.tsx': 1,
-    'src/features/follows/FollowToggle.tsx': 1,
-    'src/features/follows/FollowingSection.tsx': 3,
-    'src/features/follows/ManageFollows.tsx': 3,
-    'src/features/follows/SwipeRow.tsx': 1,
-    'src/features/leads/Chart.tsx': 2,
-    'src/features/leads/LeadDetail.tsx': 2,
-    'src/features/leads/LeadFeedCard.tsx': 4,
-    'src/features/leads/Leads.tsx': 3,
-    'src/features/money/MoneyControls.tsx': 2,
-    'src/features/money/MoneyMapLabels.tsx': 1,
-    'src/features/money/MoneyNodeScreen.tsx': 4,
-    'src/features/money/MoneyScreen.tsx': 2,
-    'src/features/money-public/Agencies.tsx': 4,
-    'src/features/money-public/Allocation.tsx': 5,
-    'src/features/money-public/Connections.tsx': 1,
-    'src/features/money-public/Hub.tsx': 1,
-    'src/features/money-public/Largest.tsx': 1,
-    'src/features/money-public/Program.tsx': 4,
-    'src/features/money-public/parts.tsx': 2,
-    'src/features/people/DeclaredInterests.tsx': 3,
-    'src/features/people/ExpenseGlossary.tsx': 2,
-    'src/features/people/FinancialBlocks.tsx': 5,
-    'src/features/people/PartyDepth.tsx': 4,
-    'src/features/people/Sections.tsx': 6,
-    'src/features/records/BillTextReader.tsx': 3,
-    'src/features/records/CitationScreen.tsx': 2,
-    'src/features/records/DocumentReader.tsx': 4,
-    'src/features/records/ReaderList.tsx': 1,
-    'src/features/reports/ReportPage.tsx': 2,
-    'src/features/reports/TodayReports.tsx': 2,
-    'src/features/reports/TopicPage.tsx': 1,
-    'src/features/reports/TopicsIndex.tsx': 2,
-    'src/features/reports/parts.tsx': 4,
-    'src/features/search/Excerpt.tsx': 1,
-    'src/features/search/FiltersSheet.tsx': 1,
-    'src/features/search/ResultRow.tsx': 3,
-    'src/features/search/Results.tsx': 1,
-    'src/features/sources/SourcesScreen.tsx': 8,
-    'src/features/talk/AnswerCaption.tsx': 2,
-    'src/features/talk/Consent.tsx': 3,
-    'src/features/talk/TalkScreen.tsx': 5,
-    'src/features/today/DeclarationRow.tsx': 1,
-    'src/features/today/EditionHero.tsx': 9,
-    'src/features/today/ExploreGrid.tsx': 1,
-    'src/features/today/Foot.tsx': 2,
-    'src/features/today/Masthead.tsx': 1,
-    'src/features/today/StageLine.tsx': 2,
-    'src/navigation/AndroidSheet.tsx': 2,
-    'src/navigation/chrome.ts': 2,
-    'src/onboarding/PadTour.tsx': 3,
-    'src/onboarding/WelcomeTour.tsx': 2,
-    'src/onboarding/padScenes.tsx': 11,
-    'src/onboarding/scenes.tsx': 11,
-    'src/test-screens/MoneyMapSpike.tsx': 4,
-    'src/workbench/TalkOrbs.tsx': 1,
-    'src/workbench/Workbench.tsx': 10,
-  },
-  'continuous-corners/corners': {
-    'src/design/controls.tsx': 8,
-    'src/design/info.tsx': 1,
-    'src/design/labels.tsx': 4,
-    'src/design/layout.tsx': 1,
-    'src/design/people.tsx': 2,
-    'src/design/rows.tsx': 1,
-    'src/design/selection.tsx': 1,
-    'src/design/source.tsx': 2,
-    'src/design/split.tsx': 1,
-    'src/design/states.tsx': 3,
-    'src/features/Party.tsx': 1,
-    'src/features/Person.tsx': 2,
-    'src/features/ask/AskProgress.tsx': 3,
-    'src/features/bills/BillDetail.tsx': 2,
-    'src/features/bills/parts.tsx': 3,
-    'src/features/community/CommunityScreen.tsx': 1,
-    'src/features/electorate-map/LocationSuggestion.tsx': 3,
-    'src/features/electorate-map/OutlineMap.tsx': 1,
-    'src/features/follows/FollowingSection.tsx': 1,
-    'src/features/leads/Chart.tsx': 1,
-    'src/features/leads/LeadFeedCard.tsx': 1,
-    'src/features/money/MoneyControls.tsx': 1,
-    'src/features/money/NativeMoneyMap.tsx': 1,
-    'src/features/records/BillTextReader.tsx': 1,
-    'src/features/today/EditionHero.tsx': 1,
-    'src/features/today/StageLine.tsx': 1,
-    'src/navigation/AndroidSheet.tsx': 1,
-    'src/navigation/AndroidTabs.tsx': 1,
-    'src/onboarding/PadTour.tsx': 1,
-    'src/onboarding/WelcomeTour.tsx': 1,
-    'src/onboarding/padScenes.tsx': 3,
-    'src/test-screens/VoiceBridgeTestScreen.tsx': 1,
-    'src/workbench/Workbench.tsx': 2,
-  },
-  'symbol-vocabulary/symbol': {
-    'src/design/controls.tsx': 3,
-    'src/design/disclosure.tsx': 1,
-    'src/design/info.tsx': 1,
-    'src/design/labels.tsx': 1,
-    'src/design/lead.tsx': 1,
-    'src/design/people.tsx': 1,
-    'src/design/rows.tsx': 2,
-    'src/design/source.tsx': 1,
-    'src/design/split.tsx': 1,
-    'src/design/states.tsx': 2,
-    'src/features/ask/AskProgress.tsx': 1,
-    'src/features/bills/parts.tsx': 1,
-    'src/features/community/CommunityScreen.tsx': 1,
-    'src/features/declarations/Declarations.tsx': 1,
-    'src/features/directories/DirectoryChoice.tsx': 1,
-    'src/features/directories/PartyDirectoryRow.tsx': 1,
-    'src/features/follows/FollowingSection.tsx': 1,
-    'src/features/follows/ManageFollows.tsx': 1,
-    'src/features/follows/SwipeRow.tsx': 1,
-    'src/features/leads/Chart.tsx': 1,
-    'src/features/leads/LeadDetail.tsx': 1,
-    'src/features/leads/LeadFeedCard.tsx': 1,
-    'src/features/search/FiltersSheet.tsx': 2,
-    'src/navigation/AndroidReadingHeader.tsx': 1,
-    'src/onboarding/padScenes.tsx': 3,
-  },
-  'deprecated-design/spacing': {
-    'src/design/controls.tsx': 26,
-    'src/design/layout.tsx': 5,
-    'src/design/lead.tsx': 10,
-    'src/design/states.tsx': 8,
-    'src/design/useStableKeyboard.ts': 2,
-    'src/features/ask/AskProgress.tsx': 5,
-    'src/features/ask/AskScreen.tsx': 1,
-    'src/features/follows/FollowToggle.tsx': 1,
-    'src/features/money/NativeMoneyMap.tsx': 1,
-    'src/navigation/SourceDestination.tsx': 1,
-  },
-  'deprecated-design/bronze': {
-    'src/design/labels.tsx': 1,
-    'src/design/lead.tsx': 4,
-    'src/design/source.tsx': 2,
-    'src/features/ask/AnswerView.tsx': 1,
-    'src/features/bills/parts.tsx': 1,
-    'src/features/leads/Chart.tsx': 1,
-    'src/features/leads/LeadFeedCard.tsx': 4,
-    'src/features/reports/parts.tsx': 1,
-  },
-  'category-ink/category': {
-    'src/design/labels.tsx': 2,
-    'src/features/Electorate.tsx': 1,
-    'src/features/directories/PartyDirectoryRow.tsx': 1,
-    'src/features/money-public/Agencies.tsx': 1,
-    'src/features/money-public/Allocation.tsx': 1,
-    'src/features/money-public/Largest.tsx': 1,
-    'src/features/money-public/Program.tsx': 1,
-    'src/features/records/BillTextReader.tsx': 1,
-  },
-  'show-menu/menu': {
-    'src/features/ask/AnswerView.tsx': 1,
-    'src/features/bills/BillDetail.tsx': 1,
-    'src/features/people/PageActions.tsx': 1,
-    'src/features/records/RecordActions.tsx': 2,
-    'src/features/search/Results.tsx': 1,
-    'src/features/sources/SourcesScreen.tsx': 1,
-    'src/features/today/RecordMenu.tsx': 1,
-    'src/navigation/chrome.ts': 2,
-  },
-};
-function withRatchet(rule, ruleName) {
-  return {
-    ...rule,
-    create(context) {
-      const reports = [];
-      const proxy = Object.create(context);
-      Object.defineProperty(proxy, 'report', {
-        value: (descriptor) => reports.push(descriptor),
-      });
-      const listeners = rule.create(proxy);
-      const finish = listeners['Program:exit'];
-      return {
-        ...listeners,
-        'Program:exit'(node) {
-          if (finish) finish(node);
-          const file = context.filename
-            .replace(/\\/g, '/')
-            .split('/mobile/')
-            .pop();
-          const counts = {};
-          for (const report of reports) {
-            const recipe = `${ruleName}/${report.messageId}`;
-            counts[recipe] = (counts[recipe] || 0) + 1;
-            if (counts[recipe] > (ratchetBaseline[recipe]?.[file] || 0))
-              context.report(report);
-          }
-        },
-      };
-    },
-  };
-}
-module.exports = withRatchet(deprecatedRule, 'deprecated-design');
+// All deprecated design recipes have a zero baseline and error severity.
+const ratchetBaseline = {};
+module.exports = deprecatedRule;
 module.exports.rules = rules;
 module.exports.ratchetBaseline = ratchetBaseline;

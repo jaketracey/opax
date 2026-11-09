@@ -61,7 +61,11 @@ for (const variant of ['production', 'e2e', 'development']) {
   assert.equal(native.UILaunchStoryboardName, 'SplashScreen');
   assert.equal(
     native.NSLocationWhenInUseUsageDescription,
-    'OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere.',
+    'OPAX uses your location once, on this iPhone, to find your electorate. It is not sent anywhere.',
+  );
+  assert.equal(
+    native['NSLocationWhenInUseUsageDescription~ipad'],
+    'OPAX uses your location once, on this iPad, to find your electorate. It is not sent anywhere.',
   );
   assert.equal(native.NSMotionUsageDescription, undefined);
   assert(
@@ -310,7 +314,7 @@ if (appIndex !== -1) {
   assert(!plist.NSMicrophoneUsageDescription);
   assert.equal(
     plist.NSLocationWhenInUseUsageDescription,
-    'OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere.',
+    'OPAX uses your location once, on this iPhone, to find your electorate. It is not sent anywhere.',
   );
   assert.equal(plist.NSMotionUsageDescription, undefined);
   assert.deepEqual(

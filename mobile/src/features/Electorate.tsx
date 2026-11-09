@@ -1,3 +1,6 @@
+import { partyFromCode } from './bills/party-codes';
+import { RouteOptions } from '../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   useEffect,
   useRef,
@@ -13,7 +16,13 @@ import {
   useWindowDimensions,
   type ScrollView,
 } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import type { Electorate as Seat } from '../api/catalogs';
+import { ApiError } from '../api/errors';
+import { catalogs } from '../api/runtime';
+import { formatDate } from '../design/format';
+import { Icon } from '../design/icon';
+import { confirmAction } from '../design/menu';
+import { chamberName, jurisdictionName } from '../design/parliament';
 import {
   ContentUnavailable,
   FollowButton,
@@ -33,23 +42,15 @@ import {
   ValueRow,
   copy,
 } from '../design/primitives';
-import { Icon } from '../design/icon';
-import { symbols } from '../design/symbols';
 import { RowLink, rowMenus, type RowMenuAction } from '../design/row-link';
-import { confirmAction } from '../design/menu';
 import {
   ownsRowPadding,
   useRowCellStyle,
   useRowInset,
 } from '../design/row-padding';
+import { symbols } from '../design/symbols';
 import { colors, minimumTarget, rhythm } from '../design/tokens';
-import { formatDate } from '../design/format';
-import { chamberName, jurisdictionName } from '../design/parliament';
-import { catalogs } from '../api/runtime';
-import { ApiError } from '../api/errors';
-import type { Electorate as Seat } from '../api/catalogs';
 import { glassBar, headerItems, pageItems } from '../navigation/chrome';
-import { copyRecordLink, shareRecord } from '../navigation/share';
 import { openOnWeb } from '../navigation/external';
 import {
   electionRoute,
@@ -57,27 +58,32 @@ import {
   electorateRoute,
   membersRoute,
 } from '../navigation/routes';
-import { SeatGrants } from './money-public/Grants';
+import { copyRecordLink, shareRecord } from '../navigation/share';
+import { presentSource } from '../navigation/sheets';
+import { useOpenAsk } from './ask/open';
+import { onElectorateDate } from './directories/ElectorateDateSheet';
+import {
+  DatedMembers,
+  ElectorateHistory,
+} from './directories/ElectorateHistory';
+import { validDate } from './directories/model';
 import {
   OutlineMap,
   OutlineSource,
   hasOutline,
   outlineSourceDetails,
 } from './electorate-map/OutlineMap';
-import { presentSource } from '../navigation/sheets';
-import {
-  DatedMembers,
-  ElectorateHistory,
-} from './directories/ElectorateHistory';
-import { onElectorateDate } from './directories/ElectorateDateSheet';
-import { validDate } from './directories/model';
+import { AddedSinceGroup } from './follows/AddedSinceGroup';
+import { followKey } from './follows/store';
+import { useFollowStates } from './follows/useFollowStates';
+import { SeatGrants } from './money-public/SeatGrants';
 import {
   BlockSource,
   combinedBlock,
   representationBlock,
 } from './your-mp/Evidence';
-import { RepresentativeRows, sinceLine } from './your-mp/RepresentativeRows';
 import { FaceStackRow, byFamilyName } from './your-mp/FaceStackRow';
+import { RepresentativeRows, sinceLine } from './your-mp/RepresentativeRows';
 import {
   censusHeadline,
   censusOtherRows,
@@ -86,16 +92,12 @@ import {
   newestCensus,
   type ElectionRecord,
 } from './your-mp/election-summary';
-import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
-import { useOpenAsk } from './ask/open';
-import { AddedSinceGroup } from './follows/AddedSinceGroup';
-import { useFollowStates } from './follows/useFollowStates';
-import { followKey } from './follows/store';
 import {
   representativeProfile,
   type Directory,
   type ElectorateView,
 } from './your-mp/model';
+import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
 
 export interface LoadedElectorate {
   directory: Directory;
@@ -148,17 +150,6 @@ export function identityLine(identity: {
   return [chamberName(identity.chamber, identity.jurisdiction), state]
     .filter(Boolean)
     .join(', ');
-}
-
-/**
- * The export's Census note without the vintage the heading already says.
- * @deprecated The page says one fixed caveat; kept for the copy tests.
- */
-export function censusCaveat(note: string, vintage: string): string {
-  const rest = note.startsWith(vintage)
-    ? note.slice(vintage.length).replace(/^[\s;:,.-]+/, '')
-    : note;
-  return rest ? rest.charAt(0).toUpperCase() + rest.slice(1) : note;
 }
 
 export default function Electorate() {
@@ -257,6 +248,11 @@ export function ElectorateScreen({
             <ContentUnavailable
               symbol="map"
               title="We couldn't find this electorate."
+              body="Search for an electorate or its member."
+              action={{
+                label: 'Search',
+                onPress: () => router.navigate('/search'),
+              }}
               testID="electorate-error"
             />
           ) : (
@@ -326,7 +322,7 @@ function ElectorateBar({
 }) {
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           headerTransparent: glassBar(),
           ...(loaded ? {} : headerItems(undefined)),
@@ -401,7 +397,7 @@ export function useElectorateMenu(
 function ElectorateMenu({ seat, asof }: { seat: Seat; asof: string }) {
   const { share, menu } = useElectorateMenu(seat, asof);
   return (
-    <Stack.Screen
+    <RouteOptions
       options={headerItems(pageItems({ name: seat.name, share, menu }))}
     />
   );
@@ -693,6 +689,7 @@ function ElectoratePage({
   )
     page.push(
       <SeatGrants
+        variant="seat-home"
         key="grants"
         name={identity.name}
         state={identity.state}
@@ -865,9 +862,8 @@ function ElectionRow({
                 {summary.winner.name}
               </Text>
               <PartyLabel
-                party={summary.winner.party ?? 'Independent'}
+                party={partyFromCode(summary.winner.party) ?? 'Independent'}
                 status="unknown"
-                dense
                 nested
                 linked={false}
               />

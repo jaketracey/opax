@@ -1,3 +1,4 @@
+import * as Router from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -6,9 +7,9 @@ import {
   type ReactNode,
 } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import * as Router from 'expo-router';
-import type { Block, Electorate, EditionView } from '../api/catalogs';
+import type { Block, EditionView, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
+import { useOffline } from '../api/useOffline';
 import { useAccessibilitySize } from '../design/accessibility';
 import { useLayout } from '../design/adaptive';
 import { thisDevice } from '../design/device';
@@ -16,6 +17,7 @@ import { Screen } from '../design/layout';
 import { ContentUnavailable } from '../design/states';
 import { rhythm } from '../design/tokens';
 import { releaseSplash } from '../launch/splash';
+import { welcomeDeclinedThisLaunch } from '../onboarding/state';
 import { EditionCard, EditionSkeleton } from './edition/EditionCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
@@ -51,9 +53,8 @@ import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { VotesBlock } from './today/VotesBlock';
 import { StateSeatCard, YourMPCard } from './today/YourMPCard';
-import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
 import { saveChoice } from './your-mp/choice-store';
-import { welcomeDeclinedThisLaunch } from '../onboarding/state';
+import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
 
 /**
  * Runs `effect` each time Today's screen gains focus. Unit tests that render
@@ -62,9 +63,6 @@ import { welcomeDeclinedThisLaunch } from '../onboarding/state';
 const useScreenFocus: (effect: () => void) => void = Router.useFocusEffect
   ? (effect) => Router.useFocusEffect(effect)
   : () => undefined;
-
-/** The splash waits at most this long for Today's first reads. */
-const SPLASH_WAIT = 400;
 
 const house = (s: Electorate) =>
   s.jurisdiction === 'federal' &&
@@ -220,6 +218,7 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
  * on its own, keeps its saved copy and ends in its own dated line.
  */
 export default function Today() {
+  const offline = useOffline();
   const now = useNow();
   const day = sydneyDay(now);
   const launch = useLaunch(day);
@@ -230,7 +229,6 @@ export default function Today() {
   const [pulled, setPulled] = useState<number | null>(null);
   const reports = useTodayReports();
   const edition = useEditionRead(attempt);
-  const [billsAnswered, setBillsAnswered] = useState(false);
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
   const refresh = useCallback(() => {
     setAttempt((n) => {
@@ -250,17 +248,6 @@ export default function Today() {
       : null;
   const home = federal && house(federal) ? federal : null;
   const ready = !!launch && seat.status !== 'loading';
-
-  // The cover fades when Today has its order and a first answer, or after
-  // 400 ms, whichever is first.
-  useEffect(() => {
-    const timer = setTimeout(() => releaseSplash('today'), SPLASH_WAIT);
-    return () => clearTimeout(timer);
-  }, []);
-  useEffect(() => {
-    if (ready && (edition.block !== null || billsAnswered))
-      releaseSplash('today');
-  }, [ready, edition.block, billsAnswered]);
 
   const order = launch
     ? todayOrder({
@@ -348,12 +335,7 @@ export default function Today() {
             testID="today-unavailable"
           />
         ) : (
-          <BillsBlock
-            key={name}
-            attempt={attempt}
-            onAnswer={() => setBillsAnswered(true)}
-            onRetry={retry}
-          />
+          <BillsBlock key={name} attempt={attempt} onRetry={retry} />
         );
       case 'votes':
         return nothingSaved ? null : (
@@ -383,8 +365,14 @@ export default function Today() {
 
   const offlineAt = [
     reports.savedAt,
-    edition.block?.stale ? edition.block.savedAt : null,
-    directory?.electorates.stale ? directory.electorates.savedAt : null,
+    offline ? reports.cachedAt : null,
+    edition.block &&
+    (edition.block.stale || (offline && edition.block.status === 'ready'))
+      ? edition.block.savedAt
+      : null,
+    directory?.electorates.stale || (offline && !!home)
+      ? directory?.electorates.savedAt
+      : null,
   ]
     .filter((d): d is number => typeof d === 'number')
     .sort((a, b) => a - b)[0];
@@ -392,6 +380,7 @@ export default function Today() {
   return (
     <Screen
       testID="today-screen"
+      onLayout={() => releaseSplash('today')}
       column="wide"
       grouped
       refreshControl={
@@ -403,7 +392,9 @@ export default function Today() {
         {order && ready ? (
           <TodayBody order={order} slot={slot} />
         ) : (
-          <View testID="today-launching" />
+          <View testID="today-launching">
+            <EditionSkeleton />
+          </View>
         )}
       </TodayReports>
     </Screen>
@@ -447,7 +438,7 @@ function useEditionRead(attempt: number) {
   }>({ block: null, attempt: -1 });
   useEffect(() => {
     let active = true;
-    void catalogs.todayEdition(attempt > 0).then((block) => {
+    const show = (block: Block<EditionView>) => {
       if (!active) return;
       setState((shown) => ({
         // A failed revalidation keeps the edition already drawn.
@@ -458,7 +449,15 @@ function useEditionRead(attempt: number) {
         attempt,
       }));
       void rememberEdition(block);
-    });
+    };
+    void catalogs
+      .todayEdition(attempt > 0)
+      .then((block) => {
+        show(block);
+        if (active && attempt === 0)
+          return catalogs.todayEdition('background').then(show);
+      })
+      .catch(() => undefined);
     return () => {
       active = false;
     };

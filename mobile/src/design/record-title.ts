@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 
 /** U+00A0: the line may not break here. */
 export const NO_BREAK_SPACE = ' ';
+/** U+2060 prevents UIKit separating a closing parenthesis from its word. */
+export const WORD_JOINER = '\u2060';
 
 /**
  * The roles a record's title is drawn in (and the legacy title roles that
@@ -11,8 +13,6 @@ export const NO_BREAK_SPACE = ' ';
 export const recordTitleRoles: readonly string[] = [
   'recordTitle',
   'recordHeading',
-  'title',
-  'padTitle',
 ];
 
 /** The pair stays short enough to fit an AX5 line on the narrowest phone. */
@@ -26,6 +26,7 @@ const MAX_BOUND = 16;
  * largest text sizes, are left as they are.
  */
 export function bindShortLastWord(text: string): string {
+  text = text.replace(/\s+\)/g, NO_BREAK_SPACE + ')');
   const match = /^([\s\S]*\S)[ \t]+(\S+)[ \t]+(\S+?)(\s*)$/.exec(text);
   if (!match) return text;
   const [, head, before, last, trailing] = match;
@@ -40,12 +41,17 @@ export function bindShortLastWord(text: string): string {
  * of runs (nested Text runs are left alone).
  */
 export function bindRecordTitle(children: ReactNode): ReactNode {
-  if (typeof children === 'string') return bindShortLastWord(children);
+  if (typeof children === 'string')
+    return bindShortLastWord(
+      children.replace(/(?<=[^\s\u2060])\)/g, WORD_JOINER + ')'),
+    );
   if (Array.isArray(children)) {
     const index = children.length - 1;
     const last: unknown = children[index];
     if (typeof last === 'string') {
-      const bound = bindShortLastWord(last);
+      const bound = bindShortLastWord(
+        last.replace(/(?<=[^\s\u2060])\)/g, WORD_JOINER + ')'),
+      );
       // Unchanged runs keep their identity, so callers can tell.
       if (bound !== last) return [...children.slice(0, index), bound];
     }

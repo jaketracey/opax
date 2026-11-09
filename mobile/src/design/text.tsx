@@ -13,15 +13,14 @@ import {
   type TextProps,
 } from 'react-native';
 import { useBoldText, useHighTextContrast } from './accessibility';
-import { useTextProbe } from './text-probe';
+import { lightHighContrast, paletteFor } from './palette';
 import { bindRecordTitle, recordTitleRoles } from './record-title';
+import { useTextProbe } from './text-probe';
 import type { ProbeLine } from './text-probe.types';
-import { lightHighContrast } from './palette';
 import {
   boldStep,
   colors,
   contentSizeCategory,
-  light,
   textStyles,
   type Role,
   type TextVariant,
@@ -45,15 +44,13 @@ export type TextTone =
       | 'billsInk'
     >
   | 'link';
-/** @deprecated Legacy callers render as navy. Use link. */
-type LegacyTextTone = 'bronzeInk';
 export interface OpaxTextProps extends TextProps {
   variant?: TextVariant;
   /**
    * Override the role's colour. `inkFaint` is for paper and raised surfaces
    * only; on sunken surfaces and tags use `inkSoft`.
    */
-  tone?: TextTone | LegacyTextTone;
+  tone?: TextTone;
   /**
    * Never break a word across lines. React Native has no hyphenation on iOS,
    * so at large text sizes this text steps its own scale down, only as far as
@@ -63,10 +60,11 @@ export interface OpaxTextProps extends TextProps {
   wordSafe?: boolean;
   /**
    * Tabular figures, so digits line up in columns and counts do not jitter:
-   * `strong` with `tabular` is an inline figure, `control` with `tabular` a
-   * countdown. `display` is always tabular.
+   * `strong` with `tabular` is an inline figure. `figure` and `tileFigure` are always tabular.
    */
   tabular?: boolean;
+  /** Code citation formats keep the body role and its scaling in a fixed-width face. */
+  monospace?: boolean;
   /**
    * Native drawing check enabled in e2e. Production resolves a no-op module
    * and excludes the diagnostic implementation and its prop factory.
@@ -79,8 +77,10 @@ export interface OpaxTextProps extends TextProps {
  * contrast text takes the same stronger roles (`lightHighContrast`).
  */
 export function roleColour(tone: Role | 'link', strong: boolean) {
-  const role = tone === 'link' || tone === 'bronzeInk' ? 'navy' : tone;
-  return strong ? (lightHighContrast[role] ?? light[role]) : colors[role];
+  const role = tone === 'link' ? 'navy' : tone;
+  return strong
+    ? (lightHighContrast[role] ?? paletteFor('light')[role])
+    : colors[role];
 }
 
 /**
@@ -317,6 +317,7 @@ export function Text({
   style,
   wordSafe = false,
   tabular: tabularProp = false,
+  monospace = false,
   onTextLayout,
   onLayout,
   ...given
@@ -532,7 +533,7 @@ export function Text({
             }
       }
       allowFontScaling
-      maxFontSizeMultiplier={0}
+      maxFontSizeMultiplier={given.maxFontSizeMultiplier ?? 0}
       dynamicTypeRamp={role.dynamicTypeRamp}
       {...(Platform.OS === 'ios' && titleRole
         ? { lineBreakStrategyIOS: 'push-out' }

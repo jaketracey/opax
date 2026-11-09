@@ -1,6 +1,8 @@
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { ApiError } from '../../api/errors';
 import { Button, SegmentedPicker } from '../../design/controls';
 import {
   formatDate,
@@ -12,7 +14,6 @@ import { LinkRow, MoneyRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
-import { ApiError } from '../../api/errors';
 import {
   agencyRoute,
   grantProgramRoute,
@@ -24,24 +25,24 @@ import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { programRecipients, type Program as ProgramData } from './data';
-import { money } from './runtime';
-import { moneyItemHref, organisationHref } from './routes';
-import { SEAT_CAVEAT, SEAT_RULE } from './SeatGrants';
 import {
-  ListCaption,
-  MoneyList,
-  MoneyStatus,
   askAbout,
   counted,
   fy,
   fyRange,
+  ListCaption,
   matches,
   moneyBar,
   moneyCitation,
+  MoneyList,
+  MoneyStatus,
   readableDates,
   recordSource,
   useMoneySearch,
 } from './parts';
+import { moneyItemHref, organisationHref } from './routes';
+import { money } from './runtime';
+import { SEAT_CAVEAT, SEAT_RULE } from './SeatGrants';
 
 const lower = (v: string) => v.toLocaleLowerCase('en-AU');
 
@@ -218,7 +219,7 @@ export default function Program() {
     jur === 'qld' ? 'Queensland grants' : 'Commonwealth grants';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerSearchBarOptions: program ? search.options : undefined,
@@ -286,51 +287,48 @@ export default function Program() {
                       seatFigure?.line
                         ? seatFigure.caveat
                         : program.listed < program.available
-                          ? `${program.listed.toLocaleString('en-AU')} of the ${program.available.toLocaleString('en-AU')} grants are listed below.`
+                          ? `${program.listed.toLocaleString('en-AU')} of the ${counted(program.available, 'grant')} ${program.listed === 1 ? 'is' : 'are'} listed below.`
                           : undefined
                     }
-                    // Spread: opax/transport reads a plain `source` prop as an image.
-                    {...{
-                      source: {
-                        asOf: program.asOf,
-                        citation: [register],
-                        savedAt: saved.savedAt,
-                        state: saved.state,
-                        originals: [
-                          ...(data.index.meta.sourceUrl
-                            ? [
-                                {
-                                  label: register.label,
-                                  url: data.index.meta.sourceUrl,
-                                },
-                              ]
-                            : []),
-                          ...(note?.audits ?? []).map((a) => ({
-                            label: a.title,
-                            url: a.url,
-                          })),
-                          ...(note?.sources ?? []).map((s) => ({
-                            label: s.title,
-                            url: s.url,
-                          })),
-                        ],
-                        notes: [
-                          seat
-                            ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
-                            : null,
-                          seat ? SEAT_RULE : null,
-                          note?.summary,
-                          ...(note?.audits ?? []).map(
-                            (a) => `${a.title}: ${a.finding}`,
-                          ),
-                          note && data.notes
-                            ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
-                            : null,
-                          ...saved.stateNotes,
-                        ].map(readableDates),
-                        licence: data.index.meta.licence,
-                        testID: 'program-source',
-                      },
+                    citation={{
+                      asOf: program.asOf,
+                      citation: [register],
+                      savedAt: saved.savedAt,
+                      state: saved.state,
+                      originals: [
+                        ...(data.index.meta.sourceUrl
+                          ? [
+                              {
+                                label: register.label,
+                                url: data.index.meta.sourceUrl,
+                              },
+                            ]
+                          : []),
+                        ...(note?.audits ?? []).map((a) => ({
+                          label: a.title,
+                          url: a.url,
+                        })),
+                        ...(note?.sources ?? []).map((s) => ({
+                          label: s.title,
+                          url: s.url,
+                        })),
+                      ],
+                      notes: [
+                        seat
+                          ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
+                          : null,
+                        seat ? SEAT_RULE : null,
+                        note?.summary,
+                        ...(note?.audits ?? []).map(
+                          (a) => `${a.title}: ${a.finding}`,
+                        ),
+                        note && data.notes
+                          ? `Program notes by OPAX, as at ${formatDate(data.notes.asOf)}.`
+                          : null,
+                        ...saved.stateNotes,
+                      ].map(readableDates),
+                      licence: data.index.meta.licence,
+                      testID: 'program-source',
                     }}
                     testID="program-total"
                   />

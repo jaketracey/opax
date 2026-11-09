@@ -1,13 +1,13 @@
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
-import { Redirect, useLocalSearchParams } from 'expo-router';
 import { portraits } from '../../api/runtime';
-import { InsetGroup, LinkRow, Screen, Text } from '../../design/primitives';
 import { formatCount } from '../../design/format';
-import { chrome } from '../../design/tokens';
+import { InsetGroup, LinkRow, Screen, Text } from '../../design/primitives';
+import { colors } from '../../design/tokens';
 import { explore } from '../explore/runtime';
-import { code, statement } from './datasets';
 import { sourcesHrefs, useSourcesBase } from './base';
+import { code, statement } from './datasets';
 import { fontList } from './FontsList';
 import { useSources } from './loader';
 import { sourcesCopy as text } from './parts';
@@ -67,7 +67,7 @@ export function SourcesScreen() {
             sources.refresh();
             setRequest((n) => n + 1);
           }}
-          tintColor={chrome.tint}
+          tintColor={colors.navy}
         />
       }
     >

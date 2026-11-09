@@ -39,7 +39,7 @@ export function stageTitle(stage: string | null | undefined): string | null {
     .replace(/\s+/g, ' ')
     .trim();
   if (!s) return null;
-  const head = s.split(/\s+[–—-]\s+/)[0]!;
+  const head = s.split(/\s+[–\u2014-]\s+/)[0]!;
   return (
     TITLE_CASE[head.toLocaleLowerCase('en-AU')] ??
     s[0]!.toUpperCase() + s.slice(1)
@@ -100,7 +100,7 @@ export function divisionQuestion(
     short_title: bill.short_title ?? null,
   };
   let text = billStripTitle(repairQuestion(question), names);
-  const kind = /^[A-Z][A-Za-z ]{0,40}?\s+[-–—]\s+/.exec(text);
+  const kind = /^[A-Z][A-Za-z ]{0,40}?\s+[-–\u2014]\s+/.exec(text);
   if (kind) {
     const rest = text.slice(kind[0].length).trim();
     const stripped = billStripTitle(rest, names);
@@ -114,7 +114,7 @@ export function divisionQuestion(
   ) {
     const rest = text
       .slice(s.length)
-      .replace(/^\s*[-–—:]\s*/, '')
+      .replace(/^\s*[-–\u2014:]\s*/, '')
       .trim();
     if (rest) text = rest;
   }

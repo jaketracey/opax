@@ -1,3 +1,6 @@
+import { Text as NativeText } from 'react-native';
+import { SourceLine } from '../src/design/primitives';
+import { CatalogState } from '../src/features/CatalogState';
 // Design pass 5, lane A (docs/design/review-2026-10/pass5-app-critique.md).
 // P2-10: division history titles each row by its stage, with its outcome as
 // a status and the count beside it, under one line per run of a bill's
@@ -5,28 +8,19 @@
 // people directory's ⓘ, saved-copy date and as-at line are one SourceLine.
 // P2-21: on iPad the directory opens its first row. The catalog
 // states say a saved copy once.
+import { router } from 'expo-router';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Text as NativeText } from 'react-native';
-import { router } from 'expo-router';
+import DirectoryScreen from '../src/features/directories/DirectoryScreen';
 import {
   divisionLabel,
   historySections,
 } from '../src/features/directories/DivisionHistory';
-import DirectoryScreen from '../src/features/directories/DirectoryScreen';
 import {
   loadDirectory,
   type DirectoryRecord,
 } from '../src/features/directories/data';
 import type { DivisionRow } from '../src/features/directories/model';
-import { CatalogState } from '../src/features/CatalogState';
-import { RecordStatus, savedSentence } from '../src/features/RecordStatus';
-import {
-  AsAtLine,
-  InfoButton,
-  SourceLine,
-  StaleNotice,
-} from '../src/design/primitives';
 
 const mockParams: { kind: string; open?: string } = { kind: 'person' };
 jest.mock('expo-router', () => {
@@ -173,25 +167,6 @@ async function directory(kind: string) {
   return renderer;
 }
 
-test('the directory: one source line with the notes, each source dated, a saved copy as its state', async () => {
-  setPad(false);
-  const renderer = await directory('party');
-  expect(renderer.root.findAllByType(InfoButton)).toHaveLength(0);
-  expect(renderer.root.findAllByType(StaleNotice)).toHaveLength(0);
-  expect(renderer.root.findAllByType(AsAtLine)).toHaveLength(0);
-  const line = renderer.root.findByType(SourceLine);
-  expect(line.props.testID).toBe('directory-source');
-  expect(line.props.citation).toEqual([
-    { label: 'OPAX parliamentary roster', asOf: '2026-09-04' },
-    { label: 'Party speech totals', asOf: '2026-10-09' },
-  ]);
-  expect(line.props.savedAt).toBe(record.savedAt);
-  expect(line.props.state).toBe('saved');
-  expect(line.props.notes.join(' ')).toMatch(/Receipts are per commission/);
-  expect(line.props.notes.join(' ')).toMatch(/could not be loaded/);
-  await act(async () => renderer.unmount());
-});
-
 test('iPad opens the first row in landscape and portrait; a cleared selection stays cleared', async () => {
   setPad(true);
   delete mockParams.open;
@@ -216,43 +191,20 @@ test('iPad opens the first row in landscape and portrait; a cleared selection st
   setPad(false);
 });
 
-const words = (renderer: TestRenderer.ReactTestRenderer) =>
-  renderer.root
-    .findAllByType(NativeText)
-    .map((n) => [n.props.children].flat(3).join(''))
-    .join(' ');
-
-test('a whole-screen saved copy says its reason and date in one sentence', () => {
-  expect(savedSentence('unavailable', Date.UTC(2026, 9, 3))).toBe(
-    'The latest records could not be loaded. Showing the saved copy. Saved 3 October 2026. It may be out of date.',
-  );
-  let renderer!: TestRenderer.ReactTestRenderer;
-  act(() => {
-    renderer = TestRenderer.create(
-      <RecordStatus
-        record={{
-          stale: true,
-          staleReason: 'unreadable',
-          savedAt: Date.UTC(2026, 9, 3),
-        }}
-        error={null}
-        refreshing={false}
-        refresh={() => {}}
-        retry={() => {}}
-        label="Loading"
-        testID="record"
-      />,
-    );
-  });
-  expect(renderer.root.findAllByType(StaleNotice)).toHaveLength(0);
-  const said = renderer.root.findAll(
-    (n) => n.props.testID === 'record-saved-copy' && typeof n.type !== 'string',
-  );
-  expect(said.length).toBeGreaterThan(0);
-  expect(words(renderer)).toMatch(
-    /could not be read\. Showing the saved copy\. Saved 3 October 2026/,
-  );
-  act(() => renderer.unmount());
+test('the directory: one source line with the notes, each source dated, a saved copy as its state', async () => {
+  setPad(false);
+  const renderer = await directory('party');
+  const line = renderer.root.findByType(SourceLine);
+  expect(line.props.testID).toBe('directory-source');
+  expect(line.props.citation).toEqual([
+    { label: 'OPAX parliamentary roster', asOf: '2026-09-04' },
+    { label: 'Party speech totals', asOf: '2026-10-09' },
+  ]);
+  expect(line.props.savedAt).toBe(record.savedAt);
+  expect(line.props.state).toBe('saved');
+  expect(line.props.notes.join(' ')).toMatch(/Receipts are per commission/);
+  expect(line.props.notes.join(' ')).toMatch(/could not be loaded/);
+  await act(async () => renderer.unmount());
 });
 
 test('a catalog block dates its saved copy in its source line', () => {
@@ -280,8 +232,6 @@ test('a catalog block dates its saved copy in its source line', () => {
       </CatalogState>,
     );
   });
-  expect(renderer.root.findAllByType(StaleNotice)).toHaveLength(0);
-  expect(renderer.root.findAllByType(AsAtLine)).toHaveLength(0);
   const line = renderer.root.findByType(SourceLine);
   expect(line.props).toMatchObject({
     testID: 'block-as-at',
@@ -291,3 +241,9 @@ test('a catalog block dates its saved copy in its source line', () => {
   expect(words(renderer)).toContain('Saved 3 Oct 2026');
   act(() => renderer.unmount());
 });
+
+const words = (renderer: TestRenderer.ReactTestRenderer) =>
+  renderer.root
+    .findAllByType(NativeText)
+    .map((n) => [n.props.children].flat(3).join(''))
+    .join(' ');

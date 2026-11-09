@@ -1,17 +1,29 @@
 import { TwoSlotStore } from '../../storage/two-slot';
 import { decodeChoice, type SeatChoice } from './model';
-const store = new TwoSlotStore(
+
+type SavedChoice = { choice: SeatChoice | null };
+const store = new TwoSlotStore<SavedChoice>(
   ['opax-seat-v1.json', 'opax-seat-v1.b.json'],
-  decodeChoice,
-  (choice) => choice,
+  (raw) => {
+    if (
+      raw &&
+      typeof raw === 'object' &&
+      (raw as { version?: unknown }).version === 1 &&
+      (raw as { forgotten?: unknown }).forgotten === true
+    )
+      return { choice: null };
+    const choice = decodeChoice(raw);
+    return choice ? { choice } : null;
+  },
+  ({ choice }) => choice ?? { version: 1, forgotten: true },
 );
-export function loadChoice(): Promise<SeatChoice | null> {
-  return store.read();
+export async function loadChoice(): Promise<SeatChoice | null> {
+  return (await store.read())?.choice ?? null;
 }
-const listeners = new Set<(choice: SeatChoice) => void>();
-/** Fired after a complete save only. Disk format and reads stay unchanged. */
+const listeners = new Set<(choice: SeatChoice | null) => void>();
+/** Fired only after the complete save, including a persisted forget. */
 export function subscribeChoice(
-  listener: (choice: SeatChoice) => void,
+  listener: (choice: SeatChoice | null) => void,
 ): () => void {
   listeners.add(listener);
   return () => {
@@ -19,6 +31,10 @@ export function subscribeChoice(
   };
 }
 export async function saveChoice(choice: SeatChoice): Promise<void> {
-  await store.save(choice);
+  await store.save({ choice });
   listeners.forEach((listener) => listener(choice));
+}
+export async function forgetChoice(): Promise<void> {
+  await store.save({ choice: null });
+  listeners.forEach((listener) => listener(null));
 }

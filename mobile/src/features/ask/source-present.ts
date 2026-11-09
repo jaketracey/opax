@@ -56,7 +56,7 @@ export function sourceTitle(s: Source): string {
     ? subject
         .replace(
           new RegExp(
-            `^${s.speaker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[—–-]\\s*`,
+            `^${s.speaker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[\u2014–-]\\s*`,
           ),
           '',
         )

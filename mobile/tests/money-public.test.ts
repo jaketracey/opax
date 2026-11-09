@@ -1,23 +1,23 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { decodeDiscovery } from '../src/api/catalog-decoders';
+import type { ApiClient, RecordResult } from '../src/api/client';
+import { assertAllowedPath } from '../src/api/policy';
+import { formatMoneyCompact } from '../src/design/format';
+import { MoneyCatalogs, combine } from '../src/features/money-public/catalog';
 import * as d from '../src/features/money-public/data';
+import { publicSignal } from '../src/features/money-public/discovery';
 import {
+  isOrganisation,
   publicRecipient,
   unnamedRecipient,
-  isOrganisation,
 } from '../src/features/money-public/privacy';
-import { publicSignal } from '../src/features/money-public/discovery';
-import { MoneyCatalogs, combine } from '../src/features/money-public/catalog';
-import { fromWebPath } from '../src/navigation/routes';
 import {
   moneyFromWebPath,
   moneyItemHref,
   organisationHref,
 } from '../src/features/money-public/routes';
-import { assertAllowedPath } from '../src/api/policy';
-import { decodeDiscovery } from '../src/api/catalog-decoders';
-import { formatMoneyCompact } from '../src/design/format';
-import type { ApiClient, RecordResult } from '../src/api/client';
+import { fromWebPath } from '../src/navigation/routes';
 const publicRoot = resolve(__dirname, '../../portal/public');
 const raw = (path: string) =>
   JSON.parse(readFileSync(resolve(publicRoot, path.slice(1)), 'utf8'));
@@ -329,7 +329,6 @@ describe('route and transport boundaries', () => {
   test.each([
     '/api/ask',
     '/api/search',
-    '/grants/federal/shard-00.json',
     '/grants/vic/programs/a.json',
     '/grants/federal/programs/../secret.json',
     '/agencies/a-f.json',

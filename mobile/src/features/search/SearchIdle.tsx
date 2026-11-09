@@ -6,13 +6,14 @@ import {
   Text,
   type SFSymbol,
 } from '../../design/primitives';
+import { symbols } from '../../design/symbols';
 import { colors, rhythm } from '../../design/tokens';
-import { directoryRoute } from '../../navigation/routes/people';
 import { divisionHistoryRoute } from '../../navigation/routes/bills';
+import { directoryRoute } from '../../navigation/routes/people';
 import { publicMoneyRoute } from '../../navigation/routes/public-money';
 import { topicsRoute } from '../../navigation/routes/search';
+import { recentSearches, useRecentSearches, type RecentSearch } from './recent';
 import { scopeLabel, type Scope } from './scopes';
-import { useRecentSearches, recentSearches, type RecentSearch } from './recent';
 
 type Browse = {
   title: string;
@@ -54,8 +55,7 @@ export const browseRows: readonly Browse[] = [
   },
   {
     title: 'Public money',
-    // design/symbols.ts has no australiandollarsign.circle yet (Follow-up).
-    symbol: 'dollarsign.circle',
+    symbol: symbols.money,
     href: publicMoneyRoute,
     testID: 'search-browse-money',
   },

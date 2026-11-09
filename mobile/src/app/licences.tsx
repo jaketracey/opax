@@ -1,11 +1,11 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../navigation/preview';
 import { SourcesScreen } from '../features/sources/SourcesScreen';
 import { closeSheetItem, headerItems } from '../navigation/chrome';
 
 export default function LicencesSheet() {
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Sources and licences',
           presentation: 'modal',

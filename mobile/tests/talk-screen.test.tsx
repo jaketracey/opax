@@ -21,6 +21,7 @@ jest.mock('../src/design/useHeaderBottom', () => ({
   useHeaderBottom: () => 0,
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
   Stack: { Screen: () => null },
   useFocusEffect: jest.fn(),

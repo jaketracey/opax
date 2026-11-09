@@ -1,34 +1,34 @@
-import { act } from 'react';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { MoneyCatalogs } from '../src/features/money-public/catalog';
+import { act } from 'react';
+import { Animated, FlatList } from 'react-native';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import type { ApiClient, RecordResult } from '../src/api/client';
-import { money } from '../src/features/money-public/runtime';
-import { ChoiceChips, Field, StepButtons } from '../src/design/primitives';
+import { useReduceMotion } from '../src/design/accessibility';
 import { PopUpButton, SegmentedPicker } from '../src/design/controls';
+import { ChoiceChips, Field, StepButtons } from '../src/design/primitives';
 import { FigureBlock } from '../src/design/record';
 import { MoneyRow } from '../src/design/rows';
 import { SourceLine } from '../src/design/source';
+import Agencies from '../src/features/money-public/Agencies';
+import Allocation, { inState } from '../src/features/money-public/Allocation';
+import { MoneyCatalogs } from '../src/features/money-public/catalog';
+import Connections, {
+  CONNECTIONS_CITATION,
+} from '../src/features/money-public/Connections';
+import { decodeAllocation } from '../src/features/money-public/data';
 import Grants from '../src/features/money-public/Grants';
 import Largest, {
   MONTH_FADE_MS,
   monthName,
   shiftMonth,
 } from '../src/features/money-public/Largest';
-import { Animated, FlatList } from 'react-native';
-import { useReduceMotion } from '../src/design/accessibility';
-import Agencies from '../src/features/money-public/Agencies';
-import Allocation, { inState } from '../src/features/money-public/Allocation';
-import Connections, {
-  CONNECTIONS_CITATION,
-} from '../src/features/money-public/Connections';
 import { loadMoneyItem } from '../src/features/money-public/MoneyItem';
 import {
   moneyCitation,
   readableDates,
 } from '../src/features/money-public/parts';
-import { decodeAllocation } from '../src/features/money-public/data';
+import { money } from '../src/features/money-public/runtime';
 
 // Design programme pass 5, lane C, as the Apple-design programme redrew it
 // (specs/money.md 1.2 to 1.5, 2.2 to 2.12): short publisher names (P2-5),
@@ -165,7 +165,7 @@ describe('P2-5: short publisher names', () => {
   });
   test('agencies, programs and places, and community funding cite their publishers', async () => {
     let r = await render(Agencies);
-    expect(figure(r.root, 'agencies-total').props.source.citation).toEqual([
+    expect(figure(r.root, 'agencies-total').props.citation.citation).toEqual([
       { label: 'AusTender', title: 'AusTender, Department of Finance' },
     ]);
     await act(async () => r.unmount());
@@ -183,9 +183,9 @@ describe('P2-5: short publisher names', () => {
     await act(async () => r.unmount());
 
     r = await render(Allocation);
-    expect(figure(r.root, 'allocation-figure').props.source.citation).toEqual([
-      expect.objectContaining({ label: 'GrantConnect' }),
-    ]);
+    expect(figure(r.root, 'allocation-figure').props.citation.citation).toEqual(
+      [expect.objectContaining({ label: 'GrantConnect' })],
+    );
     await act(async () => r.unmount());
   });
   test('a contract’s page names its register short, with its record ID', async () => {
@@ -333,7 +333,7 @@ describe('P3-12: months by name and dates in words', () => {
     mockParams.jur = 'federal';
     const r = await render(Grants);
     const notes = (
-      figure(r.root, 'grants-total').props.source.notes as unknown[]
+      figure(r.root, 'grants-total').props.citation.notes as unknown[]
     ).filter((n): n is string => typeof n === 'string');
     expect(notes.join('\n')).not.toMatch(/\d{4}-\d{2}-\d{2}/);
     await act(async () => r.unmount());

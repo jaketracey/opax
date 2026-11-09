@@ -1,4 +1,5 @@
-import { Stack, router } from 'expo-router';
+import { router } from 'expo-router';
+import { RouteOptions } from '../navigation/preview';
 import { StyleSheet, View } from 'react-native';
 import { ContentUnavailable } from '../design/states';
 import { colors } from '../design/tokens';
@@ -14,7 +15,7 @@ export default function NotFound() {
   };
   return (
     <View style={styles.screen} testID="not-found">
-      <Stack.Screen options={{ title: 'Page not found', headerShown: true }} />
+      <RouteOptions options={{ title: 'Page not found', headerShown: true }} />
       <ContentUnavailable
         symbol="link"
         title="This page isn't in the app"

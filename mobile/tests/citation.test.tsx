@@ -16,6 +16,7 @@ import { presentSheet } from '../src/navigation/sheets';
 import type { Answer, Source, Turn } from '../src/features/ask/model';
 
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), back: jest.fn() },
   useSegments: () => [],
 }));

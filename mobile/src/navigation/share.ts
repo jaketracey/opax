@@ -1,11 +1,11 @@
-import { Alert } from 'react-native';
 import type { NativeStackHeaderItem } from 'expo-router';
+import { Alert } from 'react-native';
 import { OpaxShare } from '../../modules/opax-share';
 import { isE2E, webOrigin } from '../design/environment';
 import { haptic } from '../design/haptics';
-import { chrome } from '../design/tokens';
-import { canonicalUrl } from './external';
+import { currentChromeColours } from '../design/tokens';
 import type { AskOptions } from '../features/ask/model';
+import { canonicalUrl } from './external';
 
 export const canShare = isE2E || OpaxShare !== null;
 
@@ -17,6 +17,8 @@ export interface ShareTarget {
   title: string;
   /** A section anchor, only when shared from that section: "person-pay". */
   anchor?: string;
+  /** A sentence supplied by a quiz result, shared beside its canonical link. */
+  text?: string;
 }
 
 /**
@@ -29,6 +31,7 @@ export async function shareRecord({
   title,
   anchor,
   question,
+  text,
 }: ShareTarget): Promise<void> {
   const url = question
     ? questionShareURL(question.text, question.options)
@@ -39,7 +42,7 @@ export async function shareRecord({
     return;
   }
   if (!OpaxShare) return;
-  await OpaxShare.share({ url, title }).catch(() =>
+  await OpaxShare.share({ url, title, ...(text ? { text } : {}) }).catch(() =>
     Alert.alert("Couldn't share this link"),
   );
 }
@@ -67,7 +70,7 @@ export function shareHeaderItem(target: ShareTarget): NativeStackHeaderItem {
     type: 'button',
     label: 'Share',
     accessibilityLabel: `Share ${target.title}`,
-    tintColor: chrome.tint,
+    tintColor: currentChromeColours().tint,
     icon: { type: 'sfSymbol', name: 'square.and.arrow.up' },
     onPress: () => void shareRecord(target),
   };

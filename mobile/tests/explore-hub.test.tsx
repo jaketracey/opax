@@ -1,23 +1,19 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
+import { router } from 'expo-router';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
 import { Platform } from 'react-native';
-import { router } from 'expo-router';
+import TestRenderer from 'react-test-renderer';
+import { apiClient } from '../src/api/runtime';
 import ExploreHub, { tools } from '../src/features/explore/Hub';
-import {
-  exploreMenu,
-  ExploreChrome,
-  ExploreHeader,
-} from '../src/features/explore/parts';
+import { ExploreChrome, exploreMenu } from '../src/features/explore/parts';
 import { quizSession } from '../src/features/explore/quiz-session';
 import { frontPageDeck, quizRounds } from '../src/features/explore/quiz/data';
-import { exploreToolTitle } from '../src/navigation/stack/explore';
-import { apiClient } from '../src/api/runtime';
-import { hubInStack, exploreWebPath } from '../src/navigation/routes/explore';
-import { copyRecordLink, shareRecord } from '../src/navigation/share';
 import { openOnWeb } from '../src/navigation/external';
+import { exploreWebPath, hubInStack } from '../src/navigation/routes/explore';
+import { copyRecordLink, shareRecord } from '../src/navigation/share';
+import { exploreToolTitle } from '../src/navigation/stack/explore';
 
 let mockState: { routes: { name: string }[] } = { routes: [] };
 jest.mock('expo-router', () => {
@@ -197,19 +193,6 @@ test('a sort adds a Sort by submenu first, above a divider', () => {
   ]);
   (sortBy.items[1] as { onPress: () => void }).onPress();
   expect(onChange).toHaveBeenCalledWith('az');
-});
-
-test('the deprecated ExploreHeader is the same chrome with a fixed title', () => {
-  const renderer = render(<ExploreHeader title="Time machine" game="tm" />);
-  const options = renderer.root.findByType('StackScreen' as never).props
-    .options;
-  expect(options.title).toBe('Time machine');
-  expect(
-    options
-      .unstable_headerRightItems()
-      .map((item: { label: string }) => item.label),
-  ).toEqual(['Share', 'More']);
-  act(() => renderer.unmount());
 });
 
 test('the quiz stack title says "Today\'s question" only for a question in the front-page deck', () => {

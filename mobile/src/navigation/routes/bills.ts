@@ -14,6 +14,7 @@ export const billRoute = (
 export const billListRoute = (
   filters: {
     scope?: string;
+    year?: string;
     sort?: string;
     q?: string;
     /** '1' puts the cursor in the search field. */

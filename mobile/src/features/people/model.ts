@@ -1,3 +1,5 @@
+import { serverPassage } from '../../api/passage-text';
+import type { PersonProfile } from '../../api/person-identity';
 import {
   array,
   boolean,
@@ -13,12 +15,10 @@ import {
   text,
   url,
 } from '../../api/validation';
-import { serverPassage } from '../../api/passage-text';
-import type { PersonProfile } from '../../api/person-identity';
-import type { ProfileView } from '../your-mp/model';
-import type { SourceCitation } from '../../design/source';
-import { chamberName, jurisdictionName } from '../../design/parliament';
 import { formatDate, formatYearRange } from '../../design/format';
+import { chamberName, jurisdictionName } from '../../design/parliament';
+import type { SourceCitation } from '../../design/source';
+import type { ProfileView } from '../your-mp/model';
 
 const topic = shape({
   slug: nonempty,
@@ -246,7 +246,7 @@ export function displayedRecordTitle(row: RecordRow) {
     value.trim().replace(/\s+/g, ' ').toLowerCase();
   const parts = (row.title_subject || row.title || '')
     .trim()
-    .split(/(\s+—\s+)/);
+    .split(/(\s+\u2014\s+)/);
   if (row.speaker && key(parts[0] ?? '') === key(row.speaker))
     parts.splice(0, 2);
   if (row.date) {
@@ -283,12 +283,12 @@ export function cleanPassage(text: string | undefined) {
   s = s.replace(/^(?![^\]]*\.\s)[^\[\]]{0,300}\]\s*/, '');
   // banner: honorific + name, one or more parentheticals, then a colon or dash
   s = s.replace(
-    /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*){0,4}\s*(?:\([^)]{0,80}\)\s*)+(?:[:—–-]|\.-)\s*/i,
+    /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*){0,4}\s*(?:\([^)]{0,80}\)\s*)+(?:[:\u2014–-]|\.-)\s*/i,
     '',
   );
   // banner: honorific + ALL-CAPS name, then a colon or dash
   s = s.replace(
-    /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|senator|madam)\s+[A-Z][A-Z'’.\-]+(?:\s+[A-Z][A-Za-z'’.\-]+){0,4}\s*[:—–-]\s*/,
+    /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|senator|madam)\s+[A-Z][A-Z'’.\-]+(?:\s+[A-Z][A-Za-z'’.\-]+){0,4}\s*[:\u2014–-]\s*/,
     '',
   );
   // committee turn: "Ms Barrett : " (a short name, then a colon)
@@ -296,7 +296,7 @@ export function cleanPassage(text: string | undefined) {
     /^(?:mr|mrs|ms|miss|dr|prof\.?|senator|chair|the chair)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*)?\s*:\s+/i,
     '',
   );
-  s = s.replace(/^[:;,—–\-\s]+/, '');
+  s = s.replace(/^[:;,\u2014–\-\s]+/, '');
   return s;
 }
 

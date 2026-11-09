@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import { colors } from '../../design/tokens';
-import { askHeaderItems, glassBar } from '../chrome';
+import { askHeaderItems, glassBar, opaqueBar } from '../chrome';
 import { conversationsRoute } from '../routes/ask';
-import { screen, sheetOptions } from './screen';
+import { screen, screenInStack, sheetOptions } from './screen';
 
 /**
  * Ask's routes in the shared tab stack. The Ask root's bar items change with
@@ -12,6 +12,8 @@ import { screen, sheetOptions } from './screen';
 export function askScreens(segment = '', signedIn = false) {
   return [
     screen('ask', 'Ask', {
+      ...opaqueBar(colors.sunken),
+      contentStyle: { backgroundColor: colors.sunken },
       headerLargeTitleEnabled: segment === '(ask)',
       headerTransparent: segment === '(ask)' && glassBar(),
       ...askHeaderItems({
@@ -46,5 +48,6 @@ export function askScreens(segment = '', signedIn = false) {
 }
 /** Account › Ask: the settings page and its Conversations, pushed in Account. */
 export function askAccountScreens() {
+  const screen = screenInStack('Account');
   return [screen('ask', 'Ask'), screen('conversations', 'Conversations')];
 }

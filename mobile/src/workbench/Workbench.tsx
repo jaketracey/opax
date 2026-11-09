@@ -1,66 +1,59 @@
-import { phoneCopy } from '../design/phone-copy';
-import { voiceLinked } from '../voice/linked';
+import Constants from 'expo-constants';
+import { router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Alert, Image, Platform, StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
-import {
-  AsAtLine,
-  Button,
-  Divider,
-  EmptyState,
-  ErrorState,
-  FilterChip,
-  Field,
-  Figure,
-  Group,
-  Heading,
-  IconButton,
-  KeyValueList,
-  LeadCard,
-  LoadingState,
-  MoneyFigure,
-  OfflineBanner,
-  OpaxWebLink,
-  PartyLabel,
-  PersonRow,
-  Portrait,
-  RowList,
-  Screen,
-  Section,
-  SegmentedControl,
-  SourceLink,
-  StaleNotice,
-  StatRow,
-  SubSection,
-  Tag,
-  Text,
-  stateCopy,
-  useAccessibilitySize,
-  type Lead,
-  Composer,
-  MachineLabel,
-  StepButtons,
-} from '../design/primitives';
+import { OpaxShare } from '../../modules/opax-share';
+import { isE2E } from '../design/environment';
 import {
   formatMoney,
   formatMoneyCompact,
   formatPercent,
 } from '../design/format';
+import { phoneCopy } from '../design/phone-copy';
 import {
-  light,
-  deprecatedTextVariants,
+  Button,
+  Composer,
+  Divider,
+  EmptyState,
+  ErrorState,
+  Field,
+  FigureBlock,
+  FilterChip,
+  Group,
+  Heading,
+  IconButton,
+  InsetGroup,
+  LinkRow,
+  LoadingState,
+  MachinePill,
+  OfflineBanner,
+  PartyLabel,
+  PersonRow,
+  Portrait,
+  Screen,
+  Section,
+  SegmentedControl,
+  SourceLine,
+  StatStrip,
+  StepButtons,
+  Tag,
+  Text,
+  ValueRow,
+  stateCopy,
+  useAccessibilitySize,
+  type Lead,
+} from '../design/primitives';
+import {
+  colors,
   textStyles,
   type Role,
   type TextVariant,
 } from '../design/tokens';
-import { shareRecord } from '../navigation/share';
 import { leadEvidenceFor } from '../features/leads/model';
 import { canonicalUrl } from '../navigation/external';
-import { isE2E } from '../design/environment';
-import { OpaxShare } from '../../modules/opax-share';
-import Constants from 'expo-constants';
+import { shareRecord } from '../navigation/share';
+import { voiceLinked } from '../voice/linked';
 import { TalkOrbs } from './TalkOrbs';
-import { LocationProgress } from '../features/electorate-map/LocationSuggestion';
 
 // Searched for by the release bundle scan: it must never appear in production.
 export const WORKBENCH_MARKER = 'OPAX_DESIGN_WORKBENCH';
@@ -107,11 +100,9 @@ const westpac: Lead = {
   ],
 };
 
-const roles = Object.keys(light) as Role[];
+const roles = Object.keys(colors) as Role[];
 // The eleven current roles; the deprecated names draw as these.
-const variants = Object.keys(textStyles).filter(
-  (name) => !(name in deprecatedTextVariants),
-) as TextVariant[];
+const variants = Object.keys(textStyles) as TextVariant[];
 const notice = () =>
   Alert.alert(
     'Workbench',
@@ -138,7 +129,7 @@ function Block({
 }
 function Anchor({ id, children }: { id: string; children: string }) {
   return (
-    <Text variant="label" testID={`wb-${id}`}>
+    <Text variant="capsule" testID={`wb-${id}`}>
       {children}
     </Text>
   );
@@ -160,7 +151,7 @@ export default function Workbench() {
           Every design-system component and state, for review and screenshots.
           Development and e2e builds only.
         </Text>
-        <Text variant="fine" accessibilityElementsHidden>
+        <Text variant="footnote" accessibilityElementsHidden>
           {WORKBENCH_MARKER}
         </Text>
       </Group>
@@ -216,27 +207,29 @@ export default function Workbench() {
       </Block>
 
       <Block id="colour" title="Colour roles">
-        <RowList>
+        <InsetGroup>
           {roles.map((role) => (
             <View key={role} style={styles.swatchRow}>
-              <View style={[styles.swatch, { backgroundColor: light[role] }]} />
+              <View
+                style={[styles.swatch, { backgroundColor: colors[role] }]}
+              />
               <View style={stacked ? styles.grow : styles.swatchText}>
-                <Text variant="metadata" tone="ink" style={styles.grow}>
+                <Text variant="secondary" tone="ink" style={styles.grow}>
                   {role}
                 </Text>
-                <Text variant="metadata">{light[role]}</Text>
+                <Text variant="secondary">{role}</Text>
               </View>
             </View>
           ))}
-        </RowList>
+        </InsetGroup>
       </Block>
 
       <Block id="type" title="Type roles">
         {variants.map((variant) => (
           <View key={variant} style={styles.typeRow}>
-            <Text variant="fine">{variant}</Text>
+            <Text variant="footnote">{variant}</Text>
             <Text variant={variant}>
-              {variant === 'display'
+              {variant === 'figure'
                 ? formatMoney(622102)
                 : 'Anthony Albanese, Member for Grayndler'}
             </Text>
@@ -364,11 +357,11 @@ export default function Workbench() {
       </Block>
 
       <Block id="dividers" title="Dividers">
-        <Text variant="metadata">Default, between major sections</Text>
+        <Text variant="secondary">Default, between major sections</Text>
         <Divider />
-        <Text variant="metadata">Subtle, between rows and subheadings</Text>
+        <Text variant="secondary">Subtle, between rows and subheadings</Text>
         <Divider variant="subtle" />
-        <Text variant="metadata">Accent, intentional emphasis only</Text>
+        <Text variant="secondary">Accent, intentional emphasis only</Text>
         <Divider variant="accent" />
       </Block>
 
@@ -441,7 +434,7 @@ export default function Workbench() {
       </Block>
 
       <Block id="people" title="People rows">
-        <RowList>
+        <InsetGroup>
           <PersonRow
             name="Anthony Albanese"
             party="Labor"
@@ -485,7 +478,7 @@ export default function Workbench() {
             partyStatus="current"
             place="Senator for Queensland"
           />
-        </RowList>
+        </InsetGroup>
         <Anchor id="portraits">Portraits</Anchor>
         <View style={styles.inline}>
           <Portrait />
@@ -500,51 +493,54 @@ export default function Workbench() {
 
       <Block id="record" title="As-at lines and sources">
         <Group gap={12}>
-          <AsAtLine
+          <SourceLine
             asOf="2026-09-17"
             citation={['Remuneration Tribunal', 'Parliamentary Handbook']}
           />
-          <AsAtLine asOf="2026-09-29" citation="ParlInfo bill records" />
-          <AsAtLine
+          <SourceLine asOf="2026-09-29" citation="ParlInfo bill records" />
+          <SourceLine
             asOf="2026-09-04"
             citation="Registers of interests"
             savedAt="2026-10-03"
           />
-          <AsAtLine
-            votes={{
-              content_changed_at: '2026-10-03T03:41:07Z',
-              latest_division_date: '2026-09-25',
-              latest_division_date_by_jurisdiction: { federal: '2026-09-25' },
-              schema: 1,
-            }}
-            jurisdiction="federal"
+          <SourceLine
+            asOf="2026-10-03"
+            coverage="Divisions to 25 Sep 2026"
             citation="They Vote For You"
             licence="ODbL"
           />
-          <AsAtLine votes={null} citation="They Vote For You" licence="ODbL" />
+          <SourceLine asOf={null} citation="They Vote For You" licence="ODbL" />
         </Group>
         <Anchor id="sources">Source links</Anchor>
-        <SourceLink
+        <SourceLine
           citation="They Vote For You"
-          record="division, 19 Aug 2026"
-          url="https://theyvoteforyou.org.au/divisions/senate/2026-08-19/6"
-          kind="record"
+          originals={[
+            {
+              label: 'They Vote For You',
+              record: 'division, 19 Aug 2026',
+              url: 'https://theyvoteforyou.org.au/divisions/senate/2026-08-19/6',
+            },
+          ]}
         />
-        <SourceLink
+        <SourceLine
           citation="AusTender register"
-          record="record CN3407266"
-          url="https://www.tenders.gov.au/"
-          kind="register"
+          originals={[
+            {
+              label: 'AusTender register',
+              record: 'record CN3407266',
+              url: 'https://www.tenders.gov.au/',
+            },
+          ]}
         />
-        <OpaxWebLink
-          label="Speeches, topics and mentions"
-          path="/subject/person/anthony-albanese"
+        <LinkRow
+          title="Speeches, topics and mentions"
+          href="/person/anthony-albanese"
         />
       </Block>
 
       <Block id="figures" title="Figures">
-        <StatRow
-          stats={[
+        <StatStrip
+          tiles={[
             { value: '2,929', label: 'recorded divisions' },
             { value: '1,251', label: 'ayes' },
             { value: '1,678', label: 'noes' },
@@ -552,21 +548,28 @@ export default function Workbench() {
         />
         <Anchor id="money">Money</Anchor>
         <View style={styles.wrap}>
-          <MoneyFigure amount={4537500} label="Contract value · 6 Feb 2017" />
-          <MoneyFigure
-            amount={76984493}
-            compact
+          <FigureBlock
+            value={formatMoneyCompact(4537500)}
+            label="Contract value · 6 Feb 2017"
+            citation={{ asOf: '2026-10-03', citation: 'AusTender register' }}
+          />
+          <FigureBlock
+            value={formatMoneyCompact(76984493)}
             label="Recorded party receipts"
+            citation={{ asOf: '2026-10-03', citation: 'AusTender register' }}
           />
-          <MoneyFigure
-            amount={9102500}
-            compact
-            size="inline"
+          <FigureBlock
+            value={formatMoneyCompact(9102500)}
             label="Recorded contract value"
+            citation={{ asOf: '2026-10-03', citation: 'AusTender register' }}
           />
-          <Figure value={(1251 / 2929) * 100} format="percent" label="ayes" />
+          <FigureBlock
+            value={formatPercent((1251 / 2929) * 100)}
+            label="ayes"
+            citation={{ asOf: '2026-10-03', citation: 'They Vote For You' }}
+          />
         </View>
-        <Text variant="fine">
+        <Text variant="footnote">
           Compact forms: {formatMoneyCompact(76984493)},{' '}
           {formatMoneyCompact(4537500)}, {formatMoneyCompact(1803)}. Share:{' '}
           {formatPercent((1251 / 2929) * 100)}.
@@ -574,8 +577,8 @@ export default function Workbench() {
       </Block>
 
       <Block id="sections" title="Sections and lists">
-        <KeyValueList
-          items={[
+        <InsetGroup>
+          {[
             {
               label: 'Prime Minister, a year',
               value: formatMoney(622102),
@@ -583,25 +586,38 @@ export default function Workbench() {
             },
             { label: 'Base salary', value: formatMoney(239270) },
             { label: 'Loading', value: '160%' },
-          ]}
-        />
-        <AsAtLine
+          ].map((item) => (
+            <ValueRow key={item.label} {...item} />
+          ))}
+        </InsetGroup>
+        <SourceLine
           asOf="2026-09-17"
           citation={['Remuneration Tribunal', 'Parliamentary Handbook']}
         />
-        <SubSection title="Voted for">
+        <Group>
+          <Heading level={3}>Voted for</Heading>
           <Text>
             Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026 · 2026
           </Text>
-        </SubSection>
+        </Group>
       </Block>
 
       <Block id="machine" title="Machine-written label">
-        <MachineLabel
-          explanation="Written by a model from the explanatory memorandum; not the record."
+        <MachinePill
+          note={{
+            title: 'How this was written',
+            body: [
+              'Written by a model from the explanatory memorandum; not the record.',
+            ],
+          }}
           testID="wb-machine"
         />
-        <MachineLabel explanation="An automated summary written by a model; not the record." />
+        <MachinePill
+          note={{
+            title: 'How this was written',
+            body: ['An automated summary written by a model; not the record.'],
+          }}
+        />
       </Block>
 
       <Block id="steps" title="Previous and next">
@@ -633,8 +649,8 @@ export default function Workbench() {
       </Block>
 
       <Block id="progress" title="Location progress">
-        <LocationProgress done={9} total={150} />
-        <LocationProgress done={104} total={150} />
+        <Text>9 of 150</Text>
+        <Text>104 of 150</Text>
       </Block>
 
       <Block id="states" title="States">
@@ -652,15 +668,15 @@ export default function Workbench() {
         <Anchor id="offline">Offline and stale</Anchor>
         <OfflineBanner />
         <OfflineBanner cached={false} />
-        <StaleNotice savedAt="2026-10-03" />
-        <StaleNotice savedAt="2026-10-03" refreshing />
+        <SourceLine savedAt="2026-10-03" />
+        <SourceLine savedAt="2026-10-03" />
       </Block>
 
       <Block id="lead" title="Lead card">
-        <LeadCard
-          lead={westpac}
-          category="Companies in both"
-          asAt={{ asOf: '2026-09-21', citation: 'OPAX discovery export' }}
+        <FigureBlock
+          value={formatMoneyCompact(9102500)}
+          label={westpac.title}
+          citation={{ asOf: '2026-09-21', citation: 'AusTender register' }}
         />
       </Block>
 
@@ -690,7 +706,7 @@ export default function Workbench() {
           <TalkOrbs />
         </Block>
       )}
-      <Text variant="fine" testID="wb-end">
+      <Text variant="footnote" testID="wb-end">
         End of workbench
       </Text>
     </Screen>
@@ -699,7 +715,12 @@ export default function Workbench() {
 
 const styles = StyleSheet.create({
   markRow: { flexDirection: 'row', gap: 16, flexWrap: 'wrap' },
-  icon: { width: 120, height: 120, borderRadius: 26 },
+  icon: {
+    width: 120,
+    height: 120,
+    borderRadius: 26,
+    borderCurve: 'continuous',
+  },
   darkTile: { backgroundColor: '#000000' },
   swatchRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   swatch: {
@@ -707,7 +728,8 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: light.line,
+    borderColor: colors.dividerSubtle,
+    borderCurve: 'continuous',
   },
   grow: { flex: 1 },
   swatchText: { flex: 1, flexDirection: 'row', gap: 12 },

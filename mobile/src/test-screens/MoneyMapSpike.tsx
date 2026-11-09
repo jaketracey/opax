@@ -1,24 +1,24 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, View, type LayoutChangeEvent } from 'react-native';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { File, Paths } from 'expo-file-system';
 import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppState, View, type LayoutChangeEvent } from 'react-native';
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-import { apiClient } from '../api/runtime';
 import type { RecordResult } from '../api/client';
+import { apiClient } from '../api/runtime';
+import { useReduceMotion } from '../design/accessibility';
 import {
   Button,
-  Screen,
-  Text,
-  Heading,
-  AsAtLine,
   Group,
+  Heading,
+  Screen,
+  SourceLine,
+  Text,
 } from '../design/primitives';
-import { useReduceMotion } from '../design/accessibility';
 import { decodeMoneyGraph, type MoneyGraph } from '../features/money/data';
 import {
   NativeMoneyScene,
@@ -333,7 +333,7 @@ export default function MoneyMapSpike() {
     <Screen testID="money-spike-screen">
       <Heading level={2}>Native money map spike</Heading>
       <Text>Political donations &amp; public money map</Text>
-      <Text variant="fine">
+      <Text variant="footnote">
         Phase 1 · {record?.data.nodes.length ?? '…'} nodes and{' '}
         {record?.data.edges.length.toLocaleString('en-AU') ?? '…'} flows ·
         simulator measurements
@@ -369,10 +369,10 @@ export default function MoneyMapSpike() {
           </Text>
         )}
       </View>
-      <Text testID="money-spike-probe" variant="fine">
+      <Text testID="money-spike-probe" variant="footnote">
         {probe}
       </Text>
-      <Text testID="money-spike-metrics" variant="fine">
+      <Text testID="money-spike-metrics" variant="footnote">
         {summary}
       </Text>
       <Group>
@@ -425,14 +425,14 @@ export default function MoneyMapSpike() {
         </Group>
       ) : null}
       {record ? (
-        <AsAtLine
+        <SourceLine
           asOf={record.asOf}
           savedAt={record.savedAt}
           citation="AEC disclosure returns"
           licence="CC BY 4.0"
         />
       ) : null}
-      <Text variant="fine">
+      <Text variant="footnote">
         AEC disclosure data: donations under the disclosure threshold are not
         reported and cannot appear here, so totals are a floor, not a ceiling.
       </Text>

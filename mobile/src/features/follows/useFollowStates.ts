@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
+import { changesFor, currentKeys } from './changes';
 import {
   followState,
   needsFor,
@@ -9,19 +10,18 @@ import {
   type FollowState,
 } from './markers';
 import {
-  followResultKey,
   followKey,
+  followResultKey,
   loadFollowResult,
-  saveFollowResult,
   markSeen,
+  saveFollowResult,
   useFollows,
   type Follow,
   type StoredFollowResult,
 } from './store';
-import { changesFor, currentKeys } from './changes';
 
 /**
- * Takes the first baseline only. Legacy FollowToggle calls this on mount;
+ * Takes the first baseline only. FollowButton calls this on mount;
  * subsequent visits must use useSeenOnView, never clear changes on mount.
  */
 export async function markSeenNow(follow: Follow) {

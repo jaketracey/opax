@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'fs';
 import { extname, join, relative } from 'path';
 import type { ReactElement, ReactNode } from 'react';
 import { act } from 'react';
-import { Modal, Platform, StyleSheet, Text as NativeText } from 'react-native';
+import { Modal, Text as NativeText, Platform, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 
 // Pass 4F: Android follows the redesigned iPhone screens on its own chrome.
@@ -198,7 +198,7 @@ describe('Android tabs', () => {
       );
     expect(style(true)).toMatchObject({
       backgroundColor: colors.navyWash,
-      borderRadius: radii.pill,
+      borderRadius: radii.capsule,
       height: 32,
     });
     expect(style(false).backgroundColor).toBeUndefined();
@@ -373,7 +373,7 @@ describe('Android ⋯ menus', () => {
       '../src/design/tokens',
     );
     expect(flat(sheet.props.style)).toMatchObject({
-      borderTopLeftRadius: radii.md,
+      borderTopLeftRadius: radii.container,
       // The gesture inset plus the tight rhythm.
       paddingBottom: 16 + 8,
     });
@@ -425,36 +425,6 @@ describe('Android ⋯ menus', () => {
     act(() => pressable(renderer, 'android-menu-close').props.onPress());
     expect(renderer.root.findAllByType(Modal)).toHaveLength(0);
     expect(ask).not.toHaveBeenCalled();
-  });
-});
-
-describe('Android source sheets', () => {
-  const body = (os: 'android' | 'ios') => {
-    const { SheetBody } = jest.requireActual<
-      typeof import('../src/design/source')
-    >('../src/design/source');
-    return asPlatform(os, () =>
-      render(
-        <SheetBody title="Sources" onClose={jest.fn()} testID="sheet">
-          {null}
-        </SheetBody>,
-      ),
-    );
-  };
-  // The grab handle: a 36 x 5 pill.
-  const grabs = (renderer: TestRenderer.ReactTestRenderer) =>
-    renderer.root.findAll((n) => {
-      const style = flat(n.props.style) ?? {};
-      return (
-        typeof n.type === 'string' && style.width === 36 && style.height === 5
-      );
-    });
-
-  test('a full-screen Android sheet draws no grab handle; iPhone keeps it', () => {
-    expect(grabs(body('android'))).toHaveLength(0);
-    expect(grabs(body('ios'))).toHaveLength(1);
-    const done = pressable(body('android'), 'sheet-done');
-    expect(done.props.accessibilityLabel).toBe('Done');
   });
 });
 

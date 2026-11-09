@@ -1,9 +1,8 @@
 import {
-  light,
   dark,
-  partyColorsDark,
+  paletteFor,
   partyColors,
-  partyWashes,
+  partyColorsDark,
   type Palette,
   type Role,
 } from './palette';
@@ -60,7 +59,7 @@ const pair = (
   background: Role,
   kind: PairKind = 'text',
 ): ColourPair => ({
-  foreground: light[foreground],
+  foreground: paletteFor('light')[foreground],
   foregroundRole: foreground,
   background,
   kind,
@@ -79,11 +78,11 @@ export const componentPairs: ColourPair[] = [
   ...contrastRules.text
     .filter(({ fg }) => fg === 'onBand' || fg === 'onBandSoft')
     .map(({ fg, bg }) => pair(`${fg} on ${bg}`, 'rest', fg, bg)),
-  ...(['paper', 'raised', 'sunken', 'navyWash', 'bronzeWash'] as const).map(
-    (bg) => pair(`Link text on ${bg}`, 'rest', 'navy', bg),
+  ...(['paper', 'raised', 'sunken', 'navyWash'] as const).map((bg) =>
+    pair(`Link text on ${bg}`, 'rest', 'navy', bg),
   ),
   // Text roles on the surfaces screens use.
-  ...(['paper', 'raised', 'sunken', 'bronzeWash'] as const).map((bg) =>
+  ...(['paper', 'raised', 'sunken'] as const).map((bg) =>
     pair('Text (ink): titles, headings, values', 'rest', 'ink', bg),
   ),
   ...(['paper', 'raised', 'sunken'] as const).map((bg) =>
@@ -135,7 +134,7 @@ export const componentPairs: ColourPair[] = [
   pair(
     'Button disabled boundary',
     'disabled',
-    'lineStrong',
+    'lineControl',
     'paper',
     'non-text',
   ),
@@ -147,10 +146,10 @@ export const componentPairs: ColourPair[] = [
   pair('IconButton quiet icon', 'disabled', 'inkSoft', 'paper', 'non-text'),
   pair('IconButton default icon', 'disabled', 'inkSoft', 'sunken', 'non-text'),
 
-  // Tag: pressed keeps the label colour and adds an outline and underline.
-  pair('Tag label and hash', 'rest', 'bronzeInk', 'bronzeWash'),
-  pair('Tag label and hash', 'pressed', 'bronzeInk', 'bronzeWash'),
-  pair('Tag outline', 'pressed', 'bronzeInk', 'paper', 'non-text'),
+  // Tag: plain ink, or a navy link; a pressed link takes the row highlight.
+  pair('Tag label', 'rest', 'ink', 'navyWash'),
+  pair('Tag linked label', 'rest', 'navy', 'navyWash'),
+  pair('Tag linked label', 'pressed', 'navy', 'sunken'),
 
   // FilterChip.
   pair('FilterChip key', 'rest', 'inkSoft', 'navyWash'),
@@ -162,7 +161,7 @@ export const componentPairs: ColourPair[] = [
   pair('Segment label', 'rest', 'navy', 'raised'),
   pair('Segment label', 'pressed', 'navy', 'sunken'),
   pair('Segment label', 'selected', 'onNavy', 'navy'),
-  pair('Segmented boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  pair('Segmented boundary', 'rest', 'lineControl', 'paper', 'non-text'),
   // ChoiceChips.
   pair('Choice chip label', 'rest', 'navy', 'navyWash'),
   pair('Choice chip label', 'pressed', 'navy', 'sunken'),
@@ -172,7 +171,7 @@ export const componentPairs: ColourPair[] = [
   // Field.
   pair('Field value', 'rest', 'ink', 'raised'),
   pair('Field placeholder', 'rest', 'inkFaint', 'raised'),
-  pair('Field boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  pair('Field boundary', 'rest', 'lineControl', 'paper', 'non-text'),
   pair('Field boundary (2pt)', 'focused', 'navy', 'paper', 'non-text'),
   pair('Field boundary (2pt)', 'error', 'danger', 'paper', 'non-text'),
   pair('Field error text and icon', 'error', 'danger', 'paper'),
@@ -182,7 +181,7 @@ export const componentPairs: ColourPair[] = [
   // Composer: one raised surface, the send circle inline (primary colours).
   pair('Composer value', 'rest', 'ink', 'raised'),
   pair('Composer placeholder', 'rest', 'inkFaint', 'raised'),
-  pair('Composer boundary', 'rest', 'lineStrong', 'paper', 'non-text'),
+  pair('Composer boundary', 'rest', 'lineControl', 'paper', 'non-text'),
   pair('Composer boundary (2pt)', 'focused', 'navy', 'paper', 'non-text'),
   pair('Composer send circle', 'rest', 'navy', 'raised', 'non-text'),
   pair('Composer send arrow', 'rest', 'onNavy', 'navy'),
@@ -198,7 +197,6 @@ export const componentPairs: ColourPair[] = [
       ['moneyInk', 'moneyWash'],
       ['votesInk', 'votesWash'],
       ['interestsInk', 'interestsWash'],
-      ['bronzeInk', 'bronzeWash'],
     ] as const
   ).flatMap(([mark, wash]) => [
     pair('Split row title', 'selected', 'ink', wash),
@@ -212,29 +210,7 @@ export const componentPairs: ColourPair[] = [
     'navyWash',
   ),
 
-  // MachineWritten pill: the bills accent; pressed takes sunken.
-  pair('MachineWritten label and sparkle', 'rest', 'billsInk', 'billsWash'),
-  pair('MachineWritten label and sparkle', 'pressed', 'billsInk', 'sunken'),
-
-  // Location progress: a navy bar on its sunken track.
-  pair('Location progress bar', 'rest', 'navy', 'sunken', 'non-text'),
-  pair('Field boundary', 'disabled', 'lineStrong', 'paper', 'non-text'),
-
-  // SourceLink and OpaxWebLink.
-  pair(
-    'SourceLink and OpaxWebLink label and icon',
-    'rest',
-    'bronzeInk',
-    'paper',
-  ),
-  pair('OpaxWebLink cue', 'rest', 'inkSoft', 'paper'),
-  pair(
-    'SourceLink and OpaxWebLink label and icon',
-    'pressed',
-    'bronzeInk',
-    'sunken',
-  ),
-  pair('OpaxWebLink cue', 'pressed', 'inkSoft', 'sunken'),
+  pair('Field boundary', 'disabled', 'lineControl', 'paper', 'non-text'),
 
   // PersonRow: pressed is raised, so every party dot keeps 3:1.
   pair('PersonRow name', 'rest', 'ink', 'paper'),
@@ -244,7 +220,7 @@ export const componentPairs: ColourPair[] = [
 
   // States.
   pair('ErrorState icon', 'rest', 'danger', 'paper', 'non-text'),
-  pair('OfflineBanner text and icon', 'rest', 'ink', 'paper'),
+  pair('OfflineLine text and icon', 'rest', 'inkSoft', 'paper'),
 
   // Category accents (UI sweep): symbols, display figures and short labels
   // in each accent ink, on paper, raised and the accent's own wash; ink and
@@ -256,7 +232,6 @@ export const componentPairs: ColourPair[] = [
       ['interestsInk', 'interestsWash'],
       ['billsInk', 'billsWash'],
       ['navy', 'navyWash'],
-      ['bronzeInk', 'bronzeWash'],
     ] as const
   ).flatMap(([ink, wash]) => [
     pair(`Accent ${ink}: symbols, figures, labels`, 'rest', ink, 'paper'),
@@ -267,16 +242,11 @@ export const componentPairs: ColourPair[] = [
     pair(`Text (inkSoft) on ${wash}`, 'rest', 'inkSoft', wash),
   ]),
 
-  // Disclosure rows, LinkRow, InfoButton and ViewOriginal.
+  // Disclosure rows and LinkRow.
   pair('Disclosure and LinkRow label', 'rest', 'ink', 'paper'),
   pair('Disclosure and LinkRow label', 'pressed', 'ink', 'sunken'),
   pair('Disclosure value and chevron', 'rest', 'inkSoft', 'paper'),
   pair('Disclosure value and chevron', 'pressed', 'inkSoft', 'sunken'),
-  pair('InfoButton symbol', 'rest', 'navy', 'paper', 'non-text'),
-  pair('InfoButton symbol', 'pressed', 'navy', 'sunken', 'non-text'),
-  pair('ViewOriginal label and symbol', 'rest', 'bronzeInk', 'paper'),
-  pair('ViewOriginal label and symbol', 'pressed', 'bronzeInk', 'sunken'),
-  pair('Caption (Updated …)', 'rest', 'inkSoft', 'paper'),
 
   // States: the empty note on paper; the error note on its sunken panel,
   // with Try again (Button default) inside it.
@@ -285,32 +255,32 @@ export const componentPairs: ColourPair[] = [
   pair(
     'Button default boundary on the error panel',
     'rest',
-    'lineStrong',
+    'lineControl',
     'sunken',
     'non-text',
   ),
   pair('ErrorState symbol', 'rest', 'danger', 'sunken', 'non-text'),
 
-  // Pass 2B components (design review 5.2).
-  // StatusLabel: each tone's ink on its wash (statusTones).
-  pair('StatusLabel done', 'rest', 'moneyInk', 'moneyWash'),
-  pair('StatusLabel active', 'rest', 'billsInk', 'billsWash'),
-  pair('StatusLabel ended', 'rest', 'inkSoft', 'sunken'),
-  pair('StatusLabel draft', 'rest', 'bronzeInk', 'bronzeWash'),
-  // MachineLabel: the bills accent; pressed takes sunken.
-  pair('MachineLabel label and sparkle', 'rest', 'billsInk', 'billsWash'),
-  pair('MachineLabel label and sparkle', 'pressed', 'billsInk', 'sunken'),
-  // SourceLine: the date in inkSoft, the source's name and glyph in
-  // bronzeInk; pressed takes sunken.
-  pair('SourceLine date and state', 'rest', 'inkSoft', 'paper'),
-  pair('SourceLine source name and glyph', 'rest', 'bronzeInk', 'paper'),
-  pair('SourceLine date and state', 'pressed', 'inkSoft', 'sunken'),
-  pair('SourceLine source name and glyph', 'pressed', 'bronzeInk', 'sunken'),
-  pair('SourceLine on a card', 'rest', 'inkSoft', 'raised'),
-  pair('SourceLine source name on a card', 'rest', 'bronzeInk', 'raised'),
-  // SourceSheet rows: originals in bronzeInk, Sources and licences in ink.
-  pair('SourceSheet original', 'rest', 'bronzeInk', 'paper'),
-  pair('SourceSheet original', 'pressed', 'bronzeInk', 'sunken'),
+  // Final status and machine capsules, and block source lines.
+  pair('StatusCapsule active', 'rest', 'billsInk', 'billsWash'),
+  pair('StatusCapsule neutral', 'rest', 'inkSoft', 'sunken'),
+  pair('StatusCapsule neutral on grouped page', 'rest', 'inkSoft', 'raised'),
+  pair('MachinePill label and sparkle', 'rest', 'navy', 'navyWash'),
+  pair('MachinePill label and sparkle', 'pressed', 'navy', 'sunken'),
+  ...(['paper', 'raised', 'sunken'] as const).flatMap((surface) => [
+    pair(`SourceLine date and state on ${surface}`, 'rest', 'inkSoft', surface),
+    pair(`SourceLine source name on ${surface}`, 'rest', 'navy', surface),
+    pair(
+      `SourceAffordance glyph on ${surface}`,
+      'rest',
+      'inkSoft',
+      surface,
+      'non-text',
+    ),
+    pair(`SourceAffordance label on ${surface}`, 'rest', 'navy', surface),
+  ]),
+  pair('SourceSheet original', 'rest', 'ink', 'paper'),
+  pair('SourceSheet original', 'pressed', 'ink', 'sunken'),
   pair('SourceSheet row detail and chevron', 'pressed', 'inkSoft', 'sunken'),
   pair('SourceSheet Done', 'rest', 'navy', 'paper'),
   // Toggle Button (Follow): off is the default capsule; on is navy.
@@ -340,7 +310,7 @@ export const componentPairs: ColourPair[] = [
     'paper',
     'non-text',
   ),
-  pair('IconButton badge count', 'rest', 'onNavy', 'bronzeInk'),
+  pair('IconButton badge count', 'rest', 'onNavy', 'navy'),
   // ChoiceChip disabled.
   pair('ChoiceChip label', 'disabled', 'inkSoft', 'sunken'),
   // SwitchRow: the label, its pressed row, the switch's navy track.
@@ -359,10 +329,9 @@ export const componentPairs: ColourPair[] = [
   pair('PartyLabel name on navy', 'rest', 'onNavySoft', 'navy'),
   pair('PartyLabel dot ring on navy', 'rest', 'raised', 'navy', 'non-text'),
   // accentTint: a subject's deep ground under white text.
-  ...(
-    ['moneyInk', 'billsInk', 'votesInk', 'interestsInk', 'bronzeInk'] as const
-  ).map((deep) =>
-    pair(`Accent deep ground (${deep}) under onNavy`, 'rest', 'onNavy', deep),
+  ...(['moneyInk', 'billsInk', 'votesInk', 'interestsInk'] as const).map(
+    (deep) =>
+      pair(`Accent deep ground (${deep}) under onNavy`, 'rest', 'onNavy', deep),
   ),
   pair('Accent deep ground (navy) under onNavy', 'rest', 'onNavy', 'navy'),
   // EmptyState pane: the title on paper.
@@ -382,25 +351,11 @@ export const componentPairs: ColourPair[] = [
   ),
 ];
 
-/**
- * Party chips and tinted profile headers draw ink and inkSoft text on each
- * party's wash (not a role: one per party). The dot sits on a raised ring,
- * so its pair is the PartyLabel dot on raised above.
- */
-export const partyWashPairs = Object.entries(partyWashes).flatMap(
-  ([party, wash]) =>
-    (['ink', 'inkSoft'] as const).map((role) => ({
-      use: `PartyChip ${role} on the ${party} wash`,
-      foreground: light[role],
-      background: wash,
-    })),
-);
-
 // Pairs IOS-UX records as failing: components must never draw them.
 export const forbiddenPairs: ColourPair[] = [
   pair('use inkSoft on sunken surfaces', 'rest', 'inkFaint', 'sunken'),
-  pair('use inkSoft or bronzeInk on tags', 'rest', 'inkFaint', 'bronzeWash'),
-  pair('bronze is for rules and chart marks', 'rest', 'bronze', 'paper'),
+  pair('use ink or navy on tags', 'rest', 'inkFaint', 'navyWash'),
+  pair('bronze is reserved for launch art', 'rest', 'bronze', 'paper'),
 ];
 
 /** The pair the table lists for a drawn foreground and background, if any. */
@@ -412,7 +367,8 @@ export function listedPair(
   return componentPairs.find(
     (entry) =>
       entry.foreground.toLowerCase() === foreground.toLowerCase() &&
-      light[entry.background].toLowerCase() === background.toLowerCase() &&
+      paletteFor('light')[entry.background].toLowerCase() ===
+        background.toLowerCase() &&
       // A pair listed as text also covers icons; a non-text row never covers text.
       (as === 'non-text' || entry.kind !== 'non-text'),
   );

@@ -1,8 +1,8 @@
 import { act, type ReactElement } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import * as d from '../src/api/catalogs';
 import { billSplits } from '../src/api/bill-transforms';
+import * as d from '../src/api/catalogs';
 import {
   BillIndexRow,
   DivisionQuestion,
@@ -214,7 +214,7 @@ describe('division questions and briefs', () => {
       <MachineBrief label="Machine brief" brief={brief} testID="b" />,
     );
     expect(byID(root, 'b-label')[0]!.props.accessibilityLabel).toBe(
-      'Machine-written. An automated summary written by a model; not the record.',
+      'Machine-written',
     );
     expect(byID(root, 'b-text')).toHaveLength(0);
     expect(byID(root, 'b-more')[0]!.props.accessibilityLabel).toBe(

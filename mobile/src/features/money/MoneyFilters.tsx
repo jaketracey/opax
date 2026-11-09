@@ -4,8 +4,8 @@ import {
   type FilterModel,
   type FilterValues,
 } from '../../design/filter-sheet';
-import { moneyFilterModel } from '../sheets/filter-models';
 import { filtersRoute } from '../../navigation/routes/filters';
+import { moneyFilterModel } from '../sheets/filter-models';
 import type { MoneyGraph } from './data';
 import { CPI_REFERENCE_YEAR } from './ported/cpi';
 import {
@@ -125,6 +125,18 @@ export function moneyFiltersModel(
       row.key === 'industry'
         ? {
             ...row,
+            multiple: true,
+            select: (state, value) => {
+              const values = new Set(
+                String(state.industry ?? '')
+                  .split(',')
+                  .filter(Boolean),
+              );
+              if (!value) values.clear();
+              else if (values.has(value)) values.delete(value);
+              else values.add(value);
+              return { ...state, industry: [...values].join(',') };
+            },
             choices: (state) => {
               const [all, ...rest] = row.choices(state);
               return [

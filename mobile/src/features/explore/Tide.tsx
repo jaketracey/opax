@@ -1,20 +1,23 @@
+import { router } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { useRead } from '../../api/useRead';
+import { InsetGroup } from '../../design/layout';
 import {
+  Group,
+  LinkRow,
   PadGrid,
   Screen,
   Section,
-  Group,
-  Text,
   SegmentedControl,
-  LinkRow,
-  KeyValueList,
+  Text,
 } from '../../design/primitives';
-import { useCallback, useState } from 'react';
+import { ValueRow } from '../../design/rows';
+import { topicRoute } from '../../navigation/routes/search';
 import { topicNames } from '../reports/model';
-import { useRead, ReadState, ShareBars } from '../reports/parts';
-import { openTopicWindow } from '../reports/open';
-import { explore } from './runtime';
+import { ReadState, ShareBars } from '../reports/parts';
 import { TIDE_NOTE } from './model';
-import { ExploreHeader } from './parts';
+import { ExploreChrome } from './parts';
+import { explore } from './runtime';
 export default function Tide() {
   const [scope, setScope] = useState<'federal' | 'all'>('federal'),
     [order, setOrder] = useState('rising');
@@ -22,10 +25,10 @@ export default function Tide() {
     read = useRead(load);
   return (
     <>
-      <ExploreHeader title="The tide" game="tide" />
+      <ExploreChrome title="The tide" game="tide" />
       <Screen column="wide" testID="explore-tide-screen">
         {/* The title is the screen's; its notes are in the source line. */}
-        <Section rule={false}>
+        <Section>
           <Text wordSafe variant="body">
             How parliament’s labelled debates move across four decades
           </Text>
@@ -64,12 +67,20 @@ export default function Tide() {
               ),
             ],
             extra: (
-              <KeyValueList
-                items={data.decades.map((d) => ({
-                  label: d.label,
-                  value: `${d.labelled.toLocaleString('en-AU')} of ${d.total.toLocaleString('en-AU')} labelled (${(d.coverage * 100).toFixed(1)}%)`,
-                }))}
-              />
+              <InsetGroup>
+                {data.decades
+                  .map((d) => ({
+                    label: d.label,
+                    value: `${d.labelled.toLocaleString('en-AU')} of ${d.total.toLocaleString('en-AU')} labelled (${(d.coverage * 100).toFixed(1)}%)`,
+                  }))
+                  .map((item) => (
+                    <ValueRow
+                      key={item.label}
+                      label={item.label}
+                      value={item.value}
+                    />
+                  ))}
+              </InsetGroup>
             ),
           })}
           testID="tide"
@@ -96,7 +107,7 @@ export default function Tide() {
             });
             return (
               <Group>
-                <Text variant="fine" wordSafe>
+                <Text variant="footnote" wordSafe>
                   Shares of labelled speeches, not every speech
                 </Text>
                 <PadGrid>
@@ -105,7 +116,7 @@ export default function Tide() {
                       <LinkRow
                         title={`${order === 'now' ? (metric(slug).now * 100).toFixed(1) + '%' : `${metric(slug).change >= 0 ? '+' : '−'}${Math.abs(metric(slug).change * 100).toFixed(1)} pp`}`}
                         onPress={() =>
-                          openTopicWindow(slug, {}, topicNames[slug]!)
+                          router.push(topicRoute(slug, {}, topicNames[slug]!))
                         }
                       />
                       <ShareBars
@@ -123,16 +134,18 @@ export default function Tide() {
                               (d) => d.slug === point?.decade,
                             );
                           if (d)
-                            openTopicWindow(
-                              slug,
-                              {
-                                from: String(d.from),
-                                to: String(d.to),
-                                ...(scope === 'federal'
-                                  ? { state: 'federal' }
-                                  : {}),
-                              },
-                              topicNames[slug]!,
+                            router.push(
+                              topicRoute(
+                                slug,
+                                {
+                                  from: String(d.from),
+                                  to: String(d.to),
+                                  ...(scope === 'federal'
+                                    ? { state: 'federal' }
+                                    : {}),
+                                },
+                                topicNames[slug]!,
+                              ),
                             );
                         }}
                       />

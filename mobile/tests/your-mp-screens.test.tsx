@@ -1,11 +1,10 @@
-import { sheetPayload } from '../src/navigation/sheets';
+import { Icon } from '../src/design/icon';
 import {
-  portraits as portraitService,
-  catalogs as runtime,
-} from '../src/api/runtime';
-import * as format from '../src/design/format';
+  LatestRow as LatestVoteRow,
+  type LatestRecord,
+} from '../src/features/your-mp/LatestRows';
+import { router } from 'expo-router';
 import { act, type ReactElement } from 'react';
-import TestRenderer from 'react-test-renderer';
 import {
   ActionSheetIOS,
   Image,
@@ -13,41 +12,48 @@ import {
   RefreshControl,
   StyleSheet,
 } from 'react-native';
-import { minimumTarget } from '../src/design/tokens';
-import { router } from 'expo-router';
+import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
 import {
-  catalogs,
-  index,
-  manifest,
-  people,
-  roster,
-  slugs,
-  pinned,
-  files,
-} from './pinned';
-import Person from '../src/features/Person';
-import YourMP from '../src/features/YourMP';
-import Electorate from '../src/features/Electorate';
-import { billRoute, seatRoute } from '../src/navigation/routes';
+  portraits as portraitService,
+  catalogs as runtime,
+} from '../src/api/runtime';
+import * as format from '../src/design/format';
 import {
-  PersonRow,
-  PartyLabel,
-  Text,
   Button,
   LinkRow,
+  PartyLabel,
+  PersonRow,
   SourceLine,
+  Text,
 } from '../src/design/primitives';
+import { minimumTarget } from '../src/design/tokens';
+import Electorate from '../src/features/Electorate';
+import { MemberVoteRow } from '../src/features/people/MemberVoteRow';
+import Person from '../src/features/Person';
 import {
+  forgetChoice,
   loadChoice,
   saveChoice,
   subscribeChoice,
 } from '../src/features/your-mp/choice-store';
 import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
-import { MemberVoteRow } from '../src/features/people/MemberVoteRow';
-import { canShare } from '../src/navigation/share';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
+import YourMP from '../src/features/YourMP';
+import { billRoute, seatRoute } from '../src/navigation/routes';
+import { canShare } from '../src/navigation/share';
+import { sheetPayload } from '../src/navigation/sheets';
+import {
+  catalogs,
+  files,
+  index,
+  manifest,
+  people,
+  pinned,
+  roster,
+  slugs,
+} from './pinned';
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn() },
   catalogs: {
@@ -62,6 +68,7 @@ jest.mock('../src/api/runtime', () => ({
 jest.mock('../src/features/your-mp/choice-store', () => ({
   loadChoice: jest.fn(),
   saveChoice: jest.fn(),
+  forgetChoice: jest.fn(async () => undefined),
   subscribeChoice: jest.fn(() => () => undefined),
 }));
 jest.mock('../src/api/image-policy', () => ({
@@ -74,6 +81,7 @@ jest.mock('../src/features/ask/open', () => ({
   useOpenAsk: () => mockOpenAsk,
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(
     ({ children, ...props }: { children: unknown }) =>
       jest
@@ -957,6 +965,11 @@ describe('Your MP tab', () => {
     (saveChoice as jest.Mock).mockImplementation(async (choice) =>
       (subscribeChoice as jest.Mock).mock.calls.at(-1)?.[0](choice),
     );
+    jest
+      .mocked(forgetChoice)
+      .mockImplementation(async () =>
+        (subscribeChoice as jest.Mock).mock.calls.at(-1)?.[0](null),
+      );
     const sheet = jest
       .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
       .mockImplementation((_options, done) => done(0));
@@ -1032,4 +1045,27 @@ describe('Your MP tab', () => {
     expect(has(r, 'seat-search')).toBe(false);
     await act(async () => r.unmount());
   });
+});
+
+test('a combined vote with no bill route has no external accessory, matching the person page', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  const record: LatestRecord = {
+    key: 'combined-vote',
+    kind: 'vote',
+    title: 'Two bills',
+    date: '2026-06-04',
+    action: 'Voted for',
+    detail: 'Second reading',
+    url: 'https://example.test/division',
+  };
+  await act(async () => {
+    r = TestRenderer.create(<LatestVoteRow record={record} />);
+  });
+  expect(
+    r.root.findAllByType(Icon).map((node) => node.props.name),
+  ).not.toContain('arrow.up.right.square');
+  expect(
+    r.root.findAllByType(Icon).map((node) => node.props.name),
+  ).not.toContain('chevron.right');
+  await act(async () => r.unmount());
 });

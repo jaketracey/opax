@@ -1,8 +1,9 @@
+import { RouteOptions } from '../../navigation/preview';
+
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { Stack } from 'expo-router';
-import { portraits } from '../../api/runtime';
 import type { PortraitListing } from '../../api/people-portraits';
+import { portraits } from '../../api/runtime';
 import {
   Divider,
   InlineError,
@@ -14,6 +15,7 @@ import {
   Text,
   useScreenColumn,
 } from '../../design/primitives';
+import { StatePageProvider } from '../../design/states';
 import { colors, rhythm } from '../../design/tokens';
 import { portraitCreditLine } from '../CachedPortrait';
 import { portraitTerms } from './datasets';
@@ -108,49 +110,51 @@ export default function PortraitsList() {
   );
   return (
     <SidebarSafe style={styles.screen}>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: text.portraits,
           headerSearchBarOptions: search.options,
           ...paperBar,
         }}
       />
-      <FlatList
-        testID="sources-portraits-screen"
-        style={styles.screen}
-        contentContainerStyle={[styles.content, column.content]}
-        onLayout={column.onLayout}
-        contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        data={list ? shown : []}
-        keyExtractor={(row) => row.info.key}
-        ListHeaderComponent={header}
-        ItemSeparatorComponent={() => <Divider variant="subtle" />}
-        renderItem={({ item: row }) => {
-          const officialPortrait = /^\d+$/.test(row.info.key);
-          return (
-            <CreditRow
-              title={row.name}
-              detail={portraitCreditLine(row.info)}
-              note={row.info.attribution}
-              url={officialPortrait ? null : row.info.sourceURL}
-              label={`Photo of ${row.name}`}
-              testID={`sources-portrait-${row.slug}`}
-            />
-          );
-        }}
-        ListEmptyComponent={
-          list && search.query ? (
-            <NoResults
-              query={search.query}
-              body={text.tryName}
-              testID="sources-portraits-empty"
-            />
-          ) : null
-        }
-        initialNumToRender={12}
-      />
+      <StatePageProvider refreshing={false}>
+        <FlatList
+          testID="sources-portraits-screen"
+          style={styles.screen}
+          contentContainerStyle={[styles.content, column.content]}
+          onLayout={column.onLayout}
+          contentInsetAdjustmentBehavior="automatic"
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          data={list ? shown : []}
+          keyExtractor={(row) => row.info.key}
+          ListHeaderComponent={header}
+          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          renderItem={({ item: row }) => {
+            const officialPortrait = /^\d+$/.test(row.info.key);
+            return (
+              <CreditRow
+                title={row.name}
+                detail={portraitCreditLine(row.info)}
+                note={row.info.attribution}
+                url={officialPortrait ? null : row.info.sourceURL}
+                label={`Photo of ${row.name}`}
+                testID={`sources-portrait-${row.slug}`}
+              />
+            );
+          }}
+          ListEmptyComponent={
+            list && search.query ? (
+              <NoResults
+                query={search.query}
+                body={text.tryName}
+                testID="sources-portraits-empty"
+              />
+            ) : null
+          }
+          initialNumToRender={12}
+        />
+      </StatePageProvider>
     </SidebarSafe>
   );
 }

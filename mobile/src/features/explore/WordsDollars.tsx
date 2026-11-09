@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import type { RecordResult } from '../../api/client';
+import { reports } from '../../api/runtime';
+import { useRead } from '../../api/useRead';
+import { counted, formatMoney } from '../../design/format';
 import {
   ContentUnavailable,
   Heading,
@@ -15,16 +19,10 @@ import {
   type SourceDetails,
   type TextTone,
 } from '../../design/primitives';
-import { formatCount, formatMoney } from '../../design/format';
 import { symbols } from '../../design/symbols';
 import { accents, rhythm } from '../../design/tokens';
-import { reports } from '../../api/runtime';
-import type { RecordResult } from '../../api/client';
-import type { IndustryMoney } from '../reports/model';
 import { isOffline } from '../CatalogState';
-import { useRead } from '../reports/parts';
-import { explore } from './runtime';
-import { readExploreChoices, saveExploreChoice } from './repository';
+import type { IndustryMoney } from '../reports/model';
 import {
   THIN_PARTY_BASE,
   WORDS_NOTE,
@@ -36,8 +34,10 @@ import {
   type Matrix,
   type Pairing,
 } from './model';
-import { ExploreHeader } from './parts';
 import { PairRow, type PairFigures } from './PairRow';
+import { ExploreChrome } from './parts';
+import { readExploreChoices, saveExploreChoice } from './repository';
+import { explore } from './runtime';
 
 const SUBJECTS = pairings.map((p) => ({
   value: p.topic,
@@ -160,7 +160,7 @@ export default function WordsDollars() {
   const base = figures?.panel.base ?? 0;
   return (
     <>
-      <ExploreHeader title="Words per dollar" game="wd" />
+      <ExploreChrome name="Words per dollar" game="wd" />
       <Screen
         testID="explore-wd-screen"
         barTitle="Words per dollar"
@@ -304,7 +304,7 @@ export default function WordsDollars() {
                 ) : null}
                 {matrix.record && base > 0 && base < THIN_PARTY_BASE ? (
                   <Text wordSafe variant="footnote" testID="wd-thin">
-                    {`A party is recorded for only ${formatCount(base)} speeches on this subject, so shares are not shown.`}
+                    {`A party is recorded for only ${counted(base, 'speech', 'speeches')} on this subject, so shares are not shown.`}
                   </Text>
                 ) : null}
               </>

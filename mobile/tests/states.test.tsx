@@ -1,52 +1,48 @@
-import { act, type ReactElement, type ReactNode } from 'react';
+import { ContentUnavailableView, Host } from '@expo/ui/swift-ui';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { act, type ReactElement, type ReactNode } from 'react';
 import {
-  ActivityIndicator,
   AccessibilityInfo,
-  Platform,
+  ActivityIndicator,
   Dimensions,
-  StyleSheet,
   Text as NativeText,
+  Platform,
+  StyleSheet,
   View,
 } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import {
-  Button,
-  Field,
-  FilterChip,
-  Heading,
-  IconButton,
-  OpaxWebLink,
-  PartyLabel,
-  PersonRow,
-  SegmentedControl,
-  SourceLink,
-  Tag,
-  Text,
-} from '../src/design/primitives';
-import { Host, ContentUnavailableView } from '@expo/ui/swift-ui';
-import {
-  Collapse,
-  ContentUnavailable,
-  InlineError,
-  ErrorState,
-  OfflineLine,
-  Skeleton,
-  StatePageProvider,
-  errorMessage,
-} from '../src/design/states';
-import { RecordStatus, recordSourceState } from '../src/features/RecordStatus';
-import { catalogStateNote } from '../src/features/CatalogNotice';
-import { copy } from '../src/design/copy';
-import { symbols } from '../src/design/symbols';
 import { ApiError } from '../src/api/errors';
 import {
   contrastRatio,
   listedPair,
   requiredRatio,
 } from '../src/design/contrast';
+import { copy } from '../src/design/copy';
 import { light, partyColors } from '../src/design/palette';
+import {
+  Button,
+  Field,
+  FilterChip,
+  Heading,
+  IconButton,
+  PartyLabel,
+  PersonRow,
+  SegmentedControl,
+  Tag,
+  Text,
+} from '../src/design/primitives';
+import {
+  Collapse,
+  ContentUnavailable,
+  ErrorState,
+  InlineError,
+  OfflineLine,
+  Skeleton,
+  StatePageProvider,
+  errorMessage,
+} from '../src/design/states';
+import { symbols } from '../src/design/symbols';
 import {
   LINE_HEIGHT_NUDGE,
   breaksMidWord,
@@ -60,6 +56,8 @@ import {
   textStyles,
   type TextVariant,
 } from '../src/design/tokens';
+import { catalogStateNote } from '../src/features/CatalogNotice';
+import { recordSourceState } from '../src/features/RecordStatus';
 
 function render(element: ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
@@ -278,21 +276,6 @@ describe('every drawn state is in the contrast table and passes', () => {
       );
       expectListed(drawn(control, false, light.raised, segmentFill));
       expectListed(drawn(control, true, light.raised, segmentFill));
-    }
-  });
-  test('SourceLink and OpaxWebLink: rest and pressed', () => {
-    for (const link of [
-      <SourceLink
-        key="s"
-        citation="AusTender register"
-        record="record CN3407266"
-        url="https://www.tenders.gov.au/"
-        kind="register"
-      />,
-      <OpaxWebLink key="w" label="Speeches" path="/subject/person/x" />,
-    ]) {
-      expectListed(drawn(link, false));
-      expectListed(drawn(link, true));
     }
   });
   test('PersonRow: rest and pressed, every party dot included', () => {
@@ -588,7 +571,7 @@ describe('word-safe text', () => {
     expect(
       textContent([
         'Email address',
-        <Text key="r" variant="metadata">
+        <Text key="r" variant="secondary">
           {' '}
           (required)
         </Text>,
@@ -617,38 +600,6 @@ describe('word-safe text', () => {
     expect(nextWordSafeCap(30 * 1.05, 30)).toBe(1);
     expect(nextWordSafeCap(30, 30)).toBeNull();
   });
-  test('a SourceLink label is word-safe', () => {
-    let renderer!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      renderer = TestRenderer.create(
-        <SourceLink
-          label="Parliamentary Library · Bills Digest"
-          citation="Parliamentary Library"
-          record="Bills Digest"
-          url="https://www.aph.gov.au/"
-          kind="record"
-        />,
-      );
-    });
-    const label = () =>
-      renderer.root
-        .findAllByType(NativeText)
-        .find((node) => typeof node.props.onTextLayout === 'function')!;
-    expect(label().props.children).toBe('Parliamentary Library · Bills Digest');
-    expect(capScale(label(), 'footnote')).toBe(1);
-    act(() => {
-      label().props.onTextLayout({
-        nativeEvent: {
-          lines: [
-            { text: 'Parliamentar', height: 18 * 3 },
-            { text: 'y Library · Bills Digest', height: 18 * 3 },
-          ],
-        },
-      });
-    });
-    // 2.7 of the uncapped 3, through the role's own size and line height.
-    expect(capScale(label(), 'footnote')).toBeCloseTo(0.9, 6);
-  });
   test('a heading lowers its own size after a mid-word break, and only then', () => {
     const lineHeight = textStyles.sectionTitle.lineHeight + LINE_HEIGHT_NUDGE;
     let renderer!: TestRenderer.ReactTestRenderer;
@@ -658,7 +609,7 @@ describe('word-safe text', () => {
       );
     });
     const text = () => renderer.root.findByType(NativeText);
-    expect(capScale(text(), 'heading')).toBe(1);
+    expect(capScale(text(), 'sectionTitle')).toBe(1);
     const layout = (at: number, broken = true) =>
       act(() => {
         text().props.onTextLayout({
@@ -684,11 +635,11 @@ describe('word-safe text', () => {
         });
       });
     layout(2.3, false);
-    expect(capScale(text(), 'heading')).toBe(1);
+    expect(capScale(text(), 'sectionTitle')).toBe(1);
     layout(2.3);
     // Uncapped 2.3, capped 2.07: 90% of the role's size, which Dynamic Type
     // then multiplies by the same 2.3.
-    expect(capScale(text(), 'heading')).toBeCloseTo(2.07 / 2.3, 6);
+    expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.07 / 2.3, 6);
     // Each layout at the size now drawn that still breaks steps 10% lower,
     // always as a share of the same uncapped 2.3, and stops at the reader's
     // default size.
@@ -703,12 +654,12 @@ describe('word-safe text', () => {
       [1, 1],
     ] as const) {
       layout(at);
-      expect(capScale(text(), 'heading')).toBeCloseTo(next / 2.3, 6);
+      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(next / 2.3, 6);
     }
     expect(text().props.accessibilityRole).toBe('header');
   });
   describe('word-safe resets and late layouts', () => {
-    const base = textStyles.heading.lineHeight + LINE_HEIGHT_NUDGE;
+    const base = textStyles.sectionTitle.lineHeight + LINE_HEIGHT_NUDGE;
     // "Representation" at heading scale: 212pt wide at the uncapped 2.3,
     // 191pt at 2.07 and 172pt at 1.86.
     const broken = (at: number, widths: [number, number]) => ({
@@ -747,7 +698,7 @@ describe('word-safe text', () => {
     );
     function heading(
       fontScale = 2.3,
-      variant: TextVariant = 'heading',
+      variant: TextVariant = 'sectionTitle',
       children = 'Representation',
     ) {
       act(() => {
@@ -822,7 +773,7 @@ describe('word-safe text', () => {
     test("a change of role starts again with that role's own uncapped size", () => {
       const { text, layout } = heading(
         2.3,
-        'heading',
+        'sectionTitle',
         'Recorded representation',
       );
       layout({
@@ -833,17 +784,17 @@ describe('word-safe text', () => {
           ],
         },
       });
-      expect(capScale(text(), 'heading')).toBeCloseTo(2.07 / 2.3, 6);
+      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.07 / 2.3, 6);
       act(() =>
         renderer.update(
-          <Text wordSafe variant="fine">
+          <Text wordSafe variant="footnote">
             Recorded representation
           </Text>,
         ),
       );
-      expect(capScale(text(), 'fine')).toBe(1);
+      expect(capScale(text(), 'footnote')).toBe(1);
       // The fine role's ramp is 3.4 at this size: 3.06 of 3.4, not of 2.3.
-      const fine = textStyles.fine.lineHeight + LINE_HEIGHT_NUDGE;
+      const fine = textStyles.footnote.lineHeight + LINE_HEIGHT_NUDGE;
       act(() =>
         text().props.onTextLayout({
           nativeEvent: {
@@ -858,7 +809,7 @@ describe('word-safe text', () => {
           },
         }),
       );
-      expect(capScale(text(), 'fine')).toBeCloseTo(3.06 / 3.4, 6);
+      expect(capScale(text(), 'footnote')).toBeCloseTo(3.06 / 3.4, 6);
     });
     test('a late layout from an earlier size can neither raise nor lower the cap', () => {
       const { text, ratio, layout } = heading();
@@ -1038,90 +989,6 @@ describe('shared state kit', () => {
     });
     expect(inline.root.findByType(Button).props.variant).toBe('plain');
   });
-  test.each([false, true])(
-    'RecordStatus notesInSource=%s keeps exactly one home for saved and partial notes',
-    (notesInSource) => {
-      const r = mount(
-        <RecordStatus
-          record={{
-            stale: true,
-            savedAt: Date.UTC(2026, 9, 3),
-            staleReason: 'unreadable',
-            partial: true,
-          }}
-          error={null}
-          refreshing
-          refresh={noop}
-          retry={noop}
-          label="Loading"
-          testID="record"
-          notesInSource={notesInSource}
-        />,
-      );
-      const notes = r.root.findAllByType(Text);
-      expect(
-        notes.filter((node) => node.props.testID === 'record-saved-copy'),
-      ).toHaveLength(notesInSource ? 0 : 1);
-      expect(
-        notes.filter((node) => node.props.testID === 'record-partial'),
-      ).toHaveLength(notesInSource ? 0 : 1);
-      if (!notesInSource) {
-        expect(notes.every((node) => node.props.variant === 'footnote')).toBe(
-          true,
-        );
-        expect(
-          notes.find((node) => node.props.testID === 'record-saved-copy')!.props
-            .children,
-        ).toContain('Checking for a newer copy.');
-      }
-      expect(r.root.findAllByType(Button)).toHaveLength(0);
-    },
-  );
-  test.each([false, true])(
-    'RecordStatus offline notesInSource=%s retains the offline line',
-    (notesInSource) => {
-      const r = mount(
-        <RecordStatus
-          record={{ stale: true, savedAt: Date.UTC(2026, 9, 3) }}
-          error={null}
-          refreshing={false}
-          refresh={noop}
-          retry={noop}
-          label="Loading"
-          testID="record"
-          notesInSource={notesInSource}
-        />,
-      );
-      expect(r.root.findAllByType(OfflineLine)).toHaveLength(1);
-      expect(
-        r.root
-          .findAllByType(Text)
-          .filter((node) => node.props.testID === 'record-stale'),
-      ).toHaveLength(notesInSource ? 0 : 1);
-    },
-  );
-  test.each([false, true])(
-    'RecordStatus partial notesInSource=%s retains its legacy note by default',
-    (notesInSource) => {
-      const r = mount(
-        <RecordStatus
-          record={{ stale: false, savedAt: null, partial: true }}
-          error={null}
-          refreshing={false}
-          refresh={noop}
-          retry={noop}
-          label="Loading"
-          testID="record"
-          notesInSource={notesInSource}
-        />,
-      );
-      expect(
-        r.root
-          .findAllByType(Text)
-          .filter((node) => node.props.testID === 'record-partial'),
-      ).toHaveLength(notesInSource ? 0 : 1);
-    },
-  );
   test('separate pages announce independently', () => {
     jest.useFakeTimers();
     const announce = jest

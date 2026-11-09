@@ -1,57 +1,51 @@
+import { router, Stack } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { act, Children, type ReactElement } from 'react';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import {
   ActionSheetIOS,
   Dimensions,
   Linking,
-  Modal,
-  StyleSheet,
-  ScrollView,
-  View,
   Text as NativeText,
+  ScrollView,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { router, Stack } from 'expo-router';
-import * as WebBrowser from 'expo-web-browser';
-import {
-  SourceLine,
-  SourceSheet as LegacySourceSheet,
-  SheetBody,
-} from '../src/design/source';
-import { SwitchRow } from '../src/design/controls';
-import { FilterRoute } from '../src/features/sheets/FilterRoutes';
-import { billsFilterModel } from '../src/features/sheets/filter-models';
-import {
-  registerFilterModel,
-  filterStore,
-} from '../src/features/sheets/filter-model';
-import { InfoButton, InsetGroup } from '../src/design/layout';
-import { InfoSheet } from '../src/design/info';
-import { Text } from '../src/design/text';
-import { rhythm, minimumTarget } from '../src/design/tokens';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MachineLabel, MachinePill } from '../src/design/labels';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { SwitchRow } from '../src/design/controls';
 import { copy } from '../src/design/copy';
-import {
-  presentSheet,
-  presentSource,
-  sheetPayload,
-  setSheetSegments,
-} from '../src/navigation/sheets';
-import SourceSheet, {
-  TintRow,
-  openOriginal,
-  SourceContent,
-  Paragraphs,
-  sourceHeader,
-} from '../src/features/sheets/SourceSheet';
-import MachineNoteSheet from '../src/features/sheets/MachineNoteSheet';
-import RuleSheet from '../src/features/sheets/RuleSheet';
+import { MachinePill } from '../src/design/labels';
+import { InsetGroup } from '../src/design/layout';
+import { LinkRow } from '../src/design/rows';
+import { SourceLine } from '../src/design/source';
+import { Text } from '../src/design/text';
+import { minimumTarget, rhythm } from '../src/design/tokens';
 import CitationSheet, {
   citationBar,
 } from '../src/features/sheets/CitationSheet';
+import { FilterRoute } from '../src/features/sheets/FilterRoutes';
+import MachineNoteSheet from '../src/features/sheets/MachineNoteSheet';
+import RuleSheet from '../src/features/sheets/RuleSheet';
+import SourceSheet, {
+  openOriginal,
+  Paragraphs,
+  SourceContent,
+  sourceHeader,
+  TintRow,
+} from '../src/features/sheets/SourceSheet';
+import {
+  filterStore,
+  registerFilterModel,
+} from '../src/features/sheets/filter-model';
+import { billsFilterModel } from '../src/features/sheets/filter-models';
 import { fittedBottom, routeSheetOptions } from '../src/features/sheets/frame';
 import { openCorrection, openSource } from '../src/navigation/external';
-import { LinkRow } from '../src/design/rows';
+import {
+  presentSheet,
+  presentSource,
+  setSheetSegments,
+  sheetPayload,
+} from '../src/navigation/sheets';
 
 jest.mock('../src/design/environment', () => ({
   ...jest.requireActual('../src/design/environment'),
@@ -64,7 +58,12 @@ jest.mock(
 let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => ({
   ...jest.requireActual('expo-router'),
-  router: { push: jest.fn(), back: jest.fn() },
+  router: {
+    push: jest.fn(),
+    back: jest.fn(),
+    canGoBack: () => true,
+    replace: jest.fn(),
+  },
   Stack: { Screen: () => null },
   useLocalSearchParams: () => mockParams,
 }));
@@ -299,8 +298,7 @@ test('licence terms use their own route and Sources and licences is a separate m
   ).toEqual({ pathname: '/licence/[id]', params: { id: 'bills' } });
   press(root, 'src-sheet-licences');
   expect(router.push).toHaveBeenCalledWith({
-    pathname: '/licences',
-    params: { dataset: 'bills' },
+    pathname: '/licence/sources',
   });
 });
 test.each([SourceSheet, MachineNoteSheet, RuleSheet, CitationSheet])(
@@ -414,23 +412,6 @@ test('citation bar slots put previous and next leading, then More and Done trail
     ),
   ).toEqual(['More', 'Done']);
 });
-test('MachineLabel and MachinePill present registry notes with unchanged props', () => {
-  const root = render(
-    <>
-      <MachineLabel explanation="Written by a model" testID="legacy" />
-      <MachinePill
-        note={{ title: 'Machine-written', body: ['Check it.'] }}
-        testID="pill"
-      />
-    </>,
-  );
-  press(root, 'legacy');
-  expect(sheetPayload(lastKey(), 'machine')?.note.body[0]).toBe(
-    'Written by a model.',
-  );
-  press(root, 'pill');
-  expect(sheetPayload(lastKey(), 'machine')?.note.body).toEqual(['Check it.']);
-});
 test('corrections open mail when available and offer Copy address without it', async () => {
   jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(true);
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
@@ -445,80 +426,6 @@ test('corrections open mail when available and offer Copy address without it', a
     expect.objectContaining({ options: [copy.copyAddress, 'Cancel'] }),
     expect.any(Function),
   );
-});
-test('legacy SheetBody and SourceSheet remain exported', () => {
-  expect(SheetBody).toEqual(expect.any(Function));
-  expect(LegacySourceSheet).toEqual(expect.any(Function));
-});
-
-test('InfoButton presents /rule through its retained notes adapter without changing props', () => {
-  const root = render(
-    <InfoButton
-      title="About these figures"
-      notes={['A rule.', null, 'A caveat.']}
-      testID="info"
-    />,
-  );
-  press(root, 'info');
-  expect(router.push).toHaveBeenLastCalledWith({
-    pathname: '/rule',
-    params: { key: expect.any(String) },
-  });
-  expect(sheetPayload(lastKey(), 'rule')?.rule).toBe('A rule.\n\nA caveat.');
-});
-
-test.each([{ notes: [] as string[] }, { notes: ['A note.'] }])(
-  'InfoSheet with extra keeps its live legacy Modal (notes: $notes)',
-  ({ notes }) => {
-    const onClose = jest.fn();
-    const renderSheet = (value: string) => (
-      <InfoSheet
-        visible
-        onClose={onClose}
-        title="View on a date"
-        notes={notes}
-        extra={<Text testID="date-value">{value}</Text>}
-      />
-    );
-    const root = render(renderSheet('18 August 2026'));
-    const renderer = mounted.at(-1)!;
-    expect(root.findByType(Modal).props.visible).toBe(true);
-    expect(text(root)).toContain('View on a date');
-    expect(text(root)).toContain('18 August 2026');
-    act(() => renderer.update(renderSheet('9 November 2026')));
-    expect(text(root)).toContain('9 November 2026');
-    expect(text(root)).not.toContain('18 August 2026');
-    expect(router.push).not.toHaveBeenCalled();
-    expect(onClose).not.toHaveBeenCalled();
-  },
-);
-test('notes-only InfoSheet carries its own title into the rule route', () => {
-  const onClose = jest.fn();
-  const root = render(
-    <InfoSheet
-      visible
-      onClose={onClose}
-      title="Your location"
-      notes={['Used once.', ' ', null]}
-    />,
-  );
-  expect(root.findAllByType(Modal)).toHaveLength(0);
-  expect(sheetPayload(lastKey(), 'rule')).toMatchObject({
-    title: 'Your location',
-    rule: 'Used once.',
-  });
-  expect(onClose).toHaveBeenCalledTimes(1);
-  mockParams = { key: lastKey() };
-  expect(
-    render(<RuleSheet />).findByType(Stack.Screen).props.options.title,
-  ).toBe('Your location');
-});
-test('an empty notes-only InfoSheet keeps its legacy modal', () => {
-  const root = render(
-    <InfoSheet visible onClose={jest.fn()} title="Notes" notes={[' ', null]} />,
-  );
-  expect(root.findByType(Modal).props.visible).toBe(true);
-  expect(router.push).not.toHaveBeenCalled();
 });
 test('sources without originals are individual non-link rows beneath their date header', () => {
   const root = render(
@@ -623,4 +530,15 @@ test('FilterRoute Cancel restores the opening snapshot after a rendered switch c
   expect(filterStore('bills', owner)!.get()).toEqual(opening);
   expect(root.findByType(SwitchRow).props.value).toBe(false);
   expect(router.back).toHaveBeenCalledTimes(1);
+});
+
+test('MachinePill presents its full registry note', () => {
+  const root = render(
+    <MachinePill
+      note={{ title: 'Machine-written', body: ['Check it.'] }}
+      testID="pill"
+    />,
+  );
+  press(root, 'pill');
+  expect(sheetPayload(lastKey(), 'machine')?.note.body).toEqual(['Check it.']);
 });

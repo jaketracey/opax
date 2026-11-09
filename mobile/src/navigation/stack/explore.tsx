@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { Platform } from 'react-native';
-import { rootBackTitle, screen, sheetOptions } from './screen';
+import { rootBackTitle, screen, sheetOptions, untitled } from './screen';
 import { closeSheetItem, headerItems } from '../chrome';
 import { frontPageQuestion } from '../../features/explore/quiz/data';
 
@@ -40,6 +40,7 @@ export function exploreScreens() {
             : undefined;
         return {
           title: exploreToolTitle(params),
+          ...untitled,
           headerLargeTitleEnabled: false,
           ...(back ? { headerBackTitle: back } : {}),
         };

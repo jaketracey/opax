@@ -1,28 +1,21 @@
-import { act } from 'react';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { router } from 'expo-router';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { router } from 'expo-router';
-import { MoneyCatalogs } from '../src/features/money-public/catalog';
+import { act } from 'react';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import type { ApiClient, RecordResult } from '../src/api/client';
-import { money } from '../src/features/money-public/runtime';
-import {
-  BigFigure,
-  LinkRow,
-  Section,
-  SectionHeader,
-  SourceLine,
-} from '../src/design/primitives';
+import { formatCount } from '../src/design/format';
+import { LinkRow, SectionHeader, SourceLine } from '../src/design/primitives';
 import { FigureBlock } from '../src/design/record';
-import { SeatGrants as FromGrants } from '../src/features/money-public/Grants';
 import {
   SEAT_CAVEAT,
   SEAT_RULE,
   SeatGrants,
   noSeatMatch,
 } from '../src/features/money-public/SeatGrants';
+import { MoneyCatalogs } from '../src/features/money-public/catalog';
 import { decodeGrantIndex } from '../src/features/money-public/data';
-import { formatCount, formatMoneyCompact } from '../src/design/format';
+import { money } from '../src/features/money-public/runtime';
 
 jest.mock('expo-router', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -77,75 +70,14 @@ async function render(element: React.ReactElement) {
 const byID = (root: ReactTestInstance, testID: string) =>
   root.findAll((n) => n.props.testID === testID && typeof n.type !== 'string');
 
-describe('SeatGrants with no variant renders exactly as before', () => {
-  test('Grants.tsx still exports it', () => {
-    expect(FromGrants).toBe(SeatGrants);
-  });
-  test('the section, figure, source line and both rows, as drawn before', async () => {
-    const r = await render(<SeatGrants name={seat.name} state={seat.state} />);
-    const section = r.root.findByType(Section);
-    expect(section.props).toMatchObject({
-      title: 'Grants in this seat',
-      accent: 'money',
-      testID: 'seat-grants',
-    });
-    const figure = r.root.findByType(BigFigure);
-    expect(figure.props).toMatchObject({
-      value: formatMoneyCompact(seat.total),
-      label: `In ${formatCount(seat.count)} Commonwealth grants`,
-      accent: 'money',
-      testID: 'seat-grants-total',
-    });
-    const source = r.root.findByType(SourceLine);
-    expect(source.props.title).toBe('About grants in this seat');
-    expect(source.props.testID).toBe('seat-grants-source');
-    expect(source.props.notes.at(-1)).toBe(
-      'Electorate mappings are approximate and use the award’s delivery or recipient postcode.',
-    );
-    expect(source.props.licence).toBe(index.meta.licence);
-    const rows = r.root.findAllByType(LinkRow);
-    expect(rows.map((row) => [row.props.title, row.props.testID])).toEqual([
-      ['See all', 'seat-grants-all'],
-      ['Public money', 'seat-public-money'],
-    ]);
-    await act(async () => rows[0]!.props.onPress());
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: '/grants',
-      params: {
-        jur: 'federal',
-        seat: seat.name,
-        state: seat.state,
-        view: 'electorates',
-      },
-    });
-    await act(async () => rows[1]!.props.onPress());
-    expect(router.push).toHaveBeenLastCalledWith('/public-money');
-    expect(r.root.findAllByType(FigureBlock)).toHaveLength(0);
-    await act(async () => r.unmount());
-  });
-  test('an ineligible seat keeps the old sentence and rows', async () => {
-    const r = await render(
-      <SeatGrants name={seat.name} state={seat.state} eligible={false} />,
-    );
-    expect(r.root.findAllByType(BigFigure)).toHaveLength(0);
-    const text = r.root
-      .findAll((n) => typeof n.props.children === 'string')
-      .map((n) => n.props.children as string);
-    expect(text).toContain(
-      'No matching federal division in the grant records. This is not a zero total.',
-    );
-    expect(
-      r.root.findAllByType(LinkRow).map((row) => row.props.testID),
-    ).toEqual(['seat-grants-all', 'seat-public-money']);
-    await act(async () => r.unmount());
-  });
+describe('SeatGrants defaults to the seat home variant', () => {
   test('an unmatched seat says it is not a zero total', async () => {
     const r = await render(<SeatGrants name="Nowhere" state="NSW" />);
     const text = r.root
       .findAll((n) => typeof n.props.children === 'string')
       .map((n) => n.props.children as string);
     expect(text).toContain(
-      'No matching federal division in the grant records. This is not a zero total.',
+      'No grants are matched to Nowhere in the grant records. This is not a zero total.',
     );
     await act(async () => r.unmount());
   });
@@ -168,9 +100,9 @@ describe('SeatGrants variant="seat-home"', () => {
       ),
     );
     expect(figure.props.caveat).toBe(SEAT_CAVEAT);
-    expect(figure.props.source.notes[0]).toBe(SEAT_RULE);
-    expect(figure.props.source.notes[1]).toMatch(/postcode/);
-    expect(figure.props.source.testID).toBe('seat-grants-source');
+    expect(figure.props.citation.notes[0]).toBe(SEAT_RULE);
+    expect(figure.props.citation.notes[1]).toMatch(/postcode/);
+    expect(figure.props.citation.testID).toBe('seat-grants-source');
     // Nothing onward and nothing national until the per-seat slice ships.
     expect(byID(r.root, 'seat-grants-all')).toHaveLength(0);
     expect(byID(r.root, 'seat-public-money')).toHaveLength(0);

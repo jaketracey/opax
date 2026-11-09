@@ -1,6 +1,6 @@
 import { TextDecoder, TextEncoder } from 'node:util';
-import { ApiClient } from '../src/api/client';
 import { CatalogCache } from '../src/api/cache';
+import { ApiClient } from '../src/api/client';
 import { decodeAnswer } from '../src/features/ask/model';
 const origin = 'http://127.0.0.1:8940';
 const payload = { answer: 'Recorded answer', citations: {}, sources: [] };
@@ -39,7 +39,7 @@ test.each([
   [401, 'blocked'],
   [503, 'invalid'],
 ])(
-  'HTTP %s is terminal, one request with unchanged Worker error',
+  'HTTP %s is terminal, one request without exposing Worker error text',
   async (status, code) => {
     const t = jest
       .fn()
@@ -50,7 +50,7 @@ test.each([
         { question: 'A question' },
         controller().signal,
       ),
-    ).rejects.toMatchObject({ code, message: 'Worker refusal' });
+    ).rejects.toMatchObject({ code, message: `Request failed (${status}).` });
     expect(t).toHaveBeenCalledTimes(1);
     expect(t.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',

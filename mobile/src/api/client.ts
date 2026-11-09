@@ -1,31 +1,31 @@
-import { phoneCopy } from '../design/phone-copy';
-import {
-  assertYearPictureBytes,
-  isYearPicturePath,
-  yearPictureMaxBytes,
-} from './year-picture-policy';
-import { catalogUserAgent } from './user-agent';
 import { fetch as expoFetch } from 'expo/fetch';
-import { CatalogCache, isFresh, type CacheEntry } from './cache';
-import { ApiError, httpError } from './errors';
-import { allowedURL, assertAskPostPath } from './policy';
+import { phoneCopy } from '../design/phone-copy';
 import {
   AskFailure,
   AskStream,
   type StreamHandlers,
 } from '../features/ask/stream';
-import { isPartialCatalog } from './validation';
-import { isPeoplePaidPath } from '../features/people/policy';
 import { isExplorePaidPath } from '../features/explore/policy';
-import { isReportsPaidPath } from './reports-policy';
+import { isPeoplePaidPath } from '../features/people/policy';
 import { summaryStreamBody } from '../features/search/decoders';
+import { CatalogCache, isFresh, type CacheEntry } from './cache';
+import { ApiError, httpError } from './errors';
+import { allowedURL, assertAskPostPath } from './policy';
 import {
-  assertPortraitPath,
   assertPortraitBytes,
+  assertPortraitPath,
   isPortraitPath,
   portraitMaxBytes,
   portraitMetadataLimits,
 } from './portrait-policy';
+import { isReportsPaidPath } from './reports-policy';
+import { catalogUserAgent } from './user-agent';
+import { isPartialCatalog } from './validation';
+import {
+  assertYearPictureBytes,
+  isYearPicturePath,
+  yearPictureMaxBytes,
+} from './year-picture-policy';
 
 export interface RecordResult<T> {
   data: T;
@@ -82,36 +82,82 @@ function freezeSnapshot(...values: unknown[]) {
 export class ApiClient {
   private actionReads = new Map<string, Promise<RecordResult<unknown>>>();
   /** Explicit actions only: one attempt, session memory, no disk or retry. */
-  getForAction<T>(path: string, decode: Decoder<T>): Promise<RecordResult<T>> {
+  getForAction<T>(
+    path: string,
+    decode: Decoder<T>,
+    { fresh = false }: { fresh?: boolean } = {},
+  ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path);
-    if (!isPeoplePaidPath(path) && !isReportsPaidPath(path) && !isExplorePaidPath(path)) throw new ApiError('forbidden', 'Not an action read.');
+    if (
+      !isPeoplePaidPath(path) &&
+      !isReportsPaidPath(path) &&
+      !isExplorePaidPath(path)
+    )
+      throw new ApiError('forbidden', 'Not an action read.');
     const previous = this.actionReads.get(path);
-    if (previous) return previous as Promise<RecordResult<T>>;
+    if (previous && !fresh) return previous as Promise<RecordResult<T>>;
     const pending = this.readAction(url, decode);
     this.actionReads.set(path, pending);
     // Failed actions can be retried explicitly; never retry automatically.
-    void pending.catch(() => this.actionReads.delete(path));
+    void pending.catch(() => {
+      if (this.actionReads.get(path) === pending) this.actionReads.delete(path);
+    });
     return pending;
   }
-  private async readAction<T>(url: string, decode: Decoder<T>): Promise<RecordResult<T>> {
+  private async readAction<T>(
+    url: string,
+    decode: Decoder<T>,
+  ): Promise<RecordResult<T>> {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), this.options.timeoutMs ?? 8000);
+    const timer = setTimeout(
+      () => controller.abort(),
+      this.options.timeoutMs ?? 8000,
+    );
     try {
       const response = await this.transport(url, {
-        method: 'GET', credentials: 'omit', redirect: 'manual', signal: controller.signal,
-        headers: { Accept: 'application/json', 'User-Agent': catalogUserAgent(this.options.version, this.options.build) },
+        method: 'GET',
+        credentials: 'omit',
+        redirect: 'manual',
+        signal: controller.signal,
+        headers: {
+          Accept: 'application/json',
+          'User-Agent': catalogUserAgent(
+            this.options.version,
+            this.options.build,
+          ),
+        },
       });
-      if (response.redirected || (response.status >= 300 && response.status < 400) || (response.url && response.url !== url))
-        throw new ApiError('forbidden', 'Redirects are not allowed for catalog data.');
+      if (
+        response.redirected ||
+        (response.status >= 300 && response.status < 400) ||
+        (response.url && response.url !== url)
+      )
+        throw new ApiError(
+          'forbidden',
+          'Redirects are not allowed for catalog data.',
+        );
       if (!response.ok) throw httpError(response.status);
       let data: T;
-      try { data = this.decodeBody(await response.json(), decode); }
-      catch { throw new ApiError('invalid-data', 'The catalog response could not be read.'); }
+      try {
+        data = this.decodeBody(await response.json(), decode);
+      } catch {
+        throw new ApiError(
+          'invalid-data',
+          'The catalog response could not be read.',
+        );
+      }
       return { data, stale: false, savedAt: this.now(), asOf: dataAsOf(data) };
     } catch (e) {
       if (e instanceof ApiError) throw e;
-      throw new ApiError(controller.signal.aborted ? 'timeout' : 'offline', controller.signal.aborted ? 'The public record took too long to load. Try again.' : 'This section is not saved for this session. It will load when you are back online.');
-    } finally { clearTimeout(timer); }
+      throw new ApiError(
+        controller.signal.aborted ? 'timeout' : 'offline',
+        controller.signal.aborted
+          ? 'The public record took too long to load.'
+          : 'This section is not saved for this session. It will load when you are back online.',
+      );
+    } finally {
+      clearTimeout(timer);
+    }
   }
   private transport: typeof fetch;
   private now: () => number;
@@ -149,24 +195,44 @@ export class ApiClient {
     force = false,
     {
       absence = false,
+      background = false,
+      signal,
       retries = this.options.retries ?? 2,
       timeoutMs = this.options.timeoutMs ?? 8000,
       summaryStream = false,
     }: {
       absence?: boolean;
+      background?: boolean;
+      signal?: AbortSignal;
       retries?: number;
       timeoutMs?: number;
       summaryStream?: boolean;
     } = {},
   ): Promise<RecordResult<T>> {
     if (path.startsWith('/api/community/'))
-      throw new ApiError('forbidden', 'Community requires the native session client.');
+      throw new ApiError(
+        'forbidden',
+        'Community requires the native session client.',
+      );
     if (path.startsWith('/api/ask') || path.startsWith('/api/followups'))
       throw new ApiError('forbidden', 'Ask requires an explicit submission.');
     const url = allowedURL(this.options.origin, path); // before cache or networking
-    if (isPeoplePaidPath(path) || isReportsPaidPath(path) || isExplorePaidPath(path)) throw new ApiError('forbidden', 'Paid sections require an explicit action read.');
+    if (
+      isPeoplePaidPath(path) ||
+      isReportsPaidPath(path) ||
+      isExplorePaidPath(path)
+    )
+      throw new ApiError(
+        'forbidden',
+        'Paid sections require an explicit action read.',
+      );
     if (isPortraitPath(path) || isYearPicturePath(path))
       throw new ApiError('forbidden', 'Images require the byte client.');
+    const cancelled = () => {
+      if (signal?.aborted)
+        throw Object.assign(new Error('Cancelled'), { name: 'AbortError' });
+    };
+    cancelled();
     const requestStartedAt = this.now();
     const deadline = requestStartedAt + timeoutMs;
     let cached = await this.options.cache.get(url);
@@ -187,7 +253,8 @@ export class ApiClient {
         asOf: entry.asOf,
       };
     };
-    if (cached && !force && isFresh(cached, this.now()))
+    cancelled();
+    if (cached && !force && !background && isFresh(cached, this.now()))
       return result(cached, false);
     let lastError = new ApiError(
       'offline',
@@ -196,11 +263,15 @@ export class ApiClient {
       ),
     );
     for (let attempt = 0; attempt <= retries; attempt++) {
+      cancelled();
       const remaining = deadline - this.now();
       if (remaining <= 0) break;
       let retryDelay = 300 * 2 ** attempt;
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), remaining);
+      const abort = () => controller.abort();
+      signal?.addEventListener('abort', abort, { once: true });
+      if (signal?.aborted) abort();
+      const timer = setTimeout(abort, remaining);
       try {
         const response = await this.transport(url, {
           method: 'GET',
@@ -209,13 +280,18 @@ export class ApiClient {
           signal: controller.signal,
           headers: {
             Accept: 'application/json',
-            'User-Agent': catalogUserAgent(this.options.version, this.options.build),
-            ...(cached?.etag ? { 'If-None-Match': cached.etag } : {}),
+            'User-Agent': catalogUserAgent(
+              this.options.version,
+              this.options.build,
+            ),
+            ...(cached?.etag && !background
+              ? { 'If-None-Match': cached.etag }
+              : {}),
             // A forced read (a pull to refresh) must reach the origin. The
             // transport's URLSession keeps its own HTTP cache, which answers
             // a fresh entry under ~512 KB itself, If-None-Match or not; a
             // request no-cache makes it revalidate.
-            ...(force ? { 'Cache-Control': 'no-cache' } : {}),
+            ...(force || background ? { 'Cache-Control': 'no-cache' } : {}),
           },
         });
         if (
@@ -278,7 +354,7 @@ export class ApiClient {
           if (controller.signal.aborted)
             throw new ApiError(
               'timeout',
-              'The public record took too long to load. Try again.',
+              'The public record took too long to load.',
             );
           if (
             !(error instanceof SyntaxError) &&
@@ -342,13 +418,14 @@ export class ApiClient {
             !validatedSameRecord,
         );
       } catch (error) {
+        cancelled();
         lastError =
           error instanceof ApiError
             ? error
             : controller.signal.aborted
               ? new ApiError(
                   'timeout',
-                  'The public record took too long to load. Try again.',
+                  'The public record took too long to load.',
                 )
               : new ApiError(
                   'offline',
@@ -366,6 +443,7 @@ export class ApiClient {
         )
           throw lastError;
       } finally {
+        signal?.removeEventListener('abort', abort);
         clearTimeout(timer);
       }
       if (attempt < retries) {
@@ -413,7 +491,10 @@ export class ApiClient {
         headers: {
           'Content-Type': 'application/json',
           Accept: on ? 'text/event-stream' : 'application/json',
-          'User-Agent': catalogUserAgent(this.options.version, this.options.build),
+          'User-Agent': catalogUserAgent(
+            this.options.version,
+            this.options.build,
+          ),
         },
         body: JSON.stringify(body),
       });
@@ -424,18 +505,13 @@ export class ApiClient {
       )
         throw new AskFailure('blocked', 'The answer request was blocked.');
       if (!response.ok) {
-        const raw = await response.json().catch(() => ({}));
-        const detail =
-          typeof raw?.error === 'string'
-            ? raw.error
-            : `Request failed (${response.status})`;
         throw new AskFailure(
           response.status === 429
             ? 'rate-limited'
             : response.status === 403 || response.status === 401
               ? 'blocked'
               : 'invalid',
-          detail,
+          `Request failed (${response.status}).`,
         );
       }
       if (
@@ -548,7 +624,10 @@ export class ApiClient {
         signal: controller.signal,
         headers: {
           Accept: 'image/webp',
-          'User-Agent': catalogUserAgent(this.options.version, this.options.build),
+          'User-Agent': catalogUserAgent(
+            this.options.version,
+            this.options.build,
+          ),
         },
       });
       if (

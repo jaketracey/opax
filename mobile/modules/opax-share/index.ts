@@ -1,7 +1,11 @@
 import { requireOptionalNativeModule } from 'expo';
 
 interface OpaxShareModule {
-  share(request: { url: string; title: string }): Promise<boolean>;
+  share(request: {
+    url: string;
+    title: string;
+    text?: string;
+  }): Promise<boolean>;
   copyText(text: string): Promise<void>;
   shareText(request: { text: string; filename: string }): Promise<boolean>;
   /** Light feedback for Follow and Share ("success", "selection", "light"). */

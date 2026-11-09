@@ -1,10 +1,6 @@
-import { pageActions } from '../src/features/people/PageActions';
-import {
-  recordPageActions,
-  RecordActions,
-} from '../src/features/records/RecordActions';
-import { canonicalUrl } from '../src/navigation/external';
 import { ActionSheetIOS } from 'react-native';
+import { haptic } from '../src/design/haptics';
+import { confirmAction } from '../src/design/menu';
 import {
   menuLeaves,
   menuSections,
@@ -12,13 +8,13 @@ import {
   rowMenus,
   type RowMenuAction,
 } from '../src/design/row-link';
-import { confirmAction } from '../src/design/menu';
-import { haptic } from '../src/design/haptics';
+import { pageActions } from '../src/features/people/PageActions';
 import { copyText } from '../src/features/records/actions';
-
-jest.mock('../src/features/follows/FollowToggle', () => ({
-  FollowToggle: () => null,
-}));
+import {
+  recordActions,
+  recordBarItems,
+} from '../src/features/records/RecordActions';
+import { canonicalUrl } from '../src/navigation/external';
 
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
 jest.mock('../src/api/runtime', () => ({ catalogs: {} }));
@@ -193,7 +189,7 @@ test('page bar actions keep Ask, Copy link and Open on web without a second Foll
 });
 test('record bar actions expose Cite in an inline section and remove the in-content menu', () => {
   const target = { slug: 'speech-123', title: 'A speech' };
-  const actions = recordPageActions(target);
+  const actions = recordActions(target);
   expect(actions[0]).toMatchObject({ title: 'Cite', inline: true });
   expect(menuLeaves(actions).map((action) => action.title)).toEqual([
     'Copy APA 7',
@@ -204,8 +200,11 @@ test('record bar actions expose Cite in an inline section and remove the in-cont
     'Copy link',
     'Open on opax.com.au',
   ]);
-  expect(RecordActions(target)).toBeNull();
-  expect(recordPageActions({ slug: '../bad', title: 'A speech' })).toEqual([]);
+  expect(recordBarItems(target)()[0]).toMatchObject({
+    type: 'menu',
+    label: 'More',
+  });
+  expect(recordActions({ slug: '../bad', title: 'A speech' })).toEqual([]);
 });
 
 for (const following of [false, true]) {

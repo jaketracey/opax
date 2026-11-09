@@ -1,7 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { billFoldText, billName } from '../../api/bill-transforms';
 import type { billsFor } from '../../api/catalogs';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import {
   filterStore,
@@ -366,7 +366,7 @@ export function useBoundBillsModel(
   }, [owner, rows, scope]);
 }
 
-const bills = (n: number) => `${formatCount(n)} ${n === 1 ? 'bill' : 'bills'}`;
+const bills = (n: number) => `${counted(n, 'bill', 'bills')}`;
 /** "119 bills", or "27 of 1,793 bills" once a filter narrows the scope. */
 export function countLine(
   shown: number,

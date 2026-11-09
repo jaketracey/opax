@@ -1,9 +1,10 @@
+import type { Href } from 'expo-router';
 import { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
-import type { Href } from 'expo-router';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { Card } from '../../design/card';
+import { copy } from '../../design/copy';
 import {
   formatFinancialYear,
   formatMoneyCompact,
@@ -12,20 +13,20 @@ import {
 import { Icon, type SFSymbol } from '../../design/icon';
 import { SourceLine, type SourceDetails } from '../../design/source';
 import { InlineError, Skeleton } from '../../design/states';
+import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
-import { copy } from '../../design/copy';
-import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { symbols } from '../../design/symbols';
-import { useMoneyRecord } from '../money/hooks';
-import type { MoneyGraph } from '../money/data';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import {
   agenciesRoute,
   grantsRoute,
 } from '../../navigation/routes/public-money';
 import { presentSource } from '../../navigation/sheets';
-import { money } from './runtime';
+import { useCatalogRecord } from '../bills/useCatalogRecord';
+import type { MoneyGraph } from '../money/data';
+import { useMoneyRecord } from '../money/hooks';
+import { partyDonationsTotal } from '../money/records';
+import { defaultMoneyFilters } from '../money/view';
 import type { GrantIndex } from './data';
 import {
   counted,
@@ -36,6 +37,7 @@ import {
   recordSource,
   yearRange,
 } from './parts';
+import { money } from './runtime';
 
 /** Written in each card's source sheet, under "How this is chosen". */
 export const ORDER_RULE =
@@ -96,11 +98,12 @@ export function partyDonations(graph: MoneyGraph) {
   const range = /(\d{4}-\d{2}) to (\d{4}-\d{2})/.exec(graph.meta.coverage);
   if (key && parties.some((p) => p.byYear?.[key]))
     return {
-      value: parties.reduce((sum, p) => sum + (p.byYear?.[key]?.[0] ?? 0), 0),
+      value: partyDonationsTotal(graph, { from: Number(key), to: Number(key) })
+        .total,
       line: `disclosed to political parties in ${formatFinancialYear(Number(key))}`,
     };
   return {
-    value: parties.reduce((sum, p) => sum + p.total, 0),
+    value: partyDonationsTotal(graph, defaultMoneyFilters(graph)).total,
     line: `disclosed to political parties${range ? `, ${fyRange(range[1]!, range[2]!)}` : ''}`,
   };
 }

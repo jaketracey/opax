@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from '../../../design/text';
 import { colors, rhythm } from '../../../design/tokens';
-import { formatCount } from '../../../design/format';
+import { counted } from '../../../design/format';
 import { progressLine } from '../quiz-model';
 
 /**
@@ -21,7 +21,7 @@ export function ProgressStrip({
   return (
     <View
       accessible
-      accessibilityLabel={`Question ${index + 1} of ${total}. ${formatCount(points)} ${points === 1 ? 'point' : 'points'}.`}
+      accessibilityLabel={`Question ${index + 1} of ${total}. ${counted(points, 'point', 'points')}.`}
       testID="quiz-progress"
       style={styles.block}
     >

@@ -7,11 +7,11 @@ import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
 import Today from '../src/features/Today';
-import { loadChoice } from '../src/features/your-mp/choice-store';
-import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { readCachedEdition } from '../src/features/today/edition-store';
 import { readInvitationDates } from '../src/features/today/invitation-store';
 import { addDays, sydneyDay } from '../src/features/today/rules';
+import { loadChoice } from '../src/features/your-mp/choice-store';
+import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { responseBytes } from './fixture-bytes';
 import {
   bills,
@@ -198,10 +198,10 @@ test('first reads use the cache and leave the spinner idle; a pull revalidates e
     }>;
   expect(control().type).toBe(RefreshControl);
   expect(control().props.refreshing).toBe(false);
-  expect(mock.todayEdition).toHaveBeenLastCalledWith(false);
-  expect(mock.todayBills).toHaveBeenLastCalledWith(3, 'new', false);
-  expect(mock.todayDeclarations).toHaveBeenLastCalledWith(3, false);
-  expect(mock.recentDivisions).toHaveBeenLastCalledWith(false);
+  expect(mock.todayEdition).toHaveBeenNthCalledWith(1, false);
+  expect(mock.todayBills).toHaveBeenNthCalledWith(1, 3, 'new', false);
+  expect(mock.todayDeclarations).toHaveBeenNthCalledWith(1, 3, false);
+  expect(mock.recentDivisions).toHaveBeenNthCalledWith(1, false);
   let answer!: (block: c.Block<c.EditionView>) => void;
   mock.todayEdition.mockImplementationOnce(
     () => new Promise((resolve) => (answer = resolve)),

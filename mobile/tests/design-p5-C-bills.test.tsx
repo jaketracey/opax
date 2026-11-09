@@ -26,6 +26,7 @@ const mockParams: { key?: string; bill?: string; scope?: string; q?: string } =
 // Every Stack.Screen's options, newest last: the bar's items live there.
 const mockScreens: Record<string, unknown>[] = [];
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn(), setParams: jest.fn() },

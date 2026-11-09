@@ -28,7 +28,10 @@ export function exploreFixture(
     return body;
   }
   if (isExploreStaticPath(path)) return bytes(path);
-  if (isExplorePaidPath(path)) {
+  if (
+    isExplorePaidPath(path) &&
+    new URL(path, 'http://fixture').pathname === '/api/tide'
+  ) {
     const raw = reportBytes('/api/tide');
     if (!raw) return undefined;
     return Buffer.from(

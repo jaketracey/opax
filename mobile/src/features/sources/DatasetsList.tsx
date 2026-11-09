@@ -1,4 +1,5 @@
-import { Stack } from 'expo-router';
+import { RouteOptions } from '../../navigation/preview';
+
 import { InsetGroup, LinkRow, Screen, Skeleton } from '../../design/primitives';
 import { copy } from '../../design/copy';
 import { updatedText } from '../../design/source';
@@ -42,7 +43,7 @@ export default function DatasetsList() {
   );
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: text.datasets,
           headerSearchBarOptions: search.options,

@@ -1,21 +1,20 @@
 import type { Href } from 'expo-router';
 import { Pressable, Share, StyleSheet, View } from 'react-native';
-import { symbols } from '../../design/symbols';
+import { billName } from '../../api/bill-transforms';
+import type { BillIndex, PersonProfile } from '../../api/catalogs';
+import { haptic } from '../../design/haptics';
 import { Icon, type SFSymbol } from '../../design/icon';
 import { RowLink, rowMenus, type RowMenuAction } from '../../design/row-link';
-import { copyText } from '../records/actions';
-import { haptic } from '../../design/haptics';
-import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import {
   ownsRowPadding,
   useRowCellStyle,
   useRowInset,
 } from '../../design/row-padding';
-import { billRoute, personRoute } from '../../navigation/routes';
+import { symbols } from '../../design/symbols';
+import { Text } from '../../design/text';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import type { BillIndex, PersonProfile } from '../../api/catalogs';
-import { billName } from '../../api/bill-transforms';
+import { billRoute, personRoute } from '../../navigation/routes';
 import {
   changeDate,
   declarationAction,
@@ -23,6 +22,7 @@ import {
   voteAction,
   type FollowRecord,
 } from '../follows/changes';
+import { copyText } from '../records/actions';
 import type { ProfileView } from './model';
 
 export interface LatestRecord extends FollowRecord {
@@ -74,6 +74,10 @@ export function latestRecord(record: FollowRecord): LatestRecord | null {
       record.kind === 'register' ? 'interests' : undefined,
     );
   if (!href && !record.url) return null;
+  detail = detail.replace(
+    /^(second|third) reading(?: amendment)?/i,
+    (words) => words[0]!.toUpperCase() + words.slice(1).toLowerCase(),
+  );
   return { ...record, action, detail, href };
 }
 /** Existing profile data only. No speech or undated statement enters Lately. */
@@ -170,7 +174,9 @@ export function LatestRow({
   record,
   testID,
   onPress,
+  compact = false,
 }: {
+  compact?: boolean;
   record: LatestRecord;
   testID?: string;
   onPress?: () => void;
@@ -212,16 +218,20 @@ export function LatestRow({
           variant={record.kind === 'register' ? 'recordText' : 'rowRecord'}
           numberOfLines={record.kind === 'register' ? 3 : undefined}
         >
-          {record.title}
+          {compact && record.kind === 'register' && record.title.length > 80
+            ? record.title.slice(0, 79).trimEnd() + '…'
+            : record.title}
         </Text>
         <Text variant="secondary">{detail}</Text>
       </View>
-      <Icon
-        name={record.href ? symbols.chevron : symbols.external}
-        size={13}
-        maxScale={1.5}
-        tone="inkSoft"
-      />
+      {record.href || !['vote', 'division'].includes(record.kind) ? (
+        <Icon
+          name={record.href ? symbols.chevron : symbols.external}
+          size={13}
+          maxScale={1.5}
+          tone="inkSoft"
+        />
+      ) : null}
     </Pressable>
   );
   const path = record.billKey
@@ -280,6 +290,7 @@ export function LatestRow({
 }
 ownsRowPadding(LatestRow);
 export interface LatestRowsProps {
+  compact?: boolean;
   records: readonly LatestRecord[];
   limit?: number;
   testID?: string;
@@ -290,6 +301,7 @@ export function LatestRows({
   records,
   limit = 5,
   testID = 'latest',
+  compact = false,
   onRowPress,
 }: LatestRowsProps) {
   return (
@@ -298,6 +310,7 @@ export function LatestRows({
         <LatestRow
           key={record.key}
           record={record}
+          compact={compact}
           testID={`${testID}-${i}`}
           onPress={onRowPress ? () => onRowPress(record) : undefined}
         />

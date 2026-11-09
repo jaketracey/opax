@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import { counted, formatCount } from '../../design/format';
 import {
   Group,
-  RowList,
+  InsetGroup,
   SectionHeader,
   Skeleton,
   type SourceDetails,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
-import { formatCount } from '../../design/format';
 import { AllResults, allLocal, resultID } from './AllResults';
 import {
   EmptyResults,
@@ -19,17 +19,17 @@ import { SearchInRows } from './GroupResults';
 import { ResultsHeader } from './ResultsHeader';
 import { ScopeBar } from './ScopeBar';
 import { SpeechResults, speechRoute } from './SpeechResults';
-import { MatchRow, matchRoute } from './rows';
-import { ORDER_RULE, matchAll, type GroupKind, type Match } from './ranking';
-import { registerGroups, type Scope } from './scopes';
 import { filtersLine, hasFilters, type SpeechFilters } from './filters';
+import { ORDER_RULE, matchAll, type GroupKind, type Match } from './ranking';
+import { MatchRow, matchRoute } from './rows';
+import { registerGroups, type Scope } from './scopes';
+import type { SearchSources } from './sources';
 import {
   SPEECH_RULE,
   useSpeechList,
   type SpeechList,
   type SpeechSort,
 } from './speeches';
-import type { SearchSources } from './sources';
 
 const ALL_RULE = `${ORDER_RULE} ${SPEECH_RULE}`;
 
@@ -255,7 +255,7 @@ function LocalScope({
             level={3}
           />
           <View style={styles.rows}>
-            <RowList>
+            <InsetGroup>
               {rows.map((match) => (
                 <MatchRow
                   key={`${match.kind}:${match.key}`}
@@ -266,7 +266,7 @@ function LocalScope({
                   testID={resultID(match)}
                 />
               ))}
-            </RowList>
+            </InsetGroup>
           </View>
         </View>
       ) : (
@@ -297,8 +297,8 @@ function useHeader(
       settled: !!sources,
       count:
         scope === 'people'
-          ? `${formatCount(n)} ${n === 1 ? 'person' : 'people'}`
-          : `${formatCount(n)} ${n === 1 ? 'bill' : 'bills'}`,
+          ? `${counted(n, 'person', 'people')}`
+          : `${counted(n, 'bill', 'bills')}`,
       source: localSource(
         sources,
         scope === 'people' ? ['people', 'electorates'] : ['bills'],

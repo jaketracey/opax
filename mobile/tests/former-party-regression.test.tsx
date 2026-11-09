@@ -3,13 +3,14 @@ import TestRenderer from 'react-test-renderer';
 import { joinPerson } from '../src/api/person-identity';
 import { buildPortraitIndex } from '../src/api/portrait-index';
 import { rosterIdentityFor, searchPersonFor } from '../src/api/selectors';
+import { partyText } from '../src/design/party';
+import { PartyLabel, PersonRow } from '../src/design/primitives';
 import { peopleRows } from '../src/features/directories/model';
 import { personRowContext } from '../src/features/search/model';
-import { PartyChip, PersonRow } from '../src/design/primitives';
-import { partyText } from '../src/design/party';
 import { catalogs, index, manifest, people, roster, slugs } from './pinned';
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  useIsPreview: () => false, router: { push: jest.fn() } }));
 const record = <T,>(data: T) => ({
   data,
   stale: false,
@@ -66,7 +67,8 @@ test.each([
     act(() => {
       rendered = TestRenderer.create(
         <>
-          <PartyChip
+          <PartyLabel
+            linked={false}
             party={profile.party}
             status={profile.partyStatus}
             testID="header-party"

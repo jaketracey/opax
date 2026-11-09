@@ -25,6 +25,7 @@ const mockNavigation = {
 const mockBar: { options?: Record<string, any> } = {};
 const mockDetail: string[] = [];
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), setParams: jest.fn() },
   Link: Object.assign(({ children }: { children: unknown }) => children, {
     Trigger: ({ children }: { children: unknown }) => children,

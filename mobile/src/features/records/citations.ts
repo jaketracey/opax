@@ -52,7 +52,7 @@ export function titleSubject(rec: {
 }) {
   const parts = String(rec.title ?? '')
     .trim()
-    .split(/(\s+—\s+)/);
+    .split(/(\s+\u2014\s+)/);
   if (rec.speaker && titleKey(parts[0]) === titleKey(rec.speaker))
     parts.splice(0, 2);
   else if (

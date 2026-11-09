@@ -1,28 +1,30 @@
-import { ScrollView, View } from 'react-native';
+import { counted } from '../../design/format';
+import { router } from 'expo-router';
+import { View } from 'react-native';
 import { reports } from '../../api/runtime';
+import { useRead } from '../../api/useRead';
 import {
+  Button,
+  Group,
+  LinkRow,
   Screen,
   Section,
-  Group,
   Text,
-  Button,
-  LinkRow,
-  useAccessibilitySize,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
+import { topicRoute } from '../../navigation/routes/search';
 import { topicNames } from '../reports/model';
-import { useRead, ReadState } from '../reports/parts';
-import { openTopicWindow, openRecord } from '../reports/open';
+import { openRecord } from '../reports/open';
+import { ReadState } from '../reports/parts';
 import { MATRIX_NOTE } from './model';
-import { ExploreHeader } from './parts';
+import { ExploreChrome } from './parts';
 export default function Matrix() {
-  const read = useRead(reports.matrix),
-    ax = useAccessibilitySize();
+  const read = useRead(reports.matrix);
   return (
     <>
-      <ExploreHeader title="Debates" game="matrix" />
+      <ExploreChrome title="Debates" game="matrix" />
       <Screen column="wide" testID="explore-matrix-screen">
-        <Section rule={false}>
+        <Section>
           <Text wordSafe variant="body">
             Each party’s share of a debate’s labelled speeches
           </Text>
@@ -48,14 +50,15 @@ export default function Matrix() {
                 {slugs.map((slug, i) => (
                   <Section key={slug} title={topicNames[slug]}>
                     <LinkRow
-                      title={`${(data.totals[slug] ?? 0).toLocaleString('en-AU')} labelled speeches`}
+                      title={`${counted(data.totals[slug] ?? 0, 'labelled speech', 'labelled speeches')}`}
                       onPress={() =>
-                        openTopicWindow(slug, {}, topicNames[slug]!)
+                        router.push(topicRoute(slug, {}, topicNames[slug]!))
                       }
                     />
                     <View
                       style={{
-                        flexDirection: ax ? 'column' : 'row',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
                         gap: rhythm.tight,
                       }}
                     >
@@ -63,23 +66,29 @@ export default function Matrix() {
                         const count = data.cells[slug]?.[party] ?? 0,
                           total = data.totals[slug] ?? 0,
                           pct = total ? (count / total) * 100 : 0,
-                          label = `${party} · ${pct > 0 && pct < 1 ? '<1' : Math.round(pct)}%`;
+                          label = `${party}\u00a0·\u00a0${pct > 0 && pct < 1 ? '<1' : Math.round(pct)}%`;
                         return (
-                          <View key={party} style={ax ? {} : { width: 160 }}>
+                          <View key={party} style={{ maxWidth: '100%' }}>
                             {party === 'Other' || !count ? (
-                              <Text wordSafe variant="metadata">
+                              <Text wordSafe variant="secondary">
                                 {party}:{' '}
                                 {count ? label.split(' · ')[1] : 'none yet'}
                               </Text>
                             ) : (
                               <Button
                                 label={label}
+                                accessibilityLabel={label.replace(
+                                  /\u00a0/g,
+                                  ' ',
+                                )}
                                 accessibilityHint={`${count.toLocaleString('en-AU')} of ${total.toLocaleString('en-AU')} labelled ${topicNames[slug]} speeches. Opens the topic.`}
                                 onPress={() =>
-                                  openTopicWindow(
-                                    slug,
-                                    { party },
-                                    topicNames[slug]!,
+                                  router.push(
+                                    topicRoute(
+                                      slug,
+                                      { party },
+                                      topicNames[slug]!,
+                                    ),
                                   )
                                 }
                                 testID={`matrix-cell-${i}-${j}`}
@@ -95,21 +104,10 @@ export default function Matrix() {
             );
             return (
               <Group>
-                <Text wordSafe variant="metadata">
-                  {data.labelled.toLocaleString('en-AU')} speeches carry topic
-                  labels so far
+                <Text wordSafe variant="secondary">
+                  {`${counted(data.labelled, 'speech', 'speeches')} ${data.labelled === 1 ? 'carries' : 'carry'} topic labels so far`}
                 </Text>
-                {ax ? (
-                  rows
-                ) : (
-                  <ScrollView
-                    horizontal
-                    contentContainerStyle={{ paddingBottom: rhythm.block }}
-                    accessibilityLabel="Party by topic grid, scroll horizontally"
-                  >
-                    {rows}
-                  </ScrollView>
-                )}
+                {rows}
                 <LinkRow
                   title="Parties"
                   onPress={() => openRecord('/subject/party', 'Parties')}

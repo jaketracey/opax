@@ -1,5 +1,8 @@
 import { useRef } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
+import type { Corpus } from '../../api/catalog-decoders';
+import { copy } from '../../design/copy';
+import { formatCount } from '../../design/format';
 import {
   ContentUnavailable,
   Heading,
@@ -12,13 +15,12 @@ import {
   SourceLine,
   ValueRow,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
 import { symbols } from '../../design/symbols';
-import { chrome, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { methodsRoute } from '../../navigation/routes/reference';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { coverageCopy as text } from './copy';
+import { useRead, useShareItem, type Read } from './read';
 import {
   coverageSources,
   kindRows,
@@ -27,8 +29,6 @@ import {
   type CountRow,
   type Counts as CountsRecord,
 } from './repository';
-import { useRead, useShareItem, type Read } from './read';
-import type { Corpus } from '../../api/catalog-decoders';
 
 /**
  * Coverage (records.md 7): what OPAX holds, by source first (the question
@@ -45,9 +45,7 @@ export default function Coverage() {
   const bar = useTitleOnScroll(titleRef, text.title);
   const refresh = () => {
     summary.refresh();
-    // The counts are a paid read: a pull draws the session's answer again,
-    // and only a failed read asks for a new one.
-    if (counts.error) counts.retry();
+    counts.refresh();
   };
   const failed =
     !!summary.error && !summary.record && !!counts.error && !counts.record;
@@ -62,7 +60,7 @@ export default function Coverage() {
         <RefreshControl
           refreshing={summary.refreshing}
           onRefresh={refresh}
-          tintColor={chrome.tint}
+          tintColor={colors.navy}
         />
       }
     >

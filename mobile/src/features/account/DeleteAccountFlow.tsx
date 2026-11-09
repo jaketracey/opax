@@ -1,8 +1,8 @@
+import { RouteOptions } from '../../navigation/preview';
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
-import { Stack, router } from 'expo-router';
-import * as voice from '../../voice';
-import type { VoiceFailure } from '../../voice';
+import { confirmAction } from '../../design/menu';
 import {
   Button,
   ErrorState,
@@ -14,16 +14,17 @@ import {
 } from '../../design/primitives';
 import { useRowCellStyle } from '../../design/row-padding';
 import { minimumTarget, rhythm } from '../../design/tokens';
-import { confirmAction } from '../../design/menu';
 import { openOnWeb } from '../../navigation/external';
 import {
   deleteCodeRouteFor,
   signInRoute,
 } from '../../navigation/routes/account';
+import type { VoiceFailure } from '../../voice';
+import * as voice from '../../voice';
 import { clearAskConversations } from '../ask/store';
-import { SettingsRow } from './AccountLinks';
 import { CODE_LENGTH, codeDigits } from './code';
 import { accountCopy, deletionRefusal, refusalCopy } from './copy';
+import { SettingsRow } from './parts';
 import { ResendButton } from './ResendButton';
 import { accountDeleted, sessionEnded } from './store';
 import { issueChallenge, useCodeChallenge } from './useCodeChallenge';
@@ -207,7 +208,7 @@ export function DeleteCode({
 
   const confirm = () =>
     confirmAction(
-      `${accountCopy.confirmDeleteTitle} ${accountCopy.confirmDeleteMessage}`,
+      accountCopy.confirmDeleteTitle,
       [
         {
           title: accountCopy.deleteAccount,
@@ -215,12 +216,14 @@ export function DeleteCode({
           onPress: () => void remove(),
         },
       ],
+      undefined,
+      accountCopy.confirmDeleteMessage,
     );
   const deleting = busy === 'delete';
 
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         // No swipe or back while the deletion request runs (1.1, 6.4).
         options={{ gestureEnabled: !deleting, headerBackVisible: !deleting }}
       />

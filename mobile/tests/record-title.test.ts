@@ -1,12 +1,13 @@
 import { act, createElement } from 'react';
-import TestRenderer from 'react-test-renderer';
 import { Text as NativeText } from 'react-native';
-import { Text } from '../src/design/text';
+import TestRenderer from 'react-test-renderer';
 import {
   NO_BREAK_SPACE,
+  WORD_JOINER,
   bindRecordTitle,
   bindShortLastWord,
 } from '../src/design/record-title';
+import { Text } from '../src/design/text';
 
 const nb = NO_BREAK_SPACE;
 
@@ -73,7 +74,7 @@ test('a bound title keeps its words as published in the accessibility label', ()
   const title = 'Interactive Gambling (Cost Recovery Levy) Bill 2026';
   const native = drawn({ variant: 'recordTitle' }, title);
   expect(native.children).toBe(
-    `Interactive Gambling (Cost Recovery Levy) Bill${nb}2026`,
+    `Interactive Gambling (Cost Recovery Levy${WORD_JOINER}) Bill${nb}2026`,
   );
   expect(native.accessibilityLabel).toBe(title);
   expect(native.accessibilityLabel).not.toContain(nb);
@@ -98,4 +99,10 @@ test('a title that needs no binding gets no accessibility label', () => {
   const body = drawn({ variant: 'body' }, 'Water Amendment Bill 2026');
   expect(body.children).toBe('Water Amendment Bill 2026');
   expect(body).not.toHaveProperty('accessibilityLabel');
+});
+
+test('a closing parenthesis stays attached to its preceding word at AX sizes', () => {
+  expect(bindRecordTitle('Implementation) Bill 2026')).toBe(
+    `Implementation${WORD_JOINER}) Bill${nb}2026`,
+  );
 });

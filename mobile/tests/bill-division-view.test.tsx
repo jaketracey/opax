@@ -3,7 +3,7 @@ import { Text as NativeText, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
-import { Heading, InfoButton, SourceLine } from '../src/design/primitives';
+import { Heading, SourceLine } from '../src/design/primitives';
 import BillDetail from '../src/features/bills/BillDetail';
 import { pinned, slugs } from './pinned';
 
@@ -12,6 +12,7 @@ const mockParams: { key: string; section?: string } = {
   section: 'divisions',
 };
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
@@ -76,33 +77,6 @@ async function render() {
   });
   return renderer;
 }
-test('?section=divisions opens the whole bill, its votes dated and sourced', async () => {
-  const r = await render();
-  // No intermediate "Bill divisions" view: the bill itself, scrolled to its votes.
-  const heading = r.root.findAllByType(Heading)[0]!;
-  expect(heading.props.level).toBe(1);
-  expect(heading.props.children).not.toBe('Bill divisions');
-  const row = (await fixture.billFor(mockParams.key)).data.divisions.data!
-    .rows[0]!;
-  const vote = r.root.find(
-    (n) =>
-      typeof n.type === 'string' &&
-      /^bill-division-\d+-more$/.test(n.props.testID ?? '') &&
-      n.props.accessibilityLabel.includes(`${row.ayes} ayes, ${row.noes} noes`),
-  );
-  expect(vote.props.accessibilityState).toEqual({ expanded: false });
-  // One source line for the block; its sheet lists every vote's original.
-  const line = r.root.find(
-    (n) => n.type === SourceLine && n.props.testID === 'bill-divisions-source',
-  );
-  expect(line.props.originals).toContainEqual(
-    expect.objectContaining({ label: 'They Vote For You', url: row.url }),
-  );
-  expect(line.props.licence).toBe('ODbL');
-  // No lone ⓘ above the title.
-  expect(r.root.findAll((n) => n.type === InfoButton)).toHaveLength(0);
-  act(() => r.unmount());
-});
 test('ordinary bill routes retain the title, summary, dates and divisions', async () => {
   delete mockParams.section;
   const r = await render();
@@ -161,4 +135,30 @@ test('the whole bill page at AX5: uncapped text, the stage ruler as one element,
   ).toHaveLength(0);
   act(() => r.unmount());
   mockParams.key = 'au-federal-r7501';
+});
+
+test('?section=divisions opens the whole bill, its votes dated and sourced', async () => {
+  const r = await render();
+  // No intermediate "Bill divisions" view: the bill itself, scrolled to its votes.
+  const heading = r.root.findAllByType(Heading)[0]!;
+  expect(heading.props.level).toBe(1);
+  expect(heading.props.children).not.toBe('Bill divisions');
+  const row = (await fixture.billFor(mockParams.key)).data.divisions.data!
+    .rows[0]!;
+  const vote = r.root.find(
+    (n) =>
+      typeof n.type === 'string' &&
+      /^bill-division-\d+-more$/.test(n.props.testID ?? '') &&
+      n.props.accessibilityLabel.includes(`${row.ayes} ayes, ${row.noes} noes`),
+  );
+  expect(vote.props.accessibilityState).toEqual({ expanded: false });
+  // One source line for the block; its sheet lists every vote's original.
+  const line = r.root.find(
+    (n) => n.type === SourceLine && n.props.testID === 'bill-divisions-source',
+  );
+  expect(line.props.originals).toContainEqual(
+    expect.objectContaining({ label: 'They Vote For You', url: row.url }),
+  );
+  expect(line.props.licence).toBe('ODbL');
+  act(() => r.unmount());
 });

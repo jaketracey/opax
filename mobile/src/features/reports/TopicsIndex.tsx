@@ -1,7 +1,11 @@
+import { RouteOptions } from '../../navigation/preview';
+import { router } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { RefreshControl, View } from 'react-native';
-import { Stack, router } from 'expo-router';
 import { reports } from '../../api/runtime';
+import { useRead } from '../../api/useRead';
+import { copy } from '../../design/copy';
+import { counted } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
@@ -14,18 +18,16 @@ import {
   SourceLine,
   Text,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
 import { useListSearchBar } from '../../design/search-bar';
 import { rhythm } from '../../design/tokens';
 import { headerItems } from '../../navigation/chrome';
-import { shareHeaderItem } from '../../navigation/share';
-import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { coverageRoute, methodsRoute } from '../../navigation/routes/reference';
 import { resultsRoute, topicRoute } from '../../navigation/routes/search';
-import { allTopics, matchTopics } from '../search/ranking';
+import { shareHeaderItem } from '../../navigation/share';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { isOffline } from '../CatalogState';
-import { announce, useRead } from './parts';
+import { allTopics, matchTopics } from '../search/ranking';
+import { announce } from './parts';
 import { TOPIC_CITATION, topicNotes } from './topic-copy';
 
 type Order = 'name' | 'count';
@@ -77,7 +79,7 @@ export default function TopicsIndex() {
   const loading = !read.record && !read.error;
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Topics',
           headerSearchBarOptions: { ...search, hideWhenScrolling: true },
@@ -157,7 +159,7 @@ export default function TopicsIndex() {
                     value={
                       t.count === undefined
                         ? undefined
-                        : `${formatCount(t.count)} speeches`
+                        : `${counted(t.count, 'speech', 'speeches')}`
                     }
                     detail={t.description}
                     href={topicRoute(t.slug)}

@@ -1,22 +1,21 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
-import { votingMetaFor, type EvidenceBlock, type ProfileView } from './model';
+import { formatDate } from '../../design/format';
+import { jurisdictionName } from '../../design/parliament';
 import {
   EmptyState,
-  LoadingState,
   ErrorState,
   Heading,
+  LoadingState,
   Section,
   SourceLine,
   errorMessage,
   licenceText,
-  type InfoNotes,
   type SourceDetails,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
-import { jurisdictionName } from '../../design/parliament';
 import { colors, hairline, rhythm, type Accent } from '../../design/tokens';
+import { votingMetaFor, type EvidenceBlock, type ProfileView } from './model';
 
 /** What a block's source line reads from: its date, sources and state. */
 export type SourcedBlock = Pick<
@@ -198,7 +197,10 @@ export function BlockSource({
   licence?: string;
   /** The Sources and licences entry the licence row opens. */
   licenceDataset?: string;
-  notes?: InfoNotes['notes'];
+  notes?: {
+    title?: string | null;
+    notes?: readonly (string | false | null | undefined)[];
+  }['notes'];
   /** Original records beyond the block's own sources: one per division. */
   originals?: SourceDetails['originals'];
   /** What the line says in place of the block's own fields. */
@@ -273,7 +275,10 @@ export function EvidenceFooter({
   block: SourcedBlock;
   id: string;
   /** The source sheet's title and notes: methodology and caveats. */
-  about?: InfoNotes | null;
+  about?: {
+    title?: string | null;
+    notes?: readonly (string | false | null | undefined)[];
+  } | null;
   line?: SourceOverrides;
   /** The Sources and licences entry the licence row opens. */
   licenceDataset?: string;
@@ -282,7 +287,7 @@ export function EvidenceFooter({
     <BlockSource
       block={block}
       testID={`${id}-source`}
-      title={about?.title}
+      title={about?.title ?? undefined}
       notes={about?.notes}
       line={line}
       licenceDataset={licenceDataset}
@@ -325,7 +330,10 @@ export function RecordBlock<T>({
   children: (data: T) => ReactNode;
   accent?: Accent;
   /** Methodology and caveats, given the data: the source sheet's notes. */
-  about?: (data: T | null) => InfoNotes | null;
+  about?: (data: T | null) => {
+    title?: string | null;
+    notes?: readonly (string | false | null | undefined)[];
+  } | null;
   /** What the source line says in place of the block's date. */
   line?: (data: T | null) => SourceOverrides | undefined;
   /** False where the section draws one line for several blocks. */
@@ -405,12 +413,7 @@ export function RecordBlock<T>({
       </View>
     );
   return (
-    <Section
-      testID={id}
-      title={title}
-      headingTestID={`${id}-heading`}
-      accent={accent}
-    >
+    <Section testID={id} title={title} headingTestID={`${id}-heading`}>
       {body}
     </Section>
   );

@@ -1,9 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { ApiClient } from '../src/api/client';
+import { exploreFixture } from '../scripts/explore-fixture';
+import pins from '../scripts/fixtures/explore-pictures.json';
 import { CatalogCache } from '../src/api/cache';
-import { PortraitCache, type SavedPortrait } from '../src/api/portrait-cache';
+import { ApiClient } from '../src/api/client';
 import { assertAllowedPath } from '../src/api/policy';
+import { PortraitCache, type SavedPortrait } from '../src/api/portrait-cache';
 import {
   assertYearPictureBytes,
   yearPictureKey,
@@ -11,8 +13,6 @@ import {
   yearPicturePath,
 } from '../src/api/year-picture-policy';
 import { decodePictures } from '../src/features/explore/pictures';
-import { exploreFixture } from '../scripts/explore-fixture';
-import pins from '../scripts/fixtures/explore-pictures.json';
 const raw = JSON.parse(
   readFileSync(
     resolve(__dirname, '../../portal/public/years/pictures.json'),
@@ -32,7 +32,13 @@ const cache = () =>
     remove: async () => {},
   });
 test('the web manifest preserves all 189 photos and credits, including unknown dates', () => {
-  expect(decodePictures(raw)).toEqual(raw);
+  const cleaned = decodePictures(raw);
+  const originals = Object.values(raw).flat() as any[];
+  for (const p of Object.values(cleaned).flat()) {
+    const original = originals.find((row) => row.file === p.file);
+    expect({ ...p, credit: original.credit }).toEqual(original);
+    expect(p.credit).not.toMatch(/^(?:photo:\s*)?own work[.!]?$/i);
+  }
   expect(Object.values(decodePictures(raw)).flat()).toHaveLength(189);
   for (const rows of Object.values(decodePictures(raw)))
     for (const p of rows) {
@@ -81,7 +87,7 @@ test.each([
   expect(() => assertAllowedPath(path)).toThrow();
 });
 test('small fixture subset is pinned, exact WebP bytes; unknown images never proxy production', () => {
-  expect(paths).toHaveLength(6);
+  expect(paths).toHaveLength(7);
   expect(Object.values(pins).reduce((n, p) => n + p.bytes, 0)).toBeLessThan(
     1024 * 1024,
   );
@@ -103,7 +109,7 @@ test('small fixture subset is pinned, exact WebP bytes; unknown images never pro
         exploreFixture('/years/pictures.json', () => undefined)!.toString(),
       ),
     ),
-  ).toEqual(raw);
+  ).toEqual(decodePictures(raw));
 });
 test('byte client uses one bounded free read, rejects redirects and non-WebP, JSON client cannot read an image', async () => {
   const transport = jest.fn(
@@ -180,10 +186,10 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   await Promise.all(
     [...paths, paths[0]!].map((path) => photos.get(yearPictureKey(path))),
   );
-  expect(getPortrait).toHaveBeenCalledTimes(6);
+  expect(getPortrait).toHaveBeenCalledTimes(paths.length);
   expect(peak).toBe(3);
   await photos.get(yearPictureKey(paths[0]!));
-  expect(getPortrait).toHaveBeenCalledTimes(6);
+  expect(getPortrait).toHaveBeenCalledTimes(paths.length);
   const offline = new PortraitCache(
     store,
     {

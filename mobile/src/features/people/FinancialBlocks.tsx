@@ -1,10 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 import { Disclosure } from '../../design/disclosure';
-import { Group } from '../../design/layout';
-import { LinkRow, ValueRow } from '../../design/rows';
-import { Text } from '../../design/text';
-import { isPartyLabel } from '../../design/party';
-import { rhythm } from '../../design/tokens';
 import {
   formatCount,
   formatDate,
@@ -14,6 +9,11 @@ import {
   formatYearRange,
   moneyAccessibilityLabel,
 } from '../../design/format';
+import { Group } from '../../design/layout';
+import { isPartyLabel } from '../../design/party';
+import { LinkRow, ValueRow } from '../../design/rows';
+import { Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 import {
   expenseGlossaryRoute,
   moneyRoute,
@@ -68,8 +68,6 @@ export function PayBlock({
   block: ProfileView['blocks']['pay'];
   retry: () => void;
   id: string;
-  /** @deprecated The block always shows its own dated figure. */
-  figure?: boolean;
 }) {
   return (
     <ProfileBlock

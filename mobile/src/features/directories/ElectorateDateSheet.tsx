@@ -1,7 +1,8 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { headerItems } from '../../navigation/chrome';
 import { colors, rhythm } from '../../design/tokens';
 import { copy } from '../../design/copy';
@@ -64,7 +65,7 @@ export default function ElectorateDateSheet() {
         padding: rhythm.block,
       }}
     >
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'View on a date',
           unstable_headerLeftItems: () => [

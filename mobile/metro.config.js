@@ -17,7 +17,9 @@ const inheritedResolver = config.resolver.resolveRequest;
 // welcome tour's launch argument and the electorate outline probe, and the
 // Account and Talk entries use a single release switch below.
 const productionStubs = [
+  path.join(__dirname, 'src/features/follows/launch-fixture'),
   'src/design/text-probe',
+  'src/features/today/launch-fixture',
   'src/features/people/party-timing',
   'src/onboarding/launch-flag',
   'src/features/electorate-map/outline-probe',
@@ -58,7 +60,7 @@ const productionBlockList = require('./scripts/production-block-list.json').map(
 // and store, and the rows the entry draws on Android.
 const accountSignIn = [
   /[/\\]src[/\\]app[/\\]account[/\\](?:sign-in|delete)\.tsx$/,
-  /[/\\]src[/\\]features[/\\]account[/\\](?!(?:(?:entry|store)\.production\.ts|AccountRows\.tsx|AccountLinks\.tsx)$).*/,
+  /[/\\]src[/\\]features[/\\]account[/\\](?!(?:(?:entry|store)\.production\.ts|AccountRows\.tsx|AccountLinks\.tsx|parts\.tsx)$).*/,
 ];
 config.cacheVersion = `opax-${variant}-voice-${voiceEnabled ? 'on' : 'off'}${communityHidden ? '-community-off' : ''}${androidBuild ? '-android' : ''}`;
 const existing = config.resolver.blockList;

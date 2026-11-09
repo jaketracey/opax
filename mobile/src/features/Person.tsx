@@ -1,3 +1,5 @@
+import { RouteOptions } from '../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Platform,
@@ -6,32 +8,29 @@ import {
   View,
   type ScrollView,
 } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { catalogs } from '../api/runtime';
 import type { Electorate } from '../api/catalogs';
 import type { PersonProfile } from '../api/person-identity';
-import { CachedPortrait } from './CachedPortrait';
+import { catalogs } from '../api/runtime';
+import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
+import { VoteSplit } from '../design/charts';
 import { Disclosure } from '../design/disclosure';
+import { formatCount, formatMoney } from '../design/format';
 import { Group, Screen } from '../design/layout';
-import { LinkRow } from '../design/rows';
+import { isPartyLabel } from '../design/party';
+import { phoneCopy } from '../design/phone-copy';
 import { StatStrip, type StatTileProps } from '../design/record';
+import { LinkRow } from '../design/rows';
 import {
   ContentUnavailable,
   InlineError,
   LoadingState,
   Skeleton,
 } from '../design/states';
-import { phoneCopy } from '../design/phone-copy';
 import { Text } from '../design/text';
-import { VoteSplit } from '../design/charts';
-import { isPartyLabel } from '../design/party';
-import { useReduceMotion } from '../design/accessibility';
-import { useHeaderBottom } from '../design/useHeaderBottom';
-import { formatCount, formatMoney } from '../design/format';
 import { rhythm } from '../design/tokens';
+import { useHeaderBottom } from '../design/useHeaderBottom';
 import { headerItems, pageItems } from '../navigation/chrome';
-import { shareRecord } from '../navigation/share';
 import { openOnWeb } from '../navigation/external';
 import {
   billRoute,
@@ -39,11 +38,8 @@ import {
   partyRoute,
   personSpeechesRoute,
 } from '../navigation/routes';
-import { profileGrid } from './split/grid';
-import { BlockSource, votesSource } from './your-mp/Evidence';
-import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
-import { useIsMyMember } from './your-mp/useIsMyMember';
-import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
+import { shareRecord } from '../navigation/share';
+import { CachedPortrait } from './CachedPortrait';
 import { AddedSinceGroup } from './follows/AddedSinceGroup';
 import type { Change } from './follows/changes';
 import { followKey, useFollows } from './follows/store';
@@ -56,9 +52,9 @@ import {
   PayBlock,
 } from './people/FinancialBlocks';
 import { MemberVoteRow } from './people/MemberVoteRow';
+import { PersonNotFound } from './people/NotFound';
 import { officialPageItem, usePageActions } from './people/PageActions';
 import { ProfileHeader, type IdentityRow } from './people/ProfileHeader';
-import { PersonNotFound } from './people/NotFound';
 import { MoreFromRecord, PersonDiary } from './people/Sections';
 import {
   annualPay,
@@ -75,6 +71,11 @@ import {
   type ProfileArrival,
   type ProfileSection,
 } from './people/model';
+import { profileGrid } from './split/grid';
+import { BlockSource, votesSource } from './your-mp/Evidence';
+import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
+import { useIsMyMember } from './your-mp/useIsMyMember';
+import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
@@ -270,7 +271,7 @@ export function ProfileScreen({
   return (
     <>
       {embedded ? null : (
-        <Stack.Screen
+        <RouteOptions
           options={{
             // The back button on the next page names this one.
             ...(name ? { title: name } : {}),
@@ -662,7 +663,7 @@ function ProfileContent({
                   countsStyle="ayesNoes"
                   {...{
                     dateRange: { start: `${from}-01-01`, end: `${to}-12-31` },
-                    source: 'They Vote For You',
+                    citation: 'They Vote For You',
                   }}
                 />
               ) : null}

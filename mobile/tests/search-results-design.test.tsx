@@ -1,16 +1,13 @@
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import records from '../scripts/fixtures/search/records.json';
 import {
-  BigFigure,
   Disclosure,
   RecordRow,
   SegmentedControl,
-  ViewOriginal,
 } from '../src/design/primitives';
-import { SpeechResults } from '../src/features/search/SpeechResults';
-import { ResultsHeader } from '../src/features/search/ResultsHeader';
-import { speechSource, type SpeechList } from '../src/features/search/speeches';
+import { decodeRecords } from '../src/features/search/decoders';
 import { defaultSpeechFilters } from '../src/features/search/filters';
 import {
   countLabel,
@@ -18,14 +15,16 @@ import {
   resultTitle,
   savedCopy,
 } from '../src/features/search/present';
-import { decodeRecords } from '../src/features/search/decoders';
-import records from '../scripts/fixtures/search/records.json';
+import { ResultsHeader } from '../src/features/search/ResultsHeader';
+import { speechSource, type SpeechList } from '../src/features/search/speeches';
+import { SpeechResults } from '../src/features/search/SpeechResults';
 
 jest.mock('../src/api/runtime', () => ({
   recordSearch: { search: jest.fn(), summary: jest.fn() },
   catalogs: { search: jest.fn() },
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn() },
   useSegments: () => [],
   Link: Object.assign(({ children }: { children: unknown }) => children, {
@@ -174,40 +173,6 @@ function draw(rows = [farrell]) {
   return { renderer, text, list };
 }
 
-test('the results: one count and source line above, one row per record', () => {
-  const { renderer, text, list } = draw();
-  expect(text).toContain('1 speech');
-  expect(renderer.root.findAllByType(BigFigure)).toHaveLength(0);
-  // Passages | Summaries is retired: every row shows its passage.
-  expect(renderer.root.findAllByType(SegmentedControl)).toHaveLength(0);
-  // The row: its own title, the kind and formatted date, who spoke.
-  const row = renderer.root.findByType(RecordRow);
-  expect(row.props).toMatchObject({
-    title: 'Bills',
-    meta: 'Speech · 6 Mar 2023 · Federal',
-    speaker: { name: 'Don Farrell' },
-    compact: true,
-  });
-  expect(text).not.toContain('Don Farrell — Bills — 2023-03-06');
-  expect(text).not.toContain('2023-03-06');
-  expect(renderer.root.findAllByType(Disclosure)).toHaveLength(0);
-  expect(text).not.toMatch(/Read matching record|View original/);
-  expect(renderer.root.findAllByType(ViewOriginal)).toHaveLength(0);
-  // The record's original is in the results' one source line (the header).
-  expect(list.source?.originals).toEqual([
-    expect.objectContaining({ label: 'Senate Hansard' }),
-  ]);
-  expect(
-    renderer.root.findAll((n) => n.props?.testID === 'search-count'),
-  ).not.toHaveLength(0);
-  // The whole row opens the reader, with the query for its find bar.
-  expect(row.props.href).toMatchObject({
-    params: { slug: 'speech-828012', q: 'Don Farrell' },
-  });
-  // A one-page result offers no paging row.
-  expect(text).not.toMatch(/Show 20 more|Page 1 of 1/);
-});
-
 test('Summarise sits after the third result and nowhere else', () => {
   const few = draw();
   expect(
@@ -233,4 +198,36 @@ test('Summarise sits after the third result and nowhere else', () => {
     'results-summarise',
   ]);
   expect(many.text).toContain('Summarise these speeches');
+});
+
+test('the results: one count and source line above, one row per record', () => {
+  const { renderer, text, list } = draw();
+  expect(text).toContain('1 speech');
+  // Passages | Summaries is retired: every row shows its passage.
+  expect(renderer.root.findAllByType(SegmentedControl)).toHaveLength(0);
+  // The row: its own title, the kind and formatted date, who spoke.
+  const row = renderer.root.findByType(RecordRow);
+  expect(row.props).toMatchObject({
+    title: 'Bills',
+    meta: 'Speech · 6 Mar 2023 · Federal',
+    speaker: { name: 'Don Farrell' },
+    compact: true,
+  });
+  expect(text).not.toContain('Don Farrell — Bills — 2023-03-06');
+  expect(text).not.toContain('2023-03-06');
+  expect(renderer.root.findAllByType(Disclosure)).toHaveLength(0);
+  expect(text).not.toMatch(/Read matching record|View original/);
+  // The record's original is in the results' one source line (the header).
+  expect(list.source?.originals).toEqual([
+    expect.objectContaining({ label: 'Senate Hansard' }),
+  ]);
+  expect(
+    renderer.root.findAll((n) => n.props?.testID === 'search-count'),
+  ).not.toHaveLength(0);
+  // The whole row opens the reader, with the query for its find bar.
+  expect(row.props.href).toMatchObject({
+    params: { slug: 'speech-828012', q: 'Don Farrell' },
+  });
+  // A one-page result offers no paging row.
+  expect(text).not.toMatch(/Show 20 more|Page 1 of 1/);
 });

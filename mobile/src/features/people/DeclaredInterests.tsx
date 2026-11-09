@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import type { InterestDetail } from '../../api/catalogs';
 import { Disclosure } from '../../design/disclosure';
+import { counted, formatCount, formatDate } from '../../design/format';
 import { Group } from '../../design/layout';
 import { Text } from '../../design/text';
-import { formatCount, formatDate } from '../../design/format';
 import { colors, hairline, rhythm } from '../../design/tokens';
-import type { InterestDetail } from '../../api/catalogs';
 import { NewDot } from '../follows/NewDot';
 import { registerCategoryLabel, registerEntry } from '../your-mp/model';
 
@@ -34,7 +34,7 @@ export function statementLine(r: InterestDetail): string | null {
     ? `Statement of ${formatDate(r.statement_date, 'short')}`
     : null;
   const since = changes
-    ? `${formatCount(changes)} ${changes === 1 ? 'change' : 'changes'}${statement ? ' since' : ''}`
+    ? `${counted(changes, 'change', 'changes')}${statement ? ' since' : ''}`
     : null;
   return [statement, since].filter(Boolean).join(' · ') || null;
 }
@@ -82,8 +82,6 @@ export function DeclaredInterests({
   isNew,
 }: {
   register: InterestDetail;
-  /** @deprecated The page's strip carries the total. */
-  figure?: boolean;
   isNew?: (row: InterestDetail['buckets'][string]['items'][number]) => boolean;
 }) {
   const line = statementLine(r);

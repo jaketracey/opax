@@ -1,6 +1,7 @@
+import { RouteOptions } from '../../navigation/preview';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { BarSeries } from '../../design/charts';
 import { PopUpButton, SegmentedPicker } from '../../design/controls';
@@ -20,24 +21,24 @@ import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { leadsFor } from '../leads/model';
 import { CONTRACTS_CAVEAT } from './HubCards';
-import { money } from './runtime';
-import { moneyItemHref, organisationHref } from './routes';
 import {
-  ListCaption,
-  MoneyList,
-  MoneyStatus,
-  TitleAlias,
   askAbout,
   counted,
+  ListCaption,
   matches,
   moneyBar,
   moneyCitation,
+  MoneyList,
+  MoneyStatus,
   readableDates,
   recordSource,
+  TitleAlias,
   useDebouncedAnnounce,
   useMoneySearch,
   yearRange,
 } from './parts';
+import { moneyItemHref, organisationHref } from './routes';
+import { money } from './runtime';
 
 const AGENCY_NAMES =
   'Agency names appear as recorded. Renamed departments are separate entries; no succession or combined history is assumed.';
@@ -88,7 +89,7 @@ export default function Agencies() {
   const name = 'Government agencies';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerLargeTitleEnabled: true,
@@ -119,24 +120,19 @@ export default function Agencies() {
                       : ''
                   }`}
                   caveat={CONTRACTS_CAVEAT}
-                  // Spread: opax/transport reads a plain `source` prop as an image.
-                  {...{
-                    source: {
-                      asOf: data.meta.asOf,
-                      citation: [
-                        moneyCitation(data.meta.source || 'AusTender'),
-                      ],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals: [AUSTENDER],
-                      notes: [
-                        START_YEARS(data.publishedFrom, data.publishedTo),
-                        AGENCY_NAMES,
-                        ...data.meta.caveats,
-                        ...saved.stateNotes,
-                      ].map(readableDates),
-                      testID: 'agencies-source',
-                    },
+                  citation={{
+                    asOf: data.meta.asOf,
+                    citation: [moneyCitation(data.meta.source || 'AusTender')],
+                    savedAt: saved.savedAt,
+                    state: saved.state,
+                    originals: [AUSTENDER],
+                    notes: [
+                      START_YEARS(data.publishedFrom, data.publishedTo),
+                      AGENCY_NAMES,
+                      ...data.meta.caveats,
+                      ...saved.stateNotes,
+                    ].map(readableDates),
+                    testID: 'agencies-source',
                   }}
                   testID="agencies-total"
                 />
@@ -266,7 +262,7 @@ export function Agency() {
     last = profile?.lastYear ?? latest ?? '';
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: name,
           headerSearchBarOptions:
@@ -320,24 +316,19 @@ export function Agency() {
                       ? `${formatMoneyCompact(profile.undated)} of this has no start date. ${CONTRACTS_CAVEAT}`
                       : CONTRACTS_CAVEAT
                   }
-                  // Spread: opax/transport reads a plain `source` prop as an image.
-                  {...{
-                    source: {
-                      asOf: data.meta.asOf,
-                      citation: [
-                        moneyCitation(data.meta.source || 'AusTender'),
-                      ],
-                      savedAt: saved.savedAt,
-                      state: saved.state,
-                      originals: [AUSTENDER],
-                      notes: [
-                        'Years describe the calendar year each contract started.',
-                        AGENCY_NAMES,
-                        ...data.meta.caveats,
-                        ...saved.stateNotes,
-                      ].map(readableDates),
-                      testID: 'agency-source',
-                    },
+                  citation={{
+                    asOf: data.meta.asOf,
+                    citation: [moneyCitation(data.meta.source || 'AusTender')],
+                    savedAt: saved.savedAt,
+                    state: saved.state,
+                    originals: [AUSTENDER],
+                    notes: [
+                      'Years describe the calendar year each contract started.',
+                      AGENCY_NAMES,
+                      ...data.meta.caveats,
+                      ...saved.stateNotes,
+                    ].map(readableDates),
+                    testID: 'agency-source',
                   }}
                   testID="agency-total"
                 />
@@ -411,8 +402,7 @@ export function Agency() {
                           start: `${chartYears[0]!.year}-01-01`,
                           end: data.meta.asOf,
                         }}
-                        // Spread: opax/transport reads a plain `source` prop as an image.
-                        {...{ source: 'AusTender' }}
+                        citation={'AusTender'}
                       />
                     ) : (
                       <EmptyState message="No contracts in this agency's records have a start date." />

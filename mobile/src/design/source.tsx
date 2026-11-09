@@ -1,28 +1,11 @@
-import { router } from 'expo-router';
-import { presentSheet, presentSource } from '../navigation/sheets';
-import { useEffect, useRef, useState, type ReactNode, type Ref } from 'react';
-import {
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { openOnWeb, openSource } from '../navigation/external';
-import { useAccessibilitySize, useReduceMotion } from './accessibility';
-import {
-  calendarDate,
-  formatDate,
-  savedText,
-  sourceName,
-  type DateInput,
-} from './format';
+import { useState, type ReactNode, type Ref } from 'react';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { presentSource } from '../navigation/sheets';
+import { useAccessibilitySize } from './accessibility';
+import { calendarDate, formatDate, sourceName, type DateInput } from './format';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { useRowHighlight } from './row-padding';
-import { useKeyCommand } from './keyboard';
-import { Heading, Text } from './text';
+import { Text } from './text';
 import {
   colors,
   hairline,
@@ -70,10 +53,12 @@ export interface SourceDetails {
   /** The source file's own date: meta.as_of, generated_at. */
   asOf?: DateInput | null;
   dateRole?: 'recorded' | 'found';
+  /** Ask dates an answer to the minute rather than dating a source record. */
+  header?: string;
   /** How a rule-ordered block was selected. */
   rule?: string;
   /** Ask supplies its report action without placing it in route params. */
-  report?: { label: string; onPress: () => void };
+  report?: { label: string; onPress: () => void; testID?: string };
   /**
    * Who holds the record: one name, or several. The line shows the first
    * short name ("and 2 more"); the sheet lists every full title, each with
@@ -288,10 +273,9 @@ export function SourceLine({
 }
 
 /**
- * The drawn source line, shared by SourceLine and the provenance adapters
- * (SourceLink, ViewOriginal): one anatomy for every way into a source.
+ * The drawn source line shared by SourceLine, AnswerView and CitationContent:
+ * one anatomy for block provenance and Ask's source footers.
  */
-/** @deprecated Compatibility drawing for source adapters; use SourceLine. */
 export function SourceAffordance({
   glyph,
   date,
@@ -390,353 +374,11 @@ function lineChildren(
   ];
 }
 
-/**
- * The source sheet: a native page sheet with a Done button. Original
- * records first (each opens the record), then the as-at date and coverage,
- * the sources, the notes and caveats in full, the licence, and a row to
- * Sources and licences. With notes alone it is the notes sheet (ⓘ).
- */
-/** @deprecated Use presentSource and the /source route. */
-export function SourceSheet({
-  visible,
-  onClose,
-  title,
-  testID,
-  ...details
-}: SourceDetails & {
-  visible: boolean;
-  onClose: () => void;
-  title: string;
-  testID?: string;
-}) {
-  const reduced = useReduceMotion();
-  // An original opens once the sheet has gone, so a native route or the
-  // browser never lands behind it.
-  const pending = useRef<(() => void) | null>(null);
-  const after = (action: () => void) => {
-    if (Platform.OS === 'ios') pending.current = action;
-    onClose();
-    if (Platform.OS !== 'ios') action();
-  };
-  useKeyCommand('list-escape', onClose, visible);
-  // Interactive extra content must keep re-rendering with its legacy parent.
-  const notesOnly =
-    details.extra == null &&
-    details.notes?.some((note) => typeof note === 'string' && note.trim()) &&
-    Object.keys(details).every((key) => key === 'notes' || key === 'extra');
-  if (visible && notesOnly)
-    return (
-      <LegacyRuleBridge
-        title={title}
-        details={details}
-        onClose={onClose}
-        testID={testID}
-      />
-    );
-  return (
-    <Modal
-      visible={visible}
-      animationType={reduced ? 'none' : 'slide'}
-      presentationStyle="pageSheet"
-      onRequestClose={onClose}
-      onDismiss={() => {
-        const action = pending.current;
-        pending.current = null;
-        action?.();
-      }}
-    >
-      <SheetBody title={title} onClose={onClose} testID={testID}>
-        <SourceDetailsBody details={details} after={after} testID={testID} />
-      </SheetBody>
-    </Modal>
-  );
-}
-
-function LegacyRuleBridge({
-  title,
-  details,
-  onClose,
-  testID,
-}: {
-  title: string;
-  details: SourceDetails;
-  onClose: () => void;
-  testID?: string;
-}) {
-  const presented = useRef(false);
-  useEffect(() => {
-    if (presented.current) return;
-    presented.current = true;
-    presentSheet({
-      kind: 'rule',
-      title,
-      rule: (details.notes ?? [])
-        .filter((note) => typeof note === 'string' && note.trim())
-        .join('\n\n'),
-      testID: testID?.replace(/-sheet$/, ''),
-    });
-    onClose();
-  }, [title, details, onClose, testID]);
-  return null;
-}
-
-function SourceDetailsBody({
-  details,
-  after,
-  testID,
-}: {
-  details: SourceDetails;
-  after: (action: () => void) => void;
-  testID?: string;
-}) {
-  const { coverage, savedAt, originals, notes, licence, extra } = details;
-  const sources = sourceCitations(details.citation);
-  const asOf = details.asOf ?? newestSourceDate(details.citation);
-  const usable = (originals ?? []).filter(
-    (s, i, all) =>
-      (s.url.startsWith('https://') || s.url.startsWith('/')) &&
-      all.findIndex((o) => o.url === s.url) === i,
-  );
-  const shownNotes = (notes ?? []).filter((note): note is string => !!note);
-  const date = sheetDate(asOf);
-  const dated = !!date || !!coverage || savedAt != null;
-  // Each source says its own date only when the dates differ (P2-4): one
-  // date for many sources would date the oldest feed as the newest.
-  const sourceDays = new Set(
-    sources.map((s) => dayNumber(s.asOf ?? asOf)).filter((d) => d != null),
-  );
-  const perSource = sources.some((s) => s.asOf != null) && sourceDays.size > 1;
-  const provenance =
-    dated || sources.length > 0 || usable.length > 0 || !!licence;
-  const openLicences = () =>
-    after(() =>
-      router.push(
-        details.licenceDataset
-          ? {
-              pathname: '/account/sources',
-              params: { dataset: details.licenceDataset },
-            }
-          : '/account/sources',
-      ),
-    );
-  return (
-    <>
-      {usable.length ? (
-        <View style={styles.group}>
-          <Heading level={3}>Original records</Heading>
-          {usable.map((original, index) => (
-            <OriginalRow
-              key={original.url}
-              original={original}
-              onOpen={() =>
-                after(() =>
-                  original.url.startsWith('/')
-                    ? void openOnWeb(original.url, original.label)
-                    : void openSource(
-                        original.url,
-                        original.record
-                          ? `${original.label} · ${original.record}`
-                          : original.label,
-                      ),
-                )
-              }
-              testID={testID ? `${testID}-original-${index}` : undefined}
-            />
-          ))}
-        </View>
-      ) : null}
-      {dated ? (
-        <View style={styles.group}>
-          <Heading level={3}>As at</Heading>
-          {/* The heading says "As at"; the value is the date alone. */}
-          <Text wordSafe variant="body">
-            {date || 'Date not published'}
-          </Text>
-          {coverage ? (
-            <Text wordSafe variant="metadata">
-              {coverage}
-            </Text>
-          ) : null}
-          {savedAt != null ? (
-            <Text wordSafe variant="metadata">
-              {savedText(savedAt)}
-            </Text>
-          ) : null}
-        </View>
-      ) : null}
-      {sources.length ? (
-        <View style={styles.group}>
-          <Heading level={3}>
-            {sources.length === 1 ? 'Source' : 'Sources'}
-          </Heading>
-          {sources.map((source) => {
-            const own = perSource
-              ? sheetDate(source.asOf ?? asOf, 'short')
-              : '';
-            return (
-              <Text key={source.title} wordSafe variant="body">
-                {own ? `${source.title} · ${own}` : source.title}
-              </Text>
-            );
-          })}
-        </View>
-      ) : null}
-      {shownNotes.length ? (
-        <View style={[styles.group, styles.notes]}>
-          {provenance ? <Heading level={3}>Notes</Heading> : null}
-          {shownNotes.map((note, index) => (
-            <Text key={index} wordSafe variant="body">
-              {note}
-            </Text>
-          ))}
-        </View>
-      ) : null}
-      {licence ? (
-        <View style={styles.group}>
-          <Heading level={3}>Licence</Heading>
-          {/* The licence opens its terms in full (Sources and licences). */}
-          <OriginalRow
-            original={{ label: licenceText(licence), url: '' }}
-            internal
-            accessibilityLabel={`Licence: ${licenceText(licence)}`}
-            accessibilityHint="Opens Sources and licences"
-            onOpen={openLicences}
-            testID={testID ? `${testID}-licences` : undefined}
-          />
-        </View>
-      ) : null}
-      {extra}
-      {provenance && !licence ? (
-        <OriginalRow
-          original={{ label: 'Sources and licences', url: '' }}
-          internal
-          onOpen={openLicences}
-          testID={testID ? `${testID}-licences` : undefined}
-        />
-      ) : null}
-    </>
-  );
-}
-
-/** A date in the sheet: "4 September 2026", a year-only vintage as "2021". */
-function sheetDate(
-  value: DateInput | null | undefined,
-  style: 'long' | 'short' = 'long',
-): string {
-  if (value == null) return '';
-  if (typeof value === 'string' && /^\d{4}$/.test(value)) return value;
-  return formatDate(value, style);
-}
-
 /** A licence as the sheet says it; "See source terms" in plain words. */
 export function licenceText(licence: string): string {
   return /^see (the )?source('s)? terms\.?$/i.test(licence.trim())
     ? 'The source’s own terms'
     : licence.trim();
-}
-
-function OriginalRow({
-  original,
-  onOpen,
-  internal = false,
-  accessibilityLabel,
-  accessibilityHint,
-  testID,
-}: {
-  original: SourceOriginal;
-  onOpen: () => void;
-  internal?: boolean;
-  accessibilityLabel?: string;
-  accessibilityHint?: string;
-  testID?: string;
-}) {
-  const stacked = useAccessibilitySize();
-  const meta = [original.record, sheetDate(original.asOf, 'short')]
-    .filter(Boolean)
-    .join(' · ');
-  return (
-    <Pressable
-      accessibilityRole={internal ? 'button' : 'link'}
-      accessibilityLabel={
-        accessibilityLabel ??
-        [internal ? null : 'View original', original.label, meta || null]
-          .filter(Boolean)
-          .join(', ')
-      }
-      accessibilityHint={
-        accessibilityHint ?? (internal ? undefined : 'Opens the source')
-      }
-      testID={testID}
-      onPress={onOpen}
-      style={({ pressed }) => [
-        styles.row,
-        stacked ? styles.rowStacked : null,
-        pressed ? styles.pressed : null,
-      ]}
-    >
-      <View style={styles.rowText}>
-        <Text wordSafe variant="strong" tone={internal ? 'ink' : 'bronzeInk'}>
-          {original.label}
-        </Text>
-        {meta ? (
-          <Text wordSafe variant="metadata">
-            {meta}
-          </Text>
-        ) : null}
-      </View>
-      <Icon
-        name={internal ? 'chevron.right' : EXTERNAL_GLYPH}
-        size={internal ? 13 : 16}
-        tone={internal ? 'inkSoft' : 'bronzeInk'}
-      />
-    </Pressable>
-  );
-}
-
-/** A page sheet's bar (grab handle, title, Done) over its scrolling body. */
-/** @deprecated Use route sheets with a native bar. */
-export function SheetBody({
-  title,
-  onClose,
-  testID,
-  children,
-}: {
-  title: string;
-  onClose: () => void;
-  testID?: string;
-  children: ReactNode;
-}) {
-  // A page sheet sits below the status bar; only the home indicator needs
-  // room, so no inset provider (a modal would need its own). Android draws
-  // the sheet as a full-screen dialog: no grab handle, as nothing drags it;
-  // Back and Done close it.
-  const android = Platform.OS === 'android';
-  const Container = android ? SafeAreaView : View;
-  return (
-    <Container style={styles.sheet} testID={testID} accessibilityViewIsModal>
-      <View style={[styles.bar, android ? styles.barAndroid : null]}>
-        {android ? null : <View style={styles.grab} />}
-        <View style={styles.head}>
-          <Heading level={2} style={styles.title}>
-            {title}
-          </Heading>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Done"
-            testID={testID ? `${testID}-done` : undefined}
-            onPress={onClose}
-            hitSlop={8}
-            style={styles.done}
-          >
-            <Text variant="control" tone="navy">
-              Done
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-      <ScrollView contentContainerStyle={styles.content}>{children}</ScrollView>
-    </Container>
-  );
 }
 
 const sourceSymbol = 'doc.text.magnifyingglass';
@@ -792,9 +434,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 36,
     height: 5,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     backgroundColor: colors.dividerDefault,
     marginBottom: rhythm.heading,
+    borderCurve: 'continuous',
   },
   head: { flexDirection: 'row', alignItems: 'center', gap: rhythm.block },
   title: { flex: 1 },
@@ -812,3 +455,13 @@ const styles = StyleSheet.create({
     gap: rhythm.group,
   },
 });
+
+/** A date in the sheet: "4 September 2026", a year-only vintage as "2021". */
+function sheetDate(
+  value: DateInput | null | undefined,
+  style: 'long' | 'short' = 'long',
+): string {
+  if (value == null) return '';
+  if (typeof value === 'string' && /^\d{4}$/.test(value)) return value;
+  return formatDate(value, style);
+}

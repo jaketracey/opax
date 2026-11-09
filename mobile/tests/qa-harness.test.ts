@@ -101,37 +101,12 @@ describe('iPhone suite', () => {
   });
 
   test('every numbered iPhone journey is in the suite or a separate run', () => {
-    // Waiting for qa_iphone_suite in scripts/qa-flows.sh (w4-reference).
-    const waiting = [
-      '.maestro/22b-sources.yaml',
-      '.maestro/59-methods-coverage.yaml',
-      '.maestro/62-sources-done.yaml',
-    ];
+    const waiting: string[] = [];
     const covered = new Set([...suite, ...separate, ...waiting]);
     const missing = readdirSync('.maestro')
       .filter((name) => /^\d\d[a-z]?-.*\.yaml$/.test(name))
       .filter((name) => !/-(open-profile|scene-lifecycle)\.yaml$/.test(name))
       .filter((name) => !name.includes('ipad'))
-      // New in wave 4 (w4-seat-welcome); join qa_iphone_suite at merge.
-      .filter(
-        (name) =>
-          ![
-            '28d-first-launch-link.yaml',
-            '28e-no-permission-at-launch.yaml',
-          ].includes(name),
-      )
-      // Needs the -OPAXSeedFollows e2e seed before it gets a separate run.
-      .filter((name) => name !== '26c-follow-limit.yaml')
-      // New in wave 4 (w4-bills); joins qa_iphone_suite at merge.
-      .filter((name) => name !== '60-bill-states.yaml')
-      // Until scripts/qa-flows.sh lists it (w4-money-map-leads follow-up).
-      .filter((name) => name !== '64-money-record.yaml')
-      // Until scripts/qa-flows.sh lists it (w4-public-money follow-up).
-      .filter((name) => name !== '63-money-privacy.yaml')
-      // Until scripts/qa-flows.sh lists them (w5-today follow-up).
-      .filter((name) => !/^(13[d-i]|28[cfg])-/.test(name))
-      // Until scripts/qa-flows.sh lists them (w6-flows follow-up).
-      .filter((name) => !/^6[5-8]-/.test(name))
       .map((name) => `.maestro/${name}`)
       .filter((path) => !covered.has(path));
     expect(missing).toEqual([]);

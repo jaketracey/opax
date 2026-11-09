@@ -23,7 +23,8 @@ const tabPages: readonly (readonly [RegExp, TabSegment])[] = [
   [/^\/(ask|conversations|ask-report|consent)(?:\/|$)/, '(ask)'],
   [/^\/(your-mp|members|election)(?:\/|$)/, '(your-mp)'],
 ];
-const moneyMap = /^\/(money|money-record|money-node)(?:\/|$)/;
+const moneyMap =
+  /^\/(money|money-record|money-node|money-item|public-money|grants|grant-program|programs|agencies|agency|allocation|connections|largest|leads|lead)(?:\/|$)/;
 // Root-stack routes: never inside a tab.
 const outsideTabs =
   /^\/(account|community|talk|licence|licences|citation|machine-note|rule|seat|source|source-destination|welcome)(?:\/|$)/;

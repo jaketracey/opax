@@ -1,3 +1,4 @@
+import { RouteOptions } from '../../navigation/preview';
 import {
   useCallback,
   useEffect,
@@ -6,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { Animated, type FlatList, View } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useReduceMotion } from '../../design/accessibility';
 import { PopUpButton } from '../../design/controls';
 import { formatDate } from '../../design/format';
@@ -67,7 +68,7 @@ export default function Largest() {
   const fade = useMonthChange(listRef, data ? month : null);
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Largest grants',
           ...moneyBar({

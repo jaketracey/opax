@@ -23,7 +23,7 @@ export function reportAnswerUrl(
       'Reports need a public record path without query or fragment',
     );
   if (
-    !/^\/(?:doc\/[^/]+|bill\/[^/]+|subject\/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)\/[^/]+|money(?:\/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|connections|topics|parties|reports(?:\/[^/]+)?|journey\/[^/]+)\/?$/.test(
+    !/^\/(?:doc\/[^/]+|bill\/[^/]+|subject\/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)\/[^/]+|money(?:\/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|connections|topics|parties|journey\/[^/]+)\/?$/.test(
       recordPath,
     )
   )

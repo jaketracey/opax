@@ -1,47 +1,56 @@
 import { router, type Href } from 'expo-router';
+import type { ReactNode } from 'react';
+import { isValidElement, useState } from 'react';
 import {
-  ownsRowPadding,
-  useRowHighlight,
-  useRowInset,
-  useRowCellStyle,
-} from './row-padding';
+  Image,
+  Pressable,
+  StyleSheet,
+  View,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native';
+import { localImageURI } from '../api/image-policy';
+import type { PartyStatus } from '../api/party-transforms';
+import { partyRoute } from '../navigation/routes';
+import { useAccessibilitySize } from './accessibility';
+import { Hoverable, useHover } from './adaptive';
+import { Icon } from './icon';
+import {
+  formerMember,
+  isPartyLabel,
+  partyDot,
+  partyIdentity,
+  partyText,
+  type PartyContext,
+} from './party';
 import {
   RowLink,
   rowMenus,
   useRowFollow,
   type RowMenuAction,
 } from './row-link';
-import { partyRoute } from '../navigation/routes';
-import { isValidElement, useState } from 'react';
-import { localImageURI } from '../api/image-policy';
-import type { ReactNode } from 'react';
 import {
-  Image,
-  Pressable,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-  useColorScheme,
-} from 'react-native';
-import { useAccessibilitySize } from './accessibility';
-import { Icon } from './icon';
-import type { PartyStatus } from '../api/party-transforms';
-import {
-  isPartyLabel,
-  partyDot,
-  partyIdentity,
-  partyText,
-  formerMember,
-  type PartyContext,
-} from './party';
-import { Hoverable, useHover } from './adaptive';
+  ownsRowPadding,
+  useRowCellStyle,
+  useRowHighlight,
+  useRowInset,
+} from './row-padding';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
+import { symbols } from './symbols';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
-import { colors, hairline, minimumTarget, rhythm } from './tokens';
+import {
+  colors,
+  hairline,
+  minimumTarget,
+  rhythm,
+  size as sizeTokens,
+  textStyles,
+  type CurrentTextVariant,
+} from './tokens';
 
-const portraitSizes = { row: 44, profile: 96 } as const;
-/** A circular portrait; an absent or failed image stays a blank circle. */
+const portraitSizes = { row: sizeTokens.portraitRow, profile: 96 } as const;
+/** A circular portrait; absent or failed images show initials or a decorative person symbol. */
 export function Portrait({
   size = 'row',
   testID,
@@ -65,12 +74,36 @@ export function Portrait({
 }) {
   const [failed, setFailed] = useState<string | null>(null);
   const dimension = typeof size === 'number' ? size : portraitSizes[size];
+  const initials = (
+    name
+      ?.trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((word) => Array.from(word)[0])
+      .join('') ?? ''
+  )
+    .toLocaleUpperCase('en-AU')
+    .slice(0, 2);
+  const initialsVariant: CurrentTextVariant =
+    dimension < sizeTokens.portraitRow
+      ? 'capsule'
+      : dimension < sizeTokens.portraitHeader
+        ? 'strong'
+        : 'tileFigure';
+  const initialsRole = textStyles[initialsVariant];
+  // Allow two wide initials and a full line inside the circle, with an inset.
+  // The smallest portraits keep the role's default size rather than shrinking.
+  const initialsScale = Math.max(
+    1,
+    (dimension - rhythm.tight) /
+      Math.hypot(2 * initialsRole.fontSize, initialsRole.lineHeight),
+  );
   const input = localURI ?? uri;
   let source: string | undefined;
   try {
     if (input && input !== failed) source = localImageURI(input);
   } catch {
-    /* Retain the blank circle for a rejected URI. */
+    /* Retain the placeholder for a rejected URI. */
   }
   const decorative = nameBeside || !name || !source;
   return (
@@ -112,7 +145,29 @@ export function Portrait({
             onDisplay?.(false);
           }}
         />
-      ) : null}
+      ) : (
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
+          {initials ? (
+            <Text
+              variant={initialsVariant}
+              tone="inkSoft"
+              maxFontSizeMultiplier={initialsScale}
+              accessible={false}
+            >
+              {initials}
+            </Text>
+          ) : (
+            <Icon
+              name={symbols.person}
+              tone="inkSoft"
+              size={dimension / 2}
+              maxScale={1}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 }
@@ -192,8 +247,6 @@ export function PartyLabel({
   dense?: boolean;
   testID?: string;
   linked?: boolean;
-  /** @deprecated Ignored: a party is never a filled capsule. */
-  chip?: boolean;
   /**
    * Inside a row or control that already says the party: drawn only, not a
    * separate VoiceOver element and never a link of its own.
@@ -298,36 +351,6 @@ export function PartyLabel({
         ) : null}
       </Text>
     </Container>
-  );
-}
-
-/**
- * @deprecated Use `PartyLabel` (`dense` for the short label, `linked={false}`
- * inside a row that carries the party action). A party is a dot beside its
- * name, never a tinted capsule: this draws a PartyLabel.
- */
-export function PartyChip({
-  party,
-  status,
-  formerly,
-  short = true,
-  nested = false,
-  testID,
-}: PartyContext & {
-  short?: boolean;
-  nested?: boolean;
-  testID?: string;
-}) {
-  return (
-    <PartyLabel
-      party={party}
-      status={status}
-      formerly={formerly}
-      dense={short}
-      linked={false}
-      nested={nested}
-      testID={testID}
-    />
   );
 }
 

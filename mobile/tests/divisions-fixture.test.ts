@@ -92,3 +92,33 @@ test('How parliament voted finds three reading votes and leaves procedure out', 
     file.divisions[0]!.division_key,
   );
 });
+
+test('a bill appears once per day with its latest reading division', () => {
+  const row = {
+    bill_key: 'au-federal-r1',
+    title: 'Example Bill 2026',
+    stage: 'Second reading',
+    date: '2026-11-09',
+    ayes: 80,
+    noes: 60,
+  };
+  const file = decodeRecentDivisions({
+    generated_at: '2026-11-09',
+    divisions: [
+      { ...row, division_key: 'house-99' },
+      { ...row, stage: 'Third reading', division_key: 'house-100' },
+      {
+        ...row,
+        bill_key: 'au-federal-r2',
+        title: 'Another Bill 2026',
+        division_key: 'house-101',
+      },
+      { ...row, date: '2026-11-08', division_key: 'house-98' },
+    ],
+  });
+  expect(recentReadingVotes(file, 4).map((vote) => vote.division_key)).toEqual([
+    'house-101',
+    'house-100',
+    'house-98',
+  ]);
+});

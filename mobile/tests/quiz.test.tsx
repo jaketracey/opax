@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
-import { act } from 'react';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Picker, Slider } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
+import { act } from 'react';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { useAccessibilitySize } from '../src/design/accessibility';
+import { Portrait } from '../src/design/people';
 import Quiz from '../src/features/explore/Quiz';
-import { quizSession } from '../src/features/explore/quiz-session';
-import { quizStore } from '../src/features/explore/quiz-store';
-import { frontPageDeck, quizRounds } from '../src/features/explore/quiz/data';
 import {
   formatGuess,
   type Question,
   type QuizRecord,
 } from '../src/features/explore/quiz-model';
-import { useAccessibilitySize } from '../src/design/accessibility';
-import { Portrait } from '../src/design/people';
+import { quizSession } from '../src/features/explore/quiz-session';
+import { quizStore } from '../src/features/explore/quiz-store';
 import { choicePortrait } from '../src/features/explore/quiz/ChoiceList';
+import { frontPageDeck, quizRounds } from '../src/features/explore/quiz/data';
 
 let mockRecord: QuizRecord | null = null;
 jest.mock('../src/features/explore/quiz-store', () => ({
@@ -276,6 +276,9 @@ test('a full round: typed guesses exact, every answer then its source, and the r
   share.onPress();
   expect(shareRecord).toHaveBeenCalledWith({
     path: '/explore?game=quiz',
+    text: expect.stringMatching(
+      /^I scored [\d,]+ in The record quiz on OPAX: 8 of 8 right\.$/,
+    ),
     title: expect.stringMatching(
       /^I scored [\d,]+ in The record quiz on OPAX: 8 of 8 right\.$/,
     ),

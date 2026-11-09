@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import {
+  counted,
   asAtText,
   cleanRecordTitle,
   recordTitleStage,
@@ -221,4 +222,13 @@ describe('record row titles', () => {
     expect(cleanRecordTitle(raw!)).toBe(title);
     expect(recordTitleStage(raw!)).toBe(stage);
   });
+});
+
+test.each([
+  [0, 'speech', 'speeches', '0 speeches'],
+  [1, 'speech', 'speeches', '1 speech'],
+  [2, 'speech', 'speeches', '2 speeches'],
+  [1000, 'record', 'records', '1,000 records'],
+])('counted handles %s %s', (n, one, many, expected) => {
+  expect(counted(n as number, one as string, many as string)).toBe(expected);
 });

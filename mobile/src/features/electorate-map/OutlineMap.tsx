@@ -1,25 +1,28 @@
+import { Path, useCanvasRef } from '@shopify/react-native-skia';
 import { useState } from 'react';
 import { useColorScheme, View } from 'react-native';
-import { Path, useCanvasRef } from '@shopify/react-native-skia';
-import { SizedCanvas } from '../../design/canvas';
-import { SourceLine } from '../../design/source';
-import { useAccessibilitySize } from '../../design/accessibility';
-import { radii } from '../../design/tokens';
-import { dark, light } from '../../design/tokens.generated';
-import { jurisdictionName } from '../../design/parliament';
-import { useOutlineProbe } from './outline-probe';
 import {
   displayBoundary,
   outlinePath,
   type Boundary,
 } from '../../api/electorate-geometry';
+import { useAccessibilitySize } from '../../design/accessibility';
+import { SizedCanvas } from '../../design/canvas';
+import { jurisdictionName } from '../../design/parliament';
+import { SourceLine } from '../../design/source';
+import { radii } from '../../design/tokens';
+import { dark, light } from '../../design/tokens.generated';
+import { useOutlineProbe } from './outline-probe';
 
 /** The outline's colours by the ground it is drawn on (Dir 2.2). */
 export function outlineColours(
   ground: 'sunken' | 'raised',
   scheme: 'light' | 'dark',
 ): { fill: string; stroke: string } {
-  if (scheme === 'light') return { fill: light.navyWash, stroke: light.navy };
+  if (scheme === 'light') {
+    const { navyWash: fill, navy: stroke } = light;
+    return { fill, stroke };
+  }
   return ground === 'sunken'
     ? { fill: dark.raised, stroke: dark.inkSoft }
     : { fill: dark.sunken, stroke: dark.inkSoft };
@@ -106,6 +109,7 @@ export function OutlineMap({
           ? {
               borderTopLeftRadius: radii.thumb,
               borderTopRightRadius: radii.thumb,
+              borderCurve: 'continuous',
             }
           : null),
       }}

@@ -1,22 +1,22 @@
+import { spawn, type ChildProcess } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { decodeDocument, decodeSimilar } from '../src/features/records/model';
-import { decodeRecords } from '../src/features/search/decoders';
+import { get, request as httpRequest } from 'node:http';
+import { resolve } from 'node:path';
 import snapshot from '../scripts/fixture-snapshot.json';
-import { files, servedFiles } from './pinned';
 import {
   decodeEdition,
+  decodeRoster,
   decodeSearch,
   decodeSlugs,
-  decodeRoster,
 } from '../src/api/catalogs';
 import { editionPath } from '../src/api/policy';
+import { decodeDocument, decodeSimilar } from '../src/features/records/model';
+import { decodeRecords } from '../src/features/search/decoders';
 import {
   decodeRecentDivisions,
   recentReadingVotes,
 } from '../src/features/today/votes';
-import { spawn, type ChildProcess } from 'node:child_process';
-import { get, request as httpRequest } from 'node:http';
-import { resolve } from 'node:path';
+import { files, pinned, servedFiles } from './pinned';
 let child: ChildProcess;
 let output = '';
 let port = 0; // Each unit-test fixture reserves its own loopback port atomically.
@@ -182,6 +182,8 @@ test.each(
   servedFiles.filter(
     (p) =>
       p.endsWith('.json') &&
+      !['/parliamentarians.json', '/votes.json'].includes(p) &&
+      !/^\/electorates\/releases\/[^/]+\/people.json$/.test(p) &&
       (!p.startsWith('/reports/') || p === '/reports/grants-allocation.json'),
   ),
 )('serves the exact pinned JSON bytes at %s', async (path) => {
@@ -591,7 +593,7 @@ test('the fixture refuses an unknown roster mode at startup', async () => {
   const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_ROSTER: 'live' });
   try {
     await expect(fixture.ready).rejects.toThrow(
-      'OPAX_FIXTURE_ROSTER must be pinned or null-optional',
+      'OPAX_FIXTURE_ROSTER must be pinned, null-optional or vacant',
     );
   } finally {
     await fixture.stop();
@@ -637,4 +639,58 @@ test('serves the recent divisions index projected from the pinned bills', async 
   });
   expect(conditional.status).toBe(304);
   expect(output).not.toContain('OUTSIDE_ALLOW_LIST GET /divisions/recent.json');
+});
+
+// These reviewed fixture overlays are additions to real pinned identities and
+// an existing vote. Every other byte-decoded field must remain unchanged.
+test('member profile links are limited to the three verified APH identities', async () => {
+  const expected: Record<string, string> = {
+    'Anthony Albanese':
+      'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=R36',
+    'Sussan Ley':
+      'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=00AMN',
+    'Zali Steggall':
+      'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=175696',
+  };
+  const withoutLinks = (value: any): any =>
+    Array.isArray(value)
+      ? value.map(withoutLinks)
+      : value && typeof value === 'object'
+        ? Object.fromEntries(
+            Object.entries(value)
+              .filter(([key]) => key !== 'source_url')
+              .map(([key, item]) => [key, withoutLinks(item)]),
+          )
+        : value;
+  const release = servedFiles.find((path) =>
+    /^\/electorates\/releases\/[^/]+\/people.json$/.test(path),
+  )!;
+  for (const path of ['/parliamentarians.json', release]) {
+    const served = JSON.parse((await request(path)).body);
+    expect(withoutLinks(served)).toEqual(withoutLinks(pinned(path)));
+    const rows = Array.isArray(served.people)
+      ? served.people
+      : Object.values(served.people);
+    for (const [name, url] of Object.entries(expected))
+      expect(rows.find((row: any) => row.name === name)?.source_url).toBe(url);
+    for (const name of ['Tanya Plibersek', 'Dan Tehan', 'Helen Haines'])
+      expect(
+        rows.find((row: any) => row.name === name)?.source_url,
+      ).toBeUndefined();
+  }
+});
+test('the member vote overlay identifies the existing pinned division without changing the vote', async () => {
+  const served = JSON.parse((await request('/votes.json')).body);
+  const votes = served['10007'].against as any[];
+  const vote = votes.find(
+    (row) => row.division_key === 'federal-representatives-10534',
+  );
+  expect(vote).toMatchObject({
+    billKey: 'au-federal-r7512',
+    date: '2026-07-01',
+    stage: 'Second reading',
+  });
+  delete vote.billKey;
+  delete vote.division_key;
+  expect(served).toEqual(pinned('/votes.json'));
 });

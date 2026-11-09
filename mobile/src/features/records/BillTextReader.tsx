@@ -1,3 +1,4 @@
+import { RouteOptions } from '../../navigation/preview';
 import { headerItems, pageMenu } from '../../navigation/chrome';
 import {
   useCallback,
@@ -15,7 +16,7 @@ import {
   View,
 } from 'react-native';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { NavigationContext } from 'expo-router/react-navigation';
 import {
   Disclosure,
@@ -349,7 +350,7 @@ export default function BillTextReader({
   return (
     <>
       {embedded ? null : (
-        <Stack.Screen
+        <RouteOptions
           options={{
             ...headerItems(ready ? barItems : undefined),
           }}

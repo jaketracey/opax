@@ -1,7 +1,8 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { passageText } from '../../api/passage-text';
 import { catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
@@ -104,7 +105,7 @@ export default function Connection() {
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           ...(missing ? {} : moneyBar({ name: title, path })),

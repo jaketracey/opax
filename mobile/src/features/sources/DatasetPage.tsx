@@ -1,6 +1,8 @@
+import { RouteOptions } from '../../navigation/preview';
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { copy } from '../../design/copy';
 import {
   ContentUnavailable,
   Heading,
@@ -13,13 +15,12 @@ import {
   Text,
   ValueRow,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
 import { symbols } from '../../design/symbols';
-import { chrome, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { licenceHubRoute } from '../../navigation/routes/reference';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import type { Dataset, DatasetLink } from './datasets';
 import { sourcesHrefs, useSourcesBase } from './base';
+import type { Dataset, DatasetLink } from './datasets';
 import { hasOwnDate, loadedAdditions, useOwnDates, useSources } from './loader';
 import { sourcesCopy as text } from './parts';
 
@@ -79,7 +80,7 @@ export function DatasetPage({
   if (!dataset)
     return (
       <>
-        <Stack.Screen options={{ title: '' }} />
+        <RouteOptions options={{ title: '' }} />
         <Screen grouped testID="sources-dataset-screen">
           {!settled ? (
             <Skeleton
@@ -129,7 +130,7 @@ export function DatasetPage({
         <RefreshControl
           refreshing={refreshing}
           onRefresh={refresh}
-          tintColor={chrome.tint}
+          tintColor={colors.navy}
         />
       }
     >

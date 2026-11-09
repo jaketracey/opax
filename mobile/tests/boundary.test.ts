@@ -3,12 +3,12 @@ import {
   yearPictureDirectory,
 } from '../src/api/portrait-disk-store';
 
+import * as parser from '@typescript-eslint/parser';
+import { Linter, type Rule } from 'eslint';
 import { unacceptedAdvisories } from '../scripts/advisory-policy';
 import { scanSource, secretPattern } from '../scripts/source-boundary';
-import { localImageURI } from '../src/api/image-policy';
-import { Linter, type Rule } from 'eslint';
-import * as parser from '@typescript-eslint/parser';
 import transportRule from '../scripts/transport-rule';
+import { localImageURI } from '../src/api/image-policy';
 
 jest.mock('expo-file-system', () => ({
   Paths: { cache: { uri: 'file:///cache/' } },
@@ -353,7 +353,7 @@ test.each([
   expect(lintBoundary('src/fonts.ts', content).length).toBeGreaterThan(0);
 });
 test('citation labels get a specific source-prop diagnostic and a supported replacement', () => {
-  const bad = `<SourceLink source="ParlInfo" url={page} />`;
+  const bad = `<FigureBlock source="ParlInfo" url={page} />`;
   expect(scanSource('src/citation.tsx', bad)).toContain(
     '`source` is reserved for images; use `citation` for text labels. Image sources must use bundled require assets or the imported image policy helper',
   );

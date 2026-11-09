@@ -1,4 +1,3 @@
-import { useEffect, useMemo } from 'react';
 import {
   Circle,
   Group,
@@ -7,7 +6,7 @@ import {
   usePathValue,
   vec,
 } from '@shopify/react-native-skia';
-import { SizedCanvas } from '../../design/canvas';
+import { useEffect, useMemo } from 'react';
 import {
   useDerivedValue,
   useFrameCallback,
@@ -15,7 +14,8 @@ import {
   type SharedValue,
 } from 'react-native-reanimated';
 import { useIncreaseContrast } from '../../design/accessibility';
-import { light, lightHighContrast, type Role } from '../../design/palette';
+import { SizedCanvas } from '../../design/canvas';
+import { lightHighContrast, paletteFor, type Role } from '../../design/palette';
 
 /** What the call is doing, as the orb draws it. */
 export type OrbPhase =
@@ -56,7 +56,8 @@ const EXTENT = 2.35;
  * core's lit and shadowed navy.
  */
 function paint(role: Role, alpha = 1, strong = false, shade = 1): number[] {
-  const hex = (strong ? lightHighContrast[role] : undefined) ?? light[role];
+  const hex =
+    (strong ? lightHighContrast[role] : undefined) ?? paletteFor('light')[role];
   const channel = (at: number) =>
     Math.min(1, (parseInt(hex.slice(at, at + 2), 16) / 255) * shade);
   return [channel(1), channel(3), channel(5), alpha];

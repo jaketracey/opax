@@ -1,4 +1,5 @@
-import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -10,16 +11,18 @@ import {
 import {
   RefreshControl,
   StyleSheet,
-  View,
   useWindowDimensions,
+  View,
 } from 'react-native';
-import {
-  Stack,
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-} from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import type { RecordResult } from '../../api/client';
+import { ApiError } from '../../api/errors';
+import { copy } from '../../design/copy';
+import {
+  formatCount,
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../../design/format';
 import {
   Button,
   ContentUnavailable,
@@ -39,17 +42,10 @@ import {
   useLayout,
   useScreenColumn,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import {
-  formatCount,
-  formatMoneyCompact,
-  moneyAccessibilityLabel,
-} from '../../design/format';
-import { colors, chrome, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
-import { ApiError } from '../../api/errors';
-import type { RecordResult } from '../../api/client';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
   moneyCatalogs,
   type MoneyGraph,
@@ -59,8 +55,8 @@ import {
 import { useFirstScreenReader, useMoneyRecord } from './hooks';
 import { partyNodeFor } from './lookup';
 import { moneyPageMenu } from './menu';
-import { useMoneyFilters } from './MoneyFilters';
 import { MoneyTestHooks } from './money-probe';
+import { useMoneyFilters } from './MoneyFilters';
 import { NativeMoneyMap, type NativeMoneyMapHandle } from './NativeMoneyMap';
 import { moneyPartyGroups, PartyMoneyRow } from './parts';
 import {
@@ -79,6 +75,7 @@ import {
   publicMoneySource,
   type MoneyParams,
 } from './records';
+import { moneySceneHeight } from './scene-size';
 import {
   moneyNotes,
   moneyOriginals,
@@ -91,7 +88,6 @@ import {
   rankedDonors,
   type MoneyFilters,
 } from './view';
-import { moneySceneHeight } from './scene-size';
 
 const TOP_DONORS = 20;
 type Mode = 'list' | '3d';
@@ -291,7 +287,7 @@ export default function MoneyScreen() {
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (
     <GestureHandlerRootView style={styles.root}>
-      <Stack.Screen options={options} />
+      <RouteOptions options={options} />
       <Screen
         column="wide"
         testID="money-screen"
@@ -303,7 +299,7 @@ export default function MoneyScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={refresh}
-            tintColor={chrome.tint}
+            tintColor={colors.navy}
           />
         }
       >
@@ -550,15 +546,12 @@ function MoneyBody({
       label={donationsLine}
       caveat={donationsCaveat}
       accessibilityLabel={`${moneyAccessibilityLabel(donations.total, true)}, ${donationsLine}`}
-      // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
-      {...{
-        source: moneySourceDetails(record, {
-          citation: shortSource,
-          originals: moneyOriginals(graph).slice(0, 1),
-          notes: moneyNotes(graph),
-          testID: 'money-source',
-        }),
-      }}
+      citation={moneySourceDetails(record, {
+        citation: shortSource,
+        originals: moneyOriginals(graph).slice(0, 1),
+        notes: moneyNotes(graph),
+        testID: 'money-source',
+      })}
       testID="money-donations"
     />
   ) : null;

@@ -34,6 +34,7 @@ jest.mock('expo-splash-screen', () => ({
   hide: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   router: { push: jest.fn(), back: jest.fn() },
 }));
 

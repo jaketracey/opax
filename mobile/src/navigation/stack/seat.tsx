@@ -18,7 +18,10 @@ export function seatScreens() {
  */
 export function welcomeScreens() {
   return [
-    screen('index', 'Welcome', { headerShown: false }),
+    screen('index', 'Welcome', {
+      headerShown: false,
+      scrollEdgeEffects: { top: 'hidden', bottom: 'soft' },
+    }),
     screen('seat/index', 'Your electorate', {
       headerShown: true,
       headerBackButtonDisplayMode: 'minimal',

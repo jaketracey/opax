@@ -1,8 +1,8 @@
 import { act } from 'react';
 import { Text, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Catalogs } from '../src/api/catalogs';
 import * as d from '../src/api/catalogs';
+import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { SourceLine } from '../src/design/source';
@@ -25,6 +25,7 @@ import {
 const mockParams: { key: string } = { key: 'au-federal-r6850' };
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   useSegments: () => [],
   useLocalSearchParams: () => mockParams,
   router: { push: (...args: unknown[]) => mockPush(...args) },
@@ -49,9 +50,6 @@ jest.mock('../src/api/runtime', () => ({
     billIndexRow: () => null,
     directory: jest.fn(),
   },
-}));
-jest.mock('../src/features/follows/FollowToggle', () => ({
-  FollowToggle: () => null,
 }));
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,

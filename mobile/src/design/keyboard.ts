@@ -1,3 +1,4 @@
+import { NavigationContext } from 'expo-router/react-navigation';
 import {
   useCallback,
   useContext,
@@ -6,7 +7,6 @@ import {
   useSyncExternalStore,
   type RefObject,
 } from 'react';
-import { NavigationContext } from 'expo-router/react-navigation';
 import { InteractionManager, Platform } from 'react-native';
 import { OpaxIPad, type KeyCommandSpec } from '../../modules/opax-ipad';
 import { designFlags } from './flags';
@@ -24,6 +24,9 @@ export type { KeyCommandSpec };
 export type KeyCommandId =
   | 'find'
   | 'new-question'
+  | 'stop-answer'
+  | 'focus-composer-k'
+  | 'focus-composer-l'
   | 'section-1'
   | 'section-2'
   | 'section-3'
@@ -34,7 +37,8 @@ export type KeyCommandId =
   | 'back'
   | 'refresh'
   | 'list-open'
-  | 'list-escape';
+  | 'list-escape'
+  | 'ask-reselect';
 
 /**
  * Search takes the tab bar's search role on iOS 26 (the trailing glass
@@ -65,6 +69,14 @@ export const sections: readonly { route: string; title: string }[] = [
 export const keyCommandSpecs: readonly (KeyCommandSpec & {
   id: KeyCommandId;
 })[] = [
+  {
+    id: 'stop-answer',
+    input: '.',
+    modifiers: ['command'],
+    title: 'Stop answering',
+  },
+  { id: 'focus-composer-k', input: 'k', modifiers: ['command'], title: 'Ask' },
+  { id: 'focus-composer-l', input: 'l', modifiers: ['command'], title: 'Ask' },
   { id: 'find', input: 'f', modifiers: ['command'], title: 'Find' },
   {
     id: 'new-question',

@@ -5,6 +5,11 @@ import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
 import { index, manifest, people, roster, slugs, pinned } from './pinned';
 import Electorate, { identityLine } from '../src/features/Electorate';
+import { router } from 'expo-router';
+import { ContentUnavailable } from '../src/design/states';
+import { PartyLabel } from '../src/design/people';
+import { Heading } from '../src/design/text';
+import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
 import { termSpan } from '../src/features/directories/ElectorateHistory';
@@ -38,6 +43,7 @@ jest.mock('../src/features/ask/open', () => ({
 const mockParams: Record<string, string | undefined> = {};
 const mockOptions: Record<string, unknown>[] = [];
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(
     ({ children, ...props }: { children: unknown }) =>
       jest
@@ -208,6 +214,10 @@ test('election rows push the election screen, newest first', async () => {
     (n) => typeof n.type === 'string' && n.props.testID === 'election-row-0',
   );
   expect(firstRow.findAll((n) => n === links[0])).toHaveLength(1);
+  const parties = firstRow.findAllByType(PartyLabel);
+  expect(parties[0]!.props.party).toBe('Labor');
+  expect(parties[0]!.props.dense).toBeUndefined();
+
   expect(has(r, 'election-expand-0')).toBe(false);
   await act(async () => r.unmount());
 });
@@ -366,6 +376,13 @@ test('not found and failure states', async () => {
   expect(unavailable(r, 'electorate-error')).toBe(
     "We couldn't find this electorate.",
   );
+  const missing = r.root
+    .findAllByType(ContentUnavailable)
+    .find((node) => node.props.testID === 'electorate-error')!;
+  expect(missing.props.body).toBeTruthy();
+  expect(missing.props.action.label).toBe('Search');
+  act(() => missing.props.action.onPress());
+  expect(router.navigate).toHaveBeenCalledWith('/search');
   await act(async () => r.unmount());
   mockParams.id = seat('Grayndler').electorate_id;
   mock.electorateFor.mockRejectedValue(new ApiError('http', 'nope'));
@@ -402,7 +419,6 @@ test('the election screen orders candidates and marks the winner Elected', async
   expect(has(r, 'election-candidate-0-elected')).toBe(true);
   expect(has(r, 'election-source')).toBe(true);
   mockParams.key = 'missing';
-  await act(async () => r.unmount());
   const missing = await render(<Election />);
   expect(unavailable(missing, 'election-missing')).toBe(
     "This election couldn't be found.",
@@ -443,4 +459,16 @@ test('dates at their stated precision', () => {
   expect(
     identityLine({ chamber: 'vic_lc', jurisdiction: 'vic', state: 'vic' }),
   ).toBe('Legislative Council region, Victoria');
+});
+
+test('the Members page uses the system page-heading role', async () => {
+  load('New South Wales');
+  mockParams.seat = seat('New South Wales').electorate_id;
+  const r = await render(<Members />);
+  const heading = r.root
+    .findAllByType(Heading)
+    .find((node) => node.props.testID === 'members-title')!;
+  expect(heading.props.kind).toBe('page');
+  expect(heading.props.children).toBe('Senators for New South Wales');
+  await act(async () => r.unmount());
 });

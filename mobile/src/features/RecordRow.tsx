@@ -32,7 +32,7 @@ export function RecordRow({
       onPress={onPress}
       testID={testID}
       dragPath={path}
-      accent={accent}
+      symbolInk={accent}
       selected={selected}
       highlighted={highlighted}
     />

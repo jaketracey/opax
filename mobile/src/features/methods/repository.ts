@@ -1,8 +1,7 @@
+import { decodeCorpus, type Corpus } from '../../api/catalog-decoders';
 import type { ApiClient, RecordResult } from '../../api/client';
 import { apiClient } from '../../api/runtime';
-import { decodeCorpus, type Corpus } from '../../api/catalog-decoders';
 import { count, dict, nullable, shape } from '../../api/validation';
-import { formatCount } from '../../design/format';
 import { coverageCopy, kindNames, parliamentNames } from './copy';
 
 /** `/api/stats`: what OPAX holds now, by kind and by parliament. */
@@ -24,8 +23,8 @@ export class ReferenceRepository {
   constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
   summary = (refresh = false): Promise<RecordResult<Corpus>> =>
     this.client.get('/corpus.json', decodeCorpus, refresh);
-  counts = (): Promise<RecordResult<Counts>> =>
-    this.client.getForAction('/api/stats', decodeCounts);
+  counts = (refresh = false): Promise<RecordResult<Counts>> =>
+    this.client.getForAction('/api/stats', decodeCounts, { fresh: refresh });
 }
 export const reference = new ReferenceRepository(apiClient);
 
@@ -73,7 +72,7 @@ export function coverageSources(corpus: Corpus): CoverageSource[] {
   return corpus.sources
     .map((source) => {
       const name = sourceName(source.name);
-      const n = formatCount(source.docs);
+      const n = source.docs;
       return {
         name,
         window: coverageWindow(source.coverage),

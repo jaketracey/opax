@@ -1,3 +1,5 @@
+import { RouteOptions } from '../navigation/preview';
+import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActionSheetIOS,
@@ -6,47 +8,42 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { router, Stack } from 'expo-router';
 import type { BillIndex, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
-import { Button } from '../design/controls';
 import { Card } from '../design/card';
-import { confirmAction } from '../design/menu';
+import { Button } from '../design/controls';
+import { thisDevice } from '../design/device';
 import { InsetGroup, Screen, SectionHeader } from '../design/layout';
+import { confirmAction } from '../design/menu';
 import { PageFoot } from '../design/record';
+import type { RowMenuAction } from '../design/row-link';
 import { LinkRow } from '../design/rows';
 import { SourceLine } from '../design/source';
 import { InlineError, OfflineLine, Skeleton } from '../design/states';
 import { symbols } from '../design/symbols';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
-import { thisDevice } from '../design/device';
-import {
-  headerItems,
-  pageMenu,
-  rootHeaderItems,
-  type RowMenuAction,
-} from '../navigation/chrome';
+import { headerItems, pageMenu, rootHeaderItems } from '../navigation/chrome';
 import { openSource } from '../navigation/external';
-import { shareRecord } from '../navigation/share';
 import { directoryRoute, seatRoute } from '../navigation/routes';
+import { shareRecord } from '../navigation/share';
 import { useAccount } from './account/store';
 import { useOpenAsk } from './ask/open';
 import { followKey, useFollows } from './follows/store';
 import { useSeenOnView } from './follows/useSeenOnView';
-import { SeatGrants } from './money-public/Grants';
+import { SeatGrants } from './money-public/SeatGrants';
+import { forgetChoice as forgetSeat } from './your-mp/choice-store';
 import {
   ElectorateCard,
   ElectorateCardSkeleton,
 } from './your-mp/ElectorateCard';
-import { forgetSeat } from './your-mp/forget';
-import { LatestRows } from './your-mp/LatestRows';
 import {
+  LATELY_LIMIT,
   latelyFor,
   latelySource,
-  LATELY_LIMIT,
   markLatelySeen,
 } from './your-mp/latest';
+import { LatestRows } from './your-mp/LatestRows';
 import { officialPageFor } from './your-mp/MemberHeroRow';
 import {
   type Directory,
@@ -305,7 +302,7 @@ export default function YourMP() {
         <RefreshControl refreshing={refreshing} onRefresh={retry} />
       }
     >
-      <Stack.Screen
+      <RouteOptions
         options={{
           title: 'Your MP',
           headerLargeTitleEnabled: true,
@@ -380,6 +377,7 @@ export default function YourMP() {
             </View>
           )}
           <SeatGrants
+            variant="seat-home"
             name={federal.name}
             state={federal.state_code}
             eligible={house(federal)}

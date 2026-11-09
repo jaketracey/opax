@@ -6,23 +6,24 @@ import {
   ErrorState,
   Group,
   IconButton,
+  InsetGroup,
   LoadingState,
-  OpaxWebLink,
-  RowList,
   Screen,
   errorMessage,
   menuLeaves,
 } from '../../design/primitives';
+import { LinkRow } from '../../design/rows';
+import { openOnWeb } from '../../navigation/external';
 import { canShare, shareRecord } from '../../navigation/share';
-import { recordActions, showPaneMenu } from '../records/RecordActions';
-import { useBillTextPane } from '../records/billTextPane';
-import { recordHeadline } from '../records/model';
 import BillDetail from '../bills/BillDetail';
 import { ElectorateScreen } from '../Electorate';
 import { PartyPage } from '../Party';
 import { ProfileScreen } from '../Person';
+import { useBillTextPane } from '../records/billTextPane';
 import BillTextReader from '../records/BillTextReader';
 import DocumentReader from '../records/DocumentReader';
+import { recordHeadline } from '../records/model';
+import { recordActions, showPaneMenu } from '../records/RecordActions';
 import {
   resolveSearchPerson,
   resolveSuggestedPerson,
@@ -47,7 +48,13 @@ export function RecordDetail({ entry }: { entry: RecordEntry }) {
     case 'text':
       return <BillTextReader recordKey={entry.key} embedded />;
     case 'doc':
-      return <DocumentReader recordSlug={entry.key} embedded />;
+      return (
+        <DocumentReader
+          recordSlug={entry.key}
+          citedPassage={entry.passage}
+          embedded
+        />
+      );
     case 'person-name':
     case 'search-person':
       return <ResolvedPerson entry={entry} />;
@@ -105,13 +112,14 @@ function ResolvedPerson({ entry }: { entry: RecordEntry }) {
         />
       ) : destination ? (
         <Group testID="person-no-native-profile">
-          <EmptyState message="No native profile yet. Native profiles cover verified parliamentarians in the public record." />
-          <RowList>
-            <OpaxWebLink
-              label="Public record on opax.com.au"
-              path={destination.web}
+          <EmptyState message="No profile is available yet. Profiles cover verified parliamentarians in the public record." />
+          <InsetGroup>
+            <LinkRow
+              title="Public record on opax.com.au"
+              external
+              onPress={() => void openOnWeb(destination.web, 'Public record')}
             />
-          </RowList>
+          </InsetGroup>
         </Group>
       ) : (
         <LoadingState

@@ -2,9 +2,9 @@ import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import ProductionAccount from '../src/features/account/entry.production';
 import { AccountRowsScreen } from '../src/features/account/AccountRows';
 import { AccountScreen } from '../src/features/account/AccountScreen';
+import ProductionAccount from '../src/features/account/entry.production';
 
 // Production builds with the voice switch off draw the Account sheet without
 // its account groups (specs/account.md 9): Metro resolves entry.production.ts,
@@ -157,7 +157,6 @@ test('production bundles cannot see the sign-in or deletion screens', () => {
     'src/app/account/index.tsx',
     'src/app/account/about.tsx',
     'src/app/account/_layout.tsx',
-    'src/features/ComingSoon.tsx',
     'src/features/About.tsx',
   ])
     expect([path, blocked(list, path)]).toEqual([path, false]);

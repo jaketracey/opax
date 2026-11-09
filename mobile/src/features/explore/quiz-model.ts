@@ -1,4 +1,5 @@
 import {
+  counted,
   formatCount,
   formatMoney,
   formatMoneyCompact,
@@ -145,7 +146,7 @@ export function pointsLine(
   return `+${formatCount(response.gained)} points${response.multiplier > 1 ? ` · streak ×${response.multiplier}` : ''}`;
 }
 export function progressLine(index: number, total: number, points: number) {
-  return `${index + 1} of ${total} · ${formatCount(points)} ${points === 1 ? 'point' : 'points'}`;
+  return `${index + 1} of ${total} · ${counted(points, 'point', 'points')}`;
 }
 export function resultLine(correct: number, total: number, best: number) {
   return `${correct} of ${total} right · best streak ${best}`;
@@ -281,7 +282,7 @@ export function answerComplete(q: Question, answer: Answer | undefined) {
 export function optionValueText(q: Question, value: number): string {
   return q.template.startsWith('money-')
     ? formatMoneyWords(value)
-    : `${formatCount(value)} ${value === 1 ? 'speech' : 'speeches'}`;
+    : `${counted(value, 'speech', 'speeches')}`;
 }
 export function ordinal(n: number) {
   const tens = n % 100;

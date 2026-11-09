@@ -23,7 +23,7 @@ import {
   selectedWash,
   splitRowStyles,
 } from '../../design/selection';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import { isPartyLabel, partySlug } from '../../design/party';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import { minimumTarget, rhythm } from '../../design/tokens';
@@ -150,7 +150,7 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
 }: RowProps<PartyRow>) {
   const slug = partySlug(item.name);
   const follow = useRowFollow('party', slug, item.name);
-  const detail = `${formatCount(item.members)} ${item.members === 1 ? 'member' : 'members'} on record`;
+  const detail = `${counted(item.members, 'member', 'members')} on record`;
   return (
     <LinkRow
       title=""
@@ -158,6 +158,7 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
         <PartyLabel party={item.name} status="current" nested linked={false} />
       }
       detail={detail}
+      accessoryAlign="first-line"
       href={partyRoute(item.name)}
       menu={rowMenus.place({
         title: item.name,
@@ -195,7 +196,7 @@ export function electorateLines(item: Electorate): {
     return { house, member: 'No longer used', party: null };
   const members = item.representatives;
   if (item.representation_status !== 'verified' || !members.length)
-    return { house, member: 'Member not confirmed', party: null };
+    return { house, member: '', party: null };
   if (members.length > 1)
     return {
       house,
@@ -249,14 +250,16 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
         <Text wordSafe variant="secondary">
           {lines.house}
         </Text>
-        <View style={styles.member}>
-          <Text wordSafe variant="secondary">
-            {lines.party ? `${lines.member} · ` : lines.member}
-          </Text>
-          {lines.party ? (
-            <PartyLabel party={lines.party} nested linked={false} />
-          ) : null}
-        </View>
+        {lines.member ? (
+          <View style={styles.member}>
+            <Text wordSafe variant="secondary">
+              {lines.party ? `${lines.member} · ` : lines.member}
+            </Text>
+            {lines.party ? (
+              <PartyLabel party={lines.party} nested linked={false} />
+            ) : null}
+          </View>
+        ) : null}
       </View>
       {split ? null : (
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />

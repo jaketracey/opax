@@ -1,8 +1,11 @@
+import { RouteOptions } from '../../navigation/preview';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
+import { copy } from '../../design/copy';
+import { counted, formatCount } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
@@ -14,10 +17,8 @@ import {
   SourceLine,
   Text,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
 import { useListSearchBar } from '../../design/search-bar';
-import { chrome, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { leadsKindRoute } from '../../navigation/routes/money-map';
 import { leadRoute } from '../../navigation/routes/public-money';
@@ -26,12 +27,12 @@ import { moneyPageMenu } from '../money/menu';
 import { LeadFeedCard } from './LeadFeedCard';
 import {
   aboutLede,
+  categoryFrom,
   categoryLabel,
   categorySearch,
   categorySeeAll,
   categorySource,
   discoveryAsOf,
-  categoryFrom,
   leadSections,
   leadsHiddenNotes,
   searchLeads,
@@ -66,8 +67,7 @@ export function kindCaption(
   all: number,
   searching: boolean,
 ) {
-  const leads = (n: number) =>
-    `${formatCount(n)} ${n === 1 ? 'lead' : 'leads'}`;
+  const leads = (n: number) => `${counted(n, 'lead', 'leads')}`;
   if (searching) return `${formatCount(shown)} of ${leads(all)}`;
   if (category === 'donor_contract_overlap')
     return `${leads(all)}, largest first`;
@@ -275,7 +275,7 @@ export default function Leads() {
           accessibilityLiveRegion="polite"
           testID="leads-search-caption"
         >
-          {`${formatCount(results.length)} ${results.length === 1 ? 'lead matches' : 'leads match'}`}
+          {`${counted(results.length, 'lead matches', 'leads match')}`}
         </Text>
         {results.length ? (
           <>
@@ -331,7 +331,7 @@ export default function Leads() {
   }
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={{
           title,
           headerLargeTitle: true,
@@ -348,7 +348,7 @@ export default function Leads() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={refresh}
-            tintColor={chrome.tint}
+            tintColor={colors.navy}
           />
         }
       >

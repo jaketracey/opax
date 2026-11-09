@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
 /** What one block tells the page: its saved copy's time, and whether it
  * failed offline with nothing saved. */
 export interface TodayReport {
+  cachedAt?: number | null;
   savedAt: number | null;
   offline: boolean;
 }
@@ -204,11 +205,13 @@ export function reportOf(
   if (!block) return undefined;
   return {
     savedAt: block.stale ? (block.savedAt ?? null) : null,
+    cachedAt: block.status === 'ready' ? (block.savedAt ?? null) : null,
     offline: block.status === 'error' && block.error?.code === 'offline',
   };
 }
 
 interface TodayReportsValue {
+  cachedAt: number | null;
   /** The oldest saved copy any block draws, for the one offline line. */
   savedAt: number | null;
   /** Bills and Just declared both failed offline with nothing saved. */
@@ -235,7 +238,9 @@ export function useTodayReports(): TodayReportsValue {
       if (
         value === undefined
           ? shown === undefined
-          : shown?.savedAt === value.savedAt && shown.offline === value.offline
+          : shown?.savedAt === value.savedAt &&
+            shown.cachedAt === value.cachedAt &&
+            shown.offline === value.offline
       )
         return current;
       const next = { ...current };
@@ -247,6 +252,11 @@ export function useTodayReports(): TodayReportsValue {
   return useMemo(() => {
     const values = Object.values(reports);
     return {
+      cachedAt:
+        values
+          .map((r) => r.cachedAt)
+          .filter((d): d is number => typeof d === 'number')
+          .sort((a, b) => a - b)[0] ?? null,
       savedAt:
         values
           .map((r) => r.savedAt)
@@ -266,10 +276,11 @@ export function useReport(key: string, value: TodayReport | undefined) {
   const report = reports?.report;
   const savedAt = value?.savedAt ?? null;
   const offline = value?.offline ?? false;
+  const cachedAt = value?.cachedAt ?? null;
   const known = value !== undefined;
   useEffect(() => {
     if (!report) return;
-    report(key, known ? { savedAt, offline } : undefined);
-  }, [report, key, known, savedAt, offline]);
+    report(key, known ? { savedAt, cachedAt, offline } : undefined);
+  }, [report, key, known, savedAt, cachedAt, offline]);
   useEffect(() => () => report?.(key, undefined), [report, key]);
 }

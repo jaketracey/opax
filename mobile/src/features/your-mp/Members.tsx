@@ -1,11 +1,10 @@
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
 import type { Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
-import { CachedPortrait } from '../CachedPortrait';
 import { formatDate } from '../../design/format';
-import { Group, RowList, Screen } from '../../design/layout';
+import { Group, InsetGroup, Screen } from '../../design/layout';
 import { PersonRow } from '../../design/people';
 import { PageFoot } from '../../design/record';
 import { SourceLine } from '../../design/source';
@@ -14,6 +13,7 @@ import { Heading, Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { CachedPortrait } from '../CachedPortrait';
 import { byFamilyName } from './FaceStackRow';
 import { representativeProfile, type Directory } from './model';
 import { stateInRunningCopy } from './state-names';
@@ -131,7 +131,7 @@ export default function Members() {
     >
       <Group gap={rhythm.line}>
         <View ref={titleRef} onLayout={title.onTitleLayout}>
-          <Heading level={1} testID="members-title">
+          <Heading level={1} kind="page" testID="members-title">
             {titles!.page}
           </Heading>
         </View>
@@ -142,7 +142,7 @@ export default function Members() {
         ) : null}
       </Group>
       {rows.length ? (
-        <RowList>
+        <InsetGroup>
           {rows.map((r) => {
             const profile = representativeProfile(r.person_id, directory);
             return (
@@ -165,7 +165,7 @@ export default function Members() {
               />
             );
           })}
-        </RowList>
+        </InsetGroup>
       ) : (
         <ContentUnavailable
           symbol="person.3"

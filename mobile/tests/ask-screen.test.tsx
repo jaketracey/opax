@@ -5,6 +5,7 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Dimensions,
+  Keyboard,
   ScrollView,
   StyleSheet,
 } from 'react-native';
@@ -31,6 +32,7 @@ import { startersFor } from '../src/features/ask/starters';
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Stack: {
     Screen: ({ options }: { options: Record<string, unknown> }) => {
       mockBar.options = options;
@@ -345,8 +347,22 @@ test('the composer sets its question in body text; the options line is a 44 pt t
 test('mount, typing, Options and a remount never call paid routes', async () => {
   await mount();
   await type('A question');
+  const input = view!.root.findByType(AskDock).props.inputRef;
+  const blur = jest.fn();
+  input.current = { blur };
+  const dismiss = jest.spyOn(Keyboard, 'dismiss');
   await press('ask-composer-options');
   expect(openAskOptions).toHaveBeenCalled();
+  expect(dismiss).toHaveBeenCalled();
+  expect(blur).toHaveBeenCalled();
+  expect(blur.mock.invocationCallOrder[0]).toBeLessThan(
+    dismiss.mock.invocationCallOrder[0]!,
+  );
+  expect(dismiss.mock.invocationCallOrder[0]).toBeLessThan(
+    jest.mocked(openAskOptions).mock.invocationCallOrder[0]!,
+  );
+  dismiss.mockRestore();
+  input.current = null;
   await act(async () => {
     view!.unmount();
     view = create(<AskScreen />);

@@ -1,6 +1,7 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useRef, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Stack } from 'expo-router';
+
 import {
   Heading,
   InsetGroup,
@@ -100,7 +101,7 @@ export default function Methods() {
   return (
     <Screen testID="methods-screen" onScroll={bar.onScroll}>
       {/* A reading page on paper, so its bar matches its ground. */}
-      <Stack.Screen options={paperBar} />
+      <RouteOptions options={paperBar} />
       <View ref={titleRef} onLayout={bar.onTitleLayout}>
         <Heading level={1} kind="page" testID="methods-title">
           {text.title}

@@ -26,6 +26,7 @@ jest.mock('../src/api/image-policy', () => ({
 }));
 const mockParams: { slug?: string } = {};
 jest.mock('expo-router', () => ({
+  useIsPreview: () => false,
   Link: Object.assign(({ children }: { children?: unknown }) => children, {
     Trigger: ({ children }: { children?: unknown }) => children,
     Preview: () => null,

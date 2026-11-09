@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { LinkRow, Text, ValueRow } from '../../design/primitives';
 import {
-  formatCount,
+  counted,
   formatMoney,
   formatMoneyCompact,
   formatPercent,
 } from '../../design/format';
+import { LinkRow, Text, ValueRow } from '../../design/primitives';
 import {
   accents,
   chartRoles,
@@ -47,7 +47,7 @@ export function ConcentrationChart({
                 formatPercent(row.share),
                 row.records === null
                   ? null
-                  : `${formatCount(row.records)} ${row.records === 1 ? 'record' : 'records'}`,
+                  : `${counted(row.records, 'record', 'records')}`,
               ]
                 .filter(Boolean)
                 .join(' · ')}
@@ -136,9 +136,10 @@ const styles = StyleSheet.create({
   },
   track: {
     height: 8,
-    borderRadius: radii.sm,
+    borderRadius: radii.bar,
     backgroundColor: colors[chartRoles.baseline],
     overflow: 'hidden',
+    borderCurve: 'continuous',
   },
   fill: { height: 8 },
 });

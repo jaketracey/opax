@@ -1,7 +1,5 @@
 import { useRef, useState } from 'react';
 import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
-import * as voice from '../../voice';
-import type { VoiceStatus } from '../../voice';
 import {
   Button,
   ErrorState,
@@ -12,6 +10,8 @@ import {
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { openOnWeb } from '../../navigation/external';
+import type { VoiceStatus } from '../../voice';
+import * as voice from '../../voice';
 import { CODE_LENGTH, codeDigits, isEmailAddress } from './code';
 import {
   accountCopy,
@@ -208,6 +208,7 @@ export function CodeStep({
         <Field
           grouped
           label={accountCopy.code}
+          variant="code"
           value={code}
           onChangeText={changeCode}
           testID="account-sign-in-code"

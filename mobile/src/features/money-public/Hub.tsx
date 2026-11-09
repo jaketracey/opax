@@ -1,5 +1,6 @@
+import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { Stack } from 'expo-router';
+
 import { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useLayout } from '../../design/adaptive';
@@ -49,7 +50,7 @@ export default function Hub() {
   const barTitle = useTitleOnScroll(barTitleRef, 'Public money');
   return (
     <>
-      <Stack.Screen
+      <RouteOptions
         options={moneyBar({
           name: 'Public money',
           path: '/money',
