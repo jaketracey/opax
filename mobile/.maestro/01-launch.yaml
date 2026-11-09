@@ -61,12 +61,26 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
       TAB_ID: tab-ask
 - assertVisible:
     id: today-screen-message
-# Talk is reached from the Ask composer; Account remains on every root.
+# Signed-out readers have no Talk composer button; its deep link shows the gate.
 - tapOn:
     id: tab-ask
-- tapOn: Talk to OPAX
 - assertVisible:
-    id: talk-sheet-message
+    id: ask-question
+- assertNotVisible:
+    id: ask-talk
+- openLink: opax://talk
+- tapOn:
+    text: Open
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: talk-sign-in
+    timeout: 30000
+    centerElement: true
+- assertVisible:
+    id: talk-sign-in
+- assertNotVisible:
+    id: talk-start
 - takeScreenshot: ${EVIDENCE}/01-talk-sheet
 - tapOn: Done
 - tapOn:

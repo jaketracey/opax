@@ -1,5 +1,5 @@
 appId: au.com.opax.app
-name: 37 Party access, mentions, creditors, returns, follow and Your MP pay
+name: 37 Party mentions, creditors, returns, follow and Your MP pay
 ---
 - launchApp:
     clearState: true
@@ -24,13 +24,8 @@ name: 37 Party access, mentions, creditors, returns, follow and Your MP pay
       id: '^people-party-title-ms-([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9]{3})$',
     }
 - takeScreenshot: ${EVIDENCE}/37-party-title
-- scrollUntilVisible:
-    element: { id: party-access }
-    direction: DOWN
-    speed: 40
-    centerElement: true
-    timeout: 180000
-- takeScreenshot: ${EVIDENCE}/37-party-access
+# Labor has no meetings or lobbyists in the default fixture, so PartyAccess
+# deliberately renders nothing. Continue with the records the fixture holds.
 # Mentions in parliament is a row of "More from the record"; it pushes the
 # paged record list.
 - scrollUntilVisible:

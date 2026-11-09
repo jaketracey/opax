@@ -9,8 +9,8 @@ name: 06 A former member reads "Former member" beside their party; a member the 
     env:
       NAME: Julia Gillard
       SLUG: julia-gillard
-      PARTY: ^Labor$
-      NOT_PARTY: Formerly Labor
+      PARTY: ^Party, Labor$
+      NOT_PARTY: .*Formerly Labor.*
 - assertVisible:
     id: person-former
     text: Former member
@@ -23,8 +23,8 @@ name: 06 A former member reads "Former member" beside their party; a member the 
     env:
       NAME: Janelle Saffin
       SLUG: janelle-saffin
-      PARTY: ^Labor$
-      NOT_PARTY: Formerly Labor
+      PARTY: ^Party, Labor$
+      NOT_PARTY: .*Formerly Labor.*
 - assertNotVisible:
     id: person-former
 - takeScreenshot: ${EVIDENCE}/06-janelle-saffin

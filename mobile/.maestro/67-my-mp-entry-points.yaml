@@ -15,11 +15,10 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
     timeout: 60000
 - assertVisible:
     id: search-result-anthony-albanese
-    containsDescendants:
-      - text: .*Member for Grayndler.*
+    text: Anthony Albanese, Labor, Member for Grayndler.*
 # A second occurrence would be a duplicate person result.
 - assertNotVisible:
-    text: .*Member for Grayndler.*
+    text: Anthony Albanese, Labor, Member for Grayndler.*
     index: 1
 - longPressOn:
     id: search-result-anthony-albanese

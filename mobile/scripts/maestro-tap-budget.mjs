@@ -128,11 +128,14 @@ function check(file) {
     }
   }
   if (open) throw new Error(`${file}: unclosed budget ${open.task}`);
-  if (!seen.size) throw new Error(`${file}: no tap budget markers`);
   for (const task of required[path.basename(file)] ?? []) {
     if (!seen.has(task)) throw new Error(`${file}: missing budget ${task}`);
   }
-  return results;
+  // Most flows declare no tap budget. They can share the changed-flow gate,
+  // but required journeys must keep every marker and malformed pairs fail.
+  return results.length
+    ? results
+    : [`${path.basename(file)}: no declared tap budgets`];
 }
 const mobile = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const files = process.argv.slice(2);

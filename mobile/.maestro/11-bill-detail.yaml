@@ -229,7 +229,8 @@ name: 11 Read a bill, its machine summary, votes and speeches
     text: Machine-written
 - scrollUntilVisible:
     element:
-      text: Tony Burke
+      id: bill-speech-.*
+      text: .*Tony Burke.*
     direction: UP
     speed: 20
     timeout: 180000
