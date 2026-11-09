@@ -6,6 +6,7 @@
 # states. A bare number would select them at the default size with others.
 qa_path_only_journey() {
   case "$1" in
+    28) printf '%s\n' '.maestro/28-welcome-ax5.yaml' ;;
     15) printf '%s\n' '.maestro/15-cold-first-line.yaml' ;;
     *) return 1 ;;
   esac
@@ -27,15 +28,20 @@ qa_check_flow_selectors() {
 # journey order: scripts/e2e.sh <udid> --all-iphone. A bare number selects
 # every .maestro/NN-*.yaml except the open-profile and scene-lifecycle helpers
 # (e2e.sh), so journeys that share a number with a separate run are paths.
-# Not iPhone suite journeys: the iPad flows (52-54, 55b, 56, 57b, ipad-tour-*),
+# Not iPhone suite journeys: the iPad flows (52-54, 55b, 56, 57b, other iPad captures),
 # release-community-hidden (needs an OPAX_HIDE_COMMUNITY=1 build) and the
 # reviewer walkthrough and review-pages captures.
 qa_iphone_suite() {
-  printf '%s\n' 01 02 03 04 05 06 07 08 09 10 11 12 13 14 20 21 22 23 24 25 27 28 \
-    .maestro/28b-cold-launch.yaml 29 \
+  printf '%s\n' 01 02 03 04 05 06 07 08 09 10 11 12 13 14 20 21 22 23 24 25 27 \
+    .maestro/28-welcome.yaml .maestro/28b-cold-launch.yaml .maestro/28c-welcome-not-now.yaml \
+    .maestro/28d-first-launch-link.yaml .maestro/28e-no-permission-at-launch.yaml \
+    .maestro/28f-update-from-1-0.yaml \
+    .maestro/13d-today-seat.yaml .maestro/13e-today-invitation.yaml \
+    .maestro/13f-today-edition-tiers.yaml .maestro/13h-today-state-seat.yaml \
+    .maestro/13i-today-see-all.yaml 29 \
     .maestro/30-ask-entry-points.yaml .maestro/30-ask-people.yaml \
     .maestro/30-ask-progress.yaml .maestro/30-ask.yaml \
-    31 32 33 34 35 36 37 39 42 43 44 45 46 48 49 50 51 55 57 58 61
+    31 32 33 34 35 36 37 39 42 43 44 45 46 48 49 50 51 55 57 58 59 60 61 62 63 64 65 66 67 68 .maestro/22b-sources.yaml
 }
 
 # Journeys that need their own fixture or text size, one e2e.sh run each.
@@ -46,6 +52,10 @@ qa_iphone_separate_runs() {
     'OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <udid> .maestro/15-cold-first-line.yaml' \
     'scripts/e2e.sh <udid> .maestro/15-cold-first-line.yaml' \
     'OPAX_FIXTURE_DATA=changed scripts/e2e.sh <udid> .maestro/26-follows.yaml' \
+    'OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <udid> .maestro/28-welcome-ax5.yaml' \
+    'OPAX_FIXTURE_ROSTER=vacant scripts/e2e.sh <udid> .maestro/28g-vacant-seat.yaml' \
+    'OPAX_NETWORK_PROFILE=throttled scripts/e2e.sh <udid> .maestro/13g-today-first-install.yaml' \
+    'scripts/e2e.sh <udid> .maestro/26c-follow-limit.yaml' \
     'OPAX_FIXTURE_ROSTER=null-optional scripts/e2e.sh <udid> .maestro/30-catalog-robustness.yaml'
 }
 

@@ -80,7 +80,12 @@ export function reportsFixture(bytes: (path: string) => Buffer) {
   const put = (path: string, data: unknown) =>
     result.set(path, Buffer.from(JSON.stringify(data)));
   put('/api/topics', { labelled, topics });
-  put('/api/tide', { scope: 'federal', decades, topics: tideTopics });
+  put('/api/tide', {
+    generated_at: '2026-10-04T00:00:00Z',
+    scope: 'federal',
+    decades,
+    topics: tideTopics,
+  });
   for (const [slug, data] of Object.entries(byTopic)) {
     put(`/api/topic/${slug}`, data);
     const report = reports[topicReport[slug] ?? ''];
@@ -108,6 +113,7 @@ export function reportsFixture(bytes: (path: string) => Buffer) {
     ]),
   );
   put('/api/matrix', {
+    generated_at: '2026-10-04T00:00:00Z',
     labelled,
     parties: [
       ...new Set(
@@ -148,12 +154,12 @@ export function reportsFixture(bytes: (path: string) => Buffer) {
     const base = result.get(arcPath(params.get('topic')!));
     if (!base) return undefined;
     const data = JSON.parse(base.toString()) as {
-      results: Array<{
+      results: {
         party?: string;
         state?: string;
         date?: string;
         title: string;
-      }>;
+      }[];
     };
     return Buffer.from(
       JSON.stringify({

@@ -72,8 +72,10 @@ const dataMode = process.env.OPAX_FIXTURE_DATA ?? 'pinned';
 if (!dataModes.includes(dataMode))
   throw new Error('OPAX_FIXTURE_DATA must be pinned or changed');
 const rosterMode = process.env.OPAX_FIXTURE_ROSTER ?? 'pinned';
-if (!['pinned', 'null-optional'].includes(rosterMode))
-  throw new Error('OPAX_FIXTURE_ROSTER must be pinned or null-optional');
+if (!['pinned', 'null-optional', 'vacant'].includes(rosterMode))
+  throw new Error(
+    'OPAX_FIXTURE_ROSTER must be pinned, null-optional or vacant',
+  );
 const files = new Map<string, Buffer>();
 for (const [path, body] of Object.entries(recordFixtures.responses)) {
   if (path === '/api/search') continue;
@@ -85,7 +87,10 @@ const directoryBytes = fixtureBytes(directorySnapshot);
 const reportBytes = reportsFixture(pinnedBytes);
 for (const path of Object.keys(snapshot.files)) {
   if (snapshot.testOnlyFiles.includes(path)) continue;
-  if (path.startsWith('/reports/') && path !== '/reports/grants-allocation.json')
+  if (
+    path.startsWith('/reports/') &&
+    path !== '/reports/grants-allocation.json'
+  )
     continue;
   if (path.endsWith('.webp')) assertPortraitPath(path);
   else assertAllowedPath(path);
@@ -108,6 +113,85 @@ if (rosterMode === 'null-optional') {
   files.set(path, Buffer.from(JSON.stringify(raw)));
   console.log('OPAX_FIXTURE_ROSTER null-optional: pid=10007 speeches=null');
 }
+// Vacant-seat journey: the electorate remains, its sitting member does not.
+if (rosterMode === 'vacant') {
+  for (const [path, body] of files) {
+    if (
+      path !== '/parliamentarians.json' &&
+      !/^\/electorates\/[^/]+\/people\.json$/.test(path) &&
+      !/people\.json$/.test(path)
+    )
+      continue;
+    const raw = JSON.parse(body.toString());
+    if (Array.isArray(raw.people))
+      raw.people = raw.people.filter(
+        (person: { pid?: string; name?: string }) =>
+          person.pid !== '10007' && person.name !== 'Anthony Albanese',
+      );
+    else if (raw.people && typeof raw.people === 'object')
+      for (const [key, value] of Object.entries(raw.people))
+        if (
+          key === '10007' ||
+          (value as { name?: string }).name === 'Anthony Albanese'
+        )
+          delete raw.people[key];
+    files.set(path, Buffer.from(JSON.stringify(raw)));
+  }
+}
+// DATA-7 identity links: Parliament profiles verified against APH's indexed
+// member pages and the Australian Government Directory on 9 November 2026.
+const memberProfiles: Record<string, string> = {
+  'Anthony Albanese':
+    'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=R36',
+  'Sussan Ley':
+    'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=00AMN',
+  'Zali Steggall':
+    'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=175696',
+};
+for (const [path, body] of files) {
+  if (!/people\.json$/.test(path) && path !== '/parliamentarians.json')
+    continue;
+  const raw = JSON.parse(body.toString());
+  const before = JSON.stringify(raw);
+  const people = Array.isArray(raw.people)
+    ? raw.people
+    : Object.values(raw.people ?? {});
+  for (const person of people as { name?: string; source_url?: string }[]) {
+    if (person.name && memberProfiles[person.name])
+      person.source_url = memberProfiles[person.name];
+    else if (
+      ['Tanya Plibersek', 'Dan Tehan', 'Helen Haines'].includes(
+        person.name ?? '',
+      )
+    )
+      delete person.source_url;
+  }
+  if (JSON.stringify(raw) !== before)
+    files.set(path, Buffer.from(JSON.stringify(raw)));
+}
+// Join an existing member vote to the one matching pinned bill division.
+// No position, date, stage or count is fabricated.
+{
+  const votes = JSON.parse(files.get('/votes.json')!.toString());
+  const bill = JSON.parse(
+    files.get('/bills/au-federal-r7512.json')!.toString(),
+  );
+  const row = votes['10007'].against.find(
+    (vote: { name: string; date: string; stage: string }) =>
+      vote.name === bill.title &&
+      vote.date === '2026-07-01' &&
+      vote.stage === 'Second reading',
+  );
+  const divisions = bill.divisions.filter(
+    (division: { date: string; stage: string }) =>
+      division.date === row?.date && division.stage === row?.stage,
+  );
+  if (!row || divisions.length !== 1)
+    throw new Error('Pinned member vote no longer has one verified division');
+  row.billKey = bill.key;
+  row.division_key = divisions[0].key;
+  files.set('/votes.json', Buffer.from(JSON.stringify(votes)));
+}
 let editionWithdrawn = editionMode === 'absent';
 let dataChanged = false;
 const changedFiles = new Map<string, Buffer>();
@@ -125,7 +209,9 @@ if (dataMode === 'changed') {
   Object.assign(moved, { status: 'passed', status_as_of: '2026-10-01' });
   changedFiles.set('/bills/index.json', Buffer.from(JSON.stringify(index)));
 }
-const peopleFixtures = JSON.parse(responseBytes(snapshot, '/people-fixtures').toString()) as { responses: Record<string, unknown> };
+const peopleFixtures = JSON.parse(
+  responseBytes(snapshot, '/people-fixtures').toString(),
+) as { responses: Record<string, unknown> };
 const edition =
   editionMode === 'politician'
     ? readFileSync(join(__dirname, 'fixtures/edition-politician.json'))
@@ -188,6 +274,9 @@ export const server = createServer(async (request, response) => {
   let status = 200;
   let loud = false;
   const path = request.url ?? '/';
+  // Latency profile for 13g. It changes timing only, never fixture bytes.
+  if (process.env.OPAX_NETWORK_PROFILE === 'throttled' && path !== '/healthz')
+    await new Promise((resolve) => setTimeout(resolve, 1500));
   response.on('finish', () =>
     console.log(
       JSON.stringify({
@@ -221,12 +310,16 @@ export const server = createServer(async (request, response) => {
       return;
     }
     if (request.method !== 'GET') throw new Error('Only GET is allowed');
-    if (path.endsWith('.webp') && !isYearPicturePath(path)) assertPortraitPath(path);
+    if (path.endsWith('.webp') && !isYearPicturePath(path))
+      assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
     const reportBody = exploreFixture(path, reportBytes) ?? reportBytes(path);
     const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
-    const search = peopleResponse || reportBody || files.has(url.pathname) ? null : searchFixture(url, roster);
+    const search =
+      peopleResponse || reportBody || files.has(url.pathname)
+        ? null
+        : searchFixture(url, roster);
     if (search) {
       response.writeHead(200, {
         'Content-Type': search.contentType ?? 'application/json; charset=utf-8',
@@ -235,9 +328,13 @@ export const server = createServer(async (request, response) => {
       response.end(search.body);
       return;
     }
-    let body = files.get(url.pathname) ?? searchResourceFixture(url.pathname) ?? reportBody ?? (peopleResponse
-      ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
-      : undefined);
+    let body =
+      files.get(url.pathname) ??
+      searchResourceFixture(url.pathname) ??
+      reportBody ??
+      (peopleResponse
+        ? Buffer.from(JSON.stringify(peopleFixtures.responses[path]))
+        : undefined);
     // Verify the many static bill-history blobs lazily at the fixture boundary.
     if (!body && Object.hasOwn(directorySnapshot.files, url.pathname))
       body = directoryBytes(url.pathname);
@@ -263,8 +360,13 @@ export const server = createServer(async (request, response) => {
     if (isEdition) {
       body = edition;
       cacheControl = snapshot.responses[editionPath].cacheControl;
-    } else if (url.pathname === '/api/search' && !Object.hasOwn(peopleFixtures.responses, path)) {
-      body = Buffer.from(JSON.stringify(recordFixtures.responses['/api/search']));
+    } else if (
+      url.pathname === '/api/search' &&
+      !Object.hasOwn(peopleFixtures.responses, path)
+    ) {
+      body = Buffer.from(
+        JSON.stringify(recordFixtures.responses['/api/search']),
+      );
     } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(
         JSON.stringify({ generated: roster.meta.generated, slugs }),

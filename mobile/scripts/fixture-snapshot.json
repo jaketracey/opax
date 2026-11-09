@@ -281,7 +281,8 @@
     "/evidence/37.json": "9e08dd4f1e86bc466f552db64c5864c8607e7448da49544bd9871a9d1107700a",
     "/research/grant-locations.json": "f1dc6e363af613404d0ff7658668f00fe338cde672702e4c0a591551bbe17bb8",
     "/evidence/c8.json": "d50f46422b97e5ccae8ccc63a41abf653946ddcaa511e841405d720c10980d04",
-    "/interests/10758.json": "7d55162209b0daa9efe23f0ef9f229bea22896ae1f551d78da9e66db29c2602c"
+    "/interests/10758.json": "7d55162209b0daa9efe23f0ef9f229bea22896ae1f551d78da9e66db29c2602c",
+    "/grants/federal/shard-04.json": "e49f3df03ad908873bcdbbe58520c5f2b1792bf04156bf826faddabe59ce0a5a"
   },
   "sizes": {
     "/parliamentarians.json": 405665,
@@ -563,11 +564,10 @@
     "/evidence/37.json": 750512,
     "/research/grant-locations.json": 170250,
     "/evidence/c8.json": 617639,
-    "/interests/10758.json": 10255
+    "/interests/10758.json": 10255,
+    "/grants/federal/shard-04.json": 429716
   },
-  "testOnlyFiles": [
-    "/interests/ties-by-donor.json"
-  ],
+  "testOnlyFiles": ["/interests/ties-by-donor.json"],
   "responses": {
     "/api/app/v1/edition/latest": {
       "file": "fixtures/edition-latest.json",
