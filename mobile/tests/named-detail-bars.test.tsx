@@ -228,12 +228,14 @@ test('Agencies restores the system Government agencies title and its alias', asy
   });
   expect(view!.root.findByType(RouteOptions).props.options).toMatchObject({
     title: 'Government agencies',
-    headerTitle: 'Government agencies',
     headerLargeTitleEnabled: true,
     headerSearchBarOptions: { placement: 'stacked' },
   });
+  expect(view!.root.findByType(RouteOptions).props.options).not.toHaveProperty(
+    'headerTitle',
+  );
   const list = view!.root.findByType(MoneyList);
-  expect(list.props.onScroll).toBeUndefined();
+  expect(typeof list.props.onScroll).toBe('function');
   const alias = list.props.header.props.children[0];
   expect(alias.type).toBe(TitleAlias);
   expect(alias.props).toEqual({

@@ -1,6 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Platform } from 'react-native';
+import { Animated, Dimensions, Platform, StyleSheet } from 'react-native';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
@@ -33,7 +33,12 @@ import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
-import { MoneyList, TitleAlias } from '../src/features/money-public/parts';
+import {
+  MoneyList,
+  MoneyStatus,
+  TitleAlias,
+} from '../src/features/money-public/parts';
+import { FigureBlock } from '../src/design/record';
 import { BarTitle } from '../src/navigation/useTitleOnScroll';
 import {
   decodeGrantIndex,
@@ -320,12 +325,12 @@ test('Agencies keeps its system large title, stacked search and zero-height titl
   const options = rendered.root.findByType(RouteOptions).props.options;
   expect(options).toMatchObject({
     title: 'Government agencies',
-    headerTitle: 'Government agencies',
     headerLargeTitleEnabled: true,
     headerSearchBarOptions: { placement: 'stacked' },
   });
+  expect(options).not.toHaveProperty('headerTitle');
   const list = rendered.root.findByType(MoneyList);
-  expect(list.props.onScroll).toBeUndefined();
+  expect(typeof list.props.onScroll).toBe('function');
   const alias = list.props.header.props.children[0];
   expect(alias.type).toBe(TitleAlias);
   expect(alias.props).toEqual({
@@ -371,9 +376,9 @@ test.each([
         const options = rendered.root.findByType(RouteOptions).props.options;
         expect(options).toMatchObject({
           title,
-          headerTitle: title,
           headerLargeTitleEnabled: true,
         });
+        expect(options).not.toHaveProperty('headerTitle');
         if (backTitle) {
           expect(options).toMatchObject({
             headerBackTitle: backTitle,
@@ -388,6 +393,138 @@ test.each([
         if (rendered) await act(async () => rendered!.unmount());
         Platform.OS = original;
       }
+    }
+  },
+);
+
+test.each([
+  ['Commonwealth grants', Grants, {}, 'grants', false],
+  ['Queensland grants', Grants, { jur: 'qld' }, 'grants', true],
+  ['Government agencies', Agencies, {}, 'agencies', true],
+] as const)(
+  '%s reveals a capped title from its first header block while retaining its large title and back name',
+  async (title, Page, params, name, fitsBesideToday) => {
+    Object.assign(mockParams, params);
+    const originalWindow = Dimensions.get('window');
+    const originalScreen = Dimensions.get('screen');
+    let rendered: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      act(() =>
+        Dimensions.set({
+          window: { ...originalWindow, width: 402, fontScale: 1 },
+          screen: { ...originalScreen, width: 402 },
+        }),
+      );
+      for (const [previous, backTitle, room] of [
+        ['index', 'Today', 128],
+        ['public-money', 'Public money', 71],
+      ] as const) {
+        const route = { key: 'subject', name };
+        const options: Record<string, unknown> = {};
+        const navigation = {
+          getState: () => ({
+            index: 1,
+            routes: [{ key: 'previous', name: previous }, route],
+          }),
+          setOptions: jest.fn((next) => Object.assign(options, next)),
+          isFocused: () => true,
+          addListener: () => () => {},
+        };
+        rendered = await mount(() => (
+          <NavigationContext.Provider value={navigation as never}>
+            <NavigationRouteContext.Provider value={route}>
+              <HeaderHeightContext.Provider value={100}>
+                <Page />
+              </HeaderHeightContext.Provider>
+            </NavigationRouteContext.Provider>
+          </NavigationContext.Provider>
+        ));
+        expect(options).toMatchObject({
+          title,
+          headerLargeTitleEnabled: true,
+          headerBackTitle: backTitle,
+          headerBackButtonMenuEnabled: false,
+          headerBackButtonDisplayMode: 'default',
+          headerSearchBarOptions: { placement: 'stacked' },
+        });
+        expect(
+          rendered.root.findByType(RouteOptions).props.options,
+        ).not.toHaveProperty('headerTitle');
+        expect(typeof options.headerTitle).toBe('function');
+        const inline = () =>
+          (options.headerTitle as () => React.ReactElement)();
+        expect(inline().type).toBe(BarTitle);
+        expect(inline().props).toMatchObject({
+          title,
+          shown: false,
+          backTitle: options.headerBackTitle,
+        });
+        const expectVisible = (visible: boolean) => {
+          let titleView!: TestRenderer.ReactTestRenderer;
+          act(() => {
+            titleView = TestRenderer.create(inline());
+          });
+          try {
+            const text = titleView.root.findByType(Animated.Text);
+            const style = StyleSheet.flatten(text.props.style);
+            expect(style.maxWidth).toBe(room);
+            expect(style.width).toBeUndefined();
+            expect(
+              typeof style.opacity === 'number'
+                ? style.opacity
+                : style.opacity.__getValue(),
+            ).toBe(visible ? 1 : 0);
+            expect(text.props).toMatchObject({
+              children: title,
+              accessibilityElementsHidden: !visible,
+              importantForAccessibility: visible
+                ? 'auto'
+                : 'no-hide-descendants',
+            });
+          } finally {
+            act(() => titleView.unmount());
+          }
+        };
+        expectVisible(false);
+        const list = rendered.root.findByType(MoneyList);
+        const [alias, anchor] = list.props.header.props.children;
+        expect(alias.type).toBe(TitleAlias);
+        expect(anchor.props.collapsable).toBe(false);
+        expect(anchor.props.children[0].type).toBe(MoneyStatus);
+        expect(anchor.props.children[1].type).toBe(FigureBlock);
+        const pending: ((...values: number[]) => void)[] = [];
+        const measure = jest.fn((done) => pending.push(done));
+        anchor.props.ref.current = { measure };
+        act(() =>
+          anchor.props.onLayout({
+            nativeEvent: { layout: { y: 0, height: 120 } },
+          }),
+        );
+        expect(measure).not.toHaveBeenCalled();
+        const scroll = (y: number, pageY: number) =>
+          act(async () => {
+            list.props.onScroll({ nativeEvent: { contentOffset: { y } } });
+            await Promise.resolve();
+            pending.shift()!(0, 0, 300, 120, 0, pageY);
+          });
+        await scroll(9000, 140);
+        expect(inline().props.shown).toBe(false);
+        // The block's midpoint reaches the bar while its lower half is visible.
+        await scroll(-900, 40);
+        expect(inline().props.shown).toBe(true);
+        expect(inline().props.backTitle).toBe(options.headerBackTitle);
+        expectVisible(backTitle === 'Today' && fitsBesideToday);
+        await scroll(9000, 140);
+        expect(inline().props.shown).toBe(false);
+        expectVisible(false);
+        await act(async () => rendered!.unmount());
+        rendered = undefined;
+      }
+    } finally {
+      if (rendered) await act(async () => rendered!.unmount());
+      act(() =>
+        Dimensions.set({ window: originalWindow, screen: originalScreen }),
+      );
     }
   },
 );

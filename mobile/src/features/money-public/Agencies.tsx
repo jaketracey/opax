@@ -11,6 +11,7 @@ import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading, Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 import {
   agenciesRoute,
   agencyRoute,
@@ -89,12 +90,16 @@ export default function Agencies() {
   const saved = recordSource(status.record);
   const name = 'Government agencies';
   const backTitle = useNamedBackTitle();
+  const titleRef = useRef<View>(null);
+  const scrollTitle = useTitleOnScroll(titleRef, name, {
+    routeTitle: name,
+    backTitle,
+  });
   return (
     <>
       <RouteOptions
         options={{
           title: name,
-          headerTitle: name,
           ...(Platform.OS === 'ios' && backTitle
             ? {
                 headerBackTitle: backTitle,
@@ -115,12 +120,22 @@ export default function Agencies() {
         rowKey={(a) => a.id}
         refreshing={status.refreshing}
         refresh={status.refresh}
+        onScroll={scrollTitle.onScroll}
         header={
           <>
             <TitleAlias title={name} testID="agencies-title" />
-            <MoneyStatus status={status} name={name} testID="agencies-status" />
-            {data ? (
-              <>
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={scrollTitle.onTitleLayout}
+              style={{ gap: rhythm.block }}
+            >
+              <MoneyStatus
+                status={status}
+                name={name}
+                testID="agencies-status"
+              />
+              {data ? (
                 <FigureBlock
                   value={formatMoneyCompact(total)}
                   ink="money"
@@ -146,6 +161,10 @@ export default function Agencies() {
                   }}
                   testID="agencies-total"
                 />
+              ) : null}
+            </View>
+            {data ? (
+              <>
                 <View style={{ alignSelf: 'flex-start' }}>
                   <PopUpButton
                     label="Sort"

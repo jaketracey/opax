@@ -10,6 +10,7 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Heading, Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 import {
   grantProgramRoute,
   grantsRoute,
@@ -129,6 +130,11 @@ function GrantList({
   );
   const title = jur === 'federal' ? 'Commonwealth grants' : 'Queensland grants';
   const backTitle = useNamedBackTitle();
+  const titleRef = useRef<NativeView>(null);
+  const scrollTitle = useTitleOnScroll(titleRef, title, {
+    routeTitle: title,
+    backTitle,
+  });
   const search = useMoneySearch(
     view === 'programs'
       ? 'Grant programs'
@@ -190,7 +196,6 @@ function GrantList({
       <RouteOptions
         options={{
           title,
-          headerTitle: title,
           ...(Platform.OS === 'ios' && backTitle
             ? {
                 headerBackTitle: backTitle,
@@ -213,12 +218,22 @@ function GrantList({
         }
         refreshing={status.refreshing}
         refresh={status.refresh}
+        onScroll={scrollTitle.onScroll}
         header={
           <>
             <TitleAlias title={title} testID="grants-title" />
-            <MoneyStatus status={status} name={title} testID="grants-status" />
-            {data && figure ? (
-              <>
+            <NativeView
+              ref={titleRef}
+              collapsable={false}
+              onLayout={scrollTitle.onTitleLayout}
+              style={{ gap: rhythm.block }}
+            >
+              <MoneyStatus
+                status={status}
+                name={title}
+                testID="grants-status"
+              />
+              {data && figure ? (
                 <FigureBlock
                   value={formatMoneyCompact(figure.value)}
                   ink="money"
@@ -248,6 +263,10 @@ function GrantList({
                   }}
                   testID="grants-total"
                 />
+              ) : null}
+            </NativeView>
+            {data && figure ? (
+              <>
                 {figure.allYears ? (
                   <ValueRow
                     label={figure.allYears.label}
