@@ -186,17 +186,23 @@ export default function LeadDetail() {
   return (
     <>
       <RouteOptions
-        options={headerItems(
-          lead
-            ? pageItems({
-                name: lead.comparison.heading,
-                menu: moneyPageMenu({
-                  path: discoverPath({ id: lead.id, category: lead.category }),
-                  title: lead.title,
-                }),
-              })
-            : undefined,
-        )}
+        options={{
+          title: comparison?.heading || 'Lead',
+          ...headerItems(
+            lead
+              ? pageItems({
+                  name: lead.comparison.heading,
+                  menu: moneyPageMenu({
+                    path: discoverPath({
+                      id: lead.id,
+                      category: lead.category,
+                    }),
+                    title: lead.title,
+                  }),
+                })
+              : undefined,
+          ),
+        }}
       />
       <Screen
         onScroll={barTitle.onScroll}
