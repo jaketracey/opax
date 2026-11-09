@@ -334,14 +334,14 @@ describe('title size cap at AX2 (P2-18)', () => {
   });
   test('a title at AX5 draws its font size scaled (the text cache ignores maxFontSizeMultiplier)', () => {
     setSize(AX5);
-    const root = render(<Text variant="title">A bill title</Text>).root;
+    const root = render(<Text variant="recordTitle">A bill title</Text>).root;
     const style = flat(nativeTexts(root)[0]!.props.style);
     const cap = titleSizeCap('title', AX5, Platform.OS);
-    expect(style.fontSize).toBeCloseTo(textStyles.title.fontSize * cap, 5);
+    expect(style.fontSize).toBeCloseTo(textStyles.recordTitle.fontSize * cap, 5);
     expect(nativeTexts(root)[0]!.props.maxFontSizeMultiplier).toBe(0);
-    const body = render(<Text variant="heading">Section</Text>).root;
+    const body = render(<Text variant="sectionTitle">Section</Text>).root;
     expect(flat(nativeTexts(body)[0]!.props.style).fontSize).toBe(
-      textStyles.heading.fontSize,
+      textStyles.sectionTitle.fontSize,
     );
   });
 });
@@ -388,9 +388,9 @@ describe('BillRow (P2-8)', () => {
       (n) => n.type === NativeText && n.props.testID === 'bill-title',
     );
     expect(flat(title.props.style).fontFamily).toBe(
-      textStyles.subheading.fontFamily,
+      textStyles.rowRecord.fontFamily,
     );
-    expect(textStyles.subheading.fontFamily).toMatch(/Merriweather/);
+    expect(textStyles.rowRecord.fontFamily).toMatch(/Merriweather/);
     expect(strings(root)).toEqual(
       expect.arrayContaining([
         'Introduced',

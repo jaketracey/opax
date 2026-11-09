@@ -8,7 +8,7 @@ export function Placeholder({ message, id }: { message: string; id: string }) {
         </Text>
       </Group>
       <Section>
-        <Text variant="fine" testID={`${id}-footer`}>
+        <Text variant="footnote" testID={`${id}-footer`}>
           OPAX is independent and non-partisan. It is not a government app.
         </Text>
       </Section>

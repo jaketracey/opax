@@ -87,7 +87,7 @@ export function Excerpt({
   return (
     <Text
       wordSafe
-      variant="record"
+      variant="recordText"
       testID={testID}
       accessibilityLabel={prefix ? `${prefix}: ${snippet}` : undefined}
     >

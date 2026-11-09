@@ -567,7 +567,7 @@ export function ResultCount({
       : `${count.toLocaleString('en-AU')} ${noun}${detail ? ` · ${detail}` : ''}`;
   useDebouncedAnnounce(text);
   return text ? (
-    <Text wordSafe variant="metadata">
+    <Text wordSafe variant="secondary">
       {text}
     </Text>
   ) : null;

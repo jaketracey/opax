@@ -61,7 +61,7 @@ export function BillStatus({
     <View style={[styles.statusLine, stacked ? styles.stacked : null]}>
       <StatusLabel label={status} hidden />
       {asAt ? (
-        <Text variant="fine" style={styles.grow}>
+        <Text variant="footnote" style={styles.grow}>
           {asAt}
         </Text>
       ) : null}
@@ -326,7 +326,7 @@ function Runs({
         return url ? (
           <Text
             key={r}
-            variant="record"
+            variant="recordText"
             tone="bronzeInk"
             style={style}
             accessibilityRole="link"
@@ -336,7 +336,7 @@ function Runs({
             {run.text}
           </Text>
         ) : run.strong || run.emphasis || heading ? (
-          <Text key={r} variant="record" style={style}>
+          <Text key={r} variant="recordText" style={style}>
             {run.text}
           </Text>
         ) : (
@@ -368,14 +368,14 @@ function Blocks({
           {block.items.map((item, i) => (
             <View key={i} style={styles.bullet}>
               <Text
-                variant="record"
+                variant="recordText"
                 tone={tone}
                 accessibilityElementsHidden
                 importantForAccessibility="no-hide-descendants"
               >
                 {block.ordered ? `${block.start + i}.` : '•'}
               </Text>
-              <Text variant="record" tone={tone} style={styles.grow}>
+              <Text variant="recordText" tone={tone} style={styles.grow}>
                 <Runs lines={item} />
               </Text>
             </View>
@@ -385,7 +385,7 @@ function Blocks({
     return (
       <Text
         key={index}
-        variant="record"
+        variant="recordText"
         tone={tone}
         accessibilityRole={block.kind === 'heading' ? 'header' : undefined}
       >
@@ -544,7 +544,7 @@ export function RecordedParty({ party }: { party: string }) {
           style={[styles.dot, { backgroundColor: dot }]}
         />
       ) : null}
-      <Text wordSafe variant="metadata" style={styles.grow}>
+      <Text wordSafe variant="secondary" style={styles.grow}>
         {identity.name}
       </Text>
     </Container>
@@ -575,7 +575,7 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     marginHorizontal: -rhythm.line,
     paddingHorizontal: rhythm.line,
-    borderRadius: radii.sm,
+    borderRadius: radii.bar,
   },
   splitStacked: {
     flexWrap: 'wrap',

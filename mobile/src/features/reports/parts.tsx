@@ -214,7 +214,7 @@ export function SourceRows({
                 testID={`${testID}-${i}`}
               />
               {s.passage ? (
-                <Text wordSafe variant="metadata">
+                <Text wordSafe variant="secondary">
                   {passageText(s.passage)}
                 </Text>
               ) : null}
@@ -373,11 +373,11 @@ function RecordsSheet({
           <Heading level={3}>As at</Heading>
           <Text wordSafe>{date ? `As at ${date}` : 'Date not published'}</Text>
           {savedAt != null ? (
-            <Text wordSafe variant="metadata">
+            <Text wordSafe variant="secondary">
               {savedText(savedAt)}
             </Text>
           ) : null}
-          <Text wordSafe variant="metadata">
+          <Text wordSafe variant="secondary">
             {citation}
           </Text>
         </View>
@@ -572,7 +572,7 @@ export function ShareBars({
                 onPress={() => onSelect(i)}
               />
             ) : (
-              <Text key={i} wordSafe variant="metadata" accessible={false}>
+              <Text key={i} wordSafe variant="secondary" accessible={false}>
                 {p.label}: {(p.share * 100).toFixed(1)}%
                 {p.count === undefined
                   ? ''

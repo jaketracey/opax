@@ -56,7 +56,7 @@ const texts = (root: ReactTestInstance) =>
 
 describe('Text', () => {
   test('scales with Dynamic Type, uncapped, with no line limit', () => {
-    const root = render(<Text variant="metadata">Grayndler</Text>);
+    const root = render(<Text variant="secondary">Grayndler</Text>);
     const text = root.findByType(NativeText);
     expect(text.props.allowFontScaling).toBe(true);
     expect(text.props.maxFontSizeMultiplier).toBe(0);

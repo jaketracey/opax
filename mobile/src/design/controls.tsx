@@ -50,7 +50,6 @@ import {
   rhythm,
   rhythmRegular,
   size as sizes,
-  spacing,
   type ControlSize,
   type Role,
 } from './tokens';
@@ -196,7 +195,7 @@ export function Button({
   return (
     <Hoverable
       effect={inert ? 'none' : 'highlight'}
-      cornerRadius={stacked ? radii.container : radii.pill}
+      cornerRadius={stacked ? radii.container : radii.capsule}
       style={fullWidth || stacked ? styles.full : styles.hug}
     >
       <Pressable
@@ -865,12 +864,12 @@ export function FilterChip({
         { backgroundColor: pressed ? colors.sunken : colors.navyWash },
       ]}
     >
-      <Text variant="metadata" style={styles.chipText} accessible={false}>
-        <Text variant="metadata" tone="inkSoft">
+      <Text variant="secondary" style={styles.chipText} accessible={false}>
+        <Text variant="secondary" tone="inkSoft">
           {filter[0]!.toLocaleUpperCase('en-AU') + filter.slice(1)}{' '}
         </Text>
         <Text
-          variant="metadata"
+          variant="secondary"
           tone="ink"
           style={{ fontFamily: fonts.sansSemiBold }}
         >
@@ -947,7 +946,7 @@ export function SegmentedControl<T extends string>({
                   ]}
                 />
                 <Text
-                  variant="control"
+                  variant="strong"
                   tone="ink"
                   wordSafe
                   style={styles.center}
@@ -1081,7 +1080,7 @@ export function SwitchRow({
           {label}
         </Text>
         {detail ? (
-          <Text variant="metadata" wordSafe>
+          <Text variant="secondary" wordSafe>
             {detail}
           </Text>
         ) : null}
@@ -1148,7 +1147,7 @@ export function Field({
         >
           {label}
           {required ? (
-            <Text variant="metadata" tone="inkSoft">
+            <Text variant="secondary" tone="inkSoft">
               {' '}
               (required)
             </Text>
@@ -1187,7 +1186,7 @@ export function Field({
       </View>
       {hint ? (
         <Text
-          variant="fine"
+          variant="footnote"
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
@@ -1201,7 +1200,7 @@ export function Field({
           importantForAccessibility="no-hide-descendants"
         >
           <Icon name="exclamationmark.circle" size={16} tone="danger" />
-          <Text variant="fine" tone="danger">
+          <Text variant="footnote" tone="danger">
             {error}
           </Text>
         </View>
@@ -1380,7 +1379,7 @@ const segmentPadding = Math.max(
   0,
   (controlHeight.default - minimumTarget) / 2 - hairline,
 );
-const segmentInset = spacing.s1 - segmentPadding;
+const segmentInset = rhythm.line - segmentPadding;
 
 const styles = StyleSheet.create({
   // Pills, as iOS draws text buttons (D1: things you press); a 12pt corner
@@ -1388,7 +1387,7 @@ const styles = StyleSheet.create({
   // not a lozenge.
   button: {
     minWidth: minimumTarget,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     borderCurve: 'continuous',
     borderWidth: hairline,
     paddingHorizontal: 0,
@@ -1406,14 +1405,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
-  stepsStacked: { gap: spacing.s3 },
+  stepsStacked: { gap: rhythm.tight },
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
     flexShrink: 1,
   },
   center: { textAlign: 'center' },
@@ -1448,7 +1447,7 @@ const styles = StyleSheet.create({
     minWidth: 22,
     minHeight: 22,
     paddingHorizontal: 6,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     borderCurve: 'continuous',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1472,13 +1471,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
     minHeight: Platform.OS === 'android' ? minimumTarget : minimumTarget - 4,
     maxWidth: '100%',
     paddingLeft: 14,
     paddingRight: 12,
-    paddingVertical: spacing.s2,
-    borderRadius: radii.pill,
+    paddingVertical: rhythm.tight,
+    borderRadius: radii.capsule,
     borderCurve: 'continuous',
   },
   chipStacked: {
@@ -1489,14 +1488,14 @@ const styles = StyleSheet.create({
   chipText: { flexShrink: 1 },
   segmented: {
     flexDirection: 'row',
-    gap: spacing.s1,
+    gap: rhythm.line,
     // 48pt outside: a 44pt target, 1pt padding and a 1pt border each side.
     paddingVertical: segmentPadding,
-    paddingHorizontal: spacing.s1,
+    paddingHorizontal: rhythm.line,
     minHeight: controlHeight.default,
     borderWidth: hairline,
     borderColor: colors.sunken,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     borderCurve: 'continuous',
     backgroundColor: colors.sunken,
   },
@@ -1508,8 +1507,8 @@ const styles = StyleSheet.create({
   segment: {
     minHeight: minimumTarget,
     minWidth: minimumTarget,
-    paddingHorizontal: spacing.s3,
-    paddingVertical: segmentInset + spacing.s1,
+    paddingHorizontal: rhythm.tight,
+    paddingVertical: segmentInset + rhythm.line,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1519,23 +1518,23 @@ const styles = StyleSheet.create({
     bottom: segmentInset,
     left: 0,
     right: 0,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     borderCurve: 'continuous',
   },
   segmentInline: { flex: 1, flexBasis: 0 },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s3 },
-  field: { gap: spacing.s3, alignSelf: 'stretch' },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
+  field: { gap: rhythm.tight, alignSelf: 'stretch' },
   menuRow: {
     alignSelf: 'stretch',
     minHeight: minimumTarget,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.s3,
+    gap: rhythm.tight,
   },
   menuRowStacked: {
     flexDirection: 'column',
     alignItems: 'stretch',
-    gap: spacing.s1,
+    gap: rhythm.line,
   },
   menuRowTitle: { flex: 1 },
   groupedFieldSpacing: { gap: rhythm.groupHeader },
@@ -1569,8 +1568,8 @@ const styles = StyleSheet.create({
     borderColor: colors.lineControl,
     borderRadius: radii.thumb,
     borderCurve: 'continuous',
-    paddingHorizontal: spacing.s4,
-    paddingVertical: spacing.s3,
+    paddingHorizontal: rhythm.block,
+    paddingVertical: rhythm.tight,
     fontFamily: fonts.sans,
     fontSize: 17,
     color: colors.ink,
@@ -1580,15 +1579,15 @@ const styles = StyleSheet.create({
   composer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    gap: spacing.s2,
+    gap: rhythm.tight,
     borderWidth: hairline,
     borderColor: colors.lineControl,
     borderRadius: radii.container,
     borderCurve: 'continuous',
     backgroundColor: 'transparent',
-    paddingLeft: spacing.s4,
-    paddingRight: spacing.s1,
-    paddingVertical: spacing.s1,
+    paddingLeft: rhythm.block,
+    paddingRight: rhythm.line,
+    paddingVertical: rhythm.line,
   },
   composerInput: {
     flex: 1,
@@ -1610,5 +1609,5 @@ const styles = StyleSheet.create({
   send: { alignItems: 'center', justifyContent: 'center' },
   inputFocused: { borderColor: colors.navy },
   inputError: { borderColor: colors.danger },
-  error: { flexDirection: 'row', gap: spacing.s2, alignItems: 'flex-start' },
+  error: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
 });

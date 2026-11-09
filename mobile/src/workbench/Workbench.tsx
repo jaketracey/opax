@@ -138,7 +138,7 @@ function Block({
 }
 function Anchor({ id, children }: { id: string; children: string }) {
   return (
-    <Text variant="label" testID={`wb-${id}`}>
+    <Text variant="capsule" testID={`wb-${id}`}>
       {children}
     </Text>
   );
@@ -160,7 +160,7 @@ export default function Workbench() {
           Every design-system component and state, for review and screenshots.
           Development and e2e builds only.
         </Text>
-        <Text variant="fine" accessibilityElementsHidden>
+        <Text variant="footnote" accessibilityElementsHidden>
           {WORKBENCH_MARKER}
         </Text>
       </Group>
@@ -221,10 +221,10 @@ export default function Workbench() {
             <View key={role} style={styles.swatchRow}>
               <View style={[styles.swatch, { backgroundColor: light[role] }]} />
               <View style={stacked ? styles.grow : styles.swatchText}>
-                <Text variant="metadata" tone="ink" style={styles.grow}>
+                <Text variant="secondary" tone="ink" style={styles.grow}>
                   {role}
                 </Text>
-                <Text variant="metadata">{light[role]}</Text>
+                <Text variant="secondary">{light[role]}</Text>
               </View>
             </View>
           ))}
@@ -234,7 +234,7 @@ export default function Workbench() {
       <Block id="type" title="Type roles">
         {variants.map((variant) => (
           <View key={variant} style={styles.typeRow}>
-            <Text variant="fine">{variant}</Text>
+            <Text variant="footnote">{variant}</Text>
             <Text variant={variant}>
               {variant === 'display'
                 ? formatMoney(622102)
@@ -364,11 +364,11 @@ export default function Workbench() {
       </Block>
 
       <Block id="dividers" title="Dividers">
-        <Text variant="metadata">Default, between major sections</Text>
+        <Text variant="secondary">Default, between major sections</Text>
         <Divider />
-        <Text variant="metadata">Subtle, between rows and subheadings</Text>
+        <Text variant="secondary">Subtle, between rows and subheadings</Text>
         <Divider variant="subtle" />
-        <Text variant="metadata">Accent, intentional emphasis only</Text>
+        <Text variant="secondary">Accent, intentional emphasis only</Text>
         <Divider variant="accent" />
       </Block>
 
@@ -566,7 +566,7 @@ export default function Workbench() {
           />
           <Figure value={(1251 / 2929) * 100} format="percent" label="ayes" />
         </View>
-        <Text variant="fine">
+        <Text variant="footnote">
           Compact forms: {formatMoneyCompact(76984493)},{' '}
           {formatMoneyCompact(4537500)}, {formatMoneyCompact(1803)}. Share:{' '}
           {formatPercent((1251 / 2929) * 100)}.
@@ -690,7 +690,7 @@ export default function Workbench() {
           <TalkOrbs />
         </Block>
       )}
-      <Text variant="fine" testID="wb-end">
+      <Text variant="footnote" testID="wb-end">
         End of workbench
       </Text>
     </Screen>

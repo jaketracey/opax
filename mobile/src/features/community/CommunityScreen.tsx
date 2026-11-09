@@ -211,13 +211,13 @@ function ThreadRows({ items }: { items: Row[] }) {
           >
             <Portrait />
             <View style={styles.rowContent}>
-              <Text wordSafe variant="subheading">
+              <Text wordSafe variant="rowRecord">
                 {text(t, 'title')}
               </Text>
-              <Text wordSafe variant="metadata">
+              <Text wordSafe variant="secondary">
                 {text(t, 'display_name')}
               </Text>
-              <Text wordSafe variant="fine">
+              <Text wordSafe variant="footnote">
                 {dateLine(t)} · {replyCount(t)}
               </Text>
             </View>
@@ -260,7 +260,7 @@ function MemberByline({
           <Text wordSafe variant="strong">
             {text(member, 'display_name')}
           </Text>
-          <Text wordSafe variant="fine">
+          <Text wordSafe variant="footnote">
             {dateLine(member)}
           </Text>
         </View>
@@ -601,7 +601,7 @@ function CommunityPage() {
       <Section rule={false}>
         <Text wordSafe>What should a moderator review?</Text>
         {params.kind === 'message' ? (
-          <Text wordSafe variant="metadata">
+          <Text wordSafe variant="secondary">
             Reporting a message shares only that message with moderators.
           </Text>
         ) : null}
@@ -640,7 +640,7 @@ function CommunityPage() {
   else if (view === 'new-thread')
     content = (
       <Section rule={false}>
-        <Text wordSafe variant="metadata">
+        <Text wordSafe variant="secondary">
           Give people enough context to explore it with you. Member discussions
           are separate from source records.
         </Text>
@@ -839,7 +839,7 @@ function CommunityPage() {
               />
               {/* A count hugs its digits: not word-safe, which would chase
                   its own frame. */}
-              <Text variant="control" tone={working ? 'inkSoft' : 'navy'}>
+              <Text variant="strong" tone={working ? 'inkSoft' : 'navy'}>
                 {formatCount(count(t, 'likes'))}
               </Text>
             </Pressable>
@@ -897,7 +897,7 @@ function CommunityPage() {
               ))}
           </RowList>
           {data.more_replies ? (
-            <Text wordSafe variant="metadata">
+            <Text wordSafe variant="secondary">
               Showing the latest replies. Open the discussion on OPAX to read
               more.
             </Text>
@@ -974,7 +974,7 @@ function CommunityPage() {
         <Section rule={false}>
           <Heading level={1}>{text(m, 'name')}</Heading>
           <Text wordSafe>{text(m, 'bio')}</Text>
-          <Text wordSafe variant="fine">
+          <Text wordSafe variant="footnote">
             Joined {dateLine(m)}
           </Text>
           <KeyValueList
@@ -1102,7 +1102,7 @@ function CommunityPage() {
             {messages.map((msg) => (
               <Group key={text(msg, 'id')} gap={rhythm.line}>
                 <View style={styles.messageHead}>
-                  <Text wordSafe variant="metadata" style={styles.grow}>
+                  <Text wordSafe variant="secondary" style={styles.grow}>
                     {text(msg, 'sender_id') === text(m, 'id')
                       ? text(m, 'name')
                       : 'You'}{' '}
@@ -1313,7 +1313,7 @@ function CommunityPage() {
               ))}
             </RowList>
           ) : null}
-          <Text wordSafe variant="metadata">
+          <Text wordSafe variant="secondary">
             Public discussions can still be read when signed out.
           </Text>
         </Section>
@@ -1430,7 +1430,7 @@ function CommunityPage() {
         <Section rule={false}>
           <Heading level={1}>{text(l, 'title')}</Heading>
           <Text wordSafe>{text(l, 'description')}</Text>
-          <Text wordSafe variant="metadata">
+          <Text wordSafe variant="secondary">
             {flag(l.public) ? 'Shared reading list' : 'Private reading list'} ·{' '}
             {text(l, 'display_name')}
           </Text>

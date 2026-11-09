@@ -96,7 +96,7 @@ export default function Tide() {
             });
             return (
               <Group>
-                <Text variant="fine" wordSafe>
+                <Text variant="footnote" wordSafe>
                   Shares of labelled speeches, not every speech
                 </Text>
                 <PadGrid>

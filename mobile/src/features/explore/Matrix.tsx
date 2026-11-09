@@ -67,7 +67,7 @@ export default function Matrix() {
                         return (
                           <View key={party} style={ax ? {} : { width: 160 }}>
                             {party === 'Other' || !count ? (
-                              <Text wordSafe variant="metadata">
+                              <Text wordSafe variant="secondary">
                                 {party}:{' '}
                                 {count ? label.split(' · ')[1] : 'none yet'}
                               </Text>
@@ -95,7 +95,7 @@ export default function Matrix() {
             );
             return (
               <Group>
-                <Text wordSafe variant="metadata">
+                <Text wordSafe variant="secondary">
                   {data.labelled.toLocaleString('en-AU')} speeches carry topic
                   labels so far
                 </Text>

@@ -128,9 +128,9 @@ export function LocationSuggestion({
           pressed ? styles.pressed : null,
         ]}
       >
-        <Text wordSafe variant="fine">
+        <Text wordSafe variant="footnote">
           {`Used once on this ${device}; not sent or saved.`}{' '}
-          <Text variant="fine" tone="navy">
+          <Text variant="footnote" tone="navy">
             How it works
           </Text>
         </Text>
@@ -170,7 +170,7 @@ export function LocationSuggestion({
             Your location looks like it&apos;s in {result.seat.name}. Confirm or
             choose another.
           </Text>
-          <Text wordSafe variant="fine">
+          <Text wordSafe variant="footnote">
             {scope === 'state'
               ? `Suggestion from ABS ${result.vintage} statistical approximations of state districts. Boundaries may differ; confirm your district.`
               : `Suggestion from AEC ${result.vintage} display outlines. Boundaries may have changed; confirm your seat.`}
@@ -241,7 +241,7 @@ export function LocationProgress({ done, total }: Progress) {
       <Reserved
         shown={count}
         all={[total ? `${total} of ${total}` : '000 of 000']}
-        variant="fine"
+        variant="footnote"
       />
     </View>
   );
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     minHeight: minimumTarget,
     justifyContent: 'center',
-    borderRadius: radii.sm,
+    borderRadius: radii.bar,
   },
   pressed: { backgroundColor: colors.sunken },
   progress: { gap: rhythm.tight },

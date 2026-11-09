@@ -553,12 +553,12 @@ function SourceDetailsBody({
             {date || 'Date not published'}
           </Text>
           {coverage ? (
-            <Text wordSafe variant="metadata">
+            <Text wordSafe variant="secondary">
               {coverage}
             </Text>
           ) : null}
           {savedAt != null ? (
-            <Text wordSafe variant="metadata">
+            <Text wordSafe variant="secondary">
               {savedText(savedAt)}
             </Text>
           ) : null}
@@ -679,7 +679,7 @@ function OriginalRow({
           {original.label}
         </Text>
         {meta ? (
-          <Text wordSafe variant="metadata">
+          <Text wordSafe variant="secondary">
             {meta}
           </Text>
         ) : null}
@@ -728,7 +728,7 @@ export function SheetBody({
             hitSlop={8}
             style={styles.done}
           >
-            <Text variant="control" tone="navy">
+            <Text variant="strong" tone="navy">
               Done
             </Text>
           </Pressable>
@@ -792,7 +792,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 36,
     height: 5,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     backgroundColor: colors.dividerDefault,
     marginBottom: rhythm.heading,
   },

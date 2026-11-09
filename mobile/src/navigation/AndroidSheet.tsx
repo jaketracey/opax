@@ -58,7 +58,7 @@ export function AndroidBottomSheet({
         >
           <Text
             wordSafe
-            variant="metadata"
+            variant="secondary"
             accessibilityRole="header"
             style={styles.title}
           >
@@ -97,7 +97,7 @@ export function AndroidSheetRow({
       onPress={onPress}
       testID={testID}
     >
-      <Text wordSafe variant="control">
+      <Text wordSafe variant="strong">
         {label}
       </Text>
     </Pressable>
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
   scrim: { backgroundColor: colors.ink, opacity: 0.4 },
   panel: {
     backgroundColor: colors.paper,
-    borderTopLeftRadius: radii.md,
-    borderTopRightRadius: radii.md,
+    borderTopLeftRadius: radii.container,
+    borderTopRightRadius: radii.container,
     paddingTop: rhythm.block,
     maxHeight: '85%',
   },

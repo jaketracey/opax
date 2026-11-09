@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     height: minimumTarget,
     marginVertical: -rhythm.tight,
     marginRight: -rhythm.tight,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     alignItems: 'center',
     justifyContent: 'center',
   },

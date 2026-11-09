@@ -32,7 +32,6 @@ import {
   radii,
   rhythm,
   rhythmRegular,
-  spacing,
   type Accent,
 } from './tokens';
 import { columns, useLayout } from './adaptive';
@@ -522,12 +521,12 @@ export function StaleNotice({
   );
 }
 const styles = StyleSheet.create({
-  loading: { gap: spacing.s4 },
+  loading: { gap: rhythm.block },
   bar: { borderRadius: radii.bar, borderCurve: 'continuous' },
   placeholderRow: {
     minHeight: 64,
     flexDirection: 'row',
-    gap: spacing.s4,
+    gap: rhythm.block,
     alignItems: 'center',
   },
   card: { padding: 20, minHeight: 144 },
@@ -537,9 +536,9 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     borderCurve: 'continuous',
   },
-  grow: { flex: 1, gap: spacing.s3 },
-  figures: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.s4 },
-  figure: { gap: spacing.s3, minWidth: 140 },
+  grow: { flex: 1, gap: rhythm.tight },
+  figures: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.block },
+  figure: { gap: rhythm.tight, minWidth: 140 },
   error: {
     gap: rhythm.heading,
     flexDirection: 'row',
@@ -549,7 +548,7 @@ const styles = StyleSheet.create({
   },
   errorSentence: {
     flexDirection: 'row',
-    gap: spacing.s3,
+    gap: rhythm.tight,
     alignItems: 'flex-start',
     flexShrink: 1,
     maxWidth: '100%',
@@ -568,5 +567,5 @@ const styles = StyleSheet.create({
     paddingBottom: rhythm.section * 2,
   },
   center: { textAlign: 'center' },
-  inline: { flexDirection: 'row', gap: spacing.s3, alignItems: 'flex-start' },
+  inline: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'flex-start' },
 });

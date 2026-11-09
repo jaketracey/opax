@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   indicator: {
     width: 56,
     height: 32,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
     alignItems: 'center',
     justifyContent: 'center',
   },

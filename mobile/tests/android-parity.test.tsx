@@ -198,7 +198,7 @@ describe('Android tabs', () => {
       );
     expect(style(true)).toMatchObject({
       backgroundColor: colors.navyWash,
-      borderRadius: radii.pill,
+      borderRadius: radii.capsule,
       height: 32,
     });
     expect(style(false).backgroundColor).toBeUndefined();
@@ -373,7 +373,7 @@ describe('Android ⋯ menus', () => {
       '../src/design/tokens',
     );
     expect(flat(sheet.props.style)).toMatchObject({
-      borderTopLeftRadius: radii.md,
+      borderTopLeftRadius: radii.container,
       // The gesture inset plus the tight rhythm.
       paddingBottom: 16 + 8,
     });

@@ -34,7 +34,7 @@ function Sample({ phase, label, still = false }: (typeof phases)[number]) {
         size={150}
         reduceMotion={still}
       />
-      <Text variant="fine" style={styles.label}>
+      <Text variant="footnote" style={styles.label}>
         {label}
       </Text>
     </View>

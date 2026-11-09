@@ -588,7 +588,7 @@ describe('word-safe text', () => {
     expect(
       textContent([
         'Email address',
-        <Text key="r" variant="metadata">
+        <Text key="r" variant="secondary">
           {' '}
           (required)
         </Text>,
@@ -708,7 +708,7 @@ describe('word-safe text', () => {
     expect(text().props.accessibilityRole).toBe('header');
   });
   describe('word-safe resets and late layouts', () => {
-    const base = textStyles.heading.lineHeight + LINE_HEIGHT_NUDGE;
+    const base = textStyles.sectionTitle.lineHeight + LINE_HEIGHT_NUDGE;
     // "Representation" at heading scale: 212pt wide at the uncapped 2.3,
     // 191pt at 2.07 and 172pt at 1.86.
     const broken = (at: number, widths: [number, number]) => ({
@@ -836,14 +836,14 @@ describe('word-safe text', () => {
       expect(capScale(text(), 'heading')).toBeCloseTo(2.07 / 2.3, 6);
       act(() =>
         renderer.update(
-          <Text wordSafe variant="fine">
+          <Text wordSafe variant="footnote">
             Recorded representation
           </Text>,
         ),
       );
       expect(capScale(text(), 'fine')).toBe(1);
       // The fine role's ramp is 3.4 at this size: 3.06 of 3.4, not of 2.3.
-      const fine = textStyles.fine.lineHeight + LINE_HEIGHT_NUDGE;
+      const fine = textStyles.footnote.lineHeight + LINE_HEIGHT_NUDGE;
       act(() =>
         text().props.onTextLayout({
           nativeEvent: {

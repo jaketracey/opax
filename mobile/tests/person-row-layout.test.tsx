@@ -422,7 +422,7 @@ test.each([
       renderer = TestRenderer.create(
         <Profiler id="word-safe-text" onRender={() => commits++}>
           {Array.from({ length: 100 }, (_, i) => (
-            <Text key={i} wordSafe variant="heading">
+            <Text key={i} wordSafe variant="sectionTitle">
               Sources
             </Text>
           ))}

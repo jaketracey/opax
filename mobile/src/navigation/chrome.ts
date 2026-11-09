@@ -56,8 +56,8 @@ export const opaqueBar = (ground: ColorValue = colors.paper) =>
  * bar title is the screen's title: the `heading` size, Material's title size.
  */
 export const androidBar = {
-  title: textStyles.heading.fontSize,
-  action: textStyles.metadata.fontSize,
+  title: textStyles.sectionTitle.fontSize,
+  action: textStyles.secondary.fontSize,
 } as const;
 
 export function useStackChrome() {

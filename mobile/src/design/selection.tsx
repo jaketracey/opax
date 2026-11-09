@@ -13,7 +13,7 @@ export const splitRowStyles = StyleSheet.create({
   bleed: {
     marginHorizontal: -rhythm.heading,
     paddingHorizontal: rhythm.heading,
-    borderRadius: radii.md,
+    borderRadius: radii.container,
     borderCurve: 'continuous',
   },
   mark: {

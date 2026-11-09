@@ -333,7 +333,7 @@ export default function MoneyMapSpike() {
     <Screen testID="money-spike-screen">
       <Heading level={2}>Native money map spike</Heading>
       <Text>Political donations &amp; public money map</Text>
-      <Text variant="fine">
+      <Text variant="footnote">
         Phase 1 · {record?.data.nodes.length ?? '…'} nodes and{' '}
         {record?.data.edges.length.toLocaleString('en-AU') ?? '…'} flows ·
         simulator measurements
@@ -369,10 +369,10 @@ export default function MoneyMapSpike() {
           </Text>
         )}
       </View>
-      <Text testID="money-spike-probe" variant="fine">
+      <Text testID="money-spike-probe" variant="footnote">
         {probe}
       </Text>
-      <Text testID="money-spike-metrics" variant="fine">
+      <Text testID="money-spike-metrics" variant="footnote">
         {summary}
       </Text>
       <Group>
@@ -432,7 +432,7 @@ export default function MoneyMapSpike() {
           licence="CC BY 4.0"
         />
       ) : null}
-      <Text variant="fine">
+      <Text variant="footnote">
         AEC disclosure data: donations under the disclosure threshold are not
         reported and cannot appear here, so totals are a floor, not a ceiling.
       </Text>

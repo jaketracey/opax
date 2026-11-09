@@ -43,7 +43,7 @@ export function AccountComingSoon() {
         </Text>
       </Section>
       <Section title="About OPAX" accent="people">
-        <Text variant="subheading">
+        <Text variant="rowRecord">
           Open Parliamentary Accountability Exchange
         </Text>
         <Text>
@@ -51,7 +51,7 @@ export function AccountComingSoon() {
           Australian parliamentary speeches, votes, political funding and public
           disclosures.
         </Text>
-        <Text variant="metadata">{independence}</Text>
+        <Text variant="secondary">{independence}</Text>
         <RowList>
           <LinkRow
             title="About OPAX"

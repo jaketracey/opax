@@ -398,7 +398,7 @@ function PaneBack({ label, onPress }: { label: string; onPress: () => void }) {
         ]}
       >
         <Icon name="chevron.left" size={17} tone="navy" />
-        <Text variant="control" tone="navy" wordSafe style={styles.shrink}>
+        <Text variant="strong" tone="navy" wordSafe style={styles.shrink}>
           {label}
         </Text>
       </Pressable>
@@ -533,6 +533,6 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingHorizontal: rhythm.tight,
     marginHorizontal: -rhythm.tight,
-    borderRadius: radii.pill,
+    borderRadius: radii.capsule,
   },
 });

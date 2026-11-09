@@ -186,7 +186,7 @@ describe('StatusLabel', () => {
     expect(hex(style.backgroundColor)).toBe(light.sunken);
     const text = nativeTexts(root)[0]!;
     const textStyle = flat(text.props.style);
-    expect(textStyle.fontSize).toBe(textStyles.label.fontSize);
+    expect(textStyle.fontSize).toBe(textStyles.capsule.fontSize);
     expect(hex(textStyle.color)).toBe(light.inkSoft);
     expect(strings(root)).toEqual(['Passed']);
   });
@@ -372,7 +372,7 @@ describe('ChoiceChip on Android', () => {
     });
     expect(node.props.accessibilityValue).toEqual({ text: '2 of 4' });
     const style = pressedStyle(node, false);
-    expect(style.borderRadius).toBe(radii.pill);
+    expect(style.borderRadius).toBe(radii.capsule);
     expect(style.minHeight).toBe(36);
     expect(node.props.hitSlop).toBe(Platform.OS === 'android' ? 6 : 4);
   });
@@ -399,7 +399,7 @@ describe('ChoiceChip on Android', () => {
       const root = chip();
       const style = pressedStyle(pressable(root), false);
       expect(style.alignSelf).toBe('stretch');
-      expect(style.borderRadius).toBe(radii.md);
+      expect(style.borderRadius).toBe(radii.container);
     });
   });
 });
@@ -623,7 +623,7 @@ describe('MachineLabel', () => {
           typeof n.type === 'string' && flat(n.props.style).minHeight === 32,
       ).props.style,
     );
-    expect(style.borderRadius).toBe(radii.pill);
+    expect(style.borderRadius).toBe(radii.capsule);
     expect(hex(style.backgroundColor)).toBe(light.navyWash);
     expect(flat(pill('m').props.style).minHeight).toBe(44);
   });
@@ -822,7 +822,7 @@ describe('SourceLine and SourceSheet', () => {
       (n) => n.props.testID === 'i' && typeof n.props.onPress === 'function',
     );
     expect(flat(button.props.style({ pressed: false })).borderRadius).toBe(
-      radii.pill,
+      radii.capsule,
     );
     act(() => button.props.onPress());
     const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
@@ -844,7 +844,7 @@ describe('Card', () => {
     );
     const rest = pressedStyle(card, false);
     expect(rest).toMatchObject({
-      borderRadius: radii.md,
+      borderRadius: radii.container,
       borderCurve: 'continuous',
       padding: 20,
     });
@@ -895,7 +895,7 @@ describe('Button as a toggle (Follow)', () => {
     expect(off.props.accessibilityRole).toBe('switch');
     expect(off.props.accessibilityLabel).toBe('Follow Grayndler');
     expect(off.props.accessibilityState).toMatchObject({ checked: false });
-    expect(pressedStyle(off, false).borderRadius).toBe(radii.pill);
+    expect(pressedStyle(off, false).borderRadius).toBe(radii.capsule);
     expect(hex(pressedStyle(off, false).backgroundColor)).toBe(light.navyWash);
     const onRoot = toggle(true);
     const on = pressable(onRoot);
@@ -916,7 +916,7 @@ describe('Button as a toggle (Follow)', () => {
     atSize(AX5, () => {
       const style = pressedStyle(pressable(toggle(false)), false);
       expect(style.alignSelf).toBe('stretch');
-      expect(style.borderRadius).toBe(radii.md);
+      expect(style.borderRadius).toBe(radii.container);
     });
   });
 });
@@ -1124,7 +1124,7 @@ describe('Increase Contrast and Android high-contrast text', () => {
     expect(roleColour('ink', true)).toBe(light.ink);
     mockHighText = true;
     try {
-      const root = render(<Text variant="metadata">Grayndler</Text>).root;
+      const root = render(<Text variant="secondary">Grayndler</Text>).root;
       expect(flat(nativeTexts(root)[0]!.props.style).color).toBe(
         lightHighContrast.inkSoft,
       );

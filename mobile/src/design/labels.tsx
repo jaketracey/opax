@@ -294,7 +294,7 @@ export function ChoiceChip({
       ]}
     >
       <Text
-        variant="control"
+        variant="strong"
         tone={disabled ? 'inkSoft' : selected ? 'onNavy' : 'navy'}
         wordSafe={fixed}
         style={fixed ? styles.shrink : styles.center}

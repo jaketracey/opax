@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   track: {
     height: 8,
-    borderRadius: radii.sm,
+    borderRadius: radii.bar,
     backgroundColor: colors[chartRoles.baseline],
     overflow: 'hidden',
   },

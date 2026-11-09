@@ -6,7 +6,7 @@ import { Text } from '../../design/text';
 import { haptic } from '../../design/haptics';
 import { symbols } from '../../design/symbols';
 import { router } from 'expo-router';
-import { spacing } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
 import {
   FOLLOW_LIMIT,
   follow,
@@ -75,7 +75,7 @@ export function FollowToggle({
   }
   const inert = busy || follows === null;
   return (
-    <Group gap={spacing.s3}>
+    <Group gap={rhythm.tight}>
       <Button
         selected={following}
         variant="secondary"
