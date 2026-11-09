@@ -5,7 +5,14 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import React, { act } from 'react';
-import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
@@ -239,6 +246,43 @@ test('inline and sheet bars cover content and roots keep a native scroll edge', 
 });
 
 test.each([
+  ['system', 1, 34],
+  ['system', 3.571, 60],
+  ['serif', 1, 34],
+  ['serif', 3.571, 60],
+] as const)(
+  '%s iOS large titles use the Dynamic Type token ramp at fontScale %s (%s pt)',
+  (face, fontScale, expectedSize) => {
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    jest.replaceProperty(tokens, 'headingFace', face);
+    Dimensions.set({
+      window: { ...window, fontScale },
+      screen: { ...screen, fontScale },
+    });
+    let chrome!: ReturnType<typeof useStackChrome>;
+    function Harness() {
+      chrome = useStackChrome();
+      return null;
+    }
+    let view: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      view = tree(<Harness />);
+      expect(chrome.headerLargeTitleStyle).toEqual({
+        fontFamily: tokens.textStyles.largeTitle.fontFamily,
+        fontWeight: tokens.textStyles.largeTitle.fontWeight,
+        fontSize: expectedSize,
+        color: colors.ink,
+      });
+    } finally {
+      if (view) act(() => view!.unmount());
+      Dimensions.set({ window, screen });
+    }
+  },
+);
+
+test.each([
   ['xSmall', 0.823, 14, 14],
   ['small', 0.882, 15, 15],
   ['medium', 0.941, 16, 16],
@@ -277,14 +321,15 @@ test.each([
     }
   },
 );
-test('expanded iOS 26 roots colour only the scroll edge; older roots remain opaque', () => {
+test('expanded iOS 26 roots leave both appearances uncoloured; older roots remain opaque', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
   const bar = largeTitleBar(colors.sunken);
   expect(bar).not.toHaveProperty('headerBackground');
   expect(bar).toMatchObject({
     headerStyle: {},
-    headerLargeStyle: { backgroundColor: colors.sunken },
+    headerLargeStyle: {},
+    contentStyle: { backgroundColor: colors.sunken },
   });
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 18 });
   expect(largeTitleBar(colors.sunken)).toMatchObject({
@@ -325,9 +370,12 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
       expect(options.headerTransparent).toBe(true);
       expect(options.headerStyle).not.toHaveProperty('backgroundColor');
       expect(options).not.toHaveProperty('headerBlurEffect');
-      expect(options.headerLargeStyle?.backgroundColor).toEqual(
+      expect(options.headerLargeStyle).not.toHaveProperty('backgroundColor');
+      expect(options.contentStyle?.backgroundColor).toEqual(
         options.title === 'Bills' ? colors.paper : colors.sunken,
       );
+      expect(options.title).toMatch(/^(Today|Your MP|Bills|Search|Ask)$/);
+      expect(options.headerTitle).toBeUndefined();
     }
     Object.defineProperty(Platform, 'Version', {
       configurable: true,
@@ -626,7 +674,7 @@ test('Reduce Motion cuts the bar title instead of animating it', () => {
 });
 
 test.each([colors.paper, colors.sunken])(
-  'iOS 26 roots use scroll-edge ground %p at rest and both native colours only when collapsed',
+  'iOS 26 roots put ground %p beneath transparent appearances and colour the standard bar only when collapsed',
   (ground) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -637,7 +685,8 @@ test.each([colors.paper, colors.sunken])(
       const options = largeTitleBar(ground);
       expect(options).toMatchObject({
         headerStyle: {},
-        headerLargeStyle: { backgroundColor: ground },
+        headerLargeStyle: {},
+        contentStyle: { backgroundColor: ground },
         headerShadowVisible: true,
       });
       expect(options).not.toHaveProperty('headerBackground');
@@ -695,9 +744,17 @@ const tabCases = [
   ['(ask)', 'ask', 'Ask'],
 ] as const;
 
-test.each(tabCases)(
-  '%s keeps the large title clear after Screen layout and switches colour only on native collapse transitions',
-  (segment, name, title) => {
+test.each(
+  tabCases.flatMap((tab) => [[...tab, 1] as const, [...tab, 3.571] as const]),
+)(
+  '%s (%s, %s) keeps its large title on mount and return at fontScale %s',
+  (segment, name, title, fontScale) => {
+    const window = Dimensions.get('window');
+    const display = Dimensions.get('screen');
+    Dimensions.set({
+      window: { ...window, fontScale },
+      screen: { ...display, fontScale },
+    });
     const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
       configurable: true,
@@ -746,14 +803,22 @@ test.each(tabCases)(
       expect(current.headerStyle).not.toHaveProperty('backgroundColor');
       expect(current).not.toHaveProperty('headerBlurEffect');
       expect(current).not.toHaveProperty('headerBackground');
-      expect(current.headerLargeStyle).toEqual({ backgroundColor: ground });
+      expect(current.headerLargeStyle).toEqual({});
+      expect(current.contentStyle).toEqual({ backgroundColor: ground });
       expect(current.headerTransparent).toBe(true);
+      expect(current.title).toBe(title);
+      expect(current.headerLargeTitleEnabled).toBe(true);
+      expect(current.headerTitle).toBeUndefined();
     };
     let renderer: TestRenderer.ReactTestRenderer | undefined;
     try {
       expanded(); // Static options must replace the navigator's opaque default.
       renderer = tree(page(68)); // NativeStack's first estimated inline height.
       expanded();
+      expect(
+        renderer.root.findByType(ScrollView).props
+          .contentInsetAdjustmentBehavior,
+      ).toBe('automatic');
       navigation.setOptions.mockClear();
       for (const height of [120, 115, 100, 80])
         act(() => renderer!.update(page(height)));
@@ -771,6 +836,7 @@ test.each(tabCases)(
     } finally {
       if (renderer) act(() => renderer!.unmount());
       Object.defineProperty(Platform, 'Version', version);
+      Dimensions.set({ window, screen: display });
     }
   },
 );
@@ -832,7 +898,8 @@ test.each([
     );
     const expanded = () => {
       expect(current.headerStyle).not.toHaveProperty('backgroundColor');
-      expect(current.headerLargeStyle).toEqual({ backgroundColor: ground });
+      expect(current.headerLargeStyle).toEqual({});
+      expect(current.contentStyle).toEqual({ backgroundColor: ground });
       expect(current).not.toHaveProperty('headerBlurEffect');
     };
     let renderer: TestRenderer.ReactTestRenderer | undefined;

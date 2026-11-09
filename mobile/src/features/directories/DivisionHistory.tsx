@@ -49,6 +49,7 @@ import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { billRoute } from '../../navigation/routes';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
 import { countWords, isProcedural, outcomeWord } from '../bills/divisions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { copyText } from '../records/actions';
@@ -256,6 +257,7 @@ let lists = 0;
 
 /** Votes in parliament: every recorded vote on a bill, grouped by bill. */
 export default function DivisionHistory() {
+  const backOptions = useNamedBackOptions();
   const load = useCallback(
     (refresh: boolean, publish: Parameters<typeof loadDivisionHistory>[1]) =>
       loadDivisionHistory(refresh, publish),
@@ -454,6 +456,7 @@ export default function DivisionHistory() {
           headerTitle: TITLE,
           headerTitleAlign: 'center',
           headerLargeTitleEnabled: false,
+          ...backOptions,
           headerSearchBarOptions: { ...searchBar, hideWhenScrolling: true },
           ...headerItems(() => [
             pageMenu({

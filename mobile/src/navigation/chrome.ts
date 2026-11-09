@@ -53,9 +53,11 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
 /**
  * UIKit on iOS 26 hides large titles when the standard appearance has a
  * background colour or blur (react-native-screens#3100, reproduced in UIKit).
- * While expanded, colour only the scroll-edge appearance. A native header
- * height change adds the standard colour on collapse and clears it on return.
- * An empty headerStyle replaces, rather than merges with, the opaque default.
+ * Keep both appearances transparent while expanded. A scroll-edge background
+ * also suppresses the title, even with a transparent standard appearance.
+ * The screen supplies the page ground beneath the native hard scroll edge.
+ * A native height change adds the standard colour on collapse and clears it
+ * on return. Empty styles replace the navigator's opaque defaults.
  */
 export const largeTitleBar = (
   ground: ColorValue = colors.paper,
@@ -64,7 +66,8 @@ export const largeTitleBar = (
   glassBar()
     ? {
         headerStyle: collapsed ? { backgroundColor: ground } : {},
-        headerLargeStyle: { backgroundColor: ground },
+        headerLargeStyle: {},
+        contentStyle: { backgroundColor: ground },
         headerTransparent: true,
         headerShadowVisible: true,
       }
@@ -113,7 +116,12 @@ export function useStackChrome() {
     headerLargeTitleStyle: {
       fontFamily: textStyles.largeTitle.fontFamily,
       fontWeight: textStyles.largeTitle.fontWeight,
-      ...(headingFace === 'serif' ? { fontSize: sizes.largeTitle } : {}),
+      // Deviation from shell.md 2, line 176: the ink colour makes
+      // react-native-screens build a fixed 34 pt font. The token ramp
+      // stands in for UIKit's Dynamic Type scaling for both iOS faces.
+      ...(Platform.OS === 'ios' || headingFace === 'serif'
+        ? { fontSize: sizes.largeTitle }
+        : {}),
       color: colors.ink,
     },
     // Deviation from shell.md 2.3 (soft top): the wave 2 captures showed the
@@ -139,12 +147,17 @@ export type TabSegment =
 const openAccount = () => router.push('/account');
 const openTalk = () => router.push('/talk');
 
+// Expo preserves extra item properties through to the native dictionary.
+// RNSBarButtonItem must map testID to accessibilityIdentifier for iOS test
+// selectors. identifier alone only matches items across UIKit transitions.
+export type TestableHeaderItem = NativeStackHeaderItem & { testID?: string };
+
 /** Account is outermost. A root has room for just one feature action. */
 export function rootHeaderItems(props?: {
   segment: TabSegment;
   extra?: NativeStackHeaderItem[];
   signedIn: boolean;
-}): NativeStackHeaderItem[] {
+}): TestableHeaderItem[] {
   const signedIn = props?.signedIn ?? !!accountSnapshot().status?.signedIn;
   // AskScreen calls without props. Keep Talk reachable until w4-ask puts
   // it in the composer and removes that screen's own header options.
@@ -162,6 +175,8 @@ export function rootHeaderItems(props?: {
       type: 'button',
       label: 'Account',
       accessibilityLabel: 'Account',
+      testID: 'header-account',
+      identifier: 'header-account',
       tintColor: colors.navy,
       icon: {
         type: 'sfSymbol',
@@ -243,10 +258,12 @@ function nativeMenuRows(items: RowMenuAction[]): NativeMenuRow[] {
 export function pageMenu(props: {
   name: string;
   items: RowMenuAction[];
-}): NativeStackHeaderItem {
+}): TestableHeaderItem {
   return {
     type: 'menu',
     label: 'More',
+    testID: 'header-more',
+    identifier: 'header-more',
     accessibilityLabel: `More for ${props.name}`,
     icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
     menu: { items: nativeMenuRows(props.items) },
@@ -267,10 +284,12 @@ export function shareItem(props: {
 export function filtersItem(props: {
   active: boolean;
   href: Href;
-}): NativeStackHeaderItem {
+}): TestableHeaderItem {
   return {
     type: 'button',
     label: 'Filters',
+    testID: 'header-filters',
+    identifier: 'header-filters',
     accessibilityLabel: props.active ? 'Filters, on' : 'Filters',
     icon: {
       type: 'sfSymbol',
@@ -320,7 +339,7 @@ function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
  * Android's bar for a screen's items: a button's word, and a menu's word
  * that opens its rows as a bottom sheet. Labelled, scalable touch targets.
  */
-export function androidHeaderBar(items: NativeStackHeaderItem[]) {
+export function androidHeaderBar(items: TestableHeaderItem[]) {
   return createElement(
     View,
     { style: { flexDirection: 'row' } },
@@ -333,7 +352,9 @@ export function androidHeaderBar(items: NativeStackHeaderItem[]) {
             Pressable,
             {
               key: index,
-              testID: `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
+              testID:
+                item.testID ??
+                `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
               accessibilityRole: 'button',
               accessibilityLabel: item.accessibilityLabel ?? item.label,
               onPress:

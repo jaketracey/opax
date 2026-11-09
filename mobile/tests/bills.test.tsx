@@ -4,6 +4,10 @@ import { RouteOptions } from '../src/navigation/preview';
 // arrivals (`?division=`, 4.4) and Added since (4.2.1), the saved-seat line
 // under a vote, and the bill read that no longer waits for the index (4.10).
 import { router, Stack } from 'expo-router';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { act } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -259,11 +263,29 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
       stale: false,
     } as Awaited<ReturnType<typeof divisionData.loadDivisionHistory>>);
     let r!: TestRenderer.ReactTestRenderer;
+    const route = { key: 'votes', name: 'division-history' };
+    const navigation = {
+      setOptions: jest.fn(),
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({ routes: [{ key: 'root', name: 'bills' }, route] }),
+    };
     await act(async () => {
-      r = TestRenderer.create(<DivisionHistory />);
+      r = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <DivisionHistory />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
     });
     mounted.push(r);
     const root = r.root;
+    expect(root.findByType(RouteOptions).props.options).toMatchObject({
+      headerTitle: 'Votes in parliament',
+      headerBackTitle: 'Bills',
+      headerBackButtonDisplayMode: 'default',
+    });
     // The probe marks the top left of the bill header's text column.
     const probeAt = () =>
       root.findAll(
