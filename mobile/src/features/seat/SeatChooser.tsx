@@ -1,8 +1,12 @@
 import { RouteOptions } from '../../navigation/preview';
-import type { NativeStackHeaderItem } from 'expo-router';
+import type {
+  NativeStackHeaderItem,
+  NativeStackNavigationProp,
+} from 'expo-router';
+import type { ParamListBase } from 'expo-router/react-navigation';
 import { router, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import { Button } from '../../design/controls';
@@ -14,7 +18,7 @@ import { LinkRow } from '../../design/rows';
 import { useListSearchBar } from '../../design/search-bar';
 import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
-import { colors, isAccessibilityCategory, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { seatStateRoute, welcomeSeatStateRoute } from '../../navigation/routes';
@@ -169,9 +173,9 @@ export function accessoryFor(
  *   leading and "Not now" trailing, or "Done" on a replay with a seat saved.
  *
  * The title is "Your electorate" in both. The native search field sits in
- * the bar with no label above it; it is focused on arrival except at
- * accessibility sizes and with `locate=1`, where the location row starts at
- * once instead.
+ * the bar with no label above it; the sheet focuses it on arrival at every
+ * text size except with `locate=1`, where the location row starts at once.
+ * The welcome leaves it unfocused (your-mp.md 4.10).
  */
 export function SeatChooser({
   presentation,
@@ -185,8 +189,7 @@ export function SeatChooser({
   locate?: boolean;
   onChosen?: (seat: Electorate) => void;
 }) {
-  const navigation = useNavigation();
-  const { fontScale } = useWindowDimensions();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const welcome = presentation === 'welcome';
   const vic = scope === 'vic' && !welcome;
   const { state, retry } = useSeatDirectory();
@@ -242,7 +245,7 @@ export function SeatChooser({
     openedMigration.current = true;
     router.push(seatStateRoute(code));
   }, [seat, state, welcome, vic]);
-  const autoFocus = !locate && !isAccessibilityCategory(fontScale);
+  const autoFocus = !welcome && !locate;
   const typed = (text: string) => {
     setQuery(text);
     if (text.trim()) setStopKey((n) => n + 1);
@@ -259,6 +262,25 @@ export function SeatChooser({
     },
     autoFocus,
   });
+  useEffect(() => {
+    if (!autoFocus) return;
+    // iOS ignores SearchBar's Android-only autoFocus prop. The search ref
+    // can attach after useListSearchBar's mount effect, and UIKit cannot
+    // become first responder until the sheet has finished arriving.
+    const arrived = ({ data }: { data: { closing: boolean } }) => {
+      if (!data.closing && navigation.isFocused()) search.ref?.current?.focus();
+    };
+    const remove = navigation.addListener('transitionEnd', arrived);
+    // /seat owns a nested stack: the modal transition belongs to its parent.
+    const parent = navigation.getParent<
+      NativeStackNavigationProp<ParamListBase> | undefined
+    >();
+    const removeParent = parent?.addListener('transitionEnd', arrived);
+    return () => {
+      remove();
+      removeParent?.();
+    };
+  }, [autoFocus, navigation, search.ref]);
   const trailing: NativeStackHeaderItem[] = welcome
     ? [
         {
