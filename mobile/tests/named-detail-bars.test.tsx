@@ -18,7 +18,10 @@ import Members from '../src/features/your-mp/Members';
 import { catalogs } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
 import { loadDivisionHistory } from '../src/features/directories/division-data';
-import { useNamedBackOptions } from '../src/navigation/useNamedBackOptions';
+import {
+  useNamedBackOptions,
+  useNamedBackTitle,
+} from '../src/navigation/useNamedBackOptions';
 import {
   BarTitle,
   barTitleWidth,
@@ -80,13 +83,16 @@ test.each([
   [['index', 'leads', 'lead/[id]', 'money-item'], 'Lead'],
   [['index', 'explore/[tool]'], 'Today'],
   [['bills', 'bill/[key]'], 'Bills'],
+  [['your-mp', 'members'], 'Your MP'],
   [['index', 'bill/[key]', 'bill-text/[key]'], undefined],
   [['index'], undefined],
 ] as const)('%j supplies the named back options %s', (names, title) => {
   const { route, navigation } = navigationFor(...names);
   let options: ReturnType<typeof useNamedBackOptions> = {};
+  let backTitle: string | undefined;
   function Probe() {
     options = useNamedBackOptions();
+    backTitle = useNamedBackTitle();
     return null;
   }
   act(() => {
@@ -98,6 +104,7 @@ test.each([
       </NavigationContext.Provider>,
     );
   });
+  expect(backTitle).toBe(title);
   expect(options).toEqual({
     headerBackButtonDisplayMode: 'default',
     ...(title ? { headerBackTitle: title } : {}),

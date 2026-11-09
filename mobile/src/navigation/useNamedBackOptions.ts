@@ -14,15 +14,24 @@ const shortBackTitles: Readonly<Record<string, string>> = {
   'lead/[id]': 'Lead',
 };
 
-/** Reapply the previous route's name when a screen installs its own bar. */
-export function useNamedBackOptions(): NativeStackNavigationOptions {
+function useBackTitleResolution() {
   const navigation = useContext(NavigationContext);
   const route = useContext(NavigationRouteContext);
-  const routes = navigation?.getState()?.routes ?? [];
+  const routes = navigation?.getState?.()?.routes ?? [];
   const at = routes.findIndex((item) => item.key === route?.key);
   const previous = at > 0 ? routes[at - 1] : undefined;
   const shortBack = previous && shortBackTitles[previous.name];
-  const back = shortBack ?? rootBackTitle(navigation, route?.key);
+  return { back: shortBack ?? rootBackTitle(navigation, route?.key), shortBack };
+}
+
+/** The short previous-route name used by the native back item. */
+export function useNamedBackTitle(): string | undefined {
+  return useBackTitleResolution().back;
+}
+
+/** Reapply the previous route's name when a screen installs its own bar. */
+export function useNamedBackOptions(): NativeStackNavigationOptions {
+  const { back, shortBack } = useBackTitleResolution();
   return Platform.OS === 'ios'
     ? {
         headerBackButtonDisplayMode: 'default',
