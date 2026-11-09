@@ -27,5 +27,9 @@ name: Open a profile from Search and check its party label (PARTY, never NOT_PAR
     element:
       id: person-party
     centerElement: true
-- assertVisible: ${PARTY}
-- assertNotVisible: ${NOT_PARTY}
+- assertVisible:
+    id: person-party
+    text: ${PARTY}
+- assertNotVisible:
+    id: person-party
+    text: ${NOT_PARTY}

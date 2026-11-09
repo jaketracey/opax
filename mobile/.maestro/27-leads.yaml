@@ -75,6 +75,17 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: leads-source-donor_contract_overlap-sheet
     timeout: 15000
+# The source sheet starts at its medium detent. Expand from the grabber,
+# then scroll its content rather than the page behind the sheet.
+- runFlow:
+    when:
+      visible: Half screen
+    commands:
+      - swipe:
+          start: 50%, 54%
+          end: 50%, 15%
+          duration: 600
+      - waitForAnimationToEnd
 # pointer: /generated_at
 - scrollUntilVisible:
     element:
@@ -85,7 +96,7 @@ name: 27 Leads and the declared-interests feed
     speed: 20
 - scrollUntilVisible:
     element:
-      text: 14 leads about a donor not named in OPAX are not shown\.
+      text: (?s).*14 leads about a donor not named in OPAX are not shown\..*
     direction: DOWN
     timeout: 60000
     visibilityPercentage: 10

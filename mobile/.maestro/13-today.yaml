@@ -25,13 +25,10 @@ name: 13 Today front page, its native records and dated original sources
     visibilityPercentage: 10
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/13-edition
-# A bill edition's text is a model's summary: its label comes first.
-- scrollUntilVisible:
-    element:
-      id: today-edition-machine
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
+# The machine label is part of the card's combined accessible label.
+- assertVisible:
+    id: today-edition
+    text: .*Machine-written.*
 - takeScreenshot: ${EVIDENCE}/13-edition-machine
 # The card opens the daily edition inside Today.
 - waitForAnimationToEnd

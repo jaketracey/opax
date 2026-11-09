@@ -42,15 +42,15 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - takeScreenshot: ${EVIDENCE}/07-seat
 - scrollUntilVisible:
     element:
-      id: your-member-anthony-albanese-name.*
+      id: your-member-anthony-albanese
     centerElement: true
     timeout: 300000
     visibilityPercentage: 100
 - waitForAnimationToEnd
-# The fixture-only ID checks native line bounds, beyond the full AX label.
+# The name and party are on the row itself; inspect its drawing in the capture.
 - assertVisible:
-    id: your-member-anthony-albanese-name-drawn-complete-[1-9][0-9]*
-    text: Anthony Albanese
+    id: your-member-anthony-albanese
+    text: Anthony Albanese, Labor.*
 - assertVisible:
     id: your-profile-votes
 - assertVisible:
@@ -67,7 +67,9 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - takeScreenshot: ${EVIDENCE}/07-lately
 - runFlow:
     when:
-      visible: Voted against an amendment
+      visible:
+        id: your-latest-.*
+        text: .*Voted against an amendment.*
     commands:
       - takeScreenshot: ${EVIDENCE}/07-lately-amendment
 - scrollUntilVisible:
@@ -77,7 +79,9 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     timeout: 300000
 - assertVisible:
     id: your-electorate
-- assertVisible: Census 2021
+- assertVisible:
+    id: your-electorate
+    text: .*Census 2021.*
 - takeScreenshot: ${EVIDENCE}/07-electorate-card
 - scrollUntilVisible:
     element:

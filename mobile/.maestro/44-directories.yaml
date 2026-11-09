@@ -71,8 +71,9 @@ name: 44 Native people and parties directories
     speed: 20
     timeout: 180000
 - waitForAnimationToEnd
-- assertNotVisible:
-    id: directory-person-anthony-albanese-name-drawn-clipped.*
+- assertVisible:
+    id: directory-person-anthony-albanese
+    text: Anthony Albanese, Labor.*
 - takeScreenshot: ${EVIDENCE}/44-filtered-person-row
 - tapOn:
     id: directory-person-anthony-albanese

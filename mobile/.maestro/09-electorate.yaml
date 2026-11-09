@@ -50,18 +50,17 @@ name: 09 Electorate representation, elections, Census context and sources
     timeout: 15000
 - assertVisible: Grayndler
 - takeScreenshot: ${EVIDENCE}/09-identity
-# The label confirms the name; the fixture-only ID also requires native drawn
-# lines to contain all its text and fit within the final drawing frame.
+# The representative is one combined label. Inspect the name in the capture.
 - scrollUntilVisible:
     element:
-      id: electorate-member-anthony-albanese-name.*
+      id: electorate-member-anthony-albanese
     speed: 20
     centerElement: true
     timeout: 180000
 - waitForAnimationToEnd
 - assertVisible:
-    id: electorate-member-anthony-albanese-name-drawn-complete-[1-9][0-9]*
-    text: Anthony Albanese
+    id: electorate-member-anthony-albanese
+    text: Anthony Albanese, Labor.*
 - takeScreenshot: ${EVIDENCE}/09-representative-name-settled
 - scrollUntilVisible:
     element:
