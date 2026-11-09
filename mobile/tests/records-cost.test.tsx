@@ -238,14 +238,10 @@ test('bill text switches chosen bytes and never presents the old version as the 
   expect(records.billVersion).toHaveBeenCalledTimes(1);
   const version = (
     mockOptions.unstable_headerRightItems as () => {
-      menu?: {
-        items: { label: string; items?: { onPress: () => void }[] }[];
-      };
+      menu?: { items: { onPress: () => void }[] };
     }[]
-  )()
-    .at(-1)!
-    .menu!.items.find((item) => item.label === 'Version')!;
-  await act(async () => version.items![1]!.onPress());
+  )()[0]!;
+  await act(async () => version.menu!.items[1]!.onPress());
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
