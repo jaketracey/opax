@@ -1,7 +1,18 @@
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Platform, Pressable, View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { Button, SegmentedPicker } from '../../design/controls';
 import {
@@ -157,7 +168,13 @@ export default function Program() {
   );
   const titleRef = useRef<View>(null);
   const name = program?.name ?? routeName ?? 'Grant program';
-  const title = useTitleOnScroll(titleRef, name, { trailing: 1 });
+  const navigation = useContext(NavigationContext);
+  const route = useContext(NavigationRouteContext);
+  const routes = navigation?.getState?.()?.routes ?? [];
+  const at = routes.findIndex((item) => item.key === route?.key);
+  const previous = at > 0 ? routes[at - 1] : undefined;
+  const backTitle = previous?.name === 'grants' ? 'Grants' : undefined;
+  const title = useTitleOnScroll(titleRef, name, { trailing: 1, backTitle });
   const backOptions = useNamedBackOptions();
   const openAsk = useOpenAsk();
   const seatGrants = useMemo(
@@ -225,6 +242,9 @@ export default function Program() {
         options={{
           title: name,
           ...backOptions,
+          ...(Platform.OS === 'ios' && backTitle
+            ? { headerBackTitle: backTitle, headerBackButtonMenuEnabled: false }
+            : {}),
           headerSearchBarOptions: program ? search.options : undefined,
           ...moneyBar({
             name,

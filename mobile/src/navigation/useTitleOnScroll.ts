@@ -207,11 +207,19 @@ export function useTitleOnScroll(
     trailing = 2,
     trailingWidth,
     routeTitle = title,
-  }: { trailing?: number; trailingWidth?: number; routeTitle?: string } = {},
+    backTitle: backTitleOverride,
+  }: {
+    trailing?: number;
+    trailingWidth?: number;
+    routeTitle?: string;
+    /** Must match an explicit headerBackTitle installed by the caller. */
+    backTitle?: string;
+  } = {},
 ) {
   const setOptions = useSafeSetOptions();
   const namedBackTitle = useNamedBackTitle();
-  const backTitle = Platform.OS === 'ios' ? namedBackTitle : undefined;
+  const backTitle =
+    Platform.OS === 'ios' ? (backTitleOverride ?? namedBackTitle) : undefined;
   const headerHeight = useHeaderBottom();
   const [anchor, setAnchor] = useState<number | null>(null);
   const shown = useRef(false);

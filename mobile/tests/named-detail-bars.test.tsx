@@ -16,6 +16,11 @@ import {
 } from 'expo-router/react-navigation';
 import DivisionHistory from '../src/features/directories/DivisionHistory';
 import Members from '../src/features/your-mp/Members';
+import Agencies from '../src/features/money-public/Agencies';
+import Program from '../src/features/money-public/Program';
+import { MoneyList, TitleAlias } from '../src/features/money-public/parts';
+import { RouteOptions } from '../src/navigation/preview';
+import { rootBackTitle } from '../src/navigation/stack/screen';
 import { catalogs } from '../src/api/runtime';
 import { Screen, TitleAnchor } from '../src/design/layout';
 import { Heading } from '../src/design/text';
@@ -36,12 +41,19 @@ const mockParams = { seat: 'federal-senate-nsw-new-south-wales' };
 jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   useLocalSearchParams: () => mockParams,
+  useSegments: () => [],
 }));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { directory: jest.fn(), electorateFor: jest.fn() },
 }));
 jest.mock('../src/features/directories/division-data', () => ({
   loadDivisionHistory: jest.fn(),
+}));
+jest.mock('../src/features/money-public/runtime', () => ({
+  money: {
+    agencies: jest.fn(() => new Promise(() => {})),
+    grants: jest.fn(() => new Promise(() => {})),
+  },
 }));
 
 let view: TestRenderer.ReactTestRenderer | undefined;
@@ -87,7 +99,7 @@ test.each([
   [['index', 'leads', 'lead/[id]', 'money-item'], 'Lead'],
   [['index', 'explore/[tool]'], 'Today'],
   [['bills', 'bill/[key]'], 'Bills'],
-  [['index', 'grants', 'grant-program'], 'Grants'],
+  [['index', 'grants', 'grant-program'], 'Commonwealth grants'],
   [['your-mp', 'members'], 'Your MP'],
   [['index', 'bill/[key]', 'bill-text/[key]'], undefined],
   [['index'], undefined],
@@ -113,7 +125,7 @@ test.each([
   expect(options).toEqual({
     headerBackButtonDisplayMode: 'default',
     ...(title ? { headerBackTitle: title } : {}),
-    ...(['Tools', 'Bill text', 'Lead', 'Grants'].includes(title ?? '')
+    ...(['Tools', 'Bill text', 'Lead'].includes(title ?? '')
       ? { headerBackButtonMenuEnabled: false }
       : {}),
   });
@@ -141,6 +153,93 @@ test('named back options leave Android to its native header', () => {
       value: original,
     });
   }
+});
+
+test.each(['grants', 'money-record', 'largest-grants'])(
+  '%s pushed from Grants reserves the Commonwealth grants pill drawn by its stack',
+  (destination) => {
+    const { route, navigation } = navigationFor('index', 'grants', destination);
+    const options: Record<string, unknown> = {};
+    navigation.setOptions.mockImplementation((next) =>
+      Object.assign(options, next),
+    );
+    function Probe() {
+      useTitleOnScroll({ current: null }, 'Destination');
+      return null;
+    }
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <Probe />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    const inline = (options.headerTitle as () => React.ReactElement)();
+    expect(rootBackTitle(navigation, route.key)).toBe('Commonwealth grants');
+    expect(inline.props.backTitle).toBe('Commonwealth grants');
+    expect(
+      barTitleWidth(402, 2, undefined, inline.props.backTitle),
+    ).toBeLessThan(barTitleWidth(402, 2, undefined, 'Grants'));
+  },
+);
+
+test.each([
+  ['grants', 'Grants'],
+  ['largest-grants', 'Largest grants'],
+  ['index', 'Today'],
+])('Program from %s draws and reserves %s', async (previous, backTitle) => {
+  const { route, navigation } = navigationFor(
+    'index',
+    previous,
+    'grant-program',
+  );
+  const options: Record<string, unknown> = {};
+  navigation.setOptions.mockImplementation((next) =>
+    Object.assign(options, next),
+  );
+  await act(async () => {
+    view = TestRenderer.create(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <Program />
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  expect(options).toMatchObject({
+    headerBackTitle: backTitle,
+    headerBackButtonDisplayMode: 'default',
+  });
+  if (previous === 'grants')
+    expect(options.headerBackButtonMenuEnabled).toBe(false);
+  const inline = (options.headerTitle as () => React.ReactElement)();
+  expect(inline.props).toMatchObject({
+    backTitle,
+    trailing: 1,
+    shown: false,
+  });
+});
+
+test('Agencies restores the system Government agencies title and its alias', async () => {
+  await act(async () => {
+    view = TestRenderer.create(<Agencies />);
+  });
+  expect(view!.root.findByType(RouteOptions).props.options).toMatchObject({
+    title: 'Government agencies',
+    headerTitle: 'Government agencies',
+    headerLargeTitleEnabled: true,
+    headerSearchBarOptions: { placement: 'stacked' },
+  });
+  const list = view!.root.findByType(MoneyList);
+  expect(list.props.onScroll).toBeUndefined();
+  const alias = list.props.header.props.children[0];
+  expect(alias.type).toBe(TitleAlias);
+  expect(alias.props).toEqual({
+    title: 'Government agencies',
+    testID: 'agencies-title',
+  });
 });
 
 test('Votes keeps its named back button and shows the inline title only after the heading scrolls away', async () => {
@@ -413,6 +512,13 @@ test('Program has room for Commonwealth at Large with Grants and More', () => {
   expect(room).toBeGreaterThanOrEqual(
     minimumBarTitleWidth('Commonwealth Home Support Programme', fontScale),
   );
+});
+
+test('People fits as a whole word beside Search, Filters and More at Large', () => {
+  const fontScale = 1.118;
+  expect(
+    barTitleWidth(402, 2, undefined, 'Search', fontScale),
+  ).toBeGreaterThanOrEqual(minimumBarTitleWidth('People', fontScale));
 });
 
 test('iOS compares asynchronous window measurements without using the JS scroll offset', async () => {
