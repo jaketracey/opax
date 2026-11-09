@@ -23,6 +23,8 @@ import {
   recordExternalURL,
 } from '../src/navigation/source-destination';
 import { askScreens } from '../src/navigation/stack/ask';
+import { billsScreens } from '../src/navigation/stack/bills';
+import { exploreScreens } from '../src/navigation/stack/explore';
 import { editionScreens } from '../src/navigation/stack/edition';
 import { recordsScreens } from '../src/navigation/stack/records';
 import {
@@ -265,13 +267,14 @@ test.each([
     }
   },
 );
-test('iOS 26 leaves material to the system and older bars accept the screen ground', () => {
+test('all iOS versions colour native appearances without a header background overlay', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
   const bar = opaqueBar(colors.sunken);
-  expect(bar).not.toHaveProperty('headerStyle');
-  expect(bar.headerBackground?.()).toMatchObject({
-    props: { style: { backgroundColor: colors.sunken } },
+  expect(bar).not.toHaveProperty('headerBackground');
+  expect(bar).toMatchObject({
+    headerStyle: { backgroundColor: colors.sunken },
+    headerLargeStyle: { backgroundColor: colors.sunken },
   });
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 18 });
   expect(opaqueBar(colors.sunken)).toMatchObject({
@@ -283,7 +286,17 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   const rootOptions = () =>
     [
-      tabRootScreen('(today)', '(today)', 'index', 'Today', false)[0]!,
+      ...(
+        [
+          ['(today)', 'index', 'Today'],
+          ['(your-mp)', 'your-mp', 'Your MP'],
+          ['(bills)', 'bills', 'Bills'],
+          ['(search)', 'search', 'Search'],
+        ] as const
+      ).map(
+        ([segment, name, title]) =>
+          tabRootScreen(segment, segment, name, title, false)[0]!,
+      ),
       askScreens('(ask)', false).find((screen) => screen.props.name === 'ask')!,
     ].map((screen) =>
       screen.props.options({
@@ -607,13 +620,51 @@ test.each([colors.paper, colors.sunken])(
     });
     try {
       const options = opaqueBar(ground);
-      expect(options.headerBackground?.()).toMatchObject({
-        props: { style: { backgroundColor: ground } },
+      expect(options).toMatchObject({
+        headerStyle: { backgroundColor: ground },
+        headerLargeStyle: { backgroundColor: ground },
+        headerShadowVisible: true,
       });
-      expect(options).not.toHaveProperty('headerStyle');
+      expect(options).not.toHaveProperty('headerBackground');
       expect(options).not.toHaveProperty('headerBlurEffect');
     } finally {
       Object.defineProperty(Platform, 'Version', descriptor);
     }
   },
 );
+
+test('quiz and division history keep named native Back buttons and centred inline titles', () => {
+  const resolve = (entry: React.ReactElement, previous: string, params = {}) =>
+    (
+      entry.props as { options: (props: object) => Record<string, unknown> }
+    ).options({
+      route: { key: 'pushed', params },
+      navigation: {
+        getState: () => ({
+          index: 1,
+          routes: [
+            { key: 'root', name: previous },
+            { key: 'pushed', name: entry.key },
+          ],
+        }),
+      },
+    });
+  const quiz = exploreScreens().find(
+    (entry) => entry.props.name === 'explore/[tool]',
+  )!;
+  expect(resolve(quiz, 'explore/index', { tool: 'quiz' })).toMatchObject({
+    title: 'The record quiz',
+    headerBackTitle: 'Quizzes and tools',
+    headerBackButtonDisplayMode: 'default',
+    headerTitleAlign: 'center',
+  });
+  const votes = billsScreens().find(
+    (entry) => entry.props.name === 'division-history',
+  )!;
+  expect(resolve(votes, 'bills')).toMatchObject({
+    title: 'Votes in parliament',
+    headerTitle: 'Votes in parliament',
+    headerTitleAlign: 'center',
+    headerBackTitle: 'Bills',
+  });
+});

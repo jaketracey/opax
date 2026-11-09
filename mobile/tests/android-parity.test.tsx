@@ -266,7 +266,7 @@ describe('Android bars', () => {
     const atDouble = chromeFor('ios', 2);
     expect(atDefault.headerTitleStyle.fontSize).toBeUndefined();
     expect(atDouble.headerTitleStyle.fontSize).toBeUndefined();
-    expect('headerShadowVisible' in atDefault).toBe(false);
+    expect(atDefault.headerShadowVisible).toBe(true);
   });
 
   test('Android bar actions are words on the type scale, at least 48dp', () => {

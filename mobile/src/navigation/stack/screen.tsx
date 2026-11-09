@@ -5,10 +5,13 @@ import {
   closeSheetItem,
   glassBar,
   headerItems,
+  opaqueBar,
   rootHeaderItems,
   shortSheet,
   type TabSegment,
 } from '../chrome';
+import { designFlags } from '../../design/flags';
+import { colors } from '../../design/tokens';
 import { emptyBarTitle } from '../useTitleOnScroll';
 
 /**
@@ -133,6 +136,11 @@ export function tabRootScreen(
   return segment === expected
     ? [
         screen(name, title, {
+          ...opaqueBar(
+            designFlags.groupedSurfaces && expected !== '(bills)'
+              ? colors.sunken
+              : colors.paper,
+          ),
           headerLargeTitleEnabled: true,
           // Translucent for the native large-title collapse on iOS 26 and
           // later only; iOS 18.4 to 25 keeps the opaque bar (shell.md 2.3).

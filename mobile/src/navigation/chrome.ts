@@ -34,34 +34,21 @@ import { canShare } from './share';
  * Header styling shared by every stack, using the selected heading face
  * and system Dynamic Type. Buttons and named back buttons use the tint.
  */
-// On iOS 26 a bar background or blur hides the large title (a UIKit bug,
-// react-native-screens#3100), so use headerBackground there without changing
-// the native bar's background or blur. Earlier versions use an opaque bar.
-// Android's bar is flat paper like the redesign's: no elevation shadow.
 /** iOS 26 and later: the system glass bar and scroll edge effects. */
 export const glassBar = () =>
   Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
 
 /**
- * Expo Router's supported headerBackground keeps the native config transparent
- * (no blur or opaque headerStyle), preserving iOS 26 large-title collapse.
- * The background follows the measured native header height at rest and scroll.
- * See expo-router 57 useHeaderConfigProps and NativeStackView.native.
+ * Colour UIKit's standard and scroll-edge appearances, without inserting a
+ * React headerBackground view. That view covered native large titles and back
+ * indicators, and reserved an extra header-height band in sheets (wave 7).
+ * Large-title roots retain their translucent layout for native collapse.
  */
-export const opaqueBar = (ground: ColorValue = colors.paper) =>
-  glassBar()
-    ? {
-        headerBackground: () =>
-          createElement(View, {
-            pointerEvents: 'none',
-            style: { flex: 1, backgroundColor: ground },
-          }),
-      }
-    : {
-        headerStyle: { backgroundColor: ground },
-        headerLargeStyle: { backgroundColor: ground },
-        ...(Platform.OS === 'android' ? { headerShadowVisible: false } : {}),
-      };
+export const opaqueBar = (ground: ColorValue = colors.paper) => ({
+  headerStyle: { backgroundColor: ground },
+  headerLargeStyle: { backgroundColor: ground },
+  headerShadowVisible: Platform.OS === 'ios',
+});
 
 /**
  * Android bar text, in sp. The native bar sets its title in sp, so the
@@ -107,7 +94,7 @@ export function useStackChrome() {
     // soft top edge active but too light, with serif record text legible
     // through the title and bar buttons. The hard edge is UIKit's own opaque
     // boundary with a divider. The bottom stays soft at the minimising tab
-    // bar. Its page ground is supplied through headerBackground, without a blur.
+    // bar. Both native bar appearances use the page ground, without a blur.
     scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
