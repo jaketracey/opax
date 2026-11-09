@@ -53,9 +53,11 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
 /**
  * UIKit on iOS 26 hides large titles when the standard appearance has a
  * background colour or blur (react-native-screens#3100, reproduced in UIKit).
- * While expanded, colour only the scroll-edge appearance. A native header
- * height change adds the standard colour on collapse and clears it on return.
- * An empty headerStyle replaces, rather than merges with, the opaque default.
+ * Keep both appearances transparent while expanded. A scroll-edge background
+ * also suppresses the title, even with a transparent standard appearance.
+ * The screen supplies the page ground beneath the native hard scroll edge.
+ * A native height change adds the standard colour on collapse and clears it
+ * on return. Empty styles replace the navigator's opaque defaults.
  */
 export const largeTitleBar = (
   ground: ColorValue = colors.paper,
@@ -64,7 +66,8 @@ export const largeTitleBar = (
   glassBar()
     ? {
         headerStyle: collapsed ? { backgroundColor: ground } : {},
-        headerLargeStyle: { backgroundColor: ground },
+        headerLargeStyle: {},
+        contentStyle: { backgroundColor: ground },
         headerTransparent: true,
         headerShadowVisible: true,
       }
