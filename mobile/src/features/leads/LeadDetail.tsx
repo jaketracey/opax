@@ -351,46 +351,46 @@ export default function LeadDetail() {
                   ))}
                 </View>
               ) : null}
-              {lead.evidence.length ? (
-                <Section title="Example records" testID="lead-evidence">
-                  <View>
-                    {lead.evidence.map((item, index) => {
-                      const row = evidenceRow(item);
-                      const resolved = evidenceRecord(item);
-                      const href = resolved
-                        ? moneyItemRoute(
-                            {
-                              kind: 'evidence',
-                              lead: lead.id,
-                              i: String(index),
-                            },
-                            resolved.name,
-                          )
-                        : undefined;
-                      return row ? (
-                        <MoneyRow
-                          key={index}
-                          name={row.name}
-                          detail={row.detail || undefined}
-                          amount={row.amount}
-                          href={href}
-                          testID={`lead-evidence-${index}`}
-                        />
-                      ) : (
-                        <LinkRow
-                          key={index}
-                          title={item.register}
-                          detail={item.record ?? undefined}
-                          href={href}
-                          accessory="none"
-                          testID={`lead-evidence-${index}`}
-                        />
-                      );
-                    })}
-                  </View>
-                </Section>
-              ) : null}
             </View>
+            {lead.evidence.length ? (
+              <Section title="Example records" testID="lead-evidence">
+                <View>
+                  {lead.evidence.map((item, index) => {
+                    const row = evidenceRow(item);
+                    const resolved = evidenceRecord(item);
+                    const href = resolved
+                      ? moneyItemRoute(
+                          {
+                            kind: 'evidence',
+                            lead: lead.id,
+                            i: String(index),
+                          },
+                          resolved.name,
+                        )
+                      : undefined;
+                    return row ? (
+                      <MoneyRow
+                        key={index}
+                        name={row.name}
+                        detail={row.detail || undefined}
+                        amount={row.amount}
+                        href={href}
+                        testID={`lead-evidence-${index}`}
+                      />
+                    ) : (
+                      <LinkRow
+                        key={index}
+                        title={item.register}
+                        detail={item.record ?? undefined}
+                        href={href}
+                        accessory="none"
+                        testID={`lead-evidence-${index}`}
+                      />
+                    );
+                  })}
+                </View>
+              </Section>
+            ) : null}
             {mapRow ? (
               <LinkRow
                 title="Open in the money map"

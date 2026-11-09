@@ -116,7 +116,7 @@ export function ElectorateCard({
             ground="raised"
           />
         ) : null}
-        <View style={styles.body}>
+        <View style={[styles.body, outline ? styles.afterOutline : null]}>
           {!census && !election ? (
             <Text variant="subsectionTitle">{seat.name}</Text>
           ) : null}
@@ -131,7 +131,7 @@ export function ElectorateCard({
           {census && election ? <Divider /> : null}
           {election ? (
             <View style={styles.election}>
-              <View style={styles.block}>
+              <View style={[styles.block, styles.electionText]}>
                 <Text variant="subsectionTitle">{election.title}</Text>
                 {election.winner ? (
                   <>
@@ -182,7 +182,10 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
   },
   body: { padding: rhythm.block, gap: rhythm.tight },
+  // The outline already has an inset below its drawing.
+  afterOutline: { paddingTop: 0 },
   block: { gap: rhythm.line },
+  electionText: { flex: 1 },
   election: {
     flexDirection: 'row',
     alignItems: 'flex-end',

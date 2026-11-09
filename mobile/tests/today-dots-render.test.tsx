@@ -9,6 +9,7 @@ import type * as ReanimatedTypes from 'react-native-reanimated';
 import TestRenderer from 'react-test-renderer';
 import { RegionProvider } from '../src/design/adaptive';
 import { rhythm } from '../src/design/tokens';
+import { light } from '../src/design/tokens.generated';
 import {
   AustraliaDots,
   useTodayDotsScroll,
@@ -160,6 +161,8 @@ test('Today holds, crossfades and stops its actual frame callback at each visibi
     });
     expect(paint()[0]!.props.opacity.value).toBe(0);
     expect(paint()[1]!.props.opacity.value).toBe(0.76);
+    expect(paint()[0]!.props.color).toBe(light.navy);
+    expect(paint()[1]!.props.color).toBe(light.todayDotBronze);
     expect(drive()).toBe(false); // Saved NSW is held from its first frame.
     const sampledOnce = path.mock.calls.length;
     act(() => renderer!.update(page('vic')));
@@ -173,6 +176,8 @@ test('Today holds, crossfades and stops its actual frame callback at each visibi
     tick({ timeSincePreviousFrame: 451 });
     expect(drive()).toBe(false);
     expect(clock.setActive).toHaveBeenLastCalledWith(false);
+    expect(paint()[0]!.props.opacity.value).toBe(0.23);
+    expect(paint()[1]!.props.opacity.value).toBe(0);
 
     act(() => renderer!.update(page(null)));
     expect(drive()).toBe(true);

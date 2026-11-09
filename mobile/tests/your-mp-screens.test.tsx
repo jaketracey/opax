@@ -721,14 +721,20 @@ test.each(['federal', 'state'])(
         justifyContent: 'center',
       });
       // The page foot draws the link in the link tint.
-      const label = correction.findByType(Text);
-      expect(label.props).toMatchObject({
+      const [label, address] = correction.findAllByType(Text);
+      expect(label!.props).toMatchObject({
         variant: 'footnote',
         tone: 'navy',
       });
-      expect(label.props.children).toBe(
-        'Report a correction: corrections@opax.com.au',
-      );
+      expect(label!.props.children).toBe('Report a correction:');
+      expect(address!.props).toMatchObject({
+        variant: 'footnote',
+        tone: 'navy',
+        children: 'corrections@opax.com.au',
+        numberOfLines: 1,
+        adjustsFontSizeToFit: true,
+        minimumFontScale: 0.5,
+      });
       const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
       await act(async () => correction.props.onPress());
       expect(open).toHaveBeenCalledWith(CORRECTION_CONTACT);

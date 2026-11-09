@@ -44,6 +44,16 @@ test('tokens.generated.ts matches docs/design/design-tokens.json', () => {
   );
 });
 
+test('Today dot bronze matches the approved artwork without changing the existing brand bronze', () => {
+  expect(light.todayDotBronze).toBe('#C08F2C');
+  expect(dark.todayDotBronze).toBe('#C08F2C');
+  expect(light.bronze).toBe('#A0761B');
+  const source = JSON.parse(
+    readFileSync(join(MOBILE, '../docs/design/design-tokens.json'), 'utf8'),
+  );
+  expect(source.color.brand.todayDotBronze.$value).toBe(light.todayDotBronze);
+});
+
 // palette.ts and tokens.ts on ios/app before the token source (b7e436b1).
 const BEFORE_LIGHT = {
   paper: '#FAF9F6',
