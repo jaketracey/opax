@@ -360,7 +360,11 @@ export default function DivisionHistory() {
   const scrollTitle = useTitleOnScroll(titleRef, TITLE);
   const header = (
     <View style={styles.header}>
-      <View ref={titleRef} onLayout={scrollTitle.onTitleLayout}>
+      <View
+        ref={titleRef}
+        collapsable={false}
+        onLayout={scrollTitle.onTitleLayout}
+      >
         <Heading level={1} kind="page">
           {TITLE}
         </Heading>

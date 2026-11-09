@@ -14,20 +14,35 @@ const shortBackTitles: Readonly<Record<string, string>> = {
   'lead/[id]': 'Lead',
 };
 
-/** Reapply the previous route's name when a screen installs its own bar. */
-export function useNamedBackOptions(): NativeStackNavigationOptions {
+function useBackTitleResolution() {
   const navigation = useContext(NavigationContext);
   const route = useContext(NavigationRouteContext);
-  const routes = navigation?.getState()?.routes ?? [];
+  const routes = navigation?.getState?.()?.routes ?? [];
   const at = routes.findIndex((item) => item.key === route?.key);
   const previous = at > 0 ? routes[at - 1] : undefined;
-  const back =
-    (previous && shortBackTitles[previous.name]) ??
-    rootBackTitle(navigation, route?.key);
+  const shortBack = previous && shortBackTitles[previous.name];
+  return {
+    back: shortBack ?? rootBackTitle(navigation, route?.key),
+    shortBack,
+  };
+}
+
+/** The short previous-route name used by the native back item. */
+export function useNamedBackTitle(): string | undefined {
+  return useBackTitleResolution().back;
+}
+
+/** Reapply the previous route's name when a screen installs its own bar. */
+export function useNamedBackOptions(): NativeStackNavigationOptions {
+  const { back, shortBack } = useBackTitleResolution();
   return Platform.OS === 'ios'
     ? {
         headerBackButtonDisplayMode: 'default',
         ...(back ? { headerBackTitle: back } : {}),
+        // UIKit's space-aware default can discard even an explicit short
+        // title. A static native back item keeps these names beside the
+        // revealed title and trailing controls, without fixing its font.
+        ...(shortBack ? { headerBackButtonMenuEnabled: false } : {}),
       }
     : {};
 }

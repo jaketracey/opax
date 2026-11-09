@@ -1,14 +1,16 @@
 import { router } from 'expo-router';
 import { RouteOptions } from '../src/navigation/preview';
+import { withNavigationOptions } from './navigation-options';
 import { sheetPayload } from '../src/navigation/sheets';
 import { act } from 'react';
-import { Text as NativeText } from 'react-native';
+import { Text as NativeText, type View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { catalogs as runtime } from '../src/api/runtime';
 import { decodeDiscovery } from '../src/api/catalogs';
 import type { RecordResult } from '../src/api/client';
 import {
   Card,
+  Group,
   Heading,
   SourceSheet,
   Text as DesignText,
@@ -196,7 +198,68 @@ describe('a lead’s page', () => {
     await act(async () =>
       resolve({ data: discovery, stale: false, savedAt: 1, asOf: null }),
     );
-    expect(options().title).toBe(lead.comparison.heading);
+    expect(options().title).toBe('Lead');
+    await act(async () => r.unmount());
+  });
+
+  test('a scrolled lead reveals Lead rather than its comparison heading', async () => {
+    const lead = leads.find((l) => l.category === 'procurement_concentration')!;
+    mockParams.id = lead.id;
+    let options: Record<string, unknown> = {};
+    const r = await render(
+      withNavigationOptions(<LeadDetail />, (next) => {
+        options = next;
+      }),
+    );
+    const inline = () => (options.headerTitle as () => React.ReactElement)();
+    const heading = r.root
+      .findAllByType(Group)
+      .flatMap((group) => [group.props.children].flat())
+      .find(
+        (child) => child?.props?.children?.props?.testID === 'lead-heading',
+      );
+    const pending: Parameters<View['measure']>[0][] = [];
+    heading.props.ref.current.measure = (
+      done: Parameters<View['measure']>[0],
+    ) => {
+      pending.push(done);
+    };
+    const answer = (request: number, pageY: number) =>
+      act(async () => {
+        await Promise.resolve();
+        pending[request]!(0, 0, 300, 80, 0, pageY);
+      });
+    await act(async () =>
+      heading.props.onLayout({
+        nativeEvent: { layout: { y: 24, height: 80 } },
+      }),
+    );
+    expect(pending).toHaveLength(0);
+    expect(inline().props.shown).toBe(false);
+    const screen = () => r.root.findByProps({ testID: 'lead-screen' });
+    await act(async () => screen().props.onScroll(9000));
+    await answer(0, 140);
+    expect(inline().props.shown).toBe(false);
+    await act(async () => screen().props.onScroll(-500));
+    expect(inline().props.shown).toBe(false);
+    await answer(1, -50);
+    expect(inline().props).toMatchObject({
+      title: 'Lead',
+      shown: true,
+      trailing: 1,
+    });
+    expect(texts(r.root)).toContain(lead.comparison.heading);
+    await act(async () =>
+      heading.props.onLayout({
+        nativeEvent: { layout: { y: 24, height: 80 } },
+      }),
+    );
+    expect(inline().props.shown).toBe(true);
+    await answer(2, -60);
+    expect(inline().props.shown).toBe(true);
+    await act(async () => screen().props.onScroll(12000));
+    await answer(3, 140);
+    expect(inline().props.shown).toBe(false);
     await act(async () => r.unmount());
   });
 

@@ -295,10 +295,19 @@ export function ValueRow({
   const body = (
     <>
       <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
-        <Text wordSafe variant="body" style={stacked ? undefined : styles.grow}>
+        <Text
+          wordSafe
+          variant="body"
+          style={stacked ? undefined : styles.valueLabel}
+        >
           {label}
         </Text>
-        <Text wordSafe variant="strong" tabular>
+        <Text
+          wordSafe
+          variant="strong"
+          tabular
+          style={stacked ? undefined : styles.value}
+        >
           {value}
         </Text>
       </View>
@@ -1035,6 +1044,15 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   grow: { flex: 1 },
+  // Both sides can wrap. Reserve enough label width for short words such
+  // as From, and retain a short figure's natural width beside long labels.
+  valueLabel: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 'auto',
+    minWidth: '35%',
+  },
+  value: { flexShrink: 1, maxWidth: '65%', textAlign: 'right' },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
   line: {
     flexDirection: 'row',

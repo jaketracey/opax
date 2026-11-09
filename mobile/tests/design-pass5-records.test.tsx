@@ -1,4 +1,5 @@
 import { withNavigationOptions } from './navigation-options';
+import { router } from 'expo-router';
 import { RouteOptions } from '../src/navigation/preview';
 import { menuLeaves } from '../src/design/row-link';
 import {
@@ -13,7 +14,7 @@ import {
 // record rows grouped by the day they were added.
 import { NavigationContext } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Text as NativeText } from 'react-native';
+import { Text as NativeText, Platform, type View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
@@ -27,6 +28,8 @@ import {
   SourceLine,
 } from '../src/design/primitives';
 import BillTextReader from '../src/features/records/BillTextReader';
+import { useBillTextPane } from '../src/features/records/billTextPane';
+import { ReaderList } from '../src/features/records/ReaderList';
 import DocumentReader from '../src/features/records/DocumentReader';
 import {
   decodeBillText,
@@ -38,6 +41,8 @@ import {
 import RecentRecords from '../src/features/records/RecentRecords';
 import { records } from '../src/features/records/runtime';
 import { recordSource } from '../src/features/records/source';
+import { barTitleWidth } from '../src/navigation/useTitleOnScroll';
+import { billTextContentsRoute } from '../src/navigation/routes';
 import { index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
@@ -290,9 +295,16 @@ test('bill text opens on its text with the stage, one source line and the bar it
     licenceDataset: 'bills',
   });
   expect(source.props.originals).toHaveLength(1);
-  expect(barLabels()).toEqual(['As passed', 'Contents', 'More']);
+  expect(barLabels()).toEqual(['As passed', 'More']);
+  expect(
+    (mockOptions.unstable_headerRightItems as () => object[])()[0],
+  ).toMatchObject({
+    type: 'menu',
+    testID: 'bill-text-version',
+    identifier: 'bill-text-version',
+  });
   // iOS draws no bottom toolbar a tab bar would cover: Ask about this bill
-  // is a row and Share is in ⋯, since Version and Contents fill the bar.
+  // is a row and Contents is first in ⋯, leaving Version in the bar.
   expect(
     view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
   ).toHaveLength(0);
@@ -302,9 +314,18 @@ test('bill text opens on its text with the stage, one source line and the bar it
   const more = (
     mockOptions.unstable_headerRightItems as () => {
       label: string;
-      menu?: { items: { label: string }[] };
+      menu?: { items: { label: string; icon?: object; onPress: () => void }[] };
     }[]
   )().at(-1)!;
+  expect(more.menu!.items[0]).toMatchObject({
+    label: 'Contents',
+    icon: { type: 'sfSymbol', name: 'list.bullet' },
+  });
+  expect(more.menu!.items.map((item) => item.label)).not.toContain('Version');
+  await act(async () => more.menu!.items[0]!.onPress());
+  expect(router.push).toHaveBeenCalledWith(
+    billTextContentsRoute('au-federal-r7534', 'r7534-aspassed'),
+  );
   expect(more.menu!.items.map((item) => item.label)).toContain('Share');
   // The overview is a closed disclosure with its machine pill inside.
   const overview = view.root.find(
@@ -324,6 +345,68 @@ test('bill text keeps a named route title before its text loads', async () => {
   jest.mocked(records.billManifest).mockReturnValue(new Promise(() => {}));
   const view = await mount(<BillTextReader />);
   expect(mockOptions.title).toBe('Bill text');
+  await act(async () => view.unmount());
+});
+
+test('the reader reveals the short bill name after its whole heading leaves, with room beside Bills', async () => {
+  mockBillText();
+  jest.mocked(catalogs.billFor).mockResolvedValue(
+    record({
+      identity: { data: { shortTitle: 'Synthetic short bill name' } },
+      summary: { data: null },
+    }) as never,
+  );
+  const view = await mount(<BillTextReader />);
+  const inline = () => (mockOptions.headerTitle as () => React.ReactElement)();
+  const heading =
+    view.root.findByType(ReaderList).props.header.props.children[1];
+  expect(heading.props.collapsable).toBe(false);
+  const pending: Parameters<View['measure']>[0][] = [];
+  (heading.props.ref.current as View).measure = (done) => {
+    pending.push(done);
+  };
+  const answer = (request: number, pageY: number) =>
+    act(async () => {
+      await Promise.resolve();
+      pending[request]!(0, 0, 300, 80, 0, pageY);
+    });
+  await act(async () =>
+    heading.props.onLayout({ nativeEvent: { layout: { y: 28, height: 80 } } }),
+  );
+  expect(pending).toHaveLength(0);
+  expect(inline().props.shown).toBe(false);
+  const scroll = (y: number) =>
+    act(async () =>
+      view.root.findByType(ReaderList).props.onScroll({
+        nativeEvent: { contentOffset: { y } },
+      }),
+    );
+  await scroll(5000);
+  await answer(0, 120);
+  expect(inline().props.shown).toBe(false);
+  await scroll(-1000);
+  await answer(1, -34);
+  expect(inline().props.shown).toBe(false);
+  await scroll(-2000);
+  expect(inline().props.shown).toBe(false);
+  await answer(2, -36);
+  expect(inline().props).toMatchObject({
+    shown: true,
+    title: 'Synthetic short bill name',
+    trailing: 2,
+    trailingWidth: 120 + 44,
+  });
+  const room = barTitleWidth(
+    402,
+    inline().props.trailing,
+    inline().props.trailingWidth,
+  );
+  expect(room).toBe(90);
+  expect(room).toBeGreaterThan(0);
+  expect(barLabels()).toEqual(['As passed', 'More']);
+  await scroll(9000);
+  await answer(3, 120);
+  expect(inline().props.shown).toBe(false);
   await act(async () => view.unmount());
 });
 
@@ -360,6 +443,7 @@ test('choosing another version from the bar menu loads it in place', async () =>
       menu?: { items: { label: string; state: string; onPress: () => void }[] };
     }[]
   )()[0]!;
+  expect(version.label).toBe('As passed');
   expect(version.menu!.items.map((item) => [item.label, item.state])).toEqual([
     ['As passed: synthetic fixture, 1 Oct 2026', 'on'],
     ['First reading: synthetic fixture, 1 Oct 2026', 'off'],
@@ -372,6 +456,95 @@ test('choosing another version from the bar menu loads it in place', async () =>
   expect(textOfId(view, 'bill-text-stage')).toBe(
     'First reading: synthetic fixture',
   );
+  await act(async () => view.unmount());
+});
+
+test.each([
+  [1, 1],
+  [1, 2],
+  [2, 1],
+  [2, 2],
+])(
+  'the iPhone bar offers Version for %i versions and Contents for %i sections',
+  async (versionCount, sectionCount) => {
+    mockBillText();
+    const manifest = decodeBillTextManifest(
+      responses['/bill-texts/au-federal-r7534/index.json'],
+    );
+    const text = decodeBillText(
+      responses['/bill-texts/au-federal-r7534/r7534-aspassed.json'],
+    );
+    jest.mocked(records.billManifest).mockResolvedValue(
+      record({
+        ...manifest,
+        versions: manifest.versions.slice(0, versionCount),
+      }),
+    );
+    jest
+      .mocked(records.billVersion)
+      .mockResolvedValue(
+        record({ ...text, sections: text.sections.slice(0, sectionCount) }),
+      );
+    const view = await mount(<BillTextReader />);
+    expect(barLabels()).toEqual(
+      versionCount > 1 ? ['As passed', 'More'] : ['More'],
+    );
+    const more = (
+      mockOptions.unstable_headerRightItems as () => {
+        menu: { items: { label: string }[] };
+      }[]
+    )().at(-1)!;
+    const labels = more.menu.items.map((item) => item.label);
+    expect(labels).not.toContain('Version');
+    if (sectionCount > 1) expect(labels[0]).toBe('Contents');
+    else expect(labels).not.toContain('Contents');
+    await act(async () => view.unmount());
+  },
+);
+
+test('Android retains Version, Contents and More as bar items', async () => {
+  const original = Platform.OS;
+  let view: TestRenderer.ReactTestRenderer | undefined;
+  try {
+    Platform.OS = 'android';
+    mockBillText();
+    view = await mount(<BillTextReader />);
+    expect(barLabels()).toEqual(['As passed', 'Contents', 'More']);
+    const more = (
+      mockOptions.unstable_headerRightItems as () => {
+        menu?: { items: { label: string }[] };
+      }[]
+    )().at(-1)!;
+    const labels = more.menu!.items.map((item) => item.label);
+    expect(labels).not.toContain('Contents');
+    expect(labels).not.toContain('Version');
+    expect(labels).toContain('Ask about this bill');
+  } finally {
+    if (view) await act(async () => view!.unmount());
+    Platform.OS = original;
+  }
+});
+
+test('the embedded iPad reader retains its pane Version and Contents controls', async () => {
+  mockBillText();
+  let pane: ReturnType<typeof useBillTextPane> = null;
+  function Probe() {
+    pane = useBillTextPane('au-federal-r7534');
+    return null;
+  }
+  const view = await mount(
+    <>
+      <BillTextReader embedded />
+      <Probe />
+    </>,
+  );
+  expect(pane).toMatchObject({
+    version: { label: 'As passed' },
+    contents: expect.any(Function),
+  });
+  expect(pane!.menu.map((item) => item.title)).not.toContain('Contents');
+  expect(pane!.menu.map((item) => item.title)).not.toContain('Version');
+  expect(mockOptions.unstable_headerRightItems).toBeUndefined();
   await act(async () => view.unmount());
 });
 

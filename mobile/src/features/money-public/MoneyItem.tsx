@@ -711,6 +711,7 @@ export default function MoneyItem() {
           <>
             <View
               ref={titleRef}
+              collapsable={false}
               onLayout={scrollTitle.onTitleLayout}
               style={{ gap: rhythm.line }}
             >
