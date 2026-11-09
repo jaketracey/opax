@@ -3,22 +3,22 @@
 import { act } from 'react';
 import { ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { peopleDepth, catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
-import Person from '../src/features/Person';
-import Party from '../src/features/Party';
-import RecordList from '../src/features/people/RecordList';
+import { peopleDepth, catalogs as runtime } from '../src/api/runtime';
 import { PadGrid } from '../src/design/adaptive';
-import { Section } from '../src/design/layout';
-import { Text } from '../src/design/primitives';
 import {
   formatCount,
   formatMoney,
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../src/design/format';
+import { Section } from '../src/design/layout';
 import { partySlug } from '../src/design/party';
+import { Text } from '../src/design/primitives';
+import { followKey, useFollows } from '../src/features/follows/store';
+import { useFollowStates } from '../src/features/follows/useFollowStates';
+import Party from '../src/features/Party';
 import {
   annualPay,
   decodeAccess,
@@ -28,9 +28,9 @@ import {
   stripSources,
   votesCount,
 } from '../src/features/people/model';
+import RecordList from '../src/features/people/RecordList';
+import Person from '../src/features/Person';
 import type { ProfileView } from '../src/features/your-mp/model';
-import { followKey, useFollows } from '../src/features/follows/store';
-import { useFollowStates } from '../src/features/follows/useFollowStates';
 import { catalogs, manifest, people, pinned, roster, slugs } from './pinned';
 
 // The party page reads the pinned snapshot through the real catalogue code.
@@ -106,14 +106,12 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn(), navigate: jest.fn() },
   Stack: { Screen: () => null },
 }));
-jest.mock('../src/features/follows/FollowToggle', () => ({
-  FollowToggle: () => null,
-}));
 jest.mock('../src/features/follows/store', () => ({
   ...jest.requireActual('../src/features/follows/store'),
   useFollows: jest.fn(() => []),
 }));
 jest.mock('../src/features/follows/useFollowStates', () => ({
+  markSeenNow: jest.fn(async () => undefined),
   useFollowStates: jest.fn(() => ({ states: new Map() })),
 }));
 // The group's own seen-marking is the follows lane's; here it only stands.

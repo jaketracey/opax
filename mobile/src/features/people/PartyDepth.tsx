@@ -2,11 +2,6 @@ import { StyleSheet, View } from 'react-native';
 import { peopleDepth } from '../../api/runtime';
 import { BarSeries } from '../../design/charts';
 import { Disclosure } from '../../design/disclosure';
-import { Group, Section } from '../../design/layout';
-import { ValueRow } from '../../design/rows';
-import { InlineError, Skeleton } from '../../design/states';
-import { Heading, Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
 import {
   formatCount,
   formatDate,
@@ -14,10 +9,15 @@ import {
   formatMoney,
   formatMoneyCompact,
 } from '../../design/format';
+import { Group, Section } from '../../design/layout';
 import { jurisdictionName } from '../../design/parliament';
+import { ValueRow } from '../../design/rows';
+import { InlineError, Skeleton } from '../../design/states';
+import { Heading, Text } from '../../design/text';
+import { colors, hairline, rhythm } from '../../design/tokens';
+import { Amount } from './FinancialBlocks';
 import { ReadDate, useRead } from './Sections';
 import { receiptsSeries } from './model';
-import { Amount } from './FinancialBlocks';
 
 export type Funding = Awaited<ReturnType<typeof peopleDepth.funding>>;
 const fy = (year: string) => formatFinancialYear(Number(year.slice(0, 4)));
@@ -66,12 +66,13 @@ export function PartyReturns({
       <View testID="party-returns-chart">
         <BarSeries
           data={series.map((r) => ({ label: fy(r.year), value: r.receipts }))}
+          sourceLine={false}
           ink="money"
           format={formatMoneyCompact}
           tableTitle="Each year’s return"
           {...{
             dateRange: { start: `${first}-07-01`, end: `${last + 1}-06-30` },
-            source: 'AEC annual returns',
+            citation: 'AEC annual returns',
           }}
         />
       </View>

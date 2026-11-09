@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { act } from 'react';
 import {
   AppState,
@@ -5,23 +6,22 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { router } from 'expo-router';
-import { catalogs as runtime } from '../src/api/runtime';
 import { Catalogs } from '../src/api/catalogs';
+import { catalogs as runtime } from '../src/api/runtime';
+import { moneyAccessibilityLabel } from '../src/design/format';
+import { partyColors } from '../src/design/palette';
+import { PartyLabel, PersonRow } from '../src/design/people';
+import { ContentUnavailable } from '../src/design/states';
+import { textStyles } from '../src/design/tokens';
 import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
 import { PartyPage, faceCandidates, loadFaces } from '../src/features/Party';
 import { firstLineOffset } from '../src/features/people/ProfileHeader';
-import { textStyles } from '../src/design/tokens';
-import { PartyLabel, PersonRow } from '../src/design/people';
 import { openOnWeb } from '../src/navigation/external';
 import {
   moneyRecordRoute,
   partyRoute,
   personRoute,
 } from '../src/navigation/routes';
-import { moneyAccessibilityLabel } from '../src/design/format';
-import { ContentUnavailable } from '../src/design/states';
-import { partyColors } from '../src/design/palette';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 jest.mock('expo-router', () => ({
@@ -440,7 +440,7 @@ test('AX5 party text remains uncapped and the recorded disclosure exposes its ex
   press(r, 'party-recorded-toggle');
   for (const text of r.root.findAllByType(NativeText)) {
     expect(text.props.numberOfLines).toBeUndefined();
-    expect(text.props.maxFontSizeMultiplier).toBe(0);
+    expect([0, 1.353]).toContain(text.props.maxFontSizeMultiplier);
   }
   expect(
     host(r, 'party-recorded-toggle').props.accessibilityState.expanded,

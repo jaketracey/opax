@@ -1,3 +1,4 @@
+import { Stack, router, useLocalSearchParams, type Href } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Platform,
@@ -6,29 +7,13 @@ import {
   View,
   type ScrollView,
 } from 'react-native';
-import { Stack, router, useLocalSearchParams, type Href } from 'expo-router';
-import { catalogs, portraits } from '../api/runtime';
 import type { PartyPageRecord } from '../api/catalogs';
-import type { PartyMember } from '../api/party-page';
 import { nameKey } from '../api/ids';
-import { CachedPortrait } from './CachedPortrait';
-import { Disclosure } from '../design/disclosure';
-import { Group, Screen, Section } from '../design/layout';
-import { isPad, PadGrid, useLayout } from '../design/adaptive';
-import { FaceStack, PersonRow } from '../design/people';
-import { LinkRow, MoneyRow, DivisionRow } from '../design/rows';
-import { StatStrip, type StatTileProps } from '../design/record';
-import { SourceLine } from '../design/source';
-import {
-  ContentUnavailable,
-  InlineError,
-  LoadingState,
-  Skeleton,
-} from '../design/states';
-import { Text } from '../design/text';
-import { isPartyLabel, partySlug } from '../design/party';
+import type { PartyMember } from '../api/party-page';
+import { catalogs, portraits } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
-import { useHeaderBottom } from '../design/useHeaderBottom';
+import { PadGrid, isPad, useLayout } from '../design/adaptive';
+import { Disclosure } from '../design/disclosure';
 import {
   disclosureYearNote,
   formatCount,
@@ -37,9 +22,22 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../design/format';
+import { Group, Screen, Section } from '../design/layout';
+import { isPartyLabel, partySlug } from '../design/party';
+import { FaceStack, PersonRow } from '../design/people';
+import { StatStrip, type StatTileProps } from '../design/record';
+import { DivisionRow, LinkRow, MoneyRow } from '../design/rows';
+import { SourceLine } from '../design/source';
+import {
+  ContentUnavailable,
+  InlineError,
+  LoadingState,
+  Skeleton,
+} from '../design/states';
+import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
+import { useHeaderBottom } from '../design/useHeaderBottom';
 import { headerItems, pageItems } from '../navigation/chrome';
-import { shareRecord } from '../navigation/share';
 import { openOnWeb } from '../navigation/external';
 import {
   billRoute,
@@ -48,10 +46,11 @@ import {
   personRoute,
 } from '../navigation/routes';
 import type { PartySection } from '../navigation/routes/people';
-import { chamberLabel } from './bills/filters';
+import { shareRecord } from '../navigation/share';
 import { stageTitle } from './bills/divisions';
-import { profileGrid } from './split/grid';
+import { chamberLabel } from './bills/filters';
 import { useCatalogRecord } from './bills/useCatalogRecord';
+import { CachedPortrait } from './CachedPortrait';
 import { AddedSinceGroup } from './follows/AddedSinceGroup';
 import type { Change } from './follows/changes';
 import { NewDot } from './follows/NewDot';
@@ -59,6 +58,7 @@ import { followKey, useFollows } from './follows/store';
 import { useFollowStates } from './follows/useFollowStates';
 import { ProfileBlock } from './people/Block';
 import { usePageActions } from './people/PageActions';
+import { partyTimingID } from './people/party-timing';
 import {
   FundingError,
   FundingLoading,
@@ -71,7 +71,7 @@ import {
 } from './people/PartyDepth';
 import { ProfileHeader } from './people/ProfileHeader';
 import { MoreFromRecord } from './people/Sections';
-import { partyTimingID } from './people/party-timing';
+import { profileGrid } from './split/grid';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 const partyArrival = (v: unknown): PartySection | undefined =>
@@ -438,7 +438,7 @@ function PartyContent({
       about={() => ({
         title: 'Members',
         notes: [
-          'Current members use their current party. A directory snapshot is not a live roster. Undated affiliations appear separately as recorded; former members are excluded.',
+          'Current members use their current party. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,

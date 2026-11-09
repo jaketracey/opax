@@ -1,73 +1,45 @@
 import { router } from 'expo-router';
-import { billRoute, partyRoute } from '../../navigation/routes';
 import { Fragment, useMemo, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import type { BillSplit, billSplits } from '../../api/bill-transforms';
+import { billName } from '../../api/bill-transforms';
+import { Button } from '../../design/controls';
+import { formatCount, formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
-import { copyText } from '../records/actions';
+import { MACHINE_LABEL, MachinePill } from '../../design/labels';
+import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
+import { PartyLabel } from '../../design/people';
+import {
+  BillRow,
+  Disclosure as DisclosureRow,
+  Icon,
+  Text,
+  useAccessibilitySize,
+} from '../../design/primitives';
+import { symbols } from '../../design/symbols';
+import {
+  colors,
+  interfaceFonts as fonts,
+  minimumTarget,
+  radii,
+  rhythm,
+} from '../../design/tokens';
 import {
   canonicalUrl,
   openOnWeb,
   openSource,
   sourceUrl,
 } from '../../navigation/external';
-import { MACHINE_LABEL, MachinePill } from '../../design/labels';
-import { PartyLabel } from '../../design/people';
-import { Button } from '../../design/controls';
-import { blocNames, blocOrder, partyBloc, type PartyBloc } from './party-codes';
-import { countWords } from './divisions';
-import type { BillSplit, billSplits } from '../../api/bill-transforms';
-import { formatCount, formatDate } from '../../design/format';
-import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
+import { billRoute, partyRoute } from '../../navigation/routes';
+import { copyText } from '../records/actions';
 import {
-  BillRow,
-  Disclosure as DisclosureRow,
-  Icon,
-  MACHINE_BRIEF_EXPLANATION,
-  MachineLabel,
-  StatusLabel,
-  Text,
-  useAccessibilitySize,
-} from '../../design/primitives';
-import {
-  colors,
-  fonts,
-  minimumTarget,
-  radii,
-  rhythm,
-} from '../../design/tokens';
-import {
+  countWords,
   questionBlocks,
   type QuestionBlock,
   type QuestionRun,
 } from './divisions';
 import { billRowText, type BillListRow } from './filters';
-import { billName } from '../../api/bill-transforms';
-
-/**
- * @deprecated Use `StatusLabel`. Kept only for the iPad welcome tour's
- * picture of the bill list (src/onboarding, pass 4D): a status word on its
- * tone with a date beside it, the date on its own line at accessibility
- * sizes.
- */
-export function BillStatus({
-  status,
-  asAt,
-}: {
-  status: string;
-  asAt?: string | null;
-}) {
-  const stacked = useAccessibilitySize();
-  return (
-    <View style={[styles.statusLine, stacked ? styles.stacked : null]}>
-      <StatusLabel label={status} hidden />
-      {asAt ? (
-        <Text variant="footnote" style={styles.grow}>
-          {asAt}
-        </Text>
-      ) : null}
-    </View>
-  );
-}
+import { blocNames, blocOrder, partyBloc, type PartyBloc } from './party-codes';
 
 /**
  * One bill in the Bills list: the shared `BillRow` (Today draws the same).
@@ -173,7 +145,7 @@ export function SplitRow({
           styles.bar,
           {
             width: `${(split.ayes / max) * 100}%`,
-            backgroundColor: colors.bronze,
+            backgroundColor: colors.navy,
           },
         ]}
       />
@@ -327,7 +299,7 @@ function Runs({
           <Text
             key={r}
             variant="recordText"
-            tone="bronzeInk"
+            tone="navy"
             style={style}
             accessibilityRole="link"
             accessibilityHint="Opens the source"
@@ -417,7 +389,8 @@ export function DivisionQuestion({
 }
 
 /** What a stored machine brief is, for its pill's sheet and VoiceOver. */
-export const BRIEF_EXPLANATION = MACHINE_BRIEF_EXPLANATION;
+export const BRIEF_EXPLANATION =
+  'An automated summary written by a model; not the record.';
 
 /**
  * A bill's stored machine summary: one `MachinePill` (it opens how this was
@@ -467,8 +440,8 @@ export function MachineBrief({
 }) {
   return (
     <View style={styles.brief}>
-      <MachineLabel
-        explanation={BRIEF_EXPLANATION}
+      <MachinePill
+        note={{ title: 'How this was written', body: [BRIEF_EXPLANATION] }}
         testID={`${testID}-label`}
       />
       {brief.length <= BRIEF_INLINE_LIMIT ? (
@@ -576,6 +549,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -rhythm.line,
     paddingHorizontal: rhythm.line,
     borderRadius: radii.bar,
+    borderCurve: 'continuous',
   },
   splitStacked: {
     flexWrap: 'wrap',
@@ -585,13 +559,14 @@ const styles = StyleSheet.create({
   // A shared name column, so the bars start together.
   partyColumn: { width: '34%' },
   party: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
-  dot: { width: 10, height: 10, borderRadius: 5 },
+  dot: { width: 10, height: 10, borderRadius: 5, borderCurve: 'continuous' },
   track: {
     flexDirection: 'row',
     height: 6,
     borderRadius: 3,
     overflow: 'hidden',
     backgroundColor: colors.sunken,
+    borderCurve: 'continuous',
   },
   trackInline: { flex: 1 },
   bar: { height: 6 },
@@ -629,7 +604,7 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
     paddingLeft: rhythm.heading + 2,
     borderLeftWidth: 2,
-    borderLeftColor: colors.bronze,
+    borderLeftColor: colors.navy,
   },
   list: { gap: rhythm.line },
   bullet: { flexDirection: 'row', gap: rhythm.tight },
@@ -829,7 +804,7 @@ function PartyVoteRow({
         {countWords(split.ayes, split.noes)}
       </Text>
       {linked ? (
-        <Icon name="chevron.right" size={13} maxScale={1.5} tone="inkSoft" />
+        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       ) : null}
     </>
   );

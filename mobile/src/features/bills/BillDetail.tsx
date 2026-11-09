@@ -1,7 +1,5 @@
-import { scopedQuestion } from '../ask/AskAbout';
-import { useOpenAsk } from '../ask/open';
-import { headerItems, pageMenu, shareItem } from '../../navigation/chrome';
-import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -23,7 +21,6 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   billDisplay,
   billName,
@@ -37,14 +34,15 @@ import {
 import { billKey } from '../../api/catalogs';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
-import { formatCount, formatDate } from '../../design/format';
-import { showMenu } from '../../design/menu';
-import { haptic } from '../../design/haptics';
-import { copy as words } from '../../design/copy';
 import { useReduceMotion } from '../../design/accessibility';
+import { ContextMenu } from '../../design/context-menu';
+import { copy as words } from '../../design/copy';
 import { animateLayout } from '../../design/disclosure';
+import { formatCount, formatDate } from '../../design/format';
+import { haptic } from '../../design/haptics';
+import { MachinePill } from '../../design/labels';
 import { TitleAnchor } from '../../design/layout';
-import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { showMenu } from '../../design/menu';
 import {
   Button,
   ContentUnavailable,
@@ -65,40 +63,35 @@ import {
   SourceLine,
   StageTimeline,
   StatusCapsule,
-  SubSection,
   Text,
   VoteSplit,
   useAccessibilitySize,
   type SourceOriginal,
 } from '../../design/primitives';
-import {
-  chrome,
-  colors,
-  minimumTarget,
-  radii,
-  rhythm,
-  textStyles,
-} from '../../design/tokens';
+import { useRowFollow } from '../../design/row-link';
+import { symbols } from '../../design/symbols';
+import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { headerItems, pageMenu, shareItem } from '../../navigation/chrome';
 import { canonicalUrl, openSource } from '../../navigation/external';
-import { canShare, shareRecord } from '../../navigation/share';
-import { resultsRoute } from '../../navigation/routes/search';
 import {
   billListRoute,
   docRoute,
   partyRoute,
   personRoute,
 } from '../../navigation/routes';
-import { copyText } from '../records/actions';
-import { Button as SwiftButton, Host, Menu } from '@expo/ui/swift-ui';
-import { symbols } from '../../design/symbols';
-import { useRowFollow } from '../../design/row-link';
-import { MachinePill } from '../../design/labels';
+import { resultsRoute } from '../../navigation/routes/search';
+import { canShare, shareRecord } from '../../navigation/share';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { CachedPortrait } from '../CachedPortrait';
+import { scopedQuestion } from '../ask/AskAbout';
+import { useOpenAsk } from '../ask/open';
 import { AddedSinceGroup } from '../follows/AddedSinceGroup';
 import { NewDot } from '../follows/NewDot';
 import type { Change } from '../follows/changes';
 import { followKey } from '../follows/store';
 import { useFollowStates } from '../follows/useFollowStates';
+import { copyText } from '../records/actions';
 import { useIsMyMember } from '../your-mp/useIsMyMember';
 import {
   countWords,
@@ -108,6 +101,7 @@ import {
   outcomeWord,
 } from './divisions';
 import { chamberLabel } from './filters';
+import { useBillNavigation } from './navigation';
 import {
   Bullet,
   DivisionQuestion,
@@ -121,7 +115,6 @@ import {
 import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { statusEvent, statusEventText } from './status-event';
 import { useCatalogRecord } from './useCatalogRecord';
-import { useBillNavigation } from './navigation';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
@@ -177,7 +170,7 @@ const stageText = (s: BillTimelineStage) =>
  */
 const chartSource = (start: string, end: string, citation: string) => ({
   dateRange: { start, end },
-  source: citation,
+  citation,
 });
 
 /** Where the page scrolls to, and what it reveals first. */
@@ -362,7 +355,7 @@ export default function BillDetail({
           <RefreshControl
             refreshing={refreshing}
             onRefresh={refresh}
-            tintColor={chrome.tint}
+            tintColor={colors.navy}
           />
         }
       >
@@ -462,7 +455,7 @@ export default function BillDetail({
  * press, and the pane's ⋯ off iOS.
  */
 function openMenu(items: readonly { title: string; onPress: () => void }[]) {
-  showMenu('', [...items]);
+  if (Platform.OS !== 'ios') showMenu('', [...items]);
 }
 
 /** The iPad pane's ⋯: a native menu on iOS, the menu sheet elsewhere. */
@@ -981,42 +974,16 @@ function BodySkeleton() {
  */
 function ColdSkeleton() {
   return (
-    <View
-      accessible
-      accessibilityRole="progressbar"
-      accessibilityLabel="Loading the bill"
-      accessibilityState={{ busy: true }}
-      testID="bill-loading"
-      style={styles.headBlock}
-    >
-      <View
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={styles.headBlock}
-      >
-        <View style={styles.titleBlock}>
-          <View style={styles.status}>
-            <Bone width={72} height={24} round />
-            <Bone width={120} height={15} />
-          </View>
-          <Bone width="100%" height={textStyles.recordTitle.fontSize} />
-          <Bone width="100%" height={textStyles.recordTitle.fontSize} />
-          <Bone width="55%" height={textStyles.recordTitle.fontSize} />
-          <Bone width="70%" height={15} />
-        </View>
-        <View style={styles.seedPerson}>
-          <Bone width={44} height={44} round />
-          <View style={styles.seedPersonText}>
-            <Bone width="60%" height={17} />
-            <Bone width="35%" height={15} />
-          </View>
-        </View>
-        <Bone width={96} height={32} round />
-        <View style={styles.seedBlock}>
-          <Bone width="40%" height={22} />
-          <Bone width={96} height={20} round />
-          <Skeleton shape="text" count={4} label="Loading In short" />
-        </View>
+    <View style={styles.headBlock}>
+      <Skeleton
+        shape="bill-header"
+        label="Loading the bill"
+        testID="bill-loading"
+      />
+      <View style={styles.seedBlock}>
+        <Bone width="40%" height={22} />
+        <Bone width={96} height={20} round />
+        <Skeleton shape="text" count={4} label="Loading In short" />
       </View>
     </View>
   );
@@ -1177,7 +1144,7 @@ function Summary({
         testID="bill-summary"
       />
       {changes.length ? (
-        <SubSection title="What it changes">
+        <Section title="What it changes">
           {shown.map((change, index) => (
             <Bullet key={index}>{change}</Bullet>
           ))}
@@ -1191,12 +1158,12 @@ function Summary({
               ))}
             </Disclosure>
           ) : null}
-        </SubSection>
+        </Section>
       ) : null}
       {summary.affected ? (
-        <SubSection title="Who is affected">
+        <Section title="Who is affected">
           <Text variant="body">{summary.affected}</Text>
-        </SubSection>
+        </Section>
       ) : null}
       <SourceLine
         asOf={summary.as_of ?? summary.generated_at}
@@ -1676,75 +1643,76 @@ function BillVoteRow({
   ];
   return (
     <View ref={anchor} collapsable={false} testID={id} style={styles.vote}>
-      <Pressable
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel={[
-          title,
-          meta,
-          outcome,
-          countWords(division.ayes, division.noes, { spoken: true }),
-          isNew ? 'New' : null,
-        ]
-          .filter(Boolean)
-          .join(', ')}
-        accessibilityHint="Shows the party votes and the question"
-        accessibilityState={{ expanded }}
-        accessibilityActions={actions.map((a) => ({
-          name: a.title,
-          label: a.title,
-        }))}
-        onAccessibilityAction={(event) =>
-          actions
-            .find((a) => a.title === event.nativeEvent.actionName)
-            ?.onPress()
-        }
-        onPress={onToggle}
-        onLongPress={() => openMenu(actions)}
-        testID={`${id}-more`}
-        style={({ pressed }) => [
-          styles.voteRow,
-          pressed ? styles.pressed : null,
-        ]}
-      >
-        <View style={styles.voteMain}>
-          <View style={styles.voteTitle}>
-            {isNew ? <NewDot testID={`${id}-new`} /> : null}
-            <Text
-              variant="rowRecord"
-              wordSafe
-              testID={`${id}-title`}
-              style={styles.grow}
-            >
-              {title}
+      <ContextMenu items={actions}>
+        <Pressable
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel={[
+            title,
+            meta,
+            outcome,
+            countWords(division.ayes, division.noes, { spoken: true }),
+            isNew ? 'New' : null,
+          ]
+            .filter(Boolean)
+            .join(', ')}
+          accessibilityHint="Shows the party votes and the question"
+          accessibilityState={{ expanded }}
+          accessibilityActions={actions.map((a) => ({
+            name: a.title,
+            label: a.title,
+          }))}
+          onAccessibilityAction={(event) =>
+            actions
+              .find((a) => a.title === event.nativeEvent.actionName)
+              ?.onPress()
+          }
+          onPress={onToggle}
+          testID={`${id}-more`}
+          style={({ pressed }) => [
+            styles.voteRow,
+            pressed ? styles.pressed : null,
+          ]}
+        >
+          <View style={styles.voteMain}>
+            <View style={styles.voteTitle}>
+              {isNew ? <NewDot testID={`${id}-new`} /> : null}
+              <Text
+                variant="rowRecord"
+                wordSafe
+                testID={`${id}-title`}
+                style={styles.grow}
+              >
+                {title}
+              </Text>
+            </View>
+            <Text variant="secondary" wordSafe>
+              {meta}
             </Text>
-          </View>
-          <Text variant="secondary" wordSafe>
-            {meta}
-          </Text>
-          <View style={[styles.outcome, stacked ? styles.stacked : null]}>
-            <StatusCapsule status={outcome} testID={`${id}-outcome`} hidden />
-            <View style={stacked ? null : styles.grow}>
-              <VoteSplit
-                ayes={division.ayes}
-                noes={division.noes}
-                countsStyle="ayesNoes"
-                {...chartSource(
-                  division.date,
-                  division.date,
-                  'They Vote For You',
-                )}
-              />
+            <View style={[styles.outcome, stacked ? styles.stacked : null]}>
+              <StatusCapsule status={outcome} testID={`${id}-outcome`} hidden />
+              <View style={stacked ? null : styles.grow}>
+                <VoteSplit
+                  ayes={division.ayes}
+                  noes={division.noes}
+                  countsStyle="ayesNoes"
+                  {...chartSource(
+                    division.date,
+                    division.date,
+                    'They Vote For You',
+                  )}
+                />
+              </View>
             </View>
           </View>
-        </View>
-        <Icon
-          name={expanded ? chevrons.open : chevrons.closed}
-          size={13}
-          maxScale={1.5}
-          tone="inkFaint"
-        />
-      </Pressable>
+          <Icon
+            name={expanded ? chevrons.open : chevrons.closed}
+            size={13}
+            maxScale={1.5}
+            tone="inkFaint"
+          />
+        </Pressable>
+      </ContextMenu>
       {memberVote ? (
         <LinkRow
           title={`${memberVote.name}, your MP, voted ${memberVote.position}`}
@@ -1759,6 +1727,10 @@ function BillVoteRow({
       ) : null}
       {expanded ? (
         <View style={styles.voteBody} testID={`${id}-body`}>
+          <View
+            collapsable={false}
+            testID={`bill-division-${division.key}-expanded`}
+          />
           <PartyVotes
             splits={[...division.splits.drawn, ...division.splits.folded]}
             paired={division.paired}
@@ -1766,9 +1738,9 @@ function BillVoteRow({
             testID={`${id}-parties`}
           />
           {question ? (
-            <SubSection title="The question">
+            <Section title="The question">
               <DivisionQuestion text={question} testID={`${id}-question`} />
-            </SubSection>
+            </Section>
           ) : null}
         </View>
       ) : null}
@@ -1994,7 +1966,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.bar,
     borderCurve: 'continuous',
   },
-  boneRound: { borderRadius: radii.round },
+  boneRound: { borderRadius: radii.round, borderCurve: 'continuous' },
   seedSponsor: { gap: rhythm.tight },
   seedBody: { gap: rhythm.group, marginTop: rhythm.group },
   seedBlock: { gap: rhythm.line },
@@ -2014,6 +1986,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 8,
     backgroundColor: colors.ink,
+    borderCurve: 'continuous',
   },
   grow: { flexGrow: 1, flexShrink: 1 },
   vote: {

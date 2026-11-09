@@ -1,24 +1,28 @@
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { catalogs } from '../../api/runtime';
 import type { PartyPageRecord } from '../../api/catalogs';
-import { MoneyRow } from '../../design/rows';
-import { BlockSource } from '../your-mp/Evidence';
-import { ContentUnavailable, Skeleton } from '../../design/states';
-import { Text } from '../../design/text';
+import { catalogs } from '../../api/runtime';
 import {
   disclosureYearNote,
   formatCount,
   formatDisclosureYear,
 } from '../../design/format';
-import { colors, rhythm } from '../../design/tokens';
 import { useScreenColumn } from '../../design/layout';
+import { MoneyRow } from '../../design/rows';
+import {
+  ContentUnavailable,
+  Skeleton,
+  StatePageProvider,
+} from '../../design/states';
+import { Text } from '../../design/text';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRecordRoute } from '../../navigation/routes';
-import { presentSource } from '../../navigation/sheets';
 import { shareRecord } from '../../navigation/share';
+import { presentSource } from '../../navigation/sheets';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { BlockSource } from '../your-mp/Evidence';
 import { pageActions } from './PageActions';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
@@ -92,67 +96,73 @@ export default function PartySources() {
           />
         </View>
       ) : (
-        <SectionList
-          testID="party-sources-screen"
-          style={styles.page}
-          contentInsetAdjustmentBehavior="automatic"
-          stickySectionHeadersEnabled
-          onLayout={onLayout}
-          contentContainerStyle={[styles.content, content]}
-          sections={sections}
-          keyExtractor={(d, i) => `${d.id}-${i}`}
-          renderSectionHeader={({ section }) => (
-            <View style={styles.header}>
-              <Text wordSafe variant="groupHeader" accessibilityRole="header">
-                {section.title}
-              </Text>
-            </View>
-          )}
-          renderItem={({ item, index, section }) => (
-            <MoneyRow
-              name={item.name}
-              amount={item.amount}
-              href={
-                item.id.startsWith('donor:individual')
-                  ? undefined
-                  : moneyRecordRoute({ node: item.id }, item.name)
-              }
-              testID={`party-sources-${section.title}-${index}`}
-            />
-          )}
-          ListEmptyComponent={
-            !record || receipts?.status === 'loading' ? (
-              <Skeleton
-                shape="rows"
-                count={8}
-                label="Loading largest sources"
-                testID="party-sources-loading"
-              />
-            ) : (
-              <ContentUnavailable
-                symbol="banknote"
-                title="No sources disclosed"
-                testID="party-sources-empty"
-              />
-            )
-          }
-          ListFooterComponent={
-            receipts && sections.length ? (
-              <View style={styles.foot}>
-                <BlockSource
-                  block={receipts}
-                  citation={about.citation}
-                  notes={about.notes}
-                  licenceDataset="aec"
-                  testID="party-sources-source"
-                />
-                <Text wordSafe variant="footnote" testID="party-sources-count">
-                  {`${formatCount(sections.length)} ${sections.length === 1 ? 'year' : 'years'}`}
+        <StatePageProvider refreshing={false}>
+          <SectionList
+            testID="party-sources-screen"
+            style={styles.page}
+            contentInsetAdjustmentBehavior="automatic"
+            stickySectionHeadersEnabled
+            onLayout={onLayout}
+            contentContainerStyle={[styles.content, content]}
+            sections={sections}
+            keyExtractor={(d, i) => `${d.id}-${i}`}
+            renderSectionHeader={({ section }) => (
+              <View style={styles.header}>
+                <Text wordSafe variant="groupHeader" accessibilityRole="header">
+                  {section.title}
                 </Text>
               </View>
-            ) : null
-          }
-        />
+            )}
+            renderItem={({ item, index, section }) => (
+              <MoneyRow
+                name={item.name}
+                amount={item.amount}
+                href={
+                  item.id.startsWith('donor:individual')
+                    ? undefined
+                    : moneyRecordRoute({ node: item.id }, item.name)
+                }
+                testID={`party-sources-${section.title}-${index}`}
+              />
+            )}
+            ListEmptyComponent={
+              !record || receipts?.status === 'loading' ? (
+                <Skeleton
+                  shape="rows"
+                  count={8}
+                  label="Loading largest sources"
+                  testID="party-sources-loading"
+                />
+              ) : (
+                <ContentUnavailable
+                  symbol="banknote"
+                  title="No sources disclosed"
+                  testID="party-sources-empty"
+                />
+              )
+            }
+            ListFooterComponent={
+              receipts && sections.length ? (
+                <View style={styles.foot}>
+                  <BlockSource
+                    block={receipts}
+                    citation={about.citation}
+                    notes={about.notes}
+                    licenceDataset="aec"
+                    testID="party-sources-source"
+                  />
+                  <Text
+                    wordSafe
+                    variant="footnote"
+                    testID="party-sources-count"
+                  >
+                    {`${formatCount(sections.length)} ${sections.length === 1 ? 'year' : 'years'}`}
+                  </Text>
+                </View>
+              ) : null
+            }
+          />
+        </StatePageProvider>
       )}
     </>
   );

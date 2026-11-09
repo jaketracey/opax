@@ -1,4 +1,4 @@
-import { useRefreshCommand } from '../../design/keyboard';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -9,36 +9,31 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
-import { catalogs } from '../../api/runtime';
 import { ApiError } from '../../api/errors';
+import { catalogs } from '../../api/runtime';
+import { formatCount } from '../../design/format';
+import { useRefreshCommand } from '../../design/keyboard';
 import {
-  useScreenColumn,
-  SidebarSafe,
-  RegionProvider,
   ContentUnavailable,
+  copy,
   Divider,
   OfflineLine,
+  RegionProvider,
+  rowMenus,
+  SidebarSafe,
   Skeleton,
   SourceLine,
   Text,
-  copy,
-  rowMenus,
+  useScreenColumn,
 } from '../../design/primitives';
-import type { SourceDetails } from '../../design/source';
 import { useListSearchBar } from '../../design/search-bar';
-import { formatCount } from '../../design/format';
-import {
-  chrome,
-  colors,
-  layout,
-  minimumTarget,
-  rhythm,
-} from '../../design/tokens';
+import type { SourceDetails } from '../../design/source';
+import { StatePageProvider } from '../../design/states';
+import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
-import { filtersRoute } from '../../navigation/routes/filters';
 import { personRoute } from '../../navigation/routes';
+import { filtersRoute } from '../../navigation/routes/filters';
 import { presentSource } from '../../navigation/sheets';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { savedCopy } from '../search/present';
@@ -331,59 +326,61 @@ export default function Declarations() {
           ),
         }}
       />
-      <SectionList<Run, Week>
-        testID="declarations-screen"
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={refresh}
-            tintColor={chrome.tint}
-          />
-        }
-        style={styles.screen}
-        contentContainerStyle={[styles.content, column.content]}
-        onLayout={column.onLayout}
-        contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        automaticallyAdjustKeyboardInsets
-        sections={sections}
-        keyExtractor={(run) => run.key}
-        stickySectionHeadersEnabled
-        renderSectionHeader={({ section }) => (
-          <View style={styles.sectionHeader}>
-            <Text
-              wordSafe
-              variant="groupHeader"
-              accessibilityRole="header"
-              testID={`declarations-week-${section.key}`}
-            >
-              {section.title}
-            </Text>
-          </View>
-        )}
-        renderItem={({ item: run }) => {
-          const slug = run.entries[0]!.item.profileSlug;
-          return (
-            <FeedGroup
-              entries={run.entries}
-              onOpenPerson={
-                slug ? () => router.push(personRoute(slug)) : undefined
-              }
+      <StatePageProvider refreshing={refreshing}>
+        <SectionList<Run, Week>
+          testID="declarations-screen"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={refresh}
+              tintColor={colors.navy}
             />
-          );
-        }}
-        ItemSeparatorComponent={() => <Divider variant="subtle" />}
-        ListHeaderComponent={
-          <RegionProvider value={column.inner}>
-            {column.bar}
-            {header}
-          </RegionProvider>
-        }
-        ListEmptyComponent={unavailable}
-        ListFooterComponent={footer}
-        initialNumToRender={8}
-      />
+          }
+          style={styles.screen}
+          contentContainerStyle={[styles.content, column.content]}
+          onLayout={column.onLayout}
+          contentInsetAdjustmentBehavior="automatic"
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          automaticallyAdjustKeyboardInsets
+          sections={sections}
+          keyExtractor={(run) => run.key}
+          stickySectionHeadersEnabled
+          renderSectionHeader={({ section }) => (
+            <View style={styles.sectionHeader}>
+              <Text
+                wordSafe
+                variant="groupHeader"
+                accessibilityRole="header"
+                testID={`declarations-week-${section.key}`}
+              >
+                {section.title}
+              </Text>
+            </View>
+          )}
+          renderItem={({ item: run }) => {
+            const slug = run.entries[0]!.item.profileSlug;
+            return (
+              <FeedGroup
+                entries={run.entries}
+                onOpenPerson={
+                  slug ? () => router.push(personRoute(slug)) : undefined
+                }
+              />
+            );
+          }}
+          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          ListHeaderComponent={
+            <RegionProvider value={column.inner}>
+              {column.bar}
+              {header}
+            </RegionProvider>
+          }
+          ListEmptyComponent={unavailable}
+          ListFooterComponent={footer}
+          initialNumToRender={8}
+        />
+      </StatePageProvider>
     </SidebarSafe>
   );
 }

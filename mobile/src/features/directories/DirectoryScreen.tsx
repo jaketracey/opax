@@ -1,3 +1,4 @@
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -11,8 +12,9 @@ import {
   type SectionListRenderItemInfo,
   type ViewToken,
 } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
+import type { Electorate } from '../../api/catalog-decoders';
+import { ApiError } from '../../api/errors';
 import {
   Button,
   ContentUnavailable,
@@ -30,32 +32,30 @@ import {
   rowMenus,
   useLayout,
 } from '../../design/primitives';
-import type { SourceDetails } from '../../design/source';
 import { useListSearchBar } from '../../design/search-bar';
+import type { SourceDetails } from '../../design/source';
+import { StatePageProvider } from '../../design/states';
+import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
+import { headerItems, pageItems } from '../../navigation/chrome';
+import { filtersRoute } from '../../navigation/routes/filters';
+import { resultsRoute } from '../../navigation/routes/search';
+import { presentSource } from '../../navigation/sheets';
+import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { savedCopy } from '../search/present';
 import {
   filterStore,
   registerFilterModel,
   useFilterState,
 } from '../sheets/filter-model';
 import { directoryFilterModel } from '../sheets/filter-models';
-import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
-import { ApiError } from '../../api/errors';
-import type { Electorate } from '../../api/catalog-decoders';
-import { headerItems, pageItems } from '../../navigation/chrome';
-import { filtersRoute } from '../../navigation/routes/filters';
-import { resultsRoute } from '../../navigation/routes/search';
-import { presentSource } from '../../navigation/sheets';
 import {
-  encodeEntry,
   decodeEntry,
+  encodeEntry,
   entryLabel,
   type RecordEntry,
 } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
-import { savedCopy } from '../search/present';
-import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { loadDirectory, type DirectoryRecord } from './data';
-import { directoryNotes } from './notes';
 import {
   ElectorateDirectoryRow,
   PartyDirectoryRow,
@@ -77,6 +77,7 @@ import {
   type PartyRow,
   type PeopleRow,
 } from './model';
+import { directoryNotes } from './notes';
 
 const titles: Record<DirectoryKind, string> = {
   person: 'Parliamentarians',
@@ -479,40 +480,44 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
     ) : null;
   const path = `/subject/${kind}`;
   const list = (
-    <SectionList<Row, Section>
-      ref={listRef}
-      testID={`directory-${kind}-screen`}
-      style={styles.screen}
-      contentContainerStyle={styles.content}
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      automaticallyAdjustKeyboardInsets
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-      }
-      sections={sections}
-      keyExtractor={rowKey}
-      renderItem={split ? renderSplitRow : renderRow}
-      renderSectionHeader={({ section }) => <SectionTitle section={section} />}
-      stickySectionHeadersEnabled
-      extraData={split ? selectedKey : undefined}
-      onViewableItemsChanged={split ? onViewable : undefined}
-      // A row not yet measured: scroll near it; the next step lands on it.
-      onScrollToIndexFailed={({ index: at, averageItemLength }) =>
-        listRef.current
-          ?.getScrollResponder()
-          ?.scrollTo({ y: averageItemLength * at, animated: true })
-      }
-      ItemSeparatorComponent={separator}
-      initialNumToRender={10}
-      maxToRenderPerBatch={8}
-      windowSize={7}
-      removeClippedSubviews={false}
-      ListHeaderComponent={header}
-      ListEmptyComponent={unavailable}
-      ListFooterComponent={footer}
-    />
+    <StatePageProvider refreshing={refreshing}>
+      <SectionList<Row, Section>
+        ref={listRef}
+        testID={`directory-${kind}-screen`}
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        automaticallyAdjustKeyboardInsets
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        }
+        sections={sections}
+        keyExtractor={rowKey}
+        renderItem={split ? renderSplitRow : renderRow}
+        renderSectionHeader={({ section }) => (
+          <SectionTitle section={section} />
+        )}
+        stickySectionHeadersEnabled
+        extraData={split ? selectedKey : undefined}
+        onViewableItemsChanged={split ? onViewable : undefined}
+        // A row not yet measured: scroll near it; the next step lands on it.
+        onScrollToIndexFailed={({ index: at, averageItemLength }) =>
+          listRef.current
+            ?.getScrollResponder()
+            ?.scrollTo({ y: averageItemLength * at, animated: true })
+        }
+        ItemSeparatorComponent={separator}
+        initialNumToRender={10}
+        maxToRenderPerBatch={8}
+        windowSize={7}
+        removeClippedSubviews={false}
+        ListHeaderComponent={header}
+        ListEmptyComponent={unavailable}
+        ListFooterComponent={footer}
+      />
+    </StatePageProvider>
   );
   return (
     <>

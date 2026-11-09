@@ -2,6 +2,7 @@
 // and words (4.2.5), the list's filter helpers (2.2), the bill page's
 // arrivals (`?division=`, 4.4) and Added since (4.2.1), the saved-seat line
 // under a vote, and the bill read that no longer waits for the index (4.10).
+import { Stack, router } from 'expo-router';
 import { act } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -9,11 +10,10 @@ import { billTimeline } from '../src/api/bill-transforms';
 import * as d from '../src/api/catalogs';
 import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
-import { Stack, router } from 'expo-router';
-import { MachinePill } from '../src/design/labels';
-import { resultsRoute } from '../src/navigation/routes/search';
-import { SourceLine, StatusCapsule } from '../src/design/primitives';
 import { formatDate } from '../src/design/format';
+import { MachinePill } from '../src/design/labels';
+import { SourceLine, StatusCapsule } from '../src/design/primitives';
+import { bindRecordTitle } from '../src/design/record-title';
 import BillDetail from '../src/features/bills/BillDetail';
 import {
   countWords,
@@ -40,7 +40,7 @@ import DivisionHistory, {
 import * as divisionData from '../src/features/directories/division-data';
 import type { DivisionRow } from '../src/features/directories/model';
 import { useFollowStates } from '../src/features/follows/useFollowStates';
-import { bindShortLastWord } from '../src/design/record-title';
+import { resultsRoute } from '../src/navigation/routes/search';
 import { bills, pinned, slugs } from './pinned';
 
 const mockParams: { key: string; division?: string; section?: string } = {
@@ -528,7 +528,7 @@ describe('loading a bill (4.3)', () => {
     const title = host(root, 'bill-title');
     expect(title).toHaveLength(1);
     // The heading binds its short last word (design/record-title.ts).
-    expect(texts(title[0]!).join('')).toBe(bindShortLastWord(row.title));
+    expect(texts(title[0]!).join('')).toBe(bindRecordTitle(row.title));
     // No event beside the status until the key dates resolve it.
     expect(statusText(root).label).toBe('Status: Passed');
     expect(statusText(root).text).not.toMatch(/\d{4}/);
