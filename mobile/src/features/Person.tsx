@@ -16,7 +16,7 @@ import { PadGrid, ReadableColumn } from '../design/adaptive';
 import { VoteSplit } from '../design/charts';
 import { Disclosure } from '../design/disclosure';
 import { formatCount, formatMoney } from '../design/format';
-import { Group, Screen } from '../design/layout';
+import { Group, Screen, TitleAnchor } from '../design/layout';
 import { isPartyLabel } from '../design/party';
 import { phoneCopy } from '../design/phone-copy';
 import { StatStrip, type StatTileProps } from '../design/record';
@@ -792,26 +792,28 @@ function ProfileContent({
       }
     >
       <ReadableColumn style={styles.top} testID="person">
-        <ProfileHeader
-          name={identity.name}
-          portrait={
-            <CachedPortrait
-              name={identity.name}
-              slug={slug}
-              size="profile"
-              testID="person-portrait"
-              retryKey={attempt}
-            />
-          }
-          role={roleLine(profile, former)}
-          yourMP={yourMP}
-          identityRows={identityRows}
-          follow={
-            profile.personId ? { kind: 'person', id: profile.personId } : null
-          }
-          testID="person"
-          titleTestID="person-screen-title"
-        />
+        <TitleAnchor>
+          <ProfileHeader
+            name={identity.name}
+            portrait={
+              <CachedPortrait
+                name={identity.name}
+                slug={slug}
+                size="profile"
+                testID="person-portrait"
+                retryKey={attempt}
+              />
+            }
+            role={roleLine(profile, former)}
+            yourMP={yourMP}
+            identityRows={identityRows}
+            follow={
+              profile.personId ? { kind: 'person', id: profile.personId } : null
+            }
+            testID="person"
+            titleTestID="person-screen-title"
+          />
+        </TitleAnchor>
         {tiles.length ? (
           <Group gap={rhythm.tight}>
             <StatStrip tiles={tiles} testID="person-figures" />

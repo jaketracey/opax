@@ -162,12 +162,14 @@ test('a directory-kind deep link starts a blank query and waits for that kind’
   await act(async () => renderer.unmount());
 });
 
-test('nothing above the first row; the source and count are the list’s foot', async () => {
+test('the page heading precedes the first row; source and count stay at the foot', async () => {
   const renderer = await open('party', parties);
   const list = renderer.root.find(
     (n) => n.props.testID === 'directory-party-screen' && n.props.sections,
   );
-  expect(list.props.ListHeaderComponent).toBeNull();
+  const heading = list.props.ListHeaderComponent.props.children[0];
+  expect(heading.props.collapsable).toBe(false);
+  expect(heading.props.children.props.children).toBe('Parties');
   expect(list.props.stickySectionHeadersEnabled).toBe(true);
   // Name order by default.
   expect(
@@ -194,6 +196,37 @@ test('nothing above the first row; the source and count are the list’s foot', 
   expect(StyleSheet.flatten(chevron.parent!.props.style).alignSelf).toBe(
     'flex-start',
   );
+  await act(async () => renderer.unmount());
+});
+
+test('Parliamentarians reveals the whole word Members after its heading passes under the bar', async () => {
+  const renderer = await open('person', empty);
+  const list = renderer.root.find(
+    (node) =>
+      node.props.testID === 'directory-person-screen' && node.props.sections,
+  );
+  const heading = list.props.ListHeaderComponent.props.children[0];
+  const inline = () =>
+    (mockScreen.options!.headerTitle as () => React.ReactElement)();
+  expect(mockScreen.options!.title).toBe('Parliamentarians');
+  expect(heading.props.children.props.children).toBe('Parliamentarians');
+  expect(inline().props).toMatchObject({ title: 'Members', shown: false });
+  const pending: ((...values: number[]) => void)[] = [];
+  heading.props.ref.current = {
+    measure: (done: (...values: number[]) => void) => pending.push(done),
+  };
+  await act(async () => {
+    list.props.onScroll({ nativeEvent: { contentOffset: { y: -900 } } });
+    await Promise.resolve();
+    pending.shift()!(0, 0, 300, 80, 0, 0);
+  });
+  expect(inline().props).toMatchObject({ title: 'Members', shown: true });
+  await act(async () => {
+    list.props.onScroll({ nativeEvent: { contentOffset: { y: 9000 } } });
+    await Promise.resolve();
+    pending.shift()!(0, 0, 300, 80, 0, 200);
+  });
+  expect(inline().props.shown).toBe(false);
   await act(async () => renderer.unmount());
 });
 

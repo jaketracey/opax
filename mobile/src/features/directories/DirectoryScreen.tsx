@@ -21,6 +21,7 @@ import {
   ContentUnavailable,
   Divider,
   EmptyState,
+  Heading,
   LayoutRegion,
   OfflineLine,
   SidebarSafe,
@@ -38,6 +39,7 @@ import type { SourceDetails } from '../../design/source';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
 import { presentSource } from '../../navigation/sheets';
@@ -204,6 +206,12 @@ export default function DirectoryScreen() {
 }
 function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const title = titles[kind];
+  const titleRef = useRef<View>(null);
+  const scrollTitle = useTitleOnScroll(
+    titleRef,
+    kind === 'person' ? 'Members' : title,
+    { routeTitle: title },
+  );
   const load = useCallback(
     (refresh: boolean) => loadDirectory(kind, refresh),
     [kind],
@@ -368,7 +376,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   }, [split, params.open, first]);
 
   const offline = record ? savedCopy(record.stale, record.staleReason) : null;
-  const header =
+  const statusHeader =
     offline?.state === 'offline' || (record && (filtered || query)) ? (
       <View style={styles.header}>
         {offline?.state === 'offline' ? (
@@ -525,7 +533,22 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         maxToRenderPerBatch={8}
         windowSize={7}
         removeClippedSubviews={false}
-        ListHeaderComponent={header}
+        onScroll={scrollTitle.onScroll}
+        scrollEventThrottle={16}
+        ListHeaderComponent={
+          <View>
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={scrollTitle.onTitleLayout}
+            >
+              <Heading level={1} kind="page" testID="directory-title">
+                {title}
+              </Heading>
+            </View>
+            {statusHeader}
+          </View>
+        }
         ListEmptyComponent={unavailable}
         ListFooterComponent={footer}
       />
