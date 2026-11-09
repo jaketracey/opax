@@ -38,15 +38,15 @@ private enum OpaxSearchGeometryProbe {
       window.addSubview(label)
     }
     let inScreen = views(screen)
-    let button = inScreen.first(where: { $0.accessibilityIdentifier == "search-submit" })
+    let field = all.compactMap { $0 as? UISearchTextField }.first { !$0.isHidden && $0.window != nil }
     // Ask: the current question (asked or failed), its stage timeline and error.
     let askQuestion = inScreen.last { ["ask-user-question", "ask-failed-question"].contains($0.accessibilityIdentifier ?? "") }
-    let askStages = inScreen.first { $0.accessibilityIdentifier == "ask-stages" }
+    let askStages = inScreen.first { $0.accessibilityIdentifier == "ask-progress" }
     let askError = inScreen.first { ($0.accessibilityIdentifier ?? "").hasPrefix("ask-error-") }
     let nav = all.compactMap { $0 as? UINavigationBar }.first { !$0.isHidden && $0.window != nil && $0.convert($0.bounds, to: window).minX >= 0 }
     let large = nav.flatMap { views($0).first { String(describing: type(of: $0)).contains("LargeTitleView") } }
     let data: [String: Any] = [
-      "screen": screen.accessibilityIdentifier ?? "", "button": rect(button, window),
+      "screen": screen.accessibilityIdentifier ?? "", "button": rect(field, window),
       "windowHeight": window.bounds.height,
       "offset": ["x": scroll.contentOffset.x, "y": scroll.contentOffset.y],
       "inset": inset(scroll.contentInset), "adjustedInset": inset(scroll.adjustedContentInset),
@@ -56,9 +56,9 @@ private enum OpaxSearchGeometryProbe {
       "keyboardHeight": keyboardHeight,
       "editing": views(screen).contains { $0.isFirstResponder },
       // Results are on screen: a catalog or record count line (pass 5).
-      "results": views(screen).contains { ["search-cache-state", "search-count", "records-count"].contains($0.accessibilityIdentifier ?? "") },
+      "results": views(screen).contains { ["search-cache-state", "search-count", "search-results-count"].contains($0.accessibilityIdentifier ?? "") },
       // The query field itself: an answered search collapses the form below it.
-      "field": rect(views(screen).first { $0.accessibilityIdentifier == "search-input" }, window),
+      "field": rect(field, window),
       "askQuestion": rect(askQuestion, window), "askStages": rect(askStages, window), "askError": rect(askError, window),
     ]
     guard let raw = try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]), let text = String(data: raw, encoding: .utf8) else { return }

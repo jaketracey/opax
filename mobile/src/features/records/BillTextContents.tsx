@@ -1,13 +1,14 @@
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { Text } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
+import { StatePageProvider } from '../../design/states';
 import { colors, hairline, layout, rhythm } from '../../design/tokens';
-import { records } from './runtime';
-import { useRead } from './useRead';
 import { publishContents } from './contentsChannel';
 import { RecordLoadError } from './RecordLoadError';
+import { records } from './runtime';
+import { useRead } from './useRead';
 
 /** Past this many sections the sheet gains a search field. */
 const SEARCH_FROM = 20;
@@ -63,55 +64,57 @@ export default function BillTextContents() {
       {sections.length > SEARCH_FROM ? (
         <Stack.Screen options={{ headerSearchBarOptions: search }} />
       ) : null}
-      <FlatList
-        testID="bill-text-contents-screen"
-        style={styles.list}
-        contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
-        data={shown}
-        keyExtractor={(section) => section.id}
-        ListHeaderComponent={
-          error ? (
-            <RecordLoadError
-              error={error}
-              slug=""
-              subject="This bill's text"
-              onRetry={retry}
-              testID="bill-text-contents-error"
-            />
-          ) : null
-        }
-        ListEmptyComponent={
-          needle && sections.length ? (
-            <Text
-              wordSafe
-              variant="body"
-              tone="inkSoft"
-              style={styles.row}
-              testID="bill-text-contents-none"
+      <StatePageProvider refreshing={false}>
+        <FlatList
+          testID="bill-text-contents-screen"
+          style={styles.list}
+          contentInsetAdjustmentBehavior="automatic"
+          keyboardShouldPersistTaps="handled"
+          data={shown}
+          keyExtractor={(section) => section.id}
+          ListHeaderComponent={
+            error ? (
+              <RecordLoadError
+                error={error}
+                slug=""
+                subject="This bill's text"
+                onRetry={retry}
+                testID="bill-text-contents-error"
+              />
+            ) : null
+          }
+          ListEmptyComponent={
+            needle && sections.length ? (
+              <Text
+                wordSafe
+                variant="body"
+                tone="inkSoft"
+                style={styles.row}
+                testID="bill-text-contents-none"
+              >
+                No section matches “{query.trim()}”.
+              </Text>
+            ) : null
+          }
+          ItemSeparatorComponent={Separator}
+          renderItem={({ item }) => (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityHint="Shows this section"
+              onPress={() => choose(item.id)}
+              testID={`bill-text-section-${item.index}`}
+              style={({ pressed }) => [
+                styles.row,
+                pressed ? { backgroundColor: colors.sunken } : null,
+              ]}
             >
-              No section matches “{query.trim()}”.
-            </Text>
-          ) : null
-        }
-        ItemSeparatorComponent={Separator}
-        renderItem={({ item }) => (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityHint="Shows this section"
-            onPress={() => choose(item.id)}
-            testID={`bill-text-section-${item.index}`}
-            style={({ pressed }) => [
-              styles.row,
-              pressed ? { backgroundColor: colors.sunken } : null,
-            ]}
-          >
-            <Text wordSafe variant="body">
-              {item.title}
-            </Text>
-          </Pressable>
-        )}
-      />
+              <Text wordSafe variant="body">
+                {item.title}
+              </Text>
+            </Pressable>
+          )}
+        />
+      </StatePageProvider>
     </>
   );
 }
@@ -131,6 +134,6 @@ const styles = StyleSheet.create({
   separator: {
     height: hairline,
     marginLeft: layout.screenMargin,
-    backgroundColor: colors.line,
+    backgroundColor: colors.dividerSubtle,
   },
 });

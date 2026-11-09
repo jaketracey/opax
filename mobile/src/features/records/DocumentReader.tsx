@@ -1,6 +1,5 @@
-import { headerItems, shareItem } from '../../navigation/chrome';
 import type { NativeStackHeaderItem } from 'expo-router';
-import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -16,8 +15,6 @@ import {
   View,
   type ViewProps,
 } from 'react-native';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
-import { catalogs } from '../../api/runtime';
 import type { BillIndex } from '../../api/catalog-decoders';
 import {
   hasMarkdownHeadings,
@@ -25,6 +22,9 @@ import {
   passageText,
   serverPassage,
 } from '../../api/passage-text';
+import { catalogs } from '../../api/runtime';
+import { formatDate } from '../../design/format';
+import { haptic } from '../../design/haptics';
 import {
   BillRow,
   Disclosure,
@@ -41,10 +41,10 @@ import {
   Text,
   VoteSplit,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
-import { haptic } from '../../design/haptics';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
+import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { headerItems, shareItem } from '../../navigation/chrome';
 import {
   billRoute,
   citeRoute,
@@ -54,14 +54,14 @@ import {
 } from '../../navigation/routes';
 import { canShare, shareRecord } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { sponsorRows, type SponsorRow } from '../bills/sponsors';
-import { CachedPortrait } from '../CachedPortrait';
 import { documentQuestion } from '../ask/DocumentAsk';
 import { useOpenAsk } from '../ask/open';
-import { useIsMyMember } from '../your-mp/useIsMyMember';
+import { sponsorRows, type SponsorRow } from '../bills/sponsors';
+import { CachedPortrait } from '../CachedPortrait';
 import { isOrganisation } from '../money-public/privacy';
+import { useIsMyMember } from '../your-mp/useIsMyMember';
+import { titleSubject } from './citations';
 import type { Records } from './data';
-import { records } from './runtime';
 import {
   isVerbatimText,
   metaLine,
@@ -72,18 +72,18 @@ import {
   textChunks,
   type DocumentRecord,
 } from './model';
-import { titleSubject } from './citations';
-import { recordBarItems } from './RecordActions';
-import { recordCaveat, recordOriginal, recordSource } from './source';
+import { useRecordNavigation } from './navigation';
 import {
   ReaderList,
   findMatches,
   readerChunkTarget,
   type ReaderPart,
 } from './ReaderList';
-import { useRead } from './useRead';
+import { recordBarItems } from './RecordActions';
 import { RecordLoadError } from './RecordLoadError';
-import { useRecordNavigation } from './navigation';
+import { records } from './runtime';
+import { recordCaveat, recordOriginal, recordSource } from './source';
+import { useRead } from './useRead';
 
 // The web's taxonomy; unknown topics must not alter the search request.
 const topics = new Set([
@@ -187,9 +187,14 @@ function useSpeaker(doc: DocumentRecord | null) {
 }
 
 /** The reader's find bar state: the query from Search and its current match. */
-function useFind(parts: ReaderPart[], query: string, first: number) {
+function useFind(
+  parts: ReaderPart[],
+  query: string,
+  first: number,
+  passage = false,
+) {
   const matches = useMemo(() => findMatches(parts, query), [parts, query]);
-  const [open, setOpen] = useState(!!query);
+  const [open, setOpen] = useState(!passage && !!query);
   const [index, setIndex] = useState(first);
   const [engaged, setEngaged] = useState(false);
   const [jump, setJump] = useState<{
@@ -208,6 +213,14 @@ function useFind(parts: ReaderPart[], query: string, first: number) {
       position: 0.33,
     }));
   };
+  const firstPart = matches[0]?.part;
+  const citationJump = useMemo(
+    () =>
+      passage && firstPart !== undefined
+        ? { index: firstPart, attempt: 1, position: 0.33 }
+        : null,
+    [passage, firstPart],
+  );
   const step = (by: number) => {
     if (!total) return;
     if (!engaged) {
@@ -225,8 +238,11 @@ function useFind(parts: ReaderPart[], query: string, first: number) {
     query,
     total,
     current,
-    jump,
-    marks: open && query ? { query, current: matches[current] ?? null } : null,
+    jump: jump ?? citationJump,
+    marks:
+      (open || passage) && query
+        ? { query, current: matches[current] ?? null, passage }
+        : null,
     goTo: () => {
       setEngaged(true);
       reveal(current);
@@ -240,12 +256,14 @@ function useFind(parts: ReaderPart[], query: string, first: number) {
 export default function DocumentReader({
   recordSlug,
   embedded = false,
-}: { recordSlug?: string; embedded?: boolean } = {}) {
+  citedPassage,
+}: { recordSlug?: string; embedded?: boolean; citedPassage?: string } = {}) {
   const params = useLocalSearchParams<{
     slug: string;
     cite?: string;
     q?: string;
     match?: string;
+    passage?: string;
   }>();
   const slug = recordSlug ?? params.slug ?? '';
   const load = useCallback(() => records.document(slug), [slug]);
@@ -286,10 +304,16 @@ export default function DocumentReader({
       text,
     }));
   }, [doc]);
+  const passage = citedPassage ?? params.passage;
   const find = useFind(
     shown ? parts : [],
-    embedded || recordSlug ? '' : findQuery(params.q),
+    passage
+      ? passage.slice(0, 4000)
+      : embedded || recordSlug
+        ? ''
+        : findQuery(params.q),
     Math.max(0, Number(params.match) || 0),
+    !!passage,
   );
   // opax://doc-cite/<slug> arrives as /doc/<slug>?cite=1: the record first,
   // then Citation formats over it, so Done lands on the record.
@@ -581,7 +605,7 @@ function ReaderHeader({
             countsStyle="ayesNoes"
             {...{
               dateRange: { start: day!, end: day! },
-              source: recordSource(doc).citation.label,
+              citation: recordSource(doc).citation.label,
             }}
           />
         </View>

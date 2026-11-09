@@ -29,6 +29,7 @@ export interface RecordEntry {
   key: string;
   /** The record's name, for the pane's Back and Share. */
   title?: string;
+  passage?: string;
 }
 
 const kinds: readonly RecordKind[] = [
@@ -88,8 +89,17 @@ export function entryForRoute(
       return param(route, 'version')
         ? null
         : with_('text', param(route, 'key'));
-    case '/doc/[slug]':
-      return with_('doc', param(route, 'slug'));
+    case '/doc/[slug]': {
+      const entry = with_('doc', param(route, 'slug'));
+      return entry
+        ? {
+            ...entry,
+            ...(param(route, 'passage')
+              ? { passage: param(route, 'passage')!.slice(0, 4000) }
+              : {}),
+          }
+        : null;
+    }
     default:
       return null;
   }
@@ -102,7 +112,13 @@ export function entryForWebPath(path: string, title?: string) {
     if (url.hostname !== new URL(webOrigin).hostname) return null;
     const route =
       fromWebPath(url.pathname + url.search) ?? fromWebPath(url.pathname);
-    if (route) return entryForRoute(route as Route, title);
+    if (route) {
+      const entry = entryForRoute(route as Route, title);
+      const passage = url.searchParams.get('passage');
+      return entry?.kind === 'doc' && passage
+        ? { ...entry, passage: passage.slice(0, 4000) }
+        : entry;
+    }
     const party = /^\/subject\/party\/([^/?#]+)$/.exec(url.pathname);
     if (party?.[1])
       return entryForRoute(partyRoute(decodeURIComponent(party[1])), title);

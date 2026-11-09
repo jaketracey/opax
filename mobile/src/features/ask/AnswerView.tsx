@@ -1,4 +1,16 @@
 import {
+  Host,
+  Menu,
+  Button as SwiftButton,
+  Section as SwiftSection,
+} from '@expo/ui/swift-ui';
+import {
+  accessibilityIdentifier,
+  frame,
+  labelStyle,
+} from '@expo/ui/swift-ui/modifiers';
+import { router } from 'expo-router';
+import {
   createContext,
   useContext,
   useEffect,
@@ -7,18 +19,6 @@ import {
   useState,
 } from 'react';
 import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
-import {
-  Button as SwiftButton,
-  Host,
-  Menu,
-  Section as SwiftSection,
-} from '@expo/ui/swift-ui';
-import {
-  accessibilityIdentifier,
-  frame,
-  labelStyle,
-} from '@expo/ui/swift-ui/modifiers';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { IconButton } from '../../design/controls';
 import { Disclosure } from '../../design/disclosure';
@@ -32,15 +32,15 @@ import { LinkRow } from '../../design/rows';
 import { SourceAffordance, type SourceDetails } from '../../design/source';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
-import { personRoute } from '../../navigation/routes';
 import { openSource } from '../../navigation/external';
-import { resultsRoute } from '../../navigation/routes/search';
+import { personRoute } from '../../navigation/routes';
 import { askReportRoute } from '../../navigation/routes/ask';
-import { presentSource } from '../../navigation/sheets';
+import { resultsRoute } from '../../navigation/routes/search';
 import { shareRecord } from '../../navigation/share';
+import { presentSource } from '../../navigation/sheets';
 import { CachedPortrait } from '../CachedPortrait';
-import { useIsMyMember } from '../your-mp/useIsMyMember';
 import { copyText } from '../records/actions';
+import { useIsMyMember } from '../your-mp/useIsMyMember';
 import { answerBlocks, parseAnswer } from './answer-markdown';
 import { AnswerBody, openAnswerLink, type Claim } from './AnswerBody';
 import { CitedRecordRow, sourceRoute } from './AskRows';
@@ -51,17 +51,17 @@ import {
   kindLine,
   pills,
 } from './calculated';
-import { copyCitation } from './cite';
 import {
   selectCitation,
   showCitation,
   useCitationSelection,
 } from './citation-state';
+import { copyCitation } from './cite';
 import { defaultOptions, turnKey, type Source, type Turn } from './model';
 import { peopleInAnswer, type AskPerson } from './people';
 import { answerCopyText, answeredLong, answeredText } from './share-answer';
-import { useAskPane } from './SourcesPane';
 import { citedSources, sourceDate, sourceTitle } from './source-present';
+import { useAskPane } from './SourcesPane';
 import { askErrors } from './turn-copy';
 
 export { openAnswerLink } from './AnswerBody';
@@ -228,7 +228,7 @@ export function AnswerView({
           key={i}
           // FigureBlock's `source` is its citation, not an image (follow-up:
           // design/record.tsx renames it to `citation`).
-          {...{ source: { citation: figure.source, asOf: figure.asAt } }}
+          {...{ citation: { citation: figure.source, asOf: figure.asAt } }}
           value={figure.value}
           label={figure.label ?? `As at ${figure.asAt}`}
           caveat={note && isCalculated(data) ? note : undefined}
@@ -398,7 +398,9 @@ export function askSourceDetails({
         : legacy
           ? new Date(legacy.at * 1000)
           : null,
+    header: answeredLong(turn, legacy),
     report: {
+      testID: 'ask-sources-report',
       label: 'Report this answer',
       onPress: () => {
         router.back();
@@ -415,7 +417,6 @@ export function askSourceDetails({
         >
           {question.askedAs || question.text}
         </Text>
-        <Text variant="groupHeader">{answeredLong(turn, legacy)}</Text>
         {groups.cited.length ? (
           <InsetGroup header={groups.numbered ? 'Cited' : 'Found'}>
             {groups.cited.map((source, i) => (

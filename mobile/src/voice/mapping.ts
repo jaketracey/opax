@@ -2,13 +2,13 @@ import {
   callStates,
   endReasons,
   failures,
-  type VoiceStatus,
-  type VoiceSnapshot,
-  type VoiceEvent,
-  type CodeChallenge,
   type AccountDeletion,
-  type VoiceResult,
+  type CodeChallenge,
+  type VoiceEvent,
   type VoiceLevels,
+  type VoiceResult,
+  type VoiceSnapshot,
+  type VoiceStatus,
 } from './types';
 const invalid = () => {
   throw new Error('Invalid native voice value');
@@ -133,7 +133,7 @@ export function mapEvent(value: unknown): VoiceEvent | null {
             const s = object(source);
             const path = string(s.path, 1800);
             if (
-              !/^\/(?:doc\/[^/?#]+|bill\/[^/?#]+|subject\/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)\/[^/?#]+|money(?:\/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|reports(?:\/[^/?#]+)?|journey\/[^/?#]+)\/?(?:[?#].*)?$/.test(
+              !/^\/(?:doc\/[^/?#]+|bill\/[^/?#]+|subject\/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)\/[^/?#]+|money(?:\/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|journey\/[^/?#]+)\/?(?:[?#].*)?$/.test(
                 path,
               ) ||
               /%[01][0-9a-f]|%7f/i.test(path)

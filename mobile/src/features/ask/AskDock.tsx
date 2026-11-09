@@ -1,3 +1,4 @@
+import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { useState, useSyncExternalStore, type Ref } from 'react';
 import {
   Platform,
@@ -8,11 +9,11 @@ import {
   useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
-import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { IconButton } from '../../design/controls';
+import { formatCount } from '../../design/format';
 import { Icon } from '../../design/icon';
-import { symbols } from '../../design/symbols';
 import { InlineError } from '../../design/states';
+import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import {
   colors,
@@ -23,7 +24,6 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
-import { formatCount } from '../../design/format';
 import { chips, defaultOptions } from './model';
 import { askSession } from './session';
 import { topics } from './topics';
@@ -206,7 +206,7 @@ export function AskDock({
             testID="ask-options-clear"
           >
             <Icon
-              name={symbols.close}
+              name={symbols.clearOptions}
               size={17}
               tone="inkFaint"
               maxScale={1.5}

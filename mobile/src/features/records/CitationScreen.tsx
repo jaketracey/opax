@@ -1,7 +1,8 @@
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
 import { webOrigin } from '../../design/environment';
+import { haptic } from '../../design/haptics';
 import {
   Button,
   InsetGroup,
@@ -10,9 +11,8 @@ import {
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
-import { haptic } from '../../design/haptics';
 import { colors, radii, rhythm } from '../../design/tokens';
-import { records } from './runtime';
+import { copyText, shareTextFile } from './actions';
 import { citationsFor } from './citations';
 import {
   citeNotes,
@@ -22,11 +22,11 @@ import {
   useCiteStyle,
   type CiteStyleId,
 } from './citeStyle';
-import { copyText, shareTextFile } from './actions';
-import { accessedToday, corpusVersion } from './RecordActions';
 import { metaLine, recordHeadline } from './model';
-import { useRead } from './useRead';
+import { accessedToday, corpusVersion } from './RecordActions';
 import { RecordLoadError } from './RecordLoadError';
+import { records } from './runtime';
+import { useRead } from './useRead';
 
 /** How long "Copied" stays on the button before it says "Copy" again. */
 const COPIED_FOR = 2000;
@@ -130,7 +130,12 @@ export default function Citations() {
               testID={`cite-${shownId}`}
             >
               <View style={sheet.cell}>
-                <Text selectable variant="body" testID={`cite-text-${shownId}`}>
+                <Text
+                  selectable
+                  variant="body"
+                  monospace={shownId === 'bibtex' || shownId === 'ris'}
+                  testID={`cite-text-${shownId}`}
+                >
                   {citation.text}
                 </Text>
               </View>

@@ -1,18 +1,17 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
-import { decodeDocument } from '../src/features/records/model';
+import { catalogs } from '../src/api/runtime';
+import { MachinePill, SourceLine } from '../src/design/primitives';
 import DocumentReader from '../src/features/records/DocumentReader';
-import { SourceRows } from '../src/features/reports/parts';
+import { decodeDocument } from '../src/features/records/model';
 import {
   allSources,
   decodeReport,
   reportSlugs,
 } from '../src/features/reports/model';
-import { docRoute, fromWebPath } from '../src/navigation/routes';
-import { catalogs } from '../src/api/runtime';
-import { MachinePill, SourceLine } from '../src/design/primitives';
 import { openSource } from '../src/navigation/external';
+import { docRoute, fromWebPath } from '../src/navigation/routes';
 import { index, manifest, people, pinned, roster, slugs } from './pinned';
 
 // Jake, build 17/18: Today → Gambling → "Peter Costello — 1999-02-09" opened
@@ -221,30 +220,4 @@ test('a server failure ends in Try again only; the web reader would fail too', a
   expect(view.root.findByProps({ testID: 'doc-error' })).toBeTruthy();
   expect(view.root.findAllByProps({ testID: 'doc-error-web' })).toHaveLength(0);
   await act(async () => view.unmount());
-});
-
-test('topic record rows name the speaker once and the date once', async () => {
-  const view = await mount(<SourceRows sources={[costello]} testID="row" />);
-  const row = view.root.findByProps({ testID: 'row-0' });
-  expect(row.props.title).toBe('Peter Costello');
-  expect(row.props.detail).toBe(
-    'Liberal · Federal Parliament · 9 February 1999',
-  );
-  await act(async () => view.unmount());
-  const subject = await mount(
-    <SourceRows
-      sources={[
-        {
-          ...costello,
-          title: 'Peter Costello — Gambling inquiry — 1999-02-09',
-        },
-      ]}
-      testID="row"
-    />,
-  );
-  expect(subject.root.findByProps({ testID: 'row-0' }).props).toMatchObject({
-    title: 'Gambling inquiry',
-    detail: 'Peter Costello · Liberal · Federal Parliament · 9 February 1999',
-  });
-  await act(async () => subject.unmount());
 });

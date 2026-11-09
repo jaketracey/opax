@@ -1,31 +1,31 @@
 import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
 import { Text } from 'react-native';
-import { ApiClient } from '../src/api/client';
-import { CatalogCache } from '../src/api/cache';
-import { Records } from '../src/features/records/data';
+import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
-import {
-  decodeDocument,
-  decodeBillTextManifest,
-  decodeBillText,
-  decodeRecent,
-} from '../src/features/records/model';
-import { records } from '../src/features/records/runtime';
+import { CatalogCache } from '../src/api/cache';
+import { billFor, decodeBill } from '../src/api/catalogs';
+import { ApiClient } from '../src/api/client';
 import { catalogs } from '../src/api/runtime';
 import Today from '../src/features/Today';
 import BillDetail from '../src/features/bills/BillDetail';
+import BillTextReader from '../src/features/records/BillTextReader';
 import DocumentReader from '../src/features/records/DocumentReader';
 import RecentRecords from '../src/features/records/RecentRecords';
-import BillTextReader from '../src/features/records/BillTextReader';
-import { RecordActions } from '../src/features/records/RecordActions';
-import { billFor, decodeBill } from '../src/api/catalogs';
+import { recordBarItems } from '../src/features/records/RecordActions';
+import { Records } from '../src/features/records/data';
 import {
-  pinned,
+  decodeBillText,
+  decodeBillTextManifest,
+  decodeDocument,
+  decodeRecent,
+} from '../src/features/records/model';
+import { records } from '../src/features/records/runtime';
+import {
   bills,
   index,
   manifest,
   people,
+  pinned,
   roster,
   slugs,
 } from './pinned';
@@ -70,9 +70,6 @@ jest.mock('../src/api/runtime', () => ({
     bills: jest.fn(),
     corpus: jest.fn(),
   },
-}));
-jest.mock('../src/features/follows/FollowToggle', () => ({
-  FollowToggle: () => null,
 }));
 jest.mock('../src/features/follows/FollowingSection', () => ({
   FollowingSection: () => null,
@@ -177,22 +174,6 @@ beforeEach(() => {
         ),
       ),
     );
-});
-test('launch/Today and Bill mount have no paid reads; result actions mount without loading a record', async () => {
-  const today = await mount(<Today />),
-    bill = await mount(<BillDetail recordKey="au-federal-r7534" />),
-    actions = await mount(
-      <RecordActions slug="speech-1205524" title="A speech" />,
-    );
-  for (const method of Object.values(records))
-    if (typeof method === 'function') expect(method).not.toHaveBeenCalled();
-  expect(today.root.findByProps({ testID: 'today-records-open' })).toBeTruthy();
-  expect(bill.root.findByProps({ testID: 'bill-read-text' })).toBeTruthy();
-  await act(async () => {
-    today.unmount();
-    bill.unmount();
-    actions.unmount();
-  });
 });
 test('opening reader loads one record; similar loads only on tap and reopening the panel uses memory', async () => {
   const view = await mount(<DocumentReader />);
@@ -388,4 +369,18 @@ test('real request client sends one GET per action, shares in-flight and session
   expect(transport).toHaveBeenCalledTimes(7);
   await expect(repository.document('speech-1')).rejects.toThrow();
   expect(transport).toHaveBeenCalledTimes(8);
+});
+
+test('launch/Today and Bill mount have no paid reads; bar actions are built without loading a record', async () => {
+  const today = await mount(<Today />),
+    bill = await mount(<BillDetail recordKey="au-federal-r7534" />);
+  recordBarItems({ slug: 'speech-1205524', title: 'A speech' })();
+  for (const method of Object.values(records))
+    if (typeof method === 'function') expect(method).not.toHaveBeenCalled();
+  expect(today.root.findByProps({ testID: 'today-screen' })).toBeTruthy();
+  expect(bill.root.findByProps({ testID: 'bill-read-text' })).toBeTruthy();
+  await act(async () => {
+    today.unmount();
+    bill.unmount();
+  });
 });

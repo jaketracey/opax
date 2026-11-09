@@ -1,8 +1,8 @@
 import { LinkRow } from '../../design/primitives';
 import { titleSubject } from '../records/citations';
 import { metaString, type DocumentRecord } from '../records/model';
-import { topics } from './topics';
 import { useOpenAsk } from './open';
+import { topics } from './topics';
 
 /** portal/public/app.js docAskQuestion: a draft, never a submitted request. */
 export function documentQuestion(doc: DocumentRecord) {
@@ -16,7 +16,7 @@ export function documentQuestion(doc: DocumentRecord) {
   const generic =
     /^(bills?|motions?|statements?(?: by (?:members|senators))?|matters? of public importance|questions? (?:without|on) notice|adjournment|committees?|business|documents|petitions|ministerial statements?|condolences?|debate)$/i;
   const stage =
-    /\s+[-–—]\s+(?:first|second|third) reading$|\s+[-–—]\s+(?:in committee|consideration in detail|committee of the whole)$/i;
+    /\s+[-–\u2014]\s+(?:first|second|third) reading$|\s+[-–\u2014]\s+(?:in committee|consideration in detail|committee of the whole)$/i;
   const named = (value: string) => {
     const text = value.replace(stage, '').trim();
     return generic.test(text) ? '' : text;

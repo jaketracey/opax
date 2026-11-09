@@ -2,21 +2,21 @@
 // a grant or contract's organisation row only with its id, plain-language
 // states, the find bar for an incoming query, the Citation formats deep
 // link, and the Contents hand-back for bill text (records.md 4.2).
+import { router } from 'expo-router';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { router } from 'expo-router';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { ApiError } from '../src/api/errors';
 import { catalogs } from '../src/api/runtime';
-import { records } from '../src/features/records/runtime';
-import { decodeDocument } from '../src/features/records/model';
+import { ContentUnavailable, LinkRow } from '../src/design/primitives';
 import DocumentReader from '../src/features/records/DocumentReader';
 import {
   publishContents,
   subscribeContents,
 } from '../src/features/records/contentsChannel';
-import { ContentUnavailable, LinkRow } from '../src/design/primitives';
+import { decodeDocument } from '../src/features/records/model';
+import { records } from '../src/features/records/runtime';
 import { citeRoute, moneyRecordRoute } from '../src/navigation/routes';
 import { index, manifest, people, roster, slugs } from './pinned';
 
@@ -331,4 +331,17 @@ test('Contents hands back each choice to its own bill and version only', () => {
   offOther();
   publishContents('au-federal-r7534', 'r7534-aspassed', 'part-1');
   expect(mine).toHaveBeenCalledTimes(2);
+});
+
+test('a cited passage opens in place with a highlight and keeps the usual reader bar', async () => {
+  mockParams = { slug: 'speech-1205524', passage: 'paragraph' };
+  const view = await mount(<DocumentReader />);
+  expect(
+    view.root.findAllByProps({ testID: 'doc-passage-highlight' }).length,
+  ).toBeGreaterThan(0);
+  expect(view.root.findAllByProps({ testID: 'doc-find-status' })).toHaveLength(
+    0,
+  );
+  expect(barItems().map((item) => item.label)).toContain('More');
+  await act(async () => view.unmount());
 });

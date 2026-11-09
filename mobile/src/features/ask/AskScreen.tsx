@@ -1,10 +1,11 @@
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
-  type ReactNode,
   useCallback,
   useEffect,
   useRef,
   useState,
   useSyncExternalStore,
+  type ReactNode,
   type RefObject,
 } from 'react';
 import {
@@ -19,8 +20,8 @@ import {
   type TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
+import { useOffline } from '../../api/useOffline';
 import { useReduceMotion } from '../../design/accessibility';
 import {
   RegionProvider,
@@ -32,9 +33,9 @@ import {
   useMeasuredRegion,
 } from '../../design/adaptive';
 import { designFlags } from '../../design/flags';
-import { SurfaceContext } from '../../design/row-padding';
-import { useFocusRequest } from '../../design/keyboard';
+import { useFocusRequest, useKeyCommand } from '../../design/keyboard';
 import { useScreenColumn } from '../../design/layout';
+import { SurfaceContext } from '../../design/row-padding';
 import {
   colors,
   hairline,
@@ -51,13 +52,13 @@ import { AskRevealContext, announceAnswer } from './AnswerView';
 import { AskDock } from './AskDock';
 import { AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
-import { openAskOptions, topics } from './Options';
+import { askGround } from './ground';
 import type { Followup } from './model';
+import { openAskOptions, topics } from './Options';
 import { rosterProfiles, type AskPerson } from './people';
 import { arriveInAsk, askQuestion, askSession, type AskScope } from './session';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
-import { askGround } from './ground';
 import { stopCopy } from './turn-copy';
 
 const topicNames = Object.values(topics);
@@ -71,6 +72,8 @@ const announce = (text: string) =>
  * idle; within a session it keeps what was on screen.
  */
 export default function AskScreen() {
+  const offline = useOffline();
+  const atTop = useRef(true);
   const ground = askGround();
   const groundStyle = { backgroundColor: colors[ground] };
   const s = useSyncExternalStore(
@@ -212,12 +215,13 @@ export default function AskScreen() {
   );
 
   async function ask(question: string, carry?: Followup) {
+    if (offline) return;
     Keyboard.dismiss();
     pinTurn();
     setInputError((await askQuestion(question, { carry })) ?? '');
   }
   async function send() {
-    if (!s.draft.trim()) return;
+    if (offline || !s.draft.trim()) return;
     Keyboard.dismiss();
     pinTurn();
     setInputError((await askQuestion(s.draft, { fromDraft: true })) ?? '');
@@ -237,6 +241,13 @@ export default function AskScreen() {
     }
   }
   const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
+  useKeyCommand(
+    'ask-reselect',
+    () => {
+      if (atTop.current) input.current?.focus();
+    },
+    idle,
+  );
   const talk =
     designFlags.talkInAsk && voiceLinked && signedIn
       ? () => router.push('/talk')
@@ -255,7 +266,7 @@ export default function AskScreen() {
       onStop={stop}
       onOptions={() => void openAskOptions()}
       onTalk={talk}
-      offline={false}
+      offline={offline}
       inputError={inputError}
       onLayout={(e) => setDockHeight(e.nativeEvent.layout.height)}
       keyboard={keyboard}
@@ -272,7 +283,10 @@ export default function AskScreen() {
       keyboardDismissMode="interactive"
       scrollToOverflowEnabled
       onLayout={column.onLayout}
-      onScroll={docked ? sources.onScroll : undefined}
+      onScroll={(event) => {
+        atTop.current = event.nativeEvent.contentOffset.y <= 4;
+        if (docked) sources.onScroll();
+      }}
       scrollEventThrottle={16}
       contentContainerStyle={[
         styles.content,
@@ -287,7 +301,7 @@ export default function AskScreen() {
         {idle ? (
           <AskIdle
             onAsk={(q) => void ask(q)}
-            offline={false}
+            offline={offline}
             readFailed={readFailed}
             starterCount={docked ? 3 : 4}
           />

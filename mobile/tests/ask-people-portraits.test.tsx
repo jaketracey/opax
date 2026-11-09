@@ -1,9 +1,10 @@
 import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
 import { Image } from 'react-native';
-import { PeoplePortraits } from '../src/api/people-portraits';
+import TestRenderer from 'react-test-renderer';
 import type { Catalogs } from '../src/api/catalogs';
+import { PeoplePortraits } from '../src/api/people-portraits';
 import type { PortraitCache } from '../src/api/portrait-cache';
+import { AnswerView } from '../src/features/ask/AnswerView';
 import { type Source, type Turn } from '../src/features/ask/model';
 import { rosterProfiles } from '../src/features/ask/people';
 import { catalogs } from './pinned';
@@ -46,7 +47,6 @@ jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useReduceMotion: () => true,
 }));
-import { AnswerView } from '../src/features/ask/AnswerView';
 
 const source = (speaker: string, i: number): Source => ({
   resource: `r${i}`,
