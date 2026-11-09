@@ -98,10 +98,24 @@ name: 23 Native money map, held figures, original source and ranked list
 - takeScreenshot: ${EVIDENCE}/23-filters
 - tapOn:
     id: filters-row-industry
-- extendedWaitUntil:
-    visible:
+# Expand the medium sheet before using Maestro's centre-of-screen scroll.
+- runFlow:
+    when:
+      visible: Half screen
+    commands:
+      - swipe:
+          from:
+            text: Half screen
+          direction: UP
+          duration: 600
+      - waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
       id: filters-choice-unions
-    timeout: 15000
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/23-industry
 # A checkmark row: choosing one returns to the sheet.
 - tapOn:

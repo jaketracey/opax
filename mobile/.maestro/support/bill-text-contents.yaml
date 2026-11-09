@@ -1,0 +1,14 @@
+appId: au.com.opax.app
+name: Open the bill text contents
+---
+# iPhone keeps Version and More in the bar, with Contents first in More.
+# Wider bars retain the direct Contents button.
+- runFlow:
+    when:
+      notVisible: Contents
+    commands:
+      - runFlow:
+          file: open-more.yaml
+          env:
+            NAME: this bill text
+- tapOn: Contents

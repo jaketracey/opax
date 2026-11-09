@@ -1,0 +1,11 @@
+appId: au.com.opax.app
+name: Finish a typed quiz guess
+---
+# UIKit can reparent the accessory without retaining its React Native testID.
+# nativeID names the view, not its accessibility element. The Done label is
+# present in both the working and failed wave 11 XCUITest trees.
+- tapOn: ^Done$
+- extendedWaitUntil:
+    notVisible:
+      id: quiz-number
+    timeout: 10000

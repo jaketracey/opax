@@ -237,6 +237,71 @@ test('Ask dismisses the New question keyboard before navigating to the seat star
   });
 });
 
+test('Money map expands the industry sheet before scrolling to Unions', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const industry = steps.findIndex(
+    (step: any) => step.tapOn?.id === 'filters-row-industry',
+  );
+  expect(steps[industry + 1].runFlow.when.visible).toBe('Half screen');
+  expect(steps[industry + 1].runFlow.commands[0].swipe).toMatchObject({
+    from: { text: 'Half screen' },
+    direction: 'UP',
+  });
+  expect(steps[industry + 2].scrollUntilVisible).toMatchObject({
+    element: { id: 'filters-choice-unions' },
+    direction: 'DOWN',
+    centerElement: true,
+  });
+  expect(steps[industry + 4]).toEqual({
+    tapOn: { id: 'filters-choice-unions' },
+  });
+});
+
+test('Bill text scrolls past the summary, returns to the overview and opens Contents via More on compact bars', () => {
+  const steps = maestroSteps('.maestro/33-bill-text-recent.yaml');
+  const reader = steps.findIndex(
+    (step: any) => step.extendedWaitUntil?.visible?.id === 'bill-text-reader',
+  );
+  expect(steps[reader + 1].scrollUntilVisible).toMatchObject({
+    element: { id: 'reader-text-0' },
+    direction: 'DOWN',
+  });
+  expect(steps[reader + 3].scrollUntilVisible).toMatchObject({
+    element: { id: 'bill-text-overview' },
+    direction: 'UP',
+  });
+  const contents = steps.filter(
+    (step: any) => step.runFlow === 'support/bill-text-contents.yaml',
+  );
+  expect(contents).toHaveLength(2);
+  expect(steps).not.toContainEqual({ tapOn: 'Contents' });
+  const [open, tap] = maestroSteps('.maestro/support/bill-text-contents.yaml');
+  expect(open.runFlow.when.notVisible).toBe('Contents');
+  expect(open.runFlow.commands[0]).toEqual({
+    runFlow: { file: 'open-more.yaml', env: { NAME: 'this bill text' } },
+  });
+  expect(tap).toEqual({ tapOn: 'Contents' });
+  const [wait, more] = maestroSteps('.maestro/support/open-more.yaml');
+  expect(wait.extendedWaitUntil.visible).toEqual({
+    id: 'header-more',
+    text: 'More for ${NAME}',
+  });
+  expect(more.tapOn).toEqual(wait.extendedWaitUntil.visible);
+});
+
+test('all three typed quiz guesses use the exposed Done label and wait for editing to finish', () => {
+  const steps = maestroSteps('.maestro/48-explore-quiz.yaml');
+  const typed = steps.flatMap((step: any, index: number) =>
+    step.inputText ? [index] : [],
+  );
+  expect(typed).toHaveLength(3);
+  for (const at of typed)
+    expect(steps[at + 1]).toEqual({ runFlow: 'support/quiz-number-done.yaml' });
+  const [done, wait] = maestroSteps('.maestro/support/quiz-number-done.yaml');
+  expect(done).toEqual({ tapOn: '^Done$' });
+  expect(wait.extendedWaitUntil.notVisible).toEqual({ id: 'quiz-number' });
+});
+
 test('Ask idle excludes both options row ids without matching the composer Options button', () => {
   const steps = maestroSteps('.maestro/30-ask.yaml');
   const idle = steps.slice(

@@ -2,6 +2,10 @@ appId: au.com.opax.app
 name: Open the page bar menu
 ---
 - extendedWaitUntil:
-    visible: 'More for ${NAME}'
+    visible:
+      id: header-more
+      text: 'More for ${NAME}'
     timeout: 30000
-- tapOn: 'More for ${NAME}'
+- tapOn:
+    id: header-more
+    text: 'More for ${NAME}'

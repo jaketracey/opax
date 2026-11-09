@@ -29,8 +29,7 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
 - tapOn:
     id: quiz-guess-value
 - inputText: '929297'
-- tapOn:
-    id: quiz-number-done
+- runFlow: support/quiz-number-done.yaml
 - scrollUntilVisible:
     element:
       id: quiz-confirm
@@ -93,8 +92,7 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
 - tapOn:
     id: quiz-guess-value
 - inputText: '2013'
-- tapOn:
-    id: quiz-number-done
+- runFlow: support/quiz-number-done.yaml
 - scrollUntilVisible:
     element:
       id: quiz-confirm
@@ -232,8 +230,7 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
 - tapOn:
     id: quiz-guess-value
 - inputText: '3335'
-- tapOn:
-    id: quiz-number-done
+- runFlow: support/quiz-number-done.yaml
 - scrollUntilVisible:
     element:
       id: quiz-confirm

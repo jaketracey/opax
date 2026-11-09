@@ -25,16 +25,19 @@ name: 33 Bill text versions, source navigation, Just added and native records
     visible:
       id: bill-text-reader
     timeout: 20000
-# The default version's text opens at once, under the header.
-- extendedWaitUntil:
-    visible:
+# The reader opens with its summary and overview above the first text block.
+- scrollUntilVisible:
+    element:
       id: reader-text-0
-    timeout: 20000
+    direction: DOWN
+    visibilityPercentage: 10
+    speed: 20
+    timeout: 180000
 - takeScreenshot: ${EVIDENCE}/33-bill-text
 - scrollUntilVisible:
     element:
       id: bill-text-overview
-    direction: DOWN
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 180000
@@ -73,7 +76,7 @@ name: 33 Bill text versions, source navigation, Just added and native records
 - takeScreenshot: ${EVIDENCE}/33-version-switched
 # Contents hands the chosen section back to the reader; the same choice
 # twice still scrolls.
-- tapOn: Contents
+- runFlow: support/bill-text-contents.yaml
 - extendedWaitUntil:
     visible:
       id: bill-text-contents-screen
@@ -87,7 +90,7 @@ name: 33 Bill text versions, source navigation, Just added and native records
 - takeScreenshot: ${EVIDENCE}/33-text-navigation
 - scroll
 - scroll
-- tapOn: Contents
+- runFlow: support/bill-text-contents.yaml
 - extendedWaitUntil:
     visible:
       id: bill-text-contents-screen
