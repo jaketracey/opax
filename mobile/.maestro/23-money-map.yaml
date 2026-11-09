@@ -216,6 +216,15 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 15000
 - tapOn:
     id: BackButton
+# The map keeps the offset of Focus Labor, below the scene and summary.
+- extendedWaitUntil:
+    visible:
+      id: money-screen
+    timeout: 30000
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-view-summary
 - extendedWaitUntil:
     visible:
       id: money-view-summary
@@ -358,6 +367,18 @@ name: 23 Native money map, held figures, original source and ranked list
 - takeScreenshot: ${EVIDENCE}/23-list-public-money
 - tapOn:
     id: BackButton
+# The List keeps its Public money offset; its summary is above the rows.
+- extendedWaitUntil:
+    visible:
+      id: money-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: money-view-summary
+    direction: UP
+    centerElement: true
+    speed: 20
+    timeout: 120000
 - extendedWaitUntil:
     visible:
       id: money-view-summary

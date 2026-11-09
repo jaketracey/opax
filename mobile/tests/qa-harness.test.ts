@@ -352,6 +352,35 @@ test('Money record source returns below the bar before its tap and waits for the
   });
 });
 
+test('Money map and List restore the off-screen summary after record returns', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const returns = steps.flatMap((step: any, index: number) =>
+    step.extendedWaitUntil?.visible?.id === 'money-view-summary' &&
+    !step.extendedWaitUntil.visible.text
+      ? [index]
+      : [],
+  );
+  expect(returns).toHaveLength(2);
+  for (const at of returns) {
+    expect(steps[at - 3]).toEqual({ tapOn: { id: 'BackButton' } });
+    expect(steps[at - 2].extendedWaitUntil.visible).toEqual({
+      id: 'money-screen',
+    });
+  }
+  expect(steps[returns[0] - 1]).toEqual({
+    runFlow: {
+      file: 'support/money-screen-scroll-up.yaml',
+      env: { TARGET_ID: 'money-view-summary' },
+    },
+  });
+  expect(steps[returns[1] - 1].scrollUntilVisible).toMatchObject({
+    element: { id: 'money-view-summary' },
+    direction: 'UP',
+    centerElement: true,
+    speed: 20,
+  });
+});
+
 test('See all donors is centred upwards from the later footnote before tapping', () => {
   const steps = maestroSteps('.maestro/23-money-map.yaml');
   const footnote = steps.findIndex(
