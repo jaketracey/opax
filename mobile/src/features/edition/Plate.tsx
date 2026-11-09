@@ -1,22 +1,27 @@
 import { useEffect, useState, type Ref } from 'react';
-import { Image, StyleSheet, Text as NativeText, View } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
-import type { EditionView } from '../../api/selectors';
-import { portraits, yearPictures } from '../../api/runtime';
+import { Image, Text as NativeText, StyleSheet, View } from 'react-native';
 import { localImageURI } from '../../api/image-policy';
+import { portraits, yearPictures } from '../../api/runtime';
+import type { EditionView } from '../../api/selectors';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { useAccessibilitySize } from '../../design/accessibility';
+import { VoteSplit } from '../../design/charts';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { Portrait } from '../../design/people';
 import { Text } from '../../design/text';
-import { VoteSplit } from '../../design/charts';
-import { colors, fonts, radii, rhythm } from '../../design/tokens';
+import {
+  colors,
+  interfaceFonts as fonts,
+  radii,
+  rhythm,
+} from '../../design/tokens';
 import type { YearPicture } from '../explore/pictures';
 import {
   editionInk,
-  editionSymbol,
   editionPerson,
+  editionSymbol,
   plateLine,
   type EditionTier,
 } from './model';
@@ -112,6 +117,7 @@ export function Plate({
           variant="footnote"
           tone="onBandSoft"
           style={styles.kickerText}
+          maxFontSizeMultiplier={1.353}
           testID={`${testID}-kicker`}
         >
           {edition.kindShort} · {date}
@@ -151,6 +157,7 @@ export function Plate({
           wordSafe
           variant="secondary"
           tone="onBandSoft"
+          maxFontSizeMultiplier={1.353}
           testID={`${testID}-line`}
         >
           {detailLine}
@@ -217,7 +224,7 @@ export function PlateArt({
   const latest = events.at(-1);
   const provenance = {
     dateRange: { start: edition.date, end: edition.date },
-    source: 'OPAX daily edition',
+    citation: 'OPAX daily edition',
   };
   return (
     <View testID={testID} style={styles.art}>

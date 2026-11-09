@@ -100,7 +100,12 @@ export function Masthead({
 }) {
   return (
     <View testID="today-masthead" style={styles.masthead}>
-      <Text wordSafe variant="secondary" testID="today-screen-message">
+      <Text
+        wordSafe
+        variant="secondary"
+        maxFontSizeMultiplier={1.353}
+        testID="today-screen-message"
+      >
         {mastheadDate(now)}
       </Text>
       {offlineSavedAt !== undefined && offlineSavedAt !== null ? (

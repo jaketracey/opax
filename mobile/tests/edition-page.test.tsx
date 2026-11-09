@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation and Skia are inert hosts in component tests. */
+import { Stack, router } from 'expo-router';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, type ReactElement } from 'react';
-import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Dimensions, Image, Platform, StyleSheet, View } from 'react-native';
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
 } from 'react-native-safe-area-context';
-import { Stack, router } from 'expo-router';
-import { catalogs, yearPictures } from '../src/api/runtime';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import editionJSON from '../scripts/fixtures/edition-latest.json';
+import personJSON from '../scripts/fixtures/edition-politician.json';
 import {
   decodeBill,
   decodeEdition,
@@ -18,47 +19,46 @@ import {
   type EditionView,
 } from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
-import editionJSON from '../scripts/fixtures/edition-latest.json';
-import personJSON from '../scripts/fixtures/edition-politician.json';
-import { bills, pinned, roster, slugs } from './pinned';
-import { SourceLine, SourceSheet } from '../src/design/source';
-import { FigureBlock } from '../src/design/record';
+import { catalogs, yearPictures } from '../src/api/runtime';
 import { Card } from '../src/design/card';
+import { FigureBlock } from '../src/design/record';
+import { SourceLine, SourceSheet } from '../src/design/source';
+import { bills, pinned, roster, slugs } from './pinned';
 
-import { MachinePill } from '../src/design/labels';
 import { BarSeries, StageTimeline, VoteSplit } from '../src/design/charts';
+import { MachinePill } from '../src/design/labels';
+import { PersonRow } from '../src/design/people';
+import { bindRecordTitle } from '../src/design/record-title';
 import { BillRow, LinkRow, ValueRow } from '../src/design/rows';
 import { ContentUnavailable, Skeleton } from '../src/design/states';
-import { Text } from '../src/design/text';
-import { bindShortLastWord } from '../src/design/record-title';
-import { PersonRow } from '../src/design/people';
-import { colors } from '../src/design/tokens';
 import { symbols } from '../src/design/symbols';
+import { Text } from '../src/design/text';
+import { colors } from '../src/design/tokens';
 import { EditionCard } from '../src/features/edition/EditionCard';
 import { EditionStory } from '../src/features/edition/EditionStory';
-import { Plate, ArchivePhotograph } from '../src/features/edition/Plate';
+import { ArchivePhotograph, Plate } from '../src/features/edition/Plate';
 import {
+  EDITION_RULE,
   editionQuestion,
+  editionSourceRows,
+  editionSources,
   editionSubject,
   editionTier,
-  editionSources,
-  editionSourceRows,
   eventDay,
   plainSourceRow,
   plateLine,
   timelineProvenance,
-  EDITION_RULE,
 } from '../src/features/edition/model';
-import { editionRoute } from '../src/navigation/routes/edition';
+import { decodePictures } from '../src/features/explore/pictures';
+import { fromWebPath, openOnWeb } from '../src/navigation/external';
 import { billRoute } from '../src/navigation/routes/bills';
+import { editionRoute } from '../src/navigation/routes/edition';
 import {
   grantProgramRoute,
   largestGrantsRoute,
   moneyItemRoute,
 } from '../src/navigation/routes/public-money';
-import { fromWebPath, openOnWeb } from '../src/navigation/external';
 import { shareRecord } from '../src/navigation/share';
-import { decodePictures } from '../src/features/explore/pictures';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
@@ -401,7 +401,7 @@ describe('edition page text helpers', () => {
       }),
     ).toEqual({
       dateRange: { start: '2026-08-12', end: '2026-09-18' },
-      source: '',
+      citation: '',
     });
   });
 });
@@ -647,7 +647,7 @@ describe('the native edition reader', () => {
   test('keeps the full title, all paragraphs, dated timeline and native bill subject', async () => {
     const { root } = await render(<EditionStory />);
     expect(host(root, 'edition-plate-title')[0]!.props.children).toBe(
-      bindShortLastWord(edition.title),
+      bindRecordTitle(edition.title),
     );
     expect(root.findByType(MachinePill).props.note.body).toEqual([
       edition.machineWritten!.attribution,
@@ -846,7 +846,7 @@ describe('the native edition reader', () => {
       .mocked(catalogs.todayEdition)
       .mockResolvedValue({ ...ready, data: rich });
     const { root } = await render(<EditionStory />);
-    expect(root.findByType(FigureBlock).props.source).toMatchObject({
+    expect(root.findByType(FigureBlock).props.citation).toMatchObject({
       asOf: edition.date,
       citation: 'OPAX daily edition',
       originals: expect.arrayContaining([

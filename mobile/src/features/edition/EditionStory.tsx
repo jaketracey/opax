@@ -1,40 +1,40 @@
-import { Fragment, useRef } from 'react';
 import { Stack } from 'expo-router';
+import { Fragment, useRef } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
 import { BarSeries, StageTimeline, VoteSplit } from '../../design/charts';
+import { copy } from '../../design/copy';
+import { designFlags } from '../../design/flags';
+import { formatDate } from '../../design/format';
 import { MachinePill } from '../../design/labels';
 import { InsetGroup, Screen } from '../../design/layout';
-import { BillRow, LinkRow, ValueRow } from '../../design/rows';
 import { PersonRow } from '../../design/people';
 import { FigureBlock } from '../../design/record';
+import { BillRow, LinkRow, ValueRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
 import { ContentUnavailable, OfflineLine } from '../../design/states';
-import { Text } from '../../design/text';
-import { formatDate } from '../../design/format';
-import { copy } from '../../design/copy';
-import { colors, rhythm } from '../../design/tokens';
 import { symbols } from '../../design/symbols';
-import { designFlags } from '../../design/flags';
+import { Text } from '../../design/text';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useOpenAsk } from '../ask/open';
 import { CachedPortrait } from '../CachedPortrait';
-import { EditionSkeleton } from './EditionCard';
-import { Plate } from './Plate';
+import { editionMenu, shareEdition } from './actions';
 import { useEdition, useEditionSubject } from './data';
+import { EditionSkeleton } from './EditionCard';
 import {
   editionInk,
+  editionPerson,
   editionQuestion,
   editionSourceRows,
   editionSources,
   editionSubject,
   editionTopic,
-  editionPerson,
   timelineProvenance,
 } from './model';
-import { editionMenu, shareEdition } from './actions';
+import { Plate } from './Plate';
 
 export function EditionStory() {
   const { block, refreshing, refresh } = useEdition();
@@ -273,7 +273,7 @@ function EditionFacts({
   const { figures, bars, events, division } = edition.facts;
   const provenance = {
     dateRange: { start: edition.date, end: edition.date },
-    source: 'OPAX daily edition',
+    citation: 'OPAX daily edition',
   };
   const order = edition.facts.order ?? [
     ...figures.map((_, index) => ({ type: 'figure' as const, index })),
@@ -291,7 +291,7 @@ function EditionFacts({
           const figureProps = {
             ...figure,
             ink: editionInk(edition),
-            source: {
+            citation: {
               ...source,
               asOf: edition.date,
               citation: 'OPAX daily edition',

@@ -1,6 +1,6 @@
+import { router } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
 import type { BillIndex, Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import { Icon } from '../../design/icon';
@@ -21,8 +21,8 @@ import {
 import { shareRecord } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
 import { byFamilyName, FaceStackRow } from '../your-mp/FaceStackRow';
-import { LatestRows } from '../your-mp/LatestRows';
 import { latelyFor } from '../your-mp/latest';
+import { LatestRows } from '../your-mp/LatestRows';
 import { MemberHeroRow, officialPageFor } from '../your-mp/MemberHeroRow';
 import {
   representativeProfile,
@@ -34,8 +34,8 @@ import {
 import { senateSeatFor, tenureYear } from '../your-mp/RepresentativesGroup';
 import { stateInRunningCopy } from '../your-mp/state-names';
 import { isRegion } from '../your-mp/StateMembers';
-import { oldestDate } from './sources';
 import type { SydneyDate } from './rules';
+import { oldestDate } from './sources';
 
 /** Today's card shows three Latest rows (the Your MP tab shows five). */
 export const CARD_LATEST = 3;
@@ -322,6 +322,7 @@ function YourMPGroup({
         ) : null}
         {lately.status === 'ready' ? (
           <LatestRows
+            compact
             records={lately.records}
             limit={CARD_LATEST}
             testID="today-your-mp-latest"

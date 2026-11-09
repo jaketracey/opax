@@ -1,21 +1,21 @@
 import type { Href } from 'expo-router';
 import type { EditionView } from '../../api/selectors';
 import type { DateInput } from '../../design/format';
-import type { SourceDetails, SourceOriginal } from '../../design/source';
-import type { Accent } from '../../design/tokens';
 import type { SFSymbol } from '../../design/icon';
+import type { SourceDetails, SourceOriginal } from '../../design/source';
+import { symbols } from '../../design/symbols';
+import type { Accent } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes/bills';
 import { moneyRoute } from '../../navigation/routes/money-map';
+import { personRoute } from '../../navigation/routes/people';
 import {
   grantProgramRoute,
   largestGrantsRoute,
   moneyItemRoute,
   moneyRecordRoute,
 } from '../../navigation/routes/public-money';
-import { personRoute } from '../../navigation/routes/people';
 import { topicRoute } from '../../navigation/routes/search';
 import { topics } from '../search/contracts';
-import { symbols } from '../../design/symbols';
 
 export const EDITION_RULE =
   'Rotates by weekday from the public record: Sunday a bill, Monday a grant program, Tuesday a parliamentarian, Wednesday a grant, Thursday a bill, Friday the largest grants, Saturday a topic. Editions up to 3 days old appear at the top; up to 14 days old, lower on the page; older editions are not shown here.';
@@ -133,7 +133,7 @@ export function timelineProvenance(
       start: days[0] ?? edition.date,
       end: days.at(-1) ?? edition.date,
     },
-    source: '',
+    citation: '',
   };
 }
 
@@ -250,9 +250,16 @@ export function editionSources(
     // sheet carries no licence text (that is Sources and licences'). A row
     // that names a document already listed as an original is not repeated.
     rule: EDITION_RULE,
-    notes: editionSourceRows(edition, documents)
-      .filter((row) => !row.original)
-      .map((row) => row.title),
+    notes: edition.sourceRows
+      .map(plainSourceRow)
+      .filter(
+        (title) =>
+          !documents.some((original) =>
+            title
+              .toLocaleLowerCase('en-AU')
+              .startsWith(original.label.toLocaleLowerCase('en-AU')),
+          ),
+      ),
   };
 }
 

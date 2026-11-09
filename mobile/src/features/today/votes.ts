@@ -76,7 +76,17 @@ export function recentReadingVotes(file: RecentDivisions, limit = 3) {
     .sort(
       (a, b) =>
         b.date.localeCompare(a.date) ||
-        a.division_key.localeCompare(b.division_key),
+        b.division_key.localeCompare(a.division_key, undefined, {
+          numeric: true,
+        }),
+    )
+    .filter(
+      (row, index, all) =>
+        all.findIndex(
+          (other) =>
+            other.bill_key === row.bill_key &&
+            other.date.slice(0, 10) === row.date.slice(0, 10),
+        ) === index,
     )
     .slice(0, Math.max(0, limit))
     .map((row) => ({
