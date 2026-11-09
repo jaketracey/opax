@@ -19,11 +19,12 @@ class Rewriter {
   transform(response){const handlers=this.handlers;return new Response(new ReadableStream({async start(controller){
     let html=await response.text();
     for(const [selector,handler] of handlers){
-      const mutate=(outer,open,inner,close)=>{let attr=open,body=inner,removed=false;const el={setAttribute(name,value){const re=new RegExp(` ${name}="[^"]*"`);const next=` ${name}="${escapeHtml(value)}"`;attr=re.test(attr)?attr.replace(re,next):attr.replace(/>$/,next+'>');},setInnerContent(value,opts){body=opts?.html?value:escapeHtml(value);},append(value){body+=value;},remove(){removed=true;}};handler.element(el);return removed?'':attr+body+close;};
+      const mutate=(outer,open,inner,close)=>{let attr=open,body=inner,removed=false;const el={setAttribute(name,value){const re=new RegExp(` ${name}="[^"]*"`);const next=` ${name}="${escapeHtml(value)}"`;attr=re.test(attr)?attr.replace(re,next):attr.replace(/>$/,next+'>');},setInnerContent(value,opts){body=opts?.html?value:escapeHtml(value);},append(value){body+=value;},prepend(value){body=value+body;},remove(){removed=true;}};handler.element(el);return removed?'':attr+body+close;};
       if(selector==='main#main')html=html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/,mutate);
       else if(selector==='div#crawl-facts')html=html.replace(/(<div\b[^>]*id="crawl-facts"[^>]*>)([\s\S]*?)(<\/div>)/,mutate);
       else if(selector==='title')html=html.replace(/(<title>)([\s\S]*?)(<\/title>)/,mutate);
       else if(selector==='head')html=html.replace(/(<head>)([\s\S]*?)(<\/head>)/,mutate);
+      else if(selector==='body')html=html.replace(/(<body\b[^>]*>)([\s\S]*?)(<\/body>)/,mutate);
       else if(selector==='script#ld-page')html=html.replace(/(<script\b[^>]*id="ld-page"[^>]*>)([\s\S]*?)(<\/script>)/,mutate);
       else{const match=/^(meta|link)\[(name|property|rel)="([^"]+)"\]$/.exec(selector);if(match)html=html.replace(new RegExp(`<${match[1]}\\b[^>]*${match[2]}="${match[3]}"[^>]*>`,'g'),outer=>mutate(outer,outer,'',''));}
     }

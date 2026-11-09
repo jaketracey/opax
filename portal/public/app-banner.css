@@ -1,0 +1,48 @@
+/* The site intentionally uses light tokens, including in device dark mode. */
+.opax-app-banner {
+  flex: none;
+  background: var(--paper-sunken);
+  color: var(--ink);
+  border-bottom: var(--border-hairline, 1px) solid var(--divider-subtle);
+  font: var(--type-metadata, 400 0.9375rem/1.45 sans-serif);
+}
+.opax-app-banner-hidden .opax-app-banner { display: none; }
+.opax-app-banner-row {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight, 0.5rem);
+  max-width: var(--layout-column-web-max, 1440px);
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 5rem);
+}
+.opax-app-banner p {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding-block: var(--space-tight, 0.5rem);
+  overflow-wrap: anywhere;
+}
+.opax-app-banner a { color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.15em; }
+.opax-app-banner a:hover { color: var(--ink); }
+.opax-app-banner-dismiss {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 var(--size-target, 44px);
+  align-items: center;
+  justify-content: center;
+  min-width: var(--size-target, 44px);
+  min-height: var(--size-target, 44px);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.opax-app-banner-dismiss:hover { background: var(--navy-wash); }
+.opax-app-banner-dismiss svg { width: var(--size-icon-md, 20px); height: var(--size-icon-md, 20px); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.opax-app-banner :focus-visible { outline: var(--border-focus, 2px) solid var(--bronze-ink); outline-offset: 2px; }
+@media (forced-colors: active) { .opax-app-banner :focus-visible { outline-color: Highlight; } }

@@ -1,4 +1,5 @@
 import {federalPartyMoneyAnswer,federalPartyMoneyResponse} from './ask-money-routing'
+import { withAppBanner } from './app-banner'
 import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
@@ -6093,6 +6094,7 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/ask-agentic', '/api/followups', '/api/search', '/api/search-all', '/api/suggest'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
+  res = withAppBanner(res, url)
   const isApi = url.pathname.startsWith('/api/')
   // Responses from the ASSETS binding are immutable; re-wrap to edit headers.
   // res.body is passed through unread, so SSE keeps streaming.
@@ -6771,7 +6773,7 @@ async function route(
         }
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
-      const asset = await env.ASSETS.fetch(request)
+      const asset = await env.ASSETS.fetch(pageAssetRequest(request))
       // A page address nothing answers gets the site's own not-found page (noindex,
       // with a way on), not an empty 404; a missing file (a script, an image) stays plain.
       if (asset.status === 404 && (request.method === 'GET' || request.method === 'HEAD') && pageAddress(url.pathname))
@@ -6848,6 +6850,16 @@ function rewritten(res: Response): Response {
 function pageAddress(pathname: string): boolean {
   const last = pathname.slice(pathname.lastIndexOf('/') + 1)
   return !/\.[a-z0-9]{1,8}$/i.test(last) || /\.html$/i.test(last)
+}
+
+/** Shared chrome changes HTML after the asset server reads it. Never let a
+ * raw asset's conditional response reuse a page from before that change. */
+function pageAssetRequest(request: Request): Request {
+  if (!['GET', 'HEAD'].includes(request.method) || !pageAddress(new URL(request.url).pathname)) return request
+  const headers = new Headers(request.headers)
+  headers.delete('if-none-match')
+  headers.delete('if-modified-since')
+  return new Request(request, { headers })
 }
 
 function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -6978,7 +6990,7 @@ export default {
       else {
         const assetUrl = new URL(request.url)
         if (matchSeoRoute(url)) assetUrl.pathname = '/'
-        response = await env.ASSETS.fetch(new Request(assetUrl, request))
+        response = await env.ASSETS.fetch(pageAssetRequest(new Request(assetUrl, request)))
       }
       const preview = withSecurityHeaders(await display(response), url)
       preview.headers.set('x-robots-tag', 'noindex, nofollow')

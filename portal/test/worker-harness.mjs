@@ -18,13 +18,14 @@ class Rewriter {
           let attr = open, body = inner, removed = false;
           handler.element({getAttribute(name) {return new RegExp(` ${name}="([^"]*)"`).exec(attr)?.[1] ?? null;},
             setAttribute(name, value) { const re = new RegExp(` ${name}="[^"]*"`); const next = ` ${name}="${esc(value)}"`; attr = re.test(attr) ? attr.replace(re, next) : attr.replace(/>$/, next + '>'); },
-            setInnerContent(value, opts) { body = opts?.html ? value : esc(value); }, append(value) { body += value; }, remove() { removed = true; }});
+            setInnerContent(value, opts) { body = opts?.html ? value : esc(value); }, append(value) { body += value; }, prepend(value) { body = value + body; }, remove() { removed = true; }});
           return removed ? '' : attr + body + close;
         };
         if (selector === 'main#main') html = html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/, mutate);
         else if (selector === 'div#crawl-facts') html = html.replace(/(<div\b[^>]*id="crawl-facts"[^>]*>)([\s\S]*?)(<\/div>)/, mutate);
         else if (selector === 'title') html = html.replace(/(<title>)([\s\S]*?)(<\/title>)/, mutate);
         else if (selector === 'head') html = html.replace(/(<head>)([\s\S]*?)(<\/head>)/, mutate);
+        else if (selector === 'body') html = html.replace(/(<body\b[^>]*>)([\s\S]*?)(<\/body>)/, mutate);
         else if (selector === 'script#ld-page') html = html.replace(/(<script\b[^>]*id="ld-page"[^>]*>)([\s\S]*?)(<\/script>)/, mutate);
         else if (selector === 'script[src]') html = html.replace(/(<script\b[^>]*\bsrc="[^"]*"[^>]*>)([\s\S]*?)(<\/script>)/g,mutate);
         else { const m = /^(meta|link)\[(name|property|rel)="([^"]+)"\]$/.exec(selector); if (m) html = html.replace(new RegExp(`<${m[1]}\\b[^>]*${m[2]}="${m[3]}"[^>]*>`, 'g'), outer => mutate(outer, outer, '', '')); }

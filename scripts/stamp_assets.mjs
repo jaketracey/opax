@@ -208,6 +208,8 @@ export const MODULE_STAMPS = [
 // unstamped (identity-cache.test.mjs requires every importer of a
 // MODULE_STAMPS module to carry the stamp).
 const ASSET_STAMPS = [
+  // Shared chrome is injected by the Worker, rather than an entry document.
+  ['../src/app-banner.ts', 'app-banner.js'], ['../src/app-banner.ts', 'app-banner.css'],
   ['money-explain.js', 'money-explain.css'], ['money-explain.js', 'format.js'], ['app.js', 'money-explain.css'],
   ['wombat.js', 'loader.css'],
 ]

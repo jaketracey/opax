@@ -22,6 +22,7 @@ export class HTMLRewriter {
             setAttribute: (name, value) => node.setAttribute(name, value),
             setInnerContent(value, options) { if (options?.html) node.innerHTML = value; else node.textContent = value; },
             append: value => node.insertAdjacentHTML('beforeend', value),
+            prepend: value => node.insertAdjacentHTML('afterbegin', value),
             after: value => node.insertAdjacentHTML('afterend', value),
             remove: () => node.remove(),
           });
