@@ -22,6 +22,7 @@ import {
   contentSizeCategory,
   interfaceFonts as fonts,
   headingFace,
+  headlineSizes,
   largeTitleSizes,
   textStyles,
 } from '../design/tokens';
@@ -75,9 +76,10 @@ export const androidBar = {
 
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
+  const category = contentSizeCategory(fontScale);
   const sizes = {
-    largeTitle: largeTitleSizes[contentSizeCategory(fontScale)],
-    title: Math.min(23, 17 * fontScale),
+    largeTitle: largeTitleSizes[category],
+    title: Math.min(headlineSizes[category], headlineSizes.xxxLarge),
   };
   return {
     headerTintColor: colors.navy,

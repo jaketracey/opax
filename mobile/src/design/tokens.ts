@@ -323,3 +323,19 @@ export const largeTitleSizes: Record<ContentSizeCategory, number> = {
   ax4: 56,
   ax5: 60,
 };
+
+/** Headline ramp. Inline bar titles cap at xxxLarge to keep the bar height. */
+export const headlineSizes: Record<ContentSizeCategory, number> = {
+  xSmall: 14,
+  small: 15,
+  medium: 16,
+  large: 17,
+  xLarge: 19,
+  xxLarge: 21,
+  xxxLarge: 23,
+  ax1: 28,
+  ax2: 33,
+  ax3: 40,
+  ax4: 47,
+  ax5: 53,
+};

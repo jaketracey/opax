@@ -6,7 +6,7 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
-import { colors } from '../src/design/tokens';
+import * as tokens from '../src/design/tokens';
 import {
   androidHeaderBar,
   askHeaderItems,
@@ -38,6 +38,8 @@ import {
   inlineTitleScaleCap,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
+
+const { colors } = tokens;
 
 jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
@@ -222,6 +224,46 @@ test('inline and sheet bars cover content and roots keep a native scroll edge', 
   expect(shortSheet.sheetExpandsWhenScrolledToEdge).toBe(true);
   act(() => view.unmount());
 });
+
+test.each([
+  ['xSmall', 0.823, 14, 14],
+  ['small', 0.882, 15, 15],
+  ['medium', 0.941, 16, 16],
+  ['large', 1, 17, 17],
+  ['xLarge', 1.118, 19, 19],
+  ['xxLarge', 1.235, 21, 21],
+  ['xxxLarge', 1.353, 23, 23],
+  ['ax1', 1.786, 28, 23],
+  ['ax2', 2.143, 33, 23],
+  ['ax3', 2.643, 40, 23],
+  ['ax4', 3.143, 47, 23],
+  ['ax5', 3.571, 53, 23],
+] as const)(
+  '%s uses the headline ramp and caps the inline bar at xxxLarge',
+  (category, fontScale, headline, inline) => {
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    jest.replaceProperty(tokens, 'headingFace', 'serif');
+    Dimensions.set({
+      window: { ...window, fontScale },
+      screen: { ...screen, fontScale },
+    });
+    let chrome!: ReturnType<typeof useStackChrome>;
+    function Harness() {
+      chrome = useStackChrome();
+      return null;
+    }
+    let view: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      view = tree(<Harness />);
+      expect(tokens.headlineSizes[category]).toBe(headline);
+      expect(chrome.headerTitleStyle.fontSize).toBe(inline);
+    } finally {
+      if (view) act(() => view!.unmount());
+      Dimensions.set({ window, screen });
+    }
+  },
+);
 test('iOS 26 leaves material to the system and older bars accept the screen ground', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
