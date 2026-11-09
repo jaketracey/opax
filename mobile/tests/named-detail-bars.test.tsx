@@ -24,6 +24,7 @@ import {
 } from '../src/navigation/useNamedBackOptions';
 import {
   BarTitle,
+  backPillWidth,
   barTitleWidth,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
@@ -528,9 +529,37 @@ test.each([
 );
 
 test.each([
-  [402, 2, undefined, 'Bill text', 120.5],
-  [402, 2, undefined, 'Your MP', 139.5],
-  [402, 2, 164, 'Bills', 98.5],
+  ['Bills', 84],
+  ['Lead', 90],
+  ['Leads', 93],
+  ['Today', 94],
+  ['Bill text', 110],
+  ['Your MP', 117],
+] as const)(
+  '%s back pill rounds up from the device width of %i pt',
+  (title, measured) => {
+    const estimate = backPillWidth(title);
+    expect(estimate).toBeGreaterThanOrEqual(measured);
+    expect(estimate).toBeLessThanOrEqual(measured + 6);
+    expect(Number.isInteger(estimate)).toBe(true);
+  },
+);
+
+test.each([
+  ['Lead', undefined, 136],
+  ['Bill text', undefined, 116],
+  ['Bills', 164, 82],
+  ['Your MP', undefined, 109],
+] as const)(
+  '%s back name with %s pt trailing items leaves about %i pt on a 402 pt iPhone',
+  (backTitle, trailingWidth, expected) => {
+    const room = barTitleWidth(402, 2, trailingWidth, backTitle);
+    expect(room).toBeGreaterThan(0);
+    expect(Math.abs(room - expected)).toBeLessThanOrEqual(4);
+  },
+);
+
+test.each([
   [200, 2, 164, 'Bills', 0],
   [1024, 2, 164, 'Bills', 512],
 ] as const)(
@@ -562,7 +591,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
       );
     });
     const text = () => view!.root.findByType(Animated.Text);
-    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(98.5);
+    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(1);
     expect(text().props).toMatchObject({
       numberOfLines: 1,
@@ -580,7 +609,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
         />,
       ),
     );
-    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(98.5);
+    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(0);
     expect(text().props).toMatchObject({
       children: 'Synthetic short bill name',

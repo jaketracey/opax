@@ -34,6 +34,29 @@ export const TitleAnchorContext = createContext<
 // reviewer must confirm this cap at AX5; this lane never boots a simulator.
 export const inlineTitleScaleCap = 23 / 17;
 
+// SF Pro 17 pt advances tuned to lane lead's device measurements, 10 Nov 2026.
+const backTitleAdvances = [
+  [" ijl.,':;I", 5],
+  ['frt', 6.5],
+  ['mw', 14],
+  ['MW', 15.5],
+  ['0123456789', 10],
+  ['B', 12.5],
+  ['L', 13.5],
+  ['s', 8.5],
+] as const;
+
+/** Chevron and padding plus text advances, rounded up to whole points. */
+export function backPillWidth(title: string): number {
+  let width = 48;
+  for (const character of title) {
+    width +=
+      backTitleAdvances.find(([glyphs]) => glyphs.includes(character))?.[1] ??
+      (/[A-Z]/.test(character) ? 11.5 : 9.5);
+  }
+  return Math.ceil(width);
+}
+
 /**
  * The widest a bar title may be between the bar's items: iOS 26
  * draws each item as a 44 pt glass circle 16 pt from the edge, and a group
@@ -50,9 +73,9 @@ export function barTitleWidth(
   backTitle?: string,
 ): number {
   if (backTitle) {
-    const leadingReserve = 16 + 44 + 9.5 * backTitle.length + 8;
+    const leadingReserve = 16 + backPillWidth(backTitle) + 20;
     const trailingReserve =
-      16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 8;
+      16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 20;
     const room = Math.max(0, windowWidth - leadingReserve - trailingReserve);
     return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
   }
