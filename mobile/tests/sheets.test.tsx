@@ -351,6 +351,40 @@ test('rule paragraphs carry the grouped cell padding and minimum height', () => 
   });
   expect(text(paragraphs)).toContain('Newest records first.');
 });
+test('a fitted rule has only a small top inset and leaves the lower safe area to UIKit', () => {
+  jest
+    .mocked(useSafeAreaInsets)
+    .mockReturnValue({ top: 0, bottom: 34, left: 0, right: 0 });
+  presentSheet({ kind: 'rule', rule: 'Newest records first.' });
+  mockParams = { key: lastKey() };
+  const root = render(<RuleSheet />);
+  expect(root.findByType(RouteOptions).props.options.sheetAllowedDetents).toBe(
+    'fitToContents',
+  );
+  expect(root.findAllByType(ScrollView)).toHaveLength(0);
+  const body = root.find(
+    (node) => node.type === View && node.props.testID === 'rule-sheet',
+  );
+  expect(body.props.collapsable).toBe(false);
+  expect(StyleSheet.flatten(body.props.style)).toMatchObject({
+    paddingTop: rhythm.tight,
+    paddingBottom: 0,
+  });
+  expect(StyleSheet.flatten(body.props.style).flex).toBeUndefined();
+});
+test('an AX5 rule keeps a full-height scrollable body', () => {
+  Dimensions.set({
+    window: { width: 390, height: 844, scale: 3, fontScale: 3.12 },
+    screen: { width: 390, height: 844, scale: 3, fontScale: 3.12 },
+  });
+  presentSheet({ kind: 'rule', rule: 'Newest records first.' });
+  mockParams = { key: lastKey() };
+  const root = render(<RuleSheet />);
+  expect(
+    root.findByType(RouteOptions).props.options.sheetAllowedDetents,
+  ).toEqual([1]);
+  expect(root.findAllByType(ScrollView)).toHaveLength(1);
+});
 test('short machine notes do not scroll, while tables do', () => {
   presentSheet({
     kind: 'machine',

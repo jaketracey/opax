@@ -17,6 +17,7 @@ export default function RuleSheet() {
     <SheetFrame
       title={payload?.title ?? copy.howChosen}
       short={variant !== 'table'}
+      compact
       testID={testID}
     >
       {!payload ? (

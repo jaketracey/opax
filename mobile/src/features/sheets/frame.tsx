@@ -39,6 +39,7 @@ export function routeSheetOptions({
 export function SheetFrame({
   title,
   short = false,
+  compact = false,
   citation = false,
   testID,
   children,
@@ -46,6 +47,8 @@ export function SheetFrame({
 }: {
   title: string;
   short?: boolean;
+  /** A single rule group needs no extra lower inset above the system safe area. */
+  compact?: boolean;
   citation?: boolean;
   testID?: string;
   children: ReactNode;
@@ -63,8 +66,11 @@ export function SheetFrame({
     styles.content,
     {
       paddingHorizontal: margin,
+      paddingTop: fitted && compact ? rhythm.tight : rhythm.group,
       paddingBottom: fitted
-        ? fittedBottom(insets.bottom)
+        ? compact && Platform.OS === 'ios'
+          ? 0
+          : fittedBottom(insets.bottom)
         : rhythm.section + insets.bottom,
     },
   ];
@@ -79,7 +85,11 @@ export function SheetFrame({
       />
       <SurfaceContext.Provider value="sunken">
         {fitted ? (
-          <View testID={testID} style={[styles.screen, contentStyle]}>
+          <View
+            collapsable={false}
+            testID={testID}
+            style={[styles.screen, contentStyle]}
+          >
             {children}
           </View>
         ) : (
