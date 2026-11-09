@@ -2,6 +2,10 @@ import { RouteOptions } from '../src/navigation/preview';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
 import { Picker, Slider } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { act } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { useAccessibilitySize } from '../src/design/accessibility';
@@ -186,6 +190,35 @@ test('past play shows the best streak and the last round, with no header', async
     { value: '4', label: 'Best streak', testID: 'quiz-best' },
     { value: '6 of 8', label: 'Last round', testID: 'quiz-last' },
   ]);
+});
+
+test('starting a round keeps the named Back button when the question installs its bar', async () => {
+  const route = { key: 'quiz', name: 'explore/[tool]' };
+  const navigation = {
+    setOptions: jest.fn(),
+    isFocused: () => true,
+    addListener: () => () => {},
+    getState: () => ({
+      routes: [{ key: 'hub', name: 'explore/index' }, route],
+    }),
+  };
+  await mount(
+    <NavigationContext.Provider value={navigation as never}>
+      <NavigationRouteContext.Provider value={route}>
+        <Quiz />
+      </NavigationRouteContext.Provider>
+    </NavigationContext.Provider>,
+  );
+  await press('quiz-start');
+  expect(options()).toMatchObject({
+    title: 'The record quiz',
+    headerTitle: 'The record quiz',
+    headerBackTitle: 'Quizzes and tools',
+    headerBackButtonDisplayMode: 'default',
+  });
+  expect(navigation.setOptions).toHaveBeenCalledWith(
+    expect.objectContaining({ headerBackTitle: 'Quizzes and tools' }),
+  );
 });
 
 test('a full round: typed guesses exact, every answer then its source, and the result with eight reviews', async () => {
