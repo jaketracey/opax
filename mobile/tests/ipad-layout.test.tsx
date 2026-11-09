@@ -3,10 +3,10 @@ import { Dimensions, Text as NativeText, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 
 import {
-  dragWebUrl,
   breakpoints,
   columnBreakout,
   columns,
+  dragWebUrl,
   gridColumns,
   readableInset,
   ScreenColumn,
@@ -21,10 +21,10 @@ import {
   requestFocus,
   takeFocusRequest,
 } from '../src/design/keyboard';
-import { SplitLayout, SplitEmpty, useSplitPane } from '../src/design/split';
 import { Section } from '../src/design/layout';
-import { colors } from '../src/design/tokens';
 import { phoneCopy } from '../src/design/phone-copy';
+import { SplitEmpty, SplitLayout, useSplitPane } from '../src/design/split';
+import { colors } from '../src/design/tokens';
 
 // SplitLayout decides between one pane and two from `useLayout()`; the test
 // sets the region it reports. useFocusEffect runs as a mount effect here.
@@ -95,6 +95,9 @@ describe('keyboard commands', () => {
       .filter((spec) => spec.title)
       .map((spec) => `${spec.modifiers.join('+')}+${spec.input} ${spec.title}`);
     expect(listed).toEqual([
+      'command+. Stop answering',
+      'command+k Ask',
+      'command+l Ask',
       'command+f Find',
       'command+n New question',
       'command+1 Today',

@@ -1,8 +1,8 @@
 import Constants from 'expo-constants';
 import { act, Profiler } from 'react';
 import {
-  StyleSheet,
   Text as NativeText,
+  StyleSheet,
   useWindowDimensions,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -203,7 +203,7 @@ const nativeLines = [
   { text: 'Albanese', x: 0, y: 70.591, width: 200, height: 70.591 },
 ];
 
-test.each(['body', 'metadata', 'fine'] as const)(
+test.each(['body', 'secondary', 'footnote'] as const)(
   'plain %s text protects its fractional final line',
   (variant) => {
     let renderer!: TestRenderer.ReactTestRenderer;

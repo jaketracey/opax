@@ -1,40 +1,40 @@
 import { router, type Href } from 'expo-router';
+import type { ReactNode } from 'react';
+import { isValidElement, useState } from 'react';
 import {
-  ownsRowPadding,
-  useRowHighlight,
-  useRowInset,
-  useRowCellStyle,
-} from './row-padding';
+  Image,
+  Pressable,
+  StyleSheet,
+  View,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native';
+import { localImageURI } from '../api/image-policy';
+import type { PartyStatus } from '../api/party-transforms';
+import { partyRoute } from '../navigation/routes';
+import { useAccessibilitySize } from './accessibility';
+import { Hoverable, useHover } from './adaptive';
+import { Icon } from './icon';
+import {
+  formerMember,
+  isPartyLabel,
+  partyDot,
+  partyIdentity,
+  partyText,
+  type PartyContext,
+} from './party';
 import {
   RowLink,
   rowMenus,
   useRowFollow,
   type RowMenuAction,
 } from './row-link';
-import { partyRoute } from '../navigation/routes';
-import { isValidElement, useState } from 'react';
-import { localImageURI } from '../api/image-policy';
-import type { ReactNode } from 'react';
 import {
-  Image,
-  Pressable,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-  useColorScheme,
-} from 'react-native';
-import { useAccessibilitySize } from './accessibility';
-import { Icon } from './icon';
-import type { PartyStatus } from '../api/party-transforms';
-import {
-  isPartyLabel,
-  partyDot,
-  partyIdentity,
-  partyText,
-  formerMember,
-  type PartyContext,
-} from './party';
-import { Hoverable, useHover } from './adaptive';
+  ownsRowPadding,
+  useRowCellStyle,
+  useRowHighlight,
+  useRowInset,
+} from './row-padding';
 import { SelectedMark, selectedWash, splitRowStyles } from './selection';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
@@ -112,7 +112,21 @@ export function Portrait({
             onDisplay?.(false);
           }}
         />
-      ) : null}
+      ) : (
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Text variant="strong" tone="inkSoft" maxFontSizeMultiplier={1.353}>
+            {name
+              ?.trim()
+              .split(/\s+/)
+              .map((word) => word[0])
+              .filter(Boolean)
+              .slice(0, 2)
+              .join('') || '○'}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -192,8 +206,6 @@ export function PartyLabel({
   dense?: boolean;
   testID?: string;
   linked?: boolean;
-  /** @deprecated Ignored: a party is never a filled capsule. */
-  chip?: boolean;
   /**
    * Inside a row or control that already says the party: drawn only, not a
    * separate VoiceOver element and never a link of its own.
@@ -298,36 +310,6 @@ export function PartyLabel({
         ) : null}
       </Text>
     </Container>
-  );
-}
-
-/**
- * @deprecated Use `PartyLabel` (`dense` for the short label, `linked={false}`
- * inside a row that carries the party action). A party is a dot beside its
- * name, never a tinted capsule: this draws a PartyLabel.
- */
-export function PartyChip({
-  party,
-  status,
-  formerly,
-  short = true,
-  nested = false,
-  testID,
-}: PartyContext & {
-  short?: boolean;
-  nested?: boolean;
-  testID?: string;
-}) {
-  return (
-    <PartyLabel
-      party={party}
-      status={status}
-      formerly={formerly}
-      dense={short}
-      linked={false}
-      nested={nested}
-      testID={testID}
-    />
   );
 }
 

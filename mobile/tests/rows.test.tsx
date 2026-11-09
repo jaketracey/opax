@@ -1,30 +1,17 @@
+import { Link, router } from 'expo-router';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { act, useContext, type ReactElement, type ReactNode } from 'react';
 import {
   Dimensions,
+  Text as NativeText,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   View,
-  Text as NativeText,
 } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Link, router } from 'expo-router';
-import { follow } from '../src/features/follows/store';
-import { NavigationContext } from 'expo-router/react-navigation';
-import {
-  LinkRow,
-  ValueRow,
-  BillRow,
-  RecordRow,
-  DivisionRow,
-  MoneyRow,
-  SuggestionRow,
-} from '../src/design/rows';
-import { PersonRow, Portrait, FaceStack } from '../src/design/people';
-import { RowLink, menuLeaves, rowMenus } from '../src/design/row-link';
 import { Icon } from '../src/design/icon';
-import { Text, Heading } from '../src/design/text';
 import {
   InsetGroup,
   Screen,
@@ -33,19 +20,32 @@ import {
   TitleAnchor,
   TitleAnchorContext,
 } from '../src/design/layout';
+import { FaceStack, PersonRow, Portrait } from '../src/design/people';
+import { RowLink, menuLeaves, rowMenus } from '../src/design/row-link';
+import {
+  BillRow,
+  DivisionRow,
+  LinkRow,
+  MoneyRow,
+  RecordRow,
+  SuggestionRow,
+  ValueRow,
+} from '../src/design/rows';
+import { Heading, Text } from '../src/design/text';
+import { follow } from '../src/features/follows/store';
 
-import { Card, Tile, TileGrid } from '../src/design/card';
-import { FigureBlock, StatStrip, PageFoot } from '../src/design/record';
-import { StatusCapsule, MachinePill, ChoiceChip } from '../src/design/labels';
-import { SourceLine } from '../src/design/source';
-import { Hoverable } from '../src/design/adaptive';
 import * as adaptive from '../src/design/adaptive';
+import { Hoverable } from '../src/design/adaptive';
+import { AUTHORISATION_LINE } from '../src/design/authorisation';
+import { Card, Tile, TileGrid } from '../src/design/card';
+import { ChoiceChip, MachinePill, StatusCapsule } from '../src/design/labels';
+import { FigureBlock, PageFoot, StatStrip } from '../src/design/record';
 import {
   SelectedMark,
   selectedWash,
   splitRowStyles,
 } from '../src/design/selection';
-import { AUTHORISATION_LINE } from '../src/design/authorisation';
+import { SourceLine } from '../src/design/source';
 import { colors, radii } from '../src/design/tokens';
 
 jest.mock('../src/features/follows/store', () => ({
@@ -740,7 +740,7 @@ test('figures retain their required date and source; stat strips stack at AX1', 
     <FigureBlock
       value="92"
       label="Commonwealth grants"
-      source={source}
+      citation={source}
       caveat="Recorded grants only"
     />,
   ).root;
@@ -778,10 +778,8 @@ test('MachinePill is a named button on a navy wash and standalone choices stay c
     <ChoiceChip label="Bills" selected onPress={jest.fn()} />,
   ).root;
   expect(glyphs(choice)).not.toContain('checkmark');
-  const chip = choice.find((node) => typeof node.props.style === 'function');
-  expect(rowStyle(chip)).toMatchObject({ minHeight: 36 });
-  expect(rowStyle(chip).width).toBeUndefined();
-  expect(chip.props.hitSlop).toBe(4);
+  expect(choice.findAllByType(ChoiceChip)).toHaveLength(1);
+  expect(choice.findAllByType(Pressable)).toHaveLength(0);
 });
 test('PageFoot orders authorisation, the correction link and response time', () => {
   expect(strings(render(<PageFoot variant="today" />).root)).toContain(
@@ -1078,7 +1076,7 @@ test('all three split row types draw hover tint and pass the hover handler', () 
   }
 });
 test.each([undefined, 'Anne'])(
-  'Screen leaves stack header styles alone, title=%s',
+  'Screen matches the grouped ground below iOS 26, title=%s',
   (barTitle) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -1100,7 +1098,9 @@ test.each([undefined, 'Anne'])(
         </NavigationContext.Provider>,
       );
       expect(
-        setOptions.mock.calls.every(([options]) => !('headerStyle' in options)),
+        setOptions.mock.calls.some(
+          ([options]) => options.headerStyle?.backgroundColor === colors.sunken,
+        ),
       ).toBe(true);
     } finally {
       Object.defineProperty(Platform, 'Version', descriptor);

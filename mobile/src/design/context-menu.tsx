@@ -1,0 +1,75 @@
+import {
+  Host,
+  RNHostView,
+  Button as SwiftButton,
+  ContextMenu as SwiftContextMenu,
+  Menu as SwiftMenu,
+  Section as SwiftSection,
+} from '@expo/ui/swift-ui';
+import { cloneElement, type ReactElement } from 'react';
+import { Platform, type PressableProps } from 'react-native';
+import { showMenu } from './menu';
+import { menuLeaves, menuSections, type RowMenuAction } from './row-link';
+
+/** A menu on content that has no navigation destination. */
+export function ContextMenu({
+  items,
+  children,
+}: {
+  items: RowMenuAction[];
+  children: ReactElement<PressableProps>;
+}) {
+  const sections = menuSections(items);
+  const leaves = menuLeaves(sections);
+  const trigger = cloneElement(children, {
+    accessibilityActions: [
+      ...(children.props.accessibilityActions ?? []),
+      ...leaves.map(({ title }) => ({ name: title, label: title })),
+    ],
+    onAccessibilityAction: (event) => {
+      const item = leaves.find(
+        (item) => item.title === event.nativeEvent.actionName,
+      );
+      if (item) item.onPress();
+      else children.props.onAccessibilityAction?.(event);
+    },
+    ...(Platform.OS !== 'ios'
+      ? { onLongPress: () => showMenu('', leaves) }
+      : {}),
+  });
+  if (Platform.OS !== 'ios') return trigger;
+  return (
+    <Host matchContents={{ vertical: true }}>
+      <SwiftContextMenu>
+        <SwiftContextMenu.Trigger>
+          <RNHostView matchContents>{trigger}</RNHostView>
+        </SwiftContextMenu.Trigger>
+        <SwiftContextMenu.Items>{nativeItems(sections)}</SwiftContextMenu.Items>
+      </SwiftContextMenu>
+    </Host>
+  );
+}
+
+function nativeItems(items: readonly RowMenuAction[]): ReactElement[] {
+  return items.map((item, index) =>
+    'items' in item ? (
+      item.inline ? (
+        <SwiftSection key={index} title={item.title || undefined}>
+          {nativeItems(item.items)}
+        </SwiftSection>
+      ) : (
+        <SwiftMenu key={index} label={item.title} systemImage={item.symbol}>
+          {nativeItems(item.items)}
+        </SwiftMenu>
+      )
+    ) : (
+      <SwiftButton
+        key={index}
+        label={item.title}
+        systemImage={item.symbol}
+        role={item.destructive ? 'destructive' : undefined}
+        onPress={item.onPress}
+      />
+    ),
+  );
+}

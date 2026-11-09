@@ -6,10 +6,10 @@
 import { act } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
+import { catalogs as runtime } from '../src/api/runtime';
+import { Text } from '../src/design/primitives';
 import Person from '../src/features/Person';
-import { StatRow, Text } from '../src/design/primitives';
 import { catalogs, manifest, people, pinned, roster, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 
@@ -129,30 +129,5 @@ test('no view on a profile is a wrapping column, at any size', async () => {
     const r = await renderProfile(fontScale);
     expect(describeWrappingColumns(r)).toEqual([]);
     await act(async () => r.unmount());
-  }
-});
-
-test('StatRow stacks without wrapping at accessibility sizes', () => {
-  const stats = [
-    { value: '1,234', label: 'speeches', testID: 'stat-a' },
-    { value: '56', label: 'declared interests', testID: 'stat-b' },
-  ];
-  for (const fontScale of Object.values(sizes)) {
-    jest.mocked(useWindowDimensions).mockReturnValue(window(fontScale));
-    let r!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      r = TestRenderer.create(<StatRow stats={stats} />);
-    });
-    expect(describeWrappingColumns(r)).toEqual([]);
-    const row = StyleSheet.flatten(
-      (r.toJSON() as TestRenderer.ReactTestRendererJSON).props.style,
-    );
-    if (fontScale >= sizes.AX1) {
-      expect(row.flexDirection).toBe('column');
-      expect(style(host(r, 'stat-a')).flexBasis).toBeUndefined();
-    } else {
-      expect(row).toMatchObject({ flexDirection: 'row', flexWrap: 'wrap' });
-    }
-    act(() => r.unmount());
   }
 });

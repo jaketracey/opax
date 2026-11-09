@@ -1,79 +1,72 @@
+import { type Href } from 'expo-router';
+import {
+  HeaderHeightContext,
+  NavigationContext,
+} from 'expo-router/react-navigation';
 import {
   Children,
   cloneElement,
   createContext,
+  isValidElement,
+  useCallback,
   useContext,
   useEffect,
-  useCallback,
-  useState,
-  isValidElement,
   useRef,
+  useState,
   type ReactElement,
   type ReactNode,
   type Ref,
   type RefObject,
 } from 'react';
 import {
-  ScrollView,
-  Animated,
-  useColorScheme,
-  Pressable,
   Platform,
+  Pressable,
+  ScrollView,
   StyleSheet,
   View,
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
-import { useReduceMotion, useAccessibilitySize } from './accessibility';
+import { opaqueBar } from '../navigation/chrome';
+import { BarTitle } from '../navigation/useTitleOnScroll';
+import { useAccessibilitySize } from './accessibility';
 import {
-  RegionProvider,
-  Grid,
-  isPad,
-  SidebarSafe,
   columnBreakout,
   columns,
+  isPad,
+  RegionProvider,
+  SidebarSafe,
   useColumnChoice,
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
-import { type InfoNotes } from './info';
-import { type Href } from 'expo-router';
-import {
-  NavigationContext,
-  HeaderHeightContext,
-} from 'expo-router/react-navigation';
-import { Icon } from './icon';
-import { copy } from './copy';
-import type { DateInput } from './format';
-import { RowLink } from './row-link';
-import { light, dark } from './palette';
-import { designFlags } from './flags';
 import { useInCard } from './card';
+import { copy } from './copy';
+import { designFlags } from './flags';
+import type { DateInput } from './format';
+import { Icon } from './icon';
+import { useRefreshCommand } from './keyboard';
+import { RowLink } from './row-link';
 import {
-  SurfaceContext,
-  RowInsetContext,
   RowCellInsetContext,
+  RowInsetContext,
+  SurfaceContext,
 } from './row-padding';
-import { Heading, Text, type TextTone } from './text';
+import { usePaneBar } from './split';
+import { StatePageProvider } from './states';
+import { Heading, Text } from './text';
 import {
   colors,
-  accents,
   hairline,
   layout,
-  rhythm,
-  radii,
   minimumTarget,
+  radii,
+  rhythm,
   rhythmRegular,
-  textStyles,
-  motion,
-  type Accent,
 } from './tokens';
-import { usePaneBar } from './split';
 import { useStableKeyboard } from './useStableKeyboard';
-import { useRefreshCommand } from './keyboard';
 
 // The compatibility button's notes-only adapter now presents /rule.
-export { InfoButton } from './info';
 
 /**
  * The column a screen's content sits in. On compact width (every iPhone,
@@ -123,7 +116,17 @@ export function Screen({
   grouped = false,
   barTitle,
   offline,
+  onLayout: onPageLayout,
+  maintainVisibleContentPosition,
+  contentInsetAdjustmentBehavior = 'automatic',
 }: {
+  onLayout?: ViewProps['onLayout'];
+  maintainVisibleContentPosition?: React.ComponentProps<
+    typeof ScrollView
+  >['maintainVisibleContentPosition'];
+  contentInsetAdjustmentBehavior?: React.ComponentProps<
+    typeof ScrollView
+  >['contentInsetAdjustmentBehavior'];
   testID?: string;
   grouped?: boolean;
   barTitle?: string;
@@ -137,11 +140,15 @@ export function Screen({
 }) {
   const { onLayout, content, inner, bar, regular } = useScreenColumn(column);
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
+  const navigation = useContext(NavigationContext);
+  useEffect(() => {
+    navigation?.setOptions?.(opaqueBar(colors[ground]));
+  }, [navigation, ground]);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
   const suppliedBridge = useContext(ScreenTitleContext);
-  const nativeBridge = useScreenBarTitle(barTitle, anchorBottom !== null);
+  const nativeBridge = useBarTitle(barTitle, anchorBottom !== null);
   const titleBridge = suppliedBridge ?? nativeBridge;
   useEffect(() => {
     titleScroll.current =
@@ -152,48 +159,54 @@ export function Screen({
     !!refreshControl?.props.refreshing,
   );
   return (
-    <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
-      <ScrollView
-        ref={scrollRef}
-        testID={testID}
-        style={[styles.screen, { backgroundColor: colors[ground] }]}
-        contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets
-        keyboardDismissMode="on-drag"
-        refreshControl={refreshControl}
-        contentContainerStyle={[
-          styles.content,
-          content,
-          regular ? { gap: rhythmRegular.section } : null,
-        ]}
-        onLayout={onLayout}
-        onScroll={(event) => {
-          const y = event.nativeEvent.contentOffset.y;
-          titleScroll.current?.(y, anchorBottom);
-          onScroll?.(y);
-        }}
-        scrollEventThrottle={16}
-      >
-        <RegionProvider value={inner}>
-          <SurfaceContext.Provider value={ground}>
-            <TitleAnchorContext.Provider value={setAnchorBottom}>
-              <TitleContentContext.Provider value={contentRoot}>
-                <View
-                  ref={contentRoot}
-                  style={{
-                    gap: regular ? rhythmRegular.section : rhythm.section,
-                  }}
-                >
-                  {bar}
-                  {anchorHeadings(withOffline(children, offline))}
-                </View>
-              </TitleContentContext.Provider>
-            </TitleAnchorContext.Provider>
-          </SurfaceContext.Provider>
-        </RegionProvider>
-      </ScrollView>
-    </SidebarSafe>
+    <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
+      <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
+        <ScrollView
+          ref={scrollRef}
+          testID={testID}
+          style={[styles.screen, { backgroundColor: colors[ground] }]}
+          contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+          keyboardShouldPersistTaps="handled"
+          automaticallyAdjustKeyboardInsets
+          keyboardDismissMode="on-drag"
+          refreshControl={refreshControl}
+          contentContainerStyle={[
+            styles.content,
+            content,
+            regular ? { gap: rhythmRegular.section } : null,
+          ]}
+          maintainVisibleContentPosition={maintainVisibleContentPosition}
+          onLayout={(event) => {
+            onLayout(event);
+            onPageLayout?.(event);
+          }}
+          onScroll={(event) => {
+            const y = event.nativeEvent.contentOffset.y;
+            titleScroll.current?.(y, anchorBottom);
+            onScroll?.(y);
+          }}
+          scrollEventThrottle={16}
+        >
+          <RegionProvider value={inner}>
+            <SurfaceContext.Provider value={ground}>
+              <TitleAnchorContext.Provider value={setAnchorBottom}>
+                <TitleContentContext.Provider value={contentRoot}>
+                  <View
+                    ref={contentRoot}
+                    style={{
+                      gap: regular ? rhythmRegular.section : rhythm.section,
+                    }}
+                  >
+                    {bar}
+                    {anchorHeadings(withOffline(children, offline))}
+                  </View>
+                </TitleContentContext.Provider>
+              </TitleAnchorContext.Provider>
+            </SurfaceContext.Provider>
+          </RegionProvider>
+        </ScrollView>
+      </SidebarSafe>
+    </StatePageProvider>
   );
 }
 
@@ -225,34 +238,40 @@ export function KeyboardStableScreen({
     !!refreshControl?.props.refreshing,
   );
   return (
-    <SidebarSafe style={styles.screen}>
-      <ScrollView
-        ref={scroll}
-        testID={testID}
-        style={styles.screen}
-        contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets={false}
-        scrollToOverflowEnabled
-        keyboardDismissMode="on-drag"
-        refreshControl={refreshControl}
-        contentContainerStyle={[styles.content, content, keyboard.contentStyle]}
-        onLayout={(event) => {
-          onLayout(event);
-          keyboard.onLayout(event);
-        }}
-        onScroll={(event) => {
-          keyboard.onScroll(event);
-          onScroll?.(event.nativeEvent.contentOffset.y);
-        }}
-        scrollEventThrottle={16}
-      >
-        <RegionProvider value={inner}>
-          {bar}
-          {children}
-        </RegionProvider>
-      </ScrollView>
-    </SidebarSafe>
+    <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
+      <SidebarSafe style={styles.screen}>
+        <ScrollView
+          ref={scroll}
+          testID={testID}
+          style={styles.screen}
+          contentInsetAdjustmentBehavior="automatic"
+          keyboardShouldPersistTaps="handled"
+          automaticallyAdjustKeyboardInsets={false}
+          scrollToOverflowEnabled
+          keyboardDismissMode="on-drag"
+          refreshControl={refreshControl}
+          contentContainerStyle={[
+            styles.content,
+            content,
+            keyboard.contentStyle,
+          ]}
+          onLayout={(event) => {
+            onLayout(event);
+            keyboard.onLayout(event);
+          }}
+          onScroll={(event) => {
+            keyboard.onScroll(event);
+            onScroll?.(event.nativeEvent.contentOffset.y);
+          }}
+          scrollEventThrottle={16}
+        >
+          <RegionProvider value={inner}>
+            {bar}
+            {children}
+          </RegionProvider>
+        </ScrollView>
+      </SidebarSafe>
+    </StatePageProvider>
   );
 }
 
@@ -313,7 +332,7 @@ export function SectionHeader({
     </View>
   );
 }
-/** Section boundaries use space and a heading. Legacy props remain until wave 6. */
+/** Section boundaries use space and a heading. */
 export function Section({
   title,
   action,
@@ -326,11 +345,6 @@ export function Section({
   children: ReactNode;
   testID?: string;
   headingTestID?: string;
-  /** @deprecated Section headers no longer draw a rule. */ rule?: boolean;
-  /** @deprecated Use a SourceLine for notes. */ info?: InfoNotes & {
-    testID?: string;
-  };
-  /** @deprecated Section headers have no accent. */ accent?: Accent;
 }) {
   const isAction =
     action &&
@@ -445,40 +459,7 @@ export function InsetGroup({
   );
 }
 
-/** A fallback for Screen; the shell may supply its shared title renderer. */
-function ScreenBarTitle({ title, shown }: { title: string; shown: boolean }) {
-  const reduced = useReduceMotion();
-  const [opacity] = useState(() => new Animated.Value(shown ? 1 : 0));
-  useEffect(() => {
-    const animation = Animated.timing(opacity, {
-      toValue: shown ? 1 : 0,
-      duration: reduced ? 0 : motion.duration.crossfade,
-      useNativeDriver: true,
-    });
-    animation.start();
-    return () => animation.stop();
-  }, [opacity, shown, reduced]);
-  return (
-    <Animated.Text
-      numberOfLines={1}
-      ellipsizeMode="tail"
-      maxFontSizeMultiplier={1.353}
-      allowFontScaling
-      accessibilityElementsHidden={!shown}
-      importantForAccessibility={shown ? 'auto' : 'no-hide-descendants'}
-      style={{
-        fontFamily: textStyles.inlineTitle.fontFamily,
-        fontWeight: textStyles.inlineTitle.fontWeight,
-        fontSize: textStyles.inlineTitle.fontSize,
-        color: colors.ink,
-        opacity,
-      }}
-    >
-      {title}
-    </Animated.Text>
-  );
-}
-function useScreenBarTitle(title: string | undefined, anchored: boolean) {
+function useBarTitle(title: string | undefined, anchored: boolean) {
   const navigation = useContext(NavigationContext);
   const header = useContext(HeaderHeightContext) || 44;
   const shown = useRef(false);
@@ -489,7 +470,7 @@ function useScreenBarTitle(title: string | undefined, anchored: boolean) {
     if (!title || !anchored) return;
     shown.current = false;
     navigation?.setOptions({
-      headerTitle: () => <ScreenBarTitle title={title} shown={false} />,
+      headerTitle: () => <BarTitle title={title} shown={false} />,
     });
   }, [navigation, title, anchored]);
   return useCallback(
@@ -503,9 +484,7 @@ function useScreenBarTitle(title: string | undefined, anchored: boolean) {
           Platform.OS === 'android'
             ? { headerTitle: next ? barTitle : '' }
             : {
-                headerTitle: () => (
-                  <ScreenBarTitle title={barTitle} shown={next} />
-                ),
+                headerTitle: () => <BarTitle title={barTitle} shown={next} />,
               },
         );
       },
@@ -615,163 +594,6 @@ function anchorHeadings(children: ReactNode): ReactNode {
   });
 }
 
-/**
- * A soft fade over the top edge of a scrolling panel, from the paper to
- * clear, so lines that have scrolled up read as "more above" rather than cut
- * off. Decorative; place it last inside a relatively positioned wrapper.
- */
-/** @deprecated Native scroll edge effects replace this fade. */
-export function EdgeFade({
-  height = 32,
-  testID,
-}: {
-  height?: number;
-  testID?: string;
-}) {
-  const palette = useColorScheme() === 'dark' ? dark : light;
-  return (
-    <View
-      pointerEvents="none"
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-      testID={testID}
-      style={[
-        styles.fade,
-        {
-          height,
-          experimental_backgroundImage: `linear-gradient(to bottom, ${palette.paper} 0%, ${palette.paper}00 100%)`,
-        },
-      ]}
-    />
-  );
-}
-
-/** A second list within a section: subtle rule and a subsection heading. */
-/** @deprecated Use Heading level 3 and a tight gap. */
-export function SubSection({
-  title,
-  children,
-  testID,
-}: {
-  title: string;
-  children: ReactNode;
-  testID?: string;
-}) {
-  return (
-    <View testID={testID} style={styles.subsection}>
-      <Heading level={3}>{title}</Heading>
-      {children}
-    </View>
-  );
-}
-
-/**
- * Rows separated by subtle hairlines: 10pt either side of content, 2pt
- * either side of a control row (LinkRow, Disclosure, PersonRow, a web link)
- * that carries its own 44pt height and padding, so a one-line row is 48pt.
- */
-/** @deprecated Use InsetGroup. */
-export function RowList({
-  children,
-  grid = false,
-}: {
-  children: ReactNode;
-  grid?: boolean;
-}) {
-  const { regular } = useLayout();
-  return grid && isPad && regular ? (
-    <Grid minItemWidth={320}>{children}</Grid>
-  ) : (
-    <InsetGroup>{children}</InsetGroup>
-  );
-}
-
-export interface KeyValue {
-  label: string;
-  value: string;
-  /** Overrides "label, value" when the value needs words ("4,537,500 dollars"). */
-  accessibilityLabel?: string;
-  testID?: string;
-}
-/**
- * Facts as label and value. Side by side at ordinary sizes; stacked at
- * accessibility sizes so neither is squeezed.
- */
-/** @deprecated Use ValueRows in an InsetGroup. */
-export function KeyValueList({ items }: { items: readonly KeyValue[] }) {
-  const stacked = useAccessibilitySize();
-  return (
-    <RowList>
-      {items.map((item) => (
-        <View
-          key={item.label}
-          accessible
-          accessibilityLabel={
-            item.accessibilityLabel ?? `${item.label}, ${item.value}`
-          }
-          testID={item.testID}
-          style={stacked ? styles.kvStacked : styles.kvInline}
-        >
-          <Text variant="secondary" style={stacked ? null : styles.kvLabel}>
-            {item.label}
-          </Text>
-          <Text
-            variant="strong"
-            tabular
-            style={stacked ? null : styles.kvValue}
-          >
-            {item.value}
-          </Text>
-        </View>
-      ))}
-    </RowList>
-  );
-}
-
-export interface Stat {
-  value: string;
-  label: string;
-  /** What VoiceOver reads for the value: "4.2 million dollars". */
-  valueLabel?: string;
-  testID?: string;
-}
-/**
- * Figures with their labels, wrapping into a row of tiles; one per line at
- * accessibility sizes. Each tile reads "value, label".
- */
-/** @deprecated Use StatStrip with a dated source for its block. */
-export function StatRow({
-  stats,
-  accent,
-}: {
-  stats: readonly Stat[];
-  /** Tints the figures with a category accent. */
-  accent?: Accent;
-}) {
-  const stacked = useAccessibilitySize();
-  const tone = accent ? (accents[accent].ink as TextTone) : undefined;
-  return (
-    <View style={[styles.stats, stacked ? styles.statsStacked : null]}>
-      {stats.map((stat) => (
-        <View
-          key={stat.label}
-          accessible
-          accessibilityLabel={`${stat.valueLabel ?? stat.value}, ${stat.label}`}
-          testID={stat.testID}
-          style={stacked ? null : styles.stat}
-        >
-          <Text variant="figure" tone={tone}>
-            {stat.value}
-          </Text>
-          <Text wordSafe variant="secondary">
-            {stat.label}
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: {
@@ -793,47 +615,14 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     overflow: 'hidden',
   },
-  fade: { position: 'absolute', top: 0, left: 0, right: 0 },
   sectionHead: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.tight,
   },
-  // Heading to content is 12pt: the section's 16pt gap, less 4.
-  sectionHeadSpaced: { marginBottom: rhythm.heading - rhythm.block },
   sectionHeadStacked: {
     gap: rhythm.line,
     marginBottom: rhythm.heading - rhythm.block,
   },
-  sectionTools: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
   grow: { flexGrow: 1, flexShrink: 1 },
-  subsection: {
-    gap: rhythm.tight,
-    marginTop: layout.subGap - rhythm.block,
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerSubtle,
-    paddingTop: rhythm.heading,
-  },
-  row: { paddingVertical: layout.rowGap },
-  controlRow: { paddingVertical: 2 },
-  kvInline: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    gap: rhythm.block,
-  },
-  kvStacked: { gap: rhythm.line },
-  kvLabel: { flex: 1 },
-  kvValue: { textAlign: 'right', flexShrink: 1, maxWidth: '60%' },
-  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.block },
-  // Never a wrapping column: Yoga lays its stretched tiles out at max-content
-  // width, so their text measures one width and draws in another (blank or
-  // clipped figures at AX5, the profile strip in build 33).
-  statsStacked: { flexDirection: 'column', flexWrap: 'nowrap' },
-  stat: { minWidth: 96, flexGrow: 1, flexBasis: 96, gap: 2 },
 });
