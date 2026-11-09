@@ -21,6 +21,8 @@ import { welcomeDeclinedThisLaunch } from '../onboarding/state';
 import { EditionCard, EditionSkeleton } from './edition/EditionCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
+import { AustraliaDots, useTodayDotsScroll } from './today/AustraliaDots';
+import { electorateDotState } from './today/australia-dots-model';
 import { BillsBlock } from './today/BillFeed';
 import { DailyPair } from './today/DailyPair';
 import { DeclarationsBlock } from './today/DeclarationRow';
@@ -218,6 +220,7 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
  * on its own, keeps its saved copy and ends in its own dated line.
  */
 export default function Today() {
+  const dots = useTodayDotsScroll();
   const offline = useOffline();
   const now = useNow();
   const day = sydneyDay(now);
@@ -383,11 +386,24 @@ export default function Today() {
       onLayout={() => releaseSplash('today')}
       column="wide"
       grouped
+      scrollRef={dots.scrollRef}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <Masthead now={now} offlineSavedAt={offlineAt ?? null} />
+      <Masthead
+        now={now}
+        offlineSavedAt={offlineAt ?? null}
+        mark={
+          seat.status !== 'loading' ? (
+            <AustraliaDots
+              state={electorateDotState(home)}
+              scroll={dots.scroll}
+              expandedHeader={dots.expandedHeader}
+            />
+          ) : null
+        }
+      />
       <TodayReports value={reports}>
         {order && ready ? (
           <TodayBody order={order} slot={slot} />
