@@ -1,32 +1,33 @@
+import { fonts } from '../design/tokens.generated';
 // First: holds the native splash until the launch handoff replaces it.
+import { useFonts } from 'expo-font';
+import { Stack, router, useRootNavigationState, type Href } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Linking, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { isPad } from '../design/adaptive';
+import { hasSourcePreview } from '../design/environment';
+import { AndroidMenuHost } from '../design/menu';
+import { colors } from '../design/tokens';
+import { RootLaunchHandoff } from '../launch/LaunchHandoff';
 import { decideSplashPlain, holdSplashForWelcome } from '../launch/splash';
 import { useStackChrome } from '../navigation/chrome';
-import { rootScreens, rootSettings } from '../navigation/stack/root';
+import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
+import { welcomeRoute } from '../navigation/routes';
 import {
   ExternalURLProbe,
   presentSourceDestination,
   sourceDestination,
   subscribeSourceDestination,
 } from '../navigation/source-destination';
-import { AndroidMenuHost } from '../design/menu';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
-import { Stack, router, useRootNavigationState, type Href } from 'expo-router';
-import { useFonts } from 'expo-font';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { hasSourcePreview } from '../design/environment';
-import { colors, fonts } from '../design/tokens';
-import { RootLaunchHandoff } from '../launch/LaunchHandoff';
+import { rootScreens, rootSettings } from '../navigation/stack/root';
 import {
   checkFirstLaunch,
   hideTour,
   isContentLink,
   useTourState,
 } from '../onboarding/state';
-import { welcomeRoute } from '../navigation/routes';
-import { isPad } from '../design/adaptive';
-import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 export const unstable_settings = rootSettings;
 
 export default function Layout() {

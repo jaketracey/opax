@@ -1,12 +1,13 @@
 import { useSegments } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import { Platform } from 'react-native';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { OpaxIPad } from '../../../modules/opax-ipad';
+import { designFlags } from '../../design/flags';
+import { dispatchKeyCommand } from '../../design/keyboard';
+import { colors } from '../../design/tokens';
 import { AndroidTabs } from '../../navigation/AndroidTabs';
 import { setSelectedTab } from '../../navigation/link-tab';
-import { designFlags } from '../../design/flags';
-import { colors } from '../../design/tokens';
 // Search takes the system role on iOS 26; older iOS and Android keep five tabs.
 // Deviation: the role gives the detached search item on iOS 26, but on iOS 27
 // UIKit draws a .search system item inline in the full bar (it still stands
@@ -25,7 +26,8 @@ export default function TabsLayout() {
     void OpaxIPad?.configureWordSafeSidebarLabels();
   }, []);
   // Warm Money map links open in the selected tab (navigation/link-tab.ts).
-  const tab = (useSegments() as string[])[1];
+  const segments = useSegments() as string[];
+  const tab = segments[1];
   useEffect(() => setSelectedTab(tab), [tab]);
   if (Platform.OS === 'android') return <AndroidTabs />;
   const searchRole =
@@ -73,7 +75,16 @@ export default function TabsLayout() {
         />
       </NativeTabs.Trigger>
       {searchRole ? null : search}
-      <NativeTabs.Trigger name="(ask)" testID="tab-ask">
+      <NativeTabs.Trigger
+        name="(ask)"
+        testID="tab-ask"
+        listeners={{
+          tabPress: () => {
+            if (tab === '(ask)' && segments.at(-1) === 'ask')
+              dispatchKeyCommand('ask-reselect');
+          },
+        }}
+      >
         <NativeTabs.Trigger.Label>Ask</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'text.bubble', selected: 'text.bubble.fill' }}

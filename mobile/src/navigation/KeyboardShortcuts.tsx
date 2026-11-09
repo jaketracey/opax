@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
 import {
   router,
   useNavigationContainerRef,
   usePathname,
   type Href,
 } from 'expo-router';
+import { useEffect } from 'react';
 import {
   installKeyCommands,
   requestFocus,
@@ -33,6 +33,15 @@ export function KeyboardShortcuts() {
   useEffect(() => {
     installKeyCommands();
   }, []);
+  useKeyCommand('stop-answer', () => askSession.stop());
+  useKeyCommand('focus-composer-k', () => {
+    requestFocus('ask');
+    router.navigate('/ask' as Href);
+  });
+  useKeyCommand('focus-composer-l', () => {
+    requestFocus('ask');
+    router.navigate('/ask' as Href);
+  });
   useKeyCommand('find', () => {
     requestFocus('search');
     router.navigate('/search' as Href);

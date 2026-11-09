@@ -1,11 +1,30 @@
-import React, { act } from 'react';
-import TestRenderer from 'react-test-renderer';
-import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
-import { NavigationContext } from 'expo-router/react-navigation';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
+import { NavigationContext } from 'expo-router/react-navigation';
+import React, { act } from 'react';
+import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import TestRenderer from 'react-test-renderer';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
+import { designFlags } from '../src/design/flags';
+import { colors } from '../src/design/tokens';
+import {
+  androidHeaderBar,
+  askHeaderItems,
+  glassBar,
+  opaqueBar,
+  pageItems,
+  pageMenu,
+  rootHeaderItems,
+  shortSheet,
+  useStackChrome,
+} from '../src/navigation/chrome';
+import {
+  ExternalURLProbe,
+  recordExternalURL,
+} from '../src/navigation/source-destination';
 import { askScreens } from '../src/navigation/stack/ask';
+import { editionScreens } from '../src/navigation/stack/edition';
+import { recordsScreens } from '../src/navigation/stack/records';
 import {
   rootBackTitle,
   screen,
@@ -13,31 +32,12 @@ import {
   untitled,
 } from '../src/navigation/stack/screen';
 import {
-  pageItems,
-  pageMenu,
-  rootHeaderItems,
-  askHeaderItems,
-  opaqueBar,
-  glassBar,
-  useStackChrome,
-  shortSheet,
-  androidHeaderBar,
-} from '../src/navigation/chrome';
-import {
-  useTitleOnScroll,
   BarTitle,
   barTitleWidth,
   emptyBarTitle,
   inlineTitleScaleCap,
+  useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
-import { recordsScreens } from '../src/navigation/stack/records';
-import { editionScreens } from '../src/navigation/stack/edition';
-import {
-  ExternalURLProbe,
-  recordExternalURL,
-} from '../src/navigation/source-destination';
-import { designFlags } from '../src/design/flags';
-import { colors } from '../src/design/tokens';
 
 jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
@@ -225,7 +225,11 @@ test('inline and sheet bars cover content and roots keep a native scroll edge', 
 test('iOS 26 leaves material to the system and older bars accept the screen ground', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
-  expect(opaqueBar(colors.sunken)).toEqual({});
+  const bar = opaqueBar(colors.sunken);
+  expect(bar).not.toHaveProperty('headerStyle');
+  expect(bar.headerBackground?.()).toMatchObject({
+    props: { style: { backgroundColor: colors.sunken } },
+  });
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 18 });
   expect(opaqueBar(colors.sunken)).toMatchObject({
     headerStyle: { backgroundColor: colors.sunken },
@@ -548,3 +552,24 @@ test('Reduce Motion cuts the bar title instead of animating it', () => {
   );
   act(() => view.unmount());
 });
+
+test.each([colors.paper, colors.sunken])(
+  'iOS 26 draws the page ground %p behind the system bar while retaining the hard edge',
+  (ground) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    try {
+      const options = opaqueBar(ground);
+      expect(options.headerBackground?.()).toMatchObject({
+        props: { style: { backgroundColor: ground } },
+      });
+      expect(options).not.toHaveProperty('headerStyle');
+      expect(options).not.toHaveProperty('headerBlurEffect');
+    } finally {
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);

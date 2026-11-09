@@ -121,7 +121,7 @@ test('only development and e2e override the heading face at module load', () => 
     });
   }
 });
-test('every reserved module has a star export and authorisation stays direct', () => {
+test('every reserved module has explicit exports and authorisation stays direct', () => {
   const barrel = readFileSync(
     join(__dirname, '../src/design/primitives.tsx'),
     'utf8',
@@ -136,9 +136,9 @@ test('every reserved module has a star export and authorisation stays direct', (
     'party-groups',
     'device',
   ])
-    expect(barrel).toContain(`export * from './${module}';`);
+    expect(barrel).toContain(`from './${module}';`);
   expect(barrel).not.toContain('authorisation');
-  expect(barrel).not.toMatch(/export\s*\{/);
+  expect(barrel).not.toMatch(/export\s*\*/);
 });
 
 test('flag JSON changes extra.designFlags without a code edit, production ignores it', () => {

@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: radii.container,
     paddingTop: rhythm.block,
     maxHeight: '85%',
+    borderCurve: 'continuous',
   },
   title: {
     paddingHorizontal: rhythm.screen,

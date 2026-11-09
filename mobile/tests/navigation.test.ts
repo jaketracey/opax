@@ -1,7 +1,14 @@
+import { router } from 'expo-router';
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { Alert } from 'react-native';
-import { router } from 'expo-router';
+import { isE2E, webOrigin } from '../src/design/environment';
+import { partyIdentity } from '../src/design/party';
+import {
+  contentSizeCategory,
+  isAccessibilityCategory,
+  largeTitleSizes,
+} from '../src/design/tokens';
 import {
   canonicalUrl,
   forbiddenOpaxRoute,
@@ -14,13 +21,6 @@ import {
   presentSourceDestination,
   sourceDestination,
 } from '../src/navigation/source-destination';
-import { isE2E, webOrigin } from '../src/design/environment';
-import { partyIdentity } from '../src/design/party';
-import {
-  contentSizeCategory,
-  isAccessibilityCategory,
-  navigationTitleSizes,
-} from '../src/design/tokens';
 
 jest.mock('expo-constants', () => ({
   __esModule: true,
@@ -408,10 +408,9 @@ describe('Dynamic Type mapping', () => {
     expect(isAccessibilityCategory(1.353)).toBe(false);
     expect(isAccessibilityCategory(1.786)).toBe(true);
   });
-  test('navigation titles follow the system ramps', () => {
-    expect(navigationTitleSizes(1)).toEqual({ largeTitle: 34, title: 17 });
-    expect(navigationTitleSizes(3.571)).toEqual({ largeTitle: 60, title: 23 });
-    expect(navigationTitleSizes(0.823)).toEqual({ largeTitle: 31, title: 14 });
+  test('large-title serif metrics follow the system ramp', () => {
+    expect(largeTitleSizes.large).toBe(34);
+    expect(largeTitleSizes.ax5).toBe(60);
   });
 });
 

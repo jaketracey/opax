@@ -3,10 +3,10 @@ import { Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import {
   closeSheetItem,
-  headerItems,
-  shortSheet,
-  rootHeaderItems,
   glassBar,
+  headerItems,
+  rootHeaderItems,
+  shortSheet,
   type TabSegment,
 } from '../chrome';
 import { emptyBarTitle } from '../useTitleOnScroll';
@@ -91,9 +91,6 @@ export const sheetOptions: NativeStackNavigationOptions = {
   ...headerItems(() => [closeSheetItem()]),
   ...(Platform.OS === 'android' ? { header: AndroidReadingHeader } : {}),
 };
-export function placeholderStack(screens: { name: string; title: string }[]) {
-  return screens.map(({ name, title }) => screen(name, title));
-}
 
 export function tabRootScreen(
   segment: string,

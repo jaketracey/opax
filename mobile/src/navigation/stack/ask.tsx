@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { colors } from '../../design/tokens';
-import { askHeaderItems, glassBar } from '../chrome';
+import { askHeaderItems, glassBar, opaqueBar } from '../chrome';
 import { conversationsRoute } from '../routes/ask';
 import { screen, sheetOptions } from './screen';
 
@@ -12,6 +12,8 @@ import { screen, sheetOptions } from './screen';
 export function askScreens(segment = '', signedIn = false) {
   return [
     screen('ask', 'Ask', {
+      ...opaqueBar(colors.sunken),
+      contentStyle: { backgroundColor: colors.sunken },
       headerLargeTitleEnabled: segment === '(ask)',
       headerTransparent: segment === '(ask)' && glassBar(),
       ...askHeaderItems({

@@ -2,7 +2,13 @@ import type { NativeStackHeaderProps } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
-import { fonts, light, rhythm, textStyles } from '../design/tokens';
+import { symbols } from '../design/symbols';
+import {
+  colors,
+  interfaceFonts as fonts,
+  rhythm,
+  textStyles,
+} from '../design/tokens';
 import { androidBar } from './chrome';
 
 /**
@@ -16,8 +22,8 @@ export function AndroidReadingHeader({
   back,
 }: NativeStackHeaderProps) {
   const right = options.headerRight?.({
-    tintColor: light.navy,
-    backgroundColor: light.paper,
+    tintColor: colors.navy,
+    backgroundColor: colors.paper,
     canGoBack: !!back,
   });
   return (
@@ -31,7 +37,7 @@ export function AndroidReadingHeader({
             onPress={() => navigation.goBack()}
             style={styles.action}
           >
-            <Icon name="arrow.left" size={24} maxScale={1} />
+            <Icon name={symbols.arrowLeft} size={24} maxScale={1} />
           </Pressable>
         ) : null}
         <Text accessibilityRole="header" style={styles.title}>
@@ -59,7 +65,7 @@ export function AndroidReadingHeader({
 }
 
 const styles = StyleSheet.create({
-  bar: { backgroundColor: light.paper },
+  bar: { backgroundColor: colors.paper },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -71,13 +77,13 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: textStyles.inlineTitle.fontFamily,
     fontSize: androidBar.title,
-    color: light.ink,
+    color: colors.ink,
   },
   action: { minWidth: 48, minHeight: 48, justifyContent: 'center' },
   trailing: { alignItems: 'flex-end' },
   done: {
     fontFamily: fonts.sansSemiBold,
     fontSize: androidBar.action,
-    color: light.navy,
+    color: colors.navy,
   },
 });

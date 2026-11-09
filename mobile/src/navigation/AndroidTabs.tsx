@@ -5,7 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHighTextContrast } from '../design/accessibility';
 import { Icon } from '../design/icon';
 import { lightHighContrast } from '../design/palette';
-import { chrome, colors, fonts, radii } from '../design/tokens';
+import {
+  colors,
+  interfaceFonts as fonts,
+  radii,
+  useChromeColours,
+} from '../design/tokens';
 
 const tabs = [
   ['(today)', 'today', 'Today', 'newspaper'],
@@ -28,6 +33,7 @@ const BAR_HEIGHT = 72;
  */
 export function AndroidTabs() {
   const insets = useSafeAreaInsets();
+  const chrome = useChromeColours();
   // The labels are plain hex, so High contrast text takes the stronger role
   // by hand, as `Text` does everywhere else. (Icons are not text.)
   const inactive = useHighTextContrast()
@@ -106,6 +112,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.capsule,
     alignItems: 'center',
     justifyContent: 'center',
+    borderCurve: 'continuous',
   },
   chosen: { backgroundColor: colors.navyWash },
   label: {

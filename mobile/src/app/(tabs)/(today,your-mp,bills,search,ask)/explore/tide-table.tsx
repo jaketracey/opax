@@ -1,4 +1,4 @@
-import { RoutePlaceholder } from '../../../../navigation/RoutePlaceholder';
-export default function Placeholder() {
-  return <RoutePlaceholder route="explore/tide-table" title="Topic tide" />;
+import { Redirect } from 'expo-router';
+export default function TideTable() {
+  return <Redirect href="/explore/tide?view=table" />;
 }
