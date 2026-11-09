@@ -5,12 +5,59 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import { useContext, useLayoutEffect, useRef } from 'react';
+import {
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useSyncExternalStore,
+} from 'react';
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { glassBar, largeTitleBar, opaqueBar, tabRootGround } from './chrome';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
+
+// A stacked UIKit search row occupies up to 56 pt, independently of the large
+// title. Integrated/automatic fields can live in the bar or tab bar instead.
+const stackedSearchHeight = 56;
+const searches = new WeakMap<
+  object,
+  { pinned: boolean; listeners: Set<() => void> }
+>();
+
+function searchState(navigation: object) {
+  let state = searches.get(navigation);
+  if (!state) {
+    state = { pinned: false, listeners: new Set() };
+    searches.set(navigation, state);
+  }
+  return state;
+}
+
+/**
+ * RouteOptions and Screen can be siblings. Share only the search row's layout
+ * from the actual route options, keyed by the route's navigation object.
+ * Screen remains the sole appearance owner for Search, including its changing
+ * idle/results ground. Bills and Ask retain their RouteOptions owner.
+ */
+export function useRootBarSearchOptions(
+  options: NativeStackNavigationOptions | undefined,
+) {
+  const navigation = useContext(NavigationContext);
+  const search = options?.headerSearchBarOptions;
+  const pinned =
+    search?.hideWhenScrolling === false && search.placement === 'stacked';
+  useLayoutEffect(() => {
+    // Like setOptions, an omitted property leaves the existing option intact.
+    if (!navigation || !options || !('headerSearchBarOptions' in options))
+      return;
+    const state = searchState(navigation);
+    if (state.pinned === pinned) return;
+    state.pinned = pinned;
+    state.listeners.forEach((listener) => listener());
+  }, [navigation, options, pinned]);
+}
 
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
@@ -33,6 +80,22 @@ export function useRootBarAppearance(
   } = {},
 ) {
   const navigation = useContext(NavigationContext);
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (!navigation) return () => {};
+      const state = searchState(navigation);
+      state.listeners.add(listener);
+      return () => {
+        state.listeners.delete(listener);
+      };
+    },
+    [navigation],
+  );
+  const pinnedSearch = useSyncExternalStore(
+    subscribe,
+    () => (navigation ? (searches.get(navigation)?.pinned ?? false) : false),
+    () => false,
+  );
   const route = useContext(NavigationRouteContext);
   const state = route ? navigation?.getState() : undefined;
   // Every tab uses the shared route inventory. Account and other sheet stacks
@@ -57,7 +120,11 @@ export function useRootBarAppearance(
     getDefaultHeaderHeight(frame, false, top),
     top + (pad ? 50 : landscapePhone ? 32 : 44),
   );
-  const expandedRoute = useRef<string>(undefined);
+  const collapsedHeight =
+    compactHeight + (pinnedSearch ? stackedSearchHeight : 0);
+  const expandedRoute = useRef<{ key: string; collapsedHeight: number }>(
+    undefined,
+  );
   const applied = useRef<{
     key: string;
     setter: typeof setOptions;
@@ -72,12 +139,15 @@ export function useRootBarAppearance(
       applied.current = undefined;
       return;
     }
-    if (headerHeight > compactHeight + 1) expandedRoute.current = rootKey;
+    if (headerHeight > collapsedHeight + 1)
+      expandedRoute.current = { key: rootKey, collapsedHeight };
     // NativeStack starts with an estimated inline height before UIKit reports
     // the expanded bar. Do not mistake that first estimate for a collapse.
     const collapsed =
       landscapePhone ||
-      (expandedRoute.current === rootKey && headerHeight <= compactHeight + 1);
+      (expandedRoute.current?.key === rootKey &&
+        expandedRoute.current.collapsedHeight === collapsedHeight &&
+        headerHeight <= collapsedHeight + 1);
     const previous = applied.current;
     if (
       previous?.key === rootKey &&
@@ -102,7 +172,7 @@ export function useRootBarAppearance(
     setOptions,
     colour,
     headerHeight,
-    compactHeight,
+    collapsedHeight,
     landscapePhone,
     largeTitleEnabled,
   ]);

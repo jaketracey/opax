@@ -775,6 +775,93 @@ test.each(tabCases)(
   },
 );
 
+test.each([
+  ['(search)', 'search', false],
+  ['(search)', 'search', true],
+  ['(bills)', 'bills', false],
+] as const)(
+  '%s with a pinned stacked field switches once per collapse transition, route = %s, grouped = %s',
+  (segment, name, grouped) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const route = { key: `${name}-root`, name };
+    const ground = grouped ? colors.sunken : colors.paper;
+    let current = largeTitleBar(ground);
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: sharedScreens(segment, false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+      setOptions: jest.fn((next: object) => {
+        current = { ...current, ...next };
+      }),
+    };
+    const options = {
+      headerSearchBarOptions: {
+        hideWhenScrolling: false,
+        placement: 'stacked' as const,
+      },
+    };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={height}>
+              <RouteOptions options={options} />
+              {name === 'search' && (
+                <Screen grouped={grouped}>
+                  <View />
+                </Screen>
+              )}
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const expanded = () => {
+      expect(current.headerStyle).not.toHaveProperty('backgroundColor');
+      expect(current.headerLargeStyle).toEqual({ backgroundColor: ground });
+      expect(current).not.toHaveProperty('headerBlurEffect');
+    };
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      renderer = tree(page(68)); // NativeStack's initial bare inline estimate.
+      expanded();
+      navigation.setOptions.mockClear();
+      // 24 pt inset + 44 pt inline bar + 56 pt search + 52 pt large title.
+      for (const height of [176, 175, 170])
+        act(() => renderer!.update(page(height)));
+      expanded();
+      expect(navigation.setOptions).not.toHaveBeenCalled();
+      act(() => renderer!.update(page(124)));
+      expect(current.headerStyle).toEqual({ backgroundColor: ground });
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      for (const height of [124, 124.5, 120, 124, 120.5])
+        act(() => renderer!.update(page(height)));
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      act(() => renderer!.update(page(176)));
+      expanded();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      for (const height of [175, 176, 174])
+        act(() => renderer!.update(page(height)));
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
+
 test.each(['bills', 'ask'])(
   '%s observes native collapse without a shared Screen',
   (name) => {
@@ -798,7 +885,17 @@ test.each(['bills', 'ask'])(
         ).map((entry) => entry.props.name),
       }),
     };
-    const options = { title: name };
+    const options = {
+      title: name,
+      ...(name === 'bills'
+        ? {
+            headerSearchBarOptions: {
+              hideWhenScrolling: true,
+              placement: 'stacked' as const,
+            },
+          }
+        : {}),
+    };
     const page = (height: number) => (
       <NavigationContext.Provider value={navigation as never}>
         <NavigationRouteContext.Provider value={route}>
@@ -810,11 +907,15 @@ test.each(['bills', 'ask'])(
     );
     let renderer: TestRenderer.ReactTestRenderer | undefined;
     try {
-      renderer = tree(page(100));
+      renderer = tree(page(152)); // Inline + large title + search field.
       expect(setOptions).toHaveBeenCalledWith(
         expect.objectContaining({ headerStyle: {} }),
       );
       setOptions.mockClear();
+      // Bills hides its field first. The remaining large title must stay clear.
+      for (const height of [100, 99, 100.5])
+        act(() => renderer!.update(page(height)));
+      expect(setOptions).not.toHaveBeenCalled();
       act(() => renderer!.update(page(44)));
       expect(setOptions).toHaveBeenCalledTimes(1);
       expect(setOptions).toHaveBeenLastCalledWith(

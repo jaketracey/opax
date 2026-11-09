@@ -4,7 +4,10 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { useCallback, useContext, useLayoutEffect } from 'react';
-import { useRootBarAppearance } from './useRootBarAppearance';
+import {
+  useRootBarAppearance,
+  useRootBarSearchOptions,
+} from './useRootBarAppearance';
 
 /** Preview destinations have placeholder navigation that rejects options. */
 export function useCanSetOptions() {
@@ -49,6 +52,7 @@ export function RouteOptions({
   options?: NativeStackNavigationOptions;
 }) {
   const setOptions = useSafeSetOptions();
+  useRootBarSearchOptions(options);
   useRootBarAppearance(setOptions, {
     names: ['bills', 'ask'],
     largeTitleEnabled: options?.headerLargeTitleEnabled,
