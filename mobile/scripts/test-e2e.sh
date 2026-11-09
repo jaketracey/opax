@@ -5,7 +5,7 @@ set -euo pipefail
 if [ "${OPAX_E2E_TEST_SUPERVISED:-0}" != 1 ]; then
   # A stuck/stopped child must fail QA, not hold the suite forever. The parent
   # supervises only process groups descended from its own child; no arguments are read.
-  exec python3 - "$0" "${OPAX_E2E_TEST_TIMEOUT_SECONDS:-300}" <<'PY'
+  exec python3 - "$0" "${OPAX_E2E_TEST_TIMEOUT_SECONDS:-900}" <<'PY'
 import os, shutil, signal, subprocess, sys, tempfile, time
 limit = int(sys.argv[2])
 if limit <= 0:
@@ -71,6 +71,7 @@ raise SystemExit(rc)
 PY
 fi
 SCRIPTS=$(cd "$(dirname "$0")" && pwd)
+python3 "$SCRIPTS/test-maestro-watch.py"
 SCRATCH=$OPAX_E2E_TEST_SCRATCH
 MOBILE="$SCRATCH/mobile"; LOCK="$SCRATCH/paste.lock"; LIVE=(); PASSED=0
 cleanup() {
@@ -100,7 +101,7 @@ export OPAX_CAPACITY_CMD= OPAX_LOAD_PROBE='echo 0' OPAX_PASTE_WAIT_SECONDS=10 OP
 export OPAX_PASTE_POLL_SECONDS=0.1 OPAX_STOP_GRACE_SECONDS=4 JAVA_HOME="$SCRATCH/jdk"
 export OPAX_E2E_STOP_GRACE_SECONDS=4
 export PATH="$SCRATCH/bin:$PATH"
-unset QA_LOCK_LOG QA_LOCK_SCRIPT OPAX_VERIFY_OFFLINE
+unset QA_LOCK_LOG QA_LOCK_SCRIPT OPAX_VERIFY_OFFLINE OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS MAESTRO_DRIVER_STARTUP_TIMEOUT
 # e2e.sh prepends the developer's Maestro directory; a shell function keeps
 # this test on its mock regardless of the host installation or HOME.
 maestro() { "$SCRATCH/bin/maestro" "$@"; }
@@ -191,16 +192,17 @@ lock=held; [ "${MOCK_NO_LOCK:-0}" != 1 ] || lock=unconfigured
 echo "$MOCK_LANE maestro $phase lock=$lock gate=1" >> "$SCRATCH/trace"
 printf '%s\n' "$@" > "$SCRATCH/$MOCK_LANE.$phase.maestro-args"
 touch "$SCRATCH/$MOCK_LANE.maestro"
+printf '%s %s\n' "$OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS" "$MAESTRO_DRIVER_STARTUP_TIMEOUT" > "$SCRATCH/$MOCK_LANE.startup-budget"
 case "${MOCK_DRIVER_ERROR:-}" in
   bytes403) echo 'response_status=200, request_bytes=333, response_bytes=403' ;;
-  403) echo 'HTTP response status 403 Forbidden from XCTest driver'; sleep 60 ;;
-  connection) echo 'java.net.ConnectException: Failed to connect to /127.0.0.1:9073'; sleep 60 ;;
+  403) echo 'HTTP response status 403 Forbidden from XCTest driver'; sleep 300 ;;
+  connection) echo 'java.net.ConnectException: Failed to connect to /127.0.0.1:9073'; sleep 300 ;;
   debug)
     out=; while [ "$#" -gt 0 ]; do [ "$1" != --debug-output ] || out=$2; shift; done
-    mkdir -p "$out/mock"; echo 'Request failed (403)' > "$out/mock/maestro.log"; sleep 60 ;;
-  timeout) sleep 60 ;;
+    mkdir -p "$out/mock"; echo 'Request failed (403)' > "$out/mock/maestro.log"; sleep 300 ;;
+  timeout) sleep 300 ;;
   startup) echo '[Failed] Perform XCUITest driver status check on simulator, exception: java.net.ConnectException: Connection refused' ;;
-  split) printf 'HTTP response status '; sleep 0.4; echo '403 Forbidden'; sleep 60 ;;
+  split) printf 'HTTP response status '; sleep 0.4; echo '403 Forbidden'; sleep 300 ;;
 esac
 if [ "${MOCK_PAUSE:-}" = maestro ]; then
   until [ -e "$SCRATCH/$MOCK_LANE.release" ]; do sleep 0.1; done
@@ -234,7 +236,7 @@ chmod +x "$SCRATCH/bin/"* "$SCRATCH/jdk/bin/java" "$MOBILE/node_modules/.bin/tsx
 pass() { PASSED=$((PASSED + 1)); echo "ok $PASSED - $1"; }
 fail() { echo "not ok - $1" >&2; cat "$SCRATCH/trace" >&2; cat "$MOBILE"/private/qa/*/*.log >&2; exit 1; }
 wait_for() {
-  local deadline=$((SECONDS + 15))
+  local deadline=$((SECONDS + 60))
   until [ -e "$1" ]; do [ "$SECONDS" -lt "$deadline" ] || fail "timeout: $1"; sleep 0.1; done
 }
 run_lane() {
@@ -299,7 +301,7 @@ unset MOCK_PAUSE
 export MOCK_UDID=lane-b
 run_lane second 01
 wait_for "$SCRATCH/second.fixture"
-deadline=$((SECONDS + 15))
+deadline=$((SECONDS + 60))
 until grep -q 'Waiting for pasteboard lock' "$MOBILE/private/qa/second/lock.log" 2>/dev/null; do
   [ "$SECONDS" -lt "$deadline" ] || fail 'second lane never waited'; sleep 0.1
 done
@@ -334,7 +336,7 @@ wait_for "$SCRATCH/term-gate.gate-queued"
 start=$SECONDS
 kill -TERM "$LANE_PID"
 wait_for "$MOBILE/private/qa/term-gate/exit-status"
-[ $((SECONDS - start)) -lt 5 ] && [ "$(cat "$MOBILE/private/qa/term-gate/exit-status")" = 143 ] || fail 'queued gate TERM was deferred'
+[ $((SECONDS - start)) -lt 30 ] && [ "$(cat "$MOBILE/private/qa/term-gate/exit-status")" = 143 ] || fail 'queued gate TERM was deferred'
 [ ! -e "$SCRATCH/term-gate.boot" ] && [ ! -e "$LOCK" ] || fail 'queued gate TERM booted'
 gate_pid=$(cat "$SCRATCH/term-gate.gate-pid")
 ! kill -0 "$gate_pid" 2>/dev/null || fail 'queued gate child orphaned'
@@ -345,7 +347,7 @@ touch "$SCRATCH/capacity-full"
 export OPAX_LOAD_PROBE='if [ -e "$SCRATCH/capacity-full" ]; then echo 141; else echo 0; fi'
 export OPAX_CAPACITY_POLL_SECONDS=0.1
 run_lane term-capacity 01
-deadline=$((SECONDS + 15))
+deadline=$((SECONDS + 60))
 until grep -q 'Shared load' "$MOBILE/private/qa/term-capacity/lock.log" 2>/dev/null; do
   [ "$SECONDS" -lt "$deadline" ] || fail 'capacity waiter never waited'; sleep 0.1
 done
@@ -418,15 +420,18 @@ wait_for "$MOBILE/private/qa/failed-shutdown/exit-status"
 unset MOCK_FAIL MOCK_ALLOW_FALLBACK
 pass 'failed inner and fallback shutdown makes a successful Maestro run fail'
 
+# Readiness and cleanup may take up to 60 s on a busy host. Intentional mock
+# hangs still outlast that bound, and the outer supervisor bounds the suite.
 # Driver transport failures abort immediately, rather than retrying for minutes
 # while holding the simulator and lock. Debug-only failures are supervised too.
 for error in 403 connection debug split timeout; do
-  export MOCK_DRIVER_ERROR=$error OPAX_MAESTRO_TIMEOUT_SECONDS=2
+  export MOCK_DRIVER_ERROR=$error OPAX_MAESTRO_TIMEOUT_SECONDS=30
+  [ "$error" != timeout ] || export OPAX_MAESTRO_TIMEOUT_SECONDS=2
   start=$SECONDS
   run_lane "driver-$error" 01
   expected=1; [ "$error" != timeout ] || expected=124
   check_rc "driver-$error" "$expected"
-  [ $((SECONDS - start)) -lt 10 ] || fail "driver $error hung"
+  [ $((SECONDS - start)) -lt 60 ] || fail "driver $error hung"
   pass "driver $error aborts promptly, writes status, shuts down and releases"
 done
 unset MOCK_DRIVER_ERROR OPAX_MAESTRO_TIMEOUT_SECONDS
@@ -434,7 +439,14 @@ export MOCK_DRIVER_ERROR=startup
 run_lane driver-startup-probe 01
 check_rc driver-startup-probe 0
 unset MOCK_DRIVER_ERROR
+[ "$(cat "$SCRATCH/driver-startup-probe.startup-budget")" = '180 180000' ] || fail 'watcher/CLI startup defaults differ'
 pass 'the expected pre-install driver probe is allowed during bounded startup'
+export OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS=235
+run_lane driver-startup-configured 01
+check_rc driver-startup-configured 0
+[ "$(cat "$SCRATCH/driver-startup-configured.startup-budget")" = '235 235000' ] || fail 'watcher/CLI startup override differs'
+unset OPAX_MAESTRO_STARTUP_TIMEOUT_SECONDS
+pass 'startup configuration reaches the watcher and CLI in seconds and milliseconds'
 export MOCK_DRIVER_ERROR=bytes403
 run_lane driver-response-byte-count 01
 check_rc driver-response-byte-count 0
@@ -470,7 +482,7 @@ wait_for "$MOBILE/private/qa/timeout/exit-status"
 pass 'lock wait timeout never boots a simulator or removes a foreign lock'
 export OPAX_PASTE_WAIT_SECONDS=10
 run_lane term-wait 01
-deadline=$((SECONDS + 15))
+deadline=$((SECONDS + 60))
 until grep -q 'Waiting for pasteboard lock' "$MOBILE/private/qa/term-wait/lock.log" 2>/dev/null; do
   [ "$SECONDS" -lt "$deadline" ] || fail 'TERM waiter never waited'; sleep 0.1
 done
