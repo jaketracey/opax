@@ -21,13 +21,17 @@ module.exports = defineConfig([
       opax: {
         rules: {
           transport: require('./scripts/transport-rule'),
-          'deprecated-design': require('./scripts/deprecated-design-rule'),
+          ...require('./scripts/deprecated-design-rule').rules,
         },
       },
     },
     rules: {
       'opax/transport': 'error',
-      'opax/deprecated-design': 'error',
+      ...Object.fromEntries(
+        Object.keys(require('./scripts/deprecated-design-rule').rules).map(
+          (name) => [`opax/${name}`, 'error'],
+        ),
+      ),
     },
   },
 ]);

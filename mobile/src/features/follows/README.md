@@ -1,9 +1,9 @@
 # Local follows and saved-seat contracts
 
-Wave 3 contracts for waves 4 and 5. Import directly from the named modules.
-Names and required types stay stable through wave 4. Optional fields can grow.
-No screen is placed here. All computation stays on the device; seat and follow
-choices are never request parameters, account data or notification permissions.
+Import directly from the named modules. All computation stays on the device;
+seat and follow choices are never request parameters, account data or
+notification permissions. The shared FollowButton lives in design/controls,
+and the Following screens compose the store and row contracts below.
 
 ## Store: `store.ts`
 
@@ -260,7 +260,7 @@ function followResultKey(result: Pick<StoredFollowResult, 'states'>): string;
 
 The loader reads on open, foreground, changed needs and refresh. A saved ready
 reading survives a failed refresh with `stale`; its changes can be marked seen
-once visible. `markSeenNow` is baseline-only, to keep legacy `FollowToggle`'s
+once visible. `markSeenNow` is baseline-only, to keep `FollowButton`'s
 mount effect from clearing a subsequent change.
 
 The Today result uses `opax-follows-today-v1.json` and its `.b.json` slot. Wait
@@ -367,9 +367,8 @@ accessibility actions, and never marks on tap. Pass `surface="today"` in
 Today's block. `followRoute` adds `section: 'changes'` when supplied changes
 or a ready changed state. It copies the existing route mapping and does not
 import Today's screen. `PartyRow` inherits `rowMenus.place` and its actions.
-The foundation currently exposes only a string title and a single `detail`
-slot in `LinkRow`; the title-role, rich-title and leading-slot additions are
-listed as follow-ups in the final commit.
+`LinkRow` supports rich titles, a title role, a secondary slot and a separate
+leading accessory, so party identity and change text keep the shared anatomy.
 
 ## Latest rows: `../your-mp/LatestRows.tsx`
 
@@ -382,6 +381,7 @@ interface LatestRecord extends FollowRecord {
 interface LatestRowsProps {
   records: readonly LatestRecord[];
   limit?: number;
+  compact?: boolean;
   testID?: string;
   onRowPress?: (record: LatestRecord) => void;
 }
@@ -410,16 +410,18 @@ browser and carry "View source", Share and Copy link actions. Dates in record
 rows always include the year, including their accessibility labels. Both row
 glyphs stop at 1.5 times the text scale; row gaps use `rhythm.tight` and
 `rhythm.line`. The composition lives in this owned module;
-the later Your MP lane may move its internals to `latest.ts`, retaining these
-exports.
+the screen and Today use these same exports.
 
 ## Saved-seat hooks and welcome replay
 
 ```ts
-// ../your-mp/choice-store.ts; the on-disk format is unchanged.
+// ../your-mp/choice-store.ts; saved choices retain the 1.0 shape.
 function loadChoice(): Promise<SeatChoice | null>;
 function saveChoice(choice: SeatChoice): Promise<void>;
-function subscribeChoice(listener: (choice: SeatChoice) => void): () => void;
+function forgetChoice(): Promise<void>;
+function subscribeChoice(
+  listener: (choice: SeatChoice | null) => void,
+): () => void;
 
 // ../your-mp/useSeat.ts
 type SeatState =
@@ -428,6 +430,8 @@ type SeatState =
   | { status: 'chosen'; choice: SeatChoice }
   | { status: 'error'; message: string };
 interface SeatActions {
+  forget(): Promise<void>;
+  retry(): void;
   choose(seat: Electorate): Promise<void>;
   chooseState(seat: Electorate, region?: Electorate): Promise<void>;
   removeState(): Promise<void>;
@@ -457,7 +461,7 @@ function replayWelcome(): void;
 ```
 
 The seat remains `SeatChoice` from `../your-mp/model.ts`: version 1, `seatId`
-and `stateSeatIds`. `opax-seat-v1.json` and its second slot stay unchanged.
+and `stateSeatIds`. `opax-seat-v1.json` and its second slot retain saved choices. Forget writes a version-1 `forgotten: true` tombstone through the same two-slot protocol, so a current reader cannot revive the older slot.
 Migration is read-only until a choice: federal House seats remain chosen,
 abolished federal seats stay available for the abolished state, Senate and
 other-state choices give the invitation, and Victorian choices move into
@@ -479,13 +483,12 @@ and `rowMenus.person`, supply `setSeat` only when visible, with
 `{ label, onSelect: () => void run() }`.
 
 `replayWelcome()` presents the registered welcome route through `welcomeRoute()`.
-The welcome lane may change its body while preserving this name and signature.
+It records no location or account choice.
 
-## Placement still owned by screen lanes
+## Shared control and fixture seed
 
-The existing `FollowToggle`, `FollowingSection`, `FollowingEntry`,
-`ManageFollows` and `SwipeRow` remain legacy consumers until their owners
-replace them. Their old layout and Today's old tap-to-mark wiring are not a
-contract for new screens. All new placements use the parts above. In
-particular, no new page calls `markSeen` on open and no Today row calls it on
-tap. No screen, API, design module or Maestro flow changed in this package.
+Import `FollowButton` from `design/controls` or `design/primitives`. The control directly calls the follow store and baselines a new follow through `markSeenNow`; it preserves the secondary capsule, state suffix test IDs, local save errors and the Edit Following limit action. There is no separate follow-toggle adapter.
+
+The e2e-only `OPAXSeedFollows 50` launch argument uses fifty real identities
+from the pinned roster only when there is no saved list. Metro replaces its
+launch-fixture module with the production stub in release builds.
