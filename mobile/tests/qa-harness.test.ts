@@ -364,7 +364,7 @@ class Fake:
         self.taps, self.typed, self.deleted, self.keys, self.notes = [], [], [], [], []
         self.swipes, self.after_tap, self.after_swipe, self.echo = 0, None, None, True
         self.gone, self.after_gone, self.events = True, None, []
-        self.clock, self.launches = 0, []
+        self.clock, self.launches, self.shots = 0, [], []
         self.c = SimpleNamespace(tap=self.long_press, key=self.key)
     def frame(self, el):
         f = el['frame']
@@ -385,7 +385,7 @@ class Fake:
         return self.gone
     async def link(self, url): self.events.append(('link', url))
     async def dump(self, name): pass
-    async def shot(self, name): pass
+    async def shot(self, name): self.shots.append((name, self.clock))
     def launch(self, *args): self.launches.append(args)
     def reset(self): raise AssertionError('probe must not reinstall')
     async def tap(self, test_id=None, **kwargs):
@@ -419,6 +419,40 @@ class Fake:
     def note(self, text): self.notes.append(text)
 
 async def check():
+    # A busy launch can leave SpringBoard visible past five seconds. Its OPAX
+    # icon is not an app frame, even when the tree has stopped changing.
+    class Launch(Fake):
+        async def elements(self):
+            return ([element(uid='welcome-title')] if self.clock >= 5.5 else
+                    [element('OPAX', uid='au.com.opax.app')])
+    d = Launch()
+    await p.cold_launch_frame(d, now=lambda: d.clock)
+    assert d.shots == [('shell-07', 5.5)], d.shots
+    assert len(d.launches) == 1
+    d = Fake([element(uid='today-screen-message')])
+    await p.cold_launch_frame(d, now=lambda: d.clock)
+    assert d.shots == [('shell-07', 0)]
+
+    class SlowRead(Fake):
+        async def elements(self):
+            self.clock += 61
+            return [element(uid='welcome-title')]
+    class StuckRead(Fake):
+        async def elements(self):
+            raise asyncio.TimeoutError()
+    for d in (Fake([element('OPAX', uid='au.com.opax.app')]),
+              Fake([element(uid='welcome-title', y=-100)]), SlowRead(), StuckRead()):
+        try:
+            await p.cold_launch_frame(d, now=lambda: d.clock)
+            raise AssertionError('shell-07 saved without foreground OPAX content')
+        except RuntimeError as error:
+            assert 'no frame saved' in str(error)
+        assert d.shots == [], d.shots
+        assert d.clock <= 61, d.clock
+    # Specification generation also lists the gated shell-07 without a device.
+    await p.cold_launch_frame(p._Null())
+    assert p.SPEC[-1]['id'] == 'shell-07'
+
     # idb exposes the seat search as a labelled button, even if another
     # TextField appears first. The native field can be in the bottom bar.
     field = element('Electorate or member’s name')

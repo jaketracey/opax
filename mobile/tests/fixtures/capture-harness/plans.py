@@ -1,4 +1,4 @@
-"""Frozen wave 9 capture helper contract, copied on 10 November 2026.
+"""Reviewed wave 11 capture helper contract, copied on 10 November 2026.
 
 Only the helpers exercised by qa-harness.test.ts are retained from
 private/apple-design/harness/plans.py. No driver, device or ignored path is
@@ -8,6 +8,15 @@ import asyncio
 import json
 import re
 import time
+
+SPEC = []
+_RUN = {"name": "main"}
+
+
+async def shot(d, sid, route, group, state, paged=False):
+    SPEC.append({"id": sid, "route": route, "group": group, "state": state, "run": _RUN["name"],
+                 **({"paged": True} if paged else {})})
+    await d.shot(sid)
 
 
 def normal_text(text):
@@ -301,6 +310,35 @@ async def choose_grayndler(d):
         await d.dump("your-mp-seat-not-confirmed")
         d.note("Your MP did not show the saved Grayndler electorate")
     return chosen
+
+
+async def cold_launch_frame(d, now=time.monotonic, timeout=60):
+    """Capture shell-07 only after the foreground tree contains OPAX content.
+
+    A settled SpringBoard tree and its OPAX icon are not app readiness. Poll
+    explicit app ids instead of Device.wait(), which can accept a settled tree
+    without its target. A slow or failed launch must leave this capture missing.
+    """
+    d.launch("-OPAXEditionAge", "fresh", "-OPAXEditionCache", "present")
+    if not isinstance(d, _Null):
+        deadline = now() + timeout
+        app_ids = {"welcome-title", "welcome-launch-cover", "today-screen-message",
+                   "header-account", "tab-today"}
+        foreground = False
+        while now() < deadline:
+            try:
+                elements = await asyncio.wait_for(d.elements(), timeout=deadline - now())
+            except asyncio.TimeoutError:
+                break
+            if now() >= deadline:
+                break
+            if any(el.get("AXUniqueId") in app_ids and d.on_screen(el) for el in elements):
+                foreground = True
+                break
+            await d.pause(min(0.25, max(0, deadline - now())))
+        if not foreground:
+            raise RuntimeError("shell-07: OPAX did not reach the foreground; no frame saved")
+    await shot(d, "shell-07", "/ (cold launch)", "shell", "cold launch, first app frame")
 
 
 async def cold_account(d, now=time.monotonic):
