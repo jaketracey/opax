@@ -116,7 +116,12 @@ export function useStackChrome() {
     headerLargeTitleStyle: {
       fontFamily: textStyles.largeTitle.fontFamily,
       fontWeight: textStyles.largeTitle.fontWeight,
-      ...(headingFace === 'serif' ? { fontSize: sizes.largeTitle } : {}),
+      // Deviation from shell.md 2, line 176: the ink colour makes
+      // react-native-screens build a fixed 34 pt font. The token ramp
+      // stands in for UIKit's Dynamic Type scaling for both iOS faces.
+      ...(Platform.OS === 'ios' || headingFace === 'serif'
+        ? { fontSize: sizes.largeTitle }
+        : {}),
       color: colors.ink,
     },
     // Deviation from shell.md 2.3 (soft top): the wave 2 captures showed the

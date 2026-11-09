@@ -246,6 +246,43 @@ test('inline and sheet bars cover content and roots keep a native scroll edge', 
 });
 
 test.each([
+  ['system', 1, 34],
+  ['system', 3.571, 60],
+  ['serif', 1, 34],
+  ['serif', 3.571, 60],
+] as const)(
+  '%s iOS large titles use the Dynamic Type token ramp at fontScale %s (%s pt)',
+  (face, fontScale, expectedSize) => {
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    jest.replaceProperty(tokens, 'headingFace', face);
+    Dimensions.set({
+      window: { ...window, fontScale },
+      screen: { ...screen, fontScale },
+    });
+    let chrome!: ReturnType<typeof useStackChrome>;
+    function Harness() {
+      chrome = useStackChrome();
+      return null;
+    }
+    let view: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      view = tree(<Harness />);
+      expect(chrome.headerLargeTitleStyle).toEqual({
+        fontFamily: tokens.textStyles.largeTitle.fontFamily,
+        fontWeight: tokens.textStyles.largeTitle.fontWeight,
+        fontSize: expectedSize,
+        color: colors.ink,
+      });
+    } finally {
+      if (view) act(() => view!.unmount());
+      Dimensions.set({ window, screen });
+    }
+  },
+);
+
+test.each([
   ['xSmall', 0.823, 14, 14],
   ['small', 0.882, 15, 15],
   ['medium', 0.941, 16, 16],
