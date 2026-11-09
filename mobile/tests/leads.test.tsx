@@ -1,7 +1,12 @@
 import { router } from 'expo-router';
 import { createHash } from 'node:crypto';
 import { act } from 'react';
-import { Linking, Text as NativeText } from 'react-native';
+import {
+  Dimensions,
+  Linking,
+  StyleSheet,
+  Text as NativeText,
+} from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import {
   CatalogCache,
@@ -40,6 +45,7 @@ import {
   noFilters,
 } from '../src/features/declarations/model';
 import LeadDetail, { evidenceRow } from '../src/features/leads/LeadDetail';
+import { ConcentrationChart } from '../src/features/leads/Chart';
 import Leads, {
   kindCaption,
   leadsCitation,
@@ -1259,6 +1265,55 @@ describe('the Leads screen', () => {
 });
 
 describe('a lead’s page', () => {
+  test.each([
+    [320, 1, 'column'],
+    [390, 1, 'column'],
+    [700, 1, 'row'],
+    [700, 1.35, 'column'],
+    [1180, 1.65, 'column'],
+    [1180, 3.12, 'column'],
+  ])(
+    'the table at %s pt and scale %s uses %s with wrapping values',
+    async (width, fontScale, direction) => {
+      const previous = Dimensions.get('window');
+      Dimensions.set({ window: { ...previous, fontScale } });
+      const comparison = leadFor(signals[1]!)!.comparison;
+      if (comparison.type !== 'concentration')
+        throw new Error('Expected a concentration');
+      const renderer = await render(
+        <ConcentrationChart comparison={comparison} testID="lead-chart" />,
+      );
+      try {
+        await press(renderer.root, 'lead-table-toggle');
+        act(() =>
+          byTestID(renderer.root, 'lead-chart-table').props.onLayout({
+            nativeEvent: { layout: { width } },
+          }),
+        );
+        const row = byTestID(renderer.root, 'lead-chart-cell-0');
+        expect(StyleSheet.flatten(row.props.style).flexDirection).toBe(
+          direction,
+        );
+        expect(row.props.accessibilityLabel).toBe(
+          'Mineralogy Pty Ltd, $124,655,455 · 78.4% · 230 records',
+        );
+        const [name, value] = row.findAllByType(DesignText);
+        expect(name!.props).toMatchObject({
+          wordSafe: true,
+          children: 'Mineralogy Pty Ltd',
+        });
+        expect(value!.props).toMatchObject({ wordSafe: true, tabular: true });
+        for (const text of [name!, value!]) {
+          expect(text.props.numberOfLines).toBeUndefined();
+          if (direction === 'row')
+            expect(StyleSheet.flatten(text.props.style).flex).toBe(1);
+        }
+      } finally {
+        act(() => renderer.unmount());
+        Dimensions.set({ window: previous });
+      }
+    },
+  );
   test('a party lead: meta, subject, takeaway, the party’s page, its figure and chart', async () => {
     mockParams.id = signals[1]!.id;
     const renderer = await render(<LeadDetail />);
