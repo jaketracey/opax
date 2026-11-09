@@ -27,6 +27,7 @@ import {
 import { haptic } from './haptics';
 import { showMenu } from './menu';
 import type { SFSymbol } from './icon';
+import { copy as words } from './copy';
 
 export type RowMenuAction =
   | {
@@ -329,7 +330,7 @@ const copy = (target: Target): RowMenuLeaf => ({
   },
 });
 const web = (target: Target): RowMenuLeaf => ({
-  title: 'Open on opax.com.au',
+  title: words.openOnWeb,
   symbol: 'arrow.up.right.square',
   onPress: () => void openOnWeb(target.path, target.title),
 });

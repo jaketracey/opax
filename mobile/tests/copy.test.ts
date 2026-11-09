@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Isolated module-load tests. */
 import { copy } from '../src/design/copy';
 
-test('every shared constant matches shell 2.8 verbatim', () => {
+test('shared copy keeps shell wording and the shorter website menu label', () => {
   const { savedCopyNote, offline, couldNotLoad, ...strings } = copy;
   expect(strings).toEqual({
     done: 'Done',
@@ -11,7 +11,7 @@ test('every shared constant matches shell 2.8 verbatim', () => {
     more: 'More',
     share: 'Share',
     copyLink: 'Copy link',
-    openOnWeb: 'Open on opax.com.au',
+    openOnWeb: 'Open on the website',
     follow: 'Follow',
     following: 'Following',
     seeAll: 'See all',

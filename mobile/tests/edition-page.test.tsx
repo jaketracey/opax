@@ -60,6 +60,8 @@ import {
   moneyItemRoute,
 } from '../src/navigation/routes/public-money';
 import { shareRecord } from '../src/navigation/share';
+import RuleSheet from '../src/features/sheets/RuleSheet';
+import { sheetPayload } from '../src/navigation/sheets';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
@@ -74,6 +76,7 @@ jest.mock('../src/api/runtime', () => ({
   yearPictures: { get: jest.fn(async () => 'file:///cache/archive.webp') },
 }));
 let mockGroupedSurfaces = true;
+let mockParams: Record<string, string> = {};
 jest.mock('../src/design/flags', () => ({
   designFlags: Object.defineProperty(
     { ...jest.requireActual('../src/design/flags').designFlags },
@@ -102,6 +105,7 @@ jest.mock('expo-router', () => {
       Toolbar,
     },
     useSegments: () => ['(tabs)', '(today)'],
+    useLocalSearchParams: () => mockParams,
     router: { push: jest.fn(), navigate: jest.fn(), dismissTo: jest.fn() },
   };
 });
@@ -210,6 +214,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockCanShare = true;
   mockGroupedSurfaces = true;
+  mockParams = {};
   Platform.OS = 'android';
   Dimensions.set({
     window: { width: 390, height: 844, scale: 3, fontScale: 1 },
@@ -518,6 +523,28 @@ describe('the replacement edition card', () => {
         ).toBe(false);
     },
   );
+  test.each([1, 3.12])(
+    'the edition status line scales without a cap at scale %s',
+    async (fontScale) => {
+      Platform.OS = 'ios';
+      const window = { width: 390, height: 844, scale: 3, fontScale };
+      Dimensions.set({ window, screen: window });
+      const { root } = await render(
+        <EditionCard edition={ready} today="2026-10-05" />,
+      );
+      const line = host(root, 'today-edition-line')[0]!;
+      expect(line.props.children).toBe('Passed 18 Sep 2026.');
+      expect(line.props.allowFontScaling).toBe(true);
+      expect(line.props.dynamicTypeRamp).toBe('subheadline');
+      expect(line.props.maxFontSizeMultiplier).toBe(0);
+      expect(line.props.numberOfLines).toBeUndefined();
+      expect(
+        root
+          .findAllByType(Text)
+          .find((n) => n.props.testID === 'today-edition-line')!.props.wordSafe,
+      ).toBe(true);
+    },
+  );
   test('a recent card has its weekday date and a saved copy keeps the edition age', async () => {
     const savedAt = Date.parse('2026-10-10T00:00:00Z');
     const { root } = await render(
@@ -689,7 +716,7 @@ describe('the native edition reader', () => {
     ]);
     expect(
       items[1].menu.items.map((item: { label: string }) => item.label),
-    ).toEqual(['Copy link', 'Open on opax.com.au', 'How this is chosen']);
+    ).toEqual(['Copy link', 'Open on the website', 'How this is chosen']);
     const ask = root
       .findAllByType(LinkRow)
       .find((row) => row.props.testID === 'edition-ask')!;
@@ -714,6 +741,35 @@ describe('the native edition reader', () => {
     expect(openOnWeb).not.toHaveBeenCalled();
     act(() => items[1].menu.items[1].onPress());
     expect(openOnWeb).toHaveBeenCalledWith(edition.path, edition.title);
+  });
+  test('How this is chosen presents the edition rule and draws its content', async () => {
+    const { root } = await render(<EditionStory />);
+    const items = root
+      .findByType(Stack.Screen)
+      .props.options.unstable_headerRightItems();
+    const action = items[1].menu.items.find(
+      (item: { label: string }) => item.label === 'How this is chosen',
+    );
+    act(() => action.onPress());
+    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      pathname: string;
+      params: { key: string };
+    };
+    expect(route).toEqual({
+      pathname: '/rule',
+      params: { key: expect.any(String) },
+    });
+    expect(sheetPayload(route.params.key, 'rule')).toMatchObject({
+      kind: 'rule',
+      title: 'How this is chosen',
+      rule: EDITION_RULE,
+    });
+    mockParams = route.params;
+    const sheet = await render(<RuleSheet />);
+    expect(
+      sheet.root.findAllByType(Text).map((n) => n.props.children),
+    ).toContain(EDITION_RULE);
+    expect(sheet.root.findAllByType(ContentUnavailable)).toHaveLength(0);
   });
   test('iOS draws no bottom toolbar, which the floating tab bar would cover', async () => {
     Platform.OS = 'ios';

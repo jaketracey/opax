@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import {
   counted,
   formatMoney,
   formatMoneyCompact,
   formatPercent,
 } from '../../design/format';
-import { LinkRow, Text, ValueRow } from '../../design/primitives';
+import { LinkRow, Text } from '../../design/primitives';
 import {
   accents,
   chartRoles,
   colors,
+  isAccessibilityCategory,
   minimumTarget,
   radii,
   rhythm,
@@ -18,6 +19,9 @@ import {
 import { chartRowLabel, type ChartRow, type LeadComparison } from './model';
 
 type Concentration = Extract<LeadComparison, { type: 'concentration' }>;
+
+// Narrowest table width in points at scale 1 where name and value columns both fit without wrapping the value into a squeezed column.
+const MIN_TWO_COLUMN_TABLE_WIDTH = 600;
 
 /**
  * A concentration's share chart: the five largest named participants and
@@ -34,26 +38,59 @@ export function ConcentrationChart({
   testID: string;
 }) {
   const [table, setTable] = useState(false);
+  const [tableWidth, setTableWidth] = useState(0);
+  const { fontScale } = useWindowDimensions();
+  // Two real columns only when both have room. Measure the table rather
+  // than the window so iPad panes and readable columns follow the same rule.
+  const stacked =
+    isAccessibilityCategory(fontScale) ||
+    tableWidth < MIN_TWO_COLUMN_TABLE_WIDTH * fontScale;
   return (
     <View testID={testID} style={styles.chart}>
       {table ? (
-        <View testID={`${testID}-table`}>
-          {comparison.rows.map((row, index) => (
-            <ValueRow
-              key={`${row.name}-${index}`}
-              label={row.name}
-              value={[
-                formatMoney(row.value),
-                formatPercent(row.share),
-                row.records === null
-                  ? null
-                  : `${counted(row.records, 'record', 'records')}`,
-              ]
-                .filter(Boolean)
-                .join(' · ')}
-              testID={`${testID}-cell-${index}`}
-            />
-          ))}
+        <View
+          testID={`${testID}-table`}
+          onLayout={(event) => setTableWidth(event.nativeEvent.layout.width)}
+        >
+          {comparison.rows.map((row, index) => {
+            const value = [
+              formatMoney(row.value),
+              formatPercent(row.share),
+              row.records === null
+                ? null
+                : `${counted(row.records, 'record', 'records')}`,
+            ]
+              .filter(Boolean)
+              .join(' · ');
+            return (
+              <View
+                key={`${row.name}-${index}`}
+                accessible
+                accessibilityLabel={`${row.name}, ${value}`}
+                testID={`${testID}-cell-${index}`}
+                style={[
+                  styles.tableRow,
+                  stacked ? styles.stackedRow : styles.columns,
+                ]}
+              >
+                <Text
+                  wordSafe
+                  variant="body"
+                  style={stacked ? undefined : styles.column}
+                >
+                  {row.name}
+                </Text>
+                <Text
+                  wordSafe
+                  variant="strong"
+                  tabular
+                  style={stacked ? undefined : [styles.column, styles.value]}
+                >
+                  {value}
+                </Text>
+              </View>
+            );
+          })}
         </View>
       ) : (
         <View testID={`${testID}-bars`}>
@@ -122,6 +159,11 @@ function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
 
 const styles = StyleSheet.create({
   chart: { gap: rhythm.tight },
+  tableRow: { minHeight: minimumTarget, paddingVertical: rhythm.row },
+  stackedRow: { flexDirection: 'column', gap: rhythm.line },
+  columns: { flexDirection: 'row', alignItems: 'baseline', gap: rhythm.block },
+  column: { flex: 1, minWidth: 0 },
+  value: { textAlign: 'right' },
   grow: { flexGrow: 1, flexShrink: 1 },
   bar: {
     minHeight: minimumTarget,

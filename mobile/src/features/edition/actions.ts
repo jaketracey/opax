@@ -1,9 +1,10 @@
-import { router } from 'expo-router';
 import type { EditionView } from '../../api/selectors';
+import { copy } from '../../design/copy';
 import type { RowMenuAction } from '../../design/row-link';
 import { openOnWeb } from '../../navigation/external';
 import { copyRecordLink, shareRecord } from '../../navigation/share';
-import { ruleRoute } from '../../navigation/routes/sheets';
+import { presentSheet } from '../../navigation/sheets';
+import { EDITION_RULE } from './model';
 
 // The published edition points to its subject's stable public record.
 export const shareEdition = (edition: EditionView) =>
@@ -16,14 +17,19 @@ export function editionMenu(edition: EditionView): RowMenuAction[] {
       onPress: () => void copyRecordLink(edition.path),
     },
     {
-      title: 'Open on opax.com.au',
+      title: copy.openOnWeb,
       symbol: 'arrow.up.right',
       onPress: () => void openOnWeb(edition.path, edition.title),
     },
     {
-      title: 'How this is chosen',
+      title: copy.howChosen,
       symbol: 'info.circle',
-      onPress: () => router.push(ruleRoute({ block: 'edition' })),
+      onPress: () =>
+        presentSheet({
+          kind: 'rule',
+          title: copy.howChosen,
+          rule: EDITION_RULE,
+        }),
     },
   ];
 }

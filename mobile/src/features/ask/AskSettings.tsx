@@ -5,6 +5,7 @@ import { haptic } from '../../design/haptics';
 import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { useAccount } from '../account/store';
+import { TintRow } from '../sheets/SourceSheet';
 import { confirmDeleteAll } from './conversation-actions';
 import { resetAskConsent } from './consent';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
@@ -41,9 +42,8 @@ export default function AskSettings() {
           onPress={() => router.push('/account/conversations' as Href)}
           testID="ask-settings-conversations"
         />
-        <LinkRow
+        <TintRow
           title={askSettingsCopy.notice}
-          accessory="none"
           onPress={() => {
             void resetAskConsent()
               .catch(() => undefined)

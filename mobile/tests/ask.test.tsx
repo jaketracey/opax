@@ -1,6 +1,13 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { router } from 'expo-router';
-import { ActionSheetIOS } from 'react-native';
+import {
+  ActionSheetIOS,
+  Dimensions,
+  Text as NativeText,
+  StyleSheet,
+} from 'react-native';
+import { Text } from '../src/design/text';
+import { colors } from '../src/design/tokens';
 import {
   conversationMeta,
   conversationWhen,
@@ -171,13 +178,18 @@ describe('dates in the device time zone', () => {
 });
 
 type Node = ReactTestRenderer['root'];
+const mounted: ReactTestRenderer[] = [];
 async function render(element: React.ReactElement) {
   let renderer!: ReactTestRenderer;
   await act(async () => {
     renderer = create(element);
   });
+  mounted.push(renderer);
   return renderer.root;
 }
+afterEach(() => {
+  act(() => mounted.splice(0).forEach((renderer) => renderer.unmount()));
+});
 const byID = (root: Node, testID: string) =>
   root.findAll((n) => n.props.testID === testID && typeof n.type !== 'string');
 const swiftByID = (root: Node, id: string) =>
@@ -273,14 +285,40 @@ describe('Account › Ask', () => {
     await act(async () => actions[0]!.onPress());
     expect(deleteAllRemoteChats).toHaveBeenCalled();
   });
-  test('the notice row resets consent with a success haptic', async () => {
-    const root = await render(<AskSettings />);
-    await act(async () =>
-      byID(root, 'ask-settings-notice')[0]!.props.onPress(),
-    );
-    expect(resetAskConsent).toHaveBeenCalled();
-    expect(haptic).toHaveBeenCalledWith('success');
-  });
+  test.each([1, 3.12])(
+    'the notice is a tinted action at scale %s and resets consent',
+    async (fontScale) => {
+      const previous = Dimensions.get('window');
+      act(() => Dimensions.set({ window: { ...previous, fontScale } }));
+      const root = await render(<AskSettings />);
+      try {
+        const row = byID(root, 'ask-settings-notice')[0]!;
+        const button = row.findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.accessibilityRole === 'button',
+        )[0]!;
+        expect(button.props.accessibilityLabel).toBe(
+          'Show the notice before asking',
+        );
+        expect(button.props.accessibilityState?.checked).toBeUndefined();
+        expect(row.findByType(Text).props).toMatchObject({
+          wordSafe: true,
+          variant: 'body',
+          tone: 'navy',
+        });
+        const label = row.findByType(NativeText);
+        expect(StyleSheet.flatten(label.props.style).color).toBe(colors.navy);
+        expect(label.props.allowFontScaling).toBe(true);
+        expect(label.props.numberOfLines).toBeUndefined();
+        await act(async () => row.props.onPress());
+        expect(resetAskConsent).toHaveBeenCalled();
+        expect(haptic).toHaveBeenCalledWith('success');
+      } finally {
+        act(() => Dimensions.set({ window: previous }));
+      }
+    },
+  );
 });
 
 describe('Conversations', () => {

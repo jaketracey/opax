@@ -157,7 +157,6 @@ export function Plate({
           wordSafe
           variant="secondary"
           tone="onBandSoft"
-          maxFontSizeMultiplier={1.353}
           testID={`${testID}-line`}
         >
           {detailLine}

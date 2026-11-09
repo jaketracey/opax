@@ -1,12 +1,23 @@
 import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
-import { Dimensions, Linking, Text as NativeText } from 'react-native';
+import {
+  Dimensions,
+  Linking,
+  StyleSheet,
+  Text as NativeText,
+} from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import { catalogs as runtime } from '../src/api/runtime';
 import { confirmAction } from '../src/design/menu';
 import { suggestFromLocation } from '../src/features/electorate-map/location';
 import { CHOSEN_MARK_MS, SeatChooser } from '../src/features/seat/SeatChooser';
+import {
+  FieldClearance,
+  bottomFieldClearance,
+  BOTTOM_FIELD_HEIGHT,
+} from '../src/features/seat/FieldClearance';
 import { SeatStateList } from '../src/features/seat/SeatStateList';
 import { forgetChoice } from '../src/features/your-mp/choice-store';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
@@ -14,10 +25,27 @@ import { index, manifest, people, roster, slugs } from './pinned';
 
 const mockScreen: { options: Record<string, any> } = { options: {} };
 const mockGoBack = jest.fn();
+type Transition = (event: { data: { closing: boolean } }) => void;
+const mockTransitions = new Set<Transition>();
+const mockParentTransitions = new Set<Transition>();
+const mockNavigation = {
+  isFocused: jest.fn(() => true),
+  addListener: jest.fn((_event: string, listener: Transition) => {
+    mockTransitions.add(listener);
+    return () => mockTransitions.delete(listener);
+  }),
+  getParent: () => ({
+    goBack: mockGoBack,
+    addListener: (_event: string, listener: Transition) => {
+      mockParentTransitions.add(listener);
+      return () => mockParentTransitions.delete(listener);
+    },
+  }),
+};
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   router: { push: jest.fn(), back: jest.fn() },
-  useNavigation: () => ({ getParent: () => ({ goBack: mockGoBack }) }),
+  useNavigation: () => mockNavigation,
   Stack: {
     Screen: ({ options }: { options: Record<string, unknown> }) => {
       mockScreen.options = options;
@@ -80,6 +108,9 @@ const westernVictoria = index.electorates.find(
 beforeEach(() => {
   jest.clearAllMocks();
   jest.useRealTimers();
+  mockTransitions.clear();
+  mockParentTransitions.clear();
+  mockNavigation.isFocused.mockReturnValue(true);
   (runtime.directory as jest.Mock).mockResolvedValue(directory);
   mockSeat.current = { status: 'none', choose, chooseState };
   mockScreen.options = {};
@@ -356,12 +387,55 @@ describe('location', () => {
     expect(mockScreen.options.headerSearchBarOptions.autoFocus).toBe(false);
     await act(async () => r.unmount());
   });
-  test('at accessibility sizes the field waits for a tap', async () => {
-    setFontScale(2);
-    const r = await render(<SeatChooser presentation="welcome" />);
-    expect(mockScreen.options.headerSearchBarOptions.autoFocus).toBe(false);
-    await act(async () => r.unmount());
-  });
+  test.each([1, 3.12])(
+    'at scale %s the sheet focuses after the native field attaches and the modal arrives',
+    async (fontScale) => {
+      setFontScale(fontScale);
+      const r = await render(<SeatChooser presentation="sheet" />);
+      const search = mockScreen.options.headerSearchBarOptions;
+      expect(search.autoFocus).toBe(true);
+      const focus = jest.fn();
+      // Header search mounts after the chooser's effects. autoFocus alone
+      // cannot focus an iOS search bar, and the initial ref was still null.
+      search.ref.current = { focus };
+      for (const listeners of [mockTransitions, mockParentTransitions]) {
+        focus.mockClear();
+        act(() =>
+          listeners.forEach((listener) =>
+            listener({ data: { closing: true } }),
+          ),
+        );
+        expect(focus).not.toHaveBeenCalled();
+        act(() =>
+          listeners.forEach((listener) =>
+            listener({ data: { closing: false } }),
+          ),
+        );
+        expect(focus).toHaveBeenCalledTimes(1);
+        mockNavigation.isFocused.mockReturnValue(false);
+        act(() =>
+          listeners.forEach((listener) =>
+            listener({ data: { closing: false } }),
+          ),
+        );
+        expect(focus).toHaveBeenCalledTimes(1);
+        mockNavigation.isFocused.mockReturnValue(true);
+      }
+      await act(async () => r.unmount());
+      expect(mockTransitions.size).toBe(0);
+      expect(mockParentTransitions.size).toBe(0);
+    },
+  );
+  test.each([1, 3.12])(
+    'at scale %s the welcome leaves the field unfocused (your-mp 4.10)',
+    async (fontScale) => {
+      setFontScale(fontScale);
+      const r = await render(<SeatChooser presentation="welcome" />);
+      expect(mockScreen.options.headerSearchBarOptions.autoFocus).toBe(false);
+      expect(mockTransitions.size).toBe(0);
+      await act(async () => r.unmount());
+    },
+  );
 });
 
 describe('the welcome seat step', () => {
@@ -513,19 +587,38 @@ describe('the Victorian scope', () => {
   });
 });
 
-describe('the bottom search field (w4-seat-ax5-01)', () => {
-  test('at accessibility sizes on iPhone the list ends above the field', () => {
-    const { bottomFieldClearance, BOTTOM_FIELD_HEIGHT } = jest.requireActual<
-      typeof import('../src/features/seat/FieldClearance')
-    >('../src/features/seat/FieldClearance');
-    // AX5 on iPhone: the safe area, the field and a gap.
-    expect(bottomFieldClearance(3.12, 34, 'ios', false)).toBe(
+describe('the bottom search field', () => {
+  test('iPhone leaves the safe area, field height and a gap at every text size', () => {
+    expect(bottomFieldClearance(34, 'ios', false)).toBe(
       34 + BOTTOM_FIELD_HEIGHT + 8,
     );
-    // Large: the list fits above the field or scrolls under its edge.
-    expect(bottomFieldClearance(1, 34, 'ios', false)).toBe(0);
     // iPad keeps search in the bar; Android has no bottom field.
-    expect(bottomFieldClearance(3.12, 20, 'ios', true)).toBe(0);
-    expect(bottomFieldClearance(3.12, 0, 'android', false)).toBe(0);
+    expect(bottomFieldClearance(20, 'ios', true)).toBe(0);
+    expect(bottomFieldClearance(0, 'android', false)).toBe(0);
   });
+  test.each([1, 3.12])(
+    'at scale %s the AEC row scrolls inside a viewport inset above the field',
+    async (fontScale) => {
+      setFontScale(fontScale);
+      const r = await render(
+        <SafeAreaInsetsContext.Provider
+          value={{ top: 0, left: 0, right: 0, bottom: 34 }}
+        >
+          <SeatChooser presentation="sheet" />
+        </SafeAreaInsetsContext.Provider>,
+      );
+      const clearance = r.root.findByType(FieldClearance);
+      const viewport = clearance.findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          StyleSheet.flatten(n.props.style)?.paddingBottom ===
+            34 + BOTTOM_FIELD_HEIGHT + 8,
+      )[0]!;
+      expect(viewport).toBeDefined();
+      expect(
+        viewport.findAll((n) => n.props.testID === 'seat-aec'),
+      ).not.toHaveLength(0);
+      await act(async () => r.unmount());
+    },
+  );
 });
