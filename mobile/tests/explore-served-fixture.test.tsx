@@ -150,13 +150,27 @@ describe('Who owns which debate, on the served fixture', () => {
       .findAllByType(Button)
       .filter((node) => /^matrix-cell-/.test(node.props.testID ?? ''));
     expect(chips.length).toBeGreaterThan(0);
+    for (const chip of chips) {
+      expect(chip.props.label).toContain('\u00a0·\u00a0');
+      const cell = chip.parent!;
+      expect(StyleSheet.flatten(cell.props.style)).toMatchObject({
+        maxWidth: '100%',
+      });
+      let row = cell.parent!;
+      while (StyleSheet.flatten(row.props.style)?.flexWrap !== 'wrap')
+        row = row.parent!;
+      expect(StyleSheet.flatten(row.props.style)).toMatchObject({
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+      });
+    }
     const data = decodeMatrix(json('/api/matrix'));
     const [slug, cells] = Object.entries(data.cells).find(
       ([, c]) => (c.Labor ?? 0) > 0,
     )!;
     const pct = ((cells.Labor ?? 0) / data.totals[slug]!) * 100;
     expect(chips.map((node) => node.props.label)).toContain(
-      `Labor · ${pct < 1 ? '<1' : Math.round(pct)}%`,
+      `Labor\u00a0·\u00a0${pct < 1 ? '<1' : Math.round(pct)}%`,
     );
   });
 });

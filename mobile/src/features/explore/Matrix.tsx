@@ -1,5 +1,6 @@
+import { counted } from '../../design/format';
 import { router } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { reports } from '../../api/runtime';
 import { useRead } from '../../api/useRead';
 import {
@@ -9,7 +10,6 @@ import {
   Screen,
   Section,
   Text,
-  useAccessibilitySize,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { topicRoute } from '../../navigation/routes/search';
@@ -19,8 +19,7 @@ import { ReadState } from '../reports/parts';
 import { MATRIX_NOTE } from './model';
 import { ExploreChrome } from './parts';
 export default function Matrix() {
-  const read = useRead(reports.matrix),
-    ax = useAccessibilitySize();
+  const read = useRead(reports.matrix);
   return (
     <>
       <ExploreChrome title="Debates" game="matrix" />
@@ -51,14 +50,15 @@ export default function Matrix() {
                 {slugs.map((slug, i) => (
                   <Section key={slug} title={topicNames[slug]}>
                     <LinkRow
-                      title={`${(data.totals[slug] ?? 0).toLocaleString('en-AU')} labelled speeches`}
+                      title={`${counted(data.totals[slug] ?? 0, 'labelled speech', 'labelled speeches')}`}
                       onPress={() =>
                         router.push(topicRoute(slug, {}, topicNames[slug]!))
                       }
                     />
                     <View
                       style={{
-                        flexDirection: ax ? 'column' : 'row',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
                         gap: rhythm.tight,
                       }}
                     >
@@ -66,9 +66,9 @@ export default function Matrix() {
                         const count = data.cells[slug]?.[party] ?? 0,
                           total = data.totals[slug] ?? 0,
                           pct = total ? (count / total) * 100 : 0,
-                          label = `${party} · ${pct > 0 && pct < 1 ? '<1' : Math.round(pct)}%`;
+                          label = `${party}\u00a0·\u00a0${pct > 0 && pct < 1 ? '<1' : Math.round(pct)}%`;
                         return (
-                          <View key={party} style={ax ? {} : { width: 160 }}>
+                          <View key={party} style={{ maxWidth: '100%' }}>
                             {party === 'Other' || !count ? (
                               <Text wordSafe variant="secondary">
                                 {party}:{' '}
@@ -77,6 +77,10 @@ export default function Matrix() {
                             ) : (
                               <Button
                                 label={label}
+                                accessibilityLabel={label.replace(
+                                  /\u00a0/g,
+                                  ' ',
+                                )}
                                 accessibilityHint={`${count.toLocaleString('en-AU')} of ${total.toLocaleString('en-AU')} labelled ${topicNames[slug]} speeches. Opens the topic.`}
                                 onPress={() =>
                                   router.push(
@@ -101,20 +105,9 @@ export default function Matrix() {
             return (
               <Group>
                 <Text wordSafe variant="secondary">
-                  {data.labelled.toLocaleString('en-AU')} speeches carry topic
-                  labels so far
+                  {`${counted(data.labelled, 'speech', 'speeches')} ${data.labelled === 1 ? 'carries' : 'carry'} topic labels so far`}
                 </Text>
-                {ax ? (
-                  rows
-                ) : (
-                  <ScrollView
-                    horizontal
-                    contentContainerStyle={{ paddingBottom: rhythm.block }}
-                    accessibilityLabel="Party by topic grid, scroll horizontally"
-                  >
-                    {rows}
-                  </ScrollView>
-                )}
+                {rows}
                 <LinkRow
                   title="Parties"
                   onPress={() => openRecord('/subject/party', 'Parties')}
