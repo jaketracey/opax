@@ -5,6 +5,7 @@ import { useCallback, useRef, type ReactNode } from 'react';
 import { RefreshControl, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
+import { catalogs } from '../../api/runtime';
 import { counted, formatDate, formatMoney } from '../../design/format';
 import { Screen, SectionHeader } from '../../design/layout';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
@@ -18,6 +19,13 @@ import {
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { evidenceRecord } from '../leads/evidence';
+import {
+  discoveryAsOf,
+  discoverPath,
+  leadFor,
+  plainCaveat,
+} from '../leads/model';
 import { combine } from './catalog';
 import { largestFor, programRecipients, type Jurisdiction } from './data';
 import { stateName } from './Grants';
@@ -123,6 +131,37 @@ async function readMoneyItem(
 ): Promise<RecordResult<MoneyItemView>> {
   const from = params.from ?? '';
   switch (params.kind) {
+    case 'evidence': {
+      if (!/^(0|[1-9]\d*)$/.test(params.i)) throw gone();
+      const record = await catalogs.discovery(refresh);
+      const signal = record.data.signals.find((s) => s.id === params.lead);
+      const lead = signal ? leadFor(signal) : null;
+      const evidence = lead?.evidence[Number(params.i)];
+      const item = evidence ? evidenceRecord(evidence) : null;
+      if (!lead || !evidence || !item) throw gone();
+      return {
+        ...record,
+        data: {
+          meta: item.detail,
+          name: item.name,
+          individual: false,
+          amount: item.amount,
+          asOf: discoveryAsOf(record.data),
+          register: evidence.register,
+          facts: facts([
+            { label: 'From', value: evidence.from! },
+            { label: 'To', value: evidence.to! },
+            { label: 'Register', value: evidence.register },
+            { label: 'Register ID', value: evidence.record ?? '' },
+          ]),
+          children: [],
+          originals: [item.original],
+          onward: [],
+          notes: lead.caveats.map(plainCaveat),
+          path: discoverPath({ id: lead.id, category: lead.category }),
+        },
+      };
+    }
     case 'grant':
     case 'recipient': {
       if (!isJurisdiction(params.jur)) throw gone();
@@ -577,6 +616,10 @@ export function itemParams(
   };
   const kind = p.kind as MoneyItemKind | undefined;
   switch (kind) {
+    case 'evidence':
+      return p.lead && p.i && /^(0|[1-9]\d*)$/.test(p.i)
+        ? { kind, lead: p.lead, i: p.i, ...from }
+        : null;
     case 'grant':
       return p.jur && (p.program || p.rid) && (p.id || p.award)
         ? {
