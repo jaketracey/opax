@@ -23,10 +23,9 @@ name: 57b iPad - build 32 feedback, Search focus, directory labels and filter, a
     times: 20
     commands:
       - tapOn:
-          id: search-input
+          text: People, bills, topics and more
       - inputText: Albanese
       - assertVisible:
-          id: search-input
           text: ^Albanese$
       - eraseText: 12
 - takeScreenshot: ${EVIDENCE}/57b-search
@@ -34,11 +33,11 @@ name: 57b iPad - build 32 feedback, Search focus, directory labels and filter, a
 - openLink: opax://directory?kind=person
 - extendedWaitUntil:
     visible:
-      id: directory-count
+      id: directory-person-screen
     timeout: 60000
-- assertVisible: .*Sitting first, then most speeches.*
+- assertVisible: Parliamentarians
 - tapOn:
-    id: directory-search
+    text: Name, electorate or state
 - inputText: Joe Hockey
 - pressKey: Enter
 - extendedWaitUntil:
@@ -48,9 +47,22 @@ name: 57b iPad - build 32 feedback, Search focus, directory labels and filter, a
 - assertNotVisible: .*Formerly LIB.*
 - assertNotVisible: .*Formerly Liberal.*
 - takeScreenshot: ${EVIDENCE}/57b-directory-hockey
+# The shared directory sheet applies its sitting switch immediately.
+- tapOn: Filters.*
+- assertVisible:
+    id: filters-screen
+- tapOn:
+    id: filters-row-sitting
+- tapOn: Done
+- assertVisible:
+    id: directory-filter-line
+- tapOn: Filters.*
+- tapOn:
+    id: filters-row-sitting
+- tapOn: Done
 # Shorten's record in the pane: Labor's receipts and his divisions.
 - tapOn:
-    id: directory-search
+    text: Name, electorate or state
 - eraseText: 20
 - inputText: Bill Shorten
 - pressKey: Enter

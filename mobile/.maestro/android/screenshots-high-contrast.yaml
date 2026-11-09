@@ -12,10 +12,9 @@ name: Android High contrast text against the stronger text roles
       id: today-screen-message
     direction: UP
     timeout: 90000
-- extendedWaitUntil:
-    visible:
-      id: today-edition-head
-    timeout: 180000
+# The pinned edition is old on Android, where iOS Settings args do not apply.
+- assertNotVisible:
+    id: today-edition
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/hc-today
@@ -35,14 +34,14 @@ name: Android High contrast text against the stronger text roles
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: ${EVIDENCE}/hc-profile
-- openLink: opax://reports
+- openLink: opax://leads
 - extendedWaitUntil:
     visible:
-      id: reports-screen
+      id: leads-lede
     timeout: 30000
 - waitForAnimationToEnd:
     timeout: 5000
-- takeScreenshot: ${EVIDENCE}/hc-reports
+- takeScreenshot: ${EVIDENCE}/hc-leads
 - tapOn:
     id: tab-ask
 - extendedWaitUntil:
