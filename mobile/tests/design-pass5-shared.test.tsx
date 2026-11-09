@@ -1,15 +1,15 @@
+import { router } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
 import { act, type ReactElement } from 'react';
 import {
   Dimensions,
-  Modal,
+  Text as NativeText,
   Platform,
   StyleSheet,
-  Text as NativeText,
 } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { SymbolView } from 'expo-symbols';
-import { router } from 'expo-router';
 import { sourceLabel, sourceName } from '../src/design/format';
+import { partyDotSize } from '../src/design/people';
 import {
   BillRow,
   EXTERNAL_GLYPH,
@@ -18,19 +18,26 @@ import {
   SourceLine,
   Text,
 } from '../src/design/primitives';
-import { partyDotSize } from '../src/design/people';
-import {
-  SourceSheet as LegacySourceSheet,
-  licenceText,
-} from '../src/design/source';
-import { sheetPayload } from '../src/navigation/sheets';
+import { licenceText } from '../src/design/source';
 import { textContent, titleSizeCap } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
+import SourceSheet from '../src/features/sheets/SourceSheet';
 import { closeSheetItem } from '../src/navigation/chrome';
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
+}));
+let mockSheetParams: Record<string, string> = {};
 
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
-  useLocalSearchParams: () => ({}),
+  router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },
+  Link: Object.assign(({ children }: any) => children, {
+    Trigger: ({ children }: any) => children,
+    Preview: () => null,
+    Menu: () => null,
+    MenuAction: () => null,
+  }),
+  useLocalSearchParams: () => mockSheetParams,
+  Stack: { Screen: () => null },
 }));
 jest.mock('../src/navigation/external', () => ({
   ...jest.requireActual('../src/navigation/external'),
@@ -81,16 +88,8 @@ const openSheet = (root: ReactTestInstance, testID: string) => {
   const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
     params: { key: string };
   };
-  const payload = sheetPayload(params.key, 'source')!;
-  return render(
-    <LegacySourceSheet
-      visible
-      onClose={() => {}}
-      title="Sources"
-      testID={`${testID}-sheet`}
-      {...payload.details}
-    />,
-  ).root.findByType(Modal);
+  mockSheetParams = { key: params.key };
+  return render(<SourceSheet />).root;
 };
 
 describe('sourceLabel (P2-5)', () => {
@@ -217,13 +216,16 @@ describe('SourceLine and its sheet (P2-4)', () => {
     const said = strings(openSheet(root, 'src'));
     expect(said).toEqual(
       expect.arrayContaining([
-        'As at',
-        '4 October 2026',
-        'ParlInfo bill records · 4 Oct 2026',
-        'Registers of interests · 4 Sep 2026',
+        'As at 4 October 2026',
+        'ParlInfo bill records',
+        '4 Oct 2026',
+        'Registers of interests',
+        '4 Sep 2026',
       ]),
     );
-    expect(said.filter((text) => /^As at/.test(text))).toEqual(['As at']);
+    expect(said.filter((text) => /^As at/.test(text))).toEqual([
+      'As at 4 October 2026',
+    ]);
   });
   test('one date for every source is said once, under As at', () => {
     const root = render(
@@ -237,7 +239,9 @@ describe('SourceLine and its sheet (P2-4)', () => {
       />,
     ).root;
     const said = strings(openSheet(root, 'src'));
-    expect(said).toEqual(expect.arrayContaining(['A', 'B', '4 October 2026']));
+    expect(said).toEqual(
+      expect.arrayContaining(['A', 'B', 'As at 4 October 2026']),
+    );
     expect(said.join('\n')).not.toMatch(/· 4 Oct/);
   });
   test('the licence row opens Sources and licences at its dataset', () => {
@@ -261,10 +265,8 @@ describe('SourceLine and its sheet (P2-4)', () => {
         typeof n.type !== 'string',
     );
     act(() => row.props.onPress());
-    act(() => sheet.props.onDismiss());
     expect(router.push).toHaveBeenCalledWith({
-      pathname: '/account/sources',
-      params: { dataset: 'release' },
+      pathname: '/licence/sources',
     });
     expect(licenceText('CC BY 4.0')).toBe('CC BY 4.0');
   });
@@ -322,10 +324,10 @@ describe('title size cap at AX2 (P2-18)', () => {
     expect(titleSizeCap('title', AX2, 'ios')).toBe(1);
     // recordTitle uses the title1 ramp: 58pt at AX5, capped at AX2's 43pt.
     expect(titleSizeCap('title', AX5, 'ios')).toBeCloseTo(43 / 58, 5);
-    expect(titleSizeCap('padTitle', AX5, 'ios')).toBeCloseTo(43 / 58, 5);
-    expect(titleSizeCap('heading', AX5, 'ios')).toBe(1);
+    expect(titleSizeCap('recordTitle', AX5, 'ios')).toBeCloseTo(43 / 58, 5);
+    expect(titleSizeCap('sectionTitle', AX5, 'ios')).toBe(1);
     expect(titleSizeCap('body', AX5, 'ios')).toBe(1);
-    expect(titleSizeCap('display', AX5, 'ios')).toBe(1);
+    expect(titleSizeCap('figure', AX5, 'ios')).toBe(1);
     // Android scales by the font scale itself, capped at the same 43pt.
     expect(titleSizeCap('title', 2, 'android')).toBeCloseTo(
       43 / textStyles.recordTitle.fontSize / 2,
@@ -337,7 +339,10 @@ describe('title size cap at AX2 (P2-18)', () => {
     const root = render(<Text variant="recordTitle">A bill title</Text>).root;
     const style = flat(nativeTexts(root)[0]!.props.style);
     const cap = titleSizeCap('title', AX5, Platform.OS);
-    expect(style.fontSize).toBeCloseTo(textStyles.recordTitle.fontSize * cap, 5);
+    expect(style.fontSize).toBeCloseTo(
+      textStyles.recordTitle.fontSize * cap,
+      5,
+    );
     expect(nativeTexts(root)[0]!.props.maxFontSizeMultiplier).toBe(0);
     const body = render(<Text variant="sectionTitle">Section</Text>).root;
     expect(flat(nativeTexts(body)[0]!.props.style).fontSize).toBe(
@@ -377,8 +382,7 @@ describe('BillRow (P2-8)', () => {
         title="Example Amendment Bill 2026"
         status="Introduced"
         date="Introduced 17 Sep 2026"
-        by="A sponsor"
-        party={{ party: 'Labor', status: 'current' }}
+        meta={{ sponsor: 'A sponsor', party: 'Labor' }}
         onPress={onPress}
         accessibilityLabel="Example Amendment Bill 2026, Introduced"
         testID="bill"

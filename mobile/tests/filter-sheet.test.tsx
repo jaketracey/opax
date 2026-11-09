@@ -1,51 +1,51 @@
-import { act, Children, type ReactElement } from 'react';
-import TestRenderer from 'react-test-renderer';
-import { Dimensions, StyleSheet } from 'react-native';
-import { InsetGroup } from '../src/design/layout';
-import { Text } from '../src/design/text';
-import { minimumTarget, rhythm } from '../src/design/tokens';
 import { router, Stack } from 'expo-router';
-import {
-  FilterSheet,
-  FilterFacet,
-  FilterYears,
-  filterRowValue,
-} from '../src/design/filter-sheet';
+import { act, Children, type ReactElement } from 'react';
+import { Dimensions, StyleSheet } from 'react-native';
+import TestRenderer from 'react-test-renderer';
 import {
   Button,
   PopUpButton,
   SegmentedPicker,
   SwitchRow,
 } from '../src/design/controls';
+import {
+  FilterFacet,
+  filterRowValue,
+  FilterSheet,
+  FilterYears,
+} from '../src/design/filter-sheet';
+import { InsetGroup } from '../src/design/layout';
 import { LinkRow } from '../src/design/rows';
+import { Text } from '../src/design/text';
+import { minimumTarget, rhythm } from '../src/design/tokens';
 import {
   beginFilterSession,
   createFilterStore,
-  registerFilterModel,
   filterStore,
+  registerFilterModel,
   type FilterModel,
   type FilterValues,
 } from '../src/features/sheets/filter-model';
 import {
+  allocationFilterModel,
+  askFilterModel,
   billsFilterModel,
+  connectionsFilterModel,
+  declarationsFilterModel,
   directoryFilterModel,
   divisionsFilterModel,
-  declarationsFilterModel,
-  connectionsFilterModel,
-  searchFilterModel,
-  askFilterModel,
-  moneyFilterModel,
-  allocationFilterModel,
   filterModels,
+  moneyFilterModel,
+  searchFilterModel,
 } from '../src/features/sheets/filter-models';
 import {
-  filtersRoute,
-  filterFacetRoute,
-} from '../src/navigation/routes/filters';
-import {
-  FilterRoute,
   FilterFacetRoute,
+  FilterRoute,
 } from '../src/features/sheets/FilterRoutes';
+import {
+  filterFacetRoute,
+  filtersRoute,
+} from '../src/navigation/routes/filters';
 
 let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => ({
@@ -231,7 +231,7 @@ test('Search rows follow search 2.9 and Ask rows follow ask 4, with the same Yea
     'Topic',
   ]);
   expect(ask.rows.map((item) => item.title)).toEqual([
-    'Member',
+    'Person',
     'Party',
     'Parliament',
     'Topic',
