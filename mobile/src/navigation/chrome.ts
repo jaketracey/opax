@@ -42,13 +42,39 @@ export const glassBar = () =>
  * Colour UIKit's standard and scroll-edge appearances, without inserting a
  * React headerBackground view. That view covered native large titles and back
  * indicators, and reserved an extra header-height band in sheets (wave 7).
- * Large-title roots retain their translucent layout for native collapse.
+ * Inline screens and sheets can colour both appearances.
  */
 export const opaqueBar = (ground: ColorValue = colors.paper) => ({
   headerStyle: { backgroundColor: ground },
   headerLargeStyle: { backgroundColor: ground },
   headerShadowVisible: Platform.OS === 'ios',
 });
+
+/**
+ * UIKit on iOS 26 hides large titles when the standard appearance has a
+ * background colour or blur (react-native-screens#3100, reproduced in UIKit).
+ * While expanded, colour only the scroll-edge appearance. A native header
+ * height change adds the standard colour on collapse and clears it on return.
+ * An empty headerStyle replaces, rather than merges with, the opaque default.
+ */
+export const largeTitleBar = (
+  ground: ColorValue = colors.paper,
+  collapsed = false,
+) =>
+  glassBar()
+    ? {
+        headerStyle: collapsed ? { backgroundColor: ground } : {},
+        headerLargeStyle: { backgroundColor: ground },
+        headerTransparent: true,
+        headerShadowVisible: true,
+      }
+    : opaqueBar(ground);
+
+/** Initial tab grounds, also used by roots with their own scrolling view. */
+export const tabRootGround = (name: string) =>
+  name === 'ask' || (name !== 'bills' && designFlags.groupedSurfaces)
+    ? colors.sunken
+    : colors.paper;
 
 /**
  * Android bar text, in sp. The native bar sets its title in sp, so the
@@ -94,7 +120,7 @@ export function useStackChrome() {
     // soft top edge active but too light, with serif record text legible
     // through the title and bar buttons. The hard edge is UIKit's own opaque
     // boundary with a divider. The bottom stays soft at the minimising tab
-    // bar. Both native bar appearances use the page ground, without a blur.
+    // bar. The visible native appearance uses the page ground, without a blur.
     scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,

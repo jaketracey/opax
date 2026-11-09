@@ -26,6 +26,7 @@ import {
 } from 'react-native';
 import { opaqueBar } from '../navigation/chrome';
 import { useSafeSetOptions } from '../navigation/preview';
+import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { BarTitle } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
 import {
@@ -140,10 +141,14 @@ export function Screen({
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
+  const nativeRoot = useRootBarAppearance(setOptions, {
+    ground: colors[ground],
+    disabled: inPane,
+  });
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
-    if (!inPane) setOptions(opaqueBar(colors[ground]));
-  }, [setOptions, ground, inPane]);
+    if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
+  }, [setOptions, ground, inPane, nativeRoot]);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);

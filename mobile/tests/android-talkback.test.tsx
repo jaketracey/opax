@@ -62,6 +62,7 @@ jest.mock('../src/design/menu', () => ({
 jest.mock('react-native-safe-area-context', () => {
   const { View } = jest.requireActual('react-native');
   return {
+    ...jest.requireActual('react-native-safe-area-context'),
     SafeAreaView: View,
     SafeAreaProvider: ({ children }: { children: ReactNode }) => children,
     useSafeAreaInsets: () => ({ top: 24, bottom: 16, left: 0, right: 0 }),

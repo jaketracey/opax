@@ -24,6 +24,7 @@ import { textStyles } from '../src/design/tokens';
 import SourceSheet from '../src/features/sheets/SourceSheet';
 import { closeSheetItem } from '../src/navigation/chrome';
 jest.mock('react-native-safe-area-context', () => ({
+  ...jest.requireActual('react-native-safe-area-context'),
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));
 let mockSheetParams: Record<string, string> = {};

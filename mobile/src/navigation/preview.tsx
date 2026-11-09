@@ -4,6 +4,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { useCallback, useContext, useLayoutEffect } from 'react';
+import { useRootBarAppearance } from './useRootBarAppearance';
 
 /** Preview destinations have placeholder navigation that rejects options. */
 export function useCanSetOptions() {
@@ -48,6 +49,10 @@ export function RouteOptions({
   options?: NativeStackNavigationOptions;
 }) {
   const setOptions = useSafeSetOptions();
+  useRootBarAppearance(setOptions, {
+    names: ['bills', 'ask'],
+    largeTitleEnabled: options?.headerLargeTitleEnabled,
+  });
   // Stack.Screen installs options in its own effect, outside our guard.
   // Install before paint so native items start in their final positions.
   useLayoutEffect(() => {
