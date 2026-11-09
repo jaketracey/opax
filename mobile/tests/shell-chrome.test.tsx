@@ -557,15 +557,23 @@ test('the tab layout records the selected tab for warm Money map links', () => {
   setSelectedTab('(today)');
 });
 
-describe('bar titles leave room for a named back button (wave 4 bills-06, money-03)', () => {
+describe('bar titles keep their initial layout clear of the bar items', () => {
   const style = (view: TestRenderer.ReactTestRenderer) =>
     StyleSheet.flatten(view.root.findByType(Animated.Text).props.style);
-  test('at rest the title view has no width and no text', () => {
+  test('at rest the title keeps its text and width, hidden only by opacity and accessibility', () => {
     const view = tree(
       <BarTitle title="Interactive Gambling Bill" shown={false} />,
     );
-    expect(style(view).maxWidth).toBe(0);
-    expect(view.root.findByType(Animated.Text).props.children).toBe('');
+    expect(style(view).maxWidth).toBeGreaterThan(0);
+    expect(style(view).maxWidth).toBe(
+      barTitleWidth(Dimensions.get('window').width, 2),
+    );
+    expect(style(view).opacity.__getValue()).toBe(0);
+    expect(view.root.findByType(Animated.Text).props).toMatchObject({
+      children: 'Interactive Gambling Bill',
+      accessibilityElementsHidden: true,
+      importantForAccessibility: 'no-hide-descendants',
+    });
     act(() => view.unmount());
   });
   test('shown, it truncates inside the bar items, never under them (bills-07)', () => {
@@ -576,6 +584,9 @@ describe('bar titles leave room for a named back button (wave 4 bills-06, money-
     expect(text.props.children).toBe('Interactive Gambling Bill');
     expect(text.props.numberOfLines).toBe(1);
     expect(text.props.ellipsizeMode).toBe('tail');
+    expect(style(view).opacity.__getValue()).toBe(1);
+    expect(text.props.accessibilityElementsHidden).toBe(false);
+    expect(text.props.importantForAccessibility).toBe('auto');
     expect(style(view).maxWidth).toBe(
       barTitleWidth(Dimensions.get('window').width, 2),
     );
@@ -589,22 +600,33 @@ describe('bar titles leave room for a named back button (wave 4 bills-06, money-
     // iPad: never wider than half the window.
     expect(barTitleWidth(1024, 1)).toBe(512);
   });
-  test('hiding keeps the width while it fades, then gives it back', () => {
-    let finish: Animated.EndCallback | undefined;
+  test('reveal and completed fade preserve the same text and width', () => {
+    let finish: (() => void) | undefined;
     const timing = jest.spyOn(Animated, 'timing').mockImplementation(
-      () =>
+      (value, config) =>
         ({
           start: (callback?: Animated.EndCallback) => {
-            finish = callback;
+            finish = () => {
+              value.setValue(config.toValue as number);
+              callback?.({ finished: true });
+            };
           },
           stop: () => undefined,
         }) as unknown as Animated.CompositeAnimation,
     );
     const view = tree(<BarTitle title="Member" shown />);
+    const width = style(view).maxWidth;
     act(() => view.update(<BarTitle title="Member" shown={false} />));
-    expect(style(view).maxWidth).toBeGreaterThan(0);
-    act(() => finish?.({ finished: true }));
-    expect(style(view).maxWidth).toBe(0);
+    expect(style(view).maxWidth).toBe(width);
+    act(() => finish?.());
+    expect(style(view).maxWidth).toBe(width);
+    expect(style(view).opacity.__getValue()).toBe(0);
+    expect(view.root.findByType(Animated.Text).props.children).toBe('Member');
+    act(() => view.update(<BarTitle title="Member" shown />));
+    act(() => finish?.());
+    expect(style(view).maxWidth).toBe(width);
+    expect(style(view).opacity.__getValue()).toBe(1);
+    expect(view.root.findByType(Animated.Text).props.children).toBe('Member');
     act(() => view.unmount());
     timing.mockRestore();
   });

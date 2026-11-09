@@ -20,6 +20,7 @@ import {
   type View,
 } from 'react-native';
 import { useSafeSetOptions } from './preview';
+import { useNamedBackTitle } from './useNamedBackOptions';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import { useReduceMotionSetting } from '../design/accessibility';
 import { colors, motion, textStyles } from '../design/tokens';
@@ -34,18 +35,27 @@ export const TitleAnchorContext = createContext<
 export const inlineTitleScaleCap = 23 / 17;
 
 /**
- * The widest a bar title may be, centred between the bar's items: iOS 26
+ * The widest a bar title may be between the bar's items: iOS 26
  * draws each item as a 44 pt glass circle 16 pt from the edge, and a group
  * adds 60 pt an item. A React title view is laid out by Yoga, not UIKit, so
  * nothing else stops its text running under the items (bills-07). On wide
  * windows (iPad) the stack can be narrower than the window, so it keeps to
- * half the window.
+ * half the window. A known back name reserves its own pill width, allowing
+ * UIKit to place the title off-centre between unequal groups.
  */
 export function barTitleWidth(
   windowWidth: number,
   trailing = 2,
   trailingWidth?: number,
+  backTitle?: string,
 ): number {
+  if (backTitle) {
+    const leadingReserve = 16 + 44 + 9.5 * backTitle.length + 8;
+    const trailingReserve =
+      16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 8;
+    const room = Math.max(0, windowWidth - leadingReserve - trailingReserve);
+    return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
+  }
   if (trailingWidth !== undefined) {
     // A text pill needs its actual width, not the circle estimate below.
     // Reserve a short named back button (100 pt), the two 16 pt margins
@@ -60,15 +70,18 @@ export function barTitleWidth(
 }
 
 /**
- * The bar's title view. At rest it has no width, so UIKit keeps the room for
- * a named back button (a hidden but full-width title made it a bare chevron,
- * wave 4 bills-06, money-03); shown, it truncates inside the bar items.
+ * On iOS 26, react-native-screens sizes the centre title subview from its
+ * first layout. Starting with zero width and empty text prevents later
+ * titles from drawing, even when scroll measurement and setOptions work.
+ * Keep the known title laid out within the named back and trailing items,
+ * and hide it with opacity alone. Lane-lead simulator probes confirmed it.
  */
 export function BarTitle({
   title,
   shown,
   trailing = 2,
   trailingWidth,
+  backTitle,
 }: {
   title: string;
   shown: boolean;
@@ -76,21 +89,19 @@ export function BarTitle({
   trailing?: number;
   /** Combined item widths for a bar with a text pill, excluding margins. */
   trailingWidth?: number;
+  /** Resolved native back name, used to keep its pill clear of the title. */
+  backTitle?: string;
 }) {
   const reduceMotion = useReduceMotionSetting();
   const { width } = useWindowDimensions();
   const [opacity] = useState(() => new Animated.Value(shown ? 1 : 0));
-  const [present, setPresent] = useState(shown);
-  if (shown && !present) setPresent(true);
   useEffect(() => {
     const fade = Animated.timing(opacity, {
       toValue: shown ? 1 : 0,
       duration: reduceMotion === false ? motion.duration.crossfade : 0,
       useNativeDriver: true,
     });
-    fade.start(({ finished }) => {
-      if (finished && !shown) setPresent(false);
-    });
+    fade.start();
     return () => fade.stop();
   }, [shown, reduceMotion, opacity]);
   const {
@@ -112,11 +123,11 @@ export function BarTitle({
         {
           color: colors.ink,
           opacity,
-          maxWidth: present ? barTitleWidth(width, trailing, trailingWidth) : 0,
+          maxWidth: barTitleWidth(width, trailing, trailingWidth, backTitle),
         },
       ],
     },
-    present ? title : '',
+    title,
   );
 }
 
@@ -150,6 +161,8 @@ export function useTitleOnScroll(
   }: { trailing?: number; trailingWidth?: number } = {},
 ) {
   const setOptions = useSafeSetOptions();
+  const namedBackTitle = useNamedBackTitle();
+  const backTitle = Platform.OS === 'ios' ? namedBackTitle : undefined;
   const headerHeight = useHeaderBottom();
   const [anchor, setAnchor] = useState<number | null>(null);
   const shown = useRef(false);
@@ -180,11 +193,12 @@ export function useTitleOnScroll(
                   shown: next,
                   trailing,
                   trailingWidth,
+                  backTitle,
                 }),
             },
       );
     },
-    [title, setOptions, trailing, trailingWidth],
+    [title, setOptions, trailing, trailingWidth, backTitle],
   );
   const measureHeading = useCallback(() => {
     const request = ++measurementRequest.current;
@@ -221,6 +235,7 @@ export function useTitleOnScroll(
                 shown: visible,
                 trailing,
                 trailingWidth,
+                backTitle,
               }),
           }),
     });
@@ -235,6 +250,7 @@ export function useTitleOnScroll(
     headerHeight,
     trailing,
     trailingWidth,
+    backTitle,
     windowRef,
     measureHeading,
     invalidateMeasurements,

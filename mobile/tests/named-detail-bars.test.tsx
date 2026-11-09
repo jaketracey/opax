@@ -177,6 +177,7 @@ test('Votes keeps its named back button and shows the inline title only after th
   const inline = () => (options.headerTitle as () => React.ReactElement)();
   expect(inline().type).toBe(BarTitle);
   expect(inline().props.shown).toBe(false);
+  expect(inline().props.backTitle).toBe('Bill text');
   const list = view!.root.findByType(SectionList);
   const heading = list.props.ListHeaderComponent.props.children[0];
   expect(heading.props.collapsable).toBe(false);
@@ -199,6 +200,7 @@ test('Votes keeps its named back button and shows the inline title only after th
   // JS offset still looks like a negative resting inset.
   await native.answer(1, -20, 60);
   expect(inline().props.shown).toBe(true);
+  expect(inline().props.backTitle).toBe('Bill text');
   act(() =>
     list.props.onScroll({ nativeEvent: { contentOffset: { y: 9000 } } }),
   );
@@ -230,7 +232,7 @@ test('the NSW Members route reveals Senators from asynchronous window coordinate
   jest
     .mocked(catalogs.electorateFor)
     .mockResolvedValue({ data: { terms: [] } } as never);
-  const { route, navigation } = navigationFor('index', 'members');
+  const { route, navigation } = navigationFor('your-mp', 'members');
   const options: Record<string, unknown> = {};
   navigation.setOptions.mockImplementation((next) =>
     Object.assign(options, next),
@@ -251,7 +253,11 @@ test('the NSW Members route reveals Senators from asynchronous window coordinate
   const native = nativeMeasurements();
   heading.props.ref.current.measure = native.measure;
   const inline = () => (options.headerTitle as () => React.ReactElement)();
-  expect(inline().props).toMatchObject({ title: 'Senators', shown: false });
+  expect(inline().props).toMatchObject({
+    title: 'Senators',
+    shown: false,
+    backTitle: 'Your MP',
+  });
   act(() => heading.props.onLayout(headingLayout));
   expect(native.measure).not.toHaveBeenCalled();
   act(() => screen.props.onScroll(10000));
@@ -517,10 +523,26 @@ test.each([
   (width, trailing, expected) => {
     expect(barTitleWidth(width, trailing)).toBe(expected);
     expect(barTitleWidth(width, trailing, undefined)).toBe(expected);
+    expect(barTitleWidth(width, trailing, undefined, undefined)).toBe(expected);
   },
 );
 
-test('the Version pill gets off-centre title room on a 402 pt iPhone and no title width at rest', () => {
+test.each([
+  [402, 2, undefined, 'Bill text', 120.5],
+  [402, 2, undefined, 'Your MP', 139.5],
+  [402, 2, 164, 'Bills', 98.5],
+  [200, 2, 164, 'Bills', 0],
+  [1024, 2, 164, 'Bills', 512],
+] as const)(
+  '%i pt with %i items (%s pt) leaves room for back name %s',
+  (width, trailing, trailingWidth, backTitle, expected) => {
+    expect(barTitleWidth(width, trailing, trailingWidth, backTitle)).toBe(
+      expected,
+    );
+  },
+);
+
+test('the Version pill and Bills back name leave the title laid out at rest and revealed on a 402 pt iPhone', () => {
   const originalWindow = Dimensions.get('window');
   const originalScreen = Dimensions.get('screen');
   try {
@@ -535,11 +557,13 @@ test('the Version pill gets off-centre title room on a 402 pt iPhone and no titl
           shown
           trailing={2}
           trailingWidth={120 + 44}
+          backTitle="Bills"
         />,
       );
     });
     const text = () => view!.root.findByType(Animated.Text);
-    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(90);
+    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(98.5);
+    expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(1);
     expect(text().props).toMatchObject({
       numberOfLines: 1,
       ellipsizeMode: 'tail',
@@ -552,10 +576,19 @@ test('the Version pill gets off-centre title room on a 402 pt iPhone and no titl
           shown={false}
           trailing={2}
           trailingWidth={120 + 44}
+          backTitle="Bills"
         />,
       ),
     );
-    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(0);
+    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(98.5);
+    expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(0);
+    expect(text().props).toMatchObject({
+      children: 'Synthetic short bill name',
+      accessibilityElementsHidden: true,
+      importantForAccessibility: 'no-hide-descendants',
+    });
+    // A caller without a known back name retains the accepted override.
+    expect(barTitleWidth(402, 2, 164)).toBe(90);
     expect(barTitleWidth(200, 2, 164)).toBe(0);
     expect(barTitleWidth(1024, 2, 164)).toBe(512);
   } finally {

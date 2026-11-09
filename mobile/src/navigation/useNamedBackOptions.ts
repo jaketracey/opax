@@ -21,7 +21,10 @@ function useBackTitleResolution() {
   const at = routes.findIndex((item) => item.key === route?.key);
   const previous = at > 0 ? routes[at - 1] : undefined;
   const shortBack = previous && shortBackTitles[previous.name];
-  return { back: shortBack ?? rootBackTitle(navigation, route?.key), shortBack };
+  return {
+    back: shortBack ?? rootBackTitle(navigation, route?.key),
+    shortBack,
+  };
 }
 
 /** The short previous-route name used by the native back item. */
