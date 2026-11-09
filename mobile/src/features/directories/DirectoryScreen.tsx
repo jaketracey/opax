@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
+  Platform,
   Pressable,
   RefreshControl,
   SectionList,
@@ -21,7 +22,6 @@ import {
   ContentUnavailable,
   Divider,
   EmptyState,
-  Heading,
   LayoutRegion,
   OfflineLine,
   SidebarSafe,
@@ -39,7 +39,7 @@ import type { SourceDetails } from '../../design/source';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
-import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
 import { presentSource } from '../../navigation/sheets';
@@ -206,12 +206,7 @@ export default function DirectoryScreen() {
 }
 function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const title = titles[kind];
-  const titleRef = useRef<View>(null);
-  const scrollTitle = useTitleOnScroll(
-    titleRef,
-    kind === 'person' ? 'People' : title,
-    { routeTitle: title },
-  );
+  const backTitle = useNamedBackTitle();
   const load = useCallback(
     (refresh: boolean) => loadDirectory(kind, refresh),
     [kind],
@@ -533,22 +528,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         maxToRenderPerBatch={8}
         windowSize={7}
         removeClippedSubviews={false}
-        onScroll={scrollTitle.onScroll}
-        scrollEventThrottle={16}
-        ListHeaderComponent={
-          <View>
-            <View
-              ref={titleRef}
-              collapsable={false}
-              onLayout={scrollTitle.onTitleLayout}
-            >
-              <Heading level={1} kind="page" testID="directory-title">
-                {title}
-              </Heading>
-            </View>
-            {statusHeader}
-          </View>
-        }
+        ListHeaderComponent={statusHeader}
         ListEmptyComponent={unavailable}
         ListFooterComponent={footer}
       />
@@ -559,6 +539,14 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
       <RouteOptions
         options={{
           title,
+          headerTitle: kind === 'person' ? 'People' : title,
+          ...(Platform.OS === 'ios' && backTitle
+            ? {
+                headerBackTitle: backTitle,
+                headerBackButtonMenuEnabled: false,
+                headerBackButtonDisplayMode: 'default' as const,
+              }
+            : {}),
           headerLargeTitleEnabled: false,
           headerSearchBarOptions: { ...searchBar, obscureBackground: false },
           ...headerItems(
