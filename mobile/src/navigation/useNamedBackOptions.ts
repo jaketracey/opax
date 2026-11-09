@@ -12,6 +12,7 @@ const shortBackTitles: Readonly<Record<string, string>> = {
   'bill-text/[key]': 'Bill text',
   'explore/index': 'Tools',
   'lead/[id]': 'Lead',
+  grants: 'Grants',
 };
 
 function useBackTitleResolution() {

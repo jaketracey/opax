@@ -1,6 +1,6 @@
 import { Link, router } from 'expo-router';
 import { NavigationContext } from 'expo-router/react-navigation';
-import { act, useContext, type ReactElement, type ReactNode } from 'react';
+import { act, type ReactElement, type ReactNode } from 'react';
 import {
   Dimensions,
   Text as NativeText,
@@ -18,7 +18,6 @@ import {
   ScreenHeader,
   SectionHeader,
   TitleAnchor,
-  TitleAnchorContext,
 } from '../src/design/layout';
 import { FaceStack, PersonRow, Portrait } from '../src/design/people';
 import { RowLink, menuLeaves, rowMenus } from '../src/design/row-link';
@@ -895,31 +894,30 @@ test('standard bill and person menus stay available when split rows select', () 
     expect(root.findAllByProps({ testID: 'native-preview' })).toHaveLength(0);
   }
 });
-test('Screen sets the bar title only when the anchor threshold flips', () => {
+test('Screen sets the bar title only when the measured window boundary flips', () => {
   const setOptions = jest.fn();
   const navigation = {
     setOptions,
     isFocused: () => true,
     addListener: () => () => undefined,
   };
-  function MeasuredHeading() {
-    const report = useContext(TitleAnchorContext);
-    return (
-      <View testID="measured-heading" onLayout={() => report?.(100)}>
-        <Heading level={1} kind="page">
-          Anne
-        </Heading>
-      </View>
-    );
-  }
   const root = render(
     <NavigationContext.Provider value={navigation as never}>
       <Screen barTitle="Anne">
-        <MeasuredHeading />
+        <Heading level={1} kind="page">
+          Anne
+        </Heading>
       </Screen>
     </NavigationContext.Provider>,
   ).root;
-  act(() => host(root, 'measured-heading').props.onLayout());
+  let pageY = -20;
+  const anchor = root.findByType(TitleAnchor).findByType(View);
+  act(() =>
+    anchor.props.ref({
+      measure: (done: (...values: number[]) => void) =>
+        done(0, 0, 300, 60, 0, pageY),
+    }),
+  );
   setOptions.mockClear();
   for (let index = 0; index < 40; index++)
     act(() =>
@@ -928,6 +926,7 @@ test('Screen sets the bar title only when the anchor threshold flips', () => {
         .props.onScroll({ nativeEvent: { contentOffset: { y: 200 + index } } }),
     );
   expect(setOptions).toHaveBeenCalledTimes(1);
+  pageY = 200;
   act(() =>
     root
       .findByType(ScrollView)

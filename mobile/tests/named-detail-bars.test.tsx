@@ -6,7 +6,8 @@ import {
   Platform,
   SectionList,
   StyleSheet,
-  type View,
+  View,
+  ScrollView,
 } from 'react-native';
 import {
   HeaderHeightContext,
@@ -16,7 +17,8 @@ import {
 import DivisionHistory from '../src/features/directories/DivisionHistory';
 import Members from '../src/features/your-mp/Members';
 import { catalogs } from '../src/api/runtime';
-import { Screen } from '../src/design/layout';
+import { Screen, TitleAnchor } from '../src/design/layout';
+import { Heading } from '../src/design/text';
 import { loadDivisionHistory } from '../src/features/directories/division-data';
 import {
   useNamedBackOptions,
@@ -26,6 +28,7 @@ import {
   BarTitle,
   backPillWidth,
   barTitleWidth,
+  minimumBarTitleWidth,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
 
@@ -84,6 +87,7 @@ test.each([
   [['index', 'leads', 'lead/[id]', 'money-item'], 'Lead'],
   [['index', 'explore/[tool]'], 'Today'],
   [['bills', 'bill/[key]'], 'Bills'],
+  [['index', 'grants', 'grant-program'], 'Grants'],
   [['your-mp', 'members'], 'Your MP'],
   [['index', 'bill/[key]', 'bill-text/[key]'], undefined],
   [['index'], undefined],
@@ -109,7 +113,7 @@ test.each([
   expect(options).toEqual({
     headerBackButtonDisplayMode: 'default',
     ...(title ? { headerBackTitle: title } : {}),
-    ...(['Tools', 'Bill text', 'Lead'].includes(title ?? '')
+    ...(['Tools', 'Bill text', 'Lead', 'Grants'].includes(title ?? '')
       ? { headerBackButtonMenuEnabled: false }
       : {}),
   });
@@ -308,6 +312,101 @@ const headingLayout = {
   nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 80 } },
 } as never;
 
+test('Screen.barTitle measures an anchored heading, including when it is inside a custom component', async () => {
+  const native = nativeMeasurements();
+  const { route, navigation } = navigationFor('index', 'person/[slug]');
+  const options: Record<string, unknown> = {};
+  navigation.setOptions.mockImplementation((next) =>
+    Object.assign(options, next),
+  );
+  function ProfileName() {
+    return (
+      <TitleAnchor>
+        <Heading level={1}>Anthony Albanese</Heading>
+      </TitleAnchor>
+    );
+  }
+  act(() => {
+    view = TestRenderer.create(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={100}>
+            <Screen barTitle="Anthony Albanese">
+              <ProfileName />
+            </Screen>
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  const anchor = view!.root.findByType(TitleAnchor).findByType(View);
+  expect(anchor.props.collapsable).toBe(false);
+  act(() => anchor.props.ref(native.node));
+  const inline = () => (options.headerTitle as () => React.ReactElement)();
+  expect(inline().props).toMatchObject({ shown: false, backTitle: 'Today' });
+  expect(native.measure).not.toHaveBeenCalled();
+  const scroll = (y: number) =>
+    act(() =>
+      view!.root
+        .findByType(ScrollView)
+        .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+    );
+  scroll(9000);
+  await native.answer(0, 150);
+  expect(inline().props.shown).toBe(false);
+  scroll(-900);
+  // The first half is under the bar; the bottom line remains visible.
+  await native.answer(1, 50, 100);
+  expect(inline().props.shown).toBe(true);
+  scroll(9000);
+  await native.answer(2, 150);
+  expect(inline().props.shown).toBe(false);
+});
+
+test.each([
+  ['Votes in parliament', 'A bill name', 1],
+  ['Bills', 'A bill name', 3],
+  ['Bills', 'Supercalifragilisticexpialidocious Act', 1],
+] as const)(
+  'an undersized title stays laid out and hidden beside %s at scale %s',
+  (backTitle, title, fontScale) => {
+    const originalWindow = Dimensions.get('window');
+    const originalScreen = Dimensions.get('screen');
+    try {
+      act(() => {
+        Dimensions.set({
+          window: { ...originalWindow, width: 402, fontScale },
+          screen: { ...originalScreen, width: 402 },
+        });
+        view = TestRenderer.create(
+          <BarTitle title={title} shown backTitle={backTitle} />,
+        );
+      });
+      const text = view!.root.findByType(Animated.Text);
+      const style = StyleSheet.flatten(text.props.style);
+      expect(style.maxWidth).toBeLessThan(
+        minimumBarTitleWidth(title, fontScale),
+      );
+      expect(style.opacity).toBe(0);
+      expect(text.props.children).toBe(title);
+      expect(text.props.accessibilityElementsHidden).toBe(true);
+      expect(text.props.importantForAccessibility).toBe('no-hide-descendants');
+    } finally {
+      act(() =>
+        Dimensions.set({ window: originalWindow, screen: originalScreen }),
+      );
+    }
+  },
+);
+
+test('the useful minimum includes a whole first word and the capped text scale', () => {
+  expect(minimumBarTitleWidth('A bill')).toBe(60);
+  expect(minimumBarTitleWidth('Commonwealth grants')).toBeGreaterThan(100);
+  expect(minimumBarTitleWidth('Members', 3)).toBe(
+    Math.ceil(minimumBarTitleWidth('Members') * (23 / 17)),
+  );
+});
+
 test('iOS compares asynchronous window measurements without using the JS scroll offset', async () => {
   const native = nativeMeasurements();
   const { hook, inline, setOptions } = scrollTitle(native.ref);
@@ -396,10 +495,10 @@ test.each([
 );
 
 test.each([
-  [21, true],
-  [21.1, false],
+  [61, true],
+  [61.1, false],
 ])(
-  'the window boundary has 1 pt tolerance at pageY %s',
+  'a mostly hidden heading has 1 pt tolerance at pageY %s',
   async (pageY, expected) => {
     const native = nativeMeasurements();
     const { hook, inline } = scrollTitle(native.ref);
@@ -577,12 +676,12 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
   try {
     act(() => {
       Dimensions.set({
-        window: { ...originalWindow, width: 402 },
+        window: { ...originalWindow, width: 402, fontScale: 1 },
         screen: { ...originalScreen, width: 402 },
       });
       view = TestRenderer.create(
         <BarTitle
-          title="Synthetic short bill name"
+          title="Bill name"
           shown
           trailing={2}
           trailingWidth={120 + 44}
@@ -601,7 +700,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
       view!.update(
         <BarTitle
           key="rest"
-          title="Synthetic short bill name"
+          title="Bill name"
           shown={false}
           trailing={2}
           trailingWidth={120 + 44}
@@ -612,7 +711,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
     expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(0);
     expect(text().props).toMatchObject({
-      children: 'Synthetic short bill name',
+      children: 'Bill name',
       accessibilityElementsHidden: true,
       importantForAccessibility: 'no-hide-descendants',
     });

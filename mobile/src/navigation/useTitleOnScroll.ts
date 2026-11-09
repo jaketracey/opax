@@ -71,9 +71,11 @@ export function barTitleWidth(
   trailing = 2,
   trailingWidth?: number,
   backTitle?: string,
+  fontScale = 1,
 ): number {
   if (backTitle) {
-    const leadingReserve = 16 + backPillWidth(backTitle) + 20;
+    const leadingReserve =
+      16 + 48 + (backPillWidth(backTitle) - 48) * fontScale + 20;
     const trailingReserve =
       16 + (trailingWidth ?? 44 + 60 * Math.max(0, trailing - 1)) + 20;
     const room = Math.max(0, windowWidth - leadingReserve - trailingReserve);
@@ -90,6 +92,17 @@ export function barTitleWidth(
   const side = 16 + 44 + 60 * Math.max(0, trailing - 1) + 8;
   const room = Math.max(0, windowWidth - 2 * side);
   return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
+}
+
+/** Keep at least one complete word and its ellipsis, never a letter stub. */
+export function minimumBarTitleWidth(title: string, fontScale = 1): number {
+  const words = title.trim().split(/\s+/);
+  const firstWord = words[0] ?? '';
+  const advance = backPillWidth(firstWord) - 48;
+  return Math.ceil(
+    Math.max(60, advance + (words.length > 1 ? 17 : 0)) *
+      Math.min(fontScale, inlineTitleScaleCap),
+  );
 }
 
 /**
@@ -116,17 +129,26 @@ export function BarTitle({
   backTitle?: string;
 }) {
   const reduceMotion = useReduceMotionSetting();
-  const { width } = useWindowDimensions();
-  const [opacity] = useState(() => new Animated.Value(shown ? 1 : 0));
+  const { width, fontScale } = useWindowDimensions();
+  const room = barTitleWidth(
+    width,
+    trailing,
+    trailingWidth,
+    backTitle,
+    fontScale,
+  );
+  const fits = room >= minimumBarTitleWidth(title, fontScale);
+  const visible = shown && fits;
+  const [opacity] = useState(() => new Animated.Value(visible ? 1 : 0));
   useEffect(() => {
     const fade = Animated.timing(opacity, {
-      toValue: shown ? 1 : 0,
+      toValue: visible ? 1 : 0,
       duration: reduceMotion === false ? motion.duration.crossfade : 0,
       useNativeDriver: true,
     });
     fade.start();
     return () => fade.stop();
-  }, [shown, reduceMotion, opacity]);
+  }, [visible, reduceMotion, opacity]);
   const {
     dynamicTypeRamp: _ramp,
     tabular: _tabular,
@@ -138,15 +160,16 @@ export function BarTitle({
       numberOfLines: 1,
       ellipsizeMode: 'tail',
       maxFontSizeMultiplier: inlineTitleScaleCap,
-      accessibilityElementsHidden: !shown,
-      importantForAccessibility: shown ? 'auto' : 'no-hide-descendants',
+      accessibilityElementsHidden: !visible,
+      importantForAccessibility: visible ? 'auto' : 'no-hide-descendants',
       testID: 'bar-title',
       style: [
         style,
         {
           color: colors.ink,
-          opacity,
-          maxWidth: barTitleWidth(width, trailing, trailingWidth, backTitle),
+          // A resize must hide an undersized title before a fade can draw it.
+          opacity: fits ? opacity : 0,
+          maxWidth: room,
         },
       ],
     },
@@ -171,9 +194,9 @@ export function emptyBarTitle() {
 type TitleRef = RefObject<View | Text | null>;
 /**
  * Use the H1's ref outside Screen. Wire onTitleLayout and onScroll to the
- * title wrapper and scrolling view. iOS compares the ref's measured window
- * bottom with the native header. Screen can instead report its content
- * anchor with setAnchorBottom and provide it through TitleAnchorContext.
+ * non-collapsible title wrapper and scrolling view. iOS compares the heading's
+ * measured window midpoint with the native header, including Screen.barTitle
+ * via TitleAnchor. Content anchors remain available for Android adapters.
  */
 export function useTitleOnScroll(
   ref: TitleRef | null,
@@ -181,7 +204,8 @@ export function useTitleOnScroll(
   {
     trailing = 2,
     trailingWidth,
-  }: { trailing?: number; trailingWidth?: number } = {},
+    routeTitle = title,
+  }: { trailing?: number; trailingWidth?: number; routeTitle?: string } = {},
 ) {
   const setOptions = useSafeSetOptions();
   const namedBackTitle = useNamedBackTitle();
@@ -237,9 +261,11 @@ export function useTitleOnScroll(
         height <= 0
       )
         return;
-      // Fabric's window measurement and the JS scroll stream can describe
-      // different frames. Compare only window coordinates, with 1 pt slack.
-      updateShown(pageY + height <= headerHeight + 1);
+      // Hand over once the heading is mostly under the bar, at its midpoint. Short
+      // pages may stop with their final line still visible. Fabric's native
+      // measurement and JS offset can describe different frames, so compare
+      // window coordinates only, with 1 pt slack.
+      updateShown(pageY + height / 2 <= headerHeight + 1);
     });
   }, [ref, headerHeight, updateShown]);
   useLayoutEffect(() => {
@@ -248,7 +274,7 @@ export function useTitleOnScroll(
       shown.current = anchor !== null && offset.current + headerHeight > anchor;
     const visible = shown.current;
     setOptions({
-      title,
+      title: routeTitle,
       ...(Platform.OS === 'android'
         ? { headerTitle: shown.current ? title : '' }
         : {
@@ -268,6 +294,7 @@ export function useTitleOnScroll(
     return invalidateMeasurements;
   }, [
     title,
+    routeTitle,
     anchor,
     setOptions,
     headerHeight,
@@ -292,7 +319,7 @@ export function useTitleOnScroll(
     },
     [anchor, title, headerHeight, measureHeading, windowRef, updateShown],
   );
-  // Hand over only after the heading's bottom has passed under the bar.
+  // Relayout rechecks the same window boundary, without revealing at rest.
   const onTitleLayout = useCallback(
     (event: LayoutChangeEvent) => {
       if (windowRef) {
