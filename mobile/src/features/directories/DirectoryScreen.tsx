@@ -209,7 +209,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const titleRef = useRef<View>(null);
   const scrollTitle = useTitleOnScroll(
     titleRef,
-    kind === 'person' ? 'Members' : title,
+    kind === 'person' ? 'People' : title,
     { routeTitle: title },
   );
   const load = useCallback(

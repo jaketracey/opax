@@ -199,7 +199,7 @@ test('the page heading precedes the first row; source and count stay at the foot
   await act(async () => renderer.unmount());
 });
 
-test('Parliamentarians reveals the whole word Members after its heading passes under the bar', async () => {
+test('Parliamentarians reveals the whole word People after its heading passes under the bar', async () => {
   const renderer = await open('person', empty);
   const list = renderer.root.find(
     (node) =>
@@ -210,7 +210,7 @@ test('Parliamentarians reveals the whole word Members after its heading passes u
     (mockScreen.options!.headerTitle as () => React.ReactElement)();
   expect(mockScreen.options!.title).toBe('Parliamentarians');
   expect(heading.props.children.props.children).toBe('Parliamentarians');
-  expect(inline().props).toMatchObject({ title: 'Members', shown: false });
+  expect(inline().props).toMatchObject({ title: 'People', shown: false });
   const pending: ((...values: number[]) => void)[] = [];
   heading.props.ref.current = {
     measure: (done: (...values: number[]) => void) => pending.push(done),
@@ -220,7 +220,7 @@ test('Parliamentarians reveals the whole word Members after its heading passes u
     await Promise.resolve();
     pending.shift()!(0, 0, 300, 80, 0, 0);
   });
-  expect(inline().props).toMatchObject({ title: 'Members', shown: true });
+  expect(inline().props).toMatchObject({ title: 'People', shown: true });
   await act(async () => {
     list.props.onScroll({ nativeEvent: { contentOffset: { y: 9000 } } });
     await Promise.resolve();
