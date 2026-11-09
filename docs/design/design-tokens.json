@@ -2,7 +2,7 @@
   "$description": "OPAX design tokens: the one source for the web (portal/public/tokens.css and the generated :root region of style.css) and the app (mobile/src/design/tokens.generated.ts, re-exported by palette.ts and tokens.ts). Edit this file, then run `node scripts/build_tokens.mjs`; tests fail while a generated file is stale. Values are CSS px on the web and points on iOS (dp on Android): one CSS pixel is one point. Names: a colour role's key is its app name; its web name is `--` plus the key in kebab case unless `web.name` says otherwise. References like {inkSoft} name another colour role and resolve in the same theme. Rules for using these: docs/design/DESIGN-REVIEW-2026-10.md section 2. Names, aliases and deprecations: docs/design/TOKENS.md.",
   "$extensions": {
     "opax.version": "2026-11-08",
-    "opax.rules": ["Screens use role names, never hex values.", "Navy is the single tint. Category inks are reserved for subject symbols and figures; bands carry edition plates.", "Party colour is a dot beside a readable party name, never colour alone, never a chart series.", "inkFaint is for paper and raised surfaces only; use inkSoft on sunken surfaces and washes.", "Bronze is reserved for the mark, app icon and launch artwork. Links use navy.", "States change roles, never opacity."]
+    "opax.rules": ["Screens use role names, never hex values.", "Navy is the single tint. Category inks are reserved for subject symbols and figures; bands carry edition plates.", "Party colour is a dot beside a readable party name, never colour alone, never a chart series.", "inkFaint is for paper and raised surfaces only; use inkSoft on sunken surfaces and washes.", "Bronze is reserved for the mark, app icon, launch artwork and Today's decorative dot map. Links use navy.", "States change roles, never opacity."]
   },
   "themes": {
     "$description": "Both platforms are light-only (app decision 2; the web sets color-scheme: light). Every colour role still carries a dark value, held to the same contrast rules, so a dark theme is a wiring change rather than a design pass. Increase Contrast (iOS) applies today; the web's prefers-contrast: more block is written only when `web.prefersContrast` is true.",
@@ -39,6 +39,7 @@
       "navyRaised": {"$value": "#1D3A5C", "dark": "#B9CDE6", "$description": "Pressed and hover on navy."},
       "navyWash": {"$value": "#E4E6E7", "dark": "#25303D", "$description": "Secondary button fill; the people accent's wash."},
       "bronze": {"$value": "#A0761B", "dark": "#A87D2A", "$description": "Brand artwork only: mark, icon and launch screen. Never a link or text tint."},
+      "todayDotBronze": {"$value": "#C08F2C", "dark": "#C08F2C", "$description": "Today's decorative dot map highlight, at 76 percent opacity over a navy base at 23 percent. Matches today-header-v2. Never a link or text tint."},
       "bronzeInk": {"$value": "#8A5A12", "dark": "#D9A84A", "highContrast": "#5C4318", "darkHighContrast": "#EBC57F", "$description": "Brand artwork only: mark, icon and launch screen. Never a link or text tint."},
       "bronzeWash": {
         "$value": "#ECE4D3",

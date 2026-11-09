@@ -29,6 +29,8 @@ export const light = {
   navyWash: '#E4E6E7',
   /** Brand artwork only: mark, icon and launch screen. */
   bronze: '#A0761B',
+  /** Today's decorative dot map highlight, at 76 percent opacity over a navy base at 23 percent. */
+  todayDotBronze: '#C08F2C',
   /** Brand artwork only: mark, icon and launch screen. */
   bronzeInk: '#8A5A12',
   /** Brand artwork only: mark, icon and launch screen. */
@@ -105,6 +107,7 @@ export const dark: Record<Role, string> = {
   navyRaised: '#B9CDE6',
   navyWash: '#25303D',
   bronze: '#A87D2A',
+  todayDotBronze: '#C08F2C',
   bronzeInk: '#D9A84A',
   bronzeWash: '#332A1B',
   bronzeBright: '#5E400B',

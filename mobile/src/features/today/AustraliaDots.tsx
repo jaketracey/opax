@@ -235,7 +235,7 @@ function DotField({
             highlight={highlight}
             calm={calm}
             navy={palette.navy}
-            bronze={palette.bronze}
+            bronze={palette.todayDotBronze}
           />
         ))}
       </SizedCanvas>
