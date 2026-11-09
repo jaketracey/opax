@@ -737,23 +737,31 @@ test('quiz and division history keep named native Back buttons and centred inlin
   });
 });
 
-test('Today changes only the scroll-edge shadow and edge effect, preserving transparent appearances', () => {
+test('Today uses the shared protective edge only under content, preserving expanded appearances', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
   try {
-    for (const collapsed of [false, true]) {
+    for (const [collapsed, scrolled] of [
+      [false, false],
+      [false, true],
+      [true, false],
+      [true, true],
+    ]) {
       const shared = largeTitleBar(colors.sunken, collapsed);
-      expect(todayTitleBar(colors.sunken, collapsed)).toEqual({
+      const today = todayTitleBar(colors.sunken, collapsed, scrolled);
+      expect(today).toEqual({
         ...shared,
         headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+        scrollEdgeEffects: {
+          top: collapsed || scrolled ? 'hard' : 'soft',
+          bottom: 'soft',
+        },
       });
-      expect(todayTitleBar(colors.sunken, collapsed).headerShadowVisible).toBe(
-        true,
-      );
-      expect(todayTitleBar(colors.sunken, collapsed).headerLargeStyle).toEqual(
-        {},
-      );
+      expect(today.headerShadowVisible).toBe(true);
+      expect(today.headerLargeStyle).toEqual({});
+      expect(today.headerLargeStyle).not.toHaveProperty('backgroundColor');
+      expect(today).not.toHaveProperty('headerLargeTitleEnabled', false);
+      if (!collapsed) expect(today.headerStyle).toEqual({});
     }
     expect(todayTitleBar(colors.sunken).headerStyle).toEqual({});
     Object.defineProperty(Platform, 'Version', {
@@ -761,6 +769,9 @@ test('Today changes only the scroll-edge shadow and edge effect, preserving tran
       value: 25,
     });
     expect(todayTitleBar(colors.sunken)).toEqual(largeTitleBar(colors.sunken));
+    expect(todayTitleBar(colors.sunken, true, true)).toEqual(
+      largeTitleBar(colors.sunken, true),
+    );
   } finally {
     Object.defineProperty(Platform, 'Version', version);
   }
@@ -859,19 +870,177 @@ test.each(
           .contentInsetAdjustmentBehavior,
       ).toBe('automatic');
       navigation.setOptions.mockClear();
-      for (const height of [120, 115, 100, 80])
+      for (const height of [120, 119.75, 119.5, 120])
         act(() => renderer!.update(page(height)));
       expanded();
       expect(navigation.setOptions).not.toHaveBeenCalled();
+      if (name === 'index')
+        expect(current.scrollEdgeEffects).toEqual({
+          top: 'soft',
+          bottom: 'soft',
+        });
+      act(() => renderer!.update(page(119.4)));
+      expanded(); // A shrinking large title still needs both backgrounds clear.
+      if (name === 'index') {
+        expect(current.scrollEdgeEffects).toEqual({
+          top: 'hard',
+          bottom: 'soft',
+        });
+        expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      } else expect(navigation.setOptions).not.toHaveBeenCalled();
+      for (const height of [115, 100, 80])
+        act(() => renderer!.update(page(height)));
+      expanded();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(
+        name === 'index' ? 1 : 0,
+      );
       act(() => renderer!.update(page(68)));
       expect(current.headerStyle).toEqual({ backgroundColor: ground });
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      expect(current.headerLargeStyle).toEqual({});
+      expect(current.headerLargeTitleEnabled).toBe(true);
+      if (name === 'index')
+        expect(current.scrollEdgeEffects).toEqual({
+          top: 'hard',
+          bottom: 'soft',
+        });
+      const collapsedCalls = name === 'index' ? 2 : 1;
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls);
       for (let i = 0; i < 40; i++)
         act(() => renderer!.update(page(68 + (i % 2) / 2)));
-      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls);
       act(() => renderer!.update(page(120)));
       expanded();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls + 1);
+      // Stretching above the rest height must neither select hard nor raise
+      // the reference height, including after a slow return from collapse.
+      for (const height of [132, 144, 120, 119.75, 120]) {
+        act(() => renderer!.update(page(height)));
+        expanded();
+        if (name === 'index')
+          expect(current.scrollEdgeEffects).toEqual({
+            top: 'soft',
+            bottom: 'soft',
+          });
+        else expect(current).not.toHaveProperty('scrollEdgeEffects');
+      }
+      expect(navigation.setOptions).toHaveBeenCalledTimes(collapsedCalls + 1);
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', version);
+      Dimensions.set({ window, screen: display });
+    }
+  },
+);
+
+test.each([
+  ['font scale', { fontScale: 1 }],
+  ['window width', { width: 380 }],
+  ['window height', { height: 820 }],
+] as const)(
+  'Today resets its expanded reference when %s changes',
+  (_input, change) => {
+    const window = Dimensions.get('window');
+    const display = Dimensions.get('screen');
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    Dimensions.set({
+      window: { ...window, width: 390, height: 844, fontScale: 1.353 },
+      screen: { ...display, width: 390, height: 844, fontScale: 1.353 },
+    });
+    const route = { key: 'today-root', name: 'index' };
+    const entry = tabRootScreen(
+      '(today)',
+      '(today)',
+      'index',
+      'Today',
+      false,
+    )[0]!;
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: sharedScreens('(today)', false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+      setOptions: jest.fn((next: object) => {
+        current = { ...current, ...next };
+      }),
+    };
+    let current = {
+      ...opaqueBar(),
+      ...entry.props.options({ route, navigation }),
+    };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={height}>
+              <Screen grouped>
+                <View />
+              </Screen>
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const soft = () => {
+      expect(current).toMatchObject({
+        headerLargeTitleEnabled: true,
+        headerLargeTitleShadowVisible: false,
+        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+      });
+      expect(current.headerStyle).toEqual({});
+      expect(current.headerLargeStyle).toEqual({});
+    };
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    const resize = (change: Partial<typeof window>, height: number) =>
+      act(() => {
+        Dimensions.set({
+          window: { ...Dimensions.get('window'), ...change },
+          screen: { ...Dimensions.get('screen'), ...change },
+        });
+        renderer!.update(page(height));
+      });
+    try {
+      renderer = tree(page(120));
+      soft();
+      navigation.setOptions.mockClear();
+      resize(change, 112);
+      soft();
+      expect(navigation.setOptions).not.toHaveBeenCalled();
+      act(() => renderer!.update(page(111.4)));
+      expect(current.scrollEdgeEffects).toEqual({
+        top: 'hard',
+        bottom: 'soft',
+      });
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      act(() => renderer!.update(page(112)));
+      soft();
       expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      resize({ fontScale: 1.786 }, 130);
+      soft();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      act(() => renderer!.update(page(129.4)));
+      expect(current.scrollEdgeEffects).toEqual({
+        top: 'hard',
+        bottom: 'soft',
+      });
+      expect(navigation.setOptions).toHaveBeenCalledTimes(3);
+      act(() => renderer!.update(page(130)));
+      soft();
+      for (const height of [144, 130]) {
+        act(() => renderer!.update(page(height)));
+        soft();
+      }
+      expect(navigation.setOptions).toHaveBeenCalledTimes(4);
     } finally {
       if (renderer) act(() => renderer!.unmount());
       Object.defineProperty(Platform, 'Version', version);

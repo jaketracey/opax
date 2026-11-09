@@ -71,8 +71,8 @@ export function useRootBarSearchOptions(
 
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
- * their FlatList/ScrollView does not use Screen. Only the collapsed/expanded
- * transition changes options, not each native header-height notification.
+ * their FlatList/ScrollView does not use Screen. Only appearance transitions
+ * change options, including Today's first shrink from its expanded height.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -133,15 +133,21 @@ export function useRootBarAppearance(
   const collapsedHeight =
     compactHeight +
     (pinnedSearch ? stackedSearchHeight + stackedSearchSlack : 1);
-  const expandedRoute = useRef<{ key: string; collapsedHeight: number }>(
-    undefined,
-  );
+  const expandedRoute = useRef<{
+    key: string;
+    collapsedHeight: number;
+    expandedHeight: number;
+    fontScale: number;
+    width: number;
+    height: number;
+  }>(undefined);
   const applied = useRef<{
     key: string;
     setter: typeof setOptions;
     colour: ColorValue;
     collapsed: boolean;
     largeTitleEnabled: boolean;
+    todayScrolled: boolean;
   }>(undefined);
   const colour = ground ?? tabRootGround(root?.name ?? '');
   const rootKey = root?.key;
@@ -151,8 +157,26 @@ export function useRootBarAppearance(
       applied.current = undefined;
       return;
     }
-    if (headerHeight > collapsedHeight)
-      expandedRoute.current = { key: rootKey, collapsedHeight };
+    if (headerHeight > collapsedHeight) {
+      const previous = expandedRoute.current;
+      expandedRoute.current = {
+        key: rootKey,
+        collapsedHeight,
+        fontScale: frame.fontScale,
+        width: frame.width,
+        height: frame.height,
+        // Retain the first expanded measurement until the route, threshold,
+        // font scale or window size changes. Overscroll must not raise it.
+        expandedHeight:
+          previous?.key === rootKey &&
+          previous.collapsedHeight === collapsedHeight &&
+          previous.fontScale === frame.fontScale &&
+          previous.width === frame.width &&
+          previous.height === frame.height
+            ? previous.expandedHeight
+            : headerHeight,
+      };
+    }
     // NativeStack starts with an estimated inline height before UIKit reports
     // the expanded bar. Do not mistake that first estimate for a collapse.
     const collapsed =
@@ -160,18 +184,31 @@ export function useRootBarAppearance(
       (expandedRoute.current?.key === rootKey &&
         expandedRoute.current.collapsedHeight === collapsedHeight &&
         headerHeight <= collapsedHeight);
+    // Native layout reports the settled expanded height even if the last JS
+    // scroll event was missed. Half a point ignores subpixel rounding at rest.
+    const todayScrolled =
+      today &&
+      expandedRoute.current?.key === rootKey &&
+      expandedRoute.current.collapsedHeight === collapsedHeight &&
+      expandedRoute.current.fontScale === frame.fontScale &&
+      expandedRoute.current.width === frame.width &&
+      expandedRoute.current.height === frame.height &&
+      headerHeight < expandedRoute.current.expandedHeight - 0.5;
     const previous = applied.current;
     if (
       previous?.key === rootKey &&
       previous.setter === setOptions &&
       previous.colour === colour &&
       previous.collapsed === collapsed &&
-      previous.largeTitleEnabled === largeTitleEnabled
+      previous.largeTitleEnabled === largeTitleEnabled &&
+      previous.todayScrolled === todayScrolled
     )
       return;
     setOptions(
       largeTitleEnabled
-        ? (today ? todayTitleBar : largeTitleBar)(colour, collapsed)
+        ? today
+          ? todayTitleBar(colour, collapsed, todayScrolled)
+          : largeTitleBar(colour, collapsed)
         : opaqueBar(colour),
     );
     applied.current = {
@@ -180,6 +217,7 @@ export function useRootBarAppearance(
       colour,
       collapsed,
       largeTitleEnabled,
+      todayScrolled,
     };
   }, [
     rootKey,
@@ -190,6 +228,9 @@ export function useRootBarAppearance(
     landscapePhone,
     largeTitleEnabled,
     today,
+    frame.fontScale,
+    frame.width,
+    frame.height,
   ]);
   return !!root;
 }

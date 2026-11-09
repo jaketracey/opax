@@ -74,20 +74,26 @@ export const largeTitleBar = (
     : opaqueBar(ground);
 
 /**
- * Today alone uses UIKit's scroll-edge shadow transition. A hard top edge
- * paints its own divider, even when the scroll-edge appearance has no shadow.
- * Soft removes that divider without giving either expanded appearance a
- * background, preserving large titles (react-native-screens#3100).
+ * Today's soft edge leaves the dot map and large title clear at rest. Native
+ * header height shrinking below its known expanded height selects the other
+ * roots' protective edge; a settled full height or overscroll restores soft.
+ * Soft alone blurs only the status strip, leaving cards sharp behind the title.
+ * A permanently hard edge paints a divider at rest. Switching the edge keeps
+ * both expanded appearances background-free (react-native-screens#3100).
  */
 export const todayTitleBar = (
   ground: ColorValue = colors.paper,
   collapsed = false,
+  scrolled = collapsed,
 ) => ({
   ...largeTitleBar(ground, collapsed),
   ...(glassBar()
     ? {
         headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: { top: 'soft' as const, bottom: 'soft' as const },
+        scrollEdgeEffects: {
+          top: collapsed || scrolled ? ('hard' as const) : ('soft' as const),
+          bottom: 'soft' as const,
+        },
       }
     : {}),
 });

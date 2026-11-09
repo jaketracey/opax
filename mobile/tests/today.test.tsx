@@ -1,6 +1,12 @@
 import { useNetworkState } from 'expo-network';
 import { act, type ReactElement, type ReactNode } from 'react';
-import { ActionSheetIOS } from 'react-native';
+import {
+  HeaderHeightContext,
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
+import { ActionSheetIOS, Platform } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import * as c from '../src/api/catalogs';
@@ -16,6 +22,7 @@ import { invitationBody } from '../src/features/today/SeatInvitation';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { releaseSplash } from '../src/launch/splash';
+import { largeTitleBar, todayTitleBar } from '../src/navigation/chrome';
 import { welcomeDeclinedThisLaunch } from '../src/onboarding/state';
 import { responseBytes } from './fixture-bytes';
 import {
@@ -237,6 +244,78 @@ function setUp({
   );
   mock.bills.mockResolvedValue(result(bills) as never);
 }
+
+test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
+  'Today follows native header height without a final scroll event on the %s root',
+  async (name) => {
+    setUp();
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const route = { key: `${name}-root`, name };
+    const setOptions = jest.fn();
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: [name, 'bill/[key]', 'explore/[tool]'],
+      }),
+      setOptions,
+    };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={height}>
+              <Today />
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    try {
+      const renderer = await render(page(160));
+      expect(renderer.root.findByType(Screen).props.onScroll).toBeUndefined();
+      const expanded = setOptions.mock.calls.at(-1)![0];
+      const ground = expanded.contentStyle.backgroundColor;
+      expect(expanded).toEqual(
+        (name === 'index' ? todayTitleBar : largeTitleBar)(ground),
+      );
+      expect(expanded.headerStyle).toEqual({});
+      expect(expanded.headerLargeStyle).toEqual({});
+      setOptions.mockClear();
+      for (const height of [160, 159.75, 160])
+        act(() => renderer.update(page(height)));
+      expect(setOptions).not.toHaveBeenCalled();
+      for (const height of [159, 120, 100])
+        act(() => renderer.update(page(height)));
+      if (name === 'index') {
+        expect(setOptions).toHaveBeenCalledTimes(1);
+        expect(setOptions).toHaveBeenLastCalledWith(
+          todayTitleBar(ground, false, true),
+        );
+      } else expect(setOptions).not.toHaveBeenCalled();
+      act(() => renderer.update(page(68)));
+      expect(setOptions).toHaveBeenLastCalledWith(
+        (name === 'index' ? todayTitleBar : largeTitleBar)(ground, true),
+      );
+      act(() => renderer.update(page(160)));
+      expect(setOptions).toHaveBeenLastCalledWith(expanded);
+      const returnedCalls = name === 'index' ? 3 : 2;
+      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
+      for (const height of [192, 160]) act(() => renderer.update(page(height)));
+      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
+    } finally {
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
 
 describe('the launch order', () => {
   test('A, with a seat: Your MP, then the edition; the daily pair opens More to explore', async () => {
