@@ -361,11 +361,19 @@ test('the reader reveals the short bill name after its whole heading leaves, wit
   const heading =
     view.root.findByType(ReaderList).props.header.props.children[1];
   expect(heading.props.collapsable).toBe(false);
-  (heading.props.ref.current as View).measure = (done) =>
-    done(0, 0, 300, 80, 0, 120);
+  const pending: Parameters<View['measure']>[0][] = [];
+  (heading.props.ref.current as View).measure = (done) => {
+    pending.push(done);
+  };
+  const answer = (request: number, pageY: number) =>
+    act(async () => {
+      await Promise.resolve();
+      pending[request]!(0, 0, 300, 80, 0, pageY);
+    });
   await act(async () =>
     heading.props.onLayout({ nativeEvent: { layout: { y: 28, height: 80 } } }),
   );
+  expect(pending).toHaveLength(0);
   expect(inline().props.shown).toBe(false);
   const scroll = (y: number) =>
     act(async () =>
@@ -373,11 +381,15 @@ test('the reader reveals the short bill name after its whole heading leaves, wit
         nativeEvent: { contentOffset: { y } },
       }),
     );
-  await scroll(-44);
+  await scroll(5000);
+  await answer(0, 120);
   expect(inline().props.shown).toBe(false);
-  await scroll(112);
+  await scroll(-1000);
+  await answer(1, -34);
   expect(inline().props.shown).toBe(false);
-  await scroll(113);
+  await scroll(-2000);
+  expect(inline().props.shown).toBe(false);
+  await answer(2, -36);
   expect(inline().props).toMatchObject({
     shown: true,
     title: 'Synthetic short bill name',
@@ -392,7 +404,8 @@ test('the reader reveals the short bill name after its whole heading leaves, wit
   expect(room).toBe(90);
   expect(room).toBeGreaterThan(0);
   expect(barLabels()).toEqual(['As passed', 'More']);
-  await scroll(-44);
+  await scroll(9000);
+  await answer(3, 120);
   expect(inline().props.shown).toBe(false);
   await act(async () => view.unmount());
 });
@@ -461,14 +474,12 @@ test.each([
     const text = decodeBillText(
       responses['/bill-texts/au-federal-r7534/r7534-aspassed.json'],
     );
-    jest
-      .mocked(records.billManifest)
-      .mockResolvedValue(
-        record({
-          ...manifest,
-          versions: manifest.versions.slice(0, versionCount),
-        }),
-      );
+    jest.mocked(records.billManifest).mockResolvedValue(
+      record({
+        ...manifest,
+        versions: manifest.versions.slice(0, versionCount),
+      }),
+    );
     jest
       .mocked(records.billVersion)
       .mockResolvedValue(

@@ -163,6 +163,9 @@ export function useTitleOnScroll(
       setAnchor((current) => (current === bottom ? current : bottom)),
     [],
   );
+  const invalidateMeasurements = useCallback(() => {
+    measurementRequest.current++;
+  }, []);
   const updateShown = useCallback(
     (next: boolean) => {
       if (!title || next === shown.current) return;
@@ -224,9 +227,7 @@ export function useTitleOnScroll(
     installed.current = anchor !== null;
     if (windowRef && hasScrolled.current) measureHeading();
     // A response queued before a header/route change or unmount is stale.
-    return () => {
-      measurementRequest.current++;
-    };
+    return invalidateMeasurements;
   }, [
     title,
     anchor,
@@ -236,6 +237,7 @@ export function useTitleOnScroll(
     trailingWidth,
     windowRef,
     measureHeading,
+    invalidateMeasurements,
   ]);
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
