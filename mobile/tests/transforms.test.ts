@@ -1,5 +1,8 @@
-import { decodeBill, decodeMoney, decodeExpenses } from '../src/api/catalogs';
-import { assertReceiptsLookup } from './receipts';
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { runInNewContext } from 'node:vm';
+import ts from 'typescript';
 import {
   billDedupeDivisions,
   billFoldText,
@@ -9,25 +12,22 @@ import {
   billStage,
   billStageRuns,
 } from '../src/api/bill-transforms';
+import { decodeBill, decodeExpenses, decodeMoney } from '../src/api/catalogs';
+import { partyLabels, partyMoney, resolveParty } from '../src/api/party-page';
 import {
-  samePartyLabel,
   partyReceiptsFor,
   receiptParties,
+  samePartyLabel,
 } from '../src/api/party-transforms';
-import { readFileSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
-import { shape, count } from '../src/api/validation';
-import { resolve } from 'node:path';
-import { runInNewContext } from 'node:vm';
-import ts from 'typescript';
 import {
   billTitleIndex,
   expenseBenchmarks,
   payNameKey,
   payPersonRecord,
 } from '../src/api/transforms';
-import { bills, catalogs, pinned, files } from './pinned';
-import { partyLabels, partyMoney, resolveParty } from '../src/api/party-page';
+import { count, shape } from '../src/api/validation';
+import { bills, catalogs, files, pinned } from './pinned';
+import { assertReceiptsLookup } from './receipts';
 const web = readFileSync(
   resolve(__dirname, '../../portal/public/app.js'),
   'utf8',
@@ -58,7 +58,9 @@ function constant(name: string) {
 const paySource = readFileSync(
   resolve(__dirname, '../../portal/src/pay-records.mjs'),
   'utf8',
-).replace(/export /g, '');
+)
+  .replace(/export /g, '')
+  .replace(/ — /g, ': ');
 const originalPay = runInNewContext(`${paySource}; ({ payPersonRecord })`) as {
   payPersonRecord: typeof payPersonRecord;
 };

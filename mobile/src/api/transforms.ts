@@ -147,7 +147,7 @@ export function payPersonRecord(pay: Pay, id: string) {
   return {
     key: 'pay:' + id,
     kind: 'pay',
-    title: `${p.name} — pay for the posts held`,
+    title: `${p.name}: pay for the posts held`,
     href: '/subject/person/' + encodeURIComponent(p.name) + '#person-pay',
     snippet: [lead, peak, total, posts.replace(/;$/, '.'), years, LIMITS].join(
       ' ',

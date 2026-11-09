@@ -1,17 +1,17 @@
 import {
   Catalogs,
   personId,
-  type BillIndex,
-  type RecentInterests,
   rosterIdentityFor,
   suggestionsFor,
+  type BillIndex,
+  type RecentInterests,
 } from '../src/api/catalogs';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { dataAsOf } from '../src/api/client';
 import { ApiError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
-import { catalogs as data, pinned, slugs } from './pinned';
 import { personRowContext } from '../src/features/search/model';
+import { catalogs as data, pinned, slugs } from './pinned';
 const id = personId('person_2b850aa643795ce8902f754b');
 function loader(fail: string[] = [], stale: string[] = []) {
   const calls: string[] = [];
@@ -96,7 +96,7 @@ test.each([
 );
 test('Today retains declarations when the bill source fails', async () => {
   const { catalogs } = loader(['/bills/index.json']);
-  const today = await catalogs.today();
+  const today = await readToday(catalogs);
   expect(today.bills.status).toBe('error');
   expect(today.declarations.status).toBe('ready');
 });
@@ -365,7 +365,7 @@ test('explicit suggestion, Today and coverage refreshes revalidate fresh cache e
   const catalogs = new Catalogs(client);
   await underlying.suggestionSources();
   await catalogs.suggestionSources(true);
-  await catalogs.today(6, true);
+  await readToday(catalogs, 6, true);
   await catalogs.about(true);
   expect(forced).toEqual([
     '/electorates/manifest.json',
@@ -374,8 +374,8 @@ test('explicit suggestion, Today and coverage refreshes revalidate fresh cache e
     '/api/person-slugs',
     data.manifest.index_url,
     data.manifest.people_url,
-    '/parliamentarians.json',
     '/bills/index.json',
+    '/parliamentarians.json',
     '/interests/recent.json',
     '/corpus.json',
   ]);
@@ -389,7 +389,7 @@ test.each([
   'Today keeps declarations and bills readable when optional metadata fails: %s',
   async (path) => {
     const { catalogs, calls } = loader([path]);
-    const today = await catalogs.today();
+    const today = await readToday(catalogs);
     expect(calls).not.toContain('/photos/people.json');
     expect(calls).not.toContain('/photos/credits.json');
     expect(today.bills.status).toBe('ready');
@@ -403,10 +403,18 @@ test.each([
 );
 test('Today propagates optional metadata cache state without changing the declaration date', async () => {
   const { catalogs } = loader([], ['/parliamentarians.json']);
-  const today = await catalogs.today();
+  const today = await readToday(catalogs);
   expect(today.declarations.stale).toBe(true);
   expect(today.declarations.asAt).toBe(
     (pinned('/interests/recent.json') as { meta: { generated: string } }).meta
       .generated,
   );
 });
+
+async function readToday(catalogs: Catalogs, limit = 6, refresh = false) {
+  const [bills, declarations] = await Promise.all([
+    catalogs.todayBills(limit, 'new', refresh),
+    catalogs.todayDeclarationsJoined(limit, refresh),
+  ]);
+  return { bills, declarations };
+}

@@ -1,15 +1,15 @@
-import { pinnedBytes } from './pinned';
 import { Platform } from 'react-native';
-import { ApiClient } from '../src/api/client';
 import {
   CatalogCache,
   isFresh,
   type CacheEntry,
-  type CacheStore,
   type CacheIndexEntry,
+  type CacheStore,
 } from '../src/api/cache';
-import { assertAllowedPath } from '../src/api/policy';
+import { ApiClient } from '../src/api/client';
 import { ApiError, httpError } from '../src/api/errors';
+import { assertAllowedPath } from '../src/api/policy';
+import { pinnedBytes } from './pinned';
 class MemoryStore implements CacheStore {
   entries: CacheEntry[] = [];
   index: CacheIndexEntry[] = [];
@@ -110,14 +110,9 @@ describe('the never-call boundary', () => {
     '/api/search-all?q=x&kind=all',
     '/api/search-all?q=x&kind=bill&nocache=1',
     '/api/search-all?q=x&kind=speech',
-    ...[
-      'donor',
-      'supplier',
-      'receipt',
-      'contract',
-      'access',
-      'campaigner',
-    ].map((kind) => `/api/search-all?q=x&kind=${kind}`),
+    ...['donor', 'supplier', 'receipt', 'contract', 'access', 'campaigner'].map(
+      (kind) => `/api/search-all?q=x&kind=${kind}`,
+    ),
     ...['party', 'agency', 'grant', 'report'].map(
       (kind) => `/api/search-all?q=x&kind=${kind}&nocache=1`,
     ),
@@ -1328,3 +1323,55 @@ test.each(['ios', 'android'] as const)(
     }
   },
 );
+
+test('launch revalidation checks a fresh cached record without a conditional user-refresh request', async () => {
+  const transport = jest.fn<
+    ReturnType<typeof fetch>,
+    Parameters<typeof fetch>
+  >();
+  transport.mockResolvedValueOnce(
+    response(200, { etag: 'edition-v1', 'cache-control': 'max-age=3600' }),
+  );
+  const { client } = setup(transport);
+  await client.get('/bills/index.json', decode);
+  await client.get('/bills/index.json', decode);
+  expect(transport).toHaveBeenCalledTimes(1);
+  transport.mockRejectedValueOnce(new Error('Offline'));
+  const saved = await client.get('/bills/index.json', decode, false, {
+    background: true,
+  });
+  expect(saved.stale).toBe(true);
+  const headers = transport.mock.calls[1]![1]!.headers as Record<
+    string,
+    string
+  >;
+  expect(headers['Cache-Control']).toBe('no-cache');
+  expect(headers).not.toHaveProperty('If-None-Match');
+});
+
+test('a superseded read aborts its transport and does not retry or substitute cached content', async () => {
+  const controller = new AbortController();
+  let transportSignal: AbortSignal | undefined;
+  const transport = jest.fn(
+    (_url: string, init?: RequestInit) =>
+      new Promise<Response>((_resolve, reject) => {
+        transportSignal = init?.signal ?? undefined;
+        transportSignal?.addEventListener(
+          'abort',
+          () => reject(new Error('aborted')),
+          { once: true },
+        );
+      }),
+  );
+  const { client } = setup(transport as typeof fetch, () => 1000, {
+    retries: 2,
+  });
+  const pending = client.get('/parliamentarians.json', decode, false, {
+    signal: controller.signal,
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+  controller.abort();
+  await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+  expect(transportSignal?.aborted).toBe(true);
+  expect(transport).toHaveBeenCalledTimes(1);
+});

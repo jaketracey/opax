@@ -1,26 +1,29 @@
-import type { ApiClient, RecordResult } from './client';
+import { samePartyLabel } from '../design/party';
 import { decodePartyFile } from '../features/directories/party-file';
 import { publicDiscovery } from '../features/money-public/discovery';
 import {
   decodeRecentDivisions,
   type RecentDivisions,
 } from '../features/today/votes';
-import {
-  partyLabels,
-  resolveParty,
-  partyMembers,
-  partyMoney,
-  recentPartyBills,
-  partyDivisions,
-} from './party-page';
-import { samePartyLabel } from '../design/party';
-import { ApiError } from './errors';
+import type { Manifest } from './catalog-decoders';
+import * as decode from './catalog-decoders';
 import {
   memberSearchResults,
   memberSearchRows,
   memberSlugFor,
   memberSuggestionRoster,
 } from './catalog-search';
+import type { ApiClient, RecordResult } from './client';
+import { ApiError } from './errors';
+import { billKey, interestKey, personId, type PersonId } from './ids';
+import {
+  partyDivisions,
+  partyLabels,
+  partyMembers,
+  partyMoney,
+  recentPartyBills,
+  resolveParty,
+} from './party-page';
 import {
   joinPerson,
   personSlugForId,
@@ -28,31 +31,29 @@ import {
   type PersonProfile,
 } from './person-identity';
 import { editionPath, type CatalogKind } from './policy';
-import * as decode from './catalog-decoders';
-import { isPartialCatalog, type Decoder } from './validation';
-import type { Manifest } from './catalog-decoders';
-import { billKey, interestKey, personId, type PersonId } from './ids';
 import {
-  declarationProfilesFor,
-  profileFor,
-  rosterProfileFor,
-  recentBillsFor,
-  recentDeclarationsFor,
-  type RecentBillsKind,
-  suggestionProvenanceFor,
-  yourMPFor,
-  electorateFor,
-  suggestionsFor,
   billFor,
   billsFor,
   coverageFor,
+  declarationProfilesFor,
   editionFor,
+  electorateFor,
+  profileFor,
+  recentBillsFor,
+  recentDeclarationsFor,
+  rosterProfileFor,
+  suggestionProvenanceFor,
+  suggestionsFor,
+  yourMPFor,
   type Block,
   type EditionView,
   type ProfileCatalogs,
+  type RecentBillsKind,
 } from './selectors';
+import { isPartialCatalog, type Decoder } from './validation';
 export * from './catalog-decoders';
 export * from './ids';
+export * from './person-identity';
 export * from './selectors';
 
 interface SuggestionSources {
@@ -287,11 +288,14 @@ export class Catalogs {
           this.partyFile('qld', refresh),
           this.partyFile('vic', refresh),
         ]);
-        label = resolveParty(input, stateParties.flatMap((result) =>
-          result.status === 'fulfilled'
-            ? result.value.data.parties.map((party) => party.label)
-            : [],
-        ));
+        label = resolveParty(
+          input,
+          stateParties.flatMap((result) =>
+            result.status === 'fulfilled'
+              ? result.value.data.parties.map((party) => party.label)
+              : [],
+          ),
+        );
       }
       if (!label) {
         if (core.status === 'error' || money.status === 'error')
@@ -425,7 +429,9 @@ export class Catalogs {
   }
   partyFile(jurisdiction: 'federal' | 'qld' | 'vic', refresh = false) {
     return this.client.get(
-      jurisdiction === 'federal' ? '/graph/money.json' : `/graph/money.${jurisdiction}.json`,
+      jurisdiction === 'federal'
+        ? '/graph/money.json'
+        : `/graph/money.${jurisdiction}.json`,
       decodePartyFile,
       refresh,
     );
@@ -778,17 +784,6 @@ export class Catalogs {
       };
     }
   }
-  /** @deprecated Today reads `todayBills` and `todayDeclarations` apart. */
-  async today(limit = 6, refresh = false) {
-    const metadata = this.client
-      .get('/parliamentarians.json', decode.decodeRoster, refresh)
-      .catch(() => null);
-    const [bills, declarations] = await Promise.all([
-      this.todayBills(limit, 'new', refresh),
-      this.todayDeclarationsJoined(limit, refresh, metadata),
-    ]);
-    return { bills, declarations };
-  }
   /**
    * W13: the newest posted daily edition, through the catalog cache like every
    * other read, so a saved copy stays readable offline and is marked stale.
@@ -796,17 +791,25 @@ export class Catalogs {
    * its own time and max-age), so the block is `missing` and the card absent,
    * now, after a relaunch and offline. Nothing is composed when a read fails.
    */
-  async todayEdition(refresh = false): Promise<Block<EditionView>> {
+  async todayEdition(
+    refresh: boolean | 'background' = false,
+  ): Promise<Block<EditionView>> {
     const empty = { sources: [], asAt: null, stale: false, savedAt: null };
     try {
       const record = await this.client.get(
         editionPath,
         decode.decodeEditionRead,
-        refresh,
-        { absence: true },
+        refresh === true,
+        { absence: true, background: refresh === 'background' },
       );
       if ('absent' in record.data)
-        return { ...empty, data: null, status: 'missing' };
+        return {
+          ...empty,
+          data: null,
+          status: 'missing',
+          stale: record.stale,
+          savedAt: record.stale ? record.savedAt : null,
+        };
       return {
         ...editionFor(record.data),
         ...recordFlags([record]),
@@ -836,7 +839,12 @@ export class Catalogs {
    * leaves its markers unchecked instead of failing the others.
    */
   async followSources(
-    needs: { people?: boolean; bills?: boolean; electorates?: boolean; parties?: boolean },
+    needs: {
+      people?: boolean;
+      bills?: boolean;
+      electorates?: boolean;
+      parties?: boolean;
+    },
     refresh = false,
   ) {
     const records: RecordResult<unknown>[] = [];
@@ -852,10 +860,7 @@ export class Catalogs {
         records.push(record);
         if (record.partial || isPartialCatalog(record.data)) {
           errors.push(
-            new ApiError(
-              'invalid-data',
-              'Some records could not be read.',
-            ),
+            new ApiError('invalid-data', 'Some records could not be read.'),
           );
           return null;
         }
@@ -901,7 +906,11 @@ export class Catalogs {
         decode.decodeElectorateIndex,
       ),
     ]);
-    const money = await read(needs.parties, "/graph/money.json", decode.decodeMoney);
+    const money = await read(
+      needs.parties,
+      '/graph/money.json',
+      decode.decodeMoney,
+    );
     // Seats and people from two different releases never answer who sits where.
     const sameRelease = (release: string | undefined) =>
       release !== undefined && release === manifest?.release_id;
@@ -1126,7 +1135,9 @@ export class Catalogs {
     );
   }
   private async assembleProfile<
-    P extends ReturnType<typeof profileFor> | ReturnType<typeof rosterProfileFor>,
+    P extends
+      | ReturnType<typeof profileFor>
+      | ReturnType<typeof rosterProfileFor>,
   >(
     compute: (data: ProfileCatalogs) => P,
     options: { includeInterests?: boolean },
@@ -1383,4 +1394,3 @@ export class Catalogs {
     };
   }
 }
-export * from './person-identity';

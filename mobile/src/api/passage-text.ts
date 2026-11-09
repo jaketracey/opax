@@ -20,7 +20,7 @@ const named: Record<string, string> = {
   thinsp: '\u2009',
   shy: '\u00ad',
   ndash: '–',
-  mdash: '—',
+  mdash: '\u2014',
   minus: '−',
   lsquo: '‘',
   rsquo: '’',
@@ -126,7 +126,7 @@ function stripTags(text: string) {
 /** Ends a cut passage on a whole word with an ellipsis. */
 function endOnWord(text: string) {
   const whole = text.replace(/\s+\S*$/, '');
-  return (whole || text).replace(/[\s,;:—–-]+$/, '') + '…';
+  return (whole || text).replace(/[\s,;:\u2014–-]+$/, '') + '…';
 }
 
 export interface PassageOptions {

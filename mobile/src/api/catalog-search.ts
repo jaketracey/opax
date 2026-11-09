@@ -12,6 +12,7 @@ import {
   personSlugForId,
   personSlugForResult,
 } from './person-identity';
+import type { CatalogKind } from './policy';
 import {
   fullPortraitName,
   profileFor,
@@ -19,7 +20,6 @@ import {
   type SuggestionRoster,
 } from './selectors';
 import { payPersonRecord } from './transforms';
-import type { CatalogKind } from './policy';
 import { isPartialCatalog } from './validation';
 
 type MemberCatalogs = Partial<SearchIdentityCatalogs>;
@@ -272,7 +272,7 @@ export function catalogSearchRows(
     for (const [id, p] of Object.entries(data.expenses.people))
       rows.push({
         kind,
-        title: `${p.name} — parliamentary expenses`,
+        title: `${p.name}: parliamentary expenses`,
         href: href(p.name),
         snippet: `${cash(p.total)} reported expenditure. ${p.by_category.map(([n, v]) => `${n}: ${cash(v)}`).join('; ')}.`,
         slug: 'expense-' + id,
@@ -286,7 +286,7 @@ export function catalogSearchRows(
         bucket.items.forEach((item, i) =>
           rows.push({
             kind,
-            title: `${p.name} — ${category.replaceAll('_', ' ')}`,
+            title: `${p.name}: ${category.replaceAll('_', ' ')}`,
             href: href(p.name),
             snippet: `${item.description}. ${item.holder}. ${item.kind}.`,
             slug: `${p.name}-${category}-${i}`,
@@ -298,7 +298,7 @@ export function catalogSearchRows(
     for (const item of data.recent.items)
       rows.push({
         kind,
-        title: `${item.name} — ${item.kind}`,
+        title: `${item.name}: ${item.kind}`,
         href: '/declared?person=' + encodeURIComponent(item.name),
         snippet: item.description,
         slug: 'interest-' + item.id,

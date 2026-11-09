@@ -142,7 +142,7 @@ function billStripStage(text: string, stage: string | null) {
   if (!s || !out.toLowerCase().startsWith(s.toLowerCase())) return out;
   const rest = out
     .slice(s.length)
-    .replace(/^\s*[-–—:]\s*/, '')
+    .replace(/^\s*[-–\u2014:]\s*/, '')
     .trim();
   // Only when something is left: a division named by its stage alone keeps it.
   return rest || out;
@@ -207,7 +207,7 @@ export function billStripTitle(
     if (title && out.toLowerCase().startsWith(title.toLowerCase())) {
       out = out
         .slice(title.length)
-        .replace(/^\s*[-–—:]\s*/, '')
+        .replace(/^\s*[-–\u2014:]\s*/, '')
         .trim();
     }
   }
