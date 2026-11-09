@@ -506,6 +506,42 @@ test('the useful minimum includes a whole first word and the capped text scale',
   );
 });
 
+test.each([false, true])(
+  'an unknown back title leaves the title at its intrinsic width, shown=%s',
+  (shown) => {
+    const { route, navigation } = navigationFor('index', 'leads', 'lead/[id]');
+    let backTitle: string | undefined;
+    function Probe() {
+      backTitle = useNamedBackTitle();
+      return (
+        <BarTitle
+          title="Lead"
+          shown={shown}
+          trailing={1}
+          backTitle={backTitle}
+        />
+      );
+    }
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <Probe />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    expect(backTitle).toBeUndefined();
+    const text = view!.root.findByType(Animated.Text);
+    const style = StyleSheet.flatten(text.props.style);
+    expect(style.width).toBeUndefined();
+    expect(style.textAlign).toBeUndefined();
+    expect(style.maxWidth).toBeGreaterThan(0);
+    expect(text.props.children).toBe('Lead');
+    expect(text.props.accessibilityElementsHidden).toBe(!shown);
+  },
+);
+
 test('Program has room for Commonwealth at Large with Grants and More', () => {
   const fontScale = 1.118;
   const room = barTitleWidth(402, 1, undefined, 'Grants', fontScale);
@@ -856,7 +892,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
     });
     const text = () => view!.root.findByType(Animated.Text);
     expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
-    expect(StyleSheet.flatten(text().props.style).width).toBe(82);
+    expect(StyleSheet.flatten(text().props.style).width).toBeUndefined();
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(1);
     expect(text().props).toMatchObject({
       numberOfLines: 1,
@@ -875,7 +911,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
       ),
     );
     expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
-    expect(StyleSheet.flatten(text().props.style).width).toBe(82);
+    expect(StyleSheet.flatten(text().props.style).width).toBeUndefined();
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(0);
     expect(text().props).toMatchObject({
       children: 'Bill name',

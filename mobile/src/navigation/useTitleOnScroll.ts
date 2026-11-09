@@ -169,9 +169,7 @@ export function BarTitle({
           color: colors.ink,
           // A resize must hide an undersized title before a fade can draw it.
           opacity: fits ? opacity : 0,
-          width: room,
           maxWidth: room,
-          textAlign: 'center',
         },
       ],
     },
