@@ -23,6 +23,7 @@ export const splitRowStyles = StyleSheet.create({
     bottom: rhythm.heading,
     width: 3,
     borderRadius: 1.5,
+    borderCurve: 'continuous',
   },
 });
 

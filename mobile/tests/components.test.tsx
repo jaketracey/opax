@@ -1,27 +1,21 @@
 import { act, type ReactElement } from 'react';
 import { Text as NativeText, Platform, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { partyColors } from '../src/design/palette';
 import {
   Button,
   ErrorState,
   Field,
   FilterChip,
   IconButton,
-  KeyValueList,
-  LeadCard,
   LoadingState,
-  MoneyFigure,
   PartyLabel,
   PersonRow,
   Portrait,
   SegmentedControl,
-  SourceLink,
-  StatRow,
   Tag,
   Text,
-  type Lead,
 } from '../src/design/primitives';
-import { partyColors } from '../src/design/palette';
 
 function render(element: ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
@@ -269,49 +263,11 @@ describe('people', () => {
     expect(row.props.accessibilityRole).toBe('button');
     expect(accessible(root)).toHaveLength(1);
   });
-  test('a portrait is a blank circle hidden from VoiceOver, never initials', () => {
+  test('a missing portrait has a decorative placeholder', () => {
     const root = render(<Portrait size="profile" />);
     const view = root.findByType(View);
     expect(view.props.accessibilityElementsHidden).toBe(true);
-    expect(root.findAllByType(NativeText)).toHaveLength(0);
-  });
-});
-
-describe('record', () => {
-  test('a source link says where it goes', () => {
-    const root = render(
-      <SourceLink
-        citation="AusTender register"
-        record="record CN3407266"
-        url="https://www.tenders.gov.au/"
-        kind="register"
-      />,
-    );
-    // The visible label stays short; the name says it, then where it goes.
-    const link = byLabel(
-      root,
-      'View original, AusTender register, record CN3407266',
-    );
-    expect(link.props.accessibilityRole).toBe('link');
-    expect(link.props.accessibilityHint).toBe('Opens the register');
-    expect(texts(root)).toContain('View original');
-  });
-  test('money reads as words, value first', () => {
-    const root = render(
-      <MoneyFigure amount={4537500} label="Contract value" />,
-    );
-    expect(byLabel(root, '4,537,500 dollars, Contract value')).toBeTruthy();
-    expect(texts(root)).toContain('$4,537,500');
-  });
-  test('stats and key-value rows are single elements', () => {
-    const stats = render(
-      <StatRow stats={[{ value: '2,929', label: 'recorded divisions' }]} />,
-    );
-    expect(byLabel(stats, '2,929, recorded divisions')).toBeTruthy();
-    const list = render(
-      <KeyValueList items={[{ label: 'Base salary', value: '$239,270' }]} />,
-    );
-    expect(byLabel(list, 'Base salary, $239,270')).toBeTruthy();
+    expect(root.findAllByType(NativeText)).toHaveLength(1);
   });
 });
 
@@ -334,68 +290,5 @@ describe('states', () => {
         .accessibilityRole,
     ).toBe('alert');
     expect(byLabel(root, 'Try again').props.accessibilityRole).toBe('button');
-  });
-});
-
-describe('LeadCard', () => {
-  const lead: Lead = {
-    id: 'example',
-    title:
-      'Westpac Banking Corporation appears in party receipts and contracts',
-    metrics: [
-      { label: 'Recorded party receipts', value: 76984493, format: 'currency' },
-      { label: 'Contract records', value: 4, format: 'number' },
-    ],
-    evidence: [
-      {
-        amount: '$4,537,500',
-        amountSpoken: '4,537,500 dollars',
-        from: 'Australian Office of Financial Management',
-        to: 'Westpac Banking Corporation',
-        detail: 'Contract value · starts 6 Feb 2017',
-        register: 'AusTender register',
-        record: 'record CN3407266',
-        url: 'https://www.tenders.gov.au/',
-        kind: 'register',
-      },
-    ],
-    caveats: [
-      'Matching names are not verified legal identities; unrelated entities can share a name.',
-      'Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded.',
-    ],
-  };
-  test('keeps every caveat verbatim, and reads title, metrics, caveats, then evidence', () => {
-    const root = render(<LeadCard lead={lead} category="Companies in both" />);
-    for (const caveat of lead.caveats) expect(texts(root)).toContain(caveat);
-    // Document order of labelled elements and texts, as VoiceOver walks it.
-    const order = root
-      .findAll(
-        (node) =>
-          typeof node.type === 'string' &&
-          (typeof node.props.accessibilityLabel === 'string' ||
-            typeof node.props.children === 'string'),
-      )
-      .map((node) => node.props.accessibilityLabel ?? node.props.children);
-    const at = (needle: string) =>
-      order.findIndex((entry) => String(entry).includes(needle));
-    expect(at('Recorded party receipts, 76,984,493 dollars')).toBeGreaterThan(
-      -1,
-    );
-    expect(at('Contract records, 4')).toBeGreaterThan(
-      at('Recorded party receipts'),
-    );
-    expect(at('Matching names')).toBeGreaterThan(at('Contract records'));
-    expect(at('AusTender register')).toBeGreaterThan(
-      at('Annual party receipts'),
-    );
-    // The example record is one link: amount, who paid whom, what and when,
-    // then the register and its own ID.
-    expect(
-      byLabel(
-        root,
-        '4,537,500 dollars, Australian Office of Financial Management to Westpac Banking Corporation, Contract value · starts 6 Feb 2017, AusTender register, record CN3407266',
-      ).props.accessibilityRole,
-    ).toBe('link');
-    expect(texts(root)).toContain('AusTender register · record CN3407266');
   });
 });

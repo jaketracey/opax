@@ -1,49 +1,52 @@
+import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import {
-  useRef,
+  accessibilityIdentifier,
+  frame,
+  menuIndicator,
+  disabled as nativeDisabled,
+  accessibilityLabel as nativeLabel,
+  pickerStyle,
+  tag,
+  tint,
+} from '@expo/ui/swift-ui/modifiers';
+import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
+import { router } from 'expo-router';
+import {
   useEffect,
+  useRef,
   useState,
+  type ReactNode,
   type Ref,
   type RefObject,
-  type ReactNode,
 } from 'react';
 import {
   ActivityIndicator,
-  type AccessibilityState,
-  Pressable,
-  Platform,
   Keyboard,
+  Platform,
+  Pressable,
   StyleSheet,
   Switch,
   TextInput,
   View,
   useWindowDimensions,
+  type AccessibilityState,
   type TextInputProps,
 } from 'react-native';
-import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
-import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui';
-import {
-  accessibilityLabel as nativeLabel,
-  accessibilityIdentifier,
-  pickerStyle,
-  menuIndicator,
-  tag,
-  tint,
-  frame,
-  disabled as nativeDisabled,
-} from '@expo/ui/swift-ui/modifiers';
 import type { FollowKind } from '../features/follows/store';
-import { haptic } from './haptics';
-import { showMenu } from './menu';
-import { symbols } from './symbols';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
-import { Hoverable, useLayout, columns } from './adaptive';
+import { Hoverable, columns, useLayout } from './adaptive';
+import { haptic } from './haptics';
 import { Icon, type SFSymbol } from './icon';
 import { ChoiceChip } from './labels';
+import { Group, InsetGroup } from './layout';
+import { showMenu } from './menu';
+import { phoneCopy } from './phone-copy';
+import { symbols } from './symbols';
 import { Text, type TextTone } from './text';
 import {
   colors,
   controlHeight,
-  fonts,
+  interfaceFonts as fonts,
   hairline,
   minimumTarget,
   radii,
@@ -54,7 +57,7 @@ import {
   type Role,
 } from './tokens';
 
-export { Tag, ChoiceChip } from './labels';
+export { ChoiceChip, Tag } from './labels';
 
 type LegacyButtonVariant = 'default' | 'quiet' | 'danger';
 export type ButtonVariant =
@@ -139,6 +142,7 @@ export interface ButtonProps {
   /** Keeps the label (and so the width and accessible name) while working. */
   loading?: boolean;
   fullWidth?: boolean;
+  hug?: boolean;
   accessibilityHint?: string;
   /** Disclosure state; disabled and busy remain controlled by the button. */
   expanded?: AccessibilityState['expanded'];
@@ -170,6 +174,7 @@ export function Button({
   disabled = false,
   loading = false,
   fullWidth = false,
+  hug = false,
   accessibilityLabel,
   accessibilityHint,
   expanded,
@@ -196,7 +201,7 @@ export function Button({
     <Hoverable
       effect={inert ? 'none' : 'highlight'}
       cornerRadius={stacked ? radii.container : radii.capsule}
-      style={fullWidth || stacked ? styles.full : styles.hug}
+      style={fullWidth || (stacked && !hug) ? styles.full : styles.hug}
     >
       <Pressable
         ref={ref}
@@ -222,7 +227,7 @@ export function Button({
               minHeight:
                 variant === 'primary' && fullWidth ? 50 : minimumTarget,
             },
-            fullWidth || stacked ? styles.full : styles.hug,
+            fullWidth || (stacked && !hug) ? styles.full : styles.hug,
             stacked ? styles.buttonStacked : null,
             // A frameless button's label lines up with the text column; its
             // pressed wash bleeds into the margin. A stretched button reads
@@ -310,21 +315,96 @@ export function Button({
   );
 }
 
-/** Page-header follow control; the feature keeps persistence and limit handling. */
 export function FollowButton({
+  kind,
+  id,
+  title,
   testID = 'follow',
-  ...props
 }: {
   kind: FollowKind;
   id: string;
   title: string;
+  /** E2E reads the state from the suffix: `<testID>-on` or `<testID>-off`. */
   testID?: string;
 }) {
-  // Keep the follow engine out of screens that only import a field or button.
-  const { FollowToggle } =
+  // Load the engine only when a follow control is mounted.
+  const { FOLLOW_LIMIT, follow, followKey, unfollow, useFollows } =
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require('../features/follows/FollowToggle') as typeof import('../features/follows/FollowToggle');
-  return <FollowToggle {...props} testID={testID} />;
+    require('../features/follows/store') as typeof import('../features/follows/store');
+  const { markSeenNow } =
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../features/follows/useFollowStates') as typeof import('../features/follows/useFollowStates');
+  const follows = useFollows();
+  const key = followKey({ kind, id });
+  const current = follows?.find((f) => followKey(f) === key);
+  const following = !!current;
+  const [bounce, setBounce] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const marked = useRef(false);
+  useEffect(() => {
+    if (!current) marked.current = false;
+    else if (!marked.current) {
+      marked.current = true;
+      void markSeenNow(current);
+    }
+  }, [current, markSeenNow]);
+  async function toggle() {
+    setBounce(false);
+    setBusy(true);
+    setMessage(null);
+    setLimitReached(false);
+    try {
+      if (following) {
+        await unfollow(key);
+      } else if ((await follow({ kind, id, title })) === 'limit') {
+        setLimitReached(true);
+        setMessage(
+          `You can follow up to ${FOLLOW_LIMIT}. Unfollow one to add this.`,
+        );
+      } else {
+        setBounce(true);
+        haptic('success');
+      }
+    } catch {
+      setMessage(phoneCopy('Your follows could not be saved on this iPhone.'));
+    } finally {
+      setBusy(false);
+    }
+  }
+  const inert = busy || follows === null;
+  return (
+    <Group gap={rhythm.tight}>
+      <Button
+        hug
+        selected={following}
+        variant="secondary"
+        label={following ? 'Following' : 'Follow'}
+        symbol={following ? symbols.following : symbols.follow}
+        symbolAnimation={following && bounce ? 'bounce' : null}
+        accessibilityLabel={`${following ? 'Following' : 'Follow'} ${title}`}
+        size="compact"
+        hitSlop={4}
+        disabled={inert}
+        onPress={() => void toggle()}
+        testID={`${testID}-${following ? 'on' : 'off'}`}
+      />
+      {message ? (
+        <Text wordSafe variant="footnote" testID={`${testID}-message`}>
+          {message}
+        </Text>
+      ) : null}
+      {limitReached ? (
+        <Button
+          label="Edit Following"
+          variant="plain"
+          onPress={() => router.push('/follows?edit=1')}
+          testID={`${testID}-edit-following`}
+        />
+      ) : null}
+    </Group>
+  );
 }
 
 export interface PickerOption<T extends string> {
@@ -636,27 +716,61 @@ export function MonthPager({
   month,
   previous,
   next,
+  unit = 'month',
+  testID,
+  previousTestID,
+  nextTestID,
+  labels = false,
 }: {
   month: string;
+  unit?: 'month' | 'year';
+  testID?: string;
+  previousTestID?: string;
+  nextTestID?: string;
+  labels?: boolean;
   previous: { label: string; onPress: () => void } | null;
   next: { label: string; onPress: () => void } | null;
 }) {
+  const before = `Previous ${unit}`,
+    after = `Next ${unit}`;
+  if (labels)
+    return (
+      <StepButtons
+        testID={testID}
+        previous={{
+          label: previous?.label ?? before,
+          accessibilityLabel: `${before}${previous ? `, ${previous.label}` : ''}`,
+          disabled: !previous,
+          onPress: () => previous?.onPress(),
+          testID: previousTestID,
+        }}
+        next={{
+          label: next?.label ?? after,
+          accessibilityLabel: `${after}${next ? `, ${next.label}` : ''}`,
+          disabled: !next,
+          onPress: () => next?.onPress(),
+          testID: nextTestID,
+        }}
+      />
+    );
   return (
-    <View style={styles.steps}>
+    <View style={styles.steps} testID={testID}>
       <IconButton
         symbol={symbols.previous}
-        accessibilityLabel={`Previous month${previous ? `, ${previous.label}` : ''}`}
+        accessibilityLabel={`${before}${previous ? `, ${previous.label}` : ''}`}
         disabled={!previous}
         onPress={() => previous?.onPress()}
+        testID={previousTestID}
       />
       <Text variant="subsectionTitle" style={styles.shrink}>
         {month}
       </Text>
       <IconButton
         symbol={symbols.chevron}
-        accessibilityLabel={`Next month${next ? `, ${next.label}` : ''}`}
+        accessibilityLabel={`${after}${next ? `, ${next.label}` : ''}`}
         disabled={!next}
         onPress={() => next?.onPress()}
+        testID={nextTestID}
       />
     </View>
   );
@@ -876,7 +990,7 @@ export function FilterChip({
           {value}
         </Text>
       </Text>
-      <Icon name="xmark" size={16} tone="ink" />
+      <Icon name={symbols.close} size={16} tone="ink" />
     </Pressable>
   );
 }
@@ -1109,6 +1223,7 @@ export function Field({
   required = false,
   grouped = false,
   labelHidden = false,
+  variant = 'text',
   testID,
   inputRef,
   ...input
@@ -1122,6 +1237,7 @@ export function Field({
   required?: boolean;
   grouped?: boolean;
   labelHidden?: boolean;
+  variant?: 'text' | 'code';
   testID?: string;
   /** The text input itself, to focus it from a keyboard shortcut. */
   inputRef?: RefObject<TextInput | null>;
@@ -1130,13 +1246,14 @@ export function Field({
   const ref = inputRef ?? ownRef;
   const [focused, setFocused] = useState(false);
   const disabled = input.editable === false;
+  const FieldGroup = grouped ? InsetGroup : View;
   const description = [error ? `Error: ${error}` : null, hint]
     .filter(Boolean)
     .join('. ');
   return (
-    <View style={[styles.field, grouped ? styles.groupedFieldSpacing : null]}>
+    <View style={styles.field}>
       {/* The input carries the label, so VoiceOver reads it once. */}
-      {!labelHidden ? (
+      {!labelHidden && !grouped ? (
         <Text
           variant={grouped ? 'groupHeader' : 'secondary'}
           tone="inkSoft"
@@ -1154,7 +1271,15 @@ export function Field({
           ) : null}
         </Text>
       ) : null}
-      <View style={grouped ? styles.groupedField : undefined}>
+      <FieldGroup
+        {...(grouped
+          ? {
+              header: labelHidden
+                ? undefined
+                : `${label}${required ? ' (required)' : ''}`,
+            }
+          : {})}
+      >
         <TextInput
           ref={ref}
           {...input}
@@ -1176,6 +1301,14 @@ export function Field({
           placeholderTextColor={disabled ? colors.inkSoft : colors.inkFaint}
           style={[
             styles.input,
+            variant === 'code'
+              ? {
+                  fontSize: 22,
+                  lineHeight: 28,
+                  fontWeight: '600',
+                  fontVariant: ['tabular-nums'],
+                }
+              : null,
             grouped ? styles.groupedInput : null,
             disabled ? styles.inputDisabled : null,
             // Focus changes the colour, never the boundary width.
@@ -1183,7 +1316,7 @@ export function Field({
             error ? styles.inputError : null,
           ]}
         />
-      </View>
+      </FieldGroup>
       {hint ? (
         <Text
           variant="footnote"
@@ -1199,7 +1332,7 @@ export function Field({
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
-          <Icon name="exclamationmark.circle" size={16} tone="danger" />
+          <Icon name={symbols.exclamationmarkCircle} size={16} tone="danger" />
           <Text variant="footnote" tone="danger">
             {error}
           </Text>
@@ -1222,6 +1355,7 @@ export function Composer({
   busy = false,
   onStop,
   leading,
+  trailing,
   tags = [],
   note,
   docked = false,
@@ -1241,6 +1375,7 @@ export function Composer({
   onFocus?: TextInputProps['onFocus'];
   placeholder: string;
   leading?: ReactNode;
+  trailing?: ReactNode;
   tags?: { id: string; label: string; onRemove: () => void }[];
   note?: string;
   busy?: boolean;
@@ -1309,13 +1444,15 @@ export function Composer({
           placeholderTextColor={colors.inkFaint}
           style={[styles.composerInput, { maxHeight: inputHeight }]}
         />
-        <IconButton
-          symbol={busy ? symbols.stop : symbols.send}
-          accessibilityLabel={busy ? 'Stop answering' : submitLabel}
-          disabled={busy ? !onStop : !value.trim()}
-          onPress={busy ? () => onStop?.() : onSubmit}
-          testID={submitTestID}
-        />
+        {trailing ?? (
+          <IconButton
+            symbol={busy ? symbols.stop : symbols.send}
+            accessibilityLabel={busy ? 'Stop answering' : submitLabel}
+            disabled={busy ? !onStop : !value.trim()}
+            onPress={busy ? () => onStop?.() : onSubmit}
+            testID={submitTestID}
+          />
+        )}
       </View>
       {note ? (
         <Text variant="footnote" tone="inkSoft">
@@ -1366,7 +1503,7 @@ export function Divider({
           variant === 'subtle'
             ? colors.dividerSubtle
             : variant === 'accent'
-              ? colors.bronze
+              ? colors.navy
               : colors.dividerDefault,
       }}
     />

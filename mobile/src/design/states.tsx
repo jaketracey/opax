@@ -1,11 +1,13 @@
-import { phoneCopy } from './phone-copy';
+import { ContentUnavailableView, Host } from '@expo/ui/swift-ui';
+import { accessibilityIdentifier } from '@expo/ui/swift-ui/modifiers';
+import { NavigationContext } from 'expo-router/react-navigation';
 import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useMemo,
   useSyncExternalStore,
   type ReactNode,
   type Ref,
@@ -17,24 +19,17 @@ import {
   View,
   type DimensionValue,
 } from 'react-native';
-import { NavigationContext } from 'expo-router/react-navigation';
-import { ContentUnavailableView, Host } from '@expo/ui/swift-ui';
-import { accessibilityIdentifier } from '@expo/ui/swift-ui/modifiers';
 import { ApiError } from '../api/errors';
+import { useAccessibilitySize } from './accessibility';
+import { columns, useLayout } from './adaptive';
 import { Button } from './controls';
 import { copy } from './copy';
-import { staleText, type DateInput } from './format';
+import { type DateInput } from './format';
 import { Icon, type SFSymbol } from './icon';
+import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
 import { Text } from './text';
-import {
-  colors,
-  radii,
-  rhythm,
-  rhythmRegular,
-  type Accent,
-} from './tokens';
-import { columns, useLayout } from './adaptive';
+import { colors, radii, rhythm, rhythmRegular, type Accent } from './tokens';
 
 export const stateCopy = {
   offlineUncached: phoneCopy(
@@ -141,14 +136,23 @@ type SkeletonShape =
   | 'bills'
   | 'divisions'
   | 'card'
-  | 'figure';
-const bar = (width: DimensionValue, height = 14, onSunken = false) => (
+  | 'figure'
+  | 'bill-header';
+const bar = (
+  width: DimensionValue,
+  height = 14,
+  onSunken = false,
+  round = false,
+) => (
   <View
     style={[
       styles.bar,
       {
         width,
         height,
+        ...(round
+          ? { borderRadius: radii.capsule, borderCurve: 'continuous' }
+          : {}),
         backgroundColor: onSunken ? colors.raised : colors.sunken,
       },
     ]}
@@ -168,6 +172,62 @@ export function Skeleton({
   onSunken?: boolean;
   testID?: string;
 }) {
+  if (shape === 'bill-header')
+    return (
+      <View
+        accessible
+        accessibilityRole="progressbar"
+        accessibilityLabel={label}
+        accessibilityState={{ busy: true }}
+        testID={testID}
+        style={{ gap: rhythm.block }}
+      >
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{ gap: rhythm.block }}
+        >
+          <View style={{ gap: rhythm.line }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: rhythm.tight,
+              }}
+            >
+              {bar(72, 24, onSunken, true)}
+              {bar(120, 15, onSunken)}
+            </View>
+            {bar('100%', 28, onSunken)}
+            {bar('100%', 28, onSunken)}
+            {bar('55%', 28, onSunken)}
+            {bar('70%', 15, onSunken)}
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: rhythm.line,
+            }}
+          >
+            <View
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: radii.capsule,
+                borderCurve: 'continuous',
+                backgroundColor: onSunken ? colors.raised : colors.sunken,
+              }}
+            />
+            <View style={{ flex: 1, gap: rhythm.tight }}>
+              {bar('60%', 17, onSunken)}
+              {bar('35%', 15, onSunken)}
+            </View>
+          </View>
+          {bar(96, 32, onSunken, true)}
+        </View>
+      </View>
+    );
   const items = Array.from({ length: Math.max(0, count) }, (_, index) => index);
   return (
     <View
@@ -257,9 +317,15 @@ export function ContentUnavailable({
   symbol: SFSymbol;
   title: string;
   body?: string;
-  action?: { label: string; onPress: () => void; testID?: string };
+  action?: {
+    label: string;
+    onPress: () => void;
+    testID?: string;
+    containerTestID?: string;
+  };
   testID?: string;
 }) {
+  const large = useAccessibilitySize();
   const layout = useLayout();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const columnWidth =
@@ -306,12 +372,21 @@ export function ContentUnavailable({
         </View>
       )}
       {action ? (
-        <Button
-          label={action.label}
-          variant="secondary"
-          onPress={action.onPress}
-          testID={action.testID ?? (testID ? `${testID}-retry` : undefined)}
-        />
+        <View
+          testID={action.containerTestID}
+          style={
+            large
+              ? { alignSelf: 'stretch' }
+              : { flexDirection: 'row', justifyContent: 'center' }
+          }
+        >
+          <Button
+            label={action.label}
+            variant="secondary"
+            onPress={action.onPress}
+            testID={action.testID ?? (testID ? `${testID}-retry` : undefined)}
+          />
+        </View>
       ) : null}
     </View>
   );
@@ -447,9 +522,11 @@ export function ErrorState({
 /** First registered line owns the page's offline sentence, including legacy callers. */
 export function OfflineLine({
   savedAt,
+  message: customMessage,
   testID,
 }: {
   savedAt: DateInput | null;
+  message?: string;
   testID?: string;
 }) {
   const page = usePageState();
@@ -461,7 +538,9 @@ export function OfflineLine({
     page.firstOffline,
   );
   if (owner !== id) return null;
-  const message = savedAt === null ? "You're offline." : copy.offline(savedAt);
+  const message =
+    customMessage ??
+    (savedAt === null ? "You're offline." : copy.offline(savedAt));
   return (
     <View
       accessible
@@ -503,22 +582,6 @@ export function Collapse({
   children: ReactNode;
 }) {
   return when ? null : <>{children}</>;
-}
-export function StaleNotice({
-  savedAt,
-  refreshing = false,
-  testID,
-}: {
-  savedAt: DateInput;
-  refreshing?: boolean;
-  testID?: string;
-}) {
-  return (
-    <Text wordSafe variant="footnote" testID={testID}>
-      {staleText(savedAt)}
-      {refreshing ? ' Checking for a newer copy.' : ''}
-    </Text>
-  );
 }
 const styles = StyleSheet.create({
   loading: { gap: rhythm.block },

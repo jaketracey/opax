@@ -1,48 +1,37 @@
+import { Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
-import { sheetPayload } from '../src/navigation/sheets';
-import { SourceContent } from '../src/features/sheets/SourceSheet';
+import { SymbolView } from 'expo-symbols';
 import { act, type ReactElement } from 'react';
 import {
   Dimensions,
+  Text as NativeText,
   Platform,
   StyleSheet,
   Switch,
-  Text as NativeText,
 } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { SymbolView } from 'expo-symbols';
-import { Picker, Text as SwiftText } from '@expo/ui/swift-ui';
+import {
+  contrastRatio,
+  listedPair,
+  requiredRatio,
+} from '../src/design/contrast';
 import {
   ChoiceChips,
   PopUpButton,
   SegmentedPicker,
   segmentsFit,
 } from '../src/design/controls';
-import { openSource } from '../src/navigation/external';
-import {
-  contrastRatio,
-  listedPair,
-  requiredRatio,
-} from '../src/design/contrast';
 import { light, lightHighContrast } from '../src/design/palette';
 import {
-  AsAtLine,
   Button,
   Card,
   ChoiceChip,
   EmptyState,
   IconButton,
-  InfoButton,
-  MACHINE_GUIDANCE,
-  MachineLabel,
-  MachineWritten,
-  PartyChip,
   PartyLabel,
   SourceLine,
-  SourceLink,
-  StatusLabel,
+  StatusCapsule,
   SwitchRow,
-  SplitEmpty,
   Tag,
   Text,
   statusTone,
@@ -55,6 +44,9 @@ import {
   statusTones,
   textStyles,
 } from '../src/design/tokens';
+import { SourceContent } from '../src/features/sheets/SourceSheet';
+import { openSource } from '../src/navigation/external';
+import { sheetPayload } from '../src/navigation/sheets';
 
 jest.mock('expo-router', () => ({
   ...jest.requireActual('expo-router'),
@@ -156,7 +148,7 @@ beforeAll(() =>
 afterAll(() => Dimensions.set({ window: jestWindow, screen: jestScreen }));
 const noop = () => undefined;
 
-describe('StatusLabel', () => {
+describe('StatusCapsule', () => {
   test.each([
     ['Passed', 'neutral'],
     ['Assented', 'neutral'],
@@ -177,10 +169,10 @@ describe('StatusLabel', () => {
     expect(statusTone(word)).toBe(tone);
   });
   test('a word on its tone: 4-radius wash, the label role, said as the word', () => {
-    const root = render(<StatusLabel label="Passed" testID="s" />).root;
+    const root = render(<StatusCapsule status="Passed" testID="s" />).root;
     const box = host(root, 's');
     expect(box.props.accessible).toBe(true);
-    expect(box.props.accessibilityLabel).toBe('Passed');
+    expect(box.props.accessibilityLabel).toBe('Status: Passed');
     const style = flat(box.props.style);
     expect(style.borderRadius).toBe(radii.capsule);
     expect(hex(style.backgroundColor)).toBe(light.sunken);
@@ -192,7 +184,7 @@ describe('StatusLabel', () => {
   });
   test('inside a row that says it, it is drawn only', () => {
     const box = host(
-      render(<StatusLabel label="Lapsed" hidden testID="s" />).root,
+      render(<StatusCapsule status="Lapsed" hidden testID="s" />).root,
       's',
     );
     expect(box.props.accessible).toBe(false);
@@ -215,7 +207,7 @@ describe('StatusLabel', () => {
       let s: Record<string, unknown> = {};
       atSize(fontScale, () => {
         const root = render(
-          <StatusLabel label="Before parliament" testID="s" />,
+          <StatusCapsule status="Before parliament" testID="s" />,
         ).root;
         s = flat(host(root, 's').props.style);
         expect(nativeTexts(root)[0]!.props.dynamicTypeRamp).toBe(
@@ -319,13 +311,6 @@ describe('PartyLabel', () => {
     const label = host(root, 'p');
     expect(label.props.accessible).toBe(false);
     expect(label.props.accessibilityRole).toBeUndefined();
-  });
-  test('the retired PartyChip draws a PartyLabel: no capsule fill', () => {
-    const root = render(<PartyChip party="Greens" status="current" />).root;
-    expect(root.findAllByType(PartyLabel)).toHaveLength(1);
-    expect(strings(root)).toEqual(['GRN']);
-    for (const node of root.findAll((n) => typeof n.type === 'string'))
-      expect(flat(node.props.style).borderRadius).not.toBe(999);
   });
   test('on a navy header: onNavySoft text and a ringed dot', () => {
     const root = render(
@@ -590,61 +575,6 @@ describe('compact iOS choices', () => {
   });
 });
 
-describe('MachineLabel', () => {
-  test('one phrase, drawn and spoken, whatever the old label said', () => {
-    const root = render(
-      <>
-        <MachineLabel
-          explanation="Written by a model from the explanatory memorandum; not the record"
-          testID="m"
-        />
-        <MachineWritten
-          label="Machine brief"
-          explanation="An automated summary written by a model; not the record."
-          testID="w"
-        />
-      </>,
-    ).root;
-    const pill = (id: string) =>
-      root.find(
-        (n) => n.props?.testID === id && typeof n.props.children === 'function',
-      );
-    expect(pill('m').props.accessibilityLabel).toBe(
-      'Machine-written. Written by a model from the explanatory memorandum; not the record.',
-    );
-    expect(pill('w').props.accessibilityLabel).toBe(
-      'Machine-written. An automated summary written by a model; not the record.',
-    );
-    const face = render(pill('w').props.children({ pressed: false })).root;
-    expect(strings(face)).toEqual(['Machine-written']);
-    const style = flat(
-      face.find(
-        (n) =>
-          typeof n.type === 'string' && flat(n.props.style).minHeight === 32,
-      ).props.style,
-    );
-    expect(style.borderRadius).toBe(radii.capsule);
-    expect(hex(style.backgroundColor)).toBe(light.navyWash);
-    expect(flat(pill('m').props.style).minHeight).toBe(44);
-  });
-  test('tapping it opens the attribution and the guidance', () => {
-    const renderer = render(
-      <MachineLabel explanation="Written by a model" testID="m" />,
-    );
-    const pill = renderer.root.find(
-      (n) => n.props.testID === 'm' && typeof n.props.onPress === 'function',
-    );
-    act(() => pill.props.onPress());
-    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
-      params: { key: string };
-    };
-    expect(sheetPayload(params.key, 'machine')?.note.body).toEqual([
-      'Written by a model.',
-      MACHINE_GUIDANCE,
-    ]);
-  });
-});
-
 describe('SourceLine and SourceSheet', () => {
   beforeEach(() => jest.mocked(openSource).mockClear());
   test('date and source name, the name in the link colour; said as drawn', () => {
@@ -770,65 +700,6 @@ describe('SourceLine and SourceSheet', () => {
         expect.any(Function),
       );
     });
-  });
-  test('AsAtLine draws a SourceLine and keeps its spoken sentence', () => {
-    const root = render(
-      <AsAtLine
-        asOf="2026-09-21"
-        citation={['AEC annual returns', 'AusTender']}
-        testID="asat"
-      />,
-    ).root;
-    expect(root.findAllByType(SourceLine)).toHaveLength(1);
-    const line = root.find(
-      (n) => n.props.testID === 'asat' && typeof n.props.style === 'function',
-    );
-    expect(line.props.accessibilityLabel).toBe(
-      'As at 21 September 2026 · Source: AEC annual returns; AusTender',
-    );
-    expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Updated 21 Sep 2026 · AEC annual returns and 1 more',
-    );
-  });
-  test('SourceLink keeps opening its original directly, in the line’s anatomy', () => {
-    const root = render(
-      <SourceLink
-        citation="They Vote For You"
-        record="division, 19 Aug 2026"
-        url="https://theyvoteforyou.org.au/divisions/1"
-        kind="record"
-        testID="sl"
-      />,
-    ).root;
-    const link = root.find(
-      (n) => n.props.testID === 'sl' && typeof n.props.onPress === 'function',
-    );
-    expect(link.props.accessibilityRole).toBe('link');
-    expect(link.props.accessibilityLabel).toBe(
-      'View original, They Vote For You, division, 19 Aug 2026',
-    );
-    expect(strings(root)).toEqual(['View original']);
-    act(() => link.props.onPress());
-    expect(openSource).toHaveBeenCalledWith(
-      'https://theyvoteforyou.org.au/divisions/1',
-      'They Vote For You · division, 19 Aug 2026',
-    );
-  });
-  test('the ⓘ opens the same sheet, with its notes', () => {
-    const renderer = render(
-      <InfoButton title="About these figures" notes={['A note.']} testID="i" />,
-    );
-    const button = renderer.root.find(
-      (n) => n.props.testID === 'i' && typeof n.props.onPress === 'function',
-    );
-    expect(flat(button.props.style({ pressed: false })).borderRadius).toBe(
-      radii.capsule,
-    );
-    act(() => button.props.onPress());
-    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
-      params: { key: string };
-    };
-    expect(sheetPayload(params.key, 'rule')?.rule).toBe('A note.');
   });
 });
 
@@ -1063,44 +934,12 @@ describe('EmptyState', () => {
     ).root;
     expect(strings(root)).toEqual(['No declared interests.']);
   });
-  test('pane: one quiet line, the same in every split; SplitEmpty is this size', () => {
-    const pane = render(
-      <EmptyState size="pane" message="No bill selected" testID="e" />,
-    ).root;
-    expect(strings(pane)).toEqual(['No bill selected']);
-    const line = nativeTexts(pane)[0]!;
-    expect(hex(flat(line.props.style).color)).toBe(light.inkSoft);
-    expect(flat(line.props.style).textAlign).toBe('center');
-    // No symbol, no wash, no heading: nothing 64pt wide, no category colour.
-    expect(
-      pane.findAll(
-        (n) => typeof n.type === 'string' && flat(n.props.style).width === 64,
-      ),
-    ).toHaveLength(0);
-    // An older call with a title and a count draws the title alone.
-    const older = render(
-      <EmptyState
-        size="pane"
-        icon="doc.text"
-        accent="bills"
-        title="No bill selected"
-        message="12 bills"
-        testID="e"
-      />,
-    ).root;
-    expect(strings(older)).toEqual(['No bill selected']);
-    const alias = render(
-      <SplitEmpty icon="doc.text" title="No bill selected" testID="e" />,
-    ).root;
-    expect(alias.findAllByType(EmptyState)[0]!.props.size).toBe('pane');
-    expect(strings(alias)).toEqual(['No bill selected']);
-  });
 });
 
 describe('Increase Contrast and Android high-contrast text', () => {
   test('iOS: the new components draw role colours that step up natively', () => {
     if (Platform.OS !== 'ios') return;
-    const root = render(<StatusLabel label="Before parliament" />).root;
+    const root = render(<StatusCapsule status="Before parliament" />).root;
     const colour = flat(nativeTexts(root)[0]!.props.style).color;
     expect(strongHex(colour)).toBe(lightHighContrast.billsInk);
     expect(
@@ -1152,4 +991,19 @@ describe('Increase Contrast and Android high-contrast text', () => {
         4.5,
       );
   });
+});
+
+test('an empty pane is a quiet centred line without a symbol or wash', () => {
+  const pane = render(
+    <EmptyState size="pane" message="No bill selected" testID="e" />,
+  ).root;
+  expect(strings(pane)).toEqual(['No bill selected']);
+  const line = nativeTexts(pane)[0]!;
+  expect(hex(flat(line.props.style).color)).toBe(light.inkSoft);
+  expect(flat(line.props.style).textAlign).toBe('center');
+  expect(
+    pane.findAll(
+      (n) => typeof n.type === 'string' && flat(n.props.style).width === 64,
+    ),
+  ).toHaveLength(0);
 });

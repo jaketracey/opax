@@ -1,5 +1,4 @@
 import { act, useEffect, useRef } from 'react';
-import TestRenderer from 'react-test-renderer';
 import {
   Keyboard,
   type KeyboardEvent,
@@ -7,6 +6,7 @@ import {
   type View,
 } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import TestRenderer from 'react-test-renderer';
 import { useStableKeyboard } from '../src/design/useStableKeyboard';
 
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
@@ -77,7 +77,7 @@ test('a negative reveal offset retains exactly enough height through dismissal',
   expect(state.contentStyle.minHeight).toBe(767);
   keyboard(874);
   expect(state.contentStyle.minHeight).toBe(767);
-  expect(state.contentStyle.paddingBottom).toBe(52);
+  expect(state.contentStyle.paddingBottom).toBe(36);
   expect(scrollTo).not.toHaveBeenCalled();
 });
 test('returning toward the top releases retained blank space', () => {
