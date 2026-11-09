@@ -439,15 +439,22 @@ async def check():
             return [element(uid='welcome-title')]
     class StuckRead(Fake):
         async def elements(self):
-            raise asyncio.TimeoutError()
-    for d in (Fake([element('OPAX', uid='au.com.opax.app')]),
-              Fake([element(uid='welcome-title', y=-100)]), SlowRead(), StuckRead()):
-        try:
-            await p.cold_launch_frame(d, now=lambda: d.clock)
-            raise AssertionError('shell-07 saved without foreground OPAX content')
-        except RuntimeError as error:
-            assert 'no frame saved' in str(error)
+            await asyncio.Future()
+    class FailedRead(Fake):
+        async def elements(self):
+            raise RuntimeError('accessibility tree unavailable')
+    for d, timeout in ((Fake([element('OPAX', uid='au.com.opax.app')]), 60),
+                       (Fake([element(uid='welcome-title', y=-100)]), 60),
+                       (SlowRead(), 60), (FailedRead(), 60), (StuckRead(), 0.01)):
+        recorded = len(p.SPEC)
+        # Like shell() awaiting _w4_welcome next, the next capture step must
+        # still run when shell-07 is skipped. Any exception fails this test.
+        await p.cold_launch_frame(d, now=lambda: d.clock, timeout=timeout)
+        await d.link('opax://welcome')
         assert d.shots == [], d.shots
+        assert d.notes == [f'shell-07 skipped: OPAX did not reach the foreground in {timeout:g} s; no frame saved'], d.notes
+        assert d.events == [('link', 'opax://welcome')], d.events
+        assert len(p.SPEC) == recorded
         assert d.clock <= 61, d.clock
     # Specification generation also lists the gated shell-07 without a device.
     await p.cold_launch_frame(p._Null())

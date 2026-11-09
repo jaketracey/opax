@@ -328,7 +328,7 @@ async def cold_launch_frame(d, now=time.monotonic, timeout=60):
         while now() < deadline:
             try:
                 elements = await asyncio.wait_for(d.elements(), timeout=deadline - now())
-            except asyncio.TimeoutError:
+            except Exception:  # A failed or stuck tree read skips only this frame.
                 break
             if now() >= deadline:
                 break
@@ -337,7 +337,8 @@ async def cold_launch_frame(d, now=time.monotonic, timeout=60):
                 break
             await d.pause(min(0.25, max(0, deadline - now())))
         if not foreground:
-            raise RuntimeError("shell-07: OPAX did not reach the foreground; no frame saved")
+            d.note(f"shell-07 skipped: OPAX did not reach the foreground in {timeout:g} s; no frame saved")
+            return
     await shot(d, "shell-07", "/ (cold launch)", "shell", "cold launch, first app frame")
 
 
