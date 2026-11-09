@@ -3,6 +3,7 @@ import {
   createElement,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type RefObject,
@@ -140,7 +141,7 @@ export function useTitleOnScroll(
       setAnchor((current) => (current === bottom ? current : bottom)),
     [],
   );
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!title) return;
     shown.current = anchor !== null && offset.current + headerHeight > anchor;
     setOptions({

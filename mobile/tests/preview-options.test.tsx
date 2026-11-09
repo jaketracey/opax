@@ -1,13 +1,16 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { useIsPreview } from 'expo-router';
-import { NavigationContext } from 'expo-router/react-navigation';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { act, useEffect, type ReactNode } from 'react';
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { Screen } from '../src/design/layout';
 import Methods from '../src/features/methods/Methods';
-import { RouteOptions } from '../src/navigation/preview';
+import { RouteOptions, useSafeSetOptions } from '../src/navigation/preview';
 import { useTitleOnScroll } from '../src/navigation/useTitleOnScroll';
 
 const mockSetOptions = jest.fn();
@@ -60,6 +63,103 @@ const destinations: [string, () => ReactNode][] = [
 ];
 
 afterEach(() => jest.clearAllMocks());
+
+test.each([false, true])(
+  'a placeholder is safe even without preview context, registered route = %s',
+  async (registered) => {
+    jest.mocked(useIsPreview).mockReturnValue(false);
+    const setOptions = jest.fn(() => {
+      throw new Error('Options cannot be set from a placeholder screen.');
+    });
+    const dispatch = jest.fn(() => {
+      throw new Error(
+        'Actions cannot be dispatched from a placeholder screen.',
+      );
+    });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider
+          value={
+            {
+              setOptions,
+              dispatch,
+              isFocused: () => false,
+              addListener: () => () => {},
+              removeListener: () => {},
+              getState: () => ({ routes: [{ key: 'real', name: 'index' }] }),
+            } as never
+          }
+        >
+          <NavigationRouteContext.Provider
+            value={{ key: registered ? 'real' : 'placeholder', name: 'bill' }}
+          >
+            {destinations.map(([name, destination]) => (
+              <View key={name}>{destination()}</View>
+            ))}
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    act(() => {
+      for (const node of renderer.root.findAllByType(View))
+        node.props.onTouchEnd?.();
+    });
+    expect(dispatch).not.toHaveBeenCalled();
+    expect(mockSetOptions).not.toHaveBeenCalled(); // No Stack.Screen effect.
+    if (!registered) expect(setOptions).not.toHaveBeenCalled();
+    else expect(setOptions).toHaveBeenCalled(); // Exact-error fallback.
+    act(() => renderer.unmount());
+  },
+);
+
+test('ordinary option errors propagate, and an unfocused real route keeps its options', () => {
+  jest.mocked(useIsPreview).mockReturnValue(false);
+  const setOptions = jest.fn();
+  let safe!: ReturnType<typeof useSafeSetOptions>;
+  function Harness() {
+    safe = useSafeSetOptions();
+    return null;
+  }
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <NavigationContext.Provider
+        value={{ setOptions, isFocused: () => false } as never}
+      >
+        <Harness />
+      </NavigationContext.Provider>,
+    );
+  });
+  safe({ title: 'Real screen' });
+  expect(setOptions).toHaveBeenCalledWith({ title: 'Real screen' });
+  const failure = new Error('Invalid header options');
+  setOptions.mockImplementation(() => {
+    throw failure;
+  });
+  expect(() => safe({ title: 'Real screen' })).toThrow(failure);
+  act(() => renderer.unmount());
+});
+
+test('dynamic options are installed before passive effects on first mount', () => {
+  jest.mocked(useIsPreview).mockReturnValue(false);
+  const setOptions = jest.fn();
+  function FirstPaint() {
+    useEffect(() => {
+      expect(setOptions).toHaveBeenCalledWith({ title: 'Today' });
+    }, []);
+    return <RouteOptions options={{ title: 'Today' }} />;
+  }
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <NavigationContext.Provider value={{ setOptions } as never}>
+        <FirstPaint />
+      </NavigationContext.Provider>,
+    );
+  });
+  act(() => renderer.unmount());
+});
 
 describe.each([true, false])('preview = %s', (preview) => {
   test.each(destinations)(

@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactElement,
@@ -140,7 +141,7 @@ export function Screen({
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
-  useEffect(() => {
+  useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
     if (!inPane) setOptions(opaqueBar(colors[ground]));
   }, [setOptions, ground, inPane]);
@@ -153,7 +154,7 @@ export function Screen({
     anchorBottom !== null,
   );
   const titleBridge = suppliedBridge ?? (inPane ? null : nativeBridge);
-  useEffect(() => {
+  useLayoutEffect(() => {
     titleScroll.current =
       barTitle && titleBridge ? titleBridge(barTitle) : null;
   }, [barTitle, titleBridge]);
@@ -466,14 +467,14 @@ function useBarTitle(title: string | undefined, anchored: boolean) {
   const setOptions = useSafeSetOptions();
   const header = useContext(HeaderHeightContext) || 44;
   const shown = useRef(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (title)
       setOptions({
         title,
         headerTitle: () => <BarTitle title={title} shown={false} />,
       });
   }, [setOptions, title]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!title || !anchored) return;
     shown.current = false;
     setOptions({
