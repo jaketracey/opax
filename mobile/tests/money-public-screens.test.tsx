@@ -17,8 +17,9 @@ import Allocation from '../src/features/money-public/Allocation';
 import FundingBySeatType from '../src/features/money-public/FundingBySeatType';
 import Connections from '../src/features/money-public/Connections';
 import Connection from '../src/features/money-public/Connection';
-import MoneyItem from '../src/features/money-public/MoneyItem';
-import { loadMoneyItem } from '../src/features/money-public/MoneyItem';
+import MoneyItem, {
+  loadMoneyItem,
+} from '../src/features/money-public/MoneyItem';
 import { leadsFor, plainCaveat } from '../src/features/leads/model';
 import { evidenceRecord } from '../src/features/leads/evidence';
 import { RouteOptions } from '../src/navigation/preview';

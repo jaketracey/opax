@@ -124,7 +124,9 @@ export default function AskScreen() {
   }, []);
   // A deep link's draft (useOpenAsk handles taps inside the app itself).
   useEffect(() => {
-    if (!params.entry) return;
+    // A bare /ask link has an entry token too, but no draft to edit.
+    // Leave that first view at rest, with starters and the tab bar visible.
+    if (!params.entry || !params.question?.trim()) return;
     const scope: AskScope = { question: params.question ?? '' };
     for (const k of [
       'speaker',

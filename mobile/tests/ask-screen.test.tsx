@@ -6,9 +6,11 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Dimensions,
+  InteractionManager,
   Keyboard,
   ScrollView,
   StyleSheet,
+  TextInput,
 } from 'react-native';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import {
@@ -29,6 +31,13 @@ import { designFlags } from '../src/design/flags';
 import { conversationsRoute } from '../src/navigation/routes/ask';
 import { useSeat } from '../src/features/your-mp/useSeat';
 import { startersFor } from '../src/features/ask/starters';
+import {
+  dispatchKeyCommand,
+  requestFocus,
+  takeFocusRequest,
+} from '../src/design/keyboard';
+import { useOpenAsk } from '../src/features/ask/open';
+import { fromWebPath } from '../src/navigation/external';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
@@ -41,7 +50,13 @@ jest.mock('expo-router', () => ({
     },
   },
   useLocalSearchParams: jest.fn(() => ({})),
-  router: { push: jest.fn(), back: jest.fn(), canGoBack: () => false },
+  useSegments: () => ['(tabs)', '(today)'],
+  router: {
+    push: jest.fn(),
+    navigate: jest.fn(),
+    back: jest.fn(),
+    canGoBack: () => false,
+  },
 }));
 jest.mock('../src/api/runtime', () => ({
   client: { askPost: jest.fn() },
@@ -153,6 +168,8 @@ const answer = {
 let view: ReactTestRenderer | null = null;
 let scrollTo: jest.SpyInstance;
 beforeEach(() => {
+  takeFocusRequest('ask');
+  jest.mocked(TextInput.prototype.focus).mockClear();
   jest.mocked(client.askPost).mockReset();
   jest.mocked(router.push).mockClear();
   jest.mocked(chatsSnapshot).mockImplementation(() => noChats);
@@ -190,6 +207,91 @@ async function mount() {
   });
   return view!;
 }
+
+function immediateFocusRequests() {
+  const interactions = jest
+    .spyOn(InteractionManager, 'runAfterInteractions')
+    .mockImplementation((callback) => {
+      if (typeof callback === 'function') callback();
+      return { cancel: () => {}, then: () => {} } as never;
+    });
+  const frame = jest
+    .spyOn(global, 'requestAnimationFrame')
+    .mockImplementation((callback) => {
+      callback(0);
+      return 0;
+    });
+  return () => {
+    interactions.mockRestore();
+    frame.mockRestore();
+  };
+}
+
+test.each([undefined, '/ask', '/ask?q=%20%20'])(
+  'Ask opens at rest from %s without focusing the composer',
+  async (path) => {
+    if (path) {
+      const route = fromWebPath(path)!;
+      expect(typeof route).toBe('object');
+      jest
+        .mocked(useLocalSearchParams)
+        .mockReturnValue((route as { params: object }).params);
+    }
+    const restore = immediateFocusRequests();
+    try {
+      await mount();
+      expect(TextInput.prototype.focus).not.toHaveBeenCalled();
+      expect(one('ask-question').props.autoFocus).not.toBe(true);
+      expect(byId('ask-starter-0').length).toBeGreaterThan(0);
+    } finally {
+      restore();
+    }
+  },
+);
+
+test('prefill and explicit focus requests still focus, including before mount and tab reselect', async () => {
+  const restore = immediateFocusRequests();
+  try {
+    requestFocus('ask');
+    await mount();
+    const focus = jest.mocked(TextInput.prototype.focus);
+    expect(focus).toHaveBeenCalledTimes(1);
+    focus.mockClear();
+    await act(async () => {
+      byId('ask-starter-0')
+        .find((node) => node.props.menu)
+        ?.props.menu[0].onPress();
+    });
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(one('ask-question').props.value).not.toBe('');
+    focus.mockClear();
+    let openAsk!: ReturnType<typeof useOpenAsk>;
+    function Entry() {
+      openAsk = useOpenAsk();
+      return null;
+    }
+    let entry!: ReactTestRenderer;
+    await act(async () => {
+      entry = create(<Entry />);
+    });
+    await act(async () => {
+      openAsk({ question: 'What is in the public record?' });
+    });
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(one('ask-question').props.value).toBe(
+      'What is in the public record?',
+    );
+    await act(async () => entry.unmount());
+    focus.mockClear();
+    act(() => {
+      expect(dispatchKeyCommand('ask-reselect')).toBe(true);
+    });
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(client.askPost).not.toHaveBeenCalled();
+  } finally {
+    restore();
+  }
+});
 const byId = (id: string) => view!.root.findAllByProps({ testID: id });
 const one = (id: string) =>
   view!.root.findAll(
