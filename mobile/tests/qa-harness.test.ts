@@ -387,12 +387,6 @@ test('Bill text scrolls past the summary, returns to the overview and opens Cont
     runFlow: { file: 'open-more.yaml', env: { NAME: 'this bill text' } },
   });
   expect(tap).toEqual({ tapOn: 'Contents' });
-  const [wait, more] = maestroSteps('.maestro/support/open-more.yaml');
-  expect(wait.extendedWaitUntil.visible).toEqual({
-    id: 'header-more',
-    text: 'More for ${NAME}',
-  });
-  expect(more.tapOn).toEqual(wait.extendedWaitUntil.visible);
 });
 
 test('bill text selects Version by id, checks its accessible stage and retains the in-content stage assertion', () => {
@@ -425,6 +419,48 @@ test('bill text selects Version by id, checks its accessible stage and retains t
     },
   });
 });
+
+test.each([
+  'header-more',
+  'electorate-more',
+  'doc-actions',
+  'bill-text-actions',
+  'android-more',
+])(
+  'More opens once when the visible button id is %s, even if opening removes the button from the tree',
+  (buttonId) => {
+    const steps = maestroSteps('.maestro/support/open-more.yaml');
+    const label = 'More for ${NAME}';
+    expect(steps[0].extendedWaitUntil.visible).toBe(label);
+    const output: Record<string, boolean> = {};
+    const taps: unknown[] = [];
+    let visibleId: string | undefined = buttonId;
+    const evaluate = (expression: string) =>
+      Function('output', `return ${expression.slice(2, -1)}`)(output);
+    const run = (commands: any[]) => {
+      for (const step of commands) {
+        if (step.evalScript) evaluate(step.evalScript);
+        if (step.runFlow) {
+          const when = step.runFlow.when;
+          if (
+            when.visible
+              ? when.visible.id === visibleId && when.visible.text === label
+              : evaluate(when.true)
+          )
+            run(step.runFlow.commands);
+        }
+        if (step.tapOn) {
+          taps.push(step.tapOn);
+          visibleId = undefined;
+        }
+      }
+    };
+    run(steps);
+    expect(taps).toEqual([
+      buttonId === 'header-more' ? { id: 'header-more', text: label } : label,
+    ]);
+  },
+);
 
 test('all three typed quiz guesses use the exposed Done label and wait for editing to finish', () => {
   const steps = maestroSteps('.maestro/48-explore-quiz.yaml');
