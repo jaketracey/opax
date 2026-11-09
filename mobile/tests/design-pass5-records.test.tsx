@@ -258,6 +258,8 @@ function mockBillText() {
 test('bill text opens on its text with the stage, one source line and the bar items', async () => {
   mockBillText();
   const view = await mount(<BillTextReader />);
+  expect(mockOptions.title).toBe('Bill text');
+  expect(typeof mockOptions.headerTitle).toBe('function');
   expect(records.billVersion).toHaveBeenCalledWith(
     'au-federal-r7534',
     'r7534-aspassed',
@@ -307,6 +309,13 @@ test('bill text opens on its text with the stage, one source line and the bar it
       .findAllByType(MachinePill)
       .some((pill) => pill.props.testID === 'bill-text-overview-label'),
   ).toBe(true);
+  await act(async () => view.unmount());
+});
+
+test('bill text keeps a named route title before its text loads', async () => {
+  jest.mocked(records.billManifest).mockReturnValue(new Promise(() => {}));
+  const view = await mount(<BillTextReader />);
+  expect(mockOptions.title).toBe('Bill text');
   await act(async () => view.unmount());
 });
 

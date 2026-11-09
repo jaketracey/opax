@@ -183,7 +183,7 @@ export default function BillTextReader({
   // The bar title fits beside Version, Contents and ⋯ (barItems).
   const title = useTitleOnScroll(
     embedded ? null : titleRef,
-    embedded || !ready ? undefined : shortTitle,
+    embedded ? undefined : 'Bill text',
     {
       trailing:
         1 +
@@ -352,6 +352,7 @@ export default function BillTextReader({
       {embedded ? null : (
         <RouteOptions
           options={{
+            title: 'Bill text',
             ...headerItems(ready ? barItems : undefined),
           }}
         />
