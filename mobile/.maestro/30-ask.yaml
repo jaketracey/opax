@@ -17,7 +17,7 @@ name: 30 Ask idle, a starter, the answer with its records, a follow-up, a clarif
 - assertNotVisible:
     text: Build a question
 - assertNotVisible:
-    text: Options
+    id: ask-options-line
 - takeScreenshot: ${EVIDENCE}/30-ask
 # A starter asks at once (consent first on a cleared install).
 - tapOn:

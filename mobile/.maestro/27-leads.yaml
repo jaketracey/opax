@@ -459,23 +459,23 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: lead-heading
     timeout: 30000
-# The declared-interests feed behind Today's recent declarations. Back to
-# the Today root, which kept its place at the Leads entry.
+# The declared-interests feed behind Today's recent declarations. Reveal the
+# bar, then use the native scroll-to-top tap instead of a retained Leads offset.
 - runFlow:
     file: support/restore-tab-bar.yaml
     env:
-      TOP_ID: today-leads-open
+      TOP_ID: today-screen-message
       TAB_ID: tab-today
 - extendedWaitUntil:
     visible:
       id: today-screen
     timeout: 20000
-# Today keeps its place at the Leads entry, which is below Just declared.
+# Search down from the confirmed top, where Just declared follows the edition.
 - scrollUntilVisible:
     element:
       id: today-declarations-all
-    direction: UP
-    timeout: 300000
+    direction: DOWN
+    timeout: 60000
     visibilityPercentage: 10
     centerElement: true
     speed: 20

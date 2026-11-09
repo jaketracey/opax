@@ -1,4 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import {
   existsSync,
   mkdtempSync,
@@ -9,6 +10,19 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
+
+const maestroSteps = (file: string) =>
+  JSON.parse(
+    execFileSync(
+      process.execPath,
+      [
+        '-e',
+        'process.stdout.write(JSON.stringify(require("yaml").parseAllDocuments(require("fs").readFileSync(process.argv[1], "utf8"))[1].toJS()))',
+        file,
+      ],
+      { encoding: 'utf8' },
+    ),
+  );
 
 describe('Maestro startup budgets', () => {
   // Evaluate only the real configuration block, before any device work.
@@ -50,6 +64,122 @@ describe('Maestro startup budgets', () => {
       expect(result.stderr).toContain('positive integer in milliseconds');
     },
   );
+});
+
+test('screens 4.26.0 patch applies cleanly and assigns menu and plain header ids last', () => {
+  const version = JSON.parse(
+    readFileSync('node_modules/react-native-screens/package.json', 'utf8'),
+  ).version;
+  expect(version).toBe('4.26.0');
+  const file = 'node_modules/react-native-screens/ios/RNSBarButtonItem.mm';
+  const patch = resolve('patches/react-native-screens+4.26.0.patch');
+  const digest = (value: string) =>
+    createHash('sha256').update(value).digest('hex');
+  // Accept pristine or previously patched installs, then verify the exact
+  // upstream bytes before replay. No installed package is modified by this test.
+  const upstream = readFileSync(file, 'utf8')
+    .replace(/  \/\/ Menu and target\/action setup[^]*?(?=  return self;)/, '')
+    .replace(
+      /\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n/g,
+      '',
+    )
+    .replace(
+      '  UIMenu *menu = [UIMenu menuWithTitle:',
+      '  return [UIMenu menuWithTitle:',
+    )
+    .replace('  return menu;\n', '\n');
+  expect(digest(upstream)).toBe(
+    'f6680e8d632552969582162782db40a5b20a7fa5ce36f1584bf4736c1b3547d3',
+  );
+  expect(digest(readFileSync(patch, 'utf8'))).toBe(
+    '8b763ee16ec844d570af33facdddd3e2de57f696c966ea1e734c689a8ae6aae7',
+  );
+  const root = mkdtempSync(join(tmpdir(), 'screens-patch-'));
+  try {
+    const target = join(root, 'RNSBarButtonItem.mm');
+    writeFileSync(target, upstream);
+    for (const extra of [['--dry-run'], []]) {
+      const result = spawnSync(
+        '/usr/bin/patch',
+        ['--batch', '--fuzz=0', '-p1', target, '-i', patch, ...extra],
+        { encoding: 'utf8' },
+      );
+      expect(result.status).toBe(0);
+      expect(result.stdout + result.stderr).not.toMatch(/offset|fuzz/i);
+    }
+    const source = readFileSync(target, 'utf8');
+    expect(digest(source)).toBe(
+      'd2ecac91610e46bb0a0fce42ceb61563326fd06fc886b4d769021aac1f553066',
+    );
+    const init = source.split('+ (void)resolveImageFromConfig')[0]!;
+    expect(init).toContain(
+      'NSString *testID = dict[@"testID"] ?: dict[@"identifier"];',
+    );
+    const idAt = init.indexOf('self.accessibilityIdentifier = testID;');
+    expect(idAt).toBeGreaterThan(init.indexOf('self.menu ='));
+    expect(idAt).toBeGreaterThan(init.indexOf('self.action ='));
+    expect(init).toContain('self.menu.accessibilityIdentifier = testID;');
+    for (const target of ['menu', 'actionElement'])
+      expect(source).toContain(
+        `${target}.accessibilityIdentifier = dict[@"testID"];`,
+      );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+// Parse actual Maestro commands so selectors and gesture bounds are checked
+// without starting Maestro, a fixture server or a simulator.
+test('flow 27 restores chrome within six swipes then searches down from Today top', () => {
+  const steps = maestroSteps;
+  const restore = steps('.maestro/support/restore-tab-bar.yaml');
+  const gestures = restore.find(
+    (step: any) => step.repeat?.while?.notVisible,
+  )?.repeat;
+  expect(gestures.while.notVisible).toEqual({ id: '${TAB_ID}' });
+  expect(gestures.times * gestures.commands.length).toBeLessThanOrEqual(6);
+  expect(gestures.commands[0].swipe).toEqual({
+    start: '97%, 60%',
+    end: '97%, 45%',
+    duration: 600,
+  });
+  expect(gestures.commands[1].swipe).toEqual({
+    start: '97%, 30%',
+    end: '97%, 85%',
+    duration: 600,
+  });
+  const topTap = restore.findIndex(
+    (step: any) => step.tapOn?.point === '50%, 1%',
+  );
+  expect(topTap).toBeGreaterThan(
+    restore.findIndex((step: any) => step.assertVisible?.id === '${TAB_ID}'),
+  );
+  expect(restore[topTap + 1].extendedWaitUntil).toEqual({
+    visible: { id: '${TOP_ID}' },
+    timeout: 15000,
+  });
+  const lead = steps('.maestro/27-leads.yaml');
+  const returnAt = lead.findIndex(
+    (step: any) => step.runFlow?.file === 'support/restore-tab-bar.yaml',
+  );
+  expect(lead[returnAt].runFlow.env).toEqual({
+    TOP_ID: 'today-screen-message',
+    TAB_ID: 'tab-today',
+  });
+  const declarations = lead
+    .slice(returnAt)
+    .find(
+      (step: any) =>
+        step.scrollUntilVisible?.element?.id === 'today-declarations-all',
+    ).scrollUntilVisible;
+  expect(declarations.direction).toBe('DOWN');
+  expect(declarations.timeout).toBeLessThanOrEqual(60000);
+});
+
+test('Ask idle excludes the options row without matching the composer Options button', () => {
+  const idle = maestroSteps('.maestro/30-ask.yaml').slice(0, 10);
+  expect(idle).toContainEqual({ assertNotVisible: { id: 'ask-options-line' } });
+  expect(idle).not.toContainEqual({ assertNotVisible: { text: 'Options' } });
 });
 
 // Exercise the wait parser alone. No locks, build gates or devices are used.
