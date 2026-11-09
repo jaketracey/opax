@@ -28,6 +28,16 @@ const rootTitles: Record<string, string> = {
   bills: 'Bills',
   search: 'Search',
   ask: 'Ask',
+  'public-money': 'Public money',
+  grants: 'Commonwealth grants',
+  'largest-grants': 'Largest grants',
+  'grants-allocation': 'Community funding',
+  agencies: 'Government agencies',
+  connections: 'Programs and places',
+  'money-record': 'Money record',
+  'money-item': 'Money record',
+  'explore/index': 'Quizzes and tools',
+  'division-history': 'Votes in parliament',
 };
 /**
  * The back label for a screen pushed straight onto a tab root. UIKit reads
