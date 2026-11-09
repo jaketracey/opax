@@ -53,6 +53,7 @@ import {
   rhythm,
   rhythmRegular,
   size as sizes,
+  textStyles,
   type ControlSize,
   type Role,
 } from './tokens';
@@ -1303,10 +1304,13 @@ export function Field({
             styles.input,
             variant === 'code'
               ? {
-                  fontSize: 22,
-                  lineHeight: 28,
-                  fontWeight: '600',
-                  fontVariant: ['tabular-nums'],
+                  fontFamily: textStyles.tileFigure.fontFamily,
+                  fontSize: textStyles.tileFigure.fontSize,
+                  lineHeight: textStyles.tileFigure.lineHeight,
+                  fontWeight: textStyles.tileFigure.fontWeight,
+                  fontVariant: textStyles.tileFigure.tabular
+                    ? ['tabular-nums']
+                    : undefined,
                 }
               : null,
             grouped ? styles.groupedInput : null,

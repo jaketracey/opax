@@ -1,7 +1,8 @@
 import { act, type ReactElement } from 'react';
-import { Text as NativeText, Platform, View } from 'react-native';
+import { Text as NativeText, Platform, StyleSheet, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { partyColors } from '../src/design/palette';
+import { textStyles } from '../src/design/tokens';
 import {
   Button,
   ErrorState,
@@ -192,6 +193,22 @@ describe('tags, chips and segments', () => {
 });
 
 describe('Field', () => {
+  test('a code uses the tileFigure role and retains native Dynamic Type scaling', () => {
+    const root = render(<Field label="Code" variant="code" testID="code" />);
+    const input = root.find(
+      (node) => typeof node.type === 'string' && node.props.testID === 'code',
+    );
+    expect(StyleSheet.flatten(input.props.style)).toMatchObject({
+      fontFamily: textStyles.tileFigure.fontFamily,
+      fontSize: textStyles.tileFigure.fontSize,
+      lineHeight: textStyles.tileFigure.lineHeight,
+      fontWeight: textStyles.tileFigure.fontWeight,
+      fontVariant: ['tabular-nums'],
+    });
+    expect(input.props.allowFontScaling).toBe(true);
+    expect(input.props.maxFontSizeMultiplier).toBe(0);
+  });
+
   test('label, required and error reach VoiceOver through the input', () => {
     const root = render(
       <Field
