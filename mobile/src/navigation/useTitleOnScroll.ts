@@ -134,16 +134,46 @@ export function useTitleOnScroll(
   const headerHeight = useHeaderBottom();
   const [anchor, setAnchor] = useState<number | null>(null);
   const shown = useRef(false);
-  const offset = useRef(0);
+  const offset = useRef<number | null>(null);
+  const needsMeasurement = useRef(false);
+  const measuring = useRef(false);
+  const layoutVersion = useRef(0);
   const installed = useRef(false);
   const setAnchorBottom = useCallback(
     (bottom: number) =>
       setAnchor((current) => (current === bottom ? current : bottom)),
     [],
   );
+  const measureHeading = useCallback(() => {
+    const node = ref?.current;
+    const measuredOffset = offset.current;
+    if (!node || measuredOffset === null || measuring.current) return;
+    const version = layoutVersion.current;
+    measuring.current = true;
+    node.measure((_x, _y, width, height, _pageX, pageY) => {
+      measuring.current = false;
+      // A flattened or not-yet-mounted native view can measure as zero.
+      // Never substitute the wrapper's parent-relative onLayout y here.
+      // Nor combine an asynchronous measurement with a newer scroll offset.
+      if (
+        ref.current !== node ||
+        version !== layoutVersion.current ||
+        measuredOffset !== offset.current ||
+        !Number.isFinite(pageY) ||
+        !Number.isFinite(width) ||
+        !Number.isFinite(height) ||
+        !(width > 0 && height > 0)
+      )
+        return;
+      needsMeasurement.current = false;
+      setAnchorBottom(pageY + measuredOffset + height);
+    });
+  }, [ref, setAnchorBottom]);
   useLayoutEffect(() => {
     if (!title) return;
-    shown.current = anchor !== null && offset.current + headerHeight > anchor;
+    shown.current =
+      anchor !== null && (offset.current ?? 0) + headerHeight > anchor;
+    const visible = shown.current;
     setOptions({
       title,
       ...(Platform.OS === 'android'
@@ -152,7 +182,7 @@ export function useTitleOnScroll(
             headerTitle: () =>
               createElement(BarTitle, {
                 title,
-                shown: shown.current,
+                shown: visible,
                 trailing,
               }),
           }),
@@ -163,6 +193,7 @@ export function useTitleOnScroll(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
       offset.current =
         typeof event === 'number' ? event : event.nativeEvent.contentOffset.y;
+      if (needsMeasurement.current) measureHeading();
       if (!installed.current || anchor === null || !title) return;
       const next = offset.current + headerHeight > anchor;
       if (next === shown.current) return;
@@ -176,21 +207,25 @@ export function useTitleOnScroll(
             },
       );
     },
-    [anchor, title, setOptions, headerHeight, trailing],
+    [anchor, title, setOptions, headerHeight, trailing, measureHeading],
   );
   // Hand over only after the heading's bottom has passed under the bar.
   const onTitleLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      if (ref?.current) {
-        ref.current.measure((_x, _y, _width, height, _pageX, pageY) =>
-          setAnchorBottom(pageY + offset.current + height),
-        );
+      if (ref) {
+        layoutVersion.current++;
+        needsMeasurement.current = true;
+        setAnchor(null);
+        // iOS's initial automatic inset gives a negative resting offset.
+        // Until its first scroll event, pageY cannot be converted back to
+        // content coordinates. Keep the bar hidden rather than assume zero.
+        measureHeading();
       } else {
         const { y, height } = event.nativeEvent.layout;
-        setAnchorBottom(y + height);
+        if (height > 0) setAnchorBottom(y + height);
       }
     },
-    [ref, setAnchorBottom],
+    [ref, setAnchorBottom, measureHeading],
   );
   return { onScroll, onTitleLayout, setAnchorBottom };
 }
