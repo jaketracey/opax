@@ -468,6 +468,17 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const footer =
     record && source && rows.length ? (
       <View style={styles.footer}>
+        {kind === 'electorate' &&
+        (rows as Electorate[]).some(
+          (seat) =>
+            seat.status !== 'historical' &&
+            (seat.representation_status !== 'verified' ||
+              !seat.representatives.length),
+        ) ? (
+          <Text variant="footnote" tone="inkSoft">
+            Member not confirmed for some electorates.
+          </Text>
+        ) : null}
         <SourceLine {...source} testID="directory-source" />
         <Text
           wordSafe

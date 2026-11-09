@@ -1,3 +1,4 @@
+import { partyFromCode } from './bills/party-codes';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -247,6 +248,11 @@ export function ElectorateScreen({
             <ContentUnavailable
               symbol="map"
               title="We couldn't find this electorate."
+              body="Search for an electorate or its member."
+              action={{
+                label: 'Search',
+                onPress: () => router.navigate('/search'),
+              }}
               testID="electorate-error"
             />
           ) : (
@@ -856,9 +862,8 @@ function ElectionRow({
                 {summary.winner.name}
               </Text>
               <PartyLabel
-                party={summary.winner.party ?? 'Independent'}
+                party={partyFromCode(summary.winner.party) ?? 'Independent'}
                 status="unknown"
-                dense
                 nested
                 linked={false}
               />

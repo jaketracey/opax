@@ -131,7 +131,7 @@ export default function Members() {
     >
       <Group gap={rhythm.line}>
         <View ref={titleRef} onLayout={title.onTitleLayout}>
-          <Heading level={1} testID="members-title">
+          <Heading level={1} kind="page" testID="members-title">
             {titles!.page}
           </Heading>
         </View>

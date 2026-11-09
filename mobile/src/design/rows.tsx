@@ -1,6 +1,6 @@
 import { router, type Href } from 'expo-router';
 import { useState, type ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useOpenAsk } from '../features/ask/open';
 import { openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
@@ -43,6 +43,7 @@ import {
   minimumTarget,
   radii,
   rhythm,
+  textStyles,
   type Accent,
 } from './tokens';
 
@@ -79,6 +80,7 @@ export interface LinkRowProps extends Navigation {
   detailTestID?: string;
   dragPath?: string;
   accessory?: 'chevron' | 'checkmark' | 'none';
+  accessoryAlign?: 'center' | 'first-line';
   selected?: boolean;
   highlighted?: boolean;
 }
@@ -108,10 +110,12 @@ export function LinkRow({
   detailTestID,
   dragPath,
   accessory = 'chevron',
+  accessoryAlign = 'center',
   selected,
   highlighted,
 }: LinkRowProps) {
   const stacked = useAccessibilitySize();
+  const { fontScale } = useWindowDimensions();
   const [firstLineHeight, setFirstLineHeight] = useState<number | undefined>();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
@@ -183,23 +187,25 @@ export function LinkRow({
                 {leading}
               </View>
             ) : null}
-            <Text
-              wordSafe
-              variant={titleRole}
-              tone={destructive ? 'danger' : undefined}
-              testID={titleTestID}
-              style={leading ? styles.grow : undefined}
-              onTextLayout={
-                leading
-                  ? (event) => {
-                      const line = event.nativeEvent.lines[0];
-                      if (line) setFirstLineHeight(line.height);
-                    }
-                  : undefined
-              }
-            >
-              {title}
-            </Text>
+            {plainTitle ? (
+              <Text
+                wordSafe
+                variant={titleRole}
+                tone={destructive ? 'danger' : undefined}
+                testID={titleTestID}
+                style={leading ? styles.grow : undefined}
+                onTextLayout={
+                  leading
+                    ? (event) => {
+                        const line = event.nativeEvent.lines[0];
+                        if (line) setFirstLineHeight(line.height);
+                      }
+                    : undefined
+                }
+              >
+                {title}
+              </Text>
+            ) : null}
           </View>
           {secondary}
           {detail ? (
@@ -226,12 +232,26 @@ export function LinkRow({
       {!destructive && accessory === 'checkmark' && selected ? (
         <Icon name={checkmark} size={13} tone="navy" />
       ) : !destructive && !split && accessory === 'chevron' ? (
-        <Icon
-          name={external ? EXTERNAL_GLYPH : chevron}
-          size={13}
-          maxScale={1.5}
-          tone="inkSoft"
-        />
+        <View
+          style={
+            accessoryAlign === 'first-line'
+              ? {
+                  alignSelf: 'flex-start',
+                  height:
+                    firstLineHeight ??
+                    textStyles[titleRole].lineHeight * fontScale,
+                  justifyContent: 'center',
+                }
+              : undefined
+          }
+        >
+          <Icon
+            name={external ? EXTERNAL_GLYPH : chevron}
+            size={13}
+            maxScale={1.5}
+            tone="inkSoft"
+          />
+        </View>
       ) : null}
     </Pressable>
   );

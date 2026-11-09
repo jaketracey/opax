@@ -1,6 +1,8 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Text as NativeText } from 'react-native';
+import { Text as NativeText, StyleSheet } from 'react-native';
+import { Icon } from '../src/design/icon';
+import { index } from './pinned';
 import { router } from 'expo-router';
 import DirectoryScreen from '../src/features/directories/DirectoryScreen';
 import { ContentUnavailable, SourceLine } from '../src/design/primitives';
@@ -168,6 +170,15 @@ test('nothing above the first row; the source and count are the list’s foot', 
   // Party rows: members on record, no money and no speeches.
   const row = byID(renderer, 'directory-party-labor')[0]!;
   expect(row.props.accessibilityLabel).toBe('Labor, 2 members on record');
+  expect(
+    row.findAllByType(NativeText).filter((node) => node.props.children === ''),
+  ).toHaveLength(0);
+  const chevron = row
+    .findAllByType(Icon)
+    .find((icon) => icon.props.name === 'chevron.right')!;
+  expect(StyleSheet.flatten(chevron.parent!.props.style).alignSelf).toBe(
+    'flex-start',
+  );
   await act(async () => renderer.unmount());
 });
 
@@ -244,5 +255,23 @@ test('a failed read is a whole-screen state with the plain reason and Try again'
   expect(state.props.action.label).toBe('Try again');
   await act(async () => state.props.action.onPress());
   expect(loadDirectory).toHaveBeenLastCalledWith('person', false);
+  await act(async () => renderer.unmount());
+});
+
+test('unconfirmed members are explained once in the electorate directory footer', async () => {
+  const unknown = { ...index.electorates[0]!, representatives: [] };
+  const renderer = await open('electorate', {
+    ...empty,
+    electorates: [unknown],
+  });
+  const texts = renderer.root
+    .findAllByType(NativeText)
+    .map((node) => node.props.children);
+  expect(
+    texts.filter(
+      (text) => text === 'Member not confirmed for some electorates.',
+    ),
+  ).toHaveLength(1);
+  expect(texts).not.toContain('Member not confirmed');
   await act(async () => renderer.unmount());
 });
