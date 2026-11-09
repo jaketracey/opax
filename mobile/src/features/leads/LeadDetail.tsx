@@ -11,7 +11,6 @@ import {
   moneyAccessibilityLabel,
 } from '../../design/format';
 import { Section } from '../../design/layout';
-import type { LeadEvidence } from '../../design/lead';
 import {
   ContentUnavailable,
   FigureBlock,
@@ -52,6 +51,7 @@ import {
 import { moneyPageMenu } from '../money/menu';
 import { PartyDot } from '../money/parts';
 import { ConcentrationChart } from './Chart';
+import { evidenceRecord, evidenceRow } from './evidence';
 import {
   aboutLede,
   categorySource,
@@ -63,20 +63,7 @@ import {
   type LeadView,
 } from './model';
 
-/** "Westpac Banking Corporation to Australian Labor Party": no party code. */
-const withoutCode = (name: string) => name.replace(/\s*\([A-Z]{2,6}\)\s*$/, '');
-/** An example record as a money row's parts, or null when its label wasn't read. */
-export function evidenceRow(item: LeadEvidence) {
-  if (!item.from || !item.to || !item.amount) return null;
-  const amount = Number(item.amount.replace(/[$,]/g, ''));
-  if (!Number.isFinite(amount)) return null;
-  const name = `${withoutCode(item.from)} to ${withoutCode(item.to)}`;
-  const detail = (item.detail ?? '')
-    .replace(/^Contract value\b/, 'Contract')
-    .replace(/\bstarts /, 'from ')
-    .replace(/\bFY /, '');
-  return { name, detail, amount };
-}
+export { evidenceRow } from './evidence';
 
 /** The subject's own page in the app, when it has one. */
 function useSubject(lead: LeadView | null): {
@@ -363,10 +350,17 @@ export default function LeadDetail() {
                   <View>
                     {lead.evidence.map((item, index) => {
                       const row = evidenceRow(item);
-                      const href = moneyItemRoute(
-                        { kind: 'evidence', lead: lead.id, i: String(index) },
-                        row?.name ?? item.register,
-                      );
+                      const resolved = evidenceRecord(item);
+                      const href = resolved
+                        ? moneyItemRoute(
+                            {
+                              kind: 'evidence',
+                              lead: lead.id,
+                              i: String(index),
+                            },
+                            resolved.name,
+                          )
+                        : undefined;
                       return row ? (
                         <MoneyRow
                           key={index}
@@ -382,6 +376,7 @@ export default function LeadDetail() {
                           title={item.register}
                           detail={item.record ?? undefined}
                           href={href}
+                          accessory="none"
                           testID={`lead-evidence-${index}`}
                         />
                       );

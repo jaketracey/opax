@@ -19,6 +19,7 @@ import {
  * individual is addressed by index.
  */
 export type MoneyItemParams =
+  | { kind: 'evidence'; lead: string; i: string }
   | { kind: 'grant'; jur: string; program?: string; rid?: string; id: string }
   | { kind: 'recipient'; jur: string; program: string; recipient: string }
   | { kind: 'largest'; month: string; id: string }

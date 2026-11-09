@@ -235,12 +235,14 @@ const config: ExpoConfig = {
         // scripts/render-splash.swift. The lockup is 200pt wide;
         // src/launch/LaunchHandoff.tsx draws the same image.
         //
-        // No `dark` block: the app is light-only (UIUserInterfaceStyle Light)
-        // and iOS draws the launch screen in the app's style, so a dark splash
-        // could never show. The plugin would also switch the whole app to
-        // Automatic to make it show. The navy artwork (splash-dark) is
-        // rendered and ready for when a dark palette is approved.
+        // Only automatic-appearance captures get a dark launch background.
+        // A dark splash makes the plugin switch iOS to Automatic, so release
+        // and light-only builds must leave it unset.
         backgroundColor: '#FAF9F6',
+        dark:
+          variant !== 'production' && appearance === 'automatic'
+            ? { backgroundColor: '#161915' }
+            : undefined,
         image: './assets/splash/splash@3x.png',
         imageWidth: 200,
         resizeMode: 'contain',

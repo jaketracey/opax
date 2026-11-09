@@ -76,6 +76,10 @@ import {
 import { decodeAgencies } from '../src/features/money-public/data';
 import { publicDiscovery } from '../src/features/money-public/discovery';
 import { money } from '../src/features/money-public/runtime';
+import MoneyItem, {
+  itemParams,
+  loadMoneyItem,
+} from '../src/features/money-public/MoneyItem';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import {
   forgetMoneyGraphs,
@@ -131,7 +135,7 @@ jest.mock('../src/navigation/external', () => ({
   openOnWeb: jest.fn(),
   openSource: jest.fn(),
 }));
-const mockParams: { id?: string; category?: string; item?: string } = {};
+const mockParams: Record<string, string> = {};
 let mockOptions: Record<string, unknown> = {};
 // The Just declared feed's tests read the last screen options here.
 const mockScreen: { options?: Record<string, unknown> } = {};
@@ -1453,6 +1457,124 @@ describe('a lead’s page', () => {
     expect(texts(root)).not.toContain('On opax.com.au');
     expectNoWeb();
     act(() => renderer.unmount());
+  });
+  test.each([
+    [0, 'AEC Transparency Register', 'https://transparency.aec.gov.au/'],
+    [1, 'AusTender register · record CN3407266', 'https://www.tenders.gov.au/'],
+  ])(
+    'Maestro 27 example %i opens its money item and register original',
+    async (index, label, url) => {
+      // The pinned /discovery.json is the same fixture that 27-leads uses.
+      rememberMoneyGraph(
+        'federal',
+        decodeMoneyGraph(pinned('/graph/money.json')),
+      );
+      mockParams.id = signals[0]!.id;
+      const lead = await render(<LeadDetail />);
+      const href = hrefOf(lead.root, `lead-evidence-${index}`);
+      expect(href).toMatchObject({
+        pathname: '/money-item',
+        params: { kind: 'evidence', lead: signals[0]!.id, i: String(index) },
+      });
+      act(() => lead.unmount());
+      Object.keys(mockParams).forEach((key) => delete mockParams[key]);
+      Object.assign(mockParams, href.params);
+      const item = await render(<MoneyItem />);
+      expect(texts(item.root).join('\n')).not.toMatch(
+        /This record isn't available any more|643745/,
+      );
+      const original = byTestID(item.root, 'money-item-original-0');
+      expect(original.props.accessibilityLabel).toBe(label);
+      expectNoWeb();
+      await press(item.root, 'money-item-original-0');
+      expect(openSource).toHaveBeenCalledWith(url, label);
+      expect(openOnWeb).not.toHaveBeenCalled();
+      expect(Linking.openURL).not.toHaveBeenCalled();
+      act(() => item.unmount());
+    },
+  );
+  test('every pinned lead evidence route resolves with its amount and original', async () => {
+    for (const signal of shown.signals) {
+      const lead = leadFor(signal)!;
+      for (const [index, evidence] of lead.evidence.entries()) {
+        const row = evidenceRow(evidence)!;
+        const params = itemParams({
+          kind: 'evidence',
+          lead: lead.id,
+          i: String(index),
+        });
+        expect(params).not.toBeNull();
+        const item = (await loadMoneyItem(params!, false)).data;
+        expect(item).toMatchObject({
+          name: row.name,
+          amount: row.amount,
+          register: evidence.register,
+          originals: [{ url: evidence.url }],
+        });
+      }
+    }
+  });
+  test.each([
+    ['missing URL', { url: null }],
+    ['unsafe URL', { url: 'http://transparency.aec.gov.au/' }],
+    ['unreadable record', { label: 'Donation record 643745' }],
+  ])('an example with a %s has no link or preview', async (_name, change) => {
+    rememberMoneyGraph(
+      'federal',
+      decodeMoneyGraph(pinned('/graph/money.json')),
+    );
+    const signal = signals[0]!;
+    mock.discovery.mockResolvedValue({
+      data: {
+        ...shown,
+        signals: [
+          { ...signal, evidence: [{ ...signal.evidence[0]!, ...change }] },
+        ],
+      },
+      asOf: null,
+      stale: false,
+      savedAt: 200,
+    });
+    mockParams.id = signal.id;
+    const lead = await render(<LeadDetail />);
+    expect(hrefOf(lead.root, 'lead-evidence-0')).toBeUndefined();
+    expect(
+      byTestID(lead.root, 'lead-evidence-0').props.accessibilityRole,
+    ).not.toBe('link');
+    await expect(
+      loadMoneyItem({ kind: 'evidence', lead: signal.id, i: '0' }, false),
+    ).rejects.toMatchObject({ code: 'not-found' });
+    act(() => lead.unmount());
+  });
+  test.each(['', '-1', '1.5', '01', 'NaN', 'Infinity'])(
+    'an invalid evidence index %s cannot form a money item route',
+    (i) =>
+      expect(
+        itemParams({ kind: 'evidence', lead: signals[0]!.id, i }),
+      ).toBeNull(),
+  );
+  test('absent leads and out-of-range evidence fail safely, while refresh preserves source metadata', async () => {
+    for (const params of [
+      { kind: 'evidence' as const, lead: 'missing', i: '0' },
+      { kind: 'evidence' as const, lead: signals[0]!.id, i: '99' },
+    ])
+      await expect(loadMoneyItem(params, false)).rejects.toMatchObject({
+        code: 'not-found',
+      });
+    mock.discovery.mockResolvedValue({
+      data: shown,
+      asOf: null,
+      stale: true,
+      savedAt: 100,
+      partial: true,
+    });
+    expect(
+      await loadMoneyItem(
+        { kind: 'evidence', lead: signals[0]!.id, i: '0' },
+        true,
+      ),
+    ).toMatchObject({ stale: true, savedAt: 100, partial: true });
+    expect(mock.discovery).toHaveBeenLastCalledWith(true);
   });
   test('a contracts lead: its agency’s page, found in the agency directory by name', async () => {
     mockParams.id = signals[2]!.id;
