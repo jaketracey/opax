@@ -776,12 +776,14 @@ test.each(tabCases)(
 );
 
 test.each([
-  ['(search)', 'search', false],
-  ['(search)', 'search', true],
-  ['(bills)', 'bills', false],
+  ['(search)', 'search', false, 56],
+  ['(search)', 'search', true, 56],
+  ['(search)', 'search', false, 60],
+  ['(search)', 'search', false, 64],
+  ['(bills)', 'bills', false, 56],
 ] as const)(
-  '%s with a pinned stacked field switches once per collapse transition, route = %s, grouped = %s',
-  (segment, name, grouped) => {
+  '%s with a pinned stacked field switches once per collapse transition, route = %s, grouped = %s, search row = %s pt',
+  (segment, name, grouped, searchHeight) => {
     const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
       configurable: true,
@@ -838,21 +840,40 @@ test.each([
       renderer = tree(page(68)); // NativeStack's initial bare inline estimate.
       expanded();
       navigation.setOptions.mockClear();
-      // 24 pt inset + 44 pt inline bar + 56 pt search + 52 pt large title.
-      for (const height of [176, 175, 170])
+      const inlineHeight = 24 + 44;
+      const collapsedHeight = inlineHeight + searchHeight;
+      const expandedHeight = collapsedHeight + 52;
+      // Smallest Dynamic Type: a 41 pt title and a 52 pt search row still
+      // leave the standard appearance clear, including on return to the top.
+      const smallestExpandedHeight = inlineHeight + 41 + 52;
+      for (const height of [
+        expandedHeight,
+        expandedHeight - 1,
+        smallestExpandedHeight,
+      ])
         act(() => renderer!.update(page(height)));
       expanded();
       expect(navigation.setOptions).not.toHaveBeenCalled();
-      act(() => renderer!.update(page(124)));
+      act(() => renderer!.update(page(collapsedHeight)));
       expect(current.headerStyle).toEqual({ backgroundColor: ground });
       expect(navigation.setOptions).toHaveBeenCalledTimes(1);
-      for (const height of [124, 124.5, 120, 124, 120.5])
+      for (const height of [
+        collapsedHeight,
+        collapsedHeight + 0.5,
+        120,
+        collapsedHeight,
+        120.5,
+      ])
         act(() => renderer!.update(page(height)));
       expect(navigation.setOptions).toHaveBeenCalledTimes(1);
-      act(() => renderer!.update(page(176)));
+      act(() => renderer!.update(page(smallestExpandedHeight)));
       expanded();
       expect(navigation.setOptions).toHaveBeenCalledTimes(2);
-      for (const height of [175, 176, 174])
+      for (const height of [
+        expandedHeight - 1,
+        expandedHeight,
+        expandedHeight - 2,
+      ])
         act(() => renderer!.update(page(height)));
       expect(navigation.setOptions).toHaveBeenCalledTimes(2);
     } finally {

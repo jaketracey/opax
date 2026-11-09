@@ -18,9 +18,13 @@ import { glassBar, largeTitleBar, opaqueBar, tabRootGround } from './chrome';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 
-// A stacked UIKit search row occupies up to 56 pt, independently of the large
-// title. Integrated/automatic fields can live in the bar or tab bar instead.
+// Estimate the stacked search row independently of the large title.
+// Integrated/automatic fields can live in the bar or tab bar instead.
 const stackedSearchHeight = 56;
+// The row has not been measured on this iOS runtime, so allow 12 pt headroom.
+// Even at the smallest Dynamic Type size, the expanded large title adds at
+// least about 40 pt, keeping its height well above this collapsed threshold.
+const stackedSearchSlack = 12;
 const searches = new WeakMap<
   object,
   { pinned: boolean; listeners: Set<() => void> }
@@ -121,7 +125,8 @@ export function useRootBarAppearance(
     top + (pad ? 50 : landscapePhone ? 32 : 44),
   );
   const collapsedHeight =
-    compactHeight + (pinnedSearch ? stackedSearchHeight : 0);
+    compactHeight +
+    (pinnedSearch ? stackedSearchHeight + stackedSearchSlack : 1);
   const expandedRoute = useRef<{ key: string; collapsedHeight: number }>(
     undefined,
   );
@@ -139,7 +144,7 @@ export function useRootBarAppearance(
       applied.current = undefined;
       return;
     }
-    if (headerHeight > collapsedHeight + 1)
+    if (headerHeight > collapsedHeight)
       expandedRoute.current = { key: rootKey, collapsedHeight };
     // NativeStack starts with an estimated inline height before UIKit reports
     // the expanded bar. Do not mistake that first estimate for a collapse.
@@ -147,7 +152,7 @@ export function useRootBarAppearance(
       landscapePhone ||
       (expandedRoute.current?.key === rootKey &&
         expandedRoute.current.collapsedHeight === collapsedHeight &&
-        headerHeight <= collapsedHeight + 1);
+        headerHeight <= collapsedHeight);
     const previous = applied.current;
     if (
       previous?.key === rootKey &&
