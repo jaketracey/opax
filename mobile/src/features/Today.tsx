@@ -1,5 +1,6 @@
 import * as Router from 'expo-router';
 import {
+  Fragment,
   useCallback,
   useEffect,
   useRef,
@@ -51,6 +52,7 @@ import {
 import { editionTier, sydneyDay, type SydneyDate } from './today/rules';
 import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
+import { VoiceCard } from './today/VoiceCard';
 import { VotesBlock } from './today/VotesBlock';
 import { StateSeatCard, YourMPCard } from './today/YourMPCard';
 import { saveChoice } from './your-mp/choice-store';
@@ -357,7 +359,12 @@ export default function Today() {
           />
         );
       case 'ask':
-        return <AskBlock key={name} today={today} />;
+        return (
+          <Fragment key={name}>
+            <VoiceCard />
+            <AskBlock today={today} />
+          </Fragment>
+        );
       case 'foot':
         return <TodayFoot key={name} />;
     }
