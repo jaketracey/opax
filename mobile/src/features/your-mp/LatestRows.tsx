@@ -224,12 +224,14 @@ export function LatestRow({
         </Text>
         <Text variant="secondary">{detail}</Text>
       </View>
-      <Icon
-        name={record.href ? symbols.chevron : symbols.external}
-        size={13}
-        maxScale={1.5}
-        tone="inkSoft"
-      />
+      {record.href || !['vote', 'division'].includes(record.kind) ? (
+        <Icon
+          name={record.href ? symbols.chevron : symbols.external}
+          size={13}
+          maxScale={1.5}
+          tone="inkSoft"
+        />
+      ) : null}
     </Pressable>
   );
   const path = record.billKey

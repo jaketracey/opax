@@ -1,3 +1,8 @@
+import { Icon } from '../src/design/icon';
+import {
+  LatestRow as LatestVoteRow,
+  type LatestRecord,
+} from '../src/features/your-mp/LatestRows';
 import { router } from 'expo-router';
 import { act, type ReactElement } from 'react';
 import {
@@ -1040,4 +1045,27 @@ describe('Your MP tab', () => {
     expect(has(r, 'seat-search')).toBe(false);
     await act(async () => r.unmount());
   });
+});
+
+test('a combined vote with no bill route has no external accessory, matching the person page', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  const record: LatestRecord = {
+    key: 'combined-vote',
+    kind: 'vote',
+    title: 'Two bills',
+    date: '2026-06-04',
+    action: 'Voted for',
+    detail: 'Second reading',
+    url: 'https://example.test/division',
+  };
+  await act(async () => {
+    r = TestRenderer.create(<LatestVoteRow record={record} />);
+  });
+  expect(
+    r.root.findAllByType(Icon).map((node) => node.props.name),
+  ).not.toContain('arrow.up.right.square');
+  expect(
+    r.root.findAllByType(Icon).map((node) => node.props.name),
+  ).not.toContain('chevron.right');
+  await act(async () => r.unmount());
 });
