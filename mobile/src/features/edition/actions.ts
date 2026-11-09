@@ -17,7 +17,7 @@ export function editionMenu(edition: EditionView): RowMenuAction[] {
       onPress: () => void copyRecordLink(edition.path),
     },
     {
-      title: 'Open on opax.com.au',
+      title: copy.openOnWeb,
       symbol: 'arrow.up.right',
       onPress: () => void openOnWeb(edition.path, edition.title),
     },

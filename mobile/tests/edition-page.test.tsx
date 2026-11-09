@@ -693,7 +693,7 @@ describe('the native edition reader', () => {
     ]);
     expect(
       items[1].menu.items.map((item: { label: string }) => item.label),
-    ).toEqual(['Copy link', 'Open on opax.com.au', 'How this is chosen']);
+    ).toEqual(['Copy link', 'Open on the website', 'How this is chosen']);
     const ask = root
       .findAllByType(LinkRow)
       .find((row) => row.props.testID === 'edition-ask')!;

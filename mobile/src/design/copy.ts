@@ -31,7 +31,7 @@ export const copy = Object.freeze({
   more: 'More',
   share: 'Share',
   copyLink: 'Copy link',
-  openOnWeb: 'Open on opax.com.au',
+  openOnWeb: 'Open on the website',
   follow: 'Follow',
   following: 'Following',
   seeAll: 'See all',
