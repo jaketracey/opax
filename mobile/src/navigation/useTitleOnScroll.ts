@@ -41,7 +41,19 @@ export const inlineTitleScaleCap = 23 / 17;
  * windows (iPad) the stack can be narrower than the window, so it keeps to
  * half the window.
  */
-export function barTitleWidth(windowWidth: number, trailing = 2): number {
+export function barTitleWidth(
+  windowWidth: number,
+  trailing = 2,
+  trailingWidth?: number,
+): number {
+  if (trailingWidth !== undefined) {
+    // A text pill needs its actual width, not the circle estimate below.
+    // Reserve a short named back button (100 pt), the two 16 pt margins
+    // and an 8 pt gap on either side of the title. UIKit can place this
+    // title off-centre between the unequal leading and trailing groups.
+    const room = Math.max(0, windowWidth - 100 - trailingWidth - 2 * (16 + 8));
+    return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
+  }
   const side = 16 + 44 + 60 * Math.max(0, trailing - 1) + 8;
   const room = Math.max(0, windowWidth - 2 * side);
   return windowWidth >= 600 ? Math.min(room, windowWidth / 2) : room;
@@ -56,11 +68,14 @@ export function BarTitle({
   title,
   shown,
   trailing = 2,
+  trailingWidth,
 }: {
   title: string;
   shown: boolean;
   /** How many items the bar draws after the title: ⋯ alone is 1. */
   trailing?: number;
+  /** Combined item widths for a bar with a text pill, excluding margins. */
+  trailingWidth?: number;
 }) {
   const reduceMotion = useReduceMotionSetting();
   const { width } = useWindowDimensions();
@@ -97,7 +112,7 @@ export function BarTitle({
         {
           color: colors.ink,
           opacity,
-          maxWidth: present ? barTitleWidth(width, trailing) : 0,
+          maxWidth: present ? barTitleWidth(width, trailing, trailingWidth) : 0,
         },
       ],
     },
@@ -128,7 +143,10 @@ type TitleRef = RefObject<View | Text | null>;
 export function useTitleOnScroll(
   ref: TitleRef | null,
   title?: string,
-  { trailing = 2 }: { trailing?: number } = {},
+  {
+    trailing = 2,
+    trailingWidth,
+  }: { trailing?: number; trailingWidth?: number } = {},
 ) {
   const setOptions = useSafeSetOptions();
   const headerHeight = useHeaderBottom();
@@ -190,11 +208,12 @@ export function useTitleOnScroll(
                 title,
                 shown: visible,
                 trailing,
+                trailingWidth,
               }),
           }),
     });
     installed.current = anchor !== null;
-  }, [title, anchor, setOptions, headerHeight, trailing]);
+  }, [title, anchor, setOptions, headerHeight, trailing, trailingWidth]);
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
       offset.current =
@@ -209,11 +228,24 @@ export function useTitleOnScroll(
           ? { headerTitle: next ? title : '' }
           : {
               headerTitle: () =>
-                createElement(BarTitle, { title, shown: next, trailing }),
+                createElement(BarTitle, {
+                  title,
+                  shown: next,
+                  trailing,
+                  trailingWidth,
+                }),
             },
       );
     },
-    [anchor, title, setOptions, headerHeight, trailing, measureHeading],
+    [
+      anchor,
+      title,
+      setOptions,
+      headerHeight,
+      trailing,
+      trailingWidth,
+      measureHeading,
+    ],
   );
   // Hand over only after the heading's bottom has passed under the bar.
   const onTitleLayout = useCallback(

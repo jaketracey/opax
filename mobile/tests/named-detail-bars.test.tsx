@@ -1,6 +1,13 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Platform, SectionList, type View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  SectionList,
+  StyleSheet,
+  type View,
+} from 'react-native';
 import {
   HeaderHeightContext,
   NavigationContext,
@@ -9,7 +16,11 @@ import {
 import DivisionHistory from '../src/features/directories/DivisionHistory';
 import { loadDivisionHistory } from '../src/features/directories/division-data';
 import { useNamedBackOptions } from '../src/navigation/useNamedBackOptions';
-import { BarTitle, useTitleOnScroll } from '../src/navigation/useTitleOnScroll';
+import {
+  BarTitle,
+  barTitleWidth,
+  useTitleOnScroll,
+} from '../src/navigation/useTitleOnScroll';
 
 jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
@@ -267,4 +278,64 @@ test('an asynchronous heading measurement never mixes two scroll offsets', () =>
   act(() => complete(0, 0, 300, 80, 0, 20));
   act(() => hook.onScroll(1));
   expect(inline().props.shown).toBe(true);
+});
+
+test.each([
+  [402, 1, 266],
+  [402, 2, 146],
+  [402, 3, 26],
+  [375, 1, 239],
+  [375, 2, 119],
+  [1024, 1, 512],
+])(
+  'existing bar widths stay unchanged at %i pt with %i items',
+  (width, trailing, expected) => {
+    expect(barTitleWidth(width, trailing)).toBe(expected);
+    expect(barTitleWidth(width, trailing, undefined)).toBe(expected);
+  },
+);
+
+test('the Version pill gets off-centre title room on a 402 pt iPhone and no title width at rest', () => {
+  const originalWindow = Dimensions.get('window');
+  const originalScreen = Dimensions.get('screen');
+  try {
+    act(() => {
+      Dimensions.set({
+        window: { ...originalWindow, width: 402 },
+        screen: { ...originalScreen, width: 402 },
+      });
+      view = TestRenderer.create(
+        <BarTitle
+          title="Synthetic short bill name"
+          shown
+          trailing={2}
+          trailingWidth={120 + 44}
+        />,
+      );
+    });
+    const text = () => view!.root.findByType(Animated.Text);
+    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(90);
+    expect(text().props).toMatchObject({
+      numberOfLines: 1,
+      ellipsizeMode: 'tail',
+    });
+    act(() =>
+      view!.update(
+        <BarTitle
+          key="rest"
+          title="Synthetic short bill name"
+          shown={false}
+          trailing={2}
+          trailingWidth={120 + 44}
+        />,
+      ),
+    );
+    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(0);
+    expect(barTitleWidth(200, 2, 164)).toBe(0);
+    expect(barTitleWidth(1024, 2, 164)).toBe(512);
+  } finally {
+    act(() =>
+      Dimensions.set({ window: originalWindow, screen: originalScreen }),
+    );
+  }
 });
