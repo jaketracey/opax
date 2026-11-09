@@ -1,7 +1,7 @@
 import { Text as NativeText, StyleSheet } from 'react-native';
+import { passageText, serverPassage } from '../../api/passage-text';
 import { Text } from '../../design/primitives';
 import { colors } from '../../design/tokens';
-import { passageText, serverPassage } from '../../api/passage-text';
 
 /** A Worker document row (32-hex resource id) carries a normalized
  * /api/search snippet; a catalog row's snippet is raw published text. */
@@ -108,7 +108,7 @@ export function Excerpt({
 
 const styles = StyleSheet.create({
   // The search highlight: bronze wash behind the record's own ink.
-  match: { backgroundColor: colors.bronzeWash },
+  match: { backgroundColor: colors.navyWash },
 });
 
 /**

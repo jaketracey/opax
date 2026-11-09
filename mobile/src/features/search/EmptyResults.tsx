@@ -2,13 +2,13 @@ import {
   ContentUnavailable,
   Group,
   InlineError,
+  InsetGroup,
   LinkRow,
-  RowList,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
-import type { Group as ListGroup, Scope } from './scopes';
 import { hasFilters, type SpeechFilters } from './filters';
 import { emptyRecovery, type Recovery, type RecoveryAction } from './recovery';
+import type { Group as ListGroup, Scope } from './scopes';
 
 export interface RecoveryHandlers {
   onAsk: () => void;
@@ -82,7 +82,7 @@ export function EmptyResults({
         }
       />
       {rest.length ? (
-        <RowList>
+        <InsetGroup>
           {rest.map((item) => (
             <LinkRow
               key={item.action}
@@ -92,7 +92,7 @@ export function EmptyResults({
               testID={item.testID}
             />
           ))}
-        </RowList>
+        </InsetGroup>
       ) : null}
     </Group>
   );

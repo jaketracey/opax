@@ -1,5 +1,5 @@
 import { recordTypes, topics } from './web-options';
-export { recordTypes, topics, parties, examples } from './web-options';
+export { examples, parties, recordTypes, topics } from './web-options';
 export const modes = [
   { value: 'hybrid', label: 'Meaning and words' },
   { value: 'semantic', label: 'Match meaning' },

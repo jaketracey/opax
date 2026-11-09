@@ -37,7 +37,7 @@ export const resultKindLabel = (kind: string) =>
   singular[kind] ?? typeLabel(kind);
 
 /**
- * The record's own title. Search titles are built as "Speaker — Debate —
+ * The record's own title. Search titles are built as "Speaker \u2014 Debate \u2014
  * 2023-03-06"; the debate is the title, and the speaker and the date have
  * their own lines. A title that is only a speaker and a date has no subject
  * to show, so it reads "Speech by Don Farrell".

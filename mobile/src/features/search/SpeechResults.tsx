@@ -1,26 +1,26 @@
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
+import type { Roster } from '../../api/catalog-decoders';
 import {
   Group,
   InlineError,
+  InsetGroup,
   LinkRow,
   RecordRow,
-  RowList,
   Skeleton,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
-import type { Roster } from '../../api/catalog-decoders';
-import type { SearchRecord } from './decoders';
 import { docRoute } from '../../navigation/routes/records';
-import { resultMeta, resultTitle } from './present';
-import { excerptFor } from './Excerpt';
-import { searchPathRoute } from './navigation';
-import { failureRecovery } from './recovery';
-import { SummaryBlock } from './SummaryBlock';
-import type { SpeechFilters } from './filters';
-import type { SpeechList, SpeechSort } from './speeches';
-import { EmptyResults } from './EmptyResults';
+import type { SearchRecord } from './decoders';
 import type { RecoveryHandlers } from './EmptyResults';
+import { EmptyResults } from './EmptyResults';
+import { excerptFor } from './Excerpt';
+import type { SpeechFilters } from './filters';
+import { searchPathRoute } from './navigation';
+import { resultMeta, resultTitle } from './present';
+import { failureRecovery } from './recovery';
+import type { SpeechList, SpeechSort } from './speeches';
+import { SummaryBlock } from './SummaryBlock';
 
 /** Results drawn before the Summarise row, so the first is on the first screen. */
 export const SUMMARY_AFTER = 3;
@@ -159,7 +159,7 @@ export function SpeechResults({
     );
   if (variant === 'group')
     return (
-      <RowList>
+      <InsetGroup>
         {rows.slice(0, 3).map((row, index) => (
           <SpeechRow key={row.slug} row={row} q={q} index={index} />
         ))}
@@ -170,23 +170,23 @@ export function SpeechResults({
             testID="search-group-speeches-all"
           />
         ) : null}
-      </RowList>
+      </InsetGroup>
     );
   const head = rows.slice(0, SUMMARY_AFTER);
   const rest = rows.slice(SUMMARY_AFTER);
   const next = list.next;
   return (
     <Group gap={rhythm.block} testID="records-results">
-      <RowList>
+      <InsetGroup>
         {head.map((row, index) => (
           <SpeechRow key={row.slug} row={row} q={q} index={index} />
         ))}
-      </RowList>
+      </InsetGroup>
       {head.length === SUMMARY_AFTER && filters.kind !== 'all' ? (
         <SummaryBlock q={q} filters={filters} sort={sort} roster={roster} />
       ) : null}
       {rest.length ? (
-        <RowList>
+        <InsetGroup>
           {rest.map((row, index) => (
             <SpeechRow
               key={row.slug}
@@ -195,7 +195,7 @@ export function SpeechResults({
               index={index + SUMMARY_AFTER}
             />
           ))}
-        </RowList>
+        </InsetGroup>
       ) : null}
       {next?.status === 'loading' ? (
         <Skeleton shape="rows" count={1} label={`Loading more ${noun}`} />
@@ -208,14 +208,14 @@ export function SpeechResults({
         />
       ) : list.more ? (
         <View>
-          <RowList>
+          <InsetGroup>
             <LinkRow
               title={`Show 20 more ${noun}`}
               accessory="none"
               onPress={list.loadMore}
               testID="results-more"
             />
-          </RowList>
+          </InsetGroup>
         </View>
       ) : null}
     </Group>

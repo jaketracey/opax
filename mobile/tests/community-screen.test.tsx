@@ -1,10 +1,10 @@
-import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import { useEffect as mockUseEffect } from 'react';
 import { router } from 'expo-router';
+import { useEffect as mockUseEffect } from 'react';
+import { Platform } from 'react-native';
+import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import native from '../modules/opax-voice';
 import { CommunityScreen } from '../src/features/community/CommunityScreen';
 import { clearCommunity } from '../src/features/community/session';
-import { Platform } from 'react-native';
 let mockParams: Record<string, string> = { view: 'home' };
 let mockFocused = false;
 let mockSignedIn = true;
@@ -52,11 +52,11 @@ jest.mock('../src/design/primitives', () => {
         'Heading',
         'Icon',
         'IconButton',
-        'KeyValueList',
+        'ValueRow',
         'LinkRow',
         'LoadingState',
         'Portrait',
-        'RowList',
+        'InsetGroup',
         'KeyboardStableScreen',
         'Section',
         'Screen',

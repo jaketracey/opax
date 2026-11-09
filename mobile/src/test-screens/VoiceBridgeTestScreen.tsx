@@ -9,14 +9,14 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import * as voice from '../voice';
 import { setConsent } from '../features/talk/bridge';
 import type {
+  TranscriptTurn,
   VoiceEvent,
   VoiceResult,
-  TranscriptTurn,
   VoiceSource,
 } from '../voice';
+import * as voice from '../voice';
 
 export default function VoiceBridgeTestScreen() {
   const insets = useSafeAreaInsets();
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#526477',
     borderRadius: 4,
+    borderCurve: 'continuous',
   },
   input: {
     minHeight: 44,

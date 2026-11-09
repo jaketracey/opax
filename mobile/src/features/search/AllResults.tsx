@@ -1,17 +1,25 @@
-import type { ReactNode } from 'react';
 import { router } from 'expo-router';
-import { View, StyleSheet } from 'react-native';
+import type { ReactNode } from 'react';
+import { StyleSheet, View } from 'react-native';
+import type { Roster } from '../../api/catalog-decoders';
+import { formatCount } from '../../design/format';
 import {
   Group,
+  InsetGroup,
   LinkRow,
-  RowList,
   SectionHeader,
   Skeleton,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
-import type { Roster } from '../../api/catalog-decoders';
 import { resultsRoute } from '../../navigation/routes/search';
-import { MatchRow, type RowSources } from './rows';
+import {
+  EmptyResults,
+  SourcesError,
+  type RecoveryHandlers,
+} from './EmptyResults';
+import { filtersLine, hasFilters, type SpeechFilters } from './filters';
+import { FiltersLine } from './FiltersLine';
+import { SearchInRows } from './GroupResults';
 import {
   matchAll,
   orderGroups,
@@ -20,18 +28,10 @@ import {
   type Match,
   type MatchSources,
 } from './ranking';
-import { SpeechResults } from './SpeechResults';
-import { SearchInRows } from './GroupResults';
-import {
-  EmptyResults,
-  SourcesError,
-  type RecoveryHandlers,
-} from './EmptyResults';
+import { MatchRow, type RowSources } from './rows';
 import { moneyGroups, registerGroups, type Scope } from './scopes';
-import { filtersLine, hasFilters, type SpeechFilters } from './filters';
-import { FiltersLine } from './FiltersLine';
 import type { SpeechList } from './speeches';
-import { formatCount } from '../../design/format';
+import { SpeechResults } from './SpeechResults';
 
 const seeAllNoun: Record<GroupKind, string> = {
   topics: 'topics',
@@ -115,7 +115,7 @@ export function AllResults({
         <View testID="search-top-hits">
           <SectionHeader title="Top hits" level={3} />
           <View style={styles.rows}>
-            <RowList>
+            <InsetGroup>
               {local.top.map((match) => (
                 <ResultSlot key={`${match.kind}:${match.key}`} match={match}>
                   <MatchRow
@@ -127,7 +127,7 @@ export function AllResults({
                   />
                 </ResultSlot>
               ))}
-            </RowList>
+            </InsetGroup>
           </View>
         </View>
       ) : null}
@@ -135,7 +135,7 @@ export function AllResults({
         <View key={group.kind} testID={`search-group-${group.kind}`}>
           <SectionHeader title={group.label} level={3} />
           <View style={styles.rows}>
-            <RowList>
+            <InsetGroup>
               {group.rows.slice(0, 3).map((match) => (
                 <ResultSlot key={`${match.kind}:${match.key}`} match={match}>
                   <MatchRow
@@ -161,7 +161,7 @@ export function AllResults({
                   testID={`search-group-${group.kind}-all`}
                 />
               ) : null}
-            </RowList>
+            </InsetGroup>
           </View>
         </View>
       ))}

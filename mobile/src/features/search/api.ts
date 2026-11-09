@@ -1,17 +1,17 @@
 import type { ApiClient, RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import {
-  decodeBriefs,
-  decodeManifest,
-  decodeRecords,
-  decodeSummary,
-} from './decoders';
-import {
   isMoreKind,
   searchParams,
   type SearchFilters,
   type SearchSort,
 } from './contracts';
+import {
+  decodeBriefs,
+  decodeManifest,
+  decodeRecords,
+  decodeSummary,
+} from './decoders';
 
 /** Session snapshots and in-flight coalescing: returning or tapping twice
  * cannot spend twice. A failed action is retried only by another explicit tap. */
@@ -22,6 +22,7 @@ export class RecordSearch {
     path: string,
     decode: (v: unknown) => T,
     summaryStream = false,
+    signal?: AbortSignal,
   ): Promise<RecordResult<T>> {
     const cached = this.session.get(path);
     if (cached) return cached as Promise<RecordResult<T>>;
@@ -31,6 +32,7 @@ export class RecordSearch {
           retries: 0,
           timeoutMs: summaryStream ? 85000 : 15000,
           summaryStream,
+          signal,
         });
     while (this.session.size >= 128)
       this.session.delete(this.session.keys().next().value!);
@@ -45,6 +47,7 @@ export class RecordSearch {
     f: SearchFilters,
     page = 1,
     sort: SearchSort = 'relevance',
+    signal?: AbortSignal,
   ) {
     if (!isMoreKind(f.kind) && ['tas', 'wa', 'nt'].includes(f.state))
       return Promise.reject(
@@ -56,6 +59,8 @@ export class RecordSearch {
     return this.read(
       `${isMoreKind(f.kind) ? '/api/search-all' : '/api/search'}?${searchParams(q, f, page, sort)}`,
       decodeRecords,
+      false,
+      signal,
     );
   }
   summary(q: string, f: SearchFilters) {

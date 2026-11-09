@@ -1,36 +1,36 @@
-import { useState } from 'react';
 import { router, Stack, type NativeStackHeaderItem } from 'expo-router';
+import { useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-import { InsetGroup, Screen } from './layout';
-import { Button, PopUpButton, SegmentedPicker, SwitchRow } from './controls';
-import { LinkRow } from './rows';
-import { Text } from './text';
-import { ContentUnavailable, Skeleton } from './states';
-import { copy } from './copy';
-import { haptic } from './haptics';
-import { colors, minimumTarget, rhythm } from './tokens';
-import { useAccessibilitySize } from './accessibility';
-import { useKeyCommand } from './keyboard';
-import { useListSearchBar } from './search-bar';
-import { androidHeaderBar, headerItems } from '../navigation/chrome';
-import { filterFacetRoute } from '../navigation/routes/filters';
 import type {
   FilterModel,
   FilterRow,
   FilterToggle,
 } from '../features/sheets/filter-model';
+import { androidHeaderBar, headerItems } from '../navigation/chrome';
+import { filterFacetRoute } from '../navigation/routes/filters';
+import { useAccessibilitySize } from './accessibility';
+import { Button, PopUpButton, SegmentedPicker, SwitchRow } from './controls';
+import { copy } from './copy';
+import { haptic } from './haptics';
+import { useKeyCommand } from './keyboard';
+import { InsetGroup, Screen } from './layout';
+import { LinkRow } from './rows';
+import { useListSearchBar } from './search-bar';
+import { ContentUnavailable, Skeleton } from './states';
+import { Text } from './text';
+import { colors, minimumTarget, rhythm } from './tokens';
+export {
+  filterStore,
+  registerFilterModel,
+  useFilterState,
+} from '../features/sheets/filter-model';
 export type {
+  FilterChoice,
   FilterModel,
   FilterRow,
-  FilterChoice,
   FilterToggle,
   FilterToggleGroup,
   FilterValues,
-} from '../features/sheets/filter-model';
-export {
-  useFilterState,
-  registerFilterModel,
-  filterStore,
 } from '../features/sheets/filter-model';
 
 export function filterBar(onDone: () => void, onCancel?: () => void) {
@@ -315,7 +315,13 @@ export function FilterFacet<S extends object>({
                       ? undefined
                       : choice.count.toLocaleString('en-AU')
                   }
-                  selected={row.value(value) === choice.value}
+                  selected={
+                    row.multiple
+                      ? choice.value
+                        ? row.value(value).split(',').includes(choice.value)
+                        : !row.value(value)
+                      : row.value(value) === choice.value
+                  }
                   accessory="checkmark"
                   accessibilityLabel={
                     choice.count === 0

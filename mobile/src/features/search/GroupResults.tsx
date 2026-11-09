@@ -1,24 +1,24 @@
-import { useState, useSyncExternalStore } from 'react';
 import { router } from 'expo-router';
+import { useState, useSyncExternalStore } from 'react';
 import { View } from 'react-native';
+import { formatDate } from '../../design/format';
 import {
   Group,
   InlineError,
   InsetGroup,
   LinkRow,
-  RowList,
   Skeleton,
   Text,
   type SourceDetails,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
-import { formatDate } from '../../design/format';
 import {
   moneyItemRoute,
   moneyRecordRoute,
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { isGrantProgram } from './eligibility';
+import { EmptyResults, type RecoveryHandlers } from './EmptyResults';
 import {
   openSearchPath,
   openSearchPerson,
@@ -36,7 +36,6 @@ import {
   type Read,
 } from './requests';
 import { groups, type CatalogGroup } from './scopes';
-import { EmptyResults, type RecoveryHandlers } from './EmptyResults';
 
 /**
  * Where a money row goes (journeys/money.md 7 and 12.1): an organisation
@@ -198,7 +197,7 @@ function CatalogRow({
   return (
     <View>
       <LinkRow
-        title={row.title.replace(/\s+[—–-]\s+.*$/, '')}
+        title={row.title.replace(/\s+[\u2014–-]\s+.*$/, '')}
         detail={
           money
             ? detail
@@ -260,7 +259,7 @@ export function GroupResults({
           Entitlements set by instrument, not payslips.
         </Text>
       ) : null}
-      <RowList>
+      <InsetGroup>
         {rows.map((row, index) => (
           <CatalogRow
             key={`${row.slug}:${index}`}
@@ -269,7 +268,7 @@ export function GroupResults({
             index={index}
           />
         ))}
-      </RowList>
+      </InsetGroup>
       {list.next?.status === 'loading' ? (
         <Skeleton shape="rows" count={1} label={`Loading more ${noun}`} />
       ) : list.next?.status === 'error' ? (
@@ -279,14 +278,14 @@ export function GroupResults({
           onRetry={list.retry}
         />
       ) : list.more ? (
-        <RowList>
+        <InsetGroup>
           <LinkRow
             title={`Show 20 more ${noun}`}
             accessory="none"
             onPress={list.loadMore}
             testID="results-more"
           />
-        </RowList>
+        </InsetGroup>
       ) : null}
     </Group>
   );

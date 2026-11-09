@@ -1,24 +1,24 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, View, type LayoutChangeEvent } from 'react-native';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { File, Paths } from 'expo-file-system';
 import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppState, View, type LayoutChangeEvent } from 'react-native';
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-import { apiClient } from '../api/runtime';
 import type { RecordResult } from '../api/client';
+import { apiClient } from '../api/runtime';
+import { useReduceMotion } from '../design/accessibility';
 import {
   Button,
-  Screen,
-  Text,
-  Heading,
-  AsAtLine,
   Group,
+  Heading,
+  Screen,
+  SourceLine,
+  Text,
 } from '../design/primitives';
-import { useReduceMotion } from '../design/accessibility';
 import { decodeMoneyGraph, type MoneyGraph } from '../features/money/data';
 import {
   NativeMoneyScene,
@@ -425,7 +425,7 @@ export default function MoneyMapSpike() {
         </Group>
       ) : null}
       {record ? (
-        <AsAtLine
+        <SourceLine
           asOf={record.asOf}
           savedAt={record.savedAt}
           citation="AEC disclosure returns"
