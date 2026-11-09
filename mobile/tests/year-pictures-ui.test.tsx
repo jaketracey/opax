@@ -3,7 +3,15 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Image, Text as NativeText } from 'react-native';
 import { router } from 'expo-router';
-import { Button } from '../src/design/primitives';
+import { Button, InlineError } from '../src/design/primitives';
+import { Picture } from '../src/features/explore/Picture';
+import { ArchiveCard } from '../src/features/today/DailyPair';
+import { exploreFixture } from '../scripts/explore-fixture';
+import {
+  assertYearPictureBytes,
+  yearPictureKey,
+  yearPicturePath,
+} from '../src/api/year-picture-policy';
 import {
   YearGallery,
   creditText,
@@ -43,6 +51,7 @@ jest.mock('expo-router', () => {
     View: part('ToolbarView'),
   });
   return {
+    useIsPreview: () => false,
     router: { push: jest.fn(), back: jest.fn() },
     Stack: { Screen: part('StackScreen'), Toolbar },
     Link: Object.assign(part('Link'), {
@@ -116,14 +125,14 @@ beforeEach(() => {
     .mockImplementation(async (key) => `file:///cache/${key}.webp`);
 });
 
-test('the gallery reads only local photos, keeps its frame while decoding, never a paid read, and retries in place', async () => {
+test('the full viewer reads a local photo, keeps its frame and retries in place', async () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(
-      <YearGallery year={2025} photos={manifest['2025']!} />,
+      <Picture file={manifest['2025']![0]!.file} failure="inline" />,
     );
   });
-  expect(yearPictures.get).toHaveBeenCalledTimes(manifest['2025']!.length);
+  expect(yearPictures.get).toHaveBeenCalledTimes(1);
   const image = renderer.root.findAllByType(Image)[0]!;
   expect(image.props.source.uri).toBe(
     'file:///cache/2025-cooper-polling-place.webp',
@@ -319,5 +328,35 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
   expect(all.join(' ')).not.toMatch(
     /knowledge box|so far|static|manifest|register|\d{4}-\d{2}-\d{2}|—/,
   );
+  act(() => renderer.unmount());
+});
+
+test('a failed archive image keeps its caption and credit without an error overlay', async () => {
+  const picture = manifest['2014']!.find((p) =>
+    p.file.includes('march-in-march'),
+  )!;
+  const key = yearPictureKey('/' + picture.file);
+  const bytes = exploreFixture(yearPicturePath(key), () => undefined)!;
+  expect(bytes.length).toBeGreaterThan(0);
+  expect(() => assertYearPictureBytes(bytes)).not.toThrow();
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <ArchiveCard year={2014} picture={picture} />,
+    );
+  });
+  expect(yearPictures.get).toHaveBeenCalledWith(key, false);
+  const image = renderer.root.findByType(Image);
+  expect(image.props.source.uri).toBe(`file:///cache/${key}.webp`);
+  act(() => image.props.onError());
+  expect(texts(renderer)).toContain(picture.caption);
+  expect(texts(renderer)).toContain(`Photo: ${picture.credit}`);
+  expect(texts(renderer)).not.toContain('Try again');
+  expect(renderer.root.findAllByType(InlineError)).toHaveLength(0);
+  expect(renderer.root.findAllByType(Image)).toHaveLength(0);
+  const frame = renderer.root.findAllByProps({
+    testID: `tm-photo-${key}-placeholder`,
+  })[0]!;
+  expect(frame.props.style.aspectRatio).toBe(16 / 10);
   act(() => renderer.unmount());
 });

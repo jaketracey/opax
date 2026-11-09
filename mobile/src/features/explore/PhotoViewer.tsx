@@ -129,6 +129,7 @@ function ZoomPage({
       >
         <View style={fit}>
           <Picture
+            failure="inline"
             file={photo.file}
             ratio={ratio}
             ground="black"

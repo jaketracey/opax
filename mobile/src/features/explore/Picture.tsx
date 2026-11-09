@@ -13,13 +13,14 @@ export const PHOTO_BLACK = colors.photoGround;
 /**
  * One year photograph in its frame. Native Image reads only a device cache
  * file, fetched when the frame mounts. The frame keeps its shape from
- * placeholder to photo; a failure draws inside it, with Try again.
+ * placeholder to photo. Cards fail quietly; the full viewer offers Try again.
  */
 export function Picture({
   file,
   ratio = 4 / 3,
   ground = 'sunken',
   rounded = true,
+  failure = 'quiet',
 }: {
   file: string;
   /** The frame's width over height; archive photographs are never cropped. */
@@ -27,6 +28,7 @@ export function Picture({
   /** The photo viewer draws on black. */
   ground?: 'sunken' | 'black';
   rounded?: boolean;
+  failure?: 'quiet' | 'inline';
 }) {
   const [retry, setRetry] = useState(0);
   const [saved, setSaved] = useState<{
@@ -116,7 +118,7 @@ export function Picture({
           />
         </Animated.View>
       ) : null}
-      {current?.failed ? (
+      {current?.failed && failure === 'inline' ? (
         <View style={styles.failed}>
           <InlineError
             subject="Photo"
