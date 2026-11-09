@@ -46,7 +46,7 @@ import {
   splitRowStyles,
 } from '../src/design/selection';
 import { SourceLine } from '../src/design/source';
-import { colors, radii } from '../src/design/tokens';
+import { colors, minimumTarget, radii, rhythm } from '../src/design/tokens';
 
 jest.mock('../src/features/follows/store', () => ({
   useFollows: () => [],
@@ -711,6 +711,40 @@ test.each([402, 414, 420])(
     ).toBe(true);
   },
 );
+test.each([2, 3] as const)(
+  'level %s section header rows keep the same height and centred gap with or without an action',
+  (level) => {
+    const withoutAction = render(
+      <SectionHeader title="Try asking" level={level} />,
+    ).root;
+    const withAction = render(
+      <SectionHeader
+        title="Conversations"
+        level={level}
+        action={{
+          label: 'See all conversations',
+          accessibilityLabel: 'See all conversations',
+          onPress: jest.fn(),
+        }}
+      />,
+    ).root;
+    const headerStyle = flat(withoutAction.findByType(View).props.style);
+    expect(headerStyle).toEqual(flat(withAction.findByType(View).props.style));
+    // Centring the heading in the action's existing height reserves the
+    // same space below it, without adding padding or a margin to either row.
+    expect(headerStyle).toEqual({
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rhythm.tight,
+      minHeight: minimumTarget,
+    });
+    expect(
+      rowStyle(
+        withAction.find((node) => typeof node.props.style === 'function'),
+      ).minHeight,
+    ).toBe(headerStyle.minHeight);
+  },
+);
 test('section actions stack at AX1+ and keep a named 44 pt target', () => {
   size(1.786);
   const root = render(
@@ -719,6 +753,10 @@ test('section actions stack at AX1+ and keep a named 44 pt target', () => {
       action={{ accessibilityLabel: 'See all bills', href }}
     />,
   ).root;
+  expect(flat(root.findByType(View).props.style)).toEqual({
+    gap: rhythm.line,
+    marginBottom: rhythm.heading - rhythm.block,
+  });
   expect(strings(root)).toEqual(['Bills', 'See all']);
   expect(root.findByType(RowLink).props.href).toBe(href);
   expect(

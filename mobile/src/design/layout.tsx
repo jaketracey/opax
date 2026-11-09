@@ -628,6 +628,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   sectionHead: {
+    minHeight: minimumTarget,
     flexDirection: 'row',
     alignItems: 'center',
     gap: rhythm.tight,
