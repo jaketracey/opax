@@ -144,31 +144,37 @@ export function useTitleOnScroll(
       setAnchor((current) => (current === bottom ? current : bottom)),
     [],
   );
-  const measureHeading = useCallback(() => {
-    const node = ref?.current;
-    const measuredOffset = offset.current;
-    if (!node || measuredOffset === null || measuring.current) return;
-    const version = layoutVersion.current;
-    measuring.current = true;
-    node.measure((_x, _y, width, height, _pageX, pageY) => {
-      measuring.current = false;
-      // A flattened or not-yet-mounted native view can measure as zero.
-      // Never substitute the wrapper's parent-relative onLayout y here.
-      // Nor combine an asynchronous measurement with a newer scroll offset.
-      if (
-        ref.current !== node ||
-        version !== layoutVersion.current ||
-        measuredOffset !== offset.current ||
-        !Number.isFinite(pageY) ||
-        !Number.isFinite(width) ||
-        !Number.isFinite(height) ||
-        !(width > 0 && height > 0)
-      )
-        return;
-      needsMeasurement.current = false;
-      setAnchorBottom(pageY + measuredOffset + height);
-    });
-  }, [ref, setAnchorBottom]);
+  const measureHeading = useCallback(
+    function measureHeading() {
+      const node = ref?.current;
+      const measuredOffset = offset.current;
+      if (!node || measuredOffset === null || measuring.current) return;
+      const version = layoutVersion.current;
+      measuring.current = true;
+      node.measure((_x, _y, width, height, _pageX, pageY) => {
+        if (ref?.current !== node || version !== layoutVersion.current) return;
+        measuring.current = false;
+        // A flattened or not-yet-mounted native view can measure as zero.
+        // Never substitute the wrapper's parent-relative onLayout y here.
+        // Nor combine an asynchronous measurement with a newer scroll offset.
+        if (measuredOffset !== offset.current) {
+          // Retry with the latest offset even if scrolling has just stopped.
+          measureHeading();
+          return;
+        }
+        if (
+          !Number.isFinite(pageY) ||
+          !Number.isFinite(width) ||
+          !Number.isFinite(height) ||
+          !(width > 0 && height > 0)
+        )
+          return;
+        needsMeasurement.current = false;
+        setAnchorBottom(pageY + measuredOffset + height);
+      });
+    },
+    [ref, setAnchorBottom],
+  );
   useLayoutEffect(() => {
     if (!title) return;
     shown.current =
@@ -215,6 +221,7 @@ export function useTitleOnScroll(
       if (ref) {
         layoutVersion.current++;
         needsMeasurement.current = true;
+        measuring.current = false;
         setAnchor(null);
         // iOS's initial automatic inset gives a negative resting offset.
         // Until its first scroll event, pageY cannot be converted back to

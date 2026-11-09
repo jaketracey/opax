@@ -72,7 +72,8 @@ const versionLabel = (version: BillTextVersion) =>
 /**
  * The bill's own words (records.md 4): opens on the default (or requested)
  * version's text, with In short above it when the bill page's summary
- * arrives in time. The version is a bar menu, Contents a bar button.
+ * arrives in time. Contents is a bar button; iOS keeps Version in More so
+ * the revealed bill name has room beside the named back button.
  */
 export default function BillTextReader({
   recordKey,
@@ -181,14 +182,19 @@ export default function BillTextReader({
     });
   }, [key, id, jump, navigation]);
   const titleRef = useRef<View>(null);
-  // The bar title fits beside Version, Contents and ⋯ (barItems).
+  // iOS has Contents and ⋯. A third, text-labelled Version item left
+  // effectively zero title width on an iPhone (wave 10 bills-14).
   const title = useTitleOnScroll(
     embedded ? null : titleRef,
     embedded ? undefined : routeTitle,
     {
       trailing:
         1 +
-        ((manifest?.versions.length ?? 0) > 1 && shown ? 1 : 0) +
+        (Platform.OS === 'android' &&
+        (manifest?.versions.length ?? 0) > 1 &&
+        shown
+          ? 1
+          : 0) +
         ((current?.sections.length ?? 0) >= 2 ? 1 : 0),
     },
   );
@@ -261,7 +267,7 @@ export default function BillTextReader({
   const versions = manifest?.versions ?? [];
   const contents = (current?.sections.length ?? 0) >= 2;
   const android = Platform.OS === 'android';
-  const versionItem: NativeStackHeaderItem | null =
+  const versionItem: Extract<NativeStackHeaderItem, { type: 'menu' }> | null =
     versions.length > 1 && shown
       ? {
           type: 'menu',
@@ -277,23 +283,8 @@ export default function BillTextReader({
           },
         }
       : null;
-  const barItems = (): NativeStackHeaderItem[] => [
-    ...(versionItem ? [versionItem] : []),
-    ...(contents
-      ? [
-          {
-            type: 'button' as const,
-            label: 'Contents',
-            accessibilityLabel: 'Contents',
-            icon: { type: 'sfSymbol' as const, name: 'list.bullet' as const },
-            onPress: openContents,
-          },
-        ]
-      : []),
-    // Version and Contents already take the bar, so Share is in ⋯, and
-    // Ask about this bill is a row: iOS draws no bottom toolbar, which the
-    // floating tab bar covered.
-    pageMenu({
+  const barItems = (): NativeStackHeaderItem[] => {
+    const more = pageMenu({
       name: 'this bill text',
       items: [
         ...menu,
@@ -308,8 +299,32 @@ export default function BillTextReader({
             ]
           : []),
       ],
-    }),
-  ];
+    });
+    if (!android && versionItem && more.type === 'menu') {
+      more.menu.items.unshift({
+        type: 'submenu',
+        label: 'Version',
+        items: versionItem.menu.items,
+      });
+    }
+    return [
+      ...(android && versionItem ? [versionItem] : []),
+      ...(contents
+        ? [
+            {
+              type: 'button' as const,
+              label: 'Contents',
+              accessibilityLabel: 'Contents',
+              icon: { type: 'sfSymbol' as const, name: 'list.bullet' as const },
+              onPress: openContents,
+            },
+          ]
+        : []),
+      // Share and Version live in More. Ask about this bill stays a row:
+      // iOS draws no bottom toolbar under the floating tab bar.
+      more,
+    ];
+  };
   // The pane bar draws the same three items (records.md 4.3).
   const paneVersions = versions.map((version) => ({
     id: version.id,
@@ -386,6 +401,7 @@ export default function BillTextReader({
               </Text>
               <View
                 ref={titleRef}
+                collapsable={false}
                 onLayout={embedded ? undefined : title.onTitleLayout}
               >
                 <Heading level={1} testID="bill-text-title">

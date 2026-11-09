@@ -262,7 +262,8 @@ test('an asynchronous heading measurement never mixes two scroll offsets', () =>
   act(() => hook.onScroll(0));
   act(() => complete(0, 0, 300, 80, 0, 120));
   expect(inline().props.shown).toBe(false);
+  expect(measure).toHaveBeenCalledTimes(2);
+  act(() => complete(0, 0, 300, 80, 0, 20));
   act(() => hook.onScroll(1));
-  act(() => complete(0, 0, 300, 80, 0, 19));
   expect(inline().props.shown).toBe(true);
 });

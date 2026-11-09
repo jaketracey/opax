@@ -13,7 +13,7 @@ import {
 // record rows grouped by the day they were added.
 import { NavigationContext } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Text as NativeText } from 'react-native';
+import { Text as NativeText, type View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
@@ -27,6 +27,7 @@ import {
   SourceLine,
 } from '../src/design/primitives';
 import BillTextReader from '../src/features/records/BillTextReader';
+import { ReaderList } from '../src/features/records/ReaderList';
 import DocumentReader from '../src/features/records/DocumentReader';
 import {
   decodeBillText,
@@ -290,9 +291,9 @@ test('bill text opens on its text with the stage, one source line and the bar it
     licenceDataset: 'bills',
   });
   expect(source.props.originals).toHaveLength(1);
-  expect(barLabels()).toEqual(['As passed', 'Contents', 'More']);
+  expect(barLabels()).toEqual(['Contents', 'More']);
   // iOS draws no bottom toolbar a tab bar would cover: Ask about this bill
-  // is a row and Share is in ⋯, since Version and Contents fill the bar.
+  // is a row and Share and Version are in ⋯, leaving room for the bill name.
   expect(
     view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
   ).toHaveLength(0);
@@ -324,6 +325,47 @@ test('bill text keeps a named route title before its text loads', async () => {
   jest.mocked(records.billManifest).mockReturnValue(new Promise(() => {}));
   const view = await mount(<BillTextReader />);
   expect(mockOptions.title).toBe('Bill text');
+  await act(async () => view.unmount());
+});
+
+test('the reader reveals the short bill name after its whole heading leaves, with room beside Bills', async () => {
+  mockBillText();
+  jest.mocked(catalogs.billFor).mockResolvedValue(
+    record({
+      identity: { data: { shortTitle: 'Synthetic short bill name' } },
+      summary: { data: null },
+    }) as never,
+  );
+  const view = await mount(<BillTextReader />);
+  const inline = () => (mockOptions.headerTitle as () => React.ReactElement)();
+  const heading =
+    view.root.findByType(ReaderList).props.header.props.children[1];
+  expect(heading.props.collapsable).toBe(false);
+  (heading.props.ref.current as View).measure = (done) =>
+    done(0, 0, 300, 80, 0, 120);
+  await act(async () =>
+    heading.props.onLayout({ nativeEvent: { layout: { y: 28, height: 80 } } }),
+  );
+  expect(inline().props.shown).toBe(false);
+  const scroll = (y: number) =>
+    act(async () =>
+      view.root.findByType(ReaderList).props.onScroll({
+        nativeEvent: { contentOffset: { y } },
+      }),
+    );
+  await scroll(-44);
+  expect(inline().props.shown).toBe(false);
+  await scroll(112);
+  expect(inline().props.shown).toBe(false);
+  await scroll(113);
+  expect(inline().props).toMatchObject({
+    shown: true,
+    title: 'Synthetic short bill name',
+    trailing: 2,
+  });
+  expect(barLabels()).toEqual(['Contents', 'More']);
+  await scroll(-44);
+  expect(inline().props.shown).toBe(false);
   await act(async () => view.unmount());
 });
 
@@ -359,12 +401,16 @@ test('choosing another version from the bar menu loads it in place', async () =>
       label: string;
       menu?: { items: { label: string; state: string; onPress: () => void }[] };
     }[]
-  )()[0]!;
-  expect(version.menu!.items.map((item) => [item.label, item.state])).toEqual([
+  )()
+    .at(-1)!
+    .menu!.items.find((item) => item.label === 'Version')! as unknown as {
+    items: { label: string; state: string; onPress: () => void }[];
+  };
+  expect(version.items.map((item) => [item.label, item.state])).toEqual([
     ['As passed: synthetic fixture, 1 Oct 2026', 'on'],
     ['First reading: synthetic fixture, 1 Oct 2026', 'off'],
   ]);
-  await act(async () => version.menu!.items[1]!.onPress());
+  await act(async () => version.items[1]!.onPress());
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
