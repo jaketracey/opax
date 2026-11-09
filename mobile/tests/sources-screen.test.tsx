@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { router } from 'expo-router';
@@ -191,7 +192,11 @@ beforeEach(() => {
 let r: TestRenderer.ReactTestRenderer | null = null;
 async function render(element: ReactElement) {
   await act(async () => {
-    r = TestRenderer.create(element);
+    r = TestRenderer.create(
+      withNavigationOptions(element, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   return r!;
 }

@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { Icon } from '../src/design/icon';
 import {
   LatestRow as LatestVoteRow,
@@ -125,7 +126,11 @@ const mock = runtime as jest.Mocked<typeof runtime>;
 async function render(element: ReactElement) {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(element);
+    r = TestRenderer.create(
+      withNavigationOptions(element, (options) => {
+        mockOptions.push(options);
+      }),
+    );
   });
   return r;
 }

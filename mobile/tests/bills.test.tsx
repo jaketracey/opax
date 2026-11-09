@@ -1,8 +1,9 @@
+import { RouteOptions } from '../src/navigation/preview';
 // Wave 4, lane B (specs/bills.md): the status event (2.1), the vote order
 // and words (4.2.5), the list's filter helpers (2.2), the bill page's
 // arrivals (`?division=`, 4.4) and Added since (4.2.1), the saved-seat line
 // under a vote, and the bill read that no longer waits for the index (4.10).
-import { Stack, router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { act } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -487,7 +488,7 @@ describe('loading a bill (4.3)', () => {
   // The bar's items (Share beside ⋯) as label: disabled, and whether the
   // "Ask about this bill" row is drawn. iOS draws no bottom toolbar.
   const actions = (root: ReactTestInstance) => {
-    const options = root.findAllByType(Stack.Screen).at(-1)!.props.options as {
+    const options = root.findAllByType(RouteOptions).at(-1)!.props.options as {
       unstable_headerRightItems?: () => { label: string; disabled?: boolean }[];
     };
     return {
@@ -579,7 +580,7 @@ describe('the bill page', () => {
   test('iOS draws no bottom toolbar a tab bar would cover: Share is beside ⋯, Ask is a row', async () => {
     const root = await render();
     expect(root.findAllByType(Stack.Toolbar)).toHaveLength(0);
-    const options = root.findAllByType(Stack.Screen).at(-1)!.props.options;
+    const options = root.findAllByType(RouteOptions).at(-1)!.props.options;
     const items = options.unstable_headerRightItems() as { label: string }[];
     expect(items.map((item) => item.label)).toEqual(['Share', 'More']);
     const ask = root.find(

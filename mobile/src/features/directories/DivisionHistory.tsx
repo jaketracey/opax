@@ -355,7 +355,7 @@ export default function DivisionHistory() {
   ) : null;
 
   const titleRef = useRef<View>(null);
-  const scrollTitle = useTitleOnScroll(titleRef, TITLE, { trailing: 2 });
+  const scrollTitle = useTitleOnScroll(titleRef);
   const header = (
     <View style={styles.header}>
       <View ref={titleRef} onLayout={scrollTitle.onTitleLayout}>
@@ -451,6 +451,8 @@ export default function DivisionHistory() {
       <RouteOptions
         options={{
           title: TITLE,
+          headerTitle: TITLE,
+          headerTitleAlign: 'center',
           headerLargeTitleEnabled: false,
           headerSearchBarOptions: { ...searchBar, hideWhenScrolling: true },
           ...headerItems(() => [

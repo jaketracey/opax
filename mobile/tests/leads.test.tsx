@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { createHash } from 'node:crypto';
 import { act } from 'react';
@@ -220,7 +221,12 @@ afterEach(() => forgetMoneyGraphs());
 async function render(element: React.ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(element);
+    renderer = TestRenderer.create(
+      withNavigationOptions(element, (options) => {
+        mockOptions = options;
+        mockScreen.options = options;
+      }),
+    );
   });
   return renderer;
 }

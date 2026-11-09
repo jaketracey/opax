@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -102,7 +103,11 @@ afterEach(() => {
 async function render(element: React.ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(element);
+    renderer = TestRenderer.create(
+      withNavigationOptions(element, (options) => {
+        mockScreens.push(options);
+      }),
+    );
   });
   mounted.push(renderer);
   return renderer.root;

@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 // Filters and sort in Speeches (journeys/search.md 3.5): every Search
 // filter opens /filters/search; a change made there is one request; the
 // applied filters show as one line with Clear; Clear and a return to an
@@ -109,7 +110,11 @@ const items = () =>
 async function speeches() {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<SearchScreen />);
+    r = TestRenderer.create(
+      withNavigationOptions(<SearchScreen />, (options) => {
+        if (options.headerSearchBarOptions) mockBar.options = options;
+      }),
+    );
   });
   await act(async () =>
     mockBar.options!.headerSearchBarOptions.onSearchButtonPress({

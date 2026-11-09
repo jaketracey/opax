@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
 import { Dimensions, Linking, Text as NativeText } from 'react-native';
@@ -93,7 +94,11 @@ function setFontScale(fontScale: number, width = 390) {
 async function render(element: React.ReactElement) {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(element);
+    r = TestRenderer.create(
+      withNavigationOptions(element, (options) => {
+        mockScreen.options = options;
+      }),
+    );
   });
   return r;
 }

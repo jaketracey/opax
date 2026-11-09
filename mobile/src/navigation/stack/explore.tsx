@@ -42,6 +42,8 @@ export function exploreScreens() {
           title: exploreToolTitle(params),
           ...untitled,
           headerLargeTitleEnabled: false,
+          headerTitleAlign: 'center',
+          headerBackButtonDisplayMode: 'default',
           ...(back ? { headerBackTitle: back } : {}),
         };
       }}

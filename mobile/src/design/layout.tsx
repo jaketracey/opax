@@ -7,7 +7,7 @@ import {
   isValidElement,
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactElement,
@@ -26,6 +26,7 @@ import {
 } from 'react-native';
 import { opaqueBar } from '../navigation/chrome';
 import { useSafeSetOptions } from '../navigation/preview';
+import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { BarTitle } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
 import {
@@ -140,10 +141,14 @@ export function Screen({
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
-  useEffect(() => {
+  const nativeRoot = useRootBarAppearance(setOptions, {
+    ground: colors[ground],
+    disabled: inPane,
+  });
+  useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
-    if (!inPane) setOptions(opaqueBar(colors[ground]));
-  }, [setOptions, ground, inPane]);
+    if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
+  }, [setOptions, ground, inPane, nativeRoot]);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
@@ -153,7 +158,7 @@ export function Screen({
     anchorBottom !== null,
   );
   const titleBridge = suppliedBridge ?? (inPane ? null : nativeBridge);
-  useEffect(() => {
+  useLayoutEffect(() => {
     titleScroll.current =
       barTitle && titleBridge ? titleBridge(barTitle) : null;
   }, [barTitle, titleBridge]);
@@ -466,14 +471,14 @@ function useBarTitle(title: string | undefined, anchored: boolean) {
   const setOptions = useSafeSetOptions();
   const header = useContext(HeaderHeightContext) || 44;
   const shown = useRef(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (title)
       setOptions({
         title,
         headerTitle: () => <BarTitle title={title} shown={false} />,
       });
   }, [setOptions, title]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!title || !anchored) return;
     shown.current = false;
     setOptions({

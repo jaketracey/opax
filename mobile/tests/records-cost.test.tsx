@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import { Text } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -108,7 +109,11 @@ jest.mock('expo-router', () => {
 async function mount(component: React.ReactElement) {
   let view!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    view = TestRenderer.create(component);
+    view = TestRenderer.create(
+      withNavigationOptions(component, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   return view;
 }

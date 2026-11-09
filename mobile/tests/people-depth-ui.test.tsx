@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
 import { Text as NativeText } from 'react-native';
@@ -83,7 +84,11 @@ const access = decodeAccess(pinned('/access.json')),
 async function render(node: React.ReactNode) {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(node);
+    r = TestRenderer.create(
+      withNavigationOptions(node, (options) => {
+        mockOptions.current = options;
+      }),
+    );
   });
   return r;
 }

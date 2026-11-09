@@ -20,27 +20,28 @@ test.each([
   ['money-item', 'Money record'],
   ['explore/[tool]', 'The record quiz'],
   ['division-history', 'Votes in parliament'],
-])(
-  '%s retains a route title and an empty title view at rest',
-  (name, title) => {
-    const screen = screens.find((screen) => screen.props.name === name)!;
-    const routes = [
-      { key: 'root', name: 'index' },
-      { key: 'list', name, params: { tool: 'quiz' } },
-      { key: 'next', name: 'money-item' },
-    ];
-    const navigation = { getState: () => ({ index: 1, routes }) };
-    const options = screen.props.options({ route: routes[1], navigation });
-    expect(options.title).toBe(title);
+])('%s retains its route title for the next Back button', (name, title) => {
+  const screen = screens.find((screen) => screen.props.name === name)!;
+  const routes = [
+    { key: 'root', name: 'index' },
+    { key: 'list', name, params: { tool: 'quiz' } },
+    { key: 'next', name: 'money-item' },
+  ];
+  const navigation = { getState: () => ({ index: 1, routes }) };
+  const options = screen.props.options({ route: routes[1], navigation });
+  expect(options.title).toBe(title);
+  if (name === 'division-history') {
+    expect(options.headerTitle).toBe(title);
+  } else {
     expect(typeof options.headerTitle).toBe('function');
     const view = options.headerTitle();
     expect(view.props.style.width).toBe(0);
     expect(view.type).not.toBe(BarTitle);
-    const next = screens.find((screen) => screen.props.name === 'money-item')!;
-    if (name !== 'explore/[tool]') {
-      expect(
-        next.props.options({ route: routes[2], navigation }).headerBackTitle,
-      ).toBe(title);
-    }
-  },
-);
+  }
+  const next = screens.find((screen) => screen.props.name === 'money-item')!;
+  if (name !== 'explore/[tool]') {
+    expect(
+      next.props.options({ route: routes[2], navigation }).headerBackTitle,
+    ).toBe(title);
+  }
+});

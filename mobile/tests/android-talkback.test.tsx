@@ -62,6 +62,7 @@ jest.mock('../src/design/menu', () => ({
 jest.mock('react-native-safe-area-context', () => {
   const { View } = jest.requireActual('react-native');
   return {
+    ...jest.requireActual('react-native-safe-area-context'),
     SafeAreaView: View,
     SafeAreaProvider: ({ children }: { children: ReactNode }) => children,
     useSafeAreaInsets: () => ({ top: 24, bottom: 16, left: 0, right: 0 }),
@@ -193,7 +194,17 @@ async function android(run: (show: Show) => Promise<void>) {
       const spies = spy(RN, screenReader);
       let renderer!: TestRendererType.ReactTestRenderer;
       await app.React.act(async () => {
-        renderer = app.TestRenderer.create(element(app));
+        const { withNavigationOptions } = jest.requireActual(
+          './navigation-options',
+        );
+        renderer = app.TestRenderer.create(
+          withNavigationOptions(
+            element(app),
+            (options: Record<string, unknown>) => {
+              mockOptions = options;
+            },
+          ),
+        );
       });
       mounted.push(renderer);
       return { app, renderer, spies };

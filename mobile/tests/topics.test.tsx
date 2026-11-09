@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { allowsReportsPath } from '../src/api/reports-policy';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
 import { router } from 'expo-router';
@@ -163,7 +164,9 @@ async function render(element: ReactElement) {
         <SafeAreaFrameContext.Provider
           value={{ x: 0, y: 0, width: 390, height: 844 }}
         >
-          {element}
+          {withNavigationOptions(element, (options) => {
+            mockScreens.push({ options });
+          })}
         </SafeAreaFrameContext.Provider>
       </SafeAreaInsetsContext.Provider>,
     );

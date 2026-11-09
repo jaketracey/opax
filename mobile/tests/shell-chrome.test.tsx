@@ -1,28 +1,39 @@
 import { Stack } from 'expo-router';
-import { NavigationContext } from 'expo-router/react-navigation';
+import {
+  HeaderHeightContext,
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import React, { act } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
+import { Screen } from '../src/design/layout';
 import * as tokens from '../src/design/tokens';
 import {
   androidHeaderBar,
   askHeaderItems,
   glassBar,
+  largeTitleBar,
   opaqueBar,
   pageItems,
   pageMenu,
   rootHeaderItems,
   shortSheet,
+  tabRootGround,
   useStackChrome,
 } from '../src/navigation/chrome';
+import { RouteOptions } from '../src/navigation/preview';
 import {
   ExternalURLProbe,
   recordExternalURL,
 } from '../src/navigation/source-destination';
 import { askScreens } from '../src/navigation/stack/ask';
+import { sharedScreens } from '../src/navigation/stack';
+import { billsScreens } from '../src/navigation/stack/bills';
+import { exploreScreens } from '../src/navigation/stack/explore';
 import { editionScreens } from '../src/navigation/stack/edition';
 import { recordsScreens } from '../src/navigation/stack/records';
 import {
@@ -63,6 +74,7 @@ jest.mock('../src/design/useHeaderBottom', () => ({
   useHeaderBottom: () => 100,
 }));
 jest.mock('../src/design/accessibility', () => ({
+  ...jest.requireActual('../src/design/accessibility'),
   useReduceMotionSetting: () => mockReducedMotion,
 }));
 let mockReducedMotion = false;
@@ -265,16 +277,17 @@ test.each([
     }
   },
 );
-test('iOS 26 leaves material to the system and older bars accept the screen ground', () => {
+test('expanded iOS 26 roots colour only the scroll edge; older roots remain opaque', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
-  const bar = opaqueBar(colors.sunken);
-  expect(bar).not.toHaveProperty('headerStyle');
-  expect(bar.headerBackground?.()).toMatchObject({
-    props: { style: { backgroundColor: colors.sunken } },
+  const bar = largeTitleBar(colors.sunken);
+  expect(bar).not.toHaveProperty('headerBackground');
+  expect(bar).toMatchObject({
+    headerStyle: {},
+    headerLargeStyle: { backgroundColor: colors.sunken },
   });
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 18 });
-  expect(opaqueBar(colors.sunken)).toMatchObject({
+  expect(largeTitleBar(colors.sunken)).toMatchObject({
     headerStyle: { backgroundColor: colors.sunken },
   });
   if (version) Object.defineProperty(Platform, 'Version', version);
@@ -283,7 +296,17 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   const rootOptions = () =>
     [
-      tabRootScreen('(today)', '(today)', 'index', 'Today', false)[0]!,
+      ...(
+        [
+          ['(today)', 'index', 'Today'],
+          ['(your-mp)', 'your-mp', 'Your MP'],
+          ['(bills)', 'bills', 'Bills'],
+          ['(search)', 'search', 'Search'],
+        ] as const
+      ).map(
+        ([segment, name, title]) =>
+          tabRootScreen(segment, segment, name, title, false)[0]!,
+      ),
       askScreens('(ask)', false).find((screen) => screen.props.name === 'ask')!,
     ].map((screen) =>
       screen.props.options({
@@ -300,6 +323,11 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
     for (const options of rootOptions()) {
       expect(options.headerLargeTitleEnabled).toBe(true);
       expect(options.headerTransparent).toBe(true);
+      expect(options.headerStyle).not.toHaveProperty('backgroundColor');
+      expect(options).not.toHaveProperty('headerBlurEffect');
+      expect(options.headerLargeStyle?.backgroundColor).toEqual(
+        options.title === 'Bills' ? colors.paper : colors.sunken,
+      );
     }
     Object.defineProperty(Platform, 'Version', {
       configurable: true,
@@ -426,7 +454,7 @@ jest.mock('expo-router/unstable-native-tabs', () => {
   });
   return { NativeTabs };
 });
-const mockFlags = { searchTab: true, talkInAsk: true };
+const mockFlags = { searchTab: true, talkInAsk: true, groupedSurfaces: true };
 jest.mock('../src/design/flags', () => ({
   get designFlags() {
     return mockFlags;
@@ -598,7 +626,7 @@ test('Reduce Motion cuts the bar title instead of animating it', () => {
 });
 
 test.each([colors.paper, colors.sunken])(
-  'iOS 26 draws the page ground %p behind the system bar while retaining the hard edge',
+  'iOS 26 roots use scroll-edge ground %p at rest and both native colours only when collapsed',
   (ground) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -606,14 +634,377 @@ test.each([colors.paper, colors.sunken])(
       value: 26,
     });
     try {
-      const options = opaqueBar(ground);
-      expect(options.headerBackground?.()).toMatchObject({
-        props: { style: { backgroundColor: ground } },
+      const options = largeTitleBar(ground);
+      expect(options).toMatchObject({
+        headerStyle: {},
+        headerLargeStyle: { backgroundColor: ground },
+        headerShadowVisible: true,
       });
-      expect(options).not.toHaveProperty('headerStyle');
+      expect(options).not.toHaveProperty('headerBackground');
       expect(options).not.toHaveProperty('headerBlurEffect');
+      expect(largeTitleBar(ground, true).headerStyle).toEqual({
+        backgroundColor: ground,
+      });
     } finally {
       Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
+
+test('quiz and division history keep named native Back buttons and centred inline titles', () => {
+  const resolve = (entry: React.ReactElement, previous: string, params = {}) =>
+    (
+      entry.props as { options: (props: object) => Record<string, unknown> }
+    ).options({
+      route: { key: 'pushed', params },
+      navigation: {
+        getState: () => ({
+          index: 1,
+          routes: [
+            { key: 'root', name: previous },
+            { key: 'pushed', name: entry.key },
+          ],
+        }),
+      },
+    });
+  const quiz = exploreScreens().find(
+    (entry) => entry.props.name === 'explore/[tool]',
+  )!;
+  expect(resolve(quiz, 'explore/index', { tool: 'quiz' })).toMatchObject({
+    title: 'The record quiz',
+    headerBackTitle: 'Quizzes and tools',
+    headerBackButtonDisplayMode: 'default',
+    headerTitleAlign: 'center',
+  });
+  const votes = billsScreens().find(
+    (entry) => entry.props.name === 'division-history',
+  )!;
+  expect(resolve(votes, 'bills')).toMatchObject({
+    title: 'Votes in parliament',
+    headerTitle: 'Votes in parliament',
+    headerTitleAlign: 'center',
+    headerBackTitle: 'Bills',
+  });
+});
+
+const tabCases = [
+  ['(today)', 'index', 'Today'],
+  ['(your-mp)', 'your-mp', 'Your MP'],
+  ['(bills)', 'bills', 'Bills'],
+  ['(search)', 'search', 'Search'],
+  ['(ask)', 'ask', 'Ask'],
+] as const;
+
+test.each(tabCases)(
+  '%s keeps the large title clear after Screen layout and switches colour only on native collapse transitions',
+  (segment, name, title) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const route = { key: 'root', name };
+    const ground = tabRootGround(name);
+    const entry =
+      name === 'ask'
+        ? askScreens(segment).find((entry) => entry.props.name === name)!
+        : tabRootScreen(segment, segment, name, title, false)[0]!;
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: sharedScreens(segment, false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+      setOptions: jest.fn((next: object) => {
+        current = { ...current, ...next };
+      }),
+    };
+    let current = {
+      ...opaqueBar(),
+      ...entry.props.options({ route, navigation }),
+    };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={height}>
+              <Screen grouped={name !== 'bills'}>
+                <View />
+              </Screen>
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const expanded = () => {
+      expect(current.headerStyle).not.toHaveProperty('backgroundColor');
+      expect(current).not.toHaveProperty('headerBlurEffect');
+      expect(current).not.toHaveProperty('headerBackground');
+      expect(current.headerLargeStyle).toEqual({ backgroundColor: ground });
+      expect(current.headerTransparent).toBe(true);
+    };
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      expanded(); // Static options must replace the navigator's opaque default.
+      renderer = tree(page(68)); // NativeStack's first estimated inline height.
+      expanded();
+      navigation.setOptions.mockClear();
+      for (const height of [120, 115, 100, 80])
+        act(() => renderer!.update(page(height)));
+      expanded();
+      expect(navigation.setOptions).not.toHaveBeenCalled();
+      act(() => renderer!.update(page(68)));
+      expect(current.headerStyle).toEqual({ backgroundColor: ground });
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      for (let i = 0; i < 40; i++)
+        act(() => renderer!.update(page(68 + (i % 2) / 2)));
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      act(() => renderer!.update(page(120)));
+      expanded();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
+
+test.each([
+  ['(search)', 'search', false, 56],
+  ['(search)', 'search', true, 56],
+  ['(search)', 'search', false, 60],
+  ['(search)', 'search', false, 64],
+  ['(bills)', 'bills', false, 56],
+] as const)(
+  '%s with a pinned stacked field switches once per collapse transition, route = %s, grouped = %s, search row = %s pt',
+  (segment, name, grouped, searchHeight) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const route = { key: `${name}-root`, name };
+    const ground = grouped ? colors.sunken : colors.paper;
+    let current = largeTitleBar(ground);
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: sharedScreens(segment, false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+      setOptions: jest.fn((next: object) => {
+        current = { ...current, ...next };
+      }),
+    };
+    const options = {
+      headerSearchBarOptions: {
+        hideWhenScrolling: false,
+        placement: 'stacked' as const,
+      },
+    };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <SafeAreaInsetsContext.Provider
+            value={{ top: 24, bottom: 0, left: 0, right: 0 }}
+          >
+            <HeaderHeightContext.Provider value={height}>
+              <RouteOptions options={options} />
+              {name === 'search' && (
+                <Screen grouped={grouped}>
+                  <View />
+                </Screen>
+              )}
+            </HeaderHeightContext.Provider>
+          </SafeAreaInsetsContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const expanded = () => {
+      expect(current.headerStyle).not.toHaveProperty('backgroundColor');
+      expect(current.headerLargeStyle).toEqual({ backgroundColor: ground });
+      expect(current).not.toHaveProperty('headerBlurEffect');
+    };
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      renderer = tree(page(68)); // NativeStack's initial bare inline estimate.
+      expanded();
+      navigation.setOptions.mockClear();
+      const inlineHeight = 24 + 44;
+      const collapsedHeight = inlineHeight + searchHeight;
+      const expandedHeight = collapsedHeight + 52;
+      // Smallest Dynamic Type: a 41 pt title and a 52 pt search row still
+      // leave the standard appearance clear, including on return to the top.
+      const smallestExpandedHeight = inlineHeight + 41 + 52;
+      for (const height of [
+        expandedHeight,
+        expandedHeight - 1,
+        smallestExpandedHeight,
+      ])
+        act(() => renderer!.update(page(height)));
+      expanded();
+      expect(navigation.setOptions).not.toHaveBeenCalled();
+      act(() => renderer!.update(page(collapsedHeight)));
+      expect(current.headerStyle).toEqual({ backgroundColor: ground });
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      for (const height of [
+        collapsedHeight,
+        collapsedHeight + 0.5,
+        120,
+        collapsedHeight,
+        120.5,
+      ])
+        act(() => renderer!.update(page(height)));
+      expect(navigation.setOptions).toHaveBeenCalledTimes(1);
+      act(() => renderer!.update(page(smallestExpandedHeight)));
+      expanded();
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      for (const height of [
+        expandedHeight - 1,
+        expandedHeight,
+        expandedHeight - 2,
+      ])
+        act(() => renderer!.update(page(height)));
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
+
+test.each(['bills', 'ask'])(
+  '%s observes native collapse without a shared Screen',
+  (name) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const route = { key: 'root', name };
+    const setOptions = jest.fn();
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      setOptions,
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: sharedScreens(
+          name === 'bills' ? '(bills)' : '(ask)',
+          false,
+        ).map((entry) => entry.props.name),
+      }),
+    };
+    const options = {
+      title: name,
+      ...(name === 'bills'
+        ? {
+            headerSearchBarOptions: {
+              hideWhenScrolling: true,
+              placement: 'stacked' as const,
+            },
+          }
+        : {}),
+    };
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={height}>
+            <RouteOptions options={options} />
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      renderer = tree(page(152)); // Inline + large title + search field.
+      expect(setOptions).toHaveBeenCalledWith(
+        expect.objectContaining({ headerStyle: {} }),
+      );
+      setOptions.mockClear();
+      // Bills hides its field first. The remaining large title must stay clear.
+      for (const height of [100, 99, 100.5])
+        act(() => renderer!.update(page(height)));
+      expect(setOptions).not.toHaveBeenCalled();
+      act(() => renderer!.update(page(44)));
+      expect(setOptions).toHaveBeenCalledTimes(1);
+      expect(setOptions).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          headerStyle: { backgroundColor: tabRootGround(name) },
+        }),
+      );
+      act(() => renderer!.update(page(100)));
+      expect(setOptions).toHaveBeenCalledTimes(2);
+      expect(setOptions).toHaveBeenLastCalledWith(
+        expect.objectContaining({ headerStyle: {} }),
+      );
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
+
+test.each(['pushed screen', 'sheet'])(
+  '%s keeps both opaque colours on iOS 26',
+  (kind) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const route = {
+      key: 'current',
+      name: kind === 'sheet' ? 'index' : 'bill/[key]',
+    };
+    const setOptions = jest.fn();
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      setOptions,
+      getState: () =>
+        kind === 'sheet'
+          ? { index: 0, routes: [route], routeNames: ['index', 'ask'] }
+          : {
+              index: 1,
+              routes: [{ key: 'root', name: 'index' }, route],
+              routeNames: sharedScreens('(today)', false).map(
+                (entry) => entry.props.name,
+              ),
+            },
+    };
+    const renderer = tree(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={120}>
+            <Screen grouped>
+              <View />
+            </Screen>
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+    try {
+      expect(setOptions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          headerStyle: { backgroundColor: colors.sunken },
+          headerLargeStyle: { backgroundColor: colors.sunken },
+        }),
+      );
+    } finally {
+      act(() => renderer.unmount());
+      Object.defineProperty(Platform, 'Version', version);
     }
   },
 );

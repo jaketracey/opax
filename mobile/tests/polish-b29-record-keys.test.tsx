@@ -16,6 +16,9 @@ import { decodeRecords } from '../src/features/search/decoders';
 
 const mockFocus = { active: true, listeners: new Set<() => void>() };
 const mockNavigation = {
+  setOptions: (options: Record<string, unknown>) => {
+    if (options.headerSearchBarOptions) mockBar.options = options;
+  },
   isFocused: () => mockFocus.active,
   addListener: (_event: string, listener: () => void) => {
     mockFocus.listeners.add(listener);

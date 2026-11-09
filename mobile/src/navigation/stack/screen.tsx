@@ -5,8 +5,10 @@ import {
   closeSheetItem,
   glassBar,
   headerItems,
+  largeTitleBar,
   rootHeaderItems,
   shortSheet,
+  tabRootGround,
   type TabSegment,
 } from '../chrome';
 import { emptyBarTitle } from '../useTitleOnScroll';
@@ -133,6 +135,7 @@ export function tabRootScreen(
   return segment === expected
     ? [
         screen(name, title, {
+          ...largeTitleBar(tabRootGround(name)),
           headerLargeTitleEnabled: true,
           // Translucent for the native large-title collapse on iOS 26 and
           // later only; iOS 18.4 to 25 keeps the opaque bar (shell.md 2.3).

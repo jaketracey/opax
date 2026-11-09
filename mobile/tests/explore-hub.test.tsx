@@ -1,3 +1,4 @@
+import { RouteOptions } from '../src/navigation/preview';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
 import { router } from 'expo-router';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
@@ -144,8 +145,7 @@ test('with a round left at question 4, the quiz tile resumes it', () => {
 
 test('every Explore screen gets Share and one menu: Copy link, then Open on opax.com.au', () => {
   const renderer = render(<ExploreChrome game="quiz" params={{ q: 'q1' }} />);
-  const options = renderer.root.findByType('StackScreen' as never).props
-    .options;
+  const options = renderer.root.findByType(RouteOptions).props.options;
   expect(options.title).toBeUndefined();
   const items = options.unstable_headerRightItems();
   expect(items.map((item: { label: string }) => item.label)).toEqual([

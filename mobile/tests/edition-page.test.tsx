@@ -1,5 +1,6 @@
+import { RouteOptions } from '../src/navigation/preview';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation and Skia are inert hosts in component tests. */
-import { Stack, router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act, type ReactElement } from 'react';
@@ -680,7 +681,7 @@ describe('the native edition reader', () => {
   });
   test('bar holds Share then More with its three items; Ask about this is a row that drafts', async () => {
     const { root } = await render(<EditionStory />);
-    const options = root.findByType(Stack.Screen).props.options;
+    const options = root.findByType(RouteOptions).props.options;
     const items = options.unstable_headerRightItems();
     expect(items.map((item: { label: string }) => item.label)).toEqual([
       'Share',

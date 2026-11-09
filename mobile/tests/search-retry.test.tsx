@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 // Recovery in Search (journeys/search.md 3.9): a failure never reads as
 // empty, an error sits in the group or at the row that failed, Try again
 // repeats only that, and every empty state has a way on.
@@ -105,7 +106,11 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
 async function mount() {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<Search />);
+    r = TestRenderer.create(
+      withNavigationOptions(<Search />, (options) => {
+        if (options.headerSearchBarOptions) mockBar.options = options;
+      }),
+    );
   });
   return r;
 }

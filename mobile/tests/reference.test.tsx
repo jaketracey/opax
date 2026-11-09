@@ -37,7 +37,6 @@ import { opaqueBar } from '../src/navigation/chrome';
 import { colors } from '../src/design/tokens';
 import { pinned } from './pinned';
 
-let mockBar: unknown = null;
 jest.mock('expo-router', () => {
   const React = jest.requireActual<typeof import('react')>('react');
   const { Pressable } =
@@ -56,12 +55,7 @@ jest.mock('expo-router', () => {
   return {
     Link,
     Stack: {
-      Screen: (props: { name?: string; options?: unknown }) => {
-        // The stack modules read Screen elements' props; a page's own
-        // options are kept for the bar checks.
-        if (!props.name) mockBar = props.options;
-        return null;
-      },
+      Screen: () => null,
     },
     router: { push: jest.fn(), back: jest.fn() },
   };
@@ -220,9 +214,8 @@ const resolvedOptions = () =>
 
 describe('Methods', () => {
   test('on paper under a paper bar, inside the sunken Account sheet', async () => {
-    mockBar = null;
     await render(<Methods />, false);
-    expect(mockBar).toEqual(paperBar);
+    expect(resolvedOptions()).toMatchObject(paperBar);
     expect(paperBar).toEqual(opaqueBar(colors.paper));
   });
 

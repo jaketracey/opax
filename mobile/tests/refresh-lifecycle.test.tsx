@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
 import { RefreshControl } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -207,7 +208,11 @@ test('a later Search focus restores identity context without native refreshing',
     .mockReturnValueOnce(recovered.promise);
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<Search />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<Search />, (options) => {
+        if (options.headerSearchBarOptions) mockOptions.current = options;
+      }),
+    );
   });
   await act(async () =>
     mockOptions.current!.headerSearchBarOptions.onChangeText({

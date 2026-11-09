@@ -1,4 +1,5 @@
-import { router, Stack } from 'expo-router';
+import { RouteOptions } from '../src/navigation/preview';
+import { router } from 'expo-router';
 import { act, Children, type ReactElement } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -404,7 +405,7 @@ test('template has plain Done and Cancel, no Apply, and Reset only while a filte
   const props = { model, value: model.initial, onChange, onDone, onCancel };
   const renderer = render(<FilterSheet {...props} />);
   expect(renderer.root.findAllByType(Button)).toHaveLength(0);
-  const options = renderer.root.findByType(Stack.Screen).props.options;
+  const options = renderer.root.findByType(RouteOptions).props.options;
   expect(options.unstable_headerRightItems()[0]).toMatchObject({
     label: 'Done',
     variant: 'plain',

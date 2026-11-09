@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { useEffect as mockUseEffect } from 'react';
 import { Platform } from 'react-native';
@@ -114,7 +115,11 @@ it('Android Community exposes its web boundary without native reads or missing s
     mockFocused = true;
     mockParams = { view: 'messages' };
     await act(async () => {
-      screen = create(<CommunityScreen />);
+      screen = create(
+        withNavigationOptions(<CommunityScreen />, (options) => {
+          mockOptions = options;
+        }),
+      );
     });
     expect(request).not.toHaveBeenCalled();
     expect(
@@ -135,25 +140,45 @@ it('Android Community exposes its web boundary without native reads or missing s
 it('does not read on an unfocused mount or redraw, and reads one time when explicitly opened', async () => {
   request.mockResolvedValue(reply({ threads: [], more: false }));
   await act(async () => {
-    screen = create(<CommunityScreen />);
+    screen = create(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   expect(request).not.toHaveBeenCalled();
   mockFocused = true;
   await act(async () => {
-    screen.update(<CommunityScreen />);
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   expect(request).toHaveBeenCalledTimes(1);
   await act(async () => {
-    screen.update(<CommunityScreen />);
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   expect(request).toHaveBeenCalledTimes(1);
   mockFocused = false;
   await act(async () => {
-    screen.update(<CommunityScreen />);
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   mockFocused = true;
   await act(async () => {
-    screen.update(<CommunityScreen />);
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   expect(request).toHaveBeenCalledTimes(1);
 });
@@ -161,7 +186,11 @@ it('searches only on explicit submit, and ignores an unchanged trimmed query', a
   mockFocused = true;
   request.mockResolvedValue(reply({ threads: [], more: false }));
   await act(async () => {
-    screen = create(<CommunityScreen />);
+    screen = create(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   const input = () =>
     screen.root.findAll(
@@ -182,7 +211,13 @@ it('searches only on explicit submit, and ignores an unchanged trimmed query', a
     }),
   );
   mockParams = { view: 'home', feed: 'all', q: 'bill' };
-  await act(async () => screen.update(<CommunityScreen />));
+  await act(async () =>
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    ),
+  );
   expect(request).toHaveBeenCalledTimes(2);
   expect(request.mock.calls[1]![0]).toContain('q=bill');
   await act(async () => input().props.onChangeText(' bill '));
@@ -209,7 +244,11 @@ it('gates the first reply on guidelines with no write, and clears drafts across 
     }),
   );
   await act(async () => {
-    screen = create(<CommunityScreen />);
+    screen = create(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   await act(async () => {
     screen.root
@@ -227,13 +266,21 @@ it('gates the first reply on guidelines with no write, and clears drafts across 
   );
   mockFocused = false;
   await act(async () => {
-    screen.update(<CommunityScreen />);
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
     clearCommunity();
   });
   expect(request).toHaveBeenCalledTimes(1);
   mockFocused = true;
   await act(async () => {
-    screen.update(<CommunityScreen />);
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   expect(
     screen.root.findAll(
@@ -262,7 +309,11 @@ it('clears a draft when a deep link reuses the dynamic route for another discuss
     }),
   );
   await act(async () => {
-    screen = create(<CommunityScreen />);
+    screen = create(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   await act(async () => {
     screen.root
@@ -275,7 +326,11 @@ it('clears a draft when a deep link reuses the dynamic route for another discuss
   });
   mockParams = { view: 'thread', id: 'discussion-b' };
   await act(async () => {
-    screen.update(<CommunityScreen />);
+    screen.update(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   expect(
     screen.root.findAll(
@@ -299,7 +354,11 @@ it('signed out, the home shows Latest only and one sign-in prompt for the member
   mockSignedIn = false;
   request.mockResolvedValue(reply({ threads: [], more: false }));
   await act(async () => {
-    screen = create(<CommunityScreen />);
+    screen = create(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   const shown = ids();
   expect(shown.has('community-feeds')).toBe(false);
@@ -323,13 +382,17 @@ it('signed out, the home shows Latest only and one sign-in prompt for the member
   expect(shown.has('community-open-guidelines')).toBe(true);
   // Refresh is a pull, not a drawn button.
   expect(shown.has('community-refresh')).toBe(false);
-  expect(mockOptions).toEqual({ title: 'Community' });
+  expect(mockOptions).toMatchObject({ title: 'Community' });
 });
 it('signed in, the home keeps the feeds, Start a discussion and the member pages', async () => {
   mockFocused = true;
   request.mockResolvedValue(reply({ threads: [], more: false }));
   await act(async () => {
-    screen = create(<CommunityScreen />);
+    screen = create(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   const shown = ids();
   expect(shown.has('community-feeds')).toBe(true);
@@ -362,9 +425,13 @@ it('a discussion is titled once, by its heading; a reply is reported from its by
     }),
   );
   await act(async () => {
-    screen = create(<CommunityScreen />);
+    screen = create(
+      withNavigationOptions(<CommunityScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
-  expect(mockOptions).toEqual({ title: 'Discussion', headerTitle: '' });
+  expect(mockOptions).toMatchObject({ title: 'Discussion', headerTitle: '' });
   const flag = screen.root.findAll(
     (n) => n.props.testID === 'community-report-reply-reply-a',
   )[0]!;

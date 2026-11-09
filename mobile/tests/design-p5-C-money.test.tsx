@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act } from 'react';
@@ -113,7 +114,11 @@ beforeEach(() => {
 async function render(Screen: () => React.ReactNode) {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<Screen />);
+    r = TestRenderer.create(
+      withNavigationOptions(<Screen />, (options) => {
+        mockOptions.current = options;
+      }),
+    );
   });
   for (let i = 0; i < 3; i++)
     await act(async () => {
@@ -306,7 +311,13 @@ describe('P3-12: months by name and dates in words', () => {
         expect(scroll).not.toHaveBeenCalled();
         expect(timing).not.toHaveBeenCalled();
         mockParams.month = months[1]!;
-        await act(async () => r.update(<Largest />));
+        await act(async () =>
+          r.update(
+            withNavigationOptions(<Largest />, (options) => {
+              mockOptions.current = options;
+            }),
+          ),
+        );
         expect(scroll).toHaveBeenCalledTimes(1);
         expect(scroll.mock.calls[0]![0]).toMatchObject({ animated: false });
         expect(scroll.mock.calls[0]![0].offset).toBeLessThanOrEqual(0);

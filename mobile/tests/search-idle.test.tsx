@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 // TestFlight build 32 (10 Oct): "App froze on this screen" on the idle Search
 // tab, and Browse showed placeholder rows that "disappear without loading
 // anything". Both came from the suggestion catalogs Search loads on focus.
@@ -97,7 +98,11 @@ test('idle Browse never shows a placeholder for suggestions it does not draw', a
   );
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<Search />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<Search />, (options) => {
+        if (options.headerSearchBarOptions) mockBar.options = options;
+      }),
+    );
   });
   // Idle, still loading: the Browse links and no placeholder rows.
   expect(renderer.root.findAllByType(Skeleton)).toHaveLength(0);
@@ -125,7 +130,11 @@ test('an empty roster never says "No suggestions": the two fixed rows remain', a
   );
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<Search />);
+    r = TestRenderer.create(
+      withNavigationOptions(<Search />, (options) => {
+        if (options.headerSearchBarOptions) mockBar.options = options;
+      }),
+    );
   });
   await type('zzzzzz');
   expect(ids(r)).not.toContain('search-suggestions-empty');

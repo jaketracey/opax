@@ -4,6 +4,38 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import config from '../app.config';
 import { policy } from '../plugins/voiceProduction';
+
+// app.config.ts is the approved source for both device-specific prompts.
+// The Python archive/IPA verifier reads this same projection through Node.
+export const locationPurposes = Object.fromEntries(
+  Object.entries(config.ios?.infoPlist ?? {}).filter(([key]) =>
+    /^NSLocationWhenInUseUsageDescription(?:~ipad)?$/.test(key),
+  ),
+);
+assert.deepEqual(Object.keys(locationPurposes).sort(), [
+  'NSLocationWhenInUseUsageDescription',
+  'NSLocationWhenInUseUsageDescription~ipad',
+]);
+for (const value of Object.values(locationPurposes))
+  assert(typeof value === 'string' && value.trim());
+
+export function assertLocationPurposes(plist: Record<string, unknown>) {
+  for (const [key, value] of Object.entries(locationPurposes))
+    assert.equal(plist[key], value, key);
+}
+
+if (process.argv.includes('--location-purposes')) {
+  console.log(JSON.stringify(locationPurposes));
+  process.exit(0);
+}
+if (process.argv.includes('--location-only')) {
+  const path = process.argv[process.argv.indexOf('--location-only') + 1];
+  assert(path, '--location-only requires a plist JSON path');
+  assertLocationPurposes(JSON.parse(readFileSync(path, 'utf8')));
+  console.log('PASS native location purpose strings');
+  process.exit(0);
+}
+
 const productionVoice = config.extra?.productionVoiceEnabled === true;
 const plist = JSON.parse(
   execFileSync(
@@ -12,10 +44,7 @@ const plist = JSON.parse(
     { encoding: 'utf8' },
   ),
 );
-assert.equal(
-  plist.NSLocationWhenInUseUsageDescription,
-  'OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere.',
-);
+assertLocationPurposes(plist);
 assert.equal(plist.NSMotionUsageDescription, undefined);
 assert(
   !plist.NSLocationAlwaysUsageDescription &&
@@ -87,11 +116,20 @@ assert.deepEqual(plist.UIApplicationSceneManifest, {
 });
 // The actual Sources phase must compile the patched modules rather than a
 // prebuilt framework. Grepping node_modules alone cannot prove this.
-const sources = readFileSync('ios/Pods/Pods.xcodeproj/project.pbxproj', 'utf8');
+const sources = readFileSync(
+  'ios/Pods/Pods.xcodeproj/project.pbxproj',
+  'utf8',
+);
 const pods = JSON.parse(
   execFileSync(
     '/usr/bin/plutil',
-    ['-convert', 'json', '-o', '-', 'ios/Pods/Pods.xcodeproj/project.pbxproj'],
+    [
+      '-convert',
+      'json',
+      '-o',
+      '-',
+      'ios/Pods/Pods.xcodeproj/project.pbxproj',
+    ],
     { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 },
   ),
 );
@@ -103,7 +141,9 @@ const phases = reactTarget.buildPhases.map((id) => pods.objects[id]);
 const replacement = phases.findIndex((item) =>
   item.name?.includes('[RNCore] Replace React Native Core'),
 );
-const copy = phases.findIndex((item) => item.name === '[CP] Copy XCFrameworks');
+const copy = phases.findIndex(
+  (item) => item.name === '[CP] Copy XCFrameworks',
+);
 assert(
   replacement >= 0 && copy > replacement,
   'React replacement and privacy staging precede XCFramework copying',

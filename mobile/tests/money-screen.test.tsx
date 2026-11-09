@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { apiClient } from '../src/api/runtime';
@@ -76,7 +77,11 @@ const graph = decodeMoneyGraph(pinned('/graph/money.json'));
 async function render() {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<MoneyScreen />);
+    renderer = TestRenderer.create(
+      withNavigationOptions(<MoneyScreen />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   return renderer;
 }
@@ -306,7 +311,11 @@ test('every push from the map carries via=map', async () => {
 test('a donors search with no match keeps its caption over one plain line', async () => {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<MoneyDonors />);
+    r = TestRenderer.create(
+      withNavigationOptions(<MoneyDonors />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
   await act(async () =>
@@ -329,7 +338,11 @@ test('the donors page states an industry window in plain words', async () => {
   Object.assign(mockParams, { industry: 'unions' });
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<MoneyDonors />);
+    r = TestRenderer.create(
+      withNavigationOptions(<MoneyDonors />, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   expect(byTestID(r, Text, 'money-donors-window')!.props.children).toBe(
     'union donors',

@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 // The record reader (records.md 2): Ask and Share in the bottom toolbar,
 // a grant or contract's organisation row only with its id, plain-language
 // states, the find bar for an incoming query, the Citation formats deep
@@ -82,7 +83,11 @@ jest.mock('expo-router', () => {
 async function mount(component: React.ReactElement) {
   let view!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    view = TestRenderer.create(component);
+    view = TestRenderer.create(
+      withNavigationOptions(component, (options) => {
+        mockOptions = options;
+      }),
+    );
   });
   return view;
 }

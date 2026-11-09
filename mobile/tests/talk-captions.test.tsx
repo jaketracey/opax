@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 import { act, useEffect } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { useCaptionsPreference } from '../src/features/talk/captions-preference';
@@ -155,7 +156,9 @@ test('in a call with captions hidden from ⋯, the large orb is on the stage and
           insets: { top: 0, left: 0, right: 0, bottom: 34 },
         }}
       >
-        <TalkScreen />
+        {withNavigationOptions(<TalkScreen />, (options) => {
+          mockOptions = options;
+        })}
       </SafeAreaProvider>,
     );
   });

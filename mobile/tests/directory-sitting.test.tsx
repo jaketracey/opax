@@ -1,3 +1,4 @@
+import { withNavigationOptions } from './navigation-options';
 // TestFlight build 32 (10 Oct): the Parliamentarians list's party labels
 // (AILRB_Cd), its order (ACzcQOFB) and a sitting-only filter (ALUtpHq6).
 // people.md 2.3 and 2.6: sticky sections, place lines, the shared sheet.
@@ -96,7 +97,11 @@ async function open() {
   jest.mocked(loadDirectory).mockResolvedValue(directory);
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<DirectoryScreen />);
+    r = TestRenderer.create(
+      withNavigationOptions(<DirectoryScreen />, (options) => {
+        mockScreen.options = options;
+      }),
+    );
   });
   return r;
 }
