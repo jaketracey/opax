@@ -57,12 +57,21 @@ import { askGround } from './ground';
 import type { Followup } from './model';
 import { openAskOptions, topics } from './Options';
 import { rosterProfiles, type AskPerson } from './people';
-import { arriveInAsk, askQuestion, askSession, type AskScope } from './session';
+import {
+  arriveInAsk,
+  askQuestion,
+  askSession,
+  markArrival,
+  scopeOptions,
+  type AskScope,
+} from './session';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
 import { stopCopy } from './turn-copy';
 
 const topicNames = Object.values(topics);
+// Remember blank arrivals across remounts; real drafts use the session guard.
+const handledBlankEntries = new Set<string>();
 const announce = (text: string) =>
   AccessibilityInfo.announceForAccessibilityWithOptions(text, { queue: true });
 
@@ -124,9 +133,7 @@ export default function AskScreen() {
   }, []);
   // A deep link's draft (useOpenAsk handles taps inside the app itself).
   useEffect(() => {
-    // A bare /ask link has an entry token too, but no draft to edit.
-    // Leave that first view at rest, with starters and the tab bar visible.
-    if (!params.entry || !params.question?.trim()) return;
+    if (!params.entry) return;
     const scope: AskScope = { question: params.question ?? '' };
     for (const k of [
       'speaker',
@@ -138,7 +145,14 @@ export default function AskScreen() {
       'kind',
     ] as const)
       if (params[k]) scope[k] = params[k];
-    arriveInAsk(scope, params.entry);
+    if (scope.question.trim()) arriveInAsk(scope, params.entry);
+    else if (!handledBlankEntries.has(params.entry)) {
+      handledBlankEntries.add(params.entry);
+      if (handledBlankEntries.size > 32)
+        handledBlankEntries.delete(handledBlankEntries.values().next().value!);
+      markArrival(params.entry);
+      askSession.arrive('', scopeOptions(scope));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.entry]);
   // Each stage is announced once, politely; the line is not a live region.

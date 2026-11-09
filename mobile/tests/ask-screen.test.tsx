@@ -28,7 +28,7 @@ import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
 import { designFlags } from '../src/design/flags';
-import { conversationsRoute } from '../src/navigation/routes/ask';
+import { askRoute, conversationsRoute } from '../src/navigation/routes/ask';
 import { useSeat } from '../src/features/your-mp/useSeat';
 import { startersFor } from '../src/features/ask/starters';
 import {
@@ -248,6 +248,145 @@ test.each([undefined, '/ask', '/ask?q=%20%20'])(
     }
   },
 );
+
+async function showParams(params: object, mounted: boolean) {
+  jest.mocked(useLocalSearchParams).mockReturnValue(params);
+  if (!mounted) return mount();
+  await act(async () => {
+    view!.update(
+      withNavigationOptions(<AskScreen />, (options) => {
+        mockBar.options = options;
+      }),
+    );
+  });
+}
+
+function openSavedConversation() {
+  jest.mocked(chatsSnapshot).mockReturnValue(oneChat);
+  act(() => askSession.open('saved-fixture'));
+  expect(askSession.snapshot().thread.length).toBeGreaterThan(0);
+  expect(askSession.snapshot().busy).toBe(false);
+}
+
+test.each([false, true])(
+  'a bare Ask arrival starts a new conversation without focusing, already mounted = %s',
+  async (mounted) => {
+    const restore = immediateFocusRequests();
+    const announce = jest.spyOn(
+      AccessibilityInfo,
+      'announceForAccessibilityWithOptions',
+    );
+    try {
+      openSavedConversation();
+      if (mounted) await mount();
+      const params = (fromWebPath('/ask') as { params: object }).params;
+      await showParams(params, mounted);
+      expect(askSession.snapshot()).toMatchObject({
+        id: null,
+        thread: [],
+        draft: '',
+        busy: false,
+      });
+      expect(TextInput.prototype.focus).not.toHaveBeenCalled();
+      expect(announce).not.toHaveBeenCalledWith(
+        'Draft added.',
+        expect.anything(),
+      );
+    } finally {
+      announce.mockRestore();
+      restore();
+    }
+  },
+);
+
+test.each([
+  ['speaker', 'Sam Placeholder'],
+  ['party', 'Example Party'],
+])('a blank scoped Ask link applies %s without focusing', async (key, name) => {
+  const restore = immediateFocusRequests();
+  try {
+    const params = (
+      fromWebPath(`/ask?${key}=${encodeURIComponent(name!)}`) as {
+        params: object;
+      }
+    ).params;
+    await showParams(params, false);
+    expect(askSession.snapshot().options).toMatchObject({ [key!]: name });
+    expect(askSession.snapshot().draft).toBe('');
+    expect(TextInput.prototype.focus).not.toHaveBeenCalled();
+  } finally {
+    restore();
+  }
+});
+
+test.each([false, true])(
+  'Cmd-N starts a new conversation and focuses once, already mounted = %s',
+  async (mounted) => {
+    const restore = immediateFocusRequests();
+    try {
+      openSavedConversation();
+      if (mounted) await mount();
+      act(() => requestFocus('ask'));
+      await showParams(askRoute({ question: '' }).params, mounted);
+      expect(askSession.snapshot()).toMatchObject({
+        id: null,
+        thread: [],
+        draft: '',
+      });
+      expect(TextInput.prototype.focus).toHaveBeenCalledTimes(1);
+      expect(client.askPost).not.toHaveBeenCalled();
+    } finally {
+      restore();
+    }
+  },
+);
+
+test.each([false, true])(
+  'the same blank entry arrives once and is marked in the session, remount = %s',
+  async (remount) => {
+    const restore = immediateFocusRequests();
+    const arrive = jest.spyOn(askSession, 'arrive');
+    try {
+      const params = askRoute({ question: '  ' }).params;
+      await showParams(params, false);
+      expect(arrive).toHaveBeenCalledTimes(1);
+      expect(arrive).toHaveBeenCalledWith('', expect.anything());
+      await type('A draft the reader is editing');
+      const after = askSession.snapshot();
+      if (remount) {
+        await act(async () => view!.unmount());
+        view = null;
+      }
+      await showParams(params, !remount);
+      expect(arrive).toHaveBeenCalledTimes(1);
+      expect(askSession.snapshot()).toBe(after);
+      act(() => arriveInAsk({ question: 'Duplicate arrival' }, params.entry));
+      expect(askSession.snapshot()).toBe(after);
+      expect(TextInput.prototype.focus).not.toHaveBeenCalled();
+    } finally {
+      arrive.mockRestore();
+      restore();
+    }
+  },
+);
+
+test('the blank arrival guard keeps only the latest 32 entries', async () => {
+  const restore = immediateFocusRequests();
+  const arrive = jest.spyOn(askSession, 'arrive');
+  try {
+    const first = askRoute({ question: '' }).params;
+    await showParams(first, false);
+    for (let i = 0; i < 32; i++)
+      await showParams(askRoute({ question: '' }).params, true);
+    expect(arrive).toHaveBeenCalledTimes(33);
+    await showParams(first, true);
+    expect(arrive).toHaveBeenCalledTimes(34);
+    expect(TextInput.prototype.focus).not.toHaveBeenCalled();
+  } finally {
+    arrive.mockRestore();
+    restore();
+  }
+});
 
 test('prefill and explicit focus requests still focus, including before mount and tab reselect', async () => {
   const restore = immediateFocusRequests();
