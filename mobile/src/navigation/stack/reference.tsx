@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
-import { screen } from './screen';
+import { screen, screenInStack } from './screen';
 
 const android =
   Platform.OS === 'android' ? { header: AndroidReadingHeader } : {};
@@ -13,6 +13,7 @@ const android =
  * scroll.
  */
 export function referenceScreens() {
+  const screen = screenInStack('Account');
   return [
     screen('about', 'About OPAX', android, false, true),
     screen('coverage', 'Coverage', android, false, true),
@@ -32,6 +33,7 @@ export function referenceScreens() {
  * Back; Sources and licences and its lists push beneath it.
  */
 export function licenceScreens() {
+  const screen = screenInStack('Dataset');
   return [
     screen('[id]', 'Dataset', android, false, true),
     screen('sources/index', 'Sources and licences', android, false, true),

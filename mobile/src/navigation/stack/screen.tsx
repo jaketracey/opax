@@ -47,11 +47,24 @@ export function rootBackTitle(
       }
     | undefined,
   key: string | undefined,
+  stackRootTitle?: string,
 ): string | undefined {
   const routes = navigation?.getState?.()?.routes ?? [];
   const at = routes.findIndex((route) => route.key === key);
   const previous = at > 0 ? routes[at - 1] : undefined;
+  if (at === 1 && stackRootTitle) return stackRootTitle;
   return previous?.name ? rootTitles[previous.name] : undefined;
+}
+
+/** A modal's root has its own name, independent of the presenting tab. */
+export function screenInStack(rootTitle: string) {
+  return (
+    name: string,
+    title: string,
+    options: NativeStackNavigationOptions = {},
+    redirect = false,
+    doneWhenRoot = false,
+  ) => screen(name, title, options, redirect, doneWhenRoot, rootTitle);
 }
 
 /** Non-empty route titles also supply the next screen's named Back button. */
@@ -61,6 +74,7 @@ export function screen(
   options: NativeStackNavigationOptions = {},
   redirect = false,
   doneWhenRoot = false,
+  stackRootTitle?: string,
 ) {
   return (
     <Stack.Screen
@@ -74,8 +88,15 @@ export function screen(
             ? (route.params as { name: string }).name
             : title,
         headerLargeTitleEnabled: false,
-        ...(Platform.OS === 'ios' && rootBackTitle(navigation, route.key)
-          ? { headerBackTitle: rootBackTitle(navigation, route.key) }
+        ...(Platform.OS === 'ios' &&
+        rootBackTitle(navigation, route.key, stackRootTitle)
+          ? {
+              headerBackTitle: rootBackTitle(
+                navigation,
+                route.key,
+                stackRootTitle,
+              ),
+            }
           : {}),
         ...(doneWhenRoot && navigation?.getState().index === 0
           ? headerItems(() => [closeSheetItem()])

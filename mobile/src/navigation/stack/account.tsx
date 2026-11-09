@@ -1,7 +1,8 @@
 import { Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import { voiceLinked } from '../../voice/linked';
-import { screen } from './screen';
+import { screenInStack } from './screen';
+const screen = screenInStack('Account');
 import { closeSheetItem, headerItems } from '../chrome';
 export function accountScreens() {
   const hidden = Platform.OS === 'android' && !voiceLinked;
