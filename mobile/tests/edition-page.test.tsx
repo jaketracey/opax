@@ -706,71 +706,95 @@ describe('the native edition reader', () => {
     expect(mockOnScroll).toHaveBeenCalledWith(240);
     expect(root.findByType(Plate).props.onTitleLayout).toBe(mockOnTitleLayout);
   });
-  test('bar holds Share then More with its three items; Ask about this is a row that drafts', async () => {
-    const { root } = await render(<EditionStory />);
-    const options = root.findByType(RouteOptions).props.options;
-    const items = options.unstable_headerRightItems();
-    expect(items.map((item: { label: string }) => item.label)).toEqual([
-      'Share',
-      'More',
-    ]);
-    expect(
-      items[1].menu.items.map((item: { label: string }) => item.label),
-    ).toEqual(['Copy link', 'Open on the website', 'How this is chosen']);
-    const ask = root
-      .findAllByType(LinkRow)
-      .find((row) => row.props.testID === 'edition-ask')!;
-    expect(ask.props).toMatchObject({
-      title: 'Ask about this',
-      symbol: symbols.ask,
-    });
-    act(() => ask.props.onPress());
-    expect(router.navigate).toHaveBeenCalledWith(
-      expect.objectContaining({
-        params: expect.objectContaining({
-          question: editionQuestion(root.findByType(Plate).props.edition),
+  test.each(['ios', 'android'] as const)(
+    '%s bar holds Share then More with the website wording intact at AX5; Ask about this drafts',
+    async (platform) => {
+      Platform.OS = platform;
+      Dimensions.set({
+        window: { width: 390, height: 844, scale: 3, fontScale: 3.1 },
+        screen: { width: 390, height: 844, scale: 3, fontScale: 3.1 },
+      });
+      const { root } = await render(<EditionStory />);
+      const options = root.findByType(RouteOptions).props.options;
+      const items = options.unstable_headerRightItems();
+      expect(items.map((item: { label: string }) => item.label)).toEqual([
+        'Share',
+        'More',
+      ]);
+      expect(
+        items[1].menu.items.map((item: { label: string }) => item.label),
+      ).toEqual(['Copy link', 'Open on the website', 'How this is chosen']);
+      expect(items[1]).toMatchObject({
+        type: 'menu',
+        accessibilityLabel: 'More for Daily edition',
+      });
+      expect(items[1].menu.items[1].label).not.toMatch(/[\n\r\u200b\u00ad]/u);
+      const ask = root
+        .findAllByType(LinkRow)
+        .find((row) => row.props.testID === 'edition-ask')!;
+      expect(ask.props).toMatchObject({
+        title: 'Ask about this',
+        symbol: symbols.ask,
+      });
+      act(() => ask.props.onPress());
+      expect(router.navigate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          params: expect.objectContaining({
+            question: editionQuestion(root.findByType(Plate).props.edition),
+          }),
         }),
-      }),
-    );
-    expect(catalogs.todayEdition).toHaveBeenCalledTimes(1);
-    act(() => items[0].onPress());
-    expect(shareRecord).toHaveBeenCalledWith({
-      title: edition.title,
-      path: edition.path,
-    });
-    expect(openOnWeb).not.toHaveBeenCalled();
-    act(() => items[1].menu.items[1].onPress());
-    expect(openOnWeb).toHaveBeenCalledWith(edition.path, edition.title);
-  });
-  test('How this is chosen presents the edition rule and draws its content', async () => {
-    const { root } = await render(<EditionStory />);
-    const items = root
-      .findByType(RouteOptions)
-      .props.options.unstable_headerRightItems();
-    const action = items[1].menu.items.find(
-      (item: { label: string }) => item.label === 'How this is chosen',
-    );
-    act(() => action.onPress());
-    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
-      pathname: string;
-      params: { key: string };
-    };
-    expect(route).toEqual({
-      pathname: '/rule',
-      params: { key: expect.any(String) },
-    });
-    expect(sheetPayload(route.params.key, 'rule')).toMatchObject({
-      kind: 'rule',
-      title: 'How this is chosen',
-      rule: EDITION_RULE,
-    });
-    mockParams = route.params;
-    const sheet = await render(<RuleSheet />);
-    expect(
-      sheet.root.findAllByType(Text).map((n) => n.props.children),
-    ).toContain(EDITION_RULE);
-    expect(sheet.root.findAllByType(ContentUnavailable)).toHaveLength(0);
-  });
+      );
+      expect(catalogs.todayEdition).toHaveBeenCalledTimes(1);
+      act(() => items[0].onPress());
+      expect(shareRecord).toHaveBeenCalledWith({
+        title: edition.title,
+        path: edition.path,
+      });
+      expect(openOnWeb).not.toHaveBeenCalled();
+      act(() => items[1].menu.items[1].onPress());
+      expect(openOnWeb).toHaveBeenCalledWith(edition.path, edition.title);
+    },
+  );
+  test.each(['ios', 'android'] as const)(
+    '%s How this is chosen presents the edition rule and draws its content at AX5',
+    async (platform) => {
+      Platform.OS = platform;
+      Dimensions.set({
+        window: { width: 390, height: 844, scale: 3, fontScale: 3.1 },
+        screen: { width: 390, height: 844, scale: 3, fontScale: 3.1 },
+      });
+      const { root } = await render(<EditionStory />);
+      const items = root
+        .findByType(RouteOptions)
+        .props.options.unstable_headerRightItems();
+      const action = items[1].menu.items.find(
+        (item: { label: string }) => item.label === 'How this is chosen',
+      );
+      act(() => action.onPress());
+      const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+        pathname: string;
+        params: { key: string };
+      };
+      expect(route).toEqual({
+        pathname: '/rule',
+        params: { key: expect.any(String) },
+      });
+      expect(sheetPayload(route.params.key, 'rule')).toMatchObject({
+        kind: 'rule',
+        title: 'How this is chosen',
+        rule: EDITION_RULE,
+      });
+      mockParams = route.params;
+      const sheet = await render(<RuleSheet />);
+      expect(
+        sheet.root.findAllByType(Text).map((n) => n.props.children),
+      ).toContain(EDITION_RULE);
+      expect(sheet.root.findAllByType(ContentUnavailable)).toHaveLength(0);
+      expect(sheet.root.findByType(RouteOptions).props.options.title).toBe(
+        'How this is chosen',
+      );
+    },
+  );
   test('iOS draws no bottom toolbar, which the floating tab bar would cover', async () => {
     Platform.OS = 'ios';
     const { root } = await render(<EditionStory />);
