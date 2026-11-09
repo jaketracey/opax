@@ -29,7 +29,9 @@ class StartupAllowance:
     Older runners do not forward their server signal, so launch is the fallback.
     The separate overall flow deadline always bounds both phases together.
     """
-    server_started = re.compile(r'\bserver\s+started\b', re.IGNORECASE)
+    server_started = re.compile(
+        r'\bserver\s+started\b|\[FlyingFox\]\s+starting server\b', re.IGNORECASE,
+    )
     ready = '[Done] Perform XCUITest driver status check'
     probe = '[Failed] Perform XCUITest driver status check'
 
@@ -64,6 +66,18 @@ def startup_timeout_seconds():
     )
 
 
+def log_sources(log, debug):
+    # Read runner readiness before queued console probes. XCTest's own unit
+    # tests can print deliberate transport errors, so use these logs for the
+    # server-start signal only. Device syslogs are never a transport source.
+    root = Path(debug)
+    runner = {*root.rglob('xctest_runner_*.log'), *root.rglob('device-xctest.log')}
+    maestro = set(root.rglob('maestro.log')) - {Path(log)}
+    return [(path, False) for path in sorted(runner)] + [
+        (Path(log), True), *((path, True) for path in sorted(maestro)),
+    ]
+
+
 def run(log, debug, seconds, *command):
     limit = positive_seconds(seconds, 'OPAX_MAESTRO_TIMEOUT_SECONDS')
     startup_seconds = startup_timeout_seconds()
@@ -71,12 +85,9 @@ def run(log, debug, seconds, *command):
     tails = {}
 
     def logs():
-        # Device syslogs describe every iOS daemon, not Maestro transport.
-        # A swcd connection reset must never override a successful flow/report.
-        return [Path(log), *sorted(path for path in Path(debug).rglob('maestro.log')
-                                   if path != Path(log))]
+        return log_sources(log, debug)
 
-    for path in logs():
+    for path, _ in logs():
         offsets[path] = path.stat().st_size if path.exists() else 0
 
     tracked = {}
@@ -162,7 +173,7 @@ def run(log, debug, seconds, *command):
         try:
             while True:
                 remember_tree(process_rows())
-                for path in logs():
+                for path, transport in logs():
                     try:
                         with path.open(errors='replace') as source:
                             if path.stat().st_size < offsets.get(path, 0):
@@ -177,6 +188,8 @@ def run(log, debug, seconds, *command):
                     tails[path] = fresh.rsplit('\n', 1)[-1][-4096:]
                     for line in fresh.splitlines():
                         startup.observe(line, time.monotonic())
+                        if not transport:
+                            continue
                         match = forbidden.search(line) or connection.search(line)
                         if not match:
                             continue

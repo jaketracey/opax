@@ -43,6 +43,22 @@ class StartupTests(unittest.TestCase):
         allowance.observe('HTTP server started on port 9010', 300)
         self.assertFalse(allowance.allows(PROBE, 355))
 
+    def test_maestro_210_flyingfox_server_signal_anchors_readiness(self):
+        allowance = watch.StartupAllowance(0, 180)
+        allowance.observe('maestro-driver-iosUITests-Runner[3610] [FlyingFox] starting server 127.0.0.1:9010', 175)
+        self.assertTrue(allowance.allows(PROBE, 250))
+        self.assertFalse(allowance.allows(PROBE, 355))
+
+    def test_runner_logs_are_read_for_startup_but_never_transport_failures(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in ('xctest_runner_2026.log', 'device-xctest.log', 'maestro.log', 'device-simulator.log'):
+                (root / name).touch()
+            sources = watch.log_sources(root / 'console.log', root)
+            self.assertEqual(sources[:2], [(root / 'device-xctest.log', False),
+                                          (root / 'xctest_runner_2026.log', False)])
+            self.assertEqual(sources[2:], [(root / 'console.log', True), (root / 'maestro.log', True)])
+
     def test_connected_driver_gets_no_further_startup_allowance(self):
         allowance = watch.StartupAllowance(0, 180)
         allowance.observe('[Done] Perform XCUITest driver status check', 4)
@@ -90,6 +106,16 @@ root = Path(sys.argv[1])
 sys.exit(23)
 ''')
         self.assertEqual(result.returncode, 23, result.stderr)
+
+    def test_runner_unit_test_transport_messages_are_not_flow_failures(self):
+        result = self.run_child('''
+from pathlib import Path
+import sys, time
+root = Path(sys.argv[1])
+(root / 'debug/xctest_runner_2026.log').write_text('testConnection: Connection reset by peer\\n[FlyingFox] starting server 127.0.0.1:9010\\n')
+time.sleep(0.5)
+''')
+        self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_real_driver_debug_errors_still_fail(self):
         result = self.run_child('''
