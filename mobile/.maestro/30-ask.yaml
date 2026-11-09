@@ -167,6 +167,8 @@ name: 30 Ask idle, a starter, the answer with its records, a follow-up, a clarif
     visible:
       id: ask-idle-line
     timeout: 10000
+- hideKeyboard
+- waitForAnimationToEnd
 - assertVisible:
     id: ask-conversation-0
 # The seat starter fills the composer with the member and Speeches; nothing is sent.

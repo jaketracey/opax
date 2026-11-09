@@ -459,6 +459,14 @@ name: 27 Leads and the declared-interests feed
     visible:
       id: lead-heading
     timeout: 30000
+# Return to Leads and dismiss its retained search before popping to Today.
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: leads-screen
+    timeout: 30000
+- runFlow: support/search-dismiss.yaml
 # The declared-interests feed behind Today's recent declarations. Reveal the
 # bar, then use the native scroll-to-top tap instead of a retained Leads offset.
 - runFlow:

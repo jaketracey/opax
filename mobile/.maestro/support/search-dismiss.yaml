@@ -1,0 +1,14 @@
+appId: au.com.opax.app
+name: Dismiss an active native bar search
+---
+# iOS 26 calls the search cancellation button Close; earlier bars use Cancel.
+# Clearing alone leaves search active and keeps the BackButton hidden.
+- runFlow:
+    when:
+      platform: iOS
+      visible: ^(Cancel|Close)$
+    commands:
+      - tapOn:
+          text: ^(Cancel|Close)$
+          retryTapIfNoChange: false
+      - waitForAnimationToEnd

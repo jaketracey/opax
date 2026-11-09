@@ -7,6 +7,7 @@ name: Return to the tab root and reveal the native tab bar
 #
 # TAB_ID is the tab to assert once the full bar shows. Reveal the bar before
 # looking for content: TOP_ID may be below the current position or removed.
+- runFlow: search-dismiss.yaml
 - repeat:
     times: 12
     while:
@@ -16,6 +17,7 @@ name: Return to the tab root and reveal the native tab bar
       - tapOn:
           id: BackButton
       - waitForAnimationToEnd
+      - runFlow: search-dismiss.yaml
 # A short downward content scroll followed by an upward one expands the bar,
 # including at the top or bottom of a root. Never chase a content anchor here.
 - repeat:

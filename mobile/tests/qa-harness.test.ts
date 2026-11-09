@@ -182,6 +182,16 @@ test('flow 27 bounds chrome recovery and the top fallback before searching down'
     TOP_ID: 'today-screen-message',
     TAB_ID: 'tab-today',
   });
+  expect(restore[0]).toEqual({ runFlow: 'search-dismiss.yaml' });
+  const back = restore.find(
+    (step: any) => step.repeat?.while?.visible?.id === 'BackButton',
+  ).repeat;
+  expect(back.commands).toContainEqual({ runFlow: 'search-dismiss.yaml' });
+  expect(lead[returnAt - 1]).toEqual({
+    runFlow: 'support/search-dismiss.yaml',
+  });
+  expect(lead[returnAt - 2].extendedWaitUntil.visible.id).toBe('leads-screen');
+  expect(lead[returnAt - 3]).toEqual({ tapOn: { id: 'BackButton' } });
   const declarations = lead
     .slice(returnAt)
     .find(
@@ -194,6 +204,37 @@ test('flow 27 bounds chrome recovery and the top fallback before searching down'
   ).scrollUntilVisible;
   expect(declarations.timeout).toBe(opening.timeout);
   expect(declarations.timeout).toBe(180000);
+});
+
+test('bar search cancellation recognises the iOS 26 Close label before restoring Back', () => {
+  const [dismiss] = maestroSteps('.maestro/support/search-dismiss.yaml');
+  expect(dismiss.runFlow.when).toEqual({
+    platform: 'iOS',
+    visible: '^(Cancel|Close)$',
+  });
+  expect(dismiss.runFlow.commands[0].tapOn).toEqual({
+    text: '^(Cancel|Close)$',
+    retryTapIfNoChange: false,
+  });
+  expect(dismiss.runFlow.commands[1]).toBe('waitForAnimationToEnd');
+});
+
+test('Ask dismisses the New question keyboard before navigating to the seat starter', () => {
+  const steps = maestroSteps('.maestro/30-ask.yaml');
+  const fresh = steps.findIndex((step: any) => step.tapOn === 'New question');
+  const tab = steps.findIndex(
+    (step: any, index: number) =>
+      index > fresh && step.tapOn?.id === 'tab-your-mp',
+  );
+  const dismiss = steps.findIndex(
+    (step: any, index: number) => index > fresh && step === 'hideKeyboard',
+  );
+  expect(dismiss).toBeGreaterThan(fresh);
+  expect(dismiss).toBeLessThan(tab);
+  expect(steps[dismiss + 1]).toBe('waitForAnimationToEnd');
+  expect(steps[tab + 1]).toEqual({
+    runFlow: 'support/location-manual-seat.yaml',
+  });
 });
 
 test('Ask idle excludes both options row ids without matching the composer Options button', () => {
