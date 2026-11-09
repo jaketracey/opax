@@ -1,9 +1,10 @@
 import { useEffect, useSyncExternalStore } from 'react';
-import { readCopies, writeCopy, TwoSlotStore } from '../../storage/two-slot';
-import type { FollowState } from './markers';
-import { partySlug } from '../../design/party';
 import { billKey, electorateId, personId } from '../../api/ids';
+import { partySlug } from '../../design/party';
+import { readCopies, TwoSlotStore, writeCopy } from '../../storage/two-slot';
 import { currentKeys, type FollowRecord } from './changes';
+import { seededFollows } from './launch-fixture';
+import type { FollowState } from './markers';
 
 /**
  * Local follows: what this iPhone follows and the change markers it last
@@ -179,7 +180,9 @@ async function readFollows(): Promise<Follow[]> {
   ]);
   newest = { slot: copy.slot, generation: copy.generation };
   topicNewest = { slot: topics.slot, generation: topics.generation };
-  primaryEntries = copy.value ?? [];
+  const seed = copy.value == null ? seededFollows() : null;
+  primaryEntries = seed ?? copy.value ?? [];
+  if (seed) newest = writeCopy(SLOTS, newest, { version: 1, follows: seed });
   topicEntries = topics.value ?? [];
   return [...primaryEntries, ...topicEntries].filter(isKnownFollow);
 }

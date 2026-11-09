@@ -1,12 +1,13 @@
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { formatDate } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
   Heading,
+  InsetGroup,
   PersonRow,
-  RowList,
   Screen,
   Skeleton,
   StatusCapsule,
@@ -14,14 +15,13 @@ import {
   ValueRow,
   copy,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
+import { loadElectorate, type LoadedElectorate } from '../Electorate';
 import { BlockSource } from './Evidence';
 import { candidateRows, electionTitle } from './election-summary';
 import { representativeProfile } from './model';
-import { loadElectorate, type LoadedElectorate } from '../Electorate';
 
 /**
  * One election: its candidates by first preferences, highest first, with
@@ -113,7 +113,7 @@ export function ElectionScreen({
               {`${identity.name}, ${formatDate(record.election.poll_date, 'short')}`}
             </Text>
           </Group>
-          <RowList>
+          <InsetGroup>
             {candidateRows(record).map((c, i) => {
               const profile = c.personId
                 ? representativeProfile(c.personId, loaded.directory)
@@ -156,7 +156,7 @@ export function ElectionScreen({
                 </View>
               );
             })}
-          </RowList>
+          </InsetGroup>
           <BlockSource
             block={block}
             title="About this election"

@@ -1,7 +1,11 @@
-import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
+import {
+  forgetChoice,
+  loadChoice,
+  saveChoice,
+} from '../src/features/your-mp/choice-store';
+import type { SeatChoice } from '../src/features/your-mp/model';
 import { markTourSeen, tourSeen } from '../src/onboarding/state';
 import { readCopies } from '../src/storage/two-slot';
-import type { SeatChoice } from '../src/features/your-mp/model';
 
 const mockDisk = new Map<string, string>();
 let mockInterrupt: 'before' | 'missing' | 'torn' | 'after' | null = null;
@@ -142,4 +146,17 @@ test('unreadable primary does not hide a readable older-version tour slot', asyn
     (v) => (v && typeof v === 'object' ? v : null),
   );
   expect(freshRead).toMatchObject({ slot: 1, generation: 2 });
+});
+
+test('forget persists across a fresh store read without reviving the older seat slot', async () => {
+  await saveChoice(A);
+  await forgetChoice();
+  expect(await loadChoice()).toBeNull();
+  expect(JSON.parse(mockDisk.get('opax-seat-v1.b.json')!)).toMatchObject({
+    version: 1,
+    forgotten: true,
+  });
+  expect(JSON.parse(mockDisk.get('opax-seat-v1.json')!)).toMatchObject(A);
+  await saveChoice(B);
+  expect(await loadChoice()).toEqual(B);
 });

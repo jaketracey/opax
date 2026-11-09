@@ -1,8 +1,9 @@
 import { StyleSheet, View } from 'react-native';
+import type { Electorate } from '../../api/catalogs';
 import { Card } from '../../design/card';
+import { Divider } from '../../design/controls';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
-import { Divider } from '../../design/controls';
 import { PartyLabel } from '../../design/people';
 import { ValueRow } from '../../design/rows';
 import { SourceLine, type SourceDetails } from '../../design/source';
@@ -10,8 +11,8 @@ import { Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, hairline, radii, rhythm } from '../../design/tokens';
-import { presentSource } from '../../navigation/sheets';
 import { electorateRoute } from '../../navigation/routes';
+import { presentSource } from '../../navigation/sheets';
 import { hasOutline, OutlineMap } from '../electorate-map/OutlineMap';
 import {
   censusHeadline,
@@ -19,7 +20,6 @@ import {
   newestCensus,
 } from './election-summary';
 import type { ElectorateView } from './model';
-import type { Electorate } from '../../api/catalogs';
 
 /** The card's sources: AEC and ABS as separate originals, each with its date. */
 export function electorateCardSource(
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: radii.container,
     borderCurve: 'continuous',
     borderTopWidth: hairline,
-    borderTopColor: colors.line,
+    borderTopColor: colors.dividerSubtle,
     marginTop: -1,
     paddingHorizontal: rhythm.block,
     paddingBottom: rhythm.tight,

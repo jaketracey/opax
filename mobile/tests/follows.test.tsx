@@ -1,12 +1,22 @@
 import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
-import { catalogs as runtime } from '../src/api/runtime';
-import * as c from '../src/api/catalogs';
 import { ActionSheetIOS } from 'react-native';
+import TestRenderer from 'react-test-renderer';
+import * as c from '../src/api/catalogs';
+import { catalogs as runtime } from '../src/api/runtime';
+import { FollowButton } from '../src/design/controls';
 import { Card, Text } from '../src/design/primitives';
+import { LinkRow } from '../src/design/rows';
+import { currentKeys } from '../src/features/follows/changes';
+import Following, {
+  NOTHING_FOLLOWED,
+  NOTHING_FOLLOWED_TITLE,
+  followGroups,
+  type FollowEntry,
+} from '../src/features/follows/Following';
+import { FollowingSection } from '../src/features/follows/FollowingSection';
 import {
-  followState as readFollowState,
   quarterEnd,
+  followState as readFollowState,
   type FollowSources,
 } from '../src/features/follows/markers';
 import {
@@ -22,16 +32,6 @@ import {
   type Fingerprint,
   type Follow,
 } from '../src/features/follows/store';
-import { currentKeys } from '../src/features/follows/changes';
-import { FollowingSection } from '../src/features/follows/FollowingSection';
-import Following, {
-  NOTHING_FOLLOWED,
-  NOTHING_FOLLOWED_TITLE,
-  followGroups,
-  type FollowEntry,
-} from '../src/features/follows/Following';
-import { LinkRow } from '../src/design/rows';
-import { FollowToggle } from '../src/features/follows/FollowToggle';
 import { catalogs, index } from './pinned';
 
 const mockDisk = new Map<string, string>();
@@ -620,7 +620,7 @@ describe('Following on Today and the follow switch', () => {
   test('the button says what it follows and whether it is on, and is saved on the device', async () => {
     mock.followSources.mockResolvedValue(sources());
     const r = await render(
-      <FollowToggle
+      <FollowButton
         kind="electorate"
         id={GRAYNDLER}
         title="Grayndler"

@@ -1,9 +1,14 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import type { Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
-import { haptic } from '../../design/haptics';
 import { thisDevice } from '../../design/device';
-import { loadChoice, saveChoice, subscribeChoice } from './choice-store';
+import { haptic } from '../../design/haptics';
+import {
+  forgetChoice,
+  loadChoice,
+  saveChoice,
+  subscribeChoice,
+} from './choice-store';
 import type { Directory, SeatChoice } from './model';
 export type SeatState =
   | { status: 'loading' }
@@ -14,6 +19,8 @@ export interface SeatActions {
   choose(seat: Electorate): Promise<void>;
   chooseState(seat: Electorate, region?: Electorate): Promise<void>;
   removeState(): Promise<void>;
+  forget(): Promise<void>;
+  retry(): void;
 }
 let snapshot: SeatState = { status: 'loading' };
 let rawChoice: SeatChoice | null = null;
@@ -92,6 +99,17 @@ function save(change: () => SeatChoice, feedback: boolean): Promise<void> {
   return next;
 }
 const actions: SeatActions = {
+  forget() {
+    const next = saving.then(forgetChoice);
+    saving = next.catch(() => undefined);
+    return next;
+  },
+  retry() {
+    pending = null;
+    snapshot = { status: 'loading' };
+    emit();
+    initialise();
+  },
   choose(seat) {
     if (!house(seat) || seat.status === 'historical')
       return Promise.reject(

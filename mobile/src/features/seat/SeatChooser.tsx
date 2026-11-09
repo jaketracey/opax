@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import { router, Stack, useNavigation } from 'expo-router';
 import type { NativeStackHeaderItem } from 'expo-router';
+import { router, Stack, useNavigation } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
 import { Button } from '../../design/controls';
 import { copy } from '../../design/copy';
+import { formatCount } from '../../design/format';
 import { InsetGroup, Screen } from '../../design/layout';
 import { confirmAction } from '../../design/menu';
 import { LinkRow } from '../../design/rows';
@@ -13,20 +14,20 @@ import { useListSearchBar } from '../../design/search-bar';
 import { ContentUnavailable, Skeleton } from '../../design/states';
 import { Text } from '../../design/text';
 import { colors, isAccessibilityCategory, rhythm } from '../../design/tokens';
-import { formatCount } from '../../design/format';
-import { openSource } from '../../navigation/external';
 import { headerItems } from '../../navigation/chrome';
+import { openSource } from '../../navigation/external';
 import { seatStateRoute, welcomeSeatStateRoute } from '../../navigation/routes';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
-import { saveChoice } from '../your-mp/choice-store';
+import { forgetChoice } from '../your-mp/choice-store';
 import type { Directory } from '../your-mp/model';
-import { useSeat } from '../your-mp/useSeat';
+import { migratedSeat, useSeat } from '../your-mp/useSeat';
 import { FieldClearance } from './FieldClearance';
 import { LocationRow } from './LocationRow';
 import {
   abolishedLine,
   browseStates,
   isHouseSeat,
+  isStateCode,
   matchIn,
   matchLeads,
   matchSeats,
@@ -73,20 +74,8 @@ const offlineOf = (state: DirectoryState) =>
     ? { savedAt: state.directory.electorates.savedAt ?? null }
     : null;
 
-/**
- * A choice store write that the saved-seat hooks read as "no seat": a
- * well-formed ID that names no electorate, so `useSeat()` publishes `none`
- * and Today and Your MP return to the invitation. The disk format does not
- * change. Follow-up for wave 6: a `forget()` in useSeat and choice-store.
- */
-export const FORGOTTEN_SEAT_ID = `el_${'0'.repeat(24)}`;
-export function forgetSeat(): Promise<void> {
-  return saveChoice({
-    version: 1,
-    seatId: FORGOTTEN_SEAT_ID,
-    stateSeatIds: [],
-  });
-}
+/** Forget is a persisted tombstone, so an older slot cannot revive the choice. */
+export const forgetSeat = forgetChoice;
 
 /**
  * Saving a choice: the tapped row shows an indicator while the seat is
@@ -231,6 +220,27 @@ export function SeatChooser({
           (s) => s.electorate_id === seat.choice.seatId,
         ) ?? null)
       : null;
+  const openedMigration = useRef(false);
+  useEffect(() => {
+    if (
+      openedMigration.current ||
+      welcome ||
+      vic ||
+      state.status !== 'ready' ||
+      seat.status === 'loading'
+    )
+      return;
+    const old = migratedSeat();
+    if (
+      !old ||
+      (seat.status === 'chosen' && seat.choice.seatId === old.electorate_id)
+    )
+      return;
+    const code = old.state_code.toLowerCase();
+    if (!isStateCode(code)) return;
+    openedMigration.current = true;
+    router.push(seatStateRoute(code));
+  }, [seat, state, welcome, vic]);
   const autoFocus = !locate && !isAccessibilityCategory(fontScale);
   const typed = (text: string) => {
     setQuery(text);
