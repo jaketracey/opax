@@ -12,7 +12,7 @@ it('keeps both My MP journeys within their marked tap budgets', () => {
   const output = execFileSync(process.execPath, [script, ...flows], {
     encoding: 'utf8',
   });
-  expect(output).toContain('first-launch-member: 2/2');
+  expect(output).toContain('first-launch-member: 3/3');
   expect(output).toContain('today-latest-vote: 1/1');
   expect(output).toContain('today-official-page: 2/2');
   expect(output).toContain('figure-original: 2/2');
@@ -200,6 +200,33 @@ it('accepts unbudgeted flows alongside journeys and still requires journey marke
     });
     expect(missing.status).toBe(1);
     expect(missing.stderr).toContain('missing budget first-launch-member');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+it('counts field focus and rejects a fourth first-launch tap', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'maestro-budget-'));
+  try {
+    const file = path.join(dir, 'fixture.yaml');
+    writeFileSync(
+      file,
+      `appId: test
+---
+# budget: first-launch-member
+- tapOn: Continue
+- tapOn: Electorate or member.s name
+- inputText: Grayndler
+- tapOn: Grayndler
+- tapOn: Extra navigation
+# end: first-launch-member
+`,
+    );
+    const result = spawnSync(process.execPath, [script, file], {
+      encoding: 'utf8',
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('4 taps exceeds budget 3');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
