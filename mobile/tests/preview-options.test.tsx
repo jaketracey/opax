@@ -22,6 +22,7 @@ jest.mock('expo-router', () => ({
   }),
   Stack: {
     Screen: ({ options }: { options: object }) => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useEffect } = require('react');
       useEffect(() => mockSetOptions(options), [options]);
       return null;

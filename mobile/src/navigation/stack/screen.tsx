@@ -21,7 +21,7 @@ export const untitled: NativeStackNavigationOptions = {
   headerTitle: Platform.OS === 'ios' ? emptyBarTitle : '',
 };
 
-/** The tab roots' titles, by route name (navigation/stack/index.tsx). */
+/** Stable tab and list titles, available before destination data or layout. */
 const rootTitles: Record<string, string> = {
   index: 'Today',
   'your-mp': 'Your MP',
