@@ -989,7 +989,7 @@ class ProductionVoiceTests(unittest.TestCase):
         verify.verify_voice_info({}, False)
         verify.verify_voice_info(self.info(), True)
         for enabled, info in ((False, {}), (True, self.info())):
-            info["NSLocationWhenInUseUsageDescription"] = verify.LOCATION_PURPOSE
+            info["NSLocationWhenInUseUsageDescription"] = verify.location_purposes()["NSLocationWhenInUseUsageDescription"]
             verify.verify_voice_info(info, enabled)
         for enabled, info in ((True, {}), (False, self.info())):
             with self.assertRaises(ReleaseError): verify.verify_voice_info(info, enabled)
@@ -1000,9 +1000,26 @@ class ProductionVoiceTests(unittest.TestCase):
             verify.verify_voice_info(info, enabled)
             for key, value in (("NSMotionUsageDescription", "unused motion"),
                                ("NSCameraUsageDescription", "unshipped"),
-                               ("NSLocationAlwaysUsageDescription", verify.LOCATION_PURPOSE)):
+                               ("NSLocationAlwaysUsageDescription", verify.location_purposes()["NSLocationWhenInUseUsageDescription"])):
                 with self.subTest(enabled=enabled, key=key), self.assertRaises(ReleaseError):
                     verify.verify_voice_info({**info, key: value}, enabled)
+
+    def test_both_device_location_prompts_match_app_config(self):
+        purposes = verify.location_purposes()
+        self.assertEqual(set(purposes), {"NSLocationWhenInUseUsageDescription",
+                                        "NSLocationWhenInUseUsageDescription~ipad"})
+        verify.verify_location_info(purposes)
+        for enabled in (False, True):
+            info = {**(self.info() if enabled else {}), **purposes}
+            verify.verify_voice_info(info, enabled)
+            for key in purposes:
+                with self.subTest(key=key, enabled=enabled):
+                    with self.assertRaises(ReleaseError):
+                        verify.verify_location_info({**info, key: "old prompt"})
+                    with self.assertRaises(ReleaseError):
+                        verify.verify_voice_info({**info, key: "old prompt"}, enabled)
+                    with self.assertRaises(ReleaseError):
+                        verify.verify_location_info({k: v for k, v in info.items() if k != key})
 
     def test_wrong_purpose_routes_auto_consent_and_fixture_metadata_fail(self):
         for key, value in (("NSMicrophoneUsageDescription", "draft"), ("OPAXVoiceConsentDefault", True),

@@ -72,7 +72,21 @@ VOICE_POLICY = json.loads((Path(__file__).resolve().parent.parent / "voice-produ
 # no Emails or Text Messages without Community. The policy must say the same.
 LABEL_DATA_TYPES = ("EmailAddress", "UserID", "AudioData", "OtherUserContent", "ProductInteraction",
                     "SearchHistory", "OtherDiagnosticData")
-LOCATION_PURPOSE = "OPAX uses your location once, on this device, to suggest your electorate. It is not sent anywhere."
+@lru_cache(maxsize=1)
+def location_purposes():
+    """Read the approved app config through the CNG verifier, without prebuild."""
+    root = Path(__file__).resolve().parent.parent
+    result = subprocess.run(
+        ["node", "--import", "tsx", "scripts/native-config.ts", "--location-purposes"],
+        cwd=root, env={**os.environ, "OPAX_VARIANT": "production"},
+        capture_output=True, text=True)
+    require(result.returncode == 0, "approved location purpose strings loaded from app.config.ts")
+    return json.loads(result.stdout)
+
+
+def verify_location_info(info):
+    require(all(info.get(key) == value for key, value in location_purposes().items()),
+            "approved iPhone and iPad on-device location purpose strings")
 
 
 
@@ -85,10 +99,11 @@ def production_voice_enabled(value=None):
 def verify_voice_info(info, enabled):
     permissions = {k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)}
     require("NSMotionUsageDescription" not in permissions, "unused motion purpose string absent")
-    # The independent electorate lane uses location on device only.
-    if "NSLocationWhenInUseUsageDescription" in permissions:
-        require(permissions.pop("NSLocationWhenInUseUsageDescription") == LOCATION_PURPOSE,
-                "approved on-device location purpose string")
+    # Device-specific variants must be validated too, including embedded config.
+    for key, value in location_purposes().items():
+        if key in info:
+            require(info[key] == value, "approved on-device location purpose string")
+            permissions.pop(key, None)
     if enabled:
         require(permissions == {"NSMicrophoneUsageDescription": VOICE_POLICY["microphonePurpose"]},
                 "approved microphone purpose string, no unshipped permissions")
@@ -609,10 +624,10 @@ def verify_app(app, args):
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     voice_enabled = production_voice_enabled()
-    expected_permissions = {"NSLocationWhenInUseUsageDescription": LOCATION_PURPOSE}
+    expected_permissions = location_purposes().copy()
     if voice_enabled:
         expected_permissions["NSMicrophoneUsageDescription"] = VOICE_POLICY["microphonePurpose"]
-    check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription", k)} == expected_permissions,
+    check({k: v for k, v in info.items() if re.fullmatch(r"NS.*UsageDescription(?:~ipad)?", k)} == expected_permissions,
           "exact location purpose string; no other permissions" if not voice_enabled else
           "exact location and approved microphone purpose strings; no other permissions")
     check("location" not in info.get("UIBackgroundModes", []), "no background location mode")
@@ -697,6 +712,7 @@ def verify_app(app, args):
         config = json.loads(path.read_bytes())
         check((config["extra"].get("productionVoiceEnabled") is True) == voice_enabled,
               "embedded production voice switch matches the release invocation")
+        verify_location_info(config["ios"]["infoPlist"])
         verify_voice_info(config["ios"]["infoPlist"], voice_enabled)
         if voice_enabled:
             check(config["extra"].get("voiceConsentDefault") is False, "embedded consent is denied by default")
@@ -751,6 +767,16 @@ def verify_app(app, args):
 
 
 def main():
+    if "--location-only" in sys.argv:
+        parser = argparse.ArgumentParser(description="Verify location prompts without a native build")
+        parser.add_argument("--location-only", type=Path, required=True)
+        args = parser.parse_args()
+        try:
+            verify_location_info(json.loads(args.location_only.read_text()))
+            print("PASS release iPhone and iPad location purpose strings")
+        except (ReleaseError, OSError, ValueError) as error:
+            raise SystemExit(str(error))
+        return
     # Shared offline Hermes-aware route/fixture gate used by qa-static. It
     # intentionally needs no signing credentials and performs no network I/O.
     if "--bundle-only" in sys.argv:
