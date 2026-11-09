@@ -1,7 +1,6 @@
-import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { Stack, useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import { Stack, useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { ApiError } from '../../api/errors';
 import { apiClient, catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
@@ -10,6 +9,7 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../../design/format';
+import { Section } from '../../design/layout';
 import type { LeadEvidence } from '../../design/lead';
 import {
   ContentUnavailable,
@@ -24,12 +24,11 @@ import {
   Skeleton,
   SourceLine,
   StatStrip,
-  SubSection,
   Text,
   type FigureSource,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { chrome, colors, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
@@ -39,7 +38,9 @@ import {
   moneyItemRoute,
   moneyRecordRoute,
 } from '../../navigation/routes/public-money';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { money } from '../money-public/runtime';
 import { decodeMoneyGraph, moneyCatalogs } from '../money/data';
 import {
   donorNodeFor,
@@ -49,7 +50,6 @@ import {
 } from '../money/lookup';
 import { moneyPageMenu } from '../money/menu';
 import { PartyDot } from '../money/parts';
-import { money } from '../money-public/runtime';
 import { ConcentrationChart } from './Chart';
 import {
   aboutLede,
@@ -217,7 +217,7 @@ export default function LeadDetail() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={refresh}
-            tintColor={chrome.tint}
+            tintColor={colors.navy}
           />
         }
       >
@@ -301,7 +301,7 @@ export default function LeadDetail() {
                   label={comparison.figureLabel}
                   accessibilityLabel={`${moneyAccessibilityLabel(comparison.total, true)}, ${comparison.figureLabel}`}
                   // Spread: opax/transport reserves a `source` attribute for images (follow-up renames the prop).
-                  {...{ source }}
+                  citation={source}
                   testID="lead-total"
                 />
                 <ConcentrationChart
@@ -359,7 +359,7 @@ export default function LeadDetail() {
                 </View>
               ) : null}
               {lead.evidence.length ? (
-                <SubSection title="Example records" testID="lead-evidence">
+                <Section title="Example records" testID="lead-evidence">
                   <View>
                     {lead.evidence.map((item, index) => {
                       const row = evidenceRow(item);
@@ -387,7 +387,7 @@ export default function LeadDetail() {
                       );
                     })}
                   </View>
-                </SubSection>
+                </Section>
               ) : null}
             </View>
             {mapRow ? (

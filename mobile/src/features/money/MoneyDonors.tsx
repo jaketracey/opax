@@ -1,7 +1,9 @@
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
 import { ApiError } from '../../api/errors';
+import { copy } from '../../design/copy';
+import { formatCount } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
@@ -12,10 +14,8 @@ import {
   SourceLine,
   Text,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
 import { useListSearchBar } from '../../design/search-bar';
-import { chrome, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { useMoneyRecord } from './hooks';
 import { normaliseOrganisation } from './lookup';
 import {
@@ -116,7 +116,7 @@ export default function MoneyDonors() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={refresh}
-              tintColor={chrome.tint}
+              tintColor={colors.navy}
             />
           ) : undefined
         }

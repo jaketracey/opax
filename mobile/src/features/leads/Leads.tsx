@@ -1,8 +1,10 @@
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
+import { copy } from '../../design/copy';
+import { formatCount } from '../../design/format';
 import {
   ContentUnavailable,
   Group,
@@ -14,10 +16,8 @@ import {
   SourceLine,
   Text,
 } from '../../design/primitives';
-import { copy } from '../../design/copy';
-import { formatCount } from '../../design/format';
 import { useListSearchBar } from '../../design/search-bar';
-import { chrome, rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { leadsKindRoute } from '../../navigation/routes/money-map';
 import { leadRoute } from '../../navigation/routes/public-money';
@@ -26,12 +26,12 @@ import { moneyPageMenu } from '../money/menu';
 import { LeadFeedCard } from './LeadFeedCard';
 import {
   aboutLede,
+  categoryFrom,
   categoryLabel,
   categorySearch,
   categorySeeAll,
   categorySource,
   discoveryAsOf,
-  categoryFrom,
   leadSections,
   leadsHiddenNotes,
   searchLeads,
@@ -348,7 +348,7 @@ export default function Leads() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={refresh}
-            tintColor={chrome.tint}
+            tintColor={colors.navy}
           />
         }
       >

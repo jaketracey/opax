@@ -1,6 +1,6 @@
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { BarSeries } from '../../design/charts';
 import { PopUpButton, SegmentedPicker } from '../../design/controls';
@@ -20,24 +20,24 @@ import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { leadsFor } from '../leads/model';
 import { CONTRACTS_CAVEAT } from './HubCards';
-import { money } from './runtime';
-import { moneyItemHref, organisationHref } from './routes';
 import {
-  ListCaption,
-  MoneyList,
-  MoneyStatus,
-  TitleAlias,
   askAbout,
   counted,
+  ListCaption,
   matches,
   moneyBar,
   moneyCitation,
+  MoneyList,
+  MoneyStatus,
   readableDates,
   recordSource,
+  TitleAlias,
   useDebouncedAnnounce,
   useMoneySearch,
   yearRange,
 } from './parts';
+import { moneyItemHref, organisationHref } from './routes';
+import { money } from './runtime';
 
 const AGENCY_NAMES =
   'Agency names appear as recorded. Renamed departments are separate entries; no succession or combined history is assumed.';
@@ -121,7 +121,7 @@ export default function Agencies() {
                   caveat={CONTRACTS_CAVEAT}
                   // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
-                    source: {
+                    citation: {
                       asOf: data.meta.asOf,
                       citation: [
                         moneyCitation(data.meta.source || 'AusTender'),
@@ -322,7 +322,7 @@ export function Agency() {
                   }
                   // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
-                    source: {
+                    citation: {
                       asOf: data.meta.asOf,
                       citation: [
                         moneyCitation(data.meta.source || 'AusTender'),
@@ -412,7 +412,7 @@ export function Agency() {
                           end: data.meta.asOf,
                         }}
                         // Spread: opax/transport reads a plain `source` prop as an image.
-                        {...{ source: 'AusTender' }}
+                        {...{ citation: 'AusTender' }}
                       />
                     ) : (
                       <EmptyState message="No contracts in this agency's records have a start date." />

@@ -1,22 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { apiClient } from '../src/api/runtime';
-import MoneyRecordScreen, {
-  contractsCaveat,
-  grantsCaveat,
-  individualsNote,
-} from '../src/features/money/MoneyRecord';
-import { bothRegistersCaveat } from '../src/features/money/records';
-import { decodeMoneyGraph } from '../src/features/money/data';
-import {
-  donorNodeFor,
-  forgetMoneyGraphs,
-  rememberMoneyGraph,
-} from '../src/features/money/lookup';
-import {
-  agencyRoute,
-  moneyRecordRoute,
-} from '../src/navigation/routes/public-money';
 import {
   ContentUnavailable,
   FigureBlock,
@@ -25,6 +9,22 @@ import {
   Text,
   ValueRow,
 } from '../src/design/primitives';
+import { decodeMoneyGraph } from '../src/features/money/data';
+import {
+  donorNodeFor,
+  forgetMoneyGraphs,
+  rememberMoneyGraph,
+} from '../src/features/money/lookup';
+import MoneyRecordScreen, {
+  contractsCaveat,
+  grantsCaveat,
+  individualsNote,
+} from '../src/features/money/MoneyRecord';
+import { bothRegistersCaveat } from '../src/features/money/records';
+import {
+  agencyRoute,
+  moneyRecordRoute,
+} from '../src/navigation/routes/public-money';
 import { pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => {
@@ -126,10 +126,10 @@ test('a party record: originals first, the window figure, all years beside it, a
   expect(amount.props.ink).toBe('money');
   expect(amount.props.label).toMatch(/^in [\d,]+ receipts, 2024–25$/);
   expect(amount.props.caveat).toMatch(/^Totals are a minimum/);
-  expect(amount.props.source.originals).toEqual([
+  expect(amount.props.citation.originals).toEqual([
     expect.objectContaining({ url: 'https://transparency.aec.gov.au/' }),
   ]);
-  expect(amount.props.source.notes).toContain(
+  expect(amount.props.citation.notes).toContain(
     'The party total covers all industries. The donors listed follow the industry filter.',
   );
   // Narrowed: the All years row states the full range.
@@ -183,9 +183,9 @@ test('a contracts hub states the mapped-donor scope and the contracts register',
   expect(amount.props.label).toMatch(/^in contracts to donors on the map, /);
   expect(amount.props.ink).toBeUndefined();
   expect(amount.props.caveat).toBe(contractsCaveat);
-  expect(amount.props.source.citation).toBe('AusTender');
-  expect(amount.props.source.licence).toBeNull();
-  expect(amount.props.source.notes).toContain(
+  expect(amount.props.citation.citation).toBe('AusTender');
+  expect(amount.props.citation.licence).toBeNull();
+  expect(amount.props.citation.notes).toContain(
     `${raw.meta.contracts_coverage}.`,
   );
   await act(async () => r.unmount());
@@ -284,7 +284,7 @@ test('a grant recipient by rid: its grants from the index, an award is not a pay
   const grants = figure(r, 'money-focus-grants');
   expect(grants.props.caveat).toBe(grantsCaveat);
   expect(grants.props.label).toMatch(/^in [\d,]+ grants, /);
-  expect(grants.props.source.citation).toBe('GrantConnect');
+  expect(grants.props.citation.citation).toBe('GrantConnect');
   await act(async () => r.unmount());
 });
 

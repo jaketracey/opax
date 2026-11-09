@@ -25,3 +25,6 @@ jest.mock('react-native-reanimated', () => ({
     callbackId: -1,
   }),
 }));
+
+// Connectivity is supplied explicitly by its regression tests. No native monitor in Jest.
+jest.mock('expo-network', () => ({ useNetworkState: jest.fn(() => ({})) }));

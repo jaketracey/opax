@@ -1,5 +1,5 @@
-import type { RowMenuAction } from '../../navigation/chrome';
 import { copy } from '../../design/copy';
+import type { RowMenuAction } from '../../design/row-link';
 import { openOnWeb } from '../../navigation/external';
 import { copyRecordLink, shareRecord } from '../../navigation/share';
 

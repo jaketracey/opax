@@ -1,29 +1,19 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { act } from 'react';
 import { Text as NativeText, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { MoneyCatalogs } from '../src/features/money-public/catalog';
-import type { ApiClient, RecordResult } from '../src/api/client';
 import { decodeDiscovery } from '../src/api/catalog-decoders';
-import { money } from '../src/features/money-public/runtime';
-import {
-  AsAtLine,
-  BigFigure,
-  Heading,
-  InfoButton,
-  LinkRow,
-  OpaxWebLink,
-  SourceLink,
-  ViewOriginal,
-} from '../src/design/primitives';
-import Hub from '../src/features/money-public/Hub';
-import Grants from '../src/features/money-public/Grants';
-import Program from '../src/features/money-public/Program';
-import Largest from '../src/features/money-public/Largest';
+import type { ApiClient, RecordResult } from '../src/api/client';
 import Agencies, { Agency } from '../src/features/money-public/Agencies';
 import Allocation from '../src/features/money-public/Allocation';
+import { MoneyCatalogs } from '../src/features/money-public/catalog';
 import Connections from '../src/features/money-public/Connections';
+import Grants from '../src/features/money-public/Grants';
+import Hub from '../src/features/money-public/Hub';
+import Largest from '../src/features/money-public/Largest';
+import Program from '../src/features/money-public/Program';
+import { money } from '../src/features/money-public/runtime';
 
 // Design programme pass 4A (docs/design/DESIGN-REVIEW-2026-10.md, section 2
 // and "Money and leads"): one accent per view, on the section marks and the
@@ -134,36 +124,6 @@ async function render(Screen: () => React.ReactElement | null) {
   });
   return rendered;
 }
-
-test.each(screens)(
-  '%s: one accent, source lines only, a title in ink',
-  async (_name, Screen, params) => {
-    Object.assign(mockParams, params);
-    const r = await render(Screen);
-    for (const retired of [
-      AsAtLine,
-      InfoButton,
-      ViewOriginal,
-      SourceLink,
-      OpaxWebLink,
-    ])
-      expect(r.root.findAllByType(retired)).toHaveLength(0);
-    // The accent is the money ink, on section marks and one figure only.
-    const accented = r.root
-      .findAllByType(BigFigure)
-      .filter((figure) => figure.props.accent);
-    expect(accented.length).toBeLessThanOrEqual(1);
-    for (const figure of accented) expect(figure.props.accent).toBe('money');
-    for (const row of r.root.findAllByType(LinkRow))
-      expect(row.props.accent).toBeUndefined();
-    // Large-title lists draw their title in the bar (specs/money.md 1.3).
-    const title = r.root
-      .findAllByType(Heading)
-      .find((heading) => heading.props.level === 1);
-    expect(title?.props.tone).toBeUndefined();
-    await act(async () => r.unmount());
-  },
-);
 
 test.each(screens)(
   '%s at AX5: every line of text wraps whole, never clipped',

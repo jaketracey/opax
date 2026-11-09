@@ -1,6 +1,8 @@
-import { useCallback, type ReactNode } from 'react';
-import { RefreshControl, View } from 'react-native';
+import type { Href } from 'expo-router';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import { useCallback, useRef, type ReactNode } from 'react';
+import { RefreshControl, View } from 'react-native';
+import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { formatDate, formatMoney } from '../../design/format';
 import { Screen, SectionHeader } from '../../design/layout';
@@ -13,19 +15,12 @@ import {
   agencyRoute,
   grantProgramRoute,
 } from '../../navigation/routes/public-money';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { largestFor, programRecipients, type Jurisdiction } from './data';
 import { stateName } from './Grants';
 import { CONTRACTS_CAVEAT } from './HubCards';
-import { privateNote, unnamedRecipient, unnamedSupplier } from './privacy';
-import { money } from './runtime';
-import {
-  moneyItemHref,
-  organisationHref,
-  type MoneyItemKind,
-  type MoneyItemParams,
-} from './routes';
 import {
   MoneyStatus,
   fy,
@@ -34,8 +29,15 @@ import {
   readableDates,
   recordSource,
 } from './parts';
-import type { Href } from 'expo-router';
-import type { RecordResult } from '../../api/client';
+import { privateNote, unnamedRecipient, unnamedSupplier } from './privacy';
+import { loadRecipientGrant } from './recipient-grant';
+import {
+  moneyItemHref,
+  organisationHref,
+  type MoneyItemKind,
+  type MoneyItemParams,
+} from './routes';
+import { money } from './runtime';
 
 /** One fact row: a label and the record's words. Empty values are left out. */
 type Fact = { label: string; value: string; long?: boolean };
@@ -97,6 +99,24 @@ const isJurisdiction = (j: string): j is Jurisdiction =>
 
 /** Rebuild the record a money row opened, or throw not-found. */
 export async function loadMoneyItem(
+  params: MoneyItemParams & { from?: string; org?: string },
+  refresh: boolean,
+): Promise<RecordResult<MoneyItemView>> {
+  const record = await readMoneyItem(params, refresh);
+  return params.org === 'self'
+    ? {
+        ...record,
+        data: {
+          ...record.data,
+          onward: record.data.onward.filter(
+            (row) => row.key !== 'organisation',
+          ),
+        },
+      }
+    : record;
+}
+
+async function readMoneyItem(
   params: MoneyItemParams & { from?: string },
   refresh: boolean,
 ): Promise<RecordResult<MoneyItemView>> {
@@ -105,7 +125,11 @@ export async function loadMoneyItem(
     case 'grant':
     case 'recipient': {
       if (!isJurisdiction(params.jur)) throw gone();
-      const record = await money.program(params.jur, params.program, refresh);
+      if (params.kind === 'grant' && !params.program)
+        return params.rid
+          ? loadRecipientGrant(params.jur, params.rid, params.id, refresh)
+          : Promise.reject(gone());
+      const record = await money.program(params.jur, params.program!, refresh);
       const program = record.data;
       const programRow = (): Onward[] =>
         from === program.key || from === program.id
@@ -545,13 +569,22 @@ function procurement(method: string) {
 /** The route's params as one record kind, or null when they don't add up. */
 export function itemParams(
   p: Record<string, string | undefined>,
-): (MoneyItemParams & { from?: string }) | null {
-  const from = p.from ? { from: p.from } : {};
+): (MoneyItemParams & { from?: string; org?: string }) | null {
+  const from = {
+    ...(p.from ? { from: p.from } : {}),
+    ...(p.org === 'self' ? { org: 'self' } : {}),
+  };
   const kind = p.kind as MoneyItemKind | undefined;
   switch (kind) {
     case 'grant':
-      return p.jur && p.program && p.id
-        ? { kind, jur: p.jur, program: p.program, id: p.id, ...from }
+      return p.jur && (p.program || p.rid) && (p.id || p.award)
+        ? {
+            kind,
+            jur: p.jur,
+            ...(p.program ? { program: p.program } : { rid: p.rid }),
+            id: (p.id || p.award)!,
+            ...from,
+          }
         : null;
     case 'recipient':
       return p.jur && p.program && p.recipient
@@ -604,6 +637,8 @@ export default function MoneyItem() {
   const status = useCatalogRecord(load);
   const item = status.record?.data;
   const name = item?.name ?? raw.name ?? 'Money record';
+  const titleRef = useRef<View>(null);
+  const scrollTitle = useTitleOnScroll(titleRef, name);
   const saved = recordSource(status.record);
   return (
     <>
@@ -614,7 +649,7 @@ export default function MoneyItem() {
         }}
       />
       <Screen
-        barTitle={name}
+        onScroll={scrollTitle.onScroll}
         testID="money-item"
         refreshControl={
           <RefreshControl
@@ -632,7 +667,11 @@ export default function MoneyItem() {
         />
         {item ? (
           <>
-            <View style={{ gap: rhythm.line }}>
+            <View
+              ref={titleRef}
+              onLayout={scrollTitle.onTitleLayout}
+              style={{ gap: rhythm.line }}
+            >
               <Text wordSafe variant="secondary" testID="money-item-meta">
                 {item.meta}
               </Text>

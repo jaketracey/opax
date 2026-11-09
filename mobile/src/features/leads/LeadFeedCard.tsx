@@ -5,8 +5,9 @@ import {
   Text,
   useAccessibilitySize,
 } from '../../design/primitives';
-import { accents, rhythm } from '../../design/tokens';
+import { symbols } from '../../design/symbols';
 import type { TextTone } from '../../design/text';
+import { accents, rhythm } from '../../design/tokens';
 import { leadRoute } from '../../navigation/routes/public-money';
 import { moneyCardMenu } from '../money/menu';
 import { discoverPath, leadCardFigure, type LeadView } from './model';
@@ -61,7 +62,7 @@ export function LeadFeedCard({
           >
             {lead.title}
           </Text>
-          <Icon name="chevron.right" size={13} tone="inkSoft" />
+          <Icon name={symbols.chevron} size={13} tone="inkSoft" />
         </View>
         {figure ? (
           <View

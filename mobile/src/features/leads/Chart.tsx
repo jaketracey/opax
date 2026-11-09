@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { LinkRow, Text, ValueRow } from '../../design/primitives';
 import {
   formatCount,
   formatMoney,
   formatMoneyCompact,
   formatPercent,
 } from '../../design/format';
+import { LinkRow, Text, ValueRow } from '../../design/primitives';
 import {
   accents,
   chartRoles,
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.bar,
     backgroundColor: colors[chartRoles.baseline],
     overflow: 'hidden',
+    borderCurve: 'continuous',
   },
   fill: { height: 8 },
 });

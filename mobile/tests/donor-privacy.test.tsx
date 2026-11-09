@@ -1,37 +1,37 @@
 import { act } from 'react';
 import { AccessibilityInfo, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { apiClient, catalogs as runtime } from '../src/api/runtime';
+import snapshot from '../scripts/fixture-snapshot.json';
+import { decodeDiscovery, decodeInterest } from '../src/api/catalog-decoders';
 import {
   Catalogs,
   decodeRecentInterests,
   recentDeclarationsFor,
 } from '../src/api/catalogs';
-import { decodeInterest, decodeDiscovery } from '../src/api/catalog-decoders';
-import { decodeAccess } from '../src/features/people/model';
-import MoneyScreen from '../src/features/money/MoneyScreen';
+import { apiClient, catalogs as runtime } from '../src/api/runtime';
+import { PartyPage } from '../src/features/Party';
+import { FeedRow } from '../src/features/declarations/FeedRow';
+import quizFrontPage from '../src/features/explore/quiz-front-page.json';
+import quiz from '../src/features/explore/quiz-rounds.json';
+import { LeadFeedCard } from '../src/features/leads/LeadFeedCard';
+import { leadsFor } from '../src/features/leads/model';
+import { publicDiscovery } from '../src/features/money-public/discovery';
+import { isOrganisation } from '../src/features/money-public/privacy';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
+import MoneyScreen from '../src/features/money/MoneyScreen';
 import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
-import { forgetScreenReader } from '../src/features/money/hooks';
 import {
   decodeMoneyGraph,
   moneyCatalogs,
   type MoneyJurisdiction,
 } from '../src/features/money/data';
-import { PartyPage } from '../src/features/Party';
-import { FeedRow } from '../src/features/declarations/FeedRow';
-import { leadsFor } from '../src/features/leads/model';
-import { publicDiscovery } from '../src/features/money-public/discovery';
-import { isOrganisation } from '../src/features/money-public/privacy';
-import { LeadCard } from '../src/design/primitives';
+import { forgetScreenReader } from '../src/features/money/hooks';
+import { decodeAccess } from '../src/features/people/model';
 import {
   donorNotNamed,
   isOrganisationDonor,
   publicTie,
 } from '../src/privacy/donorEntity';
-import quiz from '../src/features/explore/quiz-rounds.json';
-import quizFrontPage from '../src/features/explore/quiz-front-page.json';
-import snapshot from '../scripts/fixture-snapshot.json';
 import { catalogs, people, pinned, roster, slugs } from './pinned';
 
 // Every donor the pinned exports hold without organisation evidence is derived
@@ -433,6 +433,15 @@ test('register ties never name a withheld donor, in a member’s register or the
   expect(leaks(texts, names)).toBe(0);
 });
 
+test('the bundled quiz names no withheld donor', () => {
+  expect(
+    leaks(
+      [JSON.stringify(quiz.rounds), JSON.stringify(quizFrontPage)],
+      withheldPhrases(withheldDonors.federal.flatMap(namesOf)),
+    ),
+  ).toBe(0);
+});
+
 test('leads name no withheld donor and drop a "companies in both" lead about one', async () => {
   const discovery = decodeDiscovery(pinned('/discovery.json'));
   const donorNames = discovery.signals.flatMap((s) =>
@@ -450,25 +459,9 @@ test('leads name no withheld donor and drop a "companies in both" lead about one
   expect(shown.withheld).toBeGreaterThan(0);
   const texts: string[] = [];
   for (const lead of leadsFor(shown)) {
-    const r = await render(
-      <LeadCard
-        lead={lead}
-        category={lead.categoryLabel}
-        asAt={{ asOf: '2026-09-21', citation: lead.citation }}
-        testID="card"
-      />,
-    );
+    const r = await render(<LeadFeedCard lead={lead} testID="card" />);
     texts.push(...shownStrings(r.root));
     act(() => r.unmount());
   }
   expect(leaks(texts, names)).toBe(0);
-});
-
-test('the bundled quiz names no withheld donor', () => {
-  expect(
-    leaks(
-      [JSON.stringify(quiz.rounds), JSON.stringify(quizFrontPage)],
-      withheldPhrases(withheldDonors.federal.flatMap(namesOf)),
-    ),
-  ).toBe(0);
 });

@@ -1,12 +1,12 @@
+import { formatCount, formatFinancialYear } from '../../design/format';
 import { fromWebPath } from '../../navigation/routes';
 import { moneyRecordRoute } from '../../navigation/routes/public-money';
-import { formatCount, formatFinancialYear } from '../../design/format';
 import {
   moneyCatalogs,
   type MoneyFigures,
   type MoneyGraph,
-  type MoneyNode,
   type MoneyJurisdiction,
+  type MoneyNode,
 } from './data';
 import {
   defaultMoneyFilters,
@@ -41,16 +41,23 @@ export function filtersFromParams(
   };
   const from = read('from', initial.from),
     to = read('to', initial.to);
-  const industry = param(params.industry);
+  const industry = [
+    ...new Set(
+      (param(params.industry) ?? '')
+        .split(',')
+        .filter((group) =>
+          graph.nodes.some(
+            (n) =>
+              n.kind === 'donor' && (n.group === group || n.industry === group),
+          ),
+        ),
+    ),
+  ].join(',');
   const layers = param(params.layers)?.split(',');
   return {
     from: Math.min(from, to),
     to: Math.max(from, to),
-    industry:
-      industry &&
-      graph.nodes.some((n) => n.kind === 'donor' && n.group === industry)
-        ? industry
-        : null,
+    industry: industry || null,
     donations: layers ? layers.includes('donations') : true,
     grants: layers ? layers.includes('grants') : true,
     contracts: layers ? layers.includes('contracts') : true,
@@ -135,7 +142,10 @@ export function industryLabel(group: string) {
 }
 /** In a sentence: "mining and energy". */
 export const industryWords = (group: string) =>
-  industryLabel(group).toLocaleLowerCase('en-AU');
+  group
+    .split(',')
+    .map((value) => industryLabel(value).toLocaleLowerCase('en-AU'))
+    .join(' and ');
 /** The donors of a group in a sentence: "union donors", "finance donors". */
 const singular: Record<string, string> = {
   unions: 'union',

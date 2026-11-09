@@ -1,6 +1,7 @@
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { ApiError } from '../../api/errors';
 import { Button, SegmentedPicker } from '../../design/controls';
 import {
   formatDate,
@@ -12,7 +13,6 @@ import { LinkRow, MoneyRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
-import { ApiError } from '../../api/errors';
 import {
   agencyRoute,
   grantProgramRoute,
@@ -24,24 +24,24 @@ import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { programRecipients, type Program as ProgramData } from './data';
-import { money } from './runtime';
-import { moneyItemHref, organisationHref } from './routes';
-import { SEAT_CAVEAT, SEAT_RULE } from './SeatGrants';
 import {
-  ListCaption,
-  MoneyList,
-  MoneyStatus,
   askAbout,
   counted,
   fy,
   fyRange,
+  ListCaption,
   matches,
   moneyBar,
   moneyCitation,
+  MoneyList,
+  MoneyStatus,
   readableDates,
   recordSource,
   useMoneySearch,
 } from './parts';
+import { moneyItemHref, organisationHref } from './routes';
+import { money } from './runtime';
+import { SEAT_CAVEAT, SEAT_RULE } from './SeatGrants';
 
 const lower = (v: string) => v.toLocaleLowerCase('en-AU');
 
@@ -291,7 +291,7 @@ export default function Program() {
                     }
                     // Spread: opax/transport reads a plain `source` prop as an image.
                     {...{
-                      source: {
+                      citation: {
                         asOf: program.asOf,
                         citation: [register],
                         savedAt: saved.savedAt,

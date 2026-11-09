@@ -1,6 +1,6 @@
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Button, SegmentedPicker } from '../../design/controls';
 import { formatDate, formatMoneyCompact } from '../../design/format';
 import { FigureBlock } from '../../design/record';
@@ -8,28 +8,28 @@ import { LinkRow, MoneyRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
-import { fundingBySeatTypeRoute } from '../../navigation/routes/public-money';
 import { filtersRoute } from '../../navigation/routes/filters';
-import { allocationFilterModel, stateChoices } from '../sheets/filter-models';
-import { registerFilterModel } from '../sheets/filter-model';
+import { fundingBySeatTypeRoute } from '../../navigation/routes/public-money';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
+import { registerFilterModel } from '../sheets/filter-model';
+import { allocationFilterModel, stateChoices } from '../sheets/filter-models';
 import { combine } from './catalog';
-import { money } from './runtime';
-import { moneyItemHref } from './routes';
 import {
-  ListCaption,
-  MoneyList,
-  MoneyStatus,
-  TitleAlias,
   counted,
+  ListCaption,
   matches,
   moneyBar,
   moneyCitation,
+  MoneyList,
+  MoneyStatus,
   readableDates,
   recordSource,
+  TitleAlias,
   useMoneySearch,
   yearRange,
 } from './parts';
+import { moneyItemHref } from './routes';
+import { money } from './runtime';
 
 const MERIT =
   'A difference in funding does not establish that a project lacked merit. The government describes this program as delivering election commitments. Assessment scores and unsuccessful applications would be needed to test merit.';
@@ -243,7 +243,7 @@ export default function Allocation() {
                   caveat={stage === 'history' ? LATEST_VALUES : SEPARATE_LISTS}
                   // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
-                    source: {
+                    citation: {
                       asOf:
                         stage === 'history'
                           ? data.history.asOf

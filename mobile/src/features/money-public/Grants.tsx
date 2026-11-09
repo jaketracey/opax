@@ -1,7 +1,7 @@
-import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { RefreshControl, View as NativeView } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { View as NativeView, RefreshControl } from 'react-native';
+import { catalogs } from '../../api/runtime';
 import { SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
 import { Screen } from '../../design/layout';
@@ -9,20 +9,17 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Heading, Text } from '../../design/text';
-import { catalogs } from '../../api/runtime';
-import { electorateRoute } from '../../navigation/routes/your-mp';
 import {
   grantProgramRoute,
   grantsRoute,
   largestGrantsRoute,
 } from '../../navigation/routes/public-money';
-import { stateChoices } from '../sheets/filter-models';
+import { electorateRoute } from '../../navigation/routes/your-mp';
+import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
-import { money } from './runtime';
+import { stateChoices } from '../sheets/filter-models';
 import type { GrantIndex, Jurisdiction } from './data';
 import { FUTURE_YEARS_NOTE, grantsFigure } from './HubCards';
-import { organisationHref } from './routes';
-import { SeatFigure } from './SeatGrants';
 import {
   ListCaption,
   MoneyList,
@@ -37,9 +34,9 @@ import {
   recordSource,
   useMoneySearch,
 } from './parts';
-
-/** @deprecated Import from './SeatGrants'. Kept for Your MP and Electorate until wave 6. */
-export { SeatGrants } from './SeatGrants';
+import { organisationHref } from './routes';
+import { money } from './runtime';
+import { SeatFigure } from './SeatGrants';
 
 /** "New South Wales" for "nsw". */
 export const stateName = (code: string) =>
@@ -221,7 +218,7 @@ function GrantList({
                   }
                   // Spread: opax/transport reads a plain `source` prop as an image.
                   {...{
-                    source: {
+                    citation: {
                       asOf: data.meta.asOf,
                       citation: [moneyCitation(data.meta.source)],
                       savedAt: saved.savedAt,

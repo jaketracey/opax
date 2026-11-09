@@ -1,4 +1,4 @@
-import type { MoneyFigures, MoneyGraph, MoneyNode, MoneyEdge } from './data';
+import type { MoneyEdge, MoneyFigures, MoneyGraph, MoneyNode } from './data';
 import { cpiMultiplier } from './ported/cpi';
 
 export interface MoneyFilters {
@@ -107,7 +107,11 @@ export function moneyView(raw: MoneyGraph, f: MoneyFilters): MoneyGraph {
       [byId.get(e.source)!, byId.get(e.target)!].some(
         (n) =>
           n.kind === 'donor' &&
-          (n.group === f.industry || n.industry === f.industry),
+          f
+            .industry!.split(',')
+            .some(
+              (industry) => n.group === industry || n.industry === industry,
+            ),
       )
     );
   });
