@@ -265,7 +265,11 @@ export default function AskScreen() {
       inputRef={input}
       onSend={() => void send()}
       onStop={stop}
-      onOptions={() => void openAskOptions()}
+      onOptions={() => {
+        input.current?.blur();
+        Keyboard.dismiss();
+        void openAskOptions();
+      }}
       onTalk={talk}
       offline={offline}
       inputError={inputError}
