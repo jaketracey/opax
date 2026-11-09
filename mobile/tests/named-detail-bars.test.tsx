@@ -619,6 +619,57 @@ test('Android keeps its baseline content-coordinate measurement and string title
   }
 });
 
+test('Android Screen.barTitle keeps its content anchor rather than measuring window coordinates', () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  const options: Record<string, unknown> = {};
+  const navigation = {
+    setOptions: (next: object) => Object.assign(options, next),
+    isFocused: () => true,
+    addListener: () => () => {},
+  };
+  try {
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <HeaderHeightContext.Provider value={100}>
+            <Screen barTitle="Members">
+              <Heading level={1}>Members</Heading>
+            </Screen>
+          </HeaderHeightContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    const anchor = view!.root.findByType(TitleAnchor).findByType(View);
+    act(() => {
+      anchor.props.ref({
+        measureLayout: (
+          _parent: unknown,
+          done: (...values: number[]) => void,
+        ) => done(0, 160, 300, 80),
+      });
+      anchor.props.onLayout(headingLayout);
+    });
+    expect(options.headerTitle).toBe('');
+    const scroll = (y: number) =>
+      act(() =>
+        view!.root
+          .findByType(ScrollView)
+          .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    scroll(155);
+    expect(options.headerTitle).toBe('');
+    scroll(157);
+    expect(options.headerTitle).toBe('Members');
+    scroll(0);
+    expect(options.headerTitle).toBe('');
+    act(() => view!.unmount());
+    view = undefined;
+  } finally {
+    Platform.OS = original;
+  }
+});
+
 test.each([
   [402, 1, 266],
   [402, 2, 146],

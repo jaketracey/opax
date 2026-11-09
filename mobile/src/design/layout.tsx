@@ -15,6 +15,7 @@ import {
   type RefObject,
 } from 'react';
 import {
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -156,8 +157,16 @@ export function Screen({
     heading.current = node;
   }, []);
   const nativeTitle = useTitleOnScroll(
-    heading,
+    Platform.OS === 'ios' ? heading : null,
     inPane || suppliedBridge ? undefined : barTitle,
+  );
+  const setNativeAnchorBottom = nativeTitle.setAnchorBottom;
+  const setContentAnchor = useCallback(
+    (bottom: number) => {
+      setAnchorBottom(bottom);
+      if (Platform.OS !== 'ios') setNativeAnchorBottom(bottom);
+    },
+    [setNativeAnchorBottom],
   );
   useLayoutEffect(() => {
     titleScroll.current =
@@ -199,11 +208,14 @@ export function Screen({
         >
           <RegionProvider value={inner}>
             <SurfaceContext.Provider value={ground}>
-              <TitleAnchorContext.Provider value={setAnchorBottom}>
+              <TitleAnchorContext.Provider value={setContentAnchor}>
                 <TitleHeadingContext.Provider
                   value={{
                     setRef: setHeading,
-                    onLayout: nativeTitle.onTitleLayout,
+                    onLayout:
+                      Platform.OS === 'ios'
+                        ? nativeTitle.onTitleLayout
+                        : undefined,
                   }}
                 >
                   <TitleContentContext.Provider value={contentRoot}>
