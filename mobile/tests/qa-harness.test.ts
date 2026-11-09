@@ -306,6 +306,50 @@ test('Money map expands the industry sheet before scrolling to Unions', () => {
   expect(steps[industry + 4]).toEqual({
     tapOn: { id: 'filters-choice-unions' },
   });
+  expect(steps[industry + 5]).toEqual({
+    tapOn: { id: 'BackButton', text: 'Filters' },
+  });
+  expect(steps[industry + 6].extendedWaitUntil.visible).toEqual({
+    id: 'filters-row-contracts',
+  });
+});
+
+test('declarations retry the profile push without clearing search and dismiss it only after checking the return', () => {
+  const steps = maestroSteps('.maestro/27-leads.yaml');
+  const at = steps.findIndex(
+    (step: any) => step.repeat?.while?.notVisible?.id === 'person-screen-title',
+  );
+  expect(at).toBeGreaterThan(0);
+  expect(steps[at].repeat).toEqual({
+    times: 3,
+    while: { notVisible: { id: 'person-screen-title' } },
+    commands: [
+      { tapOn: { id: 'declaration-person-0', retryTapIfNoChange: false } },
+      'waitForAnimationToEnd',
+    ],
+  });
+  expect(steps[at + 1].extendedWaitUntil.visible).toEqual({
+    id: 'person-screen-title',
+  });
+  const search = steps.findIndex((step: any) => step.inputText === 'Briskey');
+  expect(search).toBeLessThan(at);
+  expect(steps.slice(search, at)).not.toContainEqual({
+    runFlow: 'support/search-dismiss.yaml',
+  });
+  const tail = steps.slice(-5);
+  expect(tail[0]).toEqual({ tapOn: { id: 'BackButton' } });
+  expect(tail[1].extendedWaitUntil.visible).toEqual({
+    id: 'declarations-screen',
+  });
+  expect(tail[2].assertVisible).toEqual({
+    id: 'declaration-person-0',
+    text: 'Jo Briskey, .*House of Representatives.*',
+  });
+  expect(tail[3]).toEqual({ runFlow: 'support/search-dismiss.yaml' });
+  expect(tail[4].runFlow).toEqual({
+    file: 'support/restore-tab-bar.yaml',
+    env: { TOP_ID: 'today-screen-message', TAB_ID: 'tab-today' },
+  });
 });
 
 test('Bill text scrolls past the summary, returns to the overview and opens Contents via More on compact bars', () => {

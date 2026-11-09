@@ -551,8 +551,18 @@ name: 27 Leads and the declared-interests feed
 - assertVisible:
     id: declarations-screen
 - takeScreenshot: ${EVIDENCE}/27-declarations-member
-- tapOn:
-    id: declaration-person-0
+# An active native bar search can consume the first row tap. Keep the
+# member filter applied and retry only while the profile has not opened.
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        id: person-screen-title
+    commands:
+      - tapOn:
+          id: declaration-person-0
+          retryTapIfNoChange: false
+      - waitForAnimationToEnd
 - extendedWaitUntil:
     visible:
       id: person-screen-title
@@ -561,3 +571,19 @@ name: 27 Leads and the declared-interests feed
     id: person-screen-title
     text: Jo Briskey
 - takeScreenshot: ${EVIDENCE}/27-profile
+# Return with the member and chamber filters intact before dismissing search.
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: declarations-screen
+    timeout: 30000
+- assertVisible:
+    id: declaration-person-0
+    text: Jo Briskey, .*House of Representatives.*
+- runFlow: support/search-dismiss.yaml
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-screen-message
+      TAB_ID: tab-today

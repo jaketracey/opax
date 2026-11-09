@@ -117,9 +117,12 @@ name: 23 Native money map, held figures, original source and ranked list
     speed: 20
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/23-industry
-# A checkmark row: choosing one returns to the sheet.
+# Industry allows multiple choices, so selection keeps the list open.
 - tapOn:
     id: filters-choice-unions
+- tapOn:
+    id: BackButton
+    text: Filters
 - extendedWaitUntil:
     visible:
       id: filters-row-contracts
