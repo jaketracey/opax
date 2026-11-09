@@ -175,6 +175,9 @@ name: 27 Leads and the declared-interests feed
 - waitForAnimationToEnd
 - tapOn:
     id: lead-table-toggle
+- assertVisible:
+    id: lead-table-toggle
+    text: Show as chart
 # pointer: /signals/1/chart/participants/0/value as money
 # pointer: /signals/1/chart/participants/0/record_count as count
 - scrollUntilVisible:
@@ -186,9 +189,6 @@ name: 27 Leads and the declared-interests feed
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- assertVisible:
-    id: lead-table-toggle
-    text: Show as chart
 - takeScreenshot: ${EVIDENCE}/27-table
 # "How this lead was found": the method note and every caveat in plain
 # words; the pipeline's own caveat is replaced (specs/money.md 2.10).

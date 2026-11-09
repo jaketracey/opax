@@ -91,5 +91,8 @@ name: 37 Party mentions, creditors, returns, follow and Your MP pay
     element: { id: person-party-receipts }
     timeout: 90000
 - tapOn: { id: person-party-receipts }
-- assertVisible: { id: party-title }
+# This link anchors the party page at Receipts, below its title.
+- extendedWaitUntil:
+    visible: { id: party-receipts-heading }
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/37-your-mp-receipts
