@@ -347,11 +347,14 @@ awarded amounts with source cents retained, including zero and negative values.
 Recipients are public GrantConnect records. Apply the app's existing recipient
 display policy when decoding, as for program grants.
 
-Every indexed seat has a file, including current seats with no mapped grants
-(`t: 0`, `c: 0`, `grants: []`). Historical seat names with matched grants remain
-in the index. A zero count means no awards matched by the existing postcode
-method, not that the electorate received no funding. These files use all
-matched awards before the recipient, program and program-grant listing caps.
+Every indexed seat has a file and at least one matched award. Seats with no
+matched grants are omitted from both the index and slice: a matching or detail
+coverage gap cannot support a published zero funding total. Historical seat
+names with matched grants remain in the index. These files use all matched
+awards before the recipient, program and program-grant listing caps. The
+[11 November matching audit](reports/2026-11-11-seat-grants-matching.md) records
+why fourteen current seats cannot be populated reliably from the held data.
+An app lookup with no seat entry has unavailable data and must not default to $0.
 
 Rows sort by amount descending, then grant id for ties, across all pages.
 At most 500 rows are in each file. Page two is `<key>-2.json`, then
@@ -366,7 +369,7 @@ The export writes these with the federal index and removes obsolete seat
 pages. `python3 scripts/vm/validate_data.py grants` fails the grants group for
 missing, extra or malformed pages, invalid page links, duplicate awards,
 wrong ordering, source/updated metadata differences, seat identity differences,
-or total/count mismatches. Each page's `t` and `c` must equal the index exactly;
+zero-grant index entries, or total/count mismatches. Each page's `t` and `c` must equal the index exactly;
 the rows must also reconcile across the complete chain.
 
 Normal regeneration, on a machine with the source database, is
@@ -382,11 +385,13 @@ Cloudflare documents the [static asset header rules](https://developers.cloudfla
 
 Local generation on 10 November used a read-only public-source snapshot from
 the desktop database, passed through the shared `resolve_programs()`,
-`complete_seat_index()`, `build_seat_files()` and `write_seat_outputs()` rules.
+`prepare_seat_index()`, `build_seat_files()` and `write_seat_outputs()` rules.
 It reconciles all 7,906 mapped awards against the checked-in index. The index's
 source timestamp remains `2026-10-19T11:18:41Z`; this slice does not claim a new
-source refresh. All existing seat figures and metadata are retained. Fourteen
-current seats with no matched awards were added as zero rows.
+source refresh. Regeneration following review on 11 November retains all
+existing seat figures and metadata and the 139-seat list from `origin/main`.
+The fourteen unsupported zero rows from the first D5 commit and their empty
+files have been removed. The exporter no longer pads the index from the roster.
 
 | Local check | Grants | Seat total (AUD) | Pages | Bytes across pages |
 |---|---:|---:|---:|---:|
@@ -394,8 +399,8 @@ current seats with no matched awards were added as zero rows.
 | Melbourne | 566 | $13,550,986,379 | 2 | 201,567 |
 | Sydney | 511 | $10,142,777,193 | 2 | 181,124 |
 
-The slice has 153 seat records (150 current seats plus retained historical
-names), 155 JSON files and 3,251,602 bytes total. Melbourne is the largest seat
+The slice has 139 matched seat records, 141 JSON files and 3,208,858 bytes total.
+Melbourne is the largest seat
 at 201,567 bytes across both pages; its first page is the largest individual
 file at 176,043 bytes. Leichhardt's source sum is $3,055,693,008.50 and its
 existing index total is $3,055,693,009, within the final rounding interval.

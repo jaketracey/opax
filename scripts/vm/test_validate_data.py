@@ -752,10 +752,17 @@ class GrantsTests(Base):
         (self.root / f"{self.FED}/seats/bass-2.json").unlink()
         self.assertFails("grants", "bass-2.json unreadable or missing")
 
-    def test_zero_grant_seat_and_orphan_page(self):
+    def test_zero_grant_index_entry_is_rejected_even_with_a_matching_empty_slice(self):
         self.edit(self.IDX, lambda d: d["electorates"][0].update(c=0, t=0))
         self.edit(f"{self.FED}/seats/bass.json", lambda d: d.update(c=0, t=0, grants=[]))
+        self.assertFails("grants", "seat Bass has 0 matched grants; omit it from the index")
+
+    def test_nonempty_zero_dollar_total_is_valid(self):
+        self.edit(self.IDX, lambda d: d["electorates"][0].update(t=0))
+        self.edit(f"{self.FED}/seats/bass.json", lambda d: d.update(t=0, grants=[dict(g, v=0) for g in d["grants"]]))
         self.assertOk("grants")
+
+    def test_orphan_page_is_rejected(self):
         self.write(f"{self.FED}/seats/bass-2.json", {})
         self.assertFails("grants", "unlinked pages")
 

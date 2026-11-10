@@ -585,6 +585,8 @@ def build_seat_files(grants, recips, programs, index):
         raise ValueError("Matched grants have no seat index entry")
     for e in index["electorates"]:
         gs = by_seat[e["n"]]
+        if e["c"] == 0:
+            raise ValueError(f"Seat {e['n']} has no matched grants; omit it from the index")
         total = sum((Decimal(str(g["v"])) for g in gs), Decimal(0))
         if len(gs) != e["c"] or abs(total - Decimal(str(e["t"]))) > Decimal("0.5"):
             raise ValueError(f"Seat {e['n']} grants do not match the index total/count")
@@ -612,19 +614,12 @@ def build_seat_files(grants, recips, programs, index):
     return pages
 
 
-def complete_seat_index(index, current_states):
-    """Include current seats with no mapped awards, retaining historical matches."""
-    indexed = {program_key(e["n"]) for e in index["electorates"]}
-    for name, state in current_states.items():
-        key = program_key(name)
-        if key not in indexed:
-            index["electorates"].append({"n": name, "st": state, "t": 0, "c": 0,
-                                       "r": 0, "dt": 0, "dr": 0, "adhoc": 0,
-                                       "mps": [], "margin": {}})
-            indexed.add(key)
+def prepare_seat_index(index):
+    """Key only seats with matched awards. A mapping gap is not a zero award total."""
     for e in index["electorates"]:
+        if e["c"] == 0:
+            raise ValueError(f"Seat {e['n']} has no matched grants; omit it from the index")
         e["key"] = program_key(e["n"])
-    index["electorates"].sort(key=lambda e: (-e["t"], e["n"]))
 
 
 def resolve_programs(grants, jur):
@@ -838,7 +833,7 @@ def split_aliases(aliases, names):
 SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, release_holder,
                     seat_vacant, seat_holder,
                     margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
-                    program_index_extras, program_name, build_seat_files, complete_seat_index, resolve_programs,
+                    program_index_extras, program_name, build_seat_files, prepare_seat_index, resolve_programs,
                     unmangle, clean_row, source_title, award_value, split_aliases)
 SHARED_CONSTANTS = ("GENERIC_NAME_WORDS", "LEGAL_NAME_WORDS", "ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
                     "PROGRAM_RECIPIENTS_MAX", "SEAT_GRANTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
@@ -908,19 +903,7 @@ def seat_periods_from_release(public: Path) -> dict:
     return dict(sorted(out.items()))
 
 
-def current_seat_states_from_roster(path: Path) -> dict:
-    """Current federal House seats and their state codes, including unmapped seats."""
-    if not path.exists():
-        return {}
-    people = json.loads(path.read_text(encoding="utf-8")).get("people", [])
-    return {r["electorate"]: r["state"].lower()
-            for p in people if p.get("current") for r in p.get("representation", [])
-            if r.get("jurisdiction") == "federal" and r.get("chamber") == "representatives"
-            and r.get("electorate") and r.get("state")}
-
-
-def remote_program(current_seats: dict | None = None, seat_periods: dict | None = None,
-                   current_states: dict | None = None) -> str:
+def remote_program(current_seats: dict | None = None, seat_periods: dict | None = None) -> str:
     """The stdlib-only program streamed to the DB host: shared rules + REMOTE_BODY."""
     head = ["from __future__ import annotations",
             "import json, os, re, sqlite3, sys, zlib",
@@ -932,7 +915,6 @@ def remote_program(current_seats: dict | None = None, seat_periods: dict | None 
         head.append(f"{name} = {globals()[name]!r}")
     head.append(f"CURRENT_SEATS = {current_seats or {}!r}")
     head.append(f"SEAT_PERIODS = {seat_periods or {}!r}")
-    head.append(f"CURRENT_SEAT_STATES = {current_states or {}!r}")
     return "\n".join(head) + "\n\n" + "\n\n".join(inspect.getsource(f) for f in SHARED_FUNCTIONS) + "\n" + REMOTE_BODY
 
 REMOTE_BODY = r'''
@@ -1458,7 +1440,7 @@ out = {
     "programs": programs_out,   # file key -> program file
 }
 if JUR == "federal":
-    complete_seat_index(out["index"], CURRENT_SEAT_STATES)
+    prepare_seat_index(out["index"])
     out["seats"] = build_seat_files(grants, recips,
         {pid: program_name(p["names"]) or pid for pid, p in prog.items()}, out["index"])
 json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
@@ -1553,14 +1535,13 @@ def run_remote(host: str | None, jur: str, top: int, cap: int, force_abns: list[
     """
     current = current_seats_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
     periods = seat_periods_from_release(ROOT / "portal" / "public")
-    states = current_seat_states_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
     argv = ["python3" if host else sys.executable, "-", jur, str(top), str(cap), ",".join(force_abns), str(programs),
             ",".join(force_programs or [])]
     if host:
         cmd, env = ["ssh", host, *argv], None
     else:
         cmd, env = argv, dict(os.environ, **({"OPAX_DB": local_db} if local_db else {}))
-    proc = subprocess.run(cmd, input=remote_program(current, periods, states), capture_output=True, text=True, timeout=3600, env=env)
+    proc = subprocess.run(cmd, input=remote_program(current, periods), capture_output=True, text=True, timeout=3600, env=env)
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr[-4000:])
         return None

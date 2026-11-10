@@ -615,14 +615,27 @@ class SeatFilesTests(unittest.TestCase):
         self.assertTrue(all((p["t"], p["c"], p["meta"]) == (index["electorates"][0]["t"], 1001, index["meta"])
                             for p in pages.values()))
 
-    def test_boundary_and_empty_current_seats(self):
+    def test_boundary_and_only_matched_seats_are_indexed(self):
         gs = [self.seat_grant(id=f"GA{i}", v=1) for i in range(500)]
         index = self.index(total=500, count=500)
-        eg.complete_seat_index(index, {"Bullwinkel": "wa", "Eden-Monaro": "nsw"})
+        eg.prepare_seat_index(index)
         pages = eg.build_seat_files(gs, RECIPS, {"GO1": "Program"}, index)
-        self.assertEqual(set(pages), {"eden-monaro", "bullwinkel"})
-        self.assertEqual((pages["bullwinkel"]["c"], pages["bullwinkel"]["t"], pages["bullwinkel"]["grants"]), (0, 0, []))
+        self.assertEqual(set(pages), {"eden-monaro"})
+        self.assertEqual([e["n"] for e in index["electorates"]], ["Eden-Monaro"])
         self.assertIsNone(pages["eden-monaro"]["next"])
+
+    def test_zero_grant_seat_cannot_be_exported_as_a_zero_total(self):
+        index = self.index(total=0, count=0)
+        with self.assertRaisesRegex(ValueError, "no matched grants; omit"):
+            eg.prepare_seat_index(index)
+        with self.assertRaisesRegex(ValueError, "no matched grants; omit"):
+            eg.build_seat_files([], {}, {}, index)
+
+    def test_zero_dollar_award_is_still_a_matched_grant(self):
+        index = self.index(total=0, count=1)
+        eg.prepare_seat_index(index)
+        page = eg.build_seat_files([self.seat_grant(v=0)], RECIPS, {"GO1": "Program"}, index)["eden-monaro"]
+        self.assertEqual((page["t"], page["c"], page["grants"][0]["v"]), (0, 1, 0))
 
     def test_index_total_and_count_mismatch_fail_before_writing(self):
         for index in (self.index(total=99), self.index(count=2)):
@@ -638,14 +651,14 @@ class SeatFilesTests(unittest.TestCase):
     def test_missing_index_seat_and_colliding_file_keys_fail(self):
         with self.assertRaisesRegex(ValueError, "no seat index"):
             eg.build_seat_files([self.seat_grant()], RECIPS, {}, {"meta": {}, "electorates": []})
-        index = self.index(total=0, count=0)
-        index["electorates"].append({"n": "Eden Monaro", "st": "nsw", "t": 0, "c": 0})
+        index = self.index()
+        index["electorates"].append({"n": "Eden Monaro", "st": "nsw", "t": 100, "c": 1})
         with self.assertRaisesRegex(ValueError, "Duplicate seat file key"):
-            eg.build_seat_files([], {}, {}, index)
+            eg.build_seat_files([self.seat_grant(), grant(id="GA2", el="Eden Monaro", pid="GO1")], RECIPS, {"GO1": "Program"}, index)
 
-    def test_roster_capitalisation_does_not_create_a_second_seat(self):
-        index = {"meta": {}, "electorates": [{"n": "Mcpherson", "st": "qld", "t": 0, "c": 0}]}
-        eg.complete_seat_index(index, {"McPherson": "qld"})
+    def test_index_key_uses_recorded_seat_spelling(self):
+        index = {"meta": {}, "electorates": [{"n": "Mcpherson", "st": "qld", "t": 100, "c": 1}]}
+        eg.prepare_seat_index(index)
         self.assertEqual(len(index["electorates"]), 1)
         self.assertEqual(index["electorates"][0]["key"], "mcpherson")
 
@@ -674,6 +687,7 @@ class RemoteProgramTests(unittest.TestCase):
         self.assertIn("def build_seat_files(", src)
         self.assertIn('g["pid"] = key', src)
         self.assertIn('out["seats"] = build_seat_files(', src)
+        self.assertNotIn("CURRENT_SEAT_STATES", src)
 
     def test_current_seats_from_roster(self):
         with tempfile.TemporaryDirectory() as tmp:

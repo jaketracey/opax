@@ -30,7 +30,7 @@ way and every file that `git status` shows as changed or added must parse.
   money      graph/money.json, plus money.qld/vic/tas.json where they exist: meta, nodes, edges
   grants     graph/grants.federal.json: meta, agencies, programs, recipients; grants/federal
              shard-NN.json files match meta.shards, every listed program has its programs/ file,
-             each electorate has complete seats/ pages matching its total/count and index metadata,
+             each electorate has a positive grant count and complete seats/ pages matching its total/count and index metadata,
              and every federal id in grants/program-notes.json is still in programs[] (the rule
              portal/test/program-notes.test.mjs enforces)
   suppliers  suppliers.json and agencies.json; the suppliers/ and agencies/ shard directories
@@ -548,6 +548,9 @@ def _check_grant_seats(index: dict, fed: str) -> list[str]:
         c, t = seat.get("c"), seat.get("t")
         if isinstance(c, bool) or not isinstance(c, int) or c < 0 or isinstance(t, bool) or not isinstance(t, (int, float)) or not math.isfinite(t):
             errs.append(f"seat {seat['n']} has an invalid index total/count")
+            continue
+        if c == 0:
+            errs.append(f"seat {seat['n']} has 0 matched grants; omit it from the index")
             continue
         count, total, previous, complete = 0, Decimal(0), None, True
         pages = max(1, (c + 499) // 500)
