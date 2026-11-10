@@ -1067,22 +1067,25 @@ CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
           "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity,
-          "video": check_video, "electorates": check_electorates}
+          "video": check_video}
+# Checks for data no nightly group carries: the electorate release is exported by
+# hand (scripts/export_electorates.py), so it is checked on request, never by default.
+MANUAL_CHECKS = {"electorates": check_electorates}
 
 
 def main() -> int:
     groups = sys.argv[1:] or list(CHECKS)
     bad = 0
     for g in groups:
-        if g not in CHECKS:
-            print(f"unknown group {g!r}; choose from {', '.join(CHECKS)}", file=sys.stderr)
+        if g not in CHECKS and g not in MANUAL_CHECKS:
+            print(f"unknown group {g!r}; choose from {', '.join([*CHECKS, *MANUAL_CHECKS])}", file=sys.stderr)
             return 64
         if (not sys.argv[1:] and g in ("instruments", "audit")
                 and not (ROOT / PUBLIC / g / "manifest.json").is_file()
                 and _head_names(PUBLIC + "/" + g, r".*") is None):
             print(f"SKIP {g} (no catalogue)")
             continue
-        errs = CHECKS[g]()
+        errs = (CHECKS.get(g) or MANUAL_CHECKS[g])()
         if errs:
             bad += 1
             for e in errs:
