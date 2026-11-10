@@ -5,13 +5,15 @@ import { Button, Card, Icon, Text } from '../../design/primitives';
 import { designFlags } from '../../design/flags';
 import { symbols } from '../../design/symbols';
 import { colors, interfaceFonts, radii, rhythm } from '../../design/tokens';
-import { talkRoute } from '../../navigation/routes/account';
+import { talkRoute, talkSignInRoute } from '../../navigation/routes/account';
 import { voiceLinked } from '../../voice/linked';
-
-const start = () => router.push(talkRoute);
+import { accountCopy } from '../account/copy';
+import { useAccount } from '../account/store';
 
 /** An invitation only: Talk owns sign-in, consent and starting the call. */
 export function VoiceCard() {
+  const account = useAccount();
+  const signedOut = !account.checking && account.status?.signedIn === false;
   const extra = Constants.expoConfig?.extra;
   // iOS voiceLinked also stays true without the native module. Honour the
   // build switch that resolves Talk to entry.production.ts in that bundle.
@@ -19,10 +21,13 @@ export function VoiceCard() {
     extra?.variant === 'production' && extra.productionVoiceEnabled !== true;
   if (!voiceLinked || !designFlags.talkInAsk || voiceOff) return null;
 
+  const label = signedOut ? accountCopy.signUpToTalk : 'Start a voice chat';
+  const start = () => router.push(signedOut ? talkSignInRoute : talkRoute);
+
   return (
     <Card
       onPress={start}
-      accessibilityLabel="Start a voice chat"
+      accessibilityLabel={label}
       accessibilityHint="Talk to OPAX about parliament"
       testID="today-voice"
     >
@@ -41,12 +46,13 @@ export function VoiceCard() {
             Talk it through
           </Text>
           <Text wordSafe tone="inkSoft">
-            Ask about a bill, a vote or your MP, out loud. Answers come with
-            sources.
+            {signedOut
+              ? 'You’ll need a free account for voice chats. Ask about a bill, a vote or your MP, with sources.'
+              : 'Ask about a bill, a vote or your MP, out loud. Answers come with sources.'}
           </Text>
         </View>
         <Button
-          label="Start a voice chat"
+          label={label}
           variant="primary"
           size="large"
           fullWidth
