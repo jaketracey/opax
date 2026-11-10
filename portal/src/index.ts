@@ -11,6 +11,7 @@ import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../pub
 import { saPublicResponse, saEventPayload } from './sa-hansard'
 import { saEvidenceText, saEvidenceRecord, saGenerationResponse, saConversationInput } from './sa-evidence'
 import { guardAnswerAttribution } from './ask-attribution'
+import { identityAnswer, identityResponse } from './ask-identity'
 import { loosePositionPoints, claimAttributionOk, repairCausal } from './research-evidence'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
@@ -1502,6 +1503,8 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
     }
   }
   mark('rewrite')
+  const identity = await identityAnswer(rawInput, agenticToolDeps(env, firstBudget?.signal ?? request.signal, ctx))
+  if (identity) { mark('identity'); return timed(identityResponse(identity, request)) }
   let people: { name: string }[] = []
   if (needsAskPeople(rawInput)) {
     try { people = (await loadPeople(env)).people }
@@ -6406,11 +6409,14 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     answerQuestion=question;routedInput=body.value
     const bad = validateFilters(k => body.value[k])
     if (bad) return json({ error: bad }, 400)
+    const identity = await identityAnswer(body.value as AskInput, agenticToolDeps(selected, request.signal, ctx))
+    if (identity) return identityResponse(identity, request)
     const money=await federalPartyMoneyAnswer(body.value as AskInput,selected.ASSETS)
     if(money)return federalPartyMoneyResponse(money,request)
     return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
   }
   const served=await serve()
+  if (served.headers.has('x-opax-identity-route')) return usage ? withResearchEval(served, () => ({ ...researchEvalUsage(usage), model: 'deterministic-identity' })) : served
   if(served.headers.has('x-opax-money-route'))return usage?withResearchEval(served,()=>({...researchEvalUsage(usage),model:'deterministic-receipts'})):served
   answerQuestion=String(routedInput?.question??answerQuestion)
   const response = await withAnswerLanguage(served,selected.RESEARCH_LOOP==='route'?answerQuestion:undefined,typeof routedInput?.asked_as==='string'?routedInput.asked_as:undefined)
@@ -6550,6 +6556,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       if(rewrite&&typeof rewrite==='object'){budget.dispose();return json(clarifyPayload(question,rewrite.suggestion))}
       if(typeof rewrite==='string'){
         question=rewrite;input.question=rewrite;input.asked_as=rewrite
+        const identity = await budget.run(() => identityAnswer(input as AskInput, agenticToolDeps(env, budget.signal, ctx)))
+        if (identity) return identityResponse(identity, request)
         namedScope=await resolveNamedScope(question,agenticToolDeps(env,budget.signal),Math.min(4_000,budget.remaining),agenticFilters(input))
       }
     }

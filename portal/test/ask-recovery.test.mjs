@@ -3,6 +3,7 @@ import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
 const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
 import {saConversationInput} from './sa-evidence-harness.mjs';
 import * as passageText from '../src/passage-text.ts';
+import {isIdentityQuestion} from '../src/ask-identity-intent.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -12,7 +13,7 @@ import ts from 'typescript';
 
 const transpile = s => ts.transpileModule(s, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const helpers = {};
-runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers, require: () => passageText });
+runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers, require: () => ({...passageText,isIdentityQuestion}) });
 const parsed = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const names = new Set(['apiAsk', 'apiAskStream', 'askPayload', 'hasUnsupportedQuotes', 'unsupportedQuotesIn', 'unquoteUnsupported', 'looseAnswer', 'evidenceOnlyAnswer', 'isRefusal', 'withAskedAs']);
 const code = parsed.statements.filter(n => ts.isFunctionDeclaration(n) ? names.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => names.has(d.name.getText(parsed)))).map(n => n.getText(parsed)).join('\n');
@@ -44,6 +45,7 @@ function harness(responses, env = {}) {
     SSE_HEADERS: { 'content-type': 'text/event-stream' },
     // The donor privacy check and model budget are exercised in donor-privacy.test.mjs and model-budget.test.mjs.
     questionNamesWithheldDonor: async () => false, readerTurns: () => [], withheldDonorAnswer: () => ({}), MODEL_BUDGET_HEADER: 'x-opax-model-budget', modelBudgetBusy: () => new Response(null, { status: 503 }), 
+    identityAnswer:async()=>null, agenticToolDeps:()=>({}),
     federalPartyMoneyAnswer:async()=>null, rankedMoneyAnswer: async () => null, paidAnswer: async () => null, standaloneQuestion: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
     isPersonOverviewCandidate: () => false, isPersonOverviewIntent: () => false, isPersonRecentCandidate: () => false, isPersonRecentIntent: () => false, overviewPayload: async payload => ({...payload,is_overview_intent:false}),

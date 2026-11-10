@@ -10,7 +10,9 @@ import { isWitness } from '../public/speech-attribution.js';
 import ts from 'typescript';
 import {build} from 'esbuild';
 const transpile=s=>ts.transpileModule(s,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
-const exports={};runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts',import.meta.url),'utf8')),{exports, require: () => passageText});
+const intentBundle=await build({entryPoints:[new URL('../src/ask-identity-intent.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
+const identityIntent=await import('data:text/javascript;base64,'+Buffer.from(intentBundle.outputFiles[0].text).toString('base64'));
+const exports={};runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts',import.meta.url),'utf8')),{exports, require: name => name==='./ask-identity-intent'?identityIntent:passageText});
 const {normaliseFootnotes,FootnoteStream}=exports;
 const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
 const scope=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
@@ -24,6 +26,12 @@ const api=runInNewContext(transpile([extract('function buildAskBody(','/** The p
 const id='r1/t/transcript/0-50',neighbour='r1/t/transcript/50-100',generated='r1/t/da-summary/0-50';
 const fixture=()=>({answer:'😀 A fact[^1]. Another fact[^2].\n\n[^1]: block-AA\n[^2]: block-AB',citation_footnote_to_context:{'block-AA':id,'block-AB':neighbour},retrieval_results:{resources:{r1:{slug:'speech-1',title:'Speech',fields:{'t/transcript':{paragraphs:{[id]:{text:'Original passage',score:0.8,score_type:'RERANKER'}}}}}}},augmented_context:{paragraphs:{[neighbour]:{id:neighbour,text:'Surrounding original passage'}}}});
 const plain=x=>JSON.parse(JSON.stringify(x));
+test('identity queries never activate the speech position guard',()=>{
+ for(const query of ['Which party is Jacqui Lambie with?','Which electorate does Ged Kearney represent?','When was Alex Example first elected?','Is Alex Example still in parliament?']){
+  const body={query,prompt:{system:'You explain Australian politicians’ documented positions from primary records.'}};
+  assert.equal(exports.isPositionBody(body),false,query);const raw={answer:'Recorded identity fact.'};assert.equal(exports.guardPositionAnswer(raw,body),raw);
+ }
+});
 test('original-turn and witness-split versions expire unsafe answers',()=>{
  const position={question:'What would Example MP say about housing?',speaker:'Example MP',kind:'speech'};
  assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v7:witness-split-v1:mixed-speakers-v1');
