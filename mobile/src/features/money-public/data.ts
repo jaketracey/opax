@@ -106,6 +106,7 @@ export function decodeGrantIndex(v: unknown) {
     seats: array((v) => {
       const r = object(v);
       return {
+        key: opt(r.key),
         name: nonempty(r.n),
         state: nonempty(r.st),
         total: number(r.t),
@@ -127,6 +128,33 @@ export function decodeGrantIndex(v: unknown) {
   };
 }
 export type GrantIndex = ReturnType<typeof decodeGrantIndex>;
+export function decodeGrant(v: unknown) {
+  const g = object(v);
+  const recipient = publicRecipient(
+    nonempty(g.rn),
+    opt(g.k),
+    abnType(g),
+    opt(g.rid),
+  );
+  const guid = opt(g.guid);
+  return {
+    id: nonempty(g.id),
+    ...recipient,
+    recipientId: recipient.organisation ? opt(g.rid) : '',
+    title: recipient.organisation ? opt(g.n) : '',
+    guid: recipient.organisation ? guid : '',
+    value: number(g.v),
+    seat: opt(g.el),
+    state: opt(g.elst),
+    year: opt(g.fy),
+    start: opt(g.s),
+    selection: opt(g.sel),
+    sourceUrl:
+      recipient.organisation && /^[a-f0-9-]{36}$/.test(guid)
+        ? `https://www.grants.gov.au/Ga/Show/${guid}`
+        : null,
+  };
+}
 export function decodeProgram(v: unknown) {
   const d = object(v);
   return {
@@ -159,33 +187,7 @@ export function decodeProgram(v: unknown) {
               count: count(e.c),
             };
           })(d.electorates),
-    grants: array((v) => {
-      const g = object(v);
-      const recipient = publicRecipient(
-        nonempty(g.rn),
-        opt(g.k),
-        abnType(g),
-        opt(g.rid),
-      );
-      const guid = opt(g.guid);
-      return {
-        id: nonempty(g.id),
-        ...recipient,
-        recipientId: recipient.organisation ? opt(g.rid) : '',
-        title: recipient.organisation ? opt(g.n) : '',
-        guid: recipient.organisation ? guid : '',
-        value: number(g.v),
-        seat: opt(g.el),
-        state: opt(g.elst),
-        year: opt(g.fy),
-        start: opt(g.s),
-        selection: opt(g.sel),
-        sourceUrl:
-          recipient.organisation && /^[a-f0-9-]{36}$/.test(guid)
-            ? `https://www.grants.gov.au/Ga/Show/${guid}`
-            : null,
-      };
-    })(d.grants),
+    grants: array(decodeGrant)(d.grants),
   };
 }
 export type Program = ReturnType<typeof decodeProgram>;

@@ -1,11 +1,11 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { View as NativeView, Platform, RefreshControl } from 'react-native';
+import { View as NativeView, Platform } from 'react-native';
 import { catalogs } from '../../api/runtime';
-import { SegmentedPicker } from '../../design/controls';
+import { Button, SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
-import { Screen } from '../../design/layout';
+import { Section } from '../../design/layout';
 import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
@@ -29,6 +29,7 @@ import {
   MoneyStatus,
   TitleAlias,
   counted,
+  fy,
   fyRange,
   matches,
   moneyBar,
@@ -37,9 +38,11 @@ import {
   recordSource,
   useMoneySearch,
 } from './parts';
-import { organisationHref } from './routes';
+import { moneyItemHref, organisationHref } from './routes';
 import { money } from './runtime';
-import { SeatFigure } from './SeatGrants';
+import { combine } from './catalog';
+import { SeatFigure, seatRow } from './SeatGrants';
+import { useSeatGrants } from './useSeatGrants';
 
 /** "New South Wales" for "nsw". */
 export const stateName = (code: string) =>
@@ -213,9 +216,7 @@ function GrantList({
         loaded={!!data}
         id="grants-list"
         rows={rows}
-        rowKey={(r) =>
-          'key' in r ? r.key : `${r.name}-${'state' in r ? r.state : ''}`
-        }
+        rowKey={(r) => ('id' in r ? r.id : `${r.name}-${r.state}`)}
         refreshing={status.refreshing}
         refresh={status.refresh}
         onScroll={scrollTitle.onScroll}
@@ -318,7 +319,7 @@ function GrantList({
           ) : null
         }
         render={(r, i) =>
-          'key' in r ? (
+          'id' in r && 'key' in r ? (
             <MoneyRow
               name={r.name}
               detail={counted(r.count, 'grant')}
@@ -373,9 +374,7 @@ function GrantList({
 
 /**
  * Grants in one seat (specs/money.md 2.2, journeys/money.md 12.2 item 5):
- * gated on the per-seat slice (D5). Until it ships the seat view is the
- * seat's figure, its source and a row to the electorate: no picker, no
- * caption, no "See all" and no national figure or list.
+ * the index supplies the figure; the seat slice supplies the grant rows.
  */
 function SeatView({ seat, state }: { seat: string; state?: string }) {
   const load = useCallback(async (refresh: boolean) => {
@@ -389,6 +388,19 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   }, []);
   const status = useCatalogRecord(load),
     data = status.record?.data;
+  const entry = data ? seatRow(data, seat, state) : undefined;
+  const links = useMemo(
+    () => ({
+      programs: new Map(data?.programs.map((p) => [p.id, p.key])),
+      recipients: new Set(data?.recipients.map((r) => r.id)),
+    }),
+    [data],
+  );
+  const grants = useSeatGrants(entry?.key);
+  const saved =
+    status.record && grants.record && !grants.record.data.missing
+      ? combine([status.record, grants.record], status.record.data)
+      : status.record;
   const title = `Grants in ${seat}`;
   const electorate =
     status.record?.directory?.electorates.data.electorates.find(
@@ -405,58 +417,180 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   return (
     <>
       <RouteOptions options={{ title, ...moneyBar({ name: title }) }} />
-      <Screen
+      <MoneyList
         onScroll={barTitle.onScroll}
-        testID="grants-seat"
-        refreshControl={
-          <RefreshControl
-            refreshing={status.refreshing}
-            onRefresh={status.refresh}
-          />
+        id="grants-seat"
+        loaded={!!data}
+        rows={grants.grants}
+        rowKey={(r) => r.id}
+        refreshing={status.refreshing || grants.refreshing}
+        refresh={() => {
+          status.refresh();
+          grants.refresh();
+        }}
+        header={
+          <>
+            <NativeView
+              ref={barTitleRef}
+              collapsable={false}
+              onLayout={barTitle.onTitleLayout}
+            >
+              <Heading level={1} kind="page" testID="grants-title">
+                {title}
+              </Heading>
+            </NativeView>
+            {state ? (
+              <Text wordSafe variant="secondary" testID="grants-seat-state">
+                {stateName(state)}
+              </Text>
+            ) : null}
+            <MoneyStatus
+              status={{ ...status, record: saved }}
+              name={title}
+              rows={1}
+              testID="grants-status"
+            />
+            {data ? (
+              <SeatFigure
+                index={data}
+                record={saved}
+                name={seat}
+                state={state}
+                testID="grants-seat"
+              />
+            ) : null}
+            {data ? (
+              <>
+                <Text
+                  wordSafe
+                  variant="footnote"
+                  testID="grants-seat-award-note"
+                >
+                  An award is not a payment.
+                </Text>
+                <MoneyStatus
+                  status={{
+                    ...grants,
+                    record: grants.record
+                      ? { ...grants.record, stale: false }
+                      : null,
+                  }}
+                  name="Grants"
+                  figure={false}
+                  testID="grants-seat-records"
+                />
+                {grants.record &&
+                !grants.record.data.missing &&
+                grants.grants.length ? (
+                  <ListCaption testID="grants-seat-caption">
+                    {`${grants.grants.length < (entry?.count ?? 0) ? `${grants.grants.length.toLocaleString('en-AU')} of ` : ''}${counted(entry?.count ?? grants.grants.length, 'grant')}, largest first`}
+                  </ListCaption>
+                ) : null}
+              </>
+            ) : null}
+          </>
         }
-      >
-        <NativeView
-          ref={barTitleRef}
-          collapsable={false}
-          onLayout={barTitle.onTitleLayout}
-        >
-          <Heading level={1} kind="page" testID="grants-title">
-            {title}
-          </Heading>
-        </NativeView>
-        {state ? (
-          <Text wordSafe variant="secondary" testID="grants-seat-state">
-            {stateName(state)}
-          </Text>
-        ) : null}
-        <MoneyStatus
-          status={status}
-          name={title}
-          rows={1}
-          testID="grants-status"
-        />
-        {data ? (
-          <SeatFigure
-            index={data}
-            record={status.record}
-            name={seat}
-            state={state}
-            testID="grants-seat"
-          />
-        ) : null}
-        {data && electorate ? (
-          <LinkRow
-            title={electorate.name}
-            symbol="map"
-            testID="grants-seat-electorate"
-            href={electorateRoute(
-              electorate.electorate_id,
-              undefined,
-              electorate.name,
-            )}
-          />
-        ) : null}
-      </Screen>
+        render={(r, i) => {
+          const program = links.programs.get(r.programId);
+          // A listed recipient opens its record; otherwise the award on
+          // GrantConnect, or the program's own grant record. Program files
+          // list only a program's largest grants, so the record route is the
+          // last resort.
+          const listed = !!r.recipientId && links.recipients.has(r.recipientId);
+          return (
+            <MoneyRow
+              name={r.name}
+              detail={[r.program, fy(r.year)].filter(Boolean).join(' · ')}
+              amount={r.value}
+              href={
+                listed
+                  ? organisationHref(r.recipientId, r.name, 'federal')
+                  : !r.sourceUrl && program
+                    ? moneyItemHref(
+                        {
+                          kind: 'grant',
+                          jur: 'federal',
+                          program: program,
+                          id: r.id,
+                        },
+                        { name: r.name },
+                      )
+                    : undefined
+              }
+              external={
+                !listed && r.sourceUrl
+                  ? { url: r.sourceUrl, label: `GrantConnect · ${r.id}` }
+                  : undefined
+              }
+              testID={`grants-seat-grant-${i}`}
+            />
+          );
+        }}
+        empty={
+          // A seat with no index row already says it has no matched grants
+          // in its figure; a listed seat whose file is missing says only
+          // that the list isn't published, never a zero.
+          !!entry?.count &&
+          (grants.record?.data.missing ||
+            (grants.record && !grants.grants.length)) ? (
+            <EmptyState
+              message={`The individual grants for ${seat} aren't listed yet.`}
+              testID="grants-seat-empty"
+            />
+          ) : null
+        }
+        footer={
+          <>
+            {grants.record &&
+            (grants.record.data.next ||
+              grants.record.data.grants.length > grants.grants.length) ? (
+              <Button
+                label={`Show all ${(entry?.count ?? 0).toLocaleString('en-AU')}`}
+                variant="plain"
+                loading={grants.loadingMore}
+                onPress={grants.showAll}
+                testID="grants-seat-show-all"
+              />
+            ) : null}
+            {grants.record?.data.moreError ? (
+              <MoneyStatus
+                status={{
+                  record: null,
+                  error: grants.record.data.moreError,
+                  retry: grants.showAll,
+                }}
+                name="Remaining grants"
+                figure={false}
+                testID="grants-seat-more"
+              />
+            ) : null}
+            {data && electorate ? (
+              <LinkRow
+                title={electorate.name}
+                symbol="map"
+                testID="grants-seat-electorate"
+                href={electorateRoute(
+                  electorate.electorate_id,
+                  undefined,
+                  electorate.name,
+                )}
+              />
+            ) : null}
+            {data?.meta.sourceUrl ? (
+              <Section title="Originals" testID="grants-seat-originals">
+                <LinkRow
+                  title={moneyCitation(data.meta.source).label}
+                  external={{
+                    url: data.meta.sourceUrl,
+                    label: moneyCitation(data.meta.source).label,
+                  }}
+                  testID="grants-seat-original"
+                />
+              </Section>
+            ) : null}
+          </>
+        }
+      />
     </>
   );
 }

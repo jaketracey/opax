@@ -249,6 +249,10 @@ export function assertAllowedPath(path: string): void {
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||
     interestPath.test(pathname!) ||
+    // Static per-seat grant slices, including numbered continuation files.
+    /^\/grants\/federal\/seats\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/.test(
+      pathname!,
+    ) ||
     /^\/grants\/(?:federal|qld)\/programs\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(
       pathname!,
     ) ||
