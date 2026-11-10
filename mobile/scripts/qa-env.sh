@@ -14,6 +14,41 @@ build_command() {
     "$@"
   fi
 }
+# Android's desktop gate uses a mkdir lock shared by all Linux worktrees.
+# Keep the Mac's existing build gate and capacity protocol unchanged.
+android_build_command() {
+  if [ "$(uname -s)" != Linux ]; then
+    build_command "$@"
+    return
+  fi
+  (
+    set -euo pipefail
+    local lock=${OPAX_ANDROID_NATIVE_LOCK:-/tmp/opax-android-native.lock}
+    local deadline=$((SECONDS + ${OPAX_ANDROID_NATIVE_WAIT_SECONDS:-7200})) owner
+    until mkdir "$lock" 2>/dev/null; do
+      # Serialize stale-owner retirement, then recheck before removing it.
+      (
+        flock -x 9
+        owner=$(cat "$lock/pid" 2>/dev/null || true)
+        if [[ "$owner" =~ ^[0-9]+$ ]] && ! kill -0 "$owner" 2>/dev/null; then
+          rm -f "$lock/pid"
+          rmdir "$lock" 2>/dev/null || true
+        fi
+      ) 9>"$lock.reap"
+      [ -d "$lock" ] || continue
+      [ "$SECONDS" -lt "$deadline" ] || {
+        echo "Android native lock wait expired: $lock" >&2
+        exit 75
+      }
+      sleep 20
+    done
+    printf '%s\n' "$BASHPID" > "$lock/pid"
+    trap 'rm -f "$lock/pid"; rmdir "$lock"' EXIT
+    trap 'exit 130' INT
+    trap 'exit 143' TERM HUP
+    "$@"
+  )
+}
 allow_simulator() {
   if [ -z "${OPAX_ALLOWED_UDIDS:-}" ]; then
     echo "Warning: no simulator allow-list configured; accepting the requested simulator." >&2
