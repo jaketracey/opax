@@ -182,63 +182,71 @@ export function AskDock({
     >
       {Platform.OS === 'android' && line ? (
         <View style={styles.androidOptions}>
-          {s.fresh ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`${composerCopy.fresh}, ${composerCopy.clear}`}
-              onPress={() => askSession.clearFresh()}
-              style={styles.chip}
-              testID="ask-draft-new-conversation"
-            >
-              <Text
-                variant="footnote"
-                tone="inkSoft"
-                wordSafe
-                style={styles.freshText}
-              >
-                {composerCopy.fresh}
-              </Text>
-              <Icon
-                name={symbols.close}
-                size={18}
-                tone="inkSoft"
-                maxScale={1}
-              />
-            </Pressable>
-          ) : null}
-          {tags.length ? (
-            <ScrollView
-              horizontal
-              keyboardShouldPersistTaps="handled"
-              showsHorizontalScrollIndicator={false}
-            >
-              <View style={styles.chips}>
-                {tags.map((tag) => (
-                  <Pressable
-                    key={tag.id}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Remove ${tag.key}, ${tag.value}`}
-                    disabled={s.busy && !s.fresh}
-                    accessibilityState={{ disabled: s.busy && !s.fresh }}
-                    onPress={() =>
-                      askSession.options(clearChip(options, tag.id))
-                    }
-                    android_ripple={{ color: colors.dividerSubtle }}
-                    style={styles.chip}
-                    testID={`ask-option-remove-${tag.id}`}
-                  >
-                    <Text variant="footnote">{tag.value}</Text>
-                    <Icon
-                      name={symbols.close}
-                      size={18}
-                      tone="inkSoft"
-                      maxScale={1}
-                    />
-                  </Pressable>
-                ))}
-              </View>
-            </ScrollView>
-          ) : null}
+          <ScrollView
+            horizontal
+            keyboardShouldPersistTaps="handled"
+            showsHorizontalScrollIndicator={false}
+            style={styles.optionScroller}
+            testID={s.fresh ? 'ask-draft-new-conversation' : 'ask-options-line'}
+          >
+            <View style={styles.chips}>
+              {s.fresh ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={composerCopy.fresh}
+                  accessibilityHint="Opens Options"
+                  onPress={onOptions}
+                  android_ripple={{ color: colors.dividerSubtle }}
+                  style={styles.chip}
+                >
+                  <Text variant="footnote" tone="inkSoft">
+                    {composerCopy.fresh}
+                  </Text>
+                </Pressable>
+              ) : null}
+              {tags.map((tag) => (
+                <Pressable
+                  key={tag.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Remove ${tag.key}, ${tag.value}`}
+                  disabled={s.busy && !s.fresh}
+                  accessibilityState={{ disabled: s.busy && !s.fresh }}
+                  onPress={() => askSession.options(clearChip(options, tag.id))}
+                  android_ripple={{ color: colors.dividerSubtle }}
+                  style={styles.chip}
+                  testID={`ask-option-remove-${tag.id}`}
+                >
+                  <Text variant="footnote">{tag.value}</Text>
+                  <Icon
+                    name={symbols.close}
+                    size={18}
+                    tone="inkSoft"
+                    maxScale={1}
+                  />
+                </Pressable>
+              ))}
+            </View>
+          </ScrollView>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={composerCopy.clear}
+            disabled={s.busy && !s.fresh}
+            accessibilityState={{ disabled: s.busy && !s.fresh }}
+            onPress={() => {
+              if (s.fresh) askSession.clearFresh();
+              else askSession.options({ ...defaultOptions });
+            }}
+            android_ripple={{ color: colors.dividerSubtle }}
+            style={styles.androidClear}
+            testID="ask-options-clear"
+          >
+            <Icon
+              name={symbols.clearOptions}
+              size={20}
+              tone="inkSoft"
+              maxScale={1}
+            />
+          </Pressable>
         </View>
       ) : line ? (
         <View style={styles.optionsLine}>
@@ -384,8 +392,22 @@ const styles = StyleSheet.create({
     borderColor: colors.dividerSubtle,
   },
   androidSurface: { elevation: 2, shadowColor: colors.navy },
-  androidOptions: { gap: rhythm.tight, paddingHorizontal: rhythm.tight },
-  freshText: { flex: 1 },
+  androidOptions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    paddingHorizontal: rhythm.tight,
+  },
+  optionScroller: { flex: 1, minWidth: 0 },
+  androidClear: {
+    minWidth: 48,
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+  },
   chips: { flexDirection: 'row', gap: rhythm.tight },
   chip: {
     flexDirection: 'row',

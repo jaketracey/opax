@@ -1257,6 +1257,23 @@ test('Android dock has a tonal raised surface and removable option chips; iOS ke
       to: '',
       topic: 'housing',
     });
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }).length,
+    ).toBeGreaterThan(0);
+    const clear = dock.root.find(
+      (n) =>
+        n.props.testID === 'ask-options-clear' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(StyleSheet.flatten(clear.props.style).minHeight).toBe(48);
+    act(() => clear.props.onPress());
+    expect(askSession.composerOptions().topic).toBe('');
+    expect(
+      dock.root.findAllByProps({ testID: 'ask-options-line' }),
+    ).toHaveLength(0);
+    act(() =>
+      askSession.options({ ...askSession.composerOptions(), topic: 'housing' }),
+    );
     Platform.OS = 'ios';
     act(() =>
       dock.update(
