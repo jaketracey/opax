@@ -137,6 +137,7 @@ export default function TalkScreen({
   // Checking status without a Start is not an active conversation.
   const active = call.active && (s.state !== 'checking' || call.busy);
   const blocked = refusal(s.status);
+  const signedOut = call.error === 'signedOut' || blocked === 'signedOut';
   const failure = call.error === 'signedOut' ? null : call.error;
   const offline = failure === 'network' || failure === 'timeout';
   const statusFailed = !s.status && failure !== null;
@@ -193,13 +194,17 @@ export default function TalkScreen({
         ? talkCopy.offline
         : talkCopy.checkFailed
       : (message ??
-        (s.status ? talkCopy.status.ready : talkCopy.status.checking)));
-  const action: Action = !s.status
-    ? statusFailed
-      ? 'retry'
-      : 'checking'
-    : blocked === 'signedOut'
-      ? 'signIn'
+        (signedOut
+          ? failureCopy.signedOut
+          : s.status
+            ? talkCopy.status.ready
+            : talkCopy.status.checking)));
+  const action: Action = signedOut
+    ? 'signIn'
+    : !s.status
+      ? statusFailed
+        ? 'retry'
+        : 'checking'
       : blocked === 'callOpen'
         ? 'retry'
         : blocked
