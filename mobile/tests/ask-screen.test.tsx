@@ -1188,6 +1188,7 @@ test('Android observes IME show/hide and removes the bottom inset after native r
     act(() =>
       handlers.get('keyboardDidShow')!({ endCoordinates: { screenY: 500 } }),
     );
+    expect(measured.length).toBeGreaterThan(0);
     const phone = () => screen.root.findByType(PhoneDock);
     expect(phone().props).toMatchObject({ keyboard: 0, keyboardVisible: true });
     act(() => handlers.get('keyboardDidHide')!({}));
