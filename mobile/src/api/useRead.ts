@@ -13,7 +13,8 @@ export function useRead<T>(load: () => Promise<RecordResult<T>>) {
   const generation = useRef(0);
   useEffect(() => {
     const id = ++generation.current;
-    void load()
+    const request = async () => load();
+    void request()
       .then((record) => {
         if (generation.current === id)
           setOutcome({ load, revision, record, error: null });

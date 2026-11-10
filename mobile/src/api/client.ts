@@ -141,11 +141,21 @@ export class ApiClient {
       try {
         data = this.decodeBody(await response.json(), decode);
       } catch {
+        if (controller.signal.aborted)
+          throw new ApiError(
+            'timeout',
+            'The public record took too long to load.',
+          );
         throw new ApiError(
           'invalid-data',
           'The catalog response could not be read.',
         );
       }
+      if (controller.signal.aborted)
+        throw new ApiError(
+          'timeout',
+          'The public record took too long to load.',
+        );
       return { data, stale: false, savedAt: this.now(), asOf: dataAsOf(data) };
     } catch (e) {
       if (e instanceof ApiError) throw e;
@@ -231,6 +241,21 @@ export class ApiClient {
     const cancelled = () => {
       if (signal?.aborted)
         throw Object.assign(new Error('Cancelled'), { name: 'AbortError' });
+    };
+    const pause = async (ms: number) => {
+      if (!signal) return this.sleep(ms);
+      let abort!: () => void;
+      const cancellation = new Promise<never>((_resolve, reject) => {
+        abort = () =>
+          reject(Object.assign(new Error('Cancelled'), { name: 'AbortError' }));
+        signal.addEventListener('abort', abort, { once: true });
+        if (signal.aborted) abort();
+      });
+      try {
+        await Promise.race([this.sleep(ms), cancellation]);
+      } finally {
+        signal.removeEventListener('abort', abort);
+      }
     };
     cancelled();
     const requestStartedAt = this.now();
@@ -371,6 +396,12 @@ export class ApiClient {
             'The catalog response could not be read.',
           );
         }
+        cancelled();
+        if (controller.signal.aborted)
+          throw new ApiError(
+            'timeout',
+            'The public record took too long to load.',
+          );
         try {
           this.decodeBody(body, decode);
         } catch {
@@ -381,9 +412,16 @@ export class ApiClient {
         }
         const time = this.now();
         const control = response.headers.get('cache-control') ?? '';
+        const age = Number(response.headers.get('age') ?? 0);
         const ttl = /no-store|no-cache/.test(control)
           ? 0
-          : Math.min(Number(/max-age=(\d+)/.exec(control)?.[1] ?? 300), 86400);
+          : Math.max(
+              0,
+              Math.min(
+                Number(/max-age=(\d+)/.exec(control)?.[1] ?? 300),
+                86400,
+              ) - (Number.isFinite(age) && age > 0 ? age : 0),
+            );
         const entry: CacheEntry = {
           url,
           body,
@@ -404,6 +442,7 @@ export class ApiClient {
               : {}),
           })
           .catch(() => entry);
+        cancelled();
         // A concurrent read can retain its freshly validated copy of this
         // exact ETag. A zero TTL requires the next read to revalidate; it
         // does not make this successful live validation an offline fallback.
@@ -448,10 +487,11 @@ export class ApiClient {
       }
       if (attempt < retries) {
         if (retryDelay >= deadline - this.now()) break;
-        await this.sleep(retryDelay);
+        await pause(retryDelay);
       }
     }
     const latest = await this.options.cache.get(url);
+    cancelled();
     if (latest) {
       try {
         this.decodeBody(latest.body, decode);

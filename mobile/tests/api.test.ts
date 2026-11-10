@@ -1375,3 +1375,134 @@ test('a superseded read aborts its transport and does not retry or substitute ca
   expect(transportSignal?.aborted).toBe(true);
   expect(transport).toHaveBeenCalledTimes(1);
 });
+
+test('cancellation while decoding a response cannot publish or save that response', async () => {
+  let finish!: (body: unknown) => void;
+  const downloaded = response();
+  jest
+    .spyOn(downloaded, 'json')
+    .mockImplementation(() => new Promise((resolve) => (finish = resolve)));
+  const { client, store } = setup(jest.fn().mockResolvedValue(downloaded));
+  const controller = new AbortController();
+  const pending = client.get('/parliamentarians.json', decode, false, {
+    signal: controller.signal,
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+  controller.abort();
+  finish({ generated: '2026-11-11' });
+  await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+  expect(store.entries).toEqual([]);
+});
+
+test('cancelling a retry backoff settles without waiting or starting another request', async () => {
+  let finish!: () => void;
+  const sleep = jest.fn(
+    () => new Promise<void>((resolve) => (finish = resolve)),
+  );
+  const transport = jest.fn().mockRejectedValue(new Error('offline'));
+  const { client } = setup(transport, () => 1000, { sleep, retries: 2 });
+  const controller = new AbortController();
+  let error: unknown;
+  const pending = client
+    .get('/parliamentarians.json', decode, false, {
+      signal: controller.signal,
+    })
+    .catch((caught: unknown) => {
+      error = caught;
+    });
+  try {
+    await new Promise((resolve) => setImmediate(resolve));
+    expect(sleep).toHaveBeenCalledTimes(1);
+    controller.abort();
+    await new Promise((resolve) => setImmediate(resolve));
+    expect(error).toMatchObject({ name: 'AbortError' });
+    expect(transport).toHaveBeenCalledTimes(1);
+  } finally {
+    finish();
+    await pending;
+  }
+});
+
+test.each([60, 86400])(
+  'a response aged almost its %s second max-age revalidates after the remaining second',
+  async (maxAge) => {
+    let now = 1000;
+    const transport = jest.fn().mockImplementation(async () =>
+      response(200, {
+        'cache-control': `max-age=${maxAge}`,
+        age: String(maxAge - 1),
+      }),
+    );
+    const { client } = setup(transport, () => now);
+    await client.get('/parliamentarians.json', decode);
+    now = 1999;
+    await client.get('/parliamentarians.json', decode);
+    expect(transport).toHaveBeenCalledTimes(1);
+    now = 2000;
+    await client.get('/parliamentarians.json', decode);
+    expect(transport).toHaveBeenCalledTimes(2);
+  },
+);
+
+test('an oversized update never leaves the superseded offline copy marked fresh', async () => {
+  const store = new MemoryStore();
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(response(200, { 'cache-control': 'max-age=86400' }))
+    .mockImplementation(
+      async () =>
+        new Response(
+          JSON.stringify({
+            generated: '2026-11-11',
+            padding: 'x'.repeat(1000),
+          }),
+        ),
+    );
+  const client = new ApiClient({
+    origin,
+    version: '1',
+    build: '1',
+    cache: new CatalogCache(store, 500),
+    transport,
+    now: () => 1000,
+    retries: 0,
+  });
+  await client.get('/parliamentarians.json', decode);
+  expect(
+    (await client.get('/parliamentarians.json', decode, true)).data.generated,
+  ).toBe('2026-11-11');
+  expect(
+    (await client.get('/parliamentarians.json', decode)).data.generated,
+  ).toBe('2026-11-11');
+  expect(transport).toHaveBeenCalledTimes(3);
+  // Retain the smaller saved copy for an offline fallback, with its source date.
+  transport.mockRejectedValueOnce(new Error('offline'));
+  await expect(
+    client.get('/parliamentarians.json', decode),
+  ).resolves.toMatchObject({
+    stale: true,
+    data: { generated: '2026-09-04' },
+  });
+});
+
+test('an explicit action timing out while reading JSON reports a retryable timeout', async () => {
+  const transport = jest.fn(async (_url: string, init?: RequestInit) => {
+    const downloaded = response();
+    jest.spyOn(downloaded, 'json').mockImplementation(
+      () =>
+        new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new Error('aborted')),
+          );
+        }),
+    );
+    return downloaded;
+  });
+  const { client } = setup(transport as typeof fetch, Date.now, {
+    timeoutMs: 5,
+  });
+  await expect(client.getForAction('/api/news', decode)).rejects.toMatchObject({
+    code: 'timeout',
+  });
+  expect(transport).toHaveBeenCalledTimes(1);
+});

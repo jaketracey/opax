@@ -42,8 +42,10 @@ function trimmed(value: number, places: number): string {
 /** To the dollar, for records and rates of pay: "$4,537,500". */
 export function formatMoney(value: number): string {
   if (!Number.isFinite(value)) return '';
-  const sign = value < 0 ? '-' : '';
-  return `${sign}$${formatCount(Math.round(Math.abs(value)))}`;
+  const dollars = Math.round(Math.abs(value));
+  // Cents either side of zero never read as "-$0".
+  const sign = value < 0 && dollars > 0 ? '-' : '';
+  return `${sign}$${formatCount(dollars)}`;
 }
 
 /**
@@ -55,7 +57,7 @@ export function formatMoneyCompact(value: number): string {
   if (!Number.isFinite(value)) return '';
   const sign = value < 0 ? '-' : '';
   const amount = Math.abs(value);
-  if (amount < 10_000) return sign + formatMoney(amount);
+  if (amount < 10_000) return formatMoney(value);
   // Round first, so $999,950 reads "$1m", not "$1,000k".
   if (amount < 999_500) return `${sign}$${trimmed(amount / 1e3, 0)}k`;
   if (roundTo(amount / 1e6, 1) < 1000)
@@ -68,7 +70,7 @@ export function formatMoneyWords(value: number): string {
   if (!Number.isFinite(value)) return '';
   const sign = value < 0 ? '-' : '';
   const amount = Math.abs(value);
-  if (amount < 1e6) return sign + formatMoney(amount);
+  if (amount < 1e6) return formatMoney(value);
   if (roundTo(amount / 1e6, 1) < 1000)
     return `${sign}$${trimmed(amount / 1e6, 1)} million`;
   return `${sign}$${trimmed(amount / 1e9, 1)} billion`;
@@ -80,13 +82,21 @@ export function moneyAccessibilityLabel(
   compact = false,
 ): string {
   if (!Number.isFinite(value)) return '';
-  const sign = value < 0 ? 'minus ' : '';
   const amount = Math.abs(value);
+  const sign = value < 0 && Math.round(amount) > 0 ? 'minus ' : '';
   if (compact && amount >= 10_000) {
-    const words = formatMoneyWords(amount);
-    if (words.includes('million') || words.includes('billion'))
-      return `${sign}${words.slice(1)} dollars`;
-    return `${sign}${trimmed(amount / 1e3, 0)} thousand dollars`;
+    // Say what formatMoneyCompact draws: "$1m" is "1 million dollars",
+    // never "1000 thousand dollars".
+    const shown = /^\$([\d.]+)(k|m|bn)$/.exec(formatMoneyCompact(amount));
+    if (shown) {
+      const unit =
+        shown[2] === 'k'
+          ? 'thousand'
+          : shown[2] === 'm'
+            ? 'million'
+            : 'billion';
+      return `${sign}${shown[1]} ${unit} dollars`;
+    }
   }
   return `${sign}${formatCount(Math.round(amount))} dollars`;
 }
