@@ -1125,5 +1125,8 @@ class ProductionVoiceTests(unittest.TestCase):
                 with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
 
 
+from test_android_release import AndroidReleaseTests
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,6 @@
-import { readdirSync, readFileSync, statSync } from 'fs';
+import { execFileSync } from 'child_process';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'fs';
+import { tmpdir } from 'os';
 import { extname, join, relative } from 'path';
 import type { ReactElement, ReactNode } from 'react';
 import { act } from 'react';
@@ -465,22 +467,39 @@ describe('Android ⋯ menus', () => {
 });
 
 describe('Android journeys', () => {
-  const runner = readFileSync(
-    join(MOBILE, 'scripts/e2e-android-device.sh'),
-    'utf8',
-  );
-  const cases = [...runner.matchAll(/^\s+(\d\d)\) file=(\S+) ;;/gm)].map(
-    ([, key, file]) => [key!, file!] as const,
-  );
+  const prepared = mkdtempSync(join(tmpdir(), 'opax-android-journeys-'));
+  beforeAll(() => {
+    execFileSync('python3', [
+      join(MOBILE, 'scripts/prepare-android-flows.py'),
+      prepared,
+    ]);
+  });
+  afterAll(() => rmSync(prepared, { recursive: true, force: true }));
 
-  test('the runner offers the journeys the design passes touched, and each exists', () => {
-    expect(cases.map(([key]) => key)).toEqual(
-      expect.arrayContaining(['03', '13', '26', '39']),
+  test('the runner offers the parity journeys, and each prepared entry exists', () => {
+    const plan = JSON.parse(
+      readFileSync(join(prepared, 'suite.json'), 'utf8'),
+    ) as {
+      shared: string;
+      path: string;
+      run: boolean;
+    }[];
+    const offered = plan.filter((flow) => flow.run);
+    expect(offered.map((flow) => flow.shared)).toEqual(
+      expect.arrayContaining([
+        '03-mp-profile.yaml',
+        '13-today.yaml',
+        '26-follows.yaml',
+        '39-topics.yaml',
+        '66-my-mp-journey.yaml',
+      ]),
     );
     for (const key of ['38', '40'])
-      expect(cases.map(([offered]) => offered)).not.toContain(key);
-    for (const [, file] of cases)
-      expect(statSync(join(MOBILE, file)).isFile()).toBe(true);
+      expect(offered.some((flow) => flow.shared.startsWith(`${key}-`))).toBe(
+        false,
+      );
+    for (const flow of offered)
+      expect(statSync(join(prepared, flow.path)).isFile()).toBe(true);
     expect(
       statSync(
         join(MOBILE, '.maestro/android/screenshots-high-contrast.yaml'),

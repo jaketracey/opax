@@ -34,14 +34,20 @@ _spec.loader.exec_module(release_policy)
 # same change in app.config.ts and the Data safety form.
 ANDROID_ANALYTICS_ENABLED = False
 
+from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts, bundled_routes
+
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("aab", type=Path)
 parser.add_argument("bundletool", type=Path)
+parser.add_argument("--expected-version", help="Expected Expo marketing version (default: app.config.ts version)")
+parser.add_argument("--expected-commit", help="Full approved artifact commit SHA")
+parser.add_argument("--build-evidence", type=Path, help="build-play.sh hash/commit evidence; defaults beside the AAB")
+parser.add_argument("--ios-release", type=Path, help="Verified iOS distribution release.json for this candidate")
 parser.add_argument("--version-code", type=int, help="Expected candidate versionCode")
 parser.add_argument(
     "--require-ios-parity",
     action="store_true",
-    help="Fail after writing evidence if the iOS 1.0 feature flags are absent",
+    help="Require iOS 1.1 voice, identity, commit, ABI and SDK parity",
 )
 args = parser.parse_args()
 output = args.aab.parent
@@ -110,8 +116,8 @@ namespace = "{http://schemas.android.com/apk/res/android}"
 app = root.find("application")
 assert root.attrib["package"] == "au.com.opax.app"
 assert app is not None and app.attrib[namespace + "usesCleartextTraffic"] == "false"
-assert root.attrib[namespace + "versionName"] == "1.0.0"
-assert int(root.find("uses-sdk").attrib[namespace + "targetSdkVersion"]) >= 36
+expected_version = args.expected_version or configured_version(Path(__file__).resolve().parent.parent)
+verify_identity(root, expected_version, args.version_code)
 permissions = sorted(
     n.attrib[namespace + "name"] for n in root.findall("uses-permission")
 )
@@ -284,6 +290,15 @@ assert extra.get("analytics") == expected_analytics, (
     "Embedded analytics config must be exactly the opax.com.au/ingest proxy, "
     "and absent while Android analytics is off"
 )
+evidence_path = args.build_evidence or output / "build-evidence.json"
+build_evidence = verify_evidence(args.aab, evidence_path, args.expected_commit, bundle_voice)
+assert build_evidence.get("version") == expected_version, "Build evidence version mismatch"
+assert build_evidence.get("versionCode") == int(root.attrib[namespace + "versionCode"]), "Build evidence versionCode mismatch"
+with zipfile.ZipFile(args.aab) as archive:
+    release_metadata = debug_artifacts(archive, build_evidence, output)
+ios_commit = None
+if args.ios_release:
+    ios_commit = verify_ios_candidate(args.ios_release, build_evidence, expected_version)
 build_tools = (
     Path(os.environ["ANDROID_HOME"])
     / "build-tools"
@@ -292,14 +307,24 @@ build_tools = (
 (output / "zipalign.txt").write_text(
     run(build_tools / "zipalign", "-c", "-P", "16", "-v", "4", apk)
 )
+routes = bundled_routes(js)
 parity = {
     "community_hidden": b"./community/home.tsx" not in js,
     "voice_on": extra.get("productionVoiceEnabled") is True,
     "voice_consent_off_by_default": extra.get("voiceConsentDefault") is False,
     "microphone_declared": "android.permission.RECORD_AUDIO" in permissions,
-    "talk_route": b"./talk.tsx" in js,
-    "account_sign_in_route": b"./account/sign-in.tsx" in js,
+    "talk_route": routes["talk"],
+    "account_sign_in_route": routes["sign_in"],
+    "account_delete_route": routes["delete"],
+    "same_commit_as_ios_candidate": ios_commit == build_evidence["commit"],
+    "approved_version_code": args.version_code is not None,
+    "version_name": root.attrib[namespace + "versionName"] == expected_version,
+    "release_abis": abis == ["arm64-v8a", "x86_64"],
+    "target_sdk_36": root.find("uses-sdk").get(namespace + "targetSdkVersion") == "36",
 }
+apk_evidence = {**build_evidence, "artifacts": {**build_evidence["artifacts"], apk.name: hashlib.sha256(apk.read_bytes()).hexdigest()}}
+apk_evidence_path = output / "universal-apk-evidence.json"
+apk_evidence_path.write_text(json.dumps(apk_evidence, indent=2) + "\n")
 run(
     "python3",
     Path(__file__).with_name("verify-android-build.py"),
@@ -308,8 +333,15 @@ run(
     output / "apk-policy.json",
     "--certificate-sha256",
     fingerprints["sha256"],
+    "--expected-version", expected_version,
+    "--version-code", str(root.attrib[namespace + "versionCode"]),
+    "--expected-commit", build_evidence["commit"],
+    "--build-evidence", apk_evidence_path,
+    *(["--require-ios-parity", "--ios-release", args.ios_release] if args.require_ios_parity and args.ios_release else []),
 )
 report = {
+    "commit": build_evidence["commit"],
+    "release_metadata": release_metadata,
     "aab": args.aab.name,
     "bytes": args.aab.stat().st_size,
     "sha256": hashlib.sha256(args.aab.read_bytes()).hexdigest(),
@@ -353,15 +385,15 @@ report = {
         "expected_version_code": (
             "passed" if args.version_code is not None else "not requested"
         ),
-        "version_name_1_0_0": "passed",
-        "target_sdk_at_least_36": "passed",
+        "expected_version_name": "passed",
+        "target_sdk_36": "passed",
         "arm64_and_x86_64": "passed",
         "native_elf_16kb_alignment": "passed",
         "apk_zip_16kb_alignment": "passed",
     },
     "native_elf_alignment": native_alignment,
-    "ios_1_0_parity": parity,
-    "ios_1_0_parity_status": "passed" if all(parity.values()) else "failed",
+    "ios_1_1_parity": parity,
+    "ios_1_1_parity_status": "passed" if all(parity.values()) else "failed",
 }
 (output / "verification.json").write_text(json.dumps(report, indent=2) + "\n")
 print(
@@ -376,7 +408,7 @@ print(
 )
 if args.require_ios_parity and not all(parity.values()):
     print(
-        "FAIL iOS 1.0 parity: "
+        "FAIL iOS 1.1 parity: "
         + ", ".join(key for key, passed in parity.items() if not passed),
         file=sys.stderr,
     )
