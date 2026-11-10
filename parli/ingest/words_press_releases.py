@@ -126,7 +126,11 @@ GOVERNMENTS = {
     "vic": [("1992-10-06", "Kennett", None), ("1999-10-20", "Bracks", "Labor"),
             ("2007-07-30", "Brumby", "Labor"), ("2010-12-02", "Baillieu", None),
             ("2013-03-06", "Napthine", None), ("2014-12-04", "Andrews", "Labor"),
-            ("2023-09-27", "Allan", "Labor")],
+            # Victorian Hansard's officeholder list: "Ben Carroll (from 28 July 2026)
+            # Jacinta Allan (from 27 September 2023 to 28 July 2026) Daniel Andrews (to
+            # 27 September 2023)", https://www.parliament.vic.gov.au/4aa1a5/globalassets/
+            # hansard-daily-pdfs/hansard-2145855009-37384/hansard-2145855009-37384.pdf
+            ("2023-09-27", "Allan", "Labor"), ("2026-07-28", "Carroll", "Labor")],
     "nsw": [("1995-04-04", "Carr", "Labor"), ("2005-08-03", "Iemma", "Labor"),
             ("2008-09-05", "Rees", "Labor"), ("2009-12-04", "Keneally", "Labor"),
             ("2011-04-04", "O'Farrell", None), ("2014-04-17", "Baird", None),
@@ -144,6 +148,18 @@ PREMIER_FULL_NAMES = {
     "Baird": "Mike Baird", "O'Farrell": "Barry O'Farrell", "Keneally": "Kristina Keneally",
     "Rees": "Nathan Rees", "Iemma": "Morris Iemma", "Carr": "Bob Carr",
 }
+# Victorian premiers by the names Victorian Hansard prints for the office (source in
+# the GOVERNMENTS["vic"] comment). Earlier premiers are absent on purpose: no release
+# that needs them has been checked, so they stay unnamed rather than guessed.
+VIC_PREMIER_FULL_NAMES = {
+    "Andrews": "Daniel Andrews", "Allan": "Jacinta Allan", "Carroll": "Ben Carroll",
+}
+# A premier.vic.gov.au title that names the office as the author: "Statement From The
+# Premier", "Statement From The Premier On Western Renewables Link", "Premier's Speech
+# to Police Association of Victoria". "Statement On ..." titles name no author and do
+# not match (speeches-press-014).
+_VIC_PREMIER_TITLE_RE = re.compile(
+    r"^(?:statement\s+(?:from|by)\s+the\s+premier\b|premier['\u2019]s\s+speech\b)", re.I)
 
 
 def government_for(jurisdiction: str, date: Optional[str]) -> tuple[Optional[str], Optional[str]]:
@@ -522,18 +538,29 @@ def fetch_vic_page(session: PoliteSession, slug: str) -> Optional[dict]:
     politicians = [s for s in speakers if s["politician"] and s["name"]]
     lead = politicians[0] if politicians else {}
     gov, party = government_for("vic", date)
+    title = re.sub(r"\s+", " ", data.get("title") or "").strip()
+    speaker, role = lead.get("name"), lead.get("role")
+    speaker_from = "attributable" if politicians else None
+    if not politicians and _VIC_PREMIER_TITLE_RE.match(title):
+        # No "Quotes attributable to" line, but the title names the Premier as the
+        # author: the Premier in office on the date, as NSW Premier releases already
+        # are (speeches-press-014). The office is always set; the name only for a
+        # premier in VIC_PREMIER_FULL_NAMES.
+        role = "Premier"
+        speaker = VIC_PREMIER_FULL_NAMES.get(gov.split(" (")[0]) if gov else None
+        speaker_from = "title"
     return _row(
         "vic", slug,
         url=f"{VIC_BASE}/{slug}",
-        title=re.sub(r"\s+", " ", data.get("title") or "").strip(),
+        title=title,
         date=date, release_type="Media Release",
-        speaker_raw=lead.get("raw"), speaker=lead.get("name"), role=lead.get("role"),
-        party=party if politicians else None, government=gov,
+        speaker_raw=lead.get("raw"), speaker=speaker, role=role,
+        party=party if speaker else None, government=gov,
         body_html=body_html or None, body_text=text,
         subjects="; ".join(filter(None, (
             str(t.get("name") or t.get("text") or "") if isinstance(t, dict) else str(t)
             for t in (data.get("topicTags") or [])))) or None,
-        extra_json={"speakers": speakers, "nid": data.get("nid"),
+        extra_json={"speakers": speakers, "nid": data.get("nid"), "speaker_from": speaker_from,
                     "location": (data.get("details") or {}).get("location")},
     )
 
