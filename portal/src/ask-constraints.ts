@@ -28,7 +28,10 @@ export function extractAskConstraints(question: string, period: Period, named: N
 export function constrainStep(step: PlanStep, c: AskConstraints, properties: Record<string, unknown>): PlanStep {
   const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k)
   if (c.actUnfiltered) for (const key of ['state', 'jurisdiction']) if (a[key] === 'act') delete a[key]
-  if (c.dated) {
+  // Count selectors are exclusive. Preserve individual periods in comparisons;
+  // the result's query window is checked by guardToolPeriod after the lookup.
+  const countPeriod = step.tool === 'count_records' && ['date', 'month', 'year', 'financial_year', 'term'].some(key => a[key] !== undefined)
+  if (c.dated && !countPeriod) {
     for (const key of ['since', 'from_year', 'from']) if (has(key) && !c.period.since) delete a[key]
     for (const key of ['until', 'to_year', 'to']) if (has(key) && !c.period.until) delete a[key]
     if (has('since') && c.period.since) a.since = c.period.since
