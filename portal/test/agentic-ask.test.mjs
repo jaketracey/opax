@@ -40,7 +40,7 @@ test('a plan rejects unknown tools, excess steps and malformed arguments', () =>
   assert.equal(parsePlan('{"shape":"ranking","steps":[]}'), null);
   const p = parsePlan('Sure! {"shape":"ranking","steps":[{"tool":"count_speeches","args":{"topic":"gambling","group_by":"speaker"}},{"tool":"rm_rf","args":{}}]}');
   assert.equal(p, null);
-  const many = JSON.stringify({ shape: 'trend', steps: Array.from({ length: 9 }, () => ({ tool: 'find_people', args: { name: 'x' } })) });
+  const many = JSON.stringify({ shape: 'trend', steps: Array.from({ length: 17 }, () => ({ tool: 'find_people', args: { name: 'x' } })) });
   assert.equal(parsePlan(many), null);
   assert.equal(parsePlan('{"shape":"unanswerable","steps":[],"reason":"no party labels"}').shape, 'unanswerable');
 });

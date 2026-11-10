@@ -51,6 +51,9 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
   // Count selectors are exclusive. Preserve individual periods in comparisons;
   // the result's query window is checked by guardToolPeriod after the lookup.
   const countPeriod = step.tool === 'count_records' && ['date', 'month', 'year', 'financial_year', 'term'].some(key => a[key] !== undefined)
+  // A model sometimes invents 1 January as an exact division date for a bare
+  // year. Retain the requested window so it can discover the actual date/id.
+  if (step.tool === 'division' && c.dated && c.period.since !== c.period.until && a.date === c.period.since && c.period.since?.endsWith('-01-01') && !a.division_id) delete a.date
   const grantList = step.tool === 'grants' && (a.operation === 'largest' || !(a.recipient || a.program || a.group_by || a.operation === 'totals'))
   if (c.dated && !countPeriod) {
     for (const key of ['since', 'from_year', 'from']) if (has(key) && !c.period.since) delete a[key]
@@ -86,6 +89,10 @@ export interface Coverage { since: string | null; until: string | null; as_of: s
 /** Unknown coverage stays unknown; never describe the requested window as observed data. */
 export function resultCoverage(result: ToolResult, step: PlanStep): Coverage {
   const d = result.data ?? {}, known = d.coverage as Coverage | undefined
+  if (step.tool === 'division' && (!d.operation || d.operation === 'lookup') && Array.isArray(d.rows) && d.rows.length) {
+    const dates = d.rows.map(row => (row as Record<string, unknown>).date).filter((date): date is string => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)).sort()
+    if (dates.length === d.rows.length) return { since: dates[0], until: dates.at(-1)!, as_of: null, note: 'Dates of the returned division records.' }
+  }
   const donation=/Federal AEC donation returns, financial years ((?:19|20)\d{2})[–-]\d{2} to ((?:19|20)\d{2})[–-]\d{2}/i.exec(result.notes.join(' '))
   if(donation&&(!known?.since||!known?.until))return {...known,since:donation[1]+'-07-01',until:String(Number(donation[2])+1)+'-06-30',as_of:known?.as_of??null,note:result.notes[0]}
   if (known && ('since' in known || 'as_of' in known)) return known

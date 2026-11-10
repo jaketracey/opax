@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {loadWorker,offline} from './worker-harness.mjs';
 
-test('P1 deadline: JSON and SSE fallback share the single 40s deadline and abort their fetch',async()=>{
+test('P1 deadline: JSON and SSE fallback share the single 60s deadline and abort their fetch',async()=>{
  const restore=offline(),pending=[],ctx={waitUntil(p){pending.push(p)},passThroughOnException(){}};
  const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public',import.meta.url).pathname,ctx);
  const assets=h.env.ASSETS;h.env.ASSETS={fetch(req){const path=new URL(req.url).pathname;if(path==='/parliamentarians.json')return Response.json({people:[]});if(path==='/bills/index.json')return Response.json({bills:[]});if(path.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});return assets.fetch(req)}};
@@ -47,15 +47,15 @@ test('P1 deadline: JSON and SSE fallback share the single 40s deadline and abort
   });
   const completed=Promise.all(requests);
   await Promise.race([toolsStarted,stuck]);
-  await advance(12_000); // Both bounded tool calls time out.
+  await advance(20_000); // Both bounded tool calls time out.
   await Promise.race([fallbacksStarted,stuck]);
-  assert.equal(now-started,12_000);
+  assert.equal(now-started,20_000);
   assert.ok(signals.every(s=>!s.aborted),'fallback starts with time remaining');
-  await advance(28_000); // The original request deadline, not 40 more seconds.
+  await advance(40_000); // The original request deadline, not 60 more seconds.
   assert.ok(signals.every(s=>s.aborted),'the actual fallback fetch must be cancelled at the original deadline');
   const result=await Promise.race([completed,stuck]);
   assert.equal(result[0].status,504);assert.match(result[1].text,/event: error/);
-  assert.ok(result.every(r=>r.elapsed===40_000),JSON.stringify(result));assert.ok(normal>=2,'both formats must reach normal fallback');
+  assert.ok(result.every(r=>r.elapsed===60_000),JSON.stringify(result));assert.ok(normal>=2,'both formats must reach normal fallback');
   assert.ok(signals.every(s=>s.aborted),'the actual fallback fetch must be cancelled');
  }finally{
   cleaning=true;parents.forEach(p=>p.abort());abortFetches.forEach(stop=>stop());Date.now=realNow;globalThis.setTimeout=realTimeout;globalThis.clearTimeout=realClear;realClear(watchdog);timers.clear();

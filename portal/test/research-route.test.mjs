@@ -209,8 +209,8 @@ test('every ordinary fallback carries exactly one failure code and one compact l
  h.env.RESEARCH_LOOP='route';
  for(const [reason,configure] of [
   ['error',()=>{globalThis.__researchModel=new MockLanguageModelV4({doGenerate:()=>{throw Error('fixture failure')}})}],
-  // Searches that find nothing citable keep only search active, so six empty rounds exhaust the qualitative turns.
-  ['steps',()=>{const fixture=globalThis.fetch;globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/find')?Promise.resolve(Response.json({resources:{}})):fixture(input,init);globalThis.__researchModel=new MockLanguageModelV4({doGenerate:Array.from({length:7},(_,i)=>reply([call('search',{query:'housing '+i})]))})}],
+  // Searches that find nothing citable keep only search active, so eight empty rounds exhaust the qualitative turns.
+  ['steps',()=>{const fixture=globalThis.fetch;globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/find')?Promise.resolve(Response.json({resources:{}})):fixture(input,init);globalThis.__researchModel=new MockLanguageModelV4({doGenerate:Array.from({length:9},(_,i)=>reply([call('search',{query:'housing '+i})]))})}],
   ['grounding',()=>{globalThis.__researchModel=qualitative(true)}],
   ['tokens',()=>{h.env.RESEARCH_LOOP_TOKENS='1';globalThis.__researchModel=qualitative()}],
   ['limiter',()=>{let calls=0;h.env.MODEL_LIMITER={limit:async()=>({success:++calls>1})};globalThis.__researchModel=qualitative()}],

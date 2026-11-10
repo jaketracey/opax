@@ -18,7 +18,7 @@ globalThis.fetch=async(input,init)=>{
  if(url.pathname.endsWith('/ask')){
   if(b.prompt?.user?.includes('Plan the record')){
    models++;
-   if(mode==='overrun'){const now=Date.now;Date.now=()=>now()+41_000;setTimeout(()=>{Date.now=now},20);return Response.json({answer:'junk'})}
+   if(mode==='overrun'){const now=Date.now;Date.now=()=>now()+61_000;setTimeout(()=>{Date.now=now},20);return Response.json({answer:'junk'})}
    if(mode==='empty')return Response.json({answer:'{"shape":"unanswerable","steps":[],"reason":"fixture"}'});
    return Response.json({answer:'{"shape":"ranking","steps":[{"tool":"count_speeches","args":{"topic":"gambling","state":"nsw","group_by":"speaker"}}]}',metadata:{tokens:{input:10,output:5}}});
   }

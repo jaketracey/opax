@@ -169,14 +169,15 @@ const reply = content => ({ content, finishReason: { unified: 'tool-calls', raw:
 const context = (q, d) => ({ deps: d, period: api.inferPeriod(q), named: emptyScope, signal: new AbortController().signal,
   progress: async () => {}, scope: step => step, execute: (_step, _round, action) => action(d) })
 test('the loop can state a missing person after an empty lookup instead of asking for a known full name again', async () => {
-  const model = new MockLanguageModelV4({ doGenerate: [reply([call('find_people', { name: 'Taylor Unrecorded' })]), reply([call('decline', { reason: 'no_record' })])] })
+  const model = new MockLanguageModelV4({ doGenerate: [reply([call('find_people', { name: 'Taylor Unrecorded' })]), reply([call('decline', { reason: 'no_record' })]), reply([call('find_people', { name: 'Unrecorded Taylor' })]), reply([call('decline', { reason: 'no_record' })])] })
   const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) } }), { write: undefined })
   const q = 'Which electorate does Taylor Unrecorded MP represent?'
   // A missing roster is a tool failure, while an available empty roster establishes an empty lookup.
   const run = await research(q, context(q, deps({ asset: async path => path === '/parliamentarians.json' ? { people: [] } : null })))
   assert.equal(run.qualitative.answer, 'OPAX has no record of a parliamentarian by that name.')
   assert.equal(run.qualitative.answer_decision, 'limitation')
-  assert.equal(model.doGenerateCalls.length, 2)
+  assert.equal(model.doGenerateCalls.length, 4)
+  assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /empty lookup is not absence/i)
 })
 
 test('the exact absence check respects fuzzy names, ambiguous names and register-only members', async () => {

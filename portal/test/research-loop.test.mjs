@@ -51,13 +51,13 @@ test('identical scoped calls dedupe despite different property order',async()=>{
  const m=model([reply([call('count_speeches',args,'a')]),reply([call('count_speeches',{group_by:'speaker',state:'nsw',topic:'gambling'},'b')]),reply([call('finish',{facts:[1]},'c')])]),f=fixtures(m),run=await f.run();
  assert.equal(run.answered,true);assert.equal(f.plannerCalls,0);assert.equal(run.steps.filter(s=>s.tool==='count_speeches').length,1);assert.equal(f.lookups,2);assert.equal(choice(m.doGenerateCalls[2]),'finish');assert.deepEqual(names(m.doGenerateCalls[2]),names(m.doGenerateCalls[0]));
 });
-test('default five turns, six hard ceiling and bounded parallel call batches; surplus calls are refused, not fatal',async()=>{
- assert.equal(api.researchLimits({}).rounds,5);assert.equal(api.researchLimits({steps:99}).rounds,6);
+test('default eight turns, eight hard ceiling and bounded parallel call batches; surplus calls are refused, not fatal',async()=>{
+ assert.equal(api.researchLimits({}).rounds,8);assert.equal(api.researchLimits({steps:99}).rounds,8);
  // Searches that find nothing give no evidence, so no turn is forced to finish and the round cap ends the run.
- for(const [steps,wanted] of [[undefined,5],[99,6]]){const m=model(Array.from({length:7},(_,i)=>reply([call('search',{query:'gambling '+i},String(i))]))),f=fixtures(m,{steps}),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'steps');assert.equal(m.doGenerateCalls.length,wanted);assert.equal(f.plannerCalls,1);}
- const f=fixtures(model([reply(Array.from({length:12},(_,i)=>call('count_speeches',{...args,limit:i+1},String(i)))),reply([call('finish',{facts:[1]},'f')])])),run=await f.run();
+ for(const [steps,wanted] of [[undefined,8],[99,8]]){const m=model(Array.from({length:9},(_,i)=>reply([call('search',{query:'gambling '+i},String(i))]))),f=fixtures(m,{steps,inputPrice:0.1,outputPrice:0.3}),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'steps');assert.equal(m.doGenerateCalls.length,wanted);assert.equal(f.plannerCalls,1);}
+ const f=fixtures(model([reply(Array.from({length:18},(_,i)=>call('count_speeches',{...args,limit:i%15+1,venue:i>=15?'committee':'chamber'},String(i)))),reply([call('finish',{facts:[1]},'f')])])),run=await f.run();
  assert.equal(run.research.mode,'loop');assert.equal(f.failures.length,0);assert.equal(run.steps.filter(s=>s.tool==='count_speeches').length,api.RESEARCH_MAX_CALLS);assert.ok(f.lookups<=2*api.RESEARCH_MAX_CALLS);
- const surplus=f.model.doGenerateCalls[1].prompt.filter(m=>m.role==='tool').flatMap(m=>m.content).filter(c=>JSON.stringify(c).includes('call limit reached'));assert.equal(surplus.length,12-api.RESEARCH_MAX_CALLS);
+ const surplus=f.model.doGenerateCalls[1].prompt.filter(m=>m.role==='tool').flatMap(m=>m.content).filter(c=>JSON.stringify(c).includes('call limit reached'));assert.equal(surplus.length,18-api.RESEARCH_MAX_CALLS);
 });
 test('wall timeout skips the planner and returns to the route fallback',async()=>{
  const f=fixtures(model(()=>new Promise(()=>{})),{wallMs:15}),started=Date.now(),run=await f.run();assert.ok(Date.now()-started<1000);assert.equal(f.failures[0].reason,'timeout');assert.equal(run.research.mode,'planner');assert.equal(f.plannerCalls,0);assert.equal(run.answered,false);
@@ -151,7 +151,7 @@ test('unclassified prose sees every record tool, but speech counts it did not as
 test('realistic four-turn usage survives token admission; search notes stay out of numerical answers',async()=>{
  const m=model([reply([call('search',{query:'gambling',limit:4})],6000,500),reply([call('count_speeches',args)],14000,1000),reply([call('finish',{facts:[1]})],16000,500)]),f=fixtures(m,{readRecord:async()=>({text:'Source passage about gambling. '.repeat(40)})}),oldKb=f.deps.kb;
  f.deps.kb=async(path,body)=>path==='/find'?{resources:{[p.resource]:{slug:p.slug,title:p.title,fields:{body:{paragraphs:Object.fromEntries(Array.from({length:4},(_,i)=>[p.resource+'/t/body/'+i+'-1200',{text:'Source passage about gambling. '.repeat(40)}]))}}}}}:oldKb(path,body);
- const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.equal(m.doGenerateCalls.length,3);assert.deepEqual(run.tokens,{input:36000,output:2000});assert.doesNotMatch(run.answer,/Retrieved passages|ranked sample/);assert.deepEqual(run.research.trail.map(t=>t.round),[1,2,3]);assert.equal(choice(m.doGenerateCalls[2]),'finish');
+ const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.equal(m.doGenerateCalls.length,3);assert.deepEqual(run.tokens,{input:36000,output:2000});assert.doesNotMatch(run.answer,/Retrieved passages|ranked sample/);assert.deepEqual(run.research.trail.map(t=>t.round),[1,2,3]);assert.equal(choice(m.doGenerateCalls[2]),'required');
  assert.equal(api.researchLimits({}).tokens,96000);assert.equal(api.researchLimits({tokens:999999}).tokens,160000);
 });
 test('a numerical answer misroute keeps finish active and does not consume qualitative repair',async()=>{
@@ -177,24 +177,28 @@ test('ordinary failures and shadow failures skip discarded planner calls',async(
  const run=await api.runAgentic(ordinary,f.deps,async()=>{},40000,api.inferPeriod(ordinary),{},emptyScope);assert.equal(run.answered,false);assert.equal(f.plannerCalls,0);assert.equal(run.research.mode,'planner');
  const g=fixtures(model(()=>{throw Error('fixture provider failure')}));g.deps.researchShadow=true;assert.equal((await g.run()).answered,false);assert.equal(g.plannerCalls,0);
 });
-test('SDK tool errors stop inference and emit failed for older web clients',async()=>{
- const m=model([reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])]),f=fixtures(m);f.deps.kb=async()=>{throw Error('fixture lookup failure')};await f.run();assert.equal(m.doGenerateCalls.length,1);assert.equal(f.failures[0].reason,'error');assert.equal(f.events.find(e=>e.step?.tool==='count_speeches'&&e.step.state!=='running').step.state,'failed');
+test('SDK tool errors remain visible for a recovery and emit failed for older web clients',async()=>{
+ const m=model([reply([call('count_speeches',args)]),reply([call('count_speeches',{...args,limit:1})]),reply([call('finish',{facts:[1]})])]),f=fixtures(m);
+ const kb=f.deps.kb;let unavailable=true;f.deps.kb=async(...args)=>{if(unavailable){unavailable=false;throw Error('fixture lookup failure')}return kb(...args)};
+ const run=await f.run();assert.equal(run.answered,true);assert.equal(m.doGenerateCalls.length,3);assert.equal(f.failures.length,0);
+ assert.equal(f.events.find(e=>e.step?.tool==='count_speeches'&&e.step.state!=='running').step.state,'failed');
+ assert.match(JSON.stringify(m.doGenerateCalls[1].prompt),/lookup timed out or unavailable/);
 });
 test('rebuilt JSON removes content-length and stepped old answers always retain research rounds',async()=>{
  const response=new Response(JSON.stringify({answer:'Fallback.',sources:[],citations:{}}),{headers:{'content-type':'application/json','content-length':'50'}}),adapted=await api.withPlannerResearch(response);assert.equal(adapted.headers.get('content-length'),null);assert.equal((await adapted.json()).research.mode,'planner');
  const f=fixtures(model([]));delete f.deps.research;const run=await f.run(),body=api.agenticAskPayload(run,question);assert.equal(body.research.mode,'planner');assert.equal(body.research.trail.length,run.steps.length);assert.ok(body.research.trail.every(t=>t.round===1));
 });
-test('committee checks start with their ranking round and keep that round in live events and cached trails',async()=>{
- const federal={...args,state:'federal'},f=fixtures(model([reply([call('count_speeches',federal)]),reply([call('finish',{facts:[1]})])])),q='Who speaks most about gambling in federal parliament across the whole record?';
+test('model-chosen committee checks share the call budget and retain their round in live events and cached trails',async()=>{
+ const federal={...args,state:'federal'},f=fixtures(model([reply([call('count_speeches',federal,'chamber'),call('count_speeches',{...federal,venue:'committee'},'committee')]),reply([call('finish',{facts:[1]})])])),q='Who speaks most about gambling in federal parliament across the whole record?';
  const run=await api.runAgentic(q,f.deps,async(e,d)=>f.events.push(d),40000,api.inferPeriod(q),{},emptyScope),body=api.agenticAskPayload(run,q);assert.equal(run.answered,true);assert.deepEqual(body.research.trail.map(t=>[t.tool,t.round,t.label]).sort(),[['count_speeches',1,'Checking committee hearings'],['count_speeches',1,'Counting by speaker'],['finish',2,'Selecting record facts']]);
  const committee=run.events.find(e=>e.label==='Checking committee hearings');assert.equal(committee.tool,'count_speeches');assert.equal(committee.round,1);
 });
 
-test('qualitative trace searches twice, then answers with only the answer tool forced; a failed draft is repaired in code',async()=>{
+test('qualitative trace observes two searches and can still choose whether to answer or research; a failed draft is repaired in code',async()=>{
  const f=qualitativeFixture([reply([call('search',{query:'housing'})],3500,500),reply([call('search',{query:'affordability safeguards'})],6000,500),reply([call('answer',{...valid,citations:[{...valid.citations[0],quote:'fabricated'}]})],9000,500)]);
  // The fabricated citation quote is re-selected from the passage, so the model's own sentence stands, cited.
  const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(run.research.rounds,3);assert.equal(f.plannerCalls,0);assert.equal(f.failures.length,0);assert.equal(run.answer,'- '+text);assert.ok(run.qualitative.citations[id]);assert.equal(run.research.answer_stats.repairs.quote_reselected,1);assert.deepEqual(run.tokens,{input:18500,output:1500});
- assert.deepEqual(f.model.doGenerateCalls.map(choice),['required','required','answer']);assert.ok(f.model.doGenerateCalls.every(c=>JSON.stringify(names(c))===JSON.stringify(names(f.model.doGenerateCalls[0]))));
+ assert.deepEqual(f.model.doGenerateCalls.map(choice),['required','required','required']);assert.ok(f.model.doGenerateCalls.every(c=>JSON.stringify(names(c))===JSON.stringify(names(f.model.doGenerateCalls[0]))));
  assert.deepEqual(f.events.filter(e=>e.step?.state!=='running'&&e.step).map(e=>[e.step.round,e.step.tool,e.step.state]),[[1,'search','done'],[2,'search','done'],[3,'answer','done']]);
 });
 test('reported per-turn input and cached tokens are separate from bytes/4 reserve, including realistic 60k usage',async()=>{
