@@ -467,9 +467,15 @@ test('the ready announcement counts cited records', () => {
 });
 
 describe('the iPad pane is never empty', () => {
-  function Pane({ thread }: { thread: Turn[] }) {
+  function Pane({
+    thread,
+    chat = 'fixture-chat',
+  }: {
+    thread: Turn[];
+    chat?: string;
+  }) {
     return useAskSources(thread, {
-      chat: 'fixture-chat',
+      chat,
       profiles,
       onAsk: mockAsk,
     }).pane;
@@ -527,5 +533,15 @@ describe('the iPad pane is never empty', () => {
     act(() => dispatchKeyCommand('list-up'));
     expect(citationSelection()?.n).toBe(1);
     expect(presentSheet).not.toHaveBeenCalled();
+  });
+  test('another conversation with the same number of turns starts at its first citation', () => {
+    const { words, press, renderer } = drawPane([question, answer()]);
+    act(() => press('ask-pane-source-3'));
+    const next = answer({ sources: [source(1, true)] });
+    act(() =>
+      renderer.update(<Pane chat="fixture-other" thread={[question, next]} />),
+    );
+    expect(words()).toContain('Synthetic passage 1 from the record.');
+    expect(citationSelection()).toBeNull();
   });
 });

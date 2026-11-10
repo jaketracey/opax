@@ -87,13 +87,14 @@ export function useAskSources(
   const shown =
     active !== null && thread[active]?.role === 'answer' ? active : latest;
   // A new answer brings the pane to it, on citation 1.
-  const [seen, setSeen] = useState(latest);
-  if (seen !== latest) {
-    setSeen(latest);
+  const [seen, setSeen] = useState({ chat, latest });
+  if (seen.chat !== chat || seen.latest !== latest) {
+    setSeen({ chat, latest });
     setActive(null);
     setMark(null);
     setStack([]);
   }
+  useEffect(() => selectCitation(null), [chat, latest]);
   const answers = useRef(new Map<number, RefObject<View | null>>());
   const { height } = useWindowDimensions();
   const measuring = useRef(false);
