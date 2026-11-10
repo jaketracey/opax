@@ -123,15 +123,28 @@ function ensureSpeakersDatalist (rows) {
 
 const SPEAKER_NICKNAMES = { albo: 'Anthony Albanese', scomo: 'Scott Morrison' }
 
+// Folded for matching only: curly and straight apostrophes, case and accents are one name.
 function speakerKey (s) {
-  return String(s || '').replace(/’/g, "'").replace(/\s+/g, ' ').trim().toLowerCase()
+  return String(s || '').normalize('NFKD').replace(/\p{M}/gu, '').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase()
+}
+
+/** One row per speakerKey: the most-used spelling, with every spelling's speeches (app.js mergeSpeakerRows). */
+function mergeSpeakerRows (rows) {
+  const merged = new Map()
+  for (const [name, count] of rows || []) {
+    const key = speakerKey(name); const row = merged.get(key)
+    if (!row) merged.set(key, { name, top: count, count })
+    else { row.count += count; if (count > row.top) Object.assign(row, { name, top: count }) }
+  }
+  return [...merged.values()].sort((a, b) => b.count - a.count).map(({ name, count }) => [name, count])
 }
 
 let speakersDirPromise = null
 function loadSpeakersDir () {
   speakersDirPromise ??= fetch(SPEAKERS_URL)
     .then((r) => r.json())
-    .then((rows) => {
+    .then((raw) => {
+      const rows = mergeSpeakerRows(raw)
       ensureSpeakersDatalist(rows)
       const exact = new Map(); const bySurname = new Map()
       for (const [name, count] of rows) {

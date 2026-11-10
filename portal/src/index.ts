@@ -59,7 +59,7 @@ import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 import {speechPresentation, joinMixedSpeakers, type Participant} from './mixed-speakers'
-import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, printSpeakers, personScope, scopedCollaborators, type SpeechScope } from '../public/speech-attribution.js'
+import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, printSpeakers, personScope, scopedCollaborators, speakerSpellings, speakerVariantIndex, type SpeechScope } from '../public/speech-attribution.js'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
  *
@@ -3987,13 +3987,25 @@ async function speakerAttribution(env: Env, raw: string | null | undefined): Pro
 }
 
 /** The collaborator names a person's speeches sit under when surname prints were folded into them
- *  ("David Shoebridge" and "Shoebridge"); null for everyone else, whose one name already is the filter. */
+ *  ("David Shoebridge" and "Shoebridge"), or when the record spells one name two ways that differ
+ *  only in apostrophe, case or accents ("Brendan O'Connor" 879 and "Brendan O’Connor" 598,
+ *  speeches-press-002); null for everyone else, whose one name already is the filter. */
 async function speakerPrints(env: Env, raw: string | null | undefined): Promise<string[] | null> {
   if (!raw) return null
-  const people = await loadPeople(env)
-  const speakers = printSpeakers(people.byFold.get(foldName(raw)))
-  return speakers.length ? speakers : null
+  const [people, variants] = await Promise.all([loadPeople(env), loadSpeakerVariants(env).catch(() => new Map<string, string[]>())])
+  const prints = printSpeakers(people.byFold.get(foldName(raw)))
+  const speakers = speakerSpellings(prints.length ? prints : [canonicalSpeaker(raw)], variants)
+  return prints.length || speakers.length > 1 ? speakers : null
 }
+
+let speakerVariantsMemo: Promise<Map<string, string[]>> | null = null
+/** speakers.json names grouped by folded key, only where a key holds more than one spelling. */
+function loadSpeakerVariants(env: Env): Promise<Map<string, string[]>> {
+  speakerVariantsMemo ??= assetJson<[string, number][]>(env, '/speakers.json').then(rows => speakerVariantIndex(rows))
+    .catch(error => { speakerVariantsMemo = null; throw error })
+  return speakerVariantsMemo
+}
+
 
 async function scopeSpeakerBody(body: Record<string, unknown>, env: Env, raw: string | undefined): Promise<void> {
   const scope = await speakerAttribution(env, raw)

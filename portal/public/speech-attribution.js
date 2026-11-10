@@ -76,6 +76,28 @@ export function printSpeakers(person) {
   return [...new Set([person.name, ...person.prints])];
 }
 
+/** A name folded for matching only: curly and straight apostrophes, case and accents are one
+ *  (the same fold as canonical-urls.js personNameKey). Display keeps the recorded spelling. */
+export const spellingKey = name => String(name ?? '').normalize('NFKD').replace(/\p{M}/gu, '')
+  .replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+
+/** speakers.json rows grouped by spellingKey, only where one key holds several spellings
+ *  ("Brendan O'Connor" 879, "Brendan O’Connor" 598: speeches-press-002), largest first. */
+export function speakerVariantIndex(rows) {
+  const groups = new Map();
+  for (const [name, count] of rows || []) {
+    const key = spellingKey(name);
+    if (key) groups.set(key, [...(groups.get(key) || []), [name, Number(count) || 0]]);
+  }
+  return new Map([...groups].filter(([, names]) => names.length > 1)
+    .map(([key, names]) => [key, names.sort((a, b) => b[1] - a[1]).map(([name]) => name)]));
+}
+
+/** Every recorded spelling of each name; a name the directory lacks stays as given. */
+export function speakerSpellings(names, variants) {
+  return [...new Set((names || []).flatMap(name => [name, ...(variants?.get(spellingKey(name)) || [])]))];
+}
+
 /** Only reviewed split identities and folded prints acquire these aliases; ambiguous matches fail closed. */
 export function splitPerson(people, name) {
   const matches = people.filter(p => [...splitSpeakers(p), ...printSpeakers(p)].some(n => nameKey(n) === nameKey(name)));

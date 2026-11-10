@@ -3672,15 +3672,30 @@ function parseSpeakerIntent(q) {
 
 const SPEAKER_NICKNAMES = { albo: "Anthony Albanese", scomo: "Scott Morrison" };
 
+// Folded for matching only: curly and straight apostrophes, case and accents are one name.
 function speakerKey(s) {
-  return String(s || "").replace(/’/g, "'").replace(/\s+/g, " ").trim().toLowerCase();
+  return String(s || "").normalize("NFKD").replace(/\p{M}/gu, "").replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+/** One row per speakerKey: the most-used spelling, with every spelling's speeches. The record
+ *  spells some names two ways ("Brendan O'Connor" 879, "Brendan O’Connor" 598), and the smaller
+ *  spelling used to win the lookup (speeches-press-002); the Worker's speaker filter matches both. */
+function mergeSpeakerRows(rows) {
+  const merged = new Map();
+  for (const [name, count] of rows || []) {
+    const key = speakerKey(name), row = merged.get(key);
+    if (!row) merged.set(key, { name, top: count, count });
+    else { row.count += count; if (count > row.top) Object.assign(row, { name, top: count }); }
+  }
+  return [...merged.values()].sort((a, b) => b.count - a.count).map(({ name, count }) => [name, count]);
 }
 
 let speakersDirPromise = null;
 function loadSpeakersDir() {
   speakersDirPromise ??= fetch("/speakers.json")
     .then((r) => r.json())
-    .then((rows) => {
+    .then((raw) => {
+      const rows = mergeSpeakerRows(raw);
       const exact = new Map(), bySurname = new Map();
       for (const [name, count] of rows) {
         const key = speakerKey(name);
