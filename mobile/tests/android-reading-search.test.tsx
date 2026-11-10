@@ -1,6 +1,7 @@
 import { act, type ReactElement } from 'react';
 import { Keyboard, Platform, ScrollView, TextInput } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { Field } from '../src/design/primitives';
 import { SearchField } from '../src/features/search/SearchField';
 import { RouteOptions } from '../src/navigation/preview';
@@ -177,6 +178,10 @@ test('Android IME Back releases focus without submitting; iOS installs no Androi
     });
   const blur = jest.fn();
   const onDismiss = jest.fn();
+  const navigation = {
+    isFocused: () => true,
+    addListener: jest.fn((_event: string, _listener: () => void) => () => {}),
+  };
   const ref = {
     current: { isFocused: () => true, blur } as unknown as TextInput,
   };
@@ -185,15 +190,26 @@ test('Android IME Back releases focus without submitting; iOS installs no Androi
     return null;
   }
   Platform.OS = 'android';
-  const view = await mount(<Focus />);
+  const element = (
+    <NavigationContext.Provider value={navigation as never}>
+      <Focus />
+    </NavigationContext.Provider>
+  );
+  const view = await mount(element);
+  expect(navigation.addListener.mock.calls.map((call) => call[0])).toEqual([
+    'focus',
+    'blur',
+  ]);
   act(() => handlers.get('keyboardDidHide')!());
   expect(blur).toHaveBeenCalledTimes(1);
   expect(onDismiss).toHaveBeenCalledTimes(1);
   await act(async () => view.unmount());
   expect(remove).toHaveBeenCalledTimes(1);
   listen.mockClear();
+  navigation.addListener.mockClear();
   Platform.OS = 'ios';
-  const ios = await mount(<Focus />);
+  const ios = await mount(element);
   expect(listen).not.toHaveBeenCalled();
+  expect(navigation.addListener).not.toHaveBeenCalled();
   await act(async () => ios.unmount());
 });
