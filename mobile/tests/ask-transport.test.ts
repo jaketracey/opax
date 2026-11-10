@@ -243,6 +243,26 @@ test('cancelling a stalled request settles immediately without sending a second 
   expect(t).toHaveBeenCalledTimes(1);
 });
 
+test('a transport that rejects on abort still reports timeout rather than offline', async () => {
+  jest.useFakeTimers();
+  const t = jest.fn(
+    (_url: string, init: RequestInit) =>
+      new Promise<Response>((_resolve, reject) => {
+        init.signal!.addEventListener('abort', () =>
+          reject(new Error('AbortError')),
+        );
+      }),
+  );
+  const pending = api(t).askPost('/api/ask?stream=1', {}, controller().signal);
+  const timedOut = expect(pending).rejects.toMatchObject({ code: 'timeout' });
+  try {
+    await jest.advanceTimersByTimeAsync(120_000);
+    await timedOut;
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
 test('done completes the answer without waiting for the server to close the stream', async () => {
   Object.assign(globalThis, { TextDecoder, TextEncoder });
   const reader = {

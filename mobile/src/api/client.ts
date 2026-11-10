@@ -570,8 +570,13 @@ export class ApiClient {
       }
     } catch (e) {
       if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
-      if (shown && request.signal.aborted)
-        throw new AskFailure('partial', 'The answer stream ended early.');
+      if (request.signal.aborted)
+        throw new AskFailure(
+          shown ? 'partial' : 'timeout',
+          shown
+            ? 'The answer stream ended early.'
+            : 'The answer took too long.',
+        );
       if (e instanceof AskFailure) throw e;
       if (shown)
         throw new AskFailure('partial', 'The answer stream ended early.');
