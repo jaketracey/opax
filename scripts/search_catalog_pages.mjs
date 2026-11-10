@@ -79,7 +79,15 @@ export async function* pageSearchRecords(read, readConfig, {reports = reportsPub
  const budget = await optional(read,'budget/data.json');
  for(const [i,r] of (budget ? clearedAggregates(budget) : []).entries()) yield record('budget:'+i,'register',`${r.metric.replaceAll('_',' ')} — ${r.fiscal_year} (${r.release})`,'/budget?'+new URLSearchParams({year:r.fiscal_year,metric:r.metric}),`${publishedValue(r.value,r.unit)}. ${r.status}. ${r.paper}. ${r.vintage}.`,{from:Number(r.fiscal_year.slice(0,4)),state:'federal',dateLabel:r.fiscal_year,source:'Federal Budget papers',url:r.source_url});
  const saBudget = await optional(read,'sa-budget/data.json');
- for(const [i,r] of (saBudget ? clearedSABudget(saBudget) : []).entries()) yield record('sa-budget:'+i,'register',`${r.measure_as_published} — ${r.fiscal_year}`,'/budget#sa-budget',`${publishedValue(r.value,r.units)}. South Australian budget. ${r.section_as_published}. ${r.estimate_or_actual}.`,{from:Number(r.fiscal_year.slice(0,4)),state:'sa',dateLabel:r.fiscal_year,source:'South Australian budget',url:r.source_url});
+ // The SA sheet prints some lines twice by design (Net operating balance closes the operating statement and
+ // opens the net lending derivation): both rows stay in the data; search lists the identical result once (search-hubs-015).
+ const saSeen = new Set();
+ for(const [i,r] of (saBudget ? clearedSABudget(saBudget) : []).entries()) {
+  const title = `${r.measure_as_published} — ${r.fiscal_year}`, snippet = `${publishedValue(r.value,r.units)}. South Australian budget. ${r.section_as_published}. ${r.estimate_or_actual}.`;
+  if (saSeen.has(title + '\u0000' + snippet)) continue;
+  saSeen.add(title + '\u0000' + snippet);
+  yield record('sa-budget:'+i,'register',title,'/budget#sa-budget',snippet,{from:Number(r.fiscal_year.slice(0,4)),state:'sa',dateLabel:r.fiscal_year,source:'South Australian budget',url:r.source_url});
+ }
  const gifts = await optional(read,'vic-gifts/data.json');
  for(const reg of gifts ? clearedGiftRegisters(gifts) : []) for(const r of reg.rows) yield record('gift:'+r.id,'register',`${r.office_holder} — ministerial gift register`,'/register/vic-gifts?'+new URLSearchParams({'vicGifts.q':r.office_holder}),`${r.period}.${r.estimated_value ? ' Estimated value as published: '+r.estimated_value+'.' : ''} ${r.description || ''}. ${r.giver || ''}. ${r.portfolio || ''}.`,{state:'vic',from:Number(reg.document.period.start.slice(0,4)),to:Number(reg.document.period.end.slice(0,4)),dateLabel:r.period,record_id:r.id,source:'Victorian ministerial gift register',url:r.source_url});
  const gates = {instruments:instrumentsReady,reports,'vic-election':vicElectionEnabled(vicElection ? 'true' : 'false')};

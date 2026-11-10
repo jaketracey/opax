@@ -114,3 +114,10 @@ test('financial register rows fail closed when their source document clearance i
  assert.equal(held.filter(r=>r.kind==='register').length,0);
  assert.ok(!held.some(r=>r.key.startsWith('sa-grant:')));
 });
+test('an SA budget line the source prints twice is one search result; both rows stay in the data (search-hubs-015)', async () => {
+ const sa = await read('sa-budget/data.json');
+ const records = rows.filter(r => r.key.startsWith('sa-budget:'));
+ const seen = records.map(r => r.title + '\u0000' + r.snippet);
+ assert.equal(new Set(seen).size, seen.length);
+ assert.ok(records.length < sa.rows.length, 'the published table keeps the repeated source cells');
+});
