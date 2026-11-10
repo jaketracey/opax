@@ -15,6 +15,8 @@ export type ResultsParams = {
   to?: string;
   /** `all` widens Speeches to every parliamentary record type. */
   type?: string;
+  mode?: string;
+  sort?: string;
   /** The query arrived by link: it never enters Recent. */
   link?: string;
 };
@@ -81,10 +83,12 @@ export function searchRouteFromWebPath(
     'topic',
     'from',
     'to',
+    'mode',
+    'sort',
   ] as const)
     if (p.get(key)) filters[key] = p.get(key)!;
   if (target.scope === 'speeches' && kind && !['speech', 'all'].includes(kind))
-    filters.type = 'all';
+    filters.type = kind === 'press_release' ? kind : 'all';
   return target.group
     ? resultsRoute(target.group, { ...filters, group: target.group })
     : resultsRoute(target.scope, filters);

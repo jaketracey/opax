@@ -1,7 +1,7 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Keyboard } from 'react-native';
-import { catalogs } from '../src/api/runtime';
+import { catalogs, recordSearch } from '../src/api/runtime';
 import {
   ContentUnavailable,
   InlineError,
@@ -11,6 +11,8 @@ import { ResultsScreen } from '../src/features/search/ResultsScreen';
 import { ResultsView } from '../src/features/search/ResultsView';
 import { bills, index, roster } from './pinned';
 import { withNavigationOptions } from './navigation-options';
+import { searchRouteFromWebPath } from '../src/navigation/routes/search';
+import { webSearchPath } from '../src/features/search/scopes';
 
 let mockParams: Record<string, string | string[] | undefined> = {};
 jest.mock('expo-router', () => {
@@ -45,6 +47,48 @@ const ready = () => {
     provenance: { people: source, electorates: source, bills: source },
   } as Awaited<ReturnType<typeof catalogs.suggestionSources>>;
 };
+
+test('a shared media release search applies its type, mode and sort on arrival and reuse', async () => {
+  const arrival = (sort: 'newest' | 'oldest') =>
+    searchRouteFromWebPath(
+      webSearchPath(
+        'fixture release arrival',
+        { scope: 'speeches' },
+        { type: 'press_release', mode: 'keyword' },
+        sort,
+      ),
+    )!.params;
+  mockParams = arrival('newest');
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue(ready());
+  jest.mocked(recordSearch.search).mockReturnValue(new Promise(() => {}));
+  let view!: TestRenderer.ReactTestRenderer;
+  const draw = () => withNavigationOptions(<ResultsScreen />, () => {});
+  await act(async () => {
+    view = TestRenderer.create(draw());
+  });
+  expect(view.root.findByType(ResultsView).props).toMatchObject({
+    scope: 'speeches',
+    filters: { kind: 'press_release', mode: 'keyword' },
+    sort: 'newest',
+  });
+  expect(recordSearch.search).toHaveBeenLastCalledWith(
+    'fixture release arrival',
+    expect.objectContaining({ kind: 'press_release', mode: 'keyword' }),
+    1,
+    'newest',
+  );
+  await act(async () => {
+    mockParams = arrival('oldest');
+    view.update(draw());
+  });
+  expect(view.root.findByType(ResultsView).props.sort).toBe('oldest');
+  expect(recordSearch.search).toHaveBeenLastCalledWith(
+    'fixture release arrival',
+    expect.objectContaining({ kind: 'press_release', mode: 'keyword' }),
+    1,
+    'oldest',
+  );
+});
 
 test.each(['topics', 'electorates', 'parties'])(
   'a pushed %s list offers a retry when its catalogues fail',

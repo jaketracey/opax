@@ -41,6 +41,7 @@ import {
   type Scope,
 } from './scopes';
 import { useSearchSources, type SearchSources } from './sources';
+import { speechSorts } from './speeches';
 
 /**
  * `/results/[kind]`, pushed in every stack (journeys/search.md 4.3): the
@@ -60,11 +61,15 @@ export function ResultsScreen() {
   const scroll = useRef<ScrollView>(null);
   const input = useRef<TextInput>(null);
   const { sources, failed, retry } = useSearchSources();
+  const arrivalSort =
+    speechSorts.find((sort) => sort.value === params.sort)?.value ??
+    'relevance';
   const controls = useResultsControls({
     owner,
     q,
     target,
     initialFilters: filtersFromParams(params),
+    initialSort: arrivalSort,
     roster: (sources?.roster ?? null) as never,
     onQuery: (next) => submit(next),
     onScope: (scope) => {
@@ -99,6 +104,7 @@ export function ResultsScreen() {
     params.scope,
     params.q,
     filtersFromParams(params),
+    arrivalSort,
   ]);
   const appliedArrival = useRef(arrivalKey);
   useEffect(() => {
@@ -112,6 +118,7 @@ export function ResultsScreen() {
     setQ(capQuery(params.q ?? ''));
     setText(capQuery(params.q ?? ''));
     controls.setFilters(filtersFromParams(params));
+    controls.setSort(arrivalSort);
     (search.ref as RefObject<SearchBarCommands | null>).current?.setText(
       capQuery(params.q ?? ''),
     );
