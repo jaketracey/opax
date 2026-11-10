@@ -13,7 +13,7 @@ import {
   thisDevice,
   type RowMenuAction,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
+import { calendarDate, formatDate } from '../../design/format';
 import { colors, rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes';
 import { records } from './runtime';
@@ -30,6 +30,17 @@ import {
 import type { RecordResult } from '../../api/client';
 
 /**
+ * The reader's own calendar day for a date added: a UTC timestamp such as
+ * 20:00Z is the next morning in Australia, as every other date here reads.
+ */
+function localDay(indexed: string | null | undefined): string | null {
+  const date = indexed ? calendarDate(indexed) : null;
+  if (!date) return null;
+  const two = (n: number) => String(n).padStart(2, '0');
+  return `${date.year}-${two(date.month + 1)}-${two(date.day)}`;
+}
+
+/**
  * Rows grouped by the day OPAX added them, newest first (the feed's order).
  * Rows without a date added follow in a final group with no header.
  */
@@ -37,7 +48,7 @@ function byDayAdded(rows: readonly RecentItem[]) {
   const groups: { day: string | null; rows: RecentItem[] }[] = [];
   const undated: RecentItem[] = [];
   for (const row of rows) {
-    const day = row.indexed?.slice(0, 10) ?? null;
+    const day = localDay(row.indexed);
     if (!day) {
       undated.push(row);
       continue;

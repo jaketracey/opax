@@ -2,7 +2,7 @@ import { act } from 'react';
 import { RefreshControl } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import type { RecordResult } from '../src/api/client';
-import { RecordRow, SourceLine } from '../src/design/primitives';
+import { InsetGroup, RecordRow, SourceLine } from '../src/design/primitives';
 import RecentRecords from '../src/features/records/RecentRecords';
 import type { RecentFeed } from '../src/features/records/model';
 import { records } from '../src/features/records/runtime';
@@ -120,4 +120,32 @@ test('a refresh answered from the saved copy says the list is saved', async () =
   expect(line.state).toBe('saved');
   expect(line.savedAt).toBe(5);
   expect(line.asOf).toBeNull();
+});
+
+test('records are grouped by the reader’s own day added', async () => {
+  const zone = process.env.TZ;
+  process.env.TZ = 'Australia/Sydney';
+  try {
+    jest.mocked(records.recent).mockResolvedValueOnce({
+      ...record('Morning fixture'),
+      data: [
+        {
+          slug: 'speech-200',
+          title: 'Morning fixture',
+          indexed: '2026-11-10T20:00:00.000Z',
+        },
+      ],
+    });
+    let view!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      view = TestRenderer.create(
+        withNavigationOptions(<RecentRecords />, () => {}),
+      );
+    });
+    expect(view.root.findByType(InsetGroup).props.header).toBe(
+      'Added 11 November 2026',
+    );
+  } finally {
+    process.env.TZ = zone;
+  }
 });
