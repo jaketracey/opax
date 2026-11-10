@@ -123,6 +123,23 @@ function command(v, relative) {
   if (!v || typeof v !== 'object') return v;
   const out = structuredClone(v);
   if (
+    out.pressKey === 'Enter' &&
+    ['06-open-profile.yaml', '08-open-profile.yaml'].includes(relative)
+  )
+    return {
+      runFlow: {
+        commands: [
+          {
+            extendedWaitUntil: {
+              visible: { id: 'search-top-suggestion', text: '${NAME}.*' },
+              timeout: 90000,
+            },
+          },
+          out,
+        ],
+      },
+    };
+  if (
     out.inputText &&
     ['support/search-query.yaml', '06-open-profile.yaml'].includes(relative)
   ) {
