@@ -5,6 +5,18 @@ const graph=JSON.parse(await readFile(new URL('../public/graph/money.json',impor
 const assets={fetch:async req=>new Response(await readFile(new URL('../public'+new URL(req.url).pathname,import.meta.url)))};
 const ask=(question,filters={})=>rankedMoneyAnswer({question,...filters},assets);
 const history=(...questions)=>questions.map(text=>({author:'user',text}));
+// Industry membership can change after a classifier correction. Calculate
+// expectations from the published labels without changing any receipt amount.
+const industryTotal=(industry,party)=>{
+ const ids=new Set(graph.nodes.filter(n=>n.kind==='donor'&&n.industry===industry).map(n=>n.id));
+ return graph.edges.filter(e=>ids.has(e.source)&&e.target==='party:'+party&&!e.flow&&!e.grant).reduce((total,e)=>total+e.total,0);
+};
+const aud=amount=>'$'+amount.toLocaleString('en-AU');
+
+test('published industry labels separate Crown Castle from Crown Resorts',()=>{
+ assert.equal(graph.nodes.find(n=>n.id==='donor:crown castle australia').industry,'telecom');
+ assert.equal(graph.nodes.find(n=>n.id==='donor:crown resorts').industry,'gambling');
+});
 
 test('a donor name containing Federal does not block a Tasmanian comparison or its follow-ups',async()=>{
  const question='Who gets more funding from The Federal Group, Labor or Liberal in Tasmania in 2025–26?';
@@ -151,7 +163,7 @@ test('canonical funding requests retain UI filters and all-donor modes without a
 });
 test('industry and party questions rank different directions with source links',async()=>{
  const gambling=await ask('Who takes the most money from the gambling lobby?');
- assert.match(gambling.answer,/^\*\*Labor\*\*/);assert.match(gambling.answer,/\$10,763,834/);assert.match(gambling.answer,/not personal payments/);
+ assert.match(gambling.answer,/^\*\*Labor\*\*/);assert.ok(gambling.answer.includes(aud(industryTotal('gambling','Labor'))));assert.match(gambling.answer,/not personal payments/);
  for(const party of ['Labor','One Nation']) {
   const answer=await ask(`Who donates the most to ${party}?`);
   const matching=graph.edges.filter(e=>e.target==='party:'+party&&e.source.startsWith('donor:')&&!e.flow&&!e.grant).sort((a,b)=>b.total-a.total);
@@ -188,8 +200,9 @@ test('biggest industry donors and biggest recipient parties are distinct ranking
 
 test('party comparisons calculate a dollar difference and cite each scoped side',async()=>{
  const r=await ask('Who gets more gambling money, Labor or Liberal?');
- assert.equal(r.answer_status,'calculated');assert.match(r.answer,/Labor received \$1,739,427 more from gambling receipt sources than Liberal/);
- assert.match(r.answer,/\$10,763,834/);assert.match(r.answer,/\$9,024,407/);
+ const labor=industryTotal('gambling','Labor'),liberal=industryTotal('gambling','Liberal');
+ assert.equal(r.answer_status,'calculated');assert.ok(r.answer.includes(`Labor received ${aud(labor-liberal)} more from gambling receipt sources than Liberal`));
+ assert.ok(r.answer.includes(aud(labor)));assert.ok(r.answer.includes(aud(liberal)));
  for(const party of ['Labor','Liberal']) assert.ok(r.sources.some(s=>s.href.includes('party=party%3A'+party)&&s.href.includes('industry=gambling')));
  const dated=await ask('Who gets more gambling money, Labor or Liberal in 2020?');
  assert.match(dated.answer,/\$97,478 more/);assert.match(dated.answer,/\$457,673/);assert.match(dated.answer,/\$360,195/);
@@ -202,8 +215,9 @@ test('industry comparisons do not treat banks as every finance organisation',asy
  assert.equal(unsupported.answer_status,'needs_scope');assert.match(unsupported.answer,/grouped with other finance/);
  const r=await ask('Who gives more money to Labor, unions or finance?');
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\| Source industry \|/);
- assert.match(r.answer,/Unions accounted for \$122,966,378 more to Labor than Finance/);
- assert.match(r.answer,/\$247,398,401/);assert.match(r.answer,/\$124,432,023/);
+ const unions=industryTotal('unions','Labor'),finance=industryTotal('finance','Labor');
+ assert.ok(r.answer.includes(`Unions accounted for ${aud(unions-finance)} more to Labor than Finance`));
+ assert.ok(r.answer.includes(aud(unions)));assert.ok(r.answer.includes(aud(finance)));
  assert.ok(r.sources.some(s=>s.href.includes('industry=unions')&&s.href.includes('party=party%3ALabor')));
  assert.ok(r.sources.some(s=>s.href.includes('industry=finance')&&s.href.includes('party=party%3ALabor')));
  assert.equal((await ask('Who receives the most money from banks?')).answer_status,'needs_scope');
