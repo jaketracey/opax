@@ -7,6 +7,7 @@ the value main had (`from`) and the value the reviewed export showed (`to`), and
 
   "records": {"Anthony Albanese": [{"evidence": "hansard-growth", "fields": {"speeches": [5343, 5381]}}], ...},
   "new":     {"Amanda Stoker": {"evidence": "aph-handbook", "url": "...", "note": "...", "row": {...}}},
+  "drop":    {"Government members": {"evidence": "non-person", "note": "...", "row": {...}}},
 
 A field absent from a record is written null (the roster never holds a JSON null; the iOS decoder rejects one).
 
@@ -29,6 +30,10 @@ A field absent from a record is written null (the roster never holds a JSON null
   - A new row applies only when it is a complete parliamentary identity (new_row_problem: full name, pid or Handbook
     id, a house chamber, jurisdiction, and service dates from the evidence that cover its years; no witness rows),
     the export's row is exactly the reviewed row, and the shipped roster lacks the name.
+  - A dropped row is a shipped record that is not a person (parli.ingest.speaker_names.non_person_name: a group
+    label such as 'Government members', a bare title, a parse fragment), carries no identity value, still is exactly
+    the reviewed row, and is absent from the export (drop_problem). Nothing else is ever removed: the overlay keeps
+    every other row the export drops. revert() puts dropped rows back.
   - A file that cannot be read, or is not shaped like an accept list, holds everything (read()); so do curated
     evidence files that cannot be read or are malformed (read_curated()). Every field the checks read is type-checked:
     a wrongly typed entry is held with a reason, never raised; and scripts/roster_overlay.py runs the whole accept
@@ -80,7 +85,7 @@ NEW_ROW_FIELDS = {"name", "speeches", "party", "parties", "states", "chambers", 
 
 
 def empty():
-    return {"records": {}, "new": {}, "evidence": {}}
+    return {"records": {}, "new": {}, "drop": {}, "evidence": {}}
 
 
 def load(path=ACCEPT):
@@ -94,7 +99,7 @@ def shape(accept):
     """None when `accept` is shaped like an accept list, else why not (then nothing in it can be trusted)."""
     if not isinstance(accept, dict):
         return "not a JSON object"
-    for key in ("records", "new", "evidence"):
+    for key in ("records", "new", "drop", "evidence"):
         if not isinstance(accept.get(key, {}), dict):
             return f'"{key}" is not an object'
     if not all(isinstance(v, dict) for v in accept.get("evidence", {}).values()):
@@ -393,6 +398,30 @@ def _new_row_problem(name, entry, evidence, shipped_names):
     return None
 
 
+def drop_problem(name, entry, evidence, row, roster=True):
+    """None when the shipped `row` named `name` may be removed, else why it is kept. Only a row that is not a
+    person, with no identity on it, exactly as reviewed; whether the export still shows it is apply()'s check."""
+    if not (isinstance(entry, dict) and isinstance(entry.get("row"), dict) and isinstance(entry.get("evidence"), str)
+            and all(entry.get(k) is None or _text(entry[k]) for k in ("note", "checked"))):
+        return "malformed drop entry"
+    ev = evidence.get(entry["evidence"])
+    if not isinstance(ev, dict) or ev.get("kind") != "label" or not _text(ev.get("reason")):
+        return "a drop needs non-person label evidence"
+    try:
+        if str(ROOT) not in sys.path:
+            sys.path.insert(0, str(ROOT))
+        from parli.ingest.speaker_names import non_person_name
+    except ImportError:  # a copy of the script without the checkout: nothing is dropped
+        return "the non-person rule (parli.ingest.speaker_names) cannot be loaded"
+    if not non_person_name(name) or entry["row"].get("name") != name:
+        return "only a row that is not a person may be dropped"
+    if any(not _blank(entry["row"].get(f)) for f in IDENTITY_FIELDS):
+        return "the row carries an identity value"
+    if roster and row is not None and row != entry["row"]:
+        return "the shipped record has moved since the review"
+    return None
+
+
 def judge(accept, shipped_people=None, root=ROOT, curated=False):
     """The one gate, for validate() and apply() alike: (blocked, groups, new rows).
 
@@ -441,6 +470,20 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
     return None, groups, new
 
 
+def judge_drops(accept, shipped_people=None):
+    """[(name, entry, why)] for the accept list's dropped rows, why None for a drop that may apply."""
+    evidence = accept.get("evidence", {}) if isinstance(accept, dict) else {}
+    have = None if shipped_people is None else {p["name"]: p for p in shipped_people}
+    out = []
+    for name, entry in (accept.get("drop", {}) if isinstance(accept, dict) else {}).items():
+        try:
+            why = drop_problem(name, entry, evidence, have.get(name) if have is not None else None, have is not None)
+        except Exception as err:  # noqa: BLE001 - a drop that cannot be judged keeps the row
+            why = f"malformed drop entry ({type(err).__name__})"
+        out.append((name, entry, why))
+    return out
+
+
 def validate(accept, shipped_people=None, curated=False, detail=False, root=ROOT):
     """Every reason something in the list would be held (judge()): text lines, or with detail
     [(name, group index or None, why)]."""
@@ -448,6 +491,7 @@ def validate(accept, shipped_people=None, curated=False, detail=False, root=ROOT
     if blocked:
         return [("roster_accept.json", None, blocked)] if detail else [blocked]
     out = [(n, i, why) for n, i, g, why in groups if why] + [(n, None, why) for n, e, why in new if why]
+    out += [(n, None, why) for n, e, why in judge_drops(accept, shipped_people) if why]
     return out if detail else [f"{n}: {why}" for n, i, why in out]
 
 
@@ -499,6 +543,16 @@ def apply(shipped_people, fresh_people, accept, root=ROOT):
             report["applied"] += 1
         else:
             report["held"].append((name, MOVED))
+    for name, entry, why in judge_drops(accept, shipped_people):
+        if why:
+            report["held"].append((name, why))
+        elif name not in shipped:
+            report["unchanged"] += 1
+        elif name in fresh:
+            report["held"].append((name, "a reviewed drop the export still shows"))
+        else:
+            people = [p for p in people if p["name"] != name]
+            report["applied"] += 1
     return people, report
 
 
@@ -515,6 +569,9 @@ def revert(people, accept):
                 for f, (a, b) in g["fields"].items():
                     _put(p, f, a)
         out.append(p)
+    names = {p["name"] for p in out}
+    out += [copy.deepcopy(e["row"]) for n, e in accept.get("drop", {}).items()
+            if n not in names and isinstance(e, dict) and isinstance(e.get("row"), dict)]
     return out
 
 
@@ -652,7 +709,7 @@ def main(argv=None):
     groups = [g for gs in accept.get("records", {}).values() for g in gs]
     applied = sum(state(p, g) == "applied" for p in people for g in accept.get("records", {}).get(p["name"], []))
     print(f"roster accept list: {len(accept.get('records', {}))} records, {len(groups)} groups ({applied} applied), "
-          f"{len(accept.get('new', {}))} new rows; {len(problems)} problem(s)")
+          f"{len(accept.get('new', {}))} new rows, {len(accept.get('drop', {}))} dropped rows; {len(problems)} problem(s)")
     for why in problems:
         print("  " + why, file=sys.stderr)
     if problems:

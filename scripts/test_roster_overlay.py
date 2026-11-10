@@ -636,3 +636,51 @@ class SingleGateTests(unittest.TestCase):
                     self.assertEqual(r.returncode, 0, r.stderr)
                     self.assertTrue(r.stderr.startswith("ROSTER OVERLAY: "), r.stderr)
                     self.installed_only_what_validate_passes(doc, acc, json.loads(out))
+
+
+class DropTests(unittest.TestCase):
+    """A reviewed drop (roster_accept.json "drop") removes only a shipped row that is not a person
+    (members-electorates-005, state-datasets-009); every other row the export drops is kept."""
+    LABEL = {"name": "Government members", "speeches": 56, "states": ["federal"], "chambers": ["representatives"],
+             "first": 1999, "last": 2021}
+
+    def docs(self):
+        ship = shipped()
+        ship["people"].append(copy.deepcopy(self.LABEL))
+        fresh = copy.deepcopy(shipped())
+        acc = {"evidence": {"non-person": {"kind": "label", "checked": "2026-11-10", "reason": "x"}}, "records": {}, "new": {},
+               "drop": {"Government members": {"evidence": "non-person", "row": copy.deepcopy(self.LABEL)}}}
+        return ship, fresh, acc
+
+    def test_a_reviewed_non_person_row_goes_and_revert_restores_it(self):
+        ship, fresh, acc = self.docs()
+        merged, report = overlay(ship, fresh, acc, root=ROOT)
+        self.assertNotIn("Government members", [p["name"] for p in merged["people"]])
+        self.assertEqual(report["accepted"], 1)
+        self.assertEqual(merged["meta"]["people"], 4)
+        self.assertEqual(roster_accept.revert(merged["people"], acc)[-1], self.LABEL)
+        self.assertEqual(roster_accept.validate(acc, ship["people"], NO_CURATED), [])
+
+    def test_the_row_stays_while_the_export_shows_it(self):
+        ship, fresh, acc = self.docs()
+        fresh["people"].append(copy.deepcopy(self.LABEL))
+        merged, report = overlay(ship, fresh, acc, root=ROOT)
+        self.assertIn("Government members", [p["name"] for p in merged["people"]])
+        self.assertIn(("Government members", "a reviewed drop the export still shows"), report["accept_held"])
+
+    def test_a_person_or_an_identity_or_a_moved_row_is_never_dropped(self):
+        for name, row in (("Alex Example", shipped()["people"][0]),
+                          ("Government members", {**self.LABEL, "party": "Labor"}),
+                          ("Government members", {**self.LABEL, "speeches": 57})):
+            with self.subTest(name=name, row=row):
+                ship, fresh, acc = self.docs()
+                acc["drop"] = {name: {"evidence": "non-person", "row": row}}
+                merged, report = overlay(ship, fresh, acc, root=ROOT)
+                self.assertIn(name, [p["name"] for p in merged["people"]])
+                self.assertEqual(report["accepted"], 0)
+
+    def test_the_export_refusal_does_not_count_a_reviewed_drop_as_lost(self):
+        from scripts.export_parliamentarians import refusals
+        ship, fresh, acc = self.docs()
+        self.assertEqual(refusals(ship["people"], fresh["people"], accept=acc), [])
+        self.assertTrue(refusals(ship["people"], fresh["people"], accept={**acc, "drop": {}}))

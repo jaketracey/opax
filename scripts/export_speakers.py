@@ -9,7 +9,11 @@ parli.ingest.arag_sync (wragge_xml out, presiding officers out, the zenodo
 window dedupe), speaker_name_clean as the name, five or more speeches. Chairs
 and unknown speakers (speaker_type) are out; committee witnesses stay in, under
 the full names the attendance lists gave them, because their evidence is
-searchable by speaker like anything else.
+searchable by speaker like anything else. Names that are not a person (a group
+label such as "Government members", a bare title such as "Mr", a parse fragment
+such as "On", or an anonymised "Witness A") are left out of the directory by the
+roster's own rule, parli.ingest.speaker_names.non_person_name; their speeches keep
+their labels.
 
     ssh desktop python3 - < scripts/export_speakers.py > portal/public/speakers.json
 """
@@ -23,6 +27,7 @@ import json
 import sqlite3
 import sys
 from parli.ingest.speaker_roles import chair_party_sql
+from parli.ingest.speaker_names import non_person_name
 
 DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 MIN_SPEECHES = 5
@@ -47,4 +52,6 @@ rows = db.execute(f"""
     GROUP BY speaker_name_clean HAVING n >= {MIN_SPEECHES}
     ORDER BY n DESC, speaker_name_clean
 """).fetchall()
-json.dump([[name, n] for name, n in rows], sys.stdout, ensure_ascii=False, separators=(",", ":"))
+kept = [[name, n] for name, n in rows if not non_person_name(name)]
+print(f"[speakers] {len(kept):,} speakers, {len(rows) - len(kept):,} non-person labels left out", file=sys.stderr)
+json.dump(kept, sys.stdout, ensure_ascii=False, separators=(",", ":"))

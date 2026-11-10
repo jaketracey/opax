@@ -194,8 +194,16 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 code, err, output = self.export(box)
                 self.assertEqual(code, 0, err)
                 self.assertNotIn('ROSTER HELD', err)
-                self.assertIn('ROSTER OVERLAY: kept', err)
-                self.assertEqual(output, (ROOT/ROSTER).read_bytes(), 'the shipped roster is kept byte for byte')
+                # The one change the overlay may install here: the rows a review dropped (roster_accept.json
+                # "drop", rows that are not a person), which the export no longer has. Everything else is kept
+                # exactly as shipped; with no reviewed drop, byte for byte.
+                drops = set(json.loads((ROOT/'scripts/roster_accept.json').read_text()).get('drop', {}))
+                if drops:
+                    self.assertIn(f'ROSTER OVERLAY: installed {len(drops)} reviewed change(s)', err)
+                    self.assertEqual(json.loads(output)['people'], [p for p in shipped if p['name'] not in drops])
+                else:
+                    self.assertIn('ROSTER OVERLAY: kept', err)
+                    self.assertEqual(output, (ROOT/ROSTER).read_bytes(), 'the shipped roster is kept byte for byte')
                 # The overlays themselves, before that merge: the reviewed path (OPAX_ROSTER_ACCEPT=1) skips it.
                 code, err, output = self.export(box, accept=True)
                 self.assertEqual(code, 0, err)
@@ -217,14 +225,20 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                     if p.get('separated_witnesses') and not p.get('speech_scope'):
                         for field in ('full','pid','party','parties','party_now','current','representation'):
                             self.assertFalse(p.get(field),(scenario,p['name'],field))
+                # Rows the normaliser no longer prints under that name: the reviewed non-person drops, and titled
+                # prints it now cleans ('Reverend the Hon. Fred Nile' -> 'Fred Nile', held as a new row by the overlay).
+                from parli.ingest.speaker_names import normalize_speaker
+                renamed = {p['name'] for p in shipped if p['name'] in drops or normalize_speaker(p['name']) != p['name']}
                 for p in old:
+                    if p['name'] in renamed:
+                        continue
                     if p.get('witness_rows',0)*2 > p['speeches'] and p['name'] not in scoped:
                         self.assertFalse(any(by[p['name']].get(k) for k in ('full','pid','party','representation')),p['name'])
                 # A print the box export folded (scripts/roster_fold.py) is read under the person holding it.
                 by.update({stub: q for q in actual for stub in q.get('prints') or [] if stub not in by})
                 changes=[p['name'] for p in shipped if p['name'] in by and by[p['name']]['name'] == p['name']
                          and any(p.get(k)!=by[p['name']].get(k) for k in IDENTITY_FIELDS)]
-                self.assertEqual({p['name'] for p in shipped} - by.keys(), set(), 'every shipped row survives or is folded')
+                self.assertEqual({p['name'] for p in shipped} - by.keys(), renamed, 'every shipped row survives or is folded')
                 self.assertEqual(set(changes),{'Blandthorn',"D'Ambrosio",'McDermott','Robinson','Crawford'})
                 print(f'Reviewer replay {scenario}: SHIPPED {len(actual)} records, {len(scoped)}/16 scoped; 5 identity differences / cap25; zero unscoped split identities; Robinson/Crawford below own-service floor',file=sys.stderr)
 

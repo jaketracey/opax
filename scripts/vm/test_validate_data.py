@@ -428,6 +428,31 @@ class SpeakersTests(Base):
         self.assertFails("speakers", "not an array, object or count")
 
 
+class NonPersonNameTests(Base):
+    """speeches-press-011, members-electorates-005/008: labels and Handbook brackets are not names."""
+
+    def test_a_non_person_speaker_fails(self):
+        self.edit(f"{P}/speakers.json", lambda d: d.append(["Government members", 56]))
+        self.assertFails("speakers", "non-person name(s): Government members")
+        # a label HEAD already has is not new (the export that drops it clears it for good)
+        self.git("add", "--", f"{P}/speakers.json")
+        self.git("-c", "user.name=t", "-c", "user.email=t@example.invalid", "-c", "commit.gpgsign=false",
+                 "commit", "-q", "-m", "label committed")
+        self.assertOk("speakers")
+
+    def test_a_non_person_roster_row_fails_unless_its_drop_is_under_review(self):
+        self.edit(f"{P}/parliamentarians.json", lambda d: d["people"].append({"name": "Mr", "speeches": 2}))
+        self.assertFails("people", "non-person row(s) with no reviewed drop: Mr")
+        self.write("scripts/roster_accept.json", {"drop": {"Mr": {"row": {"name": "Mr", "speeches": 2}}}})
+        self.assertOk("people")
+
+    def test_a_handbook_bracket_as_a_pay_name_fails(self):
+        def bracket(d):
+            d["people"][next(iter(d["people"]))]["name"] = "formerly Martin Sullivan"
+        self.edit(f"{P}/pay.json", bracket)
+        self.assertFails("pay", "from a Handbook bracket")
+
+
 class TaxCharityTests(Base):
     TC = f"{P}/entities/tax-charity"
 

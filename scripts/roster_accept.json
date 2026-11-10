@@ -51,12 +51,174 @@
       "checked": "2026-10-18",
       "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv",
       "reason": "The record's own identity_evidence carries a dated term for the seat, so the seat basis reads as dated. Only the basis wording changes."
+    },
+    "non-person": {
+      "kind": "label",
+      "checked": "2026-11-10",
+      "reason": "Hansard group interjection labels ('Government members', 'Opposition members'), bare titles left when a print names no one ('Senator', 'Hon', 'Mr') and NSW Hansard parse fragments ('ON', 'ER', one from 'Mr SPEAK ER'): no OpenAustralia or Handbook person and no NSW member has any of these names. parli.ingest.speaker_names.non_person_name now leaves them out of the export and the speaker directory (members-electorates-005, speeches-press-011, state-datasets-009). Their speeches keep their print; only the people-directory row goes."
     }
   },
   "export": {
     "generated": "2026-10-18",
     "people": 1621,
     "sha256": "47b1a33bba96e5dac25f92b785980666b33f226c2ea7765d9fddd6fc895d748b"
+  },
+  "drop": {
+    "Er": {
+      "evidence": "non-person",
+      "checked": "2026-11-10",
+      "note": "NSW Hansard parse fragment (member stub nsw_er, prints 'ER' and 'Mr SPEAK ER')",
+      "row": {
+        "name": "Er",
+        "speeches": 6,
+        "states": [
+          "nsw"
+        ],
+        "chambers": [
+          "nsw_la",
+          "nsw_lc"
+        ],
+        "first": 2025,
+        "last": 2026,
+        "representation": []
+      }
+    },
+    "Government members": {
+      "evidence": "non-person",
+      "checked": "2026-11-10",
+      "note": "zenodo group interjection label, House 1999-2021",
+      "row": {
+        "name": "Government members",
+        "speeches": 56,
+        "states": [
+          "federal"
+        ],
+        "chambers": [
+          "representatives"
+        ],
+        "first": 1999,
+        "last": 2021,
+        "representation": []
+      }
+    },
+    "Hon": {
+      "evidence": "non-person",
+      "checked": "2026-11-10",
+      "note": "bare title, NSW Legislative Council 2020",
+      "row": {
+        "name": "Hon",
+        "speeches": 6,
+        "states": [
+          "nsw"
+        ],
+        "chambers": [
+          "nsw_lc"
+        ],
+        "first": 2020,
+        "last": 2020,
+        "representation": []
+      }
+    },
+    "Mr": {
+      "evidence": "non-person",
+      "checked": "2026-11-10",
+      "note": "bare title, NSW Legislative Council 2020",
+      "row": {
+        "name": "Mr",
+        "speeches": 2,
+        "states": [
+          "nsw"
+        ],
+        "chambers": [
+          "nsw_lc"
+        ],
+        "first": 2020,
+        "last": 2020,
+        "representation": [],
+        "separated_witnesses": {
+          "name": "Mr",
+          "speaker_type": "witness",
+          "speeches": 23,
+          "states": [
+            "federal"
+          ],
+          "chambers": [
+            "senate_committee"
+          ],
+          "first": 2025,
+          "last": 2025
+        },
+        "transcript": {
+          "speeches": 25,
+          "witness_rows": 23,
+          "states": [
+            "nsw",
+            "federal"
+          ],
+          "chambers": [
+            "nsw_lc",
+            "senate_committee"
+          ],
+          "first": 2020,
+          "last": 2025
+        }
+      }
+    },
+    "On": {
+      "evidence": "non-person",
+      "checked": "2026-11-10",
+      "note": "NSW Hansard parse fragment (member stub nsw_on, prints 'ON')",
+      "row": {
+        "name": "On",
+        "speeches": 13,
+        "states": [
+          "nsw"
+        ],
+        "chambers": [
+          "nsw_la",
+          "nsw_lc"
+        ],
+        "first": 2016,
+        "last": 2026,
+        "representation": []
+      }
+    },
+    "Opposition members": {
+      "evidence": "non-person",
+      "checked": "2026-11-10",
+      "note": "zenodo group interjection label, House",
+      "row": {
+        "name": "Opposition members",
+        "speeches": 24,
+        "states": [
+          "federal"
+        ],
+        "chambers": [
+          "representatives"
+        ],
+        "first": 1999,
+        "last": 2021,
+        "representation": []
+      }
+    },
+    "Senator": {
+      "evidence": "non-person",
+      "checked": "2026-11-10",
+      "note": "bare title on Senate committee prints that name no senator (2025)",
+      "row": {
+        "name": "Senator",
+        "speeches": 33,
+        "states": [
+          "federal"
+        ],
+        "chambers": [
+          "senate_committee"
+        ],
+        "first": 2025,
+        "last": 2025,
+        "representation": []
+      }
+    }
   },
   "records": {
     "Aaron Violi": [{"evidence": "hansard-growth", "fields": {"speeches": [174, 429]}}],

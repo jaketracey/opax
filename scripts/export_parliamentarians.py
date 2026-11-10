@@ -70,7 +70,7 @@ from parli.ingest.arag_sync import (  # noqa: E402
     DEDUPE_PREDICATES, DEFAULT_SINCE, JUNK_PREDICATES, MIN_SPEECH_CHARS,
     clean_party, prepare_dedupe,
 )
-from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
+from parli.ingest.speaker_names import non_person_name, normalize_speaker  # noqa: E402
 from scripts.roster_identity import COMMITTEES, agrees, federal_members, same_person, state_member_matches, usable_alias, verify, weak  # noqa: E402
 from scripts.enrich_profile_jurisdictions import pinned_reference, repair, REVIEWED, REPRESENTATION_METHOD  # noqa: E402
 
@@ -125,11 +125,25 @@ def member_party(pid, name, state, chamber, raw, canonical):
     return label
 
 
-def refusals(previous, new, max_changes=MAX_IDENTITY_CHANGES):
+def reviewed_drops(previous, accept=None):
+    """Names of shipped rows a review removed (scripts/roster_accept.json "drop": rows that are not a person and
+    carry no identity). An accept list that cannot be read removes nothing."""
+    from scripts import roster_accept
+    if accept is None:
+        accept, why = roster_accept.read()
+        if why:
+            return set()
+    return {n for n, _, why in roster_accept.judge_drops(accept, previous) if why is None}
+
+
+def refusals(previous, new, max_changes=MAX_IDENTITY_CHANGES, accept=None):
     """Why the `new` roster rows must not replace the `previous` (shipped) ones; empty when they may.
     Rows are matched by name, the roster's key. A surname print folded into its person (scripts/roster_fold.py)
-    still counts as a row, and is found under the person that now holds it in `prints`."""
+    still counts as a row, and is found under the person that now holds it in `prints`. A row a review dropped
+    (reviewed_drops) is not counted as lost."""
     reasons = attribution_refusals(new)
+    dropped = reviewed_drops(previous, accept)
+    previous = [p for p in previous if p["name"] not in dropped]
     rows = lambda people: len(people) + sum(len(p.get("prints") or []) for p in people)  # noqa: E731
     if rows(new) < rows(previous):
         reasons.append(f"the row count drops from {rows(previous):,} to {rows(new):,}")
@@ -278,7 +292,9 @@ def main(argv=()) -> None:
         if p["n"] + p['witness'] < FLOOR:
             below += 1
             continue
-        if not NAME_RE.match(name) or len(name) > 40:
+        # Not a person: a group label, a bare title, a parse fragment or an anonymised witness
+        # (the speaker directory's rule too, scripts/export_speakers.py).
+        if not NAME_RE.match(name) or len(name) > 40 or non_person_name(name):
             malformed += 1
             continue
         speeches_total += p["n"]
