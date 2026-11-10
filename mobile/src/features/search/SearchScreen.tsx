@@ -1,6 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import {
+  Keyboard,
   Platform,
   RefreshControl,
   ScrollView,
@@ -25,6 +26,7 @@ import { askDraft } from './recovery';
 import { capQuery, isScope, type Scope } from './scopes';
 import { useSearchSources } from './sources';
 import type { GroupKind } from './ranking';
+import { useSearchTabReset } from './tab-reset';
 
 export const SEARCH_PLACEHOLDER = 'People, bills, topics and more';
 const OWNER = 'search-root';
@@ -68,6 +70,8 @@ export function SearchScreen({
   const cancelling = useRef(false);
   const scroll = useRef<ScrollView>(null);
   const input = useRef<TextInput>(null);
+  const [tabReset, setTabReset] = useState(0);
+  const applied = useRef<string | null>(null);
   const { sources, roster, failed, refreshing, retry } = useSearchSources();
   const signedIn = !!useAccount().status?.signedIn;
   const openAsk = useOpenAsk();
@@ -125,7 +129,35 @@ export function SearchScreen({
     onChangeText: type,
     onSearchButtonPress: (value) => submit(value, 'all'),
     onCancelButtonPress: cancel,
+    autoFocus: false,
   });
+  useSearchTabReset(() => {
+    // A retained link query must not replay over this reset. Removing it also
+    // lets the reader open the same link again after returning to Browse.
+    applied.current = params.q ? JSON.stringify(params) : null;
+    if (params.q) router.setParams({ q: undefined });
+    input.current?.blur();
+    (search.ref as RefObject<SearchBarCommands | null>).current?.blur();
+    Keyboard.dismiss();
+    fieldText('');
+    setEditing(false);
+    setSubmitted(null);
+    controls.setFilters(defaultSpeechFilters);
+    onRows?.([]);
+    setTabReset((n) => n + 1);
+  });
+  useEffect(() => {
+    if (!tabReset) return;
+    const frame = requestAnimationFrame(() => {
+      // Cancel UIKit's active search presentation after the idle content
+      // commits, including a first selection before the root has mounted.
+      const bar = (search.ref as RefObject<SearchBarCommands | null>).current;
+      bar?.cancelSearch();
+      bar?.blur();
+      Keyboard.dismiss();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [tabReset, search.ref]);
   // Cmd-F from anywhere (KeyboardShortcuts) focuses this field.
   useFocusRequest(
     'search',
@@ -134,10 +166,13 @@ export function SearchScreen({
       : (search.ref as RefObject<SearchBarCommands | null>),
   );
   // `opax://search?q=…&scope=…` opens here submitted, kept out of Recent.
-  const applied = useRef<string | null>(null);
   useEffect(() => {
     const key = params.q ? JSON.stringify(params) : null;
-    if (!key || key === applied.current) return;
+    if (!key) {
+      applied.current = null;
+      return;
+    }
+    if (key === applied.current) return;
     applied.current = key;
     const scope_ = isScope(params.scope) ? params.scope : 'all';
     controls.setFilters(filtersFromParams(params));
@@ -171,6 +206,10 @@ export function SearchScreen({
         }}
       />
       <Screen
+        // A fresh scroll view starts at UIKit's adjusted top inset, restoring
+        // the expanded large title as well as Browse. scrollTo(y: 0) would
+        // leave the content beneath the bar with the large title collapsed.
+        key={tabReset}
         testID="search-screen"
         grouped={phase === 'idle'}
         scrollRef={scroll}

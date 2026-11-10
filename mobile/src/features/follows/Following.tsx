@@ -401,7 +401,8 @@ function EditRow({
 ownsRowPadding(EditRow);
 
 const styles = StyleSheet.create({
-  marker: { height: 0 },
+  // Keep journey identifiers out of the flowing list's section spacing.
+  marker: { position: 'absolute', height: 0, width: 0 },
   editRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
