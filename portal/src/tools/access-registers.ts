@@ -109,8 +109,12 @@ export const tool: ToolDefinition = {
       if (args.status && args.status !== 'all' && args.status !== r.status) return false
       if (args.since || args.until) {
         if (fits) {
-          if (!r.from) { unknownDates++; return false }
-          return (!args.until || String(r.from) <= String(args.until)) && (!args.since || !r.to || String(r.to) >= String(args.since))
+          // An inverted register interval (commencement after cease: a retrospective
+          // registration) matches no window, so the activities' own dates stand in for it.
+          const inverted = r.from && r.to && String(r.from) > String(r.to) && r.activity_from
+          const start = inverted ? r.activity_from : r.from, end = inverted ? r.activity_to : r.to
+          if (!start) { unknownDates++; return false }
+          return (!args.until || String(start) <= String(args.until)) && (!args.since || !end || String(end) >= String(args.since))
         }
         if (!r.date) unknownDates++
         return inWindow(r.date, args)
@@ -128,7 +132,7 @@ export const tool: ToolDefinition = {
       ...(unknownDates ? ['Some potentially matching records have no published date and cannot establish the requested dated count.'] : []),
       ...(matches.length ? [] : ['No retained record matches. This does not establish that no such meeting, client or registration exists.'])]
     const citations: ToolCitation[] = picked.map(r => ({ kind: 'record', url: sourceUrl(r.source_url) ?? siteUrl(env, path),
-      text: clip(fits ? `${r.registrant} registered for ${r.principal} (${[r.country, r.status, readableRange(r.from, r.to)].filter(Boolean).join(', ')}): ${(Array.isArray(r.activities) ? r.activities : []).join('; ')}.` : args.register === 'meetings' ? `${r.minister} has an exported meeting entry with ${r.organisation}, dated ${r.date ?? 'date not published'} (${r.jurisdiction}; date may be reporting-period start). ${r.purpose ?? ''}${r.source_url ? '' : ' Original entry URL is omitted from the export.'}` : `${r.client} is listed as a client of ${r.lobbyist} (${r.jurisdiction}, merged profile status ${r.status}, earliest registration across those jurisdictions ${r.date ?? 'not recorded'}). Current means at least one listed registration is active, not every jurisdiction. Original entry URL ${r.source_url ? 'is supplied' : 'is omitted from the export'}.`, 1300) }))
+      text: clip(fits ? `${r.registrant} registered for ${r.principal} (${[r.country, r.status, readableRange(r.from, r.to), r.activity_from ? `registered activities ${readableRange(r.activity_from, r.activity_to)}` : ''].filter(Boolean).join(', ')}): ${(Array.isArray(r.activities) ? r.activities : []).join('; ')}.${r.date_note ? ` ${r.date_note}` : ''}` : args.register === 'meetings' ? `${r.minister} has an exported meeting entry with ${r.organisation}, dated ${r.date ?? 'date not published'} (${r.jurisdiction}; date may be reporting-period start). ${r.purpose ?? ''}${r.source_url ? '' : ' Original entry URL is omitted from the export.'}` : `${r.client} is listed as a client of ${r.lobbyist} (${r.jurisdiction}, merged profile status ${r.status}, earliest registration across those jurisdictions ${r.date ?? 'not recorded'}). Current means at least one listed registration is active, not every jurisdiction. Original entry URL ${r.source_url ? 'is supplied' : 'is omitted from the export'}.`, 1300) }))
     const scope = ['minister', 'organisation', 'lobbyist', 'client', 'jurisdiction', 'since', 'until', 'status'].filter(k => args[k] !== undefined).map(k => `${k} ${args[k]}`).join(', ') || 'all published retained profiles'
     const count: ToolCitation = { kind: 'count', url: siteUrl(env, path), text: `${matches.length} retained ${args.register} descriptions match ${scope} in this published projection. ${complete && !unknownDates ? 'This is a complete count within that projection.' : 'This is a sample count, not a complete count for the requested register or period.'}${published_totals ? ' Separately, undated profile totals: ' + JSON.stringify(published_totals) : ''}` }
     return publishedResult(picked, [count, ...citations], { register: args.register, total: matches.length, counts: { retained_matches: matches.length,

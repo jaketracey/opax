@@ -33,11 +33,14 @@ way and every file that `git status` shows as changed or added must parse.
              and every federal id in grants/program-notes.json is still in programs[] (the rule
              portal/test/program-notes.test.mjs enforces)
   suppliers  suppliers.json and agencies.json; the suppliers/ and agencies/ shard directories
-  access     access.json: meta, donors, ministers, aliases
-  expenses   expenses.json: meta, names, people, and meta.rows
+  access     access.json: meta, donors, ministers, aliases; a new export dates no meeting
+             after its own generated date
+  expenses   expenses.json: meta, names, people, and meta.rows; in a new export each person's
+             by_category plus net_adjustments reconciles with their total within rounding
   interests  interests/index.json (_meta, _by_name, people), a file for every person it lists,
-             and the per-person files
-  fits       fits.json: meta, by_entity, people
+             and the per-person files; a changed person file publishes no nil answer ("No", ".")
+             or lone share fragment ("100%") as an interest
+  fits       fits.json: meta, by_entity, people; in a new export an inverted from/to carries date_note
   speakers   speakers.json: a non-empty array
   people     parliamentarians.json: meta, people
   pay        pay.json: meta, base, offices, current, names, people
@@ -539,13 +542,50 @@ def check_suppliers() -> list[str]:
 
 
 def check_access() -> list[str]:
-    return _check_json(f"{PUBLIC}/access.json", ("meta", "donors", "ministers", "aliases"),
+    errs = _check_json(f"{PUBLIC}/access.json", ("meta", "donors", "ministers", "aliases"),
                        ("donors", "ministers", "aliases"), ACCESS_MIN_RATIO)
+    if errs:
+        return errs
+    # No diary can disclose a meeting after the export ran (data cleanup 2026-11-10,
+    # interests-expenses-006: source typos such as "9/12/2026" in a Q4 2025 diary). Held
+    # against a new export only, so the file committed before the fix does not fail.
+    if "access.json" not in _changed(PUBLIC, r"access\.json"):
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/access.json")
+    generated = str((doc.get("meta") or {}).get("generated") or "")[:10]
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", generated):
+        return errs
+    rows = [(f"minister {k}", r) for k, m in (doc.get("ministers") or {}).items() if isinstance(m, dict)
+            for r in m.get("recent") or [] if isinstance(r, dict)]
+    rows += [(f"donor {k}", r) for k, d in (doc.get("donors") or {}).items() if isinstance(d, dict)
+             for r in d.get("meetings") or [] if isinstance(r, dict)]
+    for where, r in rows:
+        if str(r.get("date") or "")[:10] > generated:
+            errs.append(f"{where} has a meeting dated {r.get('date')} after the export ({generated})")
+            if len(errs) > 10:
+                break
+    return errs
 
 
 def check_expenses() -> list[str]:
-    return _check_json(f"{PUBLIC}/expenses.json", ("meta", "names", "people"), ("people", "names", "meta.rows"),
+    errs = _check_json(f"{PUBLIC}/expenses.json", ("meta", "names", "people"), ("people", "names", "meta.rows"),
                        EXPENSES_MIN_RATIO)
+    # A person's category bars plus net_adjustments reconcile with their total, within one
+    # dollar of rounding per figure (data cleanup 2026-11-10, registers-002). Held against a
+    # new export only, so the file committed before net_adjustments existed does not fail.
+    if errs or "expenses.json" not in _changed(PUBLIC, r"expenses\.json"):
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/expenses.json")
+    for pid, p in (doc.get("people") or {}).items():
+        if not isinstance(p, dict) or not isinstance(p.get("total"), (int, float)):
+            continue
+        cats = [v for _, v in p.get("by_category") or [] if isinstance(v, (int, float))]
+        gap = sum(cats) + (p.get("net_adjustments") or 0) - p["total"]
+        if abs(gap) > len(cats) + 1:
+            errs.append(f"person {pid}: by_category plus net_adjustments is {gap:+,} from the total")
+            if len(errs) > 10:
+                break
+    return errs
 
 
 def check_interests() -> list[str]:
@@ -564,11 +604,51 @@ def check_interests() -> list[str]:
     before = set(((_head_doc(f"{d}/index.json") or {}).get("people") or {}))
     errs += [f"interests filed under provisional id {k}; the reviewed id is {member_id_aliases()[k]}"
              for k in doc["people"] if k in member_id_aliases() and k not in before]
-    return errs + _check_dir(d, r"[^/]+\.json", INTERESTS_MIN_RATIO)
+    errs += _check_dir(d, r"[^/]+\.json", INTERESTS_MIN_RATIO)
+    return errs + _interest_placeholder_items(d)
+
+
+# A published interest that is only a nil answer ("No", a lone "."), or only an ownership
+# share split off its item ("100%"), is a parser or export regression (data cleanup
+# 2026-11-10, interests-expenses-004 and -010).
+_INTEREST_PLACEHOLDER = re.compile(r"^(?:no\.?|[\W_]+|\d{1,3}(?:\.\d+)?\s*%)$", re.I)
+
+
+def _interest_placeholder_items(rel_dir: str) -> list[str]:
+    errs: list[str] = []
+    for name in _changed(rel_dir, r"[^/]+\.json"):
+        if name in ("index.json", "recent.json", "ties-by-donor.json"):
+            continue
+        doc, err = _load_json(f"{rel_dir}/{name}")
+        if err or not isinstance(doc, dict):
+            continue
+        buckets = doc.get("buckets")
+        for bucket, b in (buckets.items() if isinstance(buckets, dict) else ()):
+            for item in (b.get("items") or [] if isinstance(b, dict) else []):
+                if not isinstance(item, dict):
+                    continue
+                desc = str(item.get("description") or "").strip()
+                if _INTEREST_PLACEHOLDER.match(desc):
+                    errs.append(f"{name} {bucket} publishes a placeholder interest {desc!r}")
+                    if len(errs) > 10:
+                        return errs
+    return errs
 
 
 def check_fits() -> list[str]:
-    return _check_json(f"{PUBLIC}/fits.json", ("meta", "by_entity", "people"), ("by_entity", "people"), FITS_MIN_RATIO)
+    errs = _check_json(f"{PUBLIC}/fits.json", ("meta", "by_entity", "people"), ("by_entity", "people"), FITS_MIN_RATIO)
+    # An inverted register interval is published as the register gives it, but never
+    # without its date_note (data cleanup 2026-11-10, interests-expenses-011).
+    if errs or "fits.json" not in _changed(PUBLIC, r"fits\.json"):
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/fits.json")
+    for section in ("by_entity", "people"):
+        for key, regs in (doc.get(section) or {}).items():
+            for e in regs if isinstance(regs, list) else []:
+                if (isinstance(e, dict) and e.get("from") and e.get("to") and str(e["from"]) > str(e["to"])
+                        and not e.get("date_note")):
+                    errs.append(f"{section} {key}: {e['from']} to {e['to']} is inverted and has no date_note")
+    return errs[:11]
 
 
 def _non_person_names(names) -> list[str]:

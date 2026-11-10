@@ -41,6 +41,7 @@ import re
 from datetime import datetime, timezone
 from urllib.parse import unquote, urljoin, urlsplit
 
+from parli.ingest.diary_dates import period_corroborated, sane_date
 from parli.ingest.ext_common import (
     CACHE_ROOT, MONTHS, add_writer_args, cached_bytes, clean_ws, log, make_session, parse_date,
     polite_get, writer_from_args,
@@ -97,14 +98,18 @@ def _now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _sane_date(iso: str | None, ps: str | None, pe: str | None) -> str | None:
-    """Drop typo years (a 2926, a 2005 inside a 2025 diary); the raw cell is kept."""
-    if not iso:
-        return None
-    y = int(iso[:4])
-    lo = int(ps[:4]) - 1 if ps else 2000
-    hi = int(pe[:4]) + 1 if pe else datetime.now().year + 1
-    return iso if lo <= y <= hi else None
+def _sane_date(iso: str | None, ps: str | None, pe: str | None, corroborated: bool = False) -> str | None:
+    """Drop typo years (a 2926, a 2005 inside a 2025 diary), future dates, and dates more than a
+    month after the diary's own period end when its other rows corroborate that period
+    (parli.ingest.diary_dates). The raw cell is kept; the date is never rewritten."""
+    return sane_date(iso, ps, pe, corroborated)
+
+
+def _corroborate(hdr: dict, meetings: list[dict]) -> dict:
+    """Record on the header whether the diary's rows corroborate its stated period."""
+    hdr["period_corroborated"] = period_corroborated(
+        [m["meeting_date"] for m in meetings], hdr.get("period_start"), hdr.get("period_end"))
+    return hdr
 
 
 def _meeting_row(jur: str, source: str, hdr: dict, period: str, m: dict, url: str) -> list:
@@ -113,7 +118,8 @@ def _meeting_row(jur: str, source: str, hdr: dict, period: str, m: dict, url: st
     plain = [l for l in org_lines if not _LOBBYIST_LINE.match(l)]
     return [jur, source, hdr.get("minister_name"), hdr.get("minister_title"), hdr.get("portfolio"), period,
             hdr.get("period_start"), hdr.get("period_end"), hdr.get("period_label"),
-            _sane_date(m["meeting_date"], hdr.get("period_start"), hdr.get("period_end")), m["meeting_date_raw"],
+            _sane_date(m["meeting_date"], hdr.get("period_start"), hdr.get("period_end"),
+                       bool(hdr.get("period_corroborated"))), m["meeting_date_raw"],
             (plain or org_lines or [None])[0], "; ".join(org_lines) or None, "; ".join(lobby) or None,
             "; ".join(m["purpose_lines"]) or None, url, m["pdf_page"], m["row_order"], _now()]
 
@@ -348,6 +354,8 @@ def run_nsw(session, years: list[int] | None, limit_pdfs: int, dry_run: bool,
             for m in meetings:
                 if not m["meeting_date"] and year and re.fullmatch(r"\d{1,2}\s+[A-Za-z]+", m["meeting_date_raw"]):
                     m["meeting_date"] = parse_date(f"{m['meeting_date_raw']} {year}", ["d_month_y", "d_mon_y"])
+            _corroborate(hdr, meetings)
+            for m in meetings:
                 rows.append(_meeting_row("nsw", "nsw_diary", hdr, "current", m, link["url"]))
             log(f"    {hdr['period_label']}: {hdr['minister_title']!s:60.60} {len(meetings):4d} meetings")
     return rows, urls
@@ -503,6 +511,7 @@ def run_qld(session, period: str, ministers: list[str] | None, limit_pdfs: int, 
             hdr = qld_header(first, page_name or mp["label"], link)
             n_pdf += 1
             urls.append(link["url"])
+            _corroborate(hdr, meetings)
             for m in meetings:
                 rows.append(_meeting_row("qld", "qld_diary", hdr, period, m, link["url"]))
             log(f"      {hdr['period_label']!s:16} {len(meetings):4d} meetings")

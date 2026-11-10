@@ -23,7 +23,13 @@ Output shape (small: one list per matched entity):
   people     { app.js normName(page name): [registration, ...] }  parliamentarians (past or present)
 
   registration = { registrant, registrant_id, registrant_type, occupation?, principal, country,
-                   principal_type, activities: [type, ...], from, to, status (current|ceased), url }
+                   principal_type, activities: [type, ...], from, to, status (current|ceased), url,
+                   activity_from?, activity_to?, date_note? }
+
+  from and to are the register's own commencement and cease dates, never swapped or replaced.
+  When the register gives a commencement later than the cease (a retrospective registration
+  lodged after its activity ended), the entry adds date_note and, where the register lists
+  the activities, their own first start and last end as activity_from and activity_to.
 
 Matching, so the numbers can be defended:
 
@@ -177,6 +183,15 @@ def main():
             "FROM ext_fits_registrations rr LEFT JOIN ext_fits_principals p ON p.principal_id = rr.principal_id "
             "ORDER BY rr.status = 'current' DESC, rr.start_date DESC"):
         regs_by_registrant[r["registrant_id"]].append(dict(r))
+    # The activities' own span per registration. Published only beside a registration whose
+    # register dates are inverted (commencement after cease: the register records a
+    # retrospective registration's lodgement as its commencement), never in place of them.
+    activity_span = {}
+    for a in db.execute(
+            "SELECT registrant_id, principal_id, MIN(start_date) AS first, "
+            "MAX(COALESCE(end_date, cease_date)) AS last FROM ext_fits_activities "
+            "WHERE start_date IS NOT NULL GROUP BY registrant_id, principal_id"):
+        activity_span[(a["registrant_id"], a["principal_id"])] = (a["first"], a["last"])
     counts = {t: db.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
               for t in ("ext_fits_registrants", "ext_fits_principals", "ext_fits_registrations", "ext_fits_activities")}
     loaded = db.execute("SELECT MAX(loaded_at) FROM ext_ingest_log WHERE table_name = 'ext_fits_registrants'").fetchone()[0]
@@ -194,6 +209,14 @@ def main():
             }
             if reg["registrant_type"] == "Individual" and reg["occupation"]:
                 e["occupation"] = reg["occupation"]
+            if e["from"] and e["to"] and e["from"] > e["to"]:
+                first, last = activity_span.get((rid, rr["principal_id"]), (None, None))
+                if first:
+                    e["activity_from"], e["activity_to"] = first, last
+                e["date_note"] = ("The register gives a commencement date later than the cease date (a "
+                                  "registration lodged after the activity ended); from and to are the "
+                                  "register's own dates" + ("; activity_from and activity_to are the "
+                                  "registered activities' dates." if first else "."))
             out.append(e)
         if not out:  # a registrant with no principal on the public register still shows as registered
             out.append({"registrant": reg["name"], "principal": None, "country": None, "activities": [],

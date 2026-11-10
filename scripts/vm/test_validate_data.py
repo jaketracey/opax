@@ -570,6 +570,50 @@ class TaxCharityTests(Base):
         self.assertFails("taxcharity", "has no files matching")
 
 
+class ExpensesTests(Base):
+    def _people(self, d, person):
+        d["people"]["k0"] = person
+
+    def test_categories_plus_net_adjustments_reconcile(self):
+        self.edit(f"{P}/expenses.json", lambda d: self._people(d, {
+            "total": 14480101, "by_category": [["Office", 14000000], ["Travel", 489407]], "net_adjustments": -9306}))
+        self.assertOk("expenses")
+        self.edit(f"{P}/expenses.json", lambda d: self._people(d, {"total": -645, "by_category": [], "net_adjustments": -645}))
+        self.assertOk("expenses")
+
+    def test_categories_that_do_not_reconcile_fail(self):
+        self.edit(f"{P}/expenses.json", lambda d: self._people(d, {
+            "total": 14480101, "by_category": [["Office", 14000000], ["Travel", 489407]]}))
+        self.assertFails("expenses", "person k0: by_category plus net_adjustments is +9,306 from the total")
+
+
+class FitsTests(Base):
+    REG = {"registrant": "RICHARDSON COUTTS PTY LTD", "from": "2024-03-06", "to": "2023-12-31", "status": "ceased"}
+
+    def test_inverted_interval_without_note_fails_and_with_note_passes(self):
+        self.edit(f"{P}/fits.json", lambda d: d["by_entity"].update({"richardson coutts": [dict(self.REG)]}))
+        self.assertFails("fits", "by_entity richardson coutts: 2024-03-06 to 2023-12-31 is inverted and has no date_note")
+        self.edit(f"{P}/fits.json", lambda d: d["by_entity"].update({"richardson coutts": [dict(self.REG, date_note="n")]}))
+        self.assertOk("fits")
+
+
+class AccessTests(Base):
+    def test_meeting_dated_after_the_export_fails(self):
+        def future(d):
+            d["meta"]["generated"] = "2026-10-18T00:00:00Z"
+            d["ministers"]["k1"] = {"recent": [{"date": "2026-12-09", "org": "Full Stop Australia"}]}
+        self.edit(f"{P}/access.json", future)
+        self.assertFails("access", "minister k1 has a meeting dated 2026-12-09 after the export (2026-10-18)")
+
+    def test_meetings_up_to_the_export_date_pass(self):
+        def past(d):
+            d["meta"]["generated"] = "2026-10-18T00:00:00Z"
+            d["ministers"]["k1"] = {"recent": [{"date": "2026-10-18"}, {"date": "2026-06-29"}]}
+            d["donors"]["k2"] = {"meetings": [{"date": "2025-10-01"}]}
+        self.edit(f"{P}/access.json", past)
+        self.assertOk("access")
+
+
 class InterestsTests(Base):
     def test_index_that_lists_a_person_without_a_file_fails(self):
         (self.root / f"{P}/interests/10003.json").unlink()
@@ -578,6 +622,23 @@ class InterestsTests(Base):
     def test_changed_person_file_that_does_not_parse_fails(self):
         self.write(f"{P}/interests/n-p4.json", b'{"name": "N4", ')
         self.assertFails("interests", "interests/n-p4.json unreadable")
+
+    def _person(self, *descriptions):
+        return {"name": "P2", "buckets": {"shareholdings": {"count": len(descriptions), "items": [
+            {"holder": "self", "description": d, "kind": "statement"} for d in descriptions]}}}
+
+    def test_changed_person_file_with_a_nil_answer_or_share_fragment_fails(self):
+        for desc in ("No", "No.", ".", "100%"):
+            self.write(f"{P}/interests/10002.json", self._person("Medibank", desc))
+            self.assertFails("interests", f"publishes a placeholder interest {desc!r}")
+
+    def test_real_interests_and_unchanged_files_pass(self):
+        self.write(f"{P}/interests/10002.json", self._person("Medibank", "Nobel Ltd", "Windsor, unit; 100%"))
+        self.assertOk("interests")
+        # a placeholder already committed at HEAD is not re-reported while the export is unchanged
+        self.files[f"{P}/interests/10002.json"] = self._person("No")
+        self.make()
+        self.assertOk("interests")
 
     def test_changed_numeric_person_file_that_does_not_parse_fails(self):
         self.write(f"{P}/interests/10001.json", b"")

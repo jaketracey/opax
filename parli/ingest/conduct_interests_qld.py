@@ -152,9 +152,21 @@ def _join_frags(frags: list[str]) -> str:
     return out
 
 
+# a fragment that is only an ownership share ("100%", "50 % share", "1/2"), which some
+# members set off with its own semicolon ("Windsor, unit, investment; 100%;")
+SHARE_ONLY_RE = re.compile(r"^(?:\d{1,3}(?:\.\d+)?\s*%|\d+\s*/\s*\d+)(?:\s+(?:share|interest|owned|ownership))?\.?$", re.I)
+
+
 def _split_entries(text: str) -> list[str]:
     parts = [p.strip(" ;:") for p in re.split(r";\s*", text) if p.strip(" ;:")]
-    return parts or ([text.strip()] if text.strip() else [])
+    out: list[str] = []
+    for p in parts:
+        if out and SHARE_ONLY_RE.match(p):
+            # the share belongs to the item before it; keep the member's own "; "
+            out[-1] = f"{out[-1]}; {p}"
+        else:
+            out.append(p)
+    return out or ([text.strip()] if text.strip() else [])
 
 
 def parse_qld_register(pdf_path: Path, source_url: str = QLD_URL) -> list[InterestDocument]:

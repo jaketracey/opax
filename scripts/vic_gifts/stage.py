@@ -20,9 +20,31 @@ def text(node):
     return " ".join(node.get_text(" ", strip=True).split())
 
 
+HON = re.compile(r"^(?:The\s+)?Hon\.?\s+", re.I)
+# A trailing lodgement note the register prints inside the holder cell, e.g.
+# "Steve Dimopoulos (via Material Change to Primary Return or Ordinary Return Form provided in November 2025)".
+LODGEMENT_NOTE = re.compile(r"\s*\(via\s[^()]*\)\s*$", re.I)
+# The same "Hon <given name>" printed twice: "Hon Lizzie Hon Lizzie Blandthorn".
+REPEATED_PREFIX = re.compile(r"^(\S+(?:\s+\S+)*?)\s+(?:The\s+)?Hon\.?\s+\1\s+(?=\S)", re.I)
+
+
+def holder_name(name):
+    """The holder cell's name with the source's lodgement note and a repeated title/name removed.
+
+    Returns (name, cleaned). Only these two printing artefacts are removed; no initials,
+    nicknames or alias joins. The published office_holder text itself is kept unchanged."""
+    raw = " ".join(name.split())
+    out = LODGEMENT_NOTE.sub("", raw)
+    rest = HON.sub("", out)
+    collapsed = REPEATED_PREFIX.sub(r"\1 ", rest)
+    if collapsed != rest:
+        out = out[:len(out) - len(rest)] + collapsed
+    return out, out != raw
+
+
 def name_key(name):
     # Strip only the published office title; no initials, nicknames or alias joins.
-    return re.sub(r"^(?:The\s+)?Hon\.?\s+", "", " ".join(name.split()), flags=re.I).casefold()
+    return HON.sub("", holder_name(name)[0]).casefold()
 
 
 def exact_holder(name, roster, paths):
@@ -35,8 +57,10 @@ def exact_holder(name, roster, paths):
     href = paths.get(p["name"])
     if not href or not re.fullmatch(r"/subject/person/[a-z0-9-]+", href):
         return None
-    return {"name": p["name"], "href": href, "pid": p.get("pid"),
-        "method": "unique exact Victorian roster name after removing Hon title"}
+    method = "unique exact Victorian roster name after removing Hon title"
+    if holder_name(name)[1]:
+        method += " and the register's lodgement note or repeated title and name"
+    return {"name": p["name"], "href": href, "pid": p.get("pid"), "method": method}
 
 
 def licence_review(copyright_body, source_body, copyright_receipt):

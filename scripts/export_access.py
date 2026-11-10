@@ -10,10 +10,16 @@ disclosure sources in parli.db, and summarises each minister's disclosed diary:
 Run on the box that holds the database (read-only, never locks the file). The two
 portal inputs travel with the run because parli.db lives on `desktop`:
 
-    ssh desktop mkdir -p /tmp/opax-access
+    ssh desktop mkdir -p /tmp/opax-access/parli/ingest
     scp portal/public/graph/money.json portal/public/speakers.json desktop:/tmp/opax-access/
-    ssh desktop python3 - /tmp/opax-access/money.json /tmp/opax-access/speakers.json \\
+    scp parli/__init__.py desktop:/tmp/opax-access/parli/
+    scp parli/ingest/__init__.py parli/ingest/diary_dates.py desktop:/tmp/opax-access/parli/ingest/
+    ssh desktop 'cd /tmp/opax-access && python3 - money.json speakers.json' \\
         < scripts/export_access.py > portal/public/access.json
+
+(The nightly runs it in place, `python3 scripts/export_access.py money.json speakers.json`.
+It imports the stdlib-only date rule parli/ingest/diary_dates.py from the checkout, or from
+the current directory when read from stdin.)
 
 Output shape:
 
@@ -66,6 +72,9 @@ import sqlite3
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))) if "__file__" in globals() else os.getcwd())
+from parli.ingest.diary_dates import date_problem, period_corroborated  # noqa: E402  (stdlib only)
 
 DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 MAX_ITEMS = 8
@@ -174,6 +183,14 @@ def norm(s):
     return " ".join(t for t in s.split() if t not in STRIP_TOKENS)
 
 
+def org_group_key(s):
+    """Grouping key for a minister's "who they meet most" list only: norm() with the spaces
+    removed, so a diary's own spacing variants count as one organisation ("Unions NSW" and
+    "UnionsNSW", "NSWTF" and "NSW TF"). The label shown is the commonest spelling. norm()
+    itself is unchanged because donor matching keys on it."""
+    return norm(s).replace(" ", "")
+
+
 def norm_name(s):
     s = re.sub(r"[^a-z0-9]+", " ", (s or "").lower())
     return " ".join(t for t in s.split() if t not in JS_STRIP)
@@ -240,9 +257,26 @@ def main():
     db.row_factory = sqlite3.Row
 
     # ---- meetings ---------------------------------------------------------------------
-    rows = db.execute(
-        "SELECT jurisdiction, minister_name, minister_title, meeting_date, period_start, organisation, "
-        "purpose, source_url FROM ext_ministerial_meetings").fetchall()
+    rows = [dict(r) for r in db.execute(
+        "SELECT jurisdiction, minister_name, minister_title, meeting_date, period_start, period_end, organisation, "
+        "purpose, source_url FROM ext_ministerial_meetings").fetchall()]
+    # Rows loaded before parli.ingest.diary_dates existed can still carry a printed date the
+    # diary itself contradicts (a "9/12/2026" in a Q4 2025 disclosure). Apply the loader's rule
+    # here too: such a row keeps its place in the counts but has no meeting date, so it takes
+    # the reporting-period start like any undated row and never ranks as the newest meeting.
+    diary_dates = defaultdict(list)
+    for r in rows:
+        diary_dates[r["source_url"]].append(r["meeting_date"])
+    corroborated = {}
+    date_rejected = Counter()
+    for r in rows:
+        u = r["source_url"]
+        if u not in corroborated:
+            corroborated[u] = period_corroborated(diary_dates[u], r["period_start"], r["period_end"])
+        why = date_problem(r["meeting_date"], r["period_start"], r["period_end"], corroborated[u])
+        if why:
+            date_rejected[why] += 1
+            r["meeting_date"] = None
 
     # NSW: office title -> surname where the Minns-government diaries name one (unique per title).
     title_surname = defaultdict(Counter)
@@ -300,7 +334,9 @@ def main():
         internal = bool(INTERNAL_RX.search(org)) or not org
         m = {"minister": person or title, "jurisdiction": r["jurisdiction"], "date": when,
              "purpose": clean_purpose(r["purpose"]), "_person": person, "_org": org,
-             "_internal": internal, "_pdf": r["source_url"]}
+             "_internal": internal, "_pdf": r["source_url"],
+             # the diary's own period end ranks diaries for latest_pdf; a row date only breaks ties
+             "_diary_end": max(r["period_end"] or "", when)}
         if org:
             by_org[norm(org)].append(m)
         if person:
@@ -333,10 +369,12 @@ def main():
         ext = [m for m in acc["rows"] if not m["_internal"]]
         org_counter = defaultdict(Counter)
         for m in ext:
-            org_counter[norm(m["_org"])][m["_org"]] += 1
-        top = sorted(org_counter.items(), key=lambda kv: (-sum(kv[1].values()), kv[0]))[:MAX_ITEMS]
+            org_counter[org_group_key(m["_org"])][m["_org"]] += 1
+        # ties break on the label's norm(), as they did before the grouping key existed
+        top = sorted(org_counter.items(),
+                     key=lambda kv: (-sum(kv[1].values()), norm(kv[1].most_common(1)[0][0])))[:MAX_ITEMS]
         recent = sorted(ext, key=lambda m: m["date"], reverse=True)[:MAX_ITEMS]
-        latest = max(acc["rows"], key=lambda m: m["date"])
+        latest = max(acc["rows"], key=lambda m: (m["_diary_end"], m["date"]))
         minister_out[key] = {
             "name": person, "page": page, "surname_key": surname_key, "jurisdiction": acc["jurisdiction"],
             "meetings_total": len(acc["rows"]), "external_total": len(ext),
@@ -418,6 +456,7 @@ def main():
         "donors_in_map": len(donor_labels), "donors_skipped_generic": skipped_generic,
         "donors_with_meetings": n_meet, "donors_with_lobbyists": n_lob, "donors_with_either": len(donors_out),
         "meetings_rows": len(rows), "ministers": len(minister_out),
+        "meeting_dates_set_aside": dict(date_rejected),
         "minister_resolution": dict(stats),
     }
     out = {"meta": meta, "donors": donors_out, "ministers": minister_out, "aliases": aliases}

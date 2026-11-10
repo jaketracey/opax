@@ -47,7 +47,8 @@ test('every roster person gets the record of their verified pid, else their name
     const result = await render(key, pids.get(key) ?? null);
     if (expected) {
       assert.match(result.section, /Parliamentary expenses/, key);
-      assert.equal(result.figure, '$' + expected.total, key);
+      // a net repayment is not a claimed figure, so it is not the rail figure either
+      assert.equal(result.figure, expected.total > 0 ? '$' + expected.total : '', key);
     } else assert.deepEqual(result, {section: '', figure: ''}, key);
   }
 });
@@ -84,4 +85,28 @@ test('the source line states the licence expenses.json publishes, linked to its 
   }
   const data = {meta: {}, people: {'1': {total: 100, lines: 1, from: 2025, to: 2025}}, names: {'test member': '1'}};
   assert.doesNotMatch((await render('Test Member', null, data, {})).section, /CC BY|undefined/);
+});
+
+test('a total of zero or less reads as IPEA adjustments and repayments, never as an amount claimed', async () => {
+  // Joe Hockey: one 2017Q02 line of -645 (IPEA's series starts after he left); Natasha Griggs nets to 0
+  const benchmark = {count: 300, latestYear: 2026, fromCutoff: 2023, latestQuarter: '2026Q02', totalMedian: 1};
+  for (const [total, lines] of [[-645, 1], [0, 4]]) {
+    const data = {meta: {}, people: {'1': {total, lines, from: 2017, to: 2017, by_category: [], net_adjustments: total || undefined,
+      by_year: [[2017, total]]}}, names: {'test member': '1'}};
+    const {section, figure} = await render('Test Member', '1', data, {}, {getExpenseBenchmarks: () => benchmark,
+      expenseComparisonHTML: () => 'BARS', columnChart: () => 'CHART'});
+    assert.match(section, /IPEA publishes only adjustments and repayments for this person in 2017/);
+    assert.ok(section.includes('netting to <b>$' + total + '</b>'), section);
+    assert.doesNotMatch(section, /claimed|a year against|BARS|CHART/);
+    assert.equal(figure, '');
+  }
+});
+
+test('categories that net below zero are explained beside the bars, not drawn as one', async () => {
+  const data = {meta: {}, people: {'1': {total: 14480101, lines: 9, from: 2017, to: 2026,
+    by_category: [['Office', 14489407]], net_adjustments: -9306}}, names: {'test member': '1'}};
+  const {section, figure} = await render('Test Member', '1', data, {});
+  assert.match(section, /claimed, 2017 to 2026/);
+  assert.ok(section.includes('The total includes $-9306 of IPEA adjustments and repayments in categories that net below zero'), section);
+  assert.equal(figure, '$14480101');
 });

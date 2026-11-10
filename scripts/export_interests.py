@@ -49,7 +49,9 @@ Per bucket the items are the six most recent entries: alterations newest
 first (by their submitted date), then statement rows in document order. The
 count is the bucket's full row count. A row is one cell of the form, so a
 comma list of eight memberships typed in one cell counts once; rows whose
-every field is a nil placeholder ("Nil applicable") are dropped. Item
+every field is a nil placeholder ("Nil applicable") or punctuation only, and
+rows whose only answer is a bare "No" with every other field nil ("Self  No
+Nil  Nil"), are dropped and counted in _meta.nil_rows_dropped. Item
 descriptions are the printed cell values joined with " · " and cut at ~120
 characters. The page link is built client-side as source_url + "#page=" +
 page; an item carries its own "url" only when it comes from a different
@@ -99,6 +101,11 @@ BUCKET_OF = {
 }
 # cells the parser kept that are still a nil placeholder once read as a whole
 NIL = re.compile(r"^\s*(?:nil(?:\s+applicable|\s+return)?|n/?a|not\s+applicable|none|nothing(?:\s+to\s+declare)?|-+)\s*\.?\s*$", re.I)
+# a cell holding only punctuation (Landry's shareholdings print a lone "." as a third line)
+PUNCT_ONLY = re.compile(r"^[\W_]+$")
+# a bare "No" typed in the name column of a Self / Spouse / Children row whose other
+# columns read "Nil" (Marles' statement: "Self  No  Nil  Nil"); nil only in that shape
+BARE_NO = re.compile(r"^\s*no\s*\.?\s*$", re.I)
 # form-structure fields that are labels, not content
 LABEL_FIELDS = {"subclause", "item"}
 WS = re.compile(r"\s+")
@@ -362,6 +369,22 @@ def description(fields_json, fallback, max_chars=DESC_CHARS):
     return text
 
 
+def is_nil_value(v):
+    """A nil placeholder or a punctuation-only cell."""
+    return bool(NIL.match(v) or PUNCT_ONLY.match(v.strip() or "."))
+
+
+def is_nil_values(vals):
+    """True when a row's content cells say nothing: every cell is nil or punctuation only,
+    or one or more cells are a bare "No" and every other cell is nil. A "No" beside real
+    content in another cell keeps the row."""
+    vals = [v for v in vals if v is not None and str(v).strip()]
+    if not vals:
+        return True
+    rest = [str(v) for v in vals if not BARE_NO.match(str(v))]
+    return all(is_nil_value(v) for v in rest)
+
+
 def is_nil_row(fields_json, desc):
     try:
         fields = json.loads(fields_json) if fields_json else {}
@@ -369,8 +392,8 @@ def is_nil_row(fields_json, desc):
         fields = {}
     vals = [str(v) for k, v in fields.items() if k not in LABEL_FIELDS and v]
     if vals:
-        return all(NIL.match(v) for v in vals)
-    return not desc or bool(NIL.match(desc))
+        return is_nil_values(vals)
+    return not desc or is_nil_values([desc])
 
 
 def main():
