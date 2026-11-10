@@ -15,7 +15,7 @@ const choice=c=>c.toolChoice?.type==='tool'?c.toolChoice.toolName:c.toolChoice?.
 const names=c=>c.tools.map(t=>t.name);
 function fixtures(m,options={}) {
  let plannerCalls=0,lookups=0,turns=0;const events=[],failures=[];
- const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:selectionOnly(api.createResearch({model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),...options})),onResearchFailure:async e=>failures.push(e)};
+ const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:selectionOnly(api.createResearch({inputPrice:0.1,outputPrice:0.3,model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),...options})),onResearchFailure:async e=>failures.push(e)};
  return {model:m,deps,events,failures,run:(q=question)=>api.runAgentic(q,deps,async(e,d)=>events.push(d),40_000,api.inferPeriod(q),{},emptyScope),get plannerCalls(){return plannerCalls},get lookups(){return lookups},get turns(){return turns}};
 }
 test('loop answer instructions require a direct first point, unique facts and separate coverage notes',async()=>{
@@ -151,8 +151,8 @@ test('unclassified prose sees every record tool, but speech counts it did not as
 test('realistic four-turn usage survives token admission; search notes stay out of numerical answers',async()=>{
  const m=model([reply([call('search',{query:'gambling',limit:4})],6000,500),reply([call('count_speeches',args)],14000,1000),reply([call('finish',{facts:[1]})],16000,500)]),f=fixtures(m,{readRecord:async()=>({text:'Source passage about gambling. '.repeat(40)})}),oldKb=f.deps.kb;
  f.deps.kb=async(path,body)=>path==='/find'?{resources:{[p.resource]:{slug:p.slug,title:p.title,fields:{body:{paragraphs:Object.fromEntries(Array.from({length:4},(_,i)=>[p.resource+'/t/body/'+i+'-1200',{text:'Source passage about gambling. '.repeat(40)}]))}}}}}:oldKb(path,body);
- const run=await f.run();assert.equal(run.research.mode,'loop');assert.equal(f.plannerCalls,0);assert.equal(m.doGenerateCalls.length,3);assert.deepEqual(run.tokens,{input:36000,output:2000});assert.doesNotMatch(run.answer,/Retrieved passages|ranked sample/);assert.deepEqual(run.research.trail.map(t=>t.round),[1,2,3]);assert.equal(choice(m.doGenerateCalls[2]),'required');
- assert.equal(api.researchLimits({}).tokens,96000);assert.equal(api.researchLimits({tokens:999999}).tokens,160000);
+ const run=await f.run();assert.equal(run.research.mode,'loop',JSON.stringify(f.failures));assert.equal(f.plannerCalls,0);assert.equal(m.doGenerateCalls.length,3);assert.deepEqual(run.tokens,{input:36000,output:2000});assert.doesNotMatch(run.answer,/Retrieved passages|ranked sample/);assert.deepEqual(run.research.trail.map(t=>t.round),[1,2,3]);assert.equal(choice(m.doGenerateCalls[2]),'required');
+ assert.equal(api.researchLimits({}).tokens,256000);assert.equal(api.researchLimits({tokens:999999}).tokens,320000);
 });
 test('a numerical answer misroute keeps finish active and does not consume qualitative repair',async()=>{
  const m=model([reply([call('count_speeches',args)]),reply([call('answer',valid)]),reply([call('finish',{facts:[1]})])]),f=fixtures(m),run=await f.run();

@@ -1,6 +1,7 @@
 /** Read-only corpus search, checked source excerpts and bounded record detail. */
 import { firstSpeechTurn } from '../position-evidence'
 import { resolvePersonName } from '../person-name-matching'
+import { searchPartyLabels } from '../party-labels'
 import { belongsToScope, isUnattributed, personScope, printSpeakers, splitSpeakers } from '../../public/speech-attribution.js'
 import { isSaHansard, saExcerpt, saOfficialUrl } from '../../public/sa-hansard.js'
 import { clip, fold, siteUrl } from './record-common'
@@ -15,7 +16,7 @@ const note = 'Search returns a ranked sample, not a complete count. Topic labels
 /** MCP uses the same KB reader contract as Ask, restricted to retrieval endpoints. */
 export function corpusKb(env: Pick<Env, 'ARAG_ZONE' | 'ARAG_KB_ID' | 'ARAG_KB_TOKEN'>, signal?: AbortSignal): NonNullable<ToolEnv['kb']> {
   return async (path, body) => {
-    if (!(path === '/find' && body !== undefined || /^\/slug\/(?:speech-\d+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)\?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text$/.test(path) && body === undefined)) throw new Error('Unsupported corpus read')
+    if (!(['/find', '/catalog', '/search'].includes(path) && body !== undefined || /^\/slug\/(?:speech-\d+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)\?show=basic&show=origin&show=extra&show=values&show=extracted&extracted=text$/.test(path) && body === undefined)) throw new Error('Unsupported corpus read')
     if (!env.ARAG_KB_ID || !env.ARAG_KB_TOKEN || !/^[a-z0-9-]+$/.test(env.ARAG_ZONE)) throw new Error('Corpus binding unavailable')
     signal?.throwIfAborted()
     const response = await fetch(`https://${env.ARAG_ZONE}.rag.progress.cloud/api/v1/kb/${encodeURIComponent(env.ARAG_KB_ID)}${path}`, {
@@ -62,12 +63,14 @@ function excerpt(text: string, query: string, size: number, offset?: number) {
 }
 
 export const tool: ToolDefinition = {
-  name: 'corpus_records',
+  name: 'corpus_records', evidenceKind: 'passages',
   description: 'Search Hansard speeches, official press releases/statements and committee-hearing turns by subject words, speaker, jurisdiction and inclusive since/until dates. kind=speech or press_release. venue=committee includes witnesses; witness or combined-debate text is never attributed to a politician. Search excerpts are checked against the original source body, excluding machine summaries; named-member excerpts use only their first speaking turn. Follow record_id for up to 4,000 characters around query, or continue via next_text_offset. SA Hansard stays capped at 120 words per record and has no text paging. Each row has source_url, OPAX record URL and citation; missing original provenance is explicit. A ranked sample cannot establish that someone never said something. Use existing speech-count tools for counts.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     kind: { type: 'string', enum: ['speech', 'press_release'] }, query: { type: 'string', minLength: 2, maxLength: 250 },
     record_id: { type: 'string', minLength: 3, maxLength: 200, pattern: '^(?:speech-[0-9]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)$' },
     speaker: { type: 'string', minLength: 2, maxLength: 120, description: 'A named parliamentarian for speeches; exact source collaborator for releases.' },
+    party: { type: 'string', minLength: 2, maxLength: 60, description: 'Speech party on the day, e.g. Labor or Coalition. Does not infer release affiliation.' },
+    chamber: { type: 'string', enum: ['representatives', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'qld_la', 'sa_ha', 'sa_lc', 'act_la'] },
     jurisdiction: { type: 'string', enum: ['federal', 'nsw', 'vic', 'sa', 'qld', 'act'] },
     topic: { type: 'string', pattern: '^[a-z][a-z-]{1,60}$', description: 'Optional machine topic label, e.g. housing. Query words also search unlabelled text.' },
     venue: { type: 'string', enum: ['chamber', 'committee', 'all'] },
@@ -76,10 +79,12 @@ export const tool: ToolDefinition = {
   }, required: ['kind'], examples: [{ kind: 'speech', query: 'housing', speaker: 'Andrew Wilkie', since: '2025-01-01' }, { kind: 'press_release', query: 'energy' }, { kind: 'speech', query: 'gambling', venue: 'committee' }] },
   identifierFields: ['speaker'],
   validate: args => validWindow(args) && (!!args.query || !!args.record_id || !!args.speaker || !!args.topic) && (args.text_offset === undefined || !!args.record_id) &&
-    (args.kind !== 'press_release' || !args.venue) && (!args.record_id || (String(args.record_id).startsWith('speech-') === (args.kind === 'speech')) && !['speaker', 'jurisdiction', 'topic', 'venue', 'since', 'until', 'limit'].some(k => args[k] !== undefined)),
+    (args.kind !== 'press_release' || !args.venue && !args.party) && (!args.party || searchPartyLabels(String(args.party)) !== null) && (!args.record_id || (String(args.record_id).startsWith('speech-') === (args.kind === 'speech')) && !['speaker', 'jurisdiction', 'party', 'chamber', 'topic', 'venue', 'since', 'until', 'limit'].some(k => args[k] !== undefined)),
   stepLabel: args => ({ label: 'Reading source passages', arg: clip(args.speaker ?? args.query ?? args.record_id, 40) }),
   async handler(env, args) {
     if (!env.kb) throw new Error('Corpus adapter unavailable')
+    const parties = args.party ? searchPartyLabels(String(args.party)) : undefined
+    if (parties === null) return { rows: [], citations: [], notes: [], error: 'Unknown party.' }
     let person: (RecordRow & { name: string }) | undefined, aliases: string[] = []
     if (args.speaker && args.kind === 'speech') {
       const roster = object(await readToolAsset(env, '/parliamentarians.json')), people = records(roster.people).filter((p): p is RecordRow & { name: string } => typeof p.name === 'string')
@@ -94,6 +99,8 @@ export const tool: ToolDefinition = {
       const clauses: unknown[] = [label('kind', args.kind), { prop: 'field', type: 'text', name: 'body' }]
       if (args.jurisdiction) clauses.push(label('state', args.jurisdiction))
       if (args.topic) clauses.push(label('topic', args.topic))
+      if (args.chamber) clauses.push(label('chamber', args.chamber))
+      if (parties?.length) clauses.push({ or: parties.map(p => label('party', p)) })
       if (aliases.length) clauses.push({ or: aliases.map(collaborator => ({ prop: 'origin_collaborator', collaborator })) })
       if (args.since || args.until) clauses.push({ prop: 'created', ...(args.since ? { since: args.since + 'T00:00:00Z' } : {}), ...(args.until ? { until: args.until + 'T23:59:59Z' } : {}) })
       if (args.kind === 'speech' && args.venue !== 'all') clauses.push(args.venue === 'committee' ? { or: COMMITTEES.map(c => label('chamber', c)) } : { not: { or: COMMITTEES.map(c => label('chamber', c)) } })
@@ -111,6 +118,7 @@ export const tool: ToolDefinition = {
       try { r = await original(env, slug) } catch { env.signal?.throwIfAborted(); if (args.record_id) throw new Error('Original source unavailable'); failures++; continue }
       if (r.kind !== args.kind) continue
       const labels = object(r.labels), meta = object(r.metadata), committee = COMMITTEES.includes(String(labels.chamber))
+      if (args.chamber && labels.chamber !== args.chamber || parties?.length && !parties.includes(String(meta.party_on_day ?? labels.party))) continue
       const scope = personScope(person)
       if (!inWindow(r.date, args) || args.jurisdiction && labels.state !== args.jurisdiction || args.kind === 'speech' && !args.record_id && args.venue !== 'all' && committee !== (args.venue === 'committee')) continue
       if (aliases.length && (!aliases.some(n => fold(n) === fold(r.speaker)) || r.kind === 'speech' && (r.speaker_attribution !== 'source collaborator' || scope && !belongsToScope({ ...labels, ...meta, kind: 'speech', state: String(labels.state ?? ''), chamber: String(labels.chamber ?? ''), speaker: String(r.speaker ?? ''), date: String(r.date ?? '') }, scope)))) continue
@@ -130,7 +138,7 @@ export const tool: ToolDefinition = {
       }
       const source_url = sa ? saOfficialUrl(r) ?? sourceUrl(r.source_url) : sourceUrl(r.source_url)
       const { text: excerptText, ...position } = window
-      rows.push({ record_id: slug, kind: r.kind, title: clip(r.title, 200), speaker: r.speaker, speaker_attribution: r.speaker_attribution,
+      rows.push({ record_id: slug, kind: r.kind, title: clip(r.title, 200), speaker: r.speaker, speaker_attribution: r.speaker_attribution, party: meta.party_on_day ?? labels.party ?? null,
         date: r.date, jurisdiction: labels.state ?? null, chamber: labels.chamber ?? null, ...position, excerpt: excerptText,
         source_url, source_status: source_url ? 'original source' : 'original URL not recorded; cite OPAX record',
         url: siteUrl(env, '/doc/' + slug), full_record_url: source_url ?? siteUrl(env, '/doc/' + slug),

@@ -188,9 +188,11 @@ test('unavailable and revoked public snapshots cannot become uncited facts', asy
   assert.deepEqual(held.rows, []); assert.deepEqual(held.citations, []);
 });
 
-test('all four tools use identical registry schemas and data through authenticated MCP and Ask', async () => {
+test('shared data tools and moved Ask capabilities have identical schemas and payloads through authenticated MCP and Ask', async () => {
   const token = 'opax_' + 'B'.repeat(43), tokenHash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('hex');
   const fixture = corpusFixture();
+  const readCorpus = fixture.env.kb;
+  fixture.env.kb = async (path, body) => ['/catalog', '/search'].includes(path) ? { fulltext: { total: 4, facets: {} } } : readCorpus(path, body);
   const mcpEnv = { COMMUNITY_ENABLED: 'true', COMMUNITY_ORIGIN: 'https://opax.test', ASSETS: assets, ARAG_ZONE: 'test-zone', ARAG_KB_ID: 'fixture', ARAG_KB_TOKEN: 'fixture-token',
     COMMUNITY_DB: { prepare(sql) { let args; return { bind(...v) { args = v; return this; }, async first() { if (sql.startsWith('SELECT m.')) return args[0] === tokenHash ? { id: 'member', key_id: 'key' } : null; if (sql.startsWith('INSERT INTO community_limits')) return { hits: 1 }; throw Error('Unexpected SQL'); }, async run() { return { success: true }; } }; } } };
   const send = async (method, params) => (await api.communityMcp(new Request('https://opax.test/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }), mcpEnv, async () => { throw Error('Registry does not use legacy MCP tools'); })).json();
@@ -199,17 +201,26 @@ test('all four tools use identical registry schemas and data through authenticat
   globalThis.fetch = async (url, init) => {
     assert.match(String(url), /^https:\/\/test-zone\.rag\.progress\.cloud\//);
     assert.equal(new Headers(init.headers).get('x-nuclia-serviceaccount'), 'Bearer fixture-token');
-    const path = new URL(url).pathname.includes('/slug/') ? '/slug/fixture' : '/find';
+    const path = new URL(url).pathname.includes('/slug/') ? '/slug/fixture' : '/' + new URL(url).pathname.split('/').at(-1);
     return Response.json(await fixture.env.kb(path, init.body ? JSON.parse(init.body) : undefined));
   };
   try {
-    for (const [name, args] of [['legislation', { kind: 'state_bill', jurisdiction: 'tas', query: 'Conversion Practices', limit: 1 }], ['public_finances', { dataset: 'vic_gifts', entity: 'Jacinta Allan', limit: 1 }], ['entity_profile', { kind: 'tax_charity', record_id: '18151340608', limit: 1 }], ['corpus_records', { kind: 'speech', query: 'housing', limit: 1 }]]) {
+    for (const [name, args] of [['legislation', { kind: 'state_bill', jurisdiction: 'tas', query: 'Conversion Practices', limit: 1 }], ['public_finances', { dataset: 'vic_gifts', entity: 'Jacinta Allan', limit: 1 }], ['entity_profile', { kind: 'tax_charity', record_id: '18151340608', limit: 1 }], ['corpus_records', { kind: 'speech', query: 'housing', limit: 1 }],
+      ['count_speeches', { speaker: 'David Shoebridge', group_by: 'none' }], ['speech_trend', { from_year: 2025, to_year: 2026 }],
+      ['find_people', { name: 'David Shoebridge' }], ['party_receipts', { party: 'Labor', limit: 2 }],
+      ['find_quotes', { speaker: 'David Shoebridge', query: 'housing' }], ['member_votes', { person: 'David Shoebridge', keyword: 'housing' }],
+      ['person_quotes', { person: 'David Shoebridge', topic: 'housing' }], ['search', { query: 'housing' }], ['read_passage', { record_id: 'speech-1' }], ['person_overview', { person: 'David Shoebridge' }],
+      ['paid_answer', { question: 'What is the federal parliamentary base salary in 2025?' }], ['ranked_money', { question: 'Which federal parties have the largest disclosed receipt totals in 2024-25?' }],
+    ]) {
       const definition = api.listTools().find(t => t.name === name), entry = listed.find(t => t.name === name);
       assert.ok(entry, name); const { $schema, ...wireSchema } = entry.inputSchema; assert.deepEqual(wireSchema, definition.inputSchema);
       const rpc = await send('tools/call', { name, arguments: args });
       assert.equal(rpc.error, undefined, JSON.stringify(rpc));
       const ask = await api.askToolSpecs.find(t => t.name === name).run({ ...fixture.env, origin: 'https://opax.com.au' }, args);
-      assert.deepEqual(rpc.result.structuredContent, ask.data, name); cited(ask.data);
+      assert.deepEqual(rpc.result.structuredContent, ask.data, name);
+      assert.equal(ask.ok, true, JSON.stringify(ask));
+      assert.ok(Array.isArray(ask.data.rows));
+      if (['legislation', 'public_finances', 'entity_profile', 'corpus_records'].includes(name)) cited(ask.data);
     }
     for (const name of ['legislation', 'public_finances', 'entity_profile', 'corpus_records']) assert.equal((await send('tools/call', { name, arguments: { unexpected: true } })).error.code, -32602);
   } finally { globalThis.fetch = mockFetch; }

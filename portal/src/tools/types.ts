@@ -10,7 +10,7 @@ export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'COMMUNITY_ORIGI
   /** Read-only KB adapter; credentials remain outside tool handlers. */
   kb?: (path: string, body?: unknown) => Promise<Record<string, unknown>>
 }
-export interface ToolCitation { text: string; url: string; value?: number | string; kind?: 'count' | 'record' | 'export' }
+export interface ToolCitation { text: string; url: string; value?: number | string; kind?: 'count' | 'record' | 'export'; related?: { label: string; url: string }[] }
 export interface StructuredToolResult {
   rows: unknown[]
   citations: ToolCitation[]
@@ -30,6 +30,10 @@ export interface ToolDefinition {
   identifierFields?: readonly string[]
   /** Exact published-catalog membership, when the catalog is available. */
   validateKnown?: (env: ToolEnv, args: ToolArgs) => Promise<boolean>
+  /** Preserve established Ask fact layouts while sharing public schemas and data. */
+  askFactStyle?: 'legacy'
+  /** Original verified excerpts are cited by passage IDs rather than record-fact IDs. */
+  evidenceKind?: 'passages'
   /** Temporary compatibility name for an existing Ask plan; never an extra MCP entry. */
   askName?: string
 }

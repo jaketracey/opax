@@ -16,7 +16,7 @@ test('P1 metric swap: aye/no values are bound to labels; no composer is called',
   ...fixtureDeps,
   generate:async()=>({text:++models===1?JSON.stringify({shape:'comparison',steps:[{tool:'member_votes',args:{keyword:'gambling',person:'Taylor Example'}},{tool:'count_speeches',args:{topic:'gambling',speaker:'Pat Example',group_by:'none'}}]}):swapped+' Pat Example made 87 speeches [2].'}),
   kb:async(_p,b)=>b.query?{resources:Object.fromEntries(['one','two','three'].map(k=>[k,{slug:'division-'+k}]))}:{fulltext:{total:87}},
-  asset:async p=>p.startsWith('/divisions/')?{key:p.split('/').at(-1).replace('.json',''),date:'2026-01-01',name:'Gambling fixture',ayes:2,noes:1,members:[{name:'Taylor Example',vote:p.includes('three')?'no':'aye'}]}:fixtureDeps.asset(p),
+  asset:async p=>p==='/divisions/index.json'?{divisions:['one','two','three'].map(id=>({key:'federal-senate-'+id,date:'2026-01-01'}))}:p.startsWith('/divisions/')?{key:p.split('/').at(-1).replace('division-','').replace('.json',''),date:'2026-01-01',name:'Gambling fixture',ayes:2,noes:1,members:[{name:'Taylor Example',vote:p.includes('three')?'no':'aye'}]}:fixtureDeps.asset(p),
  });
  assert.equal(r.answered,true);assert.equal(r.answer_source,'template');assert.equal(models,1);
  assert.match(r.answer,/Taylor Example voted in 3 divisions.*aye 2, no 1 \[1\]/);

@@ -1,0 +1,4200 @@
+{
+  "DT-BDAY-020": {
+    "question": "Which bilks were introducd in the Senate on 30 October 2012?",
+    "before": "One bill was introduced in the Senate on 30 October 2012: Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013].",
+    "payload": {
+      "answered": true,
+      "answer": "",
+      "answer_decision": "answer",
+      "citations": {},
+      "sources": [],
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2012-10-30",
+          "until": "2012-10-30",
+          "label": "Records from 2012-10-30 to 2012-10-30."
+        },
+        "dated": true,
+        "chamber": "senate",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 1,
+            "label": "Counting bills",
+            "arg": "2012-10-30",
+            "state": "done",
+            "tool": "count_records",
+            "round": 1,
+            "ms": 12,
+            "results": 1
+          },
+          {
+            "id": 2,
+            "label": "Checking the answer",
+            "state": "failed",
+            "tool": "answer",
+            "round": 2,
+            "ms": 7
+          },
+          {
+            "id": 3,
+            "label": "Checking the answer",
+            "state": "failed",
+            "tool": "answer",
+            "round": 3,
+            "ms": 1
+          }
+        ],
+        "ms": 2968
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 3,
+        "reserved_cost_usd": 0.045300624000000005,
+        "trail": [
+          {
+            "id": 1,
+            "tool": "count_records",
+            "round": 1,
+            "label": "Counting bills",
+            "arg": "2012-10-30",
+            "results": 1,
+            "ms": 12,
+            "ok": true
+          },
+          {
+            "id": 2,
+            "tool": "answer",
+            "round": 2,
+            "label": "Checking the answer",
+            "ms": 7,
+            "ok": false
+          },
+          {
+            "id": 3,
+            "tool": "answer",
+            "round": 3,
+            "label": "Checking the answer",
+            "ms": 1,
+            "ok": false
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16422,
+            "output": 98,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15781,
+            "ms": 730,
+            "cost_usd": 0.000302568
+          },
+          {
+            "round": 2,
+            "input": 3302,
+            "output": 136,
+            "cached_input": 2176,
+            "cached": 2176,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16532,
+            "ms": 1143,
+            "cost_usd": 0.000514056
+          },
+          {
+            "round": 3,
+            "input": 3586,
+            "output": 138,
+            "cached_input": 3328,
+            "cached": 3328,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16842,
+            "ms": 1067,
+            "cost_usd": 0.000262968
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          2176,
+          3328
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "salvaged": "grounding"
+        },
+        "sources": [],
+        "ms": 2988,
+        "tokens": {
+          "input": 23310,
+          "output": 372
+        },
+        "cost_usd": 0.001079592,
+        "rejections": [
+          "fact 1: count does not answer what was debated; use source passages",
+          "fact 2: count does not answer what was debated; use source passages",
+          "fact 1: count does not answer what was debated; use source passages",
+          "fact 2: count does not answer what was debated; use source passages"
+        ],
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      },
+      "coherence": {
+        "stripped_ratio": 1,
+        "fallback": true,
+        "method": "checked_points"
+      }
+    },
+    "grade": {
+      "overall": "fail",
+      "axes": {
+        "coherence": "fail",
+        "usefulness": "fail",
+        "citations": "n/a",
+        "correctness": "fail",
+        "constraints": "fail",
+        "decline": "fail",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "fail",
+        "required_components": "n/a"
+      },
+      "answered": false,
+      "refusal": true,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "terms",
+          "status": "fail",
+          "detail": "none of: Anti-Money Laundering Amendment",
+          "why": "at least one bill introduced that day is named"
+        },
+        {
+          "part": null,
+          "type": "constraint",
+          "status": "fail",
+          "detail": "period in answer or explicit coverage limit",
+          "why": null
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "fail",
+          "detail": "0/1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 0,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 0,
+        "unresolved": [],
+        "cited_sources": 0,
+        "figure_sentences": 0,
+        "figure_sentences_cited": 0
+      },
+      "coherence": {
+        "pass": false,
+        "reasons": [
+          "first sentence does not answer"
+        ],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "count_records",
+          "answer",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 3
+      },
+      "gold": null,
+      "evidence_complete": false,
+      "flags": [
+        "refused or declined"
+      ]
+    }
+  },
+  "DT-MNTH-008": {
+    "question": "How many new federal bils were introduced druing November 2022?",
+    "before": "Education and Other Legislation Amendment (Abolishing Indexation and Raising the Minimum Repayment Income for Education and Training Loans) Bill 2022; Inspector-General of Intelligence and Security and Other Legislation Amendment (Modernisation) Bill 2022; Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Bill 2022; Public Interest Disclosure Amendment (Review) Bill 2022; Safeguard Mechanism (Crediting) Amendment Bill 2023; National Reconstruction Fund Corporation Bill 2023; Customs Legislation Amendment (Controlled Trials and Other Measures) Bill 2022; Export Control Amendment (Streamlining Administrative Processes) Bill 2022; Treasury Laws Amendment (Consumer Data Right) Bill 2022; Classification (Publications, Films and Computer Games) Amendment (Loot Boxes) Bill 2022; Fuel and Vehicle Standards Legislation Amendment (Reducing Vehicle Pollution) Bill 2022; Commonwealth Electoral Amendment (Stop the Lies) Bill 2022; Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2022; Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill 2023; Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2022; Telecommunications Legislation Amendment (Information Disclosure, National Interest and Other Measures) Bill 2022; Crimes Amendment (Penalty Unit) Bill 2022.",
+    "payload": {
+      "answered": true,
+      "answer": "",
+      "answer_decision": "answer",
+      "citations": {},
+      "sources": [],
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2022-11-01",
+          "until": "2022-11-30",
+          "label": "Records from 2022-11-01 to 2022-11-30."
+        },
+        "dated": true,
+        "jurisdiction": "federal",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 1,
+            "label": "Counting bills",
+            "arg": "2022-11",
+            "state": "done",
+            "tool": "count_records",
+            "round": 1,
+            "ms": 38,
+            "results": 1
+          },
+          {
+            "id": 2,
+            "label": "Checking the answer",
+            "state": "failed",
+            "tool": "answer",
+            "round": 2,
+            "ms": 8
+          },
+          {
+            "id": 3,
+            "label": "Checking the answer",
+            "state": "failed",
+            "tool": "answer",
+            "round": 3,
+            "ms": 0
+          }
+        ],
+        "ms": 2027
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 3,
+        "reserved_cost_usd": 0.044950724,
+        "trail": [
+          {
+            "id": 1,
+            "tool": "count_records",
+            "round": 1,
+            "label": "Counting bills",
+            "arg": "2022-11",
+            "results": 1,
+            "ms": 38,
+            "ok": true
+          },
+          {
+            "id": 2,
+            "tool": "answer",
+            "round": 2,
+            "label": "Checking the answer",
+            "ms": 8,
+            "ok": false
+          },
+          {
+            "id": 3,
+            "tool": "answer",
+            "round": 3,
+            "label": "Checking the answer",
+            "ms": 0,
+            "ok": false
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16420,
+            "output": 60,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15783,
+            "ms": 681,
+            "cost_usd": 0.000256368
+          },
+          {
+            "round": 2,
+            "input": 3135,
+            "output": 118,
+            "cached_input": 2176,
+            "cached": 2176,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16430,
+            "ms": 682,
+            "cost_usd": 0.000442356
+          },
+          {
+            "round": 3,
+            "input": 3385,
+            "output": 112,
+            "cached_input": 3200,
+            "cached": 3200,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16726,
+            "ms": 608,
+            "cost_usd": 0.0002091
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          2176,
+          3200
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "salvaged": "grounding"
+        },
+        "sources": [],
+        "ms": 2058,
+        "tokens": {
+          "input": 22940,
+          "output": 290
+        },
+        "cost_usd": 0.000907824,
+        "rejections": [
+          "fact 1: count does not answer what was debated; use source passages",
+          "fact 1: count does not answer what was debated; use source passages"
+        ],
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      },
+      "coherence": {
+        "stripped_ratio": 1,
+        "fallback": true,
+        "method": "checked_points"
+      }
+    },
+    "grade": {
+      "overall": "fail",
+      "axes": {
+        "coherence": "fail",
+        "usefulness": "fail",
+        "citations": "n/a",
+        "correctness": "fail",
+        "constraints": "fail",
+        "decline": "fail",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "fail",
+        "required_components": "n/a"
+      },
+      "answered": false,
+      "refusal": true,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "number",
+          "status": "fail",
+          "detail": "missing numbers: 22",
+          "why": "bills with an introduced date in that month"
+        },
+        {
+          "part": null,
+          "type": "constraint",
+          "status": "fail",
+          "detail": "period in answer or explicit coverage limit",
+          "why": null
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "fail",
+          "detail": "0/1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 0,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 0,
+        "unresolved": [],
+        "cited_sources": 0,
+        "figure_sentences": 0,
+        "figure_sentences_cited": 0
+      },
+      "coherence": {
+        "pass": false,
+        "reasons": [
+          "first sentence does not answer"
+        ],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "count_records",
+          "answer",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 3
+      },
+      "gold": null,
+      "evidence_complete": false,
+      "flags": [
+        "refused or declined"
+      ]
+    }
+  },
+  "DT-BDAY-002": {
+    "question": "what bills got introduced in the house of representatives on 19 June 2023",
+    "before": "Two bills were introduced in the House of Representatives on 19 June 2023: Broadcasting Services Amendment (Healthy Kids Advertising) Bill 2023; Interactive Gambling Amendment (Ban on Gambling Advertisements) Bill 2023.",
+    "payload": {
+      "answered": true,
+      "answer": "Two bills were introduced in the House of Representatives on 19 June 2023.",
+      "answer_decision": "answer",
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2023-06-19",
+          "until": "2023-06-19",
+          "label": "Records from 2023-06-19 to 2023-06-19."
+        },
+        "dated": true,
+        "chamber": "representatives",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            74
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Two bills were introduced in the House of Representatives on 19 June 2023.",
+          "href": "https://opax.com.au/bills",
+          "url": "https://opax.com.au/bills",
+          "snippet": "Two bills were introduced in the House of Representatives on 19 June 2023.",
+          "cited": true,
+          "kind": "count",
+          "claim_atoms": [
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "19",
+              "unit": "count",
+              "chamber": "representatives",
+              "period": {
+                "label": "2023"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        }
+      ],
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 1,
+            "label": "Counting bills",
+            "arg": "2023-06-19",
+            "state": "done",
+            "tool": "count_records",
+            "round": 1,
+            "ms": 17,
+            "results": 1
+          },
+          {
+            "id": 2,
+            "label": "Checking the answer",
+            "state": "done",
+            "tool": "answer",
+            "round": 2,
+            "ms": 4,
+            "results": 2
+          }
+        ],
+        "ms": 1642
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 2,
+        "reserved_cost_usd": 0.0008439240000000013,
+        "trail": [
+          {
+            "id": 1,
+            "tool": "count_records",
+            "round": 1,
+            "label": "Counting bills",
+            "arg": "2023-06-19",
+            "results": 1,
+            "ms": 17,
+            "ok": true
+          },
+          {
+            "id": 2,
+            "tool": "answer",
+            "round": 2,
+            "label": "Checking the answer",
+            "results": 2,
+            "ms": 4,
+            "ok": true
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16421,
+            "output": 98,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15786,
+            "ms": 906,
+            "cost_usd": 0.000302268
+          },
+          {
+            "round": 2,
+            "input": 3402,
+            "output": 134,
+            "cached_input": 2176,
+            "cached": 2176,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16656,
+            "ms": 710,
+            "cost_usd": 0.000541656
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          2176
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "mode": "facts"
+        },
+        "sources": [
+          {
+            "title": "Two bills were introduced in the House of Representatives on 19 June 2023.",
+            "url": "https://opax.com.au/bills",
+            "kind": "count"
+          }
+        ],
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Two bills were introduced in the House of Representatives on 19 June 2023.",
+            "href": "https://opax.com.au/bills",
+            "url": "https://opax.com.au/bills",
+            "snippet": "Two bills were introduced in the House of Representatives on 19 June 2023.",
+            "cited": true,
+            "kind": "count"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/bills",
+            "url": "https://opax.com.au/bills",
+            "snippet": "Exact count of the full published bills index; not a ranked sample. Coverage in the House of Representatives: 2013-02-06 to 2026-09-17. This describes indexed records, not proof of complete parliamentary history. Published snapshot build date: 2026-10-04T16:27:54+00:00. This is a build stamp, not a live data currency guarantee. Latest indexed introduced date: 2026-09-17. Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "ms": 1673,
+        "tokens": {
+          "input": 19823,
+          "output": 232
+        },
+        "cost_usd": 0.000843924,
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      }
+    },
+    "grade": {
+      "overall": "partial",
+      "axes": {
+        "coherence": "pass",
+        "usefulness": "pass",
+        "citations": "pass",
+        "correctness": "partial",
+        "constraints": "pass",
+        "decline": "pass",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "pass",
+        "required_components": "n/a"
+      },
+      "answered": true,
+      "refusal": false,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "terms",
+          "status": "fail",
+          "detail": "none of: Broadcasting Services Amendment (Healthy Kids Advertising) Bill 2023, Interactive Gambling Amendment (Ban on Gambling Advertisements) Bill 2023",
+          "why": "at least one bill introduced that day is named"
+        },
+        {
+          "part": null,
+          "type": "constraint",
+          "status": "pass",
+          "detail": "period in answer or explicit coverage limit",
+          "why": null
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 0,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 1,
+        "unresolved": [],
+        "cited_sources": 1,
+        "figure_sentences": 0,
+        "figure_sentences_cited": 0
+      },
+      "coherence": {
+        "pass": true,
+        "reasons": [],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "count_records",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 2
+      },
+      "gold": null,
+      "evidence_complete": true,
+      "flags": []
+    }
+  },
+  "DT-BDAY-016": {
+    "question": "What legislation was introduced into the Senate on 15 March 2016?",
+    "before": "One bill was introduced in the Senate on 15 March 2016: Fair Work Amendment (Protecting Australian Workers) Bill 2016.",
+    "payload": {
+      "answered": true,
+      "answer": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages recorded 22 February 2016: introduced; 22 February 2016: second reading; 24 February 2016: second reading; 24 February 2016: committee; 29 February 2016: other; 2 March 2016: introduced; 15 March 2016: second reading; 16 March 2016: second reading; 17 March 2016: second reading; 17 March 2016: committee; 18 March 2016: committee; 18 March 2016: third reading; 21 March 2016: royal assent.",
+      "answer_decision": "answer",
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2016-03-15",
+          "until": "2016-03-15",
+          "label": "Records from 2016-03-15 to 2016-03-15."
+        },
+        "dated": true,
+        "chamber": "senate",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-13/t/body/0": [
+          [
+            0,
+            473
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-13",
+          "slug": "",
+          "title": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages: 22 February 2016: introduced (House of Representatives); 22 February 2016: second reading (House of Representatives); 24 February 2016: second reading (House of Representatives); 24 February 2016: committee (House of Representatives); 24 February 2016: third reading (House of Representatives); 29 February 2016: other (Senate); 2 March 2016: introduced (Senate); 2 March 2016: second reading (Senate); 15 March 2016: second reading (Senate); 16 March 2016: second reading (Senate); 17 March 2016: second reading (Senate); 17 March 2016: committee (Senate); 18 March 2016: committee (Senate); 18 March 2016: third reading (Senate); 18 March 2016: other (House of Representatives); 18 March 2016: passed; 21 March 2016: royal assent.",
+          "href": "https://opax.com.au/bill/au-federal-r5626",
+          "url": "https://opax.com.au/bill/au-federal-r5626",
+          "snippet": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages: 22 February 2016: introduced (House of Representatives); 22 February 2016: second reading (House of Representatives); 24 February 2016: second reading (House of Representatives); 24 February 2016: committee (House of Representatives); 24 February 2016: third reading (House of Representatives); 29 February 2016: other (Senate); 2 March 2016: introduced (Senate); 2 March 2016: second reading (Senate); 15 March 2016: second reading (Senate); 16 March 2016: second reading (Senate); 17 March 2016: second reading (Senate); 17 March 2016: committee (Senate); 18 March 2016: committee (Senate); 18 March 2016: third reading (Senate); 18 March 2016: other (House of Representatives); 18 March 2016: passed; 21 March 2016: royal assent.",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "22",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "22",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "24",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "24",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "24",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "29",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "2",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "2",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "15",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "16",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "17",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "17",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            },
+            {
+              "entity": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages",
+              "metric": "count",
+              "value": "21",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2016"
+              },
+              "evidenceId": "fact-13/t/body/0"
+            }
+          ]
+        }
+      ],
+      "coherence": {
+        "stripped_ratio": 0,
+        "fallback": true
+      },
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 1,
+            "label": "Counting bills",
+            "arg": "2016-03-15",
+            "state": "done",
+            "tool": "count_records",
+            "round": 1,
+            "ms": 8,
+            "results": 1
+          },
+          {
+            "id": 2,
+            "label": "Finding records",
+            "arg": "bill introduced Senate 15 March 2016",
+            "state": "done",
+            "tool": "find_records",
+            "round": 1,
+            "ms": 64,
+            "results": 3
+          },
+          {
+            "id": 3,
+            "label": "Checking the answer",
+            "state": "failed",
+            "tool": "answer",
+            "round": 2,
+            "ms": 8
+          },
+          {
+            "id": 4,
+            "label": "Checking the answer",
+            "state": "failed",
+            "tool": "answer",
+            "round": 3,
+            "ms": 0
+          }
+        ],
+        "ms": 4070
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 3,
+        "reserved_cost_usd": 0.05429837200000001,
+        "trail": [
+          {
+            "id": 1,
+            "tool": "count_records",
+            "round": 1,
+            "label": "Counting bills",
+            "arg": "2016-03-15",
+            "results": 1,
+            "ms": 8,
+            "ok": true
+          },
+          {
+            "id": 2,
+            "tool": "find_records",
+            "round": 1,
+            "label": "Finding records",
+            "arg": "bill introduced Senate 15 March 2016",
+            "results": 3,
+            "ms": 64,
+            "ok": true
+          },
+          {
+            "id": 3,
+            "tool": "answer",
+            "round": 2,
+            "label": "Checking the answer",
+            "ms": 8,
+            "ok": false
+          },
+          {
+            "id": 4,
+            "tool": "answer",
+            "round": 3,
+            "label": "Checking the answer",
+            "ms": 0,
+            "ok": false
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16420,
+            "output": 169,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15782,
+            "ms": 765,
+            "cost_usd": 0.000387168
+          },
+          {
+            "round": 2,
+            "input": 20755,
+            "output": 192,
+            "cached_input": 16384,
+            "cached": 16384,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 19408,
+            "ms": 871,
+            "cost_usd": 0.001640004
+          },
+          {
+            "round": 3,
+            "input": 21103,
+            "output": 122,
+            "cached_input": 20864,
+            "cached": 20864,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 19784,
+            "ms": 745,
+            "cost_usd": 0.000343284
+          },
+          {
+            "round": 4,
+            "input": 3554,
+            "output": 132,
+            "cached_input": 0,
+            "input_reserve": 5763,
+            "ms": 1065,
+            "cost_usd": 0.0012246,
+            "provider": "Together"
+          },
+          {
+            "round": 4,
+            "input": 2078,
+            "output": 46,
+            "cached_input": 0,
+            "input_reserve": 5763,
+            "ms": 523,
+            "cost_usd": 0.0006786,
+            "provider": "Together"
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          16384,
+          20864,
+          0,
+          0
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "mode": "facts",
+          "salvaged": "grounding"
+        },
+        "sources": [
+          {
+            "title": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages: 22 February 2016: introduced (House of Representatives); 22 February 2016: second reading (House of Representatives); 24 February 2016: second reading (House of Representatives); 24 February 2016: committee (House of Representatives); 24 February 2016: third reading (House of Representatives); 29 February 2016: other (Senate); 2 March 2016: introduced (Senate); 2 March 2016: second reading (Senate); 15 March 2016: second reading (Senate); 16 March 2016: second reading (Senate); 17 March 2016: second reading (Senate); 17 March 2016: committee (Senate); 18 March 2016: committee (Senate); 18 March 2016: third reading (Senate); 18 March 2016: other (House of Representatives); 18 March 2016: passed; 21 March 2016: royal assent.",
+            "url": "https://opax.com.au/bill/au-federal-r5626",
+            "kind": "record"
+          }
+        ],
+        "pre_writer_sources": [
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "On 28 November 2016, the Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016 was first introduced in the Senate.",
+            "href": "https://opax.com.au/bill/au-federal-s1050",
+            "url": "https://opax.com.au/bill/au-federal-s1050",
+            "snippet": "On 28 November 2016, the Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016 was first introduced in the Senate.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "On 22 February 2016, the Commonwealth Electoral Amendment Bill 2016 was first introduced in the House of Representatives.",
+            "href": "https://opax.com.au/bill/au-federal-r5626",
+            "url": "https://opax.com.au/bill/au-federal-r5626",
+            "snippet": "On 22 February 2016, the Commonwealth Electoral Amendment Bill 2016 was first introduced in the House of Representatives.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "On 10 October 2016, the Foreign Acquisitions and Takeovers Amendment (Strategic Assets) Bill 2016 was first introduced in the House of Representatives.",
+            "href": "https://opax.com.au/bill/au-federal-r5710",
+            "url": "https://opax.com.au/bill/au-federal-r5710",
+            "snippet": "On 10 October 2016, the Foreign Acquisitions and Takeovers Amendment (Strategic Assets) Bill 2016 was first introduced in the House of Representatives.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-6",
+            "slug": "",
+            "title": "Don Farrell (ALP) is the recorded sponsor of the Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016.",
+            "href": "https://opax.com.au/bill/au-federal-s1050",
+            "url": "https://opax.com.au/bill/au-federal-s1050",
+            "snippet": "Don Farrell (ALP) is the recorded sponsor of the Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-7",
+            "slug": "",
+            "title": "The Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016 has recorded status lapsed as at 1 July 2019.",
+            "href": "https://opax.com.au/bill/au-federal-s1050",
+            "url": "https://opax.com.au/bill/au-federal-s1050",
+            "snippet": "The Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016 has recorded status lapsed as at 1 July 2019.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-8",
+            "slug": "",
+            "title": "The Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016 has these recorded lifecycle stages: 28 November 2016: introduced (Senate); 28 November 2016: second reading (Senate); 1 July 2019: other (Senate).",
+            "href": "https://opax.com.au/bill/au-federal-s1050",
+            "url": "https://opax.com.au/bill/au-federal-s1050",
+            "snippet": "The Commonwealth Electoral Amendment (Donation Reform and Transparency) Bill 2016 has these recorded lifecycle stages: 28 November 2016: introduced (Senate); 28 November 2016: second reading (Senate); 1 July 2019: other (Senate).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-9",
+            "slug": "",
+            "title": "On 21 March 2016, the Commonwealth Electoral Amendment Bill 2016 received royal assent.",
+            "href": "https://opax.com.au/bill/au-federal-r5626",
+            "url": "https://opax.com.au/bill/au-federal-r5626",
+            "snippet": "On 21 March 2016, the Commonwealth Electoral Amendment Bill 2016 received royal assent.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-10",
+            "slug": "",
+            "title": "On 18 March 2016, the Commonwealth Electoral Amendment Bill 2016 passed both houses.",
+            "href": "https://opax.com.au/bill/au-federal-r5626",
+            "url": "https://opax.com.au/bill/au-federal-r5626",
+            "snippet": "On 18 March 2016, the Commonwealth Electoral Amendment Bill 2016 passed both houses.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-11",
+            "slug": "",
+            "title": "The Commonwealth Electoral Amendment Bill 2016 has recorded status passed as at 21 March 2016.",
+            "href": "https://opax.com.au/bill/au-federal-r5626",
+            "url": "https://opax.com.au/bill/au-federal-r5626",
+            "snippet": "The Commonwealth Electoral Amendment Bill 2016 has recorded status passed as at 21 March 2016.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-12",
+            "slug": "",
+            "title": "The Commonwealth Electoral Amendment Bill 2016 is recorded under the Finance portfolio.",
+            "href": "https://opax.com.au/bill/au-federal-r5626",
+            "url": "https://opax.com.au/bill/au-federal-r5626",
+            "snippet": "The Commonwealth Electoral Amendment Bill 2016 is recorded under the Finance portfolio.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-13",
+            "slug": "",
+            "title": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages: 22 February 2016: introduced (House of Representatives); 22 February 2016: second reading (House of Representatives); 24 February 2016: second reading (House of Representatives); 24 February 2016: committee (House of Representatives); 24 February 2016: third reading (House of Representatives); 29 February 2016: other (Senate); 2 March 2016: introduced (Senate); 2 March 2016: second reading (Senate); 15 March 2016: second reading (Senate); 16 March 2016: second reading (Senate); 17 March 2016: second reading (Senate); 17 March 2016: committee (Senate); 18 March 2016: committee (Senate); 18 March 2016: third reading (Senate); 18 March 2016: other (House of Representatives); 18 March 2016: passed; 21 March 2016: royal assent.",
+            "href": "https://opax.com.au/bill/au-federal-r5626",
+            "url": "https://opax.com.au/bill/au-federal-r5626",
+            "snippet": "The Commonwealth Electoral Amendment Bill 2016 has these recorded lifecycle stages: 22 February 2016: introduced (House of Representatives); 22 February 2016: second reading (House of Representatives); 24 February 2016: second reading (House of Representatives); 24 February 2016: committee (House of Representatives); 24 February 2016: third reading (House of Representatives); 29 February 2016: other (Senate); 2 March 2016: introduced (Senate); 2 March 2016: second reading (Senate); 15 March 2016: second reading (Senate); 16 March 2016: second reading (Senate); 17 March 2016: second reading (Senate); 17 March 2016: committee (Senate); 18 March 2016: committee (Senate); 18 March 2016: third reading (Senate); 18 March 2016: other (House of Representatives); 18 March 2016: passed; 21 March 2016: royal assent.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-14",
+            "slug": "",
+            "title": "The Commonwealth Electoral Amendment Bill 2016 is linked to Commonwealth Electoral Amendment Act 2016, with royal assent on 21 March 2016.",
+            "href": "https://www.legislation.gov.au/C2016A00025",
+            "url": "https://www.legislation.gov.au/C2016A00025",
+            "snippet": "The Commonwealth Electoral Amendment Bill 2016 is linked to Commonwealth Electoral Amendment Act 2016, with royal assent on 21 March 2016.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-15",
+            "slug": "",
+            "title": "Bob Katter Jnr (&#34;Independent Members&#34;) is the recorded sponsor of the Foreign Acquisitions and Takeovers Amendment (Strategic Assets) Bill 2016.",
+            "href": "https://opax.com.au/bill/au-federal-r5710",
+            "url": "https://opax.com.au/bill/au-federal-r5710",
+            "snippet": "Bob Katter Jnr (\"Independent Members\") is the recorded sponsor of the Foreign Acquisitions and Takeovers Amendment (Strategic Assets) Bill 2016.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/bill/au-federal-s1050",
+            "url": "https://opax.com.au/bill/au-federal-s1050",
+            "snippet": "OPAX could not confirm that these records fall in the requested period, so check their dates. Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Bill lifecycle dates and sponsors come from the published bill records. Null fields are not recorded or unavailable; status_as_of is not an introduction, passage or assent date.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "ms": 4111,
+        "tokens": {
+          "input": 63910,
+          "output": 661
+        },
+        "cost_usd": 0.004273656,
+        "coherence": {
+          "writer_passes": 2,
+          "second_passes": 1
+        },
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      }
+    },
+    "grade": {
+      "overall": "partial",
+      "axes": {
+        "coherence": "pass",
+        "usefulness": "pass",
+        "citations": "pass",
+        "correctness": "partial",
+        "constraints": "pass",
+        "decline": "pass",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "pass",
+        "required_components": "n/a"
+      },
+      "answered": true,
+      "refusal": false,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "terms",
+          "status": "fail",
+          "detail": "none of: Fair Work Amendment (Protecting Australian Workers) Bill 2016",
+          "why": "at least one bill introduced that day is named"
+        },
+        {
+          "part": null,
+          "type": "constraint",
+          "status": "pass",
+          "detail": "period in answer or explicit coverage limit",
+          "why": null
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 0,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 1,
+        "unresolved": [],
+        "cited_sources": 1,
+        "figure_sentences": 0,
+        "figure_sentences_cited": 0
+      },
+      "coherence": {
+        "pass": true,
+        "reasons": [],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "count_records",
+          "find_records",
+          "answer",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 3
+      },
+      "gold": null,
+      "evidence_complete": true,
+      "flags": []
+    }
+  },
+  "DV-BCNT-008": {
+    "question": "Nature Positive (Environment Information Australia) Bill 2024 divisions?",
+    "before": "There were 3 recorded divisions linked to Nature Positive (Environment Information Australia) Bill 2024 in federal parliament in the published snapshot.\n\nNature Positive (Environment Information Australia) Bill 2024 recorded 3 matching recorded divisions.\n\nThere were 0 recorded divisions linked to Environment Information Australia Bill 2025 in federal parliament in the published snapshot.",
+    "payload": {
+      "answered": true,
+      "answer": "The Nature Positive (Environment Information Australia) Bill 2024 has these recorded lifecycle stages recorded 29 May 2024: introduced; 29 May 2024: second reading; 6 June 2024: second reading; 26 June 2024: second reading; 27 June 2024: second reading; 2 July 2024: second reading; 3 July 2024: second reading; 4 July 2024: second reading; 4 July 2024: committee; 12 August 2024: introduced; 5 February 2025: other.",
+      "answer_decision": "answer",
+      "coverage": {
+        "note": "3 matching recorded divisions were counted for the Nature Positive (Environment Information Australia) Bill 2024 in the whole record. This division count comes from a title search, so it may miss divisions whose titles differ slightly."
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [],
+        "stateGovernment": false,
+        "recordKind": "division",
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-16/t/body/0": [
+          [
+            0,
+            416
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-16",
+          "slug": "",
+          "title": "The Nature Positive (Environment Information Australia) Bill 2024 has these recorded lifecycle stages: 29 May 2024: introduced (House of Representatives); 29 May 2024: second reading (House of Representatives); 6 June 2024: second reading (House of Representatives); 26 June 2024: second reading (House of Representatives); 27 June 2024: second reading (House of Representatives); 2 July 2024: second reading (House of Representatives); 3 July 2024: second reading (House of Representatives); 4 July 2024: second reading (House of Representatives); 4 July 2024: committee (House of Representatives); 4 July 2024: third reading (House of Representatives); 12 August 2024: introduced (Senate); 12 August 2024: second reading (Senate); 5 February 2025: other (Senate).",
+          "href": "https://opax.com.au/bill/au-federal-r7193",
+          "url": "https://opax.com.au/bill/au-federal-r7193",
+          "snippet": "The Nature Positive (Environment Information Australia) Bill 2024 has these recorded lifecycle stages: 29 May 2024: introduced (House of Representatives); 29 May 2024: second reading (House of Representatives); 6 June 2024: second reading (House of Representatives); 26 June 2024: second reading (House of Representatives); 27 June 2024: second reading (House of Representatives); 2 July 2024: second reading (House of Representatives); 3 July 2024: second reading (House of Representatives); 4 July 2024: second reading (House of Representatives); 4 July 2024: committee (House of Representatives); 4 July 2024: third reading (House of Representatives); 12 August 2024: introduced (Senate); 12 August 2024: second reading (Senate); 5 February 2025: other (Senate).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "29",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "29",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "6",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "26",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "27",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "2",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "3",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "4",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "4",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "4",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "12",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "12",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            },
+            {
+              "entity": "The Nature Positive",
+              "metric": "count",
+              "value": "5",
+              "unit": "count",
+              "chamber": "senate",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-16/t/body/0"
+            }
+          ]
+        }
+      ],
+      "coherence": {
+        "stripped_ratio": 0,
+        "fallback": true
+      },
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 1,
+            "label": "Counting divisions",
+            "arg": "",
+            "state": "done",
+            "tool": "count_records",
+            "round": 1,
+            "ms": 118,
+            "results": 1
+          },
+          {
+            "id": 2,
+            "label": "Counting divisions",
+            "arg": "",
+            "state": "done",
+            "tool": "count_records",
+            "round": 1,
+            "ms": 124,
+            "results": 1
+          },
+          {
+            "id": 3,
+            "label": "Checking a recorded division",
+            "arg": "au-federal-r7193",
+            "state": "done",
+            "tool": "division",
+            "round": 2,
+            "ms": 60,
+            "results": 2
+          },
+          {
+            "id": 4,
+            "label": "Checking a recorded division",
+            "arg": "Third Reading",
+            "state": "done",
+            "tool": "division",
+            "round": 3,
+            "ms": 58,
+            "results": 0
+          },
+          {
+            "id": 5,
+            "label": "Counting divisions",
+            "arg": "2024-01-01",
+            "state": "done",
+            "tool": "count_records",
+            "round": 4,
+            "ms": 112,
+            "results": 1
+          },
+          {
+            "id": 6,
+            "label": "Checking a recorded division",
+            "arg": "main idea",
+            "state": "done",
+            "tool": "division",
+            "round": 4,
+            "ms": 114,
+            "results": 1
+          },
+          {
+            "id": 7,
+            "label": "Checking a recorded division",
+            "arg": "Consideration in Detail",
+            "state": "done",
+            "tool": "division",
+            "round": 5,
+            "ms": 54,
+            "results": 1
+          },
+          {
+            "id": 8,
+            "label": "Finding records",
+            "arg": "Nature Positive Environment Information\u2026",
+            "state": "done",
+            "tool": "find_records",
+            "round": 6,
+            "ms": 13,
+            "results": 1
+          },
+          {
+            "id": 9,
+            "label": "Checking the answer",
+            "state": "done",
+            "tool": "answer",
+            "round": 7,
+            "ms": 3,
+            "results": 8
+          }
+        ],
+        "ms": 8408
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 7,
+        "reserved_cost_usd": 0.006686543999999996,
+        "trail": [
+          {
+            "id": 1,
+            "tool": "count_records",
+            "round": 1,
+            "label": "Counting divisions",
+            "results": 1,
+            "ms": 118,
+            "ok": true
+          },
+          {
+            "id": 2,
+            "tool": "count_records",
+            "round": 1,
+            "label": "Counting divisions",
+            "results": 1,
+            "ms": 124,
+            "ok": true
+          },
+          {
+            "id": 3,
+            "tool": "division",
+            "round": 2,
+            "label": "Checking a recorded division",
+            "arg": "au-federal-r7193",
+            "results": 2,
+            "ms": 60,
+            "ok": true
+          },
+          {
+            "id": 4,
+            "tool": "division",
+            "round": 3,
+            "label": "Checking a recorded division",
+            "arg": "Third Reading",
+            "results": 0,
+            "ms": 58,
+            "ok": true
+          },
+          {
+            "id": 5,
+            "tool": "count_records",
+            "round": 4,
+            "label": "Counting divisions",
+            "arg": "2024-01-01",
+            "results": 1,
+            "ms": 112,
+            "ok": true
+          },
+          {
+            "id": 6,
+            "tool": "division",
+            "round": 4,
+            "label": "Checking a recorded division",
+            "arg": "main idea",
+            "results": 1,
+            "ms": 114,
+            "ok": true
+          },
+          {
+            "id": 7,
+            "tool": "division",
+            "round": 5,
+            "label": "Checking a recorded division",
+            "arg": "Consideration in Detail",
+            "results": 1,
+            "ms": 54,
+            "ok": true
+          },
+          {
+            "id": 8,
+            "tool": "find_records",
+            "round": 6,
+            "label": "Finding records",
+            "arg": "Nature Positive Environment Information\u2026",
+            "results": 1,
+            "ms": 13,
+            "ok": true
+          },
+          {
+            "id": 9,
+            "tool": "answer",
+            "round": 7,
+            "label": "Checking the answer",
+            "results": 8,
+            "ms": 3,
+            "ok": true
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16373,
+            "output": 112,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15771,
+            "ms": 1072,
+            "cost_usd": 0.000304668
+          },
+          {
+            "round": 2,
+            "input": 17906,
+            "output": 58,
+            "cached_input": 16384,
+            "cached": 16384,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 17322,
+            "ms": 662,
+            "cost_usd": 0.000624504
+          },
+          {
+            "round": 3,
+            "input": 20774,
+            "output": 75,
+            "cached_input": 17920,
+            "cached": 17920,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 19889,
+            "ms": 951,
+            "cost_usd": 0.00105372
+          },
+          {
+            "round": 4,
+            "input": 21130,
+            "output": 183,
+            "cached_input": 20736,
+            "cached": 20736,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 20297,
+            "ms": 928,
+            "cost_usd": 0.000462216
+          },
+          {
+            "round": 5,
+            "input": 24124,
+            "output": 77,
+            "cached_input": 21120,
+            "cached": 21120,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 23036,
+            "ms": 639,
+            "cost_usd": 0.00112032
+          },
+          {
+            "round": 6,
+            "input": 25242,
+            "output": 130,
+            "cached_input": 24192,
+            "cached": 24192,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 24083,
+            "ms": 772,
+            "cost_usd": 0.000616152
+          },
+          {
+            "round": 7,
+            "input": 26947,
+            "output": 57,
+            "cached_input": 25344,
+            "cached": 25344,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 25597,
+            "ms": 725,
+            "cost_usd": 0.000701364
+          },
+          {
+            "round": 8,
+            "input": 2657,
+            "output": 237,
+            "cached_input": 0,
+            "input_reserve": 4632,
+            "ms": 1323,
+            "cost_usd": 0.0010815,
+            "provider": "Together"
+          },
+          {
+            "round": 8,
+            "input": 1747,
+            "output": 165,
+            "cached_input": 0,
+            "input_reserve": 4632,
+            "ms": 896,
+            "cost_usd": 0.0007221,
+            "provider": "Together"
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          16384,
+          17920,
+          20736,
+          21120,
+          24192,
+          25344,
+          0,
+          0
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "mode": "facts"
+        },
+        "sources": [
+          {
+            "title": "The Nature Positive (Environment Information Australia) Bill 2024 has these recorded lifecycle stages: 29 May 2024: introduced (House of Representatives); 29 May 2024: second reading (House of Representatives); 6 June 2024: second reading (House of Representatives); 26 June 2024: second reading (House of Representatives); 27 June 2024: second reading (House of Representatives); 2 July 2024: second reading (House of Representatives); 3 July 2024: second reading (House of Representatives); 4 July 2024: second reading (House of Representatives); 4 July 2024: committee (House of Representatives); 4 July 2024: third reading (House of Representatives); 12 August 2024: introduced (Senate); 12 August 2024: second reading (Senate); 5 February 2025: other (Senate).",
+            "url": "https://opax.com.au/bill/au-federal-r7193",
+            "kind": "record"
+          }
+        ],
+        "pre_writer_sources": [
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "Nature Positive (Environment Information Australia) Bill 2024: 3 matching recorded divisions.",
+            "href": "https://opax.com.au/bill/au-federal-r7193",
+            "url": "https://opax.com.au/bill/au-federal-r7193",
+            "snippet": "Nature Positive (Environment Information Australia) Bill 2024: 3 matching recorded divisions.",
+            "cited": true,
+            "kind": "count"
+          },
+          {
+            "resource": "fact-13",
+            "slug": "",
+            "title": "On 29 May 2024, the Nature Positive (Environment Information Australia) Bill 2024 was first introduced in the House of Representatives.",
+            "href": "https://opax.com.au/bill/au-federal-r7193",
+            "url": "https://opax.com.au/bill/au-federal-r7193",
+            "snippet": "On 29 May 2024, the Nature Positive (Environment Information Australia) Bill 2024 was first introduced in the House of Representatives.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-16",
+            "slug": "",
+            "title": "The Nature Positive (Environment Information Australia) Bill 2024 has these recorded lifecycle stages: 29 May 2024: introduced (House of Representatives); 29 May 2024: second reading (House of Representatives); 6 June 2024: second reading (House of Representatives); 26 June 2024: second reading (House of Representatives); 27 June 2024: second reading (House of Representatives); 2 July 2024: second reading (House of Representatives); 3 July 2024: second reading (House of Representatives); 4 July 2024: second reading (House of Representatives); 4 July 2024: committee (House of Representatives); 4 July 2024: third reading (House of Representatives); 12 August 2024: introduced (Senate); 12 August 2024: second reading (Senate); 5 February 2025: other (Senate).",
+            "href": "https://opax.com.au/bill/au-federal-r7193",
+            "url": "https://opax.com.au/bill/au-federal-r7193",
+            "snippet": "The Nature Positive (Environment Information Australia) Bill 2024 has these recorded lifecycle stages: 29 May 2024: introduced (House of Representatives); 29 May 2024: second reading (House of Representatives); 6 June 2024: second reading (House of Representatives); 26 June 2024: second reading (House of Representatives); 27 June 2024: second reading (House of Representatives); 2 July 2024: second reading (House of Representatives); 3 July 2024: second reading (House of Representatives); 4 July 2024: second reading (House of Representatives); 4 July 2024: committee (House of Representatives); 4 July 2024: third reading (House of Representatives); 12 August 2024: introduced (Senate); 12 August 2024: second reading (Senate); 5 February 2025: other (Senate).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-14",
+            "slug": "",
+            "title": "The Nature Positive (Environment Information Australia) Bill 2024 has recorded status lapsed as at 5 February 2025.",
+            "href": "https://opax.com.au/bill/au-federal-r7193",
+            "url": "https://opax.com.au/bill/au-federal-r7193",
+            "snippet": "The Nature Positive (Environment Information Australia) Bill 2024 has recorded status lapsed as at 5 February 2025.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "Division passed, 84 ayes to 54 noes: Nature Positive (Environment Information Australia) Bill 2024 - Second Reading - Agree with the bill's main idea (House of Representatives, 2024-07-04). No votes against an eligible party majority were identified among the available party-labelled votes. The member list is partial or unavailable.",
+            "href": "https://opax.com.au/doc/division-federal-representatives-9466",
+            "url": "https://opax.com.au/doc/division-federal-representatives-9466",
+            "snippet": "Division passed, 84 ayes to 54 noes: Nature Positive (Environment Information Australia) Bill 2024 - Second Reading - Agree with the bill's main idea (House of Representatives, 2024-07-04). No votes against an eligible party majority were identified among the available party-labelled votes. The member list is partial or unavailable.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "Division defeated, 12 ayes to 34 noes: Nature Positive (Environment Information Australia) Bill 2024 - Consideration in Detail - Definition of \"nature positive\" (House of Representatives, 2024-07-04). No votes against an eligible party majority were recorded.",
+            "href": "https://opax.com.au/doc/division-federal-representatives-9467",
+            "url": "https://opax.com.au/doc/division-federal-representatives-9467",
+            "snippet": "Division defeated, 12 ayes to 34 noes: Nature Positive (Environment Information Australia) Bill 2024 - Consideration in Detail - Definition of \"nature positive\" (House of Representatives, 2024-07-04). No votes against an eligible party majority were recorded.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-7",
+            "slug": "",
+            "title": "OPAX has no recorded division matching Third Reading.",
+            "href": "https://opax.com.au/divisions/index.json",
+            "url": "https://opax.com.au/divisions/index.json",
+            "snippet": "OPAX has no recorded division matching Third Reading.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/doc/division-federal-representatives-9466",
+            "url": "https://opax.com.au/doc/division-federal-representatives-9466",
+            "snippet": "Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded. Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing. Showing 2 of 3 matching divisions. Specify a division_id to select one unambiguously; do not present this row window as every vote.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "ms": 8439,
+        "tokens": {
+          "input": 156900,
+          "output": 1094
+        },
+        "cost_usd": 0.006686544,
+        "coherence": {
+          "writer_passes": 2,
+          "second_passes": 1,
+          "fallback": true
+        },
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      }
+    },
+    "grade": {
+      "overall": "partial",
+      "axes": {
+        "coherence": "pass",
+        "usefulness": "pass",
+        "citations": "pass",
+        "correctness": "partial",
+        "constraints": "n/a",
+        "decline": "pass",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "pass",
+        "required_components": "n/a"
+      },
+      "answered": true,
+      "refusal": false,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "number",
+          "status": "fail",
+          "detail": "missing numbers: 3",
+          "why": "divisions linked to the bill record"
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 0,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [
+          "Margaret May"
+        ],
+        "bound": [
+          "Margaret May"
+        ],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 1,
+        "unresolved": [],
+        "cited_sources": 1,
+        "figure_sentences": 0,
+        "figure_sentences_cited": 0
+      },
+      "coherence": {
+        "pass": true,
+        "reasons": [],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "count_records",
+          "count_records",
+          "division",
+          "division",
+          "count_records",
+          "division",
+          "division",
+          "find_records",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 7
+      },
+      "gold": null,
+      "evidence_complete": true,
+      "flags": []
+    }
+  },
+  "DT-SDAY-016": {
+    "question": "How many divisoons were held in the House of Representatives on 8 September 2015?",
+    "before": "5 divisions were held in the House of Representatives on 8 September 2015.",
+    "payload": {
+      "answer": "The returned records do not establish the requested answer for 2015-09-08 to 2015-09-08. The returned evidence has no verified date coverage for that period. I have not substituted current figures. Please narrow the question or check the records linked here.",
+      "answer_status": "coverage_only",
+      "citations": {
+        "period-coverage/t/body/0": [
+          [
+            0,
+            258
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "period-coverage",
+          "slug": "",
+          "title": "Coverage of the returned records",
+          "href": "/doc/division-federal-representatives-3906",
+          "url": "/doc/division-federal-representatives-3906",
+          "kind": "record",
+          "snippet": "The returned records do not establish the requested answer for 2015-09-08 to 2015-09-08. The returned evidence has no verified date coverage for that period. I have not substituted current figures. Please narrow the question or check the records linked here.",
+          "cited": true
+        }
+      ],
+      "coverage": {
+        "requested_since": "2015-09-08",
+        "requested_until": "2015-09-08",
+        "as_of": null,
+        "matched": false
+      },
+      "research": {
+        "mode": "planner",
+        "rounds": 4,
+        "trail": [
+          {
+            "id": 1,
+            "tool": "count_records",
+            "round": 1,
+            "label": "Counting divisions",
+            "arg": "2015-09-08",
+            "results": 1,
+            "ms": 50,
+            "ok": true
+          },
+          {
+            "id": 2,
+            "tool": "answer",
+            "round": 2,
+            "label": "Checking the answer",
+            "ms": 3,
+            "ok": false
+          },
+          {
+            "id": 3,
+            "tool": "finish",
+            "round": 3,
+            "label": "Selecting record facts",
+            "ms": 0,
+            "ok": false
+          },
+          {
+            "id": 4,
+            "tool": "answer",
+            "round": 4,
+            "label": "Checking the answer",
+            "ms": 1,
+            "ok": false
+          }
+        ],
+        "sources": [
+          {
+            "title": "Coverage of the returned records",
+            "url": "/doc/division-federal-representatives-3906",
+            "kind": "record"
+          }
+        ],
+        "failure": "grounding",
+        "ms": 19567,
+        "tokens": {
+          "input": 81179,
+          "output": 441
+        },
+        "cost_usd": 0.013931668000000001,
+        "turns": [
+          {
+            "round": 1,
+            "input": 16424,
+            "output": 79,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15788,
+            "ms": 629,
+            "cost_usd": 0.000280368
+          },
+          {
+            "round": 2,
+            "input": 17331,
+            "output": 39,
+            "cached_input": 16384,
+            "cached": 16384,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16623,
+            "ms": 539,
+            "cost_usd": 0.000429204
+          },
+          {
+            "round": 3,
+            "input": 17502,
+            "output": 40,
+            "cached_input": 17280,
+            "cached": 17280,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16843,
+            "ms": 486,
+            "cost_usd": 0.00021828
+          },
+          {
+            "round": 4,
+            "input": 17654,
+            "output": 141,
+            "cached_input": 17536,
+            "cached": 17536,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 17036,
+            "ms": 784,
+            "cost_usd": 0.000309816
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          16384,
+          17280,
+          17536
+        ],
+        "rejections": [
+          "fact 1: count does not answer what was debated; use source passages",
+          "fact 1: count does not answer what was debated; use source passages",
+          "citation_shape",
+          "point 1: unknown_passage"
+        ],
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      },
+      "answer_decision": "limitation"
+    },
+    "grade": {
+      "overall": "fail",
+      "axes": {
+        "coherence": "pass",
+        "usefulness": "fail",
+        "citations": "n/a",
+        "correctness": "fail",
+        "constraints": "pass",
+        "decline": "fail",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "pass",
+        "required_components": "n/a"
+      },
+      "answered": true,
+      "refusal": true,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "number",
+          "status": "fail",
+          "detail": "missing numbers: 5",
+          "why": "divisions recorded that day in that chamber"
+        },
+        {
+          "part": null,
+          "type": "constraint",
+          "status": "pass",
+          "detail": "period in answer or explicit coverage limit",
+          "why": null
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 0,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 1,
+        "unresolved": [],
+        "cited_sources": 1,
+        "figure_sentences": 0,
+        "figure_sentences_cited": 0
+      },
+      "coherence": {
+        "pass": true,
+        "reasons": [],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "count_records",
+          "answer",
+          "finish",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "planner",
+        "rounds": 4
+      },
+      "gold": null,
+      "evidence_complete": false,
+      "flags": [
+        "refused or declined"
+      ]
+    }
+  },
+  "MN-STAT-006": {
+    "question": "what did the \"2018 recruitment\" ad campsign cost in 2017-18",
+    "before": "The other published cost categories were all $0 for the same campaign and financial year: creative and campaign development, research and evaluation, print and collateral, and other campaign costs.\n\nThese figures are separate published cost categories, and no combined campaign total is inferred from them.",
+    "payload": {
+      "answered": true,
+      "answer": "2018 recruitment for Federation Training recorded $122,722 for media advertising buy in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).\n\n- 2018 recruitment for Federation Training recorded $0 for creative and campaign development in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).\n\n- 2018 recruitment for Federation Training recorded $0 for research and evaluation in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).\n\n- 2018 recruitment for Federation Training recorded $0 for print and collateral in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).\n\n- 2018 recruitment for Federation Training recorded $0 for other campaign costs in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+      "answer_decision": "answer",
+      "coverage": {
+        "note": "These figures are published as separate cost categories, and no combined campaign total is stated."
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2017-07-01",
+          "until": "2018-12-31",
+          "label": "Records from 2017-07-01 to 2018-12-31."
+        },
+        "dated": true,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            179
+          ]
+        ],
+        "fact-2/t/body/0": [
+          [
+            181,
+            368
+          ]
+        ],
+        "fact-3/t/body/0": [
+          [
+            370,
+            547
+          ]
+        ],
+        "fact-4/t/body/0": [
+          [
+            549,
+            723
+          ]
+        ],
+        "fact-5/t/body/0": [
+          [
+            725,
+            899
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "2018 recruitment for Federation Training recorded $122,722 for media advertising buy in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "snippet": "2018 recruitment for Federation Training recorded $122,722 for media advertising buy in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "",
+              "metric": "receipts",
+              "value": "122722",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "6",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "31",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "2018 recruitment for Federation Training recorded $0 for creative and campaign development in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "snippet": "2018 recruitment for Federation Training recorded $0 for creative and campaign development in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "",
+              "metric": "receipts",
+              "value": "0",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "6",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "31",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-3",
+          "slug": "",
+          "title": "2018 recruitment for Federation Training recorded $0 for research and evaluation in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "snippet": "2018 recruitment for Federation Training recorded $0 for research and evaluation in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "",
+              "metric": "receipts",
+              "value": "0",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "6",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "31",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-4",
+          "slug": "",
+          "title": "2018 recruitment for Federation Training recorded $0 for print and collateral in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "snippet": "2018 recruitment for Federation Training recorded $0 for print and collateral in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "",
+              "metric": "receipts",
+              "value": "0",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-4/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-4/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "6",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-4/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "31",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-4/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-5",
+          "slug": "",
+          "title": "2018 recruitment for Federation Training recorded $0 for other campaign costs in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+          "snippet": "2018 recruitment for Federation Training recorded $0 for other campaign costs in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "",
+              "metric": "receipts",
+              "value": "0",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-5/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-5/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "6",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-5/t/body/0"
+            },
+            {
+              "entity": "",
+              "metric": "count",
+              "value": "31",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-5/t/body/0"
+            }
+          ]
+        }
+      ],
+      "coherence": {
+        "stripped_ratio": 0.8216216216216217,
+        "fallback": true,
+        "method": "facts_rendered",
+        "monetary_citations": {
+          "repaired": 0,
+          "omitted": 5
+        }
+      },
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 1,
+            "label": "Checking campaign spending",
+            "arg": "2018 recruitment",
+            "state": "done",
+            "tool": "campaign_spend",
+            "round": 1,
+            "ms": 12,
+            "results": 5
+          },
+          {
+            "id": 2,
+            "label": "Checking the answer",
+            "state": "done",
+            "tool": "answer",
+            "round": 2,
+            "ms": 7,
+            "results": 6
+          }
+        ],
+        "ms": 3056
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 2,
+        "reserved_cost_usd": 0.0013119480000000003,
+        "trail": [
+          {
+            "id": 1,
+            "tool": "campaign_spend",
+            "round": 1,
+            "label": "Checking campaign spending",
+            "arg": "2018 recruitment",
+            "results": 5,
+            "ms": 12,
+            "ok": true
+          },
+          {
+            "id": 2,
+            "tool": "answer",
+            "round": 2,
+            "label": "Checking the answer",
+            "results": 6,
+            "ms": 7,
+            "ok": true
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16417,
+            "output": 63,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15776,
+            "ms": 781,
+            "cost_usd": 0.000259068
+          },
+          {
+            "round": 2,
+            "input": 17602,
+            "output": 150,
+            "cached_input": 16384,
+            "cached": 16384,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16876,
+            "ms": 1027,
+            "cost_usd": 0.000643704
+          },
+          {
+            "round": 3,
+            "input": 2121,
+            "output": 131,
+            "cached_input": 2048,
+            "input_reserve": 3828,
+            "ms": 551,
+            "cost_usd": 0.000191388,
+            "provider": "Together"
+          },
+          {
+            "round": 3,
+            "input": 2121,
+            "output": 153,
+            "cached_input": 2048,
+            "input_reserve": 3828,
+            "ms": 665,
+            "cost_usd": 0.000217788,
+            "provider": "Together"
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          16384,
+          2048,
+          2048
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "mode": "facts"
+        },
+        "sources": [
+          {
+            "title": "2018 recruitment for Federation Training recorded $122,722 for media advertising buy in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "kind": "record"
+          },
+          {
+            "title": "2018 recruitment for Federation Training recorded $0 for creative and campaign development in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "kind": "record"
+          },
+          {
+            "title": "2018 recruitment for Federation Training recorded $0 for research and evaluation in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "kind": "record"
+          },
+          {
+            "title": "2018 recruitment for Federation Training recorded $0 for print and collateral in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "kind": "record"
+          },
+          {
+            "title": "2018 recruitment for Federation Training recorded $0 for other campaign costs in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "kind": "record"
+          }
+        ],
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "2018 recruitment for Federation Training recorded $122,722 for media advertising buy in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "snippet": "2018 recruitment for Federation Training recorded $122,722 for media advertising buy in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "2018 recruitment for Federation Training recorded $0 for creative and campaign development in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "snippet": "2018 recruitment for Federation Training recorded $0 for creative and campaign development in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "2018 recruitment for Federation Training recorded $0 for research and evaluation in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "snippet": "2018 recruitment for Federation Training recorded $0 for research and evaluation in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "2018 recruitment for Federation Training recorded $0 for print and collateral in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "snippet": "2018 recruitment for Federation Training recorded $0 for print and collateral in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "2018 recruitment for Federation Training recorded $0 for other campaign costs in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "snippet": "2018 recruitment for Federation Training recorded $0 for other campaign costs in financial year 2017-18 ($ (excluding GST); campaign period 6 November - 31 December 2017*).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "url": "https://www.vic.gov.au/victorian-government-advertising-report--2017-18-campaign-activity-summary",
+            "snippet": "Campaign figures are separate published cost categories. No combined campaign total is inferred from category rows.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "ms": 3096,
+        "tokens": {
+          "input": 38261,
+          "output": 497
+        },
+        "cost_usd": 0.001311948,
+        "coherence": {
+          "writer_passes": 2,
+          "second_passes": 1,
+          "fallback": true
+        },
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      }
+    },
+    "grade": {
+      "overall": "fail",
+      "axes": {
+        "coherence": "pass",
+        "usefulness": "pass",
+        "citations": "pass",
+        "correctness": "pass",
+        "constraints": "n/a",
+        "decline": "pass",
+        "no_tool_echo": "pass",
+        "no_duplicates": "fail",
+        "direct_first_sentence": "pass",
+        "required_components": "n/a"
+      },
+      "answered": true,
+      "refusal": false,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "amount",
+          "status": "pass",
+          "detail": "amount 122722 stated",
+          "why": "the published campaign cost"
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "5 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 5,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 5,
+        "unresolved": [],
+        "cited_sources": 5,
+        "figure_sentences": 5,
+        "figure_sentences_cited": 5
+      },
+      "coherence": {
+        "pass": true,
+        "reasons": [],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "campaign_spend",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 2
+      },
+      "gold": null,
+      "evidence_complete": true,
+      "flags": []
+    }
+  },
+  "TT-RCPT-003": {
+    "question": "Compare disclosed donations to Labor and the Liberal Party in 2002-03.",
+    "before": "In the 2002-03 financial year, federal disclosed receipts totalled $28,277,623 for Labor across 2,892 receipts and $25,786,660 for the Liberal Party across 2,692 receipts.\n\nThese are disclosed receipts, not donations, and can include loans and other non-gift amounts, so this is not a donation ranking.",
+    "payload": {
+      "answered": true,
+      "answer": "Liberal recorded $25,786,660 in federal disclosed receipts across 2,692 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+      "answer_decision": "answer",
+      "coverage": {
+        "note": "Party totals cover all cleaned receipts assigned to each party, including internal party transfers, and exclude identified public electoral funding. Disclosed receipts include more than gifts. Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded."
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2002-07-01",
+          "until": "2003-06-30",
+          "label": "Records from 2002-07-01 to 2003-06-30."
+        },
+        "dated": true,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            135
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "Labor: $28,277,623 in federal disclosed receipts across 2,892 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALabor",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALabor",
+          "snippet": "Labor: $28,277,623 in federal disclosed receipts across 2,892 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+          "cited": false,
+          "kind": "export",
+          "entities": [
+            "party:Labor"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "Labor",
+              "metric": "receipts",
+              "value": "28277623",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "since": "2002-07-01",
+                "until": "2003-06-30",
+                "label": "2002-03"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "Labor",
+              "metric": "count",
+              "value": "2892",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2002-07-01",
+                "until": "2003-06-30",
+                "label": "2002-03"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "Labor",
+              "metric": "count",
+              "value": "03",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2002-07-01",
+                "until": "2003-06-30",
+                "label": "2002-03"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Liberal: $25,786,660 in federal disclosed receipts across 2,692 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALiberal",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALiberal",
+          "snippet": "Liberal: $25,786,660 in federal disclosed receipts across 2,692 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+          "cited": true,
+          "kind": "export",
+          "entities": [
+            "party:Liberal"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "Liberal",
+              "metric": "receipts",
+              "value": "25786660",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "since": "2002-07-01",
+                "until": "2003-06-30",
+                "label": "2002-03"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Liberal",
+              "metric": "count",
+              "value": "2692",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2002-07-01",
+                "until": "2003-06-30",
+                "label": "2002-03"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Liberal",
+              "metric": "count",
+              "value": "03",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2002-07-01",
+                "until": "2003-06-30",
+                "label": "2002-03"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/methods",
+          "url": "https://opax.com.au/methods",
+          "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "coherence": {
+        "fallback": true
+      },
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 2,
+            "label": "Adding disclosed receipts",
+            "arg": "Liberal Party",
+            "state": "done",
+            "tool": "money_totals",
+            "round": 1,
+            "ms": 7,
+            "results": 1
+          },
+          {
+            "id": 1,
+            "label": "Adding disclosed receipts",
+            "arg": "Labor",
+            "state": "done",
+            "tool": "money_totals",
+            "round": 1,
+            "ms": 13,
+            "results": 1
+          },
+          {
+            "id": 3,
+            "label": "Checking the answer",
+            "state": "done",
+            "tool": "answer",
+            "round": 2,
+            "ms": 3,
+            "results": 3
+          }
+        ],
+        "ms": 2418
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 2,
+        "reserved_cost_usd": 0.001542720000000001,
+        "trail": [
+          {
+            "id": 2,
+            "tool": "money_totals",
+            "round": 1,
+            "label": "Adding disclosed receipts",
+            "arg": "Liberal Party",
+            "results": 1,
+            "ms": 7,
+            "ok": true
+          },
+          {
+            "id": 1,
+            "tool": "money_totals",
+            "round": 1,
+            "label": "Adding disclosed receipts",
+            "arg": "Labor",
+            "results": 1,
+            "ms": 13,
+            "ok": true
+          },
+          {
+            "id": 3,
+            "tool": "answer",
+            "round": 2,
+            "label": "Checking the answer",
+            "results": 3,
+            "ms": 3,
+            "ok": true
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16419,
+            "output": 111,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15783,
+            "ms": 538,
+            "cost_usd": 0.000317268
+          },
+          {
+            "round": 2,
+            "input": 17373,
+            "output": 42,
+            "cached_input": 16384,
+            "cached": 16384,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16654,
+            "ms": 541,
+            "cost_usd": 0.000445404
+          },
+          {
+            "round": 3,
+            "input": 1505,
+            "output": 147,
+            "cached_input": 1408,
+            "input_reserve": 3146,
+            "ms": 536,
+            "cost_usd": 0.000213948,
+            "provider": "Together"
+          },
+          {
+            "round": 3,
+            "input": 1415,
+            "output": 118,
+            "cached_input": 0,
+            "input_reserve": 3146,
+            "ms": 777,
+            "cost_usd": 0.0005661,
+            "provider": "Together"
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          16384,
+          1408,
+          0
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "mode": "facts"
+        },
+        "sources": [
+          {
+            "title": "Labor: $28,277,623 in federal disclosed receipts across 2,892 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALabor",
+            "kind": "export"
+          },
+          {
+            "title": "Liberal: $25,786,660 in federal disclosed receipts across 2,692 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALiberal",
+            "kind": "export"
+          },
+          {
+            "title": "Coverage of the selected records",
+            "url": "https://opax.com.au/methods",
+            "kind": "record"
+          }
+        ],
+        "pre_writer_sources": [
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Labor: $28,277,623 in federal disclosed receipts across 2,892 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALabor",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALabor",
+            "snippet": "Labor: $28,277,623 in federal disclosed receipts across 2,892 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+            "cited": true,
+            "kind": "export",
+            "entities": [
+              "party:Labor"
+            ]
+          },
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Liberal: $25,786,660 in federal disclosed receipts across 2,692 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALiberal",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALiberal",
+            "snippet": "Liberal: $25,786,660 in federal disclosed receipts across 2,692 receipts in financial years 2002-03 (2002-07-01 to 2003-06-30).",
+            "cited": true,
+            "kind": "export",
+            "entities": [
+              "party:Liberal"
+            ]
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALiberal",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2002&to=2002&party=party%3ALiberal",
+            "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "ms": 2451,
+        "tokens": {
+          "input": 36712,
+          "output": 418
+        },
+        "cost_usd": 0.00154272,
+        "coherence": {
+          "writer_passes": 2,
+          "second_passes": 1,
+          "fallback": true
+        },
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      }
+    },
+    "grade": {
+      "overall": "fail",
+      "axes": {
+        "coherence": "fail",
+        "usefulness": "partial",
+        "citations": "pass",
+        "correctness": "partial",
+        "constraints": "n/a",
+        "decline": "pass",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "fail",
+        "required_components": "fail"
+      },
+      "answered": true,
+      "refusal": false,
+      "parts": {
+        "total": 2,
+        "covered": 1,
+        "names": [
+          "liberal"
+        ]
+      },
+      "checks": [
+        {
+          "part": "labor",
+          "type": "amount",
+          "status": "fail",
+          "detail": "no amount near 28277623",
+          "why": null
+        },
+        {
+          "part": "liberal",
+          "type": "amount",
+          "status": "pass",
+          "detail": "amount 25786660 stated",
+          "why": null
+        },
+        {
+          "part": null,
+          "type": "mentions",
+          "status": "fail",
+          "detail": "missing: Labor",
+          "why": null
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 2,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 1,
+        "unresolved": [],
+        "cited_sources": 1,
+        "figure_sentences": 1,
+        "figure_sentences_cited": 1
+      },
+      "coherence": {
+        "pass": false,
+        "reasons": [
+          "first sentence does not answer"
+        ],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "money_totals",
+          "money_totals",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 2
+      },
+      "gold": null,
+      "evidence_complete": true,
+      "flags": []
+    }
+  },
+  "MN-CONT-018": {
+    "question": "which department gives Centorrino Technologies Pty Ltd the most contracts",
+    "before": "High Speed Rail Authority gives Centorrino Technologies Pty Ltd the most contracts, awarding $4,717,706 across 2 Commonwealth contracts between 2021 and 2026.\n\nThe Department of Agriculture, Fisheries.",
+    "payload": {
+      "answered": true,
+      "answer": "Across the whole record, Centorrino Technologies Pty Ltd has $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies.\n\nThe High Speed Rail Authority gives Centorrino Technologies Pty Ltd the most contracts by value.",
+      "answer_decision": "answer",
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [],
+        "stateGovernment": false,
+        "contractSupplier": "Centorrino Technologies Pty Ltd",
+        "actUnfiltered": true,
+        "superlative": "highest",
+        "trend": false
+      },
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            140
+          ]
+        ],
+        "fact-2/t/body/0": [
+          [
+            142,
+            238
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Supplier: Centorrino Technologies Pty Ltd \u2014 $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+          "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "snippet": "Supplier: Centorrino Technologies Pty Ltd \u2014 $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.\nCentorrino Technologies Pty Ltd: $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies.",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "14178599.19",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "24",
+              "unit": "count",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "13",
+              "unit": "count",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "High Speed Rail Authority awarded Centorrino Technologies Pty Ltd $4,717,706 across 2 Commonwealth contracts, the largest total contract value for this supplier (2021 to 2026).",
+          "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "snippet": "High Speed Rail Authority awarded Centorrino Technologies Pty Ltd $4,717,706 across 2 Commonwealth contracts, the largest total contract value for this supplier (2021 to 2026).\nCentorrino Technologies Pty Ltd: $4,717,706 across 2 Commonwealth contracts, the largest total contract value for this supplier (2021 to 2026). awarded by High Speed Rail Authority.",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "4717706",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2021"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "2",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2021"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            }
+          ]
+        }
+      ],
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 2,
+            "label": "Finding records",
+            "arg": "Centorrino Technologies",
+            "state": "done",
+            "tool": "find_records",
+            "round": 1,
+            "ms": 15,
+            "results": 1
+          },
+          {
+            "id": 1,
+            "label": "Checking contracts",
+            "arg": "Centorrino Technologies Pty Ltd",
+            "state": "done",
+            "tool": "contracts",
+            "round": 1,
+            "ms": 48,
+            "results": 10
+          },
+          {
+            "id": 3,
+            "label": "Selecting record facts",
+            "state": "done",
+            "tool": "finish",
+            "round": 2,
+            "ms": 0,
+            "results": 4
+          }
+        ],
+        "ms": 3276
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 2,
+        "reserved_cost_usd": 0.0019685759999999953,
+        "trail": [
+          {
+            "id": 2,
+            "tool": "find_records",
+            "round": 1,
+            "label": "Finding records",
+            "arg": "Centorrino Technologies",
+            "results": 1,
+            "ms": 15,
+            "ok": true
+          },
+          {
+            "id": 1,
+            "tool": "contracts",
+            "round": 1,
+            "label": "Checking contracts",
+            "arg": "Centorrino Technologies Pty Ltd",
+            "results": 10,
+            "ms": 48,
+            "ok": true
+          },
+          {
+            "id": 3,
+            "tool": "finish",
+            "round": 2,
+            "label": "Selecting record facts",
+            "results": 4,
+            "ms": 0,
+            "ok": true
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16370,
+            "output": 143,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15775,
+            "ms": 766,
+            "cost_usd": 0.000340968
+          },
+          {
+            "round": 2,
+            "input": 17682,
+            "output": 49,
+            "cached_input": 16384,
+            "cached": 16384,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 17120,
+            "ms": 777,
+            "cost_usd": 0.000546504
+          },
+          {
+            "round": 3,
+            "input": 1632,
+            "output": 174,
+            "cached_input": 0,
+            "input_reserve": 3425,
+            "ms": 1046,
+            "cost_usd": 0.0006984,
+            "provider": "Together"
+          },
+          {
+            "round": 3,
+            "input": 1216,
+            "output": 109,
+            "cached_input": 384,
+            "input_reserve": 3425,
+            "ms": 624,
+            "cost_usd": 0.000382704,
+            "provider": "Together"
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          16384,
+          0,
+          384
+        ],
+        "sources": [
+          {
+            "title": "Supplier: Centorrino Technologies Pty Ltd \u2014 $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "kind": "record"
+          },
+          {
+            "title": "High Speed Rail Authority awarded Centorrino Technologies Pty Ltd $4,717,706 across 2 Commonwealth contracts, the largest total contract value for this supplier (2021 to 2026).",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "kind": "record"
+          }
+        ],
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Supplier: Centorrino Technologies Pty Ltd \u2014 $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Supplier: Centorrino Technologies Pty Ltd \u2014 $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "High Speed Rail Authority awarded Centorrino Technologies Pty Ltd $4,717,706 across 2 Commonwealth contracts, the largest total contract value for this supplier (2021 to 2026).",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "High Speed Rail Authority awarded Centorrino Technologies Pty Ltd $4,717,706 across 2 Commonwealth contracts, the largest total contract value for this supplier (2021 to 2026).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-6",
+            "slug": "",
+            "title": "Department of Defence awarded Centorrino Technologies Pty Ltd $1,050,479 across 4 Commonwealth contracts, the joint highest contract count for this supplier (2021 to 2026).",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Department of Defence awarded Centorrino Technologies Pty Ltd $1,050,479 across 4 Commonwealth contracts, the joint highest contract count for this supplier (2021 to 2026).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-9",
+            "slug": "",
+            "title": "Department of the Prime Minister and Cabinet awarded Centorrino Technologies Pty Ltd $389,243 across 4 Commonwealth contracts, the joint highest contract count for this supplier (2021 to 2026).",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Department of the Prime Minister and Cabinet awarded Centorrino Technologies Pty Ltd $389,243 across 4 Commonwealth contracts, the joint highest contract count for this supplier (2021 to 2026).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. AusTender contract notices from Commonwealth agencies: values are contract values as published (including later amendments), not payments, and a supplier name follows the notice. Agency totals cover the published supplier profile; value rankings and contract-count rankings can differ.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "ms": 3306,
+        "tokens": {
+          "input": 36900,
+          "output": 475
+        },
+        "cost_usd": 0.0019685759999999997,
+        "coherence": {
+          "writer_passes": 2,
+          "second_passes": 1
+        },
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      }
+    },
+    "grade": {
+      "overall": "fail",
+      "axes": {
+        "coherence": "fail",
+        "usefulness": "pass",
+        "citations": "pass",
+        "correctness": "pass",
+        "constraints": "n/a",
+        "decline": "pass",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "fail",
+        "required_components": "n/a"
+      },
+      "answered": true,
+      "refusal": false,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "terms",
+          "status": "pass",
+          "detail": "terms: High Speed Rail Authority",
+          "why": "the largest buying agency"
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "2 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 3,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [],
+        "bound": [],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 2,
+        "unresolved": [],
+        "cited_sources": 2,
+        "figure_sentences": 1,
+        "figure_sentences_cited": 1
+      },
+      "coherence": {
+        "pass": false,
+        "reasons": [
+          "first sentence does not answer"
+        ],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "find_records",
+          "contracts",
+          "finish"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 2
+      },
+      "gold": null,
+      "evidence_complete": true,
+      "flags": []
+    }
+  },
+  "NP-INTR-016": {
+    "question": "David Kempton shareholdings?",
+    "before": "David Kempton declared shareholdings in Agrespond Pty Ltd, a consulting company with nil value, and Mount Barker Mining Pty Ltd, an exploration and mining company holding a mining lease and mining equipment, per the Queensland register of interests as at 2026-10-16.",
+    "payload": {
+      "answered": true,
+      "answer": "David Kempton declared shareholdings: Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment (Queensland register of interests as at 2026-10-16).",
+      "answer_decision": "answer",
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [
+          "Kempton",
+          "David"
+        ],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            210
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "David Kempton declared shareholdings: Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment (Queensland register of interests as at 2026-10-16).",
+          "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+          "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+          "snippet": "David Kempton declared shareholdings: Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment (Queensland register of interests as at 2026-10-16).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": []
+        }
+      ],
+      "coherence": {
+        "fallback": true
+      },
+      "followups": [],
+      "agentic": {
+        "steps": [
+          {
+            "id": 2,
+            "label": "Resolving a name",
+            "arg": "David Kempton",
+            "state": "done",
+            "tool": "find_people",
+            "round": 1,
+            "ms": 9,
+            "results": 0
+          },
+          {
+            "id": 1,
+            "label": "Checking declared interests",
+            "arg": "David Kempton",
+            "state": "done",
+            "tool": "declared_interests",
+            "round": 1,
+            "ms": 10,
+            "results": 2
+          },
+          {
+            "id": 3,
+            "label": "Checking declared interests",
+            "arg": "David Kempton",
+            "state": "done",
+            "tool": "declared_interests",
+            "round": 2,
+            "ms": 2,
+            "results": 11
+          },
+          {
+            "id": 4,
+            "label": "Checking the answer",
+            "state": "done",
+            "tool": "answer",
+            "round": 3,
+            "ms": 2,
+            "results": 2
+          }
+        ],
+        "ms": 3156
+      },
+      "research": {
+        "mode": "loop",
+        "rounds": 3,
+        "reserved_cost_usd": 0.002456748,
+        "trail": [
+          {
+            "id": 2,
+            "tool": "find_people",
+            "round": 1,
+            "label": "Resolving a name",
+            "arg": "David Kempton",
+            "results": 0,
+            "ms": 9,
+            "ok": true
+          },
+          {
+            "id": 1,
+            "tool": "declared_interests",
+            "round": 1,
+            "label": "Checking declared interests",
+            "arg": "David Kempton",
+            "results": 2,
+            "ms": 10,
+            "ok": true
+          },
+          {
+            "id": 3,
+            "tool": "declared_interests",
+            "round": 2,
+            "label": "Checking declared interests",
+            "arg": "David Kempton",
+            "results": 11,
+            "ms": 2,
+            "ok": true
+          },
+          {
+            "id": 4,
+            "tool": "answer",
+            "round": 3,
+            "label": "Checking the answer",
+            "results": 2,
+            "ms": 2,
+            "ok": true
+          }
+        ],
+        "turns": [
+          {
+            "round": 1,
+            "input": 16361,
+            "output": 93,
+            "cached_input": 16128,
+            "cached": 16128,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 15753,
+            "ms": 508,
+            "cost_usd": 0.000278268
+          },
+          {
+            "round": 2,
+            "input": 17097,
+            "output": 59,
+            "cached_input": 16256,
+            "cached": 16256,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 16521,
+            "ms": 428,
+            "cost_usd": 0.000420636
+          },
+          {
+            "round": 3,
+            "input": 19069,
+            "output": 152,
+            "cached_input": 17024,
+            "cached": 17024,
+            "provider": "Together",
+            "reasoning": 0,
+            "input_reserve": 18310,
+            "ms": 610,
+            "cost_usd": 0.000898044
+          },
+          {
+            "round": 4,
+            "input": 984,
+            "output": 157,
+            "cached_input": 0,
+            "input_reserve": 2630,
+            "ms": 848,
+            "cost_usd": 0.0004836,
+            "provider": "Together"
+          },
+          {
+            "round": 4,
+            "input": 930,
+            "output": 81,
+            "cached_input": 0,
+            "input_reserve": 2630,
+            "ms": 739,
+            "cost_usd": 0.0003762,
+            "provider": "Together"
+          }
+        ],
+        "cached_input_by_turn": [
+          16128,
+          16256,
+          17024,
+          0,
+          0
+        ],
+        "answer_stats": {
+          "points_in": 0,
+          "points_kept": 0,
+          "points_uncited": 0,
+          "repairs": {},
+          "drops": {},
+          "uncited": {},
+          "mode": "facts"
+        },
+        "sources": [
+          {
+            "title": "David Kempton declared shareholdings: Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment (Queensland register of interests as at 2026-10-16).",
+            "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "kind": "record"
+          }
+        ],
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "David Kempton declared shareholdings: Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment (Queensland register of interests as at 2026-10-16).",
+            "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "snippet": "David Kempton declared shareholdings: Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment (Queensland register of interests as at 2026-10-16).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "snippet": "Register entries include statements, additions and removals; an entry is not necessarily a current holding or evidence of a conflict of interest.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "ms": 3181,
+        "tokens": {
+          "input": 54441,
+          "output": 542
+        },
+        "cost_usd": 0.002456748,
+        "coherence": {
+          "writer_passes": 2,
+          "second_passes": 1,
+          "fallback": true
+        },
+        "model": "deepseek/deepseek-v4.1-flash+{\"order\":[\"together\"],\"allow_fallbacks\":false,\"require_parameters\":true}~{\"enabled\":false}"
+      }
+    },
+    "grade": {
+      "overall": "fail",
+      "axes": {
+        "coherence": "fail",
+        "usefulness": "pass",
+        "citations": "pass",
+        "correctness": "pass",
+        "constraints": "n/a",
+        "decline": "pass",
+        "no_tool_echo": "pass",
+        "no_duplicates": "pass",
+        "direct_first_sentence": "fail",
+        "required_components": "n/a"
+      },
+      "answered": true,
+      "refusal": false,
+      "parts": {
+        "total": 0,
+        "covered": 0,
+        "names": []
+      },
+      "checks": [
+        {
+          "part": null,
+          "type": "terms",
+          "status": "pass",
+          "detail": "terms: Agrespond, Mount Barker Mining",
+          "why": "a distinctive name from a declared item"
+        },
+        {
+          "part": null,
+          "type": "sources",
+          "status": "pass",
+          "detail": "1 cited sources",
+          "why": null
+        }
+      ],
+      "figures": {
+        "total": 0,
+        "unbound": [],
+        "unbound_uncited": []
+      },
+      "names": {
+        "found": [
+          "David Kemp"
+        ],
+        "bound": [
+          "David Kemp"
+        ],
+        "unbound": []
+      },
+      "quotes": {
+        "total": 0,
+        "found": 0,
+        "missing": []
+      },
+      "citations": {
+        "keys": 1,
+        "unresolved": [],
+        "cited_sources": 1,
+        "figure_sentences": 0,
+        "figure_sentences_cited": 0
+      },
+      "coherence": {
+        "pass": false,
+        "reasons": [
+          "first sentence does not answer"
+        ],
+        "orphan": [],
+        "rankingLead": true
+      },
+      "causal": [],
+      "tools": {
+        "expected": [],
+        "used": [
+          "find_people",
+          "declared_interests",
+          "declared_interests",
+          "answer"
+        ],
+        "status": "n/a",
+        "mode": "loop",
+        "rounds": 3
+      },
+      "gold": null,
+      "evidence_complete": true,
+      "flags": []
+    }
+  }
+}

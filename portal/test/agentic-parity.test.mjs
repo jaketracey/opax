@@ -120,6 +120,12 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
     assert.doesNotMatch(a.answer,/\bgave\b|\bdonated\b|\bfunded\b/)
    }
    else if(q.id==='R07'){assert.match(after,/"answered":true/,`gold R07 (${stream?'SSE':'JSON'})`);assert.match(after,/Scott Morrison: 133/);}
+   else if(q.expected.votes){
+    // Archive readers now fail honestly when this legacy fixture has no division index.
+    // Pin the delivered response; step states are covered against canonical data separately.
+    const done=text=>JSON.parse(stream?text.match(/event: done\ndata: (.+)/)[1]:text);
+    assert.deepEqual(done(after),done(before),`gold ${q.id}: delivered vote response`);
+   }
    else if(SURNAME_FIX.has(q.id))assert.match(after,/"answer":/,`gold ${q.id} (${stream?'SSE':'JSON'})`);
    else assert.equal(after,before,`gold ${q.id} (${stream?'SSE':'JSON'})`);
    while(pending.length)await Promise.all(pending.splice(0));

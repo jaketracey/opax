@@ -52,7 +52,7 @@ test('MCP lists every registry schema with examples beside the existing tools', 
   const f = fixture(), response = await f.send('tools/list');
   assert.equal(response.status, 200);
   const listed = (await response.json()).result.tools;
-  const existing = ['corpus_coverage', 'find_connections', 'person_quotes', 'read_grant_program', 'read_grant_recipient', 'read_record', 'search_records'];
+  const existing = ['corpus_coverage', 'find_connections', 'read_grant_program', 'read_grant_recipient', 'read_record', 'search_records'];
   assert.deepEqual(listed.map(t => t.name).sort(), [...existing, ...tools.map(t => t.name)].sort());
   const entry = listed.find(t => t.name === 'electorates_rank'), expected = listTools()[0];
   assert.equal(entry.description, expected.description);

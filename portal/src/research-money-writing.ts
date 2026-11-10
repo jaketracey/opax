@@ -63,6 +63,8 @@ export function moneyEvidenceRows(text: string, url = ''): string[] {
   if (supplier) return [`${supplier[1]}: ${supplier[2]}.`]
   const campaign = /^Register: (.+?) — (.+?) — (\$[\d,.]+) AUD\. (\d{4}-\d{2})\. \(([^)]+)\)\. Campaign advertising expenditure/.exec(text)
   if (campaign) return [`${campaign[1]}: ${campaign[3]} in campaign advertising for ${campaign[2]} in financial year ${campaign[4]} (${campaign[5]}).`, `${campaign[2]}: ${campaign[3]} in campaign advertising for ${campaign[1]} in financial year ${campaign[4]} (${campaign[5]}).`]
+  const publishedCampaign = /^(.+?) for (.+?) recorded (\$[\d,.]+) for (.+) in (financial year \d{4}-\d{2} \(.+\))\.$/.exec(text)
+  if (publishedCampaign) return [`${publishedCampaign[1]}: ${publishedCampaign[3]} for ${publishedCampaign[4]} for ${publishedCampaign[2]} in ${publishedCampaign[5]}.`, `${publishedCampaign[2]}: ${publishedCampaign[3]} for ${publishedCampaign[4]} for ${publishedCampaign[1]} in ${publishedCampaign[5]}.`]
   return []
 }
 
@@ -71,7 +73,9 @@ export function moneyWritingInput(input: WritingInput): WritingInput {
   const donors = input.facts.flatMap(f => donorName(f) ? [donorName(f)!] : [])
   const wanted = donors.filter(name => named(input.question, name))
   const jurisdiction = /\bqueensland government\b/i.test(input.question) ? 'qld' : /\b(?:federal|commonwealth) grants?\b/i.test(input.question) ? 'federal' : undefined
+  const agencyRanking = /\b(?:which|what) (?:department|agency)\b/i.test(input.question) && input.facts.some(f => /awarded .+? \$[\d,.]+ across [\d,]+ Commonwealth contracts,/.test(f.text))
   return { ...input, facts: input.facts.filter(f => {
+    if (agencyRanking && /^Supplier:/.test(f.text)) return false
     const donor = donorName(f)
     if (wanted.length && donor && !wanted.includes(donor)) return false
     const grantJurisdiction = /\/money\/grants\/(federal|qld)\/recipient\//.exec(f.source.url)?.[1]
@@ -89,14 +93,19 @@ export function moneyWritingLines(input: WritingInput, available: WritingFact[])
   })
   if (interests.length === 1) {
     const { f, m } = interests[0], items = mergeRegisterItems(m[5].split('; ').map(description => ({ description })))
-    if (items.length < m[5].split('; ').length) return [line(`${m[1]} declared ${m[4]}: ${items.map(item => item.description).join('; ')} (${m[2]} register of interests${m[3] ?? ''}).`, f)]
+    return [line(`${m[1]} declared ${m[4]} in ${items.map(item => item.description).join('; ')} (${m[2]} register of interests${m[3] ?? ''}).`, f)]
   }
+  const declared = facts.filter(f => /^.+ declared (?:shareholdings|directorships|trusts): .+ \((?:Queensland|federal) register of interests/.test(f.text))
+  if (declared.length === 1) return [line(declared[0].text.replace(/(declared (?:shareholdings|directorships|trusts)): /, '$1 in '), declared[0])]
   const receipts = receiptWritingLines(input, facts)
   if (receipts) return receipts
   const partyTotals = facts.flatMap(f => {
     const m = /^(.+?)(?: received |: )(\$[\d,.]+) in federal disclosed receipts across ([\d,]+) receipts? in financial years (.+?) \(/.exec(f.text)
     return m && named(input.question, m[1]) ? [{ f, m }] : []
-  }).filter(({ f, m }, i, all) => all.findIndex(other => other.f.source.resource === f.source.resource && other.m.slice(1).join('|') === m.slice(1).join('|')) === i)
+  }).filter(({ m }, i, all) => all.findIndex(other => other.m.slice(1).join('|') === m.slice(1).join('|')) === i)
+  if (partyTotals.length > 1 && /\bcompar\w*\b/i.test(input.question) && new Set(partyTotals.map(r => r.m[4])).size === 1) {
+    return partyTotals.map(({ f, m }) => line(`${m[1]} received ${m[2]} in federal disclosed receipts across ${m[3]} receipts in financial year ${m[4]}.`, f))
+  }
   if (partyTotals.length === 1 && /\b(?:how much|total|money|receipts)\b/i.test(input.question) && !/\b(?:each year|by year|trend|over time|most|top|largest|biggest)\b/i.test(input.question)) {
     const { f, m } = partyTotals[0]
     const sources = facts.filter(f => f.source.receipt && !f.source.receipt.aggregate && key(f.source.receipt.party) === key(m[1]))
@@ -140,11 +149,28 @@ export function moneyWritingLines(input: WritingInput, available: WritingFact[])
     if (suppliers.length === 1) { const { f, m } = suppliers[0]; return [line(`${m[1]} recorded ${m[2]} in contract awards across ${m[3]} contracts with ${m[4]} agencies.`, f)] }
   }
   const campaigns = facts.filter(f => /recorded \$[\d,.]+ for .+ in financial year \d{4}-\d{2} \(/.test(f.text) && /campaign|advert|recruitment/i.test(f.text))
-  if (campaigns.length && /\b(?:campaign|campsign|advert|cost)\w*/i.test(input.question)) return campaigns.map((f, i) => line((i ? '- ' : '') + f.text, f))
+  if (campaigns.length && /\b(?:campaign|campsign|advert|cost)\w*/i.test(input.question)) {
+    const groups = new Map<string, { owner: string; amount: string; period: string; categories: string[]; facts: WritingFact[] }>()
+    for (const f of campaigns) {
+      const m = /^(.+?) recorded (\$[\d,.]+) for (.+) in (financial year \d{4}-\d{2} \(.+\))\.$/.exec(f.text)
+      if (!m) return campaigns.map((f, i) => line((i ? '- ' : '') + f.text, f))
+      const id = [m[1], m[2], m[4]].join('|'), group = groups.get(id) ?? { owner: m[1], amount: m[2], period: m[4], categories: [], facts: [] }
+      group.categories.push(m[3]); group.facts.push(f); groups.set(id, group)
+    }
+    return [...groups.values()].map(g => ({ text: `${g.owner} recorded ${g.amount} ${g.categories.length > 1 ? 'each ' : ''}for ${g.categories.join('; ')} in ${g.period}.`, facts: g.facts.map(f => f.id) }))
+  }
   const catalogCampaigns = facts.flatMap(f => {
     const m = /^Register: (.+?) — (.+?) — (\$[\d,.]+) AUD\. (\d{4}-\d{2})\. \(([^)]+)\)\. Campaign advertising expenditure/.exec(f.text)
     return m ? [{ f, m }] : []
   })
   if (catalogCampaigns.length) return catalogCampaigns.map(({ f, m }, i) => line(`${i ? '- ' : ''}${m[1]} for ${m[2]} recorded ${m[3]} for campaign advertising in financial year ${m[4]} (${m[5]}).`, f))
   return null
+}
+
+/** These typed selections already form complete sentences; another writing turn can lose a comparison arm or ranking. */
+export function completeMoneySelection(input: WritingInput): boolean {
+  return !!moneyWritingLines(input, input.facts.filter(f => !f.coverage && !f.metadata)) &&
+    (/\bcompar\w*\b/i.test(input.question) && input.facts.filter(f => /in federal disclosed receipts across/.test(f.text)).length > 1 ||
+      /\b(?:which|what) (?:department|agency)\b/i.test(input.question) ||
+      input.facts.some(f => /declared (?:shareholdings|directorships|trusts):|register of interests.* records|recorded \$[\d,.]+ for .+ in financial year/.test(f.text)))
 }

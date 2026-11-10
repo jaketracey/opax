@@ -15,8 +15,9 @@ import {UNCONFIRMED_PERIOD} from './ask-constraints'
 import {recordAnswerLines,recordEvidenceText} from './research-record-answer'
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
+import {inferPeriod} from './ask-period'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-19-receipt-followups'
+export const ANSWER_WRITING_VERSION = 'written-answer-20-receipts-complete-records'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -216,6 +217,12 @@ const requested=(input:WritingInput)=>input.constraints?.period?.since||input.co
 /** Known dates that miss the request entirely. An open end stays open, and undated facts are not known to be wrong. */
 export function outsideRequest(fact:WritingFact,input:WritingInput):boolean {
   const years=factYears(fact),{since,until}=requested(input)
+  if (fact.source.kind === 'count' && /bill records by introduction date|bills? (?:was|were) introduced/.test(fact.text)) {
+    const month = /\bin (\d{4})-(0[1-9]|1[0-2])[.]?$/.exec(fact.text)
+    const counted = month ? { since: `${month[1]}-${month[2]}-01`, until: new Date(Date.UTC(Number(month[1]), Number(month[2]), 0)).toISOString().slice(0, 10) } : inferPeriod(fact.text)
+    // A calendar month in a count is not a financial year extending into the next year.
+    if (counted.since && counted.until && (since && counted.since !== since || until && counted.until !== until)) return true
+  }
   return !!years&&(!!until&&years[0]>Number(until.slice(0,4))||!!since&&years[1]<Number(since.slice(0,4)))
 }
 /** A fact about some other subject than the one the question names is not found evidence for it. */
