@@ -1,4 +1,6 @@
 import { fetch as expoFetch } from 'expo/fetch';
+import { throwIfAborted } from './abort';
+import { ReadSession } from './read-session';
 import { phoneCopy } from '../design/phone-copy';
 import {
   AskFailure,
@@ -80,12 +82,12 @@ function freezeSnapshot(...values: unknown[]) {
   }
 }
 export class ApiClient {
-  private actionReads = new Map<string, Promise<RecordResult<unknown>>>();
+  private actionReads = new ReadSession<RecordResult<unknown>>();
   /** Explicit actions only: one attempt, session memory, no disk or retry. */
   getForAction<T>(
     path: string,
     decode: Decoder<T>,
-    { fresh = false }: { fresh?: boolean } = {},
+    { fresh = false, signal }: { fresh?: boolean; signal?: AbortSignal } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path);
     if (
@@ -94,21 +96,21 @@ export class ApiClient {
       !isExplorePaidPath(path)
     )
       throw new ApiError('forbidden', 'Not an action read.');
-    const previous = this.actionReads.get(path);
-    if (previous && !fresh) return previous as Promise<RecordResult<T>>;
-    const pending = this.readAction(url, decode);
-    this.actionReads.set(path, pending);
-    // Failed actions can be retried explicitly; never retry automatically.
-    void pending.catch(() => {
-      if (this.actionReads.get(path) === pending) this.actionReads.delete(path);
-    });
-    return pending;
+    return this.actionReads.read(
+      path,
+      (requestSignal) => this.readAction(url, decode, requestSignal),
+      { fresh, signal },
+    ) as Promise<RecordResult<T>>;
   }
   private async readAction<T>(
     url: string,
     decode: Decoder<T>,
+    signal?: AbortSignal,
   ): Promise<RecordResult<T>> {
+    throwIfAborted(signal);
     const controller = new AbortController();
+    const abort = () => controller.abort();
+    signal?.addEventListener('abort', abort, { once: true });
     const timer = setTimeout(
       () => controller.abort(),
       this.options.timeoutMs ?? 8000,
@@ -139,7 +141,9 @@ export class ApiClient {
       if (!response.ok) throw httpError(response.status);
       let data: T;
       try {
-        data = this.decodeBody(await response.json(), decode);
+        const body = await response.json();
+        throwIfAborted(signal);
+        data = this.decodeBody(body, decode);
       } catch {
         if (controller.signal.aborted)
           throw new ApiError(
@@ -151,6 +155,7 @@ export class ApiClient {
           'The catalog response could not be read.',
         );
       }
+      throwIfAborted(signal);
       if (controller.signal.aborted)
         throw new ApiError(
           'timeout',
@@ -158,6 +163,7 @@ export class ApiClient {
         );
       return { data, stale: false, savedAt: this.now(), asOf: dataAsOf(data) };
     } catch (e) {
+      throwIfAborted(signal);
       if (e instanceof ApiError) throw e;
       throw new ApiError(
         controller.signal.aborted ? 'timeout' : 'offline',
@@ -166,6 +172,7 @@ export class ApiClient {
           : 'This section is not saved for this session. It will load when you are back online.',
       );
     } finally {
+      signal?.removeEventListener('abort', abort);
       clearTimeout(timer);
     }
   }
@@ -433,10 +440,12 @@ export class ApiClient {
             response.headers.get('etag') ??
             (response.status === 304 ? cached?.etag : undefined),
         };
+        cancelled();
         // Persistence failure must not turn a successful network read into an error.
         const retained = await this.options.cache
           .put(entry, {
             requestStartedAt,
+            signal,
             ...(response.status === 304
               ? { revalidatedETag: cached?.etag }
               : {}),

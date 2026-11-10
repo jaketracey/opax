@@ -37,8 +37,11 @@ export default function PartySources() {
   const params = useLocalSearchParams<{ slug?: string; name?: string }>();
   const input = one(params.name) ?? one(params.slug) ?? '';
   const load = useCallback(
-    (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
-      catalogs.partyPage(input, refresh, publish),
+    (
+      refresh: boolean,
+      publish: (record: PartyPageRecord) => void,
+      signal?: AbortSignal,
+    ) => catalogs.partyPage(input, refresh, publish, signal),
     [input],
   );
   const { record, error, retry } = useCatalogRecord(load);

@@ -57,6 +57,106 @@ function setup(transport: typeof fetch, now = () => 1000, options = {}) {
     }),
   };
 }
+test('cancellation while a cache write waits for its index leaves no saved entry', async () => {
+  const { cache, store } = setup(jest.fn());
+  let release!: (index: CacheIndexEntry[]) => void;
+  jest.spyOn(store, 'readIndex').mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  );
+  const write = jest.spyOn(store, 'write');
+  const controller = new AbortController();
+  const pending = cache.put(
+    {
+      url: `${origin}/corpus.json`,
+      body: { generated: '2026-09-04' },
+      savedAt: 1000,
+      validatedAt: 1000,
+      expiresAt: 2000,
+      asOf: null,
+    },
+    { requestStartedAt: 1000, signal: controller.signal },
+  );
+  const cancelled = expect(pending).rejects.toMatchObject({
+    name: 'AbortError',
+  });
+  await Promise.resolve();
+  controller.abort();
+  release([]);
+  await cancelled;
+  expect(write).not.toHaveBeenCalled();
+  expect(store.index).toEqual([]);
+});
+test('cancellation during persistence restores the previously saved record', async () => {
+  const { cache, store } = setup(jest.fn());
+  const previous: CacheEntry = {
+    url: `${origin}/corpus.json`,
+    body: { generated: '2026-09-04' },
+    savedAt: 1000,
+    validatedAt: 1000,
+    expiresAt: 2000,
+    asOf: null,
+  };
+  await cache.put(previous);
+  let release!: () => void;
+  const write = store.write.bind(store);
+  jest.spyOn(store, 'write').mockImplementationOnce(async (entry) => {
+    await new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await write(entry);
+  });
+  const controller = new AbortController();
+  const pending = cache.put(
+    {
+      ...previous,
+      body: { generated: '2026-09-05' },
+      savedAt: 1500,
+      validatedAt: 1500,
+    },
+    { requestStartedAt: 1500, signal: controller.signal },
+  );
+  const outcome = pending.then(
+    () => null,
+    (error: unknown) => error,
+  );
+  for (let i = 0; i < 20 && !release; i++) await Promise.resolve();
+  expect(release).toBeDefined();
+  controller.abort();
+  release();
+  expect(await outcome).toMatchObject({ name: 'AbortError' });
+  expect(await cache.get(previous.url)).toEqual(previous);
+  expect(store.entries).toEqual([previous]);
+});
+test('an action response arriving after cancellation cannot enter the session cache', async () => {
+  const responses: ((response: Response) => void)[] = [];
+  const transport = jest.fn(
+    () =>
+      new Promise<Response>((resolve) => {
+        responses.push(resolve);
+      }),
+  );
+  const { client } = setup(transport);
+  const controller = new AbortController();
+  const first = client.getForAction('/api/topics', decode, {
+    signal: controller.signal,
+  });
+  const cancelled = expect(first).rejects.toMatchObject({ name: 'AbortError' });
+  await Promise.resolve();
+  controller.abort();
+  await cancelled;
+  const next = client.getForAction('/api/topics', decode);
+  await Promise.resolve();
+  expect(transport).toHaveBeenCalledTimes(2);
+  responses[1]!(new Response(JSON.stringify({ generated: '2026-09-05' })));
+  const latest = await next;
+  responses[0]!(response());
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+  expect(await client.getForAction('/api/topics', decode)).toBe(latest);
+  expect(transport).toHaveBeenCalledTimes(2);
+});
 test.each(['android', 'ios'] as const)(
   'catalog requests label %s while preserving their transport boundary',
   async (platform) => {

@@ -40,11 +40,11 @@ export function linkedYear(value: string | string[] | undefined) {
   const year = Number(raw);
   return year >= FIRST_YEAR && year <= LAST_YEAR ? year : null;
 }
-const loadBills = () => catalogs.bills();
-const loadRoster = async () => {
+const loadBills = (signal?: AbortSignal) => catalogs.bills(undefined, signal);
+const loadRoster = async (signal?: AbortSignal) => {
   const [roster, slugs] = await Promise.all([
-    catalogs.roster(),
-    catalogs.slugs(),
+    catalogs.roster(undefined, signal),
+    catalogs.slugs(undefined, signal),
   ]);
   return {
     ...roster,
@@ -120,7 +120,10 @@ function YearPage({
   onYear: (year: number) => void;
   scrollRef: React.RefObject<ScrollView | null>;
 }) {
-  const loadYear = useCallback(() => explore.year(year), [year]);
+  const loadYear = useCallback(
+    (signal?: AbortSignal) => explore.year(year, signal),
+    [year],
+  );
   const brief = useRead(loadYear),
     pictures = useRead(explore.pictures),
     bills = useRead(loadBills),

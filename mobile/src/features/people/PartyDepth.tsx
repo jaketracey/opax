@@ -24,7 +24,10 @@ const fy = (year: string) => formatFinancialYear(Number(year.slice(0, 4)));
 
 /** The AEC annual-returns read, shared by Each year's return and Debts. */
 export function usePartyFunding() {
-  return useRead(() => peopleDepth.funding(), 'funding');
+  return useRead(
+    (signal?: AbortSignal) => peopleDepth.funding(signal),
+    'funding',
+  );
 }
 
 /** The notes the returns and debts carry into their section's source sheet. */
@@ -201,7 +204,10 @@ export function FundingLoading() {
  * with them.
  */
 export function PartyAccess({ name }: { name: string }) {
-  const { read, retry } = useRead(() => peopleDepth.access(), 'access');
+  const { read, retry } = useRead(
+    (signal?: AbortSignal) => peopleDepth.access(signal),
+    'access',
+  );
   if (read.status === 'loading')
     return (
       <Section

@@ -158,7 +158,11 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   const [owner] = useState(() => (pushed ? `list-${++pushedLists}` : 'tab'));
   const list = useBillListState(owner, initial);
   const { scope, setScope, filters } = list;
-  const load = useCallback((refresh: boolean) => catalogs.bills(refresh), []);
+  const load = useCallback(
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.bills(refresh, signal),
+    [],
+  );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   useRefreshCommand(refresh, refreshing);
   const [text, setText] = useState(initial.q);

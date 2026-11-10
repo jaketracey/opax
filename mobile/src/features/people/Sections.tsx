@@ -1,3 +1,4 @@
+import { isAbortError, throwIfAborted } from '../../api/abort';
 import { useCallback, useEffect, useState } from 'react';
 import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
@@ -64,23 +65,32 @@ type Read<T> =
  * One block's own read: a skeleton, then content or an `InlineError` whose
  * Try again reads this block again and nothing else.
  */
-export function useRead<T>(load: () => Promise<T>, key: string) {
+export function useRead<T>(
+  load: (signal?: AbortSignal) => Promise<T>,
+  key: string,
+) {
   const [attempt, setAttempt] = useState(0);
   const token = `${key}#${attempt}`;
   const [result, setResult] = useState<{ token: string; read: Read<T> }>();
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     // A loader that throws before its promise is the same failed read.
     Promise.resolve()
-      .then(load)
+      .then(() => {
+        throwIfAborted(controller.signal);
+        return load(controller.signal);
+      })
       .then((value) => {
         if (active) setResult({ token, read: { status: 'ready', value } });
       })
-      .catch(() => {
-        if (active) setResult({ token, read: { status: 'error' } });
+      .catch((error: unknown) => {
+        if (active && !controller.signal.aborted && !isAbortError(error))
+          setResult({ token, read: { status: 'error' } });
       });
     return () => {
       active = false;
+      controller.abort();
     };
     // The read is keyed by `token`; a new `load` closure is the same read.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -143,7 +153,10 @@ export function eraOptions(data: TopicsData) {
  * with their share, then the block's source line.
  */
 export function Topics({ name }: { name: string }) {
-  const { read, retry } = useRead(() => peopleDepth.topics(name), name);
+  const { read, retry } = useRead(
+    (signal?: AbortSignal) => peopleDepth.topics(name, signal),
+    name,
+  );
   const [era, setEra] = useState<Era>('all');
   if (read.status === 'loading')
     return (
@@ -284,7 +297,10 @@ export function PersonDiary({ identity }: { identity: PersonProfile }) {
   return diaryEligible(identity) ? <Diary identity={identity} /> : null;
 }
 function Diary({ identity }: { identity: PersonProfile }) {
-  const { read, retry } = useRead(() => peopleDepth.access(), identity.slug);
+  const { read, retry } = useRead(
+    (signal?: AbortSignal) => peopleDepth.access(signal),
+    identity.slug,
+  );
   const record = read.status === 'ready' ? read.value : null;
   const m = record ? diaryFor(identity, record.data) : null;
   useEffect(() => {

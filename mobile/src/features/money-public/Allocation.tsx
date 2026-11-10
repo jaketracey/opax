@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -86,24 +87,33 @@ export default function Allocation() {
   }>();
   const state = (params.state ?? '').toLowerCase(),
     through = /^\d{4}$/.test(params.through ?? '') ? params.through! : '';
-  const load = useCallback(async (refresh: boolean) => {
-    // The report is still read (next-app-build item 1) but never gates the
-    // page: a failure leaves the list drawn.
-    void money.report(refresh).catch(() => undefined);
-    const [allocation, history, locations] = await Promise.all([
-      money.allocation(refresh),
-      money.history(refresh),
-      money.locations(refresh).catch(() => null),
-    ]);
-    return combine(
-      locations ? [allocation, history, locations] : [allocation, history],
-      {
-        allocation: allocation.data,
-        history: history.data,
-        locations: locations?.data ?? null,
-      },
-    );
-  }, []);
+  const load = useCallback(
+    async (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
+      // The report is still read (next-app-build item 1) but never gates the
+      // page: a failure leaves the list drawn.
+      void money.report(refresh, signal).catch(() => {
+        throwIfAborted(signal);
+        return undefined;
+      });
+      const [allocation, history, locations] = await Promise.all([
+        money.allocation(refresh, signal),
+        money.history(refresh, signal),
+        money.locations(refresh, signal).catch(() => {
+          throwIfAborted(signal);
+          return null;
+        }),
+      ]);
+      return combine(
+        locations ? [allocation, history, locations] : [allocation, history],
+        {
+          allocation: allocation.data,
+          history: history.data,
+          locations: locations?.data ?? null,
+        },
+      );
+    },
+    [],
+  );
   const status = useCatalogRecord(load),
     data = status.record?.data;
   const [stage, setStage] = useState<Stage>(

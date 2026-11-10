@@ -69,12 +69,14 @@ export default function Connection() {
     name?: string;
   }>();
   const loadIndex = useCallback(
-    (refresh: boolean) => money.connections(refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.connections(refresh, signal),
     [],
   );
   const index = useCatalogRecord(loadIndex);
   const loadExcerpts = useCallback(
-    (refresh: boolean) => money.evidence(id, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.evidence(id, refresh, signal),
     [id],
   );
   const excerpts = useCatalogRecord(loadExcerpts);

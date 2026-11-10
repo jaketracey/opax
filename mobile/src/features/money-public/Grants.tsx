@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -89,7 +90,8 @@ export default function Grants() {
 
 function useGrantIndex(jur: Jurisdiction) {
   const load = useCallback(
-    (refresh: boolean) => money.grants(jur, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.grants(jur, refresh, signal),
     [jur],
   );
   return useCatalogRecord(load);
@@ -383,15 +385,21 @@ function GrantList({
  * the index supplies the figure; the seat slice supplies the grant rows.
  */
 function SeatView({ seat, state }: { seat: string; state?: string }) {
-  const load = useCallback(async (refresh: boolean) => {
-    const index = await money.grants('federal', refresh);
-    // The electorate page's id, from the shared directory; the row is left
-    // out if the directory can't be read.
-    const directory = await Promise.resolve()
-      .then(() => catalogs.directory())
-      .catch(() => null);
-    return { ...index, directory };
-  }, []);
+  const load = useCallback(
+    async (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
+      const index = await money.grants('federal', refresh, signal);
+      // The electorate page's id, from the shared directory; the row is left
+      // out if the directory can't be read.
+      const directory = await Promise.resolve()
+        .then(() => catalogs.directory(undefined, signal))
+        .catch(() => {
+          throwIfAborted(signal);
+          return null;
+        });
+      return { ...index, directory };
+    },
+    [],
+  );
   const status = useCatalogRecord(load),
     data = status.record?.data;
   const entry = data ? seatRow(data, seat, state) : undefined;

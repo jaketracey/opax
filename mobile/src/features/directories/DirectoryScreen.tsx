@@ -208,7 +208,8 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const title = titles[kind];
   const backTitle = useNamedBackTitle();
   const load = useCallback(
-    (refresh: boolean) => loadDirectory(kind, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      loadDirectory(kind, refresh, signal),
     [kind],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);

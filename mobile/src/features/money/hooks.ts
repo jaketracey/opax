@@ -1,3 +1,4 @@
+import { isAbortError } from '../../api/abort';
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { apiClient } from '../../api/runtime';
@@ -24,15 +25,22 @@ export function useMoneyRecord(jurisdiction: MoneyJurisdiction) {
   } | null>(null);
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     void apiClient
-      .get(moneyCatalogs[jurisdiction].path, decodeMoneyGraph, attempt.refresh)
+      .get(
+        moneyCatalogs[jurisdiction].path,
+        decodeMoneyGraph,
+        attempt.refresh,
+        { signal: controller.signal },
+      )
       .then(
         (record) => {
+          if (!active || controller.signal.aborted) return;
           rememberMoneyGraph(jurisdiction, record.data);
           if (active) setState({ jurisdiction, record, error: null });
         },
         (error) => {
-          if (active)
+          if (active && !controller.signal.aborted && !isAbortError(error))
             setState((previous) =>
               attempt.refresh &&
               previous?.jurisdiction === jurisdiction &&
@@ -47,6 +55,7 @@ export function useMoneyRecord(jurisdiction: MoneyJurisdiction) {
       });
     return () => {
       active = false;
+      controller.abort();
     };
   }, [jurisdiction, attempt]);
   const current = state?.jurisdiction === jurisdiction ? state : null;

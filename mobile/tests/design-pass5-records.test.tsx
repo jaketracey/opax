@@ -320,6 +320,7 @@ test('bill text opens on its text with the stage, one source line and the bar it
   expect(records.billVersion).toHaveBeenCalledWith(
     'au-federal-r7534',
     'r7534-aspassed',
+    expect.any(AbortSignal),
   );
   expect(view.root.findAllByProps({ testID: 'bill-text-read' })).toHaveLength(
     0,
@@ -532,6 +533,7 @@ test('choosing another version from the bar menu loads it in place', async () =>
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
+    expect.any(AbortSignal),
   );
   expect(textOfId(view, 'bill-text-stage')).toBe(
     'First reading: synthetic fixture',

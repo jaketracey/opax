@@ -4,30 +4,40 @@ import * as d from './data';
 import { decodeSeatGrants } from './seat-grants-data';
 export class MoneyCatalogs {
   constructor(private client: Pick<ApiClient, 'get'>) {}
-  async grants(jur: d.Jurisdiction, refresh = false) {
+  async grants(jur: d.Jurisdiction, refresh = false, signal?: AbortSignal) {
     return this.client.get(
       `/graph/grants.${jur}.json`,
       d.decodeGrantIndex,
       refresh,
+      { signal },
     );
   }
-  async notes(refresh = false) {
+  async notes(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/grants/program-notes.json',
       d.decodeNotes,
       refresh,
+      { signal },
     );
   }
-  async largest(refresh = false) {
+  async largest(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/social/grants-largest.json',
       d.decodeLargest,
       refresh,
+      { signal },
     );
   }
-  async program(jur: d.Jurisdiction, key: string, refresh = false) {
+  async program(
+    jur: d.Jurisdiction,
+    key: string,
+    refresh = false,
+    signal?: AbortSignal,
+  ) {
     return this.client
-      .get(`/grants/${jur}/programs/${key}.json`, d.decodeProgram, refresh)
+      .get(`/grants/${jur}/programs/${key}.json`, d.decodeProgram, refresh, {
+        signal,
+      })
       .then((r) => {
         if (r.data.key !== key || r.data.jur !== jur)
           throw new ApiError(
@@ -78,11 +88,13 @@ export class MoneyCatalogs {
       throw error;
     }
   }
-  async agencies(refresh = false) {
-    return this.client.get('/agencies.json', d.decodeAgencies, refresh);
+  async agencies(refresh = false, signal?: AbortSignal) {
+    return this.client.get('/agencies.json', d.decodeAgencies, refresh, {
+      signal,
+    });
   }
-  async agency(id: string, refresh = false) {
-    const directory = await this.agencies(refresh);
+  async agency(id: string, refresh = false, signal?: AbortSignal) {
+    const directory = await this.agencies(refresh, signal);
     const entry = directory.data.agencies.find(
       (a) => a.id === id || a.name === id,
     );
@@ -91,7 +103,9 @@ export class MoneyCatalogs {
         'not-found',
         'Agency not found in the available records.',
       );
-    const profile = await this.client.get(entry.path, d.decodeAgency, refresh);
+    const profile = await this.client.get(entry.path, d.decodeAgency, refresh, {
+      signal,
+    });
     if (profile.data.id !== entry.id)
       throw new ApiError(
         'invalid-data',
@@ -102,42 +116,49 @@ export class MoneyCatalogs {
       profile: profile.data,
     });
   }
-  async allocation(refresh = false) {
-    return this.client.get('/research/mlci.json', d.decodeAllocation, refresh);
+  async allocation(refresh = false, signal?: AbortSignal) {
+    return this.client.get('/research/mlci.json', d.decodeAllocation, refresh, {
+      signal,
+    });
   }
-  async report(refresh = false) {
+  async report(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/reports/grants-allocation.json',
       d.decodeReport,
       refresh,
+      { signal },
     );
   }
-  async history(refresh = false) {
+  async history(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/research/grants-history.json',
       d.decodeHistory,
       refresh,
+      { signal },
     );
   }
-  async locations(refresh = false) {
+  async locations(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/research/grant-locations.json',
       d.decodeLocations,
       refresh,
+      { signal },
     );
   }
-  async connections(refresh = false) {
+  async connections(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/evidence/index.json',
       d.decodeConnections,
       refresh,
+      { signal },
     );
   }
-  async evidence(id: string, refresh = false) {
+  async evidence(id: string, refresh = false, signal?: AbortSignal) {
     return this.client.get(
       `/evidence/${id.slice(0, 2)}.json`,
       d.decodeEvidence,
       refresh,
+      { signal },
     );
   }
 }

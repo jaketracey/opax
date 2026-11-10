@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import type { Href } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
@@ -104,8 +105,9 @@ const isJurisdiction = (j: string): j is Jurisdiction =>
 export async function loadMoneyItem(
   params: MoneyItemParams & { from?: string; org?: string },
   refresh: boolean,
+  signal?: AbortSignal,
 ): Promise<RecordResult<MoneyItemView>> {
-  const record = await readMoneyItem(params, refresh);
+  const record = await readMoneyItem(params, refresh, signal);
   return params.org === 'self'
     ? {
         ...record,
@@ -122,14 +124,15 @@ export async function loadMoneyItem(
 async function readMoneyItem(
   params: MoneyItemParams & { from?: string },
   refresh: boolean,
+  signal?: AbortSignal,
 ): Promise<RecordResult<MoneyItemView>> {
   const from = params.from ?? '';
   switch (params.kind) {
     case 'evidence': {
       if (!/^(0|[1-9]\d*)$/.test(params.i)) throw gone();
-      const record = await catalogs.discovery(refresh);
-      const signal = record.data.signals.find((s) => s.id === params.lead);
-      const lead = signal ? leadFor(signal) : null;
+      const record = await catalogs.discovery(refresh, signal);
+      const leadSignal = record.data.signals.find((s) => s.id === params.lead);
+      const lead = leadSignal ? leadFor(leadSignal) : null;
       const evidence = lead?.evidence[Number(params.i)];
       const item = evidence ? evidenceRecord(evidence) : null;
       if (!lead || !evidence || !item) throw gone();
@@ -161,9 +164,20 @@ async function readMoneyItem(
       if (!isJurisdiction(params.jur)) throw gone();
       if (params.kind === 'grant' && !params.program)
         return params.rid
-          ? loadRecipientGrant(params.jur, params.rid, params.id, refresh)
+          ? loadRecipientGrant(
+              params.jur,
+              params.rid,
+              params.id,
+              refresh,
+              signal,
+            )
           : Promise.reject(gone());
-      const record = await money.program(params.jur, params.program!, refresh);
+      const record = await money.program(
+        params.jur,
+        params.program!,
+        refresh,
+        signal,
+      );
       const program = record.data;
       const programRow = (): Onward[] =>
         from === program.key || from === program.id
@@ -306,8 +320,8 @@ async function readMoneyItem(
     }
     case 'largest': {
       const [largest, index] = await Promise.all([
-        money.largest(refresh),
-        money.grants('federal', refresh),
+        money.largest(refresh, signal),
+        money.grants('federal', refresh, signal),
       ]);
       const r = largestFor(largest.data, index.data, params.month).find(
         (x) => x.id === params.id,
@@ -378,7 +392,7 @@ async function readMoneyItem(
     }
     case 'contract':
     case 'supplier': {
-      const record = await money.agency(params.agency, refresh);
+      const record = await money.agency(params.agency, refresh, signal);
       const profile = record.data.profile;
       const agencyRow: Onward[] =
         from === profile.id
@@ -505,8 +519,11 @@ async function readMoneyItem(
     case 'award':
     case 'project': {
       const [allocation, locations] = await Promise.all([
-        money.allocation(refresh),
-        money.locations(refresh).catch(() => null),
+        money.allocation(refresh, signal),
+        money.locations(refresh, signal).catch(() => {
+          throwIfAborted(signal);
+          return null;
+        }),
       ]);
       const list =
         params.kind === 'award'
@@ -576,7 +593,7 @@ async function readMoneyItem(
       };
     }
     case 'earlier': {
-      const history = await money.history(refresh);
+      const history = await money.history(refresh, signal);
       const r = history.data.records.find((x) => x.id === params.id);
       if (!r) throw gone();
       return {
@@ -686,9 +703,9 @@ function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
   const params = itemParams(raw);
   const key = JSON.stringify(params);
   const load = useCallback(
-    (refresh: boolean) => {
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
       const p = JSON.parse(key) as ReturnType<typeof itemParams>;
-      return p ? loadMoneyItem(p, refresh) : Promise.reject(gone());
+      return p ? loadMoneyItem(p, refresh, signal) : Promise.reject(gone());
     },
     [key],
   );

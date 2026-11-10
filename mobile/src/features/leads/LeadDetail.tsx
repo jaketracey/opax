@@ -85,10 +85,16 @@ function useSubject(lead: LeadView | null): {
   useEffect(() => {
     if (!overlap || graph) return;
     let active = true;
+    const controller = new AbortController();
     Promise.resolve()
-      .then(() => apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .then(() =>
+        apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph, false, {
+          signal: controller.signal,
+        }),
+      )
       .then(
         (record) => {
+          if (!active || controller.signal.aborted) return;
           rememberMoneyGraph('federal', record.data);
           if (active) setGraph(record.data);
         },
@@ -96,13 +102,15 @@ function useSubject(lead: LeadView | null): {
       );
     return () => {
       active = false;
+      controller.abort();
     };
   }, [overlap, graph]);
   useEffect(() => {
     if (!contracts || !subject) return;
     let active = true;
+    const controller = new AbortController();
     const wanted = normaliseOrganisation(subject);
-    money.agencies().then(
+    money.agencies(false, controller.signal).then(
       (record) => {
         const found = record.data.agencies.find(
           (a) => normaliseOrganisation(a.name) === wanted,
@@ -113,6 +121,7 @@ function useSubject(lead: LeadView | null): {
     );
     return () => {
       active = false;
+      controller.abort();
     };
   }, [contracts, subject]);
   if (!lead || !subject) return null;
@@ -143,7 +152,8 @@ export default function LeadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const load = useCallback(
-    (refresh: boolean) => catalogs.discovery(refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.discovery(refresh, signal),
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);

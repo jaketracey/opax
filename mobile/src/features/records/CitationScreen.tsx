@@ -39,7 +39,10 @@ const COPIED_FOR = 2000;
  */
 export default function Citations() {
   const { slug = '' } = useLocalSearchParams<{ slug: string }>();
-  const load = useCallback(() => records.document(slug), [slug]);
+  const load = useCallback(
+    (signal?: AbortSignal) => records.document(slug, signal),
+    [slug],
+  );
   const { value, error, retry } = useRead(load);
   const [version, setVersion] = useState('unversioned');
   const [accessed] = useState(accessedToday);

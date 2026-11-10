@@ -16,7 +16,8 @@ const dailyRefresh = 24 * 60 * 60 * 1000;
  * `load` receives `true` for a refresh (pull to refresh, Try again on a saved
  * copy, returning to the app): loaders forward it to the client, so the read
  * revalidates instead of returning a copy still within its max-age. The first
- * load and Try again after an error pass `false`.
+ * load and Try again after an error pass `false`. The third argument is the
+ * read's abort signal; loaders forward it through every nested request.
  */
 export function useCatalogRecord<R extends { stale: boolean }>(
   load: (

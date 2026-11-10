@@ -1,3 +1,4 @@
+import { isAbortError } from '../../api/abort';
 import { useCallback, useEffect, useState } from 'react';
 import { apiClient } from '../../api/runtime';
 import type { RecordResult } from '../../api/client';
@@ -106,7 +107,7 @@ type Loaded<T> = {
 };
 function useLoad<T>(
   key: string | null,
-  load: (refresh: boolean) => Promise<RecordResult<T>>,
+  load: (refresh: boolean, signal?: AbortSignal) => Promise<RecordResult<T>>,
 ): Loaded<T> {
   const [attempt, setAttempt] = useState({ n: 0, refresh: false });
   const [refreshing, setRefreshing] = useState(false);
@@ -118,13 +119,14 @@ function useLoad<T>(
   useEffect(() => {
     if (!key) return;
     let active = true;
-    load(attempt.refresh)
+    const controller = new AbortController();
+    load(attempt.refresh, controller.signal)
       .then(
         (record) => {
           if (active) setState({ key, record, error: null });
         },
         (error) => {
-          if (active)
+          if (active && !controller.signal.aborted && !isAbortError(error))
             setState((previous) =>
               attempt.refresh && previous?.key === key && previous.record
                 ? previous
@@ -137,6 +139,7 @@ function useLoad<T>(
       });
     return () => {
       active = false;
+      controller.abort();
     };
     // `load` is keyed by `key`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -159,8 +162,10 @@ function useLoad<T>(
 
 /** A grant recipient by its id in a jurisdiction's grants index. */
 export function useGrantRecipient(rid: string | null, jur: 'federal' | 'qld') {
-  const loaded = useLoad(rid ? `grants:${jur}` : null, (refresh) =>
-    apiClient.get(`/graph/grants.${jur}.json`, decodeRecipientIndex, refresh),
+  const loaded = useLoad(rid ? `grants:${jur}` : null, (refresh, signal) =>
+    apiClient.get(`/graph/grants.${jur}.json`, decodeRecipientIndex, refresh, {
+      signal,
+    }),
   );
   const recipient =
     loaded.record?.data.recipients.find((r) => r.id === rid) ?? null;
@@ -172,8 +177,9 @@ export function useGrantRecipient(rid: string | null, jur: 'federal' | 'qld') {
  * on the public allow-list, the per-supplier files are not yet.
  */
 export function useAgencySupplier(rid: string | null, agency: string | null) {
-  const loaded = useLoad(rid && agency ? `agency:${agency}` : null, (refresh) =>
-    money.agency(agency!, refresh),
+  const loaded = useLoad(
+    rid && agency ? `agency:${agency}` : null,
+    (refresh, signal) => money.agency(agency!, refresh, signal),
   );
   const profile = loaded.record?.data.profile;
   const supplier = profile?.suppliers.find((s) => s.id === rid) ?? null;

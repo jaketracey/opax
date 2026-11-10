@@ -51,7 +51,8 @@ export function photoOriginals(p: YearPicture): SourceOriginal[] {
   ];
 }
 
-const loadPictures = () => explore.pictures();
+const loadPictures = (_refresh: boolean, signal?: AbortSignal) =>
+  explore.pictures(signal);
 
 /**
  * Time machine photographs (account.md 4.6, explore.md 9): the reference

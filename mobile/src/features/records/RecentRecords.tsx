@@ -1,3 +1,4 @@
+import { isAbortError } from '../../api/abort';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -68,31 +69,48 @@ function byDayAdded(rows: readonly RecentItem[]) {
  * refresh keeps the list and says it is saved.
  */
 export default function RecentRecords() {
-  const load = useCallback(() => records.recent(), []);
+  const load = useCallback(
+    (signal?: AbortSignal) => records.recent(undefined, signal),
+    [],
+  );
   const first = useRead(load);
   const [fresh, setFresh] = useState<RecordResult<RecentFeed> | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<unknown>(null);
   const refreshGeneration = useRef(0);
+  const refreshController = useRef<AbortController | null>(null);
   useEffect(
     () => () => {
       refreshGeneration.current += 1;
+      refreshController.current?.abort();
     },
     [],
   );
   const value = fresh ?? first.value;
   const refresh = useCallback(() => {
     const generation = ++refreshGeneration.current;
+    refreshController.current?.abort();
+    const controller = new AbortController();
+    refreshController.current = controller;
     setRefreshing(true);
     void Promise.resolve()
-      .then(() => records.recent({ fresh: true }))
+      .then(() => records.recent({ fresh: true }, controller.signal))
       .then((next) => {
-        if (generation !== refreshGeneration.current) return;
+        if (
+          generation !== refreshGeneration.current ||
+          controller.signal.aborted
+        )
+          return;
         setFresh(next);
         setRefreshError(null);
       })
       .catch((error: unknown) => {
-        if (generation === refreshGeneration.current) setRefreshError(error);
+        if (
+          generation === refreshGeneration.current &&
+          !controller.signal.aborted &&
+          !isAbortError(error)
+        )
+          setRefreshError(error);
       })
       .finally(() => {
         if (generation === refreshGeneration.current) setRefreshing(false);

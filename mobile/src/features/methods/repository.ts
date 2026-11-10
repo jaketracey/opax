@@ -21,10 +21,19 @@ export type Counts = ReturnType<typeof decodeCounts>;
  */
 export class ReferenceRepository {
   constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
-  summary = (refresh = false): Promise<RecordResult<Corpus>> =>
-    this.client.get('/corpus.json', decodeCorpus, refresh);
-  counts = (refresh = false): Promise<RecordResult<Counts>> =>
-    this.client.getForAction('/api/stats', decodeCounts, { fresh: refresh });
+  summary = (
+    refresh = false,
+    signal?: AbortSignal,
+  ): Promise<RecordResult<Corpus>> =>
+    this.client.get('/corpus.json', decodeCorpus, refresh, { signal });
+  counts = (
+    refresh = false,
+    signal?: AbortSignal,
+  ): Promise<RecordResult<Counts>> =>
+    this.client.getForAction('/api/stats', decodeCounts, {
+      signal,
+      fresh: refresh,
+    });
 }
 export const reference = new ReferenceRepository(apiClient);
 

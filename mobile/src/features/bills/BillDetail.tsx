@@ -193,7 +193,8 @@ export default function BillDetail({
   }>();
   const key = String(recordKey ?? params.key);
   const load = useCallback(
-    (refresh: boolean) => catalogs.billFor(key, refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.billFor(key, refresh, signal),
     [key],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);

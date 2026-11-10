@@ -192,6 +192,7 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
         '/corpus.json',
         decodeCorpus,
         true,
+        { signal: expect.any(AbortSignal) },
       );
     else if (name === 'Person') expect(mock.person).toHaveBeenCalledTimes(2);
     else expect(mock.directory).toHaveBeenCalledTimes(2);
