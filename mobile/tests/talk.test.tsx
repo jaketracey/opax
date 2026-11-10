@@ -195,6 +195,39 @@ test('End cancels a pending Start, with no blind retry', async () => {
   });
   expect(mockVoice.start).toHaveBeenCalledTimes(1);
 });
+
+test('an old Start acknowledgement cannot clear a newer dispatch or restore its error after End', async () => {
+  mockBridge.readConsent.mockResolvedValue(true);
+  await mount();
+  const first = deferred<voice.VoiceResult<void>>(),
+    second = deferred<voice.VoiceResult<void>>();
+  mockVoice.start
+    .mockReturnValueOnce(first.promise)
+    .mockReturnValueOnce(second.promise);
+  let starting!: Promise<void>, restarting!: Promise<void>;
+  act(() => {
+    starting = call.start();
+  });
+  await act(async () => {
+    await call.end();
+  });
+  act(() => {
+    restarting = call.start();
+  });
+  expect(call.busy).toBe(true);
+  await act(async () => {
+    first.resolve({ ok: false, error: 'microphoneDenied' });
+    await starting;
+  });
+  expect(call.error).toBeNull();
+  expect(call.busy).toBe(true);
+  await act(async () => {
+    second.resolve(ok);
+    await restarting;
+  });
+  expect(call.busy).toBe(false);
+  expect(mockVoice.start).toHaveBeenCalledTimes(2);
+});
 test('a push inside Talk keeps the call: blur neither ends nor unsubscribes, and refocus rereads consent', async () => {
   mockBridge.readConsent.mockResolvedValue(true);
   await mount();
@@ -255,6 +288,29 @@ test('inactive does not end; background delegates a specific reason; foreground 
   await act(async () => lifecycle('active'));
   expect(mockVoice.status).toHaveBeenCalledTimes(2);
   expect(mockVoice.snapshot).toHaveBeenCalledTimes(2);
+});
+test("the microphone prompt's inactive round trip keeps a denial on screen", async () => {
+  let lifecycle!: (state: AppStateStatus) => void;
+  jest.spyOn(AppState, 'addEventListener').mockImplementation((_name, fn) => {
+    lifecycle = fn;
+    return { remove: jest.fn() };
+  });
+  const started = deferred<Awaited<ReturnType<typeof mockVoice.start>>>();
+  mockVoice.start.mockReturnValueOnce(started.promise);
+  await mount();
+  let pending!: Promise<unknown>;
+  act(() => {
+    pending = call.startConsented();
+  });
+  act(() => lifecycle('inactive'));
+  await act(async () => {
+    started.resolve({ ok: false, error: 'microphoneDenied' });
+    await pending;
+  });
+  expect(call.error).toBe('microphoneDenied');
+  await act(async () => lifecycle('active'));
+  expect(call.error).toBe('microphoneDenied');
+  expect(mockVoice.status).toHaveBeenCalledTimes(1);
 });
 test('leaving unsubscribes, ends and clears transient captions; remount reads a new snapshot', async () => {
   await mount();

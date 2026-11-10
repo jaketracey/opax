@@ -521,23 +521,53 @@ export class ApiClient {
   ): Promise<unknown> {
     assertAskPostPath(path);
     const url = allowedURL(this.options.origin, path);
+    if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
+    const request = new AbortController();
+    let rejectInterrupted!: (failure: AskFailure) => void;
+    const interrupted = new Promise<never>((_resolve, reject) => {
+      rejectInterrupted = reject;
+    });
+    const cancel = () => {
+      request.abort();
+      rejectInterrupted(new AskFailure('cancelled', 'Cancelled.'));
+    };
+    signal.addEventListener('abort', cancel, { once: true });
+    // The Worker has its own bounded retries. This bounds a stalled
+    // connection, JSON body or reader, without issuing another paid request.
+    // It is a stall timer: every chunk that arrives restarts it, so a long
+    // answer that is still being written is never cut off.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        request.abort();
+        rejectInterrupted(
+          new AskFailure('timeout', 'The answer took too long.'),
+        );
+      }, 120_000);
+    };
+    arm();
+    const waiting = <T>(operation: Promise<T>) =>
+      Promise.race([operation, interrupted]);
     let shown = false;
     try {
-      const response = await this.transport(url, {
-        method: 'POST',
-        credentials: 'omit',
-        redirect: 'manual',
-        signal,
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: on ? 'text/event-stream' : 'application/json',
-          'User-Agent': catalogUserAgent(
-            this.options.version,
-            this.options.build,
-          ),
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await waiting(
+        this.transport(url, {
+          method: 'POST',
+          credentials: 'omit',
+          redirect: 'manual',
+          signal: request.signal,
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: on ? 'text/event-stream' : 'application/json',
+            'User-Agent': catalogUserAgent(
+              this.options.version,
+              this.options.build,
+            ),
+          },
+          body: JSON.stringify(body),
+        }),
+      );
       if (
         response.redirected ||
         (response.status >= 300 && response.status < 400) ||
@@ -558,8 +588,9 @@ export class ApiClient {
         !on ||
         !response.headers.get('content-type')?.includes('text/event-stream')
       )
-        return await response.json();
-      if (!response.body) throw new AskFailure('empty', 'No answer came back.');
+        return await waiting(response.json());
+      if (!response.body)
+        throw new AskFailure('invalid', 'No answer came back.');
       on.stage('Searching the record');
       const stream = new AskStream({
           ...on,
@@ -576,25 +607,39 @@ export class ApiClient {
         reader = response.body.getReader();
       try {
         for (;;) {
-          const { value, done } = await reader.read();
+          const { value, done } = await waiting(reader.read());
           if (done) break;
+          arm();
           stream.push(decoder.decode(value, { stream: true }));
+          if (stream.done) break;
         }
         stream.push(decoder.decode(), true);
         return stream.result();
       } finally {
-        await reader.cancel().catch(() => undefined);
+        void reader.cancel().catch(() => undefined);
         reader.releaseLock();
       }
     } catch (e) {
       if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
+      if (request.signal.aborted)
+        throw new AskFailure(
+          shown ? 'partial' : 'timeout',
+          shown
+            ? 'The answer stream ended early.'
+            : 'The answer took too long.',
+        );
       if (e instanceof AskFailure) throw e;
       if (shown)
         throw new AskFailure('partial', 'The answer stream ended early.');
+      if (e instanceof SyntaxError)
+        throw new AskFailure('invalid', 'The answer could not be read.');
       throw new AskFailure(
         'offline',
         'The record could not be reached. Check your connection and try again.',
       );
+    } finally {
+      clearTimeout(timer);
+      signal.removeEventListener('abort', cancel);
     }
   }
   private async readBytes(

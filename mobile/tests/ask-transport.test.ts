@@ -2,6 +2,7 @@ import { TextDecoder, TextEncoder } from 'node:util';
 import { CatalogCache } from '../src/api/cache';
 import { ApiClient } from '../src/api/client';
 import { decodeAnswer } from '../src/features/ask/model';
+import { askErrorCopy } from '../src/features/ask/turn-copy';
 const origin = 'http://127.0.0.1:8940';
 const payload = { answer: 'Recorded answer', citations: {}, sources: [] };
 function response(status: number, raw: unknown = payload, extras: object = {}) {
@@ -165,5 +166,324 @@ test('offline and explicit cancel never retry', async () => {
   await expect(
     api(t).askPost('/api/ask?stream=1', {}, c.signal),
   ).rejects.toMatchObject({ code: 'cancelled' });
-  expect(t).toHaveBeenCalledTimes(2);
+  expect(t).toHaveBeenCalledTimes(1);
 });
+
+test.each(['headers', 'json', 'stream'] as const)(
+  'a stalled %s times out, aborts transport and permits manual retry',
+  async (phase) => {
+    jest.useFakeTimers();
+    Object.assign(globalThis, { TextDecoder, TextEncoder });
+    const never = new Promise<never>(() => {});
+    const reader = {
+      read: jest.fn(() => never),
+      cancel: jest.fn().mockResolvedValue(undefined),
+      releaseLock: jest.fn(),
+    };
+    const t = jest
+      .fn()
+      .mockImplementationOnce(() =>
+        phase === 'headers'
+          ? never
+          : Promise.resolve(
+              response(
+                200,
+                payload,
+                phase === 'json'
+                  ? { json: () => never }
+                  : {
+                      headers: { get: () => 'text/event-stream' },
+                      body: { getReader: () => reader },
+                    },
+              ),
+            ),
+      )
+      .mockResolvedValue(response(200));
+    const client = api(t);
+    const pending = client.askPost(
+      '/api/ask?stream=1',
+      {},
+      controller().signal,
+      { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() },
+    );
+    const failure = expect(pending).rejects.toMatchObject({ code: 'timeout' });
+    try {
+      await jest.advanceTimersByTimeAsync(120_000);
+      await failure;
+      expect(t.mock.calls[0]![1].signal.aborted).toBe(true);
+      expect(t).toHaveBeenCalledTimes(1);
+      await expect(
+        client.askPost('/api/ask?stream=1', {}, controller().signal),
+      ).resolves.toEqual(payload);
+      expect(
+        askErrorCopy({ code: 'timeout' } as Parameters<typeof askErrorCopy>[0]),
+      ).toEqual({
+        message: 'This answer took too long. Please try again.',
+        retry: true,
+      });
+      expect(jest.getTimerCount()).toBe(0);
+      if (phase === 'stream')
+        expect(reader.releaseLock).toHaveBeenCalledTimes(1);
+    } finally {
+      jest.useRealTimers();
+    }
+  },
+);
+
+test('cancelling a stalled request settles immediately without sending a second request', async () => {
+  const t = jest.fn().mockReturnValue(new Promise<never>(() => {}));
+  const c = controller();
+  const pending = api(t).askPost('/api/ask?stream=1', {}, c.signal);
+  const cancelled = expect(pending).rejects.toMatchObject({
+    code: 'cancelled',
+  });
+  c.abort();
+  await cancelled;
+  expect(t.mock.calls[0]![1].signal.aborted).toBe(true);
+  expect(t).toHaveBeenCalledTimes(1);
+});
+
+test('a transport that rejects on abort still reports timeout rather than offline', async () => {
+  jest.useFakeTimers();
+  const t = jest.fn(
+    (_url: string, init: RequestInit) =>
+      new Promise<Response>((_resolve, reject) => {
+        init.signal!.addEventListener('abort', () =>
+          reject(new Error('AbortError')),
+        );
+      }),
+  );
+  const pending = api(t).askPost('/api/ask?stream=1', {}, controller().signal);
+  const timedOut = expect(pending).rejects.toMatchObject({ code: 'timeout' });
+  try {
+    await jest.advanceTimersByTimeAsync(120_000);
+    await timedOut;
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+test.each(['missing stream body', 'malformed JSON'] as const)(
+  '%s produces a visible, retryable failure',
+  async (failure) => {
+    const t = jest.fn().mockResolvedValue(
+      response(
+        200,
+        payload,
+        failure === 'missing stream body'
+          ? { headers: { get: () => 'text/event-stream' }, body: null }
+          : {
+              json: async () => {
+                throw new SyntaxError('Private response content');
+              },
+            },
+      ),
+    );
+    const result = await api(t)
+      .askPost('/api/ask?stream=1', {}, controller().signal, {
+        stage: jest.fn(),
+        delta: jest.fn(),
+        retry: jest.fn(),
+      })
+      .catch((error: unknown) => error);
+    expect(result).toMatchObject({ code: 'invalid' });
+    expect(askErrorCopy(result as Parameters<typeof askErrorCopy>[0])).toEqual({
+      message: "The answer couldn't be read.",
+      retry: true,
+    });
+    expect(t).toHaveBeenCalledTimes(1);
+  },
+);
+
+test('timeout after words arrive preserves an explicitly partial answer', async () => {
+  jest.useFakeTimers();
+  Object.assign(globalThis, { TextDecoder, TextEncoder });
+  const reader = {
+    read: jest
+      .fn()
+      .mockResolvedValueOnce({
+        value: new TextEncoder().encode(
+          'event: delta\ndata: {"text":"Fixture partial answer"}\n\n',
+        ),
+        done: false,
+      })
+      .mockReturnValue(new Promise<never>(() => {})),
+    cancel: jest.fn().mockResolvedValue(undefined),
+    releaseLock: jest.fn(),
+  };
+  const t = jest.fn().mockResolvedValue(
+    response(200, payload, {
+      headers: { get: () => 'text/event-stream' },
+      body: { getReader: () => reader },
+    }),
+  );
+  const on = { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() };
+  const pending = api(t)
+    .askPost('/api/ask?stream=1', {}, controller().signal, on)
+    .catch((error: unknown) => error);
+  try {
+    await jest.advanceTimersByTimeAsync(120_000);
+    expect(await pending).toMatchObject({ code: 'partial' });
+    expect(on.delta).toHaveBeenCalledWith('Fixture partial answer');
+    expect(on.retry).not.toHaveBeenCalled();
+    expect(t).toHaveBeenCalledTimes(1);
+    expect(reader.releaseLock).toHaveBeenCalledTimes(1);
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+test('done completes the answer without waiting for the server to close the stream', async () => {
+  Object.assign(globalThis, { TextDecoder, TextEncoder });
+  const reader = {
+    read: jest
+      .fn()
+      .mockResolvedValueOnce({
+        value: new TextEncoder().encode(
+          `event: done\ndata: ${JSON.stringify(payload)}\n\n`,
+        ),
+        done: false,
+      })
+      .mockRejectedValue(new Error('The connection stayed open after done')),
+    cancel: jest.fn().mockResolvedValue(undefined),
+    releaseLock: jest.fn(),
+  };
+  const t = jest.fn().mockResolvedValue(
+    response(200, payload, {
+      headers: { get: () => 'text/event-stream' },
+      body: { getReader: () => reader },
+    }),
+  );
+  await expect(
+    api(t).askPost('/api/ask?stream=1', {}, controller().signal, {
+      stage: jest.fn(),
+      delta: jest.fn(),
+      retry: jest.fn(),
+    }),
+  ).resolves.toEqual(payload);
+  expect(reader.read).toHaveBeenCalledTimes(1);
+  expect(reader.cancel).toHaveBeenCalledTimes(1);
+  expect(reader.releaseLock).toHaveBeenCalledTimes(1);
+});
+
+test.each([
+  ['', 'invalid'],
+  ['event: delta\ndata: {"text":"Part of an answer"}\n\n', 'partial'],
+  [
+    'event: delta\ndata: {"text":"Withdrawn"}\n\nevent: retry\ndata: {}\n\n',
+    'invalid',
+  ],
+])(
+  'stream errors describe only words still shown: %s',
+  async (prefix, code) => {
+    Object.assign(globalThis, { TextDecoder, TextEncoder });
+    const reader = {
+      read: jest.fn().mockResolvedValueOnce({
+        value: new TextEncoder().encode(
+          `${prefix}event: error\ndata: {"error":"Private provider details","final":true}\n\n`,
+        ),
+        done: false,
+      }),
+      cancel: jest.fn().mockResolvedValue(undefined),
+      releaseLock: jest.fn(),
+    };
+    const t = jest.fn().mockResolvedValue(
+      response(200, payload, {
+        headers: { get: () => 'text/event-stream' },
+        body: { getReader: () => reader },
+      }),
+    );
+    await expect(
+      api(t).askPost('/api/ask?stream=1', {}, controller().signal, {
+        stage: jest.fn(),
+        delta: jest.fn(),
+        retry: jest.fn(),
+      }),
+    ).rejects.toMatchObject({ code, message: 'The answer stream failed.' });
+    expect(t).toHaveBeenCalledTimes(1);
+  },
+);
+
+test('a slow answer that keeps arriving is not cut off by the stall timeout', async () => {
+  jest.useFakeTimers();
+  Object.assign(globalThis, { TextDecoder, TextEncoder });
+  const later = (text: string) =>
+    new Promise((resolve) =>
+      setTimeout(
+        () => resolve({ value: new TextEncoder().encode(text), done: false }),
+        60_000,
+      ),
+    );
+  const reader = {
+    read: jest
+      .fn()
+      .mockImplementationOnce(() =>
+        later('event: delta\ndata: {"text":"Fixture "}\n\n'),
+      )
+      .mockImplementationOnce(() =>
+        later('event: delta\ndata: {"text":"slow answer"}\n\n'),
+      )
+      .mockImplementationOnce(() =>
+        later(`event: done\ndata: ${JSON.stringify(payload)}\n\n`),
+      ),
+    cancel: jest.fn().mockResolvedValue(undefined),
+    releaseLock: jest.fn(),
+  };
+  const t = jest.fn().mockResolvedValue(
+    response(200, payload, {
+      headers: { get: () => 'text/event-stream' },
+      body: { getReader: () => reader },
+    }),
+  );
+  const on = { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() };
+  const pending = api(t)
+    .askPost('/api/ask?stream=1', {}, controller().signal, on)
+    .catch((error: unknown) => error);
+  try {
+    await jest.advanceTimersByTimeAsync(180_000);
+    expect(await pending).toMatchObject({ answer: 'Recorded answer' });
+    expect(on.delta).toHaveBeenCalledWith('slow answer');
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+test.each([
+  ['', 'invalid'],
+  ['event: delta\ndata: {"text":"Part of an answer"}\n\n', 'partial'],
+  [
+    'event: delta\ndata: {"text":"Withdrawn"}\n\nevent: retry\ndata: {}\n\n',
+    'invalid',
+  ],
+])(
+  'a stream that closes before done says partway only with words shown: %s',
+  async (prefix, code) => {
+    Object.assign(globalThis, { TextDecoder, TextEncoder });
+    const reader = {
+      read: jest
+        .fn()
+        .mockResolvedValueOnce({
+          value: new TextEncoder().encode(
+            `event: status\ndata: {"phase":"searching"}\n\n${prefix}`,
+          ),
+          done: false,
+        })
+        .mockResolvedValueOnce({ value: undefined, done: true }),
+      cancel: jest.fn().mockResolvedValue(undefined),
+      releaseLock: jest.fn(),
+    };
+    const t = jest.fn().mockResolvedValue(
+      response(200, payload, {
+        headers: { get: () => 'text/event-stream' },
+        body: { getReader: () => reader },
+      }),
+    );
+    await expect(
+      api(t).askPost('/api/ask?stream=1', {}, controller().signal, {
+        stage: jest.fn(),
+        delta: jest.fn(),
+        retry: jest.fn(),
+      }),
+    ).rejects.toMatchObject({ code });
+  },
+);

@@ -107,6 +107,7 @@ export class AskController {
   };
   private listeners = new Set<() => void>();
   private abort: AbortController | null = null;
+  private nextAbort: AbortController | null = null;
   private running: Running | null = null;
   private sequence = 0;
   constructor(private io: AskIO) {}
@@ -166,27 +167,57 @@ export class AskController {
   clearFresh() {
     this.update({ fresh: false, freshOptions: null });
   }
-  open(id: string) {
-    if (this.state.busy) return;
-    const c = this.io.read().chats.find((c) => c.id === id);
-    if (c)
-      this.update({
-        id,
-        thread: c.thread,
-        options: c.options || {
-          ...defaultOptions,
-          kind: c.kind,
-          speaker: c.speaker,
-        },
-        error: null,
-        failed: null,
-        streaming: '',
-        stage: null,
-        clarify: null,
-        notice: null,
-        fresh: false,
-        freshOptions: null,
+  /** Opens a saved conversation. False while an answer is being written. */
+  open(id: string): boolean {
+    if (this.state.busy) return false;
+    const store = this.io.read();
+    const c = store.chats.find((c) => c.id === id);
+    if (!c) return false;
+    this.cancel();
+    const mine = ++this.sequence;
+    this.update({
+      id,
+      thread: c.thread,
+      options: c.options || {
+        ...defaultOptions,
+        kind: c.kind,
+        speaker: c.speaker,
+      },
+      error: null,
+      failed: null,
+      streaming: '',
+      stage: null,
+      clarify: null,
+      notice: null,
+      fresh: false,
+      freshOptions: null,
+      nextLoading: false,
+      reading: 0,
+      draft: '',
+      pending: null,
+    });
+    // Remember the selection without changing the conversation's date.
+    if (store.active !== id)
+      void this.io.save({ ...store, active: id }).catch(() => {
+        if (mine === this.sequence)
+          this.update({
+            notice: phoneCopy(
+              "This conversation couldn't be saved on this iPhone.",
+            ),
+          });
       });
+    return true;
+  }
+  /**
+   * A sync brought a newer copy of the open conversation: show its turns
+   * without touching the composer, a failed question or a waiting arrival.
+   */
+  reload(id: string) {
+    if (this.state.busy || this.state.id !== id) return;
+    const c = this.io.read().chats.find((c) => c.id === id);
+    if (!c || JSON.stringify(c.thread) === JSON.stringify(this.state.thread))
+      return;
+    this.update({ thread: c.thread });
   }
   start(options: AskOptions = { ...defaultOptions }) {
     this.cancel();
@@ -233,6 +264,8 @@ export class AskController {
   }
   cancel() {
     this.abort?.abort();
+    this.nextAbort?.abort();
+    this.nextAbort = null;
   }
   /**
    * Stop: the unfinished turn goes. The question returns to an empty
@@ -290,9 +323,16 @@ export class AskController {
   async sendDraft() {
     const q = this.state.draft.trim();
     if (!q || this.state.busy) return;
+    // The failed question sent again from the composer keeps what it quoted,
+    // as Try again does. A fresh draft is a new conversation and quotes nothing.
+    const failed = this.state.failed;
+    const carry =
+      !this.state.fresh && failed?.question.trim() === q
+        ? failed.carry
+        : undefined;
     if (this.state.fresh) this.start(this.state.freshOptions ?? undefined);
     this.update({ draft: '', fresh: false, freshOptions: null });
-    await this.submit(q);
+    await this.submit(q, carry);
   }
   /** Try again: resends the failed question, clearing it from the composer. */
   async retry() {
@@ -335,6 +375,8 @@ export class AskController {
   async submit(raw: string, carry?: Followup) {
     const q = raw.trim();
     if (!q || this.state.busy) return;
+    this.nextAbort?.abort();
+    this.nextAbort = null;
     const mine = ++this.sequence,
       abort = new AbortController();
     this.abort = abort;
@@ -361,6 +403,7 @@ export class AskController {
       failed: null,
       notice: null,
       clarify: null,
+      nextLoading: false,
     });
     try {
       const data = decodeAnswer(
@@ -490,13 +533,15 @@ export class AskController {
       .filter((p) => p.text)
       .slice(0, 8);
     if (!passages.length) return;
+    const abort = new AbortController();
+    this.nextAbort = abort;
     this.update({ nextLoading: true });
     try {
       const next = decodeFollowups(
         await this.io.post(
           '/api/followups',
           { question: q, answer: data.answer, passages },
-          new AbortController().signal,
+          abort.signal,
         ),
       );
       if (mine !== this.sequence) return;
@@ -506,6 +551,7 @@ export class AskController {
     } catch {
       /* The composer stays available. Never retry generation. */
     } finally {
+      if (this.nextAbort === abort) this.nextAbort = null;
       if (this.state.nextLoading && mine === this.sequence)
         this.update({ nextLoading: false });
     }

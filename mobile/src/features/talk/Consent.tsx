@@ -86,22 +86,40 @@ export function ConsentSheet() {
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
   const [under, setUnder] = useState(false);
+  const mounted = useRef(false);
+  const saving = useRef(false);
+  const closed = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const dismiss = () => {
+    if (closed.current) return;
+    closed.current = true;
+    router.back();
+  };
   const size = useRef({ view: 0, content: 0, y: 0 });
   const measure = () => {
     const { view, content, y } = size.current;
     setUnder(content - y > view + 1);
   };
   const agree = async () => {
+    if (saving.current || closed.current) return;
+    saving.current = true;
     setBusy(true);
     setFailed(false);
     const stored = await setConsent(true);
+    if (!mounted.current || closed.current) return;
+    saving.current = false;
     setBusy(false);
     if (!stored) {
       setFailed(true);
       return;
     }
     requestStartAfterConsent();
-    router.back();
+    dismiss();
   };
   return (
     <View style={[styles.sheet, { maxHeight }]} testID="talk-consent-sheet">
@@ -169,7 +187,7 @@ export function ConsentSheet() {
           testID="talk-not-now"
           variant="plain"
           fullWidth
-          onPress={() => router.back()}
+          onPress={dismiss}
         />
       </View>
     </View>

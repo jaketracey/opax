@@ -36,6 +36,7 @@ export function useTalk() {
   const [settled, setSettled] = useState(0);
   const [microphone, setMicrophone] = useState<MicrophoneStep>(null);
   const dispatching = useRef(false);
+  const commandGeneration = useRef(0);
   // Android pauses the app behind the permission dialog and resumes it before
   // the answer arrives; that round trip is not a visit away from the call.
   const askingMicrophone = useRef(false);
@@ -95,6 +96,8 @@ export function useTalk() {
     });
     return () => {
       mounted.current = false;
+      commandGeneration.current += 1;
+      dispatching.current = false;
       focusGeneration.current += 1;
       unsubscribe();
       void voice.end().then(() => uiBridge.discardEvidence());
@@ -128,10 +131,20 @@ export function useTalk() {
     }, [recover, refresh]),
   );
   useEffect(() => {
+    // iOS's microphone prompt and Control Centre pass through inactive
+    // alone, without the background: that is not a new visit, and a refresh
+    // then would clear the denial the prompt just produced.
+    let away = false;
+    let last: string = AppState.currentState;
     const subscription = AppState.addEventListener('change', (state) => {
-      if (!mounted.current || askingMicrophone.current) return;
+      if (!mounted.current) return;
+      if (state === 'background') away = true;
+      const returning = state === 'active' && (away || last !== 'inactive');
+      last = state;
+      if (state === 'active') away = false;
+      if (askingMicrophone.current) return;
       if (state === 'background') void uiBridge.background();
-      if (state === 'active')
+      if (returning)
         void (async () => {
           await refresh();
           await recover();
@@ -145,16 +158,17 @@ export function useTalk() {
   }, [recover, refresh]);
   async function run(action: () => ReturnType<typeof voice.start>) {
     if (dispatching.current) return;
+    const generation = ++commandGeneration.current;
     dispatching.current = true;
     setBusy(true);
     const result = await action();
     // The call outlives a push inside Talk; only leaving Talk drops it.
-    if (mounted.current) {
+    if (mounted.current && generation === commandGeneration.current) {
       dispatching.current = false;
       if (!result.ok) setError(result.error);
       setBusy(false);
     }
-    return result;
+    return generation === commandGeneration.current ? result : undefined;
   }
   // Native repeats fresh status before permission/reservation. On Android the
   // microphone is asked here first, so `start()` only checks it (README.md).
@@ -242,8 +256,9 @@ export function useTalk() {
     startConsented,
     // End must remain available while Start is awaiting native dispatch.
     end: async () => {
+      const generation = ++commandGeneration.current;
       const result = await voice.end();
-      if (mounted.current) {
+      if (mounted.current && generation === commandGeneration.current) {
         dispatching.current = false;
         if (!result.ok) setError(result.error);
         setBusy(false);

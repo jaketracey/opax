@@ -133,7 +133,8 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
     );
   };
   const open = (chat: Chat) => {
-    askSession.open(chat.id);
+    // Not while an answer is being written: the sheet stays where it is.
+    if (!askSession.open(chat.id)) return;
     if (mode === 'sheet') router.back();
     // Leaves the Account sheet for the conversation in the Ask tab.
     else router.navigate('/ask' as Href);

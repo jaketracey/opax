@@ -98,7 +98,7 @@ jest.mock('../src/features/ask/sync', () => ({
 }));
 jest.mock('../src/features/ask/session', () => ({
   askSession: {
-    open: jest.fn(),
+    open: jest.fn(() => true),
     start: jest.fn(),
     snapshot: jest.fn(() => ({ id: null, busy: false })),
   },
@@ -352,6 +352,13 @@ describe('Conversations', () => {
     act(() => swiftByID(root, 'ask-restore-0').props.onPress());
     expect(askSession.open).toHaveBeenCalledWith('first-chat');
     expect(router.back).toHaveBeenCalled();
+  });
+  test('while an answer is being written, a row stays put rather than closing on nothing', async () => {
+    stored([chat('first-chat', '2026-11-09T01:00:00Z')]);
+    jest.mocked(askSession.open).mockReturnValueOnce(false);
+    const root = await render(<Conversations mode="sheet" />);
+    act(() => swiftByID(root, 'ask-restore-0').props.onPress());
+    expect(router.back).not.toHaveBeenCalled();
   });
   test('from Account, a row opens the conversation in the Ask tab', async () => {
     stored([chat('first-chat', '2026-11-09T01:00:00Z')]);
