@@ -142,7 +142,11 @@ function GrantList({
         ? 'Recipients'
         : 'Electorates',
   );
-  const query = search.query || (initialView === 'seat' ? (seat ?? '') : '');
+  // A seat in the link seeds the electorates search once; typing or another
+  // view drops it, so cancelling the search shows the full list again.
+  const [seeded, setSeeded] = useState(initialView === 'seat');
+  if (seeded && search.query) setSeeded(false);
+  const query = search.query || (seeded ? (seat ?? '') : '');
   const organisations = useMemo(
     () =>
       (data?.recipients ?? [])
@@ -281,6 +285,7 @@ function GrantList({
                     value={view}
                     onChange={(next) => {
                       setView(next);
+                      setSeeded(false);
                       search.setQuery('');
                     }}
                     options={[

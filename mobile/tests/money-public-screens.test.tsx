@@ -937,3 +937,31 @@ describe('a program, place or organisation', () => {
     await act(async () => r.unmount());
   });
 });
+
+test('a seat seeded from the link stops filtering once the view changes', async () => {
+  const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+  Object.assign(mockParams, {
+    jur: 'federal',
+    view: 'electorates',
+    seat: 'Melbourne',
+  });
+  const r = await mount(Grants);
+  const caption = () =>
+    r.root.find((n) => n.props.testID === 'grants-caption').props.children;
+  expect(caption()).toMatch(/^1 of /);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'grants-view')!
+      .props.onChange('programs');
+  });
+  expect(caption()).toMatch(/programs, largest first$/);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'grants-view')!
+      .props.onChange('electorates');
+  });
+  expect(caption()).toMatch(/electorates, largest first$/);
+  await act(async () => r.unmount());
+});
