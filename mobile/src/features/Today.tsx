@@ -19,7 +19,8 @@ import { ContentUnavailable } from '../design/states';
 import { rhythm } from '../design/tokens';
 import { releaseSplash } from '../launch/splash';
 import { welcomeDeclinedThisLaunch } from '../onboarding/state';
-import { EditionCard, EditionSkeleton } from './edition/EditionCard';
+import { EditionSkeleton } from './edition/EditionCard';
+import { TodayEditionCard } from './today/FeaturedPeopleCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
 import { AustraliaDots, useTodayDotsScroll } from './today/AustraliaDots';
@@ -311,8 +312,9 @@ export default function Today() {
         if (!edition.block || !editionInSlot(name, order.launchCase, tier))
           return null;
         return (
-          <EditionCard
+          <TodayEditionCard
             key={name}
+            attempt={attempt}
             edition={edition.block}
             tier={tier ?? undefined}
             today={today}
