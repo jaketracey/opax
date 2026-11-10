@@ -50,7 +50,7 @@ import {
 } from '../design/row-padding';
 import { symbols } from '../design/symbols';
 import { colors, minimumTarget, rhythm } from '../design/tokens';
-import { glassBar, headerItems, pageItems } from '../navigation/chrome';
+import { headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
 import {
   electionRoute,
@@ -60,6 +60,7 @@ import {
 } from '../navigation/routes';
 import { copyRecordLink, shareRecord } from '../navigation/share';
 import { presentSource } from '../navigation/sheets';
+import { emptyBarTitle } from '../navigation/useTitleOnScroll';
 import { useOpenAsk } from './ask/open';
 import { onElectorateDate } from './directories/ElectorateDateSheet';
 import {
@@ -237,7 +238,6 @@ export function ElectorateScreen({
         column="readable"
         testID="electorate-screen"
         scrollRef={scroll}
-        barTitle={embedded ? undefined : identity?.name}
         offline={loaded?.stale ? { savedAt: loaded.savedAt } : null}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
@@ -312,7 +312,7 @@ function ElectorateSkeleton() {
   );
 }
 
-/** The bar's items: Share, then ⋯. Back and Share only while loading. */
+/** The centre stays blank; the content heading names this screen. */
 function ElectorateBar({
   loaded,
   asof,
@@ -320,18 +320,32 @@ function ElectorateBar({
   loaded: LoadedElectorate | null;
   asof: string;
 }) {
+  const { share, menu } = useElectorateMenu(loaded?.seat ?? pendingSeat, asof);
   return (
-    <>
-      <RouteOptions
-        options={{
-          headerTransparent: glassBar(),
-          ...(loaded ? {} : headerItems(undefined)),
-        }}
-      />
-      {loaded ? <ElectorateMenu seat={loaded.seat} asof={asof} /> : null}
-    </>
+    <RouteOptions
+      stableItems
+      options={{
+        // Route metadata names subsequent Back buttons without drawing a title.
+        title: loaded?.seat.name ?? '',
+        headerTitle: emptyBarTitle,
+        ...headerItems(
+          loaded
+            ? pageItems({ name: loaded.seat.name, share, menu })
+            : undefined,
+        ),
+      }}
+    />
   );
 }
+
+/** The menu hook cannot offer to save a seat until its identity is known. */
+const pendingSeat = {
+  electorate_id: '',
+  name: '',
+  jurisdiction: '',
+  chamber: '',
+  status: 'historical',
+} as Seat;
 
 /** The ⋯ items in order; a hidden item is left out, never disabled. */
 export function useElectorateMenu(
@@ -392,15 +406,6 @@ export function useElectorateMenu(
     },
     menu,
   };
-}
-
-function ElectorateMenu({ seat, asof }: { seat: Seat; asof: string }) {
-  const { share, menu } = useElectorateMenu(seat, asof);
-  return (
-    <RouteOptions
-      options={headerItems(pageItems({ name: seat.name, share, menu }))}
-    />
-  );
 }
 
 /** Embedded panes (iPad, Talk) have no bar: the ⋯ items as one button. */

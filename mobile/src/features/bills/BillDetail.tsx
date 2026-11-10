@@ -316,10 +316,11 @@ export default function BillDetail({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             // The back label for the next screen; the bar title appears by
             // scroll once the H1 passes under the bar.
-            title: title || 'Bill',
+            title,
             // ⋯ is drawn from the start, and works once the bill loads.
             ...headerItems(
               failed

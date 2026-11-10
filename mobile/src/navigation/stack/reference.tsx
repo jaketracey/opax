@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
-import { screen, screenInStack } from './screen';
+import { screen, screenInStack, untitled } from './screen';
 
 const android =
   Platform.OS === 'android' ? { header: AndroidReadingHeader } : {};
@@ -21,7 +21,13 @@ export function referenceScreens() {
     screen('methods', 'Methods', android, false, true),
     screen('sources/index', 'Sources and licences', android, false, true),
     screen('sources/datasets', 'Datasets', android, false, true),
-    screen('sources/dataset/[id]', 'Dataset', android, false, true),
+    screen(
+      'sources/dataset/[id]',
+      '',
+      { ...android, ...untitled },
+      false,
+      true,
+    ),
     screen('sources/portraits', 'Portraits', android, false, true),
     screen('sources/photos', 'Time machine photographs', android, false, true),
     screen('sources/fonts', 'Fonts', android, false, true),
@@ -33,9 +39,9 @@ export function referenceScreens() {
  * Back; Sources and licences and its lists push beneath it.
  */
 export function licenceScreens() {
-  const screen = screenInStack('Dataset');
+  const screen = screenInStack('Back');
   return [
-    screen('[id]', 'Dataset', android, false, true),
+    screen('[id]', '', { ...android, ...untitled }, false, true),
     screen('sources/index', 'Sources and licences', android, false, true),
     screen('sources/[...path]', 'Sources and licences', android, false, true),
   ];

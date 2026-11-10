@@ -97,13 +97,13 @@ function navigationFor(...names: string[]) {
 
 test.each([
   [['index', 'explore/index', 'explore/[tool]'], 'Tools'],
-  [['bills', 'bill/[key]', 'bill-text/[key]', 'division-history'], 'Bill text'],
-  [['index', 'leads', 'lead/[id]', 'money-item'], 'Lead'],
+  [['bills', 'bill/[key]', 'bill-text/[key]', 'division-history'], 'Back'],
+  [['index', 'leads', 'lead/[id]', 'money-item'], 'Back'],
   [['index', 'explore/[tool]'], 'Today'],
   [['bills', 'bill/[key]'], 'Bills'],
   [['index', 'grants', 'grant-program'], 'Commonwealth grants'],
   [['your-mp', 'members'], 'Your MP'],
-  [['index', 'bill/[key]', 'bill-text/[key]'], undefined],
+  [['index', 'bill/[key]', 'bill-text/[key]'], 'Back'],
   [['index'], undefined],
 ] as const)('%j supplies the named back options %s', (names, title) => {
   const { route, navigation } = navigationFor(...names);
@@ -127,10 +127,21 @@ test.each([
   expect(options).toEqual({
     headerBackButtonDisplayMode: 'default',
     ...(title ? { headerBackTitle: title } : {}),
-    ...(['Tools', 'Bill text', 'Lead'].includes(title ?? '')
+    ...(['Tools'].includes(title ?? '')
       ? { headerBackButtonMenuEnabled: false }
       : {}),
   });
+  const first = options;
+  act(() => {
+    view!.update(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <Probe />
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  expect(options).toBe(first);
 });
 
 test('named back options leave Android to its native header', () => {
@@ -216,12 +227,9 @@ test.each([
   });
   if (previous === 'grants')
     expect(options.headerBackButtonMenuEnabled).toBe(false);
-  const inline = (options.headerTitle as () => React.ReactElement)();
-  expect(inline.props).toMatchObject({
-    backTitle,
-    trailing: 1,
-    shown: false,
-  });
+  // No subject has arrived, so the stack's empty title view remains installed.
+  expect(options.title).toBe('');
+  expect(options.headerTitle).toBeUndefined();
 });
 
 test('Agencies restores the system Government agencies title and its alias', async () => {
@@ -278,9 +286,8 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
   });
   expect(options).toMatchObject({
     title: 'Votes in parliament',
-    headerBackTitle: 'Bill text',
+    headerBackTitle: 'Back',
     headerBackButtonDisplayMode: 'default',
-    headerBackButtonMenuEnabled: false,
   });
   const items = (
     options.unstable_headerRightItems as () => NativeStackHeaderItem[]
@@ -318,7 +325,7 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
   const inline = () => (options.headerTitle as () => React.ReactElement)();
   expect(inline().type).toBe(BarTitle);
   expect(inline().props.shown).toBe(false);
-  expect(inline().props.backTitle).toBe('Bill text');
+  expect(inline().props.backTitle).toBe('Back');
   const list = view!.root.findByType(SectionList);
   const heading = list.props.ListHeaderComponent.props.children[0];
   expect(heading.props.collapsable).toBe(false);
@@ -341,7 +348,7 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
   // JS offset still looks like a negative resting inset.
   await native.answer(1, -20, 60);
   expect(inline().props.shown).toBe(true);
-  expect(inline().props.backTitle).toBe('Bill text');
+  expect(inline().props.backTitle).toBe('Back');
   act(() =>
     list.props.onScroll({ nativeEvent: { contentOffset: { y: 9000 } } }),
   );

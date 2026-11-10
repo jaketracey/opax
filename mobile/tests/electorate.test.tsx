@@ -10,6 +10,8 @@ import { router } from 'expo-router';
 import { ContentUnavailable } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading } from '../src/design/text';
+import { Screen } from '../src/design/layout';
+import { ScrollView } from 'react-native';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -161,6 +163,57 @@ beforeEach(() => {
   mockFollow.states = new Map();
   for (const key of Object.keys(mockParams)) delete mockParams[key];
   mock.directory.mockResolvedValue(directory as never);
+});
+
+test('the electorate nav centre stays blank through loading, data arrival and scrolling, with its accessible content heading intact', async () => {
+  load('Grayndler');
+  // Hold the actual seat read so loading is observed separately from completion.
+  const seatResult = result(
+    c.electorateFor(c.decodeElectorate(pinned(seat('Grayndler').detail_url))),
+  );
+  let resolve!: (value: typeof seatResult) => void;
+  mock.electorateFor.mockImplementation(
+    () =>
+      new Promise((done) => {
+        resolve = done as typeof resolve;
+      }),
+  );
+  const r = await render(<Electorate />);
+  expect(has(r, 'electorate-loading')).toBe(true);
+  expect(mockOptions.some((options) => options.title === 'Electorate')).toBe(
+    false,
+  );
+  await act(async () => resolve(seatResult));
+  expect(r.root.findAllByType(Screen)[0]!.props.barTitle).toBeUndefined();
+  expect(r.root.findByProps({ testID: 'electorate-name' }).props.children).toBe(
+    'Grayndler',
+  );
+  expect(
+    r.root.findAll(
+      (node) =>
+        node.type === 'Text' &&
+        node.props.accessibilityRole === 'header' &&
+        node.props.children === 'Grayndler',
+    ),
+  ).not.toHaveLength(0);
+  act(() =>
+    r.root
+      .findAllByType(ScrollView)[0]!
+      .props.onScroll({ nativeEvent: { contentOffset: { y: 2000 } } }),
+  );
+  for (const options of mockOptions) {
+    expect(options.title).not.toBe('Electorate');
+    const title = (
+      options.headerTitle as () => ReactElement<{ children?: unknown }>
+    )();
+    expect(title.props).toMatchObject({
+      accessibilityElementsHidden: true,
+      importantForAccessibility: 'no-hide-descendants',
+    });
+    expect(title.props.children).toBeUndefined();
+  }
+  expect(mockOptions.at(-1)!.title).toBe('Grayndler');
+  act(() => r.unmount());
 });
 
 test('Grayndler reads in the stated order with no pipeline words', async () => {

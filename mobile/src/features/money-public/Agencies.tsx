@@ -242,7 +242,7 @@ export function Agency() {
   const { setQuery } = search;
   useEffect(() => setQuery(''), [view, setQuery]);
   const titleRef = useRef<View>(null);
-  const name = profile?.name ?? routeName ?? 'Government agency';
+  const name = profile?.name ?? routeName ?? '';
   const title = useTitleOnScroll(titleRef, name, {
     trailing: profile && view !== 'years' ? 3 : 2,
   });
@@ -294,10 +294,10 @@ export function Agency() {
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
           title: name,
-          headerSearchBarOptions:
-            profile && view !== 'years' ? search.options : undefined,
+          headerSearchBarOptions: view !== 'years' ? search.options : undefined,
           ...moneyBar({
             name,
             path: profile ? path : null,

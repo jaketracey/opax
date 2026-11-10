@@ -345,7 +345,9 @@ export default function DocumentReader({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
+            title: shown ? headline : '',
             ...headerItems(
               findBar
                 ? () => findItems(find)
