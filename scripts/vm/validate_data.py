@@ -45,6 +45,7 @@ way and every file that `git status` shows as changed or added must parse.
   taxcharity entities/tax-charity: index.json (meta.counts, sources, caveats; the ABN counts held), names.json
              (by_name), and the <dd>.json shards by the last two digits of the ABN
 """
+import datetime
 import importlib.util
 import json
 import re
@@ -624,6 +625,19 @@ def check_video() -> list[str]:
             errs.append(f"{where} links somewhere other than its YouTube watch page")
         if row.get("date") is not None and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(row.get("date"))):
             errs.append(f"{where} has a malformed date")
+        elif row.get("kind") == "question_time" and row.get("date"):
+            # The Senate does not sit at weekends: a weekend date is a title typo (speeches-press-008)
+            # that needs a reviewed entry in scripts/corrections/senate_video.json.
+            try:
+                weekday = datetime.date.fromisoformat(row["date"]).weekday()
+            except ValueError:
+                errs.append(f"{where} has an impossible date")
+            else:
+                if weekday >= 5:
+                    errs.append(f"{where} dates a Question Time to a weekend ({row['date']})")
+        if row.get("kind") == "first_speech" and row.get("date") is None and re.search(r"\b\d{4}\s*$", str(row.get("title") or "")):
+            # The title ends in a year, so it names a day the parser failed to read (speeches-press-009).
+            errs.append(f"{where} is a first speech whose titled date was not parsed")
         if ("person_slug" in row or "person_pid" in row) and row.get("kind") != "first_speech":
             errs.append(f"{where} names a person on a row that is not a first speech")
         slug = row.get("person_slug")

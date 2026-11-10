@@ -1,0 +1,10 @@
+[
+  {"id": "xqHWtT_4k5c", "field": "date", "from": "2025-03-02", "to": "2026-03-02",
+   "evidence_url": "https://www.youtube.com/watch?v=xqHWtT_4k5c",
+   "evidence": "AuSenate upload titled 'Senate Question Time, 2 March 2025' has uploadDate 2026-03-01T22:24:21-08:00 (Monday 2 March 2026, 17:24 AEDT). 2 March 2025 was a Sunday; the Senate sat on Monday 2 March 2026 with Questions without Notice (https://www.openaustralia.org.au/senate/?d=2026-03-02). The title's year is a typo.",
+   "finding": "speeches-press-008", "reviewed": "2026-11-10"},
+  {"id": "wPh1LZNAnEc", "field": "date", "from": "2025-11-05", "to": "2025-11-04",
+   "evidence_url": "https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/28873/&sid=0094",
+   "evidence": "Hansard, Senate 4/11/2025, has a Questions without Notice section. This upload, titled 'Senate Question Time, 5 November 2025', has uploadDate 2025-11-04T13:48:00-08:00 (08:48 AEDT on 5 November, before that day's Question Time; https://www.youtube.com/watch?v=wPh1LZNAnEc). The 5 November Question Time is avWcDCrOuQE, uploaded 2025-11-04T22:32:23-08:00 (17:32 AEDT on 5 November).",
+   "finding": "speeches-press-010", "reviewed": "2026-11-10"}
+]

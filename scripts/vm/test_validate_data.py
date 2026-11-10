@@ -662,6 +662,22 @@ class SenateVideoTests(Base):
         self.edit(self.REL, lambda d: d["videos"][0].update(person_slug="jane-quill"))
         self.assertFails("video", "not a first speech")
 
+    def test_a_weekend_question_time_fails(self):
+        # speeches-press-008: 'Senate Question Time, 2 March 2025' was the Monday 2 March 2026 sitting.
+        self.edit(self.REL, lambda d: d["videos"][0].update(date="2025-03-02"))
+        self.assertFails("video", "to a weekend")
+        self.make()
+        self.edit(self.REL, lambda d: d["videos"][0].update(date="2026-03-02"))
+        self.assertOk("video")
+
+    def test_a_first_speech_whose_titled_date_was_not_read_fails(self):
+        # speeches-press-009: 'First speech: Senator Babet - 3 August, 2022' was left undated.
+        self.edit(self.REL, lambda d: d["videos"][1].update(title="First speech: Senator Babet - 3 August, 2022", date=None))
+        self.assertFails("video", "titled date was not parsed")
+        self.make()
+        self.edit(self.REL, lambda d: d["videos"][1].update(title="First speech: Senator Babet", date=None))
+        self.assertOk("video")
+
 
 if __name__ == "__main__":
     unittest.main()

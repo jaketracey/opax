@@ -16,6 +16,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { honestFetch, runSource } from '../lib/http.mjs'
 import { FEED_URL, UPLOADS_PLAYLIST, parseFeed, parsePlaylistPage, mergeRows, handbookSenators, document } from './lib.mjs'
+import { load as loadCorrections } from '../corrections/apply.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const PUBLIC = join(ROOT, 'portal', 'public')
@@ -65,7 +66,8 @@ await runSource(async () => {
   ])
   if (!roster?.people?.length) throw new Error('roster missing; nothing staged')
   const mpidOf = new Map(Object.entries(links.people || {}).map(([pid, v]) => [pid, v?.aphMpid]).filter(([, m]) => m))
-  const context = { mpidOf, senators: handbookSenators(pay) }
+  // Reviewed per-video fixes (a title's own typo), each citing the upload or the Senate's record.
+  const context = { mpidOf, senators: handbookSenators(pay), corrections: loadCorrections('senate_video') }
 
   const items = await feedItems()
   const sources = [{ label: 'AuSenate YouTube feed', url: FEED_URL }]

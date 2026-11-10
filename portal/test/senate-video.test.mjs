@@ -93,6 +93,57 @@ test('feed parse, then merge: accumulate, deduplicate by id, refresh titles, re-
   assert.equal(CHANNEL_ID, 'UCQptchvNlCzMKsGPU8s_6UQ');
 });
 
+test('titles the channel prints with a comma before the year, or month first, still date and match (speeches-press-009)', () => {
+  // Published AuSenate titles: the split used to fall on the comma, leaving date '2022' and speaker 'Babet - 3 August'.
+  assert.deepEqual(parseTitle('First speech: Senator Babet - 3 August, 2022', '2022-08-05T05:13:31Z'), {kind: 'first_speech', date: '2022-08-03', speaker: 'Babet'});
+  assert.deepEqual(parseTitle('First speech: Senator Allman-Payne - 1 August, 2022', '2022-08-05T04:00:42Z'), {kind: 'first_speech', date: '2022-08-01', speaker: 'Allman-Payne'});
+  assert.deepEqual(parseTitle('First speech: Senator Barbara Pocock - 3 August, 2022', '2022-08-05T04:52:10Z'), {kind: 'first_speech', date: '2022-08-03', speaker: 'Barbara Pocock'});
+  assert.deepEqual(parseTitle('First speech: Senator Quill, 3 Sept, 2026', '2026-09-04T00:00:00Z'), {kind: 'first_speech', date: '2026-09-03', speaker: 'Quill'});
+  assert.deepEqual(parseTitle('Senate Question Time, February 3 2021', '2021-02-08T00:52:27Z'), {kind: 'question_time', date: '2021-02-03'});
+  assert.equal(parseTitle('Senate Question Time, October 15, 2026', '2026-10-16T00:00:00Z').date, '2026-10-15');
+  // Month first only where the rest of the title is one date: a range, or a stray word, is no sitting day.
+  assert.equal(parseTitle('Senate Discovery: November 22 - December 2, 2021', '2021-12-14T23:56:36Z').date, null);
+  assert.equal(parseTitle('Senate Discovery: March 23 & April 8, 2020', '2020-08-07T04:31:13Z').date, null);
+  assert.equal(parseDay('February 3 2021'), null, 'month first is opt-in');
+  assert.equal(parseDay('February 3 2021', {monthFirst: true}), '2021-02-03');
+  assert.equal(parseDay('Week 3 2021', {monthFirst: true}), null);
+  assert.equal(parseDay('February 30 2021', {monthFirst: true}), null);
+  // The upload guard still holds for the new forms.
+  assert.equal(parseTitle('Senate Question Time, February 3 2031', '2021-02-08T00:52:27Z').date, null);
+  // A printed two-part surname is the tail of the roster's full name.
+  const price = [{name: 'Tess Nampi Price', pid: '90010', chambers: ['senate'], first: 2022, last: 2026, current: true, representation: []},
+    {name: 'Nampi Price', pid: '90010', chambers: ['senate_committee'], first: 2025, last: 2026, current: true, representation: []}];
+  assert.equal(matchSenator('Nampi Price', '2022-07-27', price)?.name, 'Tess Nampi Price');
+  assert.equal(matchSenator('Other Price', '2022-07-27', price), null);
+});
+
+test('reviewed date corrections: applied by id, re-matched, and loud when stale (speeches-press-008, -010)', async () => {
+  const {load} = await import('../../scripts/corrections/apply.mjs');
+  const entries = load('senate_video');
+  assert.deepEqual(entries.map(e => [e.id, e.from, e.to]), [['xqHWtT_4k5c', '2025-03-02', '2026-03-02'], ['wPh1LZNAnEc', '2025-11-05', '2025-11-04']]);
+  for (const e of entries) assert.match(e.evidence_url, /^https:\/\/(www\.youtube\.com|www\.aph\.gov\.au)\//);
+  const items = [
+    {id: 'xqHWtT_4k5c', title: 'Senate Question Time, 2 March 2025', published: '2026-03-02T06:24:21Z'},
+    {id: 'wPh1LZNAnEc', title: 'Senate Question Time, 5 November 2025', published: '2025-11-04T21:48:00Z'},
+    {id: 'avWcDCrOuQE', title: 'Senate Question Time, 5 November 2025', published: '2025-11-05T06:32:23Z'},
+  ];
+  const byId = Object.fromEntries(mergeRows([], items, roster, {...handbook, corrections: entries}).map(r => [r.id, r]));
+  assert.equal(byId.xqHWtT_4k5c.date, '2026-03-02');
+  assert.equal(byId.wPh1LZNAnEc.date, '2025-11-04');
+  assert.equal(byId.avWcDCrOuQE.date, '2025-11-05', 'the real 5 November video is untouched');
+  // Without the corrections the titles' own dates stand: nothing else rewrites them.
+  assert.equal(mergeRows([], items, roster, handbook).find(r => r.id === 'xqHWtT_4k5c').date, '2025-03-02');
+  // A source that fixed its title (or a row that is gone) stops the build for review.
+  const fixed = items.map(i => i.id === 'xqHWtT_4k5c' ? {...i, title: 'Senate Question Time, 2 March 2026'} : i);
+  assert.throws(() => mergeRows([], fixed, roster, {...handbook, corrections: entries}), /already holds the corrected value/);
+  assert.throws(() => mergeRows([], items.slice(1), roster, {...handbook, corrections: entries}), /xqHWtT_4k5c: record not found/);
+  // A corrected first-speech date is matched again against the roster.
+  const fs = [{id: 'fsQuillTypo', title: 'First speech: Senator Quill - 16 September 2016', published: '2026-09-16T07:38:51Z'}];
+  const fix = [{id: 'fsQuillTypo', field: 'date', from: '2016-09-16', to: '2026-09-16', evidence_url: 'https://www.aph.gov.au/x', evidence: 'fixture', finding: 'test', reviewed: '2026-11-10'}];
+  assert.equal(mergeRows([], fs, roster, handbook)[0].person_slug, null);
+  assert.equal(mergeRows([], fs, roster, {...handbook, corrections: fix})[0].person_slug, 'jane-quill');
+});
+
 const rows = mergeRows([], parseFeed(feedXml), roster, handbook);
 
 const {JSDOM, requestInterceptor} = jsdom;
