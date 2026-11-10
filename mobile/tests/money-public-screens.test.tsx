@@ -10,6 +10,7 @@ import { decodeDiscovery } from '../src/api/catalog-decoders';
 import { catalogs } from '../src/api/runtime';
 import { money } from '../src/features/money-public/runtime';
 import Hub from '../src/features/money-public/Hub';
+import { grantsFigure } from '../src/features/money-public/HubCards';
 import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
 import Largest from '../src/features/money-public/Largest';
@@ -151,6 +152,19 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
       .findAll((n) => typeof n.props.testID === 'string')
       .map((n) => n.props.testID as string),
   );
+
+test('the all-years grant figure names the full recorded range, including future agreements', () => {
+  const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
+  index.meta.years = ['2023-24', '2024-25', '2026-27'];
+  index.meta.latestCompleteYear = '2024-25';
+  index.byYear = { '2024-25': { total: 20, count: 2 } };
+  index.counts.dollars = 60;
+  expect(grantsFigure(index)).toMatchObject({
+    value: 20,
+    line: 'in 2 Commonwealth grants in 2024–25',
+    allYears: { label: 'All years, 2023–24 to 2026–27', value: 60 },
+  });
+});
 
 test('a lead example names its back destination and has no lead methodology in Notes', async () => {
   const lead = leadsFor(decodeDiscovery(raw('/discovery.json'))).find(

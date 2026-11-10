@@ -70,7 +70,7 @@ export function grantsFigure(index: GrantIndex, words = 'Commonwealth grants') {
         value: year.total,
         line: `in ${counted(year.count, words.replace(/s$/, ''), words)} in ${fy(latest)}`,
         allYears: {
-          label: `All years, ${fyRange(years[0] ?? '', latest)}`,
+          label: `All years, ${fyRange(years[0] ?? '', years.at(-1) ?? '')}`,
           value: index.counts.dollars,
         },
       }
