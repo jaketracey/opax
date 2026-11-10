@@ -124,6 +124,36 @@ def check_budget_output(output, inventory):
         require(identity not in text, "held-output", f"held ID or URL remains: {identity}")
 
 
+OUTLIER_METRICS = ("receipts", "payments", "net_debt")
+OUTLIER_RATIO = 3
+
+
+def budget_outliers(aggregates):
+    """Rows more than OUTLIER_RATIO times above or below the cross-vintage median for their metric and year.
+
+    Every vintage of a year's receipts, payments or net debt sits within a few per cent of the others, so a value
+    three times off is a misread cell (a sentence's percentage or year read as a table figure,
+    contracts-grants-003), never a revision. The cash balance is left out: it crosses zero.
+    """
+    by_key = {}
+    for row in aggregates:
+        if row["metric"] in OUTLIER_METRICS:
+            billions = row["value"] / 1000 if row["unit"] == "AUD million" else row["value"]
+            by_key.setdefault((row["metric"], row["fiscal_year"]), []).append((billions, row))
+    found = []
+    for (metric, year), values in sorted(by_key.items()):
+        ordered = sorted(v for v, _ in values)
+        middle = len(ordered) // 2
+        median = ordered[middle] if len(ordered) % 2 else (ordered[middle - 1] + ordered[middle]) / 2
+        if len(ordered) < 3 or median <= 0:
+            continue
+        for value, row in values:
+            if not median / OUTLIER_RATIO <= value <= median * OUTLIER_RATIO:
+                found.append(f"{metric} {year} {row['vintage']} {row['release']} = {row['value']} {row['unit']} "
+                             f"({row['table_id']}, p{row['pdf_page']}) against a median of {median:.1f} AUD billion")
+    return found
+
+
 def budget_checks(stage):
     inventory, hub = load(stage / "inventory.json"), load(stage / "hub.json")
     receipts = load(stage / "receipts.json")
@@ -181,6 +211,8 @@ def budget_checks(stage):
                 and re.fullmatch(r"20\d{2}-\d{2}", row["fiscal_year"])
                 and type(row.get("publication_order")) in (int, float) and math.isfinite(row["publication_order"])
                 and type(row["pdf_page"]) is int and row["pdf_page"] > 0, "asset-shape", "budget fiscal row")
+    outliers = budget_outliers(aggregates)
+    require(not outliers, "outlier", "; ".join(outliers[:5]))
     for d in documents:
         if d["consolidated"] and d["kind"] in ("bp1", "myefo") and permitted(d):
             metrics = {r["metric"] for r in aggregates if r["document_id"] == d["id"] and r["fiscal_year"] == d["year"]}

@@ -258,3 +258,69 @@ def test_october_budgets_have_the_just_completed_year_as_actual():
         preceding=f'{int(year[:4])-1}-{year[2:4]}'
         assert len([r for r in rows if r['fiscal_year']==preceding and r['status']=='actual'])>=3
         assert all(r['status']=='estimate' for r in rows if r['fiscal_year']==year)
+
+
+# MYEFO 2020-21 p41 and MYEFO 2015-16 p11 as PyMuPDF prints them (sorted text): the sentences under each table
+# start with a metric's name (contracts-grants-003).
+MYEFO_2020_P41 = '''Table 3.2: Australian Government general government sector budget aggregates
+(continued)
+                                                                 Estimates
+                                                2022-23                    2023-24
+                                            Budget     MYEFO      Budget     MYEFO
+                                              $b           $b          $b           $b
+
+Receipts                                        482.6          487.1        526.4          526.3
+Per cent of GDP                                    23.0           23.1          23.9           23.8
+Payments(a)                                    570.5          571.4        593.3          592.2
+
+Compared to the 2020-21 Budget, payments are expected to decrease by $6.5 billion to
+$670.9 billion (33.4 per cent of GDP) in 2020-21, and then decrease to $592.2 billion
+(26.8 per cent of GDP) in 2023-24.
+
+Receipts are expected to increase to $473.1 billion (23.6 per cent of GDP) in 2020-21,
+increasing to $526.3 billion (23.8 per cent of GDP) in 2023-24.
+'''
+MYEFO_2015_P11 = '''Table 1.1: Budget aggregates
+                                                                          Projections
+                                                     2017-18                 2018-19
+                                                  Budget   MYEFO      Budget   MYEFO
+ Underlying cash balance($b)(a)                          -14.4        -23.0           -6.9        -14.2
+ Per cent of GDP                                               -0.8          -1.3           -0.4          -0.7
+(a) Excludes expected net Future Fund earnings.
+
+Net debt is projected to peak at 18.5 per cent of GDP in 2017-18 and then decline over
+the medium term.
+'''
+
+
+def test_sentences_that_start_with_a_metric_name_are_never_table_rows():
+    d, _ = document('myefo-2021', '2020-21', 'myefo')
+    rows = parse_page(MYEFO_2020_P41, d, 41)
+    receipts = {(r['fiscal_year'], r['vintage']): r['value'] for r in rows if r['metric'] == 'receipts'}
+    assert receipts == {('2022-23', 'Budget comparison'): 482.6, ('2022-23', 'MYEFO'): 487.1,
+                        ('2023-24', 'Budget comparison'): 526.4, ('2023-24', 'MYEFO'): 526.3}
+    d, _ = document('myefo-2015', '2015-16', 'myefo')
+    rows = parse_page(MYEFO_2015_P11, d, 11)
+    assert {r['metric'] for r in rows} == {'underlying_cash_balance'}
+
+
+def test_prose_tail_rejects_words_years_and_percentages_but_keeps_cells():
+    from scripts.budget_registry.parse import prose_tail
+    assert not prose_tail('   482.6   487.1   526.4   526.3')
+    assert not prose_tail('(a)   -35.1   -37.4')
+    assert prose_tail('are expected to increase to $473.1 billion')
+    assert prose_tail('18.5 2017-18')
+    assert prose_tail('18.5 per cent')
+
+
+def test_promotion_rejects_a_value_three_times_off_its_cross_vintage_median():
+    from scripts.promote_hub_data import budget_outliers
+    def row(value, unit='AUD billion', release='2016-17', metric='net_debt'):
+        return {'metric': metric, 'fiscal_year': '2017-18', 'value': value, 'unit': unit, 'vintage': 'MYEFO',
+                'release': release, 'table_id': 'Table 1.1', 'pdf_page': 11}
+    rows = [row(336404, 'AUD million', '2015-16'), row(341.0), row(342.0, release='2017-18'), row(350.1, release='2018-19')]
+    assert budget_outliers(rows) == []
+    rows[0] = row(18.5, release='2015-16')
+    assert budget_outliers(rows) == ['net_debt 2017-18 MYEFO 2015-16 = 18.5 AUD billion (Table 1.1, p11) against a median of 341.5 AUD billion']
+    # the cash balance crosses zero, so it is never judged by ratio
+    assert budget_outliers([row(v, metric='underlying_cash_balance') for v in (-0.5, -9.0, 4.2)]) == []

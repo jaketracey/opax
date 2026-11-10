@@ -1,10 +1,10 @@
 {
   "status": "approved",
-  "reviewed_commit": "382bff462",
-  "review_basis": "Codex lane review; promotion authorised by coverage/promote-hubs",
+  "reviewed_commit": "e0c445f2d",
+  "review_basis": "Codex lane review; promotion authorised by coverage/promote-hubs. Re-reviewed 2026-11-10 for contracts-grants-003: aggregates reparsed offline from the 34 hash-verified originals with the prose-row fix in scripts/budget_registry/parse.py; the keyed diff is exactly four rows: MYEFO 2020-21 receipts 2022-23 473.1 -> 487.1 and 2023-24 2020.0 -> 526.3 AUD billion (Table 3.2, p41); MYEFO 2015-16 net debt 2017-18 18.5 AUD billion -> 336,404 AUD million and 2018-19 2017.0 AUD billion -> 346,557 AUD million (Table 3.39, p99).",
   "inputs": {
-    "aggregates.json": "73af7b4f0bbf413a274494fb38d229a6188c6b42df48b4bb58f16da8e6280b8b",
-    "hub.json": "5e755a7f18c295b9d8c5d84087fad43e47a5a5952fddd598b07e12b47f9af4a8",
+    "aggregates.json": "96373a549778fd469f6e6cb7e1c06fa38c3faeacf1cc282517d8091f41208e66",
+    "hub.json": "7c2c6a8885b729152f1cf000eec691d02afaf65de062f6e1cdbbac229fe909d2",
     "inventory.json": "d1a8e05995b44b20d632808185bb7891f57c7cea59e6434a7362ac05ff18e9a7",
     "measures.json": "d606d1a1a4c8f6f016dc8c3b7ed1d7adbaf5e832d5092a7b089f3ed4abbd8139",
     "receipts.json": "c4959542bc32ff3e1a8c5e7e60754c44dbed6a624c9e595c582c8a265fb722f1"
