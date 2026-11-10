@@ -167,6 +167,8 @@ assert.deepEqual(
 for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
   assert.equal(app.version, '1.1.0');
+  // The API User-Agent and analytics report the store version.
+  assert.equal(app.extra.appVersion, app.version);
   assert.equal(app.ios.bundleIdentifier, 'au.com.opax.app');
   assert.equal(app.ios.buildNumber, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(

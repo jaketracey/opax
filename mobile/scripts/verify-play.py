@@ -16,6 +16,23 @@ import sys
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
+import importlib.util
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).parent))
+# The iOS release verifier owns the analytics policy (docs/ANALYTICS.md):
+# PostHog is the one reviewed SDK, JS only, sending to opax.com.au/ingest;
+# every other analytics or advertising SDK and host is refused. Android
+# reuses its Hermes string scan so both stores enforce one list.
+_spec = importlib.util.spec_from_file_location(
+    "release_policy", Path(__file__).with_name("verify-ios-release.py")
+)
+release_policy = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(release_policy)
+# Android sends no analytics until its Play Data safety answers include
+# them (docs/ANDROID-STORE.md, "Data safety"). Turning this on requires the
+# same change in app.config.ts and the Data safety form.
+ANDROID_ANALYTICS_ENABLED = False
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("aab", type=Path)
@@ -211,6 +228,11 @@ with zipfile.ZipFile(args.aab) as archive:
         if marker.encode() in js or marker.replace("/", ".").encode() in js
     ]
     assert not any(findings.values()), "Known advertising/analytics SDK namespace found"
+    # Strings in the Hermes bundle: no analytics SDK or host other than
+    # posthog-react-native's reviewed constants (verify-ios-release.py).
+    assert not release_policy.has_analytics(js), (
+        "Analytics SDK or host other than PostHog through opax.com.au/ingest"
+    )
     for secret in credentials.values():
         assert all(
             secret.encode() not in archive.read(name)
@@ -255,6 +277,13 @@ with zipfile.ZipFile(apk) as archive:
     )
     packaged_config = json.loads(archive.read("assets/app.config"))
 extra = packaged_config["extra"]
+expected_analytics = (
+    release_policy.ANALYTICS_CONFIG if ANDROID_ANALYTICS_ENABLED else None
+)
+assert extra.get("analytics") == expected_analytics, (
+    "Embedded analytics config must be exactly the opax.com.au/ingest proxy, "
+    "and absent while Android analytics is off"
+)
 build_tools = (
     Path(os.environ["ANDROID_HOME"])
     / "build-tools"
@@ -315,6 +344,8 @@ report = {
         "android_permission_allowlist": "passed",
         "microphone_follows_voice_switch": "passed",
         "known_advertising_analytics_namespaces_absent": "passed",
+        "analytics_only_posthog_via_opax_ingest": "passed",
+        "analytics_config": "on" if ANDROID_ANALYTICS_ENABLED else "off",
         "signing_credentials_absent_from_bundle": "passed",
         "universal_apk_generated": "passed",
         "aab_and_apk_embedded_js_identical": "passed",

@@ -763,6 +763,11 @@ def verify_app(app, args):
               config["ios"]["buildNumber"] == args.build and
               "NSAppTransportSecurity" not in config["ios"]["infoPlist"],
               "embedded production OPAX origin, config and build number")
+        # Analytics' app_version and the API User-Agent read these, so they
+        # must be the archive's own CFBundleShortVersionString.
+        check(config.get("version") == args.version and
+              config["extra"].get("appVersion") == args.version,
+              "embedded version and User-Agent version match the marketing version")
         check(config["extra"].get("analytics") == ANALYTICS_CONFIG,
               "analytics sends only to the opax.com.au/ingest proxy with the public project token")
         check(config.get("updates", {}).get("enabled") is False, "OTA updates disabled")

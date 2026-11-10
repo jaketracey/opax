@@ -78,6 +78,9 @@ with zipfile.ZipFile(args.apk) as archive:
             "http://10.0.2.2:" + os.environ.get("OPAX_FIXTURE_PORT", "8910"))
         assert extra["apiOrigin"] == expected_origin
         assert extra["variant"] == args.variant
+        # Android sends no analytics until its Data safety answers include
+        # them (docs/ANALYTICS.md, "iOS and Android app"; verify-play.py).
+        assert "analytics" not in extra, "Android build embeds an analytics config"
         bundle = archive.read("assets/index.android.bundle")
         routes = [b"./talk.tsx", b"./account/sign-in.tsx", b"./account/delete.tsx"]
         if args.variant == "e2e" or voice:
