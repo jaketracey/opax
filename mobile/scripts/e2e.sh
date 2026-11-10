@@ -58,7 +58,9 @@ if [[ ! "$OPAX_STOP_GRACE_SECONDS" =~ ^[0-9]+$ || ${#OPAX_STOP_GRACE_SECONDS} -g
 fi
 export OPAX_STOP_GRACE_SECONDS=$((10#$OPAX_STOP_GRACE_SECONDS))
 fallback_shutdown() {
-  [ -f "$OUT/device-started" ] && [ ! -f "$OUT/device-shutdown" ] && [ "$FALLBACK_DONE" = 0 ] || return 0
+  # A device the session deliberately kept booted (OPAX_KEEP_SIM_BOOTED=1)
+  # is not shut down here either.
+  [ -f "$OUT/device-started" ] && [ ! -f "$OUT/device-shutdown" ] && [ ! -f "$OUT/device-kept" ] && [ "$FALLBACK_DONE" = 0 ] || return 0
   FALLBACK_DONE=1
   if perl -e '$s=shift; $s =~ /^[1-9][0-9]*$/ or die "Invalid timeout\n"; alarm $s; exec @ARGV or die "exec: $!\n"' "${OPAX_SHUTDOWN_TIMEOUT_SECONDS:-20}" xcrun simctl shutdown "$UDID" > "$OUT/fallback-shutdown.log" 2>&1; then
     touch "$OUT/device-shutdown"

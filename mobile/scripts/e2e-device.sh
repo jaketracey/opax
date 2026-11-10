@@ -52,7 +52,12 @@ cleanup() {
     timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" content_size >> "$OUT/restore.log" 2>&1 || true
     timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" appearance >> "$OUT/restore.log" 2>&1 || true
     timed "$UI_TIMEOUT" xcrun simctl location "$UDID" clear >> "$OUT/restore.log" 2>&1 || true
-    if timed "$SHUTDOWN_TIMEOUT" xcrun simctl shutdown "$UDID" >> "$OUT/restore.log" 2>&1; then
+    # OPAX_KEEP_SIM_BOOTED=1 leaves the simulator up for the next run (the
+    # gate reuses a booted device), saving the boot and warm-up each time.
+    if [ "${OPAX_KEEP_SIM_BOOTED:-0}" = 1 ]; then
+      touch "$OUT/device-kept"
+      echo "Simulator left booted (OPAX_KEEP_SIM_BOOTED=1)." >> "$OUT/restore.log"
+    elif timed "$SHUTDOWN_TIMEOUT" xcrun simctl shutdown "$UDID" >> "$OUT/restore.log" 2>&1; then
       touch "$OUT/device-shutdown"
     fi
     printf 'device_cleanup_seconds=%s\n' "$((SECONDS - cleanup_start))" >> "$OUT/device-timing.txt"
@@ -76,6 +81,14 @@ assert_device_lock
 OWN_DEVICE=1
 touch "$OUT/device-started"
 device_start=$SECONDS
+# OPAX_SIM_HEAL=1: a shut-down simulator whose daemons crash-loop (which makes
+# XCTest wait for the crash reporter after every Maestro self-test) is erased
+# before boot. A booted simulator is left alone.
+if [ "${OPAX_SIM_HEAL:-0}" = 1 ] && ! xcrun simctl list devices booted | grep -q "$UDID"; then
+  heal_rc=0
+  timed "$BOOT_TIMEOUT" bash scripts/sim-health.sh "$UDID" --erase > "$OUT/sim-health.log" 2>&1 || heal_rc=$?
+  case "$heal_rc" in 0|3) ;; *) echo "sim-health failed (exit $heal_rc); see $OUT/sim-health.log" >&2; exit "$heal_rc" ;; esac
+fi
 start=$SECONDS
 # Alarm the gate itself, so a timed-out gate cannot later admit a boot.
 if [ -n "${OPAX_SIM_GATE:-}" ]; then
