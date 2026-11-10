@@ -1,10 +1,12 @@
-/** Government grants from the published table and complete recipient summaries. */
+/** Government grants from complete published aggregates and the individual-award table. */
 import { aud, clip, fold, siteUrl, tableRows } from './record-common'
 import { receiptYearWindow } from '../receipt-period'
 import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
+import { grantTotals } from './grant-totals'
 
 const STATES = ['nsw', 'vic', 'qld', 'wa', 'sa', 'tas', 'act', 'nt']
 const PRIVATE_KINDS = new Set(['person', 'individual', 'sole trader'])
+const financialYear = (year: unknown) => year ? `${year}-${String(Number(year) + 1).slice(-2)}` : null
 type GrantJurisdiction = 'federal' | 'qld'
 interface GrantRecipient { id: string; sh: number; n: string; k: string }
 interface GrantIndex { meta: { years: string[]; generated?: string }; recipients: GrantRecipient[] }
@@ -73,7 +75,7 @@ async function recipientTotal(env: ToolEnv, args: ToolArgs): Promise<StructuredT
   const notes = [jurisdiction === 'qld' ? 'Queensland values are annual expenditure lines for grants, service agreements and other assistance; counts are expenditure rows, not distinct awards.' : 'Federal values are published grant award values, not payments received; varied awards use their current published value.',
     'The total uses the complete published recipient summary, including records omitted from its largest-grant list.']
   if (!bounded && detail.c > Object.values(detail.by).reduce((sum, cell) => sum + Number(cell[1]), 0)) notes.push('The all-years total also includes records with no financial year recorded.')
-  return { rows: [{ recipient: detail.n, recipient_id: detail.id, jurisdiction, total_aud: total, records: count, period }],
+  return { rows: [{ recipient: detail.n, recipient_id: detail.id, jurisdiction, total_aud: total, records: count, record_count: count, count_unit: jurisdiction === 'qld' ? 'expenditure lines' : 'grant awards', period, from_financial_year: fyLabel(periodFrom), to_financial_year: fyLabel(periodTo), by_year: Object.fromEntries(Object.entries(detail.by).filter(([year]) => Number(year.slice(0, 4)) >= periodFrom && Number(year.slice(0, 4)) <= periodTo)), complete: true }],
     recipient: detail.n, jurisdiction, total_aud: total, records: count, period,
     coverage: { since: `${periodFrom}-07-01`, until: `${periodTo + 1}-06-30`, as_of: asOf, note: 'Complete published recipient summary, grouped by financial year.' },
     citations: [{ kind: 'record', value: total, url, text: `${detail.n} received ${aud(total)} in published ${basis}, ${period} (${count.toLocaleString('en-AU')} ${recordKind}; ${periodFrom}-07-01 to ${periodTo + 1}-06-30).` }], notes }
@@ -90,15 +92,18 @@ const grantCite = (env: ToolEnv, r: Record<string, unknown>): ToolCitation => {
   const who = individual ? 'An individual recipient' : String(r.recipient || 'Recipient not recorded')
   const page = !individual && r.recipientAvailable && typeof r.recipientId === 'string' ? siteUrl(env, `/money/grants/${r.jurisdiction}/recipient/${encodeURIComponent(r.recipientId)}`) : null
   return { kind: 'record', value: Number(r.amount), url: page ?? (typeof r.url === 'string' && /^https:\/\//.test(r.url) ? r.url : siteUrl(env, '/money/grants')),
-    text: `${who}: ${aud(r.amount)} grant "${clip(r.title, 90)}" from ${r.agency || 'agency not recorded'} (${r.year ?? 'year not recorded'}${r.electorate ? `, ${r.electorate}` : ''}${r.jurisdiction === 'qld' ? ', Queensland' : ''})` }
+    text: `${who}: ${aud(r.amount)} grant "${clip(r.title, 90)}" from ${r.agency || 'agency not recorded'} (${r.program ? `program: ${r.program}, ` : ''}${financialYear(r.year) ?? 'financial year not recorded'}${r.electorate ? `, ${r.electorate}` : ''}${r.jurisdiction === 'qld' ? ', Queensland' : ''})` }
 }
 
 export const tool: ToolDefinition = {
   name: 'grants',
-  description: 'Government grants: use recipient with aggregation total for a recipient\'s summed grant award value over all published years, a financial year or an FY range. Totals use complete published recipient summaries, including awards omitted from grant lists; federal is the default source. Otherwise lists the biggest matching grants, one largest grant per recipient by default, filtered by words, state or electorate. Federal award values are not payments received; Queensland values are annual expenditure lines.',
+  description: 'Government grants: complete published totals by recipient, program or financial year, or the largest individual grants. For "how much" or "total" pass operation: totals and recipient (full name or ID), program, or group_by: year. Totals use complete published aggregates, including awards omitted from detail lists. For totals, from_year/to_year are financial-year start years. Recipient totals also accept aggregation: total, financial_year: YYYY-YY or complete since/until financial-year boundaries. Largest-award lists retain their calendar-year filters. For a biggest single grant use operation: largest and query. Federal award values are not payments received; Queensland records are annual expenditure lines.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
-    query: { type: 'string', minLength: 2, maxLength: 160, description: 'Words in the grant title, program, recipient, agency or description.' },
-    recipient: { type: 'string', minLength: 2, maxLength: 500, description: 'Exact published recipient name or ID, or a unique name fragment. Requests its complete summed total; do not combine with query, state or electorate.' },
+    operation: { type: 'string', enum: ['totals', 'largest'], description: 'totals: complete aggregates; largest: individual awards (default unless recipient, program or group_by is supplied).' },
+    recipient: { type: 'string', minLength: 2, maxLength: 400, description: 'Full published recipient name or ID for a complete total. Do not use query for a named recipient total.' },
+    program: { type: 'string', minLength: 2, maxLength: 400, description: 'Published program name or catalogue ID for a complete program total.' },
+    group_by: { type: 'string', enum: ['recipient', 'program', 'year'], description: 'Dimension for totals. Default recipient, or program when program is supplied. year returns financial years.' },
+    query: { type: 'string', minLength: 2, maxLength: 400, description: 'Words in individual grant records. In totals mode, filters names in the selected recipient or program directory.' },
     aggregation: { type: 'string', enum: ['total'], description: 'Sum all published records for recipient, optionally by financial-year range. Requires recipient.' },
     financial_year: { type: 'string', pattern: '^\\d{4}-\\d{2}$', description: 'One financial year, YYYY-YY, e.g. 2017-18. Recipient totals only.' },
     since: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Requested recipient total start. Only complete financial years, starting 1 July, are held; other dates return a limitation.' },
@@ -106,31 +111,33 @@ export const tool: ToolDefinition = {
     state: { type: 'string', enum: STATES, description: 'Grants recorded against federal electorates in this state (wa = Western Australia).' },
     electorate: { type: 'string', minLength: 2, maxLength: 80, description: 'One federal electorate, e.g. "Perth".' },
     jurisdiction: { type: 'string', enum: ['federal', 'qld'], description: 'Grant source: federal (default for state or electorate filters) or Queensland government.' },
-    from_year: { type: 'integer', minimum: 2000, maximum: 2030, description: 'For recipient totals: first FY starting year (2017 means 2017-18). For largest-grant lists: first award calendar year.' },
-    to_year: { type: 'integer', minimum: 2000, maximum: 2030, description: 'For recipient totals: last FY starting year, inclusive. For largest-grant lists: last award calendar year.' },
-    each: { type: 'string', enum: ['recipient', 'grant'], description: 'recipient (default): one row per recipient, its largest matching grant; grant: every grant, so one recipient can fill the list.' },
-    limit: { type: 'integer', minimum: 1, maximum: 10, description: 'Rows (default 5), largest first.' },
-  }, examples: [{ recipient: 'University of Queensland', aggregation: 'total', financial_year: '2017-18' }, { recipient: 'University of Queensland', aggregation: 'total', from_year: 2017, to_year: 2019 }, { state: 'wa' }, { state: 'wa', each: 'grant', limit: 10 }, { query: 'community health', electorate: 'Perth' }, { query: 'University of Queensland', jurisdiction: 'qld' }] },
+    from_year: { type: 'integer', minimum: 2000, maximum: 2030 }, to_year: { type: 'integer', minimum: 2000, maximum: 2030 },
+    each: { type: 'string', enum: ['recipient', 'grant'], description: 'Largest mode only. recipient (default): largest matching grant per recipient; grant: every grant, including repeated recipients.' },
+    limit: { type: 'integer', minimum: 1, maximum: 10, description: 'Displayed rows (default 5). Totals are independent of this limit. Year breakdowns are chronological; rankings are largest first.' },
+  }, examples: [{ operation: 'totals', recipient: 'Board Of The Queensland Museum', jurisdiction: 'qld' }, { operation: 'totals', program: 'GO6821', group_by: 'year' }, { state: 'wa' }, { operation: 'largest', query: 'University of Queensland', jurisdiction: 'qld' }] },
   validate: args => !(Number(args.from_year) > Number(args.to_year)) &&
     (!(args.aggregation || args.financial_year || args.since || args.until) || !!args.recipient) &&
     (typeof args.recipient !== 'string' || !!args.recipient.trim()) &&
     (!args.recipient || !(args.query || args.state || args.electorate)) &&
     (args.financial_year === undefined || fyStart(args.financial_year) !== undefined &&
-      (!!(args.since || args.until) || (args.from_year === undefined || args.from_year === fyStart(args.financial_year)) && (args.to_year === undefined || args.to_year === fyStart(args.financial_year)))),
-  stepLabel: args => ({ label: 'Checking grants', arg: clip(args.recipient ?? args.query ?? args.electorate ?? args.state ?? '', 40) }),
+      (!!(args.since || args.until) || (args.from_year === undefined || args.from_year === fyStart(args.financial_year)) && (args.to_year === undefined || args.to_year === fyStart(args.financial_year)))) &&
+    !((args.operation === 'totals' || args.operation !== 'largest' && (args.recipient || args.program || args.group_by)) && args.each) &&
+    !(args.operation === 'largest' && (args.group_by || args.aggregation || args.financial_year || args.since || args.until)),
+  stepLabel: args => ({ label: 'Checking grants', arg: clip(args.recipient ?? args.program ?? args.query ?? args.electorate ?? args.state ?? '', 40) }),
   async handler(env, args) {
-    if (args.recipient) return recipientTotal(env, args)
+    if (args.operation !== 'largest' && args.recipient && !args.program && (!args.group_by || args.group_by === 'recipient')) return recipientTotal(env, args)
+    if (args.operation === 'totals' || args.operation !== 'largest' && (args.recipient || args.program || args.group_by)) return grantTotals(env, args)
     const limit = Number(args.limit) || 5, perRecipient = args.each !== 'grant'
     const seats = typeof args.electorate === 'string' ? [args.electorate.trim()] : typeof args.state === 'string' ? await stateSeats(env, args.state) : null
     if (seats && !seats.length) return { rows: [], citations: [], notes: ['No federal electorates are recorded for that state.'] }
     const jurisdiction = typeof args.jurisdiction === 'string' ? args.jurisdiction : seats ? 'federal' : undefined
     const years = args.from_year || args.to_year ? JSON.stringify({ ...(args.from_year ? { min: args.from_year } : {}), ...(args.to_year ? { max: args.to_year } : {}) }) : undefined
-    const page = await tableRows(env, 'grants', { q: typeof args.query === 'string' ? args.query : undefined, ...(seats ? { 'f.electorate': JSON.stringify(seats) } : {}),
+    const page = await tableRows(env, 'grants', { q: typeof args.query === 'string' ? args.query : undefined, ...(typeof args.recipient === 'string' ? { 'f.recipient': JSON.stringify([args.recipient]) } : {}), ...(typeof args.program === 'string' ? { 'f.program': JSON.stringify([args.program]) } : {}), ...(seats ? { 'f.electorate': JSON.stringify(seats) } : {}),
       ...(jurisdiction ? { 'f.jurisdiction': JSON.stringify([jurisdiction]) } : {}), ...(years ? { 'f.year': years } : {}), sort: 'amount:desc', pageSize: String(perRecipient ? 200 : limit) })
     const seen = new Set<string>()
     const picked = page.rows.filter(r => { const key = String(r.recipientId || r.recipient || r.id); if (perRecipient && seen.has(key)) return false; seen.add(key); return true }).slice(0, limit)
     const citations = picked.map(r => grantCite(env, r))
-    const rows = picked.map((r, i) => ({ recipient: citations[i].text.split(':')[0], amount_aud: r.amount, title: clip(r.title, 90), agency: r.agency, year: r.year, electorate: r.electorate || null, jurisdiction: r.jurisdiction }))
+    const rows = picked.map((r, i) => ({ recipient: citations[i].text.split(':')[0], amount_aud: r.amount, id: PRIVATE_KINDS.has(String(r.recipientKind)) ? null : r.id, title: clip(r.title, 90), program: r.program ?? null, agency: r.agency, year: r.year, financial_year: financialYear(r.year), electorate: r.electorate || null, jurisdiction: r.jurisdiction }))
     const notes = ['Grant values are published award values (Queensland: annual expenditure lines), not payments received.']
     if (perRecipient) notes.push('One row per recipient: its largest matching grant, not its total.')
     if (seats && args.state) notes.push(`Located by the federal electorate recorded on each grant in ${String(args.state).toUpperCase()}; grants with no electorate are not included.`)

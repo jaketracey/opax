@@ -3,6 +3,7 @@ import { researchPhaseWallMs } from './research-time'
 import { resolvePartySubject } from './ask-party-subject'
 import { receiptYearWindow } from './receipt-period'
 import { exactRecordLookup, prependLookupCorrection } from './ask-exact-lookup'
+import { serviceText, type ServicePeriod } from './person-service'
 /**
  * OPAX-owned Ask orchestration in the Worker
  * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
@@ -306,8 +307,12 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in receipts from ${d.industry} sources (federal disclosures; financial years ${period})`, r.cite[i], [`party:${row.party}`],
         { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, jurisdiction: 'federal', aggregate: true, ...(industry ? { industry, filter: industry } : {}) } }))
     } else if (r.tool === 'find_people') {
-      const p = (d.people as { name: string; party: string | null }[])[0]
+      const p = (d.people as { name: string; party: string | null; service?: ServicePeriod[] }[])[0]
       if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, { ...r.cite[0], kind: 'person' })
+      for (const period of p?.service ?? []) {
+        const text = serviceText(p.name, period)
+        add(text, { kind: 'record', label: text, url: period.url }, [`person:${p.name}`])
+      }
     } else if (r.tool === 'find_quotes') {
       ;(d.passages as { title: string; text: string }[]).slice(0, 3).forEach((p, i) => add(`Passage from ${p.title}: "${p.text.slice(0, 400)}"`, { ...r.cite[i], kind: 'speech' }))
     }

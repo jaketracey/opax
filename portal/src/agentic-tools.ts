@@ -23,7 +23,8 @@ import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } 
 import type { ToolEnv } from './tools'
 import { receiptYearWindow } from './receipt-period'
 import { resolvePersonName } from './person-name-matching'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-17-source-links/' + TOOL_REGISTRY_VERSION
+import { personService } from './person-service'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-18-interests-service-grants/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -316,10 +317,12 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
   // Existing callers use people[0] in subsequent filters. Only put a resolved
   // identity there, so an ambiguous lookup cannot silently select a stranger.
   const hits = resolution.status === 'matched' ? candidates.slice(0, 1) : []
+  const service = await personService(deps, hits)
+  const enriched = hits.map((person, i) => ({ ...person, service: service[i] }))
   const tied = candidates.filter(candidate => candidate.confidence === candidates[0]?.confidence)
   const clarification = resolution.status === 'ambiguous' ? `Which person do you mean: ${tied.map(p => `${p.name}${p.states.length ? ` (${p.states.join(', ')})` : ''}`).join(' or ')}?` : undefined
   return {
-    tool: 'find_people', ok: true, data: { people: hits, candidates, match_status: resolution.status, ...(clarification ? { clarification } : {}) }, query: { name },
+    tool: 'find_people', ok: true, data: { people: enriched, candidates, match_status: resolution.status, ...(clarification ? { clarification } : {}) }, query: { name },
     cite: hits.map((h) => ({ kind: 'record' as const, label: h.name, url: `${origin}/subject/person/${encodeURIComponent(h.name)}` })),
     notes: hits.length ? ['Use the name exactly as returned in speaker filters: it is the name the record indexes speeches under.']
       : clarification ? ['Multiple real people match equally. Ask the clarification question before using a person in another tool.']
@@ -492,7 +495,7 @@ export const TOOL_SPECS: ToolSpec[] = [
   ...askToolSpecs,
   { name: 'count_speeches', description: 'Count speeches exactly, optionally ranked by speaker or party. Use for "who speaks most", "which party mentions X most", "how many speeches". Returns counts from the record index, the method, and coverage notes that must be stated.', input: { type: 'object', properties: { ...filterProps, group_by: { type: 'string', enum: ['speaker', 'party', 'none'] }, limit: { type: 'integer', minimum: 1, maximum: 15 } } }, run: (d, a) => countSpeeches(d, a as CountInput) },
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
-  { name: 'find_people', description: 'Resolve a politician name, including typos, surname-first order, titles and common nicknames, to the indexed name, party, parliaments and years. Returns confidence-ranked candidates and one clear match in people. Equal matches require the returned clarification question; no_match means no person by that name is recorded.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
+  { name: 'find_people', description: 'Resolve a politician name, including typos, surname-first order, titles and common nicknames, to the indexed name, party, parliaments and years. Returns confidence-ranked candidates and one clear match in people. Equal matches require the returned clarification question; no_match means no person by that name is recorded. Dated service is returned per chamber and seat. Use service.start and service.end for first elected, entered, left or years served; years are speech coverage only. Empty service means dates are unavailable.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
   { name: 'member_votes', description: 'A keyword title-search summary across several divisions for a person or party (e.g. "gambling"). A bounded sample that can miss related titles. For a specific division, its outcome, ayes/noes, a member\'s actual vote, party majorities or rebels, use division with exact date/chamber/title or division_id. Use division aggregate operations for period floor-crossing and party agreement.', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
   { name: 'party_receipts', description: 'Donor breakdown of disclosed receipts to a federal party, or receipt totals by party for one source industry (e.g. gambling, mining). Use money_totals for a party or donor total, rankings by total, or annual receipt trends. Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Find a few cited passages to quote or describe what was said. A ranked sample: never count them.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string' }, limit: { type: 'integer' } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
