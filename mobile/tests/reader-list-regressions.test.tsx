@@ -1,8 +1,10 @@
 import { act } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Text as NativeText, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { useReduceMotion } from '../src/design/accessibility';
-import { ReaderList } from '../src/features/records/ReaderList';
+import { Text } from '../src/design/text';
+import { colors } from '../src/design/tokens';
+import { ReaderList, findMatches } from '../src/features/records/ReaderList';
 
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
@@ -62,3 +64,57 @@ test('changing Reduce Motion preserves manual reading position and affects only 
     scroll.mockRestore();
   }
 });
+
+test.each([
+  ['İ first and FIRST', 'first', ['first', 'FIRST']],
+  ['İİ before TARGET after TARGET', 'target', ['TARGET', 'TARGET']],
+  ['😀İ text TARGET', 'target', ['TARGET']],
+  ['İstanbul next', 'i\u0307stanbul', ['İstanbul']],
+  [
+    'i\u0307stanbul / İSTANBUL next',
+    'İstanbul',
+    ['i\u0307stanbul', 'İSTANBUL'],
+  ],
+  ['ΟΣ next', 'ος', ['ΟΣ']],
+])(
+  'find offsets and highlights stay in the source text for %s',
+  async (text, query, expected) => {
+    const parts = [{ id: 'unicode', text }];
+    let from = 0;
+    const starts = expected.map((match) => {
+      const at = text.indexOf(match, from);
+      from = at + match.length;
+      return { part: 0, start: at };
+    });
+    expect(findMatches(parts, query)).toEqual(starts);
+    let view!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      view = TestRenderer.create(
+        <ReaderList
+          parts={parts}
+          header={null}
+          testID="unicode-reader"
+          find={{ query, current: starts[0]!, passage: true }}
+        />,
+      );
+    });
+    const highlights = view.root
+      .findAllByType(Text)
+      .filter(
+        (node) =>
+          StyleSheet.flatten(node.props.style)?.backgroundColor ===
+          colors.navyWash,
+      );
+    expect(highlights.map((node) => node.props.children)).toEqual(expected);
+    expect(highlights[0]!.props.testID).toBe('doc-passage-highlight');
+    const source = view.root
+      .findAllByType(NativeText)
+      .find((node) => node.props.testID === 'reader-text-0')!;
+    function plain(node: TestRenderer.ReactTestInstance | string): string {
+      return typeof node === 'string'
+        ? node
+        : node.children.map(plain).join('');
+    }
+    expect(plain(source)).toBe(text);
+  },
+);
