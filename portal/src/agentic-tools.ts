@@ -22,6 +22,7 @@ import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../pub
 import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
 import type { ToolEnv } from './tools'
 import { receiptYearWindow } from './receipt-period'
+import { resolvePersonName } from './person-name-matching'
 export const AGENTIC_TOOLS_VERSION = 'agentic-tools-17-source-links/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
@@ -305,21 +306,24 @@ interface Person { name: string; speeches: number | null; party?: string; party_
 const fold = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase().replace(/\s+/g, ' ').trim()
 export async function findPeople(deps: ToolDeps, input: { name: string; limit?: number }): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
-  const q = fold(String(input.name ?? ''))
-  if (q.length < 2) return { tool: 'find_people', ok: false, error: 'name is required', cite: [], notes: [] }
+  const name = String(input.name ?? '').trim()
+  if (name.length < 2) return { tool: 'find_people', ok: false, error: 'name is required', cite: [], notes: [] }
   const data = await deps.asset('/parliamentarians.json') as { people?: Person[] } | null
-  const people = data?.people ?? []
-  const words = q.split(' ')
-  const hits = people
-    .map((p) => ({ p, n: fold(p.name) }))
-    .filter(({ n }) => n === q || words.every((w) => n.split(/[\s-]/).includes(w) || n.includes(w)))
-    .sort((a, b) => Number(b.n === q) - Number(a.n === q) || (b.p.speeches ?? 0) - (a.p.speeches ?? 0))
-    .slice(0, Math.min(Number(input.limit) || 5, 10))
-    .map(({ p }) => ({ name: p.name, party: p.party_now ?? p.party ?? null, states: p.states ?? [], chambers: p.chambers ?? [], years: [p.first ?? null, p.last ?? null], current: p.current ?? null, speeches_indexed: p.speeches }))
+  if (!Array.isArray(data?.people)) return { tool: 'find_people', ok: false, error: 'The parliamentary roster is unavailable.', cite: [], notes: [] }
+  const resolution = resolvePersonName(name, data.people)
+  const limit = Math.max(resolution.status === 'ambiguous' ? 2 : 1, Math.min(Math.floor(Number(input.limit)) || 5, 10))
+  const candidates = resolution.candidates.slice(0, limit).map(({ person: p, confidence }) => ({ name: p.name, confidence, party: p.party_now ?? p.party ?? null, states: p.states ?? [], chambers: p.chambers ?? [], years: [p.first ?? null, p.last ?? null], current: p.current ?? null, speeches_indexed: p.speeches }))
+  // Existing callers use people[0] in subsequent filters. Only put a resolved
+  // identity there, so an ambiguous lookup cannot silently select a stranger.
+  const hits = resolution.status === 'matched' ? candidates.slice(0, 1) : []
+  const tied = candidates.filter(candidate => candidate.confidence === candidates[0]?.confidence)
+  const clarification = resolution.status === 'ambiguous' ? `Which person do you mean: ${tied.map(p => `${p.name}${p.states.length ? ` (${p.states.join(', ')})` : ''}`).join(' or ')}?` : undefined
   return {
-    tool: 'find_people', ok: true, data: { people: hits },
+    tool: 'find_people', ok: true, data: { people: hits, candidates, match_status: resolution.status, ...(clarification ? { clarification } : {}) }, query: { name },
     cite: hits.map((h) => ({ kind: 'record' as const, label: h.name, url: `${origin}/subject/person/${encodeURIComponent(h.name)}` })),
-    notes: hits.length ? ['Use the name exactly as returned in speaker filters: it is the name the record indexes speeches under.'] : ['No person in the roster matches; the record may index them under a surname only.'],
+    notes: hits.length ? ['Use the name exactly as returned in speaker filters: it is the name the record indexes speeches under.']
+      : clarification ? ['Multiple real people match equally. Ask the clarification question before using a person in another tool.']
+      : [`OPAX has no record of a parliamentarian named "${name}" in this roster. Do not substitute someone who matches only part of the supplied name.`],
   }
 }
 
@@ -488,7 +492,7 @@ export const TOOL_SPECS: ToolSpec[] = [
   ...askToolSpecs,
   { name: 'count_speeches', description: 'Count speeches exactly, optionally ranked by speaker or party. Use for "who speaks most", "which party mentions X most", "how many speeches". Returns counts from the record index, the method, and coverage notes that must be stated.', input: { type: 'object', properties: { ...filterProps, group_by: { type: 'string', enum: ['speaker', 'party', 'none'] }, limit: { type: 'integer', minimum: 1, maximum: 15 } } }, run: (d, a) => countSpeeches(d, a as CountInput) },
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
-  { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
+  { name: 'find_people', description: 'Resolve a politician name, including typos, surname-first order, titles and common nicknames, to the indexed name, party, parliaments and years. Returns confidence-ranked candidates and one clear match in people. Equal matches require the returned clarification question; no_match means no person by that name is recorded.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
   { name: 'member_votes', description: 'How a person or party voted in recorded divisions whose title contains a keyword (e.g. "gambling").', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
   { name: 'party_receipts', description: 'Largest disclosed receipt totals to a federal party, or receipt totals by party for one source industry (e.g. gambling, mining). Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Find a few cited passages to quote or describe what was said. A ranked sample: never count them.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string' }, limit: { type: 'integer' } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
