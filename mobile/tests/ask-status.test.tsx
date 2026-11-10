@@ -1,6 +1,7 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { AccessibilityInfo, Platform, View } from 'react-native';
 import { useReduceMotionSetting } from '../src/design/accessibility';
+import { textContent } from '../src/design/text';
 import { motion } from '../src/design/tokens';
 import {
   AskStatus,
@@ -189,9 +190,11 @@ function renderStatus(stage: AskStage | null, steps: AskStep[] = []) {
   });
 }
 function currentText() {
-  return view.root.findAll(
-    (n) => n.props.testID === 'ask-status' && typeof n.type === 'string',
-  )[0]!.props.children;
+  return textContent(
+    view.root.findAll(
+      (n) => n.props.testID === 'ask-status' && typeof n.type === 'string',
+    )[0]!.props.children,
+  );
 }
 function advance(ms: number) {
   act(() => jest.advanceTimersByTime(ms));
