@@ -69,6 +69,15 @@ question could not be recovered from the record.
 
 `rebels` is the federal division's own rebellion count when above zero; whether
 this person was among the rebels is not derivable from the vote columns.
+
+Divisions TheyVoteForYou marks as duplicates of another division, with a link
+to it and the same named votes (scripts/division_rules.py find_duplicates),
+are left out of every count and list (the stderr summary says how many;
+`_meta` keeps the shipped mobile keys). scripts/vm/divisions_guard.py lets a
+published total fall by at most the person's own votes in those divisions,
+from duplicate_vote_counts(). Reviewed corrections to state division questions
+(scripts/corrections/divisions.json, shared with export_division_pages.py)
+decide which question a state division put.
 """
 
 import json
@@ -81,6 +90,10 @@ import unicodedata
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from corrections.apply import apply as apply_corrections, load as load_corrections  # noqa: E402
+import division_rules as rules  # noqa: E402
 
 DB = "file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro"
 # The file this export replaces (daily_refresh.sh runs this script from the same checkout).
@@ -320,7 +333,34 @@ def pick_sides(rows, divisions):
     return out
 
 
-def export_federal(db, out, names, newest):
+def federal_duplicates(db, division_votes):
+    """{legacy division_id: original division_id} for TVFY-marked repeats that prove out."""
+    if not {"house", "number"} <= {r[1] for r in db.execute("PRAGMA table_info(divisions)")}:
+        return {}  # a legacy table without chamber slots cannot resolve a duplicate's link
+    legacy = {did: (house, (date or "")[:10], number, name, summary) for did, house, date, number, name, summary in db.execute(
+        "SELECT division_id, house, date, number, name, summary FROM divisions WHERE COALESCE(state, 'federal') = 'federal'")}
+    return rules.find_duplicates(legacy, {did: rules.vote_set(rows) for did, rows in division_votes.items() if did in legacy})
+
+
+def legacy_division_votes(db):
+    """{legacy division_id: [(person_id, vote)]} for aye and no votes."""
+    division_votes = {}
+    for pid, did, vote in db.execute("SELECT person_id, division_id, vote FROM votes WHERE vote IN ('aye', 'no')"):
+        division_votes.setdefault(did, []).append((pid, vote))
+    return division_votes
+
+
+def duplicate_vote_counts(db):
+    """{person_id: aye/no votes in excluded duplicate divisions}: how far the
+    exclusion can lower that person's published totals."""
+    division_votes = legacy_division_votes(db)
+    counts = Counter()
+    for did in federal_duplicates(db, division_votes):
+        counts.update(pid for pid, _ in division_votes.get(did, []))
+    return dict(counts)
+
+
+def export_federal(db, out, names, newest, stats=None):
     members = {r[0]: r for r in db.execute(
         "SELECT person_id, full_name, COALESCE(party_canonical, party), chamber FROM members")}
     divisions = {}
@@ -343,6 +383,17 @@ def export_federal(db, out, names, newest):
     votes = {}
     for pid, did, vote in db.execute("SELECT person_id, division_id, vote FROM votes WHERE vote IN ('aye', 'no')"):
         votes.setdefault(pid, []).append((did, vote))
+    division_votes = legacy_division_votes(db)
+    # A repeat of another division is one vote, not two: leave it out of totals and lists.
+    duplicates = federal_duplicates(db, division_votes)
+    if duplicates:
+        for did in duplicates:
+            divisions.pop(did, None)
+            dates.pop(did, None)
+            counted.pop(did, None)
+        votes = {pid: [(d, v) for d, v in rows if d not in duplicates] for pid, rows in votes.items()}
+    if stats is not None:
+        stats["excluded_duplicate_divisions"] = len(duplicates)
     # XML-only divisions use the same schema 1 person records. Existing TVFY
     # divisions keep their legacy path, order and bytes; never count them twice.
     has_xml = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='oa_division_provenance'").fetchone()
@@ -400,11 +451,33 @@ def export_federal(db, out, names, newest):
     return len(divisions)
 
 
-def export_state(db, out, names, newest):
+def corrected_questions(db, entries=None):
+    """{division id: question} where a reviewed correction replaced the question.
+
+    Only the question corrections matter to the vote file (state_polarity reads
+    the question). They are applied to the question export_division_pages.py
+    publishes (falling back to the name), and a `from` mismatch stops this
+    export as it stops that one. An entry whose division is not in this DB is
+    left to export_division_pages.py, which fails loudly on it every night."""
+    entries = [e for e in (load_corrections("divisions") if entries is None else entries)
+               if e["field"] == "question"]
+    if not entries:
+        return {}
+    wanted = {e["id"] for e in entries}
+    facts = {did: {"question": question or name}
+             for did, name, question in db.execute("SELECT id, name, question FROM ext_divisions")
+             if did in wanted}
+    applied = apply_corrections("divisions", facts, entries=[e for e in entries if e["id"] in facts])
+    return {e["id"]: facts[e["id"]]["question"] for e in applied}
+
+
+def export_state(db, out, names, newest, corrected=None):
+    corrected = corrected or {}
     divisions = {}
     for did, name, question, bill_ref, date, extra in db.execute(
             "SELECT id, name, question, bill_ref, date, extra FROM ext_divisions WHERE jurisdiction != 'federal'"):
         divided_on = (json.loads(extra or "{}").get("divided_on") or "") if extra else ""
+        question = corrected.get(did, question)
         pol, stage = state_polarity(question, bill_ref, divided_on)
         divisions[did] = {"name": bill_ref or name, "stage": stage or "Bill", "date": date[:10],
                           "jur": did.split("-", 1)[0], "polarity": pol}
@@ -447,9 +520,9 @@ def export_state(db, out, names, newest):
 
 def main():
     db = sqlite3.connect(DB, uri=True)
-    out, names, newest = {}, {}, {}
-    n_fed = export_federal(db, out, names, newest)
-    n_state, n_state_bill = export_state(db, out, names, newest)
+    out, names, newest, stats = {}, {}, {}, {}
+    n_fed = export_federal(db, out, names, newest, stats)
+    n_state, n_state_bill = export_state(db, out, names, newest, corrected_questions(db))
     latest = {}
     for key, date in newest.items():  # one date per published key, so a replaced record leaves none
         note_latest(latest, out[key]["jurisdiction"], date)
@@ -468,7 +541,8 @@ def main():
     with_lists = sum(1 for e in people if e["for"] or e["against"])
     by_jur = Counter(e["jurisdiction"] for e in people)
     print(f"people {len(people)} ({dict(by_jur)}), with listed bills {with_lists}, "
-          f"federal divisions parsed {n_fed}, state divisions {n_state} (bill questions {n_state_bill}), "
+          f"federal divisions parsed {n_fed} (TVFY-marked duplicates excluded {stats.get('excluded_duplicate_divisions', 0)}), "
+          f"state divisions {n_state} (bill questions {n_state_bill}), "
           f"names indexed {len(names)}, latest division {out['_meta']['latest_division_date']}, "
           f"content {'unchanged since' if carried else 'changed at'} {out['_meta']['content_changed_at']}", file=sys.stderr)
 

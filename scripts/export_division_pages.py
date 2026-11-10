@@ -11,7 +11,14 @@ Every refresh preserves the existing division set and recorded member evidence.
 A degraded candidate retains the complete previous record and declares why in
 the shard and index; --strict-refresh rejects the run before publishing instead.
 Source facts on complete or pinned member snapshots require an explicit review
-when changed. Files are staged and replaced atomically, with the index last.
+when changed: a reviewed entry in scripts/corrections/divisions.json (carried on
+the record as _meta.corrections), or a TVFY placeholder question being withheld.
+Files are staged and replaced atomically, with the index last.
+
+Publication rules (scripts/division_rules.py): presiding-officer codes are
+never published as a party, one label per party, placeholder questions are
+withheld, and divisions TheyVoteForYou marks as duplicates carry
+_meta.duplicate_of (they stay published for provenance).
 """
 
 import argparse
@@ -22,11 +29,17 @@ import json
 import os
 import re
 import sqlite3
+import sys
 import tempfile
 import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from corrections.apply import apply as apply_corrections, load as load_corrections  # noqa: E402
+import division_rules as rules  # noqa: E402
+
+CORRECTIONS = "divisions"
 DEFAULT_DB = os.environ.get("OPAX_DB") or str(Path.home() / ".cache/autoresearch/parli.db")
 
 
@@ -99,13 +112,19 @@ def database_projection(db, published):
         division = divisions.get(row["division_id"])
         if not division or not row["person_name"]:
             continue
-        member = {"name": row["person_name"], "person_id": row["person_id"],
-                  "person_slug": person_slug(row["person_name"]), "vote": row["vote"],
-                  **({"party": row["party"]} if row["party"] else {})}
+        member = rules.publishable_member(
+            {"name": row["person_name"], "person_id": row["person_id"],
+             "person_slug": person_slug(row["person_name"]), "vote": row["vote"],
+             **({"party": row["party"]} if row["party"] else {})})
         identity = (member["name"], member["person_id"])
         if identity not in seen.setdefault(row["division_id"], set()):
             division["members"].append(member)
             seen[row["division_id"]].add(identity)
+    label_coverage(divisions)
+    return divisions
+
+
+def label_coverage(divisions):
     for division in divisions.values():
         ayes = sum(m["vote"] == "aye" for m in division["members"])
         noes = sum(m["vote"] == "no" for m in division["members"])
@@ -113,7 +132,38 @@ def database_projection(db, published):
             division["_meta"]["member_coverage"] = "unavailable"
         elif ayes != division["ayes"] or noes != division["noes"]:
             division["_meta"]["member_coverage"] = "partial"
-    return divisions
+        else:
+            division["_meta"]["member_coverage"] = "recorded"
+
+
+def publication_rules(divisions, corrections=None):
+    """Reviewed corrections, then withheld placeholders, coverage and duplicate flags.
+
+    `corrections` defaults to scripts/corrections/divisions.json. Entries correct
+    top-level source facts (ayes, noes, result, question, name) as the DB holds
+    them, before placeholder questions are withheld. Each record carries what
+    was applied, which is how the retention guard recognises a reviewed change.
+    A stale entry stops the export (CorrectionError), all or none."""
+    applied = apply_corrections(CORRECTIONS, divisions, entries=corrections)
+    for entry in applied:
+        divisions[entry["id"]]["_meta"].setdefault("corrections", []).append(
+            {k: entry[k] for k in ("field", "from", "to", "finding", "evidence_url", "reviewed")})
+    for division in divisions.values():
+        division["question"] = rules.publishable_question(division["question"])
+    label_coverage(divisions)
+    flag_duplicates(divisions)
+    return applied
+
+
+def flag_duplicates(divisions):
+    """_meta.duplicate_of for TVFY-marked repeats that prove out (see division_rules)."""
+    federal = {k: (*(rules.tvfy_slot(d.get("source_url")) or (d["house"], d["date"], None)), d["name"], d["question"])
+               for k, d in divisions.items() if d.get("jurisdiction") == "federal"}
+    votes = {k: rules.vote_set((m.get("person_id"), m.get("vote")) for m in divisions[k]["members"]) for k in federal}
+    duplicates = rules.find_duplicates(federal, votes)
+    for key, original in duplicates.items():
+        divisions[key]["_meta"]["duplicate_of"] = original
+    return duplicates
 
 
 def carry_verified_members(record, previous):
@@ -175,17 +225,42 @@ def has_previous_member_evidence(candidate, previous):
     available = {}
     for member in candidate.get("members", []):
         identity = (person_slug(member.get("name")), member.get("vote"))
-        pid = member.get("person_id")
-        available.setdefault(identity, set()).add(str(pid) if pid is not None else None)
+        available.setdefault(identity, set()).add(rules.canonical_person_id(member.get("person_id")))
     for member in previous.get("members", []):
         if not str(member.get("name") or "").strip():
             continue
         identity = (person_slug(member.get("name")), member.get("vote"))
         ids = available.get(identity, set())
         pid = member.get("person_id")
-        if not ids or (pid is not None and str(pid) not in ids):
+        # "11007" and "tvfy_11007" are one TVFY person id, spelt two ways.
+        if not ids or (pid is not None and rules.canonical_person_id(pid) not in ids):
             return False
     return True
+
+
+_REVIEWED = None
+
+
+def reviewed_corrections():
+    global _REVIEWED
+    if _REVIEWED is None:
+        _REVIEWED = {(e["id"], e["field"]): e for e in load_corrections(CORRECTIONS)}
+    return _REVIEWED
+
+
+def reviewed_change(candidate, field, old, new):
+    """A changed source fact the guard accepts: only these two, both reviewed.
+
+    1. A TVFY placeholder question withheld (it never recorded the question).
+    2. A correction the record carries that is in scripts/corrections/divisions.json
+       with exactly this from and to."""
+    if field == "question" and isinstance(old, str) and old.strip() in rules.PLACEHOLDER_QUESTIONS \
+            and rules.publishable_question(new) == new:
+        return True
+    entry = reviewed_corrections().get((candidate.get("key"), field))
+    carried = any(c.get("field") == field and c.get("from") == old and c.get("to") == new
+                  for c in candidate.get("_meta", {}).get("corrections", []))
+    return bool(entry and carried and entry["from"] == old and entry["to"] == new)
 
 
 def degradation_reason(candidate, previous):
@@ -196,7 +271,8 @@ def degradation_reason(candidate, previous):
     pinned = bool(old_meta.get("member_source_url")) or bool(member_counts(previous)["named_member_count"])
     for field in SOURCE_FACTS:
         old, new = previous.get(field), candidate.get(field)
-        if old is not None and (new is None or (pinned and new != old)):
+        if old is not None and (new is None or (pinned and new != old)) \
+                and not reviewed_change(candidate, field, old, new):
             return "source-facts-changed"
     if coverage_rank(candidate) < coverage_rank(previous):
         return "member-coverage-regression"
@@ -282,6 +358,8 @@ def projection_index(records):
         "division_count": len(records), "retained_count": len(retained),
         "retained_by_reason": dict(sorted(Counter(d["_meta"]["refresh_retained_reason"] for d in retained).items())),
         "member_coverage_counts": dict(sorted(Counter(d["_meta"]["member_coverage"] for d in records.values()).items())),
+        "duplicate_count": sum(bool(d["_meta"].get("duplicate_of")) for d in records.values()),
+        "corrected_count": sum(bool(d["_meta"].get("corrections")) for d in records.values()),
         "source_counts": dict(sorted(source_counts.items())),
         "member_source_counts": dict(sorted(member_sources.items())),
         **{field: sum(d["_meta"][field] for d in records.values())
@@ -292,7 +370,9 @@ def projection_index(records):
         {"key": d["key"], "slug": d["slug"], "date": d.get("date"), "bills": d.get("bills", []),
          **{field: d["_meta"][field] for field in (
              "member_coverage", "member_count", "named_member_count", "recorded_vote_count", "refresh_retained", "refresh_retained_reason")},
-         "source": d["_meta"].get("source", "unknown"), **party_tallies(d)}
+         "source": d["_meta"].get("source", "unknown"),
+         **({"duplicate_of": d["_meta"]["duplicate_of"]} if d["_meta"].get("duplicate_of") else {}),
+         **party_tallies(d)}
         for d in sorted(records.values(), key=lambda d: (d.get("date") or "", d["key"]), reverse=True)
     ]}
 
@@ -318,9 +398,21 @@ def write_projection(records, output, carry=False, strict=False):
                    for m in candidate.get("members", []) if m.get("party")}
         for member in record.get("members", []):
             party = parties.get((person_slug(member.get("name")), member.get("vote")))
-            if party and not member.get("party"):
+            if party and not member.get("party") and not rules.office_code(member.get("party")):
                 member["party"] = party
                 record["_meta"]["party_source"] = "parli.db-ext-votes"
+        # The title is not a source fact; take the DB's for the same division
+        # (a bill-export projection used the motion text as its name).
+        if candidate.get("name") and record.get("name") != candidate["name"]:
+            record["name"] = candidate["name"]
+    for record in guarded.values():
+        page_ids = str(record.get("_meta", {}).get("member_source_url") or "").startswith("https://theyvoteforyou.org.au/")
+        for member in record.get("members", []):
+            rules.publishable_member(member, tvfy_page_ids=page_ids)
+        record["question"] = rules.publishable_question(record.get("question"))
+        candidate = records.get(record["key"])
+        if candidate and candidate.get("_meta", {}).get("duplicate_of"):
+            record["_meta"]["duplicate_of"] = candidate["_meta"]["duplicate_of"]
     index = projection_index(guarded)
     encode = lambda obj: (json.dumps(obj, ensure_ascii=False, separators=(",", ":"), sort_keys=True, allow_nan=False) + "\n").encode("utf-8")
     # Validate serialization of the complete set before creating staging files.
@@ -361,6 +453,7 @@ def main():
             db.execute("PRAGMA query_only=ON")
             db.execute("BEGIN")
             records = database_projection(db, published)
+        publication_rules(records)
     records = write_projection(records, args.out, carry=args.from_bills, strict=args.strict_refresh)
     coverage = projection_index(records)["coverage"]
     print(f"Exported {len(records)} divisions; {sum(bool(d['members']) for d in records.values())} with member records; "

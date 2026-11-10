@@ -11,14 +11,17 @@ export interface DivisionSummary {
   unknown_party_count?: number
   recorded_ayes?: number
   recorded_noes?: number
+  /** Set when TheyVoteForYou marks this division as a repeat of that one (same named votes). */
+  duplicate_of?: string
 }
 
 type PartyTally = DivisionSummary['party_tallies'][number]
 type Direction = 'aye' | 'no'
 
-/** Independents and presiding-officer labels do not describe a coherent party. */
+/** Independents and presiding-officer labels do not describe a coherent party. The export no longer
+ * publishes office codes as parties (scripts/division_rules.py); this still refuses them. */
 export function isDivisionParty(party: string): boolean {
-  return !!party.trim() && !/^(independents?|unknown(?: party)?|unaffiliated|none|n\/a|spk|pres|dpres|speaker|president|deputy president)$/i.test(party.trim())
+  return !!party.trim() && !/^(independents?|unknown(?: party)?|unaffiliated|none|n\/a|[adt]?spk|sdspk|[adt]?pres|[adt]?cwm|speaker|president|deputy president|acting president|(?:second |acting )?deputy speaker|acting speaker|(?:deputy )?chair(?:man)? of committees|(?:deputy )?chairman of ways and means)$/i.test(party.trim())
 }
 
 function count(value: unknown): number {
@@ -77,7 +80,12 @@ function sourceUrl(env: ToolEnv): string {
 }
 
 /** Aggregate already selected index rows without loading individual division files. */
-export function aggregateDivisions(env: ToolEnv, args: ToolArgs, divisions: DivisionSummary[]): StructuredToolResult {
+export function aggregateDivisions(env: ToolEnv, args: ToolArgs, selected: DivisionSummary[]): StructuredToolResult {
+  // A division TheyVoteForYou marks as a repeat records the same votes again; count it once.
+  const divisions = selected.filter(d => !d.duplicate_of)
+  const repeats = selected.length - divisions.length
+  const repeatCoverage = repeats ? { excluded_duplicate_divisions: repeats } : {}
+  const repeatNotes = repeats ? [`${repeats} selected divisions are marked by TheyVoteForYou as repeats of another published division with the same named votes, and are counted once.`] : []
   const party = resolveDivisionParty(args.party, divisions)
   const otherParty = resolveDivisionParty(args.other_party, divisions)
   const period = scope(args, divisions)
@@ -114,6 +122,7 @@ export function aggregateDivisions(env: ToolEnv, args: ToolArgs, divisions: Divi
       partial_member_list_divisions_included: partialIncluded,
       partial_member_list_divisions_excluded: partialExcluded,
       reported_unknown_party_members: reportedUnknown,
+      ...repeatCoverage,
     }
     return {
       operation: 'party_agreement', rows: [row], total: both,
@@ -128,6 +137,7 @@ export function aggregateDivisions(env: ToolEnv, args: ToolArgs, divisions: Divi
         'Independents, unknown parties and presiding-officer groups are excluded. Agreement describes recorded party majorities, not every member or a party policy position.',
         'Published party affiliations may reflect later affiliations. Comparisons use the published labels, not independently verified party membership on the division date.',
         'The unknown-party coverage count sums published index metadata. Unknown affiliations are not assigned to a named party and do not invalidate otherwise recorded party-majority comparisons.',
+        ...repeatNotes,
       ],
     }
   }
@@ -163,6 +173,7 @@ export function aggregateDivisions(env: ToolEnv, args: ToolArgs, divisions: Divi
     excluded_tied_party_division_groups: excludedTies,
     excluded_non_party_division_groups: excludedGroups,
     reported_unknown_party_members: reportedUnknown,
+    ...repeatCoverage,
   }
   return {
     operation: 'floor_crossing', rows, total: memberVotes,
@@ -177,6 +188,7 @@ export function aggregateDivisions(env: ToolEnv, args: ToolArgs, divisions: Divi
       'Tied parties, abstentions, absences, Independents, unknown parties and presiding-officer groups are excluded. A zero means no eligible recorded crossings under this definition, not proof that no political dissent occurred.',
       'The unknown-party coverage count sums the published index metadata for full member-list divisions; those members cannot be assigned a party majority from unknown affiliation alone.',
       'Published party affiliations may reflect later affiliations. Floor crossing here is calculated dissent from published party labels, not independently verified historical floor crossing.',
+      ...repeatNotes,
     ],
   }
 }

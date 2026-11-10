@@ -71,7 +71,7 @@ for _canon, _aliases in {
     "Katter's Australian Party": ["KAP", "Katter's Australian Party"],
     "Centre Alliance": ["NXT", "CA", "Centre Alliance", "Nick Xenophon Team"],
     "United Australia Party": ["PUP", "UAP", "United Australia Party", "Palmer United Party"],
-    "One Nation": ["One Nation", "PHON", "Pauline Hanson's One Nation"],
+    "One Nation": ["One Nation", "PHON", "Pauline Hanson's One Nation", "Pauline Hanson's One Nation Party"],
     "Australian Democrats": ["Australian Democrats", "AD"],
     "DLP": ["DLP", "Democratic Labor Party"],
     "Family First": ["Family First", "FF"],

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from datetime import date, timedelta
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -38,15 +39,40 @@ def since(day: str, catch_up: bool = False) -> str:
     return min(lookback, *latest)
 
 
-def votes_guard(old: dict, new: dict) -> None:
+def duplicate_allowance(db_path: str | None = None) -> dict:
+    """{person id: votes in TVFY-marked duplicate divisions}, read from the DB.
+
+    export_votes.py leaves those divisions out of every total. That is the one
+    reviewed way a published total may fall, and only by the person's own
+    votes in them. No DB (or no legacy tables) means no allowance."""
+    import importlib.util
+    import sqlite3
+    path = db_path or os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
+    if not Path(path).is_file():
+        return {}
+    spec = importlib.util.spec_from_file_location("export_votes_for_guard", Path(__file__).resolve().parents[2] / "scripts/export_votes.py")
+    exporter = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(exporter)
+    db = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        return exporter.duplicate_vote_counts(db)
+    except sqlite3.Error:
+        return {}
+    finally:
+        db.close()
+
+
+def votes_guard(old: dict, new: dict, allowance: dict | None = None) -> None:
     people = validate_votes(new)
+    allowance = allowance or {}
     for key, prior in old.items():
         if key.startswith("_"):
             continue
         if key not in people:
             raise ValueError("votes.json lost a published identity")
         for field in ("ayes", "noes", "divisions_total"):
-            if field in prior and (type(people[key].get(field)) is not int or people[key][field] < prior[field]):
+            if field in prior and (type(people[key].get(field)) is not int
+                                   or people[key][field] < prior[field] - allowance.get(key, 0)):
                 raise ValueError(f"votes.json {field} shrank for a published identity")
     before = old.get("_meta", {}).get("latest_division_date_by_jurisdiction", {})
     after = new["_meta"].get("latest_division_date_by_jurisdiction", {})
@@ -91,7 +117,7 @@ def restore_bill_links() -> str:
 
 
 def check(votes_only: bool = False) -> str:
-    votes_guard(head(VOTES), json.loads(Path(VOTES).read_text()))
+    votes_guard(head(VOTES), json.loads(Path(VOTES).read_text()), duplicate_allowance())
     if votes_only:
         return "votes.json: schema 1; published identities and totals retained"
     old = head(f"{DIVISIONS}/index.json")

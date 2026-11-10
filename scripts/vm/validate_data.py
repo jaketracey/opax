@@ -297,6 +297,34 @@ def check_seovotes() -> list[str]:
     return []
 
 
+def division_record_rules(record: dict, keys: set, reviewed: dict, office_codes, placeholders) -> list[str]:
+    """Publication rules every division shard keeps (scripts/division_rules.py):
+    no presiding-officer code as a party, no TVFY placeholder as the question, a
+    result that agrees with the tally where the tally settles it (a Senate tie
+    is negative, Constitution s 23; House and state ties need the casting vote
+    and are not checked), duplicate_of naming a published division, and every
+    carried correction matching scripts/corrections/divisions.json."""
+    key, errs = record.get("key"), []
+    if any(str(m.get("party") or "").strip().casefold() in office_codes for m in record.get("members", [])):
+        errs.append(f"division {key} publishes an office code as a party")
+    if isinstance(record.get("question"), str) and record["question"].strip() in placeholders:
+        errs.append(f"division {key} publishes a placeholder question")
+    ayes, noes, result = record.get("ayes"), record.get("noes"), record.get("result")
+    if type(ayes) is int and type(noes) is int and result in ("affirmative", "negative"):
+        senate = record.get("jurisdiction") == "federal" and record.get("house") == "senate"
+        expected = "affirmative" if ayes > noes else "negative" if ayes < noes or senate else None
+        if expected and result != expected:
+            errs.append(f"division {key} result {result} disagrees with its tally {ayes}-{noes}")
+    meta = record.get("_meta", {})
+    if meta.get("duplicate_of") and (meta["duplicate_of"] == key or meta["duplicate_of"] not in keys):
+        errs.append(f"division {key} duplicate_of does not name another published division")
+    for c in meta.get("corrections", []):
+        entry = reviewed.get((key, c.get("field")))
+        if not entry or any(entry.get(f) != c.get(f) for f in ("from", "to", "evidence_url", "finding", "reviewed")):
+            errs.append(f"division {key} carries a {c.get('field')} correction not in scripts/corrections/divisions.json")
+    return errs
+
+
 def check_divisions() -> list[str]:
     directory = f"{PUBLIC}/divisions"
     data, error = _load_json(f"{directory}/index.json")
@@ -317,6 +345,12 @@ def check_divisions() -> list[str]:
     errs = []
     spec = importlib.util.spec_from_file_location('seo_division_guard', ROOT / 'scripts/export_division_pages.py')
     guard = importlib.util.module_from_spec(spec); spec.loader.exec_module(guard)
+    reviewed = {(e["id"], e["field"]): e for e in guard.load_corrections(guard.CORRECTIONS)}
+    office_codes = {code.casefold() for code in guard.rules.OFFICE_MARKERS}
+    if any(str(t.get("party") or "").strip().casefold() in office_codes
+           for row in rows for t in row.get("party_tallies", [])):
+        return ["division index publishes an office code as a party"]
+    keys = {row.get("key") for row in rows}
     changed = set(_changed(directory, r"division-[a-zA-Z0-9_-]+\.json"))
     for row in rows:
         slug = row.get("slug", "")
@@ -333,6 +367,7 @@ def check_divisions() -> list[str]:
                 or row.get("member_count") != len(record.get("members", [])) \
                 or bool(row.get("refresh_retained")) != bool(meta.get("refresh_retained")):
             errs.append(f"division {slug} identity/member coverage mismatch")
+        errs.extend(division_record_rules(record, keys, reviewed, office_codes, guard.rules.PLACEHOLDER_QUESTIONS))
         if slug + '.json' in changed:
             raw = head_bytes(rel)
             old = json.loads(raw) if raw else {}

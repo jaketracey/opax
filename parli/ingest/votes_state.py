@@ -307,6 +307,21 @@ _NSW_NAME_CELL = re.compile(
 )
 
 
+NSW_DIVIDED = re.compile(r"The (House|Council|Committee) divided\s*\.?")
+
+
+def nsw_block_matches(block: Optional[dict], ayes: Optional[int], noes: Optional[int]) -> bool:
+    """A fragment block belongs to a TOC division only when its name tables
+    hold the TOC's counts. Otherwise the pairing is unproven, and the block's
+    question and outcome must not be attached to that division."""
+    if not block:
+        return False
+    names = block.get("names") or {}
+    if ayes is None or noes is None or not (names.get("aye") or names.get("no")):
+        return True  # nothing to compare against; keep the positional pairing
+    return len(names.get("aye", [])) == ayes and len(names.get("no", [])) == noes
+
+
 def nsw_fragment_blocks(frag: ET.Element) -> list[dict]:
     """One dict per 'The House divided.' block in a fragment, in document order:
     the motion text put (nearest preceding 'That ...' paragraph), the outcome
@@ -319,7 +334,10 @@ def nsw_fragment_blocks(frag: ET.Element) -> list[dict]:
     classes = [p.get("class", "") for p in paras]
     blocks = []
     for k, t in enumerate(texts):
-        if not re.fullmatch(r"The (House|Council|Committee) divided\.?", t):
+        # The markup sometimes splits the full stop off ("The Committee divided .",
+        # Legislative Council 23 Dec 2025); missing one block pairs every later
+        # TOC division in the topic with the block after its own.
+        if not NSW_DIVIDED.fullmatch(t):
             continue
         question = None
         for b in range(k - 1, max(-1, k - 60), -1):
@@ -390,6 +408,11 @@ def nsw_parse_day(day: dict, members: dict, fetch_fragments: bool = True
 
         ayes_el, noes_el = div.find("ayes"), div.find("noes")
         ayes_n, noes_n = count(ayes_el), count(noes_el)
+        if block and not nsw_block_matches(block, ayes_n, noes_n):
+            print(f"  {day['date']} {day['house']} division {seq}: fragment block names "
+                  f"({len(block['names']['aye'])}-{len(block['names']['no'])}) disagree with the "
+                  f"table of contents ({ayes_n}-{noes_n}); question and outcome text not used", file=sys.stderr)
+            block = None
         result = result_from_text(div.findtext("questionresolved")) \
             or (result_from_text(block["result_text"]) if block else None)
         if result is None and ayes_n is not None and noes_n is not None:
@@ -506,6 +529,63 @@ def vic_sitting_days(house: str, page_size: int = 20) -> list[dict]:
     return sorted(out, key=lambda x: x["date"], reverse=True)
 
 
+# A running head the -layout text repeats at the top of each page ("BILLS",
+# "MOTIONS", "ADJOURNMENT"): the section the page belongs to.
+VIC_RUNNING_HEAD_RE = re.compile(r"^\s{8,}([A-Z][A-Z ,'\u2019&()-]{2,}?)\s*$")
+# The centred in-body heading that opens a business item other than Bills.
+VIC_OTHER_SECTIONS = frozenset({
+    "motions", "motions by leave", "notices of motion", "business of the house", "members statements",
+    "questions without notice and ministers statements", "constituency questions", "questions on notice",
+    "adjournment", "documents", "papers", "petitions", "committees", "production of documents",
+    "statements on tabled papers and petitions", "general business", "matters of public importance",
+    "grievance debate", "statements on parliamentary committee reports", "rulings by the chair",
+    "announcements", "condolences", "joint sitting of parliament",
+})
+# Questions that can only be about a bill, so its heading may be far above.
+VIC_BILL_STAGE_RE = re.compile(r"^That (?:the|this) (?:bill|amendments?|report)\b", re.I)
+
+
+def vic_bill_heading(lines: list[str], i: int, far: bool = False, near: int = 200) -> str | None:
+    """The bill heading a division at lines[i] sits under, or None.
+
+    A heading is a whole indented line that is a bill title. The -layout text
+    indents a heading by as little as one space and centres a wrapped heading's
+    second line, so a line with an unmatched ")" is joined to the line above.
+    The search looks back `near` lines; with `far` (a question that can only be
+    about a bill, or no question) it goes on to the start of the Bills section,
+    stopping at the heading of any other business item, or at the running head
+    of an earlier page in another section. (The running head of the
+    division's own page can name a section that starts below the division,
+    so it is not a stop.) A long committee stage puts the heading well over
+    200 lines above the third reading (vic-lc-2026-08-14-12, about 1750).
+    Procedural motions keep the near window, so they are not given a bill the
+    source does not tie them to."""
+    floor = -1 if far else max(-1, i - near)
+    own_page = True
+    for b in range(i - 1, floor, -1):
+        raw = lines[b]
+        s = raw.strip()
+        if not s:
+            continue
+        head = VIC_RUNNING_HEAD_RE.match(raw)
+        if head:
+            if not own_page and head.group(1).strip() != "BILLS":
+                return None
+            own_page = False
+            continue
+        if re.match(r"^\s{15,}\S", raw) and s.casefold() in VIC_OTHER_SECTIONS:
+            return None
+        if not raw[:1].isspace() or s.startswith("That ") or ":" in s or s.endswith(".") or len(s) >= 140:
+            continue
+        if s.count(")") > s.count("("):
+            above = next((lines[c] for c in range(b - 1, max(-1, b - 3), -1) if lines[c].strip()), "")
+            if above[:1].isspace() and ":" not in above:
+                s = above.strip() + " " + s
+        if BILL_RE.fullmatch(s):
+            return bill_ref(s)
+    return None
+
+
 def vic_parse_text(text: str, day: dict) -> tuple[list[Division], list[Vote]]:
     lines = text.splitlines()
     divisions: list[Division] = []
@@ -562,16 +642,8 @@ def vic_parse_text(text: str, day: dict) -> tuple[list[Division], list[Vote]]:
                         break
                 question = " ".join(q)
                 break
-        # Bill: nearest centred heading naming a Bill; re-join a wrapped heading.
-        ref = None
-        for b in range(i - 1, max(-1, i - 200), -1):
-            s = lines[b].strip()
-            if re.match(r"^\s{8,}\S", lines[b]) and BILL_RE.search(s) and len(s) < 140 \
-                    and not s.startswith("That ") and ":" not in s and not s.endswith("."):
-                if s.count(")") > s.count("(") and b > 0 and re.match(r"^\s{8,}\S", lines[b - 1]):
-                    s = lines[b - 1].strip() + " " + s
-                ref = bill_ref(s)
-                break
+        # Bill: the nearest heading naming a Bill (see vic_bill_heading).
+        ref = vic_bill_heading(lines, i, far=question is None or bool(VIC_BILL_STAGE_RE.match(question)))
 
         div_id = f"vic-{day['house'][-2:]}-{day['date']}-{seq}"
         counts = {k: v[0] for k, v in sides.items()}
