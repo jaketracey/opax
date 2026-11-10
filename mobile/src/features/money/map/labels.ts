@@ -97,13 +97,17 @@ export function labelSlots(
 export function visibleLabels(
   slots: readonly LabelSlot[],
   camera: { tx: number; ty: number; k: number },
-  viewport: { width: number; height: number },
+  viewport: { width: number; height: number; insets?: { bottom: number } },
   box: { width: number; height: number },
 ): Record<string, 1> {
   'worklet';
   const shown: Record<string, 1> = {};
   const keptX: number[] = [];
   const keptY: number[] = [];
+  // Nothing hangs under the panel or the tab bar: the map may run beneath
+  // them, but a name half under glass reads as a fault.
+  const bottom =
+    viewport.height - (viewport.insets ? viewport.insets.bottom : 0);
   const order = ['focus', 'neighbour', 'party', 'cluster', 'name'];
   for (let o = 0; o < order.length; o++) {
     const kind = order[o];
@@ -116,7 +120,7 @@ export function visibleLabels(
         sx < -box.width ||
         sy < -box.height ||
         sx > viewport.width + box.width ||
-        sy > viewport.height + box.height
+        sy > bottom - box.height / 2
       )
         continue;
       let clear = true;

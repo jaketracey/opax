@@ -10,6 +10,7 @@ import {
   edgeWidth,
   PARTIES,
   PUBLIC_MONEY,
+  publicEdgeWidth,
 } from './scales';
 
 /**
@@ -79,13 +80,23 @@ export {
   HUB_RADIUS,
   LEGEND_EDGES,
   LEGEND_NODES,
+  LEGEND_PUBLIC_EDGES,
   NODE_FLOOR,
   NODE_SCALE,
   nodeFloorAmount,
   nodeRadius,
   PARTIES,
+  PUBLIC_EDGE_CAP,
+  PUBLIC_EDGE_SCALE,
   PUBLIC_MONEY,
+  publicEdgeCapAmount,
+  publicEdgeEquivalent,
+  publicEdgeWidth,
 } from './scales';
+/** Whether an edge is public money (a hub's grants or contracts), not a donation. */
+export function isPublicEdge(edge: Pick<MapEdge, 'type'>) {
+  return edge.type !== 'donations';
+}
 export function clusterLabel(key: string) {
   return key === PARTIES
     ? 'Parties'
@@ -156,7 +167,8 @@ export function buildModel(view: MoneyGraph): MapModel {
       b,
       amount: e.total,
       count: e.count,
-      width: edgeWidth(e.total),
+      // Donations on the map's scale; public money on its own, lighter one.
+      width: type === 'donations' ? edgeWidth(e.total) : publicEdgeWidth(e.total),
       // A flow takes its source's colour: a donor's industry, or the hub's.
       colour: source.colour,
       type,

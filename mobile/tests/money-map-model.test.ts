@@ -2,6 +2,7 @@ import { decodeMoneyGraph, type MoneyNode } from '../src/features/money/data';
 import {
   buildModel,
   clusterLabel,
+  isPublicEdge,
   nextAlongFlows,
   otherEnd,
   type MapEdge,
@@ -13,6 +14,10 @@ import {
   EDGE_FLOOR,
   edgeCapAmount,
   edgeWidth,
+  PUBLIC_EDGE_CAP,
+  publicEdgeCapAmount,
+  publicEdgeEquivalent,
+  publicEdgeWidth,
   HUB_RADIUS,
   NODE_FLOOR,
   nodeFloorAmount,
@@ -118,7 +123,12 @@ describe('buildModel on the federal graph', () => {
 
   test('an edge runs from source to target, takes its source colour and is sized by amount', () => {
     for (const edge of model.edges) {
-      expect(edge.width).toBe(edgeWidth(edge.amount));
+      expect(edge.width).toBe(
+        edge.type === 'donations'
+          ? edgeWidth(edge.amount)
+          : publicEdgeWidth(edge.amount),
+      );
+      expect(isPublicEdge(edge)).toBe(edge.type !== 'donations');
       expect(edge.colour).toBe(model.nodes[edge.a]!.colour);
       if (edge.type === 'donations') {
         expect(model.nodes[edge.a]!.kind).toBe('donor');
@@ -284,4 +294,32 @@ test('clusterLabel names the parties, public money and each industry', () => {
   expect(clusterLabel('mining & energy')).toBe('Mining and energy');
   expect(clusterLabel('health_pharma')).toBe('Health pharma');
   expect(clusterLabel('finance')).toBe('Finance');
+});
+
+describe('the public money scale', () => {
+  test('is lighter than the donation scale, with the same floor and its own cap', () => {
+    expect(publicEdgeWidth(0)).toBe(EDGE_FLOOR);
+    expect(publicEdgeWidth(-1)).toBe(EDGE_FLOOR);
+    expect(publicEdgeWidth(1e9)).toBeCloseTo(6, 9);
+    expect(publicEdgeWidth(1e13)).toBe(PUBLIC_EDGE_CAP);
+    const cap = publicEdgeCapAmount();
+    expect(publicEdgeWidth(cap)).toBeCloseTo(PUBLIC_EDGE_CAP, 9);
+    expect(publicEdgeWidth(cap * 0.9)).toBeLessThan(PUBLIC_EDGE_CAP);
+    // Square-root law: four times the money, twice the width.
+    expect(publicEdgeWidth(4e8)).toBeCloseTo(2 * publicEdgeWidth(1e8), 9);
+    for (const amount of [1e6, 1e8, 1e9, 1e10])
+      expect(publicEdgeWidth(amount)).toBeLessThan(edgeWidth(amount));
+  });
+  test('states the donation a public line is as wide as', () => {
+    const equivalent = publicEdgeEquivalent(1e9);
+    expect(edgeWidth(equivalent)).toBeCloseTo(publicEdgeWidth(1e9), 9);
+    expect(equivalent).toBeGreaterThan(4e7);
+    expect(equivalent).toBeLessThan(5e7);
+  });
+  test('the federal map draws its contract lines on the public scale', () => {
+    const publicEdges = model.edges.filter(isPublicEdge);
+    expect(publicEdges.length).toBeGreaterThan(0);
+    for (const edge of publicEdges)
+      expect(edge.width).toBeLessThanOrEqual(PUBLIC_EDGE_CAP);
+  });
 });

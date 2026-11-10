@@ -677,7 +677,10 @@ function MapMode({
           }
         />
         <SafeAreaView
-          edges={['top', 'bottom']}
+          // The stack's opaque bar already sits above the stage: a top
+          // edge here would count the status bar twice and push the card
+          // down the map.
+          edges={['bottom']}
           pointerEvents="box-none"
           style={styles.chrome}
         >
@@ -1045,6 +1048,8 @@ const styles = StyleSheet.create({
     padding: rhythm.block,
     gap: rhythm.tight,
   },
+  // Floating under the card (its `top` is the card's measured height), out
+  // of the column so the expanded panel keeps its share of the stage.
   controls: { position: 'absolute', right: rhythm.block },
   grow: { flex: 1 },
   panelHost: { width: '100%' },
