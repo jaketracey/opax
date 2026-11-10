@@ -11,6 +11,7 @@ import {
 } from '../../api/validation';
 import { formatDate } from '../../design/format';
 import type { MoneyItemView } from './MoneyItem';
+import { combine } from './catalog';
 import { privateNote, publicRecipient } from './privacy';
 
 /** One existing recipient award, reached without a program key. */
@@ -89,8 +90,7 @@ export async function loadRecipientGrant(
   );
   const grant = record.data;
   return {
-    ...record,
-    stale: index.stale || record.stale,
+    ...combine([index, record], null),
     data: {
       meta: [
         'Grant agreement',
@@ -115,7 +115,7 @@ export async function loadRecipientGrant(
         { label: 'Register ID', value: grant.id },
       ].filter((row) => !!row.value),
       children: [],
-      originals: grant.guid
+      originals: grant.identity.organisation && grant.guid
         ? [
             {
               label: `GrantConnect · ${grant.id}`,
