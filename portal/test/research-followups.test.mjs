@@ -1,54 +1,89 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
-import crypto from 'node:crypto'
+import {build} from 'esbuild'
 import {clientConversationRequest,recordConversationTurn,gradeFollowUp} from '../../scripts/research_followups.mjs'
+import {sourceFingerprint} from './money-guard.mjs'
 const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/research-followups.json',import.meta.url)))
 const graph=JSON.parse(fs.readFileSync(new URL('../public/graph/money.json',import.meta.url)))
-// Keep all financial content and provenance in the guard. Only the export date
-// varies on an otherwise identical weekly regeneration (export_money_graph.py).
-function sourceFingerprint(value) {
- const generated=value.meta?.generated
- assert.equal(typeof generated,'string','money graph needs meta.generated')
- assert.match(generated,/^\d{4}-\d{2}-\d{2}$/,'meta.generated must be a UTC date')
- const time=Date.parse(`${generated}T00:00:00Z`)
- assert.ok(Number.isFinite(time)&&new Date(time).toISOString().slice(0,10)===generated,'meta.generated must be a valid UTC date')
- const {generated:_,...meta}=value.meta
- const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value
- return crypto.createHash('sha256').update(JSON.stringify(canonical({...value,meta}))).digest('hex')
+// The gold was built with the party_receipts tool over the federal donation layer of the money graph
+// (money-guard.mjs says exactly what that is). Two guards keep it honest against the live file:
+//  * the layer's fingerprint must match the pinned one, so any change to a donation figure, identity, period,
+//    row or provenance note is reviewed before the gold is trusted again;
+//  * every gold turn must still be exactly what the real tool answers from the live graph.
+// The public-money overlay (contract and grant flows) is regenerated weekly and read by neither, so a routine
+// weekly export does not trip the guard. 10 November 2026: the whole-file fingerprint used before held eleven
+// data groups for a night because AusTender notices had moved the overlay.
+const donorNode=g=>g.nodes.find(n=>n.kind==='donor')
+const donationEdge=g=>g.edges.find(e=>e.target.startsWith('party:'))
+const overlayEdge=g=>g.edges.find(e=>!e.target.startsWith('party:'))
+const overlayDonor=g=>g.nodes.find(n=>n.kind==='donor'&&n.contracts)
+const root=new URL('../',import.meta.url).pathname
+const built=await build({stdin:{contents:"export {partyDonations} from './src/agentic-tools'",resolveDir:root},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const {partyDonations}=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
+const depsFor=g=>({kb:async()=>{throw new Error('the follow-up gold needs no KB')},asset:async path=>path==='/graph/money.json'?structuredClone(g):null,origin:'https://opax.com.au'})
+async function assertGold(g){
+ for(const c of fixture.conversations)for(const [i,t] of c.turns.entries()){
+  if(!t.tool_query)continue
+  const label=`${c.id} turn ${i+1}: ${t.standalone}`
+  const r=await partyDonations(depsFor(g),{...t.tool_query,limit:15})
+  assert.equal(r.ok,true,label)
+  const rows=r.data.rows
+  if(t.rows.length)assert.deepEqual(rows.slice(0,t.rows.length),t.rows,label)
+  if(t.eligible_rows?.length)assert.deepEqual(rows,t.eligible_rows,label)
+  if(t.decision==='decline'&&t.period)assert.equal(rows.length,0,`${label} (${t.gold_limitation||'no rows in the period'})`)
+ }
 }
-test('follow-up source agrees with the pinned snapshot apart from its export date',()=>{
- assert.equal(sourceFingerprint(graph),fixture.source_semantic_sha256,'money content changed: review the pinned follow-up gold before updating its fingerprint')
+test('follow-up source: the donation layer agrees with the pinned snapshot apart from its export date',()=>{
+ assert.equal(sourceFingerprint(graph),fixture.donation_layer_sha256,'donation content or provenance changed: review the pinned follow-up gold before updating its fingerprint')
  assert.match(fixture.source_sha256,/^[a-f0-9]{64}$/)
  assert.match(fixture.source_revision,/^[a-f0-9]{40}$/)
 })
-test('follow-up source accepts metadata-only regeneration without changing graph content',()=>{
- const regenerated=structuredClone(graph)
- regenerated.meta.generated=graph.meta.generated==='2026-10-25'?'2026-11-01':'2026-10-25'
- assert.equal(sourceFingerprint(regenerated),fixture.source_semantic_sha256)
- assert.equal(sourceFingerprint(JSON.parse(JSON.stringify(regenerated,null,2))),fixture.source_semantic_sha256)
+test('a weekly regeneration that moves only the export date or the public-money overlay leaves the guard alone',()=>{
+ const changes={
+  'export date':g=>{g.meta.generated=g.meta.generated==='2026-10-25'?'2026-11-01':'2026-10-25'},
+  'contract coverage':g=>{g.meta.contracts_coverage='notices published 2007-01-01 to 2099-01-01'},
+  'contract dollars':g=>{g.meta.contract_dollars_to_map_donors+=1},
+  'grant dollars':g=>{g.meta.grant_dollars_to_map_donors+=1},
+  'donors with contracts':g=>{g.meta.donors_with_contracts+=1},
+  'edge count':g=>{g.meta.edge_count+=1},
+  'donor contract total':g=>{overlayDonor(g).contracts.total+=1},
+  'donor public money':g=>{g.nodes.find(n=>n.publicMoney).publicMoney+=1},
+  'contract flow':g=>{overlayEdge(g).total+=1;overlayEdge(g).count+=1},
+  'added contract flow':g=>{g.edges.push({...overlayEdge(g)})},
+  'grantor node':g=>{g.nodes.find(n=>n.kind==='grantor').total+=1},
+ }
+ for(const [change,apply] of Object.entries(changes)){
+  const changed=structuredClone(graph);apply(changed)
+  assert.equal(sourceFingerprint(changed),fixture.donation_layer_sha256,change)
+  assert.equal(sourceFingerprint(JSON.parse(JSON.stringify(changed,null,2))),fixture.donation_layer_sha256,`${change}, reformatted`)
+ }
 })
-test('follow-up source still detects changed figures, identities, periods, rows and provenance',()=>{
+test('the guard still detects changed figures, identities, periods, rows and provenance in the donation layer',()=>{
  const controls={
-  'donor figure':g=>{g.nodes.find(n=>n.kind==='donor').total+=1},
-  'donor identity':g=>{g.nodes.find(n=>n.kind==='donor').id='donor:synthetic-control'},
-  'donor label':g=>{g.nodes.find(n=>n.kind==='donor').label='Synthetic control'},
-  'receipt count':g=>{g.edges[0].count+=1},
-  'flow figure':g=>{g.edges[0].total+=1},
-  'recipient identity':g=>{g.edges[0].target='party:synthetic-control'},
-  'financial period':g=>{g.edges[0].byYear['1900']=[1,1]},
-  'added row':g=>{g.edges.push({...g.edges[0]})},
-  'removed row':g=>{g.edges.pop()},
-  'added node':g=>{g.nodes.push({...g.nodes[0]})},
-  'removed node':g=>{g.nodes.pop()},
+  'donor figure':g=>{donorNode(g).total+=1},
+  'donor identity':g=>{donorNode(g).id='donor:synthetic-control'},
+  'donor label':g=>{donorNode(g).label='Synthetic control'},
+  'donor industry':g=>{donorNode(g).industry='synthetic'},
+  'donor selection':g=>{donorNode(g).via='synthetic'},
+  'receipt count':g=>{donationEdge(g).count+=1},
+  'flow figure':g=>{donationEdge(g).total+=1},
+  'recipient identity':g=>{donationEdge(g).target='party:synthetic-control'},
+  'financial period':g=>{donationEdge(g).byYear['1900']=[1,1]},
+  'added row':g=>{g.edges.push({...donationEdge(g)})},
+  'removed row':g=>{g.edges.splice(g.edges.indexOf(donationEdge(g)),1)},
+  'added node':g=>{g.nodes.push({...donorNode(g)})},
+  'removed node':g=>{g.nodes.splice(g.nodes.indexOf(donorNode(g)),1)},
+  'party figure':g=>{g.nodes.find(n=>n.kind==='party').total+=1},
   'source reference':g=>{g.meta.source='Synthetic source control'},
   'coverage':g=>{g.meta.coverage='Synthetic coverage control'},
+  'selection rule':g=>{g.meta.public_money_floor+=1},
   'other metadata':g=>{g.meta.rows_considered+=1},
   'new metadata':g=>{g.meta.synthetic_control=true}
  }
  for(const [control,change] of Object.entries(controls)){
   const changed=structuredClone(graph);change(changed)
-  assert.notEqual(sourceFingerprint(changed),fixture.source_semantic_sha256,control)
+  assert.notEqual(sourceFingerprint(changed),fixture.donation_layer_sha256,control)
  }
 })
 test('follow-up source rejects missing or invalid export dates',()=>{
@@ -58,6 +93,18 @@ test('follow-up source rejects missing or invalid export dates',()=>{
  }
  const changed=structuredClone(graph);delete changed.meta
  assert.throws(()=>sourceFingerprint(changed))
+})
+test('every gold turn is exactly what the party_receipts tool answers from the live graph',async()=>{
+ await assertGold(graph)
+ // the overlay may move under the gold without changing an answer
+ const overlay=structuredClone(graph);overlayEdge(overlay).total+=1;overlayDonor(overlay).contracts.total+=1;overlay.meta.contracts_coverage='moved'
+ await assertGold(overlay)
+ // a donation figure the gold relies on cannot move unnoticed
+ const moved=structuredClone(graph);const first=fixture.conversations[0].turns[0]
+ const edge=moved.edges.find(e=>e.target===`party:${first.tool_query.party}`&&moved.nodes.find(n=>n.id===e.source)?.label===first.rows[0].donor)
+ assert.ok(edge,'the first gold row is a donation edge in the live graph')
+ edge.total+=1;for(const year in edge.byYear){edge.byYear[year][0]+=1;break}
+ await assert.rejects(()=>assertGold(moved))
 })
 test('follow-up population has ten tool-derived two/three turn conversations',()=>{
  assert.equal(fixture.conversations.length,10)
