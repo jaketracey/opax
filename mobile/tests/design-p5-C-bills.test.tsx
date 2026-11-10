@@ -18,6 +18,7 @@ import BillsList from '../src/features/bills/BillsList';
 import { billTextRoute } from '../src/navigation/routes';
 import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
+import { filterStore } from '../src/features/sheets/filter-model';
 
 // Design pass 5, lane C (bills): the bill header's actions (P1-3), the
 // shared bill row (P2-8), a lapsed bill's last stop (P2-9), the list's
@@ -300,6 +301,29 @@ describe('how it moved: a terminal status names the last stop (P2-9)', () => {
 });
 
 describe('Bills list (P2-8, P2-19)', () => {
+  test('a search the filters empty says the filters are on and offers to clear them', async () => {
+    mockParams.scope = 'all';
+    mockParams.q = 'Wilkie';
+    const root = await render(<BillsList pushed />);
+    // The newest pushed list's own filter store.
+    let store: ReturnType<typeof filterStore> | undefined;
+    for (let i = 1; i < 500; i += 1)
+      store = filterStore('bills', `list-${i}`) ?? store;
+    await act(async () => store!.set({ ...store!.get(), status: 'exposure' }));
+    const empty = root.find(
+      (node) =>
+        node.props.testID === 'bills-search-empty' &&
+        typeof node.props.title === 'string',
+    );
+    expect(empty.props.body).toMatch(/Filters are on/);
+    const clear = root.find(
+      (node) =>
+        node.props.testID === 'bills-search-clear' && !!node.props.onPress,
+    );
+    await act(async () => clear.props.onPress());
+    expect(root.findAllByType(BillRow).length).toBeGreaterThan(0);
+  });
+
   test('rows are the shared bill row: serif title, status and its dated event, sponsor with a party label', async () => {
     mockParams.scope = 'all';
     mockParams.q = 'Wilkie';

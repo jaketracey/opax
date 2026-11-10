@@ -348,9 +348,22 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <ContentUnavailable
         symbol="magnifyingglass"
         title={`No results for "${query}"`}
-        body="Check the spelling or try a new search."
+        body={
+          // The filters still apply to a search: say so, not "spelling".
+          on > 0
+            ? 'Filters are on. Clear them to search every bill.'
+            : 'Check the spelling or try a new search.'
+        }
         testID="bills-search-empty"
       />
+      {on > 0 ? (
+        <Button
+          label="Clear filters"
+          variant="secondary"
+          onPress={clear}
+          testID="bills-search-clear"
+        />
+      ) : null}
       {scope !== 'all' ? (
         <Button
           label="Search all bills"
