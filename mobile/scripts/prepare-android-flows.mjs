@@ -68,7 +68,8 @@ const permission = {
   'Precise.*Off': { text: '(?i)^(Approximate|Approximate location)$' },
 };
 // System ANR titles other than the app's own (which stays a failure).
-const systemAnr = "^(?!OPAX )(System UI|Process system|Pixel Launcher|.*[Ss]ystem.*|Google .*) (isn't|is not) responding$";
+const systemAnr =
+  "^(?!OPAX )(System UI|Process system|Pixel Launcher|.*[Ss]ystem.*|Google .*) (isn't|is not) responding$";
 const backSelector = { text: '^(Navigate up|Go back|Back|Back to .*)$' };
 // Android's native SearchView adds leading spaces to its hint. Its stable
 // resource id also works once the hint has been replaced by entered text.
@@ -268,9 +269,12 @@ function command(v, relative) {
     out.tapOn =
       text === 'Select All'
         ? { text: '^Select (All|all)$' }
-        : text === 'Name' && relative === '43-money-agencies.yaml'
-          ? { ...nativeSearch }
-          : selector(tap);
+        : text === 'Ask about their speeches'
+          ? // Android's More menu names the person ("Ask about <name>").
+            { text: '^Ask about (their speeches|.+)$' }
+          : text === 'Name' && relative === '43-money-agencies.yaml'
+            ? { ...nativeSearch }
+            : selector(tap);
     if (
       out.tapOn?.id?.endsWith('/permission_allow_one_time_button') &&
       !relative.includes('approximate')

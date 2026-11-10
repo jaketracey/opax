@@ -235,7 +235,10 @@ test('cold launches dismiss only named system ANR dialogs', () => {
 test('bottom tab taps are confirmed by the selected tab', () => {
   const body = fs.readFileSync(path.join(out, '02-search.yaml'), 'utf8');
   assert.match(body, /notVisible:\n\s+id: tab-search\n\s+selected: true/);
-  assert.match(body, /extendedWaitUntil:\n\s+visible:\n\s+id: tab-search\n\s+selected: true/);
+  assert.match(
+    body,
+    /extendedWaitUntil:\n\s+visible:\n\s+id: tab-search\n\s+selected: true/,
+  );
 });
 
 test('cold-launch readiness keeps waiting out system ANRs before requiring the root', () => {
@@ -245,4 +248,12 @@ test('cold-launch readiness keeps waiting out system ANRs before requiring the r
   assert.equal(loop.repeat.commands[1].extendedWaitUntil.optional, true);
   const i = steps.indexOf(loop);
   assert.ok(steps[i + 1].extendedWaitUntil.visible.id.includes('today-screen'));
+});
+
+test('the profile More menu Ask action accepts the Android person label', () => {
+  const body = fs.readFileSync(
+    path.join(out, '30-ask-entry-points.yaml'),
+    'utf8',
+  );
+  assert.ok(body.includes('^Ask about (their speeches|.+)$'));
 });
