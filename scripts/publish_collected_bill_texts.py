@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Publish complete collected bill versions without automatic LLM generation.
 
-Requires the KB's summary model to use the schema's `none` provider and no
-enabled/running DA tasks. Existing resources are never overwritten. Source
+Requires a KB that generates nothing: no generative summary model offered by
+the schema, no enabled/running DA tasks, and no processing summary on the newest
+resources (assert_no_generation, assert_no_generated_summaries). Existing
+resources are never overwritten. Source
 versions with a different live checksum are held for review. Run against a
 SQLite backup of the crawler state, not its changing working database.
 """
@@ -25,11 +27,46 @@ from publish_codex_bill_enrichment import validate_entry
 
 
 def assert_no_generation(config, schema, tasks):
+    """The KB's configuration must not generate: no generative summary model, no enabled or running task.
+
+    The schema used to offer a `none` summary provider and this required it. Since early November 2026 the
+    vendor offers only generative summary models, and this KB still carries the legacy value the schema no
+    longer lists (`generative-multilingual-2023`), under which it generates nothing (every resource created
+    since carries an empty summary). So: when the schema offers `none`, the configured model must be it;
+    when it does not, the configured model must at least not be one of the generative models offered, and
+    the caller proves the behaviour with assert_no_generated_summaries. A model the schema maps to a
+    generative provider fails in both worlds.
+    """
     providers = {x['value']: x.get('provider') for x in schema['summary_model']['options']}
-    if providers.get(config.get('summary_model')) != 'none':
-        raise ValueError('Automatic summaries must use the no-generation provider')
+    provider = providers.get(config.get('summary_model'))
+    if 'none' in providers.values():
+        if provider != 'none':
+            raise ValueError('Automatic summaries must use the no-generation provider')
+    elif provider is not None:
+        raise ValueError(f'Automatic summaries must not use a generative model (provider {provider})')
     if tasks.get('running') or any(x.get('enabled') for x in tasks.get('configs', [])):
         raise ValueError('Automatic enrichment must remain disabled')
+
+
+def assert_no_generated_summaries(kb, newest=3):
+    """The KB's behaviour must not generate: the newest resources carry no processing summary on any field.
+
+    Reads the catalog's most recently created resources (what the previous run published) and each field's
+    extracted metadata; a non-empty `summary` there was written by the platform, not by OPAX. Read-only.
+    """
+    catalog = _request('GET', kb._rag(f'/catalog?page_size={int(newest)}&sort_field=created&sort_order=desc&show=basic'),
+                       kb._headers)
+    resources = catalog.get('resources') or {}
+    if not resources:
+        raise ValueError('KB catalog lists no resources, so no-generation cannot be verified')
+    for rid, basic in resources.items():
+        name = basic.get('slug') or rid
+        full = _request('GET', kb._rag(f'/resource/{rid}?show=basic&show=extracted&extracted=metadata'), kb._headers)
+        for fields in (full.get('data') or {}).values():
+            for field_id, field in (fields or {}).items():
+                extracted = ((field or {}).get('extracted') or {}).get('metadata') or {}
+                if (extracted.get('metadata') or {}).get('summary'):
+                    raise ValueError(f'The KB generated a summary for field {field_id} of {name}; publishing nothing')
 
 
 def existing_outcome(resource, body):
@@ -77,6 +114,7 @@ def main():
 
     def gate():
         assert_no_generation(_request('GET', kb._rag('/configuration'), kb._headers), schema, kb.list_tasks())
+        assert_no_generated_summaries(kb)
 
     gate()
     limiter = RateLimiter(args.rate)

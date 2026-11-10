@@ -17,9 +17,10 @@ Why this is a script and not four shell lines:
     both take `--limit` newest-first style windows.
   * The fetchers upsert on the natural key and never delete, and `words_sync` is idempotent (a
     409 from the KB means "already there"), so a failed or repeated night is harmless.
-  * Before anything is created in the KB the KB's own configuration is checked: automatic
-    summaries must use the no-generation provider and enrichment tasks must be disabled
-    (`assert_no_generation`, the check the 21 Sep publication used). If that check fails the
+  * Before anything is created in the KB the KB is checked for automatic generation: no generative
+    summary model, enrichment tasks disabled (`assert_no_generation`, the check the 21 Sep publication
+    used) and no processing summary on the newest resources (`assert_no_generated_summaries`, added when
+    the schema stopped offering a no-generation provider in November 2026). If a check fails the
     publish step for every source is skipped: nothing is created.
 
 Without --apply the publish step is `words_sync` in audit mode (no KB client, no creates), and
@@ -101,11 +102,15 @@ def check_kb_no_generation() -> None:
     sys.path.insert(0, str(ROOT))
     sys.path.insert(0, str(ROOT / "scripts"))
     from parli.arag import AragConfig, KbClient, _request, load_dotenv
-    from publish_collected_bill_texts import assert_no_generation
+    from publish_collected_bill_texts import assert_no_generated_summaries, assert_no_generation
     load_dotenv(str(ROOT / ".env"))     # the repo's .env, whatever the caller's cwd (the environment still wins)
     kb = KbClient(AragConfig.from_env())
     assert_no_generation(_request("GET", kb._rag("/configuration"), kb._headers),
                          _request("GET", kb._rag("/schema"), kb._headers), kb.list_tasks())
+    # The schema stopped offering a no-generation summary provider on about 4 November 2026 and this
+    # check refused every night after; the behavioural proof (no summary on the newest resources) is
+    # what the configuration proof can no longer give.
+    assert_no_generated_summaries(kb)
 
 
 def _run(argv: list[str], timeout: int, env: dict) -> tuple[int, str, str, float]:
