@@ -9,6 +9,17 @@ source scripts/qa-java.sh
 AVD=${1:?Usage: e2e-android.sh OPAX_Pixel_API36|OPAX_API34 [01 02 03 07 08 13 25 26 32 38 39 40]}; shift
 case "$AVD" in OPAX_Pixel_API36|OPAX_API34) ;; *) echo 'Use an OPAX Android device' >&2; exit 2 ;; esac
 configure_java
+for selector in "$@"; do
+  if [ "$selector" = --all-android ]; then
+    export OPAX_ANDROID_CONTINUE_ON_FAILURE=1 OPAX_ANDROID_SUITE_ONLY=1
+  fi
+done
+export PATH="$HOME/.maestro/bin:$PATH"
+if [ "$(uname -s)" = Linux ]; then
+  export OPAX_ANDROID_EMULATOR_PORT=${OPAX_ANDROID_EMULATOR_PORT:-$([ "$AVD" = OPAX_API34 ] && echo 5602 || echo 5604)}
+  export OPAX_ANDROID_METRO_PORT=${OPAX_ANDROID_METRO_PORT:-8183}
+  export OPAX_FIXTURE_PORT=${OPAX_FIXTURE_PORT:-8920}
+fi
 export EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
 export OPAX_LOAD_LIMIT=140 OPAX_PASTE_WAIT_SECONDS=7200
 RUN=${OPAX_QA_RUN:-android-bringup}
@@ -54,7 +65,12 @@ fi
 perl -e 'setpgrp(0, 0) or die "setpgrp: $!\n"; exec @ARGV' bash -c '
 source scripts/qa-env.sh
 source scripts/qa-lock.sh
-qa_paste_lock_run "$@"
+if [ "$(uname -s)" = Linux ]; then
+  # Desktop emulators are isolated by serial/ports; no Mac-wide pasteboard lock.
+  "$@"
+else
+  qa_paste_lock_run "$@"
+fi
 ' _ bash "$PWD/scripts/e2e-android-device.sh" "$AVD" "$OUT" "$@" &
 WAITER_PID=$!
 rc=0

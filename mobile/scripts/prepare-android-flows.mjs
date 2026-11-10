@@ -1,0 +1,366 @@
+#!/usr/bin/env node
+// Android preparation preserves YAML comments, including declared tap budgets.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { parseAllDocuments, isSeq } from 'yaml';
+
+const mobile = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const source = path.join(mobile, '.maestro');
+const argv = process.argv.slice(2);
+const output = argv[0];
+if (!output)
+  throw new Error(
+    'Usage: prepare-android-flows.py <output> [--overrides <dir>] [--coverage]',
+  );
+const settings = {
+  '13b-today-no-edition': 'OPAX_FIXTURE_EDITION=absent',
+  '13c-today-edition-withdrawn': 'OPAX_FIXTURE_EDITION=withdrawn',
+  '13g-today-first-install': 'OPAX_NETWORK_PROFILE=throttled',
+  '26-follows': 'OPAX_FIXTURE_DATA=changed',
+  '28g-vacant-seat': 'OPAX_FIXTURE_ROSTER=vacant',
+  '30-catalog-robustness': 'OPAX_FIXTURE_ROSTER=null-optional',
+};
+if (argv.includes('--settings')) {
+  console.log(settings[argv[argv.indexOf('--settings') + 1]] ?? '');
+  process.exit(0);
+}
+const helpers = new Set([
+  '06-open-profile.yaml',
+  '08-open-profile.yaml',
+  'review-pages.yaml',
+  'search-keyboard-reveal.yaml',
+  'search-submit-reveal.yaml',
+]);
+const special = new Set([
+  '03-mp-profile.yaml',
+  '32-record-reader.yaml',
+  '12-search-keyboard.yaml',
+  '07-scene-lifecycle.yaml',
+]);
+const notApplicable = (name) => {
+  if (/^(52-|53-|54-|55b-|56-|57b-)/.test(name))
+    return 'iPad split panes, presentation or viewport; no Android tablet parity claim';
+  if (name === 'release-community-hidden.yaml')
+    return 'Production-only hidden-Community check needs a production binary; e2e deliberately includes fixture routes';
+  return null;
+};
+const held = (name) => /^(23-|24-)/.test(name);
+const permission = {
+  'Allow Once': {
+    id: '.*permissioncontroller:id/permission_allow_one_time_button',
+  },
+  'Allow While Using App': {
+    id: '.*permissioncontroller:id/permission_allow_foreground_only_button',
+  },
+  'Allow While Using the App': {
+    id: '.*permissioncontroller:id/permission_allow_foreground_only_button',
+  },
+  'Don’t Allow': { id: '.*permissioncontroller:id/permission_deny_button' },
+  "Don't Allow": { id: '.*permissioncontroller:id/permission_deny_button' },
+  'Precise.*On': { text: '(?i)^(Approximate|Approximate location)$' },
+  // Android keeps a fixed radio label rather than iOS’s On/Off label. The
+  // shared flow then asserts location-approximate after granting access.
+  'Precise.*Off': { text: '(?i)^(Approximate|Approximate location)$' },
+};
+const backSelector = { text: '^(Navigate up|Go back|Back|Back to .*)$' };
+function selector(v) {
+  if (typeof v === 'string')
+    return (
+      permission[v] ??
+      (v === 'People, bills, topics and more'
+        ? { id: 'search-input' }
+        : v.replaceAll('iPhone', 'phone'))
+    );
+  if (!v || typeof v !== 'object') return v;
+  if (v.id === 'BackButton')
+    return { ...backSelector, ...(v.optional ? { optional: true } : {}) };
+  if (permission[v.text])
+    return { ...permission[v.text], ...(v.optional ? { optional: true } : {}) };
+  if (v.text === 'People, bills, topics and more')
+    return { id: 'search-input' };
+  return Object.fromEntries(
+    Object.entries(v).map(([k, x]) => [
+      k,
+      k === 'text' && typeof x === 'string'
+        ? x.replaceAll('iPhone', 'phone')
+        : x,
+    ]),
+  );
+}
+function command(v, relative) {
+  if (typeof v === 'string') {
+    if (v === 'pressKey: Back') return 'back';
+    return v;
+  }
+  if (!v || typeof v !== 'object') return v;
+  const out = structuredClone(v);
+  if (out.pressKey === 'Back') return 'back';
+  if (out.tapOn) {
+    const tap = out.tapOn;
+    const text = typeof tap === 'string' ? tap : tap.text;
+    // Only navigation dismissals: editing Done and action-sheet cancellation
+    // remain real taps. Follows Done exits edit mode and must also remain a tap.
+    if (
+      tap.id === 'BackButton' ||
+      text === 'Back' ||
+      text === 'Today' ||
+      (text === 'Done' &&
+        !relative.includes('26-follows') &&
+        !relative.includes('quiz-number-done'))
+    )
+      return 'back';
+    if (
+      text === 'Cancel' &&
+      /^(07-your-mp|13e-|24-electorate-map-cancel)/.test(relative)
+    )
+      return { runFlow: { commands: ['hideKeyboard', 'back'] } };
+    if (text === 'Cancel' && relative === '22b-sources.yaml')
+      return 'hideKeyboard';
+    out.tapOn =
+      text === 'Select All' ? { text: '^Select (All|all)$' } : selector(tap);
+    if (
+      out.tapOn?.id?.endsWith('/permission_allow_one_time_button') &&
+      !relative.includes('approximate')
+    )
+      return {
+        runFlow: {
+          commands: [
+            {
+              runFlow: {
+                when: { visible: { text: '(?i)^(Precise|Precise location)$' } },
+                commands: [
+                  { tapOn: { text: '(?i)^(Precise|Precise location)$' } },
+                ],
+              },
+            },
+            { tapOn: out.tapOn },
+          ],
+        },
+      };
+    if (out.tapOn?.id?.startsWith('tab-')) out.tapOn.retryTapIfNoChange = true;
+  }
+  for (const key of [
+    'assertVisible',
+    'assertNotVisible',
+    'copyTextFrom',
+    'longPressOn',
+  ])
+    if (out[key]) out[key] = selector(out[key]);
+  if (out.extendedWaitUntil)
+    for (const key of ['visible', 'notVisible'])
+      if (out.extendedWaitUntil[key])
+        out.extendedWaitUntil[key] = selector(out.extendedWaitUntil[key]);
+  if (out.scrollUntilVisible) {
+    out.scrollUntilVisible.element = selector(out.scrollUntilVisible.element);
+    if (out.scrollUntilVisible.element?.id === 'search-input')
+      delete out.scrollUntilVisible.centerElement;
+    // System permission buttons fit their dialog; never swipe the OS dialog.
+    if (out.scrollUntilVisible.element?.id?.includes('permissioncontroller'))
+      return {
+        extendedWaitUntil: {
+          visible: out.scrollUntilVisible.element,
+          timeout: 15000,
+        },
+      };
+  }
+  if (out.swipe?.from && relative === '31-ask-saved.yaml')
+    return { longPressOn: { text: out.swipe.from } };
+  if (
+    relative === '30-ask.yaml' &&
+    out.swipe?.start === '50%, 30%' &&
+    out.swipe?.end === '50%, 90%'
+  )
+    return 'hideKeyboard';
+  const swipe = out.swipe;
+  if (swipe?.start && swipe.end) {
+    const start = swipe.start.split(',').map(parseFloat),
+      end = swipe.end.split(',').map(parseFloat);
+    if (start[0] <= 5 && end[0] >= 75 && Math.abs(start[1] - end[1]) < 15)
+      return 'back';
+  }
+  for (const key of ['runFlow', 'repeat', 'retry']) {
+    if (out[key]?.commands)
+      out[key].commands = out[key].commands.map((c) => command(c, relative));
+    if (out[key]?.when)
+      for (const check of ['visible', 'notVisible'])
+        if (out[key].when[check])
+          out[key].when[check] = selector(out[key].when[check]);
+  }
+  return out;
+}
+function prepare(body, relative) {
+  const docs = parseAllDocuments(body, { compat: 'yaml-1.1' });
+  for (const doc of docs) {
+    if (doc.errors.length)
+      throw new Error(
+        `${relative}: ${doc.errors.map((e) => e.message).join('; ')}`,
+      );
+    if (!isSeq(doc.contents)) continue;
+    function steps(seq) {
+      const result = [];
+      for (const node of seq.items) {
+        const before = node.toJSON();
+        const after = command(before, relative);
+        const next = doc.createNode(after);
+        next.commentBefore = node.commentBefore;
+        next.comment = node.comment;
+        result.push(next);
+        if (before === 'launchApp' || before?.launchApp) {
+          result.push(
+            doc.createNode({ waitForAnimationToEnd: { timeout: 5000 } }),
+          );
+          // Readiness is based on the mounted root, not the current tab. A
+          // relaunch may restore a detail or welcome screen rather than Today.
+          result.push(
+            doc.createNode({
+              extendedWaitUntil: {
+                visible: {
+                  id: 'today-screen|welcome-screen|person-screen-title|ask-screen|bill-screen|talk-sheet|search-screen',
+                },
+                timeout: 30000,
+              },
+            }),
+          );
+        }
+      }
+      seq.items = result;
+    }
+    steps(doc.contents);
+  }
+  return docs
+    .map((d) => {
+      d.directives.docStart = false;
+      return d.toString({ lineWidth: 0 });
+    })
+    .join('---\n');
+}
+function files(root) {
+  return fs.readdirSync(root, { withFileTypes: true }).flatMap((e) => {
+    const full = path.join(root, e.name);
+    return e.isDirectory()
+      ? ['results', 'screenshots', 'recordings'].includes(e.name)
+        ? []
+        : files(full)
+      : [full];
+  });
+}
+fs.mkdirSync(output, { recursive: true });
+// Clear only previously generated files recorded by this preparer. Stale
+// overrides must not silently enter a later run.
+const manifest = path.join(output, 'prepared-files.json');
+if (fs.existsSync(manifest))
+  for (const name of JSON.parse(fs.readFileSync(manifest, 'utf8'))) {
+    const full = path.resolve(output, name);
+    if (full.startsWith(path.resolve(output) + path.sep))
+      fs.rmSync(full, { force: true });
+  }
+const written = [];
+for (const original of files(source)) {
+  if (!/\.(yaml|js|json)$/.test(original)) continue;
+  const relative = path.relative(source, original);
+  const target = path.join(output, relative);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(
+    target,
+    original.endsWith('.yaml')
+      ? prepare(fs.readFileSync(original, 'utf8'), relative)
+      : fs.readFileSync(original),
+  );
+  written.push(relative);
+}
+// Android helper replacements occupy the same relative paths as their shared
+// callers. Root geometry helpers have no support/ prefix in the iOS suite.
+for (const name of [
+  'restore-tab-bar',
+  'search-dismiss',
+  'search-keyboard-reveal',
+  'search-submit-reveal',
+  'ask-progress-geometry',
+  'quiz-number-done',
+]) {
+  const relative =
+    (name.startsWith('search-') && name.endsWith('-reveal') ? '' : 'support/') +
+    name +
+    '.yaml';
+  fs.copyFileSync(
+    path.join(output, 'android/support', name + '.yaml'),
+    path.join(output, relative),
+  );
+}
+const plan = fs
+  .readdirSync(source)
+  .filter((n) => n.endsWith('.yaml'))
+  .sort()
+  .map((name) => {
+    const category = notApplicable(name)
+      ? 'not applicable'
+      : held(name)
+        ? 'held: map lane'
+        : special.has(name)
+          ? 'Android-only variant'
+          : 'prepared variant';
+    return {
+      shared: name,
+      path: special.has(name) ? `android/${name}` : name,
+      category,
+      run: !notApplicable(name) && !held(name) && !helpers.has(name),
+      reason:
+        notApplicable(name) ??
+        (held(name)
+          ? 'held: map lane; permission mapping is prepared here for that lane'
+          : helpers.has(name)
+            ? 'Parameterised helper; exercised by parent journeys'
+            : special.has(name)
+              ? 'Android navigation, native controls or keyboard geometry'
+              : 'Shared assertions; prepared Android Back, permission selectors and launch waits'),
+      settings: settings[name.slice(0, -5)] ?? '',
+    };
+  });
+if (argv.includes('--overrides')) {
+  const overrides = argv[argv.indexOf('--overrides') + 1];
+  for (const original of files(overrides)) {
+    if (!/\.(yaml|js|json)$/.test(original)) continue;
+    const relative = path.relative(overrides, original),
+      target = path.join(output, relative);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.copyFileSync(original, target);
+    written.push(relative);
+  }
+}
+fs.writeFileSync(
+  path.join(output, 'suite.json'),
+  JSON.stringify(plan, null, 2) + '\n',
+);
+fs.writeFileSync(manifest, JSON.stringify(written, null, 2) + '\n');
+if (argv.includes('--coverage')) {
+  const counts = {};
+  for (const row of plan)
+    counts[row.category] = (counts[row.category] ?? 0) + 1;
+  const body =
+    '# Android Maestro coverage\n\nGenerated by `python3 scripts/prepare-android-flows.py <private-output> --coverage`.\n' +
+    'One row per shared root flow; support helpers are exercised through their callers.\n' +
+    'Prepared means the Android file is generated and audited; device pass/fail is recorded privately per API.\n' +
+    'No shared iOS YAML is changed. Font-scale variants run at Android 2.0.\n\n' +
+    Object.entries(counts)
+      .map(([k, v]) => `${k}: **${v}**`)
+      .join('; ') +
+    `. Total: **${plan.length}**.\n\n` +
+    'The full device set is selected with `scripts/e2e-android.sh OPAX_API34 --all-android`.\n' +
+    'The runner changes fixture variants per flow; 04 requires a saved-catalog warmup then the fixture stopped.\n' +
+    'Today/welcome launch flags require Android support in the app; assertions stay mandatory.\n' +
+    'Permission taps use Android permission-controller resource IDs across API 34/36: Only this time, While using the app/this app and Don’t allow. Precise/Approximate choices accept the location suffix.\n' +
+    'R8 mapping and native symbols are release checks only when enabled by the generated native build.\n\n' +
+    '| Shared flow | Android coverage | Prepared entry / reason |\n| --- | --- | --- |\n' +
+    plan
+      .map(
+        (p) =>
+          `| \`${p.shared}\` | ${p.category} | \`${p.path}\`: ${p.reason}${p.settings ? '; `' + p.settings + '`' : ''} |`,
+      )
+      .join('\n') +
+    '\n';
+  fs.writeFileSync(path.join(source, 'android/COVERAGE.md'), body);
+}
+console.log(
+  `Prepared ${written.length} Android flow/support files in ${output}; ${plan.filter((p) => p.run).length} runnable journeys.`,
+);

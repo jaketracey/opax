@@ -65,3 +65,23 @@ qa_iphone_plan() {
   echo "  = scripts/e2e.sh <udid> $(qa_iphone_suite | tr '\n' ' ' | sed 's/ $//')"
   qa_iphone_separate_runs
 }
+
+# Prepared Android paths are explicit; numeric selectors may match multiple
+# journeys (for example 32 Ask and record reader). Helpers are not suite roots.
+qa_android_select() {
+  local root=$1 selector=$2
+  python3 - "$root" "$selector" <<'PYSELECT'
+import json, pathlib, re, sys
+root=pathlib.Path(sys.argv[1]); selector=sys.argv[2]
+plan=json.loads((root/'suite.json').read_text())
+if selector == '--all-android':
+    selected=[p['path'] for p in plan if p['run']]
+elif selector.startswith('.maestro/'):
+    selected=[selector.removeprefix('.maestro/')]
+else:
+    selected=[p['path'] for p in plan if p['run'] and re.match(re.escape(selector)+r'-', pathlib.Path(p['path']).name)]
+if not selected or any(not (root/p).is_file() for p in selected):
+    raise SystemExit('Unsupported Android journey: '+selector)
+for path in selected: print('.maestro/'+path)
+PYSELECT
+}

@@ -1,0 +1,20 @@
+appId: au.com.opax.app
+name: Android return to the tab root and reveal its first content
+---
+- hideKeyboard
+- repeat:
+    times: 12
+    while:
+      visible: ^(Navigate up|Go back|Back|Back to .*)$
+    commands:
+      - back
+      - waitForAnimationToEnd
+- assertVisible:
+    id: ${TAB_ID}
+- scrollUntilVisible:
+    element:
+      id: ${TOP_ID}
+    direction: UP
+    timeout: 300000
+- assertVisible:
+    id: ${TOP_ID}
