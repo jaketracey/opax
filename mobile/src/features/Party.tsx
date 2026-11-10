@@ -200,8 +200,11 @@ export function PartyPage({
         <Screen
           column="wide"
           testID="party-screen"
+          // "Not a party" makes no read, so a pull would spin forever.
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            notAParty ? undefined : (
+              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            )
           }
         >
           {pending}

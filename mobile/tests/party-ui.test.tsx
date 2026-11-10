@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { act } from 'react';
 import {
   AppState,
+  RefreshControl,
   Text as NativeText,
   useWindowDimensions,
 } from 'react-native';
@@ -492,6 +493,8 @@ test('Independent is not a party: it points to independent members', async () =>
   });
   expect(has(r, 'party-not-a-party')).toBe(true);
   expect(unavailable(r)).toEqual(['Not a party']);
+  // Nothing is read for a label, so there is nothing to pull to refresh.
+  expect(r.root.findAllByType(RefreshControl)).toHaveLength(0);
   press(r, 'party-not-a-party-action');
   expect(router.push).toHaveBeenCalledWith({
     pathname: '/directory',
