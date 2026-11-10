@@ -93,8 +93,12 @@ export default function RecentRecords() {
       .filter(Boolean)
       .sort()
       .at(-1) ?? null;
-  const saved = !!refreshError;
-  const offline = saved && isOffline(refreshError);
+  // A read that could not reach OPAX returns the saved copy marked stale
+  // rather than failing: say so, as a failed refresh does.
+  const saved = !!refreshError || !!value?.stale;
+  const offline =
+    (!!refreshError && isOffline(refreshError)) ||
+    (!!value?.stale && !value.staleReason);
   let body;
   if (!value && first.error)
     body = isOffline(first.error) ? (

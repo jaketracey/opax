@@ -99,3 +99,25 @@ test('an older successful refresh cannot overwrite the newest completed refresh'
   await act(async () => pending[0]!(record('Older fixture')));
   expect(view.root.findByType(RecordRow).props.title).toBe('Newest fixture');
 });
+
+test('a refresh answered from the saved copy says the list is saved', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record('Initial fixture'))
+    .mockResolvedValueOnce({
+      ...record('Saved fixture'),
+      stale: true,
+      savedAt: 5,
+    });
+  let view!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    view = TestRenderer.create(
+      withNavigationOptions(<RecentRecords />, () => {}),
+    );
+  });
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
+  const line = view.root.findByType(SourceLine).props;
+  expect(line.state).toBe('saved');
+  expect(line.savedAt).toBe(5);
+  expect(line.asOf).toBeNull();
+});
