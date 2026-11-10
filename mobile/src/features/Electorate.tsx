@@ -169,17 +169,24 @@ export default function Electorate() {
   );
 }
 
-export function ElectorateScreen({
-  id,
-  embedded = false,
-  initialDate = '',
-  section,
-}: {
+interface ElectorateScreenProps {
   id: string;
   embedded?: boolean;
   initialDate?: string;
   section?: 'changes';
-}) {
+}
+
+/** Embedded panes can reuse this component for a different electorate. */
+export function ElectorateScreen(props: ElectorateScreenProps) {
+  return <ElectorateContent key={props.id} {...props} />;
+}
+
+function ElectorateContent({
+  id,
+  embedded = false,
+  initialDate = '',
+  section,
+}: ElectorateScreenProps) {
   const [chosen, setChosen] = useState<string | null>(null);
   const asof =
     chosen ?? (initialDate && validDate(initialDate) ? initialDate : '');
@@ -738,10 +745,10 @@ function MembersSection({
   const many = view.capacity > 1 || rows.length > 1;
   const senate = identity.chamber === 'senate';
   const shown = rows.length > 6 ? rows.slice(0, 6) : rows;
-  const header = abolished
-    ? 'Past members'
-    : asof
-      ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
+  const header = asof
+    ? `${many ? 'Members' : 'Member'} on ${formatDate(asof)}`
+    : abolished
+      ? 'Past members'
       : many
         ? 'Members'
         : 'Member';
@@ -757,14 +764,14 @@ function MembersSection({
   return (
     <View testID="electorate-members" style={{ gap: rhythm.heading }}>
       <SectionHeader title={header} testID="electorate-members-heading" />
-      {abolished ? null : asof ? (
+      {asof ? (
         <DatedMembers
           view={view}
           directory={directory}
           asof={asof}
           onBackToToday={onBackToToday}
         />
-      ) : rows.length ? (
+      ) : abolished ? null : rows.length ? (
         <InsetGroup>
           <RepresentativeRows
             rows={shown}
@@ -793,7 +800,7 @@ function MembersSection({
       <ElectorateHistory
         view={view}
         directory={directory}
-        header={!abolished}
+        header={!abolished || !!asof}
       />
       <BlockSource
         block={block}
