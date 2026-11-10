@@ -207,6 +207,17 @@ export class AskController {
         });
     }
   }
+  /**
+   * A sync brought a newer copy of the open conversation: show its turns
+   * without touching the composer, a failed question or a waiting arrival.
+   */
+  reload(id: string) {
+    if (this.state.busy || this.state.id !== id) return;
+    const c = this.io.read().chats.find((c) => c.id === id);
+    if (!c || JSON.stringify(c.thread) === JSON.stringify(this.state.thread))
+      return;
+    this.update({ thread: c.thread });
+  }
   start(options: AskOptions = { ...defaultOptions }) {
     this.cancel();
     this.sequence++;

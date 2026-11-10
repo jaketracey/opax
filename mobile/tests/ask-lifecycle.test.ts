@@ -151,3 +151,27 @@ test('Mining follow-ups use the latest typed question and rewrite, and New clear
     kind: defaultOptions.kind,
   });
 });
+
+test('a synced copy of the open conversation shows its turns and keeps the draft', async () => {
+  const h = harness(jest.fn());
+  h.controller.open('fixture-saved');
+  h.controller.setDraft('Fixture draft in progress');
+  const saved = h.store().chats[0]!;
+  await h.save({
+    ...h.store(),
+    chats: [
+      {
+        ...saved,
+        updated: 3,
+        thread: [
+          ...saved.thread,
+          { role: 'user', text: 'Asked on another device' },
+          { role: 'answer', text: 'Answer from another device', sources: [] },
+        ],
+      },
+    ],
+  });
+  h.controller.reload('fixture-saved');
+  expect(h.controller.snapshot().thread).toHaveLength(4);
+  expect(h.controller.snapshot().draft).toBe('Fixture draft in progress');
+});

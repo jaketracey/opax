@@ -96,11 +96,30 @@ export async function syncConversations(
   isCurrent: () => boolean = () => true,
 ): Promise<'synced' | 'skipped' | 'failed'> {
   try {
-    const next = await reconcileChats(chatsSnapshot(), isCurrent);
+    const before = chatsSnapshot();
+    const next = await reconcileChats(before, isCurrent);
     if (!isCurrent()) return 'skipped';
-    await saveChats(next);
+    // An answer may have been saved while the account was read: the copy
+    // on this device now wins over the one the pull started from.
+    const now = chatsSnapshot();
+    const gone = (id: string) =>
+      before.chats.some((c) => c.id === id) &&
+      !now.chats.some((c) => c.id === id);
+    const chats = next.chats
+      .filter((c) => !gone(c.id))
+      .map((c) => {
+        const local = now.chats.find((l) => l.id === c.id);
+        return local && local.updated > c.updated ? local : c;
+      });
+    for (const c of now.chats)
+      if (!chats.some((x) => x.id === c.id)) chats.push(c);
+    await saveChats({
+      ...next,
+      active: now.active,
+      chats: chats.sort((a, b) => b.updated - a.updated).slice(0, 20),
+    });
     const open = askSession.snapshot();
-    if (open.id && !open.busy) askSession.open(open.id);
+    if (open.id) askSession.reload(open.id);
     return 'synced';
   } catch (e) {
     if (e instanceof ChatSyncError && e.code === 'signed-out') return 'skipped';
