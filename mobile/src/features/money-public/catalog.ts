@@ -1,6 +1,7 @@
 import type { ApiClient, RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import * as d from './data';
+import { decodeSeatGrants } from './seat-grants-data';
 export class MoneyCatalogs {
   constructor(private client: Pick<ApiClient, 'get'>) {}
   async grants(jur: d.Jurisdiction, refresh = false) {
@@ -35,6 +36,47 @@ export class MoneyCatalogs {
           );
         return r;
       });
+  }
+  async seat(
+    jur: 'federal',
+    key: string | undefined,
+    refresh = false,
+    { page, signal }: { page?: string; signal?: AbortSignal } = {},
+  ) {
+    if (!key) return null;
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(key))
+      throw new ApiError('invalid-data', 'The seat key could not be read.');
+    const file = page ?? `${key}.json`;
+    const suffix = file.slice(key.length);
+    const pageNumber = file === `${key}.json` ? 1 : Number(suffix.slice(1, -5));
+    if (
+      !file.startsWith(key) ||
+      !Number.isSafeInteger(pageNumber) ||
+      pageNumber < 1 ||
+      file !== (pageNumber === 1 ? `${key}.json` : `${key}-${pageNumber}.json`)
+    )
+      throw new ApiError('invalid-data', 'The seat page could not be read.');
+    try {
+      const record = await this.client.get(
+        `/grants/${jur}/seats/${file}`,
+        decodeSeatGrants,
+        refresh,
+        { signal },
+      );
+      if (
+        record.data.key !== key ||
+        record.data.jur !== jur ||
+        record.data.page !== pageNumber
+      )
+        throw new ApiError(
+          'invalid-data',
+          'The seat record does not match the selected seat.',
+        );
+      return record;
+    } catch (error) {
+      if (error instanceof ApiError && error.code === 'not-found') return null;
+      throw error;
+    }
   }
   async agencies(refresh = false) {
     return this.client.get('/agencies.json', d.decodeAgencies, refresh);
