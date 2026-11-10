@@ -20,14 +20,17 @@ export function Picture({
   ratio = 4 / 3,
   ground = 'sunken',
   rounded = true,
+  resizeMode = 'contain',
   failure = 'quiet',
 }: {
   file: string;
-  /** The frame's width over height; archive photographs are never cropped. */
+  /** The frame's width over height. */
   ratio?: number;
   /** The photo viewer draws on black. */
   ground?: 'sunken' | 'black';
   rounded?: boolean;
+  /** Cover previews use the native centred crop; viewers keep the whole photo. */
+  resizeMode?: 'contain' | 'cover';
   failure?: 'quiet' | 'inline';
 }) {
   const [retry, setRetry] = useState(0);
@@ -110,7 +113,7 @@ export function Picture({
             key={identity}
             source={{ uri: localImageURI(uri) }}
             style={StyleSheet.absoluteFill}
-            resizeMode="contain"
+            resizeMode={resizeMode}
             accessible={false}
             accessibilityIgnoresInvertColors
             onLoad={() => current?.onDisplay?.(true)}

@@ -77,7 +77,7 @@ function Kicker({
 }
 
 /**
- * From the archive (today.md 5.10): the day's photograph at 16:10, the year,
+ * From the archive: the day's photograph fills a 4:3 frame, then the year,
  * the caption up to three lines, expanding at accessibility text sizes,
  * and "Photo: {credit}", never clamped. One element; it opens
  * the Time machine on that year with that photograph first.
@@ -115,7 +115,12 @@ export function ArchiveCard({
       ]}
       style={styles.card}
     >
-      <Picture file={picture.file} ratio={16 / 10} rounded={false} />
+      <Picture
+        file={picture.file}
+        ratio={4 / 3}
+        rounded={false}
+        resizeMode="cover"
+      />
       <View style={styles.words}>
         <Kicker symbol="clock.arrow.circlepath" ink="tint">
           From the archive
