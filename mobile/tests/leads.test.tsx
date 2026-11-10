@@ -1255,6 +1255,27 @@ describe('the Leads screen', () => {
     expect(unavailable(renderer.root, 'leads-empty')).toBe('No leads yet');
     act(() => renderer.unmount());
   });
+  test('a kind with no leads in this export says so, not "0 leads"', async () => {
+    mockParams.category = 'companies_in_both';
+    mock.discovery.mockResolvedValueOnce({
+      data: {
+        ...shown,
+        signals: shown.signals.filter(
+          (signal: { category: string }) =>
+            signal.category !== 'donor_contract_overlap',
+        ),
+      },
+      asOf: null,
+      stale: false,
+      savedAt: 200,
+    });
+    const renderer = await render(<Leads />);
+    expect(unavailable(renderer.root, 'leads-kind-empty')).toBe(
+      'No company leads yet',
+    );
+    expect(has(renderer.root, 'leads-caption')).toBe(false);
+    act(() => renderer.unmount());
+  });
   test('a failed first load says so and retries; offline says nothing is saved', async () => {
     mock.discovery.mockRejectedValueOnce(
       new ApiError('invalid-data', 'This catalog could not be read.'),
