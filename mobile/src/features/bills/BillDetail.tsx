@@ -1739,6 +1739,8 @@ function BillVoteRow({
           <PartyVotes
             splits={[...division.splits.drawn, ...division.splits.folded]}
             paired={division.paired}
+            // Pairs have their own line.
+            notes={parties.notes.filter((note) => !/ paired$/.test(note))}
             recorded={parties.recorded}
             testID={`${id}-parties`}
           />

@@ -49,3 +49,24 @@ test('at accessibility sizes each bar takes the full line', async () => {
   jest.mocked(useAccessibilitySize).mockReturnValue(true);
   for (const { track } of await tracks()) expect(track.width).toBe('100%');
 });
+
+test('the notes on what the party rows rest on are drawn under them', async () => {
+  let view!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    view = TestRenderer.create(
+      <PartyVotes
+        splits={splits}
+        recorded
+        notes={['2 not placed with a party']}
+        testID="vote-parties"
+      />,
+    );
+  });
+  const notes = view.root.find(
+    (node) =>
+      typeof node.type === 'string' &&
+      node.props.testID === 'vote-parties-notes',
+  );
+  expect(notes.props.children).toBe('2 not placed with a party.');
+  await act(async () => view.unmount());
+});

@@ -701,11 +701,14 @@ const slugOf = (label: string) =>
 export function PartyVotes({
   splits,
   paired,
+  notes = [],
   recorded,
   testID,
 }: {
   splits: readonly BillSplit[];
   paired?: number;
+  /** What the attribution rests on: "2 not placed with a party". */
+  notes?: readonly string[];
   recorded: boolean;
   testID: string;
 }) {
@@ -751,6 +754,12 @@ export function PartyVotes({
             </View>
           );
         })}
+      {notes.length ? (
+        // Without these the party rows need not add up to the vote's count.
+        <Text variant="footnote" tone="inkSoft" testID={`${testID}-notes`}>
+          {`${notes.join('. ')}.`}
+        </Text>
+      ) : null}
       {paired ? (
         <Text variant="footnote" tone="inkSoft">
           {`${counted(paired, 'pair', 'pairs')}`}
