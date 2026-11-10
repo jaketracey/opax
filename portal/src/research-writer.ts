@@ -7,6 +7,7 @@ import {groundAnswerPayload} from './research-grounding'
 import {auditPayload} from './research-claim-audit.mjs'
 import {protectedDecision,coherenceCheck,answerDecision,canReconstructRanking} from './research-coherence.mjs'
 import type { QualitativeAnswer, ResearchStats } from './research-types'
+import {recordAnswerLines} from './research-record-answer'
 
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
@@ -15,6 +16,8 @@ export function createAnswerWriter(options: ResearchOptions) {
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...payload,research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
+    // Exact record findings have a complete prose answer without a writing turn.
+    if(recordAnswerLines(input))return ground(proseFallback(input))
     let lastDraft:QualitativeAnswer|null=null
     let requiredAnswer:QualitativeAnswer|null=null,keepsRequired=(answer:string)=>true
     const fallback=():QualitativeAnswer=>{

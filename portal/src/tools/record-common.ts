@@ -1,6 +1,7 @@
 /** Shared readers for the record tools: published tables (D1 via the table API) and site URLs. */
 import { tableApi } from '../table-api'
 import { readToolAsset, type ToolEnv, type ToolCitation } from './types'
+import { billQuestionFocus } from '../research-record-answer'
 
 export const fold = (s: unknown) => String(s ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase().replace(/\s+/g, ' ').trim()
 export const aud = (n: unknown) => '$' + Math.round(Number(n)).toLocaleString('en-AU')
@@ -101,7 +102,7 @@ export function billCitations(bill: BillFields, title: string, url: string, quer
   if (stages.length) add('stage', `The ${title} has these recorded lifecycle stages: ${[...new Set(stages)].join('; ')}.`)
   for (const act of bill.acts) if (act.title) add('act', `The ${title} is linked to ${act.title}${act.act_number ? ' (Act No. ' + act.act_number + ')' : ''}${act.assent_date ? ', with royal assent on ' + displayDate(act.assent_date) : ''}.`, act.frl_uri ?? url)
   // Prefer the requested fact while retaining all lifecycle evidence for follow-up questions.
-  const preferred = /\bassent\b|\bact (?:no|number)\b/i.test(query) ? 'assent' : /\bsponsor|\bwho (?:introduced|moved)\b/i.test(query) ? 'sponsor' : /\bstatus\b/i.test(query) ? 'status' : /\bpass(?:ed)?\b/i.test(query) ? 'passed' : 'introduced'
+  const preferred = billQuestionFocus(query)
   if (preferred === 'assent' && !bill.royal_assent) add('assent', `OPAX's published bill record does not establish a royal assent date for the ${title}.`)
   if (preferred === 'sponsor' && !bill.sponsor) add('sponsor', `OPAX does not record a sponsor name for the ${title}.`)
   if (preferred === 'introduced' && !bill.introduced) add('introduced', `OPAX does not record an introduction date for the ${title}.`)
