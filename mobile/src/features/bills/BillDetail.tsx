@@ -117,6 +117,7 @@ import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { statusEvent, statusEventText } from './status-event';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
+import { sydneyDay } from '../today/rules';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
@@ -1095,9 +1096,9 @@ function Consultation({ view }: { view: BillView }) {
   const consultation = view.consultation.data;
   if (view.identity.data?.status !== 'exposure_draft' || !consultation)
     return null;
-  const closed =
-    !!consultation.closes &&
-    consultation.closes < new Date().toISOString().slice(0, 10);
+  // Closing dates are Australian calendar days; the UTC date lags a day
+  // every Australian morning.
+  const closed = !!consultation.closes && consultation.closes < sydneyDay();
   return (
     <Section title="Consultation" testID="bill-consultation">
       <Text variant="body">

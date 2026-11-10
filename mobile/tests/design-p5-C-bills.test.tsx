@@ -449,3 +449,51 @@ describe('party codes on bill rows (P2-17)', () => {
     expect(partyFromCode(null)).toBeNull();
   });
 });
+
+test('a consultation that closed yesterday in Sydney reads closed on an Australian morning', async () => {
+  mockParams.key = 'au-federal-r7534';
+  const record = await fixture.billFor(mockParams.key);
+  mock.billFor.mockResolvedValue({
+    ...record,
+    data: {
+      ...record.data,
+      identity: {
+        ...record.data.identity,
+        data: { ...record.data.identity.data!, status: 'exposure_draft' },
+      },
+      consultation: {
+        ...record.data.consultation,
+        status: 'ready',
+        data: {
+          url: 'https://example.gov.au/consultation',
+          opens: '2026-10-01',
+          closes: '2026-11-10',
+          note: '',
+        },
+      },
+    },
+  });
+  // 08:00 on 11 Nov in Sydney is still 10 Nov in UTC.
+  jest.useFakeTimers({
+    now: new Date('2026-11-10T21:00:00Z'),
+    doNotFake: [
+      'nextTick',
+      'setImmediate',
+      'clearImmediate',
+      'setTimeout',
+      'clearTimeout',
+      'setInterval',
+      'clearInterval',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+    ],
+  });
+  try {
+    const root = await render(<BillDetail />);
+    const words = texts(host(root, 'bill-consultation')[0]!).join(' ');
+    expect(words).toContain('and closed 10 Nov');
+  } finally {
+    jest.useRealTimers();
+  }
+});
