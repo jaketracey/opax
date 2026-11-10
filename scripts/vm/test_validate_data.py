@@ -466,6 +466,23 @@ class TaxCharityTests(Base):
         self.assertFails("taxcharity", "has no files matching")
 
 
+class ExpensesTests(Base):
+    def _people(self, d, person):
+        d["people"]["k0"] = person
+
+    def test_categories_plus_net_adjustments_reconcile(self):
+        self.edit(f"{P}/expenses.json", lambda d: self._people(d, {
+            "total": 14480101, "by_category": [["Office", 14000000], ["Travel", 489407]], "net_adjustments": -9306}))
+        self.assertOk("expenses")
+        self.edit(f"{P}/expenses.json", lambda d: self._people(d, {"total": -645, "by_category": [], "net_adjustments": -645}))
+        self.assertOk("expenses")
+
+    def test_categories_that_do_not_reconcile_fail(self):
+        self.edit(f"{P}/expenses.json", lambda d: self._people(d, {
+            "total": 14480101, "by_category": [["Office", 14000000], ["Travel", 489407]]}))
+        self.assertFails("expenses", "person k0: by_category plus net_adjustments is +9,306 from the total")
+
+
 class AccessTests(Base):
     def test_meeting_dated_after_the_export_fails(self):
         def future(d):

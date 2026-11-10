@@ -39,7 +39,11 @@ PMs absent from `members`) are counted in meta.unlinked and skipped.
 Amounts are rounded to whole dollars. Negative lines are IPEA adjustments
 and repayments; they stay in the totals as published, but the category bar
 list only shows categories with a positive net and the top-five list only
-positive lines. by_year is keyed on the reporting quarter's calendar year
+positive lines. The categories left out (net below zero) are summed into the
+person's `net_adjustments` (a negative whole-dollar figure, present only when
+non-zero), so total = sum(by_category) + net_adjustments within rounding;
+meta.notes says so. A person whose total is zero or less has only adjustments
+and repayments in the series (they left before April 2017). by_year is keyed on the reporting quarter's calendar year
 (from_date is empty on 93% of rows), so 2017 and 2026 are partial years.
 by_financial_year groups the same unrounded lines by the reporting quarter's
 July to June year. meta.reporting_periods records the quarters actually held,
@@ -79,6 +83,10 @@ ATTRIBUTION = (
     "Source: Independent Parliamentary Expenses Authority © Commonwealth of Australia, Current and Former Parliamentarians’ "
     f"Expenditure (quarterly datasets on data.gov.au), licensed under {LICENCE} ({LICENCE_URL}). "
     "OPAX's totals, yearly sums and medians are calculated from the published lines.")
+NET_ADJUSTMENTS_NOTE = (
+    "Totals include IPEA adjustments and repayments as published. by_category lists only categories whose "
+    "lines net above zero; a person's net_adjustments is the sum of the categories that net below zero, so "
+    "total equals the by_category sum plus net_adjustments, within rounding.")
 
 HONORIFIC_RE = re.compile(
     r"^(?:(?:the|senator|hon|mr|mrs|ms|miss|dr|lady|sir|dame|prof|professor)\.?\s+)+", re.I)
@@ -191,6 +199,9 @@ def main():
     out_people = {}
     for pid, p in people.items():
         cats = sorted(((k, v) for k, v in p["cats"].items() if v > 0), key=lambda kv: -kv[1])
+        # categories whose lines net below zero (IPEA adjustments and repayments) are not bars:
+        # by_category feeds the chamber medians. Their sum is published beside it instead.
+        net_adjustments = sum(v for v in p["cats"].values() if v < 0)
         if len(cats) > MAX_CATEGORIES:
             rest = sum(v for _, v in cats[MAX_CATEGORIES:])
             cats = cats[:MAX_CATEGORIES] + [(f"Other ({len(cats) - MAX_CATEGORIES} categories)", rest)]
@@ -202,6 +213,7 @@ def main():
             "from": y0,
             "to": y1,
             "by_category": [[k, round(v)] for k, v in cats],
+            **({"net_adjustments": round(net_adjustments)} if round(net_adjustments) else {}),
             "by_year": [[y, round(p["years"].get(y, 0.0))] for y in range(y0, y1 + 1)],
             "by_financial_year": [[fy, round(value)] for fy, value in sorted(p["financial_years"].items())],
             "top": [{"date": d, "category": c, "description": s, "amount": round(a)}
@@ -233,6 +245,7 @@ def main():
             "people": len(out_people),
             "rows": rows,
             "unlinked": {"names": len(unresolved), "amount": round(sum(unresolved.values()))},
+            "notes": [NET_ADJUSTMENTS_NOTE],
             "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         },
         "names": names,

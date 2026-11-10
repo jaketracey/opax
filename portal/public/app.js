@@ -4779,18 +4779,27 @@ async function renderPersonExpenses(name, personId, sections) {
   const licence = !expensesData.meta?.licence ? "" : licenceUrl
     ? `, <a href="${esc(licenceUrl)}" rel="license noopener" target="_blank">${esc(expensesData.meta.licence)} ↗︎</a>`
     : `, ${esc(expensesData.meta.licence)}`;
-  const benchmark = getExpenseBenchmarks();
+  // A total of zero or less means IPEA's series (from April 2017) holds only later
+  // adjustments and repayments for this person, so nothing here was "claimed": the lead
+  // says so in IPEA's terms and there is no rail figure, yearly average or chart.
+  const netOnly = (Number(e.total) || 0) <= 0;
+  const benchmark = netOnly ? null : getExpenseBenchmarks();
   const years = Math.max(Number(e.to) - Number(e.from) + 1, 1);
   const annual = (Number(e.total) || 0) / years;
+  const netAdjustments = Number(e.net_adjustments) || 0;
   const sourceAmount = (value, label) => src
     ? `<a href="${esc(src)}" rel="noopener" target="_blank" aria-label="${esc(label)}"><b>${esc(fmtMoney(value))}</b></a>`
     : `<b>${esc(fmtMoney(value))}</b>`;
-  sections.insertAdjacentHTML("beforeend", `<section id="person-expenses" data-accent="money" data-rail-figure="${esc(fmtMoney(e.total))}">
+  const lineCount = `${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}`;
+  const lead = netOnly
+    ? `IPEA publishes only adjustments and repayments for this person ${esc(span)}, across ${lineCount}, netting to ${sourceAmount(e.total, `${fmtMoney(e.total)} net adjustments and repayments, IPEA source`)}.`
+    : `${sourceAmount(e.total, `${fmtMoney(e.total)} claimed expenses, IPEA source`)} claimed, ${esc(span)},
+      across ${lineCount}${benchmark ? `: about ${sourceAmount(annual, `${fmtMoney(annual)} a year, IPEA source`)} a year against a median of ${sourceAmount(benchmark.totalMedian, `${fmtMoney(benchmark.totalMedian)} chamber median a year, IPEA source`)}` : ""}.`;
+  sections.insertAdjacentHTML("beforeend", `<section id="person-expenses" data-accent="money"${netOnly ? "" : ` data-rail-figure="${esc(fmtMoney(e.total))}"`}>
     <h3 class="subject-section-title">Parliamentary expenses</h3>
-    <p class="expense-lead">${sourceAmount(e.total, `${fmtMoney(e.total)} claimed expenses, IPEA source`)} claimed, ${esc(span)},
-      across ${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}${benchmark ? `: about ${sourceAmount(annual, `${fmtMoney(annual)} a year, IPEA source`)} a year against a median of ${sourceAmount(benchmark.totalMedian, `${fmtMoney(benchmark.totalMedian)} chamber median a year, IPEA source`)}` : ""}.</p>
+    <p class="expense-lead">${lead}</p>
     ${benchmark ? expenseComparisonHTML(e, benchmark) : ""}
-    ${e.by_year?.length > 1 ? columnChart(e.by_year, {
+    ${!netOnly && e.by_year?.length > 1 ? columnChart(e.by_year, {
       fmt: fmtMoney, heading: "Claimed per year",
     }) : ""}
     ${sourceLineHTML({
@@ -4800,6 +4809,7 @@ async function renderPersonExpenses(name, personId, sections) {
         { label: "What the categories mean", href: "/expenses" }].filter(Boolean),
       notes: [
         "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
+        !netOnly && netAdjustments < 0 ? `The total includes ${esc(fmtMoney(netAdjustments))} of IPEA adjustments and repayments in categories that net below zero; those categories are not drawn as bars.` : "",
         benchmark ? `Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${esc(benchmark.latestYear)} who have claimed since ${esc(benchmark.fromCutoff)} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. IPEA corrects prior quarters, so treat totals as indicative.` : esc(IPEA_NOTE),
       ],
       licence: licence ? `Independent Parliamentary Expenses Authority${licence}.` : "",

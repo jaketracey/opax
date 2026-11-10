@@ -111,5 +111,35 @@ class ReportingYearTests(unittest.TestCase):
         result = export(rows)
         self.assertEqual(result["meta"]["reporting_periods"], ["2025Q04", "2026Q02"])
 
+
+class NetAdjustmentTests(unittest.TestCase):
+    """registers-002: categories that net below zero are summed beside by_category, not drawn in it."""
+
+    def row(self, category, amount, period="2026Q02", start="2026-04-01"):
+        return ["Ms Jane Smith", "P1", category, "Travel", "Fares", "Fixture", None, period, period, start,
+                amount, LicenceTests.URL]
+
+    def test_negative_net_categories_reconcile_through_net_adjustments(self):
+        person = export([self.row("Office", 1000.4), self.row("Travel", 200.0),
+                         self.row("Parliamentary Duties", 50.0), self.row("Parliamentary Duties", -9356.0)])["people"]["P1"]
+        self.assertEqual(person["by_category"], [["Office", 1000], ["Travel", 200]])
+        self.assertEqual(person["net_adjustments"], -9306)
+        self.assertEqual(person["total"], 1000 + 200 - 9306)
+        self.assertLessEqual(abs(sum(v for _, v in person["by_category"]) + person["net_adjustments"] - person["total"]),
+                             len(person["by_category"]) + 1)
+
+    def test_repayment_only_person_and_meta_note(self):
+        # a member who left before April 2017 appears only through a later repayment (Joe Hockey, 2017Q02)
+        result = export([self.row("Employee Costs", -645.26, "2017Q02", "2017-04-01")])
+        person = result["people"]["P1"]
+        self.assertEqual((person["total"], person["by_category"], person["net_adjustments"]), (-645, [], -645))
+        self.assertIn("net_adjustments", result["meta"]["notes"][0])
+
+    def test_no_field_when_nothing_nets_below_zero(self):
+        person = export([self.row("Office", 100.0), self.row("Office", -20.0)])["people"]["P1"]
+        self.assertNotIn("net_adjustments", person)
+        self.assertEqual(person["by_category"], [["Office", 80]])
+
+
 if __name__ == "__main__":
     unittest.main()

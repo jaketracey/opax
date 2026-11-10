@@ -33,10 +33,13 @@ way and every file that `git status` shows as changed or added must parse.
              and every federal id in grants/program-notes.json is still in programs[] (the rule
              portal/test/program-notes.test.mjs enforces)
   suppliers  suppliers.json and agencies.json; the suppliers/ and agencies/ shard directories
-  access     access.json: meta, donors, ministers, aliases
-  expenses   expenses.json: meta, names, people, and meta.rows
+  access     access.json: meta, donors, ministers, aliases; a new export dates no meeting
+             after its own generated date
+  expenses   expenses.json: meta, names, people, and meta.rows; in a new export each person's
+             by_category plus net_adjustments reconciles with their total within rounding
   interests  interests/index.json (_meta, _by_name, people), a file for every person it lists,
-             and the per-person files
+             and the per-person files; a changed person file publishes no nil answer ("No", ".")
+             or lone share fragment ("100%") as an interest
   fits       fits.json: meta, by_entity, people
   speakers   speakers.json: a non-empty array
   people     parliamentarians.json: meta, people
@@ -440,8 +443,24 @@ def check_access() -> list[str]:
 
 
 def check_expenses() -> list[str]:
-    return _check_json(f"{PUBLIC}/expenses.json", ("meta", "names", "people"), ("people", "names", "meta.rows"),
+    errs = _check_json(f"{PUBLIC}/expenses.json", ("meta", "names", "people"), ("people", "names", "meta.rows"),
                        EXPENSES_MIN_RATIO)
+    # A person's category bars plus net_adjustments reconcile with their total, within one
+    # dollar of rounding per figure (data cleanup 2026-11-10, registers-002). Held against a
+    # new export only, so the file committed before net_adjustments existed does not fail.
+    if errs or "expenses.json" not in _changed(PUBLIC, r"expenses\.json"):
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/expenses.json")
+    for pid, p in (doc.get("people") or {}).items():
+        if not isinstance(p, dict) or not isinstance(p.get("total"), (int, float)):
+            continue
+        cats = [v for _, v in p.get("by_category") or [] if isinstance(v, (int, float))]
+        gap = sum(cats) + (p.get("net_adjustments") or 0) - p["total"]
+        if abs(gap) > len(cats) + 1:
+            errs.append(f"person {pid}: by_category plus net_adjustments is {gap:+,} from the total")
+            if len(errs) > 10:
+                break
+    return errs
 
 
 def check_interests() -> list[str]:
