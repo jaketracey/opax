@@ -214,16 +214,15 @@ type AgencyView = 'years' | 'suppliers' | 'contracts';
  * interactive, journey 4.7) with a table toggle; supplier rows open the
  * organisation page; contract rows push their money item.
  */
+type AgencyParams = { id: string; section?: string; name?: string };
+
 export function Agency() {
-  const {
-    id,
-    section,
-    name: routeName,
-  } = useLocalSearchParams<{
-    id: string;
-    section?: string;
-    name?: string;
-  }>();
+  const params = useLocalSearchParams<AgencyParams>();
+  return <AgencyRecord key={params.id} params={params} />;
+}
+
+function AgencyRecord({ params }: { params: AgencyParams }) {
+  const { id, section, name: routeName } = params;
   const load = useCallback(
       (refresh: boolean) => money.agency(id, refresh),
       [id],

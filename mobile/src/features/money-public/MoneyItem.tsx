@@ -664,8 +664,12 @@ export function itemParams(
  * SourceLine.
  */
 export default function MoneyItem() {
-  const backOptions = useNamedBackOptions();
   const raw = useLocalSearchParams<Record<string, string>>();
+  return <MoneyItemRecord key={JSON.stringify(itemParams(raw))} raw={raw} />;
+}
+
+function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
+  const backOptions = useNamedBackOptions();
   const params = itemParams(raw);
   const key = JSON.stringify(params);
   const load = useCallback(

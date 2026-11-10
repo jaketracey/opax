@@ -166,6 +166,50 @@ test('the all-years grant figure names the full recorded range, including future
   });
 });
 
+test.each([
+  [
+    'Program',
+    Program,
+    { jur: 'federal', id: 'GO3141' },
+    'program-total',
+    'grants',
+  ],
+  ['Agency', Agency, { id: agencyId }, 'agency-total', 'agency'],
+  [
+    'Money item',
+    MoneyItem,
+    {
+      kind: 'grant',
+      jur: 'federal',
+      program: 'go3141',
+      id: program.grants[0].id,
+    },
+    'money-item-amount',
+    'program',
+  ],
+] as const)(
+  '%s clears the previous record while another identity loads or fails',
+  async (_name, Page, params, oldFigure, loader) => {
+    Object.assign(mockParams, params);
+    const rendered = await mount(Page);
+    expect(ids(rendered).has(oldFigure)).toBe(true);
+    let reject!: (error: Error) => void;
+    money[loader] = jest.fn(
+      () => new Promise((_resolve, fail) => (reject = fail)),
+    ) as never;
+    mockParams.id = 'fixture-missing-record';
+    await act(async () => rendered.update(<Page />));
+    expect(ids(rendered).has(oldFigure)).toBe(false);
+    await act(async () =>
+      reject(new Error('Fixture record could not be loaded')),
+    );
+    expect(ids(rendered).has(oldFigure)).toBe(false);
+    expect(
+      rendered.root.findAllByType(MoneyStatus)[0]!.props.status.error,
+    ).toBeInstanceOf(Error);
+  },
+);
+
 test('a lead example names its back destination and has no lead methodology in Notes', async () => {
   const lead = leadsFor(decodeDiscovery(raw('/discovery.json'))).find(
     (lead) => lead.caveats.length && lead.evidence.some(evidenceRecord),

@@ -100,7 +100,26 @@ export function programSeatFigure(
   };
 }
 
+type ProgramParams = {
+  jur?: string;
+  id?: string;
+  key?: string;
+  seat?: string;
+  state?: string;
+  name?: string;
+};
+
 export default function Program() {
+  const params = useLocalSearchParams<ProgramParams>();
+  return (
+    <ProgramRecord
+      key={JSON.stringify([params.jur, params.id, params.key])}
+      params={params}
+    />
+  );
+}
+
+function ProgramRecord({ params }: { params: ProgramParams }) {
   const {
     jur: input,
     id,
@@ -108,14 +127,7 @@ export default function Program() {
     seat,
     state,
     name: routeName,
-  } = useLocalSearchParams<{
-    jur?: string;
-    id?: string;
-    key?: string;
-    seat?: string;
-    state?: string;
-    name?: string;
-  }>();
+  } = params;
   const jur = input === 'qld' ? 'qld' : 'federal';
   const load = useCallback(
     async (refresh: boolean) => {
