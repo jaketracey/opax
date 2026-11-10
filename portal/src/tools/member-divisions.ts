@@ -38,7 +38,8 @@ export const tool: ToolDefinition = {
     const names = new Set([person.name, person.full, ...(Array.isArray(person.prints) ? person.prints : [])].filter(Boolean).map(keyName))
     if (person.pid) for (const p of people.filter(p => p.pid === person.pid)) names.add(keyName(p.name))
     const states = Array.isArray(person.states) ? person.states : []
-    let candidates = records(index.divisions).filter(d => typeof d.key === 'string' && KEY.test(d.key) && inWindow(d.date, args) &&
+    // A division TheyVoteForYou marks as a repeat of another (duplicate_of) records the same votes again: count it once.
+    let candidates = records(index.divisions).filter(d => typeof d.key === 'string' && KEY.test(d.key) && !d.duplicate_of && inWindow(d.date, args) &&
       (!args.chamber || chamberOf(d) === args.chamber) && (!args.jurisdiction || args.jurisdiction === 'all' ? !states.length || states.includes(String(d.key).split('-')[0]) : String(d.key).startsWith(args.jurisdiction + '-')))
       .sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(a.key).localeCompare(String(b.key)))
     let linked: Set<string> | undefined, billTitle = ''

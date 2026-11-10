@@ -663,5 +663,56 @@ class SenateVideoTests(Base):
         self.assertFails("video", "not a first speech")
 
 
+class DivisionRecordRulesTests(unittest.TestCase):
+    """division_record_rules: the per-shard publication rules check_divisions applies."""
+
+    OFFICES = {"pres", "dpres", "spk", "cwm"}
+    PLACEHOLDERS = {"No motion text available"}
+    CORRECTION = {"id": "federal-senate-1", "field": "result", "from": "affirmative", "to": "negative",
+                  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-09.xml",
+                  "evidence": "divisioncount ayes 37, noes 37", "finding": "divisions-votes-002",
+                  "reviewed": "2026-11-10"}
+
+    def record(self, **over):
+        base = {"key": "federal-senate-1", "jurisdiction": "federal", "house": "senate", "ayes": 37, "noes": 37,
+                "result": "negative", "question": "That the motion be agreed to.",
+                "members": [{"name": "A", "vote": "aye", "office": "PRES"}, {"name": "B", "vote": "no", "party": "Labor"}],
+                "_meta": {}}
+        base.update(over)
+        return base
+
+    def errs(self, record, keys=("federal-senate-1", "federal-senate-2"), reviewed=None):
+        reviewed = {(self.CORRECTION["id"], "result"): self.CORRECTION} if reviewed is None else reviewed
+        return vd.division_record_rules(record, set(keys), reviewed, self.OFFICES, self.PLACEHOLDERS)
+
+    def test_a_clean_record_passes(self):
+        self.assertEqual(self.errs(self.record()), [])
+        # A House or state tie needs the casting vote, so either result passes.
+        self.assertEqual(self.errs(self.record(house="representatives", result="affirmative")), [])
+        self.assertEqual(self.errs(self.record(jurisdiction="nsw", house="nsw_lc", result="affirmative")), [])
+
+    def test_each_rule_fails(self):
+        cases = [
+            (self.record(members=[{"name": "A", "vote": "aye", "party": "PRES"}]), "office code"),
+            (self.record(question="No motion text available"), "placeholder"),
+            (self.record(result="affirmative"), "disagrees with its tally"),  # Senate tie
+            (self.record(ayes=75, noes=74, house="representatives"), "disagrees with its tally"),
+            (self.record(ayes=5, noes=25, jurisdiction="nsw", house="nsw_lc", result="affirmative"), "disagrees"),
+            (self.record(_meta={"duplicate_of": "federal-senate-9"}), "duplicate_of"),
+            (self.record(_meta={"duplicate_of": "federal-senate-1"}), "duplicate_of"),
+            (self.record(_meta={"corrections": [dict(self.CORRECTION, to="tied")]}), "not in scripts/corrections"),
+        ]
+        for record, needle in cases:
+            with self.subTest(needle=needle):
+                errs = self.errs(record)
+                self.assertEqual(len(errs), 1, errs)
+                self.assertIn(needle, errs[0])
+
+    def test_a_carried_correction_that_matches_the_file_passes(self):
+        carried = {k: self.CORRECTION[k] for k in ("field", "from", "to", "finding", "evidence_url", "reviewed")}
+        self.assertEqual(self.errs(self.record(_meta={"corrections": [carried], "duplicate_of": "federal-senate-2"})), [])
+        self.assertTrue(self.errs(self.record(_meta={"corrections": [carried]}), reviewed={}))
+
+
 if __name__ == "__main__":
     unittest.main()

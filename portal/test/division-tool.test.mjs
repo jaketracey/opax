@@ -316,6 +316,19 @@ test('floor crossing aggregates count eligible minority member-votes from comple
   assert.deepEqual(party.rows.map(r => [r.party, r.member_votes]), [['Labor', 2]]);
 });
 
+test('a division marked as a repeat of another is counted once and office codes are never a party', async () => {
+  const f = fixture([division(), division({ key: 'federal-senate-101', date: '2025-09-01' })]);
+  f.assets['/divisions/index.json'].divisions.find(d => d.key === 'federal-senate-101').duplicate_of = 'federal-senate-100';
+  const data = await api.callTool(f.env, 'division', { operation: 'floor_crossing', chamber: 'senate', since: '2025-08-28', until: '2025-09-01' });
+  assert.deepEqual(data.rows.map(r => [r.party, r.member_votes, r.divisions]).sort(), [['Labor', 1, 1], ['Liberal', 1, 1]]);
+  assert.equal(data.coverage.excluded_duplicate_divisions, 1);
+  assert.match(data.notes.join(' '), /repeats of another published division/);
+  for (const office of ['CWM', 'DPRES', 'dspk', 'Chair of Committees']) {
+    const refused = await api.callTool(f.env, 'division', { operation: 'floor_crossing', party: office, chamber: 'senate', since: '2025-08-28', until: '2025-09-01' });
+    assert.ok(refused.error, office);
+  }
+});
+
 test('party agreement compares majorities, excludes ties and does not require five votes per party', async () => {
   const side = (party, vote) => Array.from({ length: 2 }, (_, i) => member(`${party} ${i}`, party, vote));
   const f = fixture([
