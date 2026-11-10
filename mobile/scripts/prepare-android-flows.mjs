@@ -32,12 +32,16 @@ const helpers = new Set([
   'search-keyboard-reveal.yaml',
   'search-submit-reveal.yaml',
 ]);
-const special = new Set([
-  '03-mp-profile.yaml',
-  '32-record-reader.yaml',
-  '12-search-keyboard.yaml',
-  '07-scene-lifecycle.yaml',
-]);
+const specialReasons = {
+  '03-mp-profile.yaml': 'Native Sources navigation and profile share action',
+  '32-record-reader.yaml':
+    'Android Back, cold citation link and exact native clipboard audit',
+  '12-search-keyboard.yaml':
+    'Inline Search field, IME submit, repeat and Back dismissal',
+  '07-scene-lifecycle.yaml':
+    'Cold/warm app links and native Android share sheet',
+};
+const special = new Set(Object.keys(specialReasons));
 const notApplicable = (name) => {
   if (/^(52-|53-|54-|55b-|56-|57b-)/.test(name))
     return 'iPad split panes, presentation or viewport; no Android tablet parity claim';
@@ -499,7 +503,7 @@ const plan = fs
           : helpers.has(name)
             ? 'Parameterised helper; exercised by parent journeys'
             : special.has(name)
-              ? 'Android navigation, native controls or keyboard geometry'
+              ? specialReasons[name]
               : 'Shared assertions; prepared Android Back, permission selectors and launch waits'),
       settings: settings[name.slice(0, -5)] ?? '',
     };

@@ -18,13 +18,13 @@ R8 mapping and native symbols are release checks only when enabled by the genera
 | --- | --- | --- |
 | `01-launch.yaml` | prepared variant | `01-launch.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `02-search.yaml` | prepared variant | `02-search.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
-| `03-mp-profile.yaml` | Android-only variant | `android/03-mp-profile.yaml`: Android navigation, native controls or keyboard geometry |
+| `03-mp-profile.yaml` | Android-only variant | `android/03-mp-profile.yaml`: Native Sources navigation and profile share action |
 | `04-offline.yaml` | prepared variant | `04-offline.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `05-workbench.yaml` | prepared variant | `05-workbench.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `06-former-member.yaml` | prepared variant | `06-former-member.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `06-open-profile.yaml` | prepared variant | `06-open-profile.yaml`: Parameterised helper; exercised by parent journeys |
 | `07-members.yaml` | prepared variant | `07-members.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
-| `07-scene-lifecycle.yaml` | Android-only variant | `android/07-scene-lifecycle.yaml`: Android navigation, native controls or keyboard geometry |
+| `07-scene-lifecycle.yaml` | Android-only variant | `android/07-scene-lifecycle.yaml`: Cold/warm app links and native Android share sheet |
 | `07-state-seat.yaml` | prepared variant | `07-state-seat.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `07-your-mp.yaml` | prepared variant | `07-your-mp.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `08-open-profile.yaml` | prepared variant | `08-open-profile.yaml`: Parameterised helper; exercised by parent journeys |
@@ -32,7 +32,7 @@ R8 mapping and native symbols are release checks only when enabled by the genera
 | `09-electorate.yaml` | prepared variant | `09-electorate.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `10-bills.yaml` | prepared variant | `10-bills.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `11-bill-detail.yaml` | prepared variant | `11-bill-detail.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
-| `12-search-keyboard.yaml` | Android-only variant | `android/12-search-keyboard.yaml`: Android navigation, native controls or keyboard geometry |
+| `12-search-keyboard.yaml` | Android-only variant | `android/12-search-keyboard.yaml`: Inline Search field, IME submit, repeat and Back dismissal |
 | `12-search-polish.yaml` | prepared variant | `12-search-polish.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `12-search.yaml` | prepared variant | `12-search.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `13-today.yaml` | prepared variant | `13-today.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
@@ -82,7 +82,7 @@ R8 mapping and native symbols are release checks only when enabled by the genera
 | `30-catalog-robustness.yaml` | prepared variant | `30-catalog-robustness.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits; `OPAX_FIXTURE_ROSTER=null-optional` |
 | `31-ask-saved.yaml` | prepared variant | `31-ask-saved.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `32-ask-check-claim.yaml` | prepared variant | `32-ask-check-claim.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
-| `32-record-reader.yaml` | Android-only variant | `android/32-record-reader.yaml`: Android navigation, native controls or keyboard geometry |
+| `32-record-reader.yaml` | Android-only variant | `android/32-record-reader.yaml`: Android Back, cold citation link and exact native clipboard audit |
 | `33-bill-text-recent.yaml` | prepared variant | `33-bill-text-recent.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `34-records-search.yaml` | prepared variant | `34-records-search.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `35-catalog-suggestions.yaml` | prepared variant | `35-catalog-suggestions.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
