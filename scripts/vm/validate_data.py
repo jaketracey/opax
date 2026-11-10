@@ -486,7 +486,24 @@ def check_people() -> list[str]:
         reviewed = set()
     # A non-person row may stay only while its reviewed drop is pending (members-electorates-005).
     bad = [n for n in _non_person_names(p.get("name") for p in doc["people"] if isinstance(p, dict)) if n not in reviewed]
-    return [f"parliamentarians.json has {len(bad)} non-person row(s) with no reviewed drop: {', '.join(bad[:8])}"] if bad else []
+    errs = [f"parliamentarians.json has {len(bad)} non-person row(s) with no reviewed drop: {', '.join(bad[:8])}"] if bad else []
+    # A state spelling twin the fold would merge is one person printed twice (members-electorates-011).
+    from scripts.roster_fold import twin_target
+    rows = [p for p in doc["people"] if isinstance(p, dict) and isinstance(p.get("name"), str)]
+    before = {p.get("name") for p in ((_head_doc(f"{PUBLIC}/parliamentarians.json") or {}).get("people") or []) if isinstance(p, dict)}
+    twins = [p["name"] for p in rows if twin_target(p, rows) is not None and p["name"] not in before]
+    if twins:
+        errs.append(f"parliamentarians.json has {len(twins)} unfolded state spelling twin(s): {', '.join(twins[:8])}")
+    # representation.state is a state code ('QLD'), never a state name ('QUEENSLAND': members-electorates-010).
+    def long_states(people):
+        return {(p.get("name"), r.get("state")) for p in people if isinstance(p, dict) for r in p.get("representation") or []
+                if isinstance(r, dict) and isinstance(r.get("state"), str) and not re.fullmatch(r"[A-Z]{2,3}", r["state"])}
+    head_people = (_head_doc(f"{PUBLIC}/parliamentarians.json") or {}).get("people") or []
+    named = sorted(long_states(rows) - long_states(head_people))
+    if named:
+        errs.append(f"parliamentarians.json has {len(named)} representation state(s) that are not a state code: "
+                    + ", ".join(f"{n} {st}" for n, st in named[:8]))
+    return errs
 
 
 def check_pay() -> list[str]:

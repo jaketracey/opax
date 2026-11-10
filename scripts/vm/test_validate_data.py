@@ -446,6 +446,21 @@ class NonPersonNameTests(Base):
         self.write("scripts/roster_accept.json", {"drop": {"Mr": {"row": {"name": "Mr", "speeches": 2}}}})
         self.assertOk("people")
 
+    def test_a_new_unfolded_state_spelling_twin_fails(self):
+        # members-electorates-011: 'Hugh Mcdermott' beside 'Hugh McDermott', same seat.
+        seat = [{"jurisdiction": "nsw", "chamber": "nsw_la", "electorate": "Prospect"}]
+        def add(d):
+            d["people"] += [dict(name="Ann McExample", speeches=900, states=["nsw"], chambers=["nsw_la"], first=2015, last=2026, representation=seat),
+                            dict(name="Ann Mcexample", speeches=9, states=["nsw"], chambers=["nsw_la"], first=2015, last=2016, representation=seat)]
+        self.edit(f"{P}/parliamentarians.json", add)
+        self.assertFails("people", "unfolded state spelling twin(s): Ann Mcexample")
+
+    def test_a_new_long_representation_state_fails(self):
+        # members-electorates-010: senators stored 'QUEENSLAND' where every other seat holds 'QLD'.
+        self.edit(f"{P}/parliamentarians.json", lambda d: d["people"].append(dict(name="Sam Senator", speeches=5,
+            representation=[{"jurisdiction": "federal", "chamber": "senate", "electorate": "Queensland", "state": "QUEENSLAND"}])))
+        self.assertFails("people", "not a state code: Sam Senator QUEENSLAND")
+
     def test_a_handbook_bracket_as_a_pay_name_fails(self):
         def bracket(d):
             d["people"][next(iter(d["people"]))]["name"] = "formerly Martin Sullivan"
