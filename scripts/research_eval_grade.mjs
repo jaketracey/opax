@@ -40,6 +40,61 @@ const isYear = (n) => Number.isInteger(n) && n >= 1900 && n <= 2035
 const traceable = (n) => !isYear(n) && (n >= 10 || !Number.isInteger(n))
 const near = (a, b, tol = 0.05) => Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1)
 
+// ---------- value checks used by the Ask baseline set (scripts/ask_baseline) ----------
+
+const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
+/** Plain numbers in an answer plus the number words zero to twenty ("three divisions"). */
+export function answerNumbers(text) {
+  const out = plainNumbers(text)
+  for (const m of fold(text).matchAll(/\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b/g)) out.push(NUMBER_WORDS.indexOf(m[1]))
+  return out
+}
+/** Money figures with or without a dollar sign: $1,234, $1.2m, 1.2 million, $3bn. Each carries whether it was rounded. */
+export function moneyFigures(text) {
+  const out = []
+  for (const m of String(text ?? '').matchAll(/(\$\s?)?(\d[\d,]*(?:\.\d+)?)\s*(billion|bn\b|million|mn\b|m\b|k\b|thousand)?/gi)) {
+    if (!m[1] && !m[3]) continue
+    let v = Number(m[2].replace(/,/g, '')); const u = (m[3] ?? '').toLowerCase()
+    if (u === 'billion' || u === 'bn') v *= 1e9; else if (['million', 'mn', 'm'].includes(u)) v *= 1e6; else if (u === 'thousand' || u === 'k') v *= 1e3
+    out.push({ v, rounded: Boolean(u) })
+  }
+  return out
+}
+/** Does the answer state `value`? Exact figures within tol (default 0.1%, at least $1); rounded ones ($1.2m) within 5%. */
+export function amountStated(text, value, tol = 0.001) {
+  const exactTol = Math.max(tol, 0)
+  return moneyFigures(text).some(({ v, rounded }) => rounded ? Math.abs(v - value) <= Math.max(0.05, exactTol) * Math.abs(value) : Math.abs(v - value) <= Math.max(1, exactTol * Math.abs(value)))
+    || plainNumbers(text).some((n) => n >= 1000 && Math.abs(n - value) <= Math.max(1, exactTol * Math.abs(value)))
+}
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+/** Written forms of an ISO date at day, month or year precision ("14 March 2013", "March 14, 2013", "14/03/2013", ...). */
+export function dateForms(iso, precision = 'day') {
+  const [y, m, d] = String(iso).split('-').map(Number), month = MONTH_NAMES[m - 1], mon = month.slice(0, 3)
+  if (precision === 'year') return [String(y)]
+  if (precision === 'month') return [`${month} ${y}`, `${mon} ${y}`, `${String(m).padStart(2, '0')}/${y}`, `${y}-${String(m).padStart(2, '0')}`]
+  const ord = d + (d % 10 === 1 && d !== 11 ? 'st' : d % 10 === 2 && d !== 12 ? 'nd' : d % 10 === 3 && d !== 13 ? 'rd' : 'th')
+  const dd = String(d).padStart(2, '0'), mm = String(m).padStart(2, '0')
+  return [`${d} ${month} ${y}`, `${ord} ${month} ${y}`, `${ord} of ${month} ${y}`, `${d} ${mon} ${y}`, `${d} ${mon}. ${y}`, `${month} ${d}, ${y}`, `${month} ${d} ${y}`, `${mon} ${d}, ${y}`, `${y}-${mm}-${dd}`, `${d}/${m}/${y}`, `${dd}/${mm}/${y}`]
+}
+const NEGATED_AYE = /\b(?:did not|didn't|does not|doesn't|never|not) (?:vote (?:for|aye|yes|in favour)|support|back)\w*|\bnot in favour\b/gi
+const NEGATED_NO = /\b(?:did not|didn't|does not|doesn't|never|not) (?:vote (?:against|no)|oppose)\w*|\bnot against\b/gi
+const AYE = /\b(?:voted\s+["“'‘]?(?:aye|yes|for|in favour)|vot(?:ed|ing) to (?:support|pass|agree)|ayes?\b(?!\s+and\s+noes)|supported|backed|in favour)/i
+const NO = /\b(?:voted\s+["“'‘]?(?:no|nay|against)\b|vot(?:ed|ing) against|against\b|opposed|rejected|noes\b|on the no side)/i
+/** Direction words in a span after negated phrases ("did not support") are removed. */
+const directions = (span) => { const t = span.replace(NEGATED_AYE, ' ').replace(NEGATED_NO, ' '); return { aye: AYE.test(t), no: NO.test(t) } }
+/** Did the answer give `person` (a member or a party) the recorded vote direction? */
+export function voteStated(text, person, direction) {
+  const wrong = direction === 'aye' ? 'no' : 'aye'
+  // Prefer the clause that names the person ("Labor opposed it while the Greens backed it"), then its sentence.
+  const about = sentencesOf(text).map((s) => s.text).filter((s) => mentions(s, person)).map((s) => {
+    const own = s.split(/,|;|\bwhile\b|\bwhereas\b|\bbut\b|\balthough\b/i).filter((c) => mentions(c, person)).map(directions)
+    return own.find((d) => d.aye || d.no) ?? directions(s)
+  })
+  if (about.some((d) => d[direction] || d[wrong])) return about.some((d) => d[direction] && !d[wrong]) && !about.some((d) => d[wrong] && !d[direction])
+  const all = directions(String(text ?? ''))
+  return all[direction] && !all[wrong]
+}
+
 export const CAVEAT = /coverage|thin|gap|incomplete|missing|limited|understat|not (?:fully )?(?:covered|captured|complete)|only \d+ (?:federal )?(?:chamber )?speeches|record (?:holds|has) (?:few|only)|sparse/i
 export const REFUSAL = /OPAX cannot establish|^\s*This selection does not establish|OPAX covers Australian parliament and public records|Please name the person, place, period|Please (?:name|specify|clarify|give (?:the )?full name)|I cannot provide private information|do not establish that money caused|I (?:can only|can't|cannot) (?:help|answer)|outside (?:OPAX|the scope)|^\s*(?:not enough data|the record (?:retrieved|does not|cannot)|i (?:couldn't|could not|can't|cannot) find|no (?:clear )?answer|it is not possible)|not enough data to answer|could(?:n't| not) find a clear answer|cannot be (?:established|determined|answered)|(?:ranking|answer|total|rate) cannot be established|is not possible to (?:determine|identify)|does not discuss/i
 export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
@@ -235,6 +290,23 @@ export function runCheck(c, ctx) {
     }
     case 'required_components': return {status:requiredComponents({question:ctx.question,must:[c]},ctx.answer,ctx.ev),detail:'comparison sides, figures and relevant coverage'}
     case 'decline': return { status: ctx.refusal ? 'pass' : 'fail', detail: ctx.refusal ? 'declined' : 'answered' }
+    case 'number': {
+      const have = answerNumbers(t), missing = (c.all ?? []).filter((n) => !have.includes(n)), any = c.any ? c.any.some((n) => have.includes(n)) : true
+      return { status: !missing.length && any ? 'pass' : 'fail', detail: missing.length ? `missing numbers: ${missing.join(', ')}` : any ? 'numbers stated' : `none of: ${c.any.join(', ')}` }
+    }
+    case 'amount': {
+      const values = c.any ?? [c.value], hit = values.find((v) => amountStated(t, v, c.tol))
+      return { status: hit != null ? 'pass' : 'fail', detail: hit != null ? `amount ${hit} stated` : `no amount near ${values.join(' or ')}` }
+    }
+    case 'date': {
+      const isos = c.any ?? [c.iso], ft = fold(t), hit = isos.find((iso) => dateForms(iso, c.precision).some((f) => ft.includes(fold(f))))
+      return { status: hit ? 'pass' : 'fail', detail: hit ? `date ${hit} stated` : `no date ${isos.join(' or ')}` }
+    }
+    case 'matches': return { status: new RegExp(c.match, c.flags ?? 'i').test(t) ? 'pass' : 'fail', detail: 'required answer content' }
+    case 'vote': {
+      const ok = voteStated(t, c.person, c.direction)
+      return { status: ok ? 'pass' : 'fail', detail: ok ? `${c.person} ${c.direction}` : `${c.person} not given as ${c.direction}` }
+    }
     default: return { status: 'unknown', detail: `unknown check ${c.type}` }
   }
 }
@@ -272,6 +344,9 @@ export function gradeRow(q, payload, { roster = [], parties = new Map() } = {}) 
   const causal = causalCheck(answer)
   const tools = toolsCheck(q.expected_tools, payload)
   const expectsDecline = q.expected?.kind === 'decline' || Boolean(q.expected?.unanswerable) || (q.must ?? []).some((c) => c.type === 'decline')
+  // An honest "no record" or "has not happened" reply is a decline even when it misses the REFUSAL wording.
+  const orMatch = (q.must ?? []).filter((c) => c.type === 'decline' && c.or_match).map((c) => new RegExp(c.or_match, c.flags ?? 'i'))
+  if (expectsDecline && !refusal && orMatch.some((re) => re.test(answer))) refusal = true
   // A partial numerical answer remains an answer when its verified, cited facts
   // follow a limitation. Moving that limitation must not hide citation quality.
   const protectedStatus=payload?.answered===false||/^(?:coverage_only|evidence_gap|needs_question|needs_scope|needs_period|refused|declined|moderated)$/.test(payload?.answer_status??'')
