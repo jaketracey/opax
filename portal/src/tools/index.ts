@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { tool as electorates } from './electorates'
 import { tool as findRecords } from './find-records'
 import { tool as parliamentaryPay } from './pay'
+import { tool as memberExpenses } from './member-expenses'
 import { tool as contracts } from './contracts'
 import { tool as grants } from './grants'
 import { tool as declaredInterests } from './interests'
@@ -13,7 +14,7 @@ export * from './identifiers'
 
 export const TOOL_REGISTRY_VERSION = 'structured-tools-4'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, contracts, grants, declaredInterests])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')

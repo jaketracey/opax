@@ -28,6 +28,7 @@ test.after(() => { globalThis.fetch = originalFetch; });
 
 // Invented people, agencies and suppliers only.
 const assets = {
+  '/expenses.json': {meta:{from:'2025Q01',to:'2025Q04',quarters:4},names:{'robin example':'P1'},people:{P1:{name:'Robin Example',total:999999,by_year:[[2025,123456]]}}},
   '/pay.json': { meta: { as_of: '2026-10-04', sources: [{ id: 'mp-determination', url: 'https://www.remtribunal.gov.au/fixture' }] }, base: [{ amount: 200000 }],
     offices: { cabinet: { label: 'Cabinet Minister', kind: 'ministerial', pct: 72.5 }, treasurer: { label: 'Treasurer', kind: 'ministerial', pct: 87.5 } },
     current: [{ name: 'Robin Example', party: 'Labor', chamber: 'senate', post: 'Minister for Fixtures (Cabinet)', pct: 72.5, salary: 345000 },
@@ -115,7 +116,7 @@ test('every record tool is on MCP with its registry schema, and bad input is -32
     ASSETS: { async fetch(req) { reads++; const body = assets[new URL(req.url).pathname]; return body ? Response.json(body) : new Response('missing', { status: 404 }); } } };
   const send = async (method, params) => (await api.communityMcp(new Request('https://opax.com.au/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }), mcpEnv, async () => { throw Error('no public reads'); })).json();
   const listed = (await send('tools/list', {})).result.tools;
-  for (const name of ['find_records', 'parliamentary_pay', 'contracts', 'grants', 'declared_interests']) {
+  for (const name of ['find_records', 'parliamentary_pay', 'member_expenses', 'contracts', 'grants', 'declared_interests']) {
     const entry = listed.find(t => t.name === name);
     assert.ok(entry, name); assert.equal(entry.description, tool(name).description); assert.equal(entry.annotations.readOnlyHint, true);
     // The same tool, same schema, is on the Ask loop.
@@ -126,6 +127,12 @@ test('every record tool is on MCP with its registry schema, and bad input is -32
     assert.equal(rpc.error?.code, -32602, name + JSON.stringify(args));
   }
   assert.equal(reads, 0);
+  const expenses = await send('tools/call', {name:'member_expenses',arguments:{person:'Robin Example',year:2025}});
+  const expenseData = expenses.result.structuredContent;
+  const askExpenses = await api.TOOL_SPECS.find(t=>t.name==='member_expenses').run(env,{person:'Robin Example',year:2025});
+  assert.deepEqual(expenseData,askExpenses.data);
+  assert.equal(expenseData.rows[0].amount_aud,123456);
+  assert.match(expenseData.citations[0].text,/calendar year 2025/);
   const pay = await send('tools/call', { name: 'parliamentary_pay', arguments: { person: 'Robin Example' } });
   assert.match(pay.result.structuredContent.citations[0].text, /\$345,000 a year/);
 });
