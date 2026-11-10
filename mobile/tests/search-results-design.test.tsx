@@ -132,6 +132,7 @@ function draw(rows = [farrell]) {
     rows: result.data.results,
     total: result.data.total,
     more: false,
+    nextCount: 0,
     next: null,
     pages: 1,
     source: speechSource(result as never, result.data.results, 'rule'),

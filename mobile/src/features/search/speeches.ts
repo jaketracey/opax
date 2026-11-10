@@ -48,6 +48,8 @@ export interface SpeechList {
   rows: SearchRecord[] | null;
   total: number;
   more: boolean;
+  /** Source records on the next page, before eligibility filtering. */
+  nextCount: number;
   /** The last page's read while it loads or after it failed. */
   next: Read<RecordsPage> | null;
   pages: number;
@@ -162,6 +164,16 @@ export function useSpeechList(
     rows,
     total,
     more,
+    nextCount: lastResult
+      ? Math.max(
+          0,
+          Math.min(
+            lastResult.data.per_page,
+            lastResult.data.total -
+              lastResult.data.page * lastResult.data.per_page,
+          ),
+        )
+      : 0,
     pages,
     next: pages > 1 ? last : null,
     count: results[0]

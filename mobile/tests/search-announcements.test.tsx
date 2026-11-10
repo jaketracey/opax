@@ -31,6 +31,7 @@ const list = (count: number, pages = 1): SpeechList => ({
   rows: rows.slice(0, count),
   total: 40,
   more: false,
+  nextCount: 0,
   next: null,
   pages,
   source: null,
