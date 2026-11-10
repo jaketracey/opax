@@ -353,6 +353,27 @@ describe('Android reading header', () => {
     act(() => done.props.onPress());
     expect(goBack).toHaveBeenCalled();
   });
+
+  test('at 200% text the reading title has its own row clear of all actions', () => {
+    mockFontScale = 2;
+    try {
+      const { renderer } = header(true, 'Time machine photographs');
+      const title = renderer.root
+        .findAllByType(NativeText)
+        .find((node) => node.props.accessibilityRole === 'header')!;
+      expect(flat(title.props.style)).toMatchObject({
+        flex: 0,
+        fontSize: 22,
+        lineHeight: 28,
+      });
+      expect(title.props.numberOfLines).toBeUndefined();
+      expect(pressable(renderer, 'header-back').props.accessibilityLabel).toBe(
+        'Navigate up',
+      );
+    } finally {
+      mockFontScale = 1;
+    }
+  });
 });
 
 describe('Android ⋯ menus', () => {

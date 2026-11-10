@@ -1,5 +1,12 @@
 import type { NativeStackHeaderProps } from 'expo-router';
-import { Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  ToastAndroid,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import { Text } from '../design/text';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
 import { symbols } from '../design/symbols';
@@ -16,6 +23,7 @@ export function AndroidReadingHeader({
   options,
   back,
 }: NativeStackHeaderProps) {
+  const largeText = useWindowDimensions().fontScale >= 2;
   const rootItems = !options.headerLeft
     ? options.unstable_headerRightItems?.({ canGoBack: !!back })
     : undefined;
@@ -38,42 +46,68 @@ export function AndroidReadingHeader({
   const close = () =>
     closeItem?.type === 'button' ? closeItem.onPress?.() : navigation.goBack();
   const label = up ? 'Navigate up' : 'Close';
+  const leading = left ?? (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={
+        up ? 'Returns to the previous screen' : 'Closes this dialog'
+      }
+      testID={up ? 'header-back' : 'header-done'}
+      onPress={close}
+      onLongPress={() => ToastAndroid.show(label, ToastAndroid.SHORT)}
+      android_ripple={{ color: colors.navyWash, borderless: true }}
+      style={styles.action}
+    >
+      <Icon
+        name={up ? symbols.arrowLeft : symbols.close}
+        size={24}
+        maxScale={1}
+      />
+    </Pressable>
+  );
+  const heading = (
+    <Text
+      wordSafe
+      variant="inlineTitle"
+      accessibilityRole="header"
+      style={[styles.title, largeText ? { flex: 0 } : null]}
+    >
+      {typeof options.headerTitle === 'string'
+        ? options.headerTitle
+        : options.title}
+    </Text>
+  );
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.bar}>
-      <View style={styles.row}>
-        {left ?? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={label}
-            accessibilityHint={
-              up ? 'Returns to the previous screen' : 'Closes this dialog'
-            }
-            testID={up ? 'header-back' : 'header-done'}
-            onPress={close}
-            onLongPress={() => ToastAndroid.show(label, ToastAndroid.SHORT)}
-            android_ripple={{ color: colors.navyWash, borderless: true }}
-            style={styles.action}
-          >
-            <Icon
-              name={up ? symbols.arrowLeft : symbols.close}
-              size={24}
-              maxScale={1}
-            />
-          </Pressable>
-        )}
-        <Text accessibilityRole="header" style={styles.title}>
-          {typeof options.headerTitle === 'string'
-            ? options.headerTitle
-            : options.title}
-        </Text>
-        {right}
-      </View>
+      {largeText ? (
+        <View style={styles.large}>
+          <View style={styles.actions}>
+            {leading}
+            <View style={{ flex: 1 }} />
+            {right}
+          </View>
+          {heading}
+        </View>
+      ) : (
+        <View style={styles.row}>
+          {leading}
+          {heading}
+          {right}
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   bar: { backgroundColor: colors.paper },
+  large: {
+    paddingHorizontal: rhythm.screen,
+    paddingVertical: rhythm.tight,
+    gap: rhythm.tight,
+  },
+  actions: { flexDirection: 'row', alignItems: 'center' },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -85,6 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: textStyles.inlineTitle.fontFamily,
     fontSize: androidBar.title,
+    lineHeight: 28,
     color: colors.ink,
   },
   action: {
