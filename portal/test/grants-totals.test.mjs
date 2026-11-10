@@ -38,7 +38,7 @@ test('one FY and inclusive FY ranges use precomputed yearly cells, including omi
   const year = await f.run({ recipient: recipient.id, financial_year: '2017-18' });
   assert.equal(year.total_aud, 300); assert.equal(year.records, 2);
   assert.equal(year.coverage.since, '2017-07-01'); assert.equal(year.coverage.until, '2018-06-30');
-  assert.equal(year.coverage.as_of, '2026-10-19'); assert.match(year.citations[0].text, /financial year 2017-18 \(2 award records; 2017-07-01 to 2018-06-30\)/);
+  assert.equal(year.coverage.as_of, '2026-10-19'); assert.match(year.citations[0].text, /financial year 2017-18 \(2 award records; 1 July 2017 to 30 June 2018\)/);
   const range = await f.run({ recipient: recipient.n, from_year: 2017, to_year: 2018 });
   assert.equal(range.total_aud, 1000); assert.equal(range.records, 5);
   assert.equal(range.coverage.until, '2019-06-30');
@@ -83,7 +83,7 @@ test('a supported FY with no recipient awards returns zero recorded awards with 
   delete f.assets['/grants/federal/shard-07.json']['abn-12345678901'].by['2018-19'];
   const out = await f.run({ recipient: recipient.id, financial_year: '2018-19' });
   assert.equal(out.total_aud, 0); assert.equal(out.records, 0);
-  assert.match(out.citations[0].text, /received \$0.*financial year 2018-19 \(0 award records; 2018-07-01 to 2019-06-30\)/);
+  assert.match(out.citations[0].text, /received \$0.*financial year 2018-19 \(0 award records; 1 July 2018 to 30 June 2019\)/);
 });
 
 test('Queensland expenditure totals remain separate from Commonwealth award values', async () => {

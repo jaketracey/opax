@@ -1,5 +1,5 @@
 /** Government grants from complete published aggregates and the individual-award table. */
-import { aud, clip, fold, siteUrl, tableRows } from './record-common'
+import { aud, clip, fold, readableRange, siteUrl, tableRows } from './record-common'
 import { receiptYearWindow } from '../receipt-period'
 import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 import { grantTotals } from './grant-totals'
@@ -81,7 +81,7 @@ export async function recipientTotal(env: ToolEnv, args: ToolArgs): Promise<Stru
     recipient: detail.n, jurisdiction, total_aud: total, records: count, period,
     coverage: { since: `${periodFrom}-07-01`, until: `${periodTo + 1}-06-30`, as_of: asOf, note: 'Complete published recipient summary, grouped by financial year.' },
     notable_grants: notable,
-    citations: [{ kind: 'record', value: total, url, text: `${detail.n} received ${aud(total)} in published ${basis}, ${period} (${count.toLocaleString('en-AU')} ${recordKind}; ${periodFrom}-07-01 to ${periodTo + 1}-06-30).` },
+    citations: [{ kind: 'record', value: total, url, text: `${detail.n} received ${aud(total)} in published ${basis}, ${period} (${count.toLocaleString('en-AU')} ${recordKind}; ${readableRange(`${periodFrom}-07-01`, `${periodTo + 1}-06-30`)}).` },
       ...notable.map(g => ({ kind: 'record' as const, value: g.v, url, text: `${detail.n} was awarded ${aud(g.v)} for ${g.n || g.pr}${g.ag ? ' from ' + g.ag : ''}${g.fy ? ' in financial year ' + g.fy : ''} (${jurisdiction === 'qld' ? 'Queensland Government expenditure line' : 'federal grant award'}).` }))], notes }
 }
 /** Federal electorates (current and abolished) in one state, as the grants table records them. */

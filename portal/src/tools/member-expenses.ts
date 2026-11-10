@@ -1,6 +1,6 @@
 /** IPEA expenses grouped by reporting quarter, rather than the transaction date. */
 import { personUrl } from '../../public/canonical-urls.js'
-import { aud, clip, fold, siteUrl } from './record-common'
+import { aud, clip, fold, readableRange, siteUrl } from './record-common'
 import { readToolAsset, type ToolArgs, type ToolDefinition } from './types'
 
 interface Expenses {
@@ -85,6 +85,6 @@ export const tool: ToolDefinition = {
     if (expenses.meta.attribution) notes.push(expenses.meta.attribution)
     return { rows: [{ name: person.name, person_id: candidates[0], year: requested.key, period: requested.label, amount_aud: amount, complete, reporting_quarters: selected }],
       coverage: { ...coverage, matched: complete },
-      citations: [{ kind: 'record', url: href, value: amount, text: `${person.name}: ${aud(amount)} in IPEA-reported parliamentary expenses for ${requested.label}${complete ? '' : ` (partial reported subtotal, ${first!.since} to ${last!.until})`}.` }], notes }
+      citations: [{ kind: 'record', url: href, value: amount, text: `${person.name}: ${aud(amount)} in IPEA-reported parliamentary expenses for ${requested.label}${complete ? '' : ` (partial reported subtotal${readableRange(first?.since, last?.until) ? ', ' + readableRange(first?.since, last?.until) : ''})`}.` }], notes }
   },
 }
