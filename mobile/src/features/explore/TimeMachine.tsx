@@ -20,7 +20,7 @@ import { YearBills } from './YearBills';
 import { YearBrief } from './YearBrief';
 import { YearGallery } from './YearGallery';
 import { YearHeader, YearPager } from './YearHeader';
-import { FIRST_YEAR, LAST_YEAR, useYearChoice } from './YearMenu';
+import { FIRST_YEAR, LAST_YEAR } from './YearMenu';
 import { YearVoices, type RosterLookup } from './YearVoices';
 
 /** The latest complete year: 2025 in November 2026. */
@@ -88,8 +88,6 @@ export default function TimeMachine() {
     saveExploreChoice({ year: next });
     scroll.current?.scrollTo({ y: 0, animated: false });
   }, []);
-  useYearChoice(setYear);
-  const shown = year ?? defaultYear();
   return (
     <>
       {/* Share and Copy link carry the year shown, as a year link opens. */}
@@ -98,13 +96,24 @@ export default function TimeMachine() {
         game="tm"
         params={year === null ? undefined : { year: String(year) }}
       />
-      <YearPage
-        key={shown}
-        year={shown}
-        photo={photo}
-        onYear={setYear}
-        scrollRef={scroll}
-      />
+      {year === null ? (
+        <Screen testID="explore-tm-screen" barTitle="Time machine">
+          <Skeleton
+            shape="text"
+            count={5}
+            label="Loading Time machine"
+            testID="tm-choice-loading"
+          />
+        </Screen>
+      ) : (
+        <YearPage
+          key={year}
+          year={year}
+          photo={photo}
+          onYear={setYear}
+          scrollRef={scroll}
+        />
+      )}
     </>
   );
 }

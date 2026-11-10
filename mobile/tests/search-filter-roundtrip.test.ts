@@ -75,6 +75,18 @@ test('a shared speech link keeps the chosen sort and record type', () => {
   expect(params.get('kind')).toBe('press_release');
   expect(params.get('mode')).toBe('keyword');
   expect(params.get('sort')).toBe('newest');
+  const route = searchRouteFromWebPath(path);
+  expect(route?.params).toMatchObject({
+    kind: 'speeches',
+    type: 'press_release',
+    mode: 'keyword',
+    sort: 'newest',
+    link: '1',
+  });
+  expect(filtersFromParams(route!.params)).toMatchObject({
+    kind: 'press_release',
+    mode: 'keyword',
+  });
 });
 
 test.each(['interests', 'pay', 'expenses'] as const)(

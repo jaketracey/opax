@@ -131,6 +131,10 @@ type FrontPageQuestion = {
   Sources and licences opens photo credits; it includes all years from 1998
   to 2026. Live headline probes and their per-speech generated briefs are not
   part of this static view.
+  An unlinked visit resolves the saved year before mounting the year's data
+  reads. The year sheet returns its choice only to the menu that opened it.
+  Bills show three preview rows; the disclosure mounts one page of up to
+  twenty additional bills, with previous and next controls.
 - Tide: exactly `/api/tide?scope=federal` or `/api/tide?scope=all` on open or
   scope selection. Sorting is local.
 - Debate matrix and Words per dollar: the existing `/api/matrix` action read,
@@ -152,3 +156,31 @@ files (under 1 MB in total). No production GET is needed to regenerate or test
 any Explore data.
 
 Then vs now stays on the web.
+
+## Product decision pending: percentage bases (11 November 2026)
+
+The two matrix consumers currently answer different questions:
+
+| Screen                                                                      | Calculation                                                                 | Presentation                                                                                                           |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Who owns which debate (`Matrix.tsx`)                                        | Party cell divided by `totals[topic]`, the full topic-labelled speech total | Each party, including the folded Other column, rounded independently                                                   |
+| Words per dollar (`WordsDollars.tsx`, `model.ts:wordsPanel`, `partyShares`) | Party cell divided by the sum of that topic's party cells (`partyBase`)     | Whole percentages apportioned to sum to 100 across all positive cells; shares hidden below 200 party-labelled speeches |
+
+The Worker in `portal/src/index.ts:apiMatrix` preserves the topic's filtered
+total separately from the party facets. It folds parties beyond its column
+cap into Other. `partyBase` includes Other, although Words per dollar omits
+the Other row. Thus a topic whose full total exceeds its party-facet total
+can show different percentages for the same party in the two tools. In an
+illustrative fixture with a topic total of 1,000, party cells totalling 600
+and a party cell of 300, the percentages are 30% and 50%, respectively.
+The current Matrix source note (`MATRIX_NOTE`) describes the recorded-party
+base even though its rendered calculation uses the full topic total.
+
+Product must choose a common denominator, or retain both questions and name
+the bases clearly in the visible and spoken copy. The decision must also
+cover Other, rounding and the thin-base threshold. Any UI change belongs in
+`Matrix.tsx`, `WordsDollars.tsx`, `PairRow.tsx` and the share helpers/notes in
+`model.ts`; an API contract change belongs to the Worker/data owner. Existing
+tests cover Other and party-share apportionment in
+`explore-tool-regressions.test.tsx` and `explore-tools.test.ts`. No percentage
+calculation or product copy was changed in the d3 search/explore bug pass.

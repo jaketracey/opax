@@ -81,6 +81,27 @@ seat markers, rather than the profile's whole reading. `seenAt` is only the
 last-look date for the group heading. `markAllSeen` checks the existing shared
 follow catalogs and skips unavailable follows and unreadable markers.
 
+### Product decision pending: Mark all as seen and saved changes (11 November 2026)
+
+Following can display a previously saved change even when its source cannot
+currently be read. `useFollowStates.ts` restores the saved ready state, or
+merges saved markers into a partial current state, and labels those changes
+as stale. The menu in `Following.tsx` calls `store.ts:markAllSeen`, which
+recomputes states from `catalogs.followSources` alone. It does not use those
+restored states. An unavailable follow or omitted marker can therefore keep
+its visible saved change after Mark all as seen. A readable stale catalogue
+is still acknowledged; this is specifically about restored changes absent
+from the available catalogues.
+
+The product choice is whether “all” means every change currently displayed,
+including saved changes, or only changes supported by the available sources.
+The former needs the displayed fingerprints and keys passed to the store;
+the latter needs copy that explains what remains unchecked. Decide this
+before changing the acknowledgement contract. Implementation belongs in
+`Following.tsx`, `useFollowStates.ts` and `store.ts`, with regressions for
+fully unavailable and partially unavailable sources. Behaviour is unchanged
+by the d3 search/explore bug pass.
+
 ## Changes: `changes.ts` and `markers.ts`
 
 ```ts

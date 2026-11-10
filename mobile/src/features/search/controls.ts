@@ -31,6 +31,7 @@ export function useResultsControls({
   q,
   target,
   initialFilters,
+  initialSort = 'relevance',
   roster,
   onQuery,
   onScope,
@@ -39,12 +40,13 @@ export function useResultsControls({
   q: string;
   target: ResultsTarget;
   initialFilters: SpeechFilters;
+  initialSort?: SpeechSort;
   roster: Roster | null;
   onQuery: (q: string) => void;
   onScope: (scope: Scope) => void;
 }) {
   const [filters, setFilters] = useState(initialFilters);
-  const [sort, setSort] = useState<SpeechSort>('relevance');
+  const [sort, setSort] = useState<SpeechSort>(initialSort);
   const openAsk = useOpenAsk();
   // The sheet reads and writes this owner's filters; the Person row lists
   // the roster once it has loaded.

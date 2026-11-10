@@ -226,7 +226,7 @@ export function SpeechResults({
         <View>
           <InsetGroup>
             <LinkRow
-              title={`Show 20 more ${noun}`}
+              title={`Show ${counted(list.nextCount, noun === 'records' ? 'more record' : 'more speech', `more ${noun}`)}`}
               accessory="none"
               onPress={list.loadMore}
               testID="results-more"
