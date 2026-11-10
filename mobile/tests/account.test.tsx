@@ -776,6 +776,26 @@ describe('Sign in by code', () => {
     // Reading clears it.
     expect(takeConsentAfterSignIn()).toBe(false);
   });
+  test.each(['android', 'ios'] as const)(
+    '%s supplies its emailed-code autofill hint',
+    async (os) => {
+      const original = Platform.OS;
+      Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+      try {
+        const renderer = await codeStep(jest.fn());
+        expect(field(renderer, 'account-sign-in-code').props).toMatchObject({
+          autoComplete: os === 'android' ? 'email-otp' : 'one-time-code',
+          textContentType: 'oneTimeCode',
+          keyboardType: 'number-pad',
+        });
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          configurable: true,
+          value: original,
+        });
+      }
+    },
+  );
   test('step 2: the code field is one-time-code and paste friendly, and a full code signs in', async () => {
     const onSignedIn = jest.fn();
     const renderer = await codeStep(onSignedIn);
@@ -1080,6 +1100,26 @@ describe('Delete account', () => {
       '/account/delete',
     );
   });
+  test.each(['android', 'ios'] as const)(
+    '%s supplies its emailed deletion-code autofill hint',
+    async (os) => {
+      const original = Platform.OS;
+      Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+      try {
+        const renderer = await codeStep();
+        expect(field(renderer, 'account-deletion-code').props).toMatchObject({
+          autoComplete: os === 'android' ? 'email-otp' : 'one-time-code',
+          textContentType: 'oneTimeCode',
+          keyboardType: 'number-pad',
+        });
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          configurable: true,
+          value: original,
+        });
+      }
+    },
+  );
   test('step 2: a hidden-label code field, then a deliberate, confirmed Delete', async () => {
     const renderer = await codeStep();
     expect(field(renderer, 'account-deletion-code').props).toMatchObject({

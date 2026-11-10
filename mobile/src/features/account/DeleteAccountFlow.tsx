@@ -271,7 +271,9 @@ export function DeleteCode({
             }}
             testID="account-deletion-code"
             textContentType="oneTimeCode"
-            autoComplete="one-time-code"
+            autoComplete={
+              Platform.OS === 'android' ? 'email-otp' : 'one-time-code'
+            }
             keyboardType="number-pad"
             autoFocus
             selectTextOnFocus

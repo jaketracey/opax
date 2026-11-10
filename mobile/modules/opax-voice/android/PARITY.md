@@ -36,6 +36,9 @@ Related Android UI defects fixed in this package:
   closes it, and its permission action checks consent again before any request.
 - Deletion hid the bar's back affordance but did not prevent route removal.
   Android now prevents removal while the confirmed deletion request is pending.
+- Sign-in and deletion supplied iOS's `one-time-code` autocomplete value, which
+  React Native's Android text input does not map. Android now supplies its
+  `email-otp` autofill hint for these emailed codes; iOS keeps its original hint.
 
 The TypeScript cross-language contract tests run in `npm run qa`; the native
 projection, HTTP, call and audio tests run with `:opax-voice:testDebugUnitTest`.
