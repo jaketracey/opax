@@ -1,0 +1,1628 @@
+{
+  "MN-DONR-028": {
+    "question": "How much did Westpac Banking Corporation donate to One Nation in 2024-25?",
+    "grade": "pass",
+    "payload": {
+      "answer": "Westpac Banking Corporation recorded $50,000 in federal disclosed receipts to One Nation across 1 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).\n\nAustralian Hotels Association (NSW) recorded $6,271 in federal disclosed receipts to One Nation across 2 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            161
+          ]
+        ],
+        "fact-2/t/body/0": [
+          [
+            163,
+            331
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Westpac Banking Corporation: $50,000 in federal disclosed receipts to One Nation across 1 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+          "snippet": "Westpac Banking Corporation: $50,000 in federal disclosed receipts to One Nation across 1 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+          "cited": true,
+          "kind": "export",
+          "entities": [
+            "party:One Nation"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "Westpac Banking Corporation",
+              "metric": "receipts",
+              "value": "50000",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "since": "2024-07-01",
+                "until": "2025-06-30",
+                "label": "2024-25"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Westpac Banking Corporation",
+              "metric": "count",
+              "value": "1",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2024-07-01",
+                "until": "2025-06-30",
+                "label": "2024-25"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Westpac Banking Corporation",
+              "metric": "count",
+              "value": "25",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2024-07-01",
+                "until": "2025-06-30",
+                "label": "2024-25"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "Australian Hotels Association (NSW): $6,271 in federal disclosed receipts to One Nation across 2 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Aaustralian+hotels+association",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Aaustralian+hotels+association",
+          "snippet": "Australian Hotels Association (NSW): $6,271 in federal disclosed receipts to One Nation across 2 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+          "cited": true,
+          "kind": "export",
+          "entities": [
+            "party:One Nation"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "Australian Hotels Association",
+              "metric": "receipts",
+              "value": "6271",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "since": "2024-07-01",
+                "until": "2025-06-30",
+                "label": "2024-25"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "Australian Hotels Association",
+              "metric": "count",
+              "value": "2",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2024-07-01",
+                "until": "2025-06-30",
+                "label": "2024-25"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "Australian Hotels Association",
+              "metric": "count",
+              "value": "25",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2024-07-01",
+                "until": "2025-06-30",
+                "label": "2024-25"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+          "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2024-07-01",
+          "until": "2025-06-30",
+          "label": "Records from 2024-07-01 to 2025-06-30."
+        },
+        "dated": true,
+        "party": "One Nation",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Westpac Banking Corporation: $50,000 in federal disclosed receipts to One Nation across 1 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+            "snippet": "Westpac Banking Corporation: $50,000 in federal disclosed receipts to One Nation across 1 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+            "cited": true,
+            "kind": "export",
+            "entities": [
+              "party:One Nation"
+            ]
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Australian Hotels Association (NSW): $6,271 in federal disclosed receipts to One Nation across 2 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Aaustralian+hotels+association",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Aaustralian+hotels+association",
+            "snippet": "Australian Hotels Association (NSW): $6,271 in federal disclosed receipts to One Nation across 2 receipts in financial years 2024-25 (2024-07-01 to 2025-06-30).",
+            "cited": true,
+            "kind": "export",
+            "entities": [
+              "party:One Nation"
+            ]
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2024&to=2024&party=party%3AOne+Nation&focus=donor%3Awestpac+banking+corporation",
+            "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "MN-GRNT-022": {
+    "question": "How much has Board Of The Queensland Museum received in Queensland Government grants?",
+    "grade": "fail",
+    "payload": {
+      "answer": "Grant: Board Of The Queensland Museum — $2,579,773.00 across 26 grant records. National Taxonomy Research Grants Program; The trematodes of Australian marine piscivorous fishes: new explorations; Taxonomy of trematodes infecting Australian….",
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            241
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Grant: Board Of The Queensland Museum — $2,579,773.00 across 26 grant records. National Taxonomy Research Grants Program; The trematodes of Australian marine piscivorous fishes: new explorations; Taxonomy of trematodes infecting Australian…",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A91522611802",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A91522611802",
+          "snippet": "Grant: Board Of The Queensland Museum — $2,579,773.00 across 26 grant records. National Taxonomy Research Grants Program; The trematodes of Australian marine piscivorous fishes: new explorations; Taxonomy of trematodes infecting Australian…",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "2579773",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "26",
+              "unit": "count",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "jurisdiction": "qld",
+        "people": [],
+        "locationState": "qld",
+        "stateGovernment": true,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Grant: Board Of The Queensland Museum — $2,579,773.00 across 26 grant records. National Taxonomy Research Grants Program; The trematodes of Australian marine piscivorous fishes: new explorations; Taxonomy of trematodes infecting Australian…",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A91522611802",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A91522611802",
+            "snippet": "Grant: Board Of The Queensland Museum — $2,579,773.00 across 26 grant records. National Taxonomy Research Grants Program; The trematodes of Australian marine piscivorous fishes: new explorations; Taxonomy of trematodes infecting Australian…",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A91522611802",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A91522611802",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "MN-DONR-016": {
+    "question": "What is the total Ramsay Health Care Limited has donated to the Nationals?",
+    "grade": "pass",
+    "payload": {
+      "answer": "Ramsay Health Care Limited's federal disclosed receipts to the Nationals totalled $143,410 across 12 receipts in the financial years from 1998-99 to 2025-26 (1 July 1998 to 30 June 2026).",
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            187
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Ramsay Health Care Limited: $143,410 in federal disclosed receipts to Nationals across 12 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ANationals&focus=donor%3Aramsay+health+care",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ANationals&focus=donor%3Aramsay+health+care",
+          "snippet": "Ramsay Health Care Limited: $143,410 in federal disclosed receipts to Nationals across 12 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+          "cited": true,
+          "kind": "export",
+          "entities": [
+            "party:Nationals"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "Ramsay Health Care Limited",
+              "metric": "receipts",
+              "value": "143410",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Ramsay Health Care Limited",
+              "metric": "count",
+              "value": "12",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Ramsay Health Care Limited",
+              "metric": "count",
+              "value": "99",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Ramsay Health Care Limited",
+              "metric": "count",
+              "value": "26",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/methods",
+          "url": "https://opax.com.au/methods",
+          "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "party": "Nationals",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Ramsay Health Care Limited: $143,410 in federal disclosed receipts to Nationals across 12 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ANationals&focus=donor%3Aramsay+health+care",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ANationals&focus=donor%3Aramsay+health+care",
+            "snippet": "Ramsay Health Care Limited: $143,410 in federal disclosed receipts to Nationals across 12 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+            "cited": true,
+            "kind": "export",
+            "entities": [
+              "party:Nationals"
+            ]
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ANationals&focus=donor%3Aramsay+health+care",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ANationals&focus=donor%3Aramsay+health+care",
+            "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "MN-STAT-006": {
+    "question": "what did the \"2018 recruitment\" ad campsign cost in 2017-18",
+    "grade": "fail",
+    "payload": {
+      "answer": "Campaign advertising expenditure (source reporting period retained; no category sum).",
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            85
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $1,966,680.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+          "href": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+          "url": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+          "snippet": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $1,966,680.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Register",
+              "metric": "receipts",
+              "value": "1966680",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Register",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $860,500.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+          "href": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+          "url": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+          "snippet": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $860,500.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+          "cited": false,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Register",
+              "metric": "receipts",
+              "value": "860500",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            },
+            {
+              "entity": "Register",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-2/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-3",
+          "slug": "",
+          "title": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $0.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+          "href": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+          "url": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+          "snippet": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $0.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+          "cited": false,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Register",
+              "metric": "receipts",
+              "value": "0",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            },
+            {
+              "entity": "Register",
+              "metric": "count",
+              "value": "18",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2017-18"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money/contracts",
+          "url": "https://opax.com.au/money/contracts",
+          "snippet": "OPAX could not confirm that these records fall in the requested period, so check their dates. Catalog hits are ranked matches, not complete totals; open the matching tool for figures.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2017-07-01",
+          "until": "2018-12-31",
+          "label": "Records from 2017-07-01 to 2018-12-31."
+        },
+        "dated": true,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $1,966,680.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+            "href": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "url": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "snippet": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $1,966,680.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $860,500.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+            "href": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "url": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "snippet": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $860,500.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $0.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+            "href": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "url": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "snippet": "Register: 2018 recruitment campaign – Choose Your Calling — Chisholm Institute — $0.00 AUD. 2017-18. (excluding GST). Campaign advertising expenditure (source reporting period retained; no category sum).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "url": "https://opax.com.au/register/gov-advertising?advertising.q=2018+recruitment+campaign+%E2%80%93+Choose+Your+Calling",
+            "snippet": "OPAX could not confirm that these records fall in the requested period, so check their dates. Catalog hits are ranked matches, not complete totals; open the matching tool for figures.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "DT-FYR-004": {
+    "question": "how much money did the LNP get from donors in 2019-20",
+    "grade": "fail",
+    "payload": {
+      "answer": "A disclosed example source was Altum Pty Ltd at $1,659,674.",
+      "citations": {
+        "fact-4/t/body/0": [
+          [
+            0,
+            59
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-3",
+          "slug": "",
+          "title": "LNP received $6,575,931 in federal disclosed receipts across 982 receipts in financial years 2019-20 (2019-07-01 to 2020-06-30).",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2019&to=2019&party=party%3ALNP",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2019&to=2019&party=party%3ALNP",
+          "snippet": "LNP received $6,575,931 in federal disclosed receipts across 982 receipts in financial years 2019-20 (2019-07-01 to 2020-06-30).",
+          "cited": false,
+          "kind": "export",
+          "entities": [
+            "party:LNP"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "LNP",
+              "metric": "receipts",
+              "value": "6575931",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "since": "2019-07-01",
+                "until": "2020-06-30",
+                "label": "2019-20"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            },
+            {
+              "entity": "LNP",
+              "metric": "count",
+              "value": "982",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2019-07-01",
+                "until": "2020-06-30",
+                "label": "2019-20"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            },
+            {
+              "entity": "LNP",
+              "metric": "count",
+              "value": "20",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "2019-07-01",
+                "until": "2020-06-30",
+                "label": "2019-20"
+              },
+              "evidenceId": "fact-3/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-4",
+          "slug": "",
+          "title": "Altum Pty Ltd to LNP — AEC annual return · 2019-20",
+          "href": "https://opax.com.au/subject/donor/Altum%20Pty%20Ltd",
+          "url": "https://opax.com.au/subject/donor/Altum%20Pty%20Ltd",
+          "snippet": "LNP disclosed $1,659,674 in receipts from Altum Pty Ltd (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20",
+          "cited": true,
+          "kind": "export",
+          "receipt": {
+            "party": "LNP",
+            "source": "Altum Pty Ltd",
+            "amount": 1659674,
+            "period": "2019-20 to 2019-20",
+            "jurisdiction": "federal",
+            "industry": "property"
+          },
+          "entities": [
+            "party:LNP"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "Altum Pty Ltd",
+              "metric": "receipts",
+              "value": "1659674",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "label": "2019-20 to 2019-20"
+              },
+              "evidenceId": "fact-4/t/body/0"
+            },
+            {
+              "entity": "LNP",
+              "metric": "receipts",
+              "value": "1659674",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "label": "2019-20 to 2019-20"
+              },
+              "evidenceId": "fact-4/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALNP&from=2019&to=2019",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALNP&from=2019&to=2019",
+          "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2019-07-01",
+          "until": "2020-06-30",
+          "label": "Records from 2019-07-01 to 2020-06-30."
+        },
+        "dated": true,
+        "party": "LNP",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "LNP received $6,575,931 in federal disclosed receipts across 982 receipts in financial years 2019-20 (2019-07-01 to 2020-06-30).",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2019&to=2019&party=party%3ALNP",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2019&to=2019&party=party%3ALNP",
+            "snippet": "LNP received $6,575,931 in federal disclosed receipts across 982 receipts in financial years 2019-20 (2019-07-01 to 2020-06-30).",
+            "cited": true,
+            "kind": "export",
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "Altum Pty Ltd to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Altum%20Pty%20Ltd",
+            "url": "https://opax.com.au/subject/donor/Altum%20Pty%20Ltd",
+            "snippet": "LNP disclosed $1,659,674 in receipts from Altum Pty Ltd (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "Altum Pty Ltd",
+              "amount": 1659674,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "property"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "Macquarie Telecom to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Macquarie%20Technology%20Group%20Ltd",
+            "url": "https://opax.com.au/subject/donor/Macquarie%20Technology%20Group%20Ltd",
+            "snippet": "LNP disclosed $189,500 in receipts from Macquarie Telecom (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "Macquarie Telecom",
+              "amount": 189500,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "finance"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-6",
+            "slug": "",
+            "title": "The Pharmacy Guild of Australia to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/The%20Pharmacy%20Guild%20of%20Australia",
+            "url": "https://opax.com.au/subject/donor/The%20Pharmacy%20Guild%20of%20Australia",
+            "snippet": "LNP disclosed $91,200 in receipts from The Pharmacy Guild of Australia (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "The Pharmacy Guild of Australia",
+              "amount": 91200,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "pharmacy"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-7",
+            "slug": "",
+            "title": "J.J. Richards & Sons PTY LTD to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/J.J.%20Richards%20%26%20Sons%20PTY%20LTD",
+            "url": "https://opax.com.au/subject/donor/J.J.%20Richards%20%26%20Sons%20PTY%20LTD",
+            "snippet": "LNP disclosed $62,256 in receipts from J.J. Richards & Sons PTY LTD (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "J.J. Richards & Sons PTY LTD",
+              "amount": 62256,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "waste_management"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-8",
+            "slug": "",
+            "title": "Gary Spence to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Gary%20Spence",
+            "url": "https://opax.com.au/subject/donor/Gary%20Spence",
+            "snippet": "LNP disclosed $55,000 in receipts from Gary Spence (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "Gary Spence",
+              "amount": 55000,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "individual"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-9",
+            "slug": "",
+            "title": "Retail Guild of Australia Inc to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Retail%20Guild%20of%20Australia%20Inc",
+            "url": "https://opax.com.au/subject/donor/Retail%20Guild%20of%20Australia%20Inc",
+            "snippet": "LNP disclosed $44,320 in receipts from Retail Guild of Australia Inc (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "Retail Guild of Australia Inc",
+              "amount": 44320,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "retail"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-10",
+            "slug": "",
+            "title": "JJ Richards & Sons Pty Ltd to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/JJ%20Richards%20%26%20Sons%20Pty%20Ltd",
+            "url": "https://opax.com.au/subject/donor/JJ%20Richards%20%26%20Sons%20Pty%20Ltd",
+            "snippet": "LNP disclosed $37,570 in receipts from JJ Richards & Sons Pty Ltd (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "JJ Richards & Sons Pty Ltd",
+              "amount": 37570,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "waste_management"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-11",
+            "slug": "",
+            "title": "J Hutchinson Pty Ltd to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/J%20Hutchinson%20Pty%20Ltd",
+            "url": "https://opax.com.au/subject/donor/J%20Hutchinson%20Pty%20Ltd",
+            "snippet": "LNP disclosed $26,600 in receipts from J Hutchinson Pty Ltd (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "J Hutchinson Pty Ltd",
+              "amount": 26600,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "other"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-12",
+            "slug": "",
+            "title": "Morgans Financial Limited to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Morgans%20Financial%20Limited",
+            "url": "https://opax.com.au/subject/donor/Morgans%20Financial%20Limited",
+            "snippet": "LNP disclosed $18,440 in receipts from Morgans Financial Limited (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "Morgans Financial Limited",
+              "amount": 18440,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "finance"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "fact-13",
+            "slug": "",
+            "title": "Insurance Australia Group Limited to LNP — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "href": "https://opax.com.au/subject/donor/Insurance%20Australia%20Group",
+            "url": "https://opax.com.au/subject/donor/Insurance%20Australia%20Group",
+            "snippet": "LNP disclosed $15,400 in receipts from Insurance Australia Group Limited (federal disclosures; financial years 2019-20 to 2019-20) — AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+            "cited": true,
+            "kind": "export",
+            "receipt": {
+              "party": "LNP",
+              "source": "Insurance Australia Group Limited",
+              "amount": 15400,
+              "period": "2019-20 to 2019-20",
+              "jurisdiction": "federal",
+              "industry": "finance"
+            },
+            "entities": [
+              "party:LNP"
+            ]
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/money?jur=federal&type=receipts&from=2019&to=2019&party=party%3ALNP",
+            "url": "https://opax.com.au/money?jur=federal&type=receipts&from=2019&to=2019&party=party%3ALNP",
+            "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "MN-CONT-018": {
+    "question": "which department gives Centorrino Technologies Pty Ltd the most contracts",
+    "grade": "fail",
+    "payload": {
+      "answer": "No Commonwealth agency in the contract record matches \"Centorrino Technologies Pty Ltd\", so I cannot name the department that awards it the most contracts.\n\nWhat the records do show:\n\n- Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.\n\n- Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026).\n\n- Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303).\n\n- Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662).\n\n- Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497).\n\n- Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545).\n\n- Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845).",
+      "citations": {
+        "coverage/t/body/0": [
+          [
+            0,
+            155
+          ]
+        ],
+        "fact-1/t/body/0": [
+          [
+            184,
+            326
+          ]
+        ],
+        "fact-5/t/body/0": [
+          [
+            328,
+            437
+          ]
+        ],
+        "fact-6/t/body/0": [
+          [
+            439,
+            591
+          ]
+        ],
+        "fact-7/t/body/0": [
+          [
+            593,
+            772
+          ]
+        ],
+        "fact-8/t/body/0": [
+          [
+            774,
+            947
+          ]
+        ],
+        "fact-9/t/body/0": [
+          [
+            949,
+            1143
+          ]
+        ],
+        "fact-10/t/body/0": [
+          [
+            1145,
+            1328
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+          "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "snippet": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Supplier",
+              "metric": "contracts",
+              "value": "14178599.19",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Supplier",
+              "metric": "contracts",
+              "value": "24",
+              "unit": "count",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Supplier",
+              "metric": "contracts",
+              "value": "13",
+              "unit": "count",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Supplier",
+              "metric": "contracts",
+              "value": "83606931524",
+              "unit": "count",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-5",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+          "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "snippet": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "14178599",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2021–2026"
+              },
+              "evidenceId": "fact-5/t/body/0"
+            },
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "24",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2021–2026"
+              },
+              "evidenceId": "fact-5/t/body/0"
+            },
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "13",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2021–2026"
+              },
+              "evidenceId": "fact-5/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-6",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+          "snippet": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "2688753",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "since": "2026-06-30",
+                "until": "2028-06-29",
+                "label": "2026-06"
+              },
+              "evidenceId": "fact-6/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-7",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+          "snippet": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "2028954",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "since": "2025-09-29",
+                "until": "2026-06-29",
+                "label": "2025-09"
+              },
+              "evidenceId": "fact-7/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-8",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+          "snippet": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "1859382",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "since": "2025-03-09",
+                "until": "2027-06-29",
+                "label": "2025-03"
+              },
+              "evidenceId": "fact-8/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-9",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+          "snippet": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "1751994",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "since": "2024-11-19",
+                "until": "2027-03-30",
+                "label": "2024-11"
+              },
+              "evidenceId": "fact-9/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-10",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+          "snippet": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Centorrino Technologies Pty Ltd",
+              "metric": "contracts",
+              "value": "1467388",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "since": "2024-06-30",
+                "until": "2027-06-29",
+                "label": "2024-06"
+              },
+              "evidenceId": "fact-10/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "coverage-eb80683",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money/contracts",
+          "url": "https://opax.com.au/money/contracts",
+          "snippet": "This is a list of what OPAX found, not a ranking.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money/contracts",
+          "url": "https://opax.com.au/money/contracts",
+          "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. AusTender contract notices from Commonwealth agencies: values are contract values as published (including later amendments), not payments, and a supplier name follows the notice. No Commonwealth agency in the contract record matches \"Centorrino Technologies Pty Ltd\".",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "superlative": "highest",
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-6",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+            "snippet": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-7",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+            "snippet": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-8",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+            "snippet": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-9",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+            "snippet": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-10",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+            "snippet": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. AusTender contract notices from Commonwealth agencies: values are contract values as published (including later amendments), not payments, and a supplier name follows the notice. No Commonwealth agency in the contract record matches \"Centorrino Technologies Pty Ltd\".",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "MN-GRNT-014": {
+    "question": "How much has The Trustee for Mantiyupwi Family Trust received in federal grants?",
+    "grade": "fail",
+    "payload": {
+      "answer": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ….\n\n- Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities.\n\n- Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. Indigenous Employment and Business.\n\n; CJBF - Tiwi Islands Workforce Infrastructure and Employ….\n\nIndigenous Communities.",
+      "citations": {
+        "fact-3/t/body/0": [
+          [
+            0,
+            250
+          ],
+          [
+            685,
+            744
+          ]
+        ],
+        "fact-4/t/body/0": [
+          [
+            252,
+            462
+          ],
+          [
+            746,
+            769
+          ]
+        ],
+        "fact-5/t/body/0": [
+          [
+            464,
+            683
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-3",
+          "slug": "",
+          "title": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "snippet": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "5941767",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-3/t/body/0"
+            },
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "4",
+              "unit": "count",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-3/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-4",
+          "slug": "",
+          "title": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "snippet": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "4092000",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {},
+              "evidenceId": "fact-4/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-5",
+          "slug": "",
+          "title": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "snippet": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "1330664",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-5/t/body/0"
+            }
+          ]
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "jurisdiction": "federal",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "snippet": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "snippet": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "snippet": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/subject/supplier/s-12cfad25aaf49c550fdc",
+            "url": "https://opax.com.au/subject/supplier/s-12cfad25aaf49c550fdc",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "NP-INTR-016": {
+    "question": "David Kempton shareholdings?",
+    "grade": "fail",
+    "payload": {
+      "answer": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil and Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            270
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+          "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+          "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+          "snippet": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries",
+              "metric": "count",
+              "value": "4",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "since": "2026-10-16",
+                "label": "2026-10"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        }
+      ],
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [
+          "Kempton",
+          "David"
+        ],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "research": {
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+            "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "snippet": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "snippet": "Register entries include statements, additions and removals; an entry is not necessarily a current holding or evidence of a conflict of interest.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  }
+}

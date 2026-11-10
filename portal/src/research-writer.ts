@@ -7,11 +7,13 @@ import {groundAnswerPayload} from './research-grounding'
 import {auditPayload} from './research-claim-audit.mjs'
 import {protectedDecision,coherenceCheck,answerDecision,canReconstructRanking} from './research-coherence.mjs'
 import type { QualitativeAnswer, ResearchStats } from './research-types'
+import {moneyWritingInput} from './research-money-writing'
 
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
+    input=moneyWritingInput(input)
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...payload,research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
@@ -39,7 +41,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     const ownerFigure=(fact:WritingInput['facts'][number])=>{
       const receipt=fact.source.receipt
       if(receipt)return {owner:receipt.source,amount:'$'+receipt.amount.toLocaleString('en-AU'),party:receipt.party}
-      const rate=/^([^:]+): (\$[\d,]+)/.exec(fact.text)
+      const rate=/^([^:]+): (\$[\d,]+)/.exec(fact.text) ?? /^(.+?) (?:received|provided) (\$[\d,]+)/.exec(fact.text)
       return rate?{owner:rate[1],amount:rate[2]}:null
     }
     const named=input.facts.filter(f=>{const pair=ownerFigure(f);return pair&&input.question.toLowerCase().includes(pair.owner.toLowerCase())&&(!pair.party||input.question.toLowerCase().includes(pair.party.toLowerCase()))})

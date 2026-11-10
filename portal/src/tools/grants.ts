@@ -10,7 +10,7 @@ const financialYear = (year: unknown) => year ? `${year}-${String(Number(year) +
 type GrantJurisdiction = 'federal' | 'qld'
 interface GrantRecipient { id: string; sh: number; n: string; k: string }
 interface GrantIndex { meta: { years: string[]; generated?: string }; recipients: GrantRecipient[] }
-interface RecipientSummary { id: string; n: string; k: string; t: number; c: number; by: Record<string, [number, number]> }
+interface RecipientSummary { id: string; n: string; k: string; t: number; c: number; by: Record<string, [number, number]>; grants?: { id: string; v: number; n?: string; pr?: string; ag?: string; fy?: string }[] }
 const fyLabel = (year: number) => `${year}-${String(year + 1).slice(-2)}`
 const fyStart = (label: unknown) => {
   if (typeof label !== 'string' || !/^\d{4}-\d{2}$/.test(label)) return undefined
@@ -23,7 +23,7 @@ const fileKey = (id: string) => {
   return kind + '-' + (id.slice(colon < 0 ? 0 : colon + 1).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'x')
 }
 /** The complete recipient summaries include awards omitted from the largest-grant listing. */
-async function recipientTotal(env: ToolEnv, args: ToolArgs): Promise<StructuredToolResult> {
+export async function recipientTotal(env: ToolEnv, args: ToolArgs): Promise<StructuredToolResult> {
   const jurisdiction = (args.jurisdiction ?? 'federal') as GrantJurisdiction
   const index = await readToolAsset(env, `/graph/grants.${jurisdiction}.json`) as GrantIndex | null
   if (!index?.meta?.years?.length || !Array.isArray(index.recipients)) throw new Error('Grant recipient index unavailable.')
@@ -75,10 +75,14 @@ async function recipientTotal(env: ToolEnv, args: ToolArgs): Promise<StructuredT
   const notes = [jurisdiction === 'qld' ? 'Queensland values are annual expenditure lines for grants, service agreements and other assistance; counts are expenditure rows, not distinct awards.' : 'Federal values are published grant award values, not payments received; varied awards use their current published value.',
     'The total uses the complete published recipient summary, including records omitted from its largest-grant list.']
   if (!bounded && detail.c > Object.values(detail.by).reduce((sum, cell) => sum + Number(cell[1]), 0)) notes.push('The all-years total also includes records with no financial year recorded.')
+  const notable = (detail.grants ?? []).filter(g => Number.isFinite(g.v) && (g.n || g.pr) && (!bounded || g.fy && Number(g.fy.slice(0, 4)) >= first && Number(g.fy.slice(0, 4)) <= last))
+    .sort((a, b) => b.v - a.v).slice(0, Math.min(3, Number(args.limit) || 3))
   return { rows: [{ recipient: detail.n, recipient_id: detail.id, jurisdiction, total_aud: total, records: count, record_count: count, count_unit: jurisdiction === 'qld' ? 'expenditure lines' : 'grant awards', period, from_financial_year: fyLabel(periodFrom), to_financial_year: fyLabel(periodTo), by_year: Object.fromEntries(Object.entries(detail.by).filter(([year]) => Number(year.slice(0, 4)) >= periodFrom && Number(year.slice(0, 4)) <= periodTo)), complete: true }],
     recipient: detail.n, jurisdiction, total_aud: total, records: count, period,
     coverage: { since: `${periodFrom}-07-01`, until: `${periodTo + 1}-06-30`, as_of: asOf, note: 'Complete published recipient summary, grouped by financial year.' },
-    citations: [{ kind: 'record', value: total, url, text: `${detail.n} received ${aud(total)} in published ${basis}, ${period} (${count.toLocaleString('en-AU')} ${recordKind}; ${periodFrom}-07-01 to ${periodTo + 1}-06-30).` }], notes }
+    notable_grants: notable,
+    citations: [{ kind: 'record', value: total, url, text: `${detail.n} received ${aud(total)} in published ${basis}, ${period} (${count.toLocaleString('en-AU')} ${recordKind}; ${periodFrom}-07-01 to ${periodTo + 1}-06-30).` },
+      ...notable.map(g => ({ kind: 'record' as const, value: g.v, url, text: `${detail.n} was awarded ${aud(g.v)} for ${g.n || g.pr}${g.ag ? ' from ' + g.ag : ''}${g.fy ? ' in financial year ' + g.fy : ''} (${jurisdiction === 'qld' ? 'Queensland Government expenditure line' : 'federal grant award'}).` }))], notes }
 }
 /** Federal electorates (current and abolished) in one state, as the grants table records them. */
 async function stateSeats(env: ToolEnv, state: string): Promise<string[]> {

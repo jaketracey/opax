@@ -129,9 +129,9 @@ export const tool: ToolDefinition = {
       const d = links.get(row)
       if (d) params.set('focus', d.id)
       const who = row.donor ? `${row.donor}: ${aud(row.total_aud)} in federal disclosed receipts to ${row.party ?? 'all recipient parties'}`
-        : `${row.party ?? 'Federal parties'} received ${aud(row.total_aud)} in federal disclosed receipts`
+        : `${row.party ?? 'Federal parties'}: ${aud(row.total_aud)} in federal disclosed receipts`
       const dates = `(${row.year ?? from}-07-01 to ${(row.year ?? to) + 1}-06-30)`
-      const text = `${who} across ${row.receipts.toLocaleString('en-AU')} receipts in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}.`
+      const text = `${who} across ${row.receipts.toLocaleString('en-AU')} receipt${row.receipts === 1 ? '' : 's'} in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}.`
       return { kind: 'export' as const, text, value: row.total_aud, url: siteUrl(env, '/money?' + params) }
     })
     return { rows: picked, citations, notes, period, group_by: group, ...(party ? { party: party.label } : {}), ...(donor ? { donor: donorDisclosure(donor).name } : {}),

@@ -15,6 +15,15 @@ interface RegisterIndex { _by_name?: Record<string, string>; people?: Record<str
 const categoryLabel = (category: string) => category === 'travel' ? 'sponsored travel or hospitality' : category.replaceAll('_', ' ')
 const itemText = (item: RegisterItem) => `${item.description}${HOLDER[String(item.holder)] ?? ''}${item.kind === 'deletion' ? ' (removed' : item.kind === 'addition' ? ' (added' : ''}${['addition', 'deletion'].includes(item.kind ?? '') ? `${item.date ? ` ${item.date}` : ''})` : ''}`
 
+/** Prefer an expanded copy of the same declaration; retain different holders and alterations. */
+export function mergeRegisterItems(items: RegisterItem[]): RegisterItem[] {
+  const same = (a: RegisterItem, b: RegisterItem) => (a.holder ?? 'unspecified') === (b.holder ?? 'unspecified') &&
+    (a.kind ?? 'statement') === (b.kind ?? 'statement') && a.date === b.date && a.page === b.page
+  const contains = (a: string, b: string) => a === b || a.startsWith(b + ',') || a.startsWith(b + ';')
+  return items.filter((item, i) => !items.some((other, j) => i !== j && same(item, other) &&
+    contains(fold(other.description), fold(item.description)) && (fold(other.description).length > fold(item.description).length || j < i)))
+}
+
 /** The register has its own member directory, including members absent from the speech roster. */
 async function memberRegister(env: ToolEnv, args: Record<string, unknown>) {
   const index = await readToolAsset(env, '/interests/index.json') as RegisterIndex | null
@@ -32,7 +41,7 @@ async function memberRegister(env: ToolEnv, args: Record<string, unknown>) {
   const href = register.source_url && /^https:\/\//.test(register.source_url) ? register.source_url : siteUrl(env, personUrl(register.name))
   const categories = Object.entries(register.buckets).filter(([category]) => !args.category || args.category === category)
   const summaries = categories.map(([category, bucket]) => ({ category, declared_entries: bucket.count, published_items: bucket.items.length,
-    items: bucket.items.filter(item => !query || fold(item.description).includes(query)) }))
+    items: mergeRegisterItems(bucket.items).filter(item => !query || fold(item.description).includes(query)) }))
   const all = summaries.flatMap(s => s.items.map(item => ({ name: register.name, category: s.category, holder: item.holder ?? 'unspecified',
     description: item.description, kind: item.kind ?? 'statement', declaration_date: item.date ?? null,
     date: item.date ?? register.as_at ?? null, register_date: register.as_at ?? null, statement_date: register.statement_date ?? null,
@@ -42,7 +51,11 @@ async function memberRegister(env: ToolEnv, args: Record<string, unknown>) {
   const citations: ToolCitation[] = summaries.filter(s => s.items.length || !query).map(s => {
     const shown = rows.filter(r => r.category === s.category)
     const count = query ? `${s.items.length} published matching` : String(s.declared_entries)
-    return { kind: 'record', url: href, text: `${register.name}'s ${register.jurisdiction === 'qld' ? 'Queensland' : 'federal'} register of interests${register.as_at ? ` as at ${register.as_at}` : ''} records ${count} ${categoryLabel(s.category)} entries${shown.length ? `: ${shown.map(r => itemText({ description: r.description, holder: r.holder, kind: r.kind, date: r.declaration_date ?? undefined })).join('; ')}` : ''}${shown.length < (query ? s.items.length : s.declared_entries) ? ` (showing ${shown.length} published items)` : ''}.` }
+    const merged = s.items.length < s.published_items && !query
+    const listing = shown.map(r => itemText({ description: r.description, holder: r.holder, kind: r.kind, date: r.declaration_date ?? undefined })).join('; ')
+    return { kind: 'record', url: href, text: merged && shown.length
+      ? `${register.name} declared ${categoryLabel(s.category)}: ${listing} (${register.jurisdiction === 'qld' ? 'Queensland' : 'federal'} register of interests${register.as_at ? ` as at ${register.as_at}` : ''}${shown.length < s.items.length ? `; showing ${shown.length} of ${s.items.length} published items after combining overlapping descriptions` : ''}).`
+      : `${register.name}'s ${register.jurisdiction === 'qld' ? 'Queensland' : 'federal'} register of interests${register.as_at ? ` as at ${register.as_at}` : ''} records ${count} ${categoryLabel(s.category)} entries${shown.length ? `: ${listing}` : ''}${shown.length < (query ? s.items.length : s.declared_entries) ? ` (showing ${shown.length} published items)` : ''}.` }
   })
   const notes = ['Register entries include statements, additions and removals; an entry is not necessarily a current holding or evidence of a conflict of interest.']
   if (summaries.some(s => s.published_items < s.declared_entries)) notes.push('The public export contains a preview of each category. Declared entry counts come from the register; only the published items are listed here.')
