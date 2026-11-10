@@ -3,6 +3,7 @@ import { researchPhaseWallMs } from './research-time'
 export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
 import { createAnswerWriter } from './research-writer'
 import { electoratePlan } from './tools/electorates'
+import { divisionModelRows } from './tools/division'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
 import { extractAskConstraints, constrainStep, guardToolPeriod } from './ask-constraints'
 import { calculatedLookup } from './research-calculated'
@@ -110,7 +111,7 @@ export function createResearch(options: ResearchOptions): Research {
     const output = (result: ToolResult) => {
       const index = results.lastIndexOf(result)
       const offset = results.slice(0, Math.max(0, index)).reduce((n, r) => n + factSheet([r]).facts.length, 0)
-      const data = result.data?.calculated_answer ? { calculated_answer: true, coverage: result.coverage } : getAskTool(result.tool) && result.data && !result.data.coverage_only ? { rows: result.data.rows, ...(result.data.total != null ? { total: result.data.total } : {}) } : result.data
+      const data = result.data?.calculated_answer ? { calculated_answer: true, coverage: result.coverage } : getAskTool(result.tool) && result.data && !result.data.coverage_only ? { rows: result.tool === 'division' ? divisionModelRows(result.data.rows) : result.data.rows, ...(result.data.total != null ? { total: result.data.total } : {}) } : result.data
       const { cite: _cite, query: _query, ...shown } = result
       const value = { ...shown, ...(data ? { data } : {}), facts: index < 0 ? [] : factSheet([result]).facts.map(f => ({ id: f.id + offset, text: f.text })) }
       if (bytes(value) > RESEARCH_RESULT_BYTES) fail('result_size')

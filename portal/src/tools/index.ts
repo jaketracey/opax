@@ -6,6 +6,7 @@ import { tool as memberExpenses } from './member-expenses'
 import { tool as contracts } from './contracts'
 import { tool as grants } from './grants'
 import { tool as declaredInterests } from './interests'
+import { tool as division } from './division'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec } from '../agentic-tools'
 export * from './types'
@@ -14,7 +15,7 @@ export * from './identifiers'
 
 export const TOOL_REGISTRY_VERSION = 'structured-tools-4'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')

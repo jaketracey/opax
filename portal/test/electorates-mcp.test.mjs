@@ -60,6 +60,7 @@ test('MCP lists every registry schema with examples beside the existing tools', 
   assert.deepEqual(schema, expected.inputSchema);
   assert.equal(entry.annotations.readOnlyHint, true);
   assert.equal(f.state.reads, 0);
+  assert.ok(tools.some(t => t.name === 'division'));
   assert.deepEqual(TOOL_SPECS.find(t => t.name === 'electorates').input, getTool('electorates_rank').inputSchema);
   assert.ok(plannerPrompt().user.includes(getTool('electorates_rank').description));
 });
