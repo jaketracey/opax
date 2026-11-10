@@ -231,3 +231,9 @@ test('cold launches dismiss only named system ANR dialogs', () => {
     assert.ok(anr.test(title), title);
   assert.ok(!anr.test("OPAX isn't responding"));
 });
+
+test('bottom tab taps are confirmed by the selected tab', () => {
+  const body = fs.readFileSync(path.join(out, '02-search.yaml'), 'utf8');
+  assert.match(body, /notVisible:\n\s+id: tab-search\n\s+selected: true/);
+  assert.match(body, /extendedWaitUntil:\n\s+visible:\n\s+id: tab-search\n\s+selected: true/);
+});

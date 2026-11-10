@@ -290,7 +290,31 @@ function command(v, relative) {
           ],
         },
       };
-    if (out.tapOn?.id?.startsWith('tab-')) out.tapOn.retryTapIfNoChange = true;
+    if (out.tapOn?.id?.startsWith('tab-')) {
+      out.tapOn.retryTapIfNoChange = true;
+      // A tab tap during a busy warm-up can be dropped while other UI still
+      // changes. Confirm the bottom tab is selected, re-tapping once.
+      if (/^tab-[a-z-]+$/.test(out.tapOn.id)) {
+        const tab = { id: out.tapOn.id, selected: true };
+        return {
+          runFlow: {
+            commands: [
+              out,
+              {
+                runFlow: {
+                  when: { notVisible: { ...tab } },
+                  commands: [
+                    { waitForAnimationToEnd: { timeout: 5000 } },
+                    { tapOn: { id: out.tapOn.id } },
+                  ],
+                },
+              },
+              { extendedWaitUntil: { visible: { ...tab }, timeout: 30000 } },
+            ],
+          },
+        };
+      }
+    }
   }
   if (
     out.assertVisible === 'Cancel' &&
