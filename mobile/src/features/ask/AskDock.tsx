@@ -3,6 +3,7 @@ import { useState, useSyncExternalStore, type Ref } from 'react';
 import {
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   TextInput,
   View,
@@ -24,7 +25,7 @@ import {
   rhythm,
   textStyles,
 } from '../../design/tokens';
-import { chips, defaultOptions } from './model';
+import { chips, clearChip, defaultOptions } from './model';
 import { askSession } from './session';
 import { topics } from './topics';
 
@@ -179,7 +180,62 @@ export function AskDock({
       style={styles.body}
       onLayout={(e) => setBodyHeight(e.nativeEvent.layout.height)}
     >
-      {line ? (
+      {Platform.OS === 'android' && line ? (
+        <View style={styles.androidOptions}>
+          {s.fresh ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${composerCopy.fresh}, ${composerCopy.clear}`}
+              onPress={() => askSession.clearFresh()}
+              style={styles.chip}
+              testID="ask-draft-new-conversation"
+            >
+              <Text variant="footnote" tone="inkSoft">
+                {composerCopy.fresh}
+              </Text>
+              <Icon
+                name={symbols.close}
+                size={18}
+                tone="inkSoft"
+                maxScale={1}
+              />
+            </Pressable>
+          ) : null}
+          {tags.length ? (
+            <ScrollView
+              horizontal
+              keyboardShouldPersistTaps="handled"
+              showsHorizontalScrollIndicator={false}
+            >
+              <View style={styles.chips}>
+                {tags.map((tag) => (
+                  <Pressable
+                    key={tag.id}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Remove ${tag.key}, ${tag.value}`}
+                    disabled={s.busy && !s.fresh}
+                    accessibilityState={{ disabled: s.busy && !s.fresh }}
+                    onPress={() =>
+                      askSession.options(clearChip(options, tag.id))
+                    }
+                    android_ripple={{ color: colors.dividerSubtle }}
+                    style={styles.chip}
+                    testID={`ask-option-remove-${tag.id}`}
+                  >
+                    <Text variant="footnote">{tag.value}</Text>
+                    <Icon
+                      name={symbols.close}
+                      size={18}
+                      tone="inkSoft"
+                      maxScale={1}
+                    />
+                  </Pressable>
+                ))}
+              </View>
+            </ScrollView>
+          ) : null}
+        </View>
+      ) : line ? (
         <View style={styles.optionsLine}>
           <Pressable
             accessibilityRole="button"
@@ -251,7 +307,23 @@ export function AskDock({
             if (!s.busy && !empty && !offline) onSend();
           }}
           allowFontScaling
-          style={[styles.input, { maxHeight }]}
+          style={[
+            styles.input,
+            { maxHeight },
+            Platform.OS === 'android'
+              ? {
+                  minHeight: Math.max(
+                    48,
+                    textStyles.body.lineHeight * fontScale + 22,
+                  ),
+                  maxHeight: Math.max(
+                    maxHeight,
+                    textStyles.body.lineHeight * fontScale + 22,
+                  ),
+                  textAlignVertical: 'top',
+                }
+              : null,
+          ]}
           onLayout={(e) => setFieldHeight(e.nativeEvent.layout.height)}
           testID="ask-question"
         />
@@ -276,7 +348,14 @@ export function AskDock({
           {content}
         </GlassView>
       ) : (
-        <View style={styles.fallback}>{content}</View>
+        <View
+          style={[
+            styles.fallback,
+            Platform.OS === 'android' ? styles.androidSurface : null,
+          ]}
+        >
+          {content}
+        </View>
       )}
     </View>
   );
@@ -298,6 +377,21 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     borderWidth: hairline,
     borderColor: colors.dividerSubtle,
+  },
+  androidSurface: { elevation: 2, shadowColor: colors.navy },
+  androidOptions: { gap: rhythm.tight, paddingHorizontal: rhythm.tight },
+  chips: { flexDirection: 'row', gap: rhythm.tight },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: 48,
+    paddingHorizontal: rhythm.tight,
+    paddingVertical: rhythm.line,
+    borderRadius: 8,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+    backgroundColor: colors.sunken,
   },
   optionsLine: {
     flexDirection: 'row',
