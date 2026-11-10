@@ -352,28 +352,35 @@ test('Money record source returns below the bar before its tap and waits for the
   });
 });
 
-test('Money map and List restore the off-screen summary after record returns', () => {
+test('Money map and List return to the summary after record visits', () => {
   const steps = maestroSteps('.maestro/23-money-map.yaml');
   const returns = steps.flatMap((step: any, index: number) =>
     step.extendedWaitUntil?.visible?.id === 'money-view-summary' &&
-    !step.extendedWaitUntil.visible.text
+    steps[index - 1]?.extendedWaitUntil?.visible?.id === 'money-screen'
       ? [index]
       : [],
   );
-  expect(returns).toHaveLength(2);
-  for (const at of returns) {
-    expect(steps[at - 3]).toEqual({ tapOn: { id: 'BackButton' } });
-    expect(steps[at - 2].extendedWaitUntil.visible).toEqual({
-      id: 'money-screen',
-    });
-  }
-  expect(steps[returns[0] - 1]).toEqual({
-    runFlow: {
-      file: 'support/money-screen-scroll-up.yaml',
-      env: { TARGET_ID: 'money-view-summary' },
-    },
+  expect(returns).toHaveLength(1);
+  // The Map view: the stage fills the screen, so the summary is in view at
+  // once, with the filters the record visit must not have lost.
+  const [map] = returns;
+  expect(steps[map! - 2]).toEqual({ tapOn: { id: 'BackButton' } });
+  expect(steps[map!].extendedWaitUntil.visible).toEqual({
+    id: 'money-view-summary',
+    text: 'Donations to parties in 2024–25, union donors only',
   });
-  expect(steps[returns[1] - 1].scrollUntilVisible).toMatchObject({
+  // The List view: scrolled, so the summary is pulled back into view.
+  const list = steps.findIndex(
+    (step: any) =>
+      step.scrollUntilVisible?.element?.id === 'money-view-summary' &&
+      step.scrollUntilVisible.direction === 'UP',
+  );
+  expect(list).toBeGreaterThan(map!);
+  expect(steps[list - 1].extendedWaitUntil.visible).toEqual({
+    id: 'money-screen',
+  });
+  expect(steps[list - 2]).toEqual({ tapOn: { id: 'BackButton' } });
+  expect(steps[list].scrollUntilVisible).toMatchObject({
     element: { id: 'money-view-summary' },
     direction: 'UP',
     centerElement: true,

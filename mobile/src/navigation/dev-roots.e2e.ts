@@ -4,6 +4,5 @@
  */
 export const devRoots: readonly string[] = [
   'workbench',
-  'money-map-spike',
   'voice-bridge-test',
 ];

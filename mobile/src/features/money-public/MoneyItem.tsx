@@ -677,13 +677,14 @@ export default function MoneyItem() {
   );
   const status = useCatalogRecord(load);
   const item = status.record?.data;
-  const name = item?.name ?? raw.name ?? 'Money record';
+  const name = item?.name ?? raw.name ?? '';
   const titleRef = useRef<View>(null);
   const scrollTitle = useTitleOnScroll(titleRef, name);
   const saved = recordSource(status.record);
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
           title: name,
           ...backOptions,

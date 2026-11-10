@@ -1,13 +1,13 @@
 import { Stack } from 'expo-router';
-import { screen, sheetOptions } from './screen';
+import { screen, sheetOptions, untitled } from './screen';
 
 export function peopleScreens() {
   return [
-    screen('person/[slug]', 'Parliamentarian'),
+    screen('person/[slug]', '', untitled),
     screen('person/[slug]/votes', 'Voting record'),
     screen('person/[slug]/speeches', 'Speeches'),
     screen('person/[slug]/interests', 'Declared interests'),
-    screen('party/[slug]', 'Party'),
+    screen('party/[slug]', '', untitled),
     screen('party-sources', 'Largest sources by year'),
     screen('declarations', 'Just declared'),
     screen('expense-glossary', 'Expense categories', sheetOptions),

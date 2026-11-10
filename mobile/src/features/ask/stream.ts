@@ -4,13 +4,41 @@ export type AskStage =
   | 'Searching the record'
   | 'Writing the answer'
   | 'Searching again';
+export type AskStep = {
+  id: string;
+  label: string;
+  arg?: string;
+  state: 'running' | 'done' | 'failed' | 'error';
+};
 export type StreamHandlers = {
   stage: (stage: AskStage) => void;
+  step?: (step: AskStep) => void;
   delta: (text: string) => void;
   retry: () => void;
   /** How many records were found: a count, never their titles. */
   reading?: (count: number) => void;
 };
+
+function parseStep(value: unknown): AskStep | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const { id, label, arg, state } = value as Record<string, unknown>;
+  if (
+    typeof id !== 'string' ||
+    !id.trim() ||
+    typeof label !== 'string' ||
+    !label.trim() ||
+    (arg !== undefined && (typeof arg !== 'string' || arg.length > 40)) ||
+    typeof state !== 'string' ||
+    !['running', 'done', 'failed', 'error'].includes(state)
+  )
+    return null;
+  return {
+    id,
+    label,
+    ...(arg ? { arg } : {}),
+    state: state as AskStep['state'],
+  };
+}
 export class AskFailure extends Error {
   constructor(
     public code:
@@ -61,7 +89,7 @@ export class AskStream {
     } catch {
       return;
     }
-    if (!v || typeof v !== 'object') return;
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return;
     if (event === 'done') {
       this.final = v;
       this.completed = true;
@@ -76,8 +104,15 @@ export class AskStream {
       this.on.retry();
       this.on.stage('Searching again');
     } else if (event === 'status') {
-      if (v.phase === 'searching') this.on.stage('Searching the record');
-      else if (['retrieved', 'writing', 'reading'].includes(String(v.phase)))
+      if (v.phase === 'step') {
+        const step = parseStep(v.step);
+        if (step) this.on.step?.(step);
+      } else if (v.phase === 'searching') this.on.stage('Searching the record');
+      else if (
+        v.phase === 'retrieved' ||
+        v.phase === 'writing' ||
+        v.phase === 'reading'
+      )
         this.on.stage('Writing the answer');
       if (v.phase === 'retrieved' && Array.isArray(v.sources))
         this.on.reading?.(v.sources.length);

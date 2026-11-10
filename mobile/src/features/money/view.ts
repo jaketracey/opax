@@ -9,6 +9,8 @@ export interface MoneyFilters {
   grants: boolean;
   contracts: boolean;
   inflation: boolean;
+  /** The smallest flow drawn and listed, in dollars; 0 for every flow. */
+  min: number;
 }
 export function yearExtent(graph: MoneyGraph) {
   const years = graph.edges
@@ -27,6 +29,7 @@ export function defaultMoneyFilters(graph: MoneyGraph): MoneyFilters {
     grants: true,
     contracts: true,
     inflation: false,
+    min: 0,
   };
 }
 /** Port of portal/graph/index.ts windowFigures: undated disclosures stay in every window. */
@@ -102,6 +105,7 @@ export function moneyView(raw: MoneyGraph, f: MoneyFilters): MoneyGraph {
   ).filter((e) => {
     const type = moneyFlowType(e, byId);
     if (!type || !f[type]) return false;
+    if (f.min > 0 && e.total < f.min) return false;
     return (
       !f.industry ||
       [byId.get(e.source)!, byId.get(e.target)!].some(

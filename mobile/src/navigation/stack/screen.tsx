@@ -36,24 +36,47 @@ const rootTitles: Record<string, string> = {
   agencies: 'Government agencies',
   connections: 'Programs and places',
   'money-record': 'Money record',
-  'money-item': 'Money record',
   'explore/index': 'Quizzes and tools',
   'division-history': 'Votes in parliament',
 };
+const loadedTitleRoutes = new Set([
+  'electorate/[id]',
+  'bill/[key]',
+  'person/[slug]',
+  'party/[slug]',
+  'lead/[id]',
+  'topic/[slug]',
+  'doc/[slug]',
+  'bill-text/[key]',
+  'sources/dataset/[id]',
+  '[id]',
+  'grant-program',
+  'agency',
+  'money-item',
+  'money-record',
+  'connection',
+]);
+const doneItems = headerItems(() => [closeSheetItem()]);
 /**
  * The back label for a screen pushed straight onto a tab root. UIKit reads
  * the root's title off its navigation item, which a link opened just after
  * launch can reach before the root has set it: the back button was then a
  * bare chevron (wave 4 money-07, 16, 18, records-01). Root titles never
  * change, so they are named outright; UIKit still shortens a label that
- * has no room. Deeper screens keep UIKit's own reading of the previous
- * title, which may be a loaded subject's name.
+ * has no room. A detail supplies its known name, or Back while unnamed,
+ * so an empty loading title never produces a bare chevron.
  */
 export function rootBackTitle(
   navigation:
     | {
         getState?: () =>
-          | { routes?: readonly { key?: string; name?: string }[] }
+          | {
+              routes?: readonly {
+                key?: string;
+                name?: string;
+                params?: { name?: unknown };
+              }[];
+            }
           | undefined;
       }
     | undefined,
@@ -64,7 +87,39 @@ export function rootBackTitle(
   const at = routes.findIndex((route) => route.key === key);
   const previous = at > 0 ? routes[at - 1] : undefined;
   if (at === 1 && stackRootTitle) return stackRootTitle;
+  if (previous?.name && loadedTitleRoutes.has(previous.name)) {
+    const name = previous.params?.name;
+    return typeof name === 'string' && name.trim()
+      ? name
+      : (rootTitles[previous.name] ?? 'Back');
+  }
   return previous?.name ? rootTitles[previous.name] : undefined;
+}
+
+/** Match a detail's short back pill before its component can install options. */
+export function detailBackOptions(
+  navigation: Parameters<typeof rootBackTitle>[0],
+  key: string | undefined,
+  name: string,
+): NativeStackNavigationOptions {
+  if (Platform.OS !== 'ios') return {};
+  const routes = navigation?.getState?.()?.routes ?? [];
+  const at = routes.findIndex((route) => route.key === key);
+  const previous = at > 0 ? routes[at - 1]?.name : undefined;
+  const short =
+    name === 'grant-program' && previous === 'grants'
+      ? 'Grants'
+      : (name === 'grant-program' || name === 'money-item') &&
+          previous === 'explore/index'
+        ? 'Tools'
+        : undefined;
+  return short
+    ? {
+        headerBackTitle: short,
+        headerBackButtonDisplayMode: 'default',
+        headerBackButtonMenuEnabled: false,
+      }
+    : {};
 }
 
 /** A modal's root has its own name, independent of the presenting tab. */
@@ -109,8 +164,9 @@ export function screen(
               ),
             }
           : {}),
+        ...detailBackOptions(navigation, route.key, name),
         ...(doneWhenRoot && navigation?.getState().index === 0
-          ? headerItems(() => [closeSheetItem()])
+          ? doneItems
           : {}),
         ...options,
         ...(Platform.OS === 'android' ? { headerTitleAlign: 'left' } : {}),

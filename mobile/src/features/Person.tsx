@@ -271,9 +271,10 @@ export function ProfileScreen({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             // The back button on the next page names this one.
-            ...(name ? { title: name } : {}),
+            title: name ?? '',
             ...headerItems(
               identity
                 ? pageItems({

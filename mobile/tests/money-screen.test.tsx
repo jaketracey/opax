@@ -8,7 +8,7 @@ import MoneyScreen, {
   moneySummary,
 } from '../src/features/money/MoneyScreen';
 import MoneyDonors from '../src/features/money/MoneyDonors';
-import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
+import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { defaultMoneyFilters } from '../src/features/money/view';
 import { filterStore } from '../src/features/sheets/filter-model';
@@ -24,20 +24,17 @@ import {
 import { pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
-jest.mock('../src/features/money/NativeMoneyMap', () => ({
-  ...jest.requireActual('../src/features/money/NativeMoneyMap'),
-  NativeMoneyMap: jest.fn(() => null),
+jest.mock('../src/features/money/map/MoneyMap', () => ({
+  MoneyMap: jest.fn(() => null),
 }));
 let mockReader: boolean | null = true;
 jest.mock('../src/features/money/hooks', () => ({
   ...jest.requireActual('../src/features/money/hooks'),
   useFirstScreenReader: () => mockReader,
 }));
-jest.mock('react-native-gesture-handler', () => ({
-  GestureHandlerRootView: jest.requireActual('react-native').View,
-  GestureDetector: jest.requireActual('react-native').View,
-  Gesture: {},
-}));
+jest.mock('react-native-gesture-handler', () =>
+  jest.requireActual('./gesture-mock'),
+);
 const mockParams: Record<string, string> = {};
 const mockRouter = {
   push: jest.fn(),
@@ -115,12 +112,12 @@ test('VoiceOver opens on the List view; without it the map draws', async () => {
       .findByType(SegmentedPicker)
       .props.options.map((o: { label: string }) => o.label),
   ).toEqual(['List', 'Map']);
-  expect(NativeMoneyMap).not.toHaveBeenCalled();
+  expect(MoneyMap).not.toHaveBeenCalled();
   await act(async () => r.unmount());
   mockReader = false;
   r = await render();
-  expect(r.root.findByType(SegmentedPicker).props.value).toBe('3d');
-  expect(NativeMoneyMap).toHaveBeenCalled();
+  expect(r.root.findByType(SegmentedPicker).props.value).toBe('map');
+  expect(MoneyMap).toHaveBeenCalled();
   await act(async () => r.unmount());
 });
 

@@ -97,10 +97,6 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
             presentation: 'fullScreenModal',
             headerShown: true,
           }),
-          screen('money-map-spike', 'Money map spike', {
-            ...chrome,
-            headerShown: true,
-          }),
         ]),
   ].map((element) =>
     cloneElement(element, {

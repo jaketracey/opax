@@ -772,8 +772,20 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   );
   await act(async () => {
     on!.stage('Searching the record');
+    // Status copy has a minimum dwell time, even for a fast lookup.
+    await new Promise((resolve) => setTimeout(resolve, 650));
   });
   expect(textOf('ask-status')).toBe('Searching the record');
+  await act(async () => {
+    on!.step?.({
+      id: 'hearings',
+      label: 'Checking committee hearings',
+      arg: 'housing',
+      state: 'running',
+    });
+    await new Promise((resolve) => setTimeout(resolve, 650));
+  });
+  expect(textOf('ask-status')).toBe('Checking committee hearings: housing');
   // An error after text keeps the question with one plain sentence, never
   // the server's words, and Try again.
   await act(async () => {

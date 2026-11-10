@@ -1,4 +1,5 @@
-import { router } from 'expo-router';
+import type { Href } from 'expo-router';
+import { useRecordPush } from '../../navigation/record-link';
 import { webOrigin } from '../../design/environment';
 import { useSplitPane } from '../../design/primitives';
 import { fromWebPath, partyRoute } from '../../navigation/routes';
@@ -165,13 +166,14 @@ export function entryLabel(entry: RecordEntry): string {
  * routes a pane does not draw, it pushes the route as before.
  */
 export function useRecordNavigation() {
+  const push = useRecordPush();
   const pane = useSplitPane<RecordEntry>();
   return {
     inPane: pane !== null,
     open(route: Route, title?: string) {
       const entry = pane ? entryForRoute(route, title) : null;
       if (pane && entry) pane.push(entry);
-      else router.push(route as Parameters<typeof router.push>[0]);
+      else push(route as Href);
     },
   };
 }

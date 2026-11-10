@@ -1,4 +1,5 @@
-import { router, type Href } from 'expo-router';
+import { type Href } from 'expo-router';
+import { useRecordLink } from '../navigation/record-link';
 import { useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useOpenAsk } from '../features/ask/open';
@@ -117,6 +118,7 @@ export function LinkRow({
   selected,
   highlighted,
 }: LinkRowProps) {
+  const recordLink = useRecordLink(href);
   const stacked = useAccessibilitySize();
   const { fontScale } = useWindowDimensions();
   const [firstLineHeight, setFirstLineHeight] = useState<number | undefined>();
@@ -124,8 +126,7 @@ export function LinkRow({
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined && accessory !== 'checkmark';
   const [hovered, onHover] = useHover();
-  const onActivate =
-    select ?? onPress ?? (href ? () => router.push(href) : undefined);
+  const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const plainTitle = typeof title === 'string' ? title : textContent(title);
   const glyph = symbol;
   const ink = symbolInk;
@@ -453,14 +454,14 @@ export function BillRow({
   selected,
   highlighted,
 }: BillRowProps) {
+  const recordLink = useRecordLink(href);
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset();
   const split = selected !== undefined;
   const [hovered, onHover] = useHover();
-  const onActivate =
-    select ?? onPress ?? (href ? () => router.push(href) : undefined);
+  const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const formattedDate =
     date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? formatDate(date, 'short') : date;
   const dated = formattedDate

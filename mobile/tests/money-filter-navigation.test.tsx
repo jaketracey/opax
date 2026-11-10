@@ -7,32 +7,32 @@ import { Text as NativeText } from 'react-native';
 import { apiClient } from '../src/api/runtime';
 import MoneyScreen from '../src/features/money/MoneyScreen';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
-import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
 import {
   FilterRoute,
   FilterFacetRoute,
   FiltersLayout,
 } from '../src/features/sheets/FilterRoutes';
 import { FilterSheet, FilterFacet } from '../src/design/filter-sheet';
-import { MoneyRow, SegmentedPicker, Text } from '../src/design/primitives';
+import {
+  Button,
+  MoneyRow,
+  SegmentedPicker,
+  Text,
+} from '../src/design/primitives';
 import { RouteOptions } from '../src/navigation/preview';
 import { filterFacetRoute } from '../src/navigation/routes/filters';
 import { filtersScreens } from '../src/navigation/stack/filters';
 import { pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
-jest.mock('../src/features/money/NativeMoneyMap', () => ({
-  NativeMoneyMap: () => null,
+jest.mock('../src/features/money/map/MoneyMap', () => ({
+  MoneyMap: () => null,
 }));
 jest.mock('../src/features/money/hooks', () => ({
   ...jest.requireActual('../src/features/money/hooks'),
   useFirstScreenReader: () => false,
 }));
-jest.mock('react-native-gesture-handler', () => ({
-  GestureHandlerRootView: jest.requireActual('react-native').View,
-  GestureDetector: jest.requireActual('react-native').View,
-  Gesture: {},
-}));
+jest.mock('react-native-gesture-handler', () => require('./gesture-mock'));
 
 const app = {
   _layout: () => (
@@ -184,9 +184,12 @@ test.each(['push', 'native link'] as const)(
         .find((node) => node.props.testID === 'money-view-summary')!.props
         .children,
     ).toBe('Donations to parties in 2024–25, union donors only');
-    // Same onSelect callback as the native scene and the Labor journey action.
+    // The Labor journey action: the same push as the panel's Open record.
     await act(async () =>
-      map().findByType(NativeMoneyMap).props.onSelect('party:Labor'),
+      map()
+        .findAllByType(Button)
+        .find((node) => node.props.testID === 'money-test-focus')!
+        .props.onPress(),
     );
     expect(rendered.getPathname()).toBe('/money-record');
     expect(rendered.getSearchParams()).toMatchObject({

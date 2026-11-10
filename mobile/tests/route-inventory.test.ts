@@ -466,7 +466,7 @@ test.each(builders)(
   },
 );
 
-test('sheet presentations and named fallback titles come from the owning modules', () => {
+test('sheet presentations and blank detail loading titles come from the owning modules', () => {
   let view!: TestRenderer.ReactTestRenderer;
   act(() => {
     view = TestRenderer.create(
@@ -478,7 +478,7 @@ test('sheet presentations and named fallback titles come from the owning modules
       .findAllByType(Stack.Screen)
       .find((node) => node.props.name === name)!
       .props.options({ route: { params } });
-  expect(options('person/[slug]').title).toBe('Parliamentarian');
+  expect(options('person/[slug]').title).toBe('');
   expect(options('person/[slug]', { name: 'Loaded name' }).title).toBe(
     'Loaded name',
   );

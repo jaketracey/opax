@@ -140,7 +140,7 @@ export default function BillTextReader({
       : null;
   const shortTitle =
     summaryState.value?.data.identity.data?.shortTitle ?? manifest?.title ?? '';
-  const routeTitle = ready && shortTitle ? shortTitle : 'Bill text';
+  const routeTitle = ready ? shortTitle : '';
   const changes = summary?.changes.filter(Boolean) ?? [];
   const [jumpTo, setJump] = useState<{ index: number; attempt: number } | null>(
     null,
@@ -373,6 +373,7 @@ export default function BillTextReader({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             title: routeTitle,
             ...headerItems(ready ? barItems : undefined),

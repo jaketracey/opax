@@ -179,11 +179,10 @@ export function PartyPage({
     <>
       {embedded ? null : (
         <RouteOptions
+          stableItems
           options={{
             // The back button on the next page names this one.
-            ...(view || notAParty || record
-              ? { title: view?.label ?? 'Party' }
-              : {}),
+            title: view?.label ?? '',
             ...headerItems(
               view
                 ? pageItems({
@@ -201,7 +200,6 @@ export function PartyPage({
         <Screen
           column="wide"
           testID="party-screen"
-          barTitle={notAParty || record ? 'Party' : undefined}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={refresh} />
           }

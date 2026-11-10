@@ -634,18 +634,22 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     act(() => view.unmount());
     timing.mockRestore();
   });
-  test('reader and edition routes keep their title for the next back button', () => {
+  test('readers start unnamed while fixed record and edition titles stay named', () => {
     expect(untitled.headerTitle).toBe(emptyBarTitle);
     const options = (screen: React.ReactElement) =>
       (
         screen.props as {
+          name: string;
           options: (p: object) => { title: string; headerTitle?: unknown };
         }
       ).options({ route: { params: {} }, navigation: undefined });
     for (const screen of [...recordsScreens(), ...editionScreens()]) {
       const resolved = options(screen);
       expect(resolved.headerTitle).not.toBe('');
-      expect(resolved.title).not.toBe('');
+      const name = (screen.props as { name: string }).name;
+      if (name === 'doc/[slug]' || name === 'bill-text/[key]')
+        expect(resolved.title).toBe('');
+      else expect(resolved.title).not.toBe('');
     }
     const empty = tree(emptyBarTitle());
     expect(StyleSheet.flatten(empty.root.findByType(View).props.style)).toEqual(
@@ -669,10 +673,10 @@ describe('a screen pushed onto a tab root names its back button', () => {
     expect(rootBackTitle(stack('bills', 'bill/[key]'), 'k1')).toBe('Bills');
     expect(rootBackTitle(stack('your-mp', 'members'), 'k1')).toBe('Your MP');
   });
-  test("deeper screens keep UIKit's reading of the previous title", () => {
+  test('a deeper push from an unnamed detail falls back to Back', () => {
     expect(
       rootBackTitle(stack('index', 'bill/[key]', 'bill-text/[key]'), 'k2'),
-    ).toBeUndefined();
+    ).toBe('Back');
     expect(rootBackTitle(stack('index'), 'k0')).toBeUndefined();
   });
   test('the screen helper passes it as headerBackTitle on iOS', () => {

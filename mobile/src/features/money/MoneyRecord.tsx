@@ -58,7 +58,7 @@ import {
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { donorNotNamed } from '../../privacy/donorEntity';
+import { donorNotNamed, isOrganisationDonor } from '../../privacy/donorEntity';
 import { leadsAbout } from '../leads/model';
 import type {
   MoneyFigures,
@@ -124,8 +124,8 @@ const byYearBars = (figures: MoneyFigures) =>
  * One organisation's money (specs/money.md 2.14, journeys/money.md 4.10):
  * a donor, a party or the public money on the map by `node`; a grant
  * recipient by `rid` and `jur`; a government supplier by `rid` (with the
- * `agency` it holds contracts with). The original registers come first,
- * then one section per register, each dated and sourced, never summed.
+ * `agency` it holds contracts with). One section per register, each dated
+ * and sourced, never summed. Original registers follow the data sections.
  */
 export default function MoneyRecordScreen() {
   const params = useLocalSearchParams<MoneyParams>();
@@ -693,14 +693,6 @@ function NodeBody({
             {note}
           </Text>
         ) : null}
-        <Originals
-          rows={[
-            {
-              label: `AEC Transparency Register · returns for ${node.label}`,
-              url: graph.meta.source_url ?? AEC_REGISTER,
-            },
-          ]}
-        />
         <RegisterSection
           title="Donations to parties"
           testID="money-record-donations"
@@ -731,6 +723,14 @@ function NodeBody({
             </View>
           ) : null}
         </RegisterSection>
+        <Originals
+          rows={[
+            {
+              label: `AEC Transparency Register · returns for ${node.label}`,
+              url: graph.meta.source_url ?? AEC_REGISTER,
+            },
+          ]}
+        />
         <More>
           {profile.native ? (
             <LinkRow
@@ -764,14 +764,6 @@ function NodeBody({
             {note}
           </Text>
         ) : null}
-        <Originals
-          rows={[
-            {
-              label: contracts ? contractsSource.label : grantsSource.label,
-              url: contracts ? contractsSource.url : grantsSource.url,
-            },
-          ]}
-        />
         <RegisterSection
           title={contracts ? 'Government contracts' : 'Grants received'}
           testID={contracts ? 'money-record-contracts' : 'money-record-grants'}
@@ -807,6 +799,14 @@ function NodeBody({
             ))}
           </View>
         </RegisterSection>
+        <Originals
+          rows={[
+            {
+              label: contracts ? contractsSource.label : grantsSource.label,
+              url: contracts ? contractsSource.url : grantsSource.url,
+            },
+          ]}
+        />
       </Page>
     );
   }
@@ -927,7 +927,6 @@ function NodeBody({
           {note}
         </Text>
       ) : null}
-      <Originals rows={originals} />
       {filters.donations ? (
         <RegisterSection
           title="Donations to parties"
@@ -963,12 +962,25 @@ function NodeBody({
       ) : null}
       {grants ? publicSection('grants', grants, full.grants) : null}
       {contracts ? publicSection('contracts', contracts, full.contracts) : null}
+      <Originals rows={originals} />
       {node.withheld ? (
         <Text wordSafe variant="footnote" testID="money-withheld-note">
           {individualsNote}
         </Text>
       ) : (
         <More>
+          {node.kind === 'donor' && isOrganisationDonor(node) ? (
+            <LinkRow
+              title="Find on Wikipedia"
+              external={{
+                url: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(node.label)}`,
+                label: `Find ${node.label} on Wikipedia`,
+              }}
+              accessibilityLabel={`Find ${node.label} on Wikipedia`}
+              accessibilityHint="Opens in the browser"
+              testID="money-record-wikipedia"
+            />
+          ) : null}
           <LeadRows name={node.label} />
           {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
         </More>
@@ -1134,14 +1146,6 @@ function RecipientBody({
           {bothRegistersCaveat}
         </Text>
       ) : null}
-      <Originals
-        rows={[
-          {
-            label: `GrantConnect · awards to ${recipient.name}`,
-            url: GRANTCONNECT,
-          },
-        ]}
-      />
       <RegisterSection
         title="Grants received"
         testID="money-record-grants"
@@ -1169,6 +1173,14 @@ function RecipientBody({
               }
             : null
         }
+      />
+      <Originals
+        rows={[
+          {
+            label: `GrantConnect · awards to ${recipient.name}`,
+            url: GRANTCONNECT,
+          },
+        ]}
       />
       <More>
         {donor ? (
@@ -1269,14 +1281,6 @@ function SupplierBody({
           {bothRegistersCaveat}
         </Text>
       ) : null}
-      <Originals
-        rows={[
-          {
-            label: `AusTender · contracts with ${supplier.name}`,
-            url: AUSTENDER,
-          },
-        ]}
-      />
       <RegisterSection
         title="Government contracts"
         testID="money-record-contracts"
@@ -1328,6 +1332,14 @@ function SupplierBody({
           </View>
         ) : null}
       </RegisterSection>
+      <Originals
+        rows={[
+          {
+            label: `AusTender · contracts with ${supplier.name}`,
+            url: AUSTENDER,
+          },
+        ]}
+      />
       <More>
         <LinkRow
           title={agency.name}

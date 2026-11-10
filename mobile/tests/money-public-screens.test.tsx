@@ -186,7 +186,7 @@ test('a lead example names its back destination and has no lead methodology in N
     </NavigationContext.Provider>
   ));
   expect(r.root.findByType(RouteOptions).props.options).toMatchObject({
-    headerBackTitle: 'Lead',
+    headerBackTitle: 'Back',
     headerBackButtonDisplayMode: 'default',
   });
   const shown = r.root
@@ -379,7 +379,7 @@ test.each([
     for (const [os, previous, backTitle] of [
       ['ios', 'index', 'Today'],
       ['ios', 'public-money', 'Public money'],
-      ['ios', 'person/[slug]', undefined],
+      ['ios', 'person/[slug]', 'Back'],
       ['android', 'index', undefined],
     ] as const) {
       let rendered: TestRenderer.ReactTestRenderer | undefined;

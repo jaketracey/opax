@@ -19,7 +19,7 @@ import { publicDiscovery } from '../src/features/money-public/discovery';
 import { isOrganisation } from '../src/features/money-public/privacy';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import MoneyScreen from '../src/features/money/MoneyScreen';
-import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
+import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import {
   decodeMoneyGraph,
   moneyCatalogs,
@@ -52,30 +52,10 @@ jest.mock('../src/api/runtime', () => ({
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
-jest.mock('../src/features/money/NativeMoneyMap', () => ({
-  NativeMoneyMap: jest.fn(() => null),
+jest.mock('../src/features/money/map/MoneyMap', () => ({
+  MoneyMap: jest.fn(() => null),
 }));
-jest.mock('react-native-gesture-handler', () => {
-  const chain = () => {
-    const value: Record<string, unknown> = {};
-    for (const name of [
-      'runOnJS',
-      'activeOffsetX',
-      'failOffsetY',
-      'onBegin',
-      'onUpdate',
-      'onEnd',
-      'onFinalize',
-    ])
-      value[name] = () => value;
-    return value;
-  };
-  return {
-    GestureHandlerRootView: jest.requireActual('react-native').View,
-    GestureDetector: jest.requireActual('react-native').View,
-    Gesture: { Pan: chain, Tap: chain, Race: chain },
-  };
-});
+jest.mock('react-native-gesture-handler', () => require('./gesture-mock'));
 const mockParams: Record<string, string> = {};
 const mockRouter = { push: jest.fn(), replace: jest.fn() };
 jest.mock('expo-router', () => {
@@ -280,9 +260,9 @@ describe.each(Object.keys(moneyCatalogs) as MoneyJurisdiction[])(
         ),
       );
       expect(leaks(texts, moneyNames)).toBe(0);
-      // The 3D map: every prop handed to the native scene.
+      // The map: every prop handed to the stage (its model names the discs).
       await act(async () => answerReader(false));
-      const scene = jest.mocked(NativeMoneyMap).mock.calls.at(-1)?.[0];
+      const scene = jest.mocked(MoneyMap).mock.calls.at(-1)?.[0];
       expect(scene).toBeDefined();
       const sceneText: string[] = [];
       const visit = (v: unknown, depth: number) => {

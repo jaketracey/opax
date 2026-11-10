@@ -168,7 +168,7 @@ export default function Program() {
     'button',
   );
   const titleRef = useRef<View>(null);
-  const name = program?.name ?? routeName ?? 'Grant program';
+  const name = program?.name ?? routeName ?? '';
   const navigation = useContext(NavigationContext);
   const route = useContext(NavigationRouteContext);
   const routes = navigation?.getState?.()?.routes ?? [];
@@ -240,13 +240,14 @@ export default function Program() {
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
           title: name,
           ...backOptions,
           ...(Platform.OS === 'ios' && backTitle
             ? { headerBackTitle: backTitle, headerBackButtonMenuEnabled: false }
             : {}),
-          headerSearchBarOptions: program ? search.options : undefined,
+          headerSearchBarOptions: search.options,
           ...moneyBar({
             name,
             path: program ? path : null,

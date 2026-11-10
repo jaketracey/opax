@@ -54,6 +54,7 @@ export function filtersFromParams(
     ),
   ].join(',');
   const layers = param(params.layers)?.split(',');
+  const min = Number(param(params.min));
   return {
     from: Math.min(from, to),
     to: Math.max(from, to),
@@ -62,6 +63,7 @@ export function filtersFromParams(
     grants: layers ? layers.includes('grants') : true,
     contracts: layers ? layers.includes('contracts') : true,
     inflation: param(params.inflation) === '1',
+    min: Number.isFinite(min) && min > 0 ? Math.floor(min) : 0,
   };
 }
 /** The filters as route params, so a pushed page and a shared link rebuild them. */
@@ -74,6 +76,7 @@ export function moneyWindowParams(filters: MoneyFilters) {
       .filter((k) => filters[k])
       .join(','),
     inflation: filters.inflation ? '1' : '0',
+    min: filters.min > 0 ? String(filters.min) : '',
   };
 }
 /**

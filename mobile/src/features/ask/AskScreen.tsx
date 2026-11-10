@@ -56,6 +56,7 @@ import { AskRevealContext, announceAnswer } from './AnswerView';
 import { AskDock } from './AskDock';
 import { AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
+import { useAskStageAnnouncement } from './AskStatus';
 import { askGround } from './ground';
 import type { Followup } from './model';
 import { openAskOptions, topics } from './Options';
@@ -119,7 +120,6 @@ export default function AskScreen() {
   const root = useRef<View>(null);
   const turnY = useRef(0);
   const pin = useRef(false);
-  const lastStage = useRef<string | null>(null);
   const lastAnswer = useRef<object | null>(null);
   const loadingNames = useRef(false);
   useFocusRequest('ask', input);
@@ -159,11 +159,7 @@ export default function AskScreen() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.entry]);
-  // Each stage is announced once, politely; the line is not a live region.
-  useEffect(() => {
-    if (s.stage && s.stage !== lastStage.current) announce(s.stage);
-    lastStage.current = s.stage;
-  }, [s.stage]);
+  const statusAnnouncement = useAskStageAnnouncement(s.stage);
   async function loadNames() {
     if (loadingNames.current || names.length) return;
     loadingNames.current = true;
@@ -337,6 +333,7 @@ export default function AskScreen() {
         ) : (
           <AskThread
             s={s}
+            statusAnnouncement={statusAnnouncement}
             chat={chat}
             profiles={profiles}
             names={names}
