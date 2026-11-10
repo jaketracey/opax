@@ -37,9 +37,11 @@ import {
   ZOOM_STEP,
   cameraAt,
   clampCamera,
+  discInView,
   fitCamera,
   focusScale,
   placeCamera,
+  publicEdgeOpacity,
   smallNodeOpacity,
   thinEdgeOpacity,
   translationRange,
@@ -106,6 +108,10 @@ const TICKS_PER_FRAME = 10;
 /** A tap allowance around a disc's rim, in points. */
 const TAP_SLACK = 14;
 const FLY_MS = motion.duration.launchLatest;
+/** How long after a fly the chrome's new insets may still re-aim it. */
+const FLY_SETTLE_MS = 1500;
+/** How far inside the chrome a focused disc must sit to count as in view. */
+const VIEW_MARGIN = 6;
 const DIM = 0.2;
 const fill = {
   position: 'absolute',
@@ -192,6 +198,7 @@ export function MoneyMap({
     const record = (paint: Parameters<typeof recordPicture>[1]) =>
       recordPicture(bounds, paint);
     return {
+      publicEdges: record((p) => paintEdges(p, model, at, 'public')),
       thinEdges: record((p) => paintEdges(p, model, at, 'thin')),
       thickEdges: record((p) => paintEdges(p, model, at, 'thick')),
       smallNodes: record((p) =>
@@ -245,6 +252,7 @@ export function MoneyMap({
   });
   const boundsSV = useSharedValue<Bounds>(bounds);
   const placed = useRef(false);
+  const pendingFly = useRef<{ id: string; at: number } | null>(null);
   const viewport: Viewport = useMemo(
     () => ({ width: size.width, height: size.height, insets }),
     [size.width, size.height, insets],
@@ -268,9 +276,10 @@ export function MoneyMap({
       viewport,
     );
     placed.current = next.placed;
-    tx.set(next.camera.tx);
-    ty.set(next.camera.ty);
-    k.set(next.camera.k);
+    // A set cuts a fly short: move only where the fit or the limits say to.
+    if (next.camera.tx !== tx.get()) tx.set(next.camera.tx);
+    if (next.camera.ty !== ty.get()) ty.set(next.camera.ty);
+    if (next.camera.k !== k.get()) k.set(next.camera.k);
   }, [
     bounds,
     viewport,
@@ -352,6 +361,7 @@ export function MoneyMap({
       const index = model.byId.get(id);
       if (index === undefined) return;
       const p = at(index);
+      pendingFly.current = { id, at: Date.now() };
       animateTo(
         cameraAt(
           current(),
@@ -364,6 +374,26 @@ export function MoneyMap({
     },
     [model, at, animateTo, current, viewportSV, k, fitK],
   );
+  // A focused disc stays in view. The panel grows for a focus, which moves
+  // the insets after the fly was aimed, so a recent fly is aimed again at
+  // the new centre; a disc focused by a tap or a link that the chrome
+  // covers is brought in at a readable zoom. One that is already in view
+  // stays where the reader left it.
+  useEffect(() => {
+    if (focusIndex === null || !placed.current) return;
+    const node = model.nodes[focusIndex];
+    if (!node) return;
+    const p = at(focusIndex);
+    const cam = current();
+    const fly = pendingFly.current;
+    const flying =
+      fly !== null && fly.id === node.id && Date.now() - fly.at < FLY_SETTLE_MS;
+    if (!flying && discInView(cam, p.x, p.y, node.radius, viewport, VIEW_MARGIN))
+      return;
+    animateTo(
+      cameraAt(cam, p.x, p.y, viewport, focusScale(cam.k, fitK.get())),
+    );
+  }, [focusIndex, model, at, viewport, settled, current, animateTo, fitK]);
   const centreOn = useCallback(
     (x: number, y: number) =>
       animateTo(cameraAt(current(), x, y, viewportSV.get())),
@@ -585,6 +615,7 @@ export function MoneyMap({
   const level = useDerivedValue(() => k.value / Math.max(1e-6, fitK.value));
   const smallOpacity = useDerivedValue(() => smallNodeOpacity(level.value));
   const thinOpacity = useDerivedValue(() => thinEdgeOpacity(level.value));
+  const publicOpacity = useDerivedValue(() => publicEdgeOpacity(level.value));
   const dim = useSharedValue(1);
   useEffect(() => {
     const target = focusIndex === null ? 1 : DIM;
@@ -672,6 +703,9 @@ export function MoneyMap({
           >
             <Group transform={transform}>
               <Group opacity={dim}>
+                <Group opacity={publicOpacity}>
+                  <Picture picture={pictures.publicEdges} />
+                </Group>
                 <Group opacity={thinOpacity}>
                   <Picture picture={pictures.thinEdges} />
                 </Group>

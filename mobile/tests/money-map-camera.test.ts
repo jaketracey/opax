@@ -4,6 +4,8 @@ import {
   cameraAt,
   clampCamera,
   clusterLabelOpacity,
+  discInView,
+  publicEdgeOpacity,
   fitCamera,
   focusScale,
   LOD,
@@ -351,4 +353,46 @@ describe('placeCamera', () => {
     );
     expect(tooFar.camera.k).toBe(fit.k * ZOOM_OUT);
   });
+});
+
+describe('discInView', () => {
+  const viewport: Viewport = {
+    width: 400,
+    height: 800,
+    insets: { top: 100, bottom: 200, left: 0, right: 60 },
+  };
+  const camera: Camera = { tx: 0, ty: 0, k: 1 };
+  test('a disc wholly inside the insets is in view', () => {
+    expect(discInView(camera, 200, 400, 10, viewport)).toBe(true);
+    expect(discInView(camera, 200, 400, 10, viewport, 6)).toBe(true);
+  });
+  test('a disc under the chrome, or cut by an edge, is not', () => {
+    // Under the panel.
+    expect(discInView(camera, 200, 650, 10, viewport)).toBe(false);
+    // Just over the panel's edge.
+    expect(discInView(camera, 200, 595, 10, viewport)).toBe(false);
+    expect(discInView(camera, 200, 589, 10, viewport)).toBe(true);
+    // Under the card, and under the control stack.
+    expect(discInView(camera, 200, 90, 10, viewport)).toBe(false);
+    expect(discInView(camera, 350, 400, 10, viewport)).toBe(false);
+    // The margin tightens the test.
+    expect(discInView(camera, 200, 589, 10, viewport, 6)).toBe(false);
+  });
+  test('follows the camera', () => {
+    const zoomed: Camera = { tx: -100, ty: -300, k: 2 };
+    // World (150, 350) → screen (200, 400).
+    expect(discInView(zoomed, 150, 350, 10, viewport)).toBe(true);
+    // World (150, 460) → screen (200, 620): under the panel.
+    expect(discInView(zoomed, 150, 460, 10, viewport)).toBe(false);
+  });
+});
+
+test('public money lines are a haze at the fit and firm by the names level', () => {
+  expect(publicEdgeOpacity(0.6)).toBeCloseTo(0.45, 9);
+  expect(publicEdgeOpacity(1)).toBeCloseTo(0.45, 9);
+  expect(publicEdgeOpacity(2.4)).toBeCloseTo(1, 9);
+  expect(publicEdgeOpacity(5)).toBeCloseTo(1, 9);
+  const mid = publicEdgeOpacity(1.7);
+  expect(mid).toBeGreaterThan(0.45);
+  expect(mid).toBeLessThan(1);
 });

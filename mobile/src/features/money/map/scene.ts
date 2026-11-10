@@ -1,5 +1,5 @@
 import type { MapModel } from './model';
-import { otherEnd } from './model';
+import { isPublicEdge, otherEnd } from './model';
 
 /**
  * What the map draws, as calls on a painter. The stage records each layer
@@ -35,11 +35,17 @@ export interface Positions {
 export const SMALL_NODE = 3.2;
 export const THIN_EDGE = 1.0;
 const EDGE_ALPHA = 0.42;
+/** Public money lines sit beneath the donations, as a quieter register. */
+const PUBLIC_EDGE_ALPHA = 0.3;
 const NODE_ALPHA = 0.94;
 const HUB_RING = 3.5;
 
 export type NodeTier = 'small' | 'large';
-export type EdgeTier = 'thin' | 'thick';
+/**
+ * Donations are thin or thick by width; every public money line is its own
+ * tier, drawn first, however wide.
+ */
+export type EdgeTier = 'thin' | 'thick' | 'public';
 
 /** `at(i)` is a node's layout index; the model's index is for the view. */
 export type PositionOf = (modelIndex: number) => { x: number; y: number };
@@ -53,11 +59,21 @@ export function paintEdges(
 ) {
   let drawn = 0;
   for (const edge of model.edges) {
-    if (edge.width < THIN_EDGE !== (tier === 'thin')) continue;
+    if (isPublicEdge(edge) !== (tier === 'public')) continue;
+    if (tier !== 'public' && edge.width < THIN_EDGE !== (tier === 'thin'))
+      continue;
     if (skip?.has(edge.index)) continue;
     const a = at(edge.a),
       b = at(edge.b);
-    painter.line(a.x, a.y, b.x, b.y, edge.width, edge.colour, EDGE_ALPHA);
+    painter.line(
+      a.x,
+      a.y,
+      b.x,
+      b.y,
+      edge.width,
+      edge.colour,
+      tier === 'public' ? PUBLIC_EDGE_ALPHA : EDGE_ALPHA,
+    );
     drawn++;
   }
   return drawn;

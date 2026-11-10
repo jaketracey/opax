@@ -9,10 +9,14 @@ import {
   edgeWidth,
   LEGEND_EDGES,
   LEGEND_NODES,
+  LEGEND_PUBLIC_EDGES,
   nodeFloorAmount,
   nodeRadius,
   PARTIES,
   PUBLIC_MONEY,
+  publicEdgeCapAmount,
+  publicEdgeEquivalent,
+  publicEdgeWidth,
 } from './scales';
 
 /** The $1bn reference disc is drawn this wide, in points; the rest follow. */
@@ -32,6 +36,9 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
   );
   const floor = formatMoneyCompact(nodeFloorAmount());
   const cap = formatMoneyCompact(edgeCapAmount());
+  const publicCap = formatMoneyCompact(publicEdgeCapAmount());
+  const equivalent = formatMoneyCompact(publicEdgeEquivalent(1e9));
+  const hasPublicMoney = model.clusters.some((c) => c.key === PUBLIC_MONEY);
   return (
     <View style={styles.legend} testID="money-map-legend">
       <View style={styles.block}>
@@ -96,6 +103,39 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
           ))}
         </View>
       </View>
+      {hasPublicMoney ? (
+        <View style={styles.block} testID="money-map-legend-public">
+          <Text wordSafe variant="footnote">
+            Public money lines are on a lighter scale: $1bn in grants or
+            contracts is drawn as wide as {equivalent} in donations, and lines
+            over {publicCap} are drawn at the widest.
+          </Text>
+          <View
+            style={styles.samples}
+            accessible
+            accessibilityLabel={`Reference public money lines: ${LEGEND_PUBLIC_EDGES.map((n) => formatMoneyCompact(n)).join(', ')}`}
+          >
+            {LEGEND_PUBLIC_EDGES.map((amount) => (
+              <View key={amount} style={styles.sample}>
+                <View style={styles.lineBox}>
+                  <View
+                    style={{
+                      width: 36,
+                      height: Math.max(1, publicEdgeWidth(amount) * lineScale),
+                      borderRadius: 4,
+                      borderCurve: 'continuous',
+                      backgroundColor: colors.moneyInk,
+                    }}
+                  />
+                </View>
+                <Text variant="footnote" tabular>
+                  {formatMoneyCompact(amount)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      ) : null}
       <View style={styles.block}>
         <Text wordSafe variant="footnote">
           Colour is the donor’s industry. Parties are grey and named. Public

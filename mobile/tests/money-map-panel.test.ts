@@ -8,8 +8,10 @@ import {
 } from '../src/features/money/map/model';
 import {
   focusFigureLine,
+  focusFlowGroups,
   focusFlows,
   focusMetaLine,
+  PUBLIC_MONEY_NOTE,
 } from '../src/features/money/map/MoneyMapPanel';
 import { searchModel } from '../src/features/money/map/MoneyMapSearch';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
@@ -162,5 +164,59 @@ describe('searchModel', () => {
 
   test('a query that matches nothing returns an empty list', () => {
     expect(searchModel(model, 'zzqxj no such donor')).toEqual([]);
+  });
+});
+
+describe('focusFlowGroups', () => {
+  test("a donor's donations and the public money it received are never one list", () => {
+    const donor = model.nodes.find(
+      (n) =>
+        n.kind === 'donor' &&
+        focusFlows(model, n.index).some((f) => f.edge.type === 'donations') &&
+        focusFlows(model, n.index).some((f) => f.edge.type !== 'donations'),
+    )!;
+    expect(donor).toBeDefined();
+    const flows = focusFlows(model, donor.index);
+    const groups = focusFlowGroups(donor, flows);
+    expect(groups.map((g) => g.title)).toEqual([
+      'Where it went',
+      'Public money received',
+    ]);
+    const [went, received] = groups;
+    for (const row of went!.rows) expect(row.edge.type).toBe('donations');
+    for (const row of received!.rows) expect(row.edge.type).not.toBe('donations');
+    expect(went!.note).toBeUndefined();
+    expect(received!.note).toBe(PUBLIC_MONEY_NOTE);
+    // Every flow is in exactly one group, keeping its strongest-first index.
+    const indices = groups.flatMap((g) => g.rows.map((r) => r.index)).sort((a, b) => a - b);
+    expect(indices).toEqual(flows.map((_, i) => i));
+    for (const g of groups)
+      for (const row of g.rows) expect(flows[row.index]!.edge).toBe(row.edge);
+  });
+
+  test('a donor with donations only has one section, without the note', () => {
+    const donor = model.nodes.find(
+      (n) =>
+        n.kind === 'donor' &&
+        focusFlows(model, n.index).length > 0 &&
+        focusFlows(model, n.index).every((f) => f.edge.type === 'donations'),
+    )!;
+    const groups = focusFlowGroups(donor, focusFlows(model, donor.index));
+    expect(groups).toHaveLength(1);
+    expect(groups[0]!.title).toBe('Where it went');
+    expect(groups[0]!.note).toBeUndefined();
+  });
+
+  test('a party lists its largest donors and a hub its largest recipients, in one section each', () => {
+    const party = model.nodes.find((n) => n.kind === 'party')!;
+    const hub = model.nodes.find((n) => n.kind === 'hub')!;
+    const partyGroups = focusFlowGroups(party, focusFlows(model, party.index));
+    const hubGroups = focusFlowGroups(hub, focusFlows(model, hub.index));
+    expect(partyGroups.map((g) => g.title)).toEqual(['Largest donors']);
+    expect(hubGroups.map((g) => g.title)).toEqual([
+      'Largest recipients on the map',
+    ]);
+    expect(partyGroups[0]!.rows).toHaveLength(focusFlows(model, party.index).length);
+    expect(hubGroups[0]!.rows).toHaveLength(focusFlows(model, hub.index).length);
   });
 });
