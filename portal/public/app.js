@@ -11478,11 +11478,14 @@ async function sendChat(question, carry) {
   // The records the last two answers cited travel too: the Worker gives each
   // its own pinned retrieval pass, so a follow-up keeps the conversation's
   // records in the pool whatever its new wording finds (corpuskit's
-  // prior-paper prequeries). Cited first, then the rest of the retrieval.
+  // prior-paper prequeries). Only CITED records are pinned: pinning the
+  // uncited rest let one answer's stray retrieval (Mining records, say) come
+  // back uncited on the next turn, get pinned again and stick to every later
+  // question (TestFlight report, matched by the app's b17bf19e8).
   const priorResources = [];
   for (const m of chatThread.filter((t) => t.role === "answer").slice(-2).reverse()) {
     const sources = Array.isArray(m.sources) ? m.sources : [];
-    for (const s of [...sources.filter((x) => x?.cited), ...sources.filter((x) => !x?.cited)]) {
+    for (const s of sources.filter((x) => x?.cited)) {
       // Platform record ids only: the local records an answer cites travel as
       // USER_CONTEXT_n extra context and cannot be pinned.
       if (typeof s?.resource === "string" && /^[0-9a-f]{32}$/i.test(s.resource) && !priorResources.includes(s.resource)) priorResources.push(s.resource);
