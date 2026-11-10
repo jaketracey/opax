@@ -162,6 +162,24 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
       .map((n) => n.props.testID as string),
   );
 
+test.each([
+  ['latest', 'No grant agreements to show.'],
+  ['2026-00', 'No grant agreements to show.'],
+  ['2026-13', 'No grant agreements to show.'],
+  ['2026-1', 'No grant agreements to show.'],
+  ['2026-10', 'No grant agreements started in October 2026.'],
+])('Largest grants has a complete empty-state title for latest=%s', async (latest, title) => {
+  money.largest = jest.fn(async () => ({
+    data: { asOf: '2026-11-10', latest, basis: [], months: {} },
+    stale: false,
+    savedAt: 10,
+    asOf: null,
+  }));
+  const r = await mount(Largest);
+  expect(r.root.findByType(MoneyList).props.empty.props.title).toBe(title);
+  await act(async () => r.unmount());
+});
+
 test('the all-years grant figure names the full recorded range, including future agreements', () => {
   const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
   index.meta.years = ['2023-24', '2024-25', '2026-27'];
