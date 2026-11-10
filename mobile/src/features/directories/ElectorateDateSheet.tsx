@@ -1,11 +1,15 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  DateTimePickerAndroid,
+} from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { headerItems } from '../../navigation/chrome';
 import { colors, rhythm } from '../../design/tokens';
 import { copy } from '../../design/copy';
+import { formatDate } from '../../design/format';
+import { LinkRow } from '../../design/rows';
 import { loadElectorate } from '../Electorate';
 import { validDate } from './model';
 
@@ -92,18 +96,36 @@ export default function ElectorateDateSheet() {
           ]),
         }}
       />
-      <DateTimePicker
-        testID="electorate-date-picker"
-        accessibilityLabel="View on a date"
-        value={dayDate(date)}
-        mode="date"
-        display={Platform.OS === 'ios' ? 'inline' : 'calendar'}
-        minimumDate={earliest ? dayDate(earliest) : undefined}
-        maximumDate={dayDate(today)}
-        onValueChange={(_, next) => {
-          if (next) setDate(isoDay(next));
-        }}
-      />
+      {Platform.OS === 'android' ? (
+        <LinkRow
+          title="Date"
+          detail={formatDate(date)}
+          onPress={() =>
+            DateTimePickerAndroid.open({
+              value: dayDate(date),
+              mode: 'date',
+              display: 'calendar',
+              minimumDate: earliest ? dayDate(earliest) : undefined,
+              maximumDate: dayDate(today),
+              onValueChange: (_, next) => setDate(isoDay(next)),
+            })
+          }
+          testID="electorate-date-open"
+        />
+      ) : (
+        <DateTimePicker
+          testID="electorate-date-picker"
+          accessibilityLabel="View on a date"
+          value={dayDate(date)}
+          mode="date"
+          display={Platform.OS === 'ios' ? 'inline' : 'calendar'}
+          minimumDate={earliest ? dayDate(earliest) : undefined}
+          maximumDate={dayDate(today)}
+          onValueChange={(_, next) => {
+            if (next) setDate(isoDay(next));
+          }}
+        />
+      )}
     </View>
   );
 }
