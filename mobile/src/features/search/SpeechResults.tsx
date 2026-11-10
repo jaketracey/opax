@@ -101,7 +101,7 @@ export function SpeechResults({
   announce?: boolean;
 }) {
   const announced = useRef<{ key: string; rows: number } | null>(null);
-  const noun = filters.kind === 'all' ? 'records' : 'speeches';
+  const noun = filters.kind !== 'speech' ? 'records' : 'speeches';
   const announcementKey = JSON.stringify([q.trim(), filtersKey(filters), sort]);
   useEffect(() => {
     if (!announce || !list.rows || list.first?.status !== 'ready') return;
@@ -198,7 +198,7 @@ export function SpeechResults({
           <SpeechRow key={row.slug} row={row} q={q} index={index} />
         ))}
       </InsetGroup>
-      {head.length === SUMMARY_AFTER && filters.kind !== 'all' ? (
+      {head.length === SUMMARY_AFTER && filters.kind === 'speech' ? (
         <SummaryBlock q={q} filters={filters} sort={sort} roster={roster} />
       ) : null}
       {rest.length ? (

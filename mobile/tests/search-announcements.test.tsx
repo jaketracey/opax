@@ -78,3 +78,26 @@ test('VoiceOver announces the actual newly loaded rows and a new query with the 
     announce.mockRestore();
   }
 });
+
+test('media release results do not offer a speech summary', () => {
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(
+      <SpeechResults
+        list={{
+          ...list(3),
+          rows: rows.map((row) => ({ ...row, kind: 'press_release' })),
+        }}
+        q="fixture"
+        filters={{ ...defaultSpeechFilters, kind: 'press_release' }}
+        sort="relevance"
+        roster={null}
+        variant="list"
+        recover={recover}
+      />,
+    );
+  });
+  expect(
+    view.root.findAll((node) => node.props.testID === 'results-summarise'),
+  ).toHaveLength(0);
+});

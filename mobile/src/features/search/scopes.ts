@@ -1,4 +1,4 @@
-import { documentKinds, excludedKinds } from './contracts';
+import { documentKinds, excludedKinds, type SearchSort } from './contracts';
 
 /**
  * Four scopes, drawn in content (journeys/search.md 3.4, D-7). Money is not
@@ -135,25 +135,33 @@ export function webSearchPath(
   q: string,
   target: ResultsTarget,
   filters: Record<string, string> = {},
+  sort: SearchSort = 'relevance',
 ): string {
   const kind = target.group
     ? (
-        { grants: 'grant', agencies: 'agency', parties: 'party' } as Partial<
-          Record<Group, string>
-        >
+        {
+          grants: 'grant',
+          agencies: 'agency',
+          parties: 'party',
+          interests: 'interest',
+          pay: 'pay',
+          expenses: 'expense',
+        } as Partial<Record<Group, string>>
       )[target.group]
     : (
         {
           all: 'all',
           people: 'person',
           bills: 'bill',
-          speeches: undefined,
+          speeches: filters.type || 'speech',
         } as const
       )[target.scope];
   const params = new URLSearchParams({ view: 'search', q: capQuery(q) });
   if (kind) params.set('kind', kind);
-  if (target.scope === 'speeches')
+  if (target.scope === 'speeches' || target.scope === 'all')
     for (const [key, value] of Object.entries(filters))
       if (value && key !== 'type') params.set(key, value);
+  if (target.scope === 'speeches' && sort !== 'relevance')
+    params.set('sort', sort);
   return `/ask?${params}`;
 }

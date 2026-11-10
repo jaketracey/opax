@@ -61,7 +61,7 @@ export interface SpeechList {
 }
 
 const noun = (f: SpeechFilters) =>
-  f.kind === 'all'
+  f.kind !== 'speech'
     ? (['record', 'records'] as const)
     : (['speech', 'speeches'] as const);
 

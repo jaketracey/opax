@@ -199,7 +199,7 @@ describe('scopes, results routes and links (4.3, 4.5)', () => {
     );
     expect(
       webSearchPath('housing', { scope: 'speeches' }, { party: 'Labor' }),
-    ).toBe('/ask?view=search&q=housing&party=Labor');
+    ).toBe('/ask?view=search&q=housing&kind=speech&party=Labor');
     expect(webSearchPath('x', { group: 'grants' })).toContain('kind=grant');
   });
 });
