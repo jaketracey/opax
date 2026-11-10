@@ -62,3 +62,34 @@ class ExactTwinTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SyncNameTests(unittest.TestCase):
+    """speeches-press-013: a speech with no speaker_name_clean is in the knowledge box under its raw
+    print through normalize_speaker (arag_sync.map_speech), so it counts under that name here too."""
+
+    def test_rows_without_a_clean_name_count_under_the_name_the_sync_gives_them(self):
+        backfilled = [(i, "Senator PATRICK", None, "IND", "senate", "2020-06-1%d" % i, LONG + str(i), "openaustralia",
+                       None, "member") for i in range(1, 4)]
+        cleaned = [(10 + i, "Senator PATRICK", "Rex Patrick", "IND", "senate", "2021-02-0%d" % i, LONG + str(i),
+                    "openaustralia", None, "member") for i in range(1, 3)]
+        rows, _ = export.count_speakers(db_with(backfilled + cleaned), min_speeches=1)
+        # The sync labels the three uncleaned rows with normalize_speaker's "Patrick"; they count there,
+        # exactly as the knowledge box files them, rather than vanishing.
+        self.assertEqual(export.normalize_speaker("Senator PATRICK"), "Patrick")
+        self.assertEqual(rows, [["Patrick", 3], ["Rex Patrick", 2]])
+
+    def test_a_full_print_without_a_clean_name_joins_the_cleaned_rows(self):
+        # OpenAustralia prints the full name, as on the desktop DB's 415 Cormann rows.
+        rows, _ = export.count_speakers(db_with(
+            [(i, "Mathias Cormann", None, "LP", "senate", "2014-05-1%d" % i, LONG + str(i), "openaustralia",
+              None, "member") for i in range(1, 4)]
+            + [(10 + i, "Mathias Cormann", "Mathias Cormann", "LP", "senate", "2015-05-1%d" % i,
+                LONG + str(i), "openaustralia", None, "member") for i in range(1, 3)]), min_speeches=1)
+        self.assertEqual(rows, [["Mathias Cormann", 5]])
+
+    def test_a_row_with_neither_name_is_left_out(self):
+        rows, _ = export.count_speakers(db_with(
+            [(i, None, None, None, "senate", "2014-05-1%d" % i, LONG + str(i), "openaustralia", None, "member")
+             for i in range(1, 7)]), min_speeches=1)
+        self.assertEqual(rows, [])
