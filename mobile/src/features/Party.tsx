@@ -508,7 +508,7 @@ function PartyContent({
           'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
           'Sources are the largest donor-to-party flows in the disclosure returns, largest first; they are not all of the party’s receipts. No sequence or causal link is inferred.',
           disclosureYearNote,
-          ...(fundingRecord ? fundingNotes(fundingRecord) : []),
+          ...(fundingRecord ? fundingNotes(fundingRecord, label) : []),
         ],
       })}
     >
