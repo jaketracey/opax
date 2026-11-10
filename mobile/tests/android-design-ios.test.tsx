@@ -384,3 +384,13 @@ test.each([Slider, Stepper])(
     act(() => renderer.unmount());
   },
 );
+test('the workbench Android controls gallery draws nothing on iOS', () => {
+  const { AndroidControls } =
+    require('../src/workbench/AndroidControls') as typeof import('../src/workbench/AndroidControls');
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<AndroidControls />);
+  });
+  expect(renderer.toJSON()).toBeNull();
+  act(() => renderer.unmount());
+});

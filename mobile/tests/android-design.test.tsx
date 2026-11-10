@@ -413,3 +413,23 @@ test('absolutely positioned surfaces such as chart bars keep their parent-given 
   expect(style.minWidth).toBe(0);
   expect(style.minHeight).toBe(0);
 });
+test('the workbench Android controls gallery draws every Material control', () => {
+  const { AndroidControls } =
+    require('../src/workbench/AndroidControls') as typeof import('../src/workbench/AndroidControls');
+  const r = render(<AndroidControls />);
+  for (const name of ['Filled', 'Tonal', 'Outlined', 'Text', 'Disabled'])
+    expect(r.getByRole('button', { name })).toBeTruthy();
+  expect(r.getByTestId('wb-android-switch').props.accessibilityState).toEqual({
+    checked: true,
+    disabled: false,
+  });
+  expect(
+    r.getByTestId('wb-android-chip-house').props.accessibilityState.checked,
+  ).toBe(true);
+  expect(r.getByTestId('wb-android-stepper').props.accessibilityRole).toBe(
+    'adjustable',
+  );
+  expect(r.getByTestId('wb-android-slider').props.accessibilityRole).toBe(
+    'adjustable',
+  );
+});
