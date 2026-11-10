@@ -66,13 +66,13 @@ export default function Matrix() {
                         const count = data.cells[slug]?.[party] ?? 0,
                           total = data.totals[slug] ?? 0,
                           pct = total ? (count / total) * 100 : 0,
-                          label = `${party}\u00a0·\u00a0${pct > 0 && pct < 1 ? '<1' : Math.round(pct)}%`;
+                          percentage = `${pct > 0 && pct < 1 ? '<1' : Math.round(pct)}%`,
+                          label = `${party}\u00a0·\u00a0${percentage}`;
                         return (
                           <View key={party} style={{ maxWidth: '100%' }}>
                             {party === 'Other' || !count ? (
                               <Text wordSafe variant="secondary">
-                                {party}:{' '}
-                                {count ? label.split(' · ')[1] : 'none yet'}
+                                {party}: {count ? percentage : 'none yet'}
                               </Text>
                             ) : (
                               <Button

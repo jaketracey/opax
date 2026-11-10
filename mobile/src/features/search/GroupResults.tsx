@@ -148,10 +148,7 @@ export function useGroupList(group: CatalogGroup, q: string) {
     rows: head ? rows : null,
     more,
     count: head
-      ? countLabel(head.data.total, [
-          groups[group].noun.replace(/s$/, ''),
-          groups[group].noun,
-        ])
+      ? countLabel(head.data.total, [groups[group].one, groups[group].noun])
       : null,
     source,
     load: () => {

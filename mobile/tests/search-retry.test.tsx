@@ -39,7 +39,7 @@ jest.mock('../src/features/search/navigation', () => ({
   openSearchPerson: jest.fn(),
 }));
 const mockBar: { options?: Record<string, any> } = {};
-let mockParams: Record<string, string | undefined> = {};
+let mockParams: Record<string, string | string[] | undefined> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   return {
@@ -126,6 +126,44 @@ async function mount() {
   });
   return r;
 }
+
+test.each(['search-key', 'speech-suggestion'])(
+  'submitting from %s dismisses the iOS keyboard and keeps the results',
+  async (action) => {
+    jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+    const r = await mount();
+    const nativeBar = {
+      setText: jest.fn(),
+      blur: jest.fn(),
+      cancelSearch: jest.fn(),
+    };
+    bar().ref.current = nativeBar;
+    const dismiss = jest.spyOn(Keyboard, 'dismiss');
+    try {
+      await type('housing');
+      if (action === 'search-key') await submit('housing');
+      else
+        await act(async () =>
+          r.root.findByType(SearchSuggestions).props.onSearchSpeeches(),
+        );
+      expect(nativeBar.blur).toHaveBeenCalled();
+      expect(dismiss).toHaveBeenCalled();
+      expect(nativeBar.cancelSearch).not.toHaveBeenCalled();
+      expect(r.root.findByType(ScopeBar).props.value).toBe(
+        action === 'search-key' ? 'all' : 'speeches',
+      );
+    } finally {
+      dismiss.mockRestore();
+    }
+  },
+);
+
+test('a repeated linked query parameter returns to Browse without a request', async () => {
+  mockParams = { q: ['housing', 'education'], scope: 'speeches' };
+  const r = await mount();
+  expect(r.root.findAllByType(SearchIdle)).toHaveLength(1);
+  expect(recordSearch.search).not.toHaveBeenCalled();
+});
 
 test.each(['typing', 'results'])(
   'selecting Search from %s restores Browse with a fresh native scroll view and no keyboard',

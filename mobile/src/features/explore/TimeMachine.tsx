@@ -92,7 +92,12 @@ export default function TimeMachine() {
   const shown = year ?? defaultYear();
   return (
     <>
-      <ExploreChrome name="Time machine" game="tm" />
+      {/* Share and Copy link carry the year shown, as a year link opens. */}
+      <ExploreChrome
+        name="Time machine"
+        game="tm"
+        params={year === null ? undefined : { year: String(year) }}
+      />
       <YearPage
         key={shown}
         year={shown}

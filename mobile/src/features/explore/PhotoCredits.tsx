@@ -2,7 +2,7 @@ import { RouteOptions } from '../../navigation/preview';
 
 import { useMemo } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
-import { formatCount } from '../../design/format';
+import { counted, formatCount } from '../../design/format';
 import {
   Divider,
   InlineError,
@@ -132,7 +132,7 @@ export function PhotoCreditsList() {
             <View
               accessibilityRole="header"
               accessible
-              accessibilityLabel={`${section.year}, ${formatCount(section.data.length)} photographs`}
+              accessibilityLabel={`${section.year}, ${counted(section.data.length, 'photograph')}`}
               style={styles.year}
             >
               <Text wordSafe variant="groupHeader" style={styles.grow}>

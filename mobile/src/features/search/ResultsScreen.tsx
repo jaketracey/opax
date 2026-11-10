@@ -1,9 +1,9 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
-import { Platform, ScrollView, type TextInput } from 'react-native';
+import { Keyboard, Platform, ScrollView, type TextInput } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
-import { formatCount } from '../../design/format';
+import { countLabel } from './present';
 import {
   ContentUnavailable,
   Field,
@@ -11,12 +11,17 @@ import {
   InsetGroup,
   Screen,
   SectionHeader,
+  Skeleton,
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
 import { rhythm } from '../../design/tokens';
 import { headerItems } from '../../navigation/chrome';
 import { resultID } from './AllResults';
-import { EmptyResults, type RecoveryHandlers } from './EmptyResults';
+import {
+  EmptyResults,
+  SourcesError,
+  type RecoveryHandlers,
+} from './EmptyResults';
 import { GroupResults, useGroupList } from './GroupResults';
 import { ResultsHeader } from './ResultsHeader';
 import { ResultsView, localSource } from './ResultsView';
@@ -73,6 +78,10 @@ export function ResultsScreen() {
     setQ(words);
     setText(words);
     (search.ref as RefObject<SearchBarCommands | null>).current?.setText(words);
+    if (Platform.OS === 'ios') {
+      (search.ref as RefObject<SearchBarCommands | null>).current?.blur();
+      Keyboard.dismiss();
+    }
     scroll.current?.scrollTo({ y: 0, animated: false });
   }
   const search = useListSearchBar({
@@ -84,6 +93,32 @@ export function ResultsScreen() {
       (search.ref as RefObject<SearchBarCommands | null>).current?.setText(q);
     },
   });
+  const arrivalKey = JSON.stringify([
+    params.kind,
+    params.group,
+    params.scope,
+    params.q,
+    filtersFromParams(params),
+  ]);
+  const appliedArrival = useRef(arrivalKey);
+  useEffect(() => {
+    if (appliedArrival.current === arrivalKey) return;
+    appliedArrival.current = arrivalKey;
+    setTarget(
+      resultsTarget(params.kind, params.group, params.scope) ?? {
+        scope: 'all',
+      },
+    );
+    setQ(capQuery(params.q ?? ''));
+    setText(capQuery(params.q ?? ''));
+    controls.setFilters(filtersFromParams(params));
+    (search.ref as RefObject<SearchBarCommands | null>).current?.setText(
+      capQuery(params.q ?? ''),
+    );
+    scroll.current?.scrollTo({ y: 0, animated: false });
+    // Only a changed arrival resets choices made within the screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [arrivalKey]);
   // The bar field opens prefilled with the query.
   useEffect(() => {
     const ref = (search.ref as RefObject<SearchBarCommands | null>).current;
@@ -147,6 +182,7 @@ export function ResultsScreen() {
             q={q}
             sources={sources}
             recover={controls.recover}
+            onRetrySources={failed ? retry : undefined}
           />
         )}
       </Screen>
@@ -189,18 +225,32 @@ function LocalList({
   q,
   sources,
   recover,
+  onRetrySources,
 }: {
   group: Exclude<ListGroup, CatalogGroup>;
   q: string;
   sources: SearchSources | null;
   recover: RecoveryHandlers;
+  onRetrySources?: () => void;
 }) {
+  if (!sources)
+    return onRetrySources ? (
+      <SourcesError subject={groups[group].label} onRetry={onRetrySources} />
+    ) : (
+      <Skeleton
+        shape="rows"
+        count={3}
+        label={`Searching ${groups[group].noun}`}
+      />
+    );
   const rows = sources ? (matchAll(q, sources)[group] ?? []) : [];
   const noun = groups[group].noun;
   return (
     <Group gap={rhythm.block} testID={`results-${group}`}>
       <ResultsHeader
-        count={sources ? `${formatCount(rows.length)} ${noun}` : null}
+        count={
+          sources ? countLabel(rows.length, [groups[group].one, noun]) : null
+        }
         details={
           group === 'topics'
             ? null

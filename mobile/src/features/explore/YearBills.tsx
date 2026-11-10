@@ -7,6 +7,7 @@ import {
   Skeleton,
   SourceLine,
 } from '../../design/primitives';
+import { counted } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes/bills';
 import type { BillIndex } from '../../api/catalog-decoders';
@@ -75,7 +76,9 @@ export function YearBills({
           <Row key={b.key} bill={b} />
         ))}
         {bills.length > 3 ? (
-          <Disclosure label={`${bills.length - 3} more bills`}>
+          <Disclosure
+            label={counted(bills.length - 3, 'more bill', 'more bills')}
+          >
             {() => (
               <View>
                 {bills.slice(3).map((b) => (
