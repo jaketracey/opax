@@ -172,14 +172,10 @@ test('a speech brief is labelled by the pill, not a sentence', async () => {
     }),
   );
   const view = await mount(<DocumentReader />);
-  // In short is closed until opened (records.md 2.2).
-  expect(view.root.findAllByProps({ testID: 'doc-brief-label' })).toHaveLength(
-    0,
-  );
   const toggle = view.root.find(
     (n) => n.props.testID === 'doc-brief' && !!n.props.onPress,
   );
-  await act(async () => toggle.props.onPress());
+  expect(toggle.props.accessibilityState).toEqual({ expanded: true });
   const label = view.root.find(
     (n) => n.props.testID === 'doc-brief-label' && n.props.accessibilityLabel,
   );
@@ -192,6 +188,12 @@ test('a speech brief is labelled by the pill, not a sentence', async () => {
   expect(shown).toContain('Machine-written');
   expect(shown).toContain(brief);
   expect(shown).not.toMatch(/by a model|part of the record/);
+  await act(async () => toggle.props.onPress());
+  expect(toggle.props.accessibilityState).toEqual({ expanded: false });
+  expect(textOf(view.root)).not.toContain(brief);
+  // A parent render during this visit preserves the reader's choice.
+  await act(async () => view.update(<DocumentReader />));
+  expect(toggle.props.accessibilityState).toEqual({ expanded: false });
   await act(async () => view.unmount());
 });
 

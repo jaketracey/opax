@@ -630,7 +630,12 @@ function ReaderHeader({
       ) : null}
       {doc.summary ? (
         <View style={styles.block}>
-          <Disclosure label="In short" testID="doc-brief">
+          <Disclosure
+            key={doc.slug}
+            label="In short"
+            testID="doc-brief"
+            defaultOpen={doc.labels.kind === 'speech'}
+          >
             <View style={styles.brief}>
               <MachinePill
                 note={{ title: 'Machine-written', body: [machineNote(doc)] }}
