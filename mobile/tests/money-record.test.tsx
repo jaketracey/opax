@@ -1,14 +1,17 @@
+import * as WebBrowser from 'expo-web-browser';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { apiClient } from '../src/api/runtime';
 import {
   ContentUnavailable,
   FigureBlock,
+  Icon,
   LinkRow,
   MoneyRow,
   Text,
   ValueRow,
 } from '../src/design/primitives';
+import { symbols } from '../src/design/symbols';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import {
   donorNodeFor,
@@ -27,6 +30,10 @@ import {
 } from '../src/navigation/routes/public-money';
 import { pinned } from './pinned';
 
+jest.mock('../src/design/environment', () => ({
+  ...jest.requireActual('../src/design/environment'),
+  isE2E: false,
+}));
 jest.mock('../src/api/runtime', () => {
   const get = jest.fn();
   return {
@@ -102,6 +109,63 @@ const order = (r: TestRenderer.ReactTestRenderer, ids: string[]) => {
   const all = r.root.findAll(() => true);
   return ids.map((id) => all.findIndex((x) => x.props.testID === id));
 };
+/** Originals follow every data row and precede the onward actions. */
+function expectOriginalsLast(r: TestRenderer.ReactTestRenderer) {
+  const all = r.root.findAll(() => true);
+  const originals = all.findIndex(
+    (x) => x.props.testID === 'money-record-originals',
+  );
+  expect(originals).toBeGreaterThan(-1);
+  const sections = all.filter((x) =>
+    /^money-record-(donations|grants|contracts)$/.test(x.props.testID),
+  );
+  expect(sections.length).toBeGreaterThan(0);
+  for (const section of sections)
+    for (const row of section.findAll(() => true))
+      expect(all.indexOf(row)).toBeLessThan(originals);
+  const more = all.findIndex((x) => x.props.testID === 'money-record-more');
+  if (more !== -1) expect(originals).toBeLessThan(more);
+}
+
+async function renderDonor(label: string, aliases: string[] = []) {
+  const figures = {
+    total: 1000,
+    count: 1,
+    firstYear: 2024,
+    lastYear: 2024,
+  };
+  const graph = {
+    meta: { generated: '2026-11-10', coverage: '2024–25', source: 'AEC' },
+    nodes: [
+      {
+        ...figures,
+        id: 'donor:example',
+        kind: 'donor',
+        label,
+        aliases,
+        group: 'other',
+        industry: 'other',
+      },
+      {
+        ...figures,
+        id: 'party:Labor',
+        kind: 'party',
+        label: 'Labor',
+        group: 'party',
+        industry: 'party',
+      },
+    ],
+    edges: [{ ...figures, source: 'donor:example', target: 'party:Labor' }],
+  };
+  jest.mocked(apiClient.get).mockImplementation(async (_path, decode) => ({
+    data: decode(graph),
+    stale: false,
+    asOf: '2026-11-10',
+    savedAt: 1,
+  }));
+  const donor = decodeMoneyGraph(graph).nodes.find((n) => n.kind === 'donor')!;
+  return render({ node: donor.id, via: 'map' });
+}
 beforeEach(() => {
   jest.clearAllMocks();
   forgetMoneyGraphs();
@@ -113,8 +177,9 @@ beforeEach(() => {
     savedAt: 1,
   }));
 });
+afterEach(() => jest.restoreAllMocks());
 
-test('a party record: originals first, the window figure, all years beside it, and donors that push their records', async () => {
+test('a party record: originals last, the window figure, all years beside it, and donors that push their records', async () => {
   const r = await render({
     node: 'party:Labor',
     from: '2024',
@@ -137,12 +202,10 @@ test('a party record: originals first, the window figure, all years beside it, a
     .findAllByType(ValueRow)
     .find((x) => x.props.testID === 'money-record-donations-all-years')!;
   expect(allYears.props.value).toMatch(/· \d{4}–\d{2} to \d{4}–\d{2}$/);
-  const [originals, donations] = order(r, [
-    'money-record-originals',
-    'money-record-donations',
-  ]);
-  expect(originals).toBeGreaterThan(-1);
-  expect(originals).toBeLessThan(donations!);
+  expectOriginalsLast(r);
+  expect(
+    r.root.findAll((x) => x.props.testID === 'money-record-wikipedia'),
+  ).toHaveLength(0);
   const flows = r.root
     .findAllByType(MoneyRow)
     .filter((x) => /^money-focus-flow-\d+$/.test(x.props.testID));
@@ -188,6 +251,19 @@ test('a contracts hub states the mapped-donor scope and the contracts register',
   expect(amount.props.citation.notes).toContain(
     `${raw.meta.contracts_coverage}.`,
   );
+  expectOriginalsLast(r);
+  expect(
+    r.root.findAll((x) => x.props.testID === 'money-record-wikipedia'),
+  ).toHaveLength(0);
+  await act(async () => r.unmount());
+});
+
+test('a grants hub puts originals after the grants and recipients', async () => {
+  const hub = raw.nodes.find(
+    (n) => n.kind === 'grantor' && n.flow !== 'contracts',
+  )!;
+  const r = await render({ node: hub.id });
+  expectOriginalsLast(r);
   await act(async () => r.unmount());
 });
 
@@ -205,15 +281,14 @@ test('a donor in three registers: side by side, never summed, under one caveat',
   expect(bothRegistersCaveat).toBe(
     "Appearing in both registers doesn't show that one led to the other.",
   );
-  const [originals, donations, grants, contracts] = order(r, [
-    'money-record-originals',
+  const [donations, grants, contracts] = order(r, [
     'money-record-donations',
     'money-record-grants',
     'money-record-contracts',
   ]);
-  expect(originals).toBeLessThan(donations!);
   expect(donations).toBeLessThan(grants!);
   expect(grants).toBeLessThan(contracts!);
+  expectOriginalsLast(r);
   // One money-ink figure; public money in ink, each with its own caveat.
   expect(figure(r, 'money-focus-amount').props.ink).toBe('money');
   expect(figure(r, 'money-focus-grants').props.ink).toBeUndefined();
@@ -238,6 +313,77 @@ test('a donor in three registers: side by side, never summed, under one caveat',
   await act(async () => r.unmount());
 });
 
+test.each([
+  ['Queensland Nickel Pty Ltd', []],
+  ['Example Union', []],
+  ['Example Association', []],
+  ['Example Trust', []],
+  ['CFMEU', []],
+  ['Example', ['Example Holdings']],
+])('an organisation donor %s has a Wikipedia action', async (name, aliases) => {
+  const r = await renderDonor(name, aliases);
+  const row = r.root
+    .findAllByType(LinkRow)
+    .find((x) => x.props.testID === 'money-record-wikipedia')!;
+  expect(row).toBeDefined();
+  expect(row.props.title).toBe('Find on Wikipedia');
+  const action = row
+    .findAll((x) => x.props.accessibilityRole === 'link' && x.props.onPress)
+    .at(-1)!;
+  expect(action.props.accessibilityRole).toBe('link');
+  expect(action.props.accessibilityLabel).toBe(`Find ${name} on Wikipedia`);
+  expect(action.props.accessibilityHint).toBe('Opens in the browser');
+  expect(
+    row.findAllByType(Icon).some((x) => x.props.name === symbols.external),
+  ).toBe(true);
+  expectOriginalsLast(r);
+  const more = r.root.findAll(
+    (x) => x.props.testID === 'money-record-more',
+  )[0]!;
+  expect(more.findAllByType(LinkRow)).toContain(row);
+  await act(async () => r.unmount());
+});
+
+test('the Wikipedia action encodes the donor name and opens the in-app browser', async () => {
+  const browser = jest
+    .spyOn(WebBrowser, 'openBrowserAsync')
+    .mockResolvedValue({ type: WebBrowser.WebBrowserResultType.CANCEL });
+  const r = await renderDonor('Müller & Co / Research? #1 Pty Ltd');
+  const row = r.root
+    .findAllByType(LinkRow)
+    .find((x) => x.props.testID === 'money-record-wikipedia')!;
+  const url =
+    'https://en.wikipedia.org/w/index.php?search=M%C3%BCller%20%26%20Co%20%2F%20Research%3F%20%231%20Pty%20Ltd';
+  expect(row.props.external.url).toBe(url);
+  await act(async () =>
+    row
+      .findAll(
+        (x) => x.props.testID === 'money-record-wikipedia' && x.props.onPress,
+      )
+      .at(-1)!
+      .props.onPress(),
+  );
+  expect(browser).toHaveBeenCalledWith(
+    url,
+    expect.objectContaining({
+      presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
+    }),
+  );
+  await act(async () => r.unmount());
+});
+
+test('an individual donor has no Wikipedia action', async () => {
+  const r = await renderDonor('Alex Example');
+  expect(
+    r.root.findAll((x) => x.props.testID === 'money-record-wikipedia'),
+  ).toHaveLength(0);
+  expect(figure(r, 'money-focus-amount')).toBeDefined();
+  expect(
+    r.root.findAll((x) => x.props.testID === 'money-withheld-note'),
+  ).not.toHaveLength(0);
+  await act(async () => r.unmount());
+});
+
 test('the individual donors aggregate has no originals, no share and the privacy note', async () => {
   const withheld = raw.nodes.find((n) => n.withheld);
   if (!withheld) return;
@@ -251,6 +397,9 @@ test('the individual donors aggregate has no originals, no share and the privacy
     r.root.findAll((x) => x.props.testID === 'money-record-originals'),
   ).toHaveLength(0);
   expect(mockOptions.unstable_headerRightItems).toBeUndefined();
+  expect(
+    r.root.findAll((x) => x.props.testID === 'money-record-wikipedia'),
+  ).toHaveLength(0);
   await act(async () => r.unmount());
 });
 
@@ -285,6 +434,7 @@ test('a grant recipient by rid: its grants from the index, an award is not a pay
   expect(grants.props.caveat).toBe(grantsCaveat);
   expect(grants.props.label).toMatch(/^in [\d,]+ grants, /);
   expect(grants.props.citation.citation).toBe('GrantConnect');
+  expectOriginalsLast(r);
   await act(async () => r.unmount());
 });
 
@@ -329,6 +479,7 @@ test('a supplier through its agency: contract rows push money-item without "Open
   expect(agencyRow.props.href).toEqual(
     agencyRoute(agency.id, agencyRow.props.title),
   );
+  expectOriginalsLast(r);
   await act(async () => r.unmount());
 }, 30000);
 
