@@ -1,15 +1,17 @@
 import type { NativeStackHeaderProps } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  ToastAndroid,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import { Text } from '../design/text';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../design/icon';
 import { symbols } from '../design/symbols';
-import {
-  colors,
-  interfaceFonts as fonts,
-  rhythm,
-  textStyles,
-} from '../design/tokens';
-import { androidBar } from './chrome';
+import { colors, rhythm, textStyles } from '../design/tokens';
+import { androidBar, androidHeaderBar } from './chrome';
 
 /**
  * A measured Android header: long reading titles wrap at the user's size.
@@ -21,51 +23,91 @@ export function AndroidReadingHeader({
   options,
   back,
 }: NativeStackHeaderProps) {
-  const right = options.headerRight?.({
+  const largeText = useWindowDimensions().fontScale >= 2;
+  const rootItems = !options.headerLeft
+    ? options.unstable_headerRightItems?.({ canGoBack: !!back })
+    : undefined;
+  const closeItem = rootItems?.find(
+    (item) => item.type === 'button' && item.label === 'Done',
+  );
+  const dialog = options.presentation && options.presentation !== 'card';
+  const up = !!back && !dialog && !closeItem;
+  const right = closeItem
+    ? androidHeaderBar(rootItems!.filter((item) => item !== closeItem))
+    : options.headerRight?.({
+        tintColor: colors.navy,
+        backgroundColor: colors.paper,
+        canGoBack: !!back,
+      });
+  const left = options.headerLeft?.({
     tintColor: colors.navy,
-    backgroundColor: colors.paper,
     canGoBack: !!back,
   });
+  const close = () =>
+    closeItem?.type === 'button' ? closeItem.onPress?.() : navigation.goBack();
+  const label = up ? 'Navigate up' : 'Close';
+  const leading = left ?? (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={
+        up ? 'Returns to the previous screen' : 'Closes this dialog'
+      }
+      testID={up ? 'header-back' : 'header-done'}
+      onPress={close}
+      onLongPress={() => ToastAndroid.show(label, ToastAndroid.SHORT)}
+      android_ripple={{ color: colors.navyWash, borderless: true }}
+      style={styles.action}
+    >
+      <Icon
+        name={up ? symbols.arrowLeft : symbols.close}
+        size={24}
+        maxScale={1}
+      />
+    </Pressable>
+  );
+  const heading = (
+    <Text
+      wordSafe
+      variant="inlineTitle"
+      accessibilityRole="header"
+      style={[styles.title, largeText ? { flex: 0 } : null]}
+    >
+      {typeof options.headerTitle === 'string'
+        ? options.headerTitle
+        : options.title}
+    </Text>
+  );
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.bar}>
-      <View style={styles.row}>
-        {back ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`Back to ${back.title || 'previous screen'}`}
-            testID="header-back"
-            onPress={() => navigation.goBack()}
-            style={styles.action}
-          >
-            <Icon name={symbols.arrowLeft} size={24} maxScale={1} />
-          </Pressable>
-        ) : null}
-        <Text accessibilityRole="header" style={styles.title}>
-          {typeof options.headerTitle === 'string'
-            ? options.headerTitle
-            : options.title}
-        </Text>
-        {right ??
-          (back ? null : (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Done"
-              testID="header-done"
-              onPress={() => navigation.goBack()}
-              style={[styles.action, styles.trailing]}
-            >
-              <Text maxFontSizeMultiplier={1.5} style={styles.done}>
-                Done
-              </Text>
-            </Pressable>
-          ))}
-      </View>
+      {largeText ? (
+        <View style={styles.large}>
+          <View style={styles.actions}>
+            {leading}
+            <View style={{ flex: 1 }} />
+            {right}
+          </View>
+          {heading}
+        </View>
+      ) : (
+        <View style={styles.row}>
+          {leading}
+          {heading}
+          {right}
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   bar: { backgroundColor: colors.paper },
+  large: {
+    paddingHorizontal: rhythm.screen,
+    paddingVertical: rhythm.tight,
+    gap: rhythm.tight,
+  },
+  actions: { flexDirection: 'row', alignItems: 'center' },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -77,13 +119,13 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: textStyles.inlineTitle.fontFamily,
     fontSize: androidBar.title,
+    lineHeight: 28,
     color: colors.ink,
   },
-  action: { minWidth: 48, minHeight: 48, justifyContent: 'center' },
-  trailing: { alignItems: 'flex-end' },
-  done: {
-    fontFamily: fonts.sansSemiBold,
-    fontSize: androidBar.action,
-    color: colors.navy,
+  action: {
+    width: 48,
+    minHeight: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
