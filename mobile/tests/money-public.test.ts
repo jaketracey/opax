@@ -159,6 +159,33 @@ describe('public-money privacy before presentation', () => {
     const profile = d.decodeAgency(input);
     expect(JSON.stringify(profile)).not.toContain('Ada Example');
   });
+  test('a contract honours its linked supplier’s individual entity type before its trading name', () => {
+    const directory = raw('/agencies.json');
+    const input = raw(directory.agencies[0].profile_path);
+    input.suppliers = [
+      {
+        ...input.suppliers[0],
+        id: 'fixture-supplier',
+        name: 'Fixture Trading Pty Ltd',
+        entity_type: 'individual',
+        abn_type: 'IND',
+      },
+    ];
+    input.contracts = [
+      {
+        ...input.contracts[0],
+        supplier_id: 'fixture-supplier',
+        supplier: 'Fixture Trading Pty Ltd',
+        title: 'Services from Fixture Trading Pty Ltd',
+      },
+    ];
+    const profile = d.decodeAgency(input);
+    expect(profile.contracts[0]).toMatchObject({
+      supplier: 'Individual supplier',
+      title: '',
+    });
+    expect(JSON.stringify(profile)).not.toContain('Fixture Trading');
+  });
   test('private donor names never survive Discover summaries, evidence and chart participants', () => {
     const input = decodeDiscovery(raw('/discovery.json')).signals.find(
       (s) => s.category === 'recipient_concentration',

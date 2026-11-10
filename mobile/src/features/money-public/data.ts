@@ -340,6 +340,20 @@ export function decodeAgencies(v: unknown) {
 }
 export function decodeAgency(v: unknown) {
   const d = object(v);
+  const suppliers = array((v) => {
+    const s = object(v),
+      id = nonempty(s.id),
+      name = nonempty(s.name),
+      organisation = isOrganisation(name, opt(s.entity_type), abnType(s), id);
+    return {
+      id,
+      name: organisation ? name : unnamedSupplier,
+      organisation,
+      total: number(s.total),
+      count: count(s.count),
+    };
+  })(d.suppliers);
+  const supplierEntities = new Map(suppliers.map((s) => [s.id, s]));
   return {
     id: nonempty(d.id),
     name: nonempty(d.name),
@@ -356,26 +370,18 @@ export function decodeAgency(v: unknown) {
       };
     })(d.years),
     undated: number(object(d.undated).total),
-    suppliers: array((v) => {
-      const s = object(v),
-        name = nonempty(s.name),
-        organisation = isOrganisation(name, opt(s.entity_type), abnType(s));
-      return {
-        id: nonempty(s.id),
-        name: organisation ? name : unnamedSupplier,
-        organisation,
-        total: number(s.total),
-        count: count(s.count),
-      };
-    })(d.suppliers),
+    suppliers,
     supplierCount: d.supplier_count === undefined ? 0 : count(d.supplier_count),
     contracts: array((v) => {
       const c = object(v),
         name = nonempty(c.supplier),
-        organisation = isOrganisation(name, opt(c.entity_type), abnType(c));
+        supplierId = opt(c.supplier_id),
+        organisation =
+          supplierEntities.get(supplierId)?.organisation !== false &&
+          isOrganisation(name, opt(c.entity_type), abnType(c), supplierId);
       return {
         id: nonempty(c.id),
-        supplierId: opt(c.supplier_id),
+        supplierId,
         title: organisation ? nonempty(c.title) : '',
         supplier: organisation ? name : unnamedSupplier,
         value: number(c.amount),
