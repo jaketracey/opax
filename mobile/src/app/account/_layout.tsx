@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+export { RouteErrorBoundary as ErrorBoundary } from '../../design/route-error';
 import { Platform } from 'react-native';
 import { useStackChrome, opaqueBar } from '../../navigation/chrome';
 import { colors } from '../../design/tokens';
