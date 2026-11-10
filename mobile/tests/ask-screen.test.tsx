@@ -12,6 +12,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  View,
 } from 'react-native';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import {
@@ -204,13 +205,12 @@ afterEach(async () => {
   jest.mocked(catalogs.roster).mockRejectedValue(new Error('Offline'));
   mockDirectory.current = null;
 });
-async function mount(options?: Parameters<typeof create>[1]) {
+async function mount() {
   await act(async () => {
     view = create(
       withNavigationOptions(<AskScreen />, (options) => {
         mockBar.options = options;
       }),
-      options,
     );
   });
   return view!;
@@ -1168,6 +1168,11 @@ test('Android observes IME show/hide and removes the bottom inset after native r
     height: number,
   ) => void)[] = [];
   const visible = jest.spyOn(Keyboard, 'isVisible').mockReturnValue(true);
+  const measure = jest
+    .spyOn(View.prototype, 'measureInWindow')
+    .mockImplementation((callback) => {
+      measured.push(callback);
+    });
   const handlers = new Map<string, (event: unknown) => void>();
   const listener = jest
     .spyOn(Keyboard, 'addListener')
@@ -1177,12 +1182,7 @@ test('Android observes IME show/hide and removes the bottom inset after native r
     });
   try {
     Platform.OS = 'android';
-    const screen = await mount({
-      createNodeMock: () => ({
-        measureInWindow: (callback: (typeof measured)[number]) =>
-          measured.push(callback),
-      }),
-    });
+    const screen = await mount();
     expect(handlers.has('keyboardDidShow')).toBe(true);
     expect(handlers.has('keyboardWillChangeFrame')).toBe(false);
     act(() =>
@@ -1210,6 +1210,7 @@ test('Android observes IME show/hide and removes the bottom inset after native r
   } finally {
     listener.mockRestore();
     visible.mockRestore();
+    measure.mockRestore();
     Platform.OS = original;
   }
 });

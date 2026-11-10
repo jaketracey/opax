@@ -190,7 +190,12 @@ export function AskDock({
               style={styles.chip}
               testID="ask-draft-new-conversation"
             >
-              <Text variant="footnote" tone="inkSoft">
+              <Text
+                variant="footnote"
+                tone="inkSoft"
+                wordSafe
+                style={styles.freshText}
+              >
                 {composerCopy.fresh}
               </Text>
               <Icon
@@ -380,6 +385,7 @@ const styles = StyleSheet.create({
   },
   androidSurface: { elevation: 2, shadowColor: colors.navy },
   androidOptions: { gap: rhythm.tight, paddingHorizontal: rhythm.tight },
+  freshText: { flex: 1 },
   chips: { flexDirection: 'row', gap: rhythm.tight },
   chip: {
     flexDirection: 'row',
