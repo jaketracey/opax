@@ -4,6 +4,7 @@ import argparse
 import csv
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -19,7 +20,11 @@ def lane(name):
 def index(root, prepared, blocked_reason=''):
     plan = json.loads((prepared/'suite.json').read_text())
     runs = {}
-    for path in sorted(root.rglob('flow-results.tsv'), key=lambda p: p.stat().st_mtime):
+    paths=[]
+    for folder, dirs, files in os.walk(root):
+        dirs[:]=[name for name in dirs if name not in {'node_modules','.git','shell-source','android-flows','maestro','screenshots'}]
+        if 'flow-results.tsv' in files: paths.append(Path(folder)/'flow-results.tsv')
+    for path in sorted(paths, key=lambda p: p.stat().st_mtime):
         for file, api, status in csv.reader(path.open(), delimiter='\t'):
             if api not in ('34', '36'): continue
             name = Path(file).name

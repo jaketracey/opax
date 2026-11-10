@@ -30,9 +30,6 @@ cleanup() {
   trap - EXIT
   trap '' INT TERM HUP
   qa_maestro_stop
-  if [ -n "${OPAX_ANDROID_RESULTS_ROOT:-}" ] && [ -f "$OUT/android-flows/suite.json" ]; then
-    python3 scripts/android-parity-results.py "$OPAX_ANDROID_RESULTS_ROOT" "$OUT/android-flows" || rc=1
-  fi
   for pid in "$METRO_PID" "$FIXTURE_PID"; do [ -z "$pid" ] || kill "$pid" 2>/dev/null || true; done
   if [ "$OWN_DEVICE" = 1 ]; then
     timed 10 "${ADB[@]}" shell settings put system font_scale 1.0 > "$OUT/restore.log" 2>&1 || true
@@ -43,6 +40,9 @@ cleanup() {
       [ -z "$EMULATOR_PID" ] || kill -TERM "$EMULATOR_PID" 2>/dev/null || true
       rc=1
     fi
+  fi
+  if [ -n "${OPAX_ANDROID_RESULTS_ROOT:-}" ] && [ -f "$OUT/android-flows/suite.json" ]; then
+    python3 scripts/android-parity-results.py "$OPAX_ANDROID_RESULTS_ROOT" "$OUT/android-flows" || rc=1
   fi
   exit "$rc"
 }
