@@ -261,6 +261,7 @@ describe('the sheet', () => {
       status: 'chosen',
       choice: { version: 1, seatId: grayndler.electorate_id, stateSeatIds: [] },
       choose,
+      forget: jest.fn(async () => undefined),
     };
     const r = await render(<SeatChooser presentation="sheet" />);
     expect(one(r, 'seat-saved-row').props.detail).toBe('Saved');
@@ -272,7 +273,9 @@ describe('the sheet', () => {
       destructive: true,
     });
     await act(async () => actions[0].onPress());
-    expect(forgetChoice).toHaveBeenCalledTimes(1);
+    // Through the seat's write queue, never straight to the store.
+    expect(mockSeat.current.forget).toHaveBeenCalledTimes(1);
+    expect(forgetChoice).not.toHaveBeenCalled();
     expect(closeWelcome).toHaveBeenCalledTimes(1);
     await act(async () => r.unmount());
   });

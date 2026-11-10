@@ -23,7 +23,6 @@ import { headerItems } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { seatStateRoute, welcomeSeatStateRoute } from '../../navigation/routes';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
-import { forgetChoice } from '../your-mp/choice-store';
 import type { Directory } from '../your-mp/model';
 import { migratedSeat, useSeat } from '../your-mp/useSeat';
 import { FieldClearance } from './FieldClearance';
@@ -78,9 +77,6 @@ const offlineOf = (state: DirectoryState) =>
   state.status === 'ready' && state.directory.electorates.stale
     ? { savedAt: state.directory.electorates.savedAt ?? null }
     : null;
-
-/** Forget is a persisted tombstone, so an older slot cannot revive the choice. */
-export const forgetSeat = forgetChoice;
 
 /**
  * Saving a choice: the tapped row shows an indicator while the seat is
@@ -327,7 +323,9 @@ export function SeatChooser({
         title: seatCopy.remove,
         destructive: true,
         onPress: () => {
-          void forgetSeat().then(
+          // Through the seat's write queue, so a save still in flight
+          // cannot land after the forget and bring the choice back.
+          void seat.forget().then(
             () => close(false),
             () => undefined,
           );

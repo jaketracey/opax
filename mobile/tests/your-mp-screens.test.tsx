@@ -1132,6 +1132,46 @@ describe('Your MP tab', () => {
     await act(async () => r.unmount());
   });
 
+  test('Forget waits for a state removal still being written', async () => {
+    const seat = seatNamed('Ballarat'),
+      district = seatNamed('Wendouree');
+    mock.yourMP.mockImplementation(async (id, chosen) =>
+      c.yourMPFor(id, index, manifest, chosen),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    let written!: () => void;
+    (saveChoice as jest.Mock).mockImplementation(
+      () => new Promise<void>((resolve) => (written = resolve)),
+    );
+    jest.mocked(forgetChoice).mockClear();
+    const sheet = jest
+      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+      .mockImplementation((_options, done) => done(0));
+    choose(seat.electorate_id, [district.electorate_id]);
+    mockOptions.length = 0;
+    const r = await render(<YourMP />);
+    const row = ids(r, 'your-state-member-')[0]!;
+    await act(async () => menuItems(row.props.menu).at(-1)!.onPress!());
+    expect(saveChoice).toHaveBeenCalledTimes(1);
+    type Row = { type: string; items?: Row[]; onPress?: () => void };
+    const header = mockOptions
+      .filter((o) => o.unstable_headerRightItems)
+      .at(-1)!.unstable_headerRightItems as () => {
+      type: string;
+      menu?: { items: Row[] };
+    }[];
+    const rows = header().find((i) => i.type === 'menu')!.menu!.items;
+    await act(async () => rows.at(-1)!.items![0]!.onPress!());
+    // The forget is queued behind the removal, so it lands last.
+    expect(forgetChoice).not.toHaveBeenCalled();
+    await act(async () => written());
+    expect(forgetChoice).toHaveBeenCalledTimes(1);
+    sheet.mockRestore();
+    await act(async () => r.unmount());
+  });
+
   test('a skeleton while the seat loads, then an error, never the chooser', async () => {
     let fail!: (e: Error) => void;
     (loadChoice as jest.Mock).mockResolvedValue(null);
