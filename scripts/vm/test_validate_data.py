@@ -567,6 +567,17 @@ class GrantsTests(Base):
         (self.root / f"{self.FED}/programs/go5.json").unlink()
         self.assertFails("grants", "programs/go5.json is missing")
 
+    def test_every_listed_award_keeps_its_value_and_a_real_title(self):
+        # search-hubs-008: a $0.00 GrantConnect award is published as 0, never dropped
+        good = {"abn-3": {"n": "R", "grants": [{"id": "GA14347", "v": 0}, {"id": "GA1", "v": 12.5, "n": "Rent"}]}}
+        self.write(f"{self.FED}/shard-03.json", good)
+        self.assertOk("grants")
+        self.write(f"{self.FED}/shard-03.json", {"abn-3": {"n": "R", "grants": [{"id": "GA14347"}]}})
+        self.assertFails("grants", "award GA14347 has no value")
+        # search-hubs-017: a QLD placeholder title falls back to the program name at export
+        self.write(f"{P}/grants/qld/shard-03.json", {"abn-3": {"n": "R", "grants": [{"id": "qld-1", "v": 5, "n": "N/A"}]}})
+        self.assertFails("grants", "award qld-1 is titled 'N/A'")
+
     def test_extra_program_files_are_harmless(self):
         self.write(f"{self.FED}/programs/stale.json", {"id": "x"})
         self.assertOk("grants")

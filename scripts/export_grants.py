@@ -650,10 +650,22 @@ def clean_row(row, cols):
     return out
 
 
+def source_title(title):
+    """A QLD expenditure title, or None for a placeholder ("N/A", "NA", "-") so the program name stands in
+    (search-hubs-017)."""
+    return None if (title or "").strip().casefold() in ("n/a", "na", "-") else title
+
+
+def award_value(v):
+    """A listed award's value: whole dollars, except a value under 50 cents keeps its cents so it never reads as
+    $0. A value of exactly 0 is published as 0 ("$0 (as published)"), not dropped (search-hubs-008)."""
+    return round(v) if v == 0 or abs(v) >= 0.5 else round(v, 2)
+
+
 SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, release_holder,
                     seat_vacant, seat_holder,
                     margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
-                    program_index_extras, program_name, unmangle, clean_row)
+                    program_index_extras, program_name, unmangle, clean_row, source_title, award_value)
 SHARED_CONSTANTS = ("ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
                     "PROGRAM_RECIPIENTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
 
@@ -836,7 +848,7 @@ else:
         abn = re.sub(r"\D", "", r["recipient_abn"] or "")
         rid = rid_for("qld_expenditure", abn if abn not in ("", "0") else None, r["recipient"])
         grants.append({
-            "id": f"qld-{r['grant_id']}", "rid": rid, "v": r["amount"] or 0.0, "n": r["title"] or r["program"],
+            "id": f"qld-{r['grant_id']}", "rid": rid, "v": r["amount"] or 0.0, "n": source_title(r["title"]) or r["program"],
             "ag": r["agency"], "pr": r["program"], "go": None, "cat": r["category"],
             "fy": r["financial_year"] or fy_of(r["start_date"]), "s": r["start_date"], "e": r["end_date"],
             "adhoc": 1 if r["grant_type"] in ("discretionary", "one_off") else 0,
@@ -1080,12 +1092,13 @@ for rid, rec, gs, t in listed:
         "agencies": [[a, round(v)] for a, v in ((list(agency_idx)[i], v) for i, v in ag.most_common(6))],
         "programs": [[p, round(v)] for p, v in pr.most_common(8)],
         "sel": ({k: round(v) for k, v in sel.most_common()} or None), "el": [[e, round(v)] for e, v in el.most_common(6)] or None,
+        # every field but the value drops when empty; a $0.00 award keeps "v": 0 (search-hubs-008)
         "grants": [{k: v for k, v in {
-            "id": g["id"], "v": round(g["v"]), "n": g["n"], "ag": agency_label(g["ag"]),
+            "id": g["id"], "v": award_value(g["v"]), "n": g["n"], "ag": agency_label(g["ag"]),
             "pr": (g["pr"] if g["pr"] != g["n"] else None), "cat": g["cat"],
             "fy": g["fy"], "s": g["s"], "adhoc": g["adhoc"], "sel": g["sel"], "el": g["el"],
             "guid": g.get("guid"), "desc": g.get("desc"),
-        }.items() if v not in (None, "", 0)} for g in gs_sorted[:GRANTS_PER_DETAIL]],
+        }.items() if k == "v" or v not in (None, "", 0)} for g in gs_sorted[:GRANTS_PER_DETAIL]],
         "more": max(0, len(gs) - GRANTS_PER_DETAIL),
         "d": donor_block(rec, full=True),
         "other": ({"jur": other_jur, "t": round(other_total or 0), "c": other_count or 0, "f": file_key(rid)}

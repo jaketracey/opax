@@ -47,6 +47,7 @@ way and every file that `git status` shows as changed or added must parse.
 """
 import importlib.util
 import json
+import math
 import re
 import subprocess
 import sys
@@ -392,6 +393,20 @@ def check_grants() -> list[str]:
             errs.append(f"index lists program {p.get('id')} but programs/{p.get('key')}.json is missing")
             if len(errs) > 10:
                 break
+    # Every listed award carries a finite value, 0 included: a $0.00 GrantConnect award is published as 0, never
+    # dropped (search-hubs-008); and a QLD placeholder title never stands in for the program (search-hubs-017).
+    for jur in ("federal", "qld"):
+        for name in _changed(f"{PUBLIC}/grants/{jur}", r"shard-\d+\.json"):
+            shard, err = _load_json(f"{PUBLIC}/grants/{jur}/{name}")
+            for rid, rec in (shard.items() if isinstance(shard, dict) and not err else ()):
+                for g in (rec.get("grants") or []) if isinstance(rec, dict) else ():
+                    v = g.get("v") if isinstance(g, dict) else None
+                    if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v):
+                        errs.append(f"grants/{jur}/{name} {rid} award {g.get('id') if isinstance(g, dict) else g} has no value")
+                    elif str(g.get("n") or "").strip().casefold() in ("n/a", "na", "-"):
+                        errs.append(f"grants/{jur}/{name} {rid} award {g.get('id')} is titled {g.get('n')!r}")
+                    if len(errs) > 20:
+                        return errs
     # The rule portal/test/program-notes.test.mjs enforces: every federal id the notes name is still in programs[].
     notes, _ = _load_json(f"{PUBLIC}/grants/program-notes.json")
     named = (notes.get("programs") if isinstance(notes, dict) else None) or {}

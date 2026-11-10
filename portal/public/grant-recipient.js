@@ -9,6 +9,8 @@ const JURISDICTIONS = { federal: 'Commonwealth', qld: 'Queensland' };
 const SOURCES = { federal: 'https://www.grants.gov.au/', qld: 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964' };
 const REGISTERS = { qld: 'Queensland electoral returns', vic: 'Victorian electoral returns', tas: 'Tasmanian electoral returns' };
 const money = value => MONEY.format(Number(value) || 0);
+/** One award's value: "$0 (as published)" when the source records $0.00, never a silent $0 for a missing value (search-hubs-008). */
+export const awardMoney = value => value === 0 ? '$0 (as published)' : value == null || value === '' || !Number.isFinite(Number(value)) ? 'Value not recorded' : money(value);
 const node = (tag, text, className) => {
   const element = document.createElement(tag);
   if (text != null) element.textContent = String(text);
@@ -112,7 +114,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     const selectedIndex = grants.findIndex(g => g.id === selectedAward);
     if (selectedIndex >= 0) {
       const award = grants[selectedIndex], featured = section(`Grant award ${award.id}`, 'featured-award');
-      featured.append(node('p', money(award.v), 'grant-recipient-award-value'), node('p', award.desc || award.n));
+      featured.append(node('p', awardMoney(award.v), 'grant-recipient-award-value'), node('p', award.desc || award.n));
       featured.append(definitionList([['Recipient', data.n], ['Agency', award.ag], ['Agreement starts', award.s], ['Program', award.pr]]));
       featured.append(node('p', 'Published award value, not evidence of payments received.', 'grant-recipient-note'));
       const original = link(recipientSourceUrl(jurisdiction, award), 'Read the original GrantConnect award', 'grant-recipient-source-link'); original.target = '_blank'; original.rel = 'noopener'; featured.append(original);
@@ -139,7 +141,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       list.replaceChildren(); list.start = page * 20 + 1;
       for (const grant of grants.slice(page * 20, page * 20 + 20)) {
         const item = node('li'), heading = node('div', null, 'grant-recipient-record-heading');
-        heading.append(node('h3', grant.n || grant.pr || grant.id), node('strong', money(grant.v)));
+        heading.append(node('h3', grant.n || grant.pr || grant.id), node('strong', awardMoney(grant.v)));
         item.append(heading);
         if (grant.desc) item.append(node('p', grant.desc, 'grant-recipient-description'));
         const metadata = [grant.ag, grant.cat].filter(Boolean);
