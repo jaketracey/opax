@@ -168,7 +168,8 @@ export function buildModel(view: MoneyGraph): MapModel {
       amount: e.total,
       count: e.count,
       // Donations on the map's scale; public money on its own, lighter one.
-      width: type === 'donations' ? edgeWidth(e.total) : publicEdgeWidth(e.total),
+      width:
+        type === 'donations' ? edgeWidth(e.total) : publicEdgeWidth(e.total),
       // A flow takes its source's colour: a donor's industry, or the hub's.
       colour: source.colour,
       type,

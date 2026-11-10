@@ -44,7 +44,8 @@ export const nodeFloorAmount = () => (NODE_FLOOR / NODE_SCALE) ** 2;
 /** The amount at which a line reaches the cap. */
 export const edgeCapAmount = () => (EDGE_CAP / EDGE_SCALE) ** 2;
 /** The amount at which a public money line reaches its cap. */
-export const publicEdgeCapAmount = () => (PUBLIC_EDGE_CAP / PUBLIC_EDGE_SCALE) ** 2;
+export const publicEdgeCapAmount = () =>
+  (PUBLIC_EDGE_CAP / PUBLIC_EDGE_SCALE) ** 2;
 /** The donation flow drawn as wide as a public money flow of `amount`. */
 export const publicEdgeEquivalent = (amount: number) =>
   (publicEdgeWidth(amount) / EDGE_SCALE) ** 2;

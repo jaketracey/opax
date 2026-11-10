@@ -15,8 +15,10 @@ import {
   type AccessibilityActionInfo,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import {
+import Animated, {
   Easing,
+  FadeIn,
+  FadeOut,
   cancelAnimation,
   runOnJS,
   useAnimatedReaction,
@@ -114,6 +116,8 @@ const FLY_SETTLE_MS = 1500;
 /** How far inside the chrome a focused disc must sit to count as in view. */
 const VIEW_MARGIN = 6;
 const DIM = 0.2;
+/** The overview appears once the reader is this far in from the fit. */
+const OVERVIEW_LEVEL = 1.15;
 const fill = {
   position: 'absolute',
   top: 0,
@@ -389,11 +393,12 @@ export function MoneyMap({
     const fly = pendingFly.current;
     const flying =
       fly !== null && fly.id === node.id && Date.now() - fly.at < FLY_SETTLE_MS;
-    if (!flying && discInView(cam, p.x, p.y, node.radius, viewport, VIEW_MARGIN))
+    if (
+      !flying &&
+      discInView(cam, p.x, p.y, node.radius, viewport, VIEW_MARGIN)
+    )
       return;
-    animateTo(
-      cameraAt(cam, p.x, p.y, viewport, focusScale(cam.k, fitK.get())),
-    );
+    animateTo(cameraAt(cam, p.x, p.y, viewport, focusScale(cam.k, fitK.get())));
   }, [focusIndex, model, at, viewport, settled, current, animateTo, fitK]);
   const centreOn = useCallback(
     (x: number, y: number) =>
@@ -629,6 +634,16 @@ export function MoneyMap({
     },
     [slots, box],
   );
+  // At the fit the whole map is in view, so the overview only earns its
+  // corner once the reader has come in closer.
+  const [zoomedIn, setZoomedIn] = useState(false);
+  useAnimatedReaction(
+    () => level.value > OVERVIEW_LEVEL,
+    (now, before) => {
+      if (now !== before) runOnJS(setZoomedIn)(now);
+    },
+    [],
+  );
   // Reduce Motion stops the flick (no decay) and every fly is a cut; a pan
   // or pinch still follows the finger, as a scroll view does.
 
@@ -719,8 +734,14 @@ export function MoneyMap({
           ) : null}
         </View>
       </GestureDetector>
-      {overview && size.width > 0 ? (
-        <View
+      {overview && zoomedIn && size.width > 0 ? (
+        <Animated.View
+          entering={
+            reduced ? undefined : FadeIn.duration(motion.duration.crossfade)
+          }
+          exiting={
+            reduced ? undefined : FadeOut.duration(motion.duration.crossfade)
+          }
           style={[
             styles.overview,
             { left: overview.left, bottom: overview.bottom },
@@ -734,10 +755,10 @@ export function MoneyMap({
             tx={tx}
             ty={ty}
             k={k}
-            stage={size}
+            viewport={viewport}
             onJump={centreOn}
           />
-        </View>
+        </Animated.View>
       ) : null}
       {perf}
       {children}

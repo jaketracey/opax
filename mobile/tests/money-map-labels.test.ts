@@ -313,16 +313,39 @@ describe('visibleLabels', () => {
 
 test('visibleLabels hides a name that would hang under the panel', () => {
   const slots = [
-    { key: 'a', kind: 'name' as const, text: 'A', ink: '#000', x: 100, y: 100, r: 2 },
-    { key: 'b', kind: 'name' as const, text: 'B', ink: '#000', x: 100, y: 700, r: 2 },
+    {
+      key: 'a',
+      kind: 'name' as const,
+      text: 'A',
+      ink: '#000',
+      x: 100,
+      y: 100,
+      r: 2,
+    },
+    {
+      key: 'b',
+      kind: 'name' as const,
+      text: 'B',
+      ink: '#000',
+      x: 100,
+      y: 700,
+      r: 2,
+    },
   ];
   const camera = { tx: 0, ty: 0, k: 1 };
   const box = { width: 120, height: 22 };
   // Without insets both are on screen.
-  expect(visibleLabels(slots, camera, { width: 400, height: 800 }, box)).toEqual({ a: 1, b: 1 });
+  expect(
+    visibleLabels(slots, camera, { width: 400, height: 800 }, box),
+  ).toEqual({ a: 1, b: 1 });
   // A panel 200 points tall covers the second.
   expect(
-    visibleLabels(slots, camera, { width: 400, height: 800, insets: { bottom: 200 } }, box),
+    visibleLabels(
+      slots,
+      camera,
+      { width: 400, height: 800, insets: { bottom: 200 } },
+      box,
+    ),
   ).toEqual({ a: 1 });
 });
 
@@ -330,13 +353,36 @@ test('visibleLabels counts a long name in lines, so a wrapped name clears the ro
   const camera = { tx: 0, ty: 0, k: 1 };
   const viewport = { width: 400, height: 800 };
   const box = { width: 120, height: 22 };
-  const short = { key: 'short', kind: 'party' as const, text: 'Labor', ink: '#000', x: 100, y: 100, r: 2 };
-  const below = { key: 'below', kind: 'name' as const, text: 'Rio', ink: '#000', x: 100, y: 130, r: 2 };
+  const short = {
+    key: 'short',
+    kind: 'party' as const,
+    text: 'Labor',
+    ink: '#000',
+    x: 100,
+    y: 100,
+    r: 2,
+  };
+  const below = {
+    key: 'below',
+    kind: 'name' as const,
+    text: 'Rio',
+    ink: '#000',
+    x: 100,
+    y: 130,
+    r: 2,
+  };
   // Two one-line names 30 points apart both fit.
-  expect(visibleLabels([short, below], camera, viewport, box)).toEqual({ short: 1, below: 1 });
+  expect(visibleLabels([short, below], camera, viewport, box)).toEqual({
+    short: 1,
+    below: 1,
+  });
   // A two-line name above takes the room the second needs.
   const long = { ...short, key: 'long', text: 'Commonwealth contracts' };
-  expect(visibleLabels([long, below], camera, viewport, box)).toEqual({ long: 1 });
+  expect(visibleLabels([long, below], camera, viewport, box)).toEqual({
+    long: 1,
+  });
   // Further down, both are back.
-  expect(visibleLabels([long, { ...below, y: 160 }], camera, viewport, box)).toEqual({ long: 1, below: 1 });
+  expect(
+    visibleLabels([long, { ...below, y: 160 }], camera, viewport, box),
+  ).toEqual({ long: 1, below: 1 });
 });
