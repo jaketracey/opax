@@ -144,6 +144,7 @@ const failedPartyBlock = (error: unknown): Block<never> => ({
 });
 export class Catalogs {
   private suggestionData?: Promise<SuggestionSources>;
+  private suggestionLoadedAt?: number;
   /** The last bills index read this session, for the bill page's party note. */
   private billIndex?: RecordResult<decode.BillIndex>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
@@ -1000,7 +1001,18 @@ export class Catalogs {
     return { ...result, data: view };
   }
   suggestionSources(refresh = false): Promise<SuggestionSources> {
+    const now = Date.now();
+    if (
+      this.suggestionLoadedAt !== undefined &&
+      (now < this.suggestionLoadedAt ||
+        now - this.suggestionLoadedAt >= 86400000)
+    ) {
+      this.suggestionData = undefined;
+      this.suggestionLoadedAt = undefined;
+      this.suggestionIdentityRetry = 'unused';
+    }
     if (!this.suggestionData || refresh) {
+      this.suggestionLoadedAt = undefined;
       const pending = (async () => {
         const [manifest, roster, bills, slugs] = await Promise.all([
           this.client.get(
@@ -1087,6 +1099,8 @@ export class Catalogs {
       this.suggestionData = pending;
       void pending.then(
         (sources) => {
+          if (this.suggestionData === pending)
+            this.suggestionLoadedAt = Date.now();
           if (
             this.suggestionData === pending &&
             this.suggestionIdentityRetry !== 'used'
