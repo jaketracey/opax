@@ -7,6 +7,7 @@ import {
   vec,
 } from '@shopify/react-native-skia';
 import { useEffect, useMemo } from 'react';
+import { Platform } from 'react-native';
 import {
   useDerivedValue,
   useFrameCallback,
@@ -175,17 +176,20 @@ export function VoiceOrb({
   }, false);
 
   const animated = phase !== 'rest' && !(reduceMotion && phase === 'listening');
+  const androidSize = Platform.OS === 'android' ? size : 0;
   useEffect(() => {
     code.set(phaseCode[phase]);
     calm.set(reduceMotion ? 1 : 0);
-    if (animated) {
+    // Android's surface needs a frame when it first gains a size, even at
+    // rest. Otherwise the derived paths can stay blank until the first call.
+    if (animated || Platform.OS === 'android') {
       frame.setActive(true);
-      return;
     }
+    if (animated) return;
     // Let the last ripple settle before the frame loop stops.
     const settle = setTimeout(() => frame.setActive(false), 1200);
     return () => clearTimeout(settle);
-  }, [phase, reduceMotion, animated, code, calm, frame]);
+  }, [phase, reduceMotion, animated, androidSize, code, calm, frame]);
 
   // The core swells a little with either voice; the rosette swells with it.
   const swell = useDerivedValue(() =>
