@@ -9,6 +9,7 @@ nice -n 10 python3 scripts/test-privacy-scan.py
 echo 'OPAX QA: Android flow preparation'
 nice -n 10 node --test scripts/test-android-flows.mjs
 nice -n 10 python3 scripts/test-android-harness.py
+nice -n 10 python3 scripts/test-android-results.py
 echo 'OPAX QA: shared-host lock'
 nice -n 10 bash scripts/test-qa-lock.sh
 echo 'OPAX QA: simulator lifetime'

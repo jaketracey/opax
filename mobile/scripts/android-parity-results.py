@@ -25,9 +25,12 @@ def index(root, prepared, blocked_reason=''):
         dirs[:]=[name for name in dirs if name not in {'node_modules','.git','shell-source','android-flows','maestro','screenshots'}]
         if 'flow-results.tsv' in files: paths.append(Path(folder)/'flow-results.tsv')
     for path in sorted(paths, key=lambda p: p.stat().st_mtime):
-        for file, api, status in csv.reader(path.open(), delimiter='\t'):
+        for file, api, status in csv.reader(path.read_text().splitlines(), delimiter='\t'):
             if api not in ('34', '36'): continue
             name = Path(file).name
+            warmup = name == 'offline-warmup.yaml'
+            if warmup and status == '0': continue
+            if warmup: name = '04-offline.yaml'
             report = path.parent/(Path(file).stem+'-report.xml')
             step = ''
             if report.exists():
@@ -47,13 +50,17 @@ def index(root, prepared, blocked_reason=''):
             if status != '0' and hierarchies:
                 hierarchy = max(hierarchies, key=lambda p: p.stat().st_mtime)
                 evidence += f'; [hierarchy](<{hierarchy.relative_to(root)}>)'
-            failure_kind = 'FAIL' if report.exists() else 'HARNESS ERROR'
+            if warmup: step = 'Offline setup failed before the journey: '+step
+            failure_kind = 'FAIL' if report.exists() and not warmup else 'HARNESS ERROR'
             result = 'PASS' if status == '0' else failure_kind+evidence+'; '+step.replace('|','/').replace('\n',' ')[:350]
             runs[(name, api)] = result
     counts = {category:sum(p['category'] == category for p in plan) for category in sorted({p['category'] for p in plan})}
     text = '# and-b-pipeline Android parity results\n\n'
     text += 'Updated: '+datetime.now(timezone.utc).isoformat()+'\n\n'
     text += 'Coverage: '+', '.join(f'{k}: {v}' for k,v in counts.items())+f"; {sum(p['run'] for p in plan)} runnable journeys.\n\n"
+    for api in ('34','36'):
+        values=[runs.get((Path(row['path']).name,api),'NOT RUN') for row in plan if row['run']]
+        text += f'API {api}: '+', '.join(f'{label}: {sum(value.startswith(label) for value in values)}' for label in ('PASS','FAIL','HARNESS ERROR','NOT RUN'))+'.\n\n'
     if blocked_reason: text += '**Device execution blocked:** '+blocked_reason+'\n\n'
     text += '| Shared flow | API 34: OPAX_API34, 5602 | API 36: OPAX_Pixel_API36, 5604 read-only | Owning lane if app failure |\n| --- | --- | --- | --- |\n'
     for row in plan:
