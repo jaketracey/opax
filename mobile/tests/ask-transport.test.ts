@@ -167,3 +167,74 @@ test('offline and explicit cancel never retry', async () => {
   ).rejects.toMatchObject({ code: 'cancelled' });
   expect(t).toHaveBeenCalledTimes(2);
 });
+
+test('done completes the answer without waiting for the server to close the stream', async () => {
+  Object.assign(globalThis, { TextDecoder, TextEncoder });
+  const reader = {
+    read: jest
+      .fn()
+      .mockResolvedValueOnce({
+        value: new TextEncoder().encode(
+          `event: done\ndata: ${JSON.stringify(payload)}\n\n`,
+        ),
+        done: false,
+      })
+      .mockRejectedValue(new Error('The connection stayed open after done')),
+    cancel: jest.fn().mockResolvedValue(undefined),
+    releaseLock: jest.fn(),
+  };
+  const t = jest.fn().mockResolvedValue(
+    response(200, payload, {
+      headers: { get: () => 'text/event-stream' },
+      body: { getReader: () => reader },
+    }),
+  );
+  await expect(
+    api(t).askPost('/api/ask?stream=1', {}, controller().signal, {
+      stage: jest.fn(),
+      delta: jest.fn(),
+      retry: jest.fn(),
+    }),
+  ).resolves.toEqual(payload);
+  expect(reader.read).toHaveBeenCalledTimes(1);
+  expect(reader.cancel).toHaveBeenCalledTimes(1);
+  expect(reader.releaseLock).toHaveBeenCalledTimes(1);
+});
+
+test.each([
+  ['', 'invalid'],
+  ['event: delta\ndata: {"text":"Part of an answer"}\n\n', 'partial'],
+  [
+    'event: delta\ndata: {"text":"Withdrawn"}\n\nevent: retry\ndata: {}\n\n',
+    'invalid',
+  ],
+])(
+  'stream errors describe only words still shown: %s',
+  async (prefix, code) => {
+    Object.assign(globalThis, { TextDecoder, TextEncoder });
+    const reader = {
+      read: jest.fn().mockResolvedValueOnce({
+        value: new TextEncoder().encode(
+          `${prefix}event: error\ndata: {"error":"Private provider details","final":true}\n\n`,
+        ),
+        done: false,
+      }),
+      cancel: jest.fn().mockResolvedValue(undefined),
+      releaseLock: jest.fn(),
+    };
+    const t = jest.fn().mockResolvedValue(
+      response(200, payload, {
+        headers: { get: () => 'text/event-stream' },
+        body: { getReader: () => reader },
+      }),
+    );
+    await expect(
+      api(t).askPost('/api/ask?stream=1', {}, controller().signal, {
+        stage: jest.fn(),
+        delta: jest.fn(),
+        retry: jest.fn(),
+      }),
+    ).rejects.toMatchObject({ code, message: 'The answer stream failed.' });
+    expect(t).toHaveBeenCalledTimes(1);
+  },
+);

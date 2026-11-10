@@ -539,6 +539,7 @@ export class ApiClient {
           const { value, done } = await reader.read();
           if (done) break;
           stream.push(decoder.decode(value, { stream: true }));
+          if (stream.done) break;
         }
         stream.push(decoder.decode(), true);
         return stream.result();

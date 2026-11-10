@@ -59,7 +59,11 @@ export class AskStream {
   private buffer = '';
   private final: unknown;
   private completed = false;
+  private shown = false;
   constructor(private on: StreamHandlers) {}
+  get done() {
+    return this.completed;
+  }
   push(text: string, end = false) {
     this.buffer += text;
     let match: RegExpExecArray | null;
@@ -95,12 +99,14 @@ export class AskStream {
       this.completed = true;
     } else if (event === 'error')
       throw new AskFailure(
-        'partial',
-        typeof v.error === 'string' ? v.error : 'The answer stream failed.',
+        this.shown ? 'partial' : 'invalid',
+        'The answer stream failed.',
       );
-    else if (event === 'delta' && typeof v.text === 'string')
+    else if (event === 'delta' && typeof v.text === 'string') {
+      if (v.text) this.shown = true;
       this.on.delta(v.text);
-    else if (event === 'retry') {
+    } else if (event === 'retry') {
+      this.shown = false;
       this.on.retry();
       this.on.stage('Searching again');
     } else if (event === 'status') {
