@@ -134,6 +134,7 @@ test('the full viewer reads a local photo, keeps its frame and retries in place'
   });
   expect(yearPictures.get).toHaveBeenCalledTimes(1);
   const image = renderer.root.findAllByType(Image)[0]!;
+  expect(image.props.resizeMode).toBe('contain');
   expect(image.props.source.uri).toBe(
     'file:///cache/2025-cooper-polling-place.webp',
   );
@@ -357,6 +358,6 @@ test('a failed archive image keeps its caption and credit without an error overl
   const frame = renderer.root.findAllByProps({
     testID: `tm-photo-${key}-placeholder`,
   })[0]!;
-  expect(frame.props.style.aspectRatio).toBe(16 / 10);
+  expect(frame.props.style.aspectRatio).toBe(4 / 3);
   act(() => renderer.unmount());
 });
