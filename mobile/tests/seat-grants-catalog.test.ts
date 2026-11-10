@@ -180,3 +180,47 @@ test('seat grants apply the program privacy rule before presentation', () => {
   });
   expect(JSON.stringify(page)).not.toContain('Fixture private');
 });
+
+test('a full 500-grant page retains its continuation and oversized or empty continuations are rejected', () => {
+  const grants = Array.from({ length: 500 }, (_, i) => ({
+    ...first.grants[0],
+    id: `GA-fixture-${i}`,
+  }));
+  expect(decodeSeatGrants({ ...first, c: 501, grants }).grants).toHaveLength(
+    500,
+  );
+  expect(() =>
+    decodeSeatGrants({
+      ...first,
+      c: 501,
+      grants: [...grants, { ...grants[0], id: 'GA-fixture-500' }],
+    }),
+  ).toThrow();
+  expect(() => decodeSeatGrants({ ...first, grants: [] })).toThrow();
+});
+
+test('a continuation named by its published site path is followed as the seat file', async () => {
+  const { catalog, transport } = setup();
+  transport.mockImplementation(
+    async (url: string) =>
+      new Response(
+        JSON.stringify(
+          url.endsWith('-2.json')
+            ? second
+            : { ...first, next: '/grants/federal/seats/maribyrnong-2.json' },
+        ),
+      ),
+  );
+  const a = await catalog.seat('federal', 'maribyrnong');
+  expect(a!.data.next).toBe('maribyrnong-2.json');
+  const b = await catalog.seat('federal', 'maribyrnong', false, {
+    page: a!.data.next!,
+  });
+  expect(b!.data.grants).toHaveLength(2);
+  for (const next of [
+    '/grants/qld/seats/maribyrnong-2.json',
+    '/grants/federal/seats/another-seat-2.json',
+    'https://example.test/grants/federal/seats/maribyrnong-2.json',
+  ])
+    expect(() => decodeSeatGrants({ ...first, next })).toThrow();
+});
