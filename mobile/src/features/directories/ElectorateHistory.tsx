@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import {
   Button,
@@ -8,16 +8,13 @@ import {
   Text,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
-import { isPartyLabel, presidingRole } from '../../design/party';
+import { isPartyLabel, partyText, presidingRole } from '../../design/party';
 import { personRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
-import {
-  representativeProfile,
-  type Directory,
-  type ElectorateView,
-} from '../your-mp/model';
+import type { Directory, ElectorateView } from '../your-mp/model';
 import { preciseDate } from '../your-mp/RepresentativeRows';
 import { representationAt } from './model';
+import { rosterProfileResolver } from './roster-profiles';
 
 type Term = ElectorateView['terms'][number];
 const SHOWN = 4;
@@ -70,19 +67,20 @@ function HistoryRow({
   party,
   detail,
   view,
-  directory,
+  resolveProfile,
   testID,
 }: {
   personId: string;
   party: string | null;
   detail: string | null;
   view: ElectorateView;
-  directory: Directory;
+  resolveProfile: ReturnType<typeof rosterProfileResolver>;
   testID: string;
 }) {
   const person = view.people[personId];
-  const profile = representativeProfile(personId, directory);
-  const name = person ? rosterName(person.name) : 'Name not recorded';
+  const profile = resolveProfile(person, personId);
+  const legalName = person ? rosterName(person.name) : null;
+  const name = profile?.name ?? legalName ?? 'Name not recorded';
   // Older term files may record only the presiding code. Use an available
   // recorded party from the linked profile before falling back to the role.
   const label =
@@ -93,9 +91,23 @@ function HistoryRow({
   return (
     <PersonRow
       name={name}
+      accessibilityLabel={
+        legalName && legalName !== name
+          ? [
+              name,
+              `Recorded as ${legalName}`,
+              role
+                ? null
+                : partyText({ party: label, status: 'unknown' }).spoken,
+              role ?? detail,
+            ]
+              .filter(Boolean)
+              .join(', ')
+          : undefined
+      }
       portrait={
-        person ? (
-          <CachedPortrait name={person.name} slug={profile?.slug} />
+        person || profile ? (
+          <CachedPortrait name={name} slug={profile?.slug} />
         ) : undefined
       }
       party={role ? undefined : label}
@@ -124,6 +136,10 @@ export function ElectorateHistory({
   header?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const resolveProfile = useMemo(
+    () => rosterProfileResolver(directory),
+    [directory],
+  );
   const terms = pastTerms(view);
   if (!terms.length) return null;
   const row = (t: Term, i: number) => (
@@ -138,7 +154,7 @@ export function ElectorateHistory({
       }
       detail={termSpan(t)}
       view={view}
-      directory={directory}
+      resolveProfile={resolveProfile}
       testID={`electorate-history-${i}`}
     />
   );
@@ -181,6 +197,10 @@ export function DatedMembers({
   asof: string;
   onBackToToday: () => void;
 }) {
+  const resolveProfile = useMemo(
+    () => rosterProfileResolver(directory),
+    [directory],
+  );
   const selected = representationAt(view, asof);
   return (
     <View
@@ -200,7 +220,7 @@ export function DatedMembers({
               party={r.party}
               detail={null}
               view={view}
-              directory={directory}
+              resolveProfile={resolveProfile}
               testID={`electorate-dated-${r.person_id}`}
             />
           ))}

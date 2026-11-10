@@ -5,7 +5,9 @@ the iOS minimum. Android targets API 36, with API 24 as the native minimum.
 Both platforms use light mode. Android bringup and its remaining parity work are
 described in [Android notes](../docs/ANDROID-BRINGUP.md).
 App identity: OPAX, `au.com.opax.app`, version `1.0.0`.
-No push, analytics or crash reporter. Android has no microphone permission.
+No push or crash reporter. iOS production builds send anonymous product
+analytics ([analytics](../docs/ANALYTICS.md#ios-and-android-app)); Android
+sends none. Android has no microphone permission.
 Production release
 tooling uses locally supplied Apple credentials; none are part of the app config.
 

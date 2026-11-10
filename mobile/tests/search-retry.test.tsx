@@ -4,12 +4,16 @@ import { withNavigationOptions } from './navigation-options';
 // repeats only that, and every empty state has a way on.
 import { router } from 'expo-router';
 import { act } from 'react';
+import { Keyboard, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import Search from '../src/features/Search';
 import { catalogs, recordSearch } from '../src/api/runtime';
 import { openSuggestedPerson } from '../src/features/search/navigation';
 import { resetSearchSession } from '../src/features/search/requests';
 import { ScopeBar } from '../src/features/search/ScopeBar';
+import { SearchIdle } from '../src/features/search/SearchIdle';
+import { SearchSuggestions } from '../src/features/search/SearchSuggestions';
+import { requestSearchTabReset } from '../src/features/search/tab-reset';
 import {
   InlineError,
   PersonRow,
@@ -35,6 +39,7 @@ jest.mock('../src/features/search/navigation', () => ({
   openSearchPerson: jest.fn(),
 }));
 const mockBar: { options?: Record<string, any> } = {};
+let mockParams: Record<string, string | undefined> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   return {
@@ -44,9 +49,15 @@ jest.mock('expo-router', () => {
       Menu: () => null,
       MenuAction: () => null,
     }),
-    router: { push: jest.fn(), navigate: jest.fn() },
+    router: {
+      push: jest.fn(),
+      navigate: jest.fn(),
+      setParams: jest.fn((params) => {
+        mockParams = { ...mockParams, ...params };
+      }),
+    },
     useSegments: () => [],
-    useLocalSearchParams: () => ({}),
+    useLocalSearchParams: () => mockParams,
     useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
     Stack: {
       Screen: ({ options }: { options?: Record<string, any> }) => {
@@ -90,6 +101,7 @@ const empty = () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockParams = {};
   resetSearchSession();
   jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue(sources());
   jest.mocked(catalogs.suggestionSources).mockResolvedValue(sources());
@@ -114,6 +126,78 @@ async function mount() {
   });
   return r;
 }
+
+test.each(['typing', 'results'])(
+  'selecting Search from %s restores Browse with a fresh native scroll view and no keyboard',
+  async (phase) => {
+    jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+    const r = await mount();
+    if (phase === 'typing') await type('housing');
+    else await submit('housing');
+    expect(r.root.findAllByType(SearchIdle)).toHaveLength(0);
+    const previousScroll = r.root.findByType(ScrollView);
+    const nativeBar = {
+      setText: jest.fn(),
+      cancelSearch: jest.fn(),
+      blur: jest.fn(),
+      focus: jest.fn(),
+    };
+    bar().ref.current = nativeBar;
+    const frame = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation((callback) => {
+        callback(0);
+        return 0;
+      });
+    const dismiss = jest.spyOn(Keyboard, 'dismiss');
+    try {
+      await act(async () => requestSearchTabReset());
+      expect(r.root.findAllByType(SearchIdle)).toHaveLength(1);
+      expect(r.root.findAllByType(SearchSuggestions)).toHaveLength(0);
+      expect(r.root.findAllByType(ScopeBar)).toHaveLength(0);
+      // A new native scroll view restores the automatic top inset, including
+      // the expanded title. Reusing the scrolled view at y=0 cannot do that.
+      const freshScroll = r.root.findByType(ScrollView);
+      expect(freshScroll).not.toBe(previousScroll);
+      expect(freshScroll.props.contentInsetAdjustmentBehavior).toBe(
+        'automatic',
+      );
+      expect(nativeBar.setText).toHaveBeenCalledWith('');
+      expect(nativeBar.cancelSearch).toHaveBeenCalled();
+      expect(nativeBar.blur).toHaveBeenCalled();
+      expect(nativeBar.focus).not.toHaveBeenCalled();
+      expect(dismiss).toHaveBeenCalled();
+      expect(bar().autoFocus).toBe(false);
+      await act(async () => r.unmount());
+    } finally {
+      frame.mockRestore();
+      dismiss.mockRestore();
+    }
+  },
+);
+
+test.each([false, true])(
+  'a reset clears a linked query and the same link can submit again, request before mount: %s',
+  async (beforeMount) => {
+    jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+    mockParams = { q: 'housing', scope: 'people' };
+    if (beforeMount) requestSearchTabReset();
+    const r = await mount();
+    if (!beforeMount) {
+      expect(r.root.findByType(ScopeBar).props.value).toBe('people');
+      await act(async () => requestSearchTabReset());
+    }
+    expect(router.setParams).toHaveBeenCalledWith({ q: undefined });
+    expect(r.root.findAllByType(SearchIdle)).toHaveLength(1);
+    await act(async () => {
+      mockParams = { q: 'housing', scope: 'people' };
+      r.update(withNavigationOptions(<Search />, () => {}));
+    });
+    expect(r.root.findByType(ScopeBar).props.value).toBe('people');
+    expect(r.root.findAllByType(SearchIdle)).toHaveLength(0);
+    await act(async () => r.unmount());
+  },
+);
 
 test('suggestions that could not load offer Try again, which reads them again', async () => {
   jest

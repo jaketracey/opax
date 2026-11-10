@@ -635,3 +635,81 @@ test('Previous and Next move the claim to the source’s first mark', () => {
   expect(firstClaim(blocks, 1)).toEqual({ block: '1.0', sentence: 0 });
   expect(firstClaim(blocks, 3)).toBeUndefined();
 });
+
+describe('analytics: each question measured once, never its words', () => {
+  function measured(post: jest.Mock) {
+    const events: [string, Record<string, unknown>][] = [];
+    let now = 1000000;
+    let store: ChatStore = { v: 1, active: null, chats: [] };
+    const controller = new AskController({
+      post,
+      read: () => store,
+      save: async (s) => {
+        store = s;
+      },
+      now: () => (now += 250),
+      id: () => `fixture-chat-${store.chats.length}`,
+      section: () => 'person',
+      measure: (event, properties) => events.push([event, properties]),
+    });
+    return { controller, events };
+  }
+  const question = 'Did a named member vote for the housing bill in 2031?';
+
+  test('an answer sends started then completed with counts and a duration', async () => {
+    const post = jest
+      .fn()
+      .mockResolvedValueOnce(payload)
+      .mockResolvedValueOnce({ questions: [] });
+    const h = measured(post);
+    await h.controller.submit(question);
+    expect(h.events).toEqual([
+      ['opax_ask_started', { from_section: 'person', follow_up: false }],
+      [
+        'opax_ask_completed',
+        {
+          from_section: 'person',
+          follow_up: false,
+          duration_ms: 250,
+          source_count: payload.sources.length,
+          has_answer: true,
+        },
+      ],
+    ]);
+    expect(JSON.stringify(h.events)).not.toContain('housing');
+  });
+
+  test('a failure and a stop each send one failed event', async () => {
+    const post = jest
+      .fn()
+      .mockRejectedValueOnce(new AskFailure('offline', question));
+    const h = measured(post);
+    await h.controller.submit(question);
+    expect(h.events.at(-1)).toEqual([
+      'opax_ask_failed',
+      {
+        from_section: 'person',
+        follow_up: false,
+        duration_ms: 250,
+        cancelled: false,
+      },
+    ]);
+    post.mockImplementationOnce(
+      (_p: string, _b: object, signal: AbortSignal) =>
+        new Promise((_resolve, reject) =>
+          signal.addEventListener('abort', () =>
+            reject(new AskFailure('cancelled', 'Cancelled.')),
+          ),
+        ),
+    );
+    h.events.length = 0;
+    const running = h.controller.submit(question);
+    h.controller.stop();
+    await running;
+    expect(h.events.map(([event, p]) => [event, p.cancelled])).toEqual([
+      ['opax_ask_started', undefined],
+      ['opax_ask_failed', true],
+    ]);
+    expect(JSON.stringify(h.events)).not.toContain('housing');
+  });
+});

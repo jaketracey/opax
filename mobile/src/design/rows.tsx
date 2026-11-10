@@ -61,6 +61,8 @@ export interface LinkRowProps extends Navigation {
   title: ReactNode;
   titleRole?: import('./tokens').TextVariant;
   secondary?: ReactNode;
+  /** Metadata above a full-width title, rather than beside its first line. */
+  aboveTitle?: ReactNode;
   leadingAccessory?: ReactNode;
   valueLoading?: boolean;
   detail?: string;
@@ -88,6 +90,7 @@ export function LinkRow({
   title,
   titleRole = 'body',
   secondary,
+  aboveTitle,
   leadingAccessory,
   valueLoading = false,
   detail,
@@ -179,6 +182,7 @@ export function LinkRow({
       ) : null}
       <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
         <View style={[styles.titles, stacked ? null : styles.grow]}>
+          {aboveTitle}
           <View style={leading ? styles.titleLine : undefined}>
             {leading ? (
               <View

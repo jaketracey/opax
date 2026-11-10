@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
+import { analyticsEnabled } from '../analytics';
 import { copy } from '../design/copy';
 import { formatCount } from '../design/format';
 import {
@@ -77,6 +78,11 @@ export default function About() {
         <Text wordSafe variant="body" testID="about-privacy-device">
           {`${text.privacySearch()} ${text.privacyFollows()}`}
         </Text>
+        {analyticsEnabled() ? (
+          <Text wordSafe variant="body" testID="about-privacy-usage">
+            {text.privacyUsage()}
+          </Text>
+        ) : null}
         <Text wordSafe variant="body">
           {text.privacyAsk}
         </Text>

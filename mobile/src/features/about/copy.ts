@@ -19,6 +19,11 @@ export const aboutCopy = {
       'Reading OPAX needs no account. Like any website, OPAX’s servers see your iPhone’s IP address and keep it for up to 31 days.',
     ),
   privacySearch: () => phoneCopy('Searches aren’t saved on this iPhone.'),
+  // docs/ANALYTICS.md, "iOS and Android app": shown only in builds that send it.
+  privacyUsage: () =>
+    phoneCopy(
+      'OPAX counts how the app is used, such as which screens open and how many sources an answer had, with a random ID made on this iPhone. The counts never include what you type, ask or search for, and aren’t linked to your account.',
+    ),
   // journeys/follow.md 13.1 row 6: the one home of the storage line.
   privacyFollows: () =>
     phoneCopy(

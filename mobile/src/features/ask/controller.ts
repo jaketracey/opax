@@ -56,6 +56,25 @@ export type AskIO = {
   forgetActive?: () => void;
   id: () => string;
   now: () => number;
+  /**
+   * Analytics for each question's outcome: durations, counts and flags only,
+   * never the question or answer (src/analytics/events.ts).
+   */
+  measure?: (event: AskMeasure, properties: AskMeasureProperties) => void;
+  /** The screen section the question was asked from. */
+  section?: () => string;
+};
+export type AskMeasure =
+  | 'opax_ask_started'
+  | 'opax_ask_completed'
+  | 'opax_ask_failed';
+export type AskMeasureProperties = Record<string, string | number | boolean>;
+type Running = {
+  before: Turn[];
+  question: string;
+  started: number;
+  section: string;
+  followUp: boolean;
 };
 /** What Stop did with the stopped question (journeys/ask.md 4.4 step 4). */
 export type StopResult = 'restored' | 'kept' | null;
@@ -80,7 +99,7 @@ export class AskController {
   };
   private listeners = new Set<() => void>();
   private abort: AbortController | null = null;
-  private running: { before: Turn[]; question: string } | null = null;
+  private running: Running | null = null;
   private sequence = 0;
   constructor(private io: AskIO) {}
   snapshot = () => this.state;
@@ -90,6 +109,24 @@ export class AskController {
       this.listeners.delete(f);
     };
   };
+  private measure(
+    event: AskMeasure,
+    run: Running,
+    properties: AskMeasureProperties = {},
+  ) {
+    try {
+      this.io.measure?.(event, {
+        from_section: run.section,
+        follow_up: run.followUp,
+        ...(event === 'opax_ask_started'
+          ? {}
+          : { duration_ms: Math.max(0, this.io.now() - run.started) }),
+        ...properties,
+      });
+    } catch {
+      /* Analytics never interrupts an answer. */
+    }
+  }
   private update(p: Partial<AskState>) {
     this.state = { ...this.state, ...p };
     for (const f of this.listeners) f();
@@ -140,6 +177,8 @@ export class AskController {
   start(options: AskOptions = { ...defaultOptions }) {
     this.cancel();
     this.sequence++;
+    if (this.running)
+      this.measure('opax_ask_failed', this.running, { cancelled: true });
     this.running = null;
     this.io.forgetActive?.();
     this.update({
@@ -189,6 +228,7 @@ export class AskController {
   stop(): StopResult {
     if (!this.state.busy || !this.running) return null;
     const { before, question } = this.running;
+    this.measure('opax_ask_failed', this.running, { cancelled: true });
     this.sequence++;
     this.abort?.abort();
     this.abort = null;
@@ -286,7 +326,15 @@ export class AskController {
     this.abort = abort;
     const before = this.state.thread.slice(),
       o = { ...this.state.options };
-    this.running = { before, question: q };
+    const run: Running = {
+      before,
+      question: q,
+      started: this.io.now(),
+      section: this.io.section?.() ?? 'ask',
+      followUp: before.length > 0,
+    };
+    this.running = run;
+    this.measure('opax_ask_started', run);
     const user: Turn = { role: 'user', text: q, options: o };
     this.update({
       id: this.state.id || this.io.id(),
@@ -326,6 +374,12 @@ export class AskController {
       );
       if (mine !== this.sequence) return;
       this.running = null;
+      this.measure('opax_ask_completed', run, {
+        source_count:
+          data.answer_status === 'needs_question' ? 0 : data.sources.length,
+        has_answer:
+          data.answer_status !== 'needs_question' && !!data.answer.trim(),
+      });
       if (data.answer_status === 'needs_question') {
         // Nothing was searched or written: the conversation stays as it was,
         // so the next question is not read against this one.
@@ -376,6 +430,9 @@ export class AskController {
         e instanceof AskFailure
           ? e
           : new AskFailure('invalid', 'The answer could not be read.');
+      this.measure('opax_ask_failed', run, {
+        cancelled: failure.code === 'cancelled',
+      });
       // The failed question returns to the composer only when it is empty.
       const restore = !this.state.draft.trim();
       this.update({

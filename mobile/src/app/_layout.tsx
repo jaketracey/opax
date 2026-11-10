@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { startAnalytics, useScreenTracking } from '../analytics';
 import { isPad } from '../design/adaptive';
 import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
@@ -44,8 +45,10 @@ export default function Layout() {
   const [handedOver, setHandedOver] = useState(false);
   const endHandoff = useCallback(() => setHandedOver(true), []);
   const launch = useLaunchWelcome(tour);
+  useScreenTracking();
   useEffect(() => {
     void checkFirstLaunch();
+    startAnalytics();
   }, []);
   // The launch decision, once (shell.md 3, first-launch 4.1 L2 and 4.5): the
   // splash holds while it is pending. A plain first launch presents the full

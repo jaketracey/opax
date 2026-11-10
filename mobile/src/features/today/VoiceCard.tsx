@@ -1,5 +1,6 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
+import { track } from '../../analytics';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Icon, Text } from '../../design/primitives';
 import { designFlags } from '../../design/flags';
@@ -22,7 +23,13 @@ export function VoiceCard() {
   if (!voiceLinked || !designFlags.talkInAsk || voiceOff) return null;
 
   const label = signedOut ? accountCopy.signUpToTalk : 'Start a voice chat';
-  const start = () => router.push(signedOut ? talkSignInRoute : talkRoute);
+  const start = () => {
+    track('opax_voice_card', {
+      action: 'open',
+      account: signedOut ? 'signed_out' : 'signed_in',
+    });
+    router.push(signedOut ? talkSignInRoute : talkRoute);
+  };
 
   return (
     <Card

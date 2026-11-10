@@ -27,7 +27,9 @@ GUARDS = (
     "Cross-origin API requests are forbidden",
     "Redirects are not allowed for catalog data",
 )
-SDK_PATTERN = re.compile(rb"posthog|mixpanel|amplitude|segment\.com|(?-i:(?<![a-z]))sentry|appsflyer|"
+# PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): JS only, sending
+# to the embedded opax.com.au/ingest proxy. Every other SDK stays refused.
+SDK_PATTERN = re.compile(rb"mixpanel|amplitude|segment\.com|(?-i:(?<![a-z]))sentry|appsflyer|"
                          rb"firebaseanalytics|appcenter|bugsnag|datadog|fbSDK|crashlytics|heapanalytics", re.I)
 SHIPPED_FRAMEWORKS = {"ExpoModulesJSI.framework", "hermesvm.framework", "ExpoFont.framework",
                       "ExpoModulesCore.framework", "React.framework", "ReactNativeDependencies.framework",
@@ -36,6 +38,19 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
+# posthog-react-native's own strings: its default hosts, as bare constants the
+# app overrides with ANALYTICS_CONFIG's host, and documentation links in its log
+# messages. Any other PostHog URL (an endpoint path, a new host) is refused.
+POSTHOG_SDK_HOSTS = {"us.i.posthog.com", "eu.i.posthog.com", "us-assets.i.posthog.com", "eu-assets.i.posthog.com"}
+# Whole Hermes string entries that match SDK_PATTERN without being an SDK:
+# posthog-core's list of bot user agents names Sentry's uptime monitor.
+SDK_PATTERN_EXEMPT = {b"sentryuptimebot"}
+POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types"}
+ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
+                    "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
+                    "environment": "production"}
+# What analytics adds to the privacy manifest: not linked, not tracking, Analytics.
+ANALYTICS_DATA_TYPES = ("ProductInteraction", "DeviceID")
 ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
 # Skia 2.6.2 reads Reanimated's package.json version, so Metro includes its
 # pinned 4.5.1 sideEffects metadata. These eight exact dependency references
@@ -118,22 +133,39 @@ def verify_voice_info(info, enabled):
     require("OPAXVoiceFixturePort" not in info, "production has no native fixture port")
 
 
-def verify_voice_privacy(manifest):
-    require(tuple(VOICE_POLICY["linkedDataTypes"]) == LABEL_DATA_TYPES and not VOICE_POLICY["unlinkedDataTypes"],
-            "voice policy data types are the App Store privacy label's")
+def expected_privacy_types(voice_enabled):
+    """Type -> (linked, purposes): analytics' unlinked Analytics types, merged
+    with the voice label's linked App Functionality types when voice ships."""
+    expected = {"NSPrivacyCollectedDataType" + name: (False, ["NSPrivacyCollectedDataTypePurposeAnalytics"])
+                for name in ANALYTICS_DATA_TYPES}
+    if voice_enabled:
+        for linked, names in ((True, VOICE_POLICY["linkedDataTypes"]), (False, VOICE_POLICY["unlinkedDataTypes"])):
+            for name in names:
+                key = "NSPrivacyCollectedDataType" + name
+                was_linked, purposes = expected.get(key, (False, []))
+                expected[key] = (was_linked or linked, ["NSPrivacyCollectedDataTypePurposeAppFunctionality", *purposes])
+    return expected
+
+
+def verify_collected_types(manifest, voice_enabled):
     require(manifest.get("NSPrivacyTracking") is False and not manifest.get("NSPrivacyTrackingDomains"),
             "privacy manifest declares no tracking")
     entries = manifest.get("NSPrivacyCollectedDataTypes", [])
-    expected = {"NSPrivacyCollectedDataType" + name: linked
-                for linked, names in ((True, VOICE_POLICY["linkedDataTypes"]),
-                                      (False, VOICE_POLICY["unlinkedDataTypes"])) for name in names}
+    expected = expected_privacy_types(voice_enabled)
     require(len(entries) == len(expected) and {e.get("NSPrivacyCollectedDataType") for e in entries} == set(expected),
             "privacy manifest collected types match the conservative production label; location not collected")
     for entry in entries:
-        require(entry.get("NSPrivacyCollectedDataTypeLinked") is expected[entry["NSPrivacyCollectedDataType"]] and
+        linked, purposes = expected[entry["NSPrivacyCollectedDataType"]]
+        require(entry.get("NSPrivacyCollectedDataTypeLinked") is linked and
                 entry.get("NSPrivacyCollectedDataTypeTracking") is False and
-                entry.get("NSPrivacyCollectedDataTypePurposes") == ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
-                "privacy type linkage, no tracking and App Functionality purpose")
+                entry.get("NSPrivacyCollectedDataTypePurposes") == purposes,
+                "privacy type linkage, no tracking and the declared purposes")
+
+
+def verify_voice_privacy(manifest):
+    require(tuple(VOICE_POLICY["linkedDataTypes"]) == LABEL_DATA_TYPES and not VOICE_POLICY["unlinkedDataTypes"],
+            "voice policy data types are the App Store privacy label's")
+    verify_collected_types(manifest, True)
     reasons = manifest.get("NSPrivacyAccessedAPITypes", [])
     require(bool(reasons) and all(e.get("NSPrivacyAccessedAPITypeReasons") for e in reasons) and
             any(e.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryUserDefaults" and
@@ -201,9 +233,19 @@ def has_analytics(body):
     # actual entries used by route/probe checks; malformed bytecode fails closed.
     strings = hermes_strings(body)
     entries = [body] if strings is None else [entry.encode("utf-8") for entry in strings]
-    return any(bool(SDK_PATTERN.search(entry)) or any(
-        host == denied or host.endswith("." + denied)
+    return any((bool(SDK_PATTERN.search(entry)) and entry not in SDK_PATTERN_EXEMPT) or any(
+        (host == denied or host.endswith("." + denied)) and not posthog_sdk_string(entry, host)
         for host in url_hosts(entry) for denied in ANALYTICS_HOSTS) for entry in entries)
+
+
+def posthog_sdk_string(entry, host):
+    """posthog-react-native's default-host constants and its docs links only."""
+    if host in POSTHOG_SDK_HOSTS:
+        return entry == b"https://" + host.encode()
+    if host == "posthog.com":
+        return all(url.startswith(b"https://posthog.com/docs/")
+                   for url in re.findall(rb"https?://[^\x00\s\"'<>\\]+", entry, re.I))
+    return False
 
 
 @lru_cache(maxsize=1)
@@ -639,10 +681,8 @@ def verify_app(app, args):
         verify_voice_privacy(privacy)
         check(True, "production privacy types, no tracking, existing required reasons retained")
     else:
-        check(privacy.get("NSPrivacyTracking") is False and
-              privacy.get("NSPrivacyCollectedDataTypes") == [] and
-              not privacy.get("NSPrivacyTrackingDomains"),
-              "app privacy manifest: no collected location or tracking")
+        verify_collected_types(privacy, False)
+        check(True, "app privacy manifest: analytics types only, no collected location or tracking")
     binary_privacy = scan_binary_privacy(app,
         output=Path(args.output).with_name("privacy-scan-" + args.kind + ".json"),
         evidence_dir=Path(args.output).parent / ("privacy-symbols-" + args.kind))
@@ -723,6 +763,13 @@ def verify_app(app, args):
               config["ios"]["buildNumber"] == args.build and
               "NSAppTransportSecurity" not in config["ios"]["infoPlist"],
               "embedded production OPAX origin, config and build number")
+        # Analytics' app_version and the API User-Agent read these, so they
+        # must be the archive's own CFBundleShortVersionString.
+        check(config.get("version") == args.version and
+              config["extra"].get("appVersion") == args.version,
+              "embedded version and User-Agent version match the marketing version")
+        check(config["extra"].get("analytics") == ANALYTICS_CONFIG,
+              "analytics sends only to the opax.com.au/ingest proxy with the public project token")
         check(config.get("updates", {}).get("enabled") is False, "OTA updates disabled")
         check(config["extra"].get("router", {}).get("sitemap") is False,
               "Expo debugging sitemap route disabled in embedded runtime config")
@@ -730,12 +777,14 @@ def verify_app(app, args):
               all("SIL OPEN FONT LICENSE" in f["notice"] for f in config["extra"]["fontAcknowledgements"]),
               "bundled font licence notices")
     lock = json.loads(Path("package-lock.json").read_bytes())
+    check({p for p in lock["packages"] if re.search(r"posthog", p, re.I)} == POSTHOG_PACKAGES,
+          "PostHog is the reviewed JS SDK only: no replay, native plugin or other PostHog package")
     check(not re.search(r"node_modules/(?:@sentry/|@amplitude/|@segment/|@react-native-firebase/|"
-                        r"firebase(?:/|$)|posthog|mixpanel|appcenter|react-native-appsflyer|"
+                        r"firebase(?:/|$)|mixpanel|appcenter|react-native-appsflyer|"
                         r"react-native-adjust|expo-tracking-transparency|expo-insights|@bugsnag/|"
                         r"bugsnag|@datadog/|datadog|react-native-fbsdk|@facebook/)",
-                        "\n".join(lock["packages"]), re.I), "no analytics SDK dependencies")
-    check(not has_analytics(bundle), "no analytics SDK markers or known analytics hosts in shipped JS")
+                        "\n".join(lock["packages"]), re.I), "no other analytics SDK dependencies")
+    check(not has_analytics(bundle), "no other analytics SDK markers or analytics hosts in shipped JS")
     files = [p for p in app.rglob("*") if p.is_file()]
     team_in_metadata = False
     values = private_values()

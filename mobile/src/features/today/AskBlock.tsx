@@ -3,6 +3,7 @@ import { InsetGroup, SectionHeader } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { symbols } from '../../design/symbols';
 import { rhythm } from '../../design/tokens';
+import { track } from '../../analytics';
 import { useOpenAsk } from '../ask/open';
 import { starterList } from '../ask/starters';
 import { starterPair, type SydneyDate } from './rules';
@@ -31,7 +32,10 @@ export function AskBlock({ today }: { today: SydneyDate }) {
             key={question}
             title={question}
             symbol={symbols.ask}
-            onPress={() => openAsk({ question })}
+            onPress={() => {
+              track('opax_chip', { chip_kind: 'ask', placement: 'today' });
+              openAsk({ question });
+            }}
             accessibilityHint="Opens Ask with this question"
             testID={`today-ask-${i}`}
           />

@@ -42,6 +42,10 @@ jest.mock('expo-router', () => {
   return { router: { push: jest.fn() }, Stack: { Screen: () => null }, Link };
 });
 jest.mock('../src/voice/linked', () => ({ voiceLinked: true }));
+let mockAnalytics = false;
+jest.mock('../src/analytics', () => ({
+  analyticsEnabled: () => mockAnalytics,
+}));
 
 const corpus = pinned('/corpus.json');
 const record = (stale = false): RecordResult<unknown> => ({
@@ -141,6 +145,12 @@ describe('with coverage', () => {
       expect(words).not.toContain(gone);
   });
 
+  test('builds without analytics say nothing about it', () => {
+    expect(
+      renderer.root.findAllByProps({ testID: 'about-privacy-usage' }),
+    ).toHaveLength(0);
+  });
+
   test('machine text shows the label itself, not quoted UI labels', () => {
     const specimen = renderer.root.findByProps({
       testID: 'about-machine-label',
@@ -203,4 +213,32 @@ test('a failed read with nothing saved shows the error and keeps the Coverage ro
     renderer.root.findAllByType(LinkRow).map((row) => row.props.title),
   ).toEqual(['Coverage']);
   expect(texts()).not.toContain('691,104');
+});
+
+describe('with anonymous analytics', () => {
+  beforeEach(async () => {
+    mockAnalytics = true;
+    get.mockResolvedValue(record() as never);
+    await render();
+  });
+  afterEach(() => {
+    mockAnalytics = false;
+  });
+
+  test('privacy adds one plain line: counts, a random ID, never what is typed', () => {
+    const privacy = renderer.root.findByProps({
+      testID: 'about-privacy-section',
+    });
+    const paragraphs = privacy
+      .findAllByType(Text)
+      .filter((node) => node.props.variant === 'body');
+    expect(paragraphs).toHaveLength(5);
+    const usage = renderer.root.findByProps({
+      testID: 'about-privacy-usage',
+    });
+    expect(usage.props.children).toBe(
+      'OPAX counts how the app is used, such as which screens open and how many sources an answer had, with a random ID made on this iPhone. The counts never include what you type, ask or search for, and aren’t linked to your account.',
+    );
+    expect(usage.props.children).not.toMatch(/[—–]/);
+  });
 });

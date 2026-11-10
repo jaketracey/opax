@@ -1,4 +1,5 @@
 import { useSegments } from 'expo-router';
+import type { NavigationState } from 'expo-router/react-navigation';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
@@ -6,6 +7,7 @@ import { OpaxIPad } from '../../../modules/opax-ipad';
 import { designFlags } from '../../design/flags';
 import { dispatchKeyCommand } from '../../design/keyboard';
 import { colors } from '../../design/tokens';
+import { requestSearchTabReset } from '../../features/search/tab-reset';
 import { AndroidTabs } from '../../navigation/AndroidTabs';
 import { setSelectedTab } from '../../navigation/link-tab';
 // Search takes the system role on iOS 26; older iOS and Android keep five tabs.
@@ -39,6 +41,25 @@ export default function TabsLayout() {
       name="(search)"
       testID="tab-search"
       role={searchRole ? 'search' : undefined}
+      // This trigger also supplies the floating Search button on pushed pages.
+      // Own both effects so returning from another tab resets Search as well.
+      disablePopToTop
+      disableScrollToTop
+      listeners={({ navigation, route }) => ({
+        tabPress: (event) => {
+          if (event.data.isPrevented) return;
+          requestSearchTabReset();
+          const state: NavigationState = navigation.getState();
+          const stack = state.routes.find(
+            (item) => item.key === route.key,
+          )?.state;
+          if (stack?.key && stack.index)
+            navigation.dispatch({
+              type: 'POP_TO_TOP',
+              target: stack.key,
+            });
+        },
+      })}
     >
       <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
       <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
@@ -50,14 +71,24 @@ export default function TabsLayout() {
       minimizeBehavior="onScrollDown"
       tintColor={colors.navy}
     >
-      <NativeTabs.Trigger name="(today)" testID="tab-today">
+      <NativeTabs.Trigger
+        name="(today)"
+        testID="tab-today"
+        disablePopToTop={false}
+        disableScrollToTop={false}
+      >
         <NativeTabs.Trigger.Label>Today</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'newspaper', selected: 'newspaper.fill' }}
           md="newspaper"
         />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="(your-mp)" testID="tab-your-mp">
+      <NativeTabs.Trigger
+        name="(your-mp)"
+        testID="tab-your-mp"
+        disablePopToTop={false}
+        disableScrollToTop={false}
+      >
         <NativeTabs.Trigger.Label>Your MP</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           md="account_balance"
@@ -67,7 +98,12 @@ export default function TabsLayout() {
           }}
         />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="(bills)" testID="tab-bills">
+      <NativeTabs.Trigger
+        name="(bills)"
+        testID="tab-bills"
+        disablePopToTop={false}
+        disableScrollToTop={false}
+      >
         <NativeTabs.Trigger.Label>Bills</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'doc.text', selected: 'doc.text.fill' }}

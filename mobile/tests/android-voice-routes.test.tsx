@@ -66,6 +66,7 @@ jest.mock('expo-router', () => {
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
     useFocusEffect: jest.fn(),
     useRootNavigationState: () => ({ key: 'root' }),
+    useSegments: () => [],
   };
 });
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
