@@ -1,4 +1,5 @@
 import { normalizePassage, passageWindow } from './passage-text'
+import { isIdentityQuestion } from './ask-identity-intent'
 
 /** Progress citation formats stay at the API boundary; readers use source ranges. */
 export type AugmentedContext = {
@@ -6,7 +7,7 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-10-30-bill-stage-evidence-v5'
+export const ASK_PIPELINE_VERSION = '2026-11-10-identity-facts-v6'
 
 /** A deliberately scoped evidence gap is a valid answer, not a missing citation. */
 export const EVIDENCE_GAP_ANSWER = 'This selection does not establish their position on that topic.'
@@ -201,7 +202,7 @@ export function unsupportedQuotes(answer: string, evidence: string[]): string[] 
 
 /** Position summaries cannot substitute another topic just because it has citations. */
 export const isPositionBody = (body: Record<string, unknown>): boolean =>
-  String((body.prompt as {system?:string})?.system || '').startsWith('You explain Australian politicians’ documented positions from primary records.')
+  !isIdentityQuestion(String(body.query ?? '')) && String((body.prompt as {system?:string})?.system || '').startsWith('You explain Australian politicians’ documented positions from primary records.')
 export function guardPositionAnswer<T extends {answer?:string; retrieval_results?:{resources?:Record<string,any>}; augmented_context?:AugmentedContext}>(raw: T, body: Record<string,unknown>): T {
   if (!isPositionBody(body)) return raw
   const topic = String(body.query || '').toLowerCase()

@@ -301,7 +301,7 @@ export async function speechTrend(deps: ToolDeps, input: TrendInput): Promise<To
 }
 
 // ---------------------------------------------------------------- find_people
-interface Person { name: string; speeches: number | null; party?: string; party_now?: string; states?: string[]; chambers?: string[]; first?: number; last?: number; pid?: string; current?: boolean }
+interface Person { name: string; speeches: number | null; party?: string; party_now?: string; states?: string[]; chambers?: string[]; first?: number; last?: number; pid?: string; current?: boolean; representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[] }
 const fold = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase().replace(/\s+/g, ' ').trim()
 export async function findPeople(deps: ToolDeps, input: { name: string; limit?: number }): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'
@@ -315,7 +315,7 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
     .filter(({ n }) => n === q || words.every((w) => n.split(/[\s-]/).includes(w) || n.includes(w)))
     .sort((a, b) => Number(b.n === q) - Number(a.n === q) || (b.p.speeches ?? 0) - (a.p.speeches ?? 0))
     .slice(0, Math.min(Number(input.limit) || 5, 10))
-    .map(({ p }) => ({ name: p.name, party: p.party_now ?? p.party ?? null, states: p.states ?? [], chambers: p.chambers ?? [], years: [p.first ?? null, p.last ?? null], current: p.current ?? null, speeches_indexed: p.speeches }))
+    .map(({ p }) => ({ name: p.name, party: p.party_now ?? p.party ?? null, states: p.states ?? [], chambers: p.chambers ?? [], years: [p.first ?? null, p.last ?? null], current: p.current ?? null, speeches_indexed: p.speeches, representation: p.representation ?? [] }))
   return {
     tool: 'find_people', ok: true, data: { people: hits },
     cite: hits.map((h) => ({ kind: 'record' as const, label: h.name, url: `${origin}/subject/person/${encodeURIComponent(h.name)}` })),
