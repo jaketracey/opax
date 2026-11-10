@@ -33,6 +33,7 @@ export const TitleAnchorContext = createContext<
 // Mirrors the existing inline navigation ramp (17 pt to 23 pt). The device
 // reviewer must confirm this cap at AX5; this lane never boots a simulator.
 export const inlineTitleScaleCap = 23 / 17;
+const barTitleEllipsisWidth = 17;
 
 // SF Pro 17 pt advances tuned to lane lead's device measurements, 10 Nov 2026.
 const backTitleAdvances = [
@@ -100,9 +101,28 @@ export function minimumBarTitleWidth(title: string, fontScale = 1): number {
   const firstWord = words[0] ?? '';
   const advance = backPillWidth(firstWord) - 48;
   return Math.ceil(
-    Math.max(60, advance + (words.length > 1 ? 17 : 0)) *
+    Math.max(60, advance + (words.length > 1 ? barTitleEllipsisWidth : 0)) *
       Math.min(fontScale, inlineTitleScaleCap),
   );
+}
+
+/** The longest leading whole words that fit, or no useful bar title. */
+export function shortenBarTitle(
+  title: string,
+  room: number,
+  fontScale = 1,
+): string | null {
+  if (room < minimumBarTitleWidth(title, fontScale)) return null;
+  const scale = Math.min(fontScale, inlineTitleScaleCap);
+  const fits = (text: string, extra = 0) =>
+    (backPillWidth(text) - 48 + extra) * scale <= room;
+  if (fits(title)) return title;
+  const words = title.trim().split(/\s+/);
+  for (let count = words.length - 1; count > 0; count--) {
+    const wordsToShow = words.slice(0, count).join(' ');
+    if (fits(wordsToShow, barTitleEllipsisWidth)) return `${wordsToShow}…`;
+  }
+  return null;
 }
 
 /**
@@ -137,7 +157,8 @@ export function BarTitle({
     backTitle,
     fontScale,
   );
-  const fits = room >= minimumBarTitleWidth(title, fontScale);
+  const shortened = shortenBarTitle(title, room, fontScale);
+  const fits = shortened !== null;
   const visible = shown && fits;
   const [opacity] = useState(() => new Animated.Value(visible ? 1 : 0));
   useEffect(() => {
@@ -158,8 +179,9 @@ export function BarTitle({
     Animated.Text,
     {
       numberOfLines: 1,
-      ellipsizeMode: 'tail',
+      ellipsizeMode: 'clip',
       maxFontSizeMultiplier: inlineTitleScaleCap,
+      accessibilityLabel: title,
       accessibilityElementsHidden: !visible,
       importantForAccessibility: visible ? 'auto' : 'no-hide-descendants',
       testID: 'bar-title',
@@ -173,7 +195,7 @@ export function BarTitle({
         },
       ],
     },
-    title,
+    shortened ?? title,
   );
 }
 

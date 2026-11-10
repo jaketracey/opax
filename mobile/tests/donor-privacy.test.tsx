@@ -100,6 +100,7 @@ jest.mock('expo-router', () => {
     useLocalSearchParams: () => mockParams,
     useRouter: () => mockRouter,
     useNavigation: () => ({ setParams: jest.fn() }),
+    useFocusEffect: () => undefined,
     useSegments: () => [],
     router: { push: jest.fn() },
     Stack: { Screen: () => null },

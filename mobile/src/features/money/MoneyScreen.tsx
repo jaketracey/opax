@@ -1,5 +1,10 @@
 import { RouteOptions } from '../../navigation/preview';
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import {
+  useFocusEffect,
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -185,10 +190,30 @@ export default function MoneyScreen() {
   const { record, error, refreshing, refresh, retry } =
     useMoneyRecord(jurisdiction);
   const graph = record?.data ?? null;
+  const pendingFilters = useRef<Record<string, string | undefined> | null>(
+    null,
+  );
   const write = useCallback(
-    (next: Record<string, string | undefined>) =>
-      navigation.setParams(next as never),
-    [navigation],
+    (next: Record<string, string | undefined>) => {
+      if (navigation.isFocused()) {
+        pendingFilters.current = null;
+        router.setParams(next);
+      } else {
+        // The sheet owns focus. Update this map live, then commit its URL
+        // through Expo Router once Done, Cancel or dismissal returns focus.
+        pendingFilters.current = next;
+        navigation.setParams(next as never);
+      }
+    },
+    [navigation, router],
+  );
+  useFocusEffect(
+    useCallback(() => {
+      const next = pendingFilters.current;
+      if (!next) return;
+      pendingFilters.current = null;
+      router.setParams(next);
+    }, [router]),
   );
   const sheet = useMoneyFilters(graph, params, write);
   const filters = useMemo(

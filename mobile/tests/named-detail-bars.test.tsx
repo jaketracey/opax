@@ -34,6 +34,7 @@ import {
   backPillWidth,
   barTitleWidth,
   minimumBarTitleWidth,
+  shortenBarTitle,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
 
@@ -508,6 +509,63 @@ test('the useful minimum includes a whole first word and the capped text scale',
   );
 });
 
+test('bar title shortening keeps a whole title that fits', () => {
+  expect(shortenBarTitle('Anthony Albanese', 150)).toBe('Anthony Albanese');
+});
+
+test('bar title shortening keeps the longest leading whole words with an ellipsis', () => {
+  expect(shortenBarTitle('Anthony Albanese', 125)).toBe('Anthony…');
+  expect(shortenBarTitle('Digital Transformation Agency', 225)).toBe(
+    'Digital Transformation…',
+  );
+});
+
+test('bar title shortening hides a first word that cannot fit', () => {
+  expect(
+    shortenBarTitle('Commonwealth Home Support Programme', 100),
+  ).toBeNull();
+});
+
+test('bar title shortening reserves the full ellipsis advance', () => {
+  expect(shortenBarTitle('Anthony Albanese MP', 159)).toBe('Anthony…');
+  expect(shortenBarTitle('Anthony Albanese MP', 160)).toBe('Anthony Albanese…');
+});
+
+test('bar title shortening scales its advances and caps a large font scale', () => {
+  expect(shortenBarTitle('Anthony Albanese', 150, 1)).toBe('Anthony Albanese');
+  expect(shortenBarTitle('Anthony Albanese', 150, 3)).toBe('Anthony…');
+  expect(shortenBarTitle('Anthony Albanese', 150, 3)).toBe(
+    shortenBarTitle('Anthony Albanese', 150, 23 / 17),
+  );
+  expect(shortenBarTitle('Anthony Albanese', 100, 3)).toBeNull();
+});
+
+test('a shortened bar title exposes the full accessibility label', () => {
+  const originalWindow = Dimensions.get('window');
+  const originalScreen = Dimensions.get('screen');
+  try {
+    act(() => {
+      Dimensions.set({
+        window: { ...originalWindow, width: 402, fontScale: 1 },
+        screen: { ...originalScreen, width: 402 },
+      });
+      view = TestRenderer.create(
+        <BarTitle title="Anthony Albanese" shown backTitle="Today" />,
+      );
+    });
+    expect(view!.root.findByType(Animated.Text).props).toMatchObject({
+      children: 'Anthony…',
+      accessibilityLabel: 'Anthony Albanese',
+      accessibilityElementsHidden: false,
+      ellipsizeMode: 'clip',
+    });
+  } finally {
+    act(() =>
+      Dimensions.set({ window: originalWindow, screen: originalScreen }),
+    );
+  }
+});
+
 test.each([false, true])(
   'an unknown back title leaves the title at its intrinsic width, shown=%s',
   (shown) => {
@@ -898,7 +956,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(1);
     expect(text().props).toMatchObject({
       numberOfLines: 1,
-      ellipsizeMode: 'tail',
+      ellipsizeMode: 'clip',
     });
     act(() =>
       view!.update(
