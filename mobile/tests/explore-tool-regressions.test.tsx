@@ -5,6 +5,7 @@ import TestRenderer from 'react-test-renderer';
 import { LinkRow, SegmentedControl } from '../src/design/primitives';
 import Matrix from '../src/features/explore/Matrix';
 import Tide from '../src/features/explore/Tide';
+import { ReadState } from '../src/features/reports/parts';
 import { topicRoute } from '../src/navigation/routes/search';
 
 let mockData: unknown;
@@ -73,4 +74,18 @@ test('the tide topic total keeps the selected parliament scope', () => {
     typeof topicRoute
   >;
   expect(all.params.state).toBeUndefined();
+});
+
+test('the tide note names all five parliaments when All five is chosen', () => {
+  mockData = { decades: [], topics: {} };
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(<Tide />);
+  });
+  act(() =>
+    view.root.findAllByType(SegmentedControl)[0]!.props.onChange('all'),
+  );
+  const note = view.root.findByType(ReadState).props.sheet(mockData).notes[0];
+  expect(note).not.toContain('federal parliament');
+  expect(note).toContain('New South Wales');
 });

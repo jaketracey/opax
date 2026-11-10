@@ -15,7 +15,7 @@ import { ValueRow } from '../../design/rows';
 import { topicRoute } from '../../navigation/routes/search';
 import { topicNames } from '../reports/model';
 import { ReadState, ShareBars } from '../reports/parts';
-import { TIDE_NOTE } from './model';
+import { tideNote } from './model';
 import { ExploreChrome } from './parts';
 import { explore } from './runtime';
 export default function Tide() {
@@ -58,14 +58,7 @@ export default function Tide() {
           sheet={(data) => ({
             title: 'How to read the tide',
             coverage: scope === 'federal' ? 'Federal' : 'All five parliaments',
-            notes: [
-              TIDE_NOTE.replace(
-                'Federal parliament',
-                scope === 'federal'
-                  ? 'Federal parliament'
-                  : 'all five parliaments',
-              ),
-            ],
+            notes: [tideNote(scope)],
             extra: (
               <InsetGroup>
                 {data.decades
