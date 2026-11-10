@@ -1,11 +1,12 @@
 import { Stack } from 'expo-router';
-export { RouteErrorBoundary as ErrorBoundary } from '../../design/route-error';
 import { Platform } from 'react-native';
 import { useStackChrome, headerItems } from '../../navigation/chrome';
 import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { sheetOptions } from '../../navigation/stack/screen';
 import { colors } from '../../design/tokens';
 import { copy } from '../../design/copy';
+
+export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteErrorBoundary';
 
 // A cold `opax://talk/…` link opens with Talk beneath it (specs/account.md
 // 1.1).

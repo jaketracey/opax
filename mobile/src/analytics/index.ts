@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { useSegments } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import PostHog, { type PostHogOptions } from 'posthog-react-native';
 import {
@@ -12,6 +12,7 @@ import {
   type AnalyticsEvent,
   type EventProperties,
 } from './events';
+import { routeErrorPattern } from './route-patterns';
 
 /**
  * Anonymous product analytics (docs/ANALYTICS.md, "iOS and Android app").
@@ -140,6 +141,35 @@ export function track<E extends AnalyticsEvent>(
   } catch {
     /* optional */
   }
+}
+
+/** The existing iOS build gate and both payload scrubbers apply here too. */
+export function reportRouteError(error: unknown, segments: readonly string[]) {
+  if (Platform.OS !== 'ios') return;
+  try {
+    const constructor =
+      error !== null && typeof error === 'object'
+        ? Object.getPrototypeOf(error)?.constructor?.name
+        : undefined;
+    track('opax_route_error', {
+      error_class: constructor,
+      route_pattern: routeErrorPattern(screenName(segments)) ?? '/other',
+    });
+  } catch {
+    /* Reporting must never break the recoverable state. */
+  }
+}
+
+/** One event per caught error, including React's repeated effect setup. */
+export function useRouteErrorReporting(error: unknown) {
+  const segments = useSegments();
+  const pattern = screenName(segments);
+  const last = useRef<{ error: unknown } | null>(null);
+  useEffect(() => {
+    if (last.current && last.current.error === error) return;
+    last.current = { error };
+    reportRouteError(error, segments);
+  }, [error, pattern, segments]);
 }
 
 /** The section of the screen the reader is on ("ask", "person", "today"). */

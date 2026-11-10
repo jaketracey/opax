@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-export { RouteErrorBoundary as ErrorBoundary } from '../../design/route-error';
 import { Platform } from 'react-native';
 import { useStackChrome, opaqueBar } from '../../navigation/chrome';
 import { colors } from '../../design/tokens';
@@ -7,6 +6,8 @@ import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { accountScreens } from '../../navigation/stack/account';
 import { referenceScreens } from '../../navigation/stack/reference';
 import { askAccountScreens } from '../../navigation/stack/ask';
+
+export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteErrorBoundary';
 // Genuine account links open with Account beneath them and a working back
 // button (specs/account.md 1.1).
 export const unstable_settings = { initialRouteName: 'index' };

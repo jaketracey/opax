@@ -110,6 +110,7 @@ false and `$geoip_disable` true.
 | `opax_source_open` | `from_section`, `destination` (`app` or `browser`) |
 | `opax_chip` | `chip_kind` (`ask`), `placement` (`ask` or `today`) |
 | `opax_voice_card` | `action` (`open`), `account` (`signed_in` or `signed_out`) |
+| `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; version is the common `app_version` |
 
 `from_section` is the first segment of the current route (`today` for the
 home screen); anything else becomes `other`. `scope` is one of the fixed search
@@ -120,6 +121,29 @@ are off, and GeoIP is disabled. The install ID is a random UUID made by the SDK 
 app's documents folder; it is not the IDFV or IDFA and is not linked to an
 account. `tests/analytics-sdk.test.ts` runs the real SDK against a mocked
 network and proves a raw question cannot reach any request.
+
+`opax_route_error` reports once for each error caught by the reporting route
+boundary, including a new failure after Try again. It uses `track`, the same
+build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
+separate analytics consent setting in the app. Voice consent does not enable
+analytics. Android, e2e and ordinary development builds send no report. No
+identify call, exception autocapture or new identifier is added.
+
+Its only event-specific properties are the constructor name and route pattern.
+`error_class` accepts the built-in Error constructors, `ApiError`,
+`PersonIdentityError`, `ChatSyncError` and `AskFailure`; unknown constructors
+become `other`. It never reads `error.name`, message, stack or cause. Patterns
+must match the fixed list in `mobile/src/analytics/route-patterns.ts`, checked
+against route files by a regression test. Expo Router segments supply the
+pattern; pathnames, parameters, slugs, names, questions, answers and other free
+text are never supplied. Unknown patterns become `/other`. The usual anonymous
+SDK ID, privacy flags and common build metadata still apply.
+
+Reporting is wired to the Account, Talk, Community and Licence modal stacks
+through `mobile/src/navigation/RouteErrorBoundary.tsx`. The existing root and
+tab layouts still use the display-only `mobile/src/design/route-error.tsx`;
+their owner must add `useRouteErrorReporting(error)` there (or switch those
+exports to the reporting boundary) to cover failures caught at those levels.
 
 The privacy manifest declares Product Interaction and Device ID, not linked,
 not used for tracking, purpose Analytics; `NSPrivacyTracking` stays false. The
