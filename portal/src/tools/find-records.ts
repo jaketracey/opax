@@ -3,6 +3,8 @@ import { searchCatalog, CATALOG_KINDS, type CatalogRecord } from '../catalog-sea
 import { tokens } from '../catalog-query.mjs'
 import { billCitations, billFields, billKey, clip, siteUrl } from './record-common'
 import type { ToolDefinition } from './types'
+import { recipientTotal } from './grants'
+import { campaignSpend } from './campaign-spend'
 
 const KINDS = [...CATALOG_KINDS].sort()
 const LABEL: Record<string, string> = { pay: 'Parliamentary pay', receipt: 'Disclosed receipt', interest: 'Declared interest', expense: 'Parliamentary expenses', access: 'Lobbying access', 'audit report': 'Audit report' }
@@ -13,14 +15,22 @@ export const tool: ToolDefinition = {
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     query: { type: 'string', minLength: 2, maxLength: 200, description: 'Names or subject words, e.g. "Thales Australia" or "Defence secretary pay".' },
     kind: { type: 'string', enum: KINDS, description: 'Optional: only this kind of record.' },
+    jurisdiction: { type: 'string', enum: ['federal', 'qld', 'vic', 'nsw', 'sa', 'wa', 'tas', 'nt', 'act'], description: 'Only records from this government or parliament.' },
   }, required: ['query'], examples: [{ query: 'Thales Australia' }, { query: 'Penny Wong', kind: 'pay' }, { query: 'housing grants Perth', kind: 'grant' }] },
   stepLabel: args => ({ label: 'Finding records', arg: clip(args.query, 40) }),
   async handler(env, args) {
     if (!env.ASSETS) return { rows: [], citations: [], notes: [], error: 'The record catalog is unavailable.' }
     const query = String(args.query), kind = typeof args.kind === 'string' ? args.kind : 'all'
+    if ((kind === 'all' || kind === 'register') && /\b(?:campaign|advertising|advert|recruitment)\b/i.test(query)) {
+      try {
+        const campaigns = await campaignSpend(env, { campaign: query, jurisdiction: args.jurisdiction })
+        if (campaigns.rows.length) return campaigns
+      } catch { env.signal?.throwIfAborted() }
+    }
     const words = tokens(query).slice(0, 16)
     if (!words.length) return { rows: [], citations: [], notes: ['No searchable words in the query.'] }
     const url = new URL('https://opax.com.au/api/search-all?' + new URLSearchParams({ q: words.join(' '), kind }))
+    if (typeof args.jurisdiction === 'string') url.searchParams.set('state', args.jurisdiction)
     let found = await searchCatalog(url, env.ASSETS, { perKind: 3 })
     // Every word must match first; then any longer word, so one unknown word does not hide the rest.
     if (!found.total) {
@@ -30,6 +40,13 @@ export const tool: ToolDefinition = {
     const hits = (found.results as CatalogRecord[]).slice(0, 8)
     const enriched = await Promise.all(hits.map(async r => {
       const row = { kind: r.kind, title: r.kind === 'bill' ? r.title : clip(r.title, 120), summary: clip(r.snippet, 200), url: siteUrl(env, r.href || '/doc/' + r.slug), ...(r.dateLabel || r.date ? { period: r.dateLabel || r.date } : {}) }
+      const recipient = r.kind === 'grant' && /across [\d,]+ grant records/.test(r.snippet) ? /^\/money\/grants\/(federal|qld)\/recipient\/([^?#]+)/.exec(r.href) : null
+      if (recipient) {
+        try {
+          const total = await recipientTotal(env, { recipient: decodeURIComponent(recipient[2]), jurisdiction: recipient[1] })
+          if (total.citations.length) return { row: { ...row, ...total.rows[0] as object }, citations: total.citations }
+        } catch { env.signal?.throwIfAborted() }
+      }
       if (r.kind !== 'bill') return { row, citations: [{ kind: 'record' as const, text: `${LABEL[r.kind] ?? r.kind[0].toUpperCase() + r.kind.slice(1)}: ${row.title}${row.summary ? ' — ' + row.summary : ''}`, url: row.url }] }
       const lifecycle = await billFields(env, billKey(r.href, r.slug))
       return { row: { ...row, ...lifecycle }, citations: billCitations(lifecycle, row.title, row.url, query) }

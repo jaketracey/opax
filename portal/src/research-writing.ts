@@ -14,8 +14,9 @@ import {donationCoverageLimit} from './research-coverage'
 import {UNCONFIRMED_PERIOD} from './ask-constraints'
 import {recordAnswerLines,recordEvidenceText} from './research-record-answer'
 import {decodeHTMLStrict} from 'entities'
+import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-16-record-findings-distinct-summaries'
+export const ANSWER_WRITING_VERSION = 'written-answer-17-records-summaries-money'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -52,7 +53,7 @@ export function distinctSummary<T extends Record<string, unknown>>(payload:T):T 
 export const isCoverage = (s: string) => /^.*requested period.*(?:not fully covered|unknown)|^The requested period|^Coverage:|^Salary entitlements|^Federal parliament only|^\*?\*?Salaries as at|^These records|^Party and chamber labels|^Committee chair loadings|^Opax added|^This selection covers|^It excludes|^Amounts are|^Based on AEC/i.test(s)
 export const tokens = (s: string) => (s.match(/\d[\d,]*(?:\.\d+)?%?|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand|million|billion|twice|half)\b/gi) ?? []).map(n => n.toLowerCase().replace(/,/g, '').replace(/\.0+(?=%?$)/, ''))
 const dateWords = (s: string) => s.replace(/\b\d{4}-\d{2}-\d{2}\b/g, iso => `${iso} ${new Date(iso+'T00:00:00Z').toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}`)
-export const rawToolEcho = (s: string) => /(?:^|\n)\s*(?:[-*]\s*)?(?:Coverage|Disclosed receipt|Donor):|\bAggregated connection, not an individual gift\b|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||\b(?:base \$[\d,]+ plus \d+(?:\.\d+)?%)/i.test(s)
+export const rawToolEcho = (s: string) => /(?:^|\n)\s*(?:[-*]\s*)?(?:Coverage|Disclosed receipt|Donor|Grant|Register|Supplier):|\bCampaign advertising expenditure \(source reporting period retained; no category sum\)|\bAggregated connection, not an individual gift\b|\ba year as [^\n]+, \d{4}-\d{2}-\d{2} to \d{4}-\d{2}-\d{2}; base|\|\s*(?:Rank|Parliamentarian|Party|Recipient)\s*\||\b(?:base \$[\d,]+ plus \d+(?:\.\d+)?%)/i.test(s)
 
 /** Split calculator blocks into data atoms. Overlapping calculator/record calls share atoms. */
 export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[] = [], notes: string[] = []): WritingFact[] {
@@ -67,6 +68,11 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     const metadata=/^(?:Period|Financial years):/i.test(text)
     const evidenceId=source.resource+'/t/body/0'
     let atoms=atomsFromText(text,evidenceId,source)
+    // A labelled copy keeps a tool's explicit owner/amount association readable by the final claim audit.
+    const partyTotal=/^(.+?) received (\$[\d,.]+ in federal disclosed receipts[\s\S]*)$/.exec(text)
+    if(partyTotal)source={...source,snippet:source.snippet+'\n'+partyTotal[1]+': '+partyTotal[2]}
+    const moneyRows=moneyEvidenceRows(text)
+    if(moneyRows.length)source={...source,snippet:[...new Set([source.snippet,...moneyRows])].join('\n')}
     // The tool's own owner/amount/period association, never read back out of its wording.
     // An example annual-return reference is not the period or unit of its aggregate.
     const receipt=source.receipt
@@ -254,6 +260,9 @@ function writingClaimIdentity(atom:ClaimAtom,fact:WritingFact):string {
 }
 /** The last resort: the found facts themselves, each with its own dates. No parser stands between them and the reader. */
 export function renderFacts(input:WritingInput,bullets=false):WrittenSentence[] {
+  input=moneyWritingInput(input)
+  const money=moneyWritingLines(input,foundFacts(input))
+  if(money)return money.map((line,i)=>bullets&&!i?{...line,text:'- '+line.text}:line)
   const limit=/each year|by year|year-by-year|trend|over time/i.test(input.question)?30:Math.min(30,Number(/top (\d+)/i.exec(input.question)?.[1])||8),seen=new Set<string>(),lines:WrittenSentence[]=[]
   for(const fact of foundFacts(input))for(const part of fact.source.receipt?[receiptLine(fact.source.receipt)]:fact.text.split(/\n+/)){
     const text=factLine(part)
@@ -318,11 +327,14 @@ const EMPTY_ANSWERS=new Set(['OPAX cannot establish the requested answer from th
 export const emptyAnswer=(answer:string)=>!answer.trim()||EMPTY_ANSWERS.has(answer.trim())
 /** Never return the original block, even when the provider is unavailable or the wall cap is spent. */
 export function proseFallback(input: WritingInput): QualitativeAnswer {
+  input=moneyWritingInput(input)
   // Context records are retrieval aids, never selected calculation facts.
   input={...input,facts:input.facts.filter(f=>!/^USER_CONTEXT_/i.test(f.source.resource))}
   input={...input,facts:input.facts.filter(f=>f.coverage||f.metadata||!outsideRequest(f,input))}
   const recordLines=recordAnswerLines(input)
   if(recordLines){const coverage=coverageSentence(input);return assemble([...recordLines,...(coverage?[coverage]:[])],input)}
+  const money=moneyWritingLines(input,foundFacts(input))
+  if(money){const coverage=coverageSentence(input);return assemble([...money,...(coverage?[coverage]:[])],input)}
   const coverageLimit=donationCoverageLimit(input.question,input.facts.map(f=>f.text).join('\n'))
   if(coverageLimit&&input.facts.some(f=>f.coverage&&/The requested period|cannot establish|donation records start/i.test(f.text))) {
     const fact=input.facts.find(f=>donationCoverageLimit(input.question,f.text))!
