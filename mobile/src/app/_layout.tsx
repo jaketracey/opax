@@ -30,6 +30,8 @@ import {
   useTourState,
 } from '../onboarding/state';
 export const unstable_settings = rootSettings;
+// Last resort: a page that fails to draw shows Try again instead of closing.
+export { RouteErrorBoundary as ErrorBoundary } from '../design/route-error';
 
 export default function Layout() {
   const [loaded, error] = useFonts({
