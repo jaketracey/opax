@@ -219,7 +219,15 @@ test('Android root restoration does not press Back through hideKeyboard and web 
 test('cold launches dismiss only named system ANR dialogs', () => {
   const body = fs.readFileSync(path.join(out, '01-launch.yaml'), 'utf8');
   assert.ok(body.includes("^Pixel Launcher (isn't|is not) responding$"));
-  assert.ok(body.includes("^System UI (isn't|is not) responding$"));
   assert.ok(body.includes('^Wait$'));
-  assert.ok(!body.includes('OPAX (isn'));
+  const anr = new RegExp(
+    body.match(/visible: (\^\(\?!OPAX .*responding\$)/)[1],
+  );
+  for (const title of [
+    "System UI isn't responding",
+    "Process system isn't responding",
+    "Pixel Launcher isn't responding",
+  ])
+    assert.ok(anr.test(title), title);
+  assert.ok(!anr.test("OPAX isn't responding"));
 });

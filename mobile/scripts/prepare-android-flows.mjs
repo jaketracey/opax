@@ -67,6 +67,8 @@ const permission = {
   // shared flow then asserts location-approximate after granting access.
   'Precise.*Off': { text: '(?i)^(Approximate|Approximate location)$' },
 };
+// System ANR titles other than the app's own (which stays a failure).
+const systemAnr = "^(?!OPAX )(System UI|Process system|Pixel Launcher|.*[Ss]ystem.*|Google .*) (isn't|is not) responding$";
 const backSelector = { text: '^(Navigate up|Go back|Back|Back to .*)$' };
 // Android's native SearchView adds leading spaces to its hint. Its stable
 // resource id also works once the hint has been replaced by entered text.
@@ -417,13 +419,18 @@ function prepare(body, relative) {
               },
             }),
           );
-          // A busy headless emulator can also report System UI as not
-          // responding. Waiting keeps the system bars; the app is untouched.
+          // A busy headless emulator can also report System UI or the
+          // system process as not responding. Wait on any such system
+          // dialog (never OPAX's own), a few times if it reappears.
           result.push(
             doc.createNode({
-              runFlow: {
-                when: { visible: "^System UI (isn't|is not) responding$" },
-                commands: [{ tapOn: { text: '^Wait$' } }],
+              repeat: {
+                while: { visible: systemAnr },
+                times: 3,
+                commands: [
+                  { tapOn: { text: '^Wait$' } },
+                  { waitForAnimationToEnd: { timeout: 5000 } },
+                ],
               },
             }),
           );
