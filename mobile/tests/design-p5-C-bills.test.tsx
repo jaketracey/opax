@@ -128,6 +128,41 @@ const texts = (root: ReactTestInstance): string[] =>
   root.children.flatMap((child) =>
     typeof child === 'string' ? [child] : texts(child),
   );
+
+test('the timeline reveals stages sharing dates even when every date is on the ruler', async () => {
+  mockParams.key = 'au-federal-r7534';
+  const record = await fixture.billFor(mockParams.key);
+  mock.billFor.mockResolvedValue({
+    ...record,
+    data: {
+      ...record.data,
+      keyDates: {
+        ...record.data.keyDates,
+        data: [
+          { stage: 'Introduced', date: '2026-10-01', house: 'representatives' },
+          {
+            stage: 'Second reading',
+            date: '2026-10-01',
+            house: 'representatives',
+          },
+          { stage: 'Third reading', date: '2026-10-02', house: 'senate' },
+          { stage: 'Royal assent', date: '2026-10-02', house: null },
+        ],
+      },
+    },
+  });
+  const root = await render(<BillDetail />);
+  const disclosure = root.find(
+    (node) => node.props.testID === 'bill-dates-all' && !!node.props.onPress,
+  );
+  await act(async () => disclosure.props.onPress());
+  expect(texts(host(root, 'bill-date-0')[0]!).join(' ')).toContain(
+    'Second reading',
+  );
+  expect(texts(host(root, 'bill-date-1')[0]!).join(' ')).toContain(
+    'Third reading',
+  );
+});
 /** The bar's trailing items, from the newest Stack.Screen options. */
 function barItems() {
   const options = mockScreens.findLast(

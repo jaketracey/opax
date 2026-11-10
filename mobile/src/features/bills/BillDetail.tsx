@@ -1334,7 +1334,8 @@ function KeyDates({
         ) : null}
         {entries.length === 1 ? (
           <DateRows entries={entries} freshStages={freshStages} />
-        ) : entries.length > points.length ? (
+        ) : timeline.runs > points.length ||
+          entries.some((entry) => entry.to) ? (
           <Disclosure
             label={`All ${formatCount(timeline.runs)} stages`}
             open={open}
