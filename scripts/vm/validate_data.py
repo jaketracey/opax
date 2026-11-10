@@ -434,6 +434,11 @@ def check_interests() -> list[str]:
             errs.append(f"index lists {pid} but {pid}.json is missing")
             if len(errs) > 10:
                 break
+    # A reviewed provisional id files under the person's OpenAustralia id (members-electorates-012).
+    from scripts.member_ids import aliases as member_id_aliases
+    before = set(((_head_doc(f"{d}/index.json") or {}).get("people") or {}))
+    errs += [f"interests filed under provisional id {k}; the reviewed id is {member_id_aliases()[k]}"
+             for k in doc["people"] if k in member_id_aliases() and k not in before]
     return errs + _check_dir(d, r"[^/]+\.json", INTERESTS_MIN_RATIO)
 
 

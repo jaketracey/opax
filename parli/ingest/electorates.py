@@ -292,6 +292,10 @@ class Builder:
 
     def legacy(self, path):
         data = json.loads(Path(path).read_text())
+        # A provisional APH id ('aph_25813') and the OpenAustralia id ('11065') can both be in the members
+        # table for one person; the reviewed pairs re-key and merge them (members-electorates-012).
+        from scripts.member_ids import members as reviewed_members
+        data["members"] = reviewed_members(data["members"])
         roster_date = data.get("federal_roster_verified_as_of")
         if not roster_date:
             raise ValueError("Snapshot must declare federal_roster_verified_as_of; an open end date alone is not current membership")

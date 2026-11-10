@@ -79,6 +79,9 @@ import sys
 import unicodedata
 from datetime import date
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from scripts.member_ids import aliases as member_id_aliases, canonical as member_id  # noqa: E402
+
 DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 PER_BUCKET = 6
 RECENT_LIMIT = 300
@@ -142,6 +145,16 @@ ELIGIBLE_TIE_BUCKETS = {
 def slug(name):
     s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
     return "n-" + re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+
+def document_key(d):
+    """The register file key: the roster pid for a federal document, a name slug otherwise. A reviewed
+    provisional id ('aph_25813') files under its OpenAustralia id ('11065'), the roster's
+    (members-electorates-012, registers-008)."""
+    pid = member_id(d["person_id"])
+    if pid and d["jurisdiction"] == "federal":
+        return str(pid)
+    return slug(d["member_name"] or d["member_name_raw"])
 
 
 def norm_org(value):
@@ -375,11 +388,7 @@ def main():
         "SELECT doc_id, jurisdiction, chamber, parliament, person_id, member_name, member_name_raw, "
         "source_url, last_updated, statement_date, warnings FROM ext_interests_documents")}
 
-    def key_for(d):
-        pid = d["person_id"]
-        if pid and d["jurisdiction"] == "federal":
-            return str(pid)
-        return slug(d["member_name"] or d["member_name_raw"])
+    key_for = document_key
 
     people = {}
     by_name = {}
@@ -573,6 +582,8 @@ def main():
             "sources": {f"{d['chamber']}-{d['parliament']}": 0 for d in docs.values()},
         },
         "_by_name": dict(sorted(by_name.items())),
+        # The old file key of a re-keyed person, so a link to /interests/<old>.json can be followed.
+        "_aliases": {old: new for old, new in sorted(member_id_aliases().items()) if new in people},
         "people": {k: {"name": v["name"], "total": v["total"],
                         **({"ties": len({t["organisation"] for t in v.get("ties", [])})}
                            if v.get("ties") else {})} for k, v in people.items()},

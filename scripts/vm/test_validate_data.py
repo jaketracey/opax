@@ -525,6 +525,20 @@ class InterestsTests(Base):
             (self.root / f"{P}/interests/{pid}.json").unlink()
         self.assertTrue(any("file count fell" in e for e in self.errs("interests")))
 
+    def test_a_new_file_under_a_reviewed_provisional_id_fails(self):
+        # members-electorates-012: Vanessa Bleyer files under 11065, not aph_25813.
+        self.write(f"{P}/interests/aph_25813.json", {"name": "Vanessa Bleyer", "total": 1})
+        self.edit(f"{P}/interests/index.json", lambda d: d["people"].update({"aph_25813": {"name": "Vanessa Bleyer", "total": 1}}))
+        self.assertFails("interests", "interests filed under provisional id aph_25813; the reviewed id is 11065")
+
+    def test_a_provisional_id_head_already_has_is_not_a_new_fault(self):
+        self.files[f"{P}/interests/aph_25813.json"] = {"name": "Vanessa Bleyer", "total": 1}
+        index = self.files[f"{P}/interests/index.json"]
+        index["people"]["aph_25813"] = {"name": "Vanessa Bleyer", "total": 1}
+        self.make()
+        self.edit(f"{P}/interests/index.json", lambda d: d["_meta"].update({"generated": "2026-11-11"}))
+        self.assertOk("interests")
+
     def test_recent_and_ties_files_are_parsed_when_changed(self):
         self.write(f"{P}/interests/recent.json", b"[")
         self.assertFails("interests", "interests/recent.json unreadable")
