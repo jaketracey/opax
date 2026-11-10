@@ -171,3 +171,42 @@ def test_relinking_a_bundle_repeats_history_exactly(tmp_path):
     key = lambda rows, k: sorted(rows, key=lambda r: r[k])
     for table, k in [("people", "person_id"), ("terms", "representation_id"), ("contests", "contest_id"), ("sources", "source_id")]:
         assert key(again[table], k) == key(first[table], k)
+
+
+def _validator(root):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("validate_data", Path(__file__).resolve().parents[1] / "scripts/vm/validate_data.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.ROOT = root
+    return module.check_electorates
+
+
+def _release(root, people, contests):
+    release = root / "portal/public/electorates/releases/r1"
+    release.mkdir(parents=True)
+    files = {}
+    for name, body in {"people.json": {"people": people}, "reference.json": {"people": people, "contests": contests},
+                       "index.json": {}, "crosswalk.json": {}}.items():
+        raw = json.dumps(body)
+        (release / name).write_text(raw)
+        files[name] = hashlib.sha256(raw.encode()).hexdigest()
+    base = "/electorates/releases/r1/"
+    (root / "portal/public/electorates/manifest.json").write_text(json.dumps({
+        "release_id": "r1", "files": files, **{k: base + f for k, f in [("index_url", "index.json"), ("people_url", "people.json"),
+                                                                       ("reference_url", "reference.json"), ("crosswalk_url", "crosswalk.json")]}}))
+
+
+def test_validate_data_electorates_catches_an_unlinked_member_and_a_shared_id(tmp_path):
+    people = [{"person_id": "person_a", "name": "Bill Shorten", "legacy_person_id": "10580"},
+              {"person_id": "person_b", "name": "William Richard Shorten"}]
+    _release(tmp_path, people, [{"candidates": [{"candidate_id": "aec-27966-36441", "name": "Bill Shorten", "elected": True, "person_id": None}]}])
+    assert _validator(tmp_path)() == ["elected candidacy aec-27966-36441 (Bill Shorten) names no person"]
+    people[1]["legacy_person_id"] = "10580"
+    (tmp_path / "portal").rename(tmp_path / "old")
+    _release(tmp_path, people, [{"candidates": [{"candidate_id": "c1", "name": "Bill Shorten", "elected": True, "person_id": "person_a"}]}])
+    assert _validator(tmp_path)() == ["OPAX person id 10580 is held by person_a and person_b"]
+
+
+def test_validate_data_electorates_passes_the_published_release():
+    assert _validator(Path(__file__).resolve().parents[1])() == []
