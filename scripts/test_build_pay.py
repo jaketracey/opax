@@ -159,6 +159,26 @@ class RosterNames(unittest.TestCase):
         self.assertEqual((out["people"]["PM1"]["name"], out["people"]["PM1"]["pid"]), ("Pat Premier", "10901"))
         self.assertEqual(out["names"]["patrick premier"], "PM1")
         self.assertEqual(out["names"]["pat premier"], "PM1")
+    def test_openaustralia_first_and_last_names_find_a_roster_row_without_an_id(self):
+        # APH 6J4: Handbook 'Concetto', OpenAustralia 'Con Antonio Sciacca', roster 'Con Sciacca' (no pid).
+        roster = [{"name": "Patsy Premier", "states": ["federal"], "speeches": 40}]
+        out = bp.build(Namespace(refresh=False, as_of=AS_OF), raw=RAW,
+                       oa={"PM1": ("10901", ["Patsy Anne Premier"])}, roster=roster)
+        self.assertEqual(out["people"]["PM1"]["name"], "Patsy Premier")
+
+
+class HandbookNames(unittest.TestCase):
+    # Handbook API, PHID 3E4 and 00AMU (members-electorates-008, search-hubs-007).
+    def test_a_bracketed_former_surname_is_not_a_given_name(self):
+        sullivan = {"FamilyName": "SULLIVAN", "GivenName": "Kathryn ", "PreferredName": "(Kathy)",
+                    "DisplayName": "SULLIVAN (formerly Martin), the Hon. Kathryn (Kathy) Jean Martin "}
+        self.assertEqual(bp.display_names(sullivan), ["Kathy Sullivan", "Kathryn Sullivan"])
+        mirabella = {"FamilyName": "MIRABELLA", "GivenName": "Sophie", "PreferredName": "",
+                     "DisplayName": "MIRABELLA (formerly Panopolous), Sophie"}
+        self.assertEqual(bp.display_names(mirabella), ["Sophie Mirabella"])
+        abbott = {"FamilyName": "ABBOTT", "GivenName": "Anthony", "PreferredName": "",
+                  "DisplayName": "ABBOTT, the Hon. Anthony John (Tony), AC"}
+        self.assertEqual(bp.display_names(abbott), ["Tony Abbott", "Anthony Abbott"])
 
 
 if __name__ == "__main__":

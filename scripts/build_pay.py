@@ -57,6 +57,7 @@ import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
 from parli.ingest import http as source_http
+from scripts.oa_people_ids import rows as oa_rows
 
 import argparse
 import csv
@@ -144,10 +145,11 @@ def oa_people(refresh):
             CACHE.mkdir(parents=True, exist_ok=True)
             path.write_bytes(res.read())
     out = {}
-    for row in csv.reader(io.StringIO(path.read_text(encoding="utf-8", errors="replace"))):
-        if len(row) > 2 and row[0].strip().isdigit() and row[1].strip():
-            names = [n.strip() for n in (row[2], *row[4:]) if n.strip()]
-            out[row[1].strip().upper()] = (str(10000 + int(row[0])), names)
+    # APH ids are text; the reviewed scripts/corrections/oa-people.json restores the six
+    # rows whose '3E4'-style id a spreadsheet turned into '30000' (Kathy Sullivan's among them).
+    for number, aph_id, names in oa_rows(path.read_text(encoding="utf-8", errors="replace")):
+        if aph_id:
+            out[aph_id.upper()] = (str(10000 + int(number)), names)
     return out
 
 
@@ -320,8 +322,13 @@ def display_names(person):
     """Likely public names, best first: 'Tony Abbott' before 'Anthony Abbott'."""
     family = family_case(person["FamilyName"].strip())
     names = []
-    nick = re.search(r"\(([^)]+)\)", person.get("DisplayName") or "")
-    for given in (nick.group(1) if nick else "", person.get("PreferredName") or "", person.get("GivenName") or ""):
+    # The nickname is the bracketed given name: 'SULLIVAN (formerly Martin), the Hon. Kathryn (Kathy)
+    # Jean Martin' -> 'Kathy'. A bracketed former surname ('(formerly Martin)') is not a given name.
+    nick = next((m.group(1) for m in re.finditer(r"\(([^)]+)\)", person.get("DisplayName") or "")
+                 if not m.group(1).strip().lower().startswith("formerly")), "")
+    # PreferredName comes bracketed too ('(Kathy)').
+    preferred = (person.get("PreferredName") or "").strip().strip("()")
+    for given in (nick, preferred, person.get("GivenName") or ""):
         given = given.strip()
         if given and f"{given} {family}" not in names:
             names.append(f"{given} {family}")
@@ -557,9 +564,14 @@ def build(args, raw=None, oa=None, roster=None):
         sitting = spans[-1][1] > as_of
         spellings = by_pid.get(oa.get(phid, ("", []))[0], [])
         opax = page_row(spellings, display_names(person))
-        candidates = display_names(person) + oa.get(phid, ("", []))[1] + [p["name"] for p in spellings]
+        oa_names = oa.get(phid, ("", []))[1]
+        # OpenAustralia's names, joined by this APH id, also in their first-and-last form: Hansard and the
+        # roster say 'Con Sciacca' where OA has 'Con Antonio Sciacca' and the Handbook 'Concetto'.
+        # Only for the roster match below (one exact row, or none): the short forms are not search spellings.
+        short = [f"{n.split()[0]} {n.split()[-1]}" for n in oa_names if len(n.split()) > 2]
+        candidates = display_names(person) + oa_names + [p["name"] for p in spellings]
         if not opax:
-            found = {id(p): p for name in candidates for p in by_name.get(fold(name), [])}
+            found = {id(p): p for name in candidates + short for p in by_name.get(fold(name), [])}
             opax = next(iter(found.values())) if len(found) == 1 else None
         name = opax["name"] if opax else display_names(person)[0]
         party = party_name(person.get("Party")) or None
