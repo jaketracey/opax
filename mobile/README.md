@@ -624,7 +624,10 @@ update the file, hash, size and fetch time together.
 
 Fixture startup and tests read git blobs at `fixture-snapshot.json`'s `sourceCommit`,
 then verify SHA-256 and byte size; worktree/nightly catalog changes cannot alter
-the pinned journeys. Keep that commit in the local git object database. To repin
+the pinned journeys. One `git cat-file --batch` reads a snapshot's blobs and the
+verified ones are kept under `mobile/node_modules/.cache/opax-fixture/<sourceCommit>/`
+(git-ignored); later reads come from there and are verified again on every read,
+so deleting that folder is always safe. Keep that commit in the local git object database. To repin
 deliberately, review a new local commit, set `sourceCommit`, and recompute **every**
 existing path's hash and size from `git show <commit>:portal/public<path>`
 (`shasum -a 256` and `wc -c`), adding complete reviewed files as needed. Run `npm run qa`.

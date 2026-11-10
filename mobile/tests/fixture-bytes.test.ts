@@ -1,6 +1,12 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import {
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  rmSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fixtureBytes } from './fixture-bytes';
@@ -52,6 +58,18 @@ test('a newer committed catalog or dirty worktree cannot change pinned bytes at 
     expect(fixtureBytes(snapshot, root)('/corpus.json')).toEqual(bytes);
     writeFileSync(path, Buffer.concat([bytes, Buffer.from('\n\n')]));
     expect(fixtureBytes(snapshot, root)('/corpus.json')).toEqual(bytes);
+    // The verified blob is cached under its commit; a tampered cache file
+    // is never served, only replaced from git.
+    const cachedFile = join(
+      root,
+      'mobile/node_modules/.cache/opax-fixture',
+      sourceCommit,
+      'portal/public/corpus.json',
+    );
+    expect(readFileSync(cachedFile)).toEqual(bytes);
+    writeFileSync(cachedFile, Buffer.concat([bytes, Buffer.from('\n')]));
+    expect(fixtureBytes(snapshot, root)('/corpus.json')).toEqual(bytes);
+    expect(readFileSync(cachedFile)).toEqual(bytes);
     expect(() =>
       fixtureBytes(
         { ...snapshot, sourceCommit: '0'.repeat(40) },
