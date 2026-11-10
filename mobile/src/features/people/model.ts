@@ -1,4 +1,4 @@
-import { serverPassage } from '../../api/passage-text';
+import { decodeEntities, serverPassage } from '../../api/passage-text';
 import type { PersonProfile } from '../../api/person-identity';
 import {
   array,
@@ -244,10 +244,10 @@ export function receiptsSeries(
 export function displayedRecordTitle(row: RecordRow) {
   const key = (value: string) =>
     value.trim().replace(/\s+/g, ' ').toLowerCase();
-  const parts = (row.title_subject || row.title || '')
+  const parts = decodeEntities(row.title_subject || row.title || '')
     .trim()
     .split(/(\s+\u2014\s+)/);
-  if (row.speaker && key(parts[0] ?? '') === key(row.speaker))
+  if (row.speaker && key(parts[0] ?? '') === key(decodeEntities(row.speaker)))
     parts.splice(0, 2);
   if (row.date) {
     const iso = row.date.slice(0, 10);
@@ -260,7 +260,7 @@ export function displayedRecordTitle(row: RecordRow) {
     if ([key(iso), key(written)].includes(key(parts.at(-1) ?? '')))
       parts.splice(-2);
   }
-  return parts.join('').trim() || row.title || 'Speech';
+  return parts.join('').trim() || decodeEntities(row.title || '') || 'Speech';
 }
 
 export function cleanPassage(text: string | undefined) {

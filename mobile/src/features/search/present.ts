@@ -1,6 +1,7 @@
 // How a search result reads: its own title, a kind · date · place line and
 // a count that agrees with its number. The web's search page (app.js,
 // pass 3F) draws the same anatomy.
+import { decodeEntities } from '../../api/passage-text';
 import { formatCount, formatDate } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
 import { titleSubject } from '../records/citations';
@@ -48,11 +49,12 @@ export function resultTitle(record: {
   date?: string | null;
   kind?: string;
 }) {
-  const subject = titleSubject(record);
+  const title = decodeEntities(record.title);
+  const speaker = record.speaker ? decodeEntities(record.speaker) : null;
+  const subject = titleSubject({ ...record, title, speaker });
   if (subject) return subject;
-  if (record.speaker && record.kind === 'speech')
-    return `Speech by ${record.speaker}`;
-  return record.title;
+  if (speaker && record.kind === 'speech') return `Speech by ${speaker}`;
+  return title;
 }
 
 /** "Speech · 6 Mar 2023 · Federal": what the record is, when, and where. */

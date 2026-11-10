@@ -13,6 +13,7 @@ import {
   askSourceDetails,
 } from '../src/features/ask/AnswerView';
 import { useAskSources } from '../src/features/ask/SourcesPane';
+import { RecordDetail } from '../src/features/split/RecordDetail';
 import { parseAnswer } from '../src/features/ask/answer-markdown';
 import {
   citationSelection,
@@ -330,6 +331,29 @@ test('People in this answer are full person rows, the reader’s own member mark
   });
 });
 
+test('Records cited decode titles once while People keep their roster names', () => {
+  const title = "Australia's &amp; interests";
+  const turn = answer({
+    sources: [
+      source(1, true, [], {
+        title: 'Australia&#039;s &amp;amp; interests',
+        speaker: 'Sam Placeholder',
+      }),
+    ],
+  });
+  const { words, ids } = draw(turn);
+  expect(words()).toContain(title);
+  expect(words()).not.toContain('&#039;');
+  expect(
+    ids('ask-citation-1').some((row) =>
+      row.props.accessibilityLabel?.includes(title),
+    ),
+  ).toBe(true);
+  expect(ids('ask-person-sam-placeholder')[0]!.props.name).toBe(
+    'Sam Placeholder',
+  );
+});
+
 test('the foot is the dated Answered line and one answer menu', async () => {
   const { ids, press, menuButton, renderer } = draw();
   const foot = ids('ask-answer-sources')[0]!;
@@ -426,6 +450,34 @@ test('the sources sheet never repeats a record title as a serif line', () => {
   expect(words()).not.toMatch(/retrieved|—/);
 });
 
+test('source notes and original-source labels decode their raw titles once', () => {
+  const turn = answer({
+    sources: [
+      source(1, true, [], {
+        title: 'Australia&#039;s &amp;amp; interests',
+        source: 'Science &amp; &quot;Industry&quot;',
+      }),
+    ],
+  });
+  turn.carried = { source: 'Australia&#039;s &amp;amp; interests' };
+  const details = askSourceDetails({
+    turn,
+    question,
+    chat: 'fixture-chat',
+    index: 1,
+    legacy: null,
+  });
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<>{details.extra}</>);
+  });
+  mounted.push(renderer);
+  const { words } = helpers(renderer);
+  expect(words()).toContain('Science & "Industry"');
+  expect(words()).toContain("passage from “Australia's &amp; interests”");
+  expect(words()).not.toMatch(/&#039;|&amp;amp;|&quot;/);
+});
+
 test('a figure is drawn only with its own date and source', () => {
   const { renderer } = draw(
     answer({
@@ -509,6 +561,25 @@ describe('the iPad pane is never empty', () => {
     mounted.push(renderer);
     return helpers(renderer);
   }
+  test('a source title is decoded once in the pane and its opened record', () => {
+    const title = "Australia's &amp; interests";
+    const turn = answer({
+      sources: [
+        source(1, true, [], {
+          title: 'Australia&#039;s &amp;amp; interests',
+          slug: 'press-pmt-fixture-title',
+          href: '/doc/press-pmt-fixture-title',
+        }),
+      ],
+    });
+    const { words, ids, press, renderer } = drawPane([question, turn]);
+    expect(words()).toContain(title);
+    expect(ids('citation-title')[0]!.props.children).toBe(title);
+    act(() => press('citation-open-record'));
+    expect(renderer.root.findByType(RecordDetail).props.entry.title).toBe(
+      title,
+    );
+  });
   test('idle: Try asking, whose starters ask at once', () => {
     const { words, renderer, press } = drawPane([]);
     expect(words()).toContain('Try asking');

@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useState, useSyncExternalStore } from 'react';
 import { View } from 'react-native';
+import { decodeEntities } from '../../api/passage-text';
 import { counted, formatDate } from '../../design/format';
 import {
   Group,
@@ -52,7 +53,7 @@ export function moneyDestination(row: GroupRow) {
   if (rid)
     return moneyRecordRoute(
       { rid: decodeURIComponent(rid), jur: params.get('jur') ?? 'federal' },
-      row.title,
+      decodeEntities(row.title),
     );
   if (['grant_award', 'contract'].includes(row.kind) || params.get('award'))
     return moneyItemRoute(
@@ -60,7 +61,7 @@ export function moneyDestination(row: GroupRow) {
         kind: row.kind === 'contract' ? 'contract' : 'grant',
         id: params.get('award') ?? row.slug,
       },
-      row.title,
+      decodeEntities(row.title),
     );
   if (
     row.kind === 'grant' &&
@@ -129,7 +130,7 @@ export function useGroupList(group: CatalogGroup, q: string) {
                 {
                   label: row.source || 'Original source',
                   url: row.url,
-                  record: row.title,
+                  record: decodeEntities(row.title),
                 },
               ]
             : [],
@@ -185,13 +186,14 @@ function CatalogRow({
   index: number;
 }) {
   const [failed, setFailed] = useState(false);
+  const title = decodeEntities(row.title);
   const money = group === 'grants' || group === 'agencies';
   const destination = money ? moneyDestination(row) : null;
   const open = () => {
     setFailed(false);
     const action = row.personSlug
       ? openSearchPerson(row.personSlug)
-      : openSearchPath(row.href, row.title);
+      : openSearchPath(row.href, title);
     void action.catch(() => setFailed(true));
   };
   const detail = [
@@ -203,7 +205,7 @@ function CatalogRow({
   return (
     <View>
       <LinkRow
-        title={row.title.replace(/\s+[\u2014–-]\s+.*$/, '')}
+        title={title.replace(/\s+[\u2014–-]\s+.*$/, '')}
         detail={
           money
             ? detail

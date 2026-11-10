@@ -19,6 +19,7 @@ import {
   useState,
 } from 'react';
 import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import { decodeEntities } from '../../api/passage-text';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { IconButton } from '../../design/controls';
 import { Disclosure } from '../../design/disclosure';
@@ -81,7 +82,7 @@ export const answerNotes = {
   people: 'People are listed in the order the answer cites them.',
   carried: (source: string) =>
     source
-      ? `This suggested question used a passage from “${source}”, found for the previous answer.`
+      ? `This suggested question used a passage from “${decodeEntities(source)}”, found for the previous answer.`
       : 'This suggested question used a passage found for the previous answer.',
 };
 /** The thread scrolls a claim above the half-height citation sheet. */
@@ -309,10 +310,10 @@ export function AnswerView({
                   mine
                     ? () => showCitation({ turn: key, n: i + 1 })
                     : pane
-                      ? () => go(source.href, source.title)
+                      ? () => go(source.href, sourceTitle(source))
                       : sourceRoute(source)
                         ? undefined
-                        : () => go(source.href, source.title)
+                        : () => go(source.href, sourceTitle(source))
                 }
                 onShowPassage={
                   numbered
@@ -439,7 +440,10 @@ export function askSourceDetails({
             {originals.map((source) => (
               <LinkRow
                 key={source.resource}
-                title={[source.source, sourceTitle(source)]
+                title={[
+                  decodeEntities(source.source ?? ''),
+                  sourceTitle(source),
+                ]
                   .filter(Boolean)
                   .join(' · ')}
                 detail={sourceDate(source) ?? 'Date not published'}

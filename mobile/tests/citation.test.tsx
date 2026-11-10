@@ -161,6 +161,22 @@ test('with nothing selected the sheet says there is nothing to show', () => {
   expect(host('citation-missing')).toHaveLength(1);
 });
 
+test('the source sheet shows decoded titles without decoding literal entities twice', () => {
+  found(
+    fixture([source(1, { title: 'Australia&#039;s &amp;amp; interests' })]),
+  );
+  act(() => showCitation({ turn: 'fixture-chat:1', n: 1 }));
+  const { words, renderer } = draw();
+  expect(words()).toContain("Australia's &amp; interests");
+  expect(
+    renderer.root.findAll(
+      (node) =>
+        node.props.accessibilityLabel ===
+        "Source 1, Australia's &amp; interests",
+    ).length,
+  ).toBeGreaterThan(0);
+});
+
 test('the selected source: numeral and title, meta, the whole passage, Open record', () => {
   found(two);
   act(() => showCitation({ turn: 'fixture-chat:1', n: 1 }));

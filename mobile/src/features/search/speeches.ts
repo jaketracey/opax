@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { decodeEntities } from '../../api/passage-text';
 import type { Roster } from '../../api/catalog-decoders';
 import type { RecordResult } from '../../api/client';
 import type { SourceDetails } from '../../design/primitives';
@@ -104,7 +105,13 @@ export function speechSource(
     rule,
     originals: rows.flatMap((row) =>
       row.url
-        ? [{ label: row.source || 'Hansard', url: row.url, record: row.title }]
+        ? [
+            {
+              label: row.source || 'Hansard',
+              url: row.url,
+              record: decodeEntities(row.title),
+            },
+          ]
         : [],
     ),
     notes: [
