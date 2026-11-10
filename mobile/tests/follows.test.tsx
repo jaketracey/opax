@@ -1,12 +1,15 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { ActionSheetIOS } from 'react-native';
+import { ActionSheetIOS, ScrollView, StyleSheet, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { FollowButton } from '../src/design/controls';
 import { Card, Text } from '../src/design/primitives';
 import { LinkRow } from '../src/design/rows';
+import { StatusCapsule } from '../src/design/labels';
+import { Portrait } from '../src/design/people';
+import { rhythm } from '../src/design/tokens';
 import { currentKeys } from '../src/features/follows/changes';
 import Following, {
   NOTHING_FOLLOWED,
@@ -733,6 +736,86 @@ describe('Following', () => {
         .join(' '),
     ).not.toMatch(/Saved on this|backups/);
     expect(mock.followSources).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  });
+
+  test('the first grouped heading has the standard inset without a marker section gap', async () => {
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });
+    const r = await render();
+    const marker = r.root.find(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'follows-browsing',
+    );
+    expect(StyleSheet.flatten(marker.props.style).position).toBe('absolute');
+    expect(
+      StyleSheet.flatten(
+        r.root.findByType(ScrollView).props.contentContainerStyle,
+      ).paddingTop,
+    ).toBe(rhythm.block);
+    expect(groupOrder(r)[0]).toBe('People');
+    await act(async () => r.unmount());
+  });
+
+  test('Following puts bill metadata above a full-width title with the same padding as people', async () => {
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'person', id: ALBANESE, title: 'Anthony Albanese' });
+    await follow({ kind: 'bill', id: BILL, title: 'Ending Financial Abuse' });
+    const r = await render();
+    const bill = row(r, `follows-row-bill-${BILL}`);
+    const person = row(r, `follows-row-person-${ALBANESE}`);
+    expect(bill.props.leading).toBeUndefined();
+    expect(bill.props.aboveTitle.type).toBe(View);
+    expect(StyleSheet.flatten(bill.props.aboveTitle.props.style)).toMatchObject(
+      {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        columnGap: rhythm.tight,
+        rowGap: rhythm.line,
+      },
+    );
+    const capsule = bill.findByType(StatusCapsule);
+    const date = bill
+      .findAllByType(Text)
+      .find((node) => node.props.variant === 'secondary');
+    const title = bill
+      .findAllByType(Text)
+      .find((node) => node.props.children === bill.props.title);
+    const metadata = bill
+      .findAllByType(View)
+      .find(
+        (node) =>
+          StyleSheet.flatten(node.props.style)?.columnGap === rhythm.tight &&
+          node.findAllByType(StatusCapsule).includes(capsule),
+      )!;
+    expect(metadata.findAllByType(Text)).toContain(date);
+    expect(metadata.findAllByType(Text)).not.toContain(title);
+    const words = bill.findAllByType(Text);
+    expect(words.indexOf(date!)).toBeLessThan(words.indexOf(title!));
+    expect(person.props.leading).toBeUndefined();
+    expect(person.props.leadingAccessory.type).toBe(Portrait);
+    for (const item of [person, bill]) {
+      const pressable = item
+        .findAll((node) => !!node.props.style)
+        .find((node) => {
+          const style = node.props.style;
+          return (
+            StyleSheet.flatten(
+              typeof style === 'function' ? style({ pressed: false }) : style,
+            )?.paddingVertical === rhythm.row
+          );
+        })!;
+      const style = pressable.props.style;
+      expect(
+        StyleSheet.flatten(
+          typeof style === 'function' ? style({ pressed: false }) : style,
+        ),
+      ).toMatchObject({
+        paddingVertical: rhythm.row,
+        paddingHorizontal: 16,
+      });
+    }
     await act(async () => r.unmount());
   });
 

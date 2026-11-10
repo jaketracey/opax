@@ -1,8 +1,10 @@
+import { StyleSheet, View } from 'react-native';
 import { StatusCapsule } from '../../design/labels';
 import { Text } from '../../design/text';
 import { LinkRow } from '../../design/rows';
 import { Portrait } from '../../design/people';
 import { rowMenus } from '../../design/row-link';
+import { rhythm } from '../../design/tokens';
 import {
   billRoute,
   electorateRoute,
@@ -88,32 +90,45 @@ export function FollowRow({
       : follow.kind === 'electorate'
         ? `/subject/electorate/${follow.id}`
         : `/${follow.kind}/${follow.id}`;
+  const billStatus =
+    follow.kind === 'bill' && state?.status === 'ready'
+      ? state.current.status
+      : undefined;
+  const metadata = billStatus ? (
+    <>
+      <StatusCapsule
+        status={billStatus.words ?? String(billStatus.value)}
+        hidden
+      />
+      {billStatus.asAt ? (
+        <Text wordSafe={surface === 'following'} variant="secondary">
+          {changeDate(billStatus.asAt)}
+        </Text>
+      ) : null}
+    </>
+  ) : undefined;
   return (
     <LinkRow
       title={title}
       detail={detail || undefined}
       href={state?.status === 'missing' ? undefined : route}
       accessory={state?.status === 'missing' ? 'none' : 'chevron'}
-      leading={
-        follow.kind === 'person' ? (
-          <Portrait uri={portraitURI} name={title} />
-        ) : follow.kind === 'bill' &&
-          state?.status === 'ready' &&
-          state.current.status ? (
-          <>
-            <StatusCapsule
-              status={
-                state.current.status.words ?? String(state.current.status.value)
-              }
-              hidden
-            />
-            {state.current.status.asAt ? (
-              <Text variant="secondary">
-                {changeDate(state.current.status.asAt)}
-              </Text>
-            ) : null}
-          </>
+      aboveTitle={
+        surface === 'following' && metadata ? (
+          <View style={styles.metadata}>{metadata}</View>
         ) : undefined
+      }
+      leadingAccessory={
+        surface === 'following' && follow.kind === 'person' ? (
+          <Portrait uri={portraitURI} name={title} />
+        ) : undefined
+      }
+      leading={
+        surface === 'following' ? undefined : follow.kind === 'person' ? (
+          <Portrait uri={portraitURI} name={title} />
+        ) : (
+          metadata
+        )
       }
       symbol={
         follow.kind === 'party'
@@ -144,3 +159,13 @@ export function FollowRow({
     />
   );
 }
+
+const styles = StyleSheet.create({
+  metadata: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
+  },
+});
