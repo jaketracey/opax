@@ -14,10 +14,13 @@ Audited against `src/voice/{index,mapping,types}.ts`, Talk's `bridge.ts`,
 | Idle connections     | The four-second reuse limit from `05a344516` is already present. A failed reused GET has one bounded retry; POST/reservations and relay connections are never replayed.                                        |
 | Account              | Shared authenticated client, origin-scoped credentials, held-account status, deletion proof, sign-out and local credential clearing match the current UI.                                                      |
 
-No bridge method, event, enum or payload mismatch was found. The behavioural
-mismatch was `AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK`: Android ignored this speech
-interruption in both real and synthetic sessions. Both now request a pause
-callback and emit `interruptionBegan`, using the existing call teardown.
+No bridge method, event, enum or payload mismatch was found. Audio focus:
+`AUDIOFOCUS_LOSS` and `AUDIOFOCUS_LOSS_TRANSIENT` (a phone call, an alarm, another
+voice app) end the call as an iOS interruption does.
+`AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK` (a notification sound, a navigation prompt)
+leaves the call running: an iOS voice chat session is not interrupted by these
+either, and ending a call on every notification would be wrong. The system never
+ducks speech output, so the prompt briefly mixes with the answer.
 
 Related Android UI defects fixed in this package:
 

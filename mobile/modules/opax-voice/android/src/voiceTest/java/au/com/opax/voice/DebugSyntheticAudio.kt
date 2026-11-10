@@ -121,8 +121,7 @@ class DebugSilentAudioSession(
   private var held = false
   private val listener = AudioManager.OnAudioFocusChangeListener { change ->
     when (change) {
-      AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
-      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> lifecycle?.emit(LifecycleEvent.interruptionBegan)
+      AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> lifecycle?.emit(LifecycleEvent.interruptionBegan)
       AudioManager.AUDIOFOCUS_GAIN -> lifecycle?.emit(LifecycleEvent.interruptionEnded)
     }
   }
@@ -139,7 +138,6 @@ class DebugSilentAudioSession(
               .build(),
           )
           .setOnAudioFocusChangeListener(listener, main)
-          .setWillPauseWhenDucked(true)
           .build()
         focus = request
         manager.requestAudioFocus(request)

@@ -118,7 +118,7 @@ class AndroidAudioTests : SafeVoiceTest() {
     }
   }
 
-  @Test fun duckingInterruptsSpeechInProductionAndSyntheticCalls() = test {
+  @Test fun duckingNotificationsLeaveTheCallRunningInProductionAndSyntheticCalls() = test {
     VoiceTestSafety.withIsolated(VoiceTestSafety.Monitor(loopbackOnly = false)) {
       for (synthetic in listOf(false, true)) {
         val lifecycle = AndroidVoiceLifecycle()
@@ -126,8 +126,11 @@ class AndroidAudioTests : SafeVoiceTest() {
           else AndroidVoiceAudioSession(context, lifecycle) { null }
         session.activate()
         val request = shadowOf(audioManager).lastAudioFocusRequest
-        assertTrue(request.audioFocusRequest.willPauseWhenDucked())
+        assertFalse(request.audioFocusRequest.willPauseWhenDucked())
+        // A notification sound asks to duck: the call must not end.
         request.listener.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK)
+        // An alarm takes transient focus: that does end it.
+        request.listener.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)
         shadowOf(Looper.getMainLooper()).idle()
         assertEquals(LifecycleEvent.interruptionBegan, withTimeout(1000) { lifecycle.events.first() })
         session.deactivate()
