@@ -411,8 +411,13 @@ def contracts_layer(db, jur: str, eid_to_node: dict) -> dict | None:
         if sid in sid_to_node:
             keys[(kt, kv)] = sid
     per: dict = {}
+    # The same rows the supplier register counts (parli.ingest.contract_suppliers.COUNTED): not suspect, not
+    # cancelled at source, not held for review. Older tables without the status columns count every unflagged row.
+    cols = {r[1] for r in db.execute("PRAGMA table_info(ext_contracts_current)")}
+    counted = "suspect = 0" + (" AND status = 'active'" if "status" in cols else "") + \
+        (" AND review_note IS NULL" if "review_note" in cols else "")
     for abn, name, amount, start, agency in db.execute(
-            "SELECT supplier_abn, supplier_name, amount, start_date, agency FROM ext_contracts_current WHERE suspect = 0"):
+            "SELECT supplier_abn, supplier_name, amount, start_date, agency FROM ext_contracts_current WHERE " + counted):
         sid = (keys.get(("abn", abn)) if abn else None) or keys.get(("name", (name or "").strip()))
         if not sid:
             continue

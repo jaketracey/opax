@@ -5,6 +5,12 @@ import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
 
 const NOTE = 'Published connections do not establish influence or misconduct. Contract values are awards, not payments. Evidence matches can be mentions rather than financial relationships.'
 const PRIVATE = new Set(['person', 'individual', 'sole trader', 'aggregate', 'undisclosed'])
+/** The AusTender keyword search for a contract notice number: the exporter's source-register link (contracts-grants-007). */
+const noticeUrl = (c: RecordRow): string => {
+  const id = String(c.id ?? '')
+  if (c.link_scope === 'source_register' && /^CN[\w.-]+$/i.test(id)) return 'https://www.tenders.gov.au/Search/KeywordSearch?keyword=' + encodeURIComponent(id)
+  return sourceUrl(c.url) ?? 'https://www.tenders.gov.au/'
+}
 const fileKey = (id: string) => { const i = id.indexOf(':'); return (i < 0 ? 'x' : id.slice(0, i)) + '-' + id.slice(i < 0 ? 0 : i + 1).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }
 
 async function grantRows(env: ToolEnv, abn: string, jurisdiction: string): Promise<RecordRow[]> {
@@ -46,7 +52,7 @@ function fact(row: RecordRow) {
   if (row.kind === 'corporate_tax') return `${row.name}, ABN ${row.abn}, ${row.year}: total income AUD ${row.total_income_aud ?? 'not published'}, taxable income AUD ${row.taxable_income_aud ?? 'not published'}, tax payable AUD ${row.tax_payable_aud ?? 'not published'}. Tax payable is not tax paid.`
   if (row.kind === 'charity_statement') return `${row.name}, ABN ${row.abn}, ${row.year}: charity revenue AUD ${row.revenue_aud ?? 'not published'}, government revenue AUD ${row.government_revenue_aud ?? 'not published'}, donations received AUD ${row.donations_received_aud ?? 'not published'}. These are charity finances, not political donations.`
   if (row.kind === 'receipt') return `${row.donor} to ${row.party}: AUD ${row.amount_aud} across ${row.records} disclosed receipt records (${row.first_year ?? '?'} to ${row.last_year ?? '?'}). An aggregate connection, not an individual donation.`
-  if (row.kind === 'contract' || row.kind === 'grant') return `${row.title ?? row.id}: ${row.kind} value AUD ${row.amount_aud ?? 'not published'}${row.agency ? ', ' + row.agency : ''}${row.financial_year ? ', ' + row.financial_year : ''}. ${row.source_scope ?? ''}`
+  if (row.kind === 'contract' || row.kind === 'grant') return `${row.title ?? row.id}: ${row.kind} value AUD ${row.amount_aud ?? 'not published'}${row.agency ? ', ' + row.agency : ''}${row.financial_year ? ', ' + row.financial_year : ''}. ${row.source_scope ?? ''}${row.counted_in_totals === false ? ` Not counted in the profile totals: ${clip(row.caveat, 600)}` : ''}`
   if (row.kind === 'evidence') return `${row.name}: ${row.predicate} (${row.date ?? 'undated'}, ${row.source_kind}). ${clip(row.excerpt, 700)}`
   return clip(`${row.name ?? row.n ?? row.id}: ${row.kind}; ${row.total_aud != null ? 'published contract value AUD ' + row.total_aud + ', ' + row.records + ' contracts' : row.abn ? 'ABN ' + row.abn : 'published profile'}.`, 900)
 }
@@ -89,8 +95,11 @@ export const tool: ToolDefinition = {
         if (section === 'tax') rows = /^\d{11}$/.test(abn) ? await taxRows(env, abn) : []
         else if (section === 'grants') {
           if (/^\d{11}$/.test(abn)) rows = (await Promise.all(['federal', 'qld'].map(j => grantRows(env, abn, j)))).flat()
-        } else if (section === 'contracts') rows = records(data.contracts).map(c => ({ ...c, kind: 'contract', amount_aud: c.amount, source_url: sourceUrl(c.url) ?? 'https://www.tenders.gov.au/', source_scope: c.link_scope ?? 'source register', full_record_url,
-          published_profile_record_count: data.count, listing_partial: Number(data.count) > records(data.contracts).length }))
+        } else if (section === 'contracts') rows = [...records(data.contracts).map(c => ({ ...c, kind: 'contract', amount_aud: c.amount, source_url: noticeUrl(c), source_scope: c.link_scope ?? 'source register', full_record_url,
+          published_profile_record_count: data.count, listing_partial: Number(data.count) > records(data.contracts).length })),
+          // listed on the profile but left out of its totals, with the published reason (cancelled at source, or a value held for review)
+          ...records(data.withheld).map(c => ({ ...c, kind: 'contract', amount_aud: c.amount, counted_in_totals: false, status: c.status, caveat: c.caveat,
+            source_url: noticeUrl(c), source_scope: c.link_scope ?? 'source register', full_record_url }))]
         else if (section === 'evidence') rows = records(data.excerpts).map(e => ({ kind: 'evidence', name: data.name, predicate: e.predicate, date: e.date,
           excerpt: clip(e.text ?? object(e.details).excerpt, 900), source_kind: e.source_kind, source_id: e.source_id,
           source_url: sourceUrl(e.source_url) ?? (e.source_table === 'speeches' && /^\d+$/.test(String(e.source_id)) ? siteUrl(env, '/doc/speech-' + e.source_id) : full_record_url),

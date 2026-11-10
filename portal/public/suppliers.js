@@ -206,6 +206,14 @@ export function contractHTML(contract, ids) {
   return `<details class="ui-disclosure supplier-contract"><summary><span class="supplier-contract-what"><span class="ui-row-name">${esc(heading)}</span><span class="ui-row-meta">${meta.map(esc).join(" · ")}</span></span><span class="ui-row-figure">${currency(contract.amount)}</span></summary><div class="ui-disclosure-body"><dl class="ui-kv"><dt>${contract.supplier_id ? "Supplier" : "Awarding agency"}</dt><dd>${counterpart}</dd><dt>Contract reference</dt><dd>${esc(contract.id)}</dd>${reference && reference !== heading && reference !== contract.id ? `<dt>Agency reference</dt><dd>${esc(reference)}</dd>` : ""}<dt>Start date</dt><dd>${esc(date(contract.start_date))}</dd><dt>End date</dt><dd>${esc(date(contract.end_date))}</dd><dt>Published</dt><dd>${esc(date(contract.published))}</dd><dt>Procurement method</dt><dd>${esc(contract.procurement_method || "Not recorded")}</dd></dl>${url ? `<a class="ui-source-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${contract.link_scope === "source_register" ? `Find ${esc(contract.id)} on AusTender` : "Open the source notice"}<span class="visually-hidden"> (opens in a new tab)</span></a>` : '<p class="fineprint">No direct source URL is recorded. Use the contract reference to find the notice on <a href="https://www.tenders.gov.au/" target="_blank" rel="noopener noreferrer">AusTender</a>.</p>'}${Number(contract.notices) > 1 ? `<p class="fineprint">${number(contract.notices)} source notices are associated with this contract.</p>` : ""}</div></details>`;
 }
 
+const WITHHELD_HEADINGS = { cancelled_at_source: "Cancelled at source", value_under_review: "Value held for review", suspect_value: "Value held for review" };
+/** Contracts listed but left out of every total (cancelled at source, or a value held for review), each with its reason. */
+export function withheldHTML(rows, ids, sectionId = "supplier-withheld") {
+  const list = (Array.isArray(rows) ? rows : []).filter((row) => row && row.id);
+  if (!list.length) return "";
+  return `<section class="ui-section supplier-section" id="${esc(sectionId)}"><h2 class="ui-section-title">Listed but not counted</h2><p class="ui-section-note supplier-section-note">${list.length === 1 ? "This contract is" : `These ${number(list.length)} contracts are`} left out of the totals above, for the reason shown.</p>${list.map((row) => `<div class="supplier-withheld-row"><p class="ui-row-meta"><strong>${esc(WITHHELD_HEADINGS[row.status] || "Not counted")}.</strong> ${esc(row.caveat || "")}</p>${contractHTML(row, ids)}</div>`).join("")}</section>`;
+}
+
 async function renderProfile(root, profile, meta, helpers, life, suppliers) {
   const ids = await agencyIds(life.signal);
   if (!life.alive()) return;
@@ -237,10 +245,11 @@ async function renderProfile(root, profile, meta, helpers, life, suppliers) {
     ${statsHTML([[shortMoney(profile.total), "Recorded contract value", currency(profile.total)], [number(profile.count), "Contracts"], [number(agencies.length), "Agencies"]])}</div>
     <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids, meta)}<section class="ui-section supplier-section" id="supplier-connections"><h2 class="ui-section-title">Agency connections</h2><p class="ui-section-note">Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<div class="supplier-growth"></div><section class="ui-section supplier-section supplier-funding" id="supplier-funding" hidden></section><section class="ui-section supplier-section supplier-evidence" hidden></section><section class="ui-section supplier-section supplier-taxcharity" hidden></section><section class="ui-section supplier-section supplier-mentions"></section>
       <section class="ui-section supplier-section" id="supplier-contracts"><div data-contracts-table></div>${procurementSourceHTML(meta, profile.caveats || [])}</section>
+      ${withheldHTML(profile.withheld, ids)}
       ${identity || aliases ? `<section class="ui-section supplier-section" id="supplier-identity"><h2 class="ui-section-title">Identity</h2>${identity ? `<dl class="ui-kv supplier-identity">${identity}</dl>` : ""}${aliases}</section>` : ""}
     </div>${rail}</div></div>`;
   mountSupplierGrowth(root.querySelector(".supplier-growth"), profile, meta, life, suppliers);
-  import('/agencies.js?v=agency-polish-20261014').then(({ mountProcurementPreview }) => {
+  import('/agencies.js?v=agency-withheld-20261110').then(({ mountProcurementPreview }) => {
     if (life.alive()) return mountProcurementPreview(root.querySelector('.supplier-agency-map'), profile, 'supplier', life);
   }).catch(() => {
     if (life.alive()) root.querySelector('.supplier-agency-map').innerHTML = '<p>The map could not open. Agency relationships are listed above.</p>';

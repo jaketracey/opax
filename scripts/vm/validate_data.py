@@ -48,6 +48,7 @@ way and every file that `git status` shows as changed or added must parse.
 import datetime
 import importlib.util
 import json
+import math
 import re
 import subprocess
 import sys
@@ -428,6 +429,20 @@ def check_grants() -> list[str]:
             errs.append(f"index lists program {p.get('id')} but programs/{p.get('key')}.json is missing")
             if len(errs) > 10:
                 break
+    # Every listed award carries a finite value, 0 included: a $0.00 GrantConnect award is published as 0, never
+    # dropped (search-hubs-008); and a QLD placeholder title never stands in for the program (search-hubs-017).
+    for jur in ("federal", "qld"):
+        for name in _changed(f"{PUBLIC}/grants/{jur}", r"shard-\d+\.json"):
+            shard, err = _load_json(f"{PUBLIC}/grants/{jur}/{name}")
+            for rid, rec in (shard.items() if isinstance(shard, dict) and not err else ()):
+                for g in (rec.get("grants") or []) if isinstance(rec, dict) else ():
+                    v = g.get("v") if isinstance(g, dict) else None
+                    if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v):
+                        errs.append(f"grants/{jur}/{name} {rid} award {g.get('id') if isinstance(g, dict) else g} has no value")
+                    elif str(g.get("n") or "").strip().casefold() in ("n/a", "na", "-"):
+                        errs.append(f"grants/{jur}/{name} {rid} award {g.get('id')} is titled {g.get('n')!r}")
+                    if len(errs) > 20:
+                        return errs
     # The rule portal/test/program-notes.test.mjs enforces: every federal id the notes name is still in programs[].
     notes, _ = _load_json(f"{PUBLIC}/grants/program-notes.json")
     named = (notes.get("programs") if isinstance(notes, dict) else None) or {}
@@ -439,6 +454,32 @@ def check_grants() -> list[str]:
     return errs
 
 
+WITHHELD_STATUSES = {"cancelled_at_source", "value_under_review", "suspect_value"}
+
+
+def supplier_profile_errors(profile: dict, where: str) -> list[str]:
+    """What a published supplier profile must hold (contracts-grants-001/004/007, search-hubs-004): its total is
+    the sum of the contracts it counts, so a withheld row (cancelled at source, or a value held for review) can
+    never leak into it; every withheld row says why; no counted contract carries AusTender's 1900 placeholder
+    as a date; and every contract links to its notice, not the AusTender home page."""
+    errs = []
+    contracts = profile.get("contracts") or []
+    total = sum(float(c.get("amount") or 0) for c in contracts)
+    if abs(total - float(profile.get("total") or 0)) > 0.01 * (len(contracts) + 1):
+        errs.append(f"{where} total {profile.get('total')} is not the sum of its counted contracts ({total:.2f})")
+    if int(profile.get("count") or 0) != len(contracts):
+        errs.append(f"{where} count {profile.get('count')} is not its {len(contracts)} counted contracts")
+    for c in contracts:
+        if any(str(c.get(k) or "")[:4].isdigit() and int(str(c.get(k))[:4]) <= 1900 for k in ("start_date", "end_date")):
+            errs.append(f"{where} {c.get('id')} counts a placeholder date ({c.get('start_date')} to {c.get('end_date')})")
+        if c.get("url") in (None, "", "https://www.tenders.gov.au/", "https://www.tenders.gov.au"):
+            errs.append(f"{where} {c.get('id')} links to the AusTender home page, not its notice")
+    for c in profile.get("withheld") or []:
+        if c.get("status") not in WITHHELD_STATUSES or not str(c.get("caveat") or "").strip():
+            errs.append(f"{where} withholds {c.get('id')} without a recorded status and reason")
+    return errs
+
+
 def check_suppliers() -> list[str]:
     errs = _check_json(f"{PUBLIC}/suppliers.json", ("meta", "suppliers"), ("suppliers", "meta.supplier_count"),
                        SUPPLIERS_MIN_RATIO)
@@ -446,6 +487,15 @@ def check_suppliers() -> list[str]:
                         AGENCIES_MIN_RATIO)
     errs += _check_dir(f"{PUBLIC}/suppliers", r"[0-9a-f]{2}\.json", SHARDS_MIN_RATIO)
     errs += _check_dir(f"{PUBLIC}/agencies", r"a-[0-9a-f]+\.json", SHARDS_MIN_RATIO)
+    for name in _changed(f"{PUBLIC}/suppliers", r"[0-9a-f]{2}\.json"):
+        doc, err = _load_json(f"{PUBLIC}/suppliers/{name}")
+        profiles = doc.get("profiles") if isinstance(doc, dict) else None
+        for pid, profile in profiles.items() if isinstance(profiles, dict) else ():
+            if not isinstance(profile, dict):
+                continue
+            errs += supplier_profile_errors(profile, f"suppliers/{name} {pid}")
+            if len(errs) > 20:
+                return errs
     return errs
 
 

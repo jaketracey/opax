@@ -12,7 +12,7 @@ from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from scripts.tax_expenditures.parse import CC, TERMS, STATEMENT, SHEET, TOTALS, CATEGORIES, NS, document_metadata, tables, text, key, permitted, parse_sheet, parse_combined
+from scripts.tax_expenditures.parse import CC, TERMS, STATEMENT, SHEET, TOTALS, CATEGORIES, NS, document_metadata, tables, text, key, permitted, parse_sheet, parse_combined, cell_text
 
 
 def load(path):
@@ -96,7 +96,7 @@ def build(root=ROOT):
     sheet=workbook[SHEET];grid=list(sheet.values)
     years=grid[0][2:]
     for row_index,(code,title,*values) in enumerate(grid[1:],2):
-        items[code]['title_as_statement']=items[code]['title'];items[code]['title']=title
+        items[code]['title_as_statement']=items[code]['title'];items[code]['title']=cell_text(title)
         items[code]['cells']={year:chr(67+i)+str(row_index) for i,year in enumerate(years)}
     for i in combined.values():
         i['cells']={year:f'R2C{n}' for n,year in enumerate(i['years'],1)}

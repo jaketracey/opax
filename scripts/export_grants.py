@@ -650,11 +650,101 @@ def clean_row(row, cols):
     return out
 
 
+def source_title(title):
+    """A QLD expenditure title, or None for a placeholder ("N/A", "NA", "-") so the program name stands in
+    (search-hubs-017)."""
+    return None if (title or "").strip().casefold() in ("n/a", "na", "-") else title
+
+
+def award_value(v):
+    """A listed award's value: whole dollars, except a value under 50 cents keeps its cents so it never reads as
+    $0. A value of exactly 0 is published as 0 ("$0 (as published)"), not dropped (search-hubs-008)."""
+    return round(v) if v == 0 or abs(v) >= 0.5 else round(v, 2)
+
+
+# Words that name a kind of organisation, not which one: "University" alone never ties "Griffith University" to
+# the University of Sydney's ABN.
+GENERIC_NAME_WORDS = frozenset("""the of and for in at on a an to
+university uni college school schools institute institution academy campus
+health hospital hospitals medical primary network networks service services care
+council councils shire city regional region community communities centre center centres
+association assoc society club clubs foundation trust fund group groups
+company co corporation corp limited ltd pty proprietary inc incorporated llc plc
+australia australian aust national state queensland qld nsw victoria vic
+department dept government organisation organization agency authority board
+research international holdings enterprises industries management""".split())
+
+
+LEGAL_NAME_WORDS = frozenset("the of and for in at on a an to pty ltd limited inc incorporated co company corporation corp proprietary llc plc".split())
+
+
+def split_aliases(aliases, names):
+    """(kept, differing): the source spellings of a recipient that plausibly name the ABN holder, and those that
+    share no distinguishing word, initialism or near spelling with its published or ABR name (contracts-grants-011).
+
+    GrantConnect sometimes pairs one organisation's name with another's ABN (GA355305 lists "South Western Sydney
+    Primary Health Network Ltd." under Sunshine Coast Health Network's ABN). The record stays with the ABN; the
+    differing name is shown as such, never as an alias or a search name for the ABN holder.
+    """
+    from difflib import SequenceMatcher
+
+    def words(name):
+        s = re.sub(r"['\u2019`\u00b4]", "", (name or "").lower()).replace("&", " and ")
+        return [w for w in re.split(r"[^a-z0-9]+", s) if w]
+
+    def distinct(name):
+        return {w for w in words(name) if w not in GENERIC_NAME_WORDS and not w.isdigit()}
+
+    def initials(name, every=False):
+        return "".join(w[0] for w in words(name) if every or w not in ("the", "of", "and", "for", "in", "at", "on", "a", "an", "to"))
+
+    refs = [n for n in names if n]
+    ref = set().union(*(distinct(n) for n in refs)) if refs else set()
+    named = set(ref)  # the holder's distinguishing words, empty when it is named only in common words
+    if not ref:  # a holder named only in common words ("The University of Queensland") is compared on those words
+        ref = {w for n in refs for w in words(n) if w not in LEGAL_NAME_WORDS}
+    joined = "".join(w for n in refs for w in words(n))
+
+    def core(name):
+        return [w for w in words(name) if w not in LEGAL_NAME_WORDS]
+
+    def contains(seq, part):
+        return bool(part) and any(seq[i:i + len(part)] == part for i in range(len(seq) - len(part) + 1))
+
+    def same_holder(alias):
+        own = distinct(alias)
+        if not own or not ref:
+            return True
+        if named and own & named:
+            return True
+        # "University of Queensland Press" names the University of Queensland; "Queensland University of Technology" does not
+        if not named and any(contains(core(alias), core(n)) for n in refs):
+            return True
+        if any(len(w) >= 4 and w in joined for w in own) or any(len(w) >= 4 and w in "".join(words(alias)) for w in named):
+            return True
+        if any(len(x) >= 6 and len(y) >= 6 and SequenceMatcher(None, x, y).ratio() >= 0.85 for x in own for y in ref):
+            return True
+        # an initialism on one side of the other's words ("UNSW", "RAPAD", "CPL"), never of its own
+        def abbreviates(word_set, names):
+            for n in names:
+                every, short = initials(n, True), initials(n)
+                for w in word_set:
+                    if (len(w) >= 3 and (w in every or w in short)) or (len(w) >= 2 and (short.startswith(w) or (len(short) >= 2 and w.startswith(short)))):
+                        return True
+            return False
+        return abbreviates(own, refs) or abbreviates(ref, [alias])
+
+    kept, differing = [], []
+    for alias in aliases:
+        (kept if same_holder(alias) else differing).append(alias)
+    return kept, differing
+
+
 SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, release_holder,
                     seat_vacant, seat_holder,
                     margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
-                    program_index_extras, program_name, unmangle, clean_row)
-SHARED_CONSTANTS = ("ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
+                    program_index_extras, program_name, unmangle, clean_row, source_title, award_value, split_aliases)
+SHARED_CONSTANTS = ("GENERIC_NAME_WORDS", "LEGAL_NAME_WORDS", "ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
                     "PROGRAM_RECIPIENTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
 
 
@@ -836,7 +926,7 @@ else:
         abn = re.sub(r"\D", "", r["recipient_abn"] or "")
         rid = rid_for("qld_expenditure", abn if abn not in ("", "0") else None, r["recipient"])
         grants.append({
-            "id": f"qld-{r['grant_id']}", "rid": rid, "v": r["amount"] or 0.0, "n": r["title"] or r["program"],
+            "id": f"qld-{r['grant_id']}", "rid": rid, "v": r["amount"] or 0.0, "n": source_title(r["title"]) or r["program"],
             "ag": r["agency"], "pr": r["program"], "go": None, "cat": r["category"],
             "fy": r["financial_year"] or fy_of(r["start_date"]), "s": r["start_date"], "e": r["end_date"],
             "adhoc": 1 if r["grant_type"] in ("discretionary", "one_off") else 0,
@@ -1074,18 +1164,20 @@ for rid, rec, gs, t in listed:
         "abn": rec.get("abn"), "abn_method": rec.get("abn_method"),
         "abr": ({"name": rec.get("abr_name"), "status": rec.get("abr_status"), "etype": rec.get("abr_etype"),
                  "state": rec.get("abr_state"), "postcode": rec.get("abr_postcode")} if rec.get("abr_name") else None),
-        "aliases": json.loads(rec.get("aliases") or "[]"),
+        **dict(zip(("aliases", "names_differ"), split_aliases(json.loads(rec.get("aliases") or "[]"),
+                                                              (rec["canonical_name"], rec.get("abr_name"))))),
         "t": round(t), "c": len(gs), "y0": fys[0] if fys else None, "y1": fys[-1] if fys else None, "adhoc": round(adhoc),
         "by": by_year(gs),
         "agencies": [[a, round(v)] for a, v in ((list(agency_idx)[i], v) for i, v in ag.most_common(6))],
         "programs": [[p, round(v)] for p, v in pr.most_common(8)],
         "sel": ({k: round(v) for k, v in sel.most_common()} or None), "el": [[e, round(v)] for e, v in el.most_common(6)] or None,
+        # every field but the value drops when empty; a $0.00 award keeps "v": 0 (search-hubs-008)
         "grants": [{k: v for k, v in {
-            "id": g["id"], "v": round(g["v"]), "n": g["n"], "ag": agency_label(g["ag"]),
+            "id": g["id"], "v": award_value(g["v"]), "n": g["n"], "ag": agency_label(g["ag"]),
             "pr": (g["pr"] if g["pr"] != g["n"] else None), "cat": g["cat"],
             "fy": g["fy"], "s": g["s"], "adhoc": g["adhoc"], "sel": g["sel"], "el": g["el"],
             "guid": g.get("guid"), "desc": g.get("desc"),
-        }.items() if v not in (None, "", 0)} for g in gs_sorted[:GRANTS_PER_DETAIL]],
+        }.items() if k == "v" or v not in (None, "", 0)} for g in gs_sorted[:GRANTS_PER_DETAIL]],
         "more": max(0, len(gs) - GRANTS_PER_DETAIL),
         "d": donor_block(rec, full=True),
         "other": ({"jur": other_jur, "t": round(other_total or 0), "c": other_count or 0, "f": file_key(rid)}

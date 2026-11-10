@@ -3,8 +3,15 @@ import { aud, clip, fold, siteUrl, tableRows } from './record-common'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 
 interface Agency { id: string; name: string; total: number; count: number; first_year?: number; last_year?: number }
-interface AgencyProfile extends Agency { suppliers?: { id: string; name: string; total: number; count: number }[] }
-interface SupplierProfile { id: string; name: string; total: number; count: number; agencies?: { name: string; total: number; count: number }[]; first_year?: number; last_year?: number }
+interface AgencyProfile extends Agency { suppliers?: { id: string; name: string; total: number; count: number }[]; withheld?: { id: string; amount: number; agency?: string; status?: string; caveat?: string }[] }
+interface Withheld { id: string; amount: number; agency?: string; status?: string; caveat?: string }
+interface SupplierProfile { id: string; name: string; total: number; count: number; agencies?: { name: string; total: number; count: number }[]; first_year?: number | null; last_year?: number | null; withheld?: Withheld[] }
+/** " (2019 to 2024)" for a recorded year span, nothing when the profile has no dated contract (search-hubs-003). */
+const span = (first?: number | null, last?: number | null, sep = ' to ') => first && last ? ` (${first}${sep}${last})` : ''
+/** Contracts a profile lists but leaves out of its totals, said in the source's terms (contracts-grants-001/004). */
+const withheldNote = (name: string, rows?: Withheld[]) => rows?.length
+  ? `${rows.length.toLocaleString('en-AU')} ${name} contract${rows.length === 1 ? ' is' : 's are'} listed but not counted in these totals: ${rows.slice(0, 3).map(r => `${r.id} (${aud(r.amount)}${r.agency ? ', ' + r.agency : ''}): ${clip(r.caveat ?? 'not counted', 400)}`).join(' ')}`
+  : null
 const NOTE = 'AusTender contract notices from Commonwealth agencies: values are contract values as published (including later amendments), not payments, and a supplier name follows the notice.'
 
 /** The agency a phrase names: exact name first, then every word, preferring the largest buyer ("Defence" is the Department of Defence). */
@@ -42,6 +49,8 @@ export const tool: ToolDefinition = {
         citations.push({ kind: 'record', value: s.total, url: siteUrl(env, `/subject/supplier/${s.id}`), text: `${s.name}: ${aud(s.total)} across ${s.count.toLocaleString('en-AU')} ${profile.name} contracts` })
         rows.push({ supplier: s.name, total_aud: Math.round(s.total), contracts: s.count })
       }
+      const held = withheldNote(profile.name, profile.withheld)
+      if (held) notes.push(held)
       return { rows, citations, notes }
     }
     if (supplier && !query && !agency) {
@@ -59,11 +68,16 @@ export const tool: ToolDefinition = {
         const countLeaders = profile.agencies.filter(a => a.count === Math.max(...profile.agencies!.map(a => a.count)))
         const href = siteUrl(env, `/subject/supplier/${id}`)
         const agencyCitations = [...new Set([...picked, ...countLeaders])].map(a => ({ kind: 'record' as const, value: a.total, url: href,
-          text: `${a.name} awarded ${profile.name} ${aud(a.total)} across ${a.count.toLocaleString('en-AU')} Commonwealth contracts${leaders.includes(a) ? `, ${args.rank_by === 'count' ? 'the ' + (leaders.length > 1 ? 'joint ' : '') + 'highest contract count' : 'the largest total contract value'} for this supplier` : ''}${countLeaders.includes(a) && args.rank_by !== 'count' ? ', the ' + (countLeaders.length > 1 ? 'joint ' : '') + 'highest contract count for this supplier' : ''} (${profile.first_year} to ${profile.last_year}).` }))
-        if (args.group_by === 'agency' || !env.TABLE_DB) return { rows: picked.map(a => ({ agency: a.name, supplier: profile.name, total_aud: a.total, contracts: a.count })), citations: agencyCitations, notes: [NOTE, 'Agency totals cover the published supplier profile; value rankings and contract-count rankings can differ.'], group_by: 'agency', rank_by: args.rank_by ?? 'value' }
+          text: `${a.name} awarded ${profile.name} ${aud(a.total)} across ${a.count.toLocaleString('en-AU')} Commonwealth contracts${leaders.includes(a) ? `, ${args.rank_by === 'count' ? 'the ' + (leaders.length > 1 ? 'joint ' : '') + 'highest contract count' : 'the largest total contract value'} for this supplier` : ''}${countLeaders.includes(a) && args.rank_by !== 'count' ? ', the ' + (countLeaders.length > 1 ? 'joint ' : '') + 'highest contract count for this supplier' : ''}${span(profile.first_year, profile.last_year)}.` }))
+        const held = withheldNote(profile.name, profile.withheld)
+        if (held) notes.push(held)
+        if (args.group_by === 'agency' || !env.TABLE_DB) return { rows: picked.map(a => ({ agency: a.name, supplier: profile.name, total_aud: a.total, contracts: a.count })), citations: agencyCitations, notes: [...notes, 'Agency totals cover the published supplier profile; value rankings and contract-count rankings can differ.'], group_by: 'agency', rank_by: args.rank_by ?? 'value' }
         citations.push(...agencyCitations)
+      } else if (profile?.id === id) {
+        const held = withheldNote(profile.name, profile.withheld)
+        if (held) notes.push(held)
       }
-      citations.push({ kind: 'record', value: Number(top.total), url: siteUrl(env, `/subject/supplier/${top.id}`), text: `${top.name}: ${aud(top.total)} across ${Number(top.count).toLocaleString('en-AU')} Commonwealth contracts with ${top.agency_count} agencies (${top.first_year}–${top.last_year})` })
+      citations.push({ kind: 'record', value: Number(top.total), url: siteUrl(env, `/subject/supplier/${top.id}`), text: `${top.name}: ${aud(top.total)} across ${Number(top.count).toLocaleString('en-AU')} Commonwealth contracts with ${top.agency_count} agencies${span(top.first_year as number | null, top.last_year as number | null, '–')}` })
       const contracts = await tableRows(env, 'contracts', { 'f.supplier_id': JSON.stringify([top.id]), sort: 'amount:desc', pageSize: String(limit) })
       for (const r of contracts.rows) { citations.push(contractCite(env, r)); rows.push({ supplier: r.supplier, amount_aud: r.amount, title: clip(r.title, 90), agency: r.agency, start: r.start_date }) }
       return { rows, citations, notes }

@@ -1,0 +1,6 @@
+[
+  {"id": "CN3290712@9626000000.00", "field": "counted_in_totals", "from": true, "to": false,
+   "evidence_url": "https://www.tenders.gov.au/Cn/Show/ee8bc7ea-7df9-4231-8dcf-3caf9f127953",
+   "evidence": "AusTender notice CN3290712-A7 (Australian Maritime Safety Authority, published 3 Jul 2026) lists a contract value of $9,626,000,000.00 and an amendment value of $9,619,420,000.00, executed on 12 May 2026, while the contract period on the same notice ends on 5 Nov 2024. The previous notice, CN3290712-A6 (19 Jun 2024), lists $6,580,000.00 (https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN3290712). OPAX shows the value as published and leaves it out of totals until AusTender confirms or corrects it.",
+   "finding": "contracts-grants-001", "reviewed": "2026-11-10"}
+]

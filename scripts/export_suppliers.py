@@ -30,8 +30,44 @@ CAVEATS = [
     "Older AusTender records supplement contract numbers missing from the current notice corpus. Current records always take precedence; supplemental values may have later amendments outside the collected data.",
     "Years describe recorded contract start dates. Missing or invalid dates remain in undated totals.",
     "An identity link to the funding record does not show that a contract funded a donation, or establish influence or misconduct.",
-    "Source links open the official AusTender register; search the displayed contract notice number to locate its record.",
+    "Source links open an AusTender keyword search for the contract notice number.",
+    "Notices AusTender marks cancelled, and values held for review, are listed separately with the reason and left out of every total.",
 ]
+
+# Contracts listed on a profile but left out of every total, with the reason shown beside the row. The
+# reasons come from the source (AusTender's own status) or a logged review (scripts/corrections/contracts.json,
+# applied by parli.ingest.contract_suppliers); the export never decides one by itself.
+WITHHELD_REASONS = {
+    'cancelled_at_source': 'AusTender marks this contract notice cancelled, so it is left out of supplier and '
+                           'agency totals.',
+    'suspect_value': 'This value is at least $5 billion and more than ten times every other contract recorded for '
+                     'this supplier, so it is left out of totals until it is reviewed. It is shown as published.',
+}
+KEYWORD_SEARCH = 'https://www.tenders.gov.au/Search/KeywordSearch?keyword='
+
+
+def withheld_reason(row):
+    """(status, caveat) for a contract left out of totals, or (None, None) for one that counts."""
+    if str(row.get('status') or 'active').lower() == 'cancelled':
+        return 'cancelled_at_source', WITHHELD_REASONS['cancelled_at_source']
+    if row.get('review_note'):
+        return 'value_under_review', str(row['review_note'])
+    if row.get('suspect'):
+        return 'suspect_value', WITHHELD_REASONS['suspect_value']
+    return None, None
+
+
+def source_date(value):
+    """A contract date as published, or None for AusTender's placeholder (1900-01-01, 0899-12-28)."""
+    text = str(value or '')[:10]
+    try:
+        return text if date.fromisoformat(text).year > 1900 else None
+    except ValueError:
+        return value or None
+
+
+def notice_url(identifier):
+    return KEYWORD_SEARCH + quote(str(identifier), safe='') if identifier else 'https://www.tenders.gov.au/'
 
 
 def norm_name(value):
@@ -146,6 +182,7 @@ def build_export(db, graph, published_since=None):
     unresolved = 0
     nonfinite = 0
     published_values = []
+    withheld_meta = {}
     original_notices = 0
     source_counts = defaultdict(int)
     for row in contract_rows(db, published_since):
@@ -186,7 +223,7 @@ def build_export(db, graph, published_since=None):
                              'type': info.get('abr_etype'), 'kind': info.get('kind'),
                              'abn_url': 'https://abr.business.gov.au/ABN/View?abn=' + source_abn if source_abn else None},
                 'total': Decimal(0), 'count': 0, 'aliases': set(), 'agencies': {}, 'years': {},
-                'undated': {'total': Decimal(0), 'count': 0}, 'contracts': [], 'donor_links': [],
+                'undated': {'total': Decimal(0), 'count': 0}, 'contracts': [], 'withheld': [], 'donor_links': [],
                 'caveats': CAVEATS.copy(),
             }
             linked = by_rid.get(sid, [])
@@ -215,28 +252,41 @@ def build_export(db, graph, published_since=None):
         source_counts[r['source_table']] += 1
         if raw_name:
             p['aliases'].add(raw_name)
+        agency = r.get('agency') or 'Unspecified agency'
+        description = r.get('description') or ''
+        identifier = r.get('cn_id') or r['base_cn']
+        start, end = source_date(r.get('start_date')), source_date(r.get('end_date'))
+        contract = {
+            'id': identifier, 'base_id': r['base_cn'],
+            'title': r.get('title') or description[:200] or 'Contract notice',
+            'description': description[:2000], 'description_truncated': len(description) > 2000,
+            'agency': agency, 'amount': money(amount), 'start_date': start,
+            'end_date': end, 'published': r.get('published'),
+            'procurement_method': r.get('procurement_method'), 'notices': r.get('notices') or 1,
+            'reported_supplier': raw_name, 'url': notice_url(identifier),
+            'link_scope': 'source_register', 'source_table': r['source_table'],
+        }
+        if (start, end) != (r.get('start_date'), r.get('end_date')):
+            # the source's placeholder, kept beside the "not recorded" reading (search-hubs-004)
+            contract['dates_as_published'] = {'start': r.get('start_date'), 'end': r.get('end_date')}
+        status, caveat = withheld_reason(r)
+        if status:
+            p['withheld'].append(contract | {'status': status, 'caveat': caveat})
+            bucket = withheld_meta.setdefault(status, {'count': 0, 'total': Decimal(0)})
+            bucket['count'] += 1
+            bucket['total'] += Decimal(str(amount))
+            continue
         value = Decimal(str(amount))
         p['total'] += value
         p['count'] += 1
-        agency = r.get('agency') or 'Unspecified agency'
         a = p['agencies'].setdefault(agency, {'name': agency, 'total': Decimal(0), 'count': 0})
         a['total'] += value
         a['count'] += 1
-        year = valid_start_year(r.get('start_date'))
+        year = valid_start_year(start)
         y = p['years'].setdefault(year, {'year': year, 'total': Decimal(0), 'count': 0}) if year else p['undated']
         y['total'] += value
         y['count'] += 1
-        description = r.get('description') or ''
-        p['contracts'].append({
-            'id': r.get('cn_id') or r['base_cn'], 'base_id': r['base_cn'],
-            'title': r.get('title') or description[:200] or 'Contract notice',
-            'description': description[:2000], 'description_truncated': len(description) > 2000,
-            'agency': agency, 'amount': money(amount), 'start_date': r.get('start_date'),
-            'end_date': r.get('end_date'), 'published': r.get('published'),
-            'procurement_method': r.get('procurement_method'), 'notices': r.get('notices') or 1,
-            'reported_supplier': raw_name, 'url': 'https://www.tenders.gov.au/',
-            'link_scope': 'source_register', 'source_table': r['source_table'],
-        })
+        p['contracts'].append(contract)
         original_notices += r.get('notices') or 1
         if r.get('published'):
             published_values.append(r['published'])
@@ -253,11 +303,15 @@ def build_export(db, graph, published_since=None):
         for group in [*p['agencies'], *p['years'], p['undated']]:
             group['total'] = money(group['total'])
         p['contracts'].sort(key=lambda c: (-c['amount'], c['id']))
+        p['withheld'].sort(key=lambda c: (-c['amount'], c['id']))
+        if not p['withheld']:
+            del p['withheld']
         p['first_year'] = p['years'][0]['year'] if p['years'] else None
         p['last_year'] = p['years'][-1]['year'] if p['years'] else None
         path = '/suppliers/' + p['id'][2:4] + '.json'
+        withheld = {'withheld_count': len(p['withheld'])} if p.get('withheld') else {}
         directory.append({k: p[k] for k in ('id', 'canonical_id', 'name', 'abn', 'total', 'count', 'aliases', 'first_year', 'last_year')}
-                         | {'agency_count': len(p['agencies']), 'profile_path': path,
+                         | withheld | {'agency_count': len(p['agencies']), 'profile_path': path,
                             'money_node_ids': [link['id'] for link in p['donor_links']],
                             'lookup_names': sorted({link['name'] for link in p['donor_links']}
                                 | ({previous_name} if previous_name != p['name'] else set()))})
@@ -275,6 +329,8 @@ def build_export(db, graph, published_since=None):
         'source_url': 'https://www.tenders.gov.au/', 'licence': 'CC BY 3.0 AU',
         'year_basis': 'Calendar year of recorded contract start date',
         'unresolved_contract_rows': unresolved, 'excluded_nonfinite_amount_rows': nonfinite,
+        # listed on their profiles with the reason, left out of every total above
+        'withheld': {k: {'count': v['count'], 'total': money(v['total'])} for k, v in sorted(withheld_meta.items())},
         'suppliers_linked_to_funding': sum(bool(p['money_node_ids']) for p in directory),
         'graph_snapshot': graph.get('meta', {}).get('generated'), 'caveats': CAVEATS,
         'export_seconds': round(time.monotonic() - started, 3),

@@ -10,9 +10,17 @@ money maps' "public money" layer reads:
                           amendment lineage ("CN1234", "CN1234-A1", "CN1234-A2"
                           are one contract whose value is the last notice's).
                           Summing notices would count a varied contract twice.
+                          A notice AusTender marks cancelled never sets the
+                          figures; a lineage whose every notice is cancelled
+                          keeps status 'cancelled' and stays out of every
+                          total, never deleted (findings contracts-grants-004).
+                          review_note holds the reviewed reason a value is left
+                          out of totals (scripts/corrections/contracts.json).
   ext_contract_suppliers  one row per supplier: ABN when the feed gave one
                           (nearly always), else the name matched against the
-                          ABN Bulk Extract, else the name; the ABR's legal name,
+                          ABN Bulk Extract, else one ABN supplier's own reported
+                          spelling of it (method 'reported_spelling', logged),
+                          else the name; the ABR's legal name,
                           type and status; a link to the donor register
                           (`ext_donor_entities`) by ABN, then by exact or
                           rule-normalised name, then by any registered name of
@@ -38,6 +46,11 @@ from pathlib import Path
 from parli.ingest import grant_recipients as gr
 from parli.ingest.abr_match import INDEX_NAME, Index, match_entity
 
+try:  # run from the repository root (the refresh scripts do), so scripts/ is importable
+    from scripts.corrections import apply as corrections
+except ImportError:  # pragma: no cover - a stripped checkout without scripts/
+    corrections = None
+
 SOURCE = "contract_suppliers"
 SUSPECT_FLOOR = 5_000_000_000
 SUSPECT_RATIO = 10
@@ -51,7 +64,8 @@ CREATE TABLE ext_contracts_current (
     supplier_name TEXT, supplier_abn TEXT, supplier_region TEXT, supplier_country TEXT,
     agency TEXT, agency_abn TEXT, title TEXT, description TEXT, unspsc TEXT, amount REAL,
     original_amount REAL, start_date TEXT, end_date TEXT, procurement_method TEXT,
-    procurement_method_details TEXT, atm_id TEXT, suspect INTEGER NOT NULL DEFAULT 0
+    procurement_method_details TEXT, atm_id TEXT, suspect INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'active', review_note TEXT
 );
 CREATE INDEX ix_ccur_abn ON ext_contracts_current (supplier_abn);
 CREATE INDEX ix_ccur_supplier ON ext_contracts_current (supplier_name);
@@ -107,40 +121,216 @@ class Sup:
         self.by_source: dict = defaultdict(lambda: [0.0, 0])
 
 
-def build_current(db: sqlite3.Connection) -> int:
+# A notice without an ABN is matched to an ABN supplier only on that supplier's own reported spellings
+# (contracts-grants-010): the same name once case, spacing, punctuation and a trailing (or AusTender's
+# leading "Llc") legal form are set aside, with legal forms that agree (Pty Ltd is never the same company as
+# Ltd, or Ltd as Inc), or a name cut off at AusTender's 35-character supplier-name limit that begins exactly
+# one ABN supplier's spelling. A name more than one ABN reports stays unmatched, and person-shaped names are
+# never matched by name. A spelling counts as the supplier's own only when every distinctive word in it is in a
+# name the ABR registers for that ABN, with a legal form one of those names carries: AusTender also files
+# programme names, other suppliers' names and overseas affiliates under an Australian ABN ('AIR7000 P8 POSEIDON'
+# under Defence's, 'Splunk Services Singapore Pte Ltd' and 'Hootsuite Inc.' under Australian Pty Ltds'), and
+# those never take more notices.
+LEGAL_FORMS = {"pty": "pty", "proprietary": "pty", "ltd": "ltd", "limited": "ltd", "inc": "inc",
+               "incorporated": "inc", "llc": "llc", "plc": "plc"}
+TRUNCATED_NAME_LENGTH = 35
+GENERIC_WORDS = set(LEGAL_FORMS) | {
+    "the", "of", "and", "for", "in", "a", "co", "company", "corp", "corporation", "group", "holdings", "trust",
+    "trustee", "australia", "australian", "aust", "qld", "queensland", "international", "services", "service",
+    "department", "dept", "pte", "p", "l"}
+
+
+def distinctive_words(name: str | None) -> set[str]:
+    return {t for t in norm_name(name).split() if t not in GENERIC_WORDS and len(t) > 1}
+
+
+def registered_spelling(raw: str, registered_words: set[str], registered_forms: set[str] = frozenset({""})) -> bool:
+    """Every distinctive word of the spelling is in a name the ABR registers for the ABN (the last word of a
+    name cut at 35 characters as a prefix), and a legal form the spelling carries is one a registered name
+    carries. 'Splunk Services Singapore Pte Ltd' or 'Hootsuite Inc.' filed under the ABN of an Australian Pty
+    Ltd is the overseas affiliate, not the Australian company, and takes no other notices."""
+    form = spelling_key(raw)[1]
+    if form and len(spelling_text(raw)) != TRUNCATED_NAME_LENGTH and form not in registered_forms:
+        return False
+    toks = [t for t in norm_name(raw).split() if t not in GENERIC_WORDS and len(t) > 1]
+    if not toks:
+        return False
+    if len(spelling_text(raw)) == TRUNCATED_NAME_LENGTH and toks[-1] not in registered_words \
+            and any(w.startswith(toks[-1]) for w in registered_words | GENERIC_WORDS):
+        toks = toks[:-1]
+    return set(toks) <= registered_words
+
+
+def spelling_text(name: str | None) -> str:
+    return re.sub(r"\s+", " ", (name or "").strip()).casefold()
+
+
+def spelling_key(name: str | None) -> tuple[str, str]:
+    """(base name, legal form) of a reported supplier spelling: 'RAPISARDA NOMINEES P/L' and
+    'Rapisarda Nominees Pty Ltd' are ('rapisarda nominees', 'pty'); 'Llc Gurobi Optimization' and
+    'GUROBI OPTIMIZATION, LLC' are ('gurobi optimization', 'llc')."""
+    s = re.sub(r"\bp\s*/\s*l\b", " pty ltd ", (name or "").casefold())
+    toks = norm_name(s.replace("&", " and ")).split()
+    forms = []
+    if len(toks) > 1 and toks[0] == "llc":
+        forms.append(toks.pop(0))
+    if len(toks) > 1 and toks[0] == "the":
+        toks.pop(0)
+    while len(toks) > 1 and toks[-1] in LEGAL_FORMS:
+        forms.append(toks.pop())
+    classes = {LEGAL_FORMS[t] for t in forms}
+    form = "pty" if "pty" in classes else "+".join(sorted(classes))
+    return " ".join(toks), form
+
+
+class SpellingIndex:
+    """The spellings each ABN supplier reports, for the no-ABN fallback (contracts-grants-010)."""
+
+    def __init__(self, groups, registered=None):
+        """`registered(abn)` gives the names the ABR registers for an ABN; None skips that check (tests)."""
+        self.exact: dict[str, set] = defaultdict(set)
+        self.base: dict[str, dict[str, set]] = defaultdict(lambda: defaultdict(set))
+        self.skipped_unregistered = 0
+        self.forms: dict[str, set] = {}  # legal forms of the ABR's names for each ABN (when checked)
+        words: dict[str, set] = {}
+        for g in groups:
+            abn = re.sub(r"\D", "", g["supplier_abn"] or "")
+            raw = (g["supplier_name"] or "").strip()
+            if len(abn) != 11 or not raw or gr.is_placeholder(raw):
+                continue
+            base, form = spelling_key(raw)
+            if not form and gr.looks_like_person(raw):
+                continue  # a sole trader's own name never takes a no-ABN notice by name
+            if registered is not None:
+                if abn not in words:
+                    names = registered(abn)
+                    words[abn] = (set().union(*[distinctive_words(n) for n in names]),
+                                  {spelling_key(n)[1] for n in names})
+                    self.forms[abn] = words[abn][1]
+                if not registered_spelling(raw, *words[abn]):
+                    self.skipped_unregistered += 1
+                    continue
+            self.exact[spelling_text(raw)].add(abn)
+            self.base[base][form].add(abn)
+
+    def match(self, raw: str) -> tuple[str, str] | None:
+        """(abn, how) when `raw` is one ABN supplier's reported spelling, else None."""
+        base, form = spelling_key(raw)
+        if not form and gr.looks_like_person(raw):
+            return None
+        text = spelling_text(raw)
+        abns = self.exact.get(text, set())
+        if len(abns) == 1:
+            return next(iter(abns)), "exact"
+        if abns:
+            return None  # more than one ABN reports this spelling
+        abns = set()
+        for f, held in self.base.get(base, {}).items():
+            if f == form or not f or not form:
+                # 'Dataminr Inc' never joins Dataminr Australia Pty Ltd through its plain 'DataMinr' spelling
+                abns |= {a for a in held if not form or a not in self.forms or form in self.forms[a]}
+        if len(abns) == 1:
+            return next(iter(abns)), "legal_form"
+        if abns:
+            return None
+        if len(text) == TRUNCATED_NAME_LENGTH:
+            abns = {a for spelling, held in self.exact.items()
+                    if len(spelling) > len(text) and spelling.startswith(text) for a in held}
+            if len(abns) == 1:
+                return next(iter(abns)), "truncated"
+        return None
+
+
+CANCELLED = "cancelled"
+# The reviewed list of values left out of totals: scripts/corrections/contracts.json. An entry's id is
+# "<base CN>@<amount to the cent>" and its field "counted_in_totals" goes from true to false, so it holds only
+# while AusTender still publishes that exact value: a corrected notice no longer matches, the entry lapses and
+# the contract counts again (logged, so the stale entry is removed on review).
+REVIEW_DATASET = "contracts"
+
+
+def review_key(base_cn: str, amount) -> str:
+    return f"{base_cn}@{float(amount or 0):.2f}"
+
+
+def latest_figures(rows: list) -> tuple[dict, str]:
+    """The notice whose figures a lineage carries, and the lineage's status.
+
+    `rows` are a lineage's notices in publication order. A notice AusTender marks cancelled never sets
+    the value: a cancelled amendment leaves the contract at the latest notice still active (AusTender
+    shows CN4206262 live at its last active value). Only when every notice is cancelled is the contract
+    cancelled; it then keeps its last notice's figures so a page can say what was withdrawn.
+    """
+    active = [r for r in rows if (r["status"] or "").lower() != CANCELLED]
+    return (active[-1], "active") if active else (rows[-1], CANCELLED)
+
+
+def build_current(db: sqlite3.Connection, review: list | None = None) -> int:
     """One row per contract, carrying the latest notice's figures."""
     rows = db.execute(
         "SELECT COALESCE(parent_cn, cn_id) AS base, cn_id, published, supplier_name, supplier_abn, supplier_region, "
         "supplier_country, agency, agency_abn, title, description, unspsc, amount, start_date, end_date, "
-        "procurement_method, procurement_method_details, atm_id FROM ext_contracts "
+        "procurement_method, procurement_method_details, atm_id, status FROM ext_contracts "
         "WHERE cn_id IS NOT NULL AND cn_id != '' ORDER BY base, published, cn_id").fetchall()
-    out = []
-    cur = None
+    lineages: list[list] = []
     for r in rows:
-        if cur is None or cur["base"] != r["base"]:
-            if cur is not None:
-                out.append(cur)
-            cur = {"base": r["base"], "notices": 0, "first_published": r["published"], "original_amount": r["amount"]}
-        cur["notices"] += 1
-        cur.update({k: r[k] for k in r.keys() if k not in ("base",)})
-    if cur is not None:
-        out.append(cur)
+        if not lineages or lineages[-1][0]["base"] != r["base"]:
+            lineages.append([])
+        lineages[-1].append(r)
+    out = []
+    for lineage in lineages:
+        latest, status = latest_figures(lineage)
+        c = {k: latest[k] for k in latest.keys()}
+        c.update(notices=len(lineage), first_published=lineage[0]["published"],
+                 original_amount=lineage[0]["amount"], status=status)
+        out.append(c)
     db.executemany(
-        "INSERT INTO ext_contracts_current VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0)",
+        "INSERT INTO ext_contracts_current VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?,NULL)",
         [(c["base"], c["cn_id"], c["notices"], c["published"], c["first_published"], c["supplier_name"],
           c["supplier_abn"], c["supplier_region"], c["supplier_country"], c["agency"], c["agency_abn"], c["title"],
           c["description"], c["unspsc"], c["amount"], c["original_amount"], c["start_date"], c["end_date"],
-          c["procurement_method"], c["procurement_method_details"], c["atm_id"]) for c in out])
+          c["procurement_method"], c["procurement_method_details"], c["atm_id"], c["status"]) for c in out])
     # AusTender carries a few keyed-in values that no contract can be: a $123B
     # recruitment contract, a $121B legal one. A notice of SUSPECT_FLOOR or more
     # that is also SUSPECT_RATIO times everything else its supplier ever held is
     # flagged and left out of the totals and the map, never deleted.
     db.execute("""
-        UPDATE ext_contracts_current SET suspect = 1 WHERE amount >= ? AND amount > ? * (
+        UPDATE ext_contracts_current SET suspect = 1 WHERE status = 'active' AND amount >= ? AND amount > ? * (
             SELECT COALESCE(SUM(o.amount), 0) FROM ext_contracts_current o
             WHERE COALESCE(o.supplier_abn, o.supplier_name) = COALESCE(ext_contracts_current.supplier_abn, ext_contracts_current.supplier_name)
-              AND o.base_cn != ext_contracts_current.base_cn)""", (SUSPECT_FLOOR, SUSPECT_RATIO))
+              AND o.base_cn != ext_contracts_current.base_cn AND o.status = 'active')""", (SUSPECT_FLOOR, SUSPECT_RATIO))
+    apply_review(db, review)
     return len(out)
+
+
+def apply_review(db: sqlite3.Connection, entries: list | None) -> dict:
+    """Mark the reviewed values (scripts/corrections/contracts.json) as left out of totals.
+
+    Only entries whose "<base CN>@<amount>" key matches a current, active contract apply; the rest have
+    lapsed (the source changed the value, or cancelled the notice) and are returned for the log.
+    """
+    if not entries:
+        return {"applied": [], "lapsed": []}
+    records = {}
+    for base, amount in db.execute("SELECT base_cn, amount FROM ext_contracts_current WHERE status = 'active'"):
+        records[review_key(base, amount)] = {"counted_in_totals": True}
+    live = [e for e in entries if e["id"] in records]
+    lapsed = [e["id"] for e in entries if e["id"] not in records]
+    applied = corrections.apply(REVIEW_DATASET, records, entries=live) if live else []
+    for e in applied:
+        base, _, amount = e["id"].rpartition("@")
+        db.execute("UPDATE ext_contracts_current SET review_note = ? WHERE base_cn = ? AND ROUND(amount, 2) = ?",
+                   (f"{e['evidence']} ({e['evidence_url']}; {e['finding']}, reviewed {e['reviewed']})", base, float(amount)))
+    return {"applied": [e["id"] for e in applied], "lapsed": lapsed}
+
+
+def load_review() -> list:
+    if corrections is None:
+        return []
+    return corrections.load(REVIEW_DATASET)
+
+
+COUNTED = "suspect = 0 AND status = 'active' AND review_note IS NULL"
 
 
 def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
@@ -152,9 +342,18 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
     cur = db.cursor()
     cur.execute("BEGIN")
     cur.executescript(DDL)   # executescript commits; fine, the tables are rebuilt whole
-    n_current = build_current(db)
+    review = load_review()
+    n_current = build_current(db, review)
     db.commit()
     stats["contracts"] = n_current
+    stats["cancelled_contracts"] = db.execute(
+        "SELECT COUNT(*) FROM ext_contracts_current WHERE status = 'cancelled'").fetchone()[0]
+    stats["review_excluded"] = db.execute(
+        "SELECT COUNT(*) FROM ext_contracts_current WHERE review_note IS NOT NULL").fetchone()[0]
+    stats["review_lapsed"] = len(review) - stats["review_excluded"]
+    if stats["review_lapsed"]:
+        log(f"  {stats['review_lapsed']} reviewed contract value(s) no longer match AusTender and count again; "
+            "review scripts/corrections/contracts.json")
     log(f"  {n_current:,} contracts from the notices ({time.time() - t0:.0f}s)")
 
     idx = Index(abr_dir / INDEX_NAME)
@@ -170,11 +369,15 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
     # Federal notices, then the state disclosure registers (parli.ingest.qld_contracts),
     # each group tagged with its source so the exporters can read one register at a time.
     stats["suspect_notices"] = db.execute("SELECT COUNT(*) FROM ext_contracts_current WHERE suspect = 1").fetchone()[0]
+    # Every contract gives its supplier an identity (so a page for a supplier whose only notices were
+    # cancelled, or are held for review, still resolves); only the counted ones add to its totals.
     groups = [dict(r, source="austender") for r in db.execute(
-        "SELECT supplier_abn, supplier_name, COUNT(*) n, SUM(amount) total, MIN(substr(start_date,1,4)) y0, "
-        "MAX(substr(start_date,1,4)) y1 FROM ext_contracts_current WHERE suspect = 0 GROUP BY 1, 2")]
+        "SELECT supplier_abn, supplier_name, SUM(counted) n, SUM(CASE WHEN counted THEN amount ELSE 0 END) total, "
+        "MIN(CASE WHEN dated THEN substr(start_date,1,4) END) y0, MAX(CASE WHEN dated THEN substr(start_date,1,4) END) y1 "
+        f"FROM (SELECT *, ({COUNTED}) AS counted, ({COUNTED}) AND substr(start_date,1,4) BETWEEN '1901' AND '2099' AS dated "
+        "FROM ext_contracts_current) GROUP BY 1, 2")]
     agency_rows = [dict(r, source="austender") for r in db.execute(
-        "SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current WHERE suspect = 0 GROUP BY 1, 2, 3")]
+        f"SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current WHERE {COUNTED} GROUP BY 1, 2, 3")]
     has_state = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_state_contracts_current'").fetchone()
     if has_state:
         groups += [dict(r, source=r["jurisdiction"]) for r in db.execute(
@@ -187,6 +390,10 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
         agencies_by[(r["source"], r["supplier_abn"], r["supplier_name"])][r["agency"] or ""] += r["total"] or 0
 
     matched = 0
+    reported = SpellingIndex(groups, lambda abn: [row["name"] for row in idx.db.execute(
+        "SELECT DISTINCT name FROM names WHERE abn = ?", (abn,))])
+    stats["reported_spelling_not_registered"] = reported.skipped_unregistered
+    merges = []
     for g in groups:
         raw = (g["supplier_name"] or "").strip()
         abn = re.sub(r"\D", "", g["supplier_abn"] or "")
@@ -194,25 +401,33 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
             abn = ""
         method = "source" if abn else None
         if not abn:
+            m = None
+            person = gr.looks_like_person(raw)
+            if not gr.is_placeholder(raw) and raw and not person:
+                m = match_entity(idx, raw, [])
+            hit = None if (m and m.get("abn")) or gr.is_placeholder(raw) or not raw else reported.match(raw)
             if gr.is_placeholder(raw) or not raw:
                 sid = "undisclosed:federal"
-            elif gr.looks_like_person(raw):
+            elif m and m.get("abn"):
+                abn, method = m["abn"], "abr_" + m["method"]
+                matched += 1
+                sid = f"abn:{abn}"
+                s = sup_for(sid)
+                if not s.abr:
+                    s.abr = m
+            elif hit:
+                # Reversible: the raw name keeps its own key row (below), and the merge is logged.
+                abn, method = hit[0], "reported_spelling"
+                sid = f"abn:{abn}"
+                merges.append((g["source"], raw, abn, hit[1], g["n"] or 0, float(g["total"] or 0)))
+            elif person:
                 sid = f"person:{gr.norm_person(raw)}"
             else:
-                m = match_entity(idx, raw, [])
-                if m and m.get("abn"):
-                    abn, method = m["abn"], "abr_" + m["method"]
-                    matched += 1
-                    sid = f"abn:{abn}"
-                    s = sup_for(sid)
-                    if not s.abr:
-                        s.abr = m
-                else:
-                    sid = f"name:{gr.norm_rule(raw)}"
+                sid = f"name:{gr.norm_rule(raw)}"
         else:
             sid = f"abn:{abn}"
         s = sup_for(sid)
-        if abn and not s.abn:
+        if abn and (not s.abn or (method == "source" and s.abn_method == "reported_spelling")):
             s.abn, s.abn_method = abn, method
         n = g["n"] or 0
         total = float(g["total"] or 0)
@@ -222,7 +437,8 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
         s.by_source[g["source"]][0] += total
         s.by_source[g["source"]][1] += n
         for y in (g["y0"], g["y1"]):
-            if y and str(y).isdigit():
+            # 1900 (and 0899) are AusTender's placeholders for a date it does not have
+            if y and str(y).isdigit() and 1901 <= int(y) <= 2099:
                 s.years.add(int(y))
         s.agencies.update(agencies_by[(g["source"], g["supplier_abn"], g["supplier_name"])])
         if g["supplier_abn"]:
@@ -230,6 +446,11 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
         s.keys.append((g["source"], "name", raw, n, total))
         stats["groups_" + g["source"]] += 1
     log(f"  {len(sups):,} suppliers; ABR matched {matched:,} unkeyed names ({time.time() - t0:.0f}s)")
+    stats["reported_spelling_merges"] = len(merges)
+    stats["reported_spelling_dollars"] = round(sum(m[5] for m in merges))
+    log(f"  reported_spelling: {len(merges):,} unkeyed names matched to an ABN supplier's own spelling")
+    for src, raw, abn, how, n, total in sorted(merges, key=lambda m: -m[5]):
+        log(f"    reported_spelling {how}: {src} {raw!r} -> abn:{abn} ({n} contracts, ${total:,.2f})")
 
     for s in sups.values():
         if s.abn and not s.abr:

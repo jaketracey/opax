@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { grantRecipientUrl, fileKey } from '../public/grants.js';
-import { recipientProgramMatches, recipientSourceUrl } from '../public/grant-recipient.js';
+import { awardMoney, recipientProgramMatches, recipientSourceUrl } from '../public/grant-recipient.js';
 
 test('recipient links preserve jurisdiction and round-trip normalized names safely', () => {
   for (const id of ['abn:64062160614', "name:smith & sons (wa)", "person:anne o'brien"]) {
@@ -22,4 +22,11 @@ test('original award links and source dataset/search links remain distinct', () 
   assert.equal(recipientSourceUrl('federal', {id:'GA1',guid:'guid-1'}), 'https://www.grants.gov.au/Ga/Show/guid-1');
   assert.equal(new URL(recipientSourceUrl('federal', {id:'GA1'})).searchParams.get('GaId'), 'GA1');
   assert.equal(recipientSourceUrl('qld', {id:'qld-1',guid:'ignored'}), 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964');
+});
+test('a $0.00 award reads as published; a missing value is never shown as $0 (search-hubs-008)', () => {
+  assert.equal(awardMoney(0), '$0 (as published)');
+  assert.equal(awardMoney(undefined), 'Value not recorded');
+  assert.equal(awardMoney(null), 'Value not recorded');
+  assert.match(awardMoney(201261003), /^\$201,261,003/);
+  assert.match(awardMoney(0.4), /^\$0\.40?$/);
 });

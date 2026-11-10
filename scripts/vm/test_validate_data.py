@@ -352,6 +352,36 @@ class MoneyTests(Base):
 
 
 class SuppliersTests(Base):
+    def profile(self, **over):
+        good = {"total": 30.5, "count": 2, "contracts": [
+            {"id": "CN1", "amount": 10.25, "start_date": "2025-07-01", "end_date": "2026-06-30",
+             "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN1"},
+            {"id": "CN2", "amount": 20.25, "start_date": None, "end_date": None,
+             "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN2"}],
+            "withheld": [{"id": "CN3", "amount": 9e9, "status": "value_under_review", "caveat": "AusTender lists ..."}]}
+        return good | over
+
+    def put_profile(self, profile):
+        self.edit(f"{P}/suppliers/00.json", lambda d: d["profiles"].update({"s-0": profile}))
+
+    def test_counted_contracts_must_reconcile_and_link_to_their_notice(self):
+        self.put_profile(self.profile())
+        self.assertOk("suppliers")
+        # a withheld value leaking into the total (contracts-grants-001), a cancelled stub's placeholder date
+        # (search-hubs-004) and the AusTender home page as the source (contracts-grants-007) each fail
+        self.put_profile(self.profile(total=9000000030.5))
+        self.assertFails("suppliers", "is not the sum of its counted contracts")
+        bad = self.profile()
+        bad["contracts"][1]["start_date"] = "1900-01-01"
+        self.put_profile(bad)
+        self.assertFails("suppliers", "counts a placeholder date")
+        bad = self.profile()
+        bad["contracts"][0]["url"] = "https://www.tenders.gov.au/"
+        self.put_profile(bad)
+        self.assertFails("suppliers", "links to the AusTender home page")
+        self.put_profile(self.profile(withheld=[{"id": "CN3", "amount": 1, "status": "cancelled_at_source"}]))
+        self.assertFails("suppliers", "without a recorded status and reason")
+
     def test_supplier_count_meta_is_held_to_the_same_ratio(self):
         self.edit(f"{P}/suppliers.json", lambda d: d["meta"].update(supplier_count=94))
         self.assertFails("suppliers", "supplier_count fell from 100 to 94")
@@ -536,6 +566,17 @@ class GrantsTests(Base):
     def test_listed_program_without_a_file_fails(self):
         (self.root / f"{self.FED}/programs/go5.json").unlink()
         self.assertFails("grants", "programs/go5.json is missing")
+
+    def test_every_listed_award_keeps_its_value_and_a_real_title(self):
+        # search-hubs-008: a $0.00 GrantConnect award is published as 0, never dropped
+        good = {"abn-3": {"n": "R", "grants": [{"id": "GA14347", "v": 0}, {"id": "GA1", "v": 12.5, "n": "Rent"}]}}
+        self.write(f"{self.FED}/shard-03.json", good)
+        self.assertOk("grants")
+        self.write(f"{self.FED}/shard-03.json", {"abn-3": {"n": "R", "grants": [{"id": "GA14347"}]}})
+        self.assertFails("grants", "award GA14347 has no value")
+        # search-hubs-017: a QLD placeholder title falls back to the program name at export
+        self.write(f"{P}/grants/qld/shard-03.json", {"abn-3": {"n": "R", "grants": [{"id": "qld-1", "v": 5, "n": "N/A"}]}})
+        self.assertFails("grants", "award qld-1 is titled 'N/A'")
 
     def test_extra_program_files_are_harmless(self):
         self.write(f"{self.FED}/programs/stale.json", {"id": "x"})

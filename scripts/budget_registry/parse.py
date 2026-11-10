@@ -42,6 +42,13 @@ def provenance(document, table_id, page=None):
             'licence': document['licence']['name'], 'licence_url': document['licence']['url']}
 
 
+def prose_tail(tail):
+    """True when the text after a metric label reads as a sentence rather than table cells."""
+    cells = re.sub(r'\([^)]*\)', '', tail)
+    return bool(re.search(r'[A-Za-z]{4,}', cells) or re.search(YEAR, tail)
+                or re.search(NUMBER + r'\s*(?:per\s*cent|%)', tail, re.I))
+
+
 def parse_page(text, document, page):
     """Parse labelled fiscal rows only; reject unmatched columns and unknown units.
 
@@ -119,6 +126,13 @@ def parse_page(text, document, page):
             m = re.match(r'\s*' + re.escape(label) + r'(?:\s*\([^)]*\))*\s*(.*)$', line, re.I)
             if not m or not years: continue
             tail = m[1]
+            # A sentence that starts with a metric's name is prose, not a table row: "Receipts are expected to
+            # increase to $473.1 billion (23.6 per cent of GDP) in 2020-21", "Net debt is projected to peak at
+            # 18.5 per cent of GDP in 2017-18" (contracts-grants-003). A row's cells never hold words, a fiscal
+            # year or a percentage.
+            if prose_tail(tail):
+                pending_metric = None
+                continue
             pending_metric = key if not re.search(NUMBER,tail) else None
             if re.search(r'\$\s*b\b', tail): unit = 'AUD billion'
             elif re.search(r'\$\s*m\b', tail): unit = 'AUD million'

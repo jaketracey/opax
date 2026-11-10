@@ -20,7 +20,7 @@ function node() {
 }
 function harness(fetch) {
   const context = { fetch, AbortController, URLSearchParams, setTimeout, clearTimeout, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney, sourceLineHTML };
-  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML }; })());`, context);
+  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract, plural, procurementSourceHTML, procurementRailHTML, slowNotice, statsHTML, withheldHTML }; })());`, context);
   runInNewContext(source, context); return context;
 }
 const id = 'a-0123456789abcdef0123';
@@ -150,4 +150,19 @@ test('a slow agency load says so at 12 s and gives up with a retry at 90 s', asy
   assert.ok(slow && stop, `timers ${timers.map(t => t.ms)}`);
   slow.fn();
   assert.match(status.textContent, /^Still opening the agency records/);
+});
+
+test('contracts left out of totals are listed with their reason and never summed (contracts-grants-001/004)', async () => {
+  const withheld = [
+    contract(7, { amount: 9626000000, status: 'value_under_review', caveat: 'AusTender notice CN7-A7 lists a contract value of $9,626,000,000.00.' }),
+    contract(8, { amount: 500, status: 'cancelled_at_source', caveat: 'AusTender marks this contract notice cancelled.' }),
+  ];
+  const { html } = await rendered({ ...profile, contracts: [contract(1)], withheld });
+  assert.match(html, /id="agency-withheld"/);
+  assert.match(html, /Listed but not counted/);
+  assert.match(html, /These 2 contracts are left out of the totals above/);
+  assert.match(html, /<strong>Value held for review\.<\/strong> AusTender notice CN7-A7/);
+  assert.match(html, /<strong>Cancelled at source\.<\/strong>/);
+  const { html: plain } = await rendered({ ...profile, contracts: [contract(1)] });
+  assert.doesNotMatch(plain, /Listed but not counted/);
 });
