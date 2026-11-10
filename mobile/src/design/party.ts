@@ -59,6 +59,20 @@ export function isPartyLabel(party: string | null | undefined): boolean {
   );
 }
 
+/** Presiding codes name a role, never a party. */
+export function presidingRole(
+  label: string | null | undefined,
+): 'Speaker' | 'President' | null {
+  switch (label?.trim().toLocaleUpperCase('en-AU')) {
+    case 'SPK':
+      return 'Speaker';
+    case 'PRES':
+      return 'President';
+    default:
+      return null;
+  }
+}
+
 const knownParty = (name: string) =>
   parties[name.trim().toLocaleLowerCase('en-AU').replace(/’/g, "'")];
 

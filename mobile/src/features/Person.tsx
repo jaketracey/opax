@@ -13,7 +13,6 @@ import type { PersonProfile } from '../api/person-identity';
 import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
-import { VoteSplit } from '../design/charts';
 import { Disclosure } from '../design/disclosure';
 import { formatCount, formatMoney } from '../design/format';
 import { Group, Screen, TitleAnchor } from '../design/layout';
@@ -587,7 +586,11 @@ function ProfileContent({
       ...v.against.map((r) => ({ ...r, position: 'against' as const })),
     ].sort((a, c) => (c.date ?? '').localeCompare(a.date ?? ''));
   const voteRow = (row: VoteRowData, i: number) => {
-    const raw = row as VoteRowData & { key?: string; division_key?: string };
+    const raw = row as VoteRowData & {
+      key?: string;
+      division_key?: string;
+      url?: string;
+    };
     return (
       <MemberVoteRow
         key={`${row.position}-${row.name}-${row.stage}-${row.date}-${i}`}
@@ -595,6 +598,10 @@ function ProfileContent({
         name={row.name}
         stage={row.stage}
         date={row.date}
+        url={
+          raw.url ??
+          `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(row.name)}`
+        }
         href={
           row.billKey
             ? billRoute(row.billKey, undefined, {
@@ -656,17 +663,6 @@ function ProfileContent({
               <Text wordSafe variant="secondary" testID="person-votes-summary">
                 {`Voted in ${formatCount(v.total)} divisions${from && to ? `, ${from === to ? from : `${from} to ${to}`}` : ''}`}
               </Text>
-              {from && to ? (
-                <VoteSplit
-                  ayes={v.ayes}
-                  noes={v.noes}
-                  countsStyle="ayesNoes"
-                  {...{
-                    dateRange: { start: `${from}-01-01`, end: `${to}-12-31` },
-                    citation: 'They Vote For You',
-                  }}
-                />
-              ) : null}
               {rows.length ? (
                 <View testID="person-bill-votes">
                   {rows.slice(0, 5).map(voteRow)}

@@ -8,6 +8,7 @@ import {
   Text,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
+import { isPartyLabel, presidingRole } from '../../design/party';
 import { personRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
 import {
@@ -82,6 +83,13 @@ function HistoryRow({
   const person = view.people[personId];
   const profile = representativeProfile(personId, directory);
   const name = person ? rosterName(person.name) : 'Name not recorded';
+  // Older term files may record only the presiding code. Use an available
+  // recorded party from the linked profile before falling back to the role.
+  const label =
+    presidingRole(party) && isPartyLabel(profile?.party)
+      ? profile?.party
+      : party;
+  const role = presidingRole(label);
   return (
     <PersonRow
       name={name}
@@ -90,9 +98,9 @@ function HistoryRow({
           <CachedPortrait name={person.name} slug={profile?.slug} />
         ) : undefined
       }
-      party={party}
+      party={role ? undefined : label}
       partyStatus="unknown"
-      detail={detail}
+      detail={role ?? detail}
       testID={testID}
       // Only a member with a native profile links; others are plain text.
       href={profile ? personRoute(profile.slug) : undefined}
@@ -122,7 +130,12 @@ export function ElectorateHistory({
     <HistoryRow
       key={`${t.person_id}-${t.start ?? ''}-${i}`}
       personId={t.person_id}
-      party={t.party_periods.at(-1)?.party ?? t.source_party_label ?? null}
+      party={
+        t.party_periods.findLast((p) => isPartyLabel(p.party))?.party ??
+        t.source_party_label ??
+        t.party_periods.at(-1)?.party ??
+        null
+      }
       detail={termSpan(t)}
       view={view}
       directory={directory}

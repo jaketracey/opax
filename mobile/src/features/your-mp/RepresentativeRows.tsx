@@ -1,6 +1,7 @@
 import type { Electorate } from '../../api/catalogs';
 import { formatDate } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
+import { presidingRole } from '../../design/party';
 import { InsetGroup, PersonRow } from '../../design/primitives';
 import { personRoute } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
@@ -41,6 +42,10 @@ export function RepresentativeRows({
         )?.state_code
       : undefined;
     const place = jurisdictionName(state ?? seat?.jurisdiction);
+    const party = presidingRole(profile?.party)
+      ? (r.party ?? profile?.party)
+      : (profile?.party ?? r.party);
+    const role = presidingRole(party);
     return (
       <PersonRow
         key={r.person_id}
@@ -48,20 +53,22 @@ export function RepresentativeRows({
         testID={`${id}-${profile?.slug ?? r.person_id}`}
         name={r.person.name}
         portrait={<CachedPortrait name={r.person.name} slug={profile?.slug} />}
-        party={profile?.party ?? r.party}
+        party={role ? undefined : party}
         // A current member's party is the roster's present party, never
         // "unknown" when the roster row names one.
         partyStatus={
           profile?.partyStatus ??
           (observations.length > 0 || r.party ? 'current' : 'unknown')
         }
-        formerly={profile?.formerly}
+        formerly={
+          presidingRole(profile?.formerly) ? undefined : profile?.formerly
+        }
         place={
           placeLine && seat
             ? `${seat.chamber === 'senate' ? 'Senator for' : 'Member for'} ${seat.name}${place && place !== seat.name ? `, ${place}` : ''}`
             : undefined
         }
-        detail={detailFor?.(r.person_id) ?? undefined}
+        detail={role ?? detailFor?.(r.person_id) ?? undefined}
         href={profile ? personRoute(profile.slug) : undefined}
         menu={profile ? 'person' : []}
       />

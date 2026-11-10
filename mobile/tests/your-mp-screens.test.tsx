@@ -4,7 +4,7 @@ import {
   LatestRow as LatestVoteRow,
   type LatestRecord,
 } from '../src/features/your-mp/LatestRows';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { act, type ReactElement } from 'react';
 import {
   ActionSheetIOS,
@@ -21,6 +21,7 @@ import {
   catalogs as runtime,
 } from '../src/api/runtime';
 import * as format from '../src/design/format';
+import { VoteSplit } from '../src/design/charts';
 import {
   Button,
   LinkRow,
@@ -30,6 +31,7 @@ import {
   Text,
 } from '../src/design/primitives';
 import { minimumTarget } from '../src/design/tokens';
+import { RowLink } from '../src/design/row-link';
 import Electorate from '../src/features/Electorate';
 import { MemberVoteRow } from '../src/features/people/MemberVoteRow';
 import Person from '../src/features/Person';
@@ -43,6 +45,7 @@ import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import YourMP from '../src/features/YourMP';
 import { billRoute, seatRoute } from '../src/navigation/routes';
+import * as external from '../src/navigation/external/sheets';
 import { canShare } from '../src/navigation/share';
 import { sheetPayload } from '../src/navigation/sheets';
 import {
@@ -546,7 +549,33 @@ test('historical electorate records retain the abolished notice', async () => {
   await act(async () => r.unmount());
 });
 
-test('profile bill votes push the matched native bill route and keep unmatched votes as text', async () => {
+test.each(['anthony-albanese', 'julia-gillard'])(
+  '%s keeps the division summary and source totals without a profile vote split',
+  async (slug) => {
+    mockParams.slug = slug;
+    const identity = c.joinPerson(slug, slugs, roster, people, manifest);
+    const profile = c.profileFor(identity.canonicalPersonId!, catalogs);
+    mock.person.mockResolvedValue(result(identity));
+    mock.profileFor.mockResolvedValue(profile);
+    const r = await render(<Person />);
+    const votes = profile.blocks.votes.data!;
+    expect(votes.total).toBeGreaterThan(0);
+    expect(text(r)).toContain(
+      `Voted in ${format.formatCount(votes.total)} divisions`,
+    );
+    expect(r.root.findAllByType(VoteSplit)).toHaveLength(0);
+    await act(async () => pressable(r, 'person-votes-source').props.onPress());
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    expect(sheetPayload(params.key, 'source')?.details.notes).toContain(
+      `Of these divisions, voted for ${format.formatCount(votes.ayes)} and voted against ${format.formatCount(votes.noes)}. Most divisions are on procedural motions and amendments.`,
+    );
+    await act(async () => r.unmount());
+  },
+);
+
+test('profile bill votes keep the matched native bill route and chevron', async () => {
   const identity = c.joinPerson(
     'anthony-albanese',
     slugs,
@@ -574,11 +603,68 @@ test('profile bill votes push the matched native bill route and keep unmatched v
   expect(first.props.href).toMatchObject(
     billRoute(row.billKey!, undefined, { section: 'divisions' }),
   );
-  // An unmatched vote is the same row, static, with no apology text.
+  expect(first.findAllByType(Icon).map((n) => n.props.name)).toContain(
+    'chevron.right',
+  );
   expect(text(r)).not.toContain('Not matched to a bill record');
   expect(text(r)).not.toContain('Bill record on opax.com.au');
   await act(async () => r.unmount());
 });
+
+test.each([
+  undefined,
+  'https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/1',
+])(
+  'an unmatched profile vote opens its source, with original URL %s',
+  async (url) => {
+    const identity = c.joinPerson(
+      'anthony-albanese',
+      slugs,
+      roster,
+      people,
+      manifest,
+    );
+    const profile = c.profileFor(identity.canonicalPersonId!, catalogs);
+    const votes = profile.blocks.votes.data!;
+    votes.for = [
+      Object.assign({}, votes.for[0]!, {
+        name: 'Two bills & a motion',
+        stage: 'Second reading',
+        date: '2026-06-04',
+        billKey: null,
+        url,
+      }),
+    ];
+    votes.against = [];
+    mock.person.mockResolvedValue(result(identity));
+    mock.profileFor.mockResolvedValue(profile);
+    const open = jest.spyOn(external, 'openSource').mockResolvedValue();
+    const r = await render(<Person />);
+    try {
+      const row = r.root.findByType(MemberVoteRow);
+      const destination =
+        url ??
+        'https://theyvoteforyou.org.au/search?query=Two%20bills%20%26%20a%20motion';
+      expect(row.findAllByType(Icon).map((n) => n.props.name)).toEqual([
+        'arrow.up.right.square',
+      ]);
+      expect(row.findByType(RowLink).props.preview).toBe(false);
+      const link = row.find(
+        (n) => typeof n.type === 'string' && n.props.testID === 'person-vote-0',
+      );
+      expect(link.props.accessibilityHint).toBe('Opens in the in-app browser');
+      await act(async () =>
+        row.findByType(Link).props.onPress!({
+          preventDefault: jest.fn(),
+        } as never),
+      );
+      expect(open).toHaveBeenCalledWith(destination, 'Two bills & a motion');
+    } finally {
+      open.mockRestore();
+      await act(async () => r.unmount());
+    }
+  },
+);
 
 test('missing register ties do not refer to an existing file; expense copy uses about without a chart metaphor', async () => {
   mockParams.slug = 'sheena-watt';
@@ -1058,25 +1144,46 @@ describe('Your MP tab', () => {
   });
 });
 
-test('a combined vote with no bill route has no external accessory, matching the person page', async () => {
-  let r!: TestRenderer.ReactTestRenderer;
-  const record: LatestRecord = {
-    key: 'combined-vote',
-    kind: 'vote',
-    title: 'Two bills',
-    date: '2026-06-04',
-    action: 'Voted for',
-    detail: 'Second reading',
-    url: 'https://example.test/division',
-  };
-  await act(async () => {
-    r = TestRenderer.create(<LatestVoteRow record={record} />);
-  });
-  expect(
-    r.root.findAllByType(Icon).map((node) => node.props.name),
-  ).not.toContain('arrow.up.right.square');
-  expect(
-    r.root.findAllByType(Icon).map((node) => node.props.name),
-  ).not.toContain('chevron.right');
-  await act(async () => r.unmount());
-});
+test.each(['vote', 'division'] as const)(
+  'a Lately %s without a bill route has an external accessory and opens the original',
+  async (kind) => {
+    let r!: TestRenderer.ReactTestRenderer;
+    const record: LatestRecord = {
+      key: 'combined-vote',
+      kind,
+      title: 'Two bills',
+      date: '2026-06-04',
+      action: 'Voted for',
+      detail: 'Second reading',
+      url: 'https://example.test/division',
+    };
+    const open = jest.spyOn(external, 'openSource').mockResolvedValue();
+    await act(async () => {
+      r = TestRenderer.create(
+        <LatestVoteRow record={record} testID="latest-external" />,
+      );
+    });
+    try {
+      const icons = r.root.findAllByType(Icon).map((node) => node.props.name);
+      expect(icons).toContain('arrow.up.right.square');
+      expect(icons).not.toContain('chevron.right');
+      const row = r.root.find(
+        (n) =>
+          typeof n.type === 'string' && n.props.testID === 'latest-external',
+      );
+      expect(row.props.accessibilityHint).toBe('Opens in the in-app browser');
+      await act(async () =>
+        r.root.findByType(Link).props.onPress!({
+          preventDefault: jest.fn(),
+        } as never),
+      );
+      expect(open).toHaveBeenCalledWith(record.url, record.title);
+      open.mockClear();
+      await act(async () => r.root.findByType(RowLink).props.select());
+      expect(open).toHaveBeenCalledWith(record.url, record.title);
+    } finally {
+      open.mockRestore();
+      await act(async () => r.unmount());
+    }
+  },
+);
