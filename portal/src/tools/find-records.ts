@@ -1,7 +1,7 @@
 /** Discovery over the site-wide record catalog: which register holds a name or subject. No speeches. */
 import { searchCatalog, CATALOG_KINDS, type CatalogRecord } from '../catalog-search'
 import { tokens } from '../catalog-query.mjs'
-import { clip, siteUrl } from './record-common'
+import { billCitations, billFields, billKey, clip, siteUrl } from './record-common'
 import type { ToolDefinition } from './types'
 
 const KINDS = [...CATALOG_KINDS].sort()
@@ -9,7 +9,7 @@ const LABEL: Record<string, string> = { pay: 'Parliamentary pay', receipt: 'Disc
 
 export const tool: ToolDefinition = {
   name: 'find_records',
-  description: 'Discover which OPAX register holds a name or subject before fetching it: people, parties, donors and disclosed receipts, grants, contracts, suppliers, agencies, bills, declared interests, parliamentary pay, expenses, lobbying access, reports and audit reports. Returns up to 8 typed hits, each with its record link and a one-line summary. Hansard speeches are not in this catalog; use search for what was said.',
+  description: 'Discover which OPAX register holds a name or subject: people, parties, donors and disclosed receipts, grants, contracts, suppliers, agencies, bills, declared interests, parliamentary pay, expenses, lobbying access, reports and audit reports. Returns up to 8 typed hits. Bill hits include the introduction date, each recorded stage with chamber and date, passage through both houses, royal assent date, Act number and sponsor where recorded. Use this for bill introduction, assent, status and sponsor questions; answer date questions with the date first. Hansard speeches are not in this catalog; use search for what was said.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     query: { type: 'string', minLength: 2, maxLength: 200, description: 'Names or subject words, e.g. "Thales Australia" or "Defence secretary pay".' },
     kind: { type: 'string', enum: KINDS, description: 'Optional: only this kind of record.' },
@@ -28,11 +28,25 @@ export const tool: ToolDefinition = {
       if (strong.length) { url.searchParams.set('q', strong.join(' ')); found = await searchCatalog(url, env.ASSETS, { anyTerms: true, perKind: 3 }) }
     }
     const hits = (found.results as CatalogRecord[]).slice(0, 8)
-    const rows = hits.map(r => ({ kind: r.kind, title: clip(r.title, 120), summary: clip(r.snippet, 200), url: siteUrl(env, r.href || '/doc/' + r.slug), ...(r.dateLabel || r.date ? { period: r.dateLabel || r.date } : {}) }))
-    return {
-      rows, total: found.total,
-      citations: rows.map(r => ({ kind: 'record' as const, text: `${LABEL[r.kind] ?? r.kind[0].toUpperCase() + r.kind.slice(1)}: ${r.title}${r.summary ? ' — ' + r.summary : ''}`, url: r.url })),
-      notes: [found.total ? 'Catalog hits are ranked matches, not complete totals; open the matching tool for figures.' : 'No catalog record matches these words.'],
+    const enriched = await Promise.all(hits.map(async r => {
+      const row = { kind: r.kind, title: r.kind === 'bill' ? r.title : clip(r.title, 120), summary: clip(r.snippet, 200), url: siteUrl(env, r.href || '/doc/' + r.slug), ...(r.dateLabel || r.date ? { period: r.dateLabel || r.date } : {}) }
+      if (r.kind !== 'bill') return { row, citations: [{ kind: 'record' as const, text: `${LABEL[r.kind] ?? r.kind[0].toUpperCase() + r.kind.slice(1)}: ${row.title}${row.summary ? ' — ' + row.summary : ''}`, url: row.url }] }
+      const lifecycle = await billFields(env, billKey(r.href, r.slug))
+      return { row: { ...row, ...lifecycle }, citations: billCitations(lifecycle, row.title, row.url, query) }
+    }))
+    let sizeLimited = false
+    const result = () => ({
+      rows: enriched.map(result => result.row), total: found.total, truncated: enriched.length < found.total,
+      citations: [...enriched.flatMap(result => result.citations.slice(0, 1)), ...enriched.flatMap(result => result.citations.slice(1))],
+      notes: [found.total ? 'Catalog hits are ranked matches, not complete totals; open the matching tool for figures.' : 'No catalog record matches these words.',
+        ...(enriched.some(result => result.row.kind === 'bill') ? ['Bill lifecycle dates and sponsors come from the published bill records. Null fields are not recorded or unavailable; status_as_of is not an introduction, passage or assent date.'] : []),
+        ...(sizeLimited ? ['Fewer ranked hits are shown to retain complete bill lifecycles. Narrow the query to a bill title for other matches.'] : [])],
+    })
+    // Leave room for the Ask adapter inside its 16 KiB result limit. Never cut a lifecycle in half.
+    while (enriched.length > 1 && new TextEncoder().encode(JSON.stringify(result())).length > 14_000) {
+      enriched.pop()
+      sizeLimited = true
     }
+    return result()
   },
 }
