@@ -34,6 +34,13 @@ export const DEFAULT_PRICES = { input: 0.44, output: 1.32 }
 export const PROD_HOSTS = /(^|\.)opax\.com\.au$/i
 export const LEGACY_PERIOD = /\b(?:this term|last term|since|(?:19|20)\d{2}s?)\b/i
 
+/** Charge reported cost first, token estimates second, and the reserve for unknown usage.
+ * Invalid telemetry cannot reduce the spend ledger. Zero is a valid reported cost. */
+export function spendOf(usage, requestReserveUsd = 0.75) {
+  const cost = usage?.cost_usd
+  return typeof cost === 'number' && Number.isFinite(cost) && cost >= 0 ? cost : requestReserveUsd
+}
+
 export function parseArgs(argv) {
   const opts = { mode: 'both', limit: DEFAULT_LIMIT, set: 'research', route: 'auto', prod: false, operator: false, prices: { ...DEFAULT_PRICES }, timeoutMs: DEFAULT_TIMEOUT_MS, out: resolve(ROOT, 'portal/private/research-evals') }
   const rest = []
@@ -172,7 +179,10 @@ export async function runEval(opts) {
   if(!Number.isFinite(requestReserve)||requestReserve<=0)throw Error('requestReserveUsd must be positive')
   for (const q of picked) {
     for (const mode of modes) {
-      if (!fixture && spent + requestReserve > (opts.spendCap ?? 14)) { stopped = 'spend_cap'; break }
+      // Serial requests settle at their reported cost. Stop at the cap rather than
+      // withholding a full unknown-cost reserve even when responses are metered.
+      // The final request can cross the cap; an unknown response charges the reserve.
+      if (!fixture && spent >= (opts.spendCap ?? 14)) { stopped = 'spend_cap'; break }
       let r
       if (fixture) {
         const hit = fixture.find((x) => x.id === q.id && (x.mode ?? mode) === mode)
@@ -181,15 +191,16 @@ export async function runEval(opts) {
         r = await runOne({ q, mode, base: opts.bases[mode], route: opts.route, secret: opts.secret, baselineLoop: opts.baselineLoop, operator: opts.operator, prod: opts.prod, fetchImpl, timeoutMs })
       }
       const row = { id: q.id, set: q.set, kind: q.kind, mode, route: r.route, ms: r.ms, server_ms: r.server_ms ?? r.payload?.research?.ms ?? r.payload?.agentic?.ms ?? null }
+      // Error responses can also report a billable cost (or an explicit zero).
+      if (r.payload && typeof r.payload === 'object') row.usage = usageOf(r.payload, prices)
       if (r.error || !r.payload || typeof r.payload !== 'object') row.error = r.error ?? 'empty payload'
       else {
         row.answer = String(r.payload.answer ?? '')
-        row.usage = usageOf(r.payload, prices)
         row.grade = gradeRow(q, r.payload, { roster, parties })
         row.payload = r.payload
       }
       rows.push(row)
-      spent += fixture ? 0 : row.usage?.cost_usd ?? requestReserve
+      spent += fixture ? 0 : spendOf(row.usage, requestReserve)
       await opts.onRow?.({ row, rows, spent })
       if(!fixture && opts.intervalMs)await new Promise(resolve=>setTimeout(resolve,opts.intervalMs))
     }
@@ -197,7 +208,8 @@ export async function runEval(opts) {
   }
   const summary = summarise(rows)
   const report = {
-    generated: new Date().toISOString(), spent_upper_estimate: spent, stopped, base_host: opts.baseHost ?? null, set: opts.set ?? 'research', modes, limit, prices, summary,
+    // Keep the old field for report consumers; it now uses estimates only for missing costs.
+    generated: new Date().toISOString(), spent_usd: spent, spent_upper_estimate: spent, stopped, base_host: opts.baseHost ?? null, set: opts.set ?? 'research', modes, limit, prices, summary,
     questions: picked.map((q) => ({ id: q.id, kind: q.kind, shape: q.shape ?? null, question: q.question, old_route: q.old_route ?? null, expected_tools: q.expected_tools ?? [], rubric: q.rubric ?? null, by_mode: Object.fromEntries(modes.map((m) => [m, rows.find((r) => r.id === q.id && r.mode === m) ?? null])) })),
   }
   return { rows, summary, report }
