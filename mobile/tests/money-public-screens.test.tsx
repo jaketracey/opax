@@ -965,3 +965,16 @@ test('a seat seeded from the link stops filtering once the view changes', async 
   expect(caption()).toMatch(/electorates, largest first$/);
   await act(async () => r.unmount());
 });
+
+test('a largest grant states the count of the recipient’s other awards that month, as its basis says', async () => {
+  const largest = raw('/social/grants-largest.json');
+  const rows = largest.months[largest.latest] as { id: string; more: number }[];
+  const withMore = rows.find((r) => r.more > 0)!;
+  const without = rows.find((r) => r.more === 0)!;
+  const fact = async (id: string) =>
+    (
+      await loadMoneyItem({ kind: 'largest', month: largest.latest, id }, false)
+    ).data.facts.find((f) => f.label === 'Other awards that month');
+  expect((await fact(withMore.id))?.value).toBe(String(withMore.more));
+  expect(await fact(without.id)).toBeUndefined();
+});

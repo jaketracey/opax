@@ -329,6 +329,10 @@ async function readMoneyItem(
             { label: 'Purpose', value: r.purpose, long: true },
             { label: 'Selection', value: r.selection },
             { label: 'Starts', value: short(r.start) },
+            {
+              label: 'Other awards that month',
+              value: r.more ? r.more.toLocaleString('en-AU') : '',
+            },
             { label: 'Register ID', value: r.id },
           ]),
           children: [],
