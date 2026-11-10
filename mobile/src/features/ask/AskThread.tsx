@@ -121,6 +121,7 @@ export function AskThread({
   onRetry,
   onTurnLayout,
   minHeight,
+  statusAnnouncement,
 }: {
   s: AskState;
   chat: Pick<Chat, 'created' | 'updated'> | undefined;
@@ -133,6 +134,7 @@ export function AskThread({
   /** The current turn's top, so a new question can be brought under the bar. */
   onTurnLayout: (y: number) => void;
   minHeight: number;
+  statusAnnouncement?: string;
 }) {
   const thread = s.thread;
   const failure =
@@ -197,7 +199,12 @@ export function AskThread({
           </View>
         ) : null}
         {s.busy ? (
-          <AskProgress stage={s.stage} streaming={s.streaming} />
+          <AskProgress
+            stage={s.stage}
+            steps={s.steps}
+            announcement={statusAnnouncement}
+            streaming={s.streaming}
+          />
         ) : null}
         {failure ? (
           <View style={styles.block} testID={`ask-error-${s.error!.code}`}>
