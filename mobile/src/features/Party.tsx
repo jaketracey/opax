@@ -590,9 +590,10 @@ function PartyContent({
       <Group>
         {funding.read.status === 'loading' ? (
           <FundingLoading />
-        ) : view.receipts.status === 'error' &&
-          funding.read.status === 'error' ? (
-          // The Receipts section is in error too: say it once here.
+        ) : funding.read.status === 'error' &&
+          (view.receipts.status === 'error' || view.receipts.data === null) ? (
+          // Receipts draws no funding error when it is in error itself or
+          // has nothing to show: say it once here.
           <FundingError retry={funding.retry} />
         ) : fundingRecord ? (
           <PartyDebts record={fundingRecord} name={label} />

@@ -486,6 +486,21 @@ test('failed read offers retry and does not mistake a network failure for an unk
   expect(drawn(r)).toContain('Try again');
   act(() => r.unmount());
 });
+test('with no receipts held, a failed returns read is said under Debts, not an empty heading', async () => {
+  // The funding read fails by default in this file.
+  jest.mocked(runtime.partyPage).mockResolvedValue({
+    ...view,
+    data: {
+      ...view.data!,
+      receipts: { ...view.data!.receipts, status: 'missing', data: null },
+      associated: { ...view.data!.associated, status: 'ready', data: null },
+    },
+  } as typeof view);
+  const r = await render();
+  expect(has(r, 'party-debts-section')).toBe(true);
+  expect(has(r, 'party-funding-error')).toBe(true);
+  act(() => r.unmount());
+});
 test('Independent is not a party: it points to independent members', async () => {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
