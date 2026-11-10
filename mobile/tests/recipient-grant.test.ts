@@ -40,3 +40,50 @@ test('an unknown award never substitutes a recipient total or another award', as
     loadRecipientGrant('federal', recipient.id, 'not-an-award', false),
   ).rejects.toMatchObject({ code: 'not-found' });
 });
+
+test('a recipient award retains the oldest saved date and partial state from both catalogues', async () => {
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(path.startsWith('/graph/') ? index : shard),
+    asOf: null,
+    savedAt: path.startsWith('/graph/') ? 100 : 1000,
+    stale: path.startsWith('/graph/'),
+    partial: path.startsWith('/graph/'),
+    staleReason: path.startsWith('/graph/') ? 'unreadable' : undefined,
+  }));
+  const record = await loadRecipientGrant(
+    'federal',
+    recipient.id,
+    recipient.grants[0].id,
+    true,
+  );
+  expect(record).toMatchObject({
+    stale: true,
+    partial: true,
+    savedAt: 100,
+    staleReason: 'unreadable',
+  });
+});
+
+test('an individual recipient has no identifying original link through the recipient shard', async () => {
+  const privateRecipient = {
+    ...recipient,
+    n: 'Fixture Private Recipient',
+    k: 'individual',
+  };
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(path.startsWith('/graph/') ? index : { fixture: privateRecipient }),
+    asOf: null,
+    savedAt: 1000,
+    stale: false,
+  }));
+  const record = await loadRecipientGrant(
+    'federal',
+    recipient.id,
+    recipient.grants[0].id,
+    false,
+  );
+  expect(record.data.name).toBe('Individual recipient');
+  expect(record.data.originals).toEqual([]);
+  expect(record.data.path).toBeNull();
+  expect(JSON.stringify(record.data)).not.toContain('Fixture Private Recipient');
+});

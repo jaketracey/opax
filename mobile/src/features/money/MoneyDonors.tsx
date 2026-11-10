@@ -1,7 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
 import { counted, formatCount } from '../../design/format';
@@ -10,13 +10,12 @@ import {
   Group,
   MoneyRow,
   OfflineLine,
-  Screen,
   Skeleton,
   SourceLine,
   Text,
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
-import { colors, rhythm } from '../../design/tokens';
+import { ListCaption, MoneyList } from '../money-public/parts';
 import { useMoneyRecord } from './hooks';
 import { normaliseOrganisation } from './lookup';
 import {
@@ -31,7 +30,7 @@ import {
   type MoneyParams,
 } from './records';
 import { moneyNotes, moneyOriginals, moneySourceDetails } from './sources';
-import { moneyView, moneyWindowNodes, rankedDonors } from './view';
+import { moneyView, rankedDonors } from './view';
 
 /** "400 donors, largest first"; searching, "12 of 400 donors". */
 export function donorsCaption(shown: number, all: number, searching: boolean) {
@@ -65,13 +64,7 @@ export default function MoneyDonors() {
     [graph, params],
   );
   const view = useMemo(
-    () =>
-      graph && filters
-        ? {
-            ...moneyView(graph, filters),
-            nodes: moneyWindowNodes(graph, filters),
-          }
-        : null,
+    () => (graph && filters ? moneyView(graph, filters) : null),
     [graph, filters],
   );
   const donors = useMemo(
@@ -110,98 +103,97 @@ export default function MoneyDonors() {
           headerSearchBarOptions: search,
         }}
       />
-      <Screen
-        testID="money-donors-screen"
-        refreshControl={
-          record ? (
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={refresh}
-              tintColor={colors.navy}
-            />
-          ) : undefined
-        }
-      >
-        {!record || !graph || !filters || !detail ? (
-          error ? (
-            offline ? (
-              <ContentUnavailable
-                symbol="wifi.slash"
-                title={copy.notSaved}
-                body={copy.notSavedBody}
-                testID="money-donors-error"
-              />
-            ) : (
-              <ContentUnavailable
-                symbol="exclamationmark.triangle"
-                title="The donors couldn’t be loaded"
-                body="Check your connection and try again."
-                action={{ label: copy.tryAgain, onPress: retry }}
-                testID="money-donors-error"
-              />
-            )
-          ) : (
-            <Skeleton shape="rows" count={8} label="Loading the donors" />
-          )
-        ) : (
-          <Group>
-            {record.stale && record.staleReason !== 'unreadable' ? (
-              <OfflineLine savedAt={record.savedAt} />
-            ) : null}
-            {window ? (
-              <Text wordSafe variant="secondary" testID="money-donors-window">
-                {window}
-              </Text>
-            ) : null}
-            <View style={styles.list}>
-              <Text wordSafe variant="footnote" testID="money-donors-caption">
-                {donorsCaption(shown.length, donors.length, !!wanted)}
-              </Text>
-              {shown.length ? (
-                <View testID="money-donors-list">
-                  {shown.map((node, index) => (
-                    <MoneyRow
-                      key={node.id}
-                      name={node.label}
-                      detail={detail(node)}
-                      amount={node.total}
-                      href={moneyFocusRoute(
-                        node.id,
-                        jurisdiction,
-                        filters,
-                        node.label,
-                        via,
-                      )}
-                      testID={`money-donor-${index}`}
-                    />
-                  ))}
-                </View>
+      <View testID="money-donors-screen" style={{ flex: 1 }}>
+        <MoneyList
+          id="money-donors-list"
+          loaded={!!record && !!graph && !!filters && !!detail}
+          rows={shown}
+          rowKey={(node) => node.id}
+          refreshing={refreshing}
+          refresh={refresh}
+          header={
+            !record || !graph || !filters || !detail ? (
+              error ? (
+                offline ? (
+                  <ContentUnavailable
+                    symbol="wifi.slash"
+                    title={copy.notSaved}
+                    body={copy.notSavedBody}
+                    testID="money-donors-error"
+                  />
+                ) : (
+                  <ContentUnavailable
+                    symbol="exclamationmark.triangle"
+                    title="The donors couldn’t be loaded"
+                    body="Check your connection and try again."
+                    action={{ label: copy.tryAgain, onPress: retry }}
+                    testID="money-donors-error"
+                  />
+                )
               ) : (
-                <Text
-                  wordSafe
-                  variant="body"
-                  tone="inkSoft"
-                  accessibilityLiveRegion="polite"
-                  testID="money-donors-none"
-                >
-                  {`No donors match “${query.trim()}”.`}
-                </Text>
+                <Skeleton shape="rows" count={8} label="Loading the donors" />
+              )
+            ) : (
+              <Group>
+                {record.stale && !record.staleReason ? (
+                  <OfflineLine savedAt={record.savedAt} />
+                ) : null}
+                {window ? (
+                  <Text
+                    wordSafe
+                    variant="secondary"
+                    testID="money-donors-window"
+                  >
+                    {window}
+                  </Text>
+                ) : null}
+                <ListCaption announce={!!wanted} testID="money-donors-caption">
+                  {donorsCaption(shown.length, donors.length, !!wanted)}
+                </ListCaption>
+              </Group>
+            )
+          }
+          empty={
+            <Text
+              wordSafe
+              variant="body"
+              tone="inkSoft"
+              accessibilityLiveRegion="polite"
+              testID="money-donors-none"
+            >
+              {wanted
+                ? `No donors match “${query.trim()}”.`
+                : 'No donors in the selected records.'}
+            </Text>
+          }
+          render={(node, index) => (
+            <MoneyRow
+              name={node.label}
+              detail={detail?.(node)}
+              amount={node.total}
+              href={moneyFocusRoute(
+                node.id,
+                jurisdiction,
+                filters!,
+                node.label,
+                via,
               )}
-            </View>
-            <SourceLine
-              {...moneySourceDetails(record, {
-                originals: moneyOriginals(graph).slice(0, 1),
-                notes: moneyNotes(graph),
-                testID: 'money-donors-source',
-              })}
+              testID={`money-donor-${index}`}
             />
-          </Group>
-        )}
-      </Screen>
+          )}
+          sourceLine={
+            record && graph ? (
+              <SourceLine
+                {...moneySourceDetails(record, {
+                  originals: moneyOriginals(graph).slice(0, 1),
+                  notes: moneyNotes(graph),
+                  testID: 'money-donors-source',
+                })}
+              />
+            ) : null
+          }
+        />
+      </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  list: { gap: rhythm.tight },
-});

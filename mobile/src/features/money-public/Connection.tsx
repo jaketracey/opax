@@ -183,7 +183,7 @@ export default function Connection() {
               <SectionHeader title="Excerpts" testID="connection-excerpts" />
               {entry ? (
                 <>
-                  {excerpts.record?.stale ? (
+                  {excerpts.record?.stale && !excerpts.record.staleReason ? (
                     <OfflineLine savedAt={excerpts.record.savedAt} />
                   ) : null}
                   {entry.excerpts.map((x, i) => (

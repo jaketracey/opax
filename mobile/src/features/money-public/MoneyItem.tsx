@@ -25,7 +25,7 @@ import { discoveryAsOf, discoverPath, leadFor } from '../leads/model';
 import { combine } from './catalog';
 import { largestFor, programRecipients, type Jurisdiction } from './data';
 import { stateName } from './Grants';
-import { CONTRACTS_CAVEAT } from './HubCards';
+import { CONTRACTS_CAVEAT, GRANTS_CAVEAT } from './HubCards';
 import {
   MoneyStatus,
   fy,
@@ -96,8 +96,6 @@ const fullState = (code: string) => {
 const GRANTCONNECT = 'https://www.grants.gov.au/';
 const SEAT_NOTE =
   'The electorate is the one GrantConnect gives by delivery or recipient postcode, so it is approximate. It says nothing about who arranged the grant.';
-const LATEST_AWARD =
-  'Values are the latest published award value, not payments made.';
 
 const isJurisdiction = (j: string): j is Jurisdiction =>
   j === 'federal' || j === 'qld';
@@ -234,6 +232,7 @@ async function readMoneyItem(
               ...programRow(),
             ],
             notes: [
+              program.jur === 'federal' ? GRANTS_CAVEAT : '',
               g.seat ? SEAT_NOTE : '',
               g.organisation ? '' : privateNote,
             ].filter(Boolean),
@@ -297,7 +296,10 @@ async function readMoneyItem(
               : []),
             ...programRow(),
           ],
-          notes: individuals ? [privateNote] : [],
+          notes: [
+            ...(program.jur === 'federal' ? [GRANTS_CAVEAT] : []),
+            ...(individuals ? [privateNote] : []),
+          ],
           path: `/money/grants?jur=${program.jur}&program=${encodeURIComponent(program.id)}`,
         },
       };
@@ -327,6 +329,10 @@ async function readMoneyItem(
             { label: 'Purpose', value: r.purpose, long: true },
             { label: 'Selection', value: r.selection },
             { label: 'Starts', value: short(r.start) },
+            {
+              label: 'Other awards that month',
+              value: r.more ? r.more.toLocaleString('en-AU') : '',
+            },
             { label: 'Register ID', value: r.id },
           ]),
           children: [],
@@ -508,12 +514,14 @@ async function readMoneyItem(
           : allocation.data.projects;
       const p = list.find((x) => x.id === params.id);
       if (!p) throw gone();
-      const located = locations?.data.records.find(
-        (l) =>
-          l.id === p.id &&
-          l.kind === (params.kind === 'award' ? 'award' : 'invitation'),
-      );
       const individual = p.recipient === unnamedRecipient;
+      const located = individual
+        ? undefined
+        : locations?.data.records.find(
+            (l) =>
+              l.id === p.id &&
+              l.kind === (params.kind === 'award' ? 'award' : 'invitation'),
+          );
       return {
         ...(locations ? combine([allocation, locations], null) : allocation),
         data: {
@@ -557,7 +565,12 @@ async function readMoneyItem(
             },
           ],
           onward: [],
-          notes: [individual ? privateNote : ''].filter(Boolean),
+          notes: [
+            params.kind === 'award'
+              ? GRANTS_CAVEAT
+              : 'An invitation to apply is not a grant award or a payment.',
+            individual ? privateNote : '',
+          ].filter(Boolean),
           path: null,
         },
       };
@@ -584,7 +597,7 @@ async function readMoneyItem(
           children: [],
           originals: [{ label: `GrantConnect · ${r.id}`, url: r.sourceUrl }],
           onward: [],
-          notes: [LATEST_AWARD],
+          notes: [GRANTS_CAVEAT],
           path: null,
         },
       };
@@ -664,8 +677,12 @@ export function itemParams(
  * SourceLine.
  */
 export default function MoneyItem() {
-  const backOptions = useNamedBackOptions();
   const raw = useLocalSearchParams<Record<string, string>>();
+  return <MoneyItemRecord key={JSON.stringify(itemParams(raw))} raw={raw} />;
+}
+
+function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
+  const backOptions = useNamedBackOptions();
   const params = itemParams(raw);
   const key = JSON.stringify(params);
   const load = useCallback(

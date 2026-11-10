@@ -11,6 +11,7 @@ import { decodeDiscovery } from '../src/api/catalog-decoders';
 import { catalogs } from '../src/api/runtime';
 import { money } from '../src/features/money-public/runtime';
 import Hub from '../src/features/money-public/Hub';
+import { grantsFigure } from '../src/features/money-public/HubCards';
 import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
 import Largest from '../src/features/money-public/Largest';
@@ -160,6 +161,176 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
       .findAll((n) => typeof n.props.testID === 'string')
       .map((n) => n.props.testID as string),
   );
+
+test('the all-years grant figure names the full recorded range, including future agreements', () => {
+  const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
+  index.meta.years = ['2023-24', '2024-25', '2026-27'];
+  index.meta.latestCompleteYear = '2024-25';
+  index.byYear = { '2024-25': { total: 20, count: 2 } };
+  index.counts.dollars = 60;
+  expect(grantsFigure(index)).toMatchObject({
+    value: 20,
+    line: 'in 2 Commonwealth grants in 2024–25',
+    allYears: { label: 'All years, 2023–24 to 2026–27', value: 60 },
+  });
+});
+
+test.each([
+  [
+    'grant',
+    {
+      kind: 'grant',
+      jur: 'federal',
+      program: 'go3141',
+      id: program.grants[0].id,
+    },
+  ],
+  [
+    'recipient',
+    {
+      kind: 'recipient',
+      jur: 'federal',
+      program: 'go3141',
+      recipient: program.grants[0].rid,
+    },
+  ],
+  ['award', { kind: 'award', id: raw('/research/mlci.json').awards[0].ga_id }],
+] as const)(
+  '%s details distinguish award values from payments',
+  async (_name, params) => {
+    const item = (await loadMoneyItem(params, false)).data;
+    expect(item.notes.join(' ')).toMatch(
+      /award value.*not payments|award values.*not amounts paid/i,
+    );
+  },
+);
+
+test('program sources retain the source caveats and explain award values', async () => {
+  Object.assign(mockParams, { jur: 'federal', id: 'GO3141' });
+  const rendered = await mount(Program);
+  const source = rendered.root.findByType(FigureBlock).props.citation;
+  expect(source.notes).toEqual(
+    expect.arrayContaining(
+      decodeGrantIndex(raw('/graph/grants.federal.json')).meta.caveats,
+    ),
+  );
+  expect(source.notes.join(' ')).toMatch(
+    /award value.*not payments|award values.*not amounts paid/i,
+  );
+});
+
+test('Queensland expenditure records do not acquire a federal award-value caveat', async () => {
+  const index = raw('/graph/grants.qld.json');
+  const entry = index.programs[0];
+  const first = raw(`/grants/qld/programs/${entry.key}.json`).grants[0];
+  const item = (
+    await loadMoneyItem(
+      {
+        kind: 'grant',
+        jur: 'qld',
+        program: entry.key,
+        id: first.id,
+      },
+      false,
+    )
+  ).data;
+  expect(item.notes.join(' ')).not.toMatch(/award values.*not amounts paid/i);
+});
+
+test('a venue overlay cannot re-identify an individual recipient in community funding or its record', async () => {
+  const allocation = await fixture.allocation();
+  const privateAward = {
+    ...allocation.data.awards[0]!,
+    title: 'Grant project',
+    recipient: unnamedRecipient,
+  };
+  money.allocation = jest.fn().mockResolvedValue({
+    ...allocation,
+    data: { ...allocation.data, awards: [privateAward] },
+  });
+  money.locations = jest.fn().mockResolvedValue({
+    stale: false,
+    savedAt: 10,
+    asOf: null,
+    data: {
+      asOf: allocation.data.asOf,
+      methodology: [],
+      records: [
+        {
+          id: privateAward.id,
+          kind: 'award',
+          verified: true,
+          title: 'Fixture Private Recipient venue',
+          sites: [
+            {
+              name: 'Fixture Private Recipient site',
+              address: '1 Fixture Street',
+              verified: true,
+              sourceUrl: 'https://example.org/fixture',
+            },
+          ],
+        },
+      ],
+    },
+  });
+  const record = await loadMoneyItem(
+    { kind: 'award', id: privateAward.id },
+    false,
+  );
+  expect(record.data.name).toBe('Grant project');
+  expect(record.data.facts.some((fact) => fact.label === 'Sites')).toBe(false);
+  const rendered = await mount(Allocation);
+  const list = rendered.root.findByType(MoneyList);
+  const row = list.props.render(list.props.rows[0], 0);
+  expect(row.props.name).toBe('Grant project');
+  expect(JSON.stringify(record.data)).not.toContain(
+    'Fixture Private Recipient',
+  );
+});
+
+test.each([
+  [
+    'Program',
+    Program,
+    { jur: 'federal', id: 'GO3141' },
+    'program-total',
+    'grants',
+  ],
+  ['Agency', Agency, { id: agencyId }, 'agency-total', 'agency'],
+  [
+    'Money item',
+    MoneyItem,
+    {
+      kind: 'grant',
+      jur: 'federal',
+      program: 'go3141',
+      id: program.grants[0].id,
+    },
+    'money-item-amount',
+    'program',
+  ],
+] as const)(
+  '%s clears the previous record while another identity loads or fails',
+  async (_name, Page, params, oldFigure, loader) => {
+    Object.assign(mockParams, params);
+    const rendered = await mount(Page);
+    expect(ids(rendered).has(oldFigure)).toBe(true);
+    let reject!: (error: Error) => void;
+    money[loader] = jest.fn(
+      () => new Promise((_resolve, fail) => (reject = fail)),
+    ) as never;
+    mockParams.id = 'fixture-missing-record';
+    await act(async () => rendered.update(<Page />));
+    expect(ids(rendered).has(oldFigure)).toBe(false);
+    await act(async () =>
+      reject(new Error('Fixture record could not be loaded')),
+    );
+    expect(ids(rendered).has(oldFigure)).toBe(false);
+    expect(
+      rendered.root.findAllByType(MoneyStatus)[0]!.props.status.error,
+    ).toBeInstanceOf(Error);
+  },
+);
 
 test('a lead example names its back destination and has no lead methodology in Notes', async () => {
   const lead = leadsFor(decodeDiscovery(raw('/discovery.json'))).find(
@@ -1045,4 +1216,130 @@ describe('the seat grant list', () => {
     });
     expect(row.props.detail).toBe('Victoria · 28 grants');
   });
+});
+
+test('a seat seeded from the link stops filtering once the view changes', async () => {
+  const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+  Object.assign(mockParams, {
+    jur: 'federal',
+    view: 'electorates',
+    seat: 'Melbourne',
+  });
+  const r = await mount(Grants);
+  const caption = () =>
+    r.root.find((n) => n.props.testID === 'grants-caption').props.children;
+  expect(caption()).toMatch(/^1 of /);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'grants-view')!
+      .props.onChange('programs');
+  });
+  expect(caption()).toMatch(/programs, largest first$/);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'grants-view')!
+      .props.onChange('electorates');
+  });
+  expect(caption()).toMatch(/electorates, largest first$/);
+  await act(async () => r.unmount());
+});
+
+test('a largest grant states the count of the recipient’s other awards that month, as its basis says', async () => {
+  const largest = raw('/social/grants-largest.json');
+  const rows = largest.months[largest.latest] as { id: string; more: number }[];
+  const withMore = rows.find((r) => r.more > 0)!;
+  const without = rows.find((r) => r.more === 0)!;
+  const fact = async (id: string) =>
+    (
+      await loadMoneyItem({ kind: 'largest', month: largest.latest, id }, false)
+    ).data.facts.find((f) => f.label === 'Other awards that month');
+  expect((await fact(withMore.id))?.value).toBe(String(withMore.more));
+  expect(await fact(without.id)).toBeUndefined();
+});
+
+test('a seat with one of its grants listed says it is listed', async () => {
+  Object.assign(mockParams, {
+    jur: 'federal',
+    id: 'GO6821',
+    seat: 'Bruce',
+    state: 'vic',
+  });
+  const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+  const r = await mount(Program);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'program-view')!
+      .props.onChange('grants');
+  });
+  expect(
+    r.root.find((n) => n.props.testID === 'program-caption').props.children,
+  ).toBe('1 of the 3 grants in Bruce is listed, largest first');
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['offline', undefined, 1],
+  ['the server was unavailable', 'unavailable', 0],
+] as const)(
+  'funding by seat type says offline only when %s calls for it',
+  async (_name, staleReason, lines) => {
+    const { OfflineLine } = jest.requireActual('../src/design/states');
+    const read = money.allocation;
+    money.allocation = async (refresh?: boolean) => ({
+      ...(await read(refresh)),
+      stale: true,
+      ...(staleReason ? { staleReason } : {}),
+    });
+    const r = await mount(FundingBySeatType);
+    expect(r.root.findAllByType(OfflineLine)).toHaveLength(lines);
+    await act(async () => r.unmount());
+  },
+);
+
+test.each([
+  ['Grants', Grants, { jur: 'federal' }, 'grants-view', 'recipients'],
+  [
+    'Program',
+    Program,
+    { jur: 'federal', id: 'GO3141' },
+    'program-view',
+    'grants',
+  ],
+] as const)(
+  '%s clears the native search field when the view changes',
+  async (_name, Page, params, picker, next) => {
+    const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+    Object.assign(mockParams, params);
+    const r = await mount(Page);
+    const search =
+      r.root.findByType(RouteOptions).props.options.headerSearchBarOptions;
+    const clearText = jest.fn();
+    search.ref.current = { clearText };
+    await act(async () => search.onChangeText({ nativeEvent: { text: 'zz' } }));
+    await act(async () => {
+      r.root
+        .findAllByType(SegmentedPicker)
+        .find((n) => n.props.testID === picker)!
+        .props.onChange(next);
+    });
+    expect(clearText).toHaveBeenCalled();
+    expect(r.root.findByType(MoneyList).props.rows.length).toBeGreaterThan(0);
+    await act(async () => r.unmount());
+  },
+);
+
+test('the grants card keeps the register’s caveats, as the contracts card does', async () => {
+  const { SourceLine } = jest.requireActual('../src/design/source');
+  const r = await mount(Hub);
+  const notes = r.root
+    .findAllByType(SourceLine)
+    .find((x) => x.props.testID === 'money-card-grants-source')!.props
+    .notes as string[];
+  const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
+  expect(index.meta.caveats.length).toBeGreaterThan(0);
+  for (const caveat of index.meta.caveats) expect(notes).toContain(caveat);
+  await act(async () => r.unmount());
 });

@@ -38,6 +38,7 @@ import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { programRecipients, type Program as ProgramData } from './data';
+import { GRANTS_CAVEAT } from './HubCards';
 import {
   askAbout,
   counted,
@@ -100,7 +101,26 @@ export function programSeatFigure(
   };
 }
 
+type ProgramParams = {
+  jur?: string;
+  id?: string;
+  key?: string;
+  seat?: string;
+  state?: string;
+  name?: string;
+};
+
 export default function Program() {
+  const params = useLocalSearchParams<ProgramParams>();
+  return (
+    <ProgramRecord
+      key={JSON.stringify([params.jur, params.id, params.key])}
+      params={params}
+    />
+  );
+}
+
+function ProgramRecord({ params }: { params: ProgramParams }) {
   const {
     jur: input,
     id,
@@ -108,14 +128,7 @@ export default function Program() {
     seat,
     state,
     name: routeName,
-  } = useLocalSearchParams<{
-    jur?: string;
-    id?: string;
-    key?: string;
-    seat?: string;
-    state?: string;
-    name?: string;
-  }>();
+  } = params;
   const jur = input === 'qld' ? 'qld' : 'federal';
   const load = useCallback(
     async (refresh: boolean) => {
@@ -228,7 +241,7 @@ export default function Program() {
           ? seatFigure.count && !seatGrants.length
             ? `None of the ${counted(seatFigure.count, 'grant')} in ${seat} is in the listed grants`
             : seatGrants.length < seatFigure.count
-              ? `${seatGrants.length.toLocaleString('en-AU')} of the ${counted(seatFigure.count, 'grant')} in ${seat} are listed, largest first`
+              ? `${seatGrants.length.toLocaleString('en-AU')} of the ${counted(seatFigure.count, 'grant')} in ${seat} ${seatGrants.length === 1 ? 'is' : 'are'} listed, largest first`
               : `${counted(seatGrants.length, 'grant')} in ${seat}, largest first`
           : `${counted(recipients.length, 'recipient')} in the listed grants in ${seat}, largest first`
         : view === 'recipients'
@@ -354,6 +367,8 @@ export default function Program() {
                         })),
                       ],
                       notes: [
+                        jur === 'federal' ? GRANTS_CAVEAT : null,
+                        ...data.index.meta.caveats,
                         seat
                           ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
                           : null,
@@ -378,7 +393,7 @@ export default function Program() {
                   value={view}
                   onChange={(next) => {
                     setView(next);
-                    search.setQuery('');
+                    search.clear();
                   }}
                   options={[
                     {

@@ -22,6 +22,7 @@ import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
 import {
+  counted,
   formatCount,
   formatMoneyCompact,
   moneyAccessibilityLabel,
@@ -407,7 +408,7 @@ export default function MoneyScreen() {
           </>
         }
         offline={
-          record.stale && record.staleReason !== 'unreadable' ? (
+          record.stale && !record.staleReason ? (
             <OfflineLine savedAt={record.savedAt} testID="money-offline" />
           ) : null
         }
@@ -426,7 +427,7 @@ export default function MoneyScreen() {
         </>
       }
       offline={
-        record?.stale && record.staleReason !== 'unreadable' ? (
+        record?.stale && !record.staleReason ? (
           <OfflineLine savedAt={record.savedAt} testID="money-offline" />
         ) : null
       }
@@ -905,7 +906,7 @@ function ListBody({
     <PartyMoneyRow
       key={node.id}
       name={node.label}
-      detail={`${formatCount(node.count)} receipts · ${moneyYears(node.firstYear, node.lastYear)}`}
+      detail={`${counted(node.count, 'receipt')} · ${moneyYears(node.firstYear, node.lastYear)}`}
       amount={node.total}
       href={record_(node)}
       testID={`money-party-${index}`}
@@ -921,7 +922,7 @@ function ListBody({
             title="Donors"
             action={{
               label: copy.seeAll,
-              accessibilityLabel: `See all ${formatCount(named.length)} donors`,
+              accessibilityLabel: `See all ${counted(named.length, 'donor')}`,
               href: moneyDonorsRoute({
                 jurisdiction,
                 ...moneyWindowParams(filters),
@@ -996,7 +997,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(grants.total),
                         label: 'in grants',
-                        testID: 'money-public-grants',
+                        testID: 'money-public-grants-total',
                       },
                     ]
                   : []),
@@ -1005,7 +1006,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(contracts.total),
                         label: 'in contracts',
-                        testID: 'money-public-contracts',
+                        testID: 'money-public-contracts-total',
                       },
                     ]
                   : []),
