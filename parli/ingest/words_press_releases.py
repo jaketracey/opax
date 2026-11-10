@@ -49,6 +49,7 @@ Usage (on the box that holds parli.db):
 """
 
 import argparse
+import html
 import json
 import re
 import sys
@@ -206,7 +207,9 @@ def fetch_pm_transcript(session: PoliteSession, tid: int) -> Optional[dict]:
     return _row(
         "pmtranscripts", tid,
         url=PMT_PAGE.format(id=tid),
-        title=re.sub(r"\s+", " ", get("title")),
+        # The API returns the title entity-encoded inside CDATA ("Children&#039;s"), which
+        # ElementTree leaves as printed; decode it once (speeches-press-005).
+        title=re.sub(r"\s+", " ", html.unescape(get("title"))).strip(),
         date=parse_date(get("field_date") or get("release-date")),
         release_type=get("release-type") or None,
         speaker_raw=pm_raw or None, speaker=speaker, role="Prime Minister",
@@ -676,6 +679,9 @@ def map_press_release(row) -> dict:
     date = row["date"] or ""
     speaker = row["speaker"]
     title = row["title"] or ""
+    if row["source"] == "pmtranscripts" and "&" in title:
+        # Rows stored before the fetcher decoded PM Transcripts titles (speeches-press-005).
+        title = html.unescape(title)
     body = row["body_text"] or ""
     # Titles are not searchable on the platform; make the headline part of the body.
     text = f"{title}\n\n{body}" if title and not body.startswith(title[:40]) else body
