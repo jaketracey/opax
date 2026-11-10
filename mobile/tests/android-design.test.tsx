@@ -1,0 +1,376 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Android native host doubles. */
+import { act } from 'react';
+import { fireEvent, render } from '@testing-library/react-native';
+import {
+  Modal,
+  Platform,
+  Pressable as NativePressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
+import {
+  Button,
+  Field,
+  IconButton,
+  SegmentedControl,
+  SwitchRow,
+} from '../src/design/controls';
+import { ChoiceChip } from '../src/design/labels';
+import { Slider, Stepper } from '../src/design/adjustable';
+import { AndroidMenuHost, showMenu } from '../src/design/menu';
+import { Text } from '../src/design/text';
+import { androidControls, textStyles } from '../src/design/tokens';
+import { Pressable } from '../src/design/pressable';
+import { ContextMenu } from '../src/design/context-menu';
+let mockContrast = false;
+let mockFontScale = 1;
+jest.mock('react-native', () => {
+  const rn = jest.requireActual('react-native');
+  Object.defineProperty(rn.Platform, 'OS', { get: () => 'android' });
+  return rn;
+});
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
+  __esModule: true,
+  default: () => ({
+    width: 412,
+    height: 915,
+    scale: 2.625,
+    fontScale: mockFontScale,
+  }),
+}));
+jest.mock('../src/design/accessibility', () => ({
+  useBoldText: () => false,
+  useHighTextContrast: () => mockContrast,
+  useReduceMotion: () => true,
+  useAccessibilitySize: () => mockFontScale >= 1.786,
+}));
+jest.mock('@expo/ui/jetpack-compose', () => {
+  const React = require('react');
+  function part(name: string) {
+    return function MaterialPart(props: Record<string, unknown>) {
+      return React.createElement(name, props, props.children);
+    };
+  }
+  return {
+    Host: part('MaterialHost'),
+    Switch: part('MaterialSwitch'),
+    Slider: part('MaterialSlider'),
+  };
+});
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-glass-effect', () => ({
+  GlassView: require('react-native').View,
+  isLiquidGlassAvailable: () => false,
+}));
+const noop = () => undefined;
+beforeEach(() => {
+  mockContrast = false;
+  mockFontScale = 1;
+});
+const surfaces = (r: ReturnType<typeof render>) =>
+  r.UNSAFE_root.findAll(
+    (n) =>
+      typeof n.type !== 'string' &&
+      Object.hasOwn(n.props, 'android_ripple') &&
+      Array.isArray(n.props.style) &&
+      typeof n.props.onPressIn === 'function',
+  );
+const surface = (r: ReturnType<typeof render>) => surfaces(r)[0]!;
+const styles = (node: { props: { style: unknown } }) =>
+  StyleSheet.flatten(node.props.style as never);
+
+test.each([false, true])(
+  'ripples use a visible state layer with contrast=%s, retaining the resting content',
+  (contrast) => {
+    mockContrast = contrast;
+    const r = render(
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Record"
+        style={({ pressed }) => ({ opacity: pressed ? 0.3 : 1 })}
+      >
+        {({ pressed }) => <Text>{pressed ? 'Pressed' : 'Record'}</Text>}
+      </Pressable>,
+    );
+    const p = surface(r);
+    expect(p.props.android_ripple).toEqual({
+      color: contrast
+        ? androidControls.rippleHighContrast
+        : androidControls.ripple,
+      foreground: true,
+      borderless: false,
+    });
+    expect(styles(p)).toMatchObject({
+      minHeight: 48,
+      minWidth: 48,
+      opacity: 1,
+      overflow: 'hidden',
+    });
+    fireEvent(p, 'pressIn', { nativeEvent: {} });
+    expect(r.getByText('Record')).toBeTruthy();
+  },
+);
+test('disabled controls suppress the ripple and action; icon buttons use borderless feedback', () => {
+  const change = jest.fn();
+  const r = render(
+    <View>
+      <Button label="Disabled" disabled onPress={change} />
+      <IconButton
+        symbol="ellipsis"
+        accessibilityLabel="More"
+        onPress={change}
+      />
+    </View>,
+  );
+  fireEvent.press(r.getByRole('button', { name: 'Disabled' }));
+  expect(change).not.toHaveBeenCalled();
+  const controls = surfaces(r);
+  expect(controls[0]!.props.android_ripple).toBeUndefined();
+  expect(controls[1]!.props.android_ripple.borderless).toBe(true);
+});
+test('context menus give raw React Native triggers the same Android ripple and target', () => {
+  const r = render(
+    <ContextMenu items={[{ title: 'Copy link', onPress: noop }]}>
+      <NativePressable
+        accessibilityRole="button"
+        accessibilityLabel="Votes"
+        onPress={noop}
+        style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1, minHeight: 32 })}
+      >
+        <Text>Votes</Text>
+      </NativePressable>
+    </ContextMenu>,
+  );
+  expect(styles(surface(r))).toMatchObject({ minHeight: 48, opacity: 1 });
+  expect(surface(r).props.android_ripple).toMatchObject({ foreground: true });
+  expect(surface(r).props.onLongPress).toEqual(expect.any(Function));
+});
+test.each(['filled', 'tonal', 'outlined', 'text'] as const)(
+  '%s buttons fill their target and retain a spoken label',
+  (variant) => {
+    const r = render(
+      <Button label="Show more" variant={variant} onPress={noop} />,
+    );
+    expect(styles(surface(r)).minHeight).toBeGreaterThanOrEqual(48);
+    expect(r.getByRole('button', { name: 'Show more' })).toBeTruthy();
+  },
+);
+test('selected filter chips have a check and a checked state; segments expose selected tabs', () => {
+  const r = render(
+    <View>
+      <ChoiceChip label="Housing" selected onPress={noop} />
+      <SegmentedControl
+        value="all"
+        segments={[
+          { value: 'all', label: 'All' },
+          { value: 'passed', label: 'Passed' },
+        ]}
+        onChange={noop}
+      />
+    </View>,
+  );
+  expect(
+    r.getByRole('checkbox', { name: 'Housing' }).props.accessibilityState,
+  ).toMatchObject({ checked: true, selected: true });
+  expect(
+    r.getByRole('tab', { name: 'All' }).props.accessibilityState.selected,
+  ).toBe(true);
+});
+test('switch rows draw Material switches with one accessible checked control', () => {
+  const change = jest.fn();
+  const r = render(
+    <SwitchRow label="Sitting members" value onValueChange={change} />,
+  );
+  fireEvent.press(r.getByRole('switch', { name: 'Sitting members' }));
+  expect(change).toHaveBeenCalledWith(false);
+  expect(r.UNSAFE_getByType('MaterialSwitch' as never).props.value).toBe(true);
+});
+test('fields support controlled clearing, native search affordance and a wrapping label', () => {
+  const change = jest.fn();
+  const r = render(
+    <Field
+      label="Search"
+      returnKeyType="search"
+      value="Housing"
+      onChangeText={change}
+      testID="search"
+    />,
+  );
+  const input = r.UNSAFE_getByType(TextInput);
+  fireEvent(input, 'focus', { nativeEvent: {} });
+  expect(input.props.underlineColorAndroid).toBe('transparent');
+  expect(styles(input).includeFontPadding).toBe(false);
+  fireEvent.press(r.getByRole('button', { name: 'Clear search' }));
+  expect(change).toHaveBeenCalledWith('');
+});
+test.each([Stepper, Slider])(
+  '%p exposes adjustable increments, bounds and disabled state',
+  (Control) => {
+    const change = jest.fn();
+    const r = render(
+      <Control
+        label="Year"
+        value={2025}
+        min={2024}
+        max={2026}
+        onValueChange={change}
+      />,
+    );
+    const control = r.getByRole('adjustable', { name: 'Year' });
+    fireEvent(control, 'accessibilityAction', {
+      nativeEvent: { actionName: 'increment' },
+    });
+    expect(change).toHaveBeenLastCalledWith(2026);
+    fireEvent(control, 'accessibilityAction', {
+      nativeEvent: { actionName: 'decrement' },
+    });
+    expect(change).toHaveBeenLastCalledWith(2024);
+    r.rerender(
+      <Control
+        label="Year"
+        value={2026}
+        min={2024}
+        max={2026}
+        disabled
+        onValueChange={change}
+      />,
+    );
+    change.mockClear();
+    fireEvent(r.getByRole('adjustable'), 'accessibilityAction', {
+      nativeEvent: { actionName: 'decrement' },
+    });
+    expect(change).not.toHaveBeenCalled();
+  },
+);
+test('sliders can reach both endpoints when the range is not divisible by the step', () => {
+  const change = jest.fn();
+  const r = render(
+    <Slider
+      label="Value"
+      value={6}
+      min={0}
+      max={10}
+      step={3}
+      onValueChange={change}
+    />,
+  );
+  const slider = r.UNSAFE_getByType('MaterialSlider' as never);
+  fireEvent(slider, 'valueChange', 10);
+  expect(change).toHaveBeenLastCalledWith(10);
+  fireEvent(slider, 'valueChange', 0);
+  expect(change).toHaveBeenLastCalledWith(0);
+});
+test('popup menus remain anchored inside the viewport, expose menu items and dismiss on Back or outside tap', () => {
+  const action = jest.fn(),
+    dismiss = jest.fn();
+  const r = render(<AndroidMenuHost />);
+  act(() =>
+    showMenu(
+      'Actions',
+      [
+        { title: 'Copy link', onPress: action },
+        { title: 'Delete', destructive: true, onPress: noop },
+      ],
+      { x: 350, y: 820, width: 48, height: 48 },
+      undefined,
+      dismiss,
+    ),
+  );
+  expect(r.getByTestId('android-menu').props.accessibilityRole).toBe('menu');
+  expect(styles(r.getByTestId('android-menu')).left).toBeLessThan(350);
+  fireEvent.press(r.getByRole('menuitem', { name: 'Copy link' }));
+  expect(action).toHaveBeenCalledTimes(1);
+  expect(dismiss).toHaveBeenCalledTimes(1);
+  expect(r.queryByTestId('android-menu')).toBeNull();
+  act(() => showMenu('Actions', [{ title: 'Copy', onPress: action }]));
+  fireEvent(r.UNSAFE_getByType(Modal), 'requestClose');
+  expect(r.queryByTestId('android-menu')).toBeNull();
+  act(() => showMenu('Actions', [{ title: 'Copy', onPress: action }]));
+  fireEvent.press(r.getByTestId('android-menu-outside'));
+  expect(r.queryByTestId('android-menu')).toBeNull();
+});
+test.each([1, 1.3, 2])(
+  'all type roles keep Public Sans or record serif, tabular figures and no Android height floor at %s',
+  (scale) => {
+    mockFontScale = scale;
+    expect(Platform.OS).toBe('android');
+    for (const [variant, role] of Object.entries(textStyles)) {
+      const r = render(
+        <Text variant={variant as keyof typeof textStyles}>
+          Parliament 1,234,567
+        </Text>,
+      );
+      const text = r.getByText('Parliament 1,234,567');
+      expect(styles(text)).toMatchObject({ includeFontPadding: false });
+      expect(styles(text).fontFamily).toMatch(/PublicSans|Merriweather/);
+      expect(styles(text).minHeight).toBeUndefined();
+      expect(role.fontSize).toBeGreaterThanOrEqual(12);
+      expect(role.lineHeight).toBeGreaterThan(role.fontSize);
+      if (role.tabular)
+        expect(styles(text).fontVariant).toEqual(['tabular-nums']);
+      r.unmount();
+    }
+  },
+);
+
+test('Material focus thickens the field outline without moving its text inset', () => {
+  const r = render(<Field label="Email" value="" onChangeText={noop} />);
+  const input = r.UNSAFE_getByType(TextInput);
+  const outline = () =>
+    r.UNSAFE_root.findAll(
+      (n) => typeof n.props.style === 'object' && styles(n)?.borderRadius === 4,
+    )[0]!;
+  expect(styles(outline()).borderWidth).toBe(1);
+  const inset = styles(outline()).borderWidth + styles(input).paddingHorizontal;
+  fireEvent(input, 'focus', { nativeEvent: {} });
+  expect(styles(outline()).borderWidth).toBe(2);
+  expect(styles(outline()).borderWidth + styles(input).paddingHorizontal).toBe(
+    inset,
+  );
+});
+
+test('ripple state layers preserve AA text contrast on paper and every filled category surface', () => {
+  const { contrastRatio } =
+    require('../src/design/contrast') as typeof import('../src/design/contrast');
+  const { light, lightHighContrast } =
+    require('../src/design/palette') as typeof import('../src/design/palette');
+  const { accents } =
+    require('../src/design/tokens') as typeof import('../src/design/tokens');
+  const composite = (layer: string, ground: string) => {
+    const alpha = parseInt(layer.slice(7, 9), 16) / 255;
+    return (
+      '#' +
+      [1, 3, 5]
+        .map((at) =>
+          Math.round(
+            parseInt(layer.slice(at, at + 2), 16) * alpha +
+              parseInt(ground.slice(at, at + 2), 16) * (1 - alpha),
+          )
+            .toString(16)
+            .padStart(2, '0'),
+        )
+        .join('')
+    );
+  };
+  expect(
+    contrastRatio(
+      light.inkSoft,
+      composite(androidControls.ripple, light.paper),
+    ),
+  ).toBeGreaterThanOrEqual(4.5);
+  expect(
+    contrastRatio(
+      lightHighContrast.inkSoft ?? light.inkSoft,
+      composite(androidControls.rippleHighContrast, light.paper),
+    ),
+  ).toBeGreaterThanOrEqual(4.5);
+  for (const { ink } of Object.values(accents)) {
+    expect(
+      contrastRatio(
+        light.onNavy,
+        composite(androidControls.rippleOnFilled, light[ink]),
+      ),
+    ).toBeGreaterThanOrEqual(4.5);
+  }
+});

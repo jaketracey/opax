@@ -1,3 +1,4 @@
+import { Pressable } from './pressable';
 import {
   cloneElement,
   useEffect,
@@ -8,7 +9,6 @@ import {
 import {
   Alert,
   Platform,
-  Pressable,
   StyleSheet,
   View,
   type PressableProps,
@@ -225,7 +225,19 @@ export function RowLink({
         {...child.props}
         {...accessibility}
         onPress={open}
-        onLongPress={leaves.length ? () => showMenu('', leaves) : undefined}
+        onLongPress={
+          leaves.length
+            ? Platform.OS === 'android'
+              ? (event) =>
+                  showMenu('', leaves, {
+                    x: event.nativeEvent.pageX,
+                    y: event.nativeEvent.pageY,
+                    width: 0,
+                    height: 0,
+                  })
+              : () => showMenu('', leaves)
+            : undefined
+        }
       />
     );
   const hasNativeHost = (preview && !select) || items.length > 0;
@@ -233,7 +245,7 @@ export function RowLink({
   // (`display: contents`, disableForceFlatten). iOS omits its whole subtree
   // from accessibility, even with accessible/importantForAccessibility on the
   // trigger. Link props only reach BaseExpoRouterLink, not that native host.
-  // Give accessibility a real box outside it, while leaving the Pressable,
+  // Give accessibility a real box outside it, while leaving the
   // native context-menu interaction and preview/zoom machinery intact inside.
   const semantics = Object.fromEntries(
     Object.entries(child.props).filter(
@@ -296,7 +308,7 @@ export function RowLink({
       onAccessibilityTap={open}
       // The host is now the parent's flex item, so mirror its flex and
       // alignment properties. Spacing, dimensions, colours and the original
-      // style function stay on the Pressable, protected from Slot by RowTrigger.
+      // style function stay on the protected from Slot by RowTrigger.
       style={flexItemStyle}
     >
       {link}

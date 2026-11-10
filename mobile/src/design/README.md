@@ -37,3 +37,32 @@ The shared route folder is `app/(tabs)/(today,your-mp,bills,search,ask)/`. Route
 Use one navy tint. Category inks belong to subject figures and hierarchical symbols. Party colour is a dot beside a name. Corners use purpose-named radii and continuous curves. Menus use native row or bar menus on iOS, with destructive confirmation and Android fallbacks in `design/menu`.
 
 Deprecated recipe baselines are empty and all design rules are errors. Before committing, run `npm run typecheck`, `npm run lint` and `npm test`. Device captures, large-title rendering, colour matching, AX5 layout and iPad behaviour are checked by the orchestrator; unit tests do not establish those visual outcomes.
+
+## Android controls
+
+Android design pressables use `design/pressable`: bounded foreground ripples on
+rows, cards and chips, borderless feedback on icon buttons, and minimum 48 dp
+targets. State layers have paper, filled-surface and high-contrast tokens. The
+iOS branch forwards its original props. Keep feature pressables on these shared
+controls so their targets, labels and feedback remain consistent.
+
+`Button` keeps its existing props and variants; Android also accepts `filled`,
+`tonal`, `outlined` and `text`. Existing `primary`, `secondary`, `plain` and
+`destructive` calls retain their meanings. Controls grow with wrapping text.
+`SwitchRow` draws the shell's Material 3 switch. `ChoiceChip` exposes a checked
+filter with a visible check; segments expose selected tabs. `Field` supplies the
+Android focus boundary, selection colour and labelled clear action. A field
+with `returnKeyType="search"` also draws a decorative search icon.
+
+`showMenu` and `confirmAction` keep their existing arguments. Android can also
+receive a `{ x, y, width, height }` window-coordinate anchor as the third
+argument and an optional dismissal callback as the fifth. Design touch surfaces
+record their measured anchor for existing callers; `PopUpButton` measures its
+own trigger. Android menus support Back, outside tap, scrolling and menu-item
+semantics. iOS retains its native action sheet and numeric iPad anchors.
+
+`Stepper` and `Slider` are additive Android controls with a required label,
+value, finite min/max, positive step and `onValueChange`. They expose adjustable
+increment/decrement actions and numeric bounds. They render nothing on iOS;
+existing iOS screens continue to use their native pickers. The slider and switch
+load Compose only inside Android branches, using the existing shell modules.

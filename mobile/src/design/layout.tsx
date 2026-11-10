@@ -1,3 +1,4 @@
+import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
 import {
   Children,
@@ -16,7 +17,6 @@ import {
 } from 'react';
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
