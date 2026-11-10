@@ -160,7 +160,7 @@ test('the public allow-list admits only static federal seat files', () => {
     expect(() => assertAllowedPath(path)).toThrow();
 });
 
-test('seat grants apply the program privacy rule before presentation', () => {
+test.each(['individual', 'undisclosed'])('seat grants apply the program privacy rule before presentation for kind=%s', (kind) => {
   const page = decodeSeatGrants({
     ...first,
     grants: [
@@ -168,7 +168,7 @@ test('seat grants apply the program privacy rule before presentation', () => {
         ...first.grants[0],
         rn: 'Fixture private recipient',
         rid: 'person:fixture',
-        k: 'individual',
+        k: kind,
         n: 'Fixture private purpose',
       },
     ],
@@ -179,6 +179,43 @@ test('seat grants apply the program privacy rule before presentation', () => {
     title: '',
   });
   expect(JSON.stringify(page)).not.toContain('Fixture private');
+});
+
+test.each([undefined, null, '', '   '])(
+  'a seat grant without a recipient name (%s) stays readable without an identity link',
+  (rn) => {
+    const page = decodeSeatGrants({
+      ...first,
+      grants: [{ ...first.grants[0], rn }],
+    });
+    expect(page.grants[0]).toMatchObject({
+      name: 'Unnamed recipient',
+      organisation: false,
+      recipientId: '',
+      sourceUrl: null,
+      value: first.grants[0]!.v,
+    });
+  },
+);
+
+test('an undisclosed seat recipient keeps the source label without inventing an individual', () => {
+  const page = decodeSeatGrants({
+    ...first,
+    grants: [
+      {
+        ...first.grants[0],
+        rn: 'Recipients not disclosed',
+        rid: 'undisclosed:federal',
+        k: 'undisclosed',
+      },
+    ],
+  });
+  expect(page.grants[0]).toMatchObject({
+    name: 'Recipients not disclosed',
+    organisation: false,
+    recipientId: '',
+    sourceUrl: null,
+  });
 });
 
 test('a full 500-grant page retains its continuation and oversized or empty continuations are rejected', () => {

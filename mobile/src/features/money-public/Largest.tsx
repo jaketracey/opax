@@ -136,7 +136,11 @@ export default function Largest() {
         empty={
           <ContentUnavailable
             symbol="calendar"
-            title={`No grant agreements started in ${label}.`}
+            title={
+              label
+                ? `No grant agreements started in ${label}.`
+                : 'No grant agreements to show.'
+            }
             testID="largest-empty"
           />
         }

@@ -1,6 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import type { RecordResult } from '../src/api/client';
 import { apiClient } from '../src/api/runtime';
 import {
   ContentUnavailable,
@@ -8,6 +9,7 @@ import {
   Icon,
   LinkRow,
   MoneyRow,
+  OfflineLine,
   Text,
   ValueRow,
 } from '../src/design/primitives';
@@ -224,6 +226,42 @@ test('a party record: originals last, the window figure, all years beside it, an
   await act(async () => r.unmount());
 });
 
+test.each([
+  [1, 'receipt'],
+  [2, 'receipts'],
+])(
+  'a party with %i receipts uses the matching count noun',
+  async (count, noun) => {
+    jest.mocked(apiClient.get).mockImplementation(async (_path, decode) => ({
+      data: decode({
+        meta: { generated: '2026-11-10', coverage: '2024–25', source: 'AEC' },
+        nodes: [
+          {
+            id: 'party:fixture',
+            kind: 'party',
+            label: 'Fixture Party',
+            group: 'party',
+            industry: 'party',
+            total: 1000,
+            count,
+            firstYear: 2024,
+            lastYear: 2024,
+          },
+        ],
+        edges: [],
+      }),
+      stale: false,
+      asOf: '2026-11-10',
+      savedAt: 1,
+    }));
+    const r = await render({ node: 'party:fixture' });
+    expect(figure(r, 'money-focus-amount').props.label).toBe(
+      `in ${count} ${noun}, 2024–25`,
+    );
+    await act(async () => r.unmount());
+  },
+);
+
 test('node=party:{name} accepts the party by any of its names', async () => {
   const r = await render({ node: 'party:Labor' });
   // The figure proves the node resolved.
@@ -235,6 +273,49 @@ test('node=party:{name} accepts the party by any of its names', async () => {
       .some((x) => x.props.testID === 'money-record-donations-all-years'),
   ).toBe(false);
   await act(async () => r.unmount());
+});
+
+describe.each([
+  ['party', { node: 'party:Labor' }, 'money-focus-amount'],
+  [
+    'donor',
+    { node: raw.nodes.find((n) => n.kind === 'donor' && !n.withheld)!.id },
+    'money-focus-amount',
+  ],
+  [
+    'recipient',
+    {
+      rid: (
+        pinned('/graph/grants.federal.json') as {
+          recipients: { id: string; k: string }[];
+        }
+      ).recipients.find((r) => r.k === 'company')!.id,
+      jur: 'federal',
+    },
+    'money-focus-grants',
+  ],
+] as const)('%s saved-copy state', (_name, params, figureID) => {
+  test.each<[boolean, RecordResult<unknown>['staleReason'], number]>([
+    [false, undefined, 0],
+    [true, undefined, 1],
+    [true, 'unavailable', 0],
+    [true, 'unreadable', 0],
+  ])(
+    'stale=%s, reason=%s has %i offline lines',
+    async (stale, staleReason, lines) => {
+      jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+        data: decode(pinned(path)),
+        stale,
+        staleReason,
+        asOf: '2026-11-10',
+        savedAt: 1,
+      }));
+      const r = await render(params);
+      expect(r.root.findAllByType(OfflineLine)).toHaveLength(lines);
+      expect(figure(r, figureID).props.citation.savedAt).toBe(stale ? 1 : null);
+      await act(async () => r.unmount());
+    },
+  );
 });
 
 test('a contracts hub states the mapped-donor scope and the contracts register', async () => {

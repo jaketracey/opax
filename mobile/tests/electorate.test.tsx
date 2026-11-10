@@ -26,6 +26,8 @@ import {
 } from '../src/features/directories/ElectorateHistory';
 import { CachedPortrait } from '../src/features/CachedPortrait';
 import { personRoute } from '../src/navigation/routes';
+import { grantsRoute } from '../src/navigation/routes/public-money';
+import { LinkRow } from '../src/design/rows';
 import {
   RepresentativeRows,
   sinceLine,
@@ -698,6 +700,30 @@ test('a followed electorate with no change draws no Added since group', async ()
   const r = await render(<Electorate />);
   expect(has(r, 'electorate-follow')).toBe(true);
   expect(has(r, 'electorate-added-since')).toBe(false);
+  await act(async () => r.unmount());
+});
+
+test.each(['Grayndler', 'Ballarat'])('the electorate page links to grants in %s', async (name) => {
+  load(name);
+  const r = await render(<Electorate />);
+  const link = r.root
+    .findAllByType(LinkRow)
+    .find((n) => n.props.testID === 'seat-grants-all');
+  expect(link?.props.title).toBe(`Grants in ${name}`);
+  expect(link?.props.href).toEqual(
+    grantsRoute({ jur: 'federal', seat: name, state: seat(name).state_code }),
+  );
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['Richmond', 'vic'],
+  ['New South Wales', 'federal'],
+  ['Higgins', 'federal'],
+])('the electorate page has no seat grants link for %s', async (name, jurisdiction) => {
+  load(name, jurisdiction);
+  const r = await render(<Electorate />);
+  expect(has(r, 'seat-grants-all')).toBe(false);
   await act(async () => r.unmount());
 });
 

@@ -45,6 +45,7 @@ import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import YourMP from '../src/features/YourMP';
 import { billRoute, seatRoute } from '../src/navigation/routes';
+import { grantsRoute } from '../src/navigation/routes/public-money';
 import * as external from '../src/navigation/external/sheets';
 import { canShare } from '../src/navigation/share';
 import { sheetPayload } from '../src/navigation/sheets';
@@ -951,6 +952,24 @@ describe('Your MP tab', () => {
     // No Victorian section, so no authorisation line.
     expect(has(r, 'your-state')).toBe(false);
     expect(has(r, 'your-mp-end')).toBe(true);
+    await act(async () => r.unmount());
+  });
+
+  test.each(['Grayndler', 'Ballarat'])('Your MP links to grants in %s', async (name) => {
+    const seat = seatNamed(name);
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
+    const r = await render(<YourMP />);
+    const link = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'seat-grants-all');
+    expect(link?.props.title).toBe(`Grants in ${name}`);
+    expect(link?.props.href).toEqual(
+      grantsRoute({ jur: 'federal', seat: name, state: seat.state_code }),
+    );
     await act(async () => r.unmount());
   });
 

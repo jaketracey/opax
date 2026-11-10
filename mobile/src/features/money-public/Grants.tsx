@@ -39,7 +39,7 @@ import {
   recordSource,
   useMoneySearch,
 } from './parts';
-import { moneyItemHref, organisationHref } from './routes';
+import { organisationHref } from './routes';
 import { money } from './runtime';
 import { combine } from './catalog';
 import { SeatFigure, seatRow } from './SeatGrants';
@@ -403,11 +403,11 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   const status = useCatalogRecord(load),
     data = status.record?.data;
   const entry = data ? seatRow(data, seat, state) : undefined;
-  const links = useMemo(
-    () => ({
-      programs: new Map(data?.programs.map((p) => [p.id, p.key])),
-      recipients: new Set(data?.recipients.map((r) => r.id)),
-    }),
+  const recipients = useMemo(
+    () =>
+      new Set(
+        data?.recipients.filter((r) => r.organisation).map((r) => r.id),
+      ),
     [data],
   );
   const grants = useSeatGrants(entry?.key);
@@ -505,12 +505,10 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
           </>
         }
         render={(r, i) => {
-          const program = links.programs.get(r.programId);
-          // A listed recipient opens its record; otherwise the award on
-          // GrantConnect, or the program's own grant record. Program files
-          // list only a program's largest grants, so the record route is the
-          // last resort.
-          const listed = !!r.recipientId && links.recipients.has(r.recipientId);
+          // Only the index can back a named organisation's record page.
+          // Program files contain a sample and cannot back a fallback link.
+          const listed =
+            r.organisation && !!r.recipientId && recipients.has(r.recipientId);
           return (
             <MoneyRow
               name={r.name}
@@ -519,21 +517,6 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
               href={
                 listed
                   ? organisationHref(r.recipientId, r.name, 'federal')
-                  : !r.sourceUrl && program
-                    ? moneyItemHref(
-                        {
-                          kind: 'grant',
-                          jur: 'federal',
-                          program: program,
-                          id: r.id,
-                        },
-                        { name: r.name },
-                      )
-                    : undefined
-              }
-              external={
-                !listed && r.sourceUrl
-                  ? { url: r.sourceUrl, label: `GrantConnect · ${r.id}` }
                   : undefined
               }
               testID={`grants-seat-grant-${i}`}

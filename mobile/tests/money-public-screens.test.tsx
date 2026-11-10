@@ -32,10 +32,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
-import {
-  moneyItemHref,
-  organisationHref,
-} from '../src/features/money-public/routes';
+import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow, MoneyRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
 import {
@@ -161,6 +158,24 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
       .findAll((n) => typeof n.props.testID === 'string')
       .map((n) => n.props.testID as string),
   );
+
+test.each([
+  ['latest', 'No grant agreements to show.'],
+  ['2026-00', 'No grant agreements to show.'],
+  ['2026-13', 'No grant agreements to show.'],
+  ['2026-1', 'No grant agreements to show.'],
+  ['2026-10', 'No grant agreements started in October 2026.'],
+])('Largest grants has a complete empty-state title for latest=%s', async (latest, title) => {
+  money.largest = jest.fn(async () => ({
+    data: { asOf: '2026-11-10', latest, basis: [], months: {} },
+    stale: false,
+    savedAt: 10,
+    asOf: null,
+  }));
+  const r = await mount(Largest);
+  expect(r.root.findByType(MoneyList).props.empty.props.title).toBe(title);
+  await act(async () => r.unmount());
+});
 
 test('the all-years grant figure names the full recorded range, including future agreements', () => {
   const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
@@ -1036,7 +1051,7 @@ describe('the seat grant list', () => {
     );
   });
 
-  test('an unnamed grant uses the existing program grant route without exposing a private identity', async () => {
+  test('a private recipient is a plain row without exposing a private identity', async () => {
     const privatePage = decodeSeatGrants({
       ...seatFirstFixture,
       grants: [
@@ -1054,17 +1069,8 @@ describe('the seat grant list', () => {
     const page = list(r),
       row = page.props.render(page.props.rows[0], 0);
     expect(row.props.name).toBe('Individual recipient');
-    expect(row.props.href).toEqual(
-      moneyItemHref(
-        {
-          kind: 'grant',
-          jur: 'federal',
-          program: 'go6809',
-          id: privatePage.grants[0]!.id,
-        },
-        { name: 'Individual recipient' },
-      ),
-    );
+    expect(row.props.href).toBeUndefined();
+    expect(row.props.external).toBeUndefined();
     const strings = r.root
       .findAll(() => true)
       .flatMap((n) => [
@@ -1075,16 +1081,69 @@ describe('the seat grant list', () => {
     expect(strings.join('\n')).not.toContain('Fixture private');
   });
 
-  test('an organisation outside the recipient list opens its GrantConnect award, not a record that cannot load', async () => {
+  test.each([true, false])('an unlisted recipient stays plain with an award URL=%s', async (sourceUrl) => {
     money.grants = jest.fn(async () => record({ ...index, recipients: [] }));
+    money.seat = jest.fn(async () =>
+      record({
+        ...first,
+        grants: first.grants.map((g) => ({
+          ...g,
+          sourceUrl: sourceUrl ? g.sourceUrl : null,
+        })),
+      }),
+    );
     const r = await mount(Grants);
     const page = list(r),
       row = page.props.render(page.props.rows[0], 0);
     expect(row.props.href).toBeUndefined();
-    expect(row.props.external).toEqual({
-      url: `https://www.grants.gov.au/Ga/Show/${seatFirstFixture.grants[0]!.guid}`,
-      label: `GrantConnect · ${seatFirstFixture.grants[0]!.id}`,
+    expect(row.props.external).toBeUndefined();
+    expect(row.props.name).toBe('Fixture Association 1');
+    const cell = r.root.findAllByType(LinkRow).find(
+      (n) => n.props.testID === 'grants-seat-grant-0',
+    )!;
+    expect(cell.props.accessory).toBe('none');
+    expect(cell.findAll((n) => typeof n.props.onPress === 'function')).toHaveLength(0);
+  });
+
+  test.each([
+    [null, 'Unnamed recipient'],
+    ['', 'Unnamed recipient'],
+    ['   ', 'Unnamed recipient'],
+    ['Recipients not disclosed', 'Recipients not disclosed'],
+  ])('a nameless or undisclosed seat grant (%s) stays plain', async (rn, name) => {
+    const page = decodeSeatGrants({
+      ...seatFirstFixture,
+      grants: [{ ...seatFirstFixture.grants[0], rn, k: 'undisclosed' }],
     });
+    money.seat = jest.fn(async () => record(page));
+    const r = await mount(Grants);
+    const cell = r.root.findAllByType(LinkRow).find(
+      (n) => n.props.testID === 'grants-seat-grant-0',
+    )!;
+    expect(cell.props.title).toBe(name);
+    expect(cell.props.href).toBeUndefined();
+    expect(cell.props.external).toBeUndefined();
+    expect(cell.props.accessory).toBe('none');
+    expect(cell.findAll((n) => typeof n.props.onPress === 'function')).toHaveLength(0);
+  });
+
+  test('an index entry without a public organisation page cannot back a seat recipient link', async () => {
+    money.grants = jest.fn(async () =>
+      record({
+        ...index,
+        recipients: index.recipients.map((r) => ({
+          ...r,
+          organisation: false,
+          name: 'Individual recipient',
+        })),
+      }),
+    );
+    const r = await mount(Grants);
+    const page = list(r);
+    const row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.name).toBe('Fixture Association 1');
+    expect(row.props.href).toBeUndefined();
+    expect(row.props.external).toBeUndefined();
   });
 
   test.each(['no row', 'no key', '404'] as const)(
