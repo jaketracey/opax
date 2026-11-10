@@ -27,7 +27,9 @@ interface Seat { slug: string; name: string; url: string; jurisdiction: string; 
 interface Bill {
   key: string; title: string; short_title?: string; status?: string; status_as_of?: string;
   sponsor?: string; sponsor_person_id?: string; sponsor_party?: string; portfolio?: string; introduced?: string;
-  sources?: { kind: string; url: string }[]; key_dates?: { stage: string; date: string; house: string | null; url: string }[];
+  sponsors?: { name: string; person_id?: string | null; party?: string | null }[];
+  sources?: { kind: string; url: string }[];
+  key_dates?: { stage: string; date: string; house: string | null; url: string; event_raw?: string; negatived?: boolean }[];
   divisions?: Division[];
   summary?: { attribution?: string; sentences?: string[]; changes?: string[]; affected?: string; as_of?: string };
 }
@@ -232,14 +234,38 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
 export function sponsorFor(b: Bill, people: Person[]): Person | null {
   return b.sponsor ? sponsorPerson(b.sponsor, b.sponsor_person_id, people) : null
 }
+const STAGE_LABELS: Record<string,string> = {introduced:'Introduced',second_reading:'Second reading',third_reading:'Third reading',passed_one_house:'Passed one house',passed_both:'Passed both houses',assented:'Assented',withdrawn:'Withdrawn',lapsed:'Lapsed',negatived:'Negatived'}
+/** Recorded stages as shown: the source's own wording where the export kept it
+ * (bills-005), a negatived question marked as such (bills-004), and rows that
+ * would read identically shown once. */
+export function billStageLines(rows: NonNullable<Bill['key_dates']>) {
+  const seen = new Set<string>()
+  return rows.flatMap(d=>{
+    let label = d.event_raw || STAGE_LABELS[d.stage] || human(d.stage)
+    if (d.negatived && !/negatived/i.test(label)) label += ' (negatived)'
+    const line = {label, date: d.date, house: d.house, url: d.url}
+    const id = JSON.stringify([line.label, line.date, line.house, line.url])
+    if (seen.has(id)) return []
+    seen.add(id)
+    return [line]
+  })
+}
 export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}): RenderedContent {
   const title = b.short_title || b.title
   const sponsor = sponsorFor(b,people)
-  const party = b.sponsor_party || sponsor?.party
-  const stageLabel = (stage: string) => ({introduced:'Introduced',second_reading:'Second reading',third_reading:'Third reading',passed_one_house:'Passed one house',passed_both:'Passed both houses',assented:'Assented',withdrawn:'Withdrawn',lapsed:'Lapsed'}[stage] || human(stage))
-  const description = `${human(b.status || 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${b.portfolio ? `${b.portfolio} portfolio.` : ''}`
-  let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(b.portfolio || 'Not recorded')}</dd></dl>`
-  if (b.key_dates?.length) body += `<h2>Recorded stages</h2><ul>${b.key_dates.map(d=>`<li>${escapeHtml(stageLabel(d.stage))} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`).join('')}</ul>`
+  // Only the party the export recorded for the sponsor on the day (bills-001):
+  // the roster's current party is not evidence for an earlier bill.
+  const party = b.sponsor_party
+  // A private member's "(s) ..." sponsor print is not a portfolio (bills-007).
+  const portfolio = b.portfolio && !/^\s*\(s\)/.test(b.portfolio) ? b.portfolio : ''
+  const description = `${human(b.status || 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
+  const coSponsors = (b.sponsors || []).slice(1).map(s=>{
+    const person = sponsorPerson(s.name, s.person_id ?? undefined, people) as Person | null
+    return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party ? ` (${escapeHtml(s.party)})` : '')
+  })
+  let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}${coSponsors.length ? `<dt>Co-sponsors</dt><dd>${coSponsors.join(', ')}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(portfolio || 'Not recorded')}</dd></dl>`
+  const stages = billStageLines(b.key_dates || []).map(d=>`<li>${escapeHtml(d.label)} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`)
+  if (stages.length) body += `<h2>Recorded stages</h2><ul>${stages.join('')}</ul>`
   const divisions = b.divisions || []
   const divisionSlot = '<!--bill-divisions-->'
   body += divisionSlot

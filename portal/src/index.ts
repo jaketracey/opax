@@ -4046,7 +4046,8 @@ interface BillRow {
   speeches: number
   acts: number
 }
-interface BillsData { generated: string; byKey: Map<string, BillRow> }
+/** `redirects`: a suppressed duplicate's key -> the bill it duplicates (bills-008). */
+interface BillsData { generated: string; byKey: Map<string, BillRow>; redirects: Map<string, string> }
 
 /** Reader-facing names for the four AEC registration classes. */
 const CAMPAIGNER_LABELS: Record<string, string> = {
@@ -4286,10 +4287,11 @@ let billsMemo: Promise<BillsData> | null = null
  * and the front end fetches the one it is showing.
  */
 function loadBills(env: Env): Promise<BillsData> {
-  billsMemo ??= assetJson<{ generated_at?: string; bills: BillRow[] }>(env, '/bills/index.json')
+  billsMemo ??= assetJson<{ generated_at?: string; bills: BillRow[]; redirects?: Record<string, string> }>(env, '/bills/index.json')
     .then((raw) => ({
       generated: raw.generated_at ?? '',
       byKey: new Map(raw.bills.map((b) => [b.key, b])),
+      redirects: new Map(Object.entries(raw.redirects ?? {})),
     }))
     .catch((err) => {
       billsMemo = null
@@ -4730,6 +4732,7 @@ const BILL_STATUS: Record<string, string> = {
   rejected: 'Rejected',
   withdrawn: 'Withdrawn',
   lapsed: 'Lapsed',
+  negatived: 'Negatived',
   exposure_draft: 'Exposure draft',
 }
 
@@ -4914,6 +4917,9 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   if(parts[1]==='bill' && parts.length===3) {
     const bills=await loadBills(env).catch(()=>null)
     if(bills?.byKey.has(parts[2].toLowerCase())) return `/bill/${parts[2].toLowerCase()}`
+    // A suppressed duplicate record keeps its address: it moves to the bill it duplicates.
+    const target=bills?.redirects.get(parts[2].toLowerCase())
+    if(target && bills?.byKey.has(target)) return `/bill/${target}`
   }
   if(['division','doc'].includes(parts[1]) && parts.length===3) {
     const slug=parts[2].toLowerCase().replace(/^division-/,'')

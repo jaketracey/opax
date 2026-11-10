@@ -113,7 +113,7 @@ export const tool: ToolDefinition = {
     since: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Inclusive start, YYYY-MM-DD. Since a year means YYYY-01-01.' },
     until: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Inclusive end, YYYY-MM-DD. Omit for counts through the published snapshot.' },
     group_by: { type: 'string', enum: ['year', 'month'] },
-    status: { type: 'string', enum: ['before_parliament', 'passed', 'lapsed', 'exposure_draft'], description: 'Bills only. Returns count, denominator and share_percent within the same cohort.' },
+    status: { type: 'string', enum: ['before_parliament', 'passed', 'lapsed', 'negatived', 'exposure_draft'], description: 'Bills only. negatived: defeated on its final recorded question; lapsed excludes those. Returns count, denominator and share_percent within the same cohort.' },
     bill: { type: 'string', minLength: 2, maxLength: 500, description: 'Divisions only: exact published bill key or full title. Count the bill page links, never a keyword sample.' },
     include_records: { type: 'boolean', description: 'Bills only: include up to 50 matching bill titles/links; total always counts every matching record.' },
   }, required: ['record_type'], examples: [

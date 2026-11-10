@@ -37,8 +37,18 @@ assert.equal(typeof index.generated_at, "string", "index has generated_at");
 assert.equal(index.count, index.bills.length, "index count matches the array");
 assert.ok(index.meta.party_basis, "index states its party basis");
 
+// Optional so files exported before each change still match; written on every
+// export after it. The lifecycle fields came with "Expose recorded bill
+// lifecycles to Ask and MCP"; `sponsors` and `sponsor_count` with bills-006
+// (every sponsor, not only the first).
+const LIFECYCLE_KEYS = ["passed_both_houses", "passed_both_houses_date", "royal_assent", "act_number"];
+const OPTIONAL_INDEX_KEYS = [...LIFECYCLE_KEYS, "sponsor_count"];
+const OPTIONAL_BILL_KEYS = [...LIFECYCLE_KEYS, "sponsors"];
+const STATUSES = new Set(["before_parliament", "passed", "lapsed", "negatived", "exposure_draft"]);
+const optional = (obj, keys) => keys.filter((k) => Object.hasOwn(obj, k));
+
 for (const row of index.bills) {
-  assert.deepEqual(Object.keys(row).sort(), [...INDEX_KEYS].sort(), `index row ${row.key} keys`);
+  assert.deepEqual(Object.keys(row).sort(), [...INDEX_KEYS, ...optional(row, OPTIONAL_INDEX_KEYS)].sort(), `index row ${row.key} keys`);
   assert.equal(typeof row.has_summary, "boolean", `${row.key} has_summary is a boolean`);
 }
 const sorted = [...index.bills].every(
@@ -57,7 +67,22 @@ for (const file of files) {
   assert.equal(`${doc.key}.json`, file, `${file} is named for its key`);
   // Exposure drafts (docs/BILLS-CONTRACT.md) carry three keys a registry bill never has.
   const DRAFT_ONLY = doc.status === "exposure_draft" ? ["consultation", "related", "became"] : [];
-  assert.deepEqual(Object.keys(doc).sort(), [...BILL_KEYS, ...DRAFT_ONLY].sort(), `${where} keys`);
+  assert.deepEqual(Object.keys(doc).sort(), [...BILL_KEYS, ...DRAFT_ONLY, ...optional(doc, OPTIONAL_BILL_KEYS)].sort(), `${where} keys`);
+  assert.ok(STATUSES.has(doc.status), `${where} status ${doc.status} is in the contract's vocabulary`);
+  if (doc.sponsors) {
+    assert.ok(Array.isArray(doc.sponsors), `${where} sponsors is a list`);
+    for (const s of doc.sponsors) {
+      assert.deepEqual(Object.keys(s).sort(), ["name", "party", "person_id"], `${where} sponsor keys`);
+      assert.ok(typeof s.name === "string" && s.name.trim(), `${where} sponsor name is nonempty text`);
+    }
+    if (doc.sponsors.length) assert.equal(doc.sponsors[0].party, doc.sponsor_party, `${where} first sponsor's party is sponsor_party`);
+    const listed = indexByKey.get(doc.key);
+    if (listed && Object.hasOwn(listed, "sponsor_count")) assert.equal(listed.sponsor_count, doc.sponsors.length, `${where} sponsor count agrees with the index`);
+    // bills-012: an export that writes sponsors also writes only real chambers.
+    for (const d of doc.key_dates) {
+      assert.ok(d.house === null || d.house === "representatives" || d.house === "senate", `${where} key_dates house ${d.house} is a chamber or null`);
+    }
+  }
 
   const row = indexByKey.get(doc.key);
   assert.ok(row, `${where} is listed in index.json`);
