@@ -32,10 +32,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
-import {
-  moneyItemHref,
-  organisationHref,
-} from '../src/features/money-public/routes';
+import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow, MoneyRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
 import {
