@@ -421,6 +421,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: rhythm.block,
+    // Air under the handle, so a figure never crowds it.
+    paddingTop: rhythm.tight,
     paddingBottom: rhythm.block,
     gap: rhythm.block,
   },
@@ -434,11 +436,12 @@ const styles = StyleSheet.create({
   restRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'flex-end',
+    // The figures share one top line whatever their captions wrap to.
+    alignItems: 'flex-start',
     gap: rhythm.block,
   },
   // The figures share the row and the Legend button hugs its end; only a
   // large type size wraps them.
   figure: { gap: 2, flexGrow: 1, flexShrink: 1, flexBasis: 120 },
-  legendButton: { marginLeft: 'auto' },
+  legendButton: { marginLeft: 'auto', alignSelf: 'center' },
 });

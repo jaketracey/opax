@@ -1,5 +1,6 @@
 import { decodeMoneyGraph } from '../src/features/money/data';
 import {
+  clearRim,
   labelSlots,
   NAME_LABELS,
   NEIGHBOUR_LABELS,
@@ -16,6 +17,8 @@ import {
   PUBLIC_MONEY,
 } from '../src/features/money/map/model';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
+import { contrastRatio } from '../src/design/contrast';
+import { partyMapColour, SURFACE } from '../src/features/money/ported/palette';
 import { pinned } from './pinned';
 
 const graph = decodeMoneyGraph(pinned('/graph/money.json'));
@@ -72,9 +75,10 @@ describe('labelSlots without a focus', () => {
         ink: node.ink,
         x: at(node.index).x,
         y: at(node.index).y,
-        r: node.radius,
+        r: clearRim(model, at, node.index),
         node: node.index,
       });
+      expect(slot.r).toBeGreaterThanOrEqual(node.radius);
     }
     // A hub is never also a plain name.
     for (const slot of ofKind(slots, 'name'))
@@ -121,11 +125,47 @@ describe('labelSlots without a focus', () => {
       key: `party:${node.id}`,
       kind: 'party',
       text: node.label,
-      ink: node.ink,
+      // A party's name is set in its own colour, darkened to read on paper.
+      ink: partyMapColour(node.label).ink,
       ...at(node.index),
-      r: node.radius,
+      r: clearRim(model, at, node.index),
       node: node.index,
     });
+    expect(contrastRatio(slot.ink, SURFACE)).toBeGreaterThanOrEqual(4.5);
+    const name = ofKind(slots, 'name')[0]!;
+    expect(name.ink).toBe(model.nodes[name.node!]!.ink);
+  });
+
+  test('a name begins past any disc that covers its rim, never inside a neighbour', () => {
+    for (const slot of slots) {
+      if (slot.node === undefined) continue;
+      const node = model.nodes[slot.node]!;
+      expect(slot.r).toBeGreaterThanOrEqual(node.radius);
+      // The point where the name starts lies in no other disc.
+      const start = { x: slot.x + slot.r, y: slot.y };
+      for (const other of model.nodes) {
+        if (other.index === slot.node) continue;
+        const q = at(other.index);
+        const inside =
+          Math.hypot(q.x - start.x, q.y - start.y) < other.radius - 1e-9;
+        expect(inside).toBe(false);
+      }
+    }
+    // An unobstructed disc keeps its own radius.
+    const lone = model.nodes.find(
+      (n) =>
+        n.kind !== 'party' &&
+        model.nodes.every(
+          (o) =>
+            o.index === n.index ||
+            Math.hypot(
+              at(o.index).x - at(n.index).x,
+              at(o.index).y - at(n.index).y,
+            ) >
+              o.radius + n.radius,
+        ),
+    )!;
+    expect(clearRim(model, at, lone.index)).toBe(lone.radius);
   });
 
   test('has no focus or neighbour slots, names no node twice and has unique keys', () => {
