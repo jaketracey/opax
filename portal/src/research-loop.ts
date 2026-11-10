@@ -271,7 +271,11 @@ export function createResearch(options: ResearchOptions): Research {
       let previous = 0
       for (const result of results) {
         const next = previous + factSheet([result]).facts.length
-        if (!PASSAGE_TOOLS.includes(result.tool)) for (let id = previous + 1; id <= next; id++){tools.set(id, result.tool);if(result.data?.coverage_only)coverage.add(id)}
+        for (let id = previous + 1; id <= next; id++) {
+          // Dated service from find_people is a structured record, alongside its identity result.
+          const service = result.tool === 'find_people' && all[id - 1]?.cite.kind === 'record'
+          if (!PASSAGE_TOOLS.includes(result.tool) || service) { tools.set(id, result.tool); if (result.data?.coverage_only) coverage.add(id) }
+        }
         previous = next
       }
       return { all, tools,coverage }

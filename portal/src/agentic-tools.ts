@@ -22,7 +22,8 @@ import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../pub
 import { askToolSpecs, getAskTool, validRegisteredArgs, TOOL_REGISTRY_VERSION } from './tools'
 import type { ToolEnv } from './tools'
 import { receiptYearWindow } from './receipt-period'
-export const AGENTIC_TOOLS_VERSION = 'agentic-tools-17-source-links/' + TOOL_REGISTRY_VERSION
+import { personService } from './person-service'
+export const AGENTIC_TOOLS_VERSION = 'agentic-tools-18-interests-service-grants/' + TOOL_REGISTRY_VERSION
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -316,8 +317,10 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
     .sort((a, b) => Number(b.n === q) - Number(a.n === q) || (b.p.speeches ?? 0) - (a.p.speeches ?? 0))
     .slice(0, Math.min(Number(input.limit) || 5, 10))
     .map(({ p }) => ({ name: p.name, party: p.party_now ?? p.party ?? null, states: p.states ?? [], chambers: p.chambers ?? [], years: [p.first ?? null, p.last ?? null], current: p.current ?? null, speeches_indexed: p.speeches }))
+  const service = await personService(deps, hits)
+  const enriched = hits.map((person, i) => ({ ...person, service: service[i] }))
   return {
-    tool: 'find_people', ok: true, data: { people: hits },
+    tool: 'find_people', ok: true, data: { people: enriched },
     cite: hits.map((h) => ({ kind: 'record' as const, label: h.name, url: `${origin}/subject/person/${encodeURIComponent(h.name)}` })),
     notes: hits.length ? ['Use the name exactly as returned in speaker filters: it is the name the record indexes speeches under.'] : ['No person in the roster matches; the record may index them under a surname only.'],
   }
@@ -488,7 +491,7 @@ export const TOOL_SPECS: ToolSpec[] = [
   ...askToolSpecs,
   { name: 'count_speeches', description: 'Count speeches exactly, optionally ranked by speaker or party. Use for "who speaks most", "which party mentions X most", "how many speeches". Returns counts from the record index, the method, and coverage notes that must be stated.', input: { type: 'object', properties: { ...filterProps, group_by: { type: 'string', enum: ['speaker', 'party', 'none'] }, limit: { type: 'integer', minimum: 1, maximum: 15 } } }, run: (d, a) => countSpeeches(d, a as CountInput) },
   { name: 'speech_trend', description: 'Speech counts over time (by year, decade or federal term) with each period\'s share of topic-labelled speeches. Use for "is X debated more", "how has X changed".', input: { type: 'object', properties: { ...filterProps, by: { type: 'string', enum: ['year', 'decade', 'term'] }, from_year: { type: 'integer' }, to_year: { type: 'integer' } } }, run: (d, a) => speechTrend(d, a as TrendInput) },
-  { name: 'find_people', description: 'Resolve a politician name to the name the record indexes speeches under, with party, parliaments and years.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
+  { name: 'find_people', description: 'Resolve a politician name, with party, parliaments and dated service per chamber and seat. Use service.start and service.end for first elected, entered, left or years served; years are speech coverage only. Empty service means dates are unavailable.', input: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }, run: (d, a) => findPeople(d, a as unknown as { name: string }) },
   { name: 'member_votes', description: 'How a person or party voted in recorded divisions whose title contains a keyword (e.g. "gambling").', input: { type: 'object', properties: { keyword: { type: 'string' }, person: { type: 'string' }, party: { type: 'string' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer', minimum: 1, maximum: 80 } }, required: ['keyword'] }, run: (d, a) => memberVotes(d, a as unknown as { keyword: string }) },
   { name: 'party_receipts', description: 'Largest disclosed receipt totals to a federal party, or receipt totals by party for one source industry (e.g. gambling, mining). Only complete financial years are supported; from_year/to_year are FY starting years. Names follow source disclosure spelling; uncertain identity matches have no profile link.', input: { type: 'object', properties: { party: { type: 'string' }, industry: { type: 'string' }, from_year: { type: 'integer' }, to_year: { type: 'integer' }, since: { type: 'string' }, until: { type: 'string' }, limit: { type: 'integer' } } }, run: (d, a) => partyDonations(d, a as { party?: string }) },
   { name: 'find_quotes', description: 'Find a few cited passages to quote or describe what was said. A ranked sample: never count them.', input: { type: 'object', properties: { ...filterProps, query: { type: 'string' }, limit: { type: 'integer' } }, required: ['query'] }, run: (d, a) => findQuotes(d, a as unknown as SpeechFilter & { query: string }) },
