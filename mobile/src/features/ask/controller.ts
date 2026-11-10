@@ -19,6 +19,25 @@ import {
   type StreamHandlers,
 } from './stream';
 import { runningSteps } from './status';
+
+/** The same eligibility check reserves rows before the answer is saved. */
+function followupPassages(data: Answer) {
+  if (
+    data.money_ranking ||
+    data.pay_answer ||
+    !data.answer ||
+    ['needs_scope', 'needs_period'].includes(data.answer_status || '')
+  )
+    return [];
+  return data.sources
+    .map((s) => ({
+      title: s.title || s.slug,
+      text: sourcePassage(s.snippet, false),
+    }))
+    .filter((p) => p.text)
+    .slice(0, 8);
+}
+
 export type AskState = {
   id: string | null;
   thread: Turn[];
@@ -46,7 +65,7 @@ export type AskState = {
   freshOptions: AskOptions | null;
   /** A question held for consent (A1): sent on Continue, kept on Not now. */
   pending: { question: string; carry?: Followup; fromDraft: boolean } | null;
-  /** The newest answer's Ask next request is running (two reserved rows). */
+  /** The newest answer is awaiting Ask next suggestions (three reserved rows). */
   nextLoading: boolean;
 };
 export type AskIO = {
@@ -474,11 +493,13 @@ export class AskController {
         at: this.io.now(),
         ...(carry?.evidence ? { carried: { source: carry.source || '' } } : {}),
       };
+      const passages = followupPassages(data);
       this.update({
         thread: [...before, user, answer],
         busy: false,
         stage: null,
         streaming: '',
+        nextLoading: passages.length > 0,
         error: !data.answer
           ? new AskFailure('empty', 'No answer was written this time.')
           : null,
@@ -486,7 +507,7 @@ export class AskController {
       await this.persist();
       if (mine !== this.sequence) return;
       // Generated only once for this answer. Calculated answers have fixed steps.
-      await this.followups(answer, data, q, mine);
+      await this.followups(answer, data, q, mine, passages);
       // A failed account push shows only in Conversations, never here.
       if (mine === this.sequence && this.state.id)
         await this.io.sync?.(this.state.id).catch(() => undefined);
@@ -506,6 +527,7 @@ export class AskController {
         thread: before,
         busy: false,
         stage: null,
+        nextLoading: false,
         error: failure,
         failed: { question: q, ...(carry ? { carry } : {}) },
         streaming: failure.code === 'cancelled' ? '' : this.state.streaming,
@@ -515,23 +537,15 @@ export class AskController {
       if (mine === this.sequence) this.abort = null;
     }
   }
-  private async followups(turn: Turn, data: Answer, q: string, mine: number) {
+  private async followups(
+    turn: Turn,
+    data: Answer,
+    q: string,
+    mine: number,
+    passages: ReturnType<typeof followupPassages>,
+  ) {
     if (turn.followupsRequested) return;
     turn.followupsRequested = true;
-    if (
-      data.money_ranking ||
-      data.pay_answer ||
-      !data.answer ||
-      ['needs_scope', 'needs_period'].includes(data.answer_status || '')
-    )
-      return;
-    const passages = data.sources
-      .map((s) => ({
-        title: s.title || s.slug,
-        text: sourcePassage(s.snippet, false),
-      }))
-      .filter((p) => p.text)
-      .slice(0, 8);
     if (!passages.length) return;
     const abort = new AbortController();
     this.nextAbort = abort;

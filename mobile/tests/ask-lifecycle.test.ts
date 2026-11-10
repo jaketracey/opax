@@ -54,6 +54,44 @@ const flush = async () => {
   for (let i = 0; i < 5; i++) await Promise.resolve();
 };
 
+test('suggestions reserve their rows as soon as the answer finishes, before saving completes', async () => {
+  const saved = deferred<void>();
+  const next = deferred<unknown>();
+  const post = jest
+    .fn()
+    .mockResolvedValueOnce(answer)
+    .mockReturnValueOnce(next.promise);
+  const h = harness(post);
+  h.save.mockImplementationOnce(() => saved.promise);
+  const asking = h.controller.submit('First question');
+  await flush();
+  expect(h.controller.snapshot()).toMatchObject({
+    busy: false,
+    nextLoading: true,
+  });
+  expect(h.controller.snapshot().thread.at(-1)?.text).toBe(answer.answer);
+  expect(post).toHaveBeenCalledTimes(1);
+  saved.resolve();
+  await flush();
+  expect(post.mock.calls[1]?.[0]).toBe('/api/followups');
+  next.resolve({ questions: [] });
+  await asking;
+  expect(h.controller.snapshot().nextLoading).toBe(false);
+});
+
+test.each([false, true])(
+  'empty or failed suggestions stop loading (failure: %s)',
+  async (fails) => {
+    const post = jest.fn().mockResolvedValueOnce(answer);
+    if (fails) post.mockRejectedValueOnce(new Error('Fixture failure'));
+    else post.mockResolvedValueOnce({ questions: [] });
+    const h = harness(post);
+    await h.controller.submit('First question');
+    expect(h.controller.snapshot().nextLoading).toBe(false);
+    expect(h.controller.snapshot().thread.at(-1)?.next ?? []).toEqual([]);
+  },
+);
+
 test('opening history cancels pending suggestions and ignores their late completion', async () => {
   const next = deferred<unknown>();
   const post = jest
