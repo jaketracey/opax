@@ -322,9 +322,16 @@ export class AskController {
   async sendDraft() {
     const q = this.state.draft.trim();
     if (!q || this.state.busy) return;
+    // The failed question sent again from the composer keeps what it quoted,
+    // as Try again does. A fresh draft is a new conversation and quotes nothing.
+    const failed = this.state.failed;
+    const carry =
+      !this.state.fresh && failed?.question.trim() === q
+        ? failed.carry
+        : undefined;
     if (this.state.fresh) this.start(this.state.freshOptions ?? undefined);
     this.update({ draft: '', fresh: false, freshOptions: null });
-    await this.submit(q);
+    await this.submit(q, carry);
   }
   /** Try again: resends the failed question, clearing it from the composer. */
   async retry() {

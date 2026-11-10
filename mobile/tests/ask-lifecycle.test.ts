@@ -175,3 +175,33 @@ test('a synced copy of the open conversation shows its turns and keeps the draft
   expect(h.controller.snapshot().thread).toHaveLength(4);
   expect(h.controller.snapshot().draft).toBe('Fixture draft in progress');
 });
+
+test('sending a failed follow-up again from the composer keeps its quoted evidence', async () => {
+  const { AskFailure } = jest.requireActual('../src/features/ask/stream');
+  const replies = [
+    Promise.resolve(answer),
+    Promise.reject(new AskFailure('offline', 'Fixture offline.')),
+    Promise.resolve(answer),
+  ];
+  replies[1]!.catch(() => undefined);
+  const post = jest.fn((path: string) =>
+    path === '/api/followups' ? Promise.resolve({ next: [] }) : replies.shift(),
+  );
+  const h = harness(post);
+  await h.controller.submit('Fixture first question');
+  const carry = {
+    question: 'Fixture follow-up?',
+    evidence: 'Fixture quoted passage',
+    source: 'Fixture record',
+  };
+  await h.controller.submit(carry.question, carry);
+  expect(h.controller.snapshot().draft).toBe(carry.question);
+  await h.controller.sendDraft();
+  const asks = post.mock.calls.filter(
+    ([path]) => path !== '/api/followups',
+  ) as unknown as [string, object][];
+  const body = asks[2]![1] as {
+    context: { author: string; text: string }[];
+  };
+  expect(body.context.at(-1)?.text).toContain('Fixture quoted passage');
+});
