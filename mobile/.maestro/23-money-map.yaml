@@ -271,9 +271,12 @@ name: 23 Native money map, held figures, original source and ranked list
     env:
       TARGET_ID: money-title
 - tapOn: Filters(, on)?
-- extendedWaitUntil:
-    visible:
+# Reset sits under the facets and Show toggles: below the fold at the sheet's
+# half-height detent, so scroll the sheet to it.
+- scrollUntilVisible:
+    element:
       id: filters-reset
+    centerElement: true
     timeout: 15000
 - tapOn:
     id: filters-reset
