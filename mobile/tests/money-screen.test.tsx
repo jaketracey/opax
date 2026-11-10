@@ -394,3 +394,37 @@ test('the donors page states an industry window in plain words', async () => {
   );
   await act(async () => r.unmount());
 });
+
+test('the List view counts one receipt and one donor in the singular', async () => {
+  const raw = structuredClone(pinned('/graph/money.json')) as {
+    nodes: { id: string; kind: string; withheld?: boolean; count: number }[];
+    edges: { source: string; target: string }[];
+  };
+  const keep = raw.nodes.find((n) => n.kind === 'donor' && !n.withheld)!;
+  const dropped = new Set(
+    raw.nodes
+      .filter((n) => n.kind === 'donor' && n.id !== keep.id)
+      .map((n) => n.id),
+  );
+  raw.nodes = raw.nodes.filter((n) => !dropped.has(n.id));
+  raw.edges = raw.edges.filter(
+    (e) => !dropped.has(e.source) && !dropped.has(e.target),
+  );
+  for (const n of raw.nodes) if (n.kind === 'party') n.count = 1;
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(path === '/graph/money.json' ? raw : pinned(path)),
+    stale: false,
+    asOf: '2026-09-21',
+    savedAt: 1,
+  }));
+  const r = await render();
+  const party = r.root.findAll(
+    (x) => x.props.testID === 'money-party-0' && 'detail' in x.props,
+  )[0]!;
+  expect(party.props.detail).toMatch(/^1 receipt · /);
+  const all = r.root.findAll(
+    (x) => x.props.action?.testID === 'money-donors-all',
+  )[0]!;
+  expect(all.props.action.accessibilityLabel).toBe('See all 1 donor');
+  await act(async () => r.unmount());
+});

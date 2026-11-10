@@ -22,6 +22,7 @@ import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
 import {
+  counted,
   formatCount,
   formatMoneyCompact,
   moneyAccessibilityLabel,
@@ -905,7 +906,7 @@ function ListBody({
     <PartyMoneyRow
       key={node.id}
       name={node.label}
-      detail={`${formatCount(node.count)} receipts · ${moneyYears(node.firstYear, node.lastYear)}`}
+      detail={`${counted(node.count, 'receipt')} · ${moneyYears(node.firstYear, node.lastYear)}`}
       amount={node.total}
       href={record_(node)}
       testID={`money-party-${index}`}
@@ -921,7 +922,7 @@ function ListBody({
             title="Donors"
             action={{
               label: copy.seeAll,
-              accessibilityLabel: `See all ${formatCount(named.length)} donors`,
+              accessibilityLabel: `See all ${counted(named.length, 'donor')}`,
               href: moneyDonorsRoute({
                 jurisdiction,
                 ...moneyWindowParams(filters),
