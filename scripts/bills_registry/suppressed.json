@@ -1,0 +1,32 @@
+{
+ "note": "Registry rows the bills export does not publish. Each names the record that replaces it; /bill/<key> redirects there. Never list a bill here without the original source that shows it is the same bill.",
+ "suppressed": [
+  {
+   "key": "au-federal-alrc-4391",
+   "duplicate_of": "au-federal-r5824",
+   "evidence_url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5824",
+   "evidence": "Legacy ALRC record 4391 'Fair Work Amendment (Protecting Take Home Pay) Bill 2017', introduced in the House of Representatives on 20 March 2017, is ParlInfo bill r5824: same title, same chamber, same introduction date and the same first eight progress events. The ALRC copy stops at 4 September 2017; r5824 continues to 27 March 2018 and carries the billhome source.",
+   "reason": "duplicate of a ParlInfo bill record",
+   "finding": "bills-008",
+   "reviewed": "2026-11-10"
+  },
+  {
+   "key": "au-federal-alrc-5160",
+   "duplicate_of": "au-federal-s1060",
+   "evidence_url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1060",
+   "evidence": "Legacy ALRC record 5160 'Fair Work Amendment (Protecting Take-Home Pay) Bill 2017', introduced in the Senate on 21 March 2017, is ParlInfo bill s1060: same title, same chamber and same introduction date. The ALRC copy stops at 30 March 2017; s1060 continues to 11 April 2019 and carries the billhome source.",
+   "reason": "duplicate of a ParlInfo bill record",
+   "finding": "bills-008",
+   "reviewed": "2026-11-10"
+  },
+  {
+   "key": "au-federal-alrc-4437",
+   "duplicate_of": "au-federal-r5967",
+   "evidence_url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5967",
+   "evidence": "Legacy ALRC record 4437 'Competition and Consumer Amendment (Exploitation of Indigenous Culture) Bill 2017' was introduced and read a first time in the House of Representatives on 11 September 2017, the introduction of ParlInfo bill r5967 '... Bill 2017 (No. 2)'. The ALRC title drops '(No. 2)'; the original bill r5810 was introduced on 13 February 2017.",
+   "reason": "duplicate of a ParlInfo bill record",
+   "finding": "bills-008",
+   "reviewed": "2026-11-10"
+  }
+ ]
+}

@@ -82,19 +82,40 @@ def parse_listing(body):
     return out
 
 
+def attr(s):
+    """A hidden-tag attribute as text. ParlInfo entity-encodes them and sometimes
+    wraps the value in quotes (party="&#34;ALP&#34;"), unlike the tag text."""
+    if s is None:
+        return None
+    v = re.sub(r"\s+", " ", html.unescape(html.unescape(s))).strip()
+    if len(v) >= 2 and v[0] == v[-1] == '"':
+        v = v[1:-1].strip()
+    return v or None
+
+
+def parse_sponsors(body):
+    """Every <sponsor> the page lists, in the source's order. A private
+    member's bill can have many (s1040 lists 20); the first is the sponsor."""
+    out, seen = [], set()
+    for m in SPONSOR_RX.finditer(body):
+        s = {"name": text(m.group("name")), "aph_id": attr(m.group("id")), "party": attr(m.group("party"))}
+        if s["name"] and (s["name"], s["aph_id"]) not in seen:
+            seen.add((s["name"], s["aph_id"]))
+            out.append(s)
+    return out
+
+
 def parse_billhome(body, code):
     """Everything the registry needs from one bill homepage."""
     rec = {"code": code, "events": [], "em_docs": []}
     for k, rx in TAG_RX.items():
         m = rx.search(body)
         rec[k] = text(m.group(1)) if m else None
-    m = SPONSOR_RX.search(body)
-    if m:
-        rec["sponsor_name"] = text(m.group("name"))
-        rec["sponsor_aph_id"] = m.group("id")
-        rec["sponsor_party"] = m.group("party")
-    else:
-        rec["sponsor_name"] = rec["sponsor_aph_id"] = rec["sponsor_party"] = None
+    rec["sponsors"] = parse_sponsors(body)
+    first = rec["sponsors"][0] if rec["sponsors"] else {}
+    rec["sponsor_name"] = first.get("name")
+    rec["sponsor_aph_id"] = first.get("aph_id")
+    rec["sponsor_party"] = first.get("party")
     if not rec["chamber"]:
         m = ORIG_PLAIN_RX.search(body)
         rec["chamber"] = text(m.group(1)) if m else None
@@ -185,6 +206,7 @@ def upsert(db, rec, listing, now):
                "type": rec.get("type"),
                "sponsor_aph_id": rec.get("sponsor_aph_id"),
                "sponsor_party": rec.get("sponsor_party"),
+               "sponsors": rec.get("sponsors") or [],
                "summary": rec.get("summary")}
     db.execute(
         """INSERT INTO bills_v2 (bill_key, jurisdiction, source_system, source_id,
@@ -216,6 +238,46 @@ def upsert(db, rec, listing, now):
     return key
 
 
+def reparse_cache(db, everything=False):
+    """Re-read sponsor metadata from billhome pages already in the cache, with
+    no request to the source. Rows written before the scraper kept every
+    sponsor carry only the first (bills-006) and an entity-encoded party
+    (bills-002); this fills `sponsors` and the decoded first-sponsor fields in
+    aliases_json and touches nothing else. A row already holding `sponsors` is
+    skipped unless `everything`, so a nightly run costs almost nothing."""
+    import os
+    updated = missing = 0
+    rows = db.execute(
+        "SELECT bill_key, aliases_json FROM bills_v2 WHERE source_system='parlinfo'").fetchall()
+    for row in rows:
+        try:
+            extras = json.loads(row["aliases_json"] or "{}")
+        except ValueError:
+            continue
+        if not isinstance(extras, dict) or ("sponsors" in extras and not everything):
+            continue
+        code = row["bill_key"].removeprefix("au-federal-")
+        path = bc.cache_path("billhome", code)
+        if not os.path.exists(path) or not os.path.getsize(path):
+            missing += 1
+            continue
+        with open(path, "rb") as fh:
+            body = fh.read().decode("utf-8", "replace")
+        if "<short-title>" not in body:
+            missing += 1
+            continue
+        sponsors = parse_sponsors(body)
+        first = sponsors[0] if sponsors else {}
+        extras.update(sponsors=sponsors, sponsor_aph_id=first.get("aph_id"), sponsor_party=first.get("party"))
+        db.execute("UPDATE bills_v2 SET aliases_json=? WHERE bill_key=?",
+                   (json.dumps(extras, ensure_ascii=False), row["bill_key"]))
+        updated += 1
+    db.commit()
+    print(f"reparse-cache: {updated} rows updated from cached billhome pages, "
+          f"{missing} without a usable cached page", flush=True)
+    return updated
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--parliaments", type=int, nargs="+",
@@ -224,10 +286,17 @@ def main():
                     help="fetch fresh listings and homepages, including existing bills")
     ap.add_argument("--max-cache-age", type=int, default=0, help="reuse pages fetched within this many seconds when resuming a refresh")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--reparse-cache", action="store_true",
+                    help="refill sponsor metadata from cached billhome pages (no network) and exit")
+    ap.add_argument("--all", action="store_true", help="with --reparse-cache: every row, not only rows without sponsors")
     args = ap.parse_args()
 
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()
     db = bc.connect_rw()
+    if args.reparse_cache:
+        reparse_cache(db, everything=args.all)
+        db.close()
+        return
 
     listings = []
     for p in args.parliaments:
@@ -284,6 +353,9 @@ def main():
     n = db.execute("SELECT COUNT(*) FROM bills_v2 WHERE source_system='parlinfo'").fetchone()[0]
     e = db.execute("SELECT COUNT(*) FROM bill_events").fetchone()[0]
     print(f"DONE bills_v2(parlinfo)={n} bill_events={e} {bc.stats()}", flush=True)
+    # Backfill every co-sponsor for older parliaments the nightly run does not
+    # refetch (bills-006). Cache only; a no-op once every row has `sponsors`.
+    reparse_cache(db)
     db.close()
     if failures:
         raise SystemExit(f"{failures} bill homepages failed to refresh")
