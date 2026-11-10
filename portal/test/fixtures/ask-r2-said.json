@@ -1,0 +1,359 @@
+{
+  "NP-SAID-002": {
+    "question": "What did David Gillespie say about the Register of Foreign Ownership of Agricultural Land Bill 2015?",
+    "passage": {
+      "resource": "6b027102c04c4bb3a06238071f1a837c",
+      "slug": "speech-319090",
+      "title": "David Gillespie — 2015-09-16",
+      "href": "https://opax.com.au/doc/speech-319090",
+      "url": "https://opax.com.au/doc/speech-319090",
+      "snippet": "I rise to speak about this cluster of bills, the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015, the Foreign Acquisitions and Takeovers Fees Imposition Bill 2015 and the Register of Foreign Ownership of Agricultural Land Bill 2015. These bills are putting into effect policies that the Nationals took to the country at the last election, and I am very pleased to see that we are delivering on our promises. They strengthen the integrity and management of foreign investment in agricultural land and agribusiness but have just as much relevance to the residential real estate market, and I will make some comments about that later. Ever since Australia started off as an outpost of the British foreign office and was a dumping ground for the poor, the unwanted and lots of convicts, commerce has developed on the back of foreign capital. We do not have 1,000 years of wealth stored in the nation like European nations do that have huge stores of investor capital. We are not America with huge reserves of accumulated wealth from another couple of hundred years economic activity and 350 million people. In essence, we need capital invested in this country and Australia cannot prov",
+      "cited": true,
+      "kind": "speech",
+      "date": "2015-09-16",
+      "speaker": "David Gillespie"
+    }
+  },
+  "NP-SAID-007": {
+    "question": "what did Jacqui Lambie rckon abuot the Environment Protection and Biodiversity Conservation Amendment (Reconsiderations) Bill 2025",
+    "passage": {
+      "resource": "30fe0d68a80a40f8af39b865e17087cf",
+      "slug": "speech-1194787",
+      "title": "Jacqui Lambie — Statements by Senators — 2025-03-25",
+      "href": "https://opax.com.au/doc/speech-1194787",
+      "url": "https://opax.com.au/doc/speech-1194787",
+      "snippet": "Then the Labor Party announced their dirty salmon bill last week, the Environment Protection and Biodiversity Conservation Amendment (Reconsiderations) Bill 2025. It's a bill that lets salmon companies off the hook. Mining companies have to clean up after themselves, but apparently the salmon companies get let off the hook. Mining companies have to abide by the environmental laws. But, apparently, no, no, there's a free pass to the dirty stinking salmon over here because the Labor Party and Liberal Party think it will give them a better chance of winning those electoral seats in Braddon and Lyons.",
+      "cited": true,
+      "kind": "speech",
+      "date": "2025-03-25",
+      "speaker": "Jacqui Lambie"
+    }
+  },
+  "NP-SAID-015": {
+    "question": "My family were arguing about this over dinner and we want the actual record. What did Lisa Chesters say about the Transport Security Amendment (Security of Australia’s Transport Sector) Bill 2025? If the record does not cover it, say so rather than guessing.",
+    "passage": {
+      "resource": "d64c5f5066ea45f3ba539065d9bc8bab",
+      "slug": "speech-1194764",
+      "title": "Lisa Chesters — Bills — 2025-03-25",
+      "href": "https://opax.com.au/doc/speech-1194764",
+      "url": "https://opax.com.au/doc/speech-1194764",
+      "snippet": "(4) immediately following the discussion of a matter of public importance, if the Transport Security Amendment (Security of Australia's Transport Sector) Bill 2024,Supply Bill(No. 1) 2025-2026, Supply Bill (No. 2) 2025-2026, Supply (Parliamentary Departments) Bill (No. 1) 2025-2026 and Parliamentary Business Resources Legislation Amendment (Machinery of Government Change) Bill 2025 have not passed, all questions necessary to complete consideration of the bills being put immediately;",
+      "cited": true,
+      "kind": "speech",
+      "date": "2025-03-25",
+      "speaker": "Lisa Chesters"
+    }
+  },
+  "BL-INTR-010": {
+    "question": "when did the Treasury Laws Amendment (2020 Measures No. 3) Bill 2020 first come in"
+  },
+  "MN-GRNT-022": {
+    "question": "How much has Board Of The Queensland Museum received in Queensland Government grants?",
+    "payload": {
+      "answer": "- Anzac Legacy Gallery: $4,731,339.00 from Premier and Cabinet (DPC).\n\n- Anzac Legacy Gallery: $3,765,529.00 from Premier and Cabinet (DPC).\n\nMaths - Queensland Women in STEM Prize 2024, and Cyber Security.",
+      "answer_decision": "answer",
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "jurisdiction": "qld",
+        "people": [],
+        "locationState": "qld",
+        "stateGovernment": true,
+        "grantRecipient": "Board Of The Queensland Museum",
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            142,
+            206
+          ]
+        ],
+        "fact-2/t/body/0": [
+          [
+            0,
+            69
+          ],
+          [
+            142,
+            206
+          ]
+        ],
+        "fact-3/t/body/0": [
+          [
+            71,
+            140
+          ],
+          [
+            142,
+            206
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Grant: Board Of The Queensland Museum — $11,913,708.00 across 14 grant records. Anzac Legacy Gallery; Capital Grants; Arts Sector Initiatives; Science, Technology, Engineering and Maths - Queensland Women in STEM Prize 2024; Cyber Security…",
+          "href": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+          "url": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+          "snippet": "Grant: Board Of The Queensland Museum — $11,913,708.00 across 14 grant records. Anzac Legacy Gallery; Capital Grants; Arts Sector Initiatives; Science, Technology, Engineering and Maths - Queensland Women in STEM Prize 2024; Cyber Security…\nBoard Of The Queensland Museum: $11,913,708.00 across 14 grant records. Anzac Legacy Gallery; Capital Grants; Arts Sector Initiatives; Science, Technology, Engineering and Maths - Queensland Women in STEM Prize 2024; Cyber Security…",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "11913708",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "14",
+              "unit": "count",
+              "chamber": "",
+              "period": {
+                "label": "2024"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $4,731,339.00. Premier and Cabinet (DPC). . Community support. Funding to create the new Anzac Legacy Gallery at the Queensland Museum Griffith.",
+          "href": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+          "url": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+          "snippet": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $4,731,339.00. Premier and Cabinet (DPC). . Community support. Funding to create the new Anzac Legacy Gallery at the Queensland Museum Griffith.\nAnzac Legacy Gallery: $4,731,339.00 grant to Board Of The Queensland Museum. Premier and Cabinet (DPC). . Community support. Funding to create the new Anzac Legacy Gallery at the Queensland Museum Griffith.\nBoard Of The Queensland Museum: $4,731,339.00 grant for Anzac Legacy Gallery. Premier and Cabinet (DPC). . Community support. Funding to create the new Anzac Legacy Gallery at the Queensland Museum Griffith.",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "4731339",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-2/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "fact-3",
+          "slug": "",
+          "title": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $3,765,529.00. Premier and Cabinet (DPC). . Queensland Government. The creation of a new permanent gallery and exhibition at Queensland Museum that explores the impact and legacy of the F Griffith.",
+          "href": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+          "url": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+          "snippet": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $3,765,529.00. Premier and Cabinet (DPC). . Queensland Government. The creation of a new permanent gallery and exhibition at Queensland Museum that explores the impact and legacy of the F Griffith.\nAnzac Legacy Gallery: $3,765,529.00 grant to Board Of The Queensland Museum. Premier and Cabinet (DPC). . Queensland Government. The creation of a new permanent gallery and exhibition at Queensland Museum that explores the impact and legacy of the F Griffith.\nBoard Of The Queensland Museum: $3,765,529.00 grant for Anzac Legacy Gallery. Premier and Cabinet (DPC). . Queensland Government. The creation of a new permanent gallery and exhibition at Queensland Museum that explores the impact and legacy of the F Griffith.",
+          "cited": true,
+          "kind": "record",
+          "claim_atoms": [
+            {
+              "entity": "Grant",
+              "metric": "grants",
+              "value": "3765529",
+              "unit": "AUD",
+              "chamber": "",
+              "period": {},
+              "evidenceId": "fact-3/t/body/0"
+            }
+          ]
+        }
+      ]
+    },
+    "pre_writer_sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "Grant: Board Of The Queensland Museum — $11,913,708.00 across 14 grant records. Anzac Legacy Gallery; Capital Grants; Arts Sector Initiatives; Science, Technology, Engineering and Maths - Queensland Women in STEM Prize 2024; Cyber Security…",
+        "href": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "url": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "snippet": "Grant: Board Of The Queensland Museum — $11,913,708.00 across 14 grant records. Anzac Legacy Gallery; Capital Grants; Arts Sector Initiatives; Science, Technology, Engineering and Maths - Queensland Women in STEM Prize 2024; Cyber Security…",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $4,731,339.00. Premier and Cabinet (DPC). . Community support. Funding to create the new Anzac Legacy Gallery at the Queensland Museum Griffith.",
+        "href": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "url": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "snippet": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $4,731,339.00. Premier and Cabinet (DPC). . Community support. Funding to create the new Anzac Legacy Gallery at the Queensland Museum Griffith.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-3",
+        "slug": "",
+        "title": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $3,765,529.00. Premier and Cabinet (DPC). . Queensland Government. The creation of a new permanent gallery and exhibition at Queensland Museum that explores the impact and legacy of the F Griffith.",
+        "href": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "url": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "snippet": "Grant: Anzac Legacy Gallery — Board Of The Queensland Museum — $3,765,529.00. Premier and Cabinet (DPC). . Queensland Government. The creation of a new permanent gallery and exhibition at Queensland Museum that explores the impact and legacy of the F Griffith.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "url": "https://opax.com.au/money/grants/qld/recipient/abn%3A91522611802",
+        "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ]
+  },
+  "MN-DONR-001": {
+    "question": "How much has Electrical Trades Union given to Katter's Australian Party in disclosed donations?",
+    "payload": {
+      "answer": "Electrical Trades Union provided $300,000 in federal disclosed receipts to Katter's Australian Party in financial years 1998-99 to 2025-26.\n\nThese disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence.",
+      "answer_decision": "answer",
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "party": "Katter's Australian Party",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            139
+          ]
+        ],
+        "coverage/t/body/0": [
+          [
+            141,
+            260
+          ]
+        ]
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Electrical Trades Union: $300,000 in federal disclosed receipts to Katter's Australian Party across 6 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+          "snippet": "Electrical Trades Union: $300,000 in federal disclosed receipts to Katter's Australian Party across 6 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+          "cited": true,
+          "kind": "export",
+          "entities": [
+            "party:Katter's Australian Party"
+          ],
+          "claim_atoms": [
+            {
+              "entity": "Electrical Trades Union",
+              "metric": "receipts",
+              "value": "300000",
+              "unit": "AUD",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Electrical Trades Union",
+              "metric": "count",
+              "value": "6",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Electrical Trades Union",
+              "metric": "count",
+              "value": "99",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            },
+            {
+              "entity": "Electrical Trades Union",
+              "metric": "count",
+              "value": "26",
+              "unit": "count",
+              "chamber": "federal",
+              "period": {
+                "since": "1998-07-01",
+                "until": "2026-06-30",
+                "label": "1998-99"
+              },
+              "evidenceId": "fact-1/t/body/0"
+            }
+          ]
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+          "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+          "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ]
+    },
+    "pre_writer_sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "Electrical Trades Union: $300,000 in federal disclosed receipts to Katter's Australian Party across 6 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+        "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+        "snippet": "Electrical Trades Union: $300,000 in federal disclosed receipts to Katter's Australian Party across 6 receipts in financial years 1998-99 to 2025-26 (1998-07-01 to 2026-06-30).",
+        "cited": true,
+        "kind": "export",
+        "entities": [
+          "party:Katter's Australian Party"
+        ]
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+        "url": "https://opax.com.au/money?jur=federal&type=receipts&party=party%3AKatter%27s+Australian+Party&focus=donor%3Aelectrical+trades+union+of+australia",
+        "snippet": "Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence. Financial-year keys are the starting year; election returns can be assigned to their polling or event year. Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the published donor selection (250 largest lifetime donors plus qualifying public-money recipients), not every disclosed donor.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ]
+  }
+}

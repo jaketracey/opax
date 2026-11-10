@@ -1,5 +1,6 @@
 import type { WritingFact, WritingInput, WrittenSentence } from './research-writing'
 import { decodeHTMLStrict } from 'entities'
+import { requestedBillTitle, billTitleMatches } from './bill-title'
 
 /** Keep the requested bill fact ahead of supporting lifecycle dates, including misspelt introduction verbs. */
 export function billQuestionFocus(question: string): 'sponsor' | 'introduced' | 'assent' | 'status' | 'passed' | 'portfolio' {
@@ -65,6 +66,15 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
       const introduced = facts.find(f => f.source.url === sponsor.source.url && /^On .+, the .+ was first introduced/.test(f.text))
       return [line(sponsor.text, [sponsor]), ...(introduced ? [line(introduced.text, [introduced])] : [])]
     }
+  }
+
+  if (/\bwhen\b/i.test(input.question) && /\b(?:introduc\w*|first (?:come|came) in)\b/i.test(input.question) && billQuestionFocus(input.question) === 'introduced') {
+    const title = input.constraints?.exactBillTitle ?? requestedBillTitle(input.question)
+    const introductions = facts.filter(f => {
+      const match = /\/bill\//.test(f.source.url) && /^On .+, the (.+) was first introduced\b/.exec(f.text)
+      return match && (!title || billTitleMatches(match[1], title))
+    }).filter((f, i, all) => all.findIndex(other => other.source.url === f.source.url) === i)
+    if (introductions.length === 1) return [line(introductions[0].text, [introductions[0]])]
   }
 
   // The legacy count facts and the current prose facts represent the same exact index selection.

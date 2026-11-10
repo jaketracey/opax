@@ -2,7 +2,7 @@ import { scopeAfterStatutes } from './ask-statute-titles.mjs'
 import type { Period, NamedScope, PlanStep } from './agentic-ask'
 import type { ToolResult } from './agentic-tools'
 import { receiptYearWindow } from './receipt-period'
-import { requestedBillTitle, billTitleMatches } from './ask-exact-lookup'
+import { requestedBillTitle, billTitleMatches } from './bill-title'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
