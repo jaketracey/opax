@@ -1544,6 +1544,7 @@ export function Composer({
   submitTestID?: string;
 }) {
   const { fontScale, height } = useWindowDimensions();
+  const [inputFocused, setInputFocused] = useState(false);
   const [keyboardTop, setKeyboardTop] = useState<number | null>(() =>
     Platform.OS === 'ios' ? (Keyboard.metrics()?.screenY ?? null) : null,
   );
@@ -1583,7 +1584,22 @@ export function Composer({
           ))}
         </View>
       ) : null}
-      <View style={styles.composer}>
+      <View
+        style={
+          Platform.OS === 'android'
+            ? [
+                styles.composer,
+                {
+                  borderColor: inputFocused ? colors.navy : colors.lineControl,
+                  borderWidth: inputFocused ? 2 : 1,
+                  paddingLeft: rhythm.block - (inputFocused ? 1 : 0),
+                  paddingRight: rhythm.line - (inputFocused ? 1 : 0),
+                  paddingVertical: rhythm.line - (inputFocused ? 1 : 0),
+                },
+              ]
+            : styles.composer
+        }
+      >
         {leading}
         <TextInput
           ref={inputRef}
@@ -1596,10 +1612,36 @@ export function Composer({
           testID={testID}
           accessibilityLabel={label}
           onFocus={onFocus}
+          {...(Platform.OS === 'android'
+            ? {
+                underlineColorAndroid: 'transparent',
+                selectionColor: colors.navy,
+                cursorColor: colors.navy,
+                onFocus: (
+                  event: Parameters<NonNullable<TextInputProps['onFocus']>>[0],
+                ) => {
+                  setInputFocused(true);
+                  onFocus?.(event);
+                },
+                onBlur: () => setInputFocused(false),
+              }
+            : {})}
           allowFontScaling
           maxFontSizeMultiplier={0}
           placeholderTextColor={colors.inkFaint}
-          style={[styles.composerInput, { maxHeight: inputHeight }]}
+          style={[
+            styles.composerInput,
+            { maxHeight: inputHeight },
+            ...(Platform.OS === 'android'
+              ? [
+                  {
+                    includeFontPadding: false,
+                    textAlignVertical: 'top' as const,
+                    minWidth: 0,
+                  },
+                ]
+              : []),
+          ]}
         />
         {trailing ?? (
           <IconButton

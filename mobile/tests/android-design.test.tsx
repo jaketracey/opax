@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {
   Button,
+  Composer,
   Field,
   IconButton,
   SegmentedControl,
@@ -20,7 +21,7 @@ import { ChoiceChip } from '../src/design/labels';
 import { Slider, Stepper } from '../src/design/adjustable';
 import { AndroidMenuHost, showMenu } from '../src/design/menu';
 import { Text } from '../src/design/text';
-import { androidControls, textStyles } from '../src/design/tokens';
+import { androidControls, colors, textStyles } from '../src/design/tokens';
 import { Pressable } from '../src/design/pressable';
 import { ContextMenu } from '../src/design/context-menu';
 let mockContrast = false;
@@ -203,6 +204,31 @@ test('fields support controlled clearing, native search affordance and a wrappin
   expect(styles(input).includeFontPadding).toBe(false);
   fireEvent.press(r.getByRole('button', { name: 'Clear search' }));
   expect(change).toHaveBeenCalledWith('');
+});
+test('Android composers use a focus boundary and keep native input metrics', () => {
+  const focus = jest.fn();
+  const r = render(
+    <Composer
+      label="Question"
+      submitLabel="Ask"
+      placeholder="Ask a question"
+      value="Housing"
+      onChangeText={noop}
+      onSubmit={noop}
+      onFocus={focus}
+    />,
+  );
+  const input = r.UNSAFE_getByType(TextInput);
+  expect(input.props.underlineColorAndroid).toBe('transparent');
+  expect(styles(input).includeFontPadding).toBe(false);
+  fireEvent(input, 'focus', { nativeEvent: {} });
+  expect(focus).toHaveBeenCalledTimes(1);
+  expect(
+    r.UNSAFE_getAllByType(View).some((view) => {
+      const style = styles(view);
+      return style?.borderColor === colors.navy && style.borderWidth === 2;
+    }),
+  ).toBe(true);
 });
 test.each([Stepper, Slider])(
   '%p exposes adjustable increments, bounds and disabled state',
