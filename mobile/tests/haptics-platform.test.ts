@@ -1,4 +1,5 @@
-const mockHaptic = jest.fn(() => Promise.resolve());
+import { haptic } from '../src/design/haptics';
+const mockHaptic = jest.fn((_kind: string) => Promise.resolve());
 jest.mock('../modules/opax-share', () => ({
   OpaxShare: { haptic: (kind: string) => mockHaptic(kind) },
 }));
@@ -8,7 +9,6 @@ jest.mock('react-native', () => {
   Object.defineProperty(rn.Platform, 'OS', { get: () => mockOS });
   return rn;
 });
-import { haptic } from '../src/design/haptics';
 
 beforeEach(() => mockHaptic.mockClear());
 
