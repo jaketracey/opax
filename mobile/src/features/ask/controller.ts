@@ -12,13 +12,20 @@ import {
   type Followup,
   type Turn,
 } from './model';
-import { AskFailure, type AskStage, type StreamHandlers } from './stream';
+import {
+  AskFailure,
+  type AskStage,
+  type AskStep,
+  type StreamHandlers,
+} from './stream';
+import { runningSteps } from './status';
 export type AskState = {
   id: string | null;
   thread: Turn[];
   options: AskOptions;
   busy: boolean;
   stage: AskStage | null;
+  steps: AskStep[];
   /** How many records the running answer is reading (a count, never titles). */
   reading: number;
   streaming: string;
@@ -85,6 +92,7 @@ export class AskController {
     options: { ...defaultOptions },
     busy: false,
     stage: null,
+    steps: [],
     reading: 0,
     streaming: '',
     error: null,
@@ -128,7 +136,13 @@ export class AskController {
     }
   }
   private update(p: Partial<AskState>) {
-    this.state = { ...this.state, ...p };
+    // Round boundaries, completion, cancellation and a new question discard
+    // outstanding lookups, including any whose terminal event never arrived.
+    this.state = {
+      ...this.state,
+      ...p,
+      ...(p.stage !== undefined ? { steps: [] } : {}),
+    };
     for (const f of this.listeners) f();
   }
   /** The options the composer's tags show: a fresh draft's, else the conversation's. */
@@ -356,15 +370,25 @@ export class AskController {
           abort.signal,
           {
             stage: (stage) => {
-              if (mine === this.sequence && stage !== this.state.stage)
-                this.update({ stage });
+              if (mine === this.sequence) this.update({ stage });
+            },
+            step: (step) => {
+              if (mine === this.sequence)
+                this.update({ steps: runningSteps(this.state.steps, step) });
             },
             delta: (text) => {
               if (mine === this.sequence)
-                this.update({ streaming: this.state.streaming + text });
+                this.update({
+                  streaming: this.state.streaming + text,
+                  ...(this.state.stage !== 'Writing the answer' ||
+                  this.state.steps.length
+                    ? { stage: 'Writing the answer' as const }
+                    : {}),
+                });
             },
             retry: () => {
-              if (mine === this.sequence) this.update({ streaming: '' });
+              if (mine === this.sequence)
+                this.update({ streaming: '', steps: [] });
             },
             reading: (reading) => {
               if (mine === this.sequence) this.update({ reading });
