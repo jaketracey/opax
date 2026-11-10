@@ -232,3 +232,27 @@ test.each([
 ])('counted handles %s %s', (n, one, many, expected) => {
   expect(counted(n as number, one as string, many as string)).toBe(expected);
 });
+
+test('compact money is spoken as drawn, and cents never read as minus zero', () => {
+  for (const amount of [999_500, 999_999, 999_950_000, 12_345, 4_250_000]) {
+    const drawn = formatMoneyCompact(amount);
+    const unit = drawn.endsWith('bn')
+      ? 'billion'
+      : drawn.endsWith('m')
+        ? 'million'
+        : 'thousand';
+    expect(moneyAccessibilityLabel(amount, true)).toBe(
+      `${drawn.replace(/^\$|k$|m$|bn$/g, '')} ${unit} dollars`,
+    );
+  }
+  expect(formatMoneyCompact(999_999)).toBe('$1m');
+  expect(moneyAccessibilityLabel(999_999, true)).toBe('1 million dollars');
+  expect(moneyAccessibilityLabel(-999_999, true)).toBe(
+    'minus 1 million dollars',
+  );
+  expect(formatMoney(-0.4)).toBe('$0');
+  expect(formatMoneyCompact(-0.4)).toBe('$0');
+  expect(formatMoneyWords(-0.4)).toBe('$0');
+  expect(moneyAccessibilityLabel(-0.4)).toBe('0 dollars');
+  expect(formatMoney(-0.5)).toBe('-$1');
+});
