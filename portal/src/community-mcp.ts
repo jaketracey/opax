@@ -5,6 +5,7 @@ import {body,CommunityError,digest,json,limit,now,type Member} from './community
 import {tools,getTool,toolSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {rosterPerson} from './roster-person'
 import {firstSpeechTurn} from './position-evidence'
+import {corpusKb} from './tools/corpus-records'
 export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
  try{
   if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'Community access is being prepared.')
@@ -143,7 +144,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   })
   for(const tool of tools){
    server.registerTool(tool.name,{description:tool.description,inputSchema:toolSchema(tool.name),annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async args=>{
-    const data=await callTool({ASSETS:env.ASSETS,TABLE_DB:env.TABLE_DB,COMMUNITY_ORIGIN:env.COMMUNITY_ORIGIN,origin:'https://opax.com.au',signal:req.signal},tool.name,args),text=JSON.stringify(data)
+    const data=await callTool({ASSETS:env.ASSETS,TABLE_DB:env.TABLE_DB,COMMUNITY_ORIGIN:env.COMMUNITY_ORIGIN,origin:'https://opax.com.au',signal:req.signal,kb:corpusKb(env,req.signal)},tool.name,args),text=JSON.stringify(data)
     if(new TextEncoder().encode(text).length>180000)return {content:[{type:'text' as const,text:JSON.stringify({error:'This response is too large. Narrow the filters or limit.',url:env.COMMUNITY_ORIGIN+'/methods#mcp'})}],isError:true}
     return {content:[{type:'text' as const,text}],structuredContent:data,isError:!!data.error}
    })
