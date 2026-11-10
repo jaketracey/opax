@@ -2,7 +2,16 @@
 // vote, and decline.or_match). Pure: canned answers only, no network and no corpus data.
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFile, writeFile, mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join, resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import { runCheck, gradeRow, answerNumbers, moneyFigures, amountStated, dateForms, voteStated } from '../../scripts/research_eval_grade.mjs'
+import { parseArgs, loadQuestionsFile } from '../../scripts/research_eval.mjs'
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 const ctx = (answer) => ({ answer, payload: { answer }, ev: { cited: [], entries: [] }, roster: [], names: { bound: [] }, figures: { figures: [] } })
 const status = (check, answer) => runCheck(check, ctx(answer)).status
@@ -66,4 +75,40 @@ test('decline.or_match: a plain no-record reply counts as the expected decline',
   assert.equal(invented.axes.decline, 'fail')
   const plain = { ...q, must: [{ type: 'decline' }] }
   assert.equal(gradeRow(plain, { answered: true, answer: 'There is no senator named Ingrid Tolliver in the parliamentary record.', sources: [] }).axes.decline, 'fail', 'without or_match the old REFUSAL wording still rules')
+})
+
+test('harness: --questions loads a question file and --offset skips rows', async () => {
+  const o = parseArgs(['--fixture', 'x.json', '--questions', 'scripts/ask_baseline/questions-pilot50.json', '--offset', '10', '--limit', '5'])
+  assert.equal(o.offset, 10)
+  assert.ok(o.questionsFile.endsWith('scripts/ask_baseline/questions-pilot50.json'))
+  assert.equal(parseArgs(['--fixture', 'x.json']).offset, 0)
+  assert.throws(() => parseArgs(['--fixture', 'x.json', '--offset', '-1']), /--offset/)
+  assert.throws(() => parseArgs(['--fixture', 'x.json', '--questions', 'q.json', '--set', 'gold']), /not both/)
+  const pilot = await loadQuestionsFile(resolve(root, 'scripts/ask_baseline/questions-pilot50.json'))
+  assert.equal(pilot.length, 50)
+  assert.ok(pilot.every((q) => q.id && q.question && q.old_route === 'ordinary'))
+})
+
+test('harness: an offline run grades baseline rows with the new checks', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'ask-baseline-'))
+  try {
+    const questions = [
+      { id: 'SKIP-1', kind: 'skip', question: 'Skipped by --offset.', old_route: 'ordinary', expected: { kind: 'answer' }, must: [{ type: 'number', all: [1] }] },
+      { id: 'T-AMT', kind: 'money', question: 'How much did Labor receive in 2003-04?', old_route: 'ordinary', expected: { kind: 'answer' }, must: [{ type: 'amount', value: 38631230 }] },
+      { id: 'T-FAKE', kind: 'negative', question: 'How did Senator Ingrid Tolliver vote?', old_route: 'ordinary', expected: { kind: 'decline' }, must: [{ type: 'decline', or_match: '\\bno senator\\b' }] },
+    ]
+    const rows = [
+      { id: 'T-AMT', mode: 'loop', payload: { answered: true, answer: 'Labor received about $38.6 million in 2003-04.', sources: [] } },
+      { id: 'T-FAKE', mode: 'loop', payload: { answered: true, answer: 'There is no senator named Ingrid Tolliver in the record.', sources: [] } },
+    ]
+    await writeFile(join(dir, 'q.json'), JSON.stringify({ questions }))
+    await writeFile(join(dir, 'f.json'), JSON.stringify({ rows }))
+    await promisify(execFile)(process.execPath, ['scripts/research_eval.mjs', '--fixture', join(dir, 'f.json'), '--questions', join(dir, 'q.json'), '--offset', '1', '--limit', '5', '--mode', 'loop', '--out', join(dir, 'out')], { cwd: root })
+    const report = JSON.parse(await readFile(join(dir, 'out', (await import('node:fs')).readdirSync(join(dir, 'out')).find((f) => f.endsWith('.json'))), 'utf8'))
+    const byId = Object.fromEntries(report.questions.map((r) => [r.id, r]))
+    assert.deepEqual(Object.keys(byId).sort(), ['T-AMT', 'T-FAKE'])
+    const grade = (id) => byId[id].by_mode.loop.grade
+    assert.equal(grade('T-AMT').checks.find((c) => c.type === 'amount').status, 'pass')
+    assert.equal(grade('T-FAKE').axes.decline, 'pass')
+  } finally { await rm(dir, { recursive: true, force: true }) }
 })

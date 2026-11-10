@@ -12,6 +12,8 @@
 // Flags: --mode planner|loop|both (both) · --limit N (12, max 200) · --set research|gold|all|routing (research)
 //        --route auto|ops|ask (auto) · --planner-base URL · --loop-base URL · --fixture FILE · --out DIR
 //        --price-in / --price-out US$ per million tokens (0.44 / 1.32, the BYOK DeepSeek rate) · --timeout ms · --prod · --operator
+//        --questions FILE (a question file such as scripts/ask_baseline/questions-v1.json, in place of --set)
+//        --offset N (skip the first N questions, so a 1,000-row set runs in --limit-sized slices)
 //
 // Hard limits: one request per question per mode, never a retry; --limit caps the questions; the run
 // refuses opax.com.au unless --prod is passed; HTTPS or local http only; reserved ports 8910/8961 refused.
@@ -47,6 +49,8 @@ export function parseArgs(argv) {
     else if (a === '--mode') opts.mode = val()
     else if (a === '--limit') opts.limit = Number(val())
     else if (a === '--set') opts.set = val()
+    else if (a === '--questions') opts.questionsFile = resolve(val())
+    else if (a === '--offset') opts.offset = Number(val())
     else if (a === '--route') opts.route = val()
     else if (a === '--fixture') opts.fixture = resolve(val())
     else if (a === '--out') opts.out = resolve(val())
@@ -64,6 +68,9 @@ export function parseArgs(argv) {
   if (!['research', 'gold', 'all', 'routing'].includes(opts.set)) throw new Error('--set must be research, gold or all.')
   if (!['auto', 'ops', 'ask'].includes(opts.route)) throw new Error('--route must be auto, ops or ask.')
   if (!Number.isInteger(opts.limit) || opts.limit < 1 || opts.limit > MAX_LIMIT) throw new Error(`--limit must be an integer from 1 to ${MAX_LIMIT}.`)
+  opts.offset ??= 0
+  if (!Number.isInteger(opts.offset) || opts.offset < 0) throw new Error('--offset must be a whole number of questions to skip.')
+  if (opts.questionsFile && argv.includes('--set')) throw new Error('Pass --questions or --set, not both.')
   if (opts.intervalMs !== undefined && (!Number.isFinite(opts.intervalMs) || opts.intervalMs<0 || opts.intervalMs>10000)) throw new Error('--interval must be between 0 and 10000 ms.')
   if (opts.spendCap !== undefined && (!Number.isFinite(opts.spendCap) || opts.spendCap <= 0)) throw new Error('--spend-cap must be a positive US dollar amount.')
   if (!(opts.prices.input >= 0 && opts.prices.output >= 0)) throw new Error('Prices must be non-negative numbers.')
@@ -82,6 +89,16 @@ export function guardBase(base, { prod = false } = {}) {
   if ([8910, 8961].includes(Number(u.port))) throw new Error('Reserved fixture port.')
   if (PROD_HOSTS.test(u.hostname) && !prod) throw new Error('Refusing to run against production without --prod.')
   return u
+}
+
+/** Questions from a file: an array, or { questions: [...] }. Each row needs an id and a question. */
+export async function loadQuestionsFile(file) {
+  const f = JSON.parse(await readFile(file, 'utf8'))
+  const list = Array.isArray(f) ? f : Array.isArray(f?.questions) ? f.questions : null
+  if (!list) throw new Error('The questions file must be an array of questions, or {questions: [...]}.')
+  const bad = list.findIndex((q) => !q || typeof q.id !== 'string' || typeof q.question !== 'string')
+  if (bad >= 0) throw new Error(`Question ${bad + 1} in the file has no id or question.`)
+  return list.map((q) => ({ set: 'file', ...q }))
 }
 
 export async function loadQuestions(set) {
@@ -210,12 +227,12 @@ async function main() {
   }
   const secret = process.env.DAILY_POST_OPERATOR_SECRET
   if (!fixture && (opts.route === 'ops' || opts.operator || opts.prod) && !secret) throw new Error('DAILY_POST_OPERATOR_SECRET must be set for operator evaluation.')
-  const baseQuestions = await loadQuestions(opts.set)
+  const baseQuestions = (opts.questionsFile ? await loadQuestionsFile(opts.questionsFile) : await loadQuestions(opts.set)).slice(opts.offset)
   const questions = opts.reviewProbes ? [...baseQuestions.slice(0,45),...JSON.parse(await readFile(resolve(ROOT,'portal/test/fixtures/ask-routing-review-probes.json'),'utf8')).questions] : baseQuestions
   const { roster, parties } = await loadRoster()
   await mkdir(opts.out, { recursive: true })
   const onRow = async ({ row, rows, spent }) => { await writeFile(resolve(opts.out, 'in-progress.json'), JSON.stringify({ rows, spent }, null, 2)); console.log(JSON.stringify({ id: row.id, mode: row.mode, grade: row.grade?.overall, ms: row.ms, spent })) }
-  const { report, summary } = await runEval({ onRow: fixture ? undefined : onRow, spendCap: opts.spendCap, intervalMs: opts.intervalMs, baselineLoop: opts.baselineLoop, questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.set })
+  const { report, summary } = await runEval({ onRow: fixture ? undefined : onRow, spendCap: opts.spendCap, intervalMs: opts.intervalMs, baselineLoop: opts.baselineLoop, questions, modes: opts.modes, bases, baseHost, route: opts.route, secret, operator: opts.operator, prod: opts.prod, fixture, limit: opts.limit, prices: opts.prices, timeoutMs: opts.timeoutMs, roster, parties, set: opts.questionsFile ? `file:${opts.questionsFile.split('/').at(-1)}@${opts.offset}` : opts.set })
   const written = await writeReports(report, opts.out)
   // Counts only on stdout: no question or answer text.
   const brief = Object.fromEntries(Object.entries(summary).map(([m, s]) => [m, { n: s.n, errors: s.errors, pass: s.overall.pass, partial: s.overall.partial, fail: s.overall.fail, p50_ms: s.latency_ms.p50, p95_ms: s.latency_ms.p95, mean_cost_usd: s.cost_usd.mean }]))
