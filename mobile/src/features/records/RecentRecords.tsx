@@ -204,7 +204,8 @@ export default function RecentRecords() {
           Just added
         </Heading>
       )}
-      {value && refreshError ? (
+      {/* Offline, the screen's banner already says the copy is saved. */}
+      {value && refreshError && !offline ? (
         <InlineError
           subject="New records"
           message="New records couldn't be refreshed. Showing the saved copy."

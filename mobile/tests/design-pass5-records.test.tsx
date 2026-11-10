@@ -21,6 +21,7 @@ import {
   type View,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { ApiError } from '../src/api/errors';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
 import {
@@ -796,6 +797,20 @@ test('Just added explains a failed refresh of an empty feed and lets the reader 
     view.root.findAllByProps({ testID: 'recent-empty' }).length,
   ).toBeGreaterThan(0);
   await act(async () => error.props.onRetry());
+  expect(
+    view.root.findAllByProps({ testID: 'recent-refresh-error' }).length,
+  ).toBe(0);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
+  await act(async () => view.unmount());
+});
+
+test('Just added offline: the saved-copy banner speaks once, with no second refresh error', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record(decodeRecent(responses['/api/recent'])))
+    .mockRejectedValueOnce(new ApiError('offline', 'Offline'));
+  const view = await mount(<RecentRecords />);
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
   expect(
     view.root.findAllByProps({ testID: 'recent-refresh-error' }).length,
   ).toBe(0);
