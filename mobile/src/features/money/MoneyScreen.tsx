@@ -721,7 +721,7 @@ function MapMode({
             <MoneyMapPanel
               focus={panelFocus}
               totals={totals}
-              caption={`${formatCount(model.nodes.length)} discs · ${formatCount(model.edges.length)} recorded flows · ${moneyAccessibilityLabel(model.totals.donations, true)} in donations`}
+              caption={`${formatCount(model.nodes.length)} discs · ${formatCount(model.edges.length)} recorded flows · ${formatMoneyCompact(model.totals.donations)} in donations`}
               legend={<MoneyMapLegend model={model} />}
               sourceLine={sourceLine}
               stageHeight={stage.height || window.height}
