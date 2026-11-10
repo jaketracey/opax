@@ -107,6 +107,7 @@ export class AskController {
   };
   private listeners = new Set<() => void>();
   private abort: AbortController | null = null;
+  private nextAbort: AbortController | null = null;
   private running: Running | null = null;
   private sequence = 0;
   constructor(private io: AskIO) {}
@@ -168,8 +169,11 @@ export class AskController {
   }
   open(id: string) {
     if (this.state.busy) return;
-    const c = this.io.read().chats.find((c) => c.id === id);
-    if (c)
+    const store = this.io.read();
+    const c = store.chats.find((c) => c.id === id);
+    if (c) {
+      this.cancel();
+      const mine = ++this.sequence;
       this.update({
         id,
         thread: c.thread,
@@ -186,7 +190,22 @@ export class AskController {
         notice: null,
         fresh: false,
         freshOptions: null,
+        nextLoading: false,
+        reading: 0,
+        draft: '',
+        pending: null,
       });
+      // Remember the selection without changing the conversation's date.
+      if (store.active !== id)
+        void this.io.save({ ...store, active: id }).catch(() => {
+          if (mine === this.sequence)
+            this.update({
+              notice: phoneCopy(
+                "This conversation couldn't be saved on this iPhone.",
+              ),
+            });
+        });
+    }
   }
   start(options: AskOptions = { ...defaultOptions }) {
     this.cancel();
@@ -233,6 +252,8 @@ export class AskController {
   }
   cancel() {
     this.abort?.abort();
+    this.nextAbort?.abort();
+    this.nextAbort = null;
   }
   /**
    * Stop: the unfinished turn goes. The question returns to an empty
@@ -335,6 +356,8 @@ export class AskController {
   async submit(raw: string, carry?: Followup) {
     const q = raw.trim();
     if (!q || this.state.busy) return;
+    this.nextAbort?.abort();
+    this.nextAbort = null;
     const mine = ++this.sequence,
       abort = new AbortController();
     this.abort = abort;
@@ -361,6 +384,7 @@ export class AskController {
       failed: null,
       notice: null,
       clarify: null,
+      nextLoading: false,
     });
     try {
       const data = decodeAnswer(
@@ -490,13 +514,15 @@ export class AskController {
       .filter((p) => p.text)
       .slice(0, 8);
     if (!passages.length) return;
+    const abort = new AbortController();
+    this.nextAbort = abort;
     this.update({ nextLoading: true });
     try {
       const next = decodeFollowups(
         await this.io.post(
           '/api/followups',
           { question: q, answer: data.answer, passages },
-          new AbortController().signal,
+          abort.signal,
         ),
       );
       if (mine !== this.sequence) return;
@@ -506,6 +532,7 @@ export class AskController {
     } catch {
       /* The composer stays available. Never retry generation. */
     } finally {
+      if (this.nextAbort === abort) this.nextAbort = null;
       if (this.state.nextLoading && mine === this.sequence)
         this.update({ nextLoading: false });
     }
