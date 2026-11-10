@@ -24,3 +24,6 @@ export interface DatedPartyPerson extends SplitPerson {
 }
 export function datedAffiliationParty(row: AttributedRow, person: DatedPartyPerson | null | undefined): string | null;
 export function scopedCollaborators(filter: unknown, scope: Pick<SpeechScope, 'speakers'>): unknown;
+export function spellingKey(name: unknown): string;
+export function speakerVariantIndex(rows: readonly (readonly [string, number])[] | null | undefined): Map<string, string[]>;
+export function speakerSpellings(names: readonly string[] | null | undefined, variants: ReadonlyMap<string, readonly string[]> | null | undefined): string[];

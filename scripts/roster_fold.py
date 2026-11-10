@@ -205,10 +205,66 @@ def merge(target, stub):
     return target
 
 
+def _seats(row):
+    return {(r.get("jurisdiction"), r.get("chamber"), r.get("electorate")) for r in row.get("representation") or []}
+
+
+def twin_target(stub, people):
+    """The row a state-parliament spelling twin ("Hugh Mcdermott" beside "Hugh McDermott") certainly is, else None.
+
+    The speech export keys rows by the printed string, so a print that differs only in case or apostrophe
+    becomes a second person (members-electorates-011: six NSW and Victorian twins, 8 to 16 speeches each). It
+    folds into the spelling with more speeches only when nothing separates them: the same folded name, the
+    same parliaments (state only; the federal twins carry ids and are a separate review), the twin's own
+    chambers and years inside the other's, no seat, id, party or register name of its own that differs, and
+    neither is a reviewed split or holds committee-witness rows."""
+    if any(stub.get(k) for k in SPLIT_FIELDS) or stub.get("witness_rows"):
+        return None
+    states = set(stub.get("states") or [])
+    if not states or "federal" in states:
+        return None
+    twins = [p for p in people if p is not stub and p["name"] != stub["name"] and name_key(p["name"]) == name_key(stub["name"])]
+    if len(twins) != 1:
+        return None
+    target = twins[0]
+    if (target.get("speeches") or 0) <= (stub.get("speeches") or 0) or any(target.get(k) for k in SPLIT_FIELDS) or target.get("witness_rows"):
+        return None
+    own = set(stub.get("chambers") or []) - COMMITTEES
+    if set(target.get("states") or []) != states or not own or not own <= set(target.get("chambers") or []):
+        return None
+    if None in (stub.get("first"), stub.get("last"), target.get("first"), target.get("last")) or not (
+            target["first"] - 1 <= stub["first"] and stub["last"] <= target["last"] + 1):
+        return None
+    if not _seats(stub) <= _seats(target) or stub.get("affiliations"):
+        return None
+    for field in ("pid", "party"):
+        if stub.get(field) and target.get(field) and name_key(stub[field]) != name_key(target[field]):
+            return None
+    if stub.get("full") and target.get("full") and not same_name(stub["full"], target["full"]):
+        return None
+    return target
+
+
+def fold_twins(people):
+    """(people with the certain spelling twins folded, [(twin, person)]). Rows are not copied."""
+    decisions = [(stub, twin_target(stub, people)) for stub in people]
+    folded, gone = [], set()
+    for stub, target in decisions:
+        if target is None or id(target) in gone:
+            continue
+        merge(target, stub)
+        gone.add(id(stub))
+        folded.append((stub["name"], target["name"]))
+    return [p for p in people if id(p) not in gone], folded
+
+
 def fold(people, registry=()):
-    """(people with the certain prints folded, [(print, person)], [(print, why)]). Rows are not copied."""
+    """(people with the certain prints folded, [(print, person)], [(print, why)]). Rows are not copied.
+
+    Spelling twins fold first (fold_twins), so a surname print is judged against one row per person."""
     registry = list(registry)
-    folded, skipped, gone = [], [], set()
+    people, twins = fold_twins(people)
+    folded, skipped, gone = list(twins), [], set()
     # Every print is judged against the roster as exported, before any merge widens a person's row.
     decisions = [(stub, *decide(stub, people, registry)) for stub in people if is_print(stub)]
     for stub, target, why in decisions:

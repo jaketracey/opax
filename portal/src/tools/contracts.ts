@@ -1,5 +1,5 @@
 /** Commonwealth contracts (AusTender) by agency, supplier or subject: published agency profiles and the contracts table. */
-import { aud, clip, fold, siteUrl, tableRows } from './record-common'
+import { aud, clip, fold, readableRange, siteUrl, tableRows } from './record-common'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 
 interface Agency { id: string; name: string; total: number; count: number; first_year?: number; last_year?: number }
@@ -22,7 +22,7 @@ export async function findAgency(env: ToolEnv, phrase: string): Promise<Agency |
 }
 const contractCite = (env: ToolEnv, r: Record<string, unknown>): ToolCitation => ({ kind: 'record', value: Number(r.amount),
   url: typeof r.url === 'string' && /^https:\/\//.test(r.url) ? r.url : siteUrl(env, `/subject/supplier/${r.supplier_id}`),
-  text: `${r.supplier}: ${aud(r.amount)} contract "${clip(r.title, 90)}" with ${r.agency} (${r.start_date ?? 'start not recorded'} to ${r.end_date ?? 'end not recorded'}, ${r.procurement_method ?? 'method not recorded'} tender, ${r.id})` })
+  text: `${r.supplier}: ${aud(r.amount)} contract "${clip(r.title, 90)}" with ${r.agency} (${[readableRange(r.start_date, r.end_date), `${r.procurement_method ?? 'method not recorded'} tender`, r.id].filter(Boolean).join(', ')})` })
 
 export const tool: ToolDefinition = {
   name: 'contracts',
@@ -44,7 +44,7 @@ export const tool: ToolDefinition = {
     if (agency && !supplier && !query) {
       const profile = await readToolAsset(env, `/agencies/${agency.id}.json`) as AgencyProfile | null
       if (!profile || profile.id !== agency.id) return { rows: [], citations: [], notes: [], error: 'The agency contract profile is unavailable.' }
-      citations.push({ kind: 'record', value: profile.total, url: siteUrl(env, `/subject/agency/${agency.id}`), text: `${profile.name}: ${aud(profile.total)} across ${profile.count.toLocaleString('en-AU')} published contracts${profile.first_year ? ` (${profile.first_year}–${profile.last_year})` : ''}` })
+      citations.push({ kind: 'record', value: profile.total, url: siteUrl(env, `/subject/agency/${agency.id}`), text: `${profile.name}: ${aud(profile.total)} across ${profile.count.toLocaleString('en-AU')} published contracts${readableRange(profile.first_year, profile.last_year) ? ` (${readableRange(profile.first_year, profile.last_year)})` : ''}` })
       for (const s of (profile.suppliers ?? []).slice(0, limit)) {
         citations.push({ kind: 'record', value: s.total, url: siteUrl(env, `/subject/supplier/${s.id}`), text: `${s.name}: ${aud(s.total)} across ${s.count.toLocaleString('en-AU')} ${profile.name} contracts` })
         rows.push({ supplier: s.name, total_aud: Math.round(s.total), contracts: s.count })

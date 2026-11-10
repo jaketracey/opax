@@ -22,6 +22,7 @@ import unicodedata
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from parli.ingest.http import urlopen
+from scripts.oa_people_ids import rows as oa_rows, suspect
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,14 +57,14 @@ def names_agree(name, source_names):
     return False
 
 
-def build_profile_links(csv_text, roster, photos, credits):
+def build_profile_links(csv_text, roster, photos, credits, corrections=None):
     sources = {}
-    for row in csv.reader(io.StringIO(csv_text)):
-        if len(row) < 3 or not row[0].strip().isdigit() or not re.fullmatch(r"[A-Za-z0-9]+", row[1].strip()):
+    # APH ids are text: six source rows carry '7E4'-style ids a spreadsheet turned into
+    # '70000', put right by the reviewed scripts/corrections/oa-people.json.
+    for number, aph_id, names in oa_rows(csv_text, corrections):
+        if not names or not re.fullmatch(r"[A-Za-z0-9]+", aph_id):
             continue
-        pid = str(10000 + int(row[0]))
-        sources[pid] = {"aphMpid": row[1].strip(), "name": row[2].strip(),
-                        "names": [row[2].strip(), *[name.strip() for name in row[4:] if name.strip()]]}
+        sources[str(10000 + int(number))] = {"aphMpid": aph_id, "name": names[0], "names": names}
     people, by_name, rejected = {}, {}, 0
     for person in roster["people"]:
         names = [person["name"], person.get("full") or person["name"]]
@@ -85,6 +86,11 @@ def build_profile_links(csv_text, roster, photos, credits):
                 known["wikidata"] = qid
             if known:
                 by_name[name.strip().lower()] = known
+    damaged = sorted(pid for pid, record in people.items() if suspect(record["aphMpid"]))
+    if damaged:
+        # A spreadsheet-exponent id the corrections do not explain links to a profile APH does not have.
+        raise ValueError("APH ids with the '70000' exponent-damage shape need a reviewed correction in "
+                         "scripts/corrections/oa-people.json: " + ", ".join(damaged))
     return {
         "meta": {
             "source_url": SOURCE_URL, "source_commit": SOURCE_COMMIT, "person_id_source_url": ID_SOURCE_URL,

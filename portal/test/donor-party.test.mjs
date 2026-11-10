@@ -131,6 +131,18 @@ test('a minor party outside the money map: its one member, under the full name, 
   assert.equal(partyStateMoneyHTML('Fixture First Party', [['qld', {nodes: [], edges: []}]], helpers), '');
 });
 
+test('a merged print\'s speech labels name a party page but never make the print a member (state-datasets-001)', () => {
+  // 'Hughes' holds a federal Liberal's speeches and an SA member's: no pid, no party of its own.
+  const merged = {people: [...roster.people,
+    {name: 'Hughes', recorded_parties: ['Liberal'], states: ['sa', 'federal'], chambers: ['sa_lc', 'representatives'], first: 1998, last: 2026}]};
+  assert.ok(partyLabels({roster: merged}).includes('Liberal'), 'the label still resolves a party page');
+  const liberal = partyMembers('Liberal', {roster: merged});
+  assert.deepEqual([...liberal.current, ...liberal.former].map(m => m.name), ['Alex Fixture']);
+  // The same label in the division records is evidence of a vote, so it still counts.
+  const voted = partyMembers('Liberal', {roster: merged, divisions: {parties: {Liberal: [{name: 'Hughes', last: '2004-01-01', divisions: 3}]}}});
+  assert.deepEqual(voted.former.map(m => [m.name, m.divisions]).sort(), [['Alex Fixture', 0], ['Hughes', 3]]);
+});
+
 test('state money on a party page names the commission and links the donors', () => {
   const data = {meta: {commission: 'Fixture Commission', sourceShort: 'FC'}, nodes: [{id: 'party:FF', kind: 'party', label: 'Fixture First Party', total: 500, count: 2, firstYear: 2024, lastYear: 2025}, {id: 'donor:d', kind: 'donor', label: 'Fixture & Co'}], edges: [{source: 'donor:d', target: 'party:FF', total: 500}]};
   const html = partyStateMoneyHTML('Fixture First Party', [['qld', data]], {...helpers, donorNameHTML: n => `<a href="/subject/donor/${encodeURIComponent(n)}">${esc(n)}</a>`});

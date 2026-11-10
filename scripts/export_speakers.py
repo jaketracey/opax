@@ -13,7 +13,11 @@ without speaker_name_clean, such as the OpenAustralia XML loader's, are in the
 knowledge box under that name but were missing here). Five or more speeches. Chairs
 and unknown speakers (speaker_type) are out; committee witnesses stay in, under
 the full names the attendance lists gave them, because their evidence is
-searchable by speaker like anything else.
+searchable by speaker like anything else. Names that are not a person (a group
+label such as "Government members", a bare title such as "Mr", a parse fragment
+such as "On", or an anonymised "Witness A") are left out of the directory by the
+roster's own rule, parli.ingest.speaker_names.non_person_name; their speeches keep
+their labels.
 
 A committee turn stored twice (the same hearing, date, speaker and exact text,
 as when a whole Senate estimates transcript was loaded a second time) counts
@@ -37,6 +41,7 @@ from collections import Counter
 
 from parli.ingest.speaker_names import normalize_speaker
 from parli.ingest.speaker_roles import chair_party_sql
+from parli.ingest.speaker_names import non_person_name
 
 DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 MIN_SPEECHES = 5
@@ -93,7 +98,8 @@ def count_speakers(db: sqlite3.Connection, min_speeches: int = MIN_SPEECHES) -> 
                 continue
             seen.add(key)
         counts[name] += 1
-    rows = sorted(((name, n) for name, n in counts.items() if n >= min_speeches), key=lambda r: (-r[1], r[0]))
+    rows = sorted(((name, n) for name, n in counts.items() if n >= min_speeches and not non_person_name(name)),
+                  key=lambda r: (-r[1], r[0]))
     return [[name, n] for name, n in rows], twins
 
 

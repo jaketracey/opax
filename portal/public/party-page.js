@@ -28,8 +28,17 @@ export function resolvePartyLabel(segment, labels) {
   return labels.find(l => fold(l) === want) || labels.find(l => partySlug(l) === slug) || null;
 }
 
+/** The parties a roster row says the person sat for. */
+function memberPartyLabels(p) {
+  return [p.party_now, p.party, ...(p.parties || [])].filter(Boolean);
+}
+
+/** Every party label a roster row carries. recorded_parties are the speech labels of a print the
+ *  roster could not tie to one person (a surname shared across parliaments: "Hughes" holds a
+ *  federal Liberal's speeches and an SA member's), so they name a party page but never make the
+ *  print one of its members (state-datasets-001). */
 function personPartyLabels(p) {
-  return [p.party_now, p.party, ...(p.parties || []),
+  return [...memberPartyLabels(p),
     ...(p.recorded_parties || []).map(r => typeof r === 'string' ? r : r?.party)].filter(Boolean);
 }
 
@@ -61,7 +70,7 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
     return rows.get(id);
   };
   for (const p of people) {
-    if (!personPartyLabels(p).some(l => same(l, label))) continue;
+    if (!memberPartyLabels(p).some(l => same(l, label))) continue;
     const r = row(idOf(p));
     if (p.current && same(p.party_now || p.party, label)) r.current = true;
   }

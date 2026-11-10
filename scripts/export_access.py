@@ -106,11 +106,14 @@ INTERNAL_RX = re.compile(
 MINNS_START = "2023-03-28"
 
 # NSW file-name surnames -> full names (Minns government, 2023-). Source: NSW ministry lists.
+# Each name is the member's own parliamentary name, so it is the name the speech record and the roster
+# hold: Kamper is 'Stephen Kamper' (https://www.parliament.nsw.gov.au/members-and-electorates/members-and-ministers/members-details?memberId=124),
+# not 'Steve Kamper', which joined no person page (search-hubs-006, registers-003).
 NSW_SURNAMES = {
     "Aitchison": "Jenny Aitchison", "Catley": "Yasmin Catley", "Chanthivong": "Anoulack Chanthivong",
     "Cotsis": "Sophie Cotsis", "Daley": "Michael Daley", "Dib": "Jihad Dib", "Graham": "John Graham",
     "Harris": "David Harris", "Harrison": "Jodie Harrison", "Haylen": "Jo Haylen", "Hoenig": "Ron Hoenig",
-    "Houssos": "Courtney Houssos", "Jackson": "Rose Jackson", "Kamper": "Steve Kamper",
+    "Houssos": "Courtney Houssos", "Jackson": "Rose Jackson", "Kamper": "Stephen Kamper",
     "Moriarty": "Tara Moriarty", "Park": "Ryan Park", "Saffin": "Janelle Saffin", "Scully": "Paul Scully",
     "Sharpe": "Penny Sharpe", "Washington": "Kate Washington", "Whan": "Steve Whan",
     "Minns": "Chris Minns", "Mookhey": "Daniel Mookhey", "Car": "Prue Car",

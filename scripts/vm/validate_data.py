@@ -520,6 +520,11 @@ def check_interests() -> list[str]:
             errs.append(f"index lists {pid} but {pid}.json is missing")
             if len(errs) > 10:
                 break
+    # A reviewed provisional id files under the person's OpenAustralia id (members-electorates-012).
+    from scripts.member_ids import aliases as member_id_aliases
+    before = set(((_head_doc(f"{d}/index.json") or {}).get("people") or {}))
+    errs += [f"interests filed under provisional id {k}; the reviewed id is {member_id_aliases()[k]}"
+             for k in doc["people"] if k in member_id_aliases() and k not in before]
     return errs + _check_dir(d, r"[^/]+\.json", INTERESTS_MIN_RATIO)
 
 
@@ -527,18 +532,79 @@ def check_fits() -> list[str]:
     return _check_json(f"{PUBLIC}/fits.json", ("meta", "by_entity", "people"), ("by_entity", "people"), FITS_MIN_RATIO)
 
 
+def _non_person_names(names) -> list[str]:
+    """Names the shared rule says are not a person (parli.ingest.speaker_names.non_person_name)."""
+    from parli.ingest.speaker_names import non_person_name
+    return [n for n in names if isinstance(n, str) and non_person_name(n)]
+
+
+def _head_doc(rel: str):
+    """HEAD's copy of a JSON file, or None: a ratchet's baseline (a defect already committed is not a new one;
+    the export that fixes it clears it, and then it can never come back)."""
+    raw = head_bytes(rel)
+    try:
+        return json.loads(raw) if raw else None
+    except ValueError:
+        return None
+
+
 def check_speakers() -> list[str]:
-    return _check_json(f"{PUBLIC}/speakers.json", (), ("",), SPEAKERS_MIN_RATIO)
+    errs = _check_json(f"{PUBLIC}/speakers.json", (), ("",), SPEAKERS_MIN_RATIO)
+    if errs:
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/speakers.json")
+    head = _head_doc(f"{PUBLIC}/speakers.json")
+    known = {row[0] for row in head if isinstance(row, list) and row} if isinstance(head, list) else set()
+    bad = [n for n in _non_person_names(row[0] for row in doc if isinstance(row, list) and row) if n not in known]
+    # 'Government members', 'Mr', 'Witness A' are labels, not speakers (speeches-press-011)
+    return [f"speakers.json lists {len(bad)} non-person name(s): {', '.join(bad[:8])}"] if bad else []
 
 
 def check_people() -> list[str]:
-    return _check_json(f"{PUBLIC}/parliamentarians.json", ("meta", "people"), ("people", "meta.people"),
+    errs = _check_json(f"{PUBLIC}/parliamentarians.json", ("meta", "people"), ("people", "meta.people"),
                        PEOPLE_MIN_RATIO)
+    if errs:
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/parliamentarians.json")
+    try:
+        reviewed = set(json.loads((ROOT / "scripts/roster_accept.json").read_text(encoding="utf-8")).get("drop", {}))
+    except (OSError, ValueError):
+        reviewed = set()
+    # A non-person row may stay only while its reviewed drop is pending (members-electorates-005).
+    bad = [n for n in _non_person_names(p.get("name") for p in doc["people"] if isinstance(p, dict)) if n not in reviewed]
+    errs = [f"parliamentarians.json has {len(bad)} non-person row(s) with no reviewed drop: {', '.join(bad[:8])}"] if bad else []
+    # A state spelling twin the fold would merge is one person printed twice (members-electorates-011).
+    from scripts.roster_fold import twin_target
+    rows = [p for p in doc["people"] if isinstance(p, dict) and isinstance(p.get("name"), str)]
+    before = {p.get("name") for p in ((_head_doc(f"{PUBLIC}/parliamentarians.json") or {}).get("people") or []) if isinstance(p, dict)}
+    twins = [p["name"] for p in rows if twin_target(p, rows) is not None and p["name"] not in before]
+    if twins:
+        errs.append(f"parliamentarians.json has {len(twins)} unfolded state spelling twin(s): {', '.join(twins[:8])}")
+    # representation.state is a state code ('QLD'), never a state name ('QUEENSLAND': members-electorates-010).
+    def long_states(people):
+        return {(p.get("name"), r.get("state")) for p in people if isinstance(p, dict) for r in p.get("representation") or []
+                if isinstance(r, dict) and isinstance(r.get("state"), str) and not re.fullmatch(r"[A-Z]{2,3}", r["state"])}
+    head_people = (_head_doc(f"{PUBLIC}/parliamentarians.json") or {}).get("people") or []
+    named = sorted(long_states(rows) - long_states(head_people))
+    if named:
+        errs.append(f"parliamentarians.json has {len(named)} representation state(s) that are not a state code: "
+                    + ", ".join(f"{n} {st}" for n, st in named[:8]))
+    return errs
 
 
 def check_pay() -> list[str]:
-    return _check_json(f"{PUBLIC}/pay.json", ("meta", "base", "offices", "current", "names", "people"),
+    errs = _check_json(f"{PUBLIC}/pay.json", ("meta", "base", "offices", "current", "names", "people"),
                        ("base", "offices", "current", "names", "people"), PAY_MIN_RATIO)
+    if errs:
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/pay.json")
+    # A Handbook bracket is never a name: 'formerly Martin Sullivan' was 3E4's (members-electorates-008)
+    head = _head_doc(f"{PUBLIC}/pay.json")
+    known = {k for k, p in ((head or {}).get("people") or {}).items() if isinstance(p, dict) and
+             p.get("name") == (doc["people"].get(k) or {}).get("name")}
+    bad = sorted(k for k, p in doc["people"].items() if isinstance(p, dict) and k not in known and
+                 re.search(r"^formerly\b|[()]", str(p.get("name") or ""), re.IGNORECASE))
+    return [f"pay.json names {len(bad)} people from a Handbook bracket: {', '.join(bad[:8])}"] if bad else []
 
 
 def check_discovery() -> list[str]:

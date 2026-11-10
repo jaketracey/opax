@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import {build} from 'esbuild';
 const b=await build({entryPoints:[new URL('../src/person-slug.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
-const {personSlug,slugIndex}=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'));
+const {personSlug,slugIndex,personIndex,fullNameMatches}=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'));
 const app=await readFile(new URL('../public/app.js',import.meta.url),'utf8');
 const source=/\nfunction personSlug\(name\) \{[\s\S]*?\n\}\n/.exec(app)?.[0];
 const clientSlug=new Function(`${source}; return personSlug`)();
@@ -27,4 +27,35 @@ test('one slug, one person: the fuller entry keeps it and the twin gets a distin
  // Nearly everyone has a slug of their own; the few twins are spellings of one person.
  assert.ok(live.slugOf.size>=roster.length-25,`${roster.length-live.slugOf.size} people without a slug`);
  for(const [slug,p] of live.bySlug)assert.match(slug,/^[a-z0-9]+(?:-[a-z0-9]+)*$/,p.name);
+});
+
+test('a surname row is addressable by its own full name, only where the name is free (search-hubs-006, registers-003)',()=>{
+ const people=[
+  {name:'Crisafulli',full:'David Crisafulli',states:['qld'],speeches:295},
+  {name:'Nicholls',full:'Tim Nicholls',states:['qld','federal'],speeches:440},
+  // The full name is another row's printed name: that row keeps it.
+  {name:'Thorpe',full:'Lidia Thorpe',states:['federal'],speeches:10},{name:'Lidia Thorpe',states:['federal'],speeches:900},
+  // Two rows claim one full name: neither gets it.
+  {name:'Smith',full:'Alex Smith',states:['nsw'],speeches:5},{name:'A. Smith',full:'Alex Smith',states:['vic'],speeches:4},
+ ];
+ const idx=personIndex(people);
+ assert.equal(idx.addresses.get('david crisafulli')?.name,'Crisafulli');
+ assert.equal(idx.addresses.get('tim nicholls')?.name,'Nicholls');
+ assert.equal(idx.addresses.get('lidia thorpe')?.name,'Lidia Thorpe');
+ assert.equal(idx.addresses.get('alex smith'),undefined);
+ // The speech identity is unchanged: a speaker filter never reads a full-name alias.
+ assert.equal(idx.byFold.get('david crisafulli'),undefined);
+ // A register that knows its parliament uses the alias only inside it.
+ assert.equal(fullNameMatches(idx,'David Crisafulli','qld'),true);
+ assert.equal(fullNameMatches(idx,'David Crisafulli','nsw'),false);
+ assert.equal(fullNameMatches(idx,'Tim Nicholls','QLD'),true);
+ assert.equal(fullNameMatches(idx,'Lidia Thorpe','qld'),true,'a printed name is not an alias, so no check applies');
+});
+
+test('the published roster: every QLD minister the diary names in full and the roster holds under the surname is addressable',()=>{
+ const idx=personIndex(roster);
+ for(const name of ['David Crisafulli','Jarrod Bleijie','Ann Leahy','Tim Nicholls','Fiona Simpson'])
+  assert.ok(idx.addresses.has(name.toLowerCase())||idx.byFold.has(name.toLowerCase()),name);
+ // No full-name alias overrides a name or print the roster already resolves.
+ for(const [key,p] of idx.byFold)assert.equal(idx.addresses.get(key),p,key);
 });

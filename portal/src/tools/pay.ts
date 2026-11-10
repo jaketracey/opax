@@ -3,7 +3,7 @@
 import { datedPay } from '../pay-history'
 import type { PayData as HistoricalPayData } from '../ask-pay'
 import { personUrl } from '../../public/canonical-urls.js'
-import { aud, clip, fold, siteUrl, tableRows } from './record-common'
+import { aud, clip, fold, readableRange, siteUrl, tableRows } from './record-common'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
 
 interface Office { label: string; kind: string; pct: number }
@@ -68,7 +68,7 @@ export const tool: ToolDefinition = {
       if (!p) return { rows: [], citations: [], notes: [`No federal parliamentarian named "${clip(person, 60)}" is in the pay record (federal parliament since 1999).`, PAY_LIMITS] }
       const now = pay.current.find(c => fold(c.name) === fold(p.name))
       if (now) citations.push(row(now))
-      else if (p.peak) citations.push({ kind: 'record', url: href(p.name), value: p.peak.salary, text: `${p.name}${p.party ? ` (${p.party})` : ''}: not a sitting parliamentarian as at ${asAt}; served ${p.from} to ${p.to ?? 'now'}; highest salary ${aud(p.peak.salary)} a year as ${p.peak.post} (${p.peak.year})` })
+      else if (p.peak) citations.push({ kind: 'record', url: href(p.name), value: p.peak.salary, text: `${p.name}${p.party ? ` (${p.party})` : ''}: not a sitting parliamentarian as at ${asAt}; ${readableRange(p.from, p.to) ? `served ${readableRange(p.from, p.to)}; ` : ''}highest salary ${aud(p.peak.salary)} a year as ${p.peak.post} (${p.peak.year})` })
       rows.push({ name: p.name, party: p.party ?? null, sitting: !!now, post: now?.post ?? null, salary: now?.salary ?? null, peak: p.peak ?? null })
     } else if (office) {
       const words = fold(office).split(' ').filter(w => !['the', 'of', 'a', 'an', 'for', 'and', 'in'].includes(w))

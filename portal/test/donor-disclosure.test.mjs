@@ -181,3 +181,20 @@ test('return references are export data, never a table column or inline text',()
  const flows=buildFlows(data);
  for(const [view,list] of [['flows',flows],['donors',aggregateDonors(flows)]])assert.match(buildCSV(view,list,[]),/,Return reference\r\n[\s\S]*RETURN-FIXTURE-7/);
 });
+
+test('access-register rows find the donor page by the punctuation-kept key, then the stripped one (search-hubs-005)',async()=>{
+ const {accessDonorHref}=await import('../../scripts/build_search_catalog.mjs');
+ const names=donorLookup([
+  {id:'d1',kind:'donor',label:'McKinsey & Company',jurisdiction:'federal'},
+  {id:'d2',kind:'donor',label:'Plain Name Pty Ltd',jurisdiction:'federal'},
+ ]);
+ // Before: normalize('McKinsey & Company') is 'mckinsey company', which no folded key holds, so the row had no link.
+ assert.equal(accessDonorHref(names,'McKinsey & Company'),'/subject/donor/McKinsey%20%26%20Company');
+ assert.equal(accessDonorHref(names,'Plain Name Pty Ltd'),'/subject/donor/Plain%20Name%20Pty%20Ltd');
+ // The stripped key is the fallback: a spelling that resolved only that way keeps resolving.
+ const stripped=new Map([['plain stripped',{id:'d3',kind:'donor',label:'Plain, Stripped'}]]);
+ assert.equal(accessDonorHref(stripped,'Plain - Stripped'),'/subject/donor/Plain%2C%20Stripped');
+ // No donor record: the caller's register page, never null (a null href opened /doc/catalog-N, a 404).
+ assert.equal(accessDonorHref(names,'Nobody & Co','/subject/person/chris-minns'),'/subject/person/chris-minns');
+ assert.equal(accessDonorHref(names,'Nobody & Co'),null);
+});

@@ -179,7 +179,7 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     known.add(personNameKey(p.name));
   }
   const identity = personIndex(people);
-  const personPaths = { exact: Object.fromEntries([...identity.byName].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])), folded: Object.fromEntries([...identity.byFold].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])) };
+  const personPaths = { exact: Object.fromEntries([...identity.byName].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])), folded: Object.fromEntries([...identity.addresses].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])) };
   await writeFile(join(root,'person-paths.js'), '// Generated from the roster and reviewed aliases by build:crawl.\nexport const PERSON_PATHS = '+JSON.stringify(personPaths)+';\n');
   const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
   const fallbacks=Object.fromEntries(Object.keys(groups).map(type=>[type,0]));

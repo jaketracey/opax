@@ -28,14 +28,31 @@ REPRESENTATION_METHOD = ('Evidence-gated corrections only; clean records pass th
     'Weak multi-parliament or contradictory prints require a unique compatible identity. Transcript aggregates are retained.')
 
 REGIONS={'ACT':'Australian Capital Territory','NSW':'New South Wales','VIC':'Victoria','QLD':'Queensland','SA':'South Australia','WA':'Western Australia','TAS':'Tasmania','NT':'Northern Territory'}
+# A Senate electorate is a state or territory; representation.state holds its code ('QLD'), as for every
+# other seat (members-electorates-010: 90 senators stored 'QUEENSLAND', 'TASMANIA' or 'VICTORIA').
+REGION_CODES={name:code for code,name in REGIONS.items()}
 
 def key(s):
     return re.sub(r'\s+',' ',str(s or '').replace('’',"'").strip()).casefold()
 
+
+def division_states(reference):
+    """{folded division name: state code} for the federal House divisions in the electorate release, current or
+    abolished, where the name is one division's ('Higgins' -> 'VIC'). A name two divisions have held ('Fraser':
+    ACT, abolished, and Victoria, current) is left out: the record does not say which."""
+    found=defaultdict(set)
+    for e in (reference or {}).get('electorates',[]):
+        if e.get('jurisdiction')=='federal' and e.get('chamber')=='representatives' and e.get('state_code'):
+            found[key(e['name'])].add(str(e['state_code']).upper())
+    return {name:next(iter(codes)) for name,codes in found.items() if len(codes)==1}
+
+
 def enrich(people,members,seats,reference=None,reviewed=None):
     by_name=defaultdict(list)
     for m in members:by_name[key(m['full_name'])].append(m)
-    seat_states={key(s['name']):s['state'] for s in seats}
+    # The current AEC seat list first; an abolished division ('Higgins', 'North Sydney') takes its state from
+    # the electorate release, never a guess.
+    seat_states={**division_states(reference),**{key(s['name']):s['state'] for s in seats}}
     for person in people:
         matches=[]
         states=person.get('states',[])
@@ -52,7 +69,7 @@ def enrich(people,members,seats,reference=None,reviewed=None):
             if chamber=='senate' and region not in REGIONS.values():continue
             if jur=='federal' and chamber=='representatives':
                 state=seat_states.get(key(electorate))
-            else:state=electorate.upper() if chamber=='senate' else jur.upper()
+            else:state=REGION_CODES[region] if chamber=='senate' else jur.upper()
             record={'jurisdiction':jur,'chamber':chamber,'electorate':region or electorate,
                     'state':state,'basis':'Recorded parliamentary roster; exact name and chamber match'}
             if record not in matches:matches.append(record)
@@ -446,7 +463,11 @@ def repair(people,reference,reviewed):
                     p['identity_basis']='One compatible roster name and chamber; state stub service dates not recorded'
                 if latest.get('party'):
                     p['party']=latest['party'];p.pop('parties',None)
-                elif not p.get('party') and p.get('recorded_parties'):
+                elif (not p.get('party') and p.get('recorded_parties') and latest.get('jurisdiction')
+                      and set(p.get('states') or [])=={latest['jurisdiction']}):
+                    # A speech label becomes the party only when every speech is from the identity's own
+                    # parliament: a print merged across parliaments carries a namesake's label
+                    # (state-datasets-001: 'Hughes' SA with a federal Liberal label).
                     p['party']=p['recorded_parties'][0]
                 p.pop('recorded_parties',None)
                 evidence=own

@@ -2,9 +2,13 @@ import re
 
 # Postnominals seen in the corpus (zenodo 'Lastname, Firstname, MP'; occasional others)
 _POSTNOMINALS = {"MP", "MLC", "MLA", "MHR", "AM", "AO", "OAM", "SC", "KC", "QC", "CSC"}
+# Comma segments that are neither a name nor a postnominal: 'Katter, Bob, Jnr, MP' (the son of a
+# former member of the same name) and 'Bird, Sharon, MEMBER OF PARLIAMENT' are two-segment prints.
+_SUFFIX_SEGMENTS = {"JNR", "JR", "SNR", "SR", "MEMBER OF PARLIAMENT"}
 
 _HONORIFIC_RE = re.compile(
-    r"^(?:(?:The\s+)?Hon\.?|Mr\.?|Mrs\.?|Ms\.?|Miss|Dr\.?|Prof\.?|Senator|Sen\.?|Madam|Rev\.?)\s+",
+    r"^(?:(?:The\s+)?(?:Right\s+|Rt\.?\s+)?Hon(?:ourable|\.)?|Mr\.?|Mrs\.?|Ms\.?|Miss|Dr\.?|Prof\.?|Senator|Sen\.?|Madam|"
+    r"Reverend|Rev\.?)\s+",
     re.IGNORECASE,
 )
 
@@ -16,7 +20,34 @@ _ROLE_LABELS = {
     "chair", "deputy chair", "acting chair", "chairman",
     "clerk", "clerk assistant", "acting clerk",
     "unknown", "stage direction", "business start", "honourable members",
+    # Hansard's group interjection labels: a side of the chamber, not a member
+    "honourable member", "an honourable member", "government members", "government member",
+    "a government member", "opposition members", "opposition member", "an opposition member",
 }
+
+# What is left once the honorifics are stripped from a print that never named anyone: a bare title
+# ('Mr', 'Senator', 'The Hon.') or a parse fragment the NSW Hansard split leaves ('ON', 'ER' from
+# 'Mr SPEAK ER'; a lone 'de'). Lowercased, dots dropped.
+_NOT_A_NAME = {
+    "mr", "mrs", "ms", "miss", "dr", "prof", "hon", "the hon", "honourable", "the honourable", "right hon",
+    "the right hon", "rt hon", "senator", "sen", "madam", "rev", "reverend", "sir", "dame",
+    "on", "er", "de",
+}
+# Committees' own anonymised labels for protected witnesses ('Witness A', 'Witness 6'): legitimate
+# source labels a speech can keep, but not a person for a people directory.
+_ANONYMISED_RE = re.compile(r"^witness\s+(?:[a-z]|\d{1,3})$", re.IGNORECASE)
+
+
+def non_person_name(name: str | None) -> bool:
+    """True when a normalised speaker name is not a person: a group label ('Government members'),
+    a bare honorific ('Mr', 'Senator'), a parse fragment ('On', 'Er') or an anonymised witness
+    ('Witness A'). The roster (scripts/export_parliamentarians.py) and the speaker directory
+    (scripts/export_speakers.py) both leave these out, by this one rule."""
+    key = re.sub(r"\s+", " ", (name or "").replace(".", " ")).strip().lower()
+    if not key:
+        return True
+    return (key in _NOT_A_NAME or re.sub(r"^the ", "", key) in _ROLE_LABELS
+            or bool(_ANONYMISED_RE.match(key)))
 
 # 'Mr DEPUTY SPEAKER (Mr Nehl)' / 'The Acting Speaker (Daniela De Martino)':
 # the real person is inside the parentheses.
@@ -92,7 +123,7 @@ def normalize_speaker(raw: str) -> str | None:
     # comma segments; drop postnominal-only segments ('MP', incl. unspaced 'TRUSS,MP')
     # and postnominal tokens stuck on a segment's end ('Champion, Nick MP')
     segs = [seg.strip() for seg in s.split(",") if seg.strip()]
-    segs = [seg for seg in segs if seg.upper().rstrip(".") not in _POSTNOMINALS]
+    segs = [seg for seg in segs if seg.upper().rstrip(".") not in _POSTNOMINALS | _SUFFIX_SEGMENTS]
     segs = [re.sub(r"\s+(?:" + "|".join(_POSTNOMINALS) + r")$", "", seg) for seg in segs]
     segs = [seg for seg in segs if seg]
     if not segs:
@@ -105,6 +136,10 @@ def normalize_speaker(raw: str) -> str | None:
     s = re.sub(r"^By\s+", "", s)                            # vic petitions: 'By Ms Ryan'
     s = re.sub(r"^r\s+(?=[A-Z])", "", s)                    # NSW OCR damage: 'r MARK TAYLOR'
 
+    # a group label that starts like a title ('Honourable members') is a label, not 'members'
+    if re.sub(r"^the\s+", "", s.lower()) in _ROLE_LABELS:
+        return None
+
     # strip honorifics repeatedly ('The Hon. K.A. HILDYARD', 'Senator BARBARA POCOCK')
     prev = None
     while prev != s:
@@ -114,6 +149,9 @@ def normalize_speaker(raw: str) -> str | None:
         return None
 
     if re.sub(r"^the\s+", "", s.lower()) in _ROLE_LABELS:
+        return None
+    # a bare title or a fragment ('Mr', 'Senator', 'ON'); an anonymised witness keeps its label
+    if non_person_name(s) and not _ANONYMISED_RE.match(s.strip()):
         return None
 
     tokens = s.split()

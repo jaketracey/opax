@@ -458,6 +458,46 @@ class SpeakersTests(Base):
         self.assertFails("speakers", "not an array, object or count")
 
 
+class NonPersonNameTests(Base):
+    """speeches-press-011, members-electorates-005/008: labels and Handbook brackets are not names."""
+
+    def test_a_non_person_speaker_fails(self):
+        self.edit(f"{P}/speakers.json", lambda d: d.append(["Government members", 56]))
+        self.assertFails("speakers", "non-person name(s): Government members")
+        # a label HEAD already has is not new (the export that drops it clears it for good)
+        self.git("add", "--", f"{P}/speakers.json")
+        self.git("-c", "user.name=t", "-c", "user.email=t@example.invalid", "-c", "commit.gpgsign=false",
+                 "commit", "-q", "-m", "label committed")
+        self.assertOk("speakers")
+
+    def test_a_non_person_roster_row_fails_unless_its_drop_is_under_review(self):
+        self.edit(f"{P}/parliamentarians.json", lambda d: d["people"].append({"name": "Mr", "speeches": 2}))
+        self.assertFails("people", "non-person row(s) with no reviewed drop: Mr")
+        self.write("scripts/roster_accept.json", {"drop": {"Mr": {"row": {"name": "Mr", "speeches": 2}}}})
+        self.assertOk("people")
+
+    def test_a_new_unfolded_state_spelling_twin_fails(self):
+        # members-electorates-011: 'Hugh Mcdermott' beside 'Hugh McDermott', same seat.
+        seat = [{"jurisdiction": "nsw", "chamber": "nsw_la", "electorate": "Prospect"}]
+        def add(d):
+            d["people"] += [dict(name="Ann McExample", speeches=900, states=["nsw"], chambers=["nsw_la"], first=2015, last=2026, representation=seat),
+                            dict(name="Ann Mcexample", speeches=9, states=["nsw"], chambers=["nsw_la"], first=2015, last=2016, representation=seat)]
+        self.edit(f"{P}/parliamentarians.json", add)
+        self.assertFails("people", "unfolded state spelling twin(s): Ann Mcexample")
+
+    def test_a_new_long_representation_state_fails(self):
+        # members-electorates-010: senators stored 'QUEENSLAND' where every other seat holds 'QLD'.
+        self.edit(f"{P}/parliamentarians.json", lambda d: d["people"].append(dict(name="Sam Senator", speeches=5,
+            representation=[{"jurisdiction": "federal", "chamber": "senate", "electorate": "Queensland", "state": "QUEENSLAND"}])))
+        self.assertFails("people", "not a state code: Sam Senator QUEENSLAND")
+
+    def test_a_handbook_bracket_as_a_pay_name_fails(self):
+        def bracket(d):
+            d["people"][next(iter(d["people"]))]["name"] = "formerly Martin Sullivan"
+        self.edit(f"{P}/pay.json", bracket)
+        self.assertFails("pay", "from a Handbook bracket")
+
+
 class TaxCharityTests(Base):
     TC = f"{P}/entities/tax-charity"
 
@@ -529,6 +569,20 @@ class InterestsTests(Base):
         for pid in ("10000", "10001", "10002"):
             (self.root / f"{P}/interests/{pid}.json").unlink()
         self.assertTrue(any("file count fell" in e for e in self.errs("interests")))
+
+    def test_a_new_file_under_a_reviewed_provisional_id_fails(self):
+        # members-electorates-012: Vanessa Bleyer files under 11065, not aph_25813.
+        self.write(f"{P}/interests/aph_25813.json", {"name": "Vanessa Bleyer", "total": 1})
+        self.edit(f"{P}/interests/index.json", lambda d: d["people"].update({"aph_25813": {"name": "Vanessa Bleyer", "total": 1}}))
+        self.assertFails("interests", "interests filed under provisional id aph_25813; the reviewed id is 11065")
+
+    def test_a_provisional_id_head_already_has_is_not_a_new_fault(self):
+        self.files[f"{P}/interests/aph_25813.json"] = {"name": "Vanessa Bleyer", "total": 1}
+        index = self.files[f"{P}/interests/index.json"]
+        index["people"]["aph_25813"] = {"name": "Vanessa Bleyer", "total": 1}
+        self.make()
+        self.edit(f"{P}/interests/index.json", lambda d: d["_meta"].update({"generated": "2026-11-11"}))
+        self.assertOk("interests")
 
     def test_recent_and_ties_files_are_parsed_when_changed(self):
         self.write(f"{P}/interests/recent.json", b"[")

@@ -8,6 +8,28 @@ export const aud = (n: unknown) => '$' + Math.round(Number(n)).toLocaleString('e
 export const siteUrl = (env: ToolEnv, path: string) => new URL(path, env.origin ?? env.COMMUNITY_ORIGIN ?? 'https://opax.com.au').href
 export const clip = (s: unknown, n: number) => { const t = String(s ?? '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trimEnd() + '…' : t }
 
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+/** A citation date a reader can read, and one that survives clients that strip ISO dates from text
+ *  (search-hubs-002): '2024-07-01' -> '1 July 2024', '2024-07' -> 'July 2024', 2024 -> '2024'.
+ *  Anything else, null included, is ''. Structured fields keep the ISO value. */
+export function readableDate(value: unknown): string {
+  const text = String(value ?? '').trim()
+  const m = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?:T.*)?$/.exec(text)
+  if (!m) return ''
+  const [, year, month, day] = m, mi = Number(month) - 1
+  if (!month) return year
+  if (!(mi >= 0 && mi < 12)) return ''
+  if (!day) return `${MONTHS[mi]} ${year}`
+  const d = Number(day), date = new Date(Date.UTC(Number(year), mi, d))
+  return date.getUTCMonth() === mi && date.getUTCDate() === d ? `${d} ${MONTHS[mi]} ${year}` : ''
+}
+/** A readable span naming only the ends the record holds: '1 July 2024 to 30 June 2025',
+ *  'from 1 July 2024', 'to 30 June 2025', or '' when it holds neither (never 'null to null'). */
+export function readableRange(from: unknown, to: unknown): string {
+  const a = readableDate(from), b = readableDate(to)
+  return a && b ? (a === b ? a : `${a} to ${b}`) : a ? `from ${a}` : b ? `to ${b}` : ''
+}
+
 export interface BillStage { stage: string; date: string | null; house: string | null; url: string | null; event_raw?: string }
 export interface BillAct { title: string | null; frl_uri: string | null; assent_date: string | null; act_number: string | null }
 export interface BillFields {

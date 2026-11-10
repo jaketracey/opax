@@ -131,3 +131,15 @@ def test_real_release_reconciles_sources_and_crosswalks():
     # A party change doesn't replace the person or require another election.
     senate = [r for r in b['rosters'] if registry.electorates[r['electorate_id']]['chamber'] == 'senate']
     assert sum(len(r['members']) for r in senate) == 76
+
+
+@pytest.mark.parametrize("aec, shown", [
+    # members-electorates-007: the AEC prints the family name in capitals after its own mixed-case prefix.
+    ("McINTOSH", "McIntosh"), ("McCORMACK", "McCormack"), ("MacDONALD", "MacDonald"),
+    ("van der PLAAT", "van der Plaat"), ("Van MANEN", "Van Manen"), ("De WACHT", "De Wacht"),
+    ("GALLI-McROSTIE", "Galli-McRostie"), ("DeANGELIS", "DeAngelis"),
+    ("O'BRIEN", "O'Brien"), ("D’ATH", "D’Ath"), ("SMITH-JONES", "Smith-Jones"), ("SMITH", "Smith"),
+])
+def test_candidate_surnames_keep_the_aec_prefix(aec, shown):
+    from parli.ingest.electorates import aec_surname
+    assert aec_surname(aec) == shown
