@@ -4,6 +4,7 @@ import { Card } from '../../design/card';
 import { Divider } from '../../design/controls';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
+import { PARTY_NOT_RECORDED } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import { ValueRow } from '../../design/rows';
 import { SourceLine, type SourceDetails } from '../../design/source';
@@ -90,7 +91,7 @@ export function ElectorateCard({
       ? `${census.label}: ${census.rows.map((r) => `${r.label} ${r.value}`).join(', ')}`
       : null,
     election
-      ? `${election.title}: ${election.winner?.name ?? ''}${election.winner?.party ? `, ${election.winner.party}` : ''}, ${formatDate(election.date)}`
+      ? `${election.title}: ${election.winner ? `${election.winner.name}, ${election.winner.party ?? PARTY_NOT_RECORDED}, ` : ''}${formatDate(election.date)}`
       : null,
   ]
     .filter(Boolean)

@@ -7,6 +7,7 @@ import {
   electorateFor,
 } from '../src/api/catalogs';
 import { Icon } from '../src/design/icon';
+import { PartyLabel } from '../src/design/people';
 import { symbols } from '../src/design/symbols';
 import { rhythm } from '../src/design/tokens';
 import { OutlineMap } from '../src/features/electorate-map/OutlineMap';
@@ -147,6 +148,52 @@ test.each([true, false])(
       expect(renderer.root.findAllByType(OutlineMap)).toHaveLength(
         outline ? 1 : 0,
       );
+    } finally {
+      act(() => renderer.unmount());
+    }
+  },
+);
+
+test.each([
+  ['ALP', 'Labor', 'Labor'],
+  [null, 'Party not recorded', null],
+])(
+  'the card names the winner party (%s), never a code',
+  (party, spoken, shown) => {
+    const block = view.elections.find((b) => b.data)!;
+    const data = block.data!;
+    const winner = {
+      ...data.candidates[0]!,
+      name: 'Fixture Winner',
+      party,
+      elected: true,
+    };
+    const elections = [
+      {
+        ...block,
+        data: {
+          ...data,
+          candidates: [
+            winner,
+            ...data.candidates.slice(1).map((c) => ({ ...c, elected: false })),
+          ],
+        },
+      },
+    ];
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <ElectorateCard seat={seat} view={{ ...view, elections }} />,
+      );
+    });
+    try {
+      const card = renderer.root.find(
+        (node) => node.props.testID === 'your-electorate',
+      );
+      expect(card.props.accessibilityLabel).toContain(
+        `Fixture Winner, ${spoken}, `,
+      );
+      expect(renderer.root.findByType(PartyLabel).props.party).toBe(shown);
     } finally {
       act(() => renderer.unmount());
     }

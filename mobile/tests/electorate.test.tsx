@@ -288,6 +288,9 @@ test('election rows push the election screen, newest first', async () => {
   const parties = firstRow.findAllByType(PartyLabel);
   expect(parties[0]!.props.party).toBe('Labor');
   expect(parties[0]!.props.dense).toBeUndefined();
+  // VoiceOver hears the party's name, as drawn, never the file's code.
+  expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
+  expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);
 
   expect(has(r, 'election-expand-0')).toBe(false);
   await act(async () => r.unmount());

@@ -76,6 +76,13 @@ test('the summary names the one winner, or none', () => {
   expect(electionSummary(unclear, 'federal').winner).toBeNull();
 });
 
+test('the winner carries the party name, never a code, and no guessed party', () => {
+  const coded = election([candidate('A Person', 'ALP', [], true)]);
+  expect(electionSummary(coded, 'federal').winner?.party).toBe('Labor');
+  const unrecorded = election([candidate('A Person', null, [], true)]);
+  expect(electionSummary(unrecorded, 'federal').winner?.party).toBeNull();
+});
+
 test('newest election first', () => {
   const old = election([], 'general', '2019-05-18');
   const recent = election([], 'general', '2025-05-03');

@@ -1,4 +1,4 @@
-import { partyFromCode } from './bills/party-codes';
+import { PARTY_NOT_RECORDED } from '../design/party';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -836,7 +836,7 @@ function ElectionRow({
   const label = [
     summary.title,
     summary.winner
-      ? `${summary.winner.name}, ${summary.winner.party ?? 'Independent'}`
+      ? `${summary.winner.name}, ${summary.winner.party ?? PARTY_NOT_RECORDED}`
       : null,
     formatDate(summary.date),
   ]
@@ -874,7 +874,7 @@ function ElectionRow({
                 {summary.winner.name}
               </Text>
               <PartyLabel
-                party={partyFromCode(summary.winner.party) ?? 'Independent'}
+                party={summary.winner.party}
                 status="unknown"
                 nested
                 linked={false}
