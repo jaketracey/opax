@@ -22,6 +22,39 @@ if (!['0', '1'].includes(e2eMicrophone))
   throw new Error('OPAX_E2E_MICROPHONE must be 0 or 1');
 const microphonePrompt =
   androidBuild && variant === 'e2e' && e2eMicrophone === '1';
+// Anonymous product analytics (docs/ANALYTICS.md): iOS production always, an
+// iOS development build only with OPAX_ANALYTICS=1, e2e never. Android stays
+// off until its Google Play Data safety answers include analytics (the code is
+// shared; drop the androidBuild condition then). Events go through
+// the opax.com.au Worker proxy to PostHog project 507367 (Opax). The token is
+// the website's public, write-only ingestion token, not a personal API key.
+const analyticsSwitch = process.env.OPAX_ANALYTICS ?? '0';
+if (!['0', '1'].includes(analyticsSwitch))
+  throw new Error('OPAX_ANALYTICS must be 0 or 1');
+const analytics =
+  !androidBuild &&
+  (variant === 'production' ||
+    (variant === 'development' && analyticsSwitch === '1'))
+    ? {
+        host: 'https://opax.com.au/ingest',
+        projectToken: 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr',
+        environment: variant,
+      }
+    : undefined;
+// What analytics collects, as the privacy manifest declares it: how the app
+// is used (screens, app opens, Ask and Search outcomes as counts) and the
+// random install ID that groups those events. Neither is linked to an
+// account or used for tracking. A voice build merges its own linked types.
+const analyticsDataTypes = analytics
+  ? ['ProductInteraction', 'DeviceID'].map((type) => ({
+      NSPrivacyCollectedDataType: `NSPrivacyCollectedDataType${type}`,
+      NSPrivacyCollectedDataTypeLinked: false,
+      NSPrivacyCollectedDataTypeTracking: false,
+      NSPrivacyCollectedDataTypePurposes: [
+        'NSPrivacyCollectedDataTypePurposeAnalytics',
+      ],
+    }))
+  : [];
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
   throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
@@ -155,7 +188,7 @@ const config: ExpoConfig = {
     requireFullScreen: false,
     privacyManifests: {
       NSPrivacyTracking: false,
-      NSPrivacyCollectedDataTypes: [],
+      NSPrivacyCollectedDataTypes: analyticsDataTypes,
       // Local cache metadata, animation timers, storage-aware cache writes and
       // app-only preferences. No signal or derived value is sent off device.
       NSPrivacyAccessedAPITypes: [
@@ -270,6 +303,7 @@ const config: ExpoConfig = {
     ...(microphonePrompt ? { e2eMicrophonePrompt: true } : {}),
     apiOrigin: origin,
     webOrigin,
+    ...(analytics ? { analytics } : {}),
     appVersion: '1.0.0',
     appBuild: buildNumber,
     fontAcknowledgements: ['Merriweather', 'PublicSans'].map((name) => ({

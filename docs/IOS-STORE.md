@@ -91,7 +91,7 @@ OPAX is independent and non-partisan. It is not a government app and is not affi
 Sources
 The data comes from public sources, including the Parliament of Australia, They Vote For You, the Australian Electoral Commission, the Independent Parliamentary Expenses Authority and the Remuneration Tribunal. Each source keeps its own copyright and licence, and the Sources and licences screen lists them.
 
-Reading needs no account. The app has no advertising, in-app purchases or analytics.
+Reading needs no account. The app has no advertising or in-app purchases. It counts how it is used anonymously, never what you ask or search for.
 
 Aboriginal and Torres Strait Islander readers are advised that this app contains names and images of people who have died.
 ```
@@ -137,7 +137,7 @@ The slash marks the line break between the heading and its text, as in the parag
 | Share a link to opax.com.au | `mobile/src/navigation/share.ts:17-38`; Share on profile, electorate and bill (`Person.tsx:135`, `Electorate.tsx:117`, `BillDetail.tsx:143`) |
 | Independence statement; "leads, not findings" | `mobile/src/features/ComingSoon.tsx:6-7`, `About.tsx:93-95`, `Today.tsx:57`; `Today.tsx:112-114` |
 | Sources named | Sources and licences (`mobile/src/features/sources/datasets.ts`); electorate sources carry their own licence (`selectors.ts:1094-1101`) |
-| No advertising, in-app purchases or analytics | `mobile/package.json`; `mobile/scripts/verify-ios-release.py:29-36,660-661` |
+| No advertising or in-app purchases; analytics anonymous, without questions or search words (from 1.1.1; 1.1.0 and earlier: no analytics) | `mobile/package.json`; `mobile/scripts/verify-ios-release.py` (`SDK_PATTERN`, `POSTHOG_PACKAGES`); `mobile/tests/analytics-sdk.test.ts` |
 | Notice about people who have died | Decision 15 (section 8). The web's About carries it on `main` (`portal/public/index.html:1166` there); About and welcome page 1 show the same text (section 6.2) |
 
 ### 1.2 Support and privacy pages
@@ -167,7 +167,7 @@ App Store Connect says the support URL "must lead to actual contact information 
 3,829 bytes of the 4,000-byte Notes limit, including internal newlines and excluding the code fence, counted on 7 October 2026 (171 bytes remaining). Labels were checked against the redesigned source and the passing fixture walkthrough in section 2.6. Local gates use no real email, paid calls or audio playback.
 
 ```text
-OPAX is a free reader for Australian political public records. Reading needs no account; Talk to OPAX needs sign-in. No purchases, advertising, analytics or tracking.
+OPAX is a free reader for Australian political public records. Reading needs no account; Talk to OPAX needs sign-in. No purchases, advertising or tracking. From 1.1.1 the app sends anonymous usage counts (screens opened, whether an answer arrived) without questions, search words or account IDs.
 
 Content: recorded divisions, registers of members' interests, federal pay, IPEA expenses, bills, electorates and elections. Records show update dates and link to originals; publisher terms and portrait credits are in Sources and licences. Native profiles are for parliamentarians on OPAX's verified roster. OPAX is independent and non-partisan, not a government app or affiliated with any parliament, government or party.
 
@@ -365,19 +365,22 @@ Final answers, decided 6 Oct (default) under decision 14 ("answer conservatively
 | Identifiers: User ID | Yes | Yes | No | App Functionality |
 | User Content: Audio Data | Yes | Yes | No | App Functionality |
 | User Content: Other User Content | Yes | Yes | No | App Functionality |
-| Usage Data: Product Interaction | Yes | Yes | No | App Functionality |
+| Usage Data: Product Interaction | Yes | Yes | No | App Functionality, Analytics (from 1.1.1) |
 | Search History | Yes | Yes | No | App Functionality |
 | Diagnostics: Other Diagnostic Data (server request logs, IP addresses) | Yes | Yes | No | App Functionality |
+| Identifiers: Device ID (from 1.1.1) | Yes | No | No | Analytics |
 
 **Tracking: No.** No App Tracking Transparency prompt; `NSPrivacyTracking` is false and no tracking domains are declared (`verify-ios-release.py:98-99`).
 
-**Not collected:** Location (used on the device only), Contacts, Health and Fitness, Financial Info, Purchases, Browsing History, Crash Data and Performance Data, Sensitive Info, Photos or Videos, Device ID and Advertising Data, and Emails or Text Messages (Community, the only messaging, is not in the 1.0 app).
+**Not collected:** Location (used on the device only), Contacts, Health and Fitness, Financial Info, Purchases, Browsing History, Crash Data and Performance Data, Sensitive Info, Photos or Videos, Advertising Data, and Emails or Text Messages (Community, the only messaging, is not in the 1.0 app).
 
 **Where it is enforced.** The types and their linkage come from one policy file (`mobile/voice-production-policy.json:17-24`), turned into manifest entries with tracking false and the App Functionality purpose (`mobile/plugins/voiceProduction.js:14-40`), merged into the app's manifest only when the switch is on (`mobile/app.config.ts:155-158`). The release verifier refuses a switch-on archive whose manifest differs in any type, linkage, tracking flag or purpose, and states "location not collected" (`verify-ios-release.py:97-116,570-573`).
 
 **Manifest recheck, 7 October 2026.** The policy now has all seven types in `linkedDataTypes`, including Search History and Other Data, and an empty `unlinkedDataTypes`. The switch-on manifest follows those lists; `voice-production.test.ts`, `test-release-tooling.py` and the release verifier check linkage. The signed archive and IPA must still be verified against their exact artifact commit before upload.
 
 **Label change, 10 October 2026.** IP addresses are declared as Diagnostics (Other Diagnostic Data), not Other Data (Jake's choice; `release/1.0/app-privacy.json` in the store lane). Community is left out of the 1.0 app, so Emails or Text Messages is not declared. The policy's `linkedDataTypes` are now EmailAddress, UserID, AudioData, OtherUserContent, ProductInteraction, SearchHistory and OtherDiagnosticData, and the release verifier pins exactly that list (`LABEL_DATA_TYPES`).
+
+**Label change for 1.1.1, 10 November 2026.** The app adds anonymous product analytics (`docs/ANALYTICS.md`, "iOS and Android app"). Two answers change in App Store Connect and nothing else: Usage Data: Product Interaction adds the Analytics purpose (it stays linked, because App Store Connect takes one linkage per type and the voice minutes are linked), and Identifiers: Device ID is added as collected, not linked, not used for tracking, purpose Analytics. The manifest declares the analytics entries as not linked; the voice plugin merges them with its linked entries, so the shipped manifest has Product Interaction linked with App Functionality and Analytics, and Device ID unlinked with Analytics. The release verifier pins that exact list. App Privacy answers are app-wide, not per version, and publish when saved: change them no later than submitting 1.1.1 (saving early only overstates what 1.1.0 collects; saving late would understate 1.1.1).
 
 ### 4.2 Why each answer
 
@@ -394,7 +397,8 @@ Apple counts data as collected when it leaves the device and is kept "for a peri
 | Other Data Types (IP addresses, linked) | IP addresses: read by rate limiters, possibly recorded in Workers Logs (kept 7 days) and kept up to 31 days in Cloudflare's traffic and security analytics, whose records hold the IP with the request's path and query. Apple has no IP type and says to "declare the relevant data types based on how you use IP address, such as precise location, coarse location, device ID, or diagnostics"; OPAX uses them for none of those, only rate limits and security, so they are declared as Other Data. **Linked**, because voice and account requests are tied to the member: they carry the session cookie, and the voice connection URL carries a `session_id` that the Worker stores against the member ID. A retained record of such a request can therefore tie its IP address to an account. Apple treats data as not linked only if it is de-identified before collection and never re-linked; OPAX has no such step, so decision 14's conservative answer is linked | `HTTPClient.swift:49,57-58`; `portal/src/voice.ts:42-45,264-266`; `docs/PRIVACY.md:19-20` on `main` (P5, P6); IOS-APP.md section 6 |
 | Location (not collected) | One reading after "Use my location", turned into a seat suggestion on the iPhone; never sent, saved or logged. Outlines are fetched before the reading, so no request depends on it | `location.ts:5-6,13-31`; `LocationSuggestion.tsx:69-72`; `mobile/tests/location-privacy.test.ts`; `app.config.ts:76-77,99-107`; IOS-ELECTORATE-MAP.md |
 | Seat, follows, consent, cache (not collected) | Kept on the device only: the seat file, the voice consent flag, the offline cache (at most 12 MB) and the follows file | `choice-store.ts:3-17`; `voice-production-policy.json:3-4`; `disk-store.ts:15`, `cache.ts:43`; `mobile/src/features/follows/README.md:8-12` on `ios/follows` |
-| Analytics, crash reports, SDKs (none) | No analytics or crash-reporting SDK; the verifier rejects them | `verify-ios-release.py:29-36,660-661` |
+| Product Interaction and Device ID for Analytics (from 1.1.1) | Anonymous product analytics: screen route templates, app opens, and Ask, Search, source, suggestion and Talk-card outcomes as categories and counts, grouped by a random install ID the SDK makes. Sent through `opax.com.au/ingest` to PostHog with person profiles and GeoIP off; never the question, search words, answer, titles or errors. **Not linked**: the app never calls identify and sends no account ID, so the analytics record holds no identity. Product Interaction stays linked overall because the voice minutes are linked; App Store Connect has one answer per type, so it gains the Analytics purpose. Declared Device ID conservatively: the install ID is not the IDFV or IDFA, but it is a persistent per-install identifier | `mobile/src/analytics/events.ts`; `mobile/tests/analytics-sdk.test.ts`; `docs/ANALYTICS.md`, "iOS and Android app" |
+| Crash reports, other SDKs (none) | No crash-reporting SDK and no analytics SDK other than the pinned `posthog-react-native`; the verifier rejects the rest | `verify-ios-release.py` (`SDK_PATTERN`, `POSTHOG_PACKAGES`) |
 | Share, opax.com.au pages, source records, reports (not collected by the app) | Share builds the URL on the phone; opax.com.au pages open in Safari; source records open in an in-app Safari view on the source's own site, which Apple exempts as "enabling the user to navigate the open web". "Report this answer" opens `/support` with a record path only, or no path; what the reader then submits goes to GitHub | `share.ts:17-38`; `external.ts:266-293,317-329`; `report-answer.ts:11-48`; risk R6 |
 
 ### 4.3 Submit only a switch-on build

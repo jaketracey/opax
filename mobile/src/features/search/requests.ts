@@ -6,8 +6,14 @@ import type { CatalogKind } from '../../api/policy';
 import type { RecordsPage, SearchSummary } from './decoders';
 import { defaultFilters, type SearchSort } from './contracts';
 import { eligibleRecord, eligibleSummary } from './eligibility';
-import { filtersKey, requestFilters, type SpeechFilters } from './filters';
+import {
+  filterParamKeys,
+  filtersKey,
+  requestFilters,
+  type SpeechFilters,
+} from './filters';
 import { groups, type CatalogGroup } from './scopes';
+import { track } from '../../analytics';
 
 /**
  * Every paid search read goes through here (journeys/search.md 3.4, cost
@@ -76,6 +82,56 @@ export function resetSearchSession() {
   emit();
 }
 
+/**
+ * Search analytics around one real request (a reused key sends nothing):
+ * the scope, page and counts, never the query or the filter values.
+ */
+type Scope = 'speech' | 'all' | CatalogGroup;
+function measured<T>(
+  scope: Scope,
+  page: number,
+  filterCount: number,
+  run: () => Promise<RecordResult<T>>,
+  counts: (data: T) => { result_count?: number; total_count?: number },
+): () => Promise<RecordResult<T>> {
+  return async () => {
+    const started = Date.now();
+    track('opax_search_started', { scope, page, filter_count: filterCount });
+    try {
+      const result = await run();
+      let shown = {};
+      try {
+        shown = counts(result.data);
+      } catch {
+        /* counts are optional */
+      }
+      track('opax_search_completed', {
+        scope,
+        page,
+        ...shown,
+        duration_ms: Date.now() - started,
+      });
+      return result;
+    } catch (error) {
+      track('opax_search_failed', {
+        scope,
+        page,
+        duration_ms: Date.now() - started,
+      });
+      throw error;
+    }
+  };
+}
+const pageCounts = (data: unknown) => {
+  const page = data as { results?: unknown; total?: unknown };
+  return {
+    ...(Array.isArray(page.results)
+      ? { result_count: page.results.length }
+      : {}),
+    ...(typeof page.total === 'number' ? { total_count: page.total } : {}),
+  };
+};
+
 // Keys --------------------------------------------------------------------
 
 export const speechKey = (
@@ -98,8 +154,15 @@ export function speechRequest(
   page = 1,
   sort: SearchSort = 'relevance',
 ) {
-  return request(speechKey(q, f, page, sort), () =>
-    recordSearch.search(q.trim(), requestFilters(f), page, sort),
+  return request(
+    speechKey(q, f, page, sort),
+    measured(
+      f.kind === 'all' ? 'all' : 'speech',
+      page,
+      filterParamKeys.filter((key) => !!f[key]).length,
+      () => recordSearch.search(q.trim(), requestFilters(f), page, sort),
+      pageCounts,
+    ),
   );
 }
 
@@ -140,23 +203,31 @@ export type GroupPage = {
 };
 /** One read of one list: a register through the catalogues, money direct. */
 export function groupRequest(group: CatalogGroup, q: string, page = 1) {
+  return request<GroupPage>(
+    groupKey(group, q, page),
+    measured(group, page, 0, () => groupRead(group, q, page), pageCounts),
+  );
+}
+async function groupRead(
+  group: CatalogGroup,
+  q: string,
+  page: number,
+): Promise<RecordResult<GroupPage>> {
   const kind = groups[group].catalog;
-  return request<GroupPage>(groupKey(group, q, page), async () => {
-    if (kind === 'interest' || kind === 'pay' || kind === 'expense') {
-      const result: CatalogResult = await catalogs.search(
-        q.trim(),
-        kind as CatalogKind,
-        page,
-      );
-      return result as unknown as RecordResult<GroupPage>;
-    }
-    const result = await recordSearch.search(
+  if (kind === 'interest' || kind === 'pay' || kind === 'expense') {
+    const result: CatalogResult = await catalogs.search(
       q.trim(),
-      { ...defaultFilters, kind, mode: 'keyword' },
+      kind as CatalogKind,
       page,
     );
     return result as unknown as RecordResult<GroupPage>;
-  });
+  }
+  const result = await recordSearch.search(
+    q.trim(),
+    { ...defaultFilters, kind, mode: 'keyword' },
+    page,
+  );
+  return result as unknown as RecordResult<GroupPage>;
 }
 
 /** Summarise these speeches: page 1 of the current filters, on its tap only. */

@@ -23,19 +23,35 @@ function voicePrivacyManifest(existing = {}) {
       'NSPrivacyCollectedDataTypePurposeAppFunctionality',
     ],
   }));
-  const replaced = new Set(
-    types.map((entry) => entry.NSPrivacyCollectedDataType),
+  // One entry per type. A type the base manifest already declares (analytics'
+  // Product Interaction) keeps both purposes and is linked if either use is.
+  const merged = [...(existing.NSPrivacyCollectedDataTypes ?? [])].map(
+    (entry) => ({ ...entry }),
   );
+  for (const entry of types) {
+    const same = merged.find(
+      (row) => row.NSPrivacyCollectedDataType === entry.NSPrivacyCollectedDataType,
+    );
+    if (!same) {
+      merged.push(entry);
+      continue;
+    }
+    same.NSPrivacyCollectedDataTypeLinked =
+      same.NSPrivacyCollectedDataTypeLinked === true ||
+      entry.NSPrivacyCollectedDataTypeLinked;
+    same.NSPrivacyCollectedDataTypeTracking = false;
+    same.NSPrivacyCollectedDataTypePurposes = [
+      ...new Set([
+        ...entry.NSPrivacyCollectedDataTypePurposes,
+        ...(same.NSPrivacyCollectedDataTypePurposes ?? []),
+      ]),
+    ];
+  }
   return {
     ...existing,
     NSPrivacyTracking: false,
     NSPrivacyAccessedAPITypes: existing.NSPrivacyAccessedAPITypes ?? [],
-    NSPrivacyCollectedDataTypes: [
-      ...(existing.NSPrivacyCollectedDataTypes ?? []).filter(
-        (entry) => !replaced.has(entry.NSPrivacyCollectedDataType),
-      ),
-      ...types,
-    ],
+    NSPrivacyCollectedDataTypes: merged,
   };
 }
 

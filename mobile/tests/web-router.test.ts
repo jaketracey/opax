@@ -94,6 +94,7 @@ function guardFrom(source: string): Guard {
     '../../design/environment': { webOrigin: origin, isE2E: true },
     '../../design/palette': { light: {}, dark: {} },
     '../source-destination': {},
+    '../../analytics': { currentSection: () => 'other', track: () => {} },
   };
   vm.runInNewContext(outputText, {
     module,
